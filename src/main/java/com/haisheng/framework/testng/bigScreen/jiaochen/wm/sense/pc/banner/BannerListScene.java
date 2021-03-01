@@ -7,7 +7,7 @@ import lombok.Builder;
 @Builder
 public class BannerListScene extends BaseScene {
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         return new JSONObject();
     }
 

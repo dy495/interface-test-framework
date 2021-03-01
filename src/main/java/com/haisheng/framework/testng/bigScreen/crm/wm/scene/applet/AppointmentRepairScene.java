@@ -19,7 +19,7 @@ public class AppointmentRepairScene extends BaseScene {
 
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("my_car_id", myCarId);
         object.put("customer_name", customerName);

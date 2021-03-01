@@ -28,7 +28,7 @@ public class FissionVoucherEditScene extends BaseScene {
     private final JSONObject invitedVoucher;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("type", type);
         object.put("participation_limit_type", participationLimitType);
@@ -52,10 +52,5 @@ public class FissionVoucherEditScene extends BaseScene {
     @Override
     public String getPath() {
         return "/jiaochen/pc/activity/manage/fission-voucher/edit";
-    }
-
-    @Override
-    public String getIpPort() {
-        return null;
     }
 }

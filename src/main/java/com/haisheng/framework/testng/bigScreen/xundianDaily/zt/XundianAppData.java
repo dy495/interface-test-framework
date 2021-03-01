@@ -19,6 +19,9 @@ import com.haisheng.framework.util.CommonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.*;
+import java.util.ArrayList;
+import java.util.List;
+
 
 import java.lang.reflect.Method;
 
@@ -115,7 +118,6 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             Integer unqualified_Num = unqualified_Type.getInteger("total");
             int result_Type = qualified_Num + unqualified_Num;
             Preconditions.checkArgument(checks_list == result_Type, "巡店记录列表数量" + checks_list + "不等于合格+不合格的数量=" + result_Type);
-
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -169,7 +171,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             saveData("巡店记录详情内容==PC【巡店报告详情】中的巡店记录详情内容");
         }
     }
-
+ 
 
     //[未完成]列表的数量==未完成的待办事项的的展示项
     @Test
@@ -185,7 +187,6 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
                 jsonArray = response.getJSONArray("list");
                 count += jsonArray.size();
             } while (jsonArray.size() == 10);
-
             //获取待办列表事项总数totalnum
             int totalnum = xd.task_list(1,10,0,null).getInteger("total");
             CommonUtil.valueView(count,totalnum);
@@ -239,9 +240,6 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
     }
 
 
-
-
-
     //app[首页实时客流分析] 今日到访人数<= [趋势图]今天各时段人数之和
     @Test
     public void todayNum() throws Exception{
@@ -252,15 +250,12 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             JSONObject resultList = homeList.getJSONObject(0).getJSONObject("result");
 //            Integer todayUv = resultList.getJSONObject(0).getInteger("today_uv");
             Integer todayUv = resultList.getJSONObject("total_number").getInteger("today_uv");
-
             int todayUvCount = 0;
             JSONArray trendList = homeList.getJSONObject(0).getJSONObject("result").getJSONArray("trend_list");
-
             for (int i = 0; i < trendList.size(); i++) {
                 Integer uv = trendList.getJSONObject(i).getInteger("today_uv");
                 if (uv == null) {
                     uv = 0;
-                    ;
                 }
                 todayUvCount += uv;
             }
@@ -272,6 +267,37 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             saveData("app首页实时客流分钟中今日到访人数 <= app趋势图中今天各时段人数之和");
+        }
+
+    }
+
+    //巡店记录详情，打开展示报告信息
+    @Test(dataProvider = "is_read",dataProviderClass = DataProviderMethod.class)
+    public void ReportList(Boolean is_read) throws Exception{
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+//            获取消息列表
+            JSONArray message_center = xd.user_message_center(is_read,null,10).getJSONArray("list");
+//          获取第一份报告的id
+            for(int i=0;i<message_center.size();i++){
+                int reportId = message_center.getJSONObject(i).getInteger("id");
+//            获取recordID
+                Long record_id = xd.user_message_center_detail(reportId).getLong("record_id");
+                Long shopID = xd.user_message_center_detail(reportId).getLong("shop_id");
+                JSONArray items_list = xd.patrol_detail(shopID,record_id).getJSONArray("list");
+                for(int j=0;j<items_list.size();j++){
+                    Long items_id = items_list.getJSONObject(j).getLong("id");
+                    JSONObject check = xd.getShopChecksDetail(record_id,shopID,items_id,null).getJSONObject("check");
+                    JSONArray check_items = check.getJSONArray("check_items");
+                    checkArgument(check_items != null, "app巡店记录详情");
+                }
+            }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("巡店记录详情默认展示为空");
         }
 
     }

@@ -32,7 +32,7 @@ public class ArticleAdd extends BaseScene {
     private final String voucherGetUseDays;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("title", title);
         object.put("pic_type", picType);

@@ -15,7 +15,7 @@ public class ManageApprovalScene extends BaseScene {
     private final List<Long> ids;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("status", status);
         object.put("ids", ids);
@@ -25,10 +25,5 @@ public class ManageApprovalScene extends BaseScene {
     @Override
     public String getPath() {
         return "/jiaochen/pc/activity/manage/approval";
-    }
-
-    @Override
-    public String getIpPort() {
-        return null;
     }
 }

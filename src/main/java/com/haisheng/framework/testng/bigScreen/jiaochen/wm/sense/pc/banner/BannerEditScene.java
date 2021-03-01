@@ -33,7 +33,7 @@ public class BannerEditScene extends BaseScene {
     private final Integer bannerId5 = 25;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         JSONArray array = new JSONArray();
         JSONObject object1 = new JSONObject();

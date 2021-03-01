@@ -13,7 +13,7 @@ public class MaintainShopListScene extends BaseScene {
     private final String carId;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("car_id", carId);
         return jsonObject;

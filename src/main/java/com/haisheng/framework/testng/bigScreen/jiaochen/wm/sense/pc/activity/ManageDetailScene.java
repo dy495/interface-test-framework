@@ -10,7 +10,7 @@ import lombok.Builder;
 public class ManageDetailScene extends BaseScene {
     private final Long  id;
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("id",id );
         return object;
@@ -18,10 +18,5 @@ public class ManageDetailScene extends BaseScene {
     @Override
     public String getPath() {
         return "/jiaochen/pc/activity/manage/detail";
-    }
-
-    @Override
-    public String getIpPort() {
-        return null;
     }
 }

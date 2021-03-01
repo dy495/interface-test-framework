@@ -3,7 +3,7 @@ package com.haisheng.framework.util;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.exception.DataException;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;

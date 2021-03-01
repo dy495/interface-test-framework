@@ -34,6 +34,7 @@ public class PackagePage implements Serializable {
      */
     @JSONField(name = "package_name")
     private String packageName;
+
     /**
      * 套餐id
      */
@@ -67,3 +68,4 @@ public class PackagePage implements Serializable {
     @JSONField(name = "create_time")
     private String createTime;
 }
+

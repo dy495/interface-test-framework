@@ -14,7 +14,7 @@ import lombok.Builder;
 
 
         @Override
-        public JSONObject getJSONObject() {
+        public JSONObject getRequestBody() {
             JSONObject object = new JSONObject();
             object.put("id", id);
             object.put("status", status);
@@ -25,8 +25,5 @@ import lombok.Builder;
         public String getPath() {
             return "/jiaochen/pc/voucher/apply/approval";
         }
-        @Override
-        public String getIpPort() {
-            return null;
-        }
+
     }

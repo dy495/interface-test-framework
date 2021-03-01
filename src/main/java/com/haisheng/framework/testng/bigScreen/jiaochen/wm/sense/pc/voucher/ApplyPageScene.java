@@ -28,7 +28,7 @@ public class ApplyPageScene extends BaseScene {
     private final Integer state;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("name", name);

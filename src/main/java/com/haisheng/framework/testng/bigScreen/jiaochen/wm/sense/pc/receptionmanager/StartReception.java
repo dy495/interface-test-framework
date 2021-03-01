@@ -15,7 +15,7 @@ public class StartReception extends BaseScene {
     private final String customerPhone;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("plate_number", plateNumber);
         object.put("customer_id", customerId);

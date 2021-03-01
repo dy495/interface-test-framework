@@ -11,7 +11,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity;
 public class ManageRevokeScene extends BaseScene {
     private final Long  id;
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("id",id );
         return object;
@@ -21,8 +21,5 @@ public class ManageRevokeScene extends BaseScene {
         return "/jiaochen/pc/activity/manage/revoke";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

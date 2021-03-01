@@ -1,7 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing;
 
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.voucher.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.*;
 import lombok.Getter;
 
 import java.util.Arrays;

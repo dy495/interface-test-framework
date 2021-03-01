@@ -102,7 +102,7 @@ public class CreateVoucherScene extends BaseScene {
     private final Boolean isDefaultPic;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("voucher_pic", voucherPic);
         object.put("is_default_pic", isDefaultPic);

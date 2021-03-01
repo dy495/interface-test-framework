@@ -10,10 +10,12 @@ public class FileUpload extends BaseScene {
     private final Boolean isPermanent;
     private final Double ratio;
     private final String ratioStr;
+    private final Integer permanentPicType;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
+        object.put("permanent_pic_type", permanentPicType);
         object.put("pic", pic);
         object.put("isPermanent", isPermanent);
         object.put("ratio", ratio);

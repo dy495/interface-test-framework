@@ -9,6 +9,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAp
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.ArticlePage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityStatusEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.om.ArticleStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.banner.BannerScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.ActivityManageListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.banner.BannerEdit;
@@ -40,7 +41,6 @@ public class ContentOperationCase extends TestCaseCommon implements TestCaseStd 
     private static final EnumAccount ADMINISTRATOR = EnumAccount.WINSENSE_LAB_DAILY;
     //小程序用户
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_DAILY;
-    private static final EnumAppletToken APPLET_USER_TWO = EnumAppletToken.JC_GLY_DAILY;
     //访问者
     public Visitor visitor = new Visitor(product);
     //登录工具
@@ -86,13 +86,14 @@ public class ContentOperationCase extends TestCaseCommon implements TestCaseStd 
         logger.debug("case: " + caseResult);
     }
 
+    //ok
     @Test(description = "内容运营--banner--上传图片不符合3:2")
     public void banner_system_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
             String base64 = new ImageUtil().getImageBinary(filePath);
-            String message = visitor.invokeApi(FileUpload.builder().pic(base64).isPermanent(false).ratio(1.5).ratioStr("3：2").build(), false).getString("message");
+            String message = FileUpload.builder().pic(base64).permanentPicType(0).isPermanent(false).ratio(1.5).ratioStr("3：2").build().execute(visitor, false).getString("message");
             String err = "图片宽高比不符合3：2的要求";
             CommonUtil.checkResult("图片比", "非3：2", err, message);
         } catch (Exception | AssertionError e) {
@@ -102,24 +103,26 @@ public class ContentOperationCase extends TestCaseCommon implements TestCaseStd 
         }
     }
 
-    @Test(description = "banner--跳转活动/文章的条数=展示中的文章&进行中活动条数之和")
+    //ok
+    @Test(description = "banner--跳转活动/文章的条数=展示中的文章+进行中或者已结束活动条数之和")
     public void banner_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int num = util.getArticleIdList().size();
             IScene articlePageScene = ArticlePageScene.builder().build();
-            List<ArticlePage> articlePageList = util.collectBean(articlePageScene, ArticlePage.class);
-            int articlePageListSize = articlePageList.size();
-            IScene activityManageListScene = ActivityManageListScene.builder().status(ActivityStatusEnum.PASSED.getId()).build();
-            int activityManageListSize = util.collectBean(activityManageListScene, JSONObject.class).size();
+            int articlePageListSize = (int) util.collectBean(articlePageScene, ArticlePage.class).stream().filter(e -> e.getStatusName().equals(ArticleStatusEnum.SHOW.getTypeName())).count();
+            IScene activityManageListScene = ActivityManageListScene.builder().build();
+            int activityManageListSize = (int) util.collectBean(activityManageListScene, JSONObject.class).stream()
+                    .filter(e -> e.getString("status_name").equals(ActivityStatusEnum.PASSED.getStatusName()) || e.getString("status_name").equals(ActivityStatusEnum.FINISH.getStatusName())).count();
             CommonUtil.checkResult("跳转活动/文章的条数", activityManageListSize + articlePageListSize, num);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("banner--跳转活动/文章的条数=展示中的文章&进行中活动条数之和");
+            saveData("banner--跳转活动/文章的条数=展示中的文章+进行中活动条数之和");
         }
     }
 
+    //ok
     @Test(description = "内容运营--banner--填写banner1-banner5的内容")
     public void banner_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -130,7 +133,7 @@ public class ContentOperationCase extends TestCaseCommon implements TestCaseStd 
             File[] files = file.listFiles();
             assert files != null;
             List<String> base64s = Arrays.stream(files).filter(e -> e.toString().contains("banner")).map(e -> new ImageUtil().getImageBinary(e.getPath())).collect(Collectors.toList());
-            List<String> picPaths = base64s.stream().map(e -> visitor.invokeApi(FileUpload.builder().pic(e).isPermanent(false).ratio(1.5).ratioStr("3：2").build()).getString("pic_path")).collect(Collectors.toList());
+            List<String> picPaths = base64s.stream().map(e -> visitor.invokeApi(FileUpload.builder().pic(e).permanentPicType(0).isPermanent(false).ratio(1.5).ratioStr("3：2").build()).getString("pic_path")).collect(Collectors.toList());
             IScene scene = BannerEdit.builder()
                     .bannerImgUrl1(picPaths.get(0)).articleId1(articleIds.get(0))
                     .bannerImgUrl2(picPaths.get(1)).articleId2(articleIds.get(1))

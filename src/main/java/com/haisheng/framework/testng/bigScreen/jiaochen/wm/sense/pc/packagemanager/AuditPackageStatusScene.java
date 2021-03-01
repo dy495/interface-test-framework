@@ -21,7 +21,7 @@ public class AuditPackageStatusScene extends BaseScene {
     private final String status;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("id", id);
         object.put("status", status);

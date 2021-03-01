@@ -28,7 +28,7 @@ public enum EnumAppletToken {
 
     JC_WM_DAILY(EnumProduce.JC.name(), "eVvKxoI0LSCdMQJoN3Qg7g==", "", true, "", "15321527989"),
 
-    JC_WM_ONLINE(EnumProduce.JC.name(), "5Vh23rx+RzSsFd0GIh2PdA==", "", false, "", "15321527989"),
+    JC_WM_ONLINE(EnumProduce.JC.name(), "aTcP39Q3mJAUauGwmq2VMg==", "", false, "", "15321527989"),
 
     JC_XMF_DAILY(EnumProduce.JC.name(), "hZiYL+y2QvANm4IfJFka9A==", "", false, "", "15037286013"),
 
@@ -36,7 +36,7 @@ public enum EnumAppletToken {
 
     JC_LXQ_DAILY(EnumProduce.JC.name(), "31Z9jgBlSsTIqRTYxOWaKw==", "", false, "", "13436941018"),
 
-    JC_GLY_DAILY(EnumProduce.JC.name(), "neY6Yoiafw8h0MmK3VXdtQ==", "Max", true, "", "13373166806"),
+    JC_GLY_DAILY(EnumProduce.JC.name(), "HT0hvV4GHdNUBc/Kc92BQA==", "Max", true, "", "13373166806"),
     JC_GLY_ONLINE(EnumProduce.JC.name(), "cjEW0H1AT+uU35ELU+UFbQ==", "Max", false, "", "13373166806"),
     ;
 

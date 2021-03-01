@@ -1356,6 +1356,7 @@ public class XundianScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+
     /**
      * @author zhoutao
      * @description 3.18 巡店记录处理事项下拉列表（V1.1）
@@ -1529,6 +1530,34 @@ public class XundianScenarioUtil extends TestCaseCommon {
     public JSONObject user_center() throws Exception {
         String url = "/store/m-app/auth/user/center";
         JSONObject json = new JSONObject();
+        String res = httpPost(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    /**
+     * @author zt
+     * @description 1.7 个人中心(V1.1新增字段)（V1.1） 消息中心列表
+     */
+    public JSONObject user_message_center(Boolean is_read,Integer last_value,int size) throws Exception {
+        String url = "/store/m-app/auth/user/message-center";
+        JSONObject json = new JSONObject();
+        json.put("is_read",is_read);
+        json.put("last_value",last_value);
+        json.put("size",size);
+        String res = httpPost(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    /**
+     * @author zt
+     * @description 1.7 个人中心(V1.1新增字段)（V1.1） 消息中心列表
+     */
+    public JSONObject user_message_center_detail(int id) throws Exception {
+        String url = "/store/m-app/auth/user/message-center-detail";
+        JSONObject json = new JSONObject();
+        json.put("id",id);
         String res = httpPost(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }

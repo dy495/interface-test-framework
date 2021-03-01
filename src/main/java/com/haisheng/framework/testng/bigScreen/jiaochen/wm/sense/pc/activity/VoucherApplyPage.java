@@ -11,15 +11,15 @@ import lombok.Builder;
 public class VoucherApplyPage extends BaseScene {
     private final Integer page;
     private final Integer size;
-    private final String  status;
+    private final String status;
 
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);
-        object.put("status",status);
+        object.put("status", status);
         return object;
     }
 
@@ -27,8 +27,5 @@ public class VoucherApplyPage extends BaseScene {
     public String getPath() {
         return "/jiaochen/pc/voucher/apply/page";
     }
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

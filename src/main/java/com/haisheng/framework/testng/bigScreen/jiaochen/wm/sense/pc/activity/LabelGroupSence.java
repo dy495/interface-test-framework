@@ -17,7 +17,7 @@ public class LabelGroupSence extends BaseScene {
     private final String desc;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("code", code);
         object.put("message", message);
@@ -32,10 +32,5 @@ public class LabelGroupSence extends BaseScene {
     @Override
     public String getPath() {
         return "/jiaochen/pc/activity/manage/label-group";
-    }
-
-    @Override
-    public String getIpPort() {
-        return null;
     }
 }

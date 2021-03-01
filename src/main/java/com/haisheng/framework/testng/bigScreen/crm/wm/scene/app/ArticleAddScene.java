@@ -35,7 +35,7 @@ public class ArticleAddScene extends BaseScene {
     private final boolean isOnlineActivity = false;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("position", position);
         object.put("valid_start", validStart);

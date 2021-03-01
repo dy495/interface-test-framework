@@ -13,7 +13,7 @@ public class ExtensionPageScene extends BaseScene {
     private Integer size = 10;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("id", id);
         return object;

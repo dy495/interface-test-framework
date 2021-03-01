@@ -12,7 +12,7 @@ import lombok.Builder;
 @Builder
 public class ShopQrcodeScene extends BaseScene {
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         return new JSONObject();
     }
 

@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.arronlong.httpclientutil.HttpClientUtil;
-import com.google.inject.internal.util.$ObjectArrays;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.fucPackage.StoreFuncPackage;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -16,7 +15,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.jar.JarEntry;
 
 public class StoreScenarioUtil extends TestCaseCommon {
 
@@ -2662,7 +2660,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
     }
 
     public JSONObject invokeApi(IScene scene, boolean checkCode) {
-        return invokeApi(scene.getPath(), scene.getJSONObject(), checkCode);
+        return invokeApi(scene.getPath(), scene.getRequestBody(), checkCode);
     }
 
     private JSONObject invokeApi(String path, JSONObject requestBody) {

@@ -20,7 +20,7 @@ public class Analysis2ShopPanelScene extends BaseScene {
     private final String saleId;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);

@@ -6,12 +6,19 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
+ * 卡券申请信息
+ *
  * @author wangmin
  * @date 2021/1/21 10:44
- * @desc 卡券申请信息
  */
 @Data
 public class ApplyPage implements Serializable {
+
+    /**
+     * 申请项目
+     */
+    @JSONField(name = "apply_item_name")
+    private String applyItemName;
 
     /**
      * 优惠券申请类型
@@ -42,4 +49,22 @@ public class ApplyPage implements Serializable {
      */
     @JSONField(name = "num")
     private Integer num;
+
+    /**
+     * 成本累计/元
+     */
+    @JSONField(name = "total_price")
+    private String totalPrice;
+
+    /**
+     * 成本单价/元
+     */
+    @JSONField(name = "price")
+    private String price;
+
+    /**
+     * 申请时间
+     */
+    @JSONField(name = "apply_time")
+    private String applyTime;
 }

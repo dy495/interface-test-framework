@@ -22,10 +22,10 @@ public class EditPackageScene extends BaseScene {
     private final String id;
     private final String subjectType;
     private final Long subjectId;
-    private final String customerUseValidity;
+    private final Integer customerUseValidity;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("package_name", packageName);
         object.put("validity", validity);

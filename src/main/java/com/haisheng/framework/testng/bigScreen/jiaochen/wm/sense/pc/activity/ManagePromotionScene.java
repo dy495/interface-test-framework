@@ -11,7 +11,7 @@ import lombok.Builder;
 public class ManagePromotionScene extends BaseScene {
     private final Long  id;
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("id",id );
         return object;
@@ -19,10 +19,5 @@ public class ManagePromotionScene extends BaseScene {
     @Override
     public String getPath() {
         return "/jiaochen/pc/activity/manage/promotion";
-    }
-
-    @Override
-    public String getIpPort() {
-        return null;
     }
 }

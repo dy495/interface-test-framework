@@ -24,7 +24,7 @@ public class ManagerPageScene extends BaseScene {
     private final Integer subjectId;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);

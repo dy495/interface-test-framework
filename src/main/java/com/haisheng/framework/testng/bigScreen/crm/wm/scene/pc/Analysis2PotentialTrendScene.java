@@ -18,7 +18,7 @@ public class Analysis2PotentialTrendScene extends BaseScene {
     private final String saleId;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("cycle_type", cycleType);
         object.put("dimension", dimension);

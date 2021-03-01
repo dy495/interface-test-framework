@@ -18,7 +18,7 @@ public class ManageRegisterExportScene extends BaseScene {
     private final JSONArray ids;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);
@@ -34,8 +34,5 @@ public class ManageRegisterExportScene extends BaseScene {
         return "/jiaochen/pc/activity/manage/register/export";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

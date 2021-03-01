@@ -2,7 +2,6 @@ package com.haisheng.framework.testng.bigScreen.xundianDaily.zt;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
@@ -49,6 +48,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
         beforeClassInit(commonConfig);
         logger.debug("xundian " + xd);
         xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
+
     }
 
     @AfterClass
@@ -63,37 +63,6 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
-    }
-
-
-    //客流分析搜索
-    @Test
-    public void ShopperTrak() throws Exception{
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONArray type = new JSONArray();
-            type.add("NORMAL");
-            //获取list
-            JSONArray list = md.customerFlowList("110000",type,"AI-Test(门店订单录像)","徐鹏",null,null,1,10,null).getJSONArray("list");
-            //获取district_code,type,shop_name
-            for(int i=0;i<=list.size();i++){
-                String district_code = list.getJSONObject(i).getString("district_code");
-                String district_name = list.getJSONObject(i).getString("district_name");
-                String type1 = list.getJSONObject(i).getString("type");
-                String shop_name = list.getJSONObject(i).getString("name");
-                String manager_name = list.getJSONObject(i).getString("manager_name");
-                checkArgument(district_code.contains("110"), "选择的地理位置" + district_code + "!=搜索出来门店展示的地理位置" + district_name);
-            }
-
-
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("通过搜索框输入==搜索出来门店的内容");
-        }
     }
 
 
@@ -143,31 +112,33 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    //定检巡查展示图片类型==返回的图片类型
-    @Test
-    public void picScheduled1() throws Exception{
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            int pictotal = md.picturePage("SCHEDULED","","","",null,1,8).getInteger("total");
-            int pages = md.picturePage("SCHEDULED","","","",null,1,8).getInteger("pages");
-            for(int i=1;i<=pages;i++){
-                JSONArray list = md.picturePage("SCHEDULED","","","",null,i,8).getJSONArray("list");
-                for(int j=0;j<list.size();j++){
-                    String tips = list.getJSONObject(j).getString("tips");
-//                    int a = tips.indexOf("定检巡店");
-                    checkArgument(tips.contains("定检巡店"), "定检巡查" + "!=图片返回的类型" + tips);
-                }
+//    //定检巡查展示图片类型==返回的图片类型
+//    @Test
+//    public void picScheduled1() throws Exception{
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            int pictotal = md.picturePage("SCHEDULED","","","",null,1,8).getInteger("total");
+//            int pages = md.picturePage("SCHEDULED","","","",null,1,8).getInteger("pages");
+//            for(int i=1;i<=pages;i++){
+//                JSONArray list = md.picturePage("SCHEDULED","","","",null,i,8).getJSONArray("list");
+//                for(int j=0;j<list.size();j++){
+//                    String tips = list.getJSONObject(j).getString("tips");
+////                    int a = tips.indexOf("定检巡店");
+//                    checkArgument(tips.contains("定检巡店"), "定检巡查" + "!=图片返回的类型" + tips);
+//                }
+//
+//            }
+//
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("定检巡查展示图片类型==返回的图片类型");
+//        }
+//    }
 
-            }
 
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("定检巡查展示图片类型==返回的图片类型");
-        }
-    }
 
     //定检巡查展示图片类型+日期==返回的图片类型+日期
     @Test
@@ -364,7 +335,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
 
     //新建预置位、新建预置位不加名称、新建预置位不加时间、新建预置位后列表+1、删除一个预置位列表-1
-    @Test(dataProvider = "device_id")
+    @Test(dataProvider = "device_id",dataProviderClass = DataProviderMethod.class)
     public void createPreset(String device_id) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -435,7 +406,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
 
     //新建看守位，可以通过dataProvider和新建预置位合在一起
-    @Test(dataProvider = "device_id")
+    @Test(dataProvider = "device_id",dataProviderClass = DataProviderMethod.class)
     public void createGuard(String device_id) throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -486,7 +457,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
 
     //调用看守位
-    @Test(dataProvider = "device_id")
+    @Test(dataProvider = "device_id",dataProviderClass = DataProviderMethod.class)
     public void backGuard(String device_id) throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -506,7 +477,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
 
     //调用预置位
-    @Test(dataProvider = "device_id")
+    @Test(dataProvider = "device_id",dataProviderClass = DataProviderMethod.class)
     public void backPreset(String device_id) throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -529,19 +500,6 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
         } finally {
             saveData("调用看守位 ");
         }
-    }
-
-
-
-    @DataProvider(name = "device_id")
-    public Object[] cameraId() {
-
-        return new String[][]{
-                {"8061349193417728"},
-                {"8097818264503296"},
-                {"8058611994690560"}
-
-        };
     }
 
 }

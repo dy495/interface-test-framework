@@ -4,7 +4,8 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.ReceptionReceptorList;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletIntegralRecord;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppReceptionReceptorList;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.AppointmentPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.EvaluatePage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.ReceptionPage;
@@ -19,6 +20,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.app.tack.AppApp
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.app.tack.AppReceptionFinishReceptionScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.app.tack.AppReceptionReceptorChangePageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.EvaluateSubmitScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.HomePageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.appointmentmanager.AppointmentPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.ReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.ReceptorChangeScene;
@@ -37,6 +39,7 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 小程序用例
@@ -73,8 +76,8 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
         //替换钉钉推送
         commonConfig.dingHook = EnumDingTalkWebHook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
-        commonConfig.roleId = "603";
-        commonConfig.referer = "https://servicewechat.com/wxbd41de85739a00c7/0/page-frame.html";
+        commonConfig.roleId = product.getRoleId();
+        commonConfig.referer = product.getReferer();
         commonConfig.shopId = product.getShopId();
         beforeClassInit(commonConfig);
     }
@@ -97,6 +100,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "预约保养->确认预约->点接待->变更接待->完成接待->评价->跟进")
     public void appointmentManager_maintain() {
+        logger.logCaseStart(caseResult.getCaseName());
         try {
             int i = 0;
             Integer shopId = util.getShopId();
@@ -161,7 +165,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             //变更接待
             int receptionId = receptionPage.getId();
             user.loginApp(ADMINISTRATOR);
-            ReceptionReceptorList receptorList = util.getReceptorList();
+            AppReceptionReceptorList receptorList = util.getReceptorList();
             String uid = receptorList.getUid();
             IScene receptionReceptorChangePageScene = AppReceptionReceptorChangePageScene.builder().id(receptionId).receptorId(uid).shopId(shopId).build();
             visitor.invokeApi(receptionReceptorChangePageScene);
@@ -207,11 +211,12 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
         } finally {
             saveData("预约保养->确认预约->点接待->变更接待->完成接待->评价->跟进");
         }
-
     }
 
+    //ok
     @Test(description = "预约维修->确认预约->点接待->变更接待->完成接待->评价->跟进")
     public void appointmentManager_repair() {
+        logger.logCaseStart(caseResult.getCaseName());
         try {
             int i = 0;
             Integer shopId = util.getShopId();
@@ -276,7 +281,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             //变更接待
             int receptionId = receptionPage.getId();
             user.loginApp(ADMINISTRATOR);
-            ReceptionReceptorList receptorList = util.getReceptorList();
+            AppReceptionReceptorList receptorList = util.getReceptorList();
             String uid = receptorList.getUid();
             IScene receptionReceptorChangePageScene = AppReceptionReceptorChangePageScene.builder().id(receptionId).receptorId(uid).shopId(shopId).build();
             visitor.invokeApi(receptionReceptorChangePageScene);
@@ -324,11 +329,26 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-
-
-
-    @Test
-    public void integralMall_data_1(){
-
+    //ok
+    @Test(description = "小程序--积分总数=积分明细所有项加和")
+    public void integralMall_data_1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            user.loginApplet(APPLET_USER_ONE);
+            IScene homePageScene = HomePageScene.builder().build();
+            Integer integral = visitor.invokeApi(homePageScene).getInteger("integral");
+            AtomicInteger integralSum = new AtomicInteger();
+            List<AppletIntegralRecord> appletIntegralRecordList = util.getAppletIntegralRecordList();
+            appletIntegralRecordList.forEach(e -> {
+                String changeType = e.getChangeType();
+                String integralDetail = e.getIntegral();
+                integralSum.set(changeType.equals("ADD") ? integralSum.addAndGet(Integer.parseInt(integralDetail)) : integralSum.addAndGet(-Integer.parseInt(integralDetail)));
+            });
+            CommonUtil.checkResultPlus("积分总数", integral, "积分明细积分相加", integralSum.get());
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("小程序--积分总数=积分明细所有项加和");
+        }
     }
 }

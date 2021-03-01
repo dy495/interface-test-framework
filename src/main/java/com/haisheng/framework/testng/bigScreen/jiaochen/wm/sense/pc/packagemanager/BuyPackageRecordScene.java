@@ -20,7 +20,7 @@ public class BuyPackageRecordScene extends BaseScene {
     private Integer size = 10;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("package_name", packageName);
         object.put("sender", sender);

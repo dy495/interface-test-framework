@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.crm.wm.exception.DataException;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.exception.DataException;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.util.StringUtils;
@@ -45,7 +45,7 @@ public class Visitor extends TestCaseCommon {
      * @return 返回值
      */
     public JSONObject invokeApi(@NotNull IScene scene, boolean checkCode) {
-        return invokeApi(scene.getPath(), scene.getJSONObject(), checkCode);
+        return invokeApi(scene.getPath(), scene.getRequestBody(), checkCode);
     }
 
     /**
@@ -83,7 +83,7 @@ public class Visitor extends TestCaseCommon {
      * @return 返回值
      */
     public JSONObject uploadFile(IScene scene) {
-        String response = uploadFile(scene.getJSONObject().getString("filePath"), scene.getPath(), product.getAddress());
+        String response = uploadFile(scene.getRequestBody().getString("filePath"), scene.getPath(), product.getAddress());
         return JSON.parseObject(response);
     }
 
@@ -94,7 +94,7 @@ public class Visitor extends TestCaseCommon {
      * @return 返回值
      */
     public void login(@NotNull IScene scene) {
-        httpPost(scene.getPath(), scene.getJSONObject(), product.getAddress());
+        httpPost(scene.getPath(), scene.getRequestBody(), product.getAddress());
     }
 
     /**

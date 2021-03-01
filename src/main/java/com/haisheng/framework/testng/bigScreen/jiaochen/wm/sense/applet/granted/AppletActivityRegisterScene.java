@@ -12,7 +12,7 @@ public class AppletActivityRegisterScene extends BaseScene {
     private final Integer num;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("id", id);
         object.put("name", name);

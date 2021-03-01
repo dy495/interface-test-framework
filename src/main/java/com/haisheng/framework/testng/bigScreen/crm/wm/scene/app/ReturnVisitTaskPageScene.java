@@ -13,7 +13,7 @@ public class ReturnVisitTaskPageScene extends BaseScene {
     private final Integer size = 100;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);

@@ -13,7 +13,7 @@ import lombok.Builder;
         private final JSONArray registerItems;
 
         @Override
-        public JSONObject getJSONObject() {
+        public JSONObject getRequestBody() {
             JSONObject object = new JSONObject();
             object.put("id", id);
             object.put("register_items", registerItems);

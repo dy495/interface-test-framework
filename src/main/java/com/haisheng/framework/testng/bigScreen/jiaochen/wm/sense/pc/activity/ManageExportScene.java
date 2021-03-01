@@ -21,7 +21,7 @@ public class ManageExportScene extends BaseScene {
     private final JSONArray ids;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);
@@ -39,10 +39,5 @@ public class ManageExportScene extends BaseScene {
     @Override
     public String getPath() {
         return "/jiaochen/pc/activity/manage/export";
-    }
-
-    @Override
-    public String getIpPort() {
-        return null;
     }
 }

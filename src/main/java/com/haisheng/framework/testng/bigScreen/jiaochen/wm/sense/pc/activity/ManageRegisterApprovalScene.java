@@ -16,7 +16,7 @@ public class ManageRegisterApprovalScene extends BaseScene {
     private final List<Long> ids;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("activity_id", activityId);
         object.put("status", status);
@@ -29,8 +29,5 @@ public class ManageRegisterApprovalScene extends BaseScene {
         return "/jiaochen/pc/activity/manage/register/approval";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

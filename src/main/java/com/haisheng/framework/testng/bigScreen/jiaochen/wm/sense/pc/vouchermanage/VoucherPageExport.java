@@ -22,7 +22,7 @@ public class VoucherPageExport extends BaseScene {
     private Integer size = 10;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("voucher_status", voucherStatus);
         object.put("voucher_type", voucherType);

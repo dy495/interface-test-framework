@@ -7,32 +7,29 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.AfterSaleCustomerPage;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.WechatCustomerPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletVoucherInfo;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.AfterSaleCustomerPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.ReceptionPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherSendRecord;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.WechatCustomerPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.CustomerLabelTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherSourceEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherUseStatusEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.Import.WorkOrderScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.AfterSaleCustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.RepairPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.WechatCustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.BuyPackageRecordScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.ReceptionPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.recordimport.ImportPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherInfoScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.util.CommonUtil;
-import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -165,6 +162,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
             IScene voucherInfoScene = VoucherInfoScene.builder().id(voucherId).build();
             int totalSend = visitor.invokeApi(voucherInfoScene).getInteger("total_send");
             user.loginApplet(APPLET_USER_ONE);
+            int appletMessageMessageNum = util.getAppletMessageNum();
             int appletVoucherNum = util.getAppletVoucherNum();
             int appletPackageNum = util.getAppletPackageNum();
             user.loginPc(ADMINISTRATOR);
@@ -187,6 +185,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
             user.loginApplet(APPLET_USER_ONE);
             CommonUtil.checkResult("小程序我的卡券数", appletVoucherNum, util.getAppletVoucherNum());
             CommonUtil.checkResult("小程序我的套餐数", appletPackageNum + 1, util.getAppletPackageNum());
+            CommonUtil.checkResult("小程序我的消息数", appletMessageMessageNum + 1, util.getAppletMessageNum());
             String voucherCode = voucherSendRecord.getVoucherCode();
             AppletVoucherInfo appletVoucherInfo = util.getAppletPackageVoucherInfo(voucherCode);
             CommonUtil.checkResult("小程序卡券指定车辆", platNumber, appletVoucherInfo.getPlateNumber());
@@ -270,6 +269,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
             IScene voucherInfoScene = VoucherInfoScene.builder().id(voucherId).build();
             int totalSend = visitor.invokeApi(voucherInfoScene).getInteger("total_send");
             user.loginApplet(APPLET_USER_ONE);
+            int appletMessageMessageNum = util.getAppletMessageNum();
             int appletVoucherNum = util.getAppletVoucherNum();
             int appletPackageNum = util.getAppletPackageNum();
             user.loginPc(ADMINISTRATOR);
@@ -292,6 +292,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
             user.loginApplet(APPLET_USER_ONE);
             CommonUtil.checkResult("小程序我的卡券数", appletVoucherNum, util.getAppletVoucherNum());
             CommonUtil.checkResult("小程序我的套餐数", appletPackageNum + 1, util.getAppletPackageNum());
+            CommonUtil.checkResult("小程序我的消息数", appletMessageMessageNum + 1, util.getAppletMessageNum());
             String voucherCode = voucherSendRecord.getVoucherCode();
             AppletVoucherInfo appletVoucherInfo = util.getAppletPackageVoucherInfo(voucherCode);
             CommonUtil.checkResult("小程序卡券指定车辆", platNumber, appletVoucherInfo.getPlateNumber());
@@ -379,22 +380,15 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "客户管理--导入一次工单，【导入记录】+1")
-    public void customerManager_data_1() {
-        logger.logCaseStart(caseResult.getCaseName());
+    @Test(description = "套餐购买并发测试", threadPoolSize = 4, invocationCount = 4, enabled = false)
+    public void receptionManage_data_7() {
         try {
-            IScene importPageScene = ImportPageScene.builder().build();
-            int total = visitor.invokeApi(importPageScene).getInteger("total");
-            String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/excel/服务单号已存在.xlsx";
-            IScene workOrderScene = WorkOrderScene.builder().filePath(filePath).build();
-            String message = visitor.invokeApi(workOrderScene, false).getString("message");
-            Assert.assertEquals(message, "success");
-            int newTotal = visitor.invokeApi(importPageScene).getInteger("total");
-            CommonUtil.checkResult("导入后导入记录总数", total + 1, newTotal);
+            long packageId = 146;
+            util.receptionBuyFixedPackage(packageId, 1);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("客户管理--导入一次工单，【导入记录】+1");
+            saveData("套餐购买并发测试");
         }
     }
 
@@ -448,8 +442,8 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //ok
-    @Test(description = "客户管理--有维修记录的售后客户，列表最新里程数=维修记录中最新的里程数&总消费/元=维修记录产值/mb之和")
+    //逻辑有问题
+    @Test(description = "客户管理--有维修记录的售后客户，列表最新里程数=维修记录中最新的里程数&总消费/元=维修记录产值/mb之和", enabled = false)
     public void customerManager_data_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -461,8 +455,8 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
                 if (!list.isEmpty()) {
                     int newestMiles = list.stream().map(object -> (JSONObject) object).map(e -> e.getInteger("newest_miles")).findFirst().orElse(0);
                     double outputValue = list.stream().map(object -> (JSONObject) object).map(e -> e.getDouble("output_value")).mapToDouble(object -> object).sum();
-                    CommonUtil.checkResultPlus("列表最新里程数", afterSaleCustomerPage.getNewestMiles(), "维修记录中最新的里程数", newestMiles);
-                    CommonUtil.checkResultPlus("列表最总消费/元", afterSaleCustomerPage.getTotalPrice(), "维修记录中最新的产值/mb之和", outputValue);
+                    CommonUtil.checkResultPlus(afterSaleCustomerPage.getVehicleChassisCode() + " 列表最新里程数", afterSaleCustomerPage.getNewestMiles(), "维修记录中最新的里程数", newestMiles);
+                    CommonUtil.checkResultPlus(afterSaleCustomerPage.getVehicleChassisCode() + " 列表最总消费/元", afterSaleCustomerPage.getTotalPrice(), "维修记录中最新的产值/mb之和", outputValue);
                     CommonUtil.logger(afterSaleCustomerPage.getVehicleChassisCode());
                 }
             });

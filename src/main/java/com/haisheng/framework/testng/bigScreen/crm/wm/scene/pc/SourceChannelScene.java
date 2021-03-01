@@ -12,7 +12,7 @@ public class SourceChannelScene extends BaseScene {
     private final String saleId;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("cycle_type", cycleType);
         object.put("month", month);

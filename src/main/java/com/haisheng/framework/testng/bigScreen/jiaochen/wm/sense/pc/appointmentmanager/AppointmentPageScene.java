@@ -25,7 +25,7 @@ public class AppointmentPageScene extends BaseScene {
     private Integer size = 10;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("plate_number", plateNumber);
         object.put("customer_manager", customerManager);

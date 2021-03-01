@@ -19,7 +19,7 @@ public class StaffPageScene extends BaseScene {
     private Integer size = 10;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("name", name);
         object.put("page", page);

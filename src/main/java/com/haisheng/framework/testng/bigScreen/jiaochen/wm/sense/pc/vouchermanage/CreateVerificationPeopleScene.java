@@ -15,7 +15,7 @@ public class CreateVerificationPeopleScene extends BaseScene {
     private final Integer type;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("verification_person_name", verificationPersonName);
         object.put("verification_person_phone", verificationPersonPhone);

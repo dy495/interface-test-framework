@@ -34,7 +34,7 @@ public class SignInConfigEditScene extends BaseScene {
     private final String pictureUrl;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("sign_in_config_id", signInConfigId);
         object.put("explain", explain);

@@ -19,7 +19,7 @@ public class ChangeRecordScene extends BaseScene {
     private Integer size = 10;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("voucher_id", voucherId);
         object.put("page", page);

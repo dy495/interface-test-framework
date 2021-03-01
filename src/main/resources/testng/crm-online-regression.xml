@@ -19,10 +19,6 @@
             <class name="com.haisheng.framework.testng.bigScreen.crmOnline.wm.PcDataPageOnline"/>
             <class name="com.haisheng.framework.testng.bigScreen.crmOnline.wm.AfterSaleOnline"/>
             <class name="com.haisheng.framework.testng.bigScreen.crmOnline.wm.PcDataPagePorsche"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.BusinessManageOnline"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.ContentOperationOnline"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.MarketingManageOnline"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.FinanceManagerOnline"/>
         </classes>
     </test>
 </suite>

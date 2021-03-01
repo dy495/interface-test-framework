@@ -30,7 +30,7 @@ public class SendRecordScene extends BaseScene {
     private final String customerLabel;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("voucher_name", voucherName);
         object.put("sender", sender);

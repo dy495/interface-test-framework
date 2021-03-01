@@ -19,4 +19,16 @@ public class AdditionalRecord implements Serializable {
      */
     @JSONField(name = "additional_num")
     private String additionalNum;
+
+    /**
+     * 状态
+     */
+    @JSONField(name = "status_name")
+    private String statusName;
+
+    /**
+     * id
+     */
+    @JSONField(name = "id")
+    private Integer id;
 }

@@ -20,7 +20,7 @@ public class ReceptionAfterCustomerListScene extends BaseScene {
     private final Integer size = 10;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("search_condition", searchCondition);
         object.put("search_date_start", searchDateStart);

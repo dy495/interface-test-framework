@@ -10,7 +10,7 @@ public class MakeSureBuyScene extends BaseScene {
     private final String auditStatus;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("id", id);
         object.put("audit_status", auditStatus);

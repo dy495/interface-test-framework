@@ -7,7 +7,7 @@ import lombok.Builder;
 @Builder
 public class SubjectList extends BaseScene {
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         return new JSONObject();
     }
 

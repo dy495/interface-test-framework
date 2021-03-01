@@ -38,7 +38,7 @@ public class ManageRecruitEditScene extends BaseScene {
     private final Long id;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("type", type);
         object.put("participation_limit_type", participationLimitType);
@@ -73,8 +73,5 @@ public class ManageRecruitEditScene extends BaseScene {
         return "/jiaochen/pc/activity/manage/recruit/edit";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

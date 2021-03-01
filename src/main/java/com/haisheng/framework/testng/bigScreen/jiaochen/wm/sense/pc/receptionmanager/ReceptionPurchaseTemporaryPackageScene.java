@@ -26,7 +26,7 @@ public class ReceptionPurchaseTemporaryPackageScene extends BaseScene {
     private final Integer shopId;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("customer_phone", customerPhone);
         object.put("car_type", carType);

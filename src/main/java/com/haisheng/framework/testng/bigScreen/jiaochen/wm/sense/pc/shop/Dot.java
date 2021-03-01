@@ -17,7 +17,7 @@ public class Dot extends BaseScene {
     private final String source;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         JSONObject data = new JSONObject();
         data.put("terminal_device_id", terminalDeviceId);

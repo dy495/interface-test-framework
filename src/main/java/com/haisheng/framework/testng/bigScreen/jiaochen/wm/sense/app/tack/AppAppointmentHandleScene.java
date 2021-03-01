@@ -17,7 +17,7 @@ public class AppAppointmentHandleScene extends BaseScene {
     private final Integer type;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("id", id);
         jsonObject.put("shop_id", shopId);

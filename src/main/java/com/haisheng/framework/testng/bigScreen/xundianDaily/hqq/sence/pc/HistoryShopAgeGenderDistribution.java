@@ -11,7 +11,7 @@ public class HistoryShopAgeGenderDistribution extends BaseScene {
     private final String month;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("shop_id", shopId);
         object.put("cycle_type", cycleType);

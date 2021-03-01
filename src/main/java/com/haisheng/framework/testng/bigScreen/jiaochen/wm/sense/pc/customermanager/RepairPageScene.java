@@ -14,7 +14,7 @@ public class RepairPageScene extends BaseScene {
     private final String shopId;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("size", size);
         object.put("page", page);

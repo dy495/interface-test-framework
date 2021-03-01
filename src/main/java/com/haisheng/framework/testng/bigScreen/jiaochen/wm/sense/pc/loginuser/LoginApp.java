@@ -10,7 +10,7 @@ public class LoginApp extends BaseScene {
     private final String verificationCode;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("phone", phone);
         object.put("verification_code", verificationCode);

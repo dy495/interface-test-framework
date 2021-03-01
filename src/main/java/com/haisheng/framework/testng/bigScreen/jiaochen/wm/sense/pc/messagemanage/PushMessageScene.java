@@ -11,7 +11,7 @@ import java.util.List;
  */
 @Builder
 public class PushMessageScene extends BaseScene {
-    private final String pushTarget;
+    private final Integer pushTarget;
     private final List<Long> shopList;
     private final List<String> telList;
     private final String messageName;
@@ -20,32 +20,16 @@ public class PushMessageScene extends BaseScene {
     private final List<Long> voucherOrPackageList;
     private final String beginUseTime;
     private final String endUseTime;
-    private final Integer useDays;
+    private final String useDays;
     private final Long sendTime;
     @Builder.Default
     private final Boolean ifSendImmediately = true;
     private final Long activityId;
 
-    /**
-     * v2.0
-     */
-    private final Integer pushTargetId;
-    //TODO 上线后替代原pushTarget
-
-    /**
-     * v2.0
-     */
-    private final String useDay;
-    //TODO 上线后替代原userDays
-
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
-        if (pushTarget != null) {
-            object.put("push_target", pushTarget);
-        } else {
-            object.put("push_target", pushTargetId);
-        }
+        object.put("push_target", pushTarget);
         object.put("shop_list", shopList);
         object.put("tel_list", telList);
         object.put("message_name", messageName);
@@ -54,11 +38,7 @@ public class PushMessageScene extends BaseScene {
         object.put("voucher_or_package_list", voucherOrPackageList);
         object.put("begin_use_time", beginUseTime);
         object.put("end_use_time", endUseTime);
-        if (useDays != null) {
-            object.put("use_days", useDays);
-        } else {
-            object.put("use_days", useDay);
-        }
+        object.put("use_days", useDays);
         object.put("send_time", sendTime);
         object.put("if_send_immediately", ifSendImmediately);
         object.put("activity_id", activityId);

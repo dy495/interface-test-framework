@@ -17,7 +17,7 @@ public class LoginScene extends BaseScene {
     private final String password;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("type", type);
         object.put("username", username);

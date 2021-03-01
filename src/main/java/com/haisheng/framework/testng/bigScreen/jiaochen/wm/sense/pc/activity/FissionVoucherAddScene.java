@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
-import java.lang.reflect.Array;
 import java.util.List;
 
 /**
@@ -30,7 +29,7 @@ public class FissionVoucherAddScene extends BaseScene {
     private final JSONObject invitedVoucher;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("type", type);
         object.put("participation_limit_type", participationLimitType);
@@ -54,10 +53,5 @@ public class FissionVoucherAddScene extends BaseScene {
     @Override
     public String getPath() {
         return "/jiaochen/pc/activity/manage/fission-voucher/add";
-    }
-
-    @Override
-    public String getIpPort() {
-        return null;
     }
 }

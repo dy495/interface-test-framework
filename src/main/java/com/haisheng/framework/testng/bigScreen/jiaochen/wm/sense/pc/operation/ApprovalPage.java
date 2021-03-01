@@ -13,7 +13,7 @@ public class ApprovalPage extends BaseScene {
     private Integer size = 10;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("article_id", articleId);
         object.put("page", page);

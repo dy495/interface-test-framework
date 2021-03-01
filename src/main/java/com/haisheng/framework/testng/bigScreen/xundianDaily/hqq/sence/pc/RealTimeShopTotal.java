@@ -9,7 +9,7 @@ public class RealTimeShopTotal extends BaseScene {
     private final String shopId;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("shop_id", shopId);
         return object;

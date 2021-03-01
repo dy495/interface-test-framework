@@ -16,7 +16,7 @@ public class TransferScene extends BaseScene {
     private final List<Long> voucherIds;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("transfer_phone", transferPhone);
         object.put("receive_phone", receivePhone);

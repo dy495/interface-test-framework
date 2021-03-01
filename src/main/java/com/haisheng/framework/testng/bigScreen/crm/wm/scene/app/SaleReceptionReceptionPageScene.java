@@ -20,7 +20,7 @@ public class SaleReceptionReceptionPageScene extends BaseScene {
     private final String size = "10";
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("customer_name_phone", customerNamePhone);
         object.put("end_time", endTime);

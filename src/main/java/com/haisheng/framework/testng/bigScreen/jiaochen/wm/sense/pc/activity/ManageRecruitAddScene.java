@@ -36,7 +36,7 @@ public class ManageRecruitAddScene extends BaseScene {
     private final Boolean isNeedApproval;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("type", type);
         object.put("participation_limit_type", participationLimitType);
@@ -70,8 +70,4 @@ public class ManageRecruitAddScene extends BaseScene {
         return "/jiaochen/pc/activity/manage/recruit/add";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
 }

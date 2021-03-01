@@ -14,7 +14,7 @@ public class DetailAfterSaleCustomerScene extends BaseScene {
     private final String afterRecordId;
 
     @Override
-    public JSONObject getJSONObject() {
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("after_record_id", afterRecordId);
         return object;
