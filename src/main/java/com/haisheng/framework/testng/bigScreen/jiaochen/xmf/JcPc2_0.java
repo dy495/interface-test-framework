@@ -581,8 +581,8 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
 
             JSONObject data=jc.GoodsList("1","10");
             int totalAfterCreate=data.getInteger("total");
-            String id=data.getJSONArray("list").getJSONObject(0).getString("id");
-            jc.deleteGoodMethod("1","10",id);
+            Long id=data.getJSONArray("list").getJSONObject(0).getLong("id");
+            jc.deleteGoodMethod(id);
             int totalAfterDelete=jc.GoodsList("1","10").getInteger("total");
 
             Preconditions.checkArgument(totalAfterCreate-total==1,"新建商品，列表+1");

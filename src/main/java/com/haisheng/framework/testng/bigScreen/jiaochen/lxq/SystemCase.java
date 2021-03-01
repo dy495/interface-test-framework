@@ -1831,6 +1831,109 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
     //TODO 创建商品的各种长度
 
+    @Test
+    public void goodAdd() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //新建一个一二三级品类
+            String name = "品类";
+            JSONObject obj = info.newFirstCategory(name+ Integer.toString((int)((Math.random()*9+1)*10000)));
+            String idone = obj.getString("id");
+            JSONObject objtwo = info.newSecondCategory(name+ Integer.toString((int)((Math.random()*9+1)*10000)),idone);
+            String idtwo = objtwo.getString("id");
+            JSONObject objthree = info.newThirdCategory(name+ Integer.toString((int)((Math.random()*9+1)*10000)),idtwo);
+            String idthree = objthree.getString("id");
+
+            //新建规格
+            String spename = "规格"+Integer.toString((int)((Math.random()*9+1)*10000));
+            String speItemName = "规格参数"+Integer.toString((int)((Math.random()*9+1)*10000));
+
+            //新建品牌
+            String brandid = info.newGoodBrand("pp"+System.currentTimeMillis(),"pp说明"+System.currentTimeMillis()).getString("id");
+
+            Long speId = jc.specificationsCreate(spename,Long.parseLong(idone),null,null,true).getLong("id");
+            //新建规格参数
+            JSONObject objItem = new JSONObject();
+            objItem.put("specifications_item",speItemName);
+            JSONArray spearray = new JSONArray();
+            spearray.add(objItem);
+            jc.specificationsEdit(spename,Long.parseLong(idone),spearray,speId,true);
+            Long speItemId = jc.specificationsDetail(speId,1,10).getJSONArray("specifications_list").getJSONObject(0).getLong("specifications_id");
+
+            //新建商品
+
+
+            pcCreateGoods good = new pcCreateGoods();
+            good.first_category = Long.parseLong(idone);
+            good.second_category = Long.parseLong(idtwo);
+            good.third_category = Long.parseLong(idthree);
+            good.goods_brand = Long.parseLong(brandid);
+
+            //新建商品
+            String select_specifications_str =
+                    "[" +
+                            "{" +
+                            "\"specifications_id\":"+ speId+","+
+                            "\"specifications_name\":\""+spename +"\","+
+                            "\"specifications_list\":[" +
+                            "{\"specifications_detail_id\":"+speItemId +","+
+                            "\"specifications_detail_name\":\""+speItemName+"\""+
+                            "}]}]";
+            JSONArray select_specifications = JSONArray.parseArray(select_specifications_str); //所选规格
+            String goods_specifications_list_str = "[" +
+                    "{" +
+                    "\"first_specifications\":"+speItemId+"," +
+                    "\"first_specifications_name\":\""+speItemName+"\"," +
+
+                    "\"head_pic\":\""+info.getLogo()+"\"," +
+                    "\"price\":69.98" +
+                    "}]";
+            JSONArray goods_specifications_list = JSONArray.parseArray(goods_specifications_list_str);
+            good.select_specifications = select_specifications;
+            good.goods_specifications_list = goods_specifications_list;
+            good.checkcode=false;
+            JSONObject objnew = jc.createGoodMethod(good);
+            int code = objnew.getInteger("code");
+            Preconditions.checkArgument(code==1000,"新建商品"+code);
+            Long goodid = objnew.getJSONObject("data").getLong("id");
+
+
+
+
+            //删除商品
+            jc.deleteGoodMethod(goodid);
+            //关闭->删除规格
+            jc.specificationsChgStatus(speId,false);
+            jc.specificationsDel(speId);
+            //删除品类
+            jc.categoryDel(Long.parseLong(idthree),true);
+            jc.categoryDel(Long.parseLong(idtwo),true);
+            jc.categoryDel(Long.parseLong(idone),true);
+
+
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【商品管理】创建商品");
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * 积分中心

@@ -20,7 +20,7 @@ public class jiaoChenInfo {
     DateTimeUtil dt = new DateTimeUtil();
     PublicParm pp = new PublicParm();
     ScenarioUtil jc = ScenarioUtil.getInstance();
-    String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
+    public  String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
     public final String logo = "general_temp/9a215339-d897-4516-a1e6-3dee1f4021f8";//120*120 品牌logo
     public final String logo2 = "general_temp/9c6fbc65-0f1f-4341-9892-1f1052b6aa04";
     public final String stringone = "a";//字符串长度1
@@ -40,11 +40,7 @@ public class jiaoChenInfo {
     //创建品牌，返回品牌id
     public final long getBrandID(int n){
         String name = ""+Integer.toString((int)(Math.random()*10000));
-        jc.addBrand(name,getLogo());
-
-        //删除品牌
-        Long id = jc.brandPage(1,10,"","").getJSONArray("list").getJSONObject(0).getLong("id");
-
+        Long id = jc.addBrand(name,getLogo()).getLong("id");
         return id;
     }
 
@@ -401,17 +397,52 @@ public class jiaoChenInfo {
         obj.put("id",id);
         return obj;
     }
+
     //新建二级品类
-    public JSONObject newSecondCategory(String name){
+    public JSONObject newSecondCategory(String name,String ... firstid){
         JSONObject obj = new JSONObject();
         String logo = jc.pcFileUploadNew(new ImageUtil().getImageBinary(filePath)).getString("pic_path");
-        int code = jc.categoryCreate(false,name,"SECOND_CATEGORY",Long.toString(first_category),logo,null).getInteger("code");
+        int code = 0 ;
+        if (firstid.length==0){
+            code = jc.categoryCreate(false,name,"SECOND_CATEGORY",Long.toString(first_category),logo,null).getInteger("code");
+        }
+        else {
+            code = jc.categoryCreate(false,name,"SECOND_CATEGORY",firstid[0],logo,null).getInteger("code");
+        }
         Long id =jc.categoryPage(1,10,null,null,null,null).getJSONArray("list").getJSONObject(0).getLong("id");
         obj.put("code",code);
         obj.put("id",id);
         return obj;
-
     }
+
+    //新建三级品类
+    public JSONObject newThirdCategory(String name,String ... secid){
+        JSONObject obj = new JSONObject();
+        String logo = jc.pcFileUploadNew(new ImageUtil().getImageBinary(filePath)).getString("pic_path");
+        int code = 0 ;
+        if (secid.length==0){
+            code = jc.categoryCreate(false,name,"THIRD_CATEGORY",Long.toString(second_category),logo,null).getInteger("code");
+        }
+        else {
+            code = jc.categoryCreate(false,name,"THIRD_CATEGORY",secid[0],logo,null).getInteger("code");
+        }
+        Long id =jc.categoryPage(1,10,null,null,null,null).getJSONArray("list").getJSONObject(0).getLong("id");
+        obj.put("code",code);
+        obj.put("id",id);
+        return obj;
+    }
+
+    //新建商品品牌
+    public JSONObject newGoodBrand(String name,String desc){
+        JSONObject obj = new JSONObject();
+        String logo = jc.pcFileUploadNew(new ImageUtil().getImageBinary(filePath)).getString("pic_path");
+        JSONObject obj1 = jc.BrandCreat(false,null,name,desc,logo);
+
+        obj.put("code",obj1.getInteger("code"));
+        obj.put("id",obj1.getJSONObject("data").getLong("id"));
+        return obj;
+    }
+
 
     public String getLogo(){
         String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";

@@ -4237,7 +4237,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :修改规格状态
      * @date :2021/1/20 14:00
      **/
-    public JSONObject specificationsChgStatus(Integer id,  Boolean status) {
+    public JSONObject specificationsChgStatus(Long id,  Boolean status) {
         String url = "/jiaochen/pc/integral-mall/change-specifications-status";
         JSONObject json1=new JSONObject();
         json1.put("id",id);
@@ -4246,10 +4246,23 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     /**
+     * @description :删除规格状态
+     * @date :2021/1/20 14:00
+     **/
+    public JSONObject specificationsDel(Long id) {
+        String url = "/jiaochen/pc/integral-mall/delete-specifications";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+
+        return invokeApi(url,json1);
+    }
+
+
+    /**
      * @description :商品规格详情
      * @date :2021/1/20 14:00
      **/
-    public JSONObject specificationsDetail(Integer id,  Integer page, Integer size) {
+    public JSONObject specificationsDetail(Long id,  Integer page, Integer size) {
         String url = "/jiaochen/pc/integral-mall/specifications-detail";
         JSONObject json1=new JSONObject();
         json1.put("id",id);
@@ -4262,13 +4275,13 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :修改规格
      * @date :2021/1/20 14:00
      **/
-    public JSONObject specificationsEdit(String specifications_name, Integer belongs_category, JSONArray category_list,int id,Boolean chkcode) {
+    public JSONObject specificationsEdit(String specifications_name, Long belongs_category, JSONArray category_list,Long id,Boolean chkcode) {
         String url = "/jiaochen/pc/integral-mall/edit-specifications";
         JSONObject json1=new JSONObject();
         json1.put("id",id);
         json1.put("specifications_name",specifications_name);
         json1.put("belongs_category",belongs_category);
-        json1.put("category_list",category_list);
+        json1.put("specifications_list",category_list);
         return invokeApi(url,json1,chkcode);
     }
 
@@ -4376,11 +4389,10 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2021/1/22 17:07
      **/
 
-    public JSONObject deleteGoodMethod(String page,String size,String id) {
+    public JSONObject deleteGoodMethod(Long id) {
         String url = "/jiaochen/pc/integral-mall/delete-goods";
         JSONObject json1=new JSONObject();
-        json1.put("page",page);
-        json1.put("size",size);
+
         json1.put("id",id);
 
         return invokeApi(url,json1);
