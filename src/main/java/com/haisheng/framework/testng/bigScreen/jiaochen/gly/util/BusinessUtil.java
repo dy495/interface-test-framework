@@ -378,7 +378,6 @@ public class BusinessUtil {
         JSONObject response = visitor.invokeApi(scene1).getJSONObject("recruit_activity_info");
         //获取卡券ID
         Long voucherId = response.getJSONArray("reward_vouchers").getJSONObject(0).getLong("id");
-        System.err.println("-------" + voucherId);
         List<String> picList = new ArrayList<>();
         SupporterUtil supporterUtil = new SupporterUtil(visitor);
         PublicParameter pp = new PublicParameter();
@@ -425,7 +424,7 @@ public class BusinessUtil {
                 .rewardVouchers(registerObject)
                 .voucherValid(voucherValid)
                 .build();
-        String message = visitor.invokeApi(scene).getString("message");
+        String message = visitor.invokeApi(scene,false).getString("message");
         return message;
     }
 
@@ -505,8 +504,8 @@ public class BusinessUtil {
             }
         }
         if (ids.size() == 0) {
-            createRecruitActivityApproval();
-            getActivityWaitingApproval();
+            Long id1=createRecruitActivityApproval();
+            ids.add(id1);
         }
         return ids;
     }
@@ -545,7 +544,7 @@ public class BusinessUtil {
         if (ids.size() == 0) {
             Long id1 = createRecruitActivityApproval();
             getApprovalPassed(id1);
-            getActivityWorking();
+            ids.add(id1);
 
         }
         return ids;
@@ -575,7 +574,7 @@ public class BusinessUtil {
         if (ids.size() == 0) {
             Long id1 = createRecruitActivityApproval();
             getApprovalPassed(id1);
-            getFissionActivityWorking();
+            ids.add(id1);
 
         }
         return ids;
@@ -607,7 +606,7 @@ public class BusinessUtil {
             Long id1 = createRecruitActivityApproval();
             //审批活动
             getApprovalPassed(id1);
-            getRecruitActivityWorking();
+            ids.add(id1);
 
         }
         return ids;
@@ -625,26 +624,31 @@ public class BusinessUtil {
             IScene scene1 = ActivityManageListScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
-                int status = list.getJSONObject(i).getInteger("status");
+                String statusName = list.getJSONObject(i).getString("status_name");
                 int activityType = list.getJSONObject(i).getInteger("activity_type");
-                int waitingAuditNum = list.getJSONObject(i).getInteger("waiting_audit_num");
-                if (status == ActivityStatusEnum.PASSED.getId() && activityType == 2 && waitingAuditNum >= 1) {
-                    Long id = list.getJSONObject(i).getLong("id");
-                    ids.add(id);
-                }
+              if(activityType==2&&statusName.equals("进行中")){
+                  int waitingAuditNum = list.getJSONObject(i).getInteger("waiting_audit_num");
+                  if (waitingAuditNum >= 1) {
+                      Long id = list.getJSONObject(i).getLong("id");
+                      ids.add(id);
+                  }
+              }
             }
         }
         //创建活动并审批
-        if (ids.size() == 0) {
+        if (ids.isEmpty()) {
             //创建活动
             Long id1 = createRecruitActivityApproval();
             //审批活动
             getApprovalPassed(id1);
             //小程序报名
-            activityRegisterApplet(id1, "13373166806", "郭丽雅", 3, "1513814362@qq.com","22","女");
-            getRecruitActivityWorkingApproval();
+            activityRegisterApplet(id1,"13373166806","郭丽雅",2,"1513814362@qq.com","22","女");
+            ids.add(id1);
+            //登录PC
+            jc.pcLogin(pp.phone1, pp.password);
         }
         return ids;
+
     }
 
     /**
@@ -668,10 +672,9 @@ public class BusinessUtil {
         }
         //创建活动并审批不通过
         if (ids.size() == 0) {
-            Long id = createRecruitActivityApproval();
-            getApprovalReject(id);
-            getActivityReject();
-
+            Long id1 = createRecruitActivityApproval();
+            getApprovalReject(id1);
+            ids.add(id1);
         }
         return ids;
     }
@@ -696,11 +699,11 @@ public class BusinessUtil {
             }
         }
 
-        if(!ids.isEmpty()){
-            return ids;
+        if(ids.size() == 0){
+           Long id1= createRecruitActivityApproval();
+           ids.add(id1);
         }
-        createRecruitActivityApproval();
-      return   getActivityWait();
+      return ids;
     }
 
     /**
@@ -729,7 +732,6 @@ public class BusinessUtil {
             getApprovalReject(id);
             //取消活动
             getCancelActivity(id);
-            getActivityCancel();
         }
         return id;
     }
@@ -787,10 +789,10 @@ public class BusinessUtil {
             IScene scene = ManageRegisterPageScene.builder().page(page).size(10).activityId(activityId).build();
             JSONArray list = visitor.invokeApi(scene).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
-                int statusName = list.getJSONObject(i).getInteger("status");
-                if (list.size() > 0 && statusName == ActivityApprovalStatusEnum.PENDING.getId()) {
+                String statusName = list.getJSONObject(i).getString("status_name");
+                if (statusName.equals("待审批")) {
                     //报名列表ID
-                    Long ids = response.getJSONArray("list").getJSONObject(i).getLong("id");
+                    Long ids = list.getJSONObject(i).getLong("id");
                     idArray.add(ids);
                 }
             }
@@ -894,9 +896,9 @@ public class BusinessUtil {
     /**
      * 活动管理-活动报名审批【审核不通过】
      */
-    public String getRegisterApprovalReject(Long... id) {
+    public String getRegisterApprovalReject(Long activityId,Long... id) {
         List<Long> ids = Arrays.asList(id);
-        IScene scene = ManageRegisterApprovalScene.builder().ids(ids).status(201).build();
+        IScene scene = ManageRegisterApprovalScene.builder().activityId(activityId).ids(ids).status(201).build();
         String message = visitor.invokeApi(scene, false).getString("message");
         return message;
     }
