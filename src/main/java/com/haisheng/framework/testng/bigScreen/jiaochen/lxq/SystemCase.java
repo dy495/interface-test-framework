@@ -1118,99 +1118,10 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //@Test
-    public void categoryOperate() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONArray list = jc.categoryPage(1,100,null,null,null,null).getJSONArray("list");
-            for (int i=0;i <list.size();i++){
-                JSONObject obj = list.getJSONObject(i);
-                int id = obj.getInteger("id");
-                int num = obj.getInteger("num");
-                if (num > 0 ){
-                    Boolean is_edit = obj.getBoolean("is_edit");
-                    Boolean is_delete = obj.getBoolean("is_delete");
-                    Preconditions.checkArgument(is_edit==false,"品类"+id+"应不可编辑");
-                    Preconditions.checkArgument(is_delete==false,"品类"+id+"应不可删除");
-                }
-                Boolean status = obj.getBoolean("category_status");
-
-            }
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("PC【商品品类】列表中不同状态可操作的按钮校验");
-        }
-    }
 
 
-    //@Test     --------没改
-    public void categoryFalse1() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            jc.categoryChgStatus(info.first_category,false);
-            JSONArray list = jc.categoryPage(1,50,null,info.first_category,null,null).getJSONArray("list");
-            for (int i=0;i <list.size();i++){
-                JSONObject obj = list.getJSONObject(i);
-                int id = obj.getInteger("id");
-                Boolean status = obj.getBoolean("category_status");
-                Preconditions.checkArgument(status==false,"停用后品类"+id+"的状态为"+status);
-            }
-
-            jc.categoryChgStatus(info.first_category,true);
-            JSONArray list2 = jc.categoryPage(1,50,null,info.first_category,null,null).getJSONArray("list");
-            for (int i=0;i <list2.size();i++){
-                JSONObject obj = list2.getJSONObject(i);
-                int id = obj.getInteger("id");
-                Boolean status = obj.getBoolean("category_status");
-                Preconditions.checkArgument(status==false,"启用后品类"+id+"的状态为"+status);
-            }
 
 
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("PC【商品品类】停用一级品类，期待所属的二级三级全部停用/品类下拉列表不展示该品类；再次启用，下属品类仍为停用状态");
-        }
-    }
-
-
-    //@Test--------没改
-    public void categoryFalse2() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            jc.categoryChgStatus(info.second_category,false);
-            JSONArray list = jc.categoryPage(1,50,null,info.first_category,info.second_category,null).getJSONArray("list");
-            for (int i=0;i <list.size();i++){
-                JSONObject obj = list.getJSONObject(i);
-                int id = obj.getInteger("id");
-                Boolean status = obj.getBoolean("category_status");
-                Preconditions.checkArgument(status==false,"停用后品类"+id+"的状态为"+status);
-            }
-
-            jc.categoryChgStatus(info.second_category,true);
-
-            JSONArray list2 = jc.categoryPage(1,50,null,info.first_category,info.second_category,null).getJSONArray("list");
-            for (int i=0;i <list2.size();i++){
-                JSONObject obj = list2.getJSONObject(i);
-                int id = obj.getInteger("id");
-                Boolean status = obj.getBoolean("category_status");
-                Preconditions.checkArgument(status==false,"启用后品类"+id+"的状态为"+status);
-            }
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("PC【商品品类】停用二级品类，期待所属的三级全部停用/品类下拉列表不展示该品类；再次启用二级品类，下属品类状态仍为停用");
-        }
-    }
 
     //2021-01-25
     @Test(dataProvider = "NAME")
@@ -1939,9 +1850,6 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
      * 积分中心
      */
 
-    //积分兑换
-
-
     @Test(dataProvider = "exchangeType")
     public void exchangeFilter1(String type) {
         logger.logCaseStart(caseResult.getCaseName());
@@ -2013,166 +1921,6 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             saveData("PC【积分兑换】根据商品名称筛选");
         }
     }
-
-    //2021-01-28 todo 积分兑换列表操作
-
-    //@Test(dataProvider = "exchangeStatus")
-    public void exchangeTop(String status) {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            int id = info.getStatusGoodId(status);
-            if (id!=-1){
-                int code = jc.exchangeGoodTop(id,false).getInteger("code");
-                Preconditions.checkArgument(code==1000,"置顶"+status+"状态码"+code);
-                //列表置顶
-                int listID = jc.exchangePage(1,1,null,null,null).getJSONArray("list").getJSONObject(0).getInteger("id");
-                Preconditions.checkArgument(listID==id,status+"置顶后未再列表首位");
-                //状态为进行中的话 小程序要置顶
-                if (status.equals("WORKING")){
-                    Preconditions.checkArgument(info.showInApplet(id,true) == true,"商品"+id+"小程序未展示/未置顶");
-                }
-            }
-            else {
-                Preconditions.checkArgument(1==0,"无"+status+"商品，case跳过");
-            }
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("PC【积分兑换】置顶各状态的积分兑换商品");
-        }
-    }
-
-    //@Test
-    public void exchangeOpenCLOSE() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            int id = info.getStatusGoodId("CLOSE");
-            if (id!=-1){
-                //开启
-                int code = jc.exchangeGoodChgStatus(id,true,false).getInteger("code");
-                Preconditions.checkArgument(code==1000,"状态码期待1000，实际"+code);
-                //列表中状态=进行中，为了方便的获取状态 先置顶
-                jc.exchangeGoodTop(id,true);
-                String status = jc.exchangePage(1,1,null,null,null).getJSONArray("list").getJSONObject(0).getString("status");
-                Preconditions.checkArgument(status.equals("WORKING"),"开启后状态为"+status);
-                //小程序-人气推荐展示此商品
-                Preconditions.checkArgument(info.showInApplet(id,false)==true,"小程序未展示此积分兑换品");
-
-            }
-            else {
-                Preconditions.checkArgument(1==0,"无已关闭商品，case跳过");
-            }
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("PC【积分兑换】开启 状态为已关闭的积分兑换商品");
-        }
-    }
-
-    //@Test(dataProvider = "exchangeStatus2")
-    public void exchangeOpenNOTShow(String status1) {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            int id = info.getStatusGoodId(status1);
-            if (id!=-1){
-                //开启
-                int code = jc.exchangeGoodChgStatus(id,true,false).getInteger("code");
-                Preconditions.checkArgument(code==1000,"状态码期待1000，实际"+code);
-                //列表中状态=原状态，为了方便的获取状态 先置顶
-                jc.exchangeGoodTop(id,true);
-                String status = jc.exchangePage(1,1,null,null,null).getJSONArray("list").getJSONObject(0).getString("status");
-                Preconditions.checkArgument(status.equals(status1),"开启后状态为"+status);
-                //小程序-人气推荐不展示此商品
-                Preconditions.checkArgument(info.showInApplet(id,false)==false,"小程序展示了此积分兑换品");
-
-            }
-            else {
-                Preconditions.checkArgument(1==0,"无"+status1+"商品，case跳过");
-            }
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("PC【积分兑换】开启 状态为"+status1+"的积分兑换商品");
-        }
-    }
-    @DataProvider(name = "exchangeStatus2")
-    public Object[] exchangeStatus2(){
-        return new String[]{
-                "NOT_START",//未开始
-                "EXPIRED", // 已过期
-
-        };
-    }
-
-    //@Test(dataProvider = "exchangeStatus2")
-    public void exchangeCloseNOTShow(String status1) {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            int id = info.getStatusGoodId(status1);
-            if (id!=-1){
-                //关闭
-                int code = jc.exchangeGoodChgStatus(id,false,false).getInteger("code");
-                Preconditions.checkArgument(code==1000,"状态码期待1000，实际"+code);
-                //列表中状态=原状态，为了方便的获取状态 先置顶
-                jc.exchangeGoodTop(id,true);
-                String status = jc.exchangePage(1,1,null,null,null).getJSONArray("list").getJSONObject(0).getString("status");
-                Preconditions.checkArgument(status.equals(status1),"关闭后状态为"+status);
-                //小程序-人气推荐不展示此商品
-                Preconditions.checkArgument(info.showInApplet(id,false)==false,"小程序展示了此积分兑换品");
-
-            }
-            else {
-                Preconditions.checkArgument(1==0,"无"+status1+"商品，case跳过");
-            }
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("PC【积分兑换】关闭 状态为"+status1+"的积分兑换商品");
-        }
-    }
-
-    //@Test
-    public void exchangeCloseWorking() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            int id = info.getStatusGoodId("WORKING");
-            if (id!=-1){
-                //关闭
-                int code = jc.exchangeGoodChgStatus(id,false,false).getInteger("code");
-                Preconditions.checkArgument(code==1000,"状态码期待1000，实际"+code);
-                //列表中状态=进行中，为了方便的获取状态 先置顶
-                jc.exchangeGoodTop(id,true);
-                String status = jc.exchangePage(1,1,null,null,null).getJSONArray("list").getJSONObject(0).getString("status");
-                Preconditions.checkArgument(status.equals("CLOSE"),"关闭后状态为"+status);
-                //小程序-人气推荐不展示此商品
-                Preconditions.checkArgument(info.showInApplet(id,false)==false,"小程序展示了此积分兑换品");
-
-            }
-            else {
-                Preconditions.checkArgument(1==0,"无进行中商品，case跳过");
-            }
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("PC【积分兑换】关闭 状态为进行中的积分兑换商品");
-        }
-    }
-
 
 
     @Test
@@ -2302,12 +2050,6 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-
-
-    //积分订单
-
-    //todo 积分订单筛选栏 接口状态要改
-    //todo 积分订单确认发货
     //2021-02-02
     @Test
     public void exchangeOrder() {
@@ -2516,6 +2258,58 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
 
 
+    @Test(dataProvider = "export")
+    public void ExportAll(String url,String mess) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //导出
+            jc.recExport(url);
+            Thread.sleep(800);
+            String status = jc.exportListFilterManage("-1","1","1",null,null).getJSONArray("list").getJSONObject(0).getString("status_name");
+
+            Preconditions.checkArgument(status.equals("导出完成"),mess+" "+status);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("导出");
+        }
+    }
+    @DataProvider(name = "export")
+    public Object[] export(){
+        return new String[][]{ // 单弄 维修记录、保养配置、优惠券变更记录、作废记录、增发记录、领取记录、核销记录、活动报名记录、车系列表、车型列表
+                {"/jiaochen/pc/reception-manage/record/export","接待管理"},
+                {"/jiaochen/pc/customer-manage/pre-sale-customer/page/export","销售客户"},
+                {"/jiaochen/pc/customer-manage/after-sale-customer/page/export","售后客户"},
+                {"/jiaochen/pc/customer-manage/wechat-customer/page/export","小程序客户"},
+                {"/jiaochen/pc/appointment-manage/record/export","预约记录"},
+                {"/jiaochen/pc/manage/evaluate/export","评价列表"},
+                {"/jiaochen/pc/voucher-manage/voucher-form/export","优惠券管理"},
+                {"/jiaochen/pc/voucher-manage/verification-people/export","核销人员"},
+                {"/jiaochen/pc/package-manage/buy-package-record/export","套餐购买记录"},
+                {"/jiaochen/pc/operation/article/export","文章列表"},
+                {"/jiaochen/pc/activity/manage/export","活动列表"},
+                {"/jiaochen/pc/voucher/apply/export","优惠券申请"},
+                {"/jiaochen/pc/shop/export","门店管理"},
+                {"/jiaochen/pc/brand/export","品牌管理"},
+                {"/jiaochen/pc/role/export","角色管理"},
+                {"/jiaochen/pc/staff/export","员工管理"},
+                {"/jiaochen/pc/record/import-record/export","导入记录"},
+                {"/jiaochen/pc/record/export-record/export","导出记录"},
+                {"/jiaochen/pc/record/push-msg/export","消息记录"},
+                {"/jiaochen/pc/manage/rescue/export","在线救援"},
+                {"/jiaochen/pc/vip-marketing/wash-car-manager/export","洗车管理"},
+                {"/jiaochen/pc/vip-marketing/wash-car-manager/adjust-number/export","调整次数"},
+                {"/jiaochen/pc/vip-marketing/sign_in_config/change-record/export","签到积分变更记录"},
+                {"/jiaochen/pc/integral-center/exchange/export","积分兑换"},
+                {"/jiaochen/pc/integral-center/exchange-detail/export","积分明细"},
+                {"/jiaochen/pc/integral-center/exchange-order/export","积分订单"},
+                {"/jiaochen/pc/integral-mall/goods-manage/export","商品管理"},
+
+        };
+    }
+
 
 
 
@@ -2581,4 +2375,9 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             saveData("通用枚举");
         }
     }
+
+
+
+
+
 }

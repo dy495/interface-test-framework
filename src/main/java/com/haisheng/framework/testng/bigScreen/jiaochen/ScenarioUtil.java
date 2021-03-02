@@ -5406,6 +5406,22 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
 
+    /**
+     * 导出列表
+     */
+
+    /**
+     * @description :PC导出
+     * @date :2021/3/2
+     **/
+    public JSONObject recExport(String url) {
+        JSONObject json=new JSONObject();
+        json.put("page",1);
+        json.put("size",10);
+        json.put("export_type","CURRENT_PAGE");
+        return invokeApi(url,json);
+    }
+
 
 
 
