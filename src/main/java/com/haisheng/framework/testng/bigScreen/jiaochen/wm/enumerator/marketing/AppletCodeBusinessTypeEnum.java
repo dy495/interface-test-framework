@@ -128,7 +128,6 @@ public enum AppletCodeBusinessTypeEnum {
                 .forEach((k, v) -> Preconditions.checkArgument(v == 1, "类型key{" + k + "}重复"));
     }
 
-
     public static AppletCodeBusinessTypeEnum findByKey(String key) {
         Optional<AppletCodeBusinessTypeEnum> any = Arrays.stream(values()).filter(t -> t.getKey().equals(key)).findAny();
         Preconditions.checkArgument(any.isPresent(), "小程序码业务类型不存在");
@@ -137,5 +136,13 @@ public enum AppletCodeBusinessTypeEnum {
 
     public static String findKeyByTypeName(String typeName) {
         return Arrays.stream(AppletCodeBusinessTypeEnum.values()).filter(e -> e.getTypeName().equals(typeName)).map(AppletCodeBusinessTypeEnum::getKey).findFirst().orElse(null);
+    }
+
+    public static boolean isContainTypeName(String str) {
+        return Arrays.stream(AppletCodeBusinessTypeEnum.values()).anyMatch(e -> str.contains(e.typeName));
+    }
+
+    public static AppletCodeBusinessTypeEnum findEnumByContainTypeName(String str) {
+        return Arrays.stream(AppletCodeBusinessTypeEnum.values()).filter(e -> str.contains(e.typeName)).findFirst().orElse(null);
     }
 }

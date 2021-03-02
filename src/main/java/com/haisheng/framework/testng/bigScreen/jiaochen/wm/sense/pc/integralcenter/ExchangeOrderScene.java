@@ -9,6 +9,7 @@ import lombok.Builder;
  */
 @Builder
 public class ExchangeOrderScene extends BaseScene {
+    private final String orderStatus;
     @Builder.Default
     private Integer page = 1;
     @Builder.Default
@@ -17,6 +18,7 @@ public class ExchangeOrderScene extends BaseScene {
     @Override
     public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
+        object.put("order_status", orderStatus);
         object.put("page", page);
         object.put("size", size);
         return object;

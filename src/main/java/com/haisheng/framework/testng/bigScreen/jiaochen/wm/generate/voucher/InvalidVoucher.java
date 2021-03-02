@@ -6,8 +6,8 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.InvalidVoucherScene;
 
 /**
- *
  * 作废状态
+ *
  * @author wangmin
  * @date 2021/1/22 15:49
  */

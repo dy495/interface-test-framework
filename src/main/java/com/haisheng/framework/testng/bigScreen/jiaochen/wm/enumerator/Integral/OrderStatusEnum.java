@@ -1,9 +1,10 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral;
 
 /**
+ * 订单状态枚举
+ *
  * @author wangmin
  * @date 2020/12/17 11:05 AM
- * @desc 订单状态枚举
  */
 public enum OrderStatusEnum {
     /**
@@ -21,7 +22,7 @@ public enum OrderStatusEnum {
     /**
      * 已发货
      */
-    SEND("已发货"),
+    SEND("待收货"),
     /**
      * 已完成
      */

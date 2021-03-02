@@ -7,9 +7,10 @@ import java.util.Arrays;
 import java.util.Optional;
 
 /**
+ * 商品类型
+ *
  * @author wangmin
  * @date 2020/12/15 4:38 PM
- * @desc 商品类型
  */
 public enum CommodityTypeEnum {
     /**

@@ -9,7 +9,6 @@ import java.util.Optional;
 /**
  * @author wangmin
  * @date 2021/1/6 3:17 PM
- * @desc
  */
 public enum ChangeStockTypeEnum {
     /**

@@ -32,6 +32,11 @@ public class ExchangeDetailed implements Serializable {
     @JSONField(name = "exchange_type")
     private String exchangeType;
 
+    /**
+     * 变更类型
+     */
+    @JSONField(name = "exchange_type_name")
+    private String exchangeTypeName;
 
     /**
      * 电话号
@@ -43,5 +48,11 @@ public class ExchangeDetailed implements Serializable {
      * 明细
      */
     @JSONField(name = "stock_detail")
-    private Long stockDetail;
+    private Integer stockDetail;
+
+    /**
+     * 订单号
+     */
+    @JSONField(name = "order_code")
+    private String orderCode;
 }

@@ -1,9 +1,10 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral;
 
 /**
+ * 排序方式枚举
+ *
  * @author wangmin
  * @date 2020/12/15 3:26 PM
- * @desc 排序方式枚举
  */
 public enum SortTypeEnum {
     /**

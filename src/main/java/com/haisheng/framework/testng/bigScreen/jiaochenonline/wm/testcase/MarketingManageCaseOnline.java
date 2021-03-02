@@ -2279,7 +2279,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐表单--购买套餐，主体详情异常");
+            saveData("套餐表单--购买套餐，选择套餐异常");
         }
     }
 

@@ -5,11 +5,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 积分兑换
+ * 积分规则
  */
 @Builder
-public class ExchangePageScene extends BaseScene {
-    private final String status;
+public class IntegralExchangeRulesScene extends BaseScene {
     @Builder.Default
     private Integer page = 1;
     @Builder.Default
@@ -18,7 +17,6 @@ public class ExchangePageScene extends BaseScene {
     @Override
     public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
-        object.put("status", status);
         object.put("page", page);
         object.put("size", size);
         return object;
@@ -26,7 +24,7 @@ public class ExchangePageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/integral-center/exchange-page";
+        return "/jiaochen/pc/integral-center/integral-exchange-rules";
     }
 
     @Override

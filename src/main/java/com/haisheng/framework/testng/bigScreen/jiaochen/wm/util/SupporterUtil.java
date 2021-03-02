@@ -10,17 +10,16 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppAppointme
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppFollowUpPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppReceptionPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppReceptionReceptorList;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletAppointmentTimeList;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletIntegralRecord;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletVoucher;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletVoucherInfo;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumVP;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.CommodityTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.RegisterInfoEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.appointment.AppointmentTypeEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.commodity.CommodityStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.app.FollowUpPageScene;
@@ -28,12 +27,16 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.app.tack.AppApp
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.app.tack.AppReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.app.tack.AppReceptionReceptorListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.Integralmall.GoodsManagePageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.FissionVoucherAddScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.ManageApprovalScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.ManageRecruitAddScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.appointmentmanager.AppointmentPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.appointmentmanager.TimeTableListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpload;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.CommoditySpecificationsListScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.CreateExchangeGoodsScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.ExchangePageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.loginuser.ShopListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.manager.EvaluatePageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.GroupTotalScene;
@@ -44,7 +47,6 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionman
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.ReceptionPurchaseFixedPackageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.ReceptionPurchaseTemporaryPackageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.ReceptionVoucherListScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.staff.StaffPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.userange.Detail;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.userange.SubjectList;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPageScene;
@@ -487,108 +489,6 @@ public class SupporterUtil extends BaseUtil {
         IScene scene = SendRecordScene.builder().voucherId(voucherId).build();
         return visitor.invokeApi(scene).getJSONArray("list").getJSONObject(0).getString("voucher_code");
     }
-
-//    /**
-//     * 获取套餐包含卡券信息集合
-//     *
-//     * @return 卡券信息集合
-//     */
-//    public JSONArray getVoucherArray() {
-//        JSONArray array = new JSONArray();
-//        JSONObject object = new JSONObject();
-//        IScene scene = VoucherListScene.builder().build();
-//        JSONArray list = visitor.invokeApi(scene).getJSONArray("list");
-//        if (list.isEmpty()) {
-//            String voucherName = createVoucher(1, VoucherTypeEnum.CUSTOM);
-//            applyVoucher(voucherName, "1");
-//        }
-//        Long id = Objects.requireNonNull(visitor.invokeApi(scene).getJSONArray("list").stream().map(e -> (JSONObject) e).findFirst().orElse(null)).getLong("id");
-//        object.put("voucher_id", id);
-//        object.put("voucher_count", 10);
-//        array.add(object);
-//        return array;
-//    }
-//
-//    public JSONArray
-
-//    /**
-//     * 获取卡券信息集合
-//     *
-//     * @param count 卡券种类数
-//     * @return 卡券信息集合
-//     */
-//    public JSONArray getVoucherArray(int count) {
-//        JSONArray voucherList = new JSONArray();
-//        IScene scene = VoucherListScene.builder().build();
-//        JSONArray array = visitor.invokeApi(scene).getJSONArray("list");
-//        if (count > array.size()) {
-//            throw new DataException("count 不可大于" + array.size());
-//        }
-//        for (int i = 0; i < count; i++) {
-//            JSONObject object = array.getJSONObject(i);
-//            object.put("voucher_count", 1);
-//            voucherList.add(object);
-//        }
-//        return voucherList;
-//    }
-
-//    /**
-//     * 获取卡券信息集合
-//     *
-//     * @param voucherName  卡券名
-//     * @param voucherCount 卡券数量
-//     * @return 卡券信息集合
-//     */
-//    public JSONArray getVoucherInfo(String voucherName, int voucherCount) {
-//        JSONArray voucherList = new JSONArray();
-//        IScene scene = VoucherPageScene.builder().voucherName(voucherName).size(SIZE).build();
-//        JSONArray array = visitor.invokeApi(scene).getJSONArray("list");
-//        JSONObject jsonObject = array.stream().map(e -> (JSONObject) e).filter(e -> e.getString("voucher_name").equals(voucherName)).collect(Collectors.toList()).get(0);
-//        jsonObject.put("voucher_count", voucherCount);
-//        voucherList.add(jsonObject);
-//        return voucherList;
-//    }
-
-//    /**
-//     * 获取一个卡券信息集合
-//     *
-//     * @param voucherName 卡券名称
-//     * @return 卡券信息列表
-//     */
-//    public JSONArray getOneVoucherInfo(String voucherName) throws Exception {
-//        JSONArray list = new JSONArray();
-//        VoucherPageScene.VoucherPageSceneBuilder builder = VoucherPageScene.builder().voucherName(voucherName);
-//        int total = visitor.invokeApi(builder.build()).getInteger("total");
-//        int s = CommonUtil.getTurningPage(total, SIZE);
-//        for (int i = 1; i < s; i++) {
-//            JSONArray array = visitor.invokeApi(builder.page(i).size(SIZE).build()).getJSONArray("list");
-//            list.addAll(array.stream().map(e -> (JSONObject) e).filter(e -> e.getString("voucher_name").equals(voucherName)).collect(Collectors.toList()));
-//        }
-//        if (list.size() == 0) {
-//            throw new Exception("无" + voucherName);
-//        }
-//        list.getJSONObject(0).put("voucher_count", 1);
-//        return list;
-//    }
-//
-//    /**
-//     * 获取可修改的套餐id
-//     *
-//     * @return 套餐id
-//     */
-//    public Long getModifyPackageId() {
-//        List<Long> list = new ArrayList<>();
-//        PackageFormPage.PackageFormPageBuilder builder = PackageFormPage.builder();
-//        int total = jc.invokeApi(builder.build()).getInteger("total");
-//        int s = CommonUtil.getTurningPage(total, size);
-//        for (int i = 1; i < s; i++) {
-//            JSONArray array = jc.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
-//            list.addAll(array.stream().map(e -> (JSONObject) e).filter(e -> !EnumVP.isContains(e.getString("package_name")))
-//                    .map(e -> e.getLong("package_id")).collect(Collectors.toList()));
-//        }
-//        return list.get(0);
-//    }
-//
 
     /**
      * 获取车牌号
@@ -1114,28 +1014,6 @@ public class SupporterUtil extends BaseUtil {
     }
 
     /**
-     * 获取员工电话
-     *
-     * @return 电话号
-     */
-    public String getStaffPhone() {
-        IScene staffPageScene = StaffPageScene.builder().build();
-        List<JSONObject> staffPages = collectBean(staffPageScene, JSONObject.class);
-        return staffPages.stream().filter(e -> visitor.invokeApi(VerificationPeopleScene.builder().verificationPhone(e.getString("phone")).build()).getInteger("total") == 0).map(e -> e.getString("phone")).findFirst().orElse(null);
-    }
-
-    /**
-     * 获取员工信息
-     *
-     * @return 员工信息
-     */
-    public StaffPage getStaffPage(String staffId) {
-        IScene staffPageScene = StaffPageScene.builder().build();
-        List<StaffPage> staffPageList = collectBean(staffPageScene, StaffPage.class);
-        return staffPageList.stream().filter(e -> e.getUid().equals(staffId)).findFirst().orElse(null);
-    }
-
-    /**
      * 获取核销码
      *
      * @param verificationIdentity 核销员身份
@@ -1194,8 +1072,6 @@ public class SupporterUtil extends BaseUtil {
     }
 
     //-------------------------------------------------小程序----------------------------------------------------------
-
-    //-----------------------------------------------------预约------------------------------------------------------
 
     /**
      * 小程序预约
@@ -1310,56 +1186,6 @@ public class SupporterUtil extends BaseUtil {
         JSONArray list = visitor.invokeApi(appletPackageDetailScene).getJSONArray("list");
         return list.stream().map(e -> (JSONObject) e).filter(e -> e.getString("voucher_code").equals(voucherCode)).map(e -> JSONObject.toJavaObject(e, AppletVoucherInfo.class)).findFirst().orElse(null);
     }
-//
-//    /**
-//     * 获取小程序卡券名称
-//     *
-//     * @return 卡券编号
-//     */
-//    public String getAppletVoucherName(Long voucherId) {
-//        List<String> voucherList = new ArrayList<>();
-//        Integer id = null;
-//        Integer status = null;
-//        JSONArray list;
-//        do {
-//            VoucherList.VoucherListBuilder builder = VoucherList.builder().type("GENERAL").size(size).id(id).status(status);
-//            JSONObject response = jc.invokeApi(builder.build());
-//            JSONObject lastValue = response.getJSONObject("last_value");
-//            id = lastValue.getInteger("id");
-//            status = lastValue.getInteger("status");
-//            list = response.getJSONArray("list");
-//            voucherList.addAll(list.stream().map(e -> (JSONObject) e).filter(e -> e.getLong("id").equals(voucherId))
-//                    .map(e -> e.getString("title")).collect(Collectors.toList()));
-//            logger.info("id:{},status:{}", id, status);
-//        } while (list.size() == size);
-//        return voucherList.get(0);
-//    }
-//
-//    /**
-//     * 获取小程序卡券集合
-//     *
-//     * @param type 类型：已使用/已过期/快过期
-//     * @return 卡券id集合
-//     */
-//    public List<Long> getAppletVoucherList(String type) {
-//        List<Long> voucherList = new ArrayList<>();
-//        Integer id = null;
-//        Integer status = null;
-//        JSONArray list;
-//        do {
-//            VoucherList.VoucherListBuilder builder = VoucherList.builder().type("GENERAL").size(20).id(id).status(status);
-//            JSONObject response = jc.invokeApi(builder.build());
-//            JSONObject lastValue = response.getJSONObject("last_value");
-//            id = lastValue.getInteger("id");
-//            status = lastValue.getInteger("status");
-//            list = response.getJSONArray("list");
-//            voucherList.addAll(list.stream().map(e -> (JSONObject) e).filter(e -> e.getString("status_name").equals(type))
-//                    .map(e -> e.getLong("id")).collect(Collectors.toList()));
-//            logger.info("id:{},status:{}", id, status);
-//        } while (list.size() == 20);
-//        return voucherList;
-//    }
-//
 
     /**
      * 获取小程序卡券状态的信息
@@ -1510,6 +1336,25 @@ public class SupporterUtil extends BaseUtil {
     }
 
     /**
+     * 获取小程序积分明细数量
+     *
+     * @return 积分明细数量
+     */
+    public int getAppletIntegralRecordNum() {
+        int listSize = 0;
+        Integer lastValue = null;
+        JSONArray array;
+        do {
+            IScene scene = AppletIntegralRecordScene.builder().lastValue(lastValue).size(20).type("ALL").endTime(null).build();
+            JSONObject response = visitor.invokeApi(scene);
+            lastValue = response.getInteger("last_value");
+            array = response.getJSONArray("list");
+            listSize += array.size();
+        } while (array.size() == 20);
+        return listSize;
+    }
+
+    /**
      * 获取小程序积分明细
      *
      * @return 积分明细
@@ -1517,17 +1362,53 @@ public class SupporterUtil extends BaseUtil {
     public List<AppletIntegralRecord> getAppletIntegralRecordList() {
         List<AppletIntegralRecord> list = new ArrayList<>();
         Integer lastValue = null;
-        JSONArray jsonArray;
+        JSONArray array;
         do {
             IScene scene = AppletIntegralRecordScene.builder().lastValue(lastValue).size(20).type("ALL").endTime(null).build();
             JSONObject response = visitor.invokeApi(scene);
             lastValue = response.getInteger("last_value");
-            jsonArray = response.getJSONArray("list");
-            list.addAll(jsonArray.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppletIntegralRecord.class)).collect(Collectors.toList()));
-        } while (jsonArray.size() == 20);
+            array = response.getJSONArray("list");
+            list.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppletIntegralRecord.class)).collect(Collectors.toList()));
+        } while (array.size() == 20);
         return list;
-
     }
+
+    /**
+     * 获取小程序兑换记录数量
+     *
+     * @return 兑换数量
+     */
+    public int getAppletExchangeRecordNum() {
+        int listSize = 0;
+        Integer lastValue = null;
+        JSONArray array;
+        do {
+            JSONObject response = AppletExchangeRecordScene.builder().lastValue(lastValue).size(20).status(null).build().execute(visitor, true);
+            lastValue = response.getInteger("last_value");
+            array = response.getJSONArray("list");
+            listSize += array.size();
+        } while (array.size() == 20);
+        return listSize;
+    }
+
+    /**
+     * 获取小程序兑换记录信息
+     *
+     * @return 兑换信息
+     */
+    public List<AppletExchangeRecord> getAppletExchangeRecordList() {
+        List<AppletExchangeRecord> appletExchangeRecordList = new ArrayList<>();
+        Integer lastValue = null;
+        JSONArray array;
+        do {
+            JSONObject response = AppletExchangeRecordScene.builder().lastValue(lastValue).size(20).status(null).build().execute(visitor, true);
+            lastValue = response.getInteger("last_value");
+            array = response.getJSONArray("list");
+            appletExchangeRecordList.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppletExchangeRecord.class)).collect(Collectors.toList()));
+        } while (array.size() == 20);
+        return appletExchangeRecordList;
+    }
+
 //
 //    /**
 //     * 小程序我的报名列表
@@ -1783,6 +1664,40 @@ public class SupporterUtil extends BaseUtil {
         IScene receptorListScene = AppReceptionReceptorListScene.builder().shopId(getShopId()).build();
         JSONArray jsonArray = visitor.invokeApi(receptorListScene).getJSONArray("list");
         return jsonArray.stream().map(e -> (JSONObject) e).filter(e -> e.getString("name").equals(account.getName())).map(e -> JSONObject.toJavaObject(e, AppReceptionReceptorList.class)).findFirst().orElse(null);
+    }
+
+
+    //-------------------------------------------------------积分中心---------------------------------------------------
+
+    public ExchangePage getExchangePage(Long id) {
+        IScene exchangePageScene = ExchangePageScene.builder().build();
+        return collectBean(exchangePageScene, ExchangePage.class).stream().filter(e -> e.getId().equals(id)).findFirst().orElse(null);
+    }
+
+    /**
+     * 创建实物积分兑换
+     *
+     * @return 积分兑换id
+     */
+    public ExchangePage CreateExchangeGoods() {
+        String exchangeStartTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
+        String exchangeEndTime = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 30), "yyyy-MM-dd HH:mm:ss");
+        JSONArray specificationList = new JSONArray();
+        JSONObject response = GoodsManagePageScene.builder().goodsStatus(CommodityStatusEnum.UP.name()).build().execute(visitor, true).getJSONArray("list").getJSONObject(0);
+        long goodsId = response.getLong("id");
+        JSONArray specificationDetailList = CommoditySpecificationsListScene.builder().id(goodsId).build().execute(visitor, true).getJSONArray("specification_detail_list");
+        specificationDetailList.forEach(e -> {
+            JSONObject specificationDetail = (JSONObject) e;
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("id", specificationDetail.getInteger("id"));
+            jsonObject.put("stock", 1);
+            specificationList.add(jsonObject);
+        });
+        //创建积分兑换
+        CreateExchangeGoodsScene.builder().exchangeGoodsType(CommodityTypeEnum.REAL.name()).goodsId(goodsId).exchangePrice("1")
+                .isLimit(true).exchangePeopleNum("1").specificationList(specificationList).exchangeStartTime(exchangeStartTime)
+                .exchangeEndTime(exchangeEndTime).build().execute(visitor, true);
+        return collectBean(ExchangePageScene.builder().build(), ExchangePage.class).get(0);
     }
 
     //-------------------------------------------------------活动---------------------------------------------------

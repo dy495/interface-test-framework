@@ -22,4 +22,11 @@ public class AppletIntegralRecord implements Serializable {
      */
     @JSONField(name = "change_type")
     private String changeType;
+
+
+    /**
+     * 详情
+     */
+    @JSONField(name = "name")
+    private String name;
 }
