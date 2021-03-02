@@ -526,6 +526,14 @@ public class ScenarioUtil extends TestCaseCommon {
         object.put("size", size);
         return invokeApi(url, object);
     }
+    //小程序我的卡券
+    public  JSONObject appletVoucherListNew(JSONObject lastValue, Integer size) {
+        String url = "/jiaochen/applet/granted/voucher/list";
+        JSONObject object = new JSONObject();
+        object.put("last_value", lastValue);
+        object.put("size", size);
+        return invokeApi(url, object);
+    }
 
     //小程序我的套餐
     public JSONObject appletpackageList(JSONObject lastValue, String type, Integer size) {

@@ -2,10 +2,10 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.gly.util;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
 
 public class PublicParameter {
-    private Visitor visitor;
-    BusinessUtil businessUtil =new BusinessUtil(visitor);
+
     //登录账号、密码
     public String phone="15711300001";
+    public String phone1="13114785236";
     public String password="000000";
     //固定的卡券套餐ID
     public Long packageId=266L;
@@ -16,9 +16,9 @@ public class PublicParameter {
     //活动规则
     public String EditRule="编辑后的活动规则";
     //招募活动名称
-    public String RecruitName="招募活动"+businessUtil.randomNumber() ;
+    public String RecruitName="招募活动"+(int) (Math.random() * 10000);
     //裂变活动名称
-    public String fissionVoucherName="裂变活动"+businessUtil.randomNumber();
+    public String fissionVoucherName="裂变活动"+(int) (Math.random() * 10000);
     //活动地址
     public String address="北京海淀中关村SOHO-10-16";
     //活动的领取次数限制异常情况
