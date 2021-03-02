@@ -42,7 +42,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     jiaoChenInfo info = new  jiaoChenInfo();
     PublicParm pp = new PublicParm();
     String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
-
+    CommonConfig commonConfig = new CommonConfig();
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
      *
@@ -51,7 +51,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     @Override
     public void initial() {
         logger.debug("before classs initial");
-        CommonConfig commonConfig = new CommonConfig();
+
 
 
         //replace checklist app id and conf id
@@ -81,7 +81,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         //set shop id
         commonConfig.shopId = "-1";
         commonConfig.roleId="603";
-        //commonConfig.shopId = "45973";
+//        commonConfig.shopId = "46439";
         beforeClassInit(commonConfig);
 
     }
@@ -2260,10 +2260,13 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(dataProvider = "export")
     public void ExportAll(String url,String mess) {
+
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            commonConfig.shopId = "46439";
             //导出
-            jc.recExport(url);
+            int code = jc.recExport(url).getInteger("code");
+            Preconditions.checkArgument(code==1000,mess+"导出状态码为"+code);
             Thread.sleep(800);
             String status = jc.exportListFilterManage("-1","1","1",null,null).getJSONArray("list").getJSONObject(0).getString("status_name");
 
@@ -2273,12 +2276,13 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
+            commonConfig.shopId = "-1";
             saveData("导出");
         }
     }
     @DataProvider(name = "export")
     public Object[] export(){
-        return new String[][]{ // 单弄 维修记录、保养配置、优惠券变更记录、作废记录、增发记录、领取记录、核销记录、活动报名记录、车系列表、车型列表
+        return new String[][]{ // 单弄 、优惠券变更记录、作废记录、增发记录、领取记录、核销记录、活动报名记录、车系列表、车型列表
                 {"/jiaochen/pc/reception-manage/record/export","接待管理"},
                 {"/jiaochen/pc/customer-manage/pre-sale-customer/page/export","销售客户"},
                 {"/jiaochen/pc/customer-manage/after-sale-customer/page/export","售后客户"},
@@ -2306,12 +2310,142 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
                 {"/jiaochen/pc/integral-center/exchange-detail/export","积分明细"},
                 {"/jiaochen/pc/integral-center/exchange-order/export","积分订单"},
                 {"/jiaochen/pc/integral-mall/goods-manage/export","商品管理"},
+                {"/jiaochen/pc/manage/maintain/car-model/export","保养配置"},
 
         };
     }
 
+    @Test
+    public void Exportweixiu() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
 
+            JSONObject obj = jc.afterSleCustomerManage("1","10").getJSONArray("list").getJSONObject(0);
+            String carid = obj.getString("car_id");
+            String shopid = obj.getString("shop_id");
 
+            //导出
+            int code = jc.weixiuExport(carid,shopid).getInteger("code");
+            Preconditions.checkArgument(code==1000,"状态码为"+code);
+            Thread.sleep(800);
+            String status = jc.exportListFilterManage("-1","1","1",null,null).getJSONArray("list").getJSONObject(0).getString("status_name");
+
+            Preconditions.checkArgument(status.equals("导出完成"),status);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("导出维修记录");
+        }
+    }
+
+    @Test(dataProvider = "exportVourcher")
+    public void ExportAll1(String url,String mess) {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String id = jc.oucherFormVoucherPage(null,"1","10").getJSONArray("list").getJSONObject(0).getString("voucher_id");
+            //导出
+            int code = jc.vourcherExport(url,id).getInteger("code");
+            Preconditions.checkArgument(code==1000,mess+"导出状态码为"+code);
+            Thread.sleep(800);
+            String status = jc.exportListFilterManage("-1","1","1",null,null).getJSONArray("list").getJSONObject(0).getString("status_name");
+
+            Preconditions.checkArgument(status.equals("导出完成"),mess+" "+status);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("导出");
+        }
+    }
+    @DataProvider(name = "exportVourcher")
+    public Object[] exportVourcher(){
+        return new String[][]{ // 单弄 活动报名记录、车系列表、车型列表
+
+                {"/jiaochen/pc/voucher-manage/change-record/export","优惠券变更记录"},
+                {"/jiaochen/pc/voucher-manage/voucher-invalid-page/export","作废记录"},
+                {"/jiaochen/pc/voucher-manage/additional-record/export","增发记录"},
+                {"/jiaochen/pc/voucher-manage/send-record/export","领取记录"},
+                {"/jiaochen/pc/voucher-manage/verification-record/export","核销记录"},
+
+        };
+    }
+
+    @Test
+    public void ExportAll2() {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String id = "";
+            JSONArray array= jc.activityPage(1,50).getJSONArray("list");
+            for (int i = 0 ; i < array.size();i++){
+                JSONObject obj = array.getJSONObject(i);
+                if (obj.getInteger("activity_type")==2){// 招募活动 类型是2
+                    id = obj.getString("id");
+                }
+            }
+            //导出
+            int code = jc.activityExport(id).getInteger("code");
+            Preconditions.checkArgument(code==1000,"导出状态码为"+code);
+            Thread.sleep(800);
+            String status = jc.exportListFilterManage("-1","1","1",null,null).getJSONArray("list").getJSONObject(0).getString("status_name");
+
+            Preconditions.checkArgument(status.equals("导出完成"),status);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("导出活动报名记录");
+        }
+    }
+
+    @Test
+    public void ExportAll3() {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            //导出
+            int code = jc.carStyleExport(info.BrandID).getInteger("code");
+            Preconditions.checkArgument(code==1000,"导出状态码为"+code);
+            Thread.sleep(800);
+            String status = jc.exportListFilterManage("-1","1","1",null,null).getJSONArray("list").getJSONObject(0).getString("status_name");
+
+            Preconditions.checkArgument(status.equals("导出完成"),status);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("导出车系列表");
+        }
+    }
+
+    @Test
+    public void ExportAll4() {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            //导出
+            int code = jc.carModelExport(info.BrandID,info.CarStyleID).getInteger("code");
+            Preconditions.checkArgument(code==1000,"导出状态码为"+code);
+            Thread.sleep(800);
+            String status = jc.exportListFilterManage("-1","1","1",null,null).getJSONArray("list").getJSONObject(0).getString("status_name");
+
+            Preconditions.checkArgument(status.equals("导出完成"),status);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("导出车型列表");
+        }
+    }
 
 
 

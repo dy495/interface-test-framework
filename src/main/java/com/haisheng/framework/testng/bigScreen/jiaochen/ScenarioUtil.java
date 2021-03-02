@@ -5411,7 +5411,7 @@ public class ScenarioUtil extends TestCaseCommon {
      */
 
     /**
-     * @description :PC导出
+     * @description :PC导出 通用
      * @date :2021/3/2
      **/
     public JSONObject recExport(String url) {
@@ -5419,8 +5419,92 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("page",1);
         json.put("size",10);
         json.put("export_type","CURRENT_PAGE");
+//        if (url.equals("/jiaochen/pc/manage/maintain/car-model/export")){
+//            json.put("shop_id","46439");
+//        }
+        return invokeApi(url,json,false);
+    }
+
+    /**
+     * @description :PC导出 维修记录
+     * @date :2021/3/2
+     **/
+    public JSONObject weixiuExport(String car_id,String shop_id) {
+        JSONObject json=new JSONObject();
+        String url = "/jiaochen/pc/customer-manage/after-sale-customer/repair-page/export";
+        json.put("page",1);
+        json.put("size",10);
+        json.put("export_type","CURRENT_PAGE");
+        json.put("car_id",car_id);
+        json.put("shop_id",shop_id);
+        return invokeApi(url,json,false);
+    }
+
+    /**
+     * @description :PC导出 优惠券记录
+     * @date :2021/3/2
+     **/
+    public JSONObject vourcherExport(String url, String id) {
+        JSONObject json=new JSONObject();
+        json.put("page",1);
+        json.put("size",10);
+        json.put("export_type","CURRENT_PAGE");
+        json.put("voucher_id",id);
+        return invokeApi(url,json,false);
+    }
+
+    /**
+     * @description :PC导出 活动报名记录
+     * @date :2021/3/2
+     **/
+    public JSONObject activityExport(String activity_id) {
+        JSONObject json=new JSONObject();
+        String url = "/jiaochen/pc/activity/manage/register/export";
+        json.put("page",1);
+        json.put("size",10);
+        json.put("export_type","CURRENT_PAGE");
+        json.put("activity_id",activity_id);
+        return invokeApi(url,json,false);
+    }
+    /**
+     * @description :PC导出 车系列表
+     * @date :2021/3/2
+     **/
+    public JSONObject carStyleExport(Long brand_id) {
+        JSONObject json=new JSONObject();
+        String url = "/jiaochen/pc/brand/car-style/export";
+        json.put("page",1);
+        json.put("size",10);
+        json.put("export_type","CURRENT_PAGE");
+        json.put("brand_id",brand_id);
+        return invokeApi(url,json,false);
+    }
+
+    /**
+     * @description :PC导出 车型列表
+     * @date :2021/3/2
+     **/
+    public JSONObject carModelExport(Long brand_id,Long style_id) {
+        JSONObject json=new JSONObject();
+        String url = "/jiaochen/pc/brand/car-style/car-model/export";
+        json.put("page",1);
+        json.put("size",10);
+        json.put("export_type","CURRENT_PAGE");
+        json.put("brand_id",brand_id);
+        json.put("style_id",style_id);
+        return invokeApi(url,json,false);
+    }
+
+    public JSONObject activityPage(Integer page,Integer size) {
+        JSONObject json=new JSONObject();
+        String url = "/jiaochen/pc/activity/manage/page";
+        json.put("page",page);
+        json.put("size",size);
         return invokeApi(url,json);
     }
+
+
+
 
 
 
