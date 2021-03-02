@@ -10,8 +10,6 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTest
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.jiaoChenInfo;
-import com.haisheng.framework.testng.bigScreen.jiaochen.lxq.create.pcCreateExchangeGoods;
-import com.haisheng.framework.testng.bigScreen.jiaochen.lxq.create.submitOrder;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
@@ -1323,6 +1321,158 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @Test
+    public void categoryStop1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //新建一级品类
+            Long id = info.newFirstCategory("品类"+Integer.toString((int)((Math.random()*9+1)*1000))).getLong("id");
+            //停用
+            jc.categoryChgStatus(id,false);
+            //删除
+            int code= jc.categoryDel(id,false).getInteger("code");
+            Preconditions.checkArgument(code==1000,"删除失败，状态码"+code);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【商品品类】停用/删除无商品使用&无下级品类的品类,期待成功");
+        }
+    }
+
+    @Test
+    public void categoryStop2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //新建一级品类
+            Long id = info.newFirstCategory("1品类"+Integer.toString((int)((Math.random()*9+1)*1000))).getLong("id");
+            //新建一个二级品类
+            Long secondid = info.newSecondCategory("2品类"+Integer.toString((int)((Math.random()*9+1)*1000)),Long.toString(id)).getLong("id");
+            //停用
+            jc.categoryChgStatus(secondid,false);
+            jc.categoryChgStatus(id,false);
+
+            //删除
+            int code= jc.categoryDel(id,false).getInteger("code");
+            Preconditions.checkArgument(code==1000,"删除失败，状态码"+code);
+
+            jc.categoryDel(secondid,true);
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【商品品类】停用/删除无商品使用&下级品类状态为停用的品类,期待成功");
+        }
+    }
+
+    @Test
+    public void categoryStop3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //新建一级品类
+            Long id = info.newFirstCategory("1品类"+Integer.toString((int)((Math.random()*9+1)*1000))).getLong("id");
+            //新建一个二级品类
+            Long secondid = info.newSecondCategory("2品类"+Integer.toString((int)((Math.random()*9+1)*1000)),Long.toString(id)).getLong("id");
+            //启用
+            jc.categoryChgStatus(secondid,true);
+            //停用
+            int code = jc.categoryChgStatus(id,false,false).getInteger("code");
+            Preconditions.checkArgument(code==1001,"停用期待1001，实际"+code);
+
+            //删除
+            int code1= jc.categoryDel(id,false).getInteger("code");
+            Preconditions.checkArgument(code1==1001,"删除期待1001，实际"+code1);
+
+            jc.categoryChgStatus(secondid,false);
+            jc.categoryDel(secondid,true);
+            jc.categoryDel(id,true);
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【商品品类】停用/删除无商品使用&下级品类状态为[启用]的品类,期待失败");
+        }
+    }
+
+
+
+
+
+    @Test
+    public void categoryDel1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //新建一级品类
+            Long id = info.newFirstCategory("1品类"+Integer.toString((int)((Math.random()*9+1)*1000))).getLong("id");
+            //绑定规格
+            Long speId = jc.specificationsCreate("规格"+Integer.toString((int)((Math.random()*9+1)*1000)),id,null,null,true).getLong("id");
+
+            //删除
+            int code1= jc.categoryDel(id,false).getInteger("code");
+            Preconditions.checkArgument(code1==1001,"删除期待1001，实际"+code1);
+
+
+            jc.specificationsChgStatus(speId,false);
+            jc.specificationsDel(speId);
+            jc.categoryDel(id,true);
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【商品品类】停用有规格绑定的品类,期待失败");
+        }
+    }
+
+    //@Test    要改的啊啊啊啊啊啊啊啊啊
+    public void categoryStart1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //新建一级品类
+            Long id = info.newFirstCategory("1品类"+Integer.toString((int)((Math.random()*9+1)*1000))).getLong("id");
+            //新建一个二级品类
+            Long secondid = info.newSecondCategory("2品类"+Integer.toString((int)((Math.random()*9+1)*1000)),Long.toString(id)).getLong("id");
+            //启用
+            jc.categoryChgStatus(secondid,true);
+            //停用
+            int code = jc.categoryChgStatus(id,false,false).getInteger("code");
+            Preconditions.checkArgument(code==1001,"停用期待1001，实际"+code);
+
+            //删除
+            int code1= jc.categoryDel(id,false).getInteger("code");
+            Preconditions.checkArgument(code1==1001,"删除期待1001，实际"+code1);
+
+            jc.categoryChgStatus(secondid,false);
+            jc.categoryDel(secondid,true);
+            jc.categoryDel(id,true);
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【商品品类】启用无上级品类的品类，期待成功");
+        }
+    }
+
+
+
+
+
+
+
+
 
     //商品品牌
     @Test(dataProvider = "BRANDNAME")
@@ -1809,8 +1959,6 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             Long goodid = objnew.getJSONObject("data").getLong("id");
 
 
-
-
             //删除商品
             jc.deleteGoodMethod(goodid);
             //关闭->删除规格
@@ -1820,7 +1968,6 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             jc.categoryDel(Long.parseLong(idthree),true);
             jc.categoryDel(Long.parseLong(idtwo),true);
             jc.categoryDel(Long.parseLong(idone),true);
-
 
 
 
@@ -2080,179 +2227,179 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
 
 
-    @Test
-    public void newFictitiousAndBuy() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-
-            /**
-             * 步骤一 新建虚拟积分商品 兑换次数限制=1
-             */
-            //新建虚拟商品前记录数据
-            int PCtotalPre = jc.exchangePage(1,1,null,null,null).getInteger("total");
-            jc.appletLoginToken(pp.appletTocken);
-            int applettotalPre = jc.appletMallCommidityList(1,null,null,null,null).getInteger("total");
-
-            //新建虚拟积分商品 兑换次数限制=1
-            jc.pcLogin("15711300001","000000");
-            Long fictitiousId = info.newFictitious();
-
-            //PC积分兑换列表+1
-            //小程序积分商城 积分兑换商品+1
-            int PCtotalAft = jc.exchangePage(1,1,null,null,null).getInteger("total");
-            jc.appletLoginToken(pp.appletTocken);
-            int applettotalAft = jc.appletMallCommidityList(1,null,null,null,null).getInteger("total");
-
-            Preconditions.checkArgument(PCtotalAft-PCtotalPre == 1, "新建虚拟积分商品后，PC积分兑换未增加1" );
-            Preconditions.checkArgument(applettotalAft-applettotalPre == 1, "新建虚拟积分商品后，小程序积分商城的积分兑换商品未增加1" );
-
-
-            /**
-             * 步骤二 小程序兑换
-             */
-
-            info.appletBuyFictitious(fictitiousId);
-
-            /**
-             * 步骤三 小程序再次兑换
-             */
-            //小程序再次兑换 应失败
-            int code = jc.appletSubmitExchange(fictitiousId,false).getInteger("code");
-            Preconditions.checkArgument(code==1001,"期待兑换失败1001，实际"+code);
-
-
-            jc.pcLogin("15711300001","000000");
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("PC新建虚拟商品->小程序兑换");
-        }
-    }
-
-    @Test
-    public void newRealAndBuy() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-
-            /**
-             * 步骤一 新建品牌、一二三级品类、规格、商品
-             */
-
-            //新建品牌
-            Long brandID = System.currentTimeMillis();
-            jc.BrandCreat(true,brandID,"name"+brandID,"desc"+brandID,info.getLogo());
-
-            //新建一级品类
-            Long firstid = System.currentTimeMillis();
-            String firstname = "F"+Integer.toString((int)((Math.random()*9+1)*1000));
-            jc.categoryCreate(true,firstname,"一级品类",null,info.getLogo(),firstid);
-            jc.categoryChgStatus(firstid,true);
-
-            //新建二级品类
-            Long secondid = System.currentTimeMillis();
-            String secondname = "S"+Integer.toString((int)((Math.random()*9+1)*1000));
-            jc.categoryCreate(true,secondname,"二级品类",Long.toString(firstid),info.getLogo(),secondid);
-            jc.categoryChgStatus(secondid,true);
-
-            //新建三级品类
-            Long thirdid = System.currentTimeMillis();
-            String thirdname = "T"+Integer.toString((int)((Math.random()*9+1)*1000));
-            jc.categoryCreate(true,thirdname,"三级品类",Long.toString(secondid),info.getLogo(),thirdid);
-            jc.categoryChgStatus(thirdid,true);
-
-            //新建规格
-            Long speID = System.currentTimeMillis();
-            String speName = "规格" + Integer.toString((int)((Math.random()*9+1)*1000));
-            String specifications_list_str = "[" +
-                    "{" +
-                    "\"specifications_item\":\""+dt.getHistoryDate(0) +"\"," +
-                    "\"num\":100" +
-                    "}" +
-                    "]";
-            JSONArray specifications_list = JSONArray.parseArray(specifications_list_str);
-            Long specifications_detail_id = 1L;// ??
-            jc.specificationsCreate(speName,firstid,specifications_list,speID,true);
-
-            //新建商品
-            String select_specifications_str =
-                    "[" +
-                            "{" +
-                            "\"specifications_id\":"+ speID+","+
-                            "\"specifications_name\":\""+speName +"\","+
-                            "\"specifications_list\":[" +
-                            "\"specifications_detail_id\":"+specifications_detail_id +"\","+
-                            "\"specifications_detail_name\":\""+dt.getHistoryDate(0)+"\""+
-                            "}]}]";
-            JSONArray select_specifications = JSONArray.parseArray(select_specifications_str); //所选规格
-            String goods_specifications_list_str = "[" +
-                    "{" +
-                    "\"first_specifications\":"+specifications_detail_id+"," +
-                    //"\"second_specifications\":"+null+",\n" +
-                    "\"head_pic\":\""+info.getLogo()+"\"," +
-                    "\"price\":69.98" +
-                    "}]";
-            JSONArray goods_specifications_list = JSONArray.parseArray(goods_specifications_list_str);
-            pcCreateGoods goods = new pcCreateGoods();
-            goods.id = System.currentTimeMillis();
-            goods.price = "99.99";
-            goods.select_specifications = select_specifications;
-            goods.goods_specifications_list = goods_specifications_list;
-            jc.createGoodMethod(goods);
-
-
-            /**
-             * 步骤二 新建实体积分商品 兑换次数不限
-             */
-
-            JSONArray specification_list = new JSONArray(); // 内容要补充
-            pcCreateExchangeGoods ex = new pcCreateExchangeGoods();
-            ex.chkcode=true;
-            ex.id  = System.currentTimeMillis();
-            ex.exchange_goods_type = "REAL";
-            ex.goods_id = goods.id;
-            ex.is_limit=false;
-            ex.specification_list = specification_list;
-            jc.exchangeGoodCreat(ex);
-
-
-            /**
-             * 步骤三 小程序【积分商城】兑换
-             */
-            submitOrder or = new submitOrder();
-            or.commodity_id = ex.id;
-            or.specification_id = specifications_detail_id;
-            or.buyer_message = "自动化"+System.currentTimeMillis();
-            or.commodity_num = 1;
-            or.district_code = info.district_code;
-            or.address= "zdh北京市海淀区";
-            or.receiver = "zdh";
-            or.receive_phone= "13400000001";
-            jc.appletSubmitOrder(or);
-
-            //查询订单id
-            Long order_id = jc.exchangeOrder(1,1,null,null,null,null,null,null).getJSONArray("list").getJSONObject(0).getLong("id");
-
-            /**
-             * 步骤四 PC发货
-             */
-            jc.confirmShipment(order_id,String.valueOf(System.currentTimeMillis()),true);
-
-            /**
-             * 步骤五 小程序【积分兑换订单】再次兑换
-             */
-            jc.appletSubmitOrder(or);
-
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("PC新建实体商品积分兑换-> 小程序兑换-> 发货");
-        }
-    }
+//    @Test
+//    public void newFictitiousAndBuy() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//
+//            /**
+//             * 步骤一 新建虚拟积分商品 兑换次数限制=1
+//             */
+//            //新建虚拟商品前记录数据
+//            int PCtotalPre = jc.exchangePage(1,1,null,null,null).getInteger("total");
+//            jc.appletLoginToken(pp.appletTocken);
+//            int applettotalPre = jc.appletMallCommidityList(1,null,null,null,null).getInteger("total");
+//
+//            //新建虚拟积分商品 兑换次数限制=1
+//            jc.pcLogin("15711300001","000000");
+//            Long fictitiousId = info.newFictitious();
+//
+//            //PC积分兑换列表+1
+//            //小程序积分商城 积分兑换商品+1
+//            int PCtotalAft = jc.exchangePage(1,1,null,null,null).getInteger("total");
+//            jc.appletLoginToken(pp.appletTocken);
+//            int applettotalAft = jc.appletMallCommidityList(1,null,null,null,null).getInteger("total");
+//
+//            Preconditions.checkArgument(PCtotalAft-PCtotalPre == 1, "新建虚拟积分商品后，PC积分兑换未增加1" );
+//            Preconditions.checkArgument(applettotalAft-applettotalPre == 1, "新建虚拟积分商品后，小程序积分商城的积分兑换商品未增加1" );
+//
+//
+//            /**
+//             * 步骤二 小程序兑换
+//             */
+//
+//            info.appletBuyFictitious(fictitiousId);
+//
+//            /**
+//             * 步骤三 小程序再次兑换
+//             */
+//            //小程序再次兑换 应失败
+//            int code = jc.appletSubmitExchange(fictitiousId,false).getInteger("code");
+//            Preconditions.checkArgument(code==1001,"期待兑换失败1001，实际"+code);
+//
+//
+//            jc.pcLogin("15711300001","000000");
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("PC新建虚拟商品->小程序兑换");
+//        }
+//    }
+//
+//    @Test
+//    public void newRealAndBuy() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//
+//            /**
+//             * 步骤一 新建品牌、一二三级品类、规格、商品
+//             */
+//
+//            //新建品牌
+//            Long brandID = System.currentTimeMillis();
+//            jc.BrandCreat(true,brandID,"name"+brandID,"desc"+brandID,info.getLogo());
+//
+//            //新建一级品类
+//            Long firstid = System.currentTimeMillis();
+//            String firstname = "F"+Integer.toString((int)((Math.random()*9+1)*1000));
+//            jc.categoryCreate(true,firstname,"一级品类",null,info.getLogo(),firstid);
+//            jc.categoryChgStatus(firstid,true);
+//
+//            //新建二级品类
+//            Long secondid = System.currentTimeMillis();
+//            String secondname = "S"+Integer.toString((int)((Math.random()*9+1)*1000));
+//            jc.categoryCreate(true,secondname,"二级品类",Long.toString(firstid),info.getLogo(),secondid);
+//            jc.categoryChgStatus(secondid,true);
+//
+//            //新建三级品类
+//            Long thirdid = System.currentTimeMillis();
+//            String thirdname = "T"+Integer.toString((int)((Math.random()*9+1)*1000));
+//            jc.categoryCreate(true,thirdname,"三级品类",Long.toString(secondid),info.getLogo(),thirdid);
+//            jc.categoryChgStatus(thirdid,true);
+//
+//            //新建规格
+//            Long speID = System.currentTimeMillis();
+//            String speName = "规格" + Integer.toString((int)((Math.random()*9+1)*1000));
+//            String specifications_list_str = "[" +
+//                    "{" +
+//                    "\"specifications_item\":\""+dt.getHistoryDate(0) +"\"," +
+//                    "\"num\":100" +
+//                    "}" +
+//                    "]";
+//            JSONArray specifications_list = JSONArray.parseArray(specifications_list_str);
+//            Long specifications_detail_id = 1L;// ??
+//            jc.specificationsCreate(speName,firstid,specifications_list,speID,true);
+//
+//            //新建商品
+//            String select_specifications_str =
+//                    "[" +
+//                            "{" +
+//                            "\"specifications_id\":"+ speID+","+
+//                            "\"specifications_name\":\""+speName +"\","+
+//                            "\"specifications_list\":[" +
+//                            "\"specifications_detail_id\":"+specifications_detail_id +"\","+
+//                            "\"specifications_detail_name\":\""+dt.getHistoryDate(0)+"\""+
+//                            "}]}]";
+//            JSONArray select_specifications = JSONArray.parseArray(select_specifications_str); //所选规格
+//            String goods_specifications_list_str = "[" +
+//                    "{" +
+//                    "\"first_specifications\":"+specifications_detail_id+"," +
+//                    //"\"second_specifications\":"+null+",\n" +
+//                    "\"head_pic\":\""+info.getLogo()+"\"," +
+//                    "\"price\":69.98" +
+//                    "}]";
+//            JSONArray goods_specifications_list = JSONArray.parseArray(goods_specifications_list_str);
+//            pcCreateGoods goods = new pcCreateGoods();
+//            goods.id = System.currentTimeMillis();
+//            goods.price = "99.99";
+//            goods.select_specifications = select_specifications;
+//            goods.goods_specifications_list = goods_specifications_list;
+//            jc.createGoodMethod(goods);
+//
+//
+//            /**
+//             * 步骤二 新建实体积分商品 兑换次数不限
+//             */
+//
+//            JSONArray specification_list = new JSONArray(); // 内容要补充
+//            pcCreateExchangeGoods ex = new pcCreateExchangeGoods();
+//            ex.chkcode=true;
+//            ex.id  = System.currentTimeMillis();
+//            ex.exchange_goods_type = "REAL";
+//            ex.goods_id = goods.id;
+//            ex.is_limit=false;
+//            ex.specification_list = specification_list;
+//            jc.exchangeGoodCreat(ex);
+//
+//
+//            /**
+//             * 步骤三 小程序【积分商城】兑换
+//             */
+//            submitOrder or = new submitOrder();
+//            or.commodity_id = ex.id;
+//            or.specification_id = specifications_detail_id;
+//            or.buyer_message = "自动化"+System.currentTimeMillis();
+//            or.commodity_num = 1;
+//            or.district_code = info.district_code;
+//            or.address= "zdh北京市海淀区";
+//            or.receiver = "zdh";
+//            or.receive_phone= "13400000001";
+//            jc.appletSubmitOrder(or);
+//
+//            //查询订单id
+//            Long order_id = jc.exchangeOrder(1,1,null,null,null,null,null,null).getJSONArray("list").getJSONObject(0).getLong("id");
+//
+//            /**
+//             * 步骤四 PC发货
+//             */
+//            jc.confirmShipment(order_id,String.valueOf(System.currentTimeMillis()),true);
+//
+//            /**
+//             * 步骤五 小程序【积分兑换订单】再次兑换
+//             */
+//            jc.appletSubmitOrder(or);
+//
+//
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("PC新建实体商品积分兑换-> 小程序兑换-> 发货");
+//        }
+//    }
 
 
 

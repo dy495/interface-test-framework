@@ -4099,6 +4099,14 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(url,json1);
     }
 
+    public JSONObject categoryChgStatus(Long id, Boolean status,Boolean chk) {
+        String url = "/jiaochen/pc/integral-mall/change-status";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+        json1.put("status",status);
+        return invokeApi(url,json1,chk);
+    }
+
     /**
      * @description :查看品类详情
      * @date :2021/1/20 14:00
