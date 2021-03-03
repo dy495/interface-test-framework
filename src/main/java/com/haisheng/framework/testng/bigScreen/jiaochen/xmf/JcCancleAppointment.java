@@ -82,7 +82,7 @@ public class JcCancleAppointment extends TestCaseCommon implements TestCaseStd {
     public void initial() {
         initial1();
         qaDbUtil.openConnection();
-//        BeforeStart();               //调试单个case时注释此行
+        BeforeStart();               //调试单个case时注释此行
     }
 
     @AfterClass
