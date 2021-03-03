@@ -1434,25 +1434,47 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //@Test    要改的啊啊啊啊啊啊啊啊啊
+    @Test
     public void categoryStart1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //新建一级品类
             Long id = info.newFirstCategory("1品类"+Integer.toString((int)((Math.random()*9+1)*1000))).getLong("id");
-            //新建一个二级品类
-            Long secondid = info.newSecondCategory("2品类"+Integer.toString((int)((Math.random()*9+1)*1000)),Long.toString(id)).getLong("id");
+
             //启用
-            jc.categoryChgStatus(secondid,true);
-            //停用
-            int code = jc.categoryChgStatus(id,false,false).getInteger("code");
-            Preconditions.checkArgument(code==1001,"停用期待1001，实际"+code);
+            int code = jc.categoryChgStatus(id,false).getInteger("code");
+            Preconditions.checkArgument(code==1000,"状态码"+code);
 
             //删除
-            int code1= jc.categoryDel(id,false).getInteger("code");
-            Preconditions.checkArgument(code1==1001,"删除期待1001，实际"+code1);
+            jc.categoryDel(id,true);
 
-            jc.categoryChgStatus(secondid,false);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【商品品类】启用无上级品类的品类（一级品类），期待成功");
+        }
+    }
+
+    @Test
+    public void categoryStart2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //新建一级品类
+            Long id = info.newFirstCategory("1品类"+Integer.toString((int)((Math.random()*9+1)*1000))).getLong("id");
+            //启用
+            jc.categoryChgStatus(id,true);
+
+            //新建二级品类
+            Long secondid = info.newSecondCategory("2品类"+Integer.toString((int)((Math.random()*9+1)*1000)),Long.toString(id)).getLong("id");
+            //启用
+            int code1= jc.categoryChgStatus(secondid,true,false).getInteger("code");
+            Preconditions.checkArgument(code1==1000,"状态码"+code1);
+
+
+            //删除
             jc.categoryDel(secondid,true);
             jc.categoryDel(id,true);
 
@@ -1462,7 +1484,41 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("PC【商品品类】启用无上级品类的品类，期待成功");
+            saveData("PC【商品品类】启用 有上级品类&上级品类状态为启用的品类，期待成功");
+        }
+    }
+
+    @Test
+    public void categoryStart3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //新建一级品类
+            Long id = info.newFirstCategory("1品类"+Integer.toString((int)((Math.random()*9+1)*1000))).getLong("id");
+            //启用
+            jc.categoryChgStatus(id,true);
+
+            //新建二级品类
+            Long secondid = info.newSecondCategory("2品类"+Integer.toString((int)((Math.random()*9+1)*1000)),Long.toString(id)).getLong("id");
+            //停用一级品类
+            jc.categoryChgStatus(secondid,false);
+            jc.categoryChgStatus(id,false);
+
+            //启用二级
+            int code1= jc.categoryChgStatus(secondid,true,false).getInteger("code");
+            Preconditions.checkArgument(code1==1000,"状态码"+code1);
+
+
+            //删除
+            jc.categoryDel(secondid,true);
+            jc.categoryDel(id,true);
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【商品品类】启用 有上级品类&上级品类状态为停用的品类，期待成功");
         }
     }
 
