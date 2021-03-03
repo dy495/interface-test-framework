@@ -1556,11 +1556,12 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     public  Object[] brandName() {
         return new String[]{
                 "1",
-                "aA",
-                "!@#$%^&*(-",
-                "自动化",
-                "之家",
-                "测试",
+//                "aA",
+//                "!@#$%^&*(-",
+//                "自动化",
+//                "之家",
+//                "测试",
+//                "2021",
 
         };
     }
@@ -2322,17 +2323,17 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             Long goodid = objnew.getJSONObject("data").getLong("id");
 
 
-//            //删除商品
-//            jc.deleteGoodMethod(goodid);
-//            //关闭->删除规格
-//            jc.specificationsChgStatus(speId,false);
-//            jc.specificationsDel(speId);
-//            jc.specificationsChgStatus(speId2,false);
-//            jc.specificationsDel(speId2);
-//            //删除品类
-//            jc.categoryDel(Long.parseLong(idthree),true);
-//            jc.categoryDel(Long.parseLong(idtwo),true);
-//            jc.categoryDel(Long.parseLong(idone),true);
+            //删除商品
+            jc.deleteGoodMethod(goodid);
+            //关闭->删除规格
+            jc.specificationsChgStatus(speId,false);
+            jc.specificationsDel(speId);
+            jc.specificationsChgStatus(speId2,false);
+            jc.specificationsDel(speId2);
+            //删除品类
+            jc.categoryDel(Long.parseLong(idthree),true);
+            jc.categoryDel(Long.parseLong(idtwo),true);
+            jc.categoryDel(Long.parseLong(idone),true);
 
 
 
@@ -2489,8 +2490,8 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             JSONArray list = jc.exchangeDetail(1,50,null,null,null,start,end).getJSONArray("list");
             for (int i = 0  ; i < list.size();i++){
                 JSONObject obj = list.getJSONObject(i);
-                String searchname = obj.getString("operate_time");
-                //todo 操作时间在选择时间段内
+                String searchtime = obj.getString("operate_time");
+               Preconditions.checkArgument(searchtime.contains(start),"搜索"+start+"，结果包含"+searchtime);
 
             }
         } catch (AssertionError e) {
@@ -2498,7 +2499,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("PC【积分明细】根据存在的兑换类型筛选");
+            saveData("PC【积分明细】根据兑换时间筛选");
         }
     }
 
@@ -2506,7 +2507,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     public Object[] exchange_time(){
         return new String[][]{
                 {dt.getHistoryDate(0),dt.getHistoryDate(0)},
-                {dt.getHistoryDate(-2),dt.getHistoryDate(-1)},
+                {dt.getHistoryDate(-2),dt.getHistoryDate(-2)},
 
         };
     }
@@ -2589,6 +2590,119 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             saveData("PC【积分订单】列表根据兑换时间倒序排列");
         }
     }
+
+    @Test(dataProvider = "BRANDNAME")
+    public void exchangeOrderFilter1(String orderid) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            List time = new ArrayList();
+
+
+            JSONArray list = jc.exchangeOrder(1,50,orderid,null,null,null,null,null).getJSONArray("list");
+            for (int i = 0 ; i < list.size();i++){
+                JSONObject obj = list.getJSONObject(i);
+                String search = obj.getString("order_id");
+                Preconditions.checkArgument(search.contains(orderid),"搜索"+orderid+",结果包含"+search);
+            }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【积分订单】根据订单ID筛选");
+        }
+    }
+
+    @Test(dataProvider = "BRANDNAME")
+    public void exchangeOrderFilter2(String name) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray list = jc.exchangeOrder(1,50,null,null,null,null,name,null).getJSONArray("list");
+            for (int i = 0 ; i < list.size();i++){
+                JSONObject obj = list.getJSONObject(i);
+                String search = obj.getString("member_name");
+                Preconditions.checkArgument(search.contains(name),"搜索"+name+",结果包含"+search);
+            }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【积分订单】根据会员名称筛选");
+        }
+    }
+
+    @Test(dataProvider = "BRANDNAME")
+    public void exchangeOrderFilter3(String name) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray list = jc.exchangeOrder(1,50,null,null,null,null,null,name).getJSONArray("list");
+            for (int i = 0 ; i < list.size();i++){
+                JSONObject obj = list.getJSONObject(i);
+                String search = obj.getString("goods_name");
+                Preconditions.checkArgument(search.contains(name),"搜索"+name+",结果包含"+search);
+            }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【积分订单】根据商品名称筛选");
+        }
+    }
+
+    @Test(dataProvider = "exchange_time")
+    public void exchangeOrderFilter4(String start, String end) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray list = jc.exchangeOrder(1,50,null,start,end,null,null,null).getJSONArray("list");
+            for (int i = 0  ; i < list.size();i++){
+                JSONObject obj = list.getJSONObject(i);
+                String searchtime = obj.getString("exchange_time");
+                Preconditions.checkArgument(searchtime.contains(start),"搜索"+start+"，结果包含"+searchtime);
+
+            }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【积分订单】根据兑换时间筛选");
+        }
+    }
+
+    @Test(dataProvider = "exchangeOrderStatus")
+    public void exchangeOrderFilter5(String status, String mess) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray list = jc.exchangeOrder(1,50,null,null,null,status,null,null).getJSONArray("list");
+            for (int i = 0  ; i < list.size();i++){
+                JSONObject obj = list.getJSONObject(i);
+                String searchtime = obj.getString("order_status_name");
+                Preconditions.checkArgument(searchtime.equals(mess),"搜索"+mess+"，结果包含"+searchtime);
+
+            }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【积分订单】根据状态筛选");
+        }
+    }
+
+    @DataProvider(name = "exchangeOrderStatus")
+    public Object[] exchangeOrderStatus(){
+        return new String[][]{
+                {"WAITING","待发货"},
+                {"CANCELED","已取消"},
+                {"SEND","待收货"},
+                {"FINISHED","已完成"},
+
+
+        };
+    }
+
 
 
 
