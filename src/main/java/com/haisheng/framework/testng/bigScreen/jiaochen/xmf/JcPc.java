@@ -40,6 +40,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
     public String phone = "";
 
 
+
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
      */
@@ -47,8 +48,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
     @Override
     public void initial() {
         logger.debug("before classs initial");
-
-
+        jc.changeIpPort(EnumTestProduce.JIAOCHEN_DAILY.getAddress());
 
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
@@ -1061,6 +1061,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
     public void Jc_pcShopButton() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+//            System.out.println("ip=="+IpPort);
             String statusAll="DISABLE";
             String open="ENABLE";
             JSONObject data=jc.shopListFilterManage("","1","10","name",pp.shopname).getJSONArray("list").getJSONObject(0);

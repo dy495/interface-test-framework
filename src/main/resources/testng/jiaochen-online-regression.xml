@@ -10,7 +10,6 @@
     <test name="daily-rgn" preserve-order="true">
         <classes>
             <!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.FilterColumnSystemOnline"/>-->
-            <!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.JcAppletOnline"/>-->
             <!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.lxq.SystemCaseOnline"/>-->
             <!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.JcPc_SystemLogOnline"/>-->
             <!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.Jc_Pc_CustomerManageOnline"/>-->
@@ -18,6 +17,8 @@
             <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.testcase.IntegralCenterCaseOnline"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.testcase.MarketingManageCaseOnline"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.testcase.ContentOperationCaseOnline"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.JcAppOnline"/>
+
         </classes>
     </test>
 </suite>

@@ -688,8 +688,8 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //2.0 变更接待  调试时需注意账号登录登出顺序
-//    @Test(description = "app变更接待,接待任务变更")
+//    2.0 变更接待  调试时需注意账号登录登出顺序
+    @Test(description = "app变更接待,接待任务变更")
     public void Jc_recepchangetion() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -704,8 +704,9 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             //变更接待后
             int total2 = jc.appreceptionPage(null, 10).getInteger("total");
             int tasknumA[] = pf.appTask();
-
+            appLogin(pp.dzphone,pp.dzcode,pp.dzroleId);
             jc.receptorChange(id[0], id[1],pp.userid);    //变更接待，变回来
+            appLogin(pp.jdgw,pp.jdgwpassword,pp.roleidJdgw);
             int total3 = jc.appreceptionPage(null, 10).getInteger("total");
 
             //完成接待
@@ -714,8 +715,8 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(total - total2 == 1, "变更接待后接待列表未-1,接待前：" + total + "，接待后：" + total2);
             Preconditions.checkArgument(total3 - total2 == 1, "变更接待后接待列表未-1,接待前：" + total2 + "，接待后：" + total3);
 
-            Preconditions.checkArgument(tasknumA[2] - tasknum[2] == 1, "变更接待后今日任务-分子+1 ");
-            Preconditions.checkArgument(tasknumA[3] - tasknum[3] == 1, "变更接待后今日任务-分母+1");
+            Preconditions.checkArgument(tasknumA[2] - tasknum[2] == -1, "变更接待后今日任务-分子+1 ");
+            Preconditions.checkArgument(tasknumA[3] - tasknum[3] == -1, "变更接待后今日任务-分母+1");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -725,7 +726,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
     }
 
     //2.0 变更接待
-//    @Test(description = "变更接待列表")
+    @Test(description = "变更接待列表")
     public void receptorOnlyList() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

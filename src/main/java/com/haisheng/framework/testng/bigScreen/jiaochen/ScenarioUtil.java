@@ -11,7 +11,6 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.lxq.create.pcCreateExcha
 import com.haisheng.framework.testng.bigScreen.jiaochen.lxq.create.submitOrder;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.*;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
-import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import org.springframework.util.StringUtils;
 import org.testng.annotations.DataProvider;
 
@@ -23,7 +22,7 @@ import java.util.List;
  */
 public class ScenarioUtil extends TestCaseCommon {
     private static volatile ScenarioUtil instance = null;
-    private static final String IpPort = EnumTestProduce.JIAOCHEN_DAILY.getAddress();
+//    private static final String IpPort = EnumTestProduce.JIAOCHEN_DAILY.getAddress();
     private static final String shopId = EnumTestProduce.JIAOCHEN_DAILY.getShopId();
 
     /**
@@ -40,6 +39,10 @@ public class ScenarioUtil extends TestCaseCommon {
             }
         }
         return instance;
+    }
+
+    public void changeIpPort(String Ipport){
+        IpPort=Ipport;
     }
 
     //pc登录

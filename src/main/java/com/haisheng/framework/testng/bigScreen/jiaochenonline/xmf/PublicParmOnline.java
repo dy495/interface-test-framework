@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 
 public class PublicParmOnline {
-    public String roleId="";
+    public String roleId="395";
     public String shopId="-1";   //门店Id
     public String shopIdZ="20032";   //门店Id 中关村店
 
@@ -16,16 +16,16 @@ public class PublicParmOnline {
     public String shichang="";
     public String shichangPassword="";
 
-    public String carModelId="111";
-    public String carModel="AMG S 63 L 4MATIC+";
-    public String car_id="4624";             //小程序车id
-    public String carplate="浙QWER123";      //编辑小程序车牌号
-
+    public String carModelId="19655";
+    public String carModel="AB";
+    public String car_id="78";             //小程序车id
+    public String carplate="浙MNB789";      //编辑小程序车牌号
+    public String carplate7 = "浙ASD124";      //编辑小程序车牌号
     //预约使用车辆
-    public Long car_idA=4624L;
+    public Long car_idA=2L;
     public String shopname="中关村";
     public String modolIdAppointment = "111";
-    public String carStyleId="";
+    public String carStyleId="78";
     public String carStyleName="";
 
     public String gwname="15711200001"; //单个店的客户的数据   //登录账号
@@ -34,14 +34,14 @@ public class PublicParmOnline {
     public String gwpassword="000000"; //单个店的客户的数据  登录密码
 
     public String jdgw="15037286011";  //xx ,属于中关村店
-    public String roleidJdgw="";      //TODO:
+    public String roleidJdgw="424";
     public String nameJdgw="接待顾问x";
     public String jdgw2="15037286013";  //xx ,属于中关村店
     public String jdgwpassword="000000"; //单个店的客户的数据  登录密码
     public String jdgwName="接待顾问x"; //单个店的客户的数据  登录密码
 
     public String dzphone="15037286014";   //中关村店长
-    public String dzroleId="";
+    public String dzroleId="426";
     public String dzcode="000000";
 
     //---------2.0---------
@@ -52,8 +52,8 @@ public class PublicParmOnline {
     //其他小程序用户tocken和车牌号信息
     public String getAppletTockenOther="R4M7UpQ2+Q3L0QbxGA32iA==";
     public  String CarplateOther="浙ZXCV123";
-    public String userid="uid_0216a935"; //xx的userId;
-    public String userid2="uid_0216a935"; //xx2的userId;
+    public String userid="uid_2960c1cf"; //接待顾问x 15037286011 的userId;
+    public String userid2="uid_bf9d24ef"; //接待顾问2 6013的userId;
 
     public int ordeId=10; // 订单Id
     public String filepath11="src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/1_1.jpg";
