@@ -36,6 +36,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.appointmentm
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpload;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.CommoditySpecificationsListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.CreateExchangeGoodsScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.ExchangeGoodsStockScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.ExchangePageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.loginuser.ShopListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.manager.EvaluatePageScene;
@@ -1679,7 +1680,16 @@ public class SupporterUtil extends BaseUtil {
      *
      * @return 积分兑换id
      */
-    public ExchangePage CreateExchangeGoods() {
+    public ExchangePage CreateExchangeRealGoods() {
+        return CreateExchangeRealGoods(1);
+    }
+
+    /**
+     * 创建实物积分兑换
+     *
+     * @return 积分兑换商品
+     */
+    public ExchangePage CreateExchangeRealGoods(int stock) {
         String exchangeStartTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
         String exchangeEndTime = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 30), "yyyy-MM-dd HH:mm:ss");
         JSONArray specificationList = new JSONArray();
@@ -1690,14 +1700,41 @@ public class SupporterUtil extends BaseUtil {
             JSONObject specificationDetail = (JSONObject) e;
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", specificationDetail.getInteger("id"));
-            jsonObject.put("stock", 1);
+            jsonObject.put("stock", stock);
             specificationList.add(jsonObject);
         });
         //创建积分兑换
-        CreateExchangeGoodsScene.builder().exchangeGoodsType(CommodityTypeEnum.REAL.name()).goodsId(goodsId).exchangePrice("1")
-                .isLimit(true).exchangePeopleNum("1").specificationList(specificationList).exchangeStartTime(exchangeStartTime)
-                .exchangeEndTime(exchangeEndTime).build().execute(visitor, true);
+        CreateExchangeGoodsScene.builder().exchangeGoodsType(CommodityTypeEnum.REAL.name()).goodsId(goodsId)
+                .isLimit(true).exchangePeopleNum("10").specificationList(specificationList).exchangeStartTime(exchangeStartTime)
+                .exchangePrice("1").exchangeEndTime(exchangeEndTime).build().execute(visitor, true);
         return collectBean(ExchangePageScene.builder().build(), ExchangePage.class).get(0);
+    }
+
+    /**
+     * 创建虚拟兑换商品
+     *
+     * @param voucherId 卡券id
+     * @return 积分兑换商品
+     */
+    public ExchangePage CreateExchangeFictitiousGoods(Long voucherId) {
+        String exchangeStartTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
+        String exchangeEndTime = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 30), "yyyy-MM-dd HH:mm:ss");
+        //创建积分兑换
+        CreateExchangeGoodsScene.builder().exchangeGoodsType(CommodityTypeEnum.FICTITIOUS.name()).goodsId(voucherId)
+                .exchangeNum("1").isLimit(true).exchangePeopleNum("10").exchangeStartTime(exchangeStartTime)
+                .exchangePrice("1").exchangeEndTime(exchangeEndTime).build().execute(visitor, true);
+        return collectBean(ExchangePageScene.builder().build(), ExchangePage.class).get(0);
+    }
+
+    /**
+     * 获取积分兑换包含的卡券信息
+     *
+     * @param id 兑换商品id
+     * @return 卡券信息
+     */
+    public VoucherPage getExchangeGoodsContainVoucher(Long id) {
+        String voucherName = ExchangeGoodsStockScene.builder().id(id).build().execute(visitor, true).getString("goods_name");
+        return getVoucherPage(voucherName);
     }
 
     //-------------------------------------------------------活动---------------------------------------------------

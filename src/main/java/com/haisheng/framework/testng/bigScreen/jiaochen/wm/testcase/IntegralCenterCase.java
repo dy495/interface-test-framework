@@ -92,7 +92,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
 
     //ok
     @Test(description = "积分兑换--库存详情--当前库存=兑换品库存明细加和")
-    public void IntegralExchange_data_1() {
+    public void integralExchange_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //上线日期，之前得数据不做校验
@@ -125,7 +125,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
 
     //ok
     @Test(description = "积分兑换--创建实体积分兑换")
-    public void IntegralExchange_system_1() {
+    public void integralExchange_system_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String exchangeStartTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
@@ -170,7 +170,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
 
     //ok
     @Test(description = "积分兑换--创建虚拟积分兑换")
-    public void IntegralExchange_system_2() {
+    public void integralExchange_system_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
@@ -206,7 +206,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
 
     //ok
     @Test(description = "积分兑换--创建虚拟积分兑换，可兑换数量大于卡券库存")
-    public void IntegralExchange_system_3() {
+    public void integralExchange_system_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
@@ -229,7 +229,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
 
     //bug  -1/1000000000没限制
     @Test(description = "积分兑换--创建虚拟积分兑换，兑换价异常")
-    public void IntegralExchange_system_4() {
+    public void integralExchange_system_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
@@ -254,8 +254,29 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
+    @Test(description = "积分兑换--创建虚拟积分兑换，包含无库存的卡券")
+    public void integralExchange_system_5() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String exchangeStartTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
+            String exchangeEndTime = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 30), "yyyy-MM-dd HH:mm:ss");
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.SELL_OUT).buildVoucher().getVoucherId();
+            String voucherName = util.getVoucherPage(voucherId).getVoucherName();
+            String message = CreateExchangeGoodsScene.builder().exchangeGoodsType(CommodityTypeEnum.FICTITIOUS.name()).goodsId(voucherId).exchangePrice("1")
+                    .exchangeNum("1").isLimit(true).exchangePeopleNum("1").exchangeStartTime(exchangeStartTime)
+                    .exchangeEndTime(exchangeEndTime).build().execute(visitor, false).getString("message");
+            String err = "卡券【" + voucherName + "】库存不足";
+            CommonUtil.checkResult("创建时包含无库存的卡券", err, message);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("积分兑换--创建虚拟积分兑换，包含无库存的卡券");
+        }
+    }
+
+    //ok
     @Test(description = "积分兑换--修改实体积分兑换库存")
-    public void IntegralExchange_system_9() {
+    public void integralExchange_system_9() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene exchangePageScene = ExchangePageScene.builder().exchangeType(CommodityTypeEnum.REAL.name()).build();
@@ -301,7 +322,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
 
     //bug 1000000000没限制
     @Test(description = "积分兑换--修改实体积分兑换库存，异常情况")
-    public void IntegralExchange_system_10() {
+    public void integralExchange_system_10() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene exchangePageScene = ExchangePageScene.builder().exchangeType(CommodityTypeEnum.REAL.name()).build();
@@ -330,7 +351,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
 
     //ok
     @Test(description = "积分兑换--修改实体积分兑换库存，减少大于当前库存的数")
-    public void IntegralExchange_system_11() {
+    public void integralExchange_system_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene exchangePageScene = ExchangePageScene.builder().exchangeType(CommodityTypeEnum.REAL.name()).build();
@@ -338,8 +359,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             Long id = exchangePageList.stream().map(ExchangePage::getId).findFirst().orElse(0L);
             String goodsName = ExchangeGoodsStockScene.builder().id(id).build().execute(visitor, true).getString("goods_name");
             JSONObject specificationDetail = ExchangeCommoditySpecificationsListScene.builder().id(id).build().execute(visitor, true).getJSONArray("specification_detail_list").getJSONObject(0);
-            String message = EditExchangeStockScene.builder().changeStockType(ChangeStockTypeEnum.MINUS.name()).num(String.valueOf(specificationDetail.getInteger("num") + 1)).id(specificationDetail.getLong("id"))
-                    .goodsName(goodsName).type(CommodityTypeEnum.REAL.name()).build().execute(visitor, false).getString("message");
+            String message = EditExchangeStockScene.builder().changeStockType(ChangeStockTypeEnum.MINUS.name()).num(String.valueOf(specificationDetail.getInteger("num") + 1)).id(specificationDetail.getLong("id")).goodsName(goodsName).type(CommodityTypeEnum.REAL.name()).build().execute(visitor, false).getString("message");
             String err = "减少库存量需小于等于当前库存量";
             CommonUtil.checkResult(goodsName + "减少库存" + specificationDetail.getInteger("num") + 1, err, message);
         } catch (Exception | AssertionError e) {
@@ -351,7 +371,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
 
     //ok
     @Test(description = "积分兑换--修改虚拟积分兑换库存，增加大于卡券库存的数")
-    public void IntegralExchange_system_12() {
+    public void integralExchange_system_12() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene exchangePageScene = ExchangePageScene.builder().exchangeType(CommodityTypeEnum.FICTITIOUS.name()).build();
@@ -376,7 +396,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
 
     //ok
     @Test(description = "积分兑换--修改虚拟积分兑换库存，减少大于当前库存的数")
-    public void IntegralExchange_system_13() {
+    public void integralExchange_system_13() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene exchangePageScene = ExchangePageScene.builder().exchangeType(CommodityTypeEnum.FICTITIOUS.name()).build();
@@ -387,8 +407,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             String goodsName = exchangeGoodsStockResponse.getString("goods_name");
             long num = goodsStock + 1;
             //增加库存
-            String message = EditExchangeStockScene.builder().changeStockType(ChangeStockTypeEnum.MINUS.name()).num(String.valueOf(num)).id(id)
-                    .goodsName(goodsName).type(CommodityTypeEnum.FICTITIOUS.name()).build().execute(visitor, false).getString("message");
+            String message = EditExchangeStockScene.builder().changeStockType(ChangeStockTypeEnum.MINUS.name()).num(String.valueOf(num)).id(id).goodsName(goodsName).type(CommodityTypeEnum.FICTITIOUS.name()).build().execute(visitor, false).getString("message");
             String err = "减少库存量需小于等于当前库存量";
             CommonUtil.checkResult(goodsName + "减少库存 " + num, err, message);
         } catch (Exception | AssertionError e) {
@@ -400,12 +419,12 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
 
     //ok
     @Test(description = "积分兑换--创建实体积分兑换->小程序兑换实体商品->发货->确认收货->取消")
-    public void IntegralExchange_system_15() {
+    public void integralExchange_system_15() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene exchangePageScene = ExchangePageScene.builder().exchangeType(IntegralExchangeStatusEnum.WORKING.name()).build();
+            IScene exchangePageScene = ExchangePageScene.builder().status(IntegralExchangeStatusEnum.WORKING.name()).build();
             ExchangePage a = util.collectBean(exchangePageScene, ExchangePage.class).stream().filter(e -> e.getExchangeType().equals(CommodityTypeEnum.REAL.name()) && e.getExchangePrice() == 1).findFirst().orElse(null);
-            ExchangePage exchangePage = a == null ? util.CreateExchangeGoods() : a;
+            ExchangePage exchangePage = a == null ? util.CreateExchangeRealGoods() : a;
             List<Integer> exchangedAndSurplusList = Arrays.stream(exchangePage.getExchangedAndSurplus().split("/")).map(Integer::valueOf).collect(Collectors.toList());
             user.loginApplet(APPLET_USER_ONE);
             int score = AppletDetailScene.builder().build().execute(visitor, true).getInteger("score");
@@ -522,7 +541,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
 
     //ok
     @Test(description = "积分订单--订单明细--实付总积分=商品积分*兑换数量")
-    public void IntegralOrder_data_1() {
+    public void integralOrder_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene exchangeOrderScene = ExchangeOrderScene.builder().build();
@@ -547,7 +566,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
 
     //bug 积分数对不上
     @Test(description = "积分明细--各个积分规则所得积分相加=此规则的已发放积分")
-    public void IntegralRule_data_1() {
+    public void integralRule_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene exchangeDetailedScene = ExchangeDetailedScene.builder().build();
@@ -565,7 +584,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
 
     //ok
     @Test(description = "积分明细--各个积分规则的奖励积分=该规则的单笔发放积分")
-    public void IntegralRule_data_2() {
+    public void integralRule_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene shareManagerPageScene = ShareManagerPageScene.builder().build();
@@ -582,7 +601,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
 
     //ok
     @Test(description = "积分明细--各个积分规则的奖励积分=该规则的单笔发放积分")
-    public void IntegralRule_data_3() {
+    public void integralRule_data_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene shareManagerPageScene = ShareManagerPageScene.builder().build();
@@ -601,7 +620,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
 
     //ok
     @Test(description = "积分明细--各个积分规则的奖励积分=该规则的单笔发放积分")
-    public void IntegralRule_data_4() {
+    public void integralRule_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene equityPageScene = EquityPageScene.builder().build();
@@ -620,7 +639,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
 
     //ok
     @Test(description = "积分明细--各个积分规则的奖励积分=该规则的单笔发放积分")
-    public void IntegralRule_data_5() {
+    public void integralRule_data_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene equityPageScene = EquityPageScene.builder().build();
@@ -639,7 +658,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
 
     //ok
     @Test(description = "积分明细--各个积分规则的奖励积分=该规则的单笔发放积分")
-    public void IntegralRule_data_6() {
+    public void integralRule_data_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene signInConfigPageScene = SignInConfigPageScene.builder().build();

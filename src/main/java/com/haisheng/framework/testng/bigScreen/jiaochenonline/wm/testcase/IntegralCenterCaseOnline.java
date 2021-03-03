@@ -408,9 +408,9 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
     public void IntegralExchange_system_15() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene exchangePageScene = ExchangePageScene.builder().exchangeType(IntegralExchangeStatusEnum.WORKING.name()).build();
+            IScene exchangePageScene = ExchangePageScene.builder().status(IntegralExchangeStatusEnum.WORKING.name()).build();
             ExchangePage a = util.collectBean(exchangePageScene, ExchangePage.class).stream().filter(e -> e.getExchangeType().equals(CommodityTypeEnum.REAL.name()) && e.getExchangePrice() == 1).findFirst().orElse(null);
-            ExchangePage exchangePage = a == null ? util.CreateExchangeGoods() : a;
+            ExchangePage exchangePage = a == null ? util.CreateExchangeRealGoods() : a;
             List<Integer> exchangedAndSurplusList = Arrays.stream(exchangePage.getExchangedAndSurplus().split("/")).map(Integer::valueOf).collect(Collectors.toList());
             user.loginApplet(APPLET_USER_ONE);
             int score = AppletDetailScene.builder().build().execute(visitor, true).getInteger("score");

@@ -1,29 +1,37 @@
 package com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.testcase;
 
+import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppReceptionReceptorList;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletIntegralRecord;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.AppointmentPage;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.EvaluatePage;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.ReceptionPage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletShippingAddress;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.ChangeStockTypeEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.CommodityTypeEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.IntegralExchangeStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.appointment.AppointmentConfirmStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.appointment.AppointmentTypeEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherSourceEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.reception.after.ReceptionStatusEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.app.FollowUpCompleteScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.app.tack.AppAppointmentHandleScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.app.tack.AppAppointmentReceptionScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.app.tack.AppReceptionFinishReceptionScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.app.tack.AppReceptionReceptorChangePageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.EvaluateSubmitScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.HomePageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.appointmentmanager.AppointmentPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.EditExchangeStockScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.ExchangePageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.ReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.ReceptorChangeScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.AddVoucherScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -40,6 +48,7 @@ import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 /**
  * 小程序用例
@@ -190,8 +199,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
             user.loginPc(ADMINISTRATOR);
             List<EvaluatePage> evaluatePageList = util.getEvaluatePageList();
             user.loginApplet(APPLET_USER_ONE);
-            IScene evaluateSubmitScene = EvaluateSubmitScene.builder().id(appointmentId).shopId(shopId).type(1).score(4).describe(EnumDesc.MESSAGE_DESC.getDesc()).suggestion(EnumDesc.MESSAGE_DESC.getDesc()).isAnonymous(true).build();
-            visitor.invokeApi(evaluateSubmitScene);
+            EvaluateSubmitScene.builder().id(appointmentId).shopId(shopId).type(1).score(4).isAnonymous(true).describe(EnumDesc.MESSAGE_DESC.getDesc()).suggestion(EnumDesc.MESSAGE_DESC.getDesc()).build().execute(visitor, true);
             user.loginPc(ADMINISTRATOR);
             List<EvaluatePage> newEvaluatePageList = util.getEvaluatePageList();
             CommonUtil.checkResult("评价列表数", evaluatePageList.size() + 1, newEvaluatePageList.size());
@@ -201,8 +209,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
             //跟进
             user.loginApp(ADMINISTRATOR);
             Integer followId = util.getFollowUpPageList().get(0).getId();
-            IScene followUpCompleteScene = FollowUpCompleteScene.builder().id(followId).shopId(shopId).remark(EnumDesc.MESSAGE_DESC.getDesc()).build();
-            visitor.invokeApi(followUpCompleteScene);
+            FollowUpCompleteScene.builder().id(followId).shopId(shopId).remark(EnumDesc.MESSAGE_DESC.getDesc()).build().execute(visitor, true);
             user.loginPc(ADMINISTRATOR);
             List<EvaluatePage> followEvaluatePage = util.getEvaluatePageList();
             CommonUtil.checkResult("跟进后跟进备注", EnumDesc.MESSAGE_DESC.getDesc(), followEvaluatePage.get(0).getFollowUpRemark());
@@ -211,7 +218,6 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
         } finally {
             saveData("预约保养->确认预约->点接待->变更接待->完成接待->评价->跟进");
         }
-
     }
 
     //ok
@@ -290,8 +296,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
             ReceptionPage newReceptionPage = util.getReceptionPageById(receptionId);
             CommonUtil.checkResult("变更接待后接待人员", receptorList.getName(), newReceptionPage.getReceptionSaleName());
             user.loginPc(ADMINISTRATOR);
-            IScene receptorChangeScene = ReceptorChangeScene.builder().id(receptionId).receptorId(util.getReceptorList(ADMINISTRATOR).getUid()).shopId(shopId).build();
-            visitor.invokeApi(receptorChangeScene);
+            ReceptorChangeScene.builder().id(receptionId).receptorId(util.getReceptorList(ADMINISTRATOR).getUid()).shopId(shopId).build().execute(visitor, true);
             //登录此人app完成接待
             user.loginApp(ADMINISTRATOR);
             int finishReceptionNum = util.getReceptionPageNum();
@@ -307,8 +312,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
             user.loginPc(ADMINISTRATOR);
             List<EvaluatePage> evaluatePageList = util.getEvaluatePageList();
             user.loginApplet(APPLET_USER_ONE);
-            IScene evaluateSubmitScene = EvaluateSubmitScene.builder().id(appointmentId).shopId(shopId).type(2).score(4).describe(EnumDesc.MESSAGE_DESC.getDesc()).suggestion(EnumDesc.MESSAGE_DESC.getDesc()).isAnonymous(true).build();
-            visitor.invokeApi(evaluateSubmitScene);
+            EvaluateSubmitScene.builder().id(appointmentId).shopId(shopId).type(2).score(4).isAnonymous(true).describe(EnumDesc.MESSAGE_DESC.getDesc()).suggestion(EnumDesc.MESSAGE_DESC.getDesc()).build().execute(visitor, true);
             user.loginPc(ADMINISTRATOR);
             List<EvaluatePage> newEvaluatePageList = util.getEvaluatePageList();
             CommonUtil.checkResult("评价列表数", evaluatePageList.size() + 1, newEvaluatePageList.size());
@@ -318,8 +322,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
             //跟进
             user.loginApp(ADMINISTRATOR);
             Integer followId = util.getFollowUpPageList().get(0).getId();
-            IScene followUpCompleteScene = FollowUpCompleteScene.builder().id(followId).shopId(shopId).remark(EnumDesc.MESSAGE_DESC.getDesc()).build();
-            visitor.invokeApi(followUpCompleteScene);
+            FollowUpCompleteScene.builder().id(followId).shopId(shopId).remark(EnumDesc.MESSAGE_DESC.getDesc()).build().execute(visitor, true);
             user.loginPc(ADMINISTRATOR);
             List<EvaluatePage> followEvaluatePage = util.getEvaluatePageList();
             CommonUtil.checkResult("跟进后跟进备注", EnumDesc.MESSAGE_DESC.getDesc(), followEvaluatePage.get(0).getFollowUpRemark());
@@ -350,6 +353,139 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
             collectMessage(e);
         } finally {
             saveData("小程序--积分总数=积分明细所有项加和");
+        }
+    }
+
+    //ok
+    @Test(description = "积分兑换--兑换库存不足的实体商品，提示：商品库存不足")
+    public void integralMall_system_1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene exchangePageScene = ExchangePageScene.builder().status(IntegralExchangeStatusEnum.WORKING.name()).exchangeType(CommodityTypeEnum.REAL.name()).build();
+            ExchangePage a = util.collectBean(exchangePageScene, ExchangePage.class).stream().filter(e -> e.getExchangedAndSurplus().split("/")[1].equals("0")).findFirst().orElse(null);
+            ExchangePage exchangePage = a == null ? util.CreateExchangeRealGoods(0) : a;
+            user.loginApplet(APPLET_USER_ONE);
+            int specificationId = AppletCommodityDetailScene.builder().id(exchangePage.getId()).build().execute(visitor, true).getJSONArray("specification_compose_list").getJSONObject(0).getInteger("id");
+            AppletShippingAddress appletShippingAddress = AppletShippingAddressListScene.builder().build().execute(visitor, true).getJSONArray("list").stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppletShippingAddress.class)).collect(Collectors.toList()).get(0);
+            //兑换积分
+            String message = AppletSubmitOrderScene.builder().commodityId(exchangePage.getId()).specificationId(specificationId).smsNotify(false).commodityNum("1").districtCode(appletShippingAddress.getDistrictCode()).address(appletShippingAddress.getAddress()).receiver(appletShippingAddress.getName()).receivePhone(appletShippingAddress.getPhone()).build().execute(visitor, false).getString("message");
+            String err = "商品库存不足";
+            CommonUtil.checkResult("兑换库存不足的商品", err, message);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("积分兑换--兑换库存不足的实体商品，提示：商品库存不足");
+        }
+    }
+
+    //ok
+    @Test(description = "积分兑换--兑换卡券无库存的虚拟商品")
+    public void integralMall_system_2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //找一个库存为大于0并且包含卡券剩余库存等于0的积分商品
+            IScene exchangePageScene = ExchangePageScene.builder().status(IntegralExchangeStatusEnum.WORKING.name()).exchangeType(CommodityTypeEnum.FICTITIOUS.name()).build();
+            ExchangePage a = util.collectBean(exchangePageScene, ExchangePage.class).stream().filter(e -> Integer.parseInt(e.getExchangedAndSurplus().split("/")[1]) > 0 && util.getExchangeGoodsContainVoucher(e.getId()).getSurplusInventory() == 0).findFirst().orElse(null);
+            ExchangePage exchangePage;
+            if (a == null) {
+                Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.SELL_OUT).buildVoucher().getVoucherId();
+                AddVoucherScene.builder().id(voucherId).addNumber(1).build().execute(visitor, true);
+                String voucherName = util.getVoucherName(voucherId);
+                util.applyVoucher(voucherName, "1");
+                exchangePage = util.CreateExchangeFictitiousGoods(voucherId);
+                util.pushMessage(0, true, voucherId);
+            } else {
+                exchangePage = a;
+            }
+            user.loginApplet(APPLET_USER_ONE);
+            Long specificationId = AppletCommodityDetailScene.builder().id(exchangePage.getId()).build().execute(visitor, true).getLong("id");
+            //兑换积分
+            String message = AppletIntegralExchangeScene.builder().id(specificationId).build().execute(visitor, false).getString("message");
+            String err = "很遗憾，优惠券已经被抢光了～更多活动敬请期待";
+            CommonUtil.checkResult("兑换卡券无库存的虚拟商品", err, message);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("积分兑换--兑换卡券无库存的虚拟商品");
+        }
+    }
+
+    //ok
+    @Test(description = "积分兑换--兑换无库存的虚拟商品，提示：商品库存不足")
+    public void integralMall_system_3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //找一个库存为大于0并且包含卡券剩余库存等于0的积分商品
+            IScene exchangePageScene = ExchangePageScene.builder().status(IntegralExchangeStatusEnum.WORKING.name()).exchangeType(CommodityTypeEnum.FICTITIOUS.name()).build();
+            ExchangePage a = util.collectBean(exchangePageScene, ExchangePage.class).stream().filter(e -> Integer.parseInt(e.getExchangedAndSurplus().split("/")[1]) == 0 && util.getExchangeGoodsContainVoucher(e.getId()).getSurplusInventory() > 0).findFirst().orElse(null);
+            ExchangePage exchangePage;
+            if (a == null) {
+                Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+                exchangePage = util.CreateExchangeFictitiousGoods(voucherId);
+                EditExchangeStockScene.builder().id(exchangePage.getId()).changeStockType(ChangeStockTypeEnum.MINUS.name()).num("1").goodsName(exchangePage.getGoodsName()).type(exchangePage.getExchangeType()).build().execute(visitor, true);
+            } else {
+                exchangePage = a;
+            }
+            user.loginApplet(APPLET_USER_ONE);
+            Long specificationId = AppletCommodityDetailScene.builder().id(exchangePage.getId()).build().execute(visitor, true).getLong("id");
+            //兑换积分
+            String message = AppletIntegralExchangeScene.builder().id(specificationId).build().execute(visitor, false).getString("message");
+            String err = "商品库存不足";
+            CommonUtil.checkResult("兑换无库存的虚拟商品", err, message);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("积分兑换--兑换无库存的虚拟商品，提示：商品库存不足");
+        }
+    }
+
+    //ok
+    @Test(description = "积分兑换--兑换无库存的虚拟商品")
+    public void integralMall_system_4() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long voucherId;
+            ExchangePage exchangePage;
+            IScene exchangePageScene = ExchangePageScene.builder().status(IntegralExchangeStatusEnum.WORKING.name()).exchangeType(CommodityTypeEnum.FICTITIOUS.name()).build();
+            //找一个库存为大于0并且包含卡券剩余库存大于0的积分商品
+            ExchangePage a = util.collectBean(exchangePageScene, ExchangePage.class).stream().filter(e -> Integer.parseInt(e.getExchangedAndSurplus().split("/")[1]) > 0 && util.getExchangeGoodsContainVoucher(e.getId()).getSurplusInventory() > 0 && util.getExchangeGoodsContainVoucher(e.getId()).getVoucherStatus().equals(VoucherStatusEnum.WORKING.name())).findFirst().orElse(null);
+            if (a == null) {
+                //如果没有找一个库存为0并且包含卡券剩余库存大于0的积分商品
+                ExchangePage b = util.collectBean(exchangePageScene, ExchangePage.class).stream().filter(e -> Integer.parseInt(e.getExchangedAndSurplus().split("/")[1]) == 0 && util.getExchangeGoodsContainVoucher(e.getId()).getSurplusInventory() > 0 && util.getExchangeGoodsContainVoucher(e.getId()).getVoucherStatus().equals(VoucherStatusEnum.WORKING.name())).findFirst().orElse(null);
+                if (b == null) {
+                    //如果没有创建一个库存为1并且包含卡券剩余库存>0的积分商品
+                    voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+                    exchangePage = util.CreateExchangeFictitiousGoods(voucherId);
+                } else {
+                    //如果有给此积分商品增加一个库存
+                    exchangePage = b;
+                    voucherId = util.getExchangeGoodsContainVoucher(exchangePage.getId()).getVoucherId();
+                    EditExchangeStockScene.builder().changeStockType(ChangeStockTypeEnum.ADD.name()).num("1").id(exchangePage.getId()).goodsName(exchangePage.getGoodsName()).type(CommodityTypeEnum.FICTITIOUS.name()).build().execute(visitor, true);
+                }
+            } else {
+                //如果有直接使用
+                exchangePage = a;
+                voucherId = util.getExchangeGoodsContainVoucher(exchangePage.getId()).getVoucherId();
+            }
+            VoucherPage voucherPage = util.getVoucherPage(voucherId);
+            user.loginApplet(APPLET_USER_ONE);
+            int appletVoucherNum = util.getAppletVoucherNum();
+            //兑换积分
+            Long specificationId = AppletCommodityDetailScene.builder().id(exchangePage.getId()).build().execute(visitor, true).getLong("id");
+            AppletIntegralExchangeScene.builder().id(specificationId).build().execute(visitor, true);
+            int newAppletVoucherNum = util.getAppletVoucherNum();
+            CommonUtil.checkResult(voucherPage.getVoucherName() + "兑换后我的卡券列表数量", appletVoucherNum + 1, newAppletVoucherNum);
+            user.loginPc(ADMINISTRATOR);
+            VoucherPage newVoucherPage = util.getVoucherPage(voucherId);
+            CommonUtil.checkResult(voucherPage.getVoucherName() + "剩余库存", voucherPage.getSurplusInventory() - 1, newVoucherPage.getSurplusInventory());
+            CommonUtil.checkResult(voucherPage.getVoucherName() + "已领取", voucherPage.getCumulativeDelivery() + 1, newVoucherPage.getCumulativeDelivery());
+            VoucherSendRecord voucherSendRecord = util.getVoucherSendRecordList(voucherId).get(0);
+            CommonUtil.checkResult(voucherPage.getVoucherName() + "领取记录领取渠道", VoucherSourceEnum.INTEGRAL_PURCHASE.getName(), voucherSendRecord.getSendChannelName());
+            CommonUtil.checkResult(voucherPage.getVoucherName() + "领取人手机号", APPLET_USER_ONE.getPhone(), voucherSendRecord.getCustomerPhone());
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("积分兑换--兑换无库存的虚拟商品");
         }
     }
 }
