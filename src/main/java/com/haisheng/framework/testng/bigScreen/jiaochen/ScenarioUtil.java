@@ -4260,24 +4260,34 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :修改规格状态
      * @date :2021/1/20 14:00
      **/
-    public JSONObject specificationsChgStatus(Long id,  Boolean status) {
+    public JSONObject specificationsChgStatus(Long id,  Boolean ... status) {
         String url = "/jiaochen/pc/integral-mall/change-specifications-status";
         JSONObject json1=new JSONObject();
         json1.put("id",id);
-        json1.put("status",status);
-        return invokeApi(url,json1);
+        json1.put("status",status[0]);
+        if (status.length > 1){
+            return invokeApi(url,json1,status[1]);
+        }
+        else {
+            return invokeApi(url,json1);
+        }
+
     }
 
     /**
      * @description :删除规格状态
      * @date :2021/1/20 14:00
      **/
-    public JSONObject specificationsDel(Long id) {
+    public JSONObject specificationsDel(Long id,Boolean ... chk) {
         String url = "/jiaochen/pc/integral-mall/delete-specifications";
         JSONObject json1=new JSONObject();
         json1.put("id",id);
-
-        return invokeApi(url,json1);
+        if (chk.length>0){
+            return invokeApi(url,json1,chk[0]);
+        }
+        else {
+            return invokeApi(url,json1);
+        }
     }
 
 
@@ -4347,6 +4357,21 @@ public class ScenarioUtil extends TestCaseCommon {
         json1.put("first_category",first_category);
         json1.put("second_category",second_category);
         json1.put("third_category",third_category);
+        return invokeApi(url,json1);
+    }
+
+    /**
+     * @description :商品规格列表
+     * @date :2021/3/03 19:00
+     **/
+    public JSONObject specificationsPage(Integer page, Integer size,String specifications_name,Long first_category,Boolean specifications_status) {
+        String url = "/jiaochen/pc/integral-mall/specifications-page";
+        JSONObject json1=new JSONObject();
+        json1.put("page",page);
+        json1.put("size",size);
+        json1.put("specifications_name",specifications_name);
+        json1.put("first_category",first_category);
+        json1.put("specifications_status",specifications_status);
         return invokeApi(url,json1);
     }
 

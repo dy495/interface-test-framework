@@ -460,6 +460,12 @@ public class jiaoChenInfo {
         return obj;
     }
 
+    public Long newSpecificition(){
+        //新建规格
+        String spename = "规格"+Integer.toString((int)((Math.random()*9+1)*10000));
+        Long speId = jc.specificationsCreate(spename,first_category,null,null,true).getLong("id");
+        return speId;
+    }
 
     public String getLogo(){
         String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";

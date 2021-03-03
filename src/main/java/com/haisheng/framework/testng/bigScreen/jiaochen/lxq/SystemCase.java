@@ -1824,6 +1824,27 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         };
     }
 
+    //商品规格
+    @Test
+    public void specificationsStop1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long id = info.newSpecificition();
+            int code= jc.specificationsChgStatus(id,false,false).getInteger("code");
+            Preconditions.checkArgument(code==1000,"状态码"+code);
+
+            jc.specificationsDel(id);
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【商品规格】停用 无商品使用的规格，期待成功");
+        }
+    }
+
 
 
 
