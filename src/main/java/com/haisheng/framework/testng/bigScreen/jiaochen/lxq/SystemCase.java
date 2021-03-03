@@ -1831,8 +1831,12 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         try {
             Long id = info.newSpecificition();
             int code= jc.specificationsChgStatus(id,false,false).getInteger("code");
-            Preconditions.checkArgument(code==1000,"状态码"+code);
+            Preconditions.checkArgument(code==1000,"停用无商品使用的规格,状态码"+code);
 
+            int code1= jc.specificationsChgStatus(id,true,false).getInteger("code");
+            Preconditions.checkArgument(code1==1000,"启用停用的规格，期待成功实际"+code1);
+
+            jc.specificationsChgStatus(id,false);
             jc.specificationsDel(id);
 
 
@@ -1841,7 +1845,32 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("PC【商品规格】停用 无商品使用的规格，期待成功");
+            saveData("PC【商品规格】停用无商品使用的规格，期待成功");
+        }
+    }
+
+    @Test
+    public void specificationsDel1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long id = info.newSpecificition();
+
+
+            //删除启用的规格，应失败（ 前端限制，这里注释掉）
+//            jc.specificationsChgStatus(id,true,true);
+//            int code1 = jc.specificationsDel(id,false).getInteger("code");
+//            Preconditions.checkArgument(code1==1001,"删除启用的规格，期待失败实际"+code1);
+            //删除停用的规格，应成功
+            jc.specificationsChgStatus(id,false);
+            int code2 = jc.specificationsDel(id,false).getInteger("code");
+            Preconditions.checkArgument(code2==1000,"删除停用的规格，期待成功实际"+code2);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【商品规格】删除各种状态的&无商品使用的规格");
         }
     }
 
@@ -2078,10 +2107,10 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //TODO 创建商品的各种长度
 
-    @Test
-    public void goodAdd() {
+
+    @Test(dataProvider = "GOOD")
+    public void goodAdd(String goodname,String goodDesc,String gooddetail, String price,String spename,String mess) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //新建一个一二三级品类
@@ -2094,7 +2123,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             String idthree = objthree.getString("id");
 
             //新建规格
-            String spename = "规格"+Integer.toString((int)((Math.random()*9+1)*10000));
+
             String speItemName = "规格参数"+Integer.toString((int)((Math.random()*9+1)*10000));
 
             //新建品牌
@@ -2141,9 +2170,14 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             good.select_specifications = select_specifications;
             good.goods_specifications_list = goods_specifications_list;
             good.checkcode=false;
+            good.goods_name = goodname;
+            good.goods_description = goodDesc;
+            good.price = price;
+            good.goods_detail = gooddetail;
+            good.goods_pic_list = good.getPicone();
             JSONObject objnew = jc.createGoodMethod(good);
             int code = objnew.getInteger("code");
-            Preconditions.checkArgument(code==1000,"新建商品"+code);
+            Preconditions.checkArgument(code==1000,mess+"状态码"+code);
             Long goodid = objnew.getJSONObject("data").getLong("id");
 
 
@@ -2164,7 +2198,150 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("PC【商品管理】创建商品");
+            saveData("PC【商品管理】创建商品,一个规格一个参数");
+        }
+    }
+    @DataProvider(name = "GOOD")
+    public Object[] good(){ //商品名称 商品描述  商品详情 市场价 规格名称 描述
+        return new String[][] {
+                {"a","a","123456789sdxfcghvjbknlm,@#$%^&*JHGFDs事事顺遂","0.00","a","商品名称1个字 商品描述1个字 市场价0.00 规格名称1个字"},
+                {"12345Q~!a啊不嘈杂啊67890","12345Q~!a啊不嘈杂啊6789012345Q~!a啊不嘈杂啊67890","123456789sdxf123456789sdxfcghvjbknlm,@#$%^&*JHGFDs事事顺遂123456789sdxfcghvjbknlm,@#$%^&*JHGFDs事事顺遂123456789sdxfcghvjbknlm,@#$%^&*JHGFDs事事顺遂123456789sdxfcghvjbknlm,@#$%^&*JHGFDs事事顺遂123456789sdxfcghvjbknlm,@#$%^&*JHGFDs事事顺遂123456789sdxfcghvjbknlm,@#$%^&*JHGFDs事事顺遂cghvjbknlm,@#$%^&*JHGFDs事事顺遂","100000000.00","a啊123～！@90","商品名称20个字 商品描述40个字 市场价100000000.00 规格名称10个字"},
+                {"12Q~!a啊不嘈","12Q~!a啊不嘈","1","99.99","a啊23～","商品名称10个字 商品描述10个字 市场价99.99 规格名称5个字"},
+
+        };
+    }
+
+    @Test
+    public void goodAddMore() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //新建一个一二三级品类
+            String name = "品类";
+            JSONObject obj = info.newFirstCategory(name+ Integer.toString((int)((Math.random()*9+1)*10000)));
+            String idone = obj.getString("id");
+            JSONObject objtwo = info.newSecondCategory(name+ Integer.toString((int)((Math.random()*9+1)*10000)),idone);
+            String idtwo = objtwo.getString("id");
+            JSONObject objthree = info.newThirdCategory(name+ Integer.toString((int)((Math.random()*9+1)*10000)),idtwo);
+            String idthree = objthree.getString("id");
+
+
+            //新建品牌
+            String brandid = info.newGoodBrand("pp"+System.currentTimeMillis(),"pp说明"+System.currentTimeMillis()).getString("id");
+
+            //新建规格
+            String spename1 = "1规格"+Integer.toString((int)((Math.random()*9+1)*10000));
+            String spename2 = "2规格"+Integer.toString((int)((Math.random()*9+1)*10000));
+
+            Long speId = jc.specificationsCreate(spename1,Long.parseLong(idone),null,null,true).getLong("id"); //第一个规格 有10个参数
+            Long speId2 = jc.specificationsCreate(spename2,Long.parseLong(idone),null,null,true).getLong("id"); //第二个规格 有1个参数
+            //新建规格1的10个参数
+            JSONArray spearray = new JSONArray();
+            for (int i =1 ;i<11;i++){
+                JSONObject objItem = new JSONObject();
+                objItem.put("specifications_item","speItemName"+i);
+                spearray.add(objItem);
+            }
+
+            jc.specificationsEdit(spename1,Long.parseLong(idone),spearray,speId,true);
+            Long speItemId = jc.specificationsDetail(speId,1,10).getJSONArray("specifications_list").getJSONObject(0).getLong("specifications_id");
+
+            //新建规格2的一个参数
+            JSONObject objItem1 = new JSONObject();
+            objItem1.put("specifications_item","speItemName11");
+            JSONArray spearray2 = new JSONArray();
+            spearray2.add(objItem1);
+            jc.specificationsEdit(spename2,Long.parseLong(idone),spearray2,speId2,true);
+            Long speItemId2 = jc.specificationsDetail(speId2,1,10).getJSONArray("specifications_list").getJSONObject(0).getLong("specifications_id");
+
+            //新建商品
+
+            pcCreateGoods good = new pcCreateGoods();
+            good.first_category = Long.parseLong(idone);
+            good.second_category = Long.parseLong(idtwo);
+            good.third_category = Long.parseLong(idthree);
+            good.goods_brand = Long.parseLong(brandid);
+
+            //新建商品
+
+            JSONArray select_specifications = new JSONArray();
+
+            JSONObject spe1obj = new JSONObject();
+            spe1obj.put("specifications_id",speId);
+            spe1obj.put("specifications_name",spename1);
+            //规格1的信息
+            JSONArray spe1list = new JSONArray();
+            for (int i = 0 ; i< 10;i++){
+                JSONObject speclistobj = jc.specificationsDetail(speId,1,10).getJSONArray("specifications_list").getJSONObject(i);
+                Long specifications_id = speclistobj.getLong("specifications_id");
+                String specifications_item = speclistobj.getString("specifications_item");
+                JSONObject everyspeclist = new JSONObject();
+                everyspeclist.put("specifications_detail_id",specifications_id);
+                everyspeclist.put("specifications_detail_name",specifications_item);
+                spe1list.add(everyspeclist);
+            }
+            spe1obj.put("specifications_list",spe1list);
+            //规格2的信息
+            JSONObject spe2obj = new JSONObject();
+            spe2obj.put("specifications_id",speId2);
+            spe2obj.put("specifications_name",spename2);
+
+            JSONArray spe2list = new JSONArray();
+            JSONObject everyspeclist = new JSONObject();
+            everyspeclist.put("specifications_detail_id",speItemId2);
+            everyspeclist.put("specifications_detail_name","speItemName11");
+            spe2list.add(everyspeclist);
+            spe2obj.put("specifications_list",spe2list);
+
+            select_specifications.add(spe1obj);
+            select_specifications.add(spe2obj);
+
+
+
+            //参数组合
+            JSONArray goods_specifications_list =new JSONArray();
+            for (int j = 0; j < 10;j++){
+                JSONObject speclistobj = jc.specificationsDetail(speId,1,10).getJSONArray("specifications_list").getJSONObject(j);
+                Long specifications_id = speclistobj.getLong("specifications_id");
+                String specifications_item = speclistobj.getString("specifications_item");
+                JSONObject everygoodspeclist = new JSONObject();
+                everygoodspeclist.put("first_specifications",specifications_id);
+                everygoodspeclist.put("first_specifications_name",specifications_item);
+                everygoodspeclist.put("second_specifications",speItemId2);
+                everygoodspeclist.put("second_specifications_name","speItemName11");
+                goods_specifications_list.add(everygoodspeclist);
+            }
+
+
+            good.select_specifications = select_specifications;
+            good.goods_specifications_list = goods_specifications_list;
+            good.checkcode=false;
+
+            JSONObject objnew = jc.createGoodMethod(good);
+            int code = objnew.getInteger("code");
+            Preconditions.checkArgument(code==1000,"状态码"+code);
+            Long goodid = objnew.getJSONObject("data").getLong("id");
+
+
+//            //删除商品
+//            jc.deleteGoodMethod(goodid);
+//            //关闭->删除规格
+//            jc.specificationsChgStatus(speId,false);
+//            jc.specificationsDel(speId);
+//            jc.specificationsChgStatus(speId2,false);
+//            jc.specificationsDel(speId2);
+//            //删除品类
+//            jc.categoryDel(Long.parseLong(idthree),true);
+//            jc.categoryDel(Long.parseLong(idtwo),true);
+//            jc.categoryDel(Long.parseLong(idone),true);
+
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【商品管理】创建商品,多个规格多参数");
         }
     }
 

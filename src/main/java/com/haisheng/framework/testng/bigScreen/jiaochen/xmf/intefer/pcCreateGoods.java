@@ -33,6 +33,15 @@ public class pcCreateGoods {
         JSONArray picarr = new JSONArray();
         picarr.add(logo);
         picarr.add(logo);
+        picarr.add(logo);
+        picarr.add(logo);
+        picarr.add(logo);
+        return picarr;
+    }
+    public JSONArray getPicone(){
+        String logo = jc.pcFileUploadNew(new ImageUtil().getImageBinary(info.filePath)).getString("pic_path");
+        JSONArray picarr = new JSONArray();
+        picarr.add(logo);
         return picarr;
     }
 }
