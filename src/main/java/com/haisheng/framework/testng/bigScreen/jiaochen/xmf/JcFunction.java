@@ -61,6 +61,8 @@ public class JcFunction {
     }
 
 
+
+
     //pc预约记录总数
     public int pcAppointmentRecodePage() {
         jc.pcLogin(pp.jdgw, pp.jdgwpassword);
@@ -399,7 +401,7 @@ public class JcFunction {
         }
         return count;
     }
-
+    //获取套餐个数
     public Integer getpackgeTotal() {
         JSONObject data = jc.appletpackageList(null, "GENERAL", 20);
         JSONObject lastValue = data.getJSONObject("last_value");

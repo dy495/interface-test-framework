@@ -1,6 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.xmf;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 
 
@@ -51,7 +52,7 @@ public class PublicParm {
     //---------2.0---------
     public String String_20="一二三四五六七八九十一二三四五六七八九十";
     public String String_200="一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十";
-    public String StoreCommodity="1902";  //TODO:编辑需要的商品套餐的名字
+    public String StoreCommodityId="79";  //TODO:编辑需要的商品套餐的名字
     public String importFilepath="src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/importfile.xlsx";   //导入工单文件路径
     //其他小程序用户tocken和车牌号信息
     public String getAppletTockenOther="R4M7UpQ2+Q3L0QbxGA32iA==";
@@ -69,11 +70,21 @@ public class PublicParm {
 
     public JSONArray roleList = getRoleList();
     public JSONArray vouchers = getvouchersList();
+    public JSONArray vouchers2 =voucherSingle() ;
 
-    public JSONArray getvouchersList() {
+    public JSONArray getvouchersList() {   //创建精品套餐时创建的卡券数组
+        JSONObject vouletList=new JSONObject();
+        vouletList.put("effective_day",1);
+        vouletList.put("voucher_count",1);
+        vouletList.put("voucher_id",69);
+        vouletList.put("voucher_name","测试专用优惠券");
         JSONArray moduleId2 = new JSONArray();
-        moduleId2.add(136);  //TODO:新增卡券名字
-        moduleId2.add(137);
+        moduleId2.add(vouletList);
+        return moduleId2;
+    }
+    public JSONArray voucherSingle(){
+        JSONArray moduleId2 = new JSONArray();
+        moduleId2.add(69);
         return moduleId2;
     }
 

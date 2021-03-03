@@ -46,6 +46,8 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
     private QADbProxy qaDbProxy = QADbProxy.getInstance();
     public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
     CommonConfig commonConfig = new CommonConfig();
+    public String IpPort = EnumTestProduce.JIAOCHEN_DAILY.getAddress();
+
 
 
     /**
@@ -267,10 +269,12 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         try {
             pcCreateStoreCommodity er=new pcCreateStoreCommodity();
             er.commodity_name="保温杯"+random.nextInt(10);
-            er.affiliation="红色";    //规格
-            er.price=89.99;       //单价
-            er.commission=99.99;  //佣金
+            er.commodity_specification="颜色:红色";    //规格
+            er.price=0.1;       //单价
+            er.commission=0.1;  //佣金
             er.invitation_payment=1.99;   //邀请奖励金
+            er.voucher_list=pp.getvouchersList();
+
             jc.CreateStoreCommodity( er);
 
         } catch (AssertionError | Exception e) {
@@ -286,15 +290,16 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         try {
             pcCreateStoreCommodity er=new pcCreateStoreCommodity();
             er.commodity_name="一二三四五六七八九十一二三四五六七八九十保温杯"+random.nextInt(10);
-            er.affiliation="红色";    //规格
+            er.commodity_specification="颜色:红色";    //规格
             er.price=89.99;       //单价
             er.commission=99.99;  //佣金
             er.invitation_payment=1.99;   //邀请奖励金
+            er.voucher_list=pp.getvouchersList();
             er.checkcode=false;
             int code=jc.CreateStoreCommodity( er).getInteger("code");
             Preconditions.checkArgument(code==1001,"创建商城套餐异常");
             er.commodity_name="保温杯"+random.nextInt(10);
-            er.affiliation="一二三四五六七八九十一二三四五六七八九十红色";  //规格>20
+            er.commodity_specification="一:二三 四:五六 七: 八九 十:一二三四五六七八九十红色";  //规格>20
             int code2=jc.CreateStoreCommodity( er).getInteger("code");
             Preconditions.checkArgument(code2==1001,"创建商城套餐异常");
 
@@ -305,7 +310,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test  //下单，发送卡券，下架商城套餐，下单，不发送套餐  TODO:
+//    @Test  //下单，发送卡券，下架商城套餐，下单，不发送套餐  TODO:无法自动化实现有赞下单
     public void Commodity2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -319,7 +324,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test  //下单，发送卡券，下架商城套餐，下单，不发送套餐  TODO:
+//    @Test  //下单，发送卡券，下架商城套餐，下单，不发送套餐  TODO:
     public void CommodityUpAndDown() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -341,29 +346,25 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
     public void EditCommodity() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            pcCreateStoreCommodity er=new pcCreateStoreCommodity();
-            er.commodity_name="一保温杯"+random.nextInt(10);
-            er.affiliation="红色";    //规格
-            er.price=89.99;       //单价
-            er.commission=99.99;  //佣金
-            er.invitation_payment=1.99;   //邀请奖励金
-            er.id=pp.StoreCommodity;   //编辑的商品套餐id
+            JSONObject data=jc.StoreCommodityDetail(pp.StoreCommodityId);
+            data.put("id",pp.StoreCommodityId);
+            httpPostWithCheckCode("/jiaochen/pc/store/commodity/edit",data.toJSONString(),IpPort);
 
-            jc.EditStoreCommodity( er);
+
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("pc-新建商城套餐异常格式验证");
+            saveData("pc-编辑商城套餐");
         }
     }
 
-    @Test  //商城订单页
+//    @Test  //商城订单页  //TODO: JSONpath 没校准
     public void StoreOrderList() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject data=jc.StoreorderPage("1","10","","","","");
-            jpu.spiltString(data.toJSONString(),"$.order_number&&$.commodity_name&&$.pay_time&&$.order_status&&$.commodity_specification&&$.order_money&&$.purchase_number&&$.distribution_manner&&$.shipping_status&&$.consignee&&$.consignee_address&&$.customer_phone&&$.sales_phone&&$.sales_name&&$.sales_shop_name&&$.commission&&$.invitation_payment&&$.express_number");
+            jpu.spiltString(data.toJSONString(),"$.commodity_name&&$.commission&&$.commodity_specification&&$.create_date&&$.id&&$.invitation_payment&&$.price&&$.consignee&&$.status_name&&$.subject_type&&$.subject_type_name");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -371,29 +372,44 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             saveData("pc-新建商城套餐单接口");
         }
     }
+    @Test  //商城页套餐
+    public void StoreList() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject data=jc.storeCommodityPage("","1","10","","");
+            jpu.spiltString(data.toJSONString(),"$.list[*].commodity_name&&$.list[*].commission&&$.list[*].id&&$.list[*].invitation_payment&&$.list[*].price&&$.list[*].status_name&&$.list[*].subject_type_name");
 
-    @Test  //商城订单页，作废&发放
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("pc-商城套餐列表字段不为空校验");
+        }
+    }
+
+//    @Test  //商城订单页，作废&发放  TODO:订单id 需要给定
     public void StoreOrderVolumeSend() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //提前创建好订单，写入订单号
-            int total=pf.getpackgeTotal();  //小程序 套餐个数
+            int totalBefore=pf.getVoucherTotal();  //小程序 卡券个数
            //发放，套餐个数+1
             jc.volumeSend(pp.ordeId);
 
-            int totalAfter=pf.getpackgeTotal();
-            JSONArray list=jc.appletpackageList(null,"GENERAL",20).getJSONArray("list");
-            Integer id=list.getJSONObject(0).getInteger("id");
+            int total=pf.getVoucherTotal();
+//            JSONArray list=jc.appletpackageList(null,"GENERAL",20).getJSONArray("list");
+//            Integer id=list.getJSONObject(0).getInteger("id");
 
             //作废，套餐状态变更 失效
             jc.volumeCancel(pp.ordeId);
+            int totalAfter=pf.getVoucherTotal();
 
-            JSONArray packageList=jc.appletpackageDeatil(id.toString()).getJSONArray("list");
-            for(int i=0;i<packageList.size();i++) {
-                String status_name=packageList.getJSONObject(i).getString("status_name");
-                Preconditions.checkArgument(status_name.equals("已过期"));
-            }
-            Preconditions.checkArgument(totalAfter-total==1,"发放卡券，卡券数+1");
+//            JSONArray packageList=jc.appletpackageDeatil(id.toString()).getJSONArray("list");
+//            for(int i=0;i<packageList.size();i++) {
+//                String status_name=packageList.getJSONObject(i).getString("status_name");
+//                Preconditions.checkArgument(status_name.equals("已过期"));
+//            }
+            Preconditions.checkArgument(totalBefore-total==-1,"发放卡券，卡券数+1");
+            Preconditions.checkArgument(totalAfter-total==1,"作废卡券，卡券数-1");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -435,7 +451,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             pccreateRemind er=new pccreateRemind();
             er.item="提醒标题";
             er.content="提醒内容";
-            er.vouchers=pp.vouchers;    //卡券
+            er.vouchers=pp.vouchers2;    //卡券
             er.effective_days="1";     //卡券有效期
 //            er.days="1";            //提醒天数
             er.mileage="200";        //提醒公里数
@@ -454,7 +470,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
     public void CreateRemindCheck() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String maile="2000";
+            String maile="2001";
             //前提新建好一个任务
             //查询小程序卡券数量
             jc.appletLoginToken(pp.appletTocken);
@@ -462,28 +478,29 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             //新建一个excel,里程数=智能提醒公里数
             PoiUtils.importCustomer(maile);
             //导入工单
-            jc.pcLogin(pp.gwphone,pp.gwpassword);
+            pcLogin(pp.jdgw,pp.jdgwpassword,pp.roleidJdgw);
             jc.pcWorkOrder(pp.importFilepath);      //导入工单文件的路径=新建excel 路径
             //查询小程序卡券数量
             jc.appletLoginToken(pp.appletTocken);
             int totalAfter=pf.getVoucherTotal();
 
-            //新建下一个智能提醒
-            pccreateRemind er=new pccreateRemind();
-            er.item="提醒标题";
-            er.content="提醒内容";
-            er.vouchers=pp.vouchers;    //卡券
-            er.effective_days="1";     //卡券有效期
-//            er.days="1";            //提醒天数
-            er.mileage=maile;        //提醒公里数
-            Integer RemindId =jc.createRemindMethod( er).getInteger("id");
-            jc.pcLogin(pp.gwphone,pp.gwpassword);
+            pcLogin(pp.jdgw,pp.jdgwpassword,pp.roleidJdgw);
             jc.pcWorkOrder(pp.importFilepath);      //导入工单文件的路径=新建excel 路径
             jc.appletLoginToken(pp.appletTocken);
             int totalAfter2=pf.getVoucherTotal();
+            //新建下一个智能提醒
+            pcLogin(pp.jdgw,pp.jdgwpassword,pp.roleidJdgw);
+            pccreateRemind er=new pccreateRemind();
+            er.item="提醒标题";
+            er.content="提醒内容";
+            er.vouchers=pp.vouchers2;    //卡券
+            er.effective_days="1";     //卡券有效期
+//            er.days="1";            //提醒天数
+            er.mileage=maile;        //提醒公里数
+            Integer RemindId =jc.createRemindMethod(er).getInteger("id");
 
-            Preconditions.checkArgument(totalAfter-total==1,"触发智能提醒，小程序收到卡券");
             Preconditions.checkArgument(totalAfter-totalAfter2==0,"公里数同一任务只触发一次智能提醒，小程序收不到卡券");
+            Preconditions.checkArgument(totalAfter-total==1,"触发智能提醒，小程序收到卡券");
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -498,7 +515,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
      * @description :新建一个智能提醒，天数1天，该小程序用户找研发要tocken,隔天接待一次，查询卡券数量
      * @date :2021/1/20 17:57
      **/
-    @Test  //新建智能提醒（天数 1天）
+//    @Test  //新建智能提醒（天数 1天）  TODO:虚拟用户的tocken 未取到
     public void CreateRemindCheck2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -507,7 +524,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             Calendar calendar=Calendar.getInstance();
 
             int day=calendar.get(Calendar.DAY_OF_WEEK);
-            if(day%2==1&&day!=Calendar.SATURDAY){  //如果是星期数数是基数且不是周日
+            if(3%2==1&&day!=Calendar.SATURDAY){  //如果是星期数数是基数且不是周日
                 //查询小程序卡券数量
                 jc.appletLoginToken(pp.getAppletTockenOther);
                 int totalAfter=pf.getVoucherTotal();
@@ -529,20 +546,21 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    //人员管理
+    //人员管理2.0
     @Test
     public void accountInfoData_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray list = jc.organizationRolePage("", 1, 10).getJSONArray("list");
+            JSONArray list = jc.staffListFilterManage("", "1", "10","","").getJSONArray("list");
 
             for (int i = 1; i < list.size(); i++) {
-                String role_name = list.getJSONObject(i).getString("role_name");
-                JSONArray list1 = jc.organizationRolePage(role_name, 1, 10).getJSONArray("list");
-                int account_num = list1.getJSONObject(0).getInteger("account_number");
-                //TODO:角色使用账户列表接口未给出
-//                Integer Total = jc.organizationAccountPage("", "", "", "", role_name, "", 1, 10).getInteger("total");
-//                Preconditions.checkArgument(account_num == Total, "角色名为:" + role_name + "的使用账户数量：" + account_num + "！=【账户列表】中该角色的账户数量：" + Total);
+                String role_name = list.getJSONObject(i).getJSONArray("role_list").getJSONObject(0).getString("role_name");
+                JSONArray list1 = jc.organizationRolePage(role_name, 1, 100).getJSONArray("list");
+                int account_num = list1.getJSONObject(0).getInteger("num");
+                String id = list1.getJSONObject(0).getString("id");
+
+                Integer Total = jc.staffListFilterManage("", "1", "10",   "role_id",id ).getInteger("total");
+                Preconditions.checkArgument(account_num == Total, "角色名为:" + role_name + "的使用账户数量：" + account_num + "！=【账户列表】中该角色的账户数量：" + Total);
             }
 
         } catch (AssertionError | Exception e) {
@@ -559,7 +577,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
      * @date :2021/1/22 18:42
      **/
 
-    @Test
+//    @Test
     public void createGoods() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -569,10 +587,12 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             //品类树
             JSONObject category=jc.categoryList().getJSONArray("list").getJSONObject(0);  //品类数
             ReadContext context = JsonPath.parse(category.toJSONString());
-            List<Long> result = context.read("$..category_id");
-            er.first_category=result.get(0);
-            er.second_category=result.get(1);
-            er.third_category=result.get(2);  //品类
+            List<Integer> result = context.read("$..category_id");
+            System.out.println("result:"+result);
+            System.out.println(result.get(0));
+            er.first_category=result.get(0).longValue();
+            er.second_category=result.get(1).longValue();
+            er.third_category=result.get(2).longValue();  //品类
 
             er.goods_brand=jc.bandList().getJSONArray("list").getJSONObject(0).getLong("id");  //品牌
             er.price="9.99";  //价格
@@ -597,7 +617,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test(description = "创建积分商品，名称异常")
+//    @Test(description = "创建积分商品，名称异常")
     public void createGoodsAb() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

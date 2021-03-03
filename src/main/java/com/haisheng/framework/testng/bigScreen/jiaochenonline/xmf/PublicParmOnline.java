@@ -4,9 +4,10 @@ import com.alibaba.fastjson.JSONArray;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 
 public class PublicParmOnline {
-    public int roleId=1;
+    public String roleId="";
     public String shopId="-1";   //门店Id
     public String shopIdZ="20032";   //门店Id 中关村店
+
     public String reception_sale_id="接待顾问x";
     public String name="";
     public String customerPhone = "15037286013";
@@ -33,14 +34,30 @@ public class PublicParmOnline {
     public String gwpassword="000000"; //单个店的客户的数据  登录密码
 
     public String jdgw="15037286011";  //xx ,属于中关村店
+    public String roleidJdgw="";      //TODO:
+    public String nameJdgw="接待顾问x";
     public String jdgw2="15037286013";  //xx ,属于中关村店
     public String jdgwpassword="000000"; //单个店的客户的数据  登录密码
     public String jdgwName="接待顾问x"; //单个店的客户的数据  登录密码
 
     public String dzphone="15037286014";   //中关村店长
+    public String dzroleId="";
     public String dzcode="000000";
 
+    //---------2.0---------
+    public String String_20="一二三四五六七八九十一二三四五六七八九十";
+    public String String_200="一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十";
+    public String StoreCommodity="1902";  //TODO:编辑需要的商品套餐的名字
+    public String importFilepath="src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/importfile.xlsx";   //导入工单文件路径
+    //其他小程序用户tocken和车牌号信息
+    public String getAppletTockenOther="R4M7UpQ2+Q3L0QbxGA32iA==";
+    public  String CarplateOther="浙ZXCV123";
+    public String userid="uid_0216a935"; //xx的userId;
+    public String userid2="uid_0216a935"; //xx2的userId;
 
+    public int ordeId=10; // 订单Id
+    public String filepath11="src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/1_1.jpg";
+    //---------2.0---------
     public String appletTocken= EnumAppletToken.JC_XMF_ONLINE.getToken();
     public JSONArray coordinate = getCoordinate();
     public Long voucherId = 81L;  //经纬度

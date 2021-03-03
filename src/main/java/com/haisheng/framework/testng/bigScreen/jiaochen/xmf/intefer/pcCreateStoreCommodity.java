@@ -14,4 +14,6 @@ public class pcCreateStoreCommodity {
     public double invitation_payment;
     public JSONArray volume;
     public Boolean checkcode=true;
+    public  String subject_type="REGION";
+    public JSONArray voucher_list;
 }

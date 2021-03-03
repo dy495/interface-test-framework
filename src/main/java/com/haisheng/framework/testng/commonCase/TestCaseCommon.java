@@ -457,6 +457,7 @@ public class TestCaseCommon {
         HttpPost httpPost = new HttpPost(url);
         httpPost.addHeader("authorization", authorization);
         httpPost.addHeader("shop_id", commonConfig.shopId);
+        httpPost.addHeader("role_id", commonConfig.roleId);
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
         File file = new File(filePath);
         String res = "";

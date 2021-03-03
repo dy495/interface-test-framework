@@ -11,6 +11,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.lxq.create.pcCreateExcha
 import com.haisheng.framework.testng.bigScreen.jiaochen.lxq.create.submitOrder;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.*;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
+import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import org.springframework.util.StringUtils;
 import org.testng.annotations.DataProvider;
 
@@ -3867,14 +3868,16 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2021/1/13 14:17
      **/
     public JSONObject CreateStoreCommodity(pcCreateStoreCommodity er) {
-        String url = "/business-jiaochen/pc/store/commodity/page";
+        String url = "/jiaochen/pc/store/commodity/create";
         JSONObject json1=new JSONObject();
         json1.put("commodity_name",er.commodity_name);
         json1.put("commodity_specification",er.commodity_specification);
-        json1.put("affiliation",er.affiliation);
         json1.put("price",er.price);
         json1.put("commission",er.commission);
         json1.put("invitation_payment",er.invitation_payment);
+        json1.put("subject_type",er.subject_type);
+        json1.put("voucher_list",er.voucher_list);
+
 
         return invokeApi(url,json1,er.checkcode);
     }
@@ -3882,7 +3885,7 @@ public class ScenarioUtil extends TestCaseCommon {
 
     //商品套餐详情
     public JSONObject StoreCommodityDetail(String id) {
-        String url = "/business-jiaochen/pc/store/commodity/detail";
+        String url = "/jiaochen/pc/store/commodity/detail";
         JSONObject json1=new JSONObject();
         json1.put("id",id);
 
@@ -3907,12 +3910,13 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(url,json1);
     }
 
+
     /**
      * @description :订单商城
      * @date :2021/1/13 15:35
      **/
     public JSONObject StoreorderPage(String page,String size,String bind_phone,String commodity_name,String pay_time,String order_number) {
-        String url = "/business-jiaochen/pc/store/order/page";
+        String url = "/jiaochen/pc/store/order/page";
         JSONObject json1=new JSONObject();
         json1.put("page",page);
         json1.put("size",size);
@@ -5053,7 +5057,7 @@ public class ScenarioUtil extends TestCaseCommon {
             json1.put("coordinate",coordinate);
 
         }
-        if(!washingStatus.equals(null)) {
+        if(!washingStatus.equals("null")) {
             json1.put("washingStatus", washingStatus);
         }
         return invokeApi(url,json1);
