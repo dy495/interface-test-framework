@@ -443,6 +443,23 @@ public class jiaoChenInfo {
         return obj;
     }
 
+    public JSONObject newGoodBrand(String ... cs){
+        JSONObject obj = new JSONObject();
+        String logo = jc.pcFileUploadNew(new ImageUtil().getImageBinary(filePath)).getString("pic_path");
+        JSONObject obj1 = new JSONObject();
+        if (cs.length>0){
+            obj1 = jc.BrandCreat(false,null,cs[0],cs[1],logo);
+        }
+        else {
+            obj1 = jc.BrandCreat(false,null,"name"+Integer.toString((int)((Math.random()*9+1)*1000)),"品牌desc",logo);
+        }
+
+
+        obj.put("code",obj1.getInteger("code"));
+        obj.put("id",obj1.getJSONObject("data").getLong("id"));
+        return obj;
+    }
+
 
     public String getLogo(){
         String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";

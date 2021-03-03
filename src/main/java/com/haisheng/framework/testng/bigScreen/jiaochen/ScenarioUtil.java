@@ -3,9 +3,9 @@ package com.haisheng.framework.testng.bigScreen.jiaochen;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.lxq.create.pcCreateExchangeGoods;
 import com.haisheng.framework.testng.bigScreen.jiaochen.lxq.create.submitOrder;
@@ -4195,12 +4195,12 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :修改品牌状态
      * @date :2021/1/20 14:00
      **/
-    public JSONObject BrandChgStatus(Integer id,  Boolean brand_status) {
+    public JSONObject BrandChgStatus(Long id,  Boolean brand_status,Boolean chk) {
         String url = "/jiaochen/pc/integral-mall/change-brand-status";
         JSONObject json1=new JSONObject();
         json1.put("id",id);
-        json1.put("brand_status",brand_status);
-        return invokeApi(url,json1);
+        json1.put("status",brand_status);
+        return invokeApi(url,json1,chk);
     }
 
     /**

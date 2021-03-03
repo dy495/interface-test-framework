@@ -1643,9 +1643,23 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
+            int bef = jc.BrandPage(1,10,null,null).getInteger("total");
             int code = jc.BrandCreat(false,null,name,desc,info.getLogo()).getInteger("code");
-            Long id = jc.BrandPage(1,1,null,null).getJSONArray("list").getJSONObject(0).getLong("id");
+            JSONObject obj = jc.BrandPage(1,1,null,null).getJSONArray("list").getJSONObject(0);
+            Long id =obj.getLong("id");
+            //判断品牌状态
+            Boolean status = obj.getBoolean("brand_status");
+            //判断列表数量
+            int after = jc.BrandPage(1,10,null,null).getInteger("total");
+            int add = after- bef;
+            //判断新建商品时品牌下拉列表
+            JSONArray brandlist = jc.BrandList().getJSONArray("list");
+            Long listid = brandlist.getJSONObject(brandlist.size()-1).getLong("id");
+
             Preconditions.checkArgument(code==1000,a+"状态码期待1000，实际"+code);
+            Preconditions.checkArgument(add==1,"新建后列表增加了"+add);
+            Preconditions.checkArgument(status==true,"新增品牌状态期待为开启，实际为"+status);
+            Preconditions.checkArgument(listid==id,"创建商品时的品牌下拉框未增加对应的品牌");
             jc.BrandDel(id,true);
 
         } catch (AssertionError e) {
@@ -1661,8 +1675,8 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     public Object[] brandAdd1(){
         return new String[][] {
                 {"1","1","品牌名称1个字简介1个字"},
-//                {info.stringsix,info.stringsix,"品牌名称6个字简介6个字"},
-//                {"zh这是20位！@#的说的是发发简称11",info.stringfifty,"品牌名称20个字简介50个字"},
+                {info.stringsix,info.stringsix,"品牌名称6个字简介6个字"},
+                {"zh这是20位！@#的说的是发发简称11",info.stringfifty,"品牌名称20个字简介50个字"},
         };
     }
 
@@ -1713,6 +1727,103 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             saveData("PC【商品品牌】新建品牌,品牌名称与已存在的重复");
         }
     }
+
+    @Test
+    public void brandAddErr2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            //不填写名称
+            int code = jc.BrandCreat(false,null,null,"品牌描述",info.getLogo()).getInteger("code");
+            Preconditions.checkArgument(code==1001,"不填写名称期待1001，实际"+code);
+
+//            //不填写描述 bug 7808
+//            int code1 = jc.BrandCreat(false,null,"null",null,info.getLogo()).getInteger("code");
+//            Preconditions.checkArgument(code1==1001,"不填写描述期待1001，实际"+code1);
+
+            //不上传图片
+            int code2 = jc.BrandCreat(false,null,"null","品牌描述",null).getInteger("code");
+            Preconditions.checkArgument(code2==1001,"不上传图片期待1001，实际"+code2);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【商品品牌】新建品牌,不填写必填项");
+        }
+    }
+
+    @Test
+    public void brandStop1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+
+            Long id = info.newGoodBrand().getLong("id");
+            int code = jc.BrandChgStatus(id,false,false).getInteger("code");
+            Preconditions.checkArgument(code==1000,"状态码"+code);
+
+            jc.BrandDel(id,true);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【商品品牌】停用 无商品使用&状态=启用的品牌，期待成功");
+        }
+    }
+
+    @Test
+    public void brandStart1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+
+            Long id = info.newGoodBrand().getLong("id");
+            jc.BrandChgStatus(id,false,true);
+
+            int code = jc.BrandChgStatus(id,true,false).getInteger("code");
+            Preconditions.checkArgument(code==1000,"状态码"+code);
+
+            jc.BrandDel(id,true);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【商品品牌】启用 无商品使用&状态=停用的品牌，期待成功");
+        }
+    }
+
+    @Test(dataProvider = "BRANDSTATUS")
+    public void brandDel1(String status ,String mess) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            Long id = info.newGoodBrand().getLong("id");
+            jc.BrandChgStatus(id,Boolean.valueOf(status),true);
+
+            int code = jc.BrandDel(id,false).getInteger("code");
+            Preconditions.checkArgument(code==1000,"删除状态="+mess+"失败，状态码"+code);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【商品品牌】删除 无商品使用的品牌，期待成功");
+        }
+    }
+    @DataProvider(name = "BRANDSTATUS")
+    public Object[] brandstatus(){
+        return new String[][] {
+
+                {"true","启用"},
+                {"false","停用"},
+        };
+    }
+
 
 
 
