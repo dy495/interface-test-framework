@@ -34,6 +34,11 @@ public enum EnumAccount {
     ZJL_DAILY("zjl", getPassword("123456"), "uid_d3d35577", "daily", "总经理123456"),
 
     /**
+     * 总经理
+     */
+    WZJL_DAILY("wzjl", getPassword("123456"), "", "daily", "wzjl"),
+
+    /**
      * 前台
      */
     QT_DAILY("qt", getPassword("123456"), "uid_05e8599f", "daily", ""),
