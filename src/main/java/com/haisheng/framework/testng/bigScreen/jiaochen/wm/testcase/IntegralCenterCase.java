@@ -699,11 +699,14 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
         List<JSONObject> integralExchangeRulesList = util.collectBean(integralExchangeRulesScene, JSONObject.class);
         int singleSend = integralExchangeRulesList.stream().filter(e -> e.getString("rule_name").contains(ruleName)).map(e -> e.getInteger("single_send")).findFirst().orElse(0);
         List<JSONObject> sceneList = util.collectBean(scene, JSONObject.class);
-        int awardScore = Arrays.stream(ruleName()).anyMatch(e -> Arrays.asList(e).contains(ruleName))
-                ? util.collectBean(scene, JSONObject.class).stream().map(e -> e.getInteger("award_score")).findFirst().orElse(0)
-                : Arrays.stream(ruleName()).anyMatch(e -> Arrays.asList(e).contains(ruleName))
-                ? sceneList.stream().filter(e -> ruleName.contains(e.getString("equity_name")) && ruleName.contains(e.getString("service_type_name"))).map(e -> e.getInteger("award_count")).findFirst().orElse(0)
-                : sceneList.stream().filter(e -> e.getString("taskName").contains(ruleName)).map(e -> e.getInteger("award_score")).findFirst().orElse(0);
+        int awardScore = 0;
+        if (scene instanceof SignInConfigPageScene) {
+            awardScore = util.collectBean(scene, JSONObject.class).stream().map(e -> e.getInteger("award_score")).findFirst().orElse(0);
+        } else if (scene instanceof EquityPageScene) {
+            awardScore = sceneList.stream().filter(e -> ruleName.contains(e.getString("equity_name")) && ruleName.contains(e.getString("service_type_name"))).map(e -> e.getInteger("award_count")).findFirst().orElse(0);
+        } else if (scene instanceof ShareManagerPageScene) {
+            awardScore = sceneList.stream().filter(e -> e.getString("taskName").contains(ruleName)).map(e -> e.getInteger("award_score")).findFirst().orElse(0);
+        }
         integralRule.setAwardScore(awardScore);
         integralRule.setSingleSend(singleSend);
         return integralRule;
