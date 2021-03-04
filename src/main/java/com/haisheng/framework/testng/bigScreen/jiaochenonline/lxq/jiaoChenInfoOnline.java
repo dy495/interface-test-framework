@@ -1,12 +1,16 @@
 package com.haisheng.framework.testng.bigScreen.jiaochenonline.lxq;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
 import com.haisheng.framework.util.DateTimeUtil;
+import com.haisheng.framework.util.ImageUtil;
 
 public class jiaoChenInfoOnline {
     DateTimeUtil dt = new DateTimeUtil();
     ScenarioUtilOnline jc = ScenarioUtilOnline.getInstance();
     public final String logo = "general_temp/fd19d80a-bbff-45dc-8d02-36548ad2c43e";//120*120 品牌logo
+    public  String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
     public final String stringone = "a";//字符串长度1
     public final String stringten = "a2！啊A"+Integer.toString((int)(Math.random()*100000));//字符串长度10
     public final String stringsix = "A"+ Integer.toString((int)(Math.random()*100000));//随机字符串长度6
@@ -18,17 +22,13 @@ public class jiaoChenInfoOnline {
     public final String phone = "1380110"+Integer.toString((int)(Math.random()*10000));//手机号
 
     //线上
-    public final long BrandIDOnline = 33L;//自动化用的品牌id
-    public final long CarStyleIDOnline = 830L;//自动化用的品牌车系id
+    public final long BrandIDOnline = 65L;//自动化用的品牌id
+    public final long CarStyleIDOnline = 1108L;//自动化用的品牌车系id
 
     //创建品牌，返回品牌id
     public final long getBrandID(int n){
         String name = ""+Integer.toString((int)(Math.random()*10000));
-        jc.addBrand(name,logo);
-
-        //删除品牌
-        Long id = jc.brandPage(1,10,"","").getJSONArray("list").getJSONObject(0).getLong("id");
-
+        Long id = jc.addBrand(name,getLogo()).getLong("id");
         return id;
     }
 
@@ -56,6 +56,127 @@ public class jiaoChenInfoOnline {
         return  id;
     }
 
+
+
+    //V 2.0
+    public final Long  first_category= 14L; //一级品类id
+    public final String  first_category_chin= "自动化一级品类别删"; //一级品类name
+
+    public final Long  second_category= 15L; //二级品类id
+    public final String  second_category_chin= "自动化二级品类别删"; //二级品类name
+
+    public final Long  third_category= 16L; //三级品类id
+    public final String  third_category_chin= "自动化三级品类别删"; //三级品类name
+
+    public final Long  goods_brand= 6L; //商品品牌
+
+
+
+    //新建一级品类
+    public JSONObject newFirstCategory(String name){
+        JSONObject obj = new JSONObject();
+        String logo = jc.pcFileUploadNew(new ImageUtil().getImageBinary(filePath)).getString("pic_path");
+        int code = jc.categoryCreate(false,name,"FIRST_CATEGORY","",logo,null).getInteger("code");
+        Long id = jc.categoryPage(1,100,null,null,null,null).getJSONArray("list").getJSONObject(0).getLong("id");
+        obj.put("code",code);
+        obj.put("id",id);
+        return obj;
+    }
+
+    //新建二级品类
+    public JSONObject newSecondCategory(String name,String ... firstid){
+        JSONObject obj = new JSONObject();
+        String logo = jc.pcFileUploadNew(new ImageUtil().getImageBinary(filePath)).getString("pic_path");
+        int code = 0 ;
+        if (firstid.length==0){
+            code = jc.categoryCreate(false,name,"SECOND_CATEGORY",Long.toString(first_category),logo,null).getInteger("code");
+        }
+        else {
+            code = jc.categoryCreate(false,name,"SECOND_CATEGORY",firstid[0],logo,null).getInteger("code");
+        }
+        Long id =jc.categoryPage(1,10,null,null,null,null).getJSONArray("list").getJSONObject(0).getLong("id");
+        obj.put("code",code);
+        obj.put("id",id);
+        return obj;
+    }
+
+    //新建三级品类
+    public JSONObject newThirdCategory(String name,String ... secid){
+        JSONObject obj = new JSONObject();
+        String logo = jc.pcFileUploadNew(new ImageUtil().getImageBinary(filePath)).getString("pic_path");
+        int code = 0 ;
+        if (secid.length==0){
+            code = jc.categoryCreate(false,name,"THIRD_CATEGORY",Long.toString(second_category),logo,null).getInteger("code");
+        }
+        else {
+            code = jc.categoryCreate(false,name,"THIRD_CATEGORY",secid[0],logo,null).getInteger("code");
+        }
+        Long id =jc.categoryPage(1,10,null,null,null,null).getJSONArray("list").getJSONObject(0).getLong("id");
+        obj.put("code",code);
+        obj.put("id",id);
+        return obj;
+    }
+
+    //新建商品品牌
+    public JSONObject newGoodBrand(String name,String desc){
+        JSONObject obj = new JSONObject();
+        String logo = jc.pcFileUploadNew(new ImageUtil().getImageBinary(filePath)).getString("pic_path");
+        JSONObject obj1 = jc.BrandCreat(false,null,name,desc,logo);
+
+        obj.put("code",obj1.getInteger("code"));
+        obj.put("id",obj1.getJSONObject("data").getLong("id"));
+        return obj;
+    }
+
+    public JSONObject newGoodBrand(String ... cs){
+        JSONObject obj = new JSONObject();
+        String logo = jc.pcFileUploadNew(new ImageUtil().getImageBinary(filePath)).getString("pic_path");
+        JSONObject obj1 = new JSONObject();
+        if (cs.length>0){
+            obj1 = jc.BrandCreat(false,null,cs[0],cs[1],logo);
+        }
+        else {
+            obj1 = jc.BrandCreat(false,null,"name"+Integer.toString((int)((Math.random()*9+1)*1000)),"品牌desc",logo);
+        }
+
+
+        obj.put("code",obj1.getInteger("code"));
+        obj.put("id",obj1.getJSONObject("data").getLong("id"));
+        return obj;
+    }
+
+    public Long newSpecificition(){
+        //新建规格
+        String spename = "规格"+Integer.toString((int)((Math.random()*9+1)*10000));
+        Long speId = jc.specificationsCreate(spename,first_category,null,null,true).getLong("id");
+        return speId;
+    }
+
+    public String getLogo(){
+        String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
+        String base64 = new ImageUtil().getImageBinary(filePath);
+        String logo = jc.pcFileUploadNew(new ImageUtil().getImageBinary(filePath)).getString("pic_path");
+        return logo;
+    }
+
+    public JSONObject newArtical() throws Exception {
+
+        JSONArray pic_list1 =new JSONArray();
+        pic_list1.add(getLogo());
+        JSONArray pic_list2 =new JSONArray();
+        pic_list2.add(getLogo());
+        pic_list2.add(getLogo());
+        pic_list2.add(getLogo());
+        JSONObject obj = jc.addArticleNotChk(""+System.currentTimeMillis(),"ONE_BIG",pic_list1,"content","RED_PAPER","ARTICEL",null,null,null,
+                null,null,null,null,null,null,
+                null,null,null,null);
+        int code = obj.getInteger("code");
+        Long id = obj.getJSONObject("data").getLong("id");
+        JSONObject obj1 = new JSONObject();
+        obj1.put("code",code);
+        obj1.put("id",id);
+        return obj1;
+    }
 
 
 
