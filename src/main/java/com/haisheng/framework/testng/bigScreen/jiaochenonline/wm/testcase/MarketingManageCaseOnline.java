@@ -3060,20 +3060,23 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     public void vipMarketing_system_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            String[] strings = {EnumDesc.FAULT_DESCRIPTION.getDesc(), EnumDesc.MESSAGE_TITLE.getDesc(), EnumDesc.INVALID_REASON.getDesc()};
             IVoucher voucher = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher();
             Integer voucherId = Math.toIntExact(voucher.getVoucherId());
             IScene shareManagerPageScene = ShareManagerPageScene.builder().build();
             JSONArray list = visitor.invokeApi(shareManagerPageScene).getJSONArray("list");
-            list.stream().map(e -> (JSONObject) e).forEach(e -> {
-                int id = e.getInteger("id");
-                String businessType = e.getString("business_type");
-                IScene shareManagerEditScene = ShareManagerEditScene.builder().id(id).awardCustomerRule("ONCE").taskExplain(EnumDesc.MESSAGE_TITLE.getDesc())
-                        .awardScore(1000).awardCardVolumeId(voucherId).takeEffectType("DAY").dayNumber("2000").businessType(businessType).build();
-                visitor.invokeApi(shareManagerEditScene);
-            });
+            String description = null;
+            for (int i = 0; i < list.size(); i++) {
+                JSONObject jsonObject = list.getJSONObject(i);
+                int id = jsonObject.getInteger("id");
+                String businessType = jsonObject.getString("business_type");
+                description = Arrays.stream(strings).filter(string -> !jsonObject.getString("description").equals(string)).findFirst().orElse(jsonObject.getString("description"));
+                ShareManagerEditScene.builder().id(id).awardCustomerRule("ONCE").taskExplain(description).awardScore(1000).awardCardVolumeId(voucherId).takeEffectType("DAY").dayNumber("2000").businessType(businessType).build().execute(visitor, true);
+            }
             user.loginApplet(APPLET_USER_ONE);
-            JSONArray taskList = visitor.invokeApi(AppletShareTaskListScene.builder().build()).getJSONArray("task_list");
-            taskList.stream().map(e -> (JSONObject) e).forEach(e -> CommonUtil.checkResult(e.getString("task_name") + "的内容", EnumDesc.MESSAGE_TITLE.getDesc() + "+1000积分.", e.getString("award_description")));
+            JSONArray taskList = AppletShareTaskListScene.builder().build().execute(visitor, true).getJSONArray("task_list");
+            String finalDescription = description;
+            taskList.stream().map(e -> (JSONObject) e).forEach(e -> CommonUtil.checkResult(e.getString("task_name") + "的内容", finalDescription + "+1000积分.", e.getString("award_description")));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
