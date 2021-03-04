@@ -304,7 +304,7 @@ public class StorePcCaseOnline extends TestCaseCommon implements TestCaseStd {
                     "        \"real_price\": 1500,\n" +
                     "        \"shopType\": \"SHOP_TYPE\",\n" +
                     "        \"orderNumber\": \"2387979\",\n" +
-                    "        \"memberName\":\"无人风控\",\n" +
+                    "        \"memberName\":\"Tester\",\n" +
                     "        \"receipt_type\":\"小票类型\",\n" +
                     "        \"posId\": \"pos-1234586789\",\n" +
                     "        \"commodityList\": [\n" +
