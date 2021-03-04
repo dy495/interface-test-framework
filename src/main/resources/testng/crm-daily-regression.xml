@@ -22,10 +22,10 @@
             <class name="com.haisheng.framework.testng.bigScreen.crm.wm.PcData"/>
             <class name="com.haisheng.framework.testng.bigScreen.crm.wm.PcDataPage"/>
             <class name="com.haisheng.framework.testng.bigScreen.crm.wm.AfterSale"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase.MarketingManageCase"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase.BusinessManageCase"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase.IntegralCenterCase"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase.ContentOperationCase"/>
+<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase.MarketingManageCase"/>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase.BusinessManageCase"/>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase.IntegralCenterCase"/>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase.ContentOperationCase"/>-->
         </classes>
     </test>
 </suite>
