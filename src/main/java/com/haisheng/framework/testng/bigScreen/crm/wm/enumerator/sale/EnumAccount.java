@@ -31,7 +31,7 @@ public enum EnumAccount {
     /**
      * 总经理
      */
-    ZJL_DAILY("zjl", getPassword("123456"), "uid_d3d35577", "daily", "总经理123456"),
+    ZJL_DAILY("wzjl", getPassword("123456"), "uid_f6c92fe0", "daily", "wzjl"),
 
     /**
      * 总经理
