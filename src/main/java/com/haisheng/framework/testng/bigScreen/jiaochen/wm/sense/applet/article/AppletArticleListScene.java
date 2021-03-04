@@ -5,7 +5,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 @Builder
-public class ArticleListScene extends BaseScene {
+public class AppletArticleListScene extends BaseScene {
     private final String size;
     private final String lastValue;
 

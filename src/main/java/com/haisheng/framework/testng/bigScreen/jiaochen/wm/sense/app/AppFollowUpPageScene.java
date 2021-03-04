@@ -11,7 +11,7 @@ import lombok.Builder;
  * @date 2021/1/29 15:11
  */
 @Builder
-public class FollowUpPageScene extends BaseScene {
+public class AppFollowUpPageScene extends BaseScene {
     private final Integer size;
     private final Integer id;
     private final Integer time;

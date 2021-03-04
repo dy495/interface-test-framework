@@ -8,7 +8,7 @@ import lombok.Builder;
  * 自助核销卡券
  */
 @Builder
-public class VoucherVerificationScene extends BaseScene {
+public class AppletVoucherVerificationScene extends BaseScene {
 
     /**
      * 小程序我的卡券对应的id

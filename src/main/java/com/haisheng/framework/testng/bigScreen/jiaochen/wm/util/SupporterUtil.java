@@ -22,7 +22,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.appointmen
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.commodity.CommodityStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.app.FollowUpPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.app.AppFollowUpPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.app.tack.AppAppointmentPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.app.tack.AppReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.app.tack.AppReceptionReceptorListScene;
@@ -1569,7 +1569,7 @@ public class SupporterUtil extends BaseUtil {
         List<AppFollowUpPage> followUpPageList = new ArrayList<>();
         JSONArray list;
         do {
-            IScene appointmentPageScene = FollowUpPageScene.builder().id(id).time(time).size(20).build();
+            IScene appointmentPageScene = AppFollowUpPageScene.builder().id(id).time(time).size(20).build();
             JSONObject response = visitor.invokeApi(appointmentPageScene);
             JSONObject lastValue = response.getJSONObject("last_value");
             time = lastValue.getInteger("time");

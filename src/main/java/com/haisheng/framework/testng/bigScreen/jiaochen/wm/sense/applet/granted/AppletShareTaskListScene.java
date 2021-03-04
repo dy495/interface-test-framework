@@ -5,13 +5,13 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 会员权益列表
+ * 任务奖励
  *
  * @author 王敏
  * @date 2021-02-01
  */
 @Builder
-public class MemberCenterEquityListScene extends BaseScene {
+public class AppletShareTaskListScene extends BaseScene {
 
     @Override
     public JSONObject getRequestBody() {
@@ -20,6 +20,6 @@ public class MemberCenterEquityListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/granted/member-center/equity/list";
+        return "/jiaochen/applet/granted/member-center/share-task/list";
     }
 }

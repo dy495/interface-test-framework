@@ -1,18 +1,11 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted;
+package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.banner;
 
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
-/**
- * 我的权益列表
- *
- * @author 王敏
- * @date 2021-02-01
- */
 @Builder
-public class MemberCenterHomePageScene extends BaseScene {
-
+public class AppletBannerScene extends BaseScene {
     @Override
     public JSONObject getRequestBody() {
         return new JSONObject();
@@ -20,6 +13,6 @@ public class MemberCenterHomePageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/granted/member-center/home-page";
+        return "/jiaochen/applet/banner";
     }
 }
