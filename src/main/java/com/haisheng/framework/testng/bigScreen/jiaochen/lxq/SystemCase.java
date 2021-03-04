@@ -3125,6 +3125,53 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @Test(priority = 7)
+    public void zzzzzdel() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            //删除规格
+            JSONArray list = jc.specificationsPage(1,50,null,null,null).getJSONArray("list");
+            for (int i = 0 ; i < list.size();i++){
+                JSONObject obj = list.getJSONObject(i);
+                if (obj.getString("first_category").contains("品类") && obj.getString("first_category").length()==7 && obj.getInteger("num")==0){
+                    Long id = obj.getLong("id");
+                    jc.specificationsDel(id,false);
+                }
+
+            }
+
+            //删除品牌
+            JSONArray list2 = jc.BrandPage(1,50,"pp",null).getJSONArray("list");
+            for (int j = 0 ; j < list2.size();j++){
+                JSONObject obj = list2.getJSONObject(j);
+                if (obj.getString("brand_name").length()==15){
+                    Long id = obj.getLong("id");
+                    jc.BrandDel(id,false);
+                }
+            }
+
+            //删除品类
+            JSONArray list3 = jc.categoryPage(1,50,null,null,null,null).getJSONArray("list");
+            for (int j = 0 ; j < list3.size();j++){
+                JSONObject obj = list3.getJSONObject(j);
+                if (obj.getString("category_name").length()==7 && obj.getString("category_name").contains("品类")){
+                    Long id = obj.getLong("id");
+                    jc.categoryChgStatus(id,false,false);
+                    jc.categoryDel(id,false);
+                }
+            }
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("删除规格品牌品类");
+        }
+    }
+
 
 
 
