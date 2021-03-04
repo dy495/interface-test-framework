@@ -11,8 +11,8 @@ public class CustomerInfo {
     public final String dccxs = "xdcc";//销售顾问
     public final String lxqby = "lxqby";//保养顾问姓名
     public final String lxqwx = "lxqwx";//维修顾问姓名
-    public final String xszj = "xszj";//销售总监
-    public final String qt = "qt";//前台
+    public final String xszj = "qaxszj";//销售总监
+    public final String qt = "qaqt";//前台
     public final String baoshijie = "baoshijie";//超级管理员
 
 
