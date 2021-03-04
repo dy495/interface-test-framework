@@ -439,9 +439,9 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     @DataProvider(name = "CAR_MODEL")
     public  Object[] carModel() {
         return new String[][]{
-                {info.stringone, "1","ENABLE"},
+                {"x", "1","ENABLE"},
                 {info.stringfifty, "2000年","ENABLE"},
-                {info.stringsix, "XX年","DISABLE"},
+                {info.stringsix, "12345啊啊啊啊啊！@#qweQWER","DISABLE"},
         };
     }
 
@@ -526,7 +526,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            String year = "123456";
+            String year = "12345啊啊啊啊啊！@#qweQWERQ";
             String status = "ENABLE";
             JSONObject obj = jc.addCarModelNotChk(info.BrandID, info.CarStyleID,  info.stringsix,year,  status);
             int code = obj.getInteger("code");
@@ -538,7 +538,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("PC【品牌管理】，创建车型， 年款6个字");
+            saveData("PC【品牌管理】，创建车型， 年款21个字");
         }
     }
 
@@ -1160,8 +1160,8 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     public  Object[] name() {
         return new String[]{
                 "啊啊啊2",
-//                "12345",
-//                "1Aa啊！@#，嗷嗷",
+                "12345",
+                "1Aa啊！@#，嗷嗷",
 
         };
     }
@@ -1186,25 +1186,15 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     public void categoryAddSecond(String name) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            //启用一级品类
-            jc.categoryChgStatus(info.first_category,true);
 
-
-            JSONObject obj1 = info.newSecondCategory(name);
-            int code = obj1.getInteger("code");
-            Long id =obj1.getLong("id");
-
-            //停用一级品类
-            jc.categoryChgStatus(info.first_category,false);
-            JSONObject obj2 = info.newSecondCategory(name);
-            int code2 = obj2.getInteger("code");
-            Long id2 =obj2.getLong("id");
-
-            Preconditions.checkArgument(code==1000,"一级品类状态=开启，状态码为"+code);
-            Preconditions.checkArgument(code2==1000,"一级品类状态=关闭，状态码为"+code);
-            //删除停用品类
-            jc.categoryDel(id,true);
-            jc.categoryDel(id2,true);
+           //存在的一级品类
+            Long idone = info.newFirstCategory(name).getLong("id");
+            //新建二级品类
+           int code  = jc.categoryCreate(false,name,"SECOND_CATEGORY",Long.toString(idone),jc.pcFileUploadNew(new ImageUtil().getImageBinary(filePath)).getString("pic_path"),null).getInteger("code");
+            Preconditions.checkArgument(code==1000,"期待成功，实际"+code);
+            Long id =jc.categoryPage(1,10,null,null,null,null).getJSONArray("list").getJSONObject(0).getLong("id");
+            jc.categoryDel(id,false);
+            jc.categoryDel(idone,true);
 
 
         } catch (AssertionError e) {
@@ -1271,16 +1261,15 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     public void categoryAddSecondErr2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-
-
-            JSONObject obj = jc.categoryCreate(false,info.first_category_chin,"二级品类",Long.toString(info.first_category),info.getLogo(),null);
-            int code = obj.getInteger("code");
-            Long id = obj.getJSONObject("data").getLong("id");
-            Preconditions.checkArgument(code==1000,"状态码期待1000，实际"+code);
-
-            //删除品类
-            jc.categoryDel(id,true);
-
+            //存在的一级品类
+            String nameone = "1-"+Integer.toString((int)((Math.random()*9+1)*100));
+            Long idone = info.newFirstCategory(nameone).getLong("id");
+            //新建二级品类
+            int code  = jc.categoryCreate(false,nameone,"SECOND_CATEGORY",Long.toString(idone),jc.pcFileUploadNew(new ImageUtil().getImageBinary(filePath)).getString("pic_path"),null).getInteger("code");
+            Preconditions.checkArgument(code==1000,"期待成功，实际"+code);
+            Long id =jc.categoryPage(1,10,null,null,null,null).getJSONArray("list").getJSONObject(0).getLong("id");
+            jc.categoryDel(id,false);
+            jc.categoryDel(idone,true);
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -1442,7 +1431,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             Long id = info.newFirstCategory("1品类"+Integer.toString((int)((Math.random()*9+1)*1000))).getLong("id");
 
             //启用
-            int code = jc.categoryChgStatus(id,false).getInteger("code");
+            int code = jc.categoryChgStatus(id,true,false).getInteger("code");
             Preconditions.checkArgument(code==1000,"状态码"+code);
 
             //删除
@@ -1742,9 +1731,9 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 //            int code1 = jc.BrandCreat(false,null,"null",null,info.getLogo()).getInteger("code");
 //            Preconditions.checkArgument(code1==1001,"不填写描述期待1001，实际"+code1);
 
-            //不上传图片
-            int code2 = jc.BrandCreat(false,null,"null","品牌描述",null).getInteger("code");
-            Preconditions.checkArgument(code2==1001,"不上传图片期待1001，实际"+code2);
+            //不上传图片bug 7808
+//            int code2 = jc.BrandCreat(false,null,"pp"+Integer.toString((int)((Math.random()*9+1)*100)),"品牌描述",null).getInteger("code");
+//            Preconditions.checkArgument(code2==1001,"不上传图片期待1001，实际"+code2);
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -2547,7 +2536,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             for (int i = 0 ; i < list.size();i++){
                 JSONObject obj = list.getJSONObject(i);
                 String date = obj.getString("operate_time")+":000";
-                time.add(dt.dateToTimestamp(date));
+                time.add(dt.dateToTimestamp1(date));
             }
             List timecopy = time;
             Collections.sort(time);
@@ -2575,7 +2564,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             for (int i = 0 ; i < list.size();i++){
                 JSONObject obj = list.getJSONObject(i);
                 String date = obj.getString("exchange_time")+":000";
-                time.add(dt.dateToTimestamp(date));
+                time.add(dt.dateToTimestamp1(date));
             }
             List timecopy = time;
             Collections.sort(time);

@@ -141,6 +141,9 @@ public class DateTimeUtil {
     public String dateToTimestamp(String date) throws Exception {
         return String.valueOf(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss:SSS").parse(date).getTime());
     }
+    public String dateToTimestamp1(String date) throws Exception {
+        return String.valueOf(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").parse(date).getTime());
+    }
 
     /**
      * @param date "yyyy/MM/dd HH:mm:ss:SSS"
