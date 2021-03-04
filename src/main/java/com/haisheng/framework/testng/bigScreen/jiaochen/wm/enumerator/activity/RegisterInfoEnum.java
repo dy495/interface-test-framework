@@ -10,6 +10,7 @@ public enum RegisterInfoEnum {
     AGE(4, "年龄"),
     EMAIL(5, "邮箱"),
     REGISTER_COUNT(6, "报名人数"),
+    OTHERS(9999, "其他"),
     ;
 
     RegisterInfoEnum(Integer id, String name) {

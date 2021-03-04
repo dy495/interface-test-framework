@@ -28,10 +28,9 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class BusinessUtil {
 
@@ -107,6 +106,14 @@ public class BusinessUtil {
             jsonObject.put("is_required", isRequired.get(i));
             array.add(jsonObject);
         }
+        return array;
+    }
+    /**
+     * @description :创建招募活动-报名所需信息为空
+     * @date :2021/1/24
+     **/
+    public JSONArray getRegisterInformationNullList(List<Boolean> isShow, List<Boolean> isRequired) {
+        JSONArray array = new JSONArray();
         return array;
     }
 
@@ -329,7 +336,9 @@ public class BusinessUtil {
         isShow.add(true);
         isShow.add(true);
         isShow.add(true);
+        isShow.add(true);
         List<Boolean> isRequired = new ArrayList<>();
+        isRequired.add(true);
         isRequired.add(true);
         isRequired.add(true);
         isRequired.add(true);
@@ -642,7 +651,7 @@ public class BusinessUtil {
             //审批活动
             getApprovalPassed(id1);
             //小程序报名
-            activityRegisterApplet(id1,"13373166806","郭丽雅",2,"1513814362@qq.com","22","女");
+            activityRegisterApplet(id1,"13373166806","郭丽雅",2,"1513814362@qq.com","22","女","其他");
             ids.add(id1);
             //登录PC
             jc.pcLogin(pp.phone1, pp.password);
@@ -1104,7 +1113,7 @@ public class BusinessUtil {
     /**
      * 小程序报名招募活动
      */
-    public void activityRegisterApplet(Long id, String phone, String name, int registerCount, String eMail,String age,String gender) {
+    public void activityRegisterApplet(Long id, String phone, String name, int registerCount, String eMail,String age,String gender,String others) {
         JSONArray registerItems = new JSONArray();
         Long activityId=0L;
         //在活动详情中获得招募活动的报名信息
@@ -1143,8 +1152,34 @@ public class BusinessUtil {
                 jsonObjectEMail.put("type", type);
                 jsonObjectEMail.put("value", registerCount);
                 registerItems.add(jsonObjectEMail);
+            }else if (type == RegisterInfoEnum.OTHERS.getId()) {
+                JSONObject jsonObjectEMail = new JSONObject();
+                jsonObjectEMail.put("type", type);
+                jsonObjectEMail.put("value", others);
+                registerItems.add(jsonObjectEMail);
             }
         }
+        user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+        //获取小程序推荐列表
+        JSONObject object=getAppletArticleList();
+        JSONArray list=getAppletArticleList().getJSONArray("list");
+        int lastValue=object.getInteger("last_value");
+        for(int i=0;i<list.size();i++){
+            int itemId=list.getJSONObject(i).getInteger("itemId");
+            if(id==itemId){
+                activityId=list.getJSONObject(i).getLong("id");
+            }
+        }
+        IScene scene = ArticleActivityRegisterScene.builder().id(activityId).registerItems(registerItems).build();
+        visitor.invokeApi(scene);
+    }
+
+    /**
+     * 小程序报名招募活动---不填写个人信息
+     */
+    public void activityRegisterApplet(Long id) {
+        JSONArray registerItems = new JSONArray();
+        Long activityId=0L;
         user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
         //获取小程序推荐列表
         JSONObject object=getAppletArticleList();
@@ -1216,6 +1251,35 @@ public class BusinessUtil {
             ScenarioUtil su=new ScenarioUtil();
             su.pcTransfer("13373166806","17611474518",ids);
         }
+
+    }
+
+    /**
+     * @description :比较日期大小的方法
+     * @date :2020/12/14
+     **/
+    public void dataCompare() throws ParseException {
+        String flag = "2020-12-13 12:33";
+        String aaa = flag.substring(0, 9);
+        //获取当前时间---df.format(date)
+        Date date = new Date();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        //当前时间+-3天
+        Calendar rightNow = Calendar.getInstance();
+        int year = rightNow.get(Calendar.YEAR);    //获取年
+        int month = rightNow.get(Calendar.MONTH) + 1;   //获取月份，0表示1月份
+        int day = rightNow.get(Calendar.DAY_OF_MONTH);    //获取当前天数
+        int time = rightNow.get(Calendar.HOUR_OF_DAY);       //获取当前小时
+        int min = rightNow.get(Calendar.MINUTE);          //获取当前分钟
+        String startTime = year + "-" + month + "-" + (day - 3) + " " + time + ":" + min;
+        String endTime = year + "-" + month + "-" + (day + 3) + " " + time + ":" + min;
+        System.out.println("--------创建时间：" + "--------开始时间：" + startTime + "--------开始时间：" + endTime);
+        Date startDate = df.parse(startTime);
+        Date endDate = df.parse(endTime);
+        Date createDate = df.parse("2020-12-14 12:56");
+        System.out.println("--------创建时间：" + createDate + "--------开始时间：" + startDate + "--------开始时间：" + endDate);
+        System.out.println(createDate.compareTo(startDate));
+//        Preconditions.checkArgument(createDate.compareTo(startDate)>=0&&createDate.compareTo(endDate)<=0, "列表中创建时间："+createDate+"筛选栏开始时间："+startTime+"筛选栏开始时间："+endTime+"创建时间不在开始系欸结束之间之间");
 
     }
 

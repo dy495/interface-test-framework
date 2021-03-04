@@ -13,7 +13,7 @@ public class Constant {
     public static Object[][]receptionManageFilter_pram() {
         return new String[][]{
                 {"plate_number", "plate_number"},
-                {"reception_sale_name", "reception_sale_name"},
+//                {"reception_sale_name", "reception_sale_name"},
                 {"customer_name","customer_name"},
                 {"reception_status","reception_status"},
                 {"customer_phone","customer_phone"},
@@ -60,7 +60,7 @@ public class Constant {
     public static Object[][] weChatSleCustomerManage_pram() {
         return new String[][]{
                 {"customer_phone","customer_phone"},
-                {"vip_type","vip_type"}
+                {"vip_type","vip_type_name"},
         };
     }
 
@@ -73,12 +73,12 @@ public class Constant {
     public static Object[][] appointmentRecordFilter_pram() {
         return new String[][]{
                 {"plate_number", "plate_number"},
-                {"service_sale_id", "service_sale_id"},
                 {"shop_id", "shop_id"},
                 {"customer_name", "customer_name"},
                 {"confirm_status", "appointment_status_name"},
                 {"customer_phone", "customer_phone"},
                 {"is_overtime", "is_overtime"},
+//               {"service_sale_id", "service_sale_id"},
         };
     }
 
@@ -94,6 +94,7 @@ public class Constant {
                 {"manufacturer", "manufacturer"},
                 {"car_model", "model"},
                 {"year", "year"},
+                {"car_style","style_name"}
         };
     }
 
@@ -110,7 +111,7 @@ public class Constant {
                 {"creator_name", "creator_name"},
                 {"creator_account", "creator_account"},
                 {"voucher_status","voucher_status"},
-                {"voucher_type","voucher_type"}
+                {"voucher_type","voucher_name"}
 
         };
     }
@@ -325,10 +326,13 @@ public class Constant {
      * @author: gly
      * @time: 2020-11-24
      */
-    @DataProvider(name = "SELECT_satffListFilter")
+    @DataProvider(name = "SELECT_staffListFilter")
     public static Object[][] satffListFilter_pram(){
         return new String[][]{
-                {"role_name", "name"},
+                {"name", "name"},
+                {"phone", "phone"},
+//                {"role_id", "role_id"},
+//                {"shop_id", "shop_id"},
         };
     }
 
@@ -353,7 +357,6 @@ public class Constant {
     @DataProvider(name = "SELECT_exportListFilter")
     public static Object[][] exportListFilter_pram(){
         return new String[][]{
-                {"export_time", "export_time"},
                 {"type", "type"},
                 {"user", "user_name"}
         };
@@ -380,12 +383,12 @@ public class Constant {
     @DataProvider(name = "SELECT_washCarManagerFilter")
     public static Object[][] washCarManagerListFilter_pram(){
         return new String[][]{
-                {"customer_name", "customer_name"},
-                {"customer_vip_type", "customer_vip_type"},
-//                {"wash_start_time", "wash_car_date"},
-//                {"wash_end_time", "wash_car_date"},
+                {"customerName", "customer_name"},
+                {"customer_type", "customer_vip_type"},
                 {"shop_id", "shop_name"},
                 {"phone", "phone"},
+//                {"wash_start_time", "wash_car_date"},
+//                {"wash_end_time", "wash_car_date"},
 
         };
     }
@@ -400,10 +403,11 @@ public class Constant {
         return new String[][]{
                 {"customer_name", "customer_name"},
                 {"customer_phone", "customer_phone"},
+                {"customer_type", "customer_vip_type_name"},
+                {"adjust_shop_id", "adjust_shop_name"},
+
 //                {"adjust_start_time", "adjust_start_time"},
 //                {"adjust_end_time", "adjust_end_time"},
-                {"adjust_shop_id", "adjust_shop_id"},
-                {"customer_type", "customer_type"},
 
         };
     }
@@ -416,15 +420,14 @@ public class Constant {
     @DataProvider(name = "SELECT_voucherManageSendRecordFilter")
     public static Object[][] voucherManageSendRecordFilter_pram(){
         return new String[][]{
-                {"receiver", "receiver"},
-                {"receive_phone", "receive_phone"},
-                {"use_status", "use_status"},
+                {"receiver", "customer_name"},
+                {"receive_phone", "customer_phone"},
+                {"use_status", "voucher_use_status"},
+                {"customer_label", "customer_label_name"},
 //                {"start_time", "start_time"},
 //                {"end_time", "end_time"},
 //                {"use_start_time", "use_start_time"},
 //                {"use_end_time", "use_end_time"},
-                {"customer_label", "customer_label"},
-                {"id","id"},
 
 
         };
@@ -438,17 +441,14 @@ public class Constant {
     @DataProvider(name = "SELECT_voucherInvalidPageFilter")
     public static Object[][] voucherInvalidPageFilter_pram(){
         return new String[][]{
-                {"receiver", "receiver"},
-                {"receive_phone", "receive_phone"},
-//                {"start_time", "start_time"},
-//                {"end_time", "end_time"},
+                {"receiver", "customer_name"},
+                {"receive_phone", "customer_phone"},
                 {"invalid_name", "invalid_name"},
-                {"invalid_phone", "invalid_phone"},
+                {"invalidPhone", "invalid_phone"},
 //                {"invalid_start_time", "invalid_start_time"},
 //                {"invalid_end_time", "invalid_end_time"},
-                {"id","id"},
-
-
+//                {"start_time", "start_time"},
+//                {"end_time", "end_time"},
         };
     }
     /**
@@ -460,9 +460,9 @@ public class Constant {
     public static Object[][] rescuePageFilter_pram(){
         return new String[][]{
                 {"customer_name", "customer_name"},
-                {"vip_type", "vip_type"},
+                {"vip_type", "vip_type_name"},
                 {"customer_phone", "customer_phone"},
-                {"shop_id", "shop_id"},
+//                {"shop_id", "shop_name"},
 //                {"dial_start", "dial_start"},
 //                {"dial_end", "dial_end"},
 
@@ -478,14 +478,14 @@ public class Constant {
     public static Object[][] evaluatePageFilter_pram(){
         return new String[][]{
                 {"plate_number", "plate_number"},
-                {"service_sale_id", "service_sale_id"},
-                {"evaluate_type", "evaluate_type"},
+//                {"service_sale_id", "service_sale_name"},
+                {"evaluate_type", "evaluate_type_name"},
                 {"shop_id", "shop_id"},
                 {"customer_name", "customer_name"},
                 {"score", "score"},
-                {"is_follow_up", "is_follow_up"},
+                {"is_follow_up", "follow_up_remark"},
                 {"customer_phone", "customer_phone"},
-                {"is_have_msg", "is_have_msg"},
+                {"is_have_msg", "describe"},
 //                {"source_create_start", "source_create_start"},
 //                {"source_create_end", "source_create_end"},
 //                {"evaluate_start", "evaluate_start"},
@@ -519,9 +519,9 @@ public class Constant {
     @DataProvider(name = "SELECT_storeOrderPageFilter")
     public static Object[][] storeOrderPageFilter_pram(){
         return new String[][]{
-                {"bind_phone", "bind_phone"},
-                {"commodity_name", "commodity_name"},
                 {"order_number", "order_number"},
+                {"commodity_name", "commodity_name"},
+//                {"bind_phone", "bind_phone"},
 //                {"start_pay_time", "start_pay_time"},
 //                {"end_pay_time", "end_pay_time"},
 
@@ -537,7 +537,36 @@ public class Constant {
     public static Object[][] storeSalesPageFilter_pram(){
         return new String[][]{
                 {"sales_phone", "sales_phone"},
-                {"shop_id", "shop_id"},
+//                {"shop_id", "shop_name"},
+
+        };
+    }
+
+    /**
+     * @description:v2.0-PC活动管理列表
+     * @author: gly
+     * @time: 2020-3-3
+     */
+    @DataProvider(name = "SELECT_activityManagePageFilter")
+    public static Object[][] activityManagePageFilter_pram(){
+        return new String[][]{
+                {"creator_account", "creator_account"},
+                {"creator_name", "creator_name"},
+                {"status", "approval_status"},
+                {"subject_type", "subject_type"},
+
+        };
+    }
+
+    /**
+     * @description:v2.0-PC活动管理-报名列表
+     * @author: gly
+     * @time: 2020-2-3
+     */
+    @DataProvider(name = "SELECT_registerPageFilter")
+    public static Object[][] registerPageFilter_pram(){
+        return new String[][]{
+                {"status", "status"},
 
         };
     }

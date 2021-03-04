@@ -2161,8 +2161,8 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("shopId", shopId);
         json.put("page", page);
         json.put("size", size);
-        json.put("appointment_end", appointment_end);
-        json.put("appointment_start", appointment_start);
+//        json.put("appointment_end", appointment_end);
+//        json.put("appointment_start", appointment_start);
         json.put("confirm_end", confirm_end);
         json.put("confirm_start", confirm_start);
         json.put("create_end", create_end);
@@ -2201,7 +2201,7 @@ public class ScenarioUtil extends TestCaseCommon {
     public JSONObject maintainFilterManage(String shopId, String page, String size, String pram, String result) {
         String url = "/jiaochen/pc/manage/maintain/car-model/page";
         JSONObject json = new JSONObject();
-        json.put("shopId", shopId);
+        json.put("shop_id", shopId);
         json.put("page", page);
         json.put("size", size);
         if (pram != null) {
@@ -2259,6 +2259,22 @@ public class ScenarioUtil extends TestCaseCommon {
         String url = "/jiaochen/pc/voucher-manage/voucher-form/page";
         JSONObject json = new JSONObject();
         json.put("shopId", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        if (pram != null) {
+            json.put(pram, result);
+        }
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description:优惠券管理
+     * @author: gly
+     * @time: 2021-3-3
+     */
+    public JSONObject voucherPageFilterManage(String page, String size, String pram, String result) {
+        String url = "/jiaochen/pc/voucher-manage/voucher-form/voucher-page";
+        JSONObject json = new JSONObject();
         json.put("page", page);
         json.put("size", size);
         if (pram != null) {
@@ -2333,7 +2349,7 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("shopId", shopId);
         json.put("page", page);
         json.put("size", size);
-        json.put("id", id);
+        json.put("voucher_id", id);
         if (pram != null) {
             json.put(pram, result);
         }
@@ -2707,7 +2723,7 @@ public class ScenarioUtil extends TestCaseCommon {
 
 
     /**
-     * @description:卡券申请
+     * @description:优惠券审批
      * @author: gly
      * @time: 2020-11-24
      */
@@ -5096,7 +5112,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2021/2/1
      **/
     public JSONObject remindPage(String page,String size,String item,String pram, String result) {
-        String url = "/business-jiaochen/pc/manage/intelligent-remind/page";
+        String url = "/jiaochen/pc/manage/intelligent-remind/page";
         JSONObject json=new JSONObject();
         json.put("page",page);
         json.put("size",size);
@@ -5129,12 +5145,11 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :V2.0洗车管理列表
      * @date :2021/2/1
      **/
-    public JSONObject washCarManagerPage(String shopId,String page,String size,String param,String result) {
+    public JSONObject washCarManagerPage(String page,String size,String param,String result) {
         String url = "/jiaochen/pc/vip-marketing/wash-car-manager/page";
         JSONObject json=new JSONObject();
         json.put("page",page);
         json.put("size",size);
-        json.put("shop_id",shopId);
         if (param != null){
             json.put(param, result);
         }
@@ -5145,12 +5160,11 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :V2.0调整记录次数
      * @date :2021/2/2
      **/
-    public JSONObject adjustNumberRecord(String shopId,String page,String size,String param,String result) {
+    public JSONObject adjustNumberRecord(String page,String size,String param,String result) {
         String url = "/jiaochen/pc/vip-marketing/wash-car-manager/adjust-number/record";
         JSONObject json=new JSONObject();
         json.put("page",page);
         json.put("size",size);
-        json.put("shop_id",shopId);
         if (param != null){
             json.put(param, result);
         }
@@ -5206,6 +5220,21 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("page",page);
         json.put("size",size);
         json.put("shop_id",shopId);
+        json.put("id",id);
+        if (param != null){
+            json.put(param, result);
+        }
+        return invokeApi(url,json);
+    }
+    /**
+     * @description :V2.0优惠券领取记录
+     * @date :2021/2/2
+     **/
+    public JSONObject voucherManageSendRecord(String page,String size,String id ,String param,String result) {
+        String url = "/jiaochen/pc/voucher-manage/send-record";
+        JSONObject json=new JSONObject();
+        json.put("page",page);
+        json.put("size",size);
         json.put("id",id);
         if (param != null){
             json.put(param, result);
@@ -5543,10 +5572,43 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(url,json);
     }
 
+    /**
+     * 活动管理
+     * @param page
+     * @param size
+     * @param pram
+     * @param result
+     * @return
+     */
+    public JSONObject activityPage(String page,String size,String pram,String result) {
+        JSONObject json=new JSONObject();
+        String url = "/jiaochen/pc/activity/manage/page";
+        json.put("page",page);
+        json.put("size",size);
+        if (pram != null){
+            json.put(pram, result);
+        }
+        return invokeApi(url,json);
+    }
 
-
-
-
-
+    /**
+     * 活动报名列表
+     * @param page
+     * @param size
+     * @param pram
+     * @param result
+     * @return
+     */
+    public JSONObject registerPage(String activityId,String page,String size,String pram,String result) {
+        JSONObject json = new JSONObject();
+        String url = "/jiaochen/pc/activity/manage/register/page";
+        json.put("activity_id", activityId);
+        json.put("page", page);
+        json.put("size", size);
+        if (pram != null) {
+            json.put(pram, result);
+        }
+        return invokeApi(url, json);
+    }
 
 }
