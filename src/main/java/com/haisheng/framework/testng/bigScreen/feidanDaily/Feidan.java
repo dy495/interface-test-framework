@@ -1049,8 +1049,8 @@ public class Feidan {
                         "    },\n" +
                         "    \"request_id\":\"" + UUID.randomUUID() + "\"," +
                         "    \"resource\":[" +
-                        "        \"https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/witness/100000000000235625/d020e3fe-8050-47bb-9c16-49a2aebdc8f0?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1612575519&Signature=5nntV5uCcxSdhDul3HP4FcJeQDg%3D\"," +
-                        "        \"https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/witness/100000000000235625/d020e3fe-8050-47bb-9c16-49a2aebdc8f0?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1612575519&Signature=5nntV5uCcxSdhDul3HP4FcJeQDg%3D\"" +
+                        "        \"http://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/witness/100000000000235625/d020e3fe-8050-47bb-9c16-49a2aebdc8f0?OSSAccessKeyId=LTAIlYpjA39n18Yr&Expires=37614851253&Signature=sha3ensWL7oYP5lVgOy28TD6bXQ%3D\"," +
+                        "        \"http://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/witness/100000000000235625/d020e3fe-8050-47bb-9c16-49a2aebdc8f0?OSSAccessKeyId=LTAIlYpjA39n18Yr&Expires=37614851253&Signature=sha3ensWL7oYP5lVgOy28TD6bXQ%3D\"" +
                         "    ],\n" +
                         "    \"system\":{" +
                         "        \"app_id\":\"49998b971ea0\"," +

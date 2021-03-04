@@ -4024,6 +4024,20 @@ public class ScenarioUtil extends TestCaseCommon {
 
         return invokeApi(url,json1);
     }
+
+    public JSONObject editRemindMethod(pccreateRemind er) {
+        String url = "/jiaochen/pc/manage/intelligent-remind/edit";
+        JSONObject json1=new JSONObject();
+        json1.put("item",er.item);
+        json1.put("id",er.id);
+        json1.put("content",er.content);
+        json1.put("vouchers",er.vouchers);
+        json1.put("effective_days",er.effective_days);
+        json1.put("days",er.days);
+        json1.put("mileage",er.mileage);
+
+        return invokeApi(url,json1);
+    }
     /**
      * @description :app变更接待
      * @date :2021/1/21 14:43

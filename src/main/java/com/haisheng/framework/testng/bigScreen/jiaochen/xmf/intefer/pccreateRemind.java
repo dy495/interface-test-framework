@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 
 public class pccreateRemind {
     public String item;
+    public String id;
     public String content;
     public JSONArray vouchers;
     public String effective_days;

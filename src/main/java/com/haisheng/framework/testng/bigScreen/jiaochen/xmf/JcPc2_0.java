@@ -348,9 +348,16 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         try {
             JSONObject data=jc.StoreCommodityDetail(pp.StoreCommodityId);
             data.put("id",pp.StoreCommodityId);
+            Random random=new Random();
+            String name="一二三四"+random.nextInt(10);
+            data.put("commodity_name",name);
             httpPostWithCheckCode("/jiaochen/pc/store/commodity/edit",data.toJSONString(),IpPort);
-
-
+            String nameAfter=jc.StoreCommodityDetail(pp.StoreCommodityId).getString("commodity_name");
+//            Preconditions.checkArgument(nameAfter.equals(name),"编辑名称后没有变化");
+            data.put("commodity_specification","颜色:黑色");
+            String result=httpPost("/jiaochen/pc/store/commodity/edit",data.toJSONString(),IpPort);
+            Integer code=JSONObject.parseObject(result).getInteger("code");
+            Preconditions.checkArgument(code==1001,"规格编辑不应该成功");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -455,7 +462,13 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             er.effective_days="1";     //卡券有效期
 //            er.days="1";            //提醒天数
             er.mileage="200";        //提醒公里数
-           Integer RemindId =jc.createRemindMethod( er).getInteger("id");
+           jc.createRemindMethod(er);
+           String RemindId =jc.remindPage( "1","10","","","").getJSONArray("list").getJSONObject(0).getString("id");
+           //编辑
+            er.id=RemindId;
+            er.content="修改提醒内容";
+            jc.editRemindMethod(er);
+
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {

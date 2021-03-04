@@ -52,7 +52,7 @@ public class PublicParm {
     //---------2.0---------
     public String String_20="一二三四五六七八九十一二三四五六七八九十";
     public String String_200="一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十";
-    public String StoreCommodityId="79";  //TODO:编辑需要的商品套餐的名字
+    public String StoreCommodityId="85";  //TODO:编辑需要的商品套餐的名字
     public String importFilepath="src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/importfile.xlsx";   //导入工单文件路径
     //其他小程序用户tocken和车牌号信息
     public String getAppletTockenOther="R4M7UpQ2+Q3L0QbxGA32iA==";
