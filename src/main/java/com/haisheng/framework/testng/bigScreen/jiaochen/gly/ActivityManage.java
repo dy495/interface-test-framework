@@ -554,6 +554,56 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    /**
+     * 报名列表-审批通过1条，报名成功&报名成功列表--报名人数不填写     不ok
+     */
+    @Test()
+    public void activityRegisterDate91() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int registerNum = 0;
+//          //获取一个卡券
+            Long voucherId = businessUtil.getVoucherId();
+            //创建招募活动
+            IScene scene1 = businessUtil.createRecruitActivityScene(voucherId, true, 0, true,false);
+            Long activityId = visitor.invokeApi(scene1).getLong("id");
+            //审批通过招募活动
+            businessUtil.getApprovalPassed(activityId);
+            //登录小程序
+            user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+            //小程序报名此活动
+            businessUtil.activityRegisterApplet(activityId);
+            //登录PC
+            jc.pcLogin(pp.phone1, pp.password);
+            //审批通过之前报名成功的数量
+            int passedBefore = businessUtil.getRegisterData(activityId).getInteger("passed");
+            //审批通过小程序活动报名
+            List<Long> ids = businessUtil.RegisterAppletIds(activityId);
+            businessUtil.getRegisterApprovalPassed(activityId, ids.get(0));
+            //审批通过的活动人数
+            int pages = businessUtil.getRegisterPage(activityId).getInteger("pages");
+            for (int page = 1; page <= pages; page++) {
+                IScene scene = ManageRegisterPageScene.builder().page(page).size(10).activityId(activityId).build();
+                JSONArray List = visitor.invokeApi(scene).getJSONArray("list");
+                for (int i = 0; i < List.size(); i++) {
+                    Long idOne = List.getJSONObject(i).getLong("id");
+                    String statusName = List.getJSONObject(i).getString("status_name");
+                    if (ids.get(0).equals(idOne) && statusName.equals("已通过")) {
+                        registerNum += 1;
+                    }
+                }
+            }
+            //审批通过之后报名成功的数量
+            int passedAfter = businessUtil.getRegisterData(activityId).getInteger("passed");
+            Preconditions.checkArgument(passedAfter > 0 && passedAfter == (passedBefore + 1), "审批的通过的人数为:" + registerNum);
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("报名列表-审批通过1条，报名成功&报名成功列表");
+        }
+    }
+
 
     /**
      * 报名列表-审批不通过1条，报名失败
@@ -625,7 +675,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * 活动审批--①全部审批=【全部】列表数  ②全部审批=【待审核】【审核通过】【审核未通过】列表数加和      数据不准确：活动审批数据-全部活动为：85审批列表中全部活动的列表数为：90
+     * 活动审批--①全部审批=【全部】列表数  ②全部审批=【待审核】【审核通过】【审核未通过】列表数加和      ok
      */
     @Test
     public void activityApproval12() {
@@ -897,7 +947,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
 
 
     /**
-     * 活动管理-推广【进行中】的活动    接口不通
+     * 活动管理-推广【进行中】的活动
      */
     @Test(description = "活动管理-推广【进行中】的活动")
     public void promotionWorkingActivity() {
@@ -1683,13 +1733,13 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             picList.add(0, supporterUtil.getPicPath());
             //填写报名所需要信息
             List<Boolean> isShow = new ArrayList<>();
-            isShow.add(true);
-            isShow.add(true);
-            isShow.add(true);
-            isShow.add(true);
-            isShow.add(true);
-            isShow.add(true);
-            isShow.add(true);
+            isShow.add(false);
+            isShow.add(false);
+            isShow.add(false);
+            isShow.add(false);
+            isShow.add(false);
+            isShow.add(false);
+            isShow.add(false);
             List<Boolean> isRequired = new ArrayList<>();
             isRequired.add(false);
             isRequired.add(false);

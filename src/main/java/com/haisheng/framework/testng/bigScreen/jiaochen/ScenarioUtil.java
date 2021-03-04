@@ -2809,6 +2809,20 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     /**
+     * @description:门店列表
+     * @author: gly
+     * @time: 2020-11-24
+     */
+    public JSONObject shopListFilterManage( String page, String size) {
+        String url = "/jiaochen/pc/shop/page";
+        JSONObject json = new JSONObject();
+        json.put("page", page);
+        json.put("size", size);
+
+        return invokeApi(url, json);
+    }
+
+    /**
      * @description:品牌列表
      * @author: gly
      * @time: 2020-11-24
@@ -5624,5 +5638,17 @@ public class ScenarioUtil extends TestCaseCommon {
         }
         return invokeApi(url, json);
     }
+
+    /**
+     * 门店列表
+     * @return
+     */
+    public JSONObject shopListPage() {
+        JSONObject json = new JSONObject();
+        String url = "/jiaochen/pc/login-user/shop-list";
+
+        return invokeApi(url, json);
+    }
+
 
 }

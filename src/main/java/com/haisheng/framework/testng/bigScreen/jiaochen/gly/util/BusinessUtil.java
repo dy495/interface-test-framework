@@ -2,6 +2,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.gly.util;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.inject.internal.util.$ImmutableList;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.bean.Activity;
@@ -25,12 +26,16 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanag
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
+import com.haisheng.framework.testng.commonDataStructure.LogMine;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
+import org.testng.annotations.Test;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import static com.haisheng.framework.testng.commonCase.TestCaseCommon.caseResult;
 
 public class BusinessUtil {
 
@@ -379,6 +384,69 @@ public class BusinessUtil {
     }
 
     /**
+     * 活动管理-创建招募活动
+     *
+     * @param voucherId         奖励卡券信息
+     * @param successReward     是否包含奖励
+     * @param rewardReceiveType 奖励领取方式 0：自动发放，1：主动领取
+     * @param isNeedApproval    报名后是否需要审批
+     */
+    public IScene createRecruitActivityScene(Long voucherId, boolean successReward, int rewardReceiveType, boolean isNeedApproval,Boolean type) {
+        List<String> picList = new ArrayList<>();
+        SupporterUtil supporterUtil = new SupporterUtil(visitor);
+        PublicParameter pp = new PublicParameter();
+        picList.add(0,supporterUtil.getPicPath());
+        //填写报名所需要信息
+        List<Boolean> isShow = new ArrayList<>();
+        isShow.add(type);
+        isShow.add(type);
+        isShow.add(type);
+        isShow.add(type);
+        isShow.add(type);
+        isShow.add(type);
+        isShow.add(type);
+        List<Boolean> isRequired = new ArrayList<>();
+        isRequired.add(type);
+        isRequired.add(type);
+        isRequired.add(type);
+        isRequired.add(type);
+        isRequired.add(type);
+        isRequired.add(type);
+        isRequired.add(type);
+        JSONArray registerInformationList = this.getRegisterInformationList(isShow, isRequired);
+        //报名成功奖励
+        JSONArray registerObject = getRewardVouchers(voucherId, 1, getVoucherSurplusInventory(voucherId));
+        //卡券有效期
+        JSONObject voucherValid = getVoucherValid(2, null, null, 10);
+        //创建招募活动-共有的--基础信息
+        ManageRecruitAddScene.ManageRecruitAddSceneBuilder builder = ManageRecruitAddScene.builder()
+                .type(2)
+                .participationLimitType(0)
+                .title(pp.RecruitName)
+                .startDate(getStartDate())
+                .endDate(getEndDate())
+                .applyStart(getStartDate())
+                .applyEnd(getEndDate())
+                .isLimitQuota(true)
+                .quota(10)
+                .subjectType(supporterUtil.getSubjectType())
+                .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
+                .label("BARGAIN")
+                .picList(picList)
+                .rule(pp.rule)
+                .registerInformationList(registerInformationList)
+                .successReward(successReward)
+                .rewardReceiveType(rewardReceiveType)
+                .isNeedApproval(isNeedApproval);
+        if (successReward) {
+            builder.rewardVouchers(registerObject)
+                    .voucherValid(voucherValid);
+
+        }
+        return builder.build();
+    }
+
+    /**
      * 编辑活动
      */
     public String activityEditScene(Long id) {
@@ -659,6 +727,7 @@ public class BusinessUtil {
         return ids;
 
     }
+
 
     /**
      * 查询列表中的状态为【审核未通过的ID】
@@ -1282,5 +1351,81 @@ public class BusinessUtil {
 //        Preconditions.checkArgument(createDate.compareTo(startDate)>=0&&createDate.compareTo(endDate)<=0, "列表中创建时间："+createDate+"筛选栏开始时间："+startTime+"筛选栏开始时间："+endTime+"创建时间不在开始系欸结束之间之间");
 
     }
+
+    /**
+     * 门店shop_id与shop_name转化
+     */
+    public String shopNameTransformId(String shopName){
+        String shopId="";
+        JSONObject response=jc.shopListPage();
+        JSONArray list=response.getJSONArray("list");
+        for(int i=0;i<list.size();i++){
+            String name=list.getJSONObject(i).getString("shop_name");
+            if(shopName.equals(name)){
+                shopId=list.getJSONObject(i).getString("shop_id");
+            }else if(shopName.equals("集团管理")){
+                shopId=list.getJSONObject(0).getString("shop_id");
+            }else{
+                shopId=list.getJSONObject(0).getString("shop_id");
+            }
+        }
+        return shopId;
+    }
+
+    /**
+     * 获取门店列表第一个名字
+     *
+     */
+    public String getShopName(){
+        JSONArray list=jc.shopListPage().getJSONArray("list");
+        String shopName=list.getJSONObject(0).getString("shop_name");
+
+        return shopName;
+    }
+
+    /**
+     * 遍历门店的名字，判断是否存在此门店
+     */
+    public String getShopNameExist(String name) {
+        String nameBack="";
+        JSONArray list = jc.shopListPage().getJSONArray("list");
+        for (int i = 0; i < list.size(); i++) {
+            String shopName=list.getJSONObject(i).getString("shop_name");
+            if(name.equals(shopName)){
+                nameBack=shopName;
+            }else{
+                nameBack=list.getJSONObject(0).getString("shop_name");
+            }
+        }
+        return nameBack;
+    }
+
+    /**
+     * 获取进行中的优惠券
+     */
+    public Long voucherWorking(){
+        //进行中的优惠券ID
+        Long activityId=0L;
+        //优惠券列表
+        JSONObject response=jc.voucherPageFilterManage("1","10","","");
+        int pages=response.getInteger("pages");
+        for(int page=1;page<=pages;page++){
+            JSONArray list=jc.voucherPageFilterManage(String.valueOf(page),"10","","").getJSONArray("list");
+            for(int i=0;i<list.size();i++){
+                String status=list.getJSONObject(i).getString("voucher_status_name");
+                int surplusInventory=list.getJSONObject(i).getInteger("surplus_inventory");
+                if(status.equals(VoucherStatusEnum.WORKING.getName())&&surplusInventory>0){
+                    activityId=list.getJSONObject(i).getLong("voucher_id");
+                }
+            }
+        }
+        return activityId;
+    }
+
+
+
+
+
+
 
 }

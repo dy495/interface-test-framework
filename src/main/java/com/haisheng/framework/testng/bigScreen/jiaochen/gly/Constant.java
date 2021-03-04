@@ -168,8 +168,8 @@ public class Constant {
         return new String[][]{
                 {"package_name", "package_name"},
                 {"creator", "creator"},
-                {"package_status","status"}
-//                {"shop_name", "shop_name"},
+                {"package_status","status"},
+                {"shop_id", "shop_name"},
         };
     }
 
@@ -255,7 +255,7 @@ public class Constant {
                 {"name", "name"},
                 {"apply_name", "apply_name"},
                 {"status", "status_name"},
-//                {"apply_group", "apply_group"},
+                {"apply_group", "apply_group"},
 
         };
     }
@@ -332,7 +332,7 @@ public class Constant {
                 {"name", "name"},
                 {"phone", "phone"},
 //                {"role_id", "role_id"},
-//                {"shop_id", "shop_id"},
+                {"shop_id", "shop_id"},
         };
     }
 
@@ -462,7 +462,7 @@ public class Constant {
                 {"customer_name", "customer_name"},
                 {"vip_type", "vip_type_name"},
                 {"customer_phone", "customer_phone"},
-//                {"shop_id", "shop_name"},
+                {"shop_id", "shop_name"},
 //                {"dial_start", "dial_start"},
 //                {"dial_end", "dial_end"},
 
@@ -485,7 +485,7 @@ public class Constant {
                 {"score", "score"},
                 {"is_follow_up", "follow_up_remark"},
                 {"customer_phone", "customer_phone"},
-                {"is_have_msg", "describe"},
+                {"is_have_msg", "suggestion"},
 //                {"source_create_start", "source_create_start"},
 //                {"source_create_end", "source_create_end"},
 //                {"evaluate_start", "evaluate_start"},
@@ -537,7 +537,7 @@ public class Constant {
     public static Object[][] storeSalesPageFilter_pram(){
         return new String[][]{
                 {"sales_phone", "sales_phone"},
-//                {"shop_id", "shop_name"},
+                {"shop_id", "shop_name"},
 
         };
     }
