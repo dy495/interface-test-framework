@@ -1606,6 +1606,15 @@ public class FeidanMiniApiSystemtestDaily {
         String caseName = ciCaseName;
 
         try {
+//            for(int j=1;j<10;j++){
+//
+//            JSONArray ll= accountPage(j, 10, null, null, null, null, null).getJSONArray("list");
+//            for(int i=0;i<10;i++){
+//                String id=ll.getJSONObject(i).getString("id");
+//                accountDelete(id);
+//            }
+//            }
+
             //新建账号
             String name = "" + System.currentTimeMillis();
             String email = System.currentTimeMillis() + "@qq.com";
@@ -1772,6 +1781,13 @@ public class FeidanMiniApiSystemtestDaily {
         String caseName = ciCaseName;
 
         try {
+//           JSONArray ll = rolePage(4, 10, null).getJSONArray("list");
+//            for(int i=4;i<10;i++){
+//                Long id = ll.getJSONObject(i).getLong("id");
+//                roleDelete(id);
+//            }
+
+
             JSONArray arr = new JSONArray();
             arr.add("149");
 

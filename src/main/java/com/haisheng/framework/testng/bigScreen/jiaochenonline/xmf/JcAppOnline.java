@@ -47,7 +47,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
         commonConfig.referer = EnumTestProduce.JIAOCHEN_ONLINE.getReferer();
-        commonConfig.product = EnumTestProduce.JIAOCHEN_ONLINE.getDesc();
+        commonConfig.product = EnumTestProduce.JIAOCHEN_ONLINE.getAbbreviation();
 
 //        commonConfig.referer=getJcReferOnline();
 
@@ -176,7 +176,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
     public void Jc_appointmentPageAndtodaydate() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            System.out.println(IpPort);
+            appLogin(pp.jdgw,pp.jdgwpassword,pp.roleidJdgw);
             //app今日任务数
             int tasknum[] = pf.appTask();
 
@@ -379,7 +379,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
     public void Jc_reception2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-
+            appLogin(pp.jdgw,pp.jdgwpassword,pp.roleidJdgw);
             Long id[] = pf.startReception(pp.carplate7);
 
             jc.finishReception(id[0], id[1]);
@@ -395,10 +395,11 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
     public void Jc_receptionTodayTask() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            appLogin(pp.jdgw,pp.jdgwpassword,pp.roleidJdgw);
             //接待前，今日任务
             int tasknum[] = pf.appTask();
             //开始接待
-            Long id[] = pf.startReception(pp.carplate);
+            Long id[] = pf.startReception(pp.carplate7);
             int tasknumA[] = pf.appTask();
             //完成接待
             jc.finishReception(id[0], id[1]);
@@ -536,6 +537,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
     public void Jc_hexiaoAB(String num) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            appLogin(pp.jdgw,pp.jdgwpassword,pp.roleidJdgw);
             int code = jc.verification(num, false).getInteger("code");
             Preconditions.checkArgument(code == 1001, "异常核销码，返回不是1001，code:" + code);
         } catch (AssertionError | Exception e) {
@@ -648,7 +650,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
      * @description :核销----需要小程序有源源不断的卡券;  核销，核销记录+1
      * @date :2020/12/17 14:58
      **/
-    @Test()
+//    @Test()
     public void write() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -696,6 +698,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
     public void Jc_recepchangetion() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            appLogin(pp.jdgw,pp.jdgwpassword,pp.roleidJdgw);
             //开始接待
             Long id[] = pf.startReception(pp.carplate);
             //变更接待前
