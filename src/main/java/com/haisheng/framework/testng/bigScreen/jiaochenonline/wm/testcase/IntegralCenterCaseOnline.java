@@ -44,6 +44,9 @@ import java.util.stream.Collectors;
 
 /**
  * 积分中心测试用例
+ *
+ * @author wangmin
+ * @date 2021/1/29 11:17
  */
 public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce product = EnumTestProduce.JIAOCHEN_ONLINE;
@@ -603,7 +606,6 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
             collectMessage(e);
         }
     }
-
 
     //ok
     @Test(description = "积分明细--各个积分规则的奖励积分=该规则的单笔发放积分")

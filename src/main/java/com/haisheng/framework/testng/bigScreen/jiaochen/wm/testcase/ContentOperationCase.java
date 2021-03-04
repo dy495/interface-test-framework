@@ -35,6 +35,9 @@ import java.util.stream.Collectors;
 
 /**
  * 内容运营
+ *
+ * @author wangmin
+ * @date 2021/1/29 11:17
  */
 public class ContentOperationCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce product = EnumTestProduce.JIAOCHEN_DAILY;

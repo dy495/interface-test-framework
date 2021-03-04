@@ -41,6 +41,9 @@ import java.util.stream.Collectors;
 
 /**
  * 业务管理测试用例
+ *
+ * @author wangmin
+ * @date 2021/1/29 11:17
  */
 public class BusinessManageCaseOnline extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce product = EnumTestProduce.JIAOCHEN_ONLINE;

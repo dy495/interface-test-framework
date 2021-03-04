@@ -16,6 +16,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.C
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.IntegralExchangeStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.appointment.AppointmentConfirmStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.appointment.AppointmentTypeEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.AppletCodeBusinessTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherSourceEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.reception.after.ReceptionStatusEnum;
@@ -28,7 +29,9 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.app.tack.AppRec
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.appointmentmanager.AppointmentPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.EditExchangeStockScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.ExchangeDetailedScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.ExchangePageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.IntegralExchangeRulesScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.ReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.ReceptorChangeScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.AddVoucherScene;
@@ -357,7 +360,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
     }
 
     //ok
-    @Test(description = "积分兑换--兑换库存不足的实体商品，提示：商品库存不足")
+    @Test(description = "小程序--积分兑换--兑换库存不足的实体商品，提示：商品库存不足")
     public void integralMall_system_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -374,12 +377,12 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("积分兑换--兑换库存不足的实体商品，提示：商品库存不足");
+            saveData("小程序--积分兑换--兑换库存不足的实体商品，提示：商品库存不足");
         }
     }
 
     //ok
-    @Test(description = "积分兑换--兑换卡券无库存的虚拟商品")
+    @Test(description = "小程序--积分兑换--兑换卡券无库存的虚拟商品")
     public void integralMall_system_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -406,12 +409,12 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("积分兑换--兑换卡券无库存的虚拟商品");
+            saveData("小程序--积分兑换--兑换卡券无库存的虚拟商品");
         }
     }
 
     //ok
-    @Test(description = "积分兑换--兑换无库存的虚拟商品，提示：商品库存不足")
+    @Test(description = "小程序--积分兑换--兑换无库存的虚拟商品，提示：商品库存不足")
     public void integralMall_system_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -435,12 +438,12 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("积分兑换--兑换无库存的虚拟商品，提示：商品库存不足");
+            saveData("小程序--积分兑换--兑换无库存的虚拟商品，提示：商品库存不足");
         }
     }
 
     //ok
-    @Test(description = "积分兑换--兑换无库存的虚拟商品")
+    @Test(description = "小程序--积分兑换--兑换无库存的虚拟商品")
     public void integralMall_system_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -485,7 +488,54 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("积分兑换--兑换无库存的虚拟商品");
+            saveData("小程序--积分兑换--兑换无库存的虚拟商品");
+        }
+    }
+
+    //ok
+    @Test(description = "小程序--签到--积分增加&积分明细记录增加类型")
+    public void integralCenter_system_5() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene integralExchangeRulesScene = IntegralExchangeRulesScene.builder().build();
+            int allSend = util.collectBean(integralExchangeRulesScene, JSONObject.class).stream().filter(e -> e.getString("rule_name").equals(AppletCodeBusinessTypeEnum.SIGN_IN.getTypeName())).map(e -> e.getInteger("all_send")).findFirst().orElse(0);
+            user.loginApplet(APPLET_USER_ONE);
+            JSONObject response = AppletSignInDetailScene.builder().build().execute(visitor, true);
+            int signInScore = response.getInteger("sign_in_score");
+            int signInScoreCount = response.getInteger("sign_in_score_count");
+            int signInTime = response.getInteger("sign_in_time");
+            boolean isSignIn = response.getBoolean("is_sign_in");
+            CommonUtil.checkResult("小程序是否已签到", false, isSignIn);
+            int integralRecordNum = util.getAppletIntegralRecordNum();
+            //签到
+            String gainTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
+            String monthType = DateTimeUtil.getFormat(new Date(), "yyyy-MM");
+            AppletSignInScene.builder().build().execute(visitor, true);
+            JSONObject newResponse = AppletSignInDetailScene.builder().build().execute(visitor, true);
+            CommonUtil.checkResult("小程序签到完成累计签到积分", signInScoreCount + signInScore, newResponse.getInteger("sign_in_score_count"));
+            CommonUtil.checkResult("小程序签到完成累计签到次数", signInTime + 1, newResponse.getInteger("sign_in_time"));
+            int newIntegralRecordNum = util.getAppletIntegralRecordNum();
+            CommonUtil.checkResult("小程序签到完成积分明细列表数", integralRecordNum + 1, newIntegralRecordNum);
+            AppletIntegralRecord integralRecord = util.getAppletIntegralRecordList().get(0);
+            CommonUtil.checkResult("小程序签到完成积分明细获取时间", gainTime, integralRecord.getGainTime());
+            CommonUtil.checkResult("小程序签到完成积分明细获取月份", monthType, integralRecord.getMonthType());
+            CommonUtil.checkResult("小程序签到完成积分明细内容", "签到获得" + signInScore + "积分", integralRecord.getName());
+            CommonUtil.checkResult("小程序签到完成积分明细类型", ChangeStockTypeEnum.ADD.name(), integralRecord.getChangeType());
+            CommonUtil.checkResult("小程序签到完成积分明细积分数", signInScore, Integer.parseInt(integralRecord.getIntegral()));
+            user.loginPc(ADMINISTRATOR);
+            IScene exchangeDetailedScene = ExchangeDetailedScene.builder().build();
+            ExchangeDetailed exchangeDetailed = util.collectBean(exchangeDetailedScene, ExchangeDetailed.class).get(0);
+            CommonUtil.checkResult("pc积分明细获取时间", gainTime, exchangeDetailed.getOperateTime());
+            CommonUtil.checkResult("pc积分明细内容", "签到获得" + signInScore + "积分", exchangeDetailed.getChangeReason());
+            CommonUtil.checkResult("pc积分明细类型", ChangeStockTypeEnum.ADD.name(), exchangeDetailed.getExchangeType());
+            CommonUtil.checkResult("pc积分明细类型", ChangeStockTypeEnum.ADD.getDescription(), exchangeDetailed.getExchangeTypeName());
+            CommonUtil.checkResult("pc积分明细积分数", signInScore, exchangeDetailed.getStockDetail());
+            int newAllSend = util.collectBean(integralExchangeRulesScene, JSONObject.class).stream().filter(e -> e.getString("rule_name").equals(AppletCodeBusinessTypeEnum.SIGN_IN.getTypeName())).map(e -> e.getInteger("all_send")).findFirst().orElse(0);
+            CommonUtil.checkResult("pc积分规则中签到已发放积分", allSend + signInScore, newAllSend);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("小程序--签到--积分增加&积分明细记录增加类型");
         }
     }
 }

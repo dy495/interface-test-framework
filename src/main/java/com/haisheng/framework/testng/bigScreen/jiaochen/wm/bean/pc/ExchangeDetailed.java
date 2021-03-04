@@ -55,4 +55,11 @@ public class ExchangeDetailed implements Serializable {
      */
     @JSONField(name = "order_code")
     private String orderCode;
+
+    /**
+     * 时间
+     */
+    @JSONField(name = "operate_time")
+    private String operateTime;
 }
+

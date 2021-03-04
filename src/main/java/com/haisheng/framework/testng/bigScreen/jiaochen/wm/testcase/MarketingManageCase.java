@@ -50,6 +50,9 @@ import java.util.stream.Collectors;
 
 /**
  * 营销管理模块测试用例
+ *
+ * @author wangmin
+ * @date 2021/1/29 11:17
  */
 public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce product = EnumTestProduce.JIAOCHEN_DAILY;
@@ -3089,7 +3092,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             IScene signInConfigEditScene = SignInConfigEditScene.builder().signInConfigId(id).awardScore(999).explain(EnumDesc.VOUCHER_DESC.getDesc()).build();
             visitor.invokeApi(signInConfigEditScene);
             user.loginApplet(APPLET_USER_ONE);
-            IScene messageFormPageScene = MemberCenterSignInDetailScene.builder().build();
+            IScene messageFormPageScene = AppletSignInDetailScene.builder().build();
             Integer signInScore = visitor.invokeApi(messageFormPageScene).getInteger("sign_in_score");
             CommonUtil.checkResultPlus("pc修改后签到积分为", 999, "小程序签到可得积分为", signInScore);
             user.loginPc(ADMINISTRATOR);

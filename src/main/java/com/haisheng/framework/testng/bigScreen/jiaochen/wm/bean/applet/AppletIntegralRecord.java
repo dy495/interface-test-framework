@@ -23,10 +23,21 @@ public class AppletIntegralRecord implements Serializable {
     @JSONField(name = "change_type")
     private String changeType;
 
-
     /**
      * 详情
      */
     @JSONField(name = "name")
     private String name;
+
+    /**
+     * 获取时间
+     */
+    @JSONField(name = "gain_time")
+    private String gainTime;
+
+    /**
+     * 月份
+     */
+    @JSONField(name = "month_type")
+    private String monthType;
 }

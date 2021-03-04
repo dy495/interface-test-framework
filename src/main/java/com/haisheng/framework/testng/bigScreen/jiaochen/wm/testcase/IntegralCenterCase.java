@@ -41,6 +41,9 @@ import java.util.stream.Collectors;
 
 /**
  * 积分中心测试用例
+ *
+ * @author wangmin
+ * @date 2021/1/29 11:17
  */
 public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce product = EnumTestProduce.JIAOCHEN_DAILY;

@@ -5,13 +5,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 小程序签到详情
- *
- * @author wangmin
- * @date 2021-02-02
+ * 小程序签到
  */
 @Builder
-public class MemberCenterSignInDetailScene extends BaseScene {
+public class AppletSignInScene extends BaseScene {
 
     @Override
     public JSONObject getRequestBody() {
@@ -20,6 +17,7 @@ public class MemberCenterSignInDetailScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/granted/member-center/sign-in-detail";
+        return "/jiaochen/applet/granted/member-center/sign-in";
     }
+
 }
