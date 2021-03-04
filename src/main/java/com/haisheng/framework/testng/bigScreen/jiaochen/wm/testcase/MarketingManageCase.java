@@ -1042,7 +1042,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             user.loginApplet(APPLET_USER_ONE);
             Long appletVoucherId = util.getAppletVoucherInfo(voucherCode).getId();
             //核销
-            IScene voucherVerificationScene = VoucherVerificationScene.builder().id(String.valueOf(appletVoucherId)).verificationCode(code).build();
+            IScene voucherVerificationScene = AppletVoucherVerificationScene.builder().id(String.valueOf(appletVoucherId)).verificationCode(code).build();
             visitor.invokeApi(voucherVerificationScene);
             //核销之后数据
             user.loginPc(ADMINISTRATOR);
@@ -1582,7 +1582,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             code = util.getVerificationCode(false, "本司员工");
             user.loginApplet(APPLET_USER_ONE);
             long id = util.getAppletVoucher(VoucherUseStatusEnum.NEAR_EXPIRE).getId();
-            String message = VoucherVerificationScene.builder().id(String.valueOf(id)).verificationCode(code).build().execute(visitor, false).getString("message");
+            String message = AppletVoucherVerificationScene.builder().id(String.valueOf(id)).verificationCode(code).build().execute(visitor, false).getString("message");
             String err = "核销码错误";
             CommonUtil.checkResult("核销卡券时核销码状态关闭", err, message);
         } catch (Exception | AssertionError e) {
@@ -3000,7 +3000,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             String newDescription = newEquityPageResponse.getString("description");
             CommonUtil.checkResult("pc修改过权益说明后", description, newDescription);
             user.loginApplet(APPLET_USER_ONE);
-            JSONObject response = MemberCenterHomePageScene.builder().build().execute(visitor, true);
+            JSONObject response = AppletMemberCenterHomePageScene.builder().build().execute(visitor, true);
             int vipType = response.getInteger("vip_type");
             JSONObject equity = response.getJSONArray("equity_list").getJSONObject(0);
             String equityName = equity.getString("equity_name");
@@ -3024,7 +3024,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             IScene equityStartOrCloseScene = EquityStartOrCloseScene.builder().equityId(equityId).equityStatus(UseStatusEnum.DISABLE.name()).build();
             visitor.invokeApi(equityStartOrCloseScene);
             user.loginApplet(APPLET_USER_ONE);
-            IScene memberCenterEquityListScene = MemberCenterHomePageScene.builder().build();
+            IScene memberCenterEquityListScene = AppletMemberCenterHomePageScene.builder().build();
             JSONObject jsonObject = visitor.invokeApi(memberCenterEquityListScene).getJSONArray("equity_list").getJSONObject(0);
             CommonUtil.checkResult(jsonObject.getString("equity_name") + "开启状态", UseStatusEnum.DISABLE.name(), jsonObject.getString("equity_status"));
         } catch (Exception | AssertionError e) {
@@ -3045,7 +3045,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             IScene equityStartOrCloseScene = EquityStartOrCloseScene.builder().equityId(equityId).equityStatus(UseStatusEnum.ENABLE.name()).build();
             visitor.invokeApi(equityStartOrCloseScene);
             user.loginApplet(APPLET_USER_ONE);
-            IScene memberCenterEquityListScene = MemberCenterHomePageScene.builder().build();
+            IScene memberCenterEquityListScene = AppletMemberCenterHomePageScene.builder().build();
             JSONObject jsonObject = visitor.invokeApi(memberCenterEquityListScene).getJSONArray("equity_list").getJSONObject(0);
             CommonUtil.checkResult(jsonObject.getString("equity_name") + "开启状态", UseStatusEnum.ENABLE.name(), jsonObject.getString("equity_status"));
         } catch (Exception | AssertionError e) {
@@ -3060,20 +3060,23 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
     public void vipMarketing_system_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            String[] strings = {EnumDesc.FAULT_DESCRIPTION.getDesc(), EnumDesc.MESSAGE_TITLE.getDesc(), EnumDesc.INVALID_REASON.getDesc()};
             IVoucher voucher = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher();
             Integer voucherId = Math.toIntExact(voucher.getVoucherId());
             IScene shareManagerPageScene = ShareManagerPageScene.builder().build();
             JSONArray list = visitor.invokeApi(shareManagerPageScene).getJSONArray("list");
-            list.stream().map(e -> (JSONObject) e).forEach(e -> {
-                int id = e.getInteger("id");
-                String businessType = e.getString("business_type");
-                IScene shareManagerEditScene = ShareManagerEditScene.builder().id(id).awardCustomerRule("ONCE").taskExplain(EnumDesc.MESSAGE_TITLE.getDesc())
-                        .awardScore(1000).awardCardVolumeId(voucherId).takeEffectType("DAY").dayNumber("2000").businessType(businessType).build();
-                visitor.invokeApi(shareManagerEditScene);
-            });
+            String description = null;
+            for (int i = 0; i < list.size(); i++) {
+                JSONObject jsonObject = list.getJSONObject(i);
+                int id = jsonObject.getInteger("id");
+                String businessType = jsonObject.getString("business_type");
+                description = Arrays.stream(strings).filter(string -> !jsonObject.getString("description").equals(string)).findFirst().orElse(jsonObject.getString("description"));
+                ShareManagerEditScene.builder().id(id).awardCustomerRule("ONCE").taskExplain(description).awardScore(1000).awardCardVolumeId(voucherId).takeEffectType("DAY").dayNumber("2000").businessType(businessType).build().execute(visitor, true);
+            }
             user.loginApplet(APPLET_USER_ONE);
-            JSONArray taskList = visitor.invokeApi(MemberCenterShareTaskListScene.builder().build()).getJSONArray("task_list");
-            taskList.stream().map(e -> (JSONObject) e).forEach(e -> CommonUtil.checkResult(e.getString("task_name") + "的内容", EnumDesc.MESSAGE_TITLE.getDesc() + "+1000积分.", e.getString("award_description")));
+            JSONArray taskList = AppletShareTaskListScene.builder().build().execute(visitor, true).getJSONArray("task_list");
+            String finalDescription = description;
+            taskList.stream().map(e -> (JSONObject) e).forEach(e -> CommonUtil.checkResult(e.getString("task_name") + "的内容", finalDescription + "+1000积分.", e.getString("award_description")));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {

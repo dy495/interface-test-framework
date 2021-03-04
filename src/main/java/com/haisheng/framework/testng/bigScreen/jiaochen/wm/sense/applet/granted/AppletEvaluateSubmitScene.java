@@ -13,7 +13,7 @@ import java.util.List;
  * @date 2021/1/29 19:01
  */
 @Builder
-public class EvaluateSubmitScene extends BaseScene {
+public class AppletEvaluateSubmitScene extends BaseScene {
     private final Integer id;
     private final Integer shopId;
     private final Integer type;

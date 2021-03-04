@@ -10,7 +10,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.ArticlePage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.om.ArticleStatusEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.banner.BannerScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.banner.AppletBannerScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.ActivityManageListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.banner.BannerEdit;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpload;
@@ -145,7 +145,7 @@ public class ContentOperationCaseOnline extends TestCaseCommon implements TestCa
                     .bannerImgUrl5(picPaths.get(4)).articleId5(articleIds.get(4)).build();
             visitor.invokeApi(scene);
             user.loginApplet(APPLET_USER_ONE);
-            JSONArray array = visitor.invokeApi(BannerScene.builder().build()).getJSONArray("list");
+            JSONArray array = visitor.invokeApi(AppletBannerScene.builder().build()).getJSONArray("list");
             List<Long> appletArticleIds = array.stream().map(e -> (JSONObject) e).map(e -> e.getLong("article_id")).collect(Collectors.toList());
             CommonUtil.checkResultPlus("pc端文章为：", appletArticleIds, "applet端文章为：", articleIds.subList(0, 5));
         } catch (Exception | AssertionError e) {
