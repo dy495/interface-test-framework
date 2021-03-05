@@ -1142,7 +1142,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
             //编辑品类-不更换图片
 
-            int code3 = jc.categoryEdit(false,id,name+"1","FIRST_CATEGORY","",null).getInteger("code");
+            int code3 = jc.categoryEdit(false,id,name,"FIRST_CATEGORY","",null).getInteger("code");
             Preconditions.checkArgument(code3==1000,"编辑不传图片状态码期待1000，实际"+code3);
 
             //删除启用品类
@@ -1615,7 +1615,6 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(obj.containsKey("num"),"品牌"+id+"无商品数量");
                 Preconditions.checkArgument(obj.containsKey("last_modify_time"),"品牌"+id+"无最新修改时间");
                 Preconditions.checkArgument(obj.containsKey("modify_sale_name"),"品牌"+id+"无修改人");
-
             }
 
         } catch (AssertionError e) {
@@ -2508,12 +2507,11 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             JSONArray list = jc.exchangeDetail(1,50,null,null,null,null,null).getJSONArray("list");
             for (int i = 0 ; i < list.size();i++){
                 JSONObject obj = list.getJSONObject(i);
-                Preconditions.checkArgument(obj.containsKey("exchange_customer_name"),"未展示客户名称");
-                Preconditions.checkArgument(obj.containsKey("phone"),"未展示客户手机号");
-                Preconditions.checkArgument(obj.containsKey("exchange_type"),"未展示兑换类型");
-                Preconditions.checkArgument(obj.containsKey("stock_detail"),"未展示库存明细");
-                Preconditions.checkArgument(obj.containsKey("order_code"),"未展示订单号");
-                Preconditions.checkArgument(obj.containsKey("operate_time"),"未展示操作时间");
+                Preconditions.checkArgument(obj.containsKey("exchange_customer_name"),obj.getString("phone")+"未展示客户名称");
+                Preconditions.checkArgument(obj.containsKey("phone"),obj.getString("exchange_customer_name")+"未展示客户手机号");
+                Preconditions.checkArgument(obj.containsKey("exchange_type"),obj.getString("exchange_customer_name")+"未展示兑换类型");
+                Preconditions.checkArgument(obj.containsKey("stock_detail"),obj.getString("exchange_customer_name")+"未展示库存明细");
+                Preconditions.checkArgument(obj.containsKey("operate_time"),obj.getString("exchange_customer_name")+"未展示操作时间");
             }
 
         } catch (AssertionError e) {
