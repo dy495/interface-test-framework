@@ -8,9 +8,11 @@ import lombok.Builder;
  * 保养配置分页
  */
 @Builder
-public class CarModelPage extends BaseScene {
-    private final Integer page;
-    private final Integer size;
+public class CarModelPageScene extends BaseScene {
+    @Builder.Default
+    private final Integer page = 1;
+    @Builder.Default
+    private final Integer size = 10;
     private final String brandName;
     private final String manufacturer;
     private final String carModel;
@@ -31,10 +33,5 @@ public class CarModelPage extends BaseScene {
     @Override
     public String getPath() {
         return "/jiaochen/pc/manage/maintain/car-model/page";
-    }
-
-    @Override
-    public String getIpPort() {
-        return null;
     }
 }

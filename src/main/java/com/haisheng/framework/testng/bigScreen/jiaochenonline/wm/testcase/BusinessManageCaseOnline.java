@@ -14,6 +14,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherSendRe
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.WechatCustomerPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.CustomerLabelTypeEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.common.EnableStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherSourceEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherUseStatusEnum;
@@ -21,6 +22,8 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.Vouc
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.AfterSaleCustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.RepairPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.WechatCustomerPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.manager.CarModelEditScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.manager.CarModelPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.BuyPackageRecordScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.ReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherInfoScene;
@@ -36,7 +39,9 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -46,6 +51,7 @@ import java.util.stream.Collectors;
  * @date 2021/1/29 11:17
  */
 public class BusinessManageCaseOnline extends TestCaseCommon implements TestCaseStd {
+    CommonConfig commonConfig = new CommonConfig();
     private static final EnumTestProduce product = EnumTestProduce.JIAOCHEN_ONLINE;
     private static final EnumAccount ADMINISTRATOR = EnumAccount.ADMINISTRATOR_ONLINE;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_ONLINE;
@@ -61,7 +67,6 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
     @Override
     public void initial() {
         logger.debug("before class initial");
-        CommonConfig commonConfig = new CommonConfig();
         //替换checklist的相关信息
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
         commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
@@ -467,6 +472,28 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
             collectMessage(e);
         } finally {
             saveData("客户管理--有维修记录的售后客户，列表最新里程数=维修记录中最新的里程数&总消费/元=维修记录产值/mb之和");
+        }
+    }
+
+    //ok
+    @Test(description = "预约管理--保养配置，修改保养价格")
+    public void customerManager_data_6() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            commonConfig.shopId = "46522";
+            Double[] doubles = {1.00, 2.99, 3.66, 50.1};
+            JSONObject jsonObject = CarModelPageScene.builder().build().execute(visitor, true).getJSONArray("list").getJSONObject(0);
+            Integer id = jsonObject.getInteger("id");
+            Double price = Arrays.stream(doubles).filter(e -> !e.equals(jsonObject.getDouble("price"))).findFirst().orElse(jsonObject.getDouble("price"));
+            CarModelEditScene.builder().id(id).price(price).status(EnableStatusEnum.DISABLE.name()).build().execute(visitor, true);
+            JSONObject newJSONObject = CarModelPageScene.builder().build().execute(visitor, true).getJSONArray("list").stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("id").equals(id)).findFirst().orElse(null);
+            CommonUtil.checkResult(id + "保养价格", price, Objects.requireNonNull(newJSONObject).getDouble("price"));
+            CommonUtil.checkResult(id + "预约状态", EnableStatusEnum.DISABLE.name(), Objects.requireNonNull(newJSONObject).getString("status"));
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            commonConfig.shopId = product.getShopId();
+            saveData("预约管理--保养配置，修改保养价格");
         }
     }
 }
