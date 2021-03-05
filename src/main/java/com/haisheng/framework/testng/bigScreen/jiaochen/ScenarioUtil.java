@@ -4036,7 +4036,7 @@ public class ScenarioUtil extends TestCaseCommon {
         json1.put("days",er.days);
         json1.put("mileage",er.mileage);
 
-        return invokeApi(url,json1);
+        return invokeApi(url,json1,er.checkcode);
     }
 
     public JSONObject editRemindMethod(pccreateRemind er) {

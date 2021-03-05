@@ -143,7 +143,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             pccreateStoreSales er=new pccreateStoreSales();
             er.sales_phone=pf.genPhoneNum();
             er.sales_name=String.valueOf(System.currentTimeMillis());
-            er.sales_phone=pp.shopIdZ;
+            er.shop_id=pp.shopIdZ;
             er.dept_name="分销1部";
             er.job_name="分销员";
             jc.SalesCreate(er);
@@ -459,9 +459,9 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             er.item="提醒标题";
             er.content="提醒内容";
             er.vouchers=pp.vouchers2;    //卡券
-            er.effective_days="1";     //卡券有效期
+            er.effective_days="180";     //卡券有效期
 //            er.days="1";            //提醒天数
-            er.mileage="200";        //提醒公里数
+            er.mileage="90000";        //提醒公里数
            jc.createRemindMethod(er);
            String RemindId =jc.remindPage( "1","10","","","").getJSONArray("list").getJSONObject(0).getString("id");
            //编辑
@@ -517,7 +517,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            jc.pcLogin(pp.gwphone,pp.gwpassword);
+            pcLogin(pp.jdgw,pp.jdgwpassword,pp.roleidJdgw);
             saveData("pc-新建智能提醒（公里）结果验证");
         }
 
@@ -551,7 +551,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            jc.pcLogin(pp.gwphone,pp.gwpassword);
+            pcLogin(pp.jdgw,pp.jdgwpassword,pp.roleidJdgw);
             saveData("pc-新建智能提醒（天数）结果验证");
         }
 
