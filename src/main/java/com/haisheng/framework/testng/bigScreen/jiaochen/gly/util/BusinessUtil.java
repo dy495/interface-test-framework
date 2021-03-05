@@ -48,6 +48,7 @@ public class BusinessUtil {
     }
      ScenarioUtil jc = new ScenarioUtil();
       PublicParameter pp = new PublicParameter();
+      public String shopId="-1";
 
     /**
      * @description :创建裂变活动-分享者奖励
@@ -1372,16 +1373,6 @@ public class BusinessUtil {
         return shopId;
     }
 
-    /**
-     * 获取门店列表第一个名字
-     *
-     */
-    public String getShopName(){
-        JSONArray list=jc.shopListPage().getJSONArray("list");
-        String shopName=list.getJSONObject(0).getString("shop_name");
-
-        return shopName;
-    }
 
     /**
      * 遍历门店的名字，判断是否存在此门店
@@ -1395,6 +1386,44 @@ public class BusinessUtil {
                 nameBack=shopName;
             }else{
                 nameBack=list.getJSONObject(0).getString("shop_name");
+            }
+        }
+        return nameBack;
+    }
+
+    /**
+     * 接待人id与name转化
+     */
+    public String authNameTransformId(String shopName,String type){
+        String shopId="";
+        JSONObject response=jc.authListPage(type,"-1");
+        JSONArray list=response.getJSONArray("list");
+        for(int i=0;i<list.size();i++){
+            String name=list.getJSONObject(i).getString("name");
+            if(shopName.equals(name)){
+                shopId=list.getJSONObject(i).getString("id");
+            }else if(shopName.equals("集团管理")){
+                shopId=list.getJSONObject(0).getString("id");
+            }else{
+                shopId=list.getJSONObject(0).getString("id");
+            }
+        }
+        return shopId;
+    }
+
+
+    /**
+     * 遍历接待人的名字，判断是否存在此接待人
+     */
+    public String getAuthNameExist(String name,String type) {
+        String nameBack="";
+        JSONArray list = jc.authListPage(type,"-1").getJSONArray("list");
+        for (int i = 0; i < list.size(); i++) {
+            String shopName=list.getJSONObject(i).getString("name");
+            if(name.equals(shopName)){
+                nameBack=shopName;
+            }else{
+                nameBack=list.getJSONObject(0).getString("name");
             }
         }
         return nameBack;
@@ -1421,11 +1450,6 @@ public class BusinessUtil {
         }
         return activityId;
     }
-
-
-
-
-
 
 
 }

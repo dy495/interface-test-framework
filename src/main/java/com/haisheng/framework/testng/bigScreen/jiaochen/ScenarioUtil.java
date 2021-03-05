@@ -5721,9 +5721,17 @@ public class ScenarioUtil extends TestCaseCommon {
         }
     }
 
+    /**
+     * 接待人列表
+     * @return
+     */
+    public JSONObject authListPage(String authType,String shopId) {
+        JSONObject json = new JSONObject();
+        json.put("auth_type", authType);
+        json.put("shop_id", shopId);
+        String url = "/jiaochen/pc/staff/auth-list";
 
-
-
-
+        return invokeApi(url, json);
+    }
 
 }
