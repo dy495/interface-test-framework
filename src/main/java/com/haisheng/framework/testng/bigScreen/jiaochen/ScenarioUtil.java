@@ -5650,5 +5650,80 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(url, json);
     }
 
+    /**
+     * 销售顾问列表下拉
+     * @return
+     */
+    public JSONObject saleList(Long shop_id) {
+        JSONObject json = new JSONObject();
+        String url = "/jiaochen/pc/customer-manage/pre-sale-customer/sales-list";
+        json.put("shop_id",shop_id);
+        return invokeApi(url, json);
+    }
+
+    /**
+     * 车辆model列表下拉
+     * @return
+     */
+    public JSONObject modelList(Long shop_id) {
+        JSONObject json = new JSONObject();
+        String url = "/jiaochen/pc/customer-manage/pre-sale-customer/model-list";
+        json.put("shop_id",shop_id);
+        return invokeApi(url, json);
+    }
+
+    /**
+     * 创建潜客
+     * @return
+     */
+    public JSONObject createPotentialCstm(String customer_name,String customer_phone,String customer_type,String sex,Long car_model_id,
+                                          Long shop_id,String salesId,Boolean ... chk) {
+        JSONObject json = new JSONObject();
+        String url = "/jiaochen/pc/customer-manage/pre-sale-customer/create-potential-customer";
+        json.put("customer_name",customer_name);
+        json.put("customer_phone",customer_phone);
+        json.put("customer_type",customer_type);
+        json.put("sex",sex);
+        json.put("car_model_id",car_model_id);
+        json.put("shop_id",shop_id);
+        json.put("salesId",salesId);
+        if (chk.length>0){
+            return invokeApi(url, json,chk[0]);
+        }
+        else {
+            return invokeApi(url, json);
+        }
+
+    }
+
+    /**
+     * 创建订单
+     * @return
+     */
+    public JSONObject createCstm(String customer_name,String customer_phone,String customer_type,String sex,Long car_model_id,
+                                          Long shop_id,String salesId,String purchase_car_date,String vehicle_chassis_code,Boolean ... chk) {
+        JSONObject json = new JSONObject();
+        String url = "/jiaochen/pc/customer-manage/pre-sale-customer/create-customer";
+        json.put("customer_name",customer_name);
+        json.put("customer_phone",customer_phone);
+        json.put("customer_type",customer_type);
+        json.put("sex",sex);
+        json.put("car_model_id",car_model_id);
+        json.put("shop_id",shop_id);
+        json.put("salesId",salesId);
+        json.put("purchase_car_date",purchase_car_date);
+        json.put("vehicle_chassis_code",vehicle_chassis_code);
+        if (chk.length>0){
+            return invokeApi(url, json,chk[0]);
+        }
+        else {
+            return invokeApi(url, json);
+        }
+    }
+
+
+
+
+
 
 }
