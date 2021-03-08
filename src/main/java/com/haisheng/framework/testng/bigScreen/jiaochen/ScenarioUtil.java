@@ -5201,6 +5201,7 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(url,json);
     }
 
+
     /**
      * @description :V2.0洗车管理列表
      * @date :2021/2/1

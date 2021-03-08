@@ -39,7 +39,6 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
     @Override
     public void initial() {
         logger.debug("before classs initial");
-        CommonConfig commonConfig = new CommonConfig();
         //替换checklist的相关信息
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_JIAOCHEN_DAILY_SERVICE;
@@ -464,7 +463,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
             for (int page = 1; page <= pages; page++) {
                 JSONArray list = jc.afterSleCustomerTimeManage("", String.valueOf(page),"10",startTime,endTime,startTime,endTime).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
-                    String orderDate = list.getJSONObject(i).containsKey("start_order_date")?list.getJSONObject(i).getString("start_order_date").substring(0,10):startTime;
+                    String orderDate = list.getJSONObject(i).containsKey("deliver_date")?list.getJSONObject(i).getString("deliver_date").substring(0,10):startTime;
                     String importDate = list.getJSONObject(i).containsKey("import_date")?list.getJSONObject(i).getString("import_date").substring(0,10):startTime;
                     Preconditions.checkArgument(orderDate.compareTo(startTime)>=0&&orderDate.compareTo(endTime)<=0, "订单开始时间："+startTime+" 订单结束时间："+endTime+" 列表中的开单时间为："+orderDate);
                     Preconditions.checkArgument(importDate.compareTo(startTime)>=0&&importDate.compareTo(endTime)<=0, "创建开始时间："+startTime+" 创建结束时间："+endTime+" 列表中的导入时间为："+importDate);
@@ -3100,8 +3099,8 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
         }catch(AssertionError|Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("V2.0-智能提醒筛选栏校验");
             commonConfig.shopId=product.getShopId();
+            saveData("V2.0-智能提醒筛选栏校验");
         }
     }
 

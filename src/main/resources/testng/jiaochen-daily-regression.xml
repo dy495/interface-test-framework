@@ -16,11 +16,10 @@
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcPc2_0"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcApp"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcApplet"/>
-<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.gly.ActivityManage"/>-->
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.gly.ActivityManage"/>
 <!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcAppAppointment"/>-->
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.gly.FilterColumnSystemDaily"/>
 <!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.gly.JcPc_SystemLog"/>-->
-<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.gly.Jc_Pc_CustomerManage"/>-->
 <!--&lt;!&ndash;            以下case一天运行一次&ndash;&gt;-->
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcAppointmentRelate"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcCancleAppointment"/>
