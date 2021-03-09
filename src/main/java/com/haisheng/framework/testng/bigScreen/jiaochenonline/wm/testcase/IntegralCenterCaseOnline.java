@@ -121,7 +121,7 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
                     int stockDetail = a.getInteger("stock_detail");
                     s.set(exchangeType.equals("ADD") ? s.addAndGet(stockDetail) : s.addAndGet(-stockDetail));
                 });
-                CommonUtil.checkResultPlus(goodsName + "当前库存", s.get(), "兑换品库存明细加和", goodsStock);
+                CommonUtil.checkResultPlus(goodsName + "兑换品库存明细加和", s.get(), "当前库存", goodsStock);
                 CommonUtil.logger(goodsName);
             });
         } catch (Exception | AssertionError e) {
@@ -357,7 +357,7 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
         }
     }
 
-    //ok
+    //bug
     @Test(description = "积分兑换--修改实体积分兑换库存，减少大于当前库存的数")
     public void integralExchange_system_11() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -430,8 +430,8 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
     public void integralExchange_system_15() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene exchangePageScene = ExchangePageScene.builder().status(IntegralExchangeStatusEnum.WORKING.name()).build();
-            ExchangePage a = util.collectBean(exchangePageScene, ExchangePage.class).stream().filter(e -> e.getExchangeType().equals(CommodityTypeEnum.REAL.name()) && e.getExchangePrice() == 1).findFirst().orElse(null);
+            IScene exchangePageScene = ExchangePageScene.builder().status(IntegralExchangeStatusEnum.WORKING.name()).exchangeType(CommodityTypeEnum.REAL.name()).build();
+            ExchangePage a = util.collectBean(exchangePageScene, ExchangePage.class).stream().filter(e -> !e.getExchangedAndSurplus().split("/")[1].equals("0") && e.getExchangePrice() == 1).findFirst().orElse(null);
             ExchangePage exchangePage = a == null ? util.CreateExchangeRealGoods() : a;
             List<Integer> exchangedAndSurplusList = Arrays.stream(exchangePage.getExchangedAndSurplus().split("/")).map(Integer::valueOf).collect(Collectors.toList());
             user.loginApplet(APPLET_USER_ONE);
@@ -582,7 +582,7 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
             Long stockSum = exchangeDetailedList.stream().filter(e -> e.getChangeReason() != null && e.getChangeReason().contains("签到获得")).mapToLong(ExchangeDetailed::getStockDetail).sum();
             int allSend = IntegralExchangeRulesScene.builder().build().execute(visitor, true).getJSONArray("list").stream().map(e -> (JSONObject) e)
                     .filter(e -> e.getString("rule_name").equals("签到")).map(e -> e.getInteger("all_send")).findFirst().orElse(0);
-            CommonUtil.checkResult("签到规则已发放积分", stockSum, allSend);
+            CommonUtil.checkResultPlus("签到规则已发放积分", allSend, "积分明细签到获得积分总和", stockSum);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -609,7 +609,45 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
 
     //ok
     @Test(description = "积分明细--各个积分规则的奖励积分=该规则的单笔发放积分")
+    public void integralRule_data_3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene shareManagerPageScene = ShareManagerPageScene.builder().build();
+            String[] strings = (String[]) ruleName()[0];
+            Arrays.stream(strings).forEach(ruleName -> {
+                IntegralRule integralRule = getIntegralRule(ruleName, shareManagerPageScene);
+                CommonUtil.checkResultPlus("积分规则" + ruleName + " 单笔发放积分", integralRule.getSingleSend(), "任务管理奖励积分", integralRule.getAwardScore());
+                CommonUtil.valueView(ruleName);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("积分明细--各个积分规则的奖励积分=该规则的单笔发放积分");
+        }
+    }
+
+    //ok
+    @Test(description = "积分明细--各个积分规则的奖励积分=该规则的单笔发放积分")
     public void integralRule_data_4() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene equityPageScene = EquityPageScene.builder().build();
+            String[] strings = (String[]) ruleName()[1];
+            Arrays.stream(strings).forEach(ruleName -> {
+                IntegralRule integralRule = getIntegralRule(ruleName, equityPageScene);
+                CommonUtil.checkResultPlus("积分规则" + ruleName + " 单笔发放积分", integralRule.getSingleSend(), "权益列表奖励积分", integralRule.getAwardScore());
+                CommonUtil.valueView(ruleName);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("积分明细--各个积分规则的奖励积分=该规则的单笔发放积分");
+        }
+    }
+
+    //ok
+    @Test(description = "积分明细--各个积分规则的奖励积分=该规则的单笔发放积分")
+    public void integralRule_data_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene equityPageScene = EquityPageScene.builder().build();
