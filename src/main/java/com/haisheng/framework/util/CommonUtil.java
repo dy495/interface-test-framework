@@ -211,7 +211,7 @@ public class CommonUtil {
         return result;
     }
 
-    public static String humpToLine(String str) {
+    public static String humpToLineReplaceFirst(String str) {
         Pattern humpPattern = Pattern.compile("[A-Z]");
         Matcher matcher = humpPattern.matcher(str);
         StringBuffer sb = new StringBuffer();
@@ -221,6 +221,39 @@ public class CommonUtil {
         matcher.appendTail(sb);
         return sb.toString().replaceFirst("_", "");
     }
+
+    public static String humpToLine(String str) {
+        Pattern humpPattern = Pattern.compile("[A-Z]");
+        Matcher matcher = humpPattern.matcher(str);
+        StringBuffer sb = new StringBuffer();
+        while (matcher.find()) {
+            matcher.appendReplacement(sb, "_" + matcher.group(0).toLowerCase());
+        }
+        matcher.appendTail(sb);
+        return sb.toString();
+    }
+
+    /**
+     * 下划线转驼峰
+     */
+    public static String lineToHump(String str, Boolean firstIsUpperCase) {
+        Pattern linePattern = str.contains("-") ? Pattern.compile("-(\\w)") : Pattern.compile("_(\\w)");
+        str = str.toLowerCase();
+        Matcher matcher = linePattern.matcher(str);
+        StringBuffer sb = new StringBuffer();
+        while (matcher.find()) {
+            matcher.appendReplacement(sb, matcher.group(1).toUpperCase());
+        }
+        matcher.appendTail(sb);
+        if (firstIsUpperCase) {
+            String s = sb.toString().substring(0, 1).toUpperCase();
+            return s + sb.toString().substring(1, sb.length());
+        } else {
+            return sb.toString();
+        }
+
+    }
+
 
     /**
      * 获取页面跳转页数
