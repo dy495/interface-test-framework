@@ -897,9 +897,10 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
      * @date :2020/8/21 16:23
      **/
     @Test(dataProvider = "ROLE_IDS",dataProviderClass = CrmScenarioUtilOnlineX.class)
-    public void peopelmangeL(Integer role_ids){
+    public void peopelmangeL(Integer role_ids,Integer ss){
         logger.logCaseStart(caseResult.getCaseName());
         try{
+            System.out.println("roleIds"+role_ids);
             JSONObject data=crm.userPage(1,100);
             int total=data.getInteger("total");
             JSONArray listN=crm.ManageListNoSelect(role_ids).getJSONArray("list");

@@ -246,6 +246,8 @@ public class JcAppointmentRelate extends TestCaseCommon implements TestCaseStd {
     }
 
 
+
+
     //    @Test()  //测试函数
     public void test1() {
         logger.logCaseStart(caseResult.getCaseName());

@@ -6,7 +6,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAp
 
 
 public class PublicParm {
-    public int num = 5;
+    public int num = 4;
     public String roleId = "603";
     public String gwphone = "13114785236"; //超级管理员
     public String gwpassword = "000000"; //单个店的客户的数据  登录密码

@@ -28,8 +28,8 @@ public class PoiUtils {
         Random random = new Random();
         String serverNumber = "A" + random.nextInt(100000);
         DateTimeUtil dt = new DateTimeUtil();
-        String begin = dt.getHistoryDate1(-20);
-        String end = dt.getHistoryDate1(-15);
+        String begin = dt.getHistoryDate1(-20)+" "+dt.getHHmm(0);
+        String end = dt.getHistoryDate1(-15)+" "+dt.getHHmm(0);
         String importFilepath="src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/importfile.xlsx";
 //        importFilepath= importFilepath.replace("/", File.separator);
         String[] roeName = {"*服务单号",

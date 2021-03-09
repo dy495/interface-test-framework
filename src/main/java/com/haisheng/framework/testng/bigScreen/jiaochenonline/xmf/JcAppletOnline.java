@@ -104,6 +104,7 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
     public void mycarConsistency() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            jc.appletLoginToken(pp.appletTocken);
             int count = pf.carListNumber(pp.carStyleId);
             String plate_number = "蒙JKIO123";
             String car_idBefore = pf.appletAddCar(plate_number);

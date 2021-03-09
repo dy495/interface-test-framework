@@ -263,7 +263,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             saveData("pc-商城套餐列表单接口");
         }
     }
-    @Test  //新建商城套餐
+//    @Test  //新建商城套餐
     public void CreateCommodity() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -451,7 +451,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test  //新建智能提醒   单接口
+//    @Test  //新建智能提醒   单接口
     public void CreateRemind() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -479,7 +479,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test  //新建智能提醒（公里数）,由于智能提醒隔天生效，故此case一天运行一次
+//    @Test  //新建智能提醒（公里数）,由于智能提醒隔天生效，故此case一天运行一次  明天调试
     public void CreateRemindCheck() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

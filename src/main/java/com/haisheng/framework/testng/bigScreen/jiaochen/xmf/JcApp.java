@@ -136,6 +136,9 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
 
             Integer receptioncountZ = 0;  //接待
             Integer receptioncountM = 0;
+
+            Integer followcountZ = 0;  //跟进
+            Integer followcountM = 0;
             //今日数据
             JSONArray todaydate = jc.apptodayDate(type, null, 100).getJSONArray("list");
 
@@ -155,13 +158,24 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
                     String[] reception = pending_reception.split("/");
                     receptioncountZ += Integer.parseInt(reception[0]);
                     receptioncountM += Integer.parseInt(reception[1]);
-                    System.out.println(receptioncountM + ":" + receptioncountM);
                 }
+                //跟进
+                //接待
+                String pending_foll = list_data.getString("pending_follow");
+                if (!pending_reception.contains("-")) {
+                    String[] reception = pending_foll.split("/");
+                    followcountZ += Integer.parseInt(reception[0]);
+                    followcountM += Integer.parseInt(reception[1]);
+                }
+
             }
             Preconditions.checkArgument(tasknum[0] == appointmentcountZ, name + "今日任务未处理预约数:" + tasknum[0] + "!=今日数据处理数据和" + appointmentcountZ);
             Preconditions.checkArgument(tasknum[1] == appointmentcountM, name + "今日任务总预约数:" + tasknum[1] + "!=今日数据处理数据和" + appointmentcountM);
             Preconditions.checkArgument(tasknum[2] == receptioncountZ, name + "今日任务未处理接待数:" + tasknum[2] + "!=今日数据处理数据和" + receptioncountZ);
             Preconditions.checkArgument(tasknum[3] == receptioncountM, name + "今日任务总接待数:" + tasknum[3] + "!=今日数据处理数据和" + receptioncountM);
+
+            Preconditions.checkArgument(tasknum[4] == followcountZ, name + "今日任务未处理接待数:" + tasknum[4] + "!=今日数据处理数据和" + followcountZ);
+            Preconditions.checkArgument(tasknum[5] == followcountM, name + "今日任务总接待数:" + tasknum[5] + "!=今日数据处理数据和" + followcountM);
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
