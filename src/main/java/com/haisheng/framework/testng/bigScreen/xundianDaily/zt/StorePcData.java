@@ -454,7 +454,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
             saveData("新建看守位、新建看守位后列表+1、删除一个看守位列表-1");
         }
     }
-
+ 
 
     //调用看守位
     @Test(dataProvider = "device_id",dataProviderClass = DataProviderMethod.class)

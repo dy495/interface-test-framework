@@ -112,7 +112,7 @@ public class A extends TestCaseCommon implements TestCaseStd {
                 .end();
         int count = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
         if (!(count > 0)) {
-            DingPushUtil.sendText(CommonUtil.humpToLine(TPorscheTodayData.class.getSimpleName()) + "表记录数据失败");
+            DingPushUtil.sendText(CommonUtil.humpToLineReplaceFirst(TPorscheTodayData.class.getSimpleName()) + "表记录数据失败");
         }
     }
 }

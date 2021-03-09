@@ -1,31 +1,14 @@
 package com.haisheng.framework.testng.bigScreen.jiaochenonline;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.lxq.create.pcCreateExchangeGoods;
 import com.haisheng.framework.testng.bigScreen.jiaochen.lxq.create.submitOrder;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.*;
-import com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.variableonline.AfterSleCustomerVariable;
-import com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.variableonline.PreSleCustomerVariable;
-import com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.variableonline.applyListVariable;
-import com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.variableonline.appointmentRecordVariable;
-import com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.variableonline.approvalListVariable;
-import com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.variableonline.articleVariable;
-import com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.variableonline.buyPackageVariable;
-import com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.variableonline.maintainVariable;
-import com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.variableonline.messageFormVariable;
-import com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.variableonline.packageFormVariable;
-import com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.variableonline.registerListVariable;
-import com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.variableonline.sendRecordVariable;
-import com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.variableonline.verificationPeopleVariable;
-import com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.variableonline.verificationRecordVariable;
-import com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.variableonline.voucherFormVariable;
-import com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.variableonline.weChatSleCustomerVariable;
+import com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.VariableOnLine.*;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.lxq.pcCreateGoodsOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import org.springframework.util.StringUtils;
@@ -2091,7 +2074,7 @@ public class ScenarioUtilOnline extends TestCaseCommon {
         json.put("page", variable.page);
         json.put("size", variable.size);
         json.put("plate_number", variable.plate_number);
-        json.put("customer_manager", variable.customer_manager);
+        json.put("service_sale_id", variable.service_sale_id);
         json.put("shop_id", variable.shop_id);
         json.put("customer_name", variable.customer_name);
         json.put("confirm_status", variable.confirm_status);
@@ -2153,9 +2136,7 @@ public class ScenarioUtilOnline extends TestCaseCommon {
         json.put("size", variable.size);
         json.put("subject_name", variable.subject_name);
         json.put("voucher_status", variable.voucher_status);
-        json.put("creator", variable.creator);
-        json.put("is_diff", variable.is_diff);
-        json.put("is_self_verification", variable.is_self_verification);
+        json.put("creator_name", variable.creator_name);
         json.put("voucher_status", variable.voucher_status);
 
         return invokeApi(url, json);

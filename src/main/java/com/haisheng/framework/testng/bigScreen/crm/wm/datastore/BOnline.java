@@ -154,7 +154,7 @@ public class BOnline extends TestCaseCommon implements TestCaseStd {
                 .end();
         int count = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
         if (count <= 0) {
-            DingPushUtil.sendText(CommonUtil.humpToLine(TPorscheDeliverInfo.class.getSimpleName()) + "表记录数据失败");
+            DingPushUtil.sendText(CommonUtil.humpToLineReplaceFirst(TPorscheDeliverInfo.class.getSimpleName()) + "表记录数据失败");
         }
         Sql sql1 = Sql.instance().select().from(TPorscheOrderInfo.class)
                 .where("order_date", "=", date)
@@ -162,7 +162,7 @@ public class BOnline extends TestCaseCommon implements TestCaseStd {
                 .end();
         int count1 = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql1).size();
         if (count1 <= 0) {
-            DingPushUtil.sendText(CommonUtil.humpToLine(TPorscheOrderInfo.class.getSimpleName()) + "表记录数据失败");
+            DingPushUtil.sendText(CommonUtil.humpToLineReplaceFirst(TPorscheOrderInfo.class.getSimpleName()) + "表记录数据失败");
         }
         Sql sql2 = Sql.instance().select().from(TPorscheReceptionData.class)
                 .where("reception_date", "=", date)
@@ -170,7 +170,7 @@ public class BOnline extends TestCaseCommon implements TestCaseStd {
                 .end();
         int count2 = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql2).size();
         if (count2 <= 0) {
-            DingPushUtil.sendText(CommonUtil.humpToLine(TPorscheReceptionData.class.getSimpleName()) + "表记录数据失败");
+            DingPushUtil.sendText(CommonUtil.humpToLineReplaceFirst(TPorscheReceptionData.class.getSimpleName()) + "表记录数据失败");
         }
     }
 
