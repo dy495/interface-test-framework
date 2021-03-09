@@ -1,6 +1,6 @@
-package com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.variableonline;
+package com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.VariableOnLine;
 
-public class verificationRecordVariable {
+public class sendRecordVariable {
     public String voucher_name;
     public String sender;
     public String start_time;

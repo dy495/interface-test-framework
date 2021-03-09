@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.variableonline;
+package com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.VariableOnLine;
 
 public class applyListVariable {
     public String page;

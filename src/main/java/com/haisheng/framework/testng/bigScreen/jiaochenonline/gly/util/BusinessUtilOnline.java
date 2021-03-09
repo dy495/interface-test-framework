@@ -1,11 +1,9 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.gly.util;
+package com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.util;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.google.inject.internal.util.$ImmutableList;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.crm.wm.bean.Activity;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
@@ -13,7 +11,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.A
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.RegisterInfoEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.activity.ActivityGenerator;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.AppletArticleListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.AppointmentActivityCancelScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.AppointmentActivityListScene;
@@ -24,30 +22,26 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanag
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherFormPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
-import com.haisheng.framework.testng.commonDataStructure.LogMine;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
-import org.testng.annotations.Test;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static com.haisheng.framework.testng.commonCase.TestCaseCommon.caseResult;
-
-public class BusinessUtil {
+public class BusinessUtilOnline {
 
    private final Visitor visitor;
    private final UserUtil user;
 
-    public BusinessUtil(Visitor visitor) {
+    public BusinessUtilOnline(Visitor visitor) {
         this.visitor = visitor;
         this.user=new UserUtil(visitor);
+        UserUtil user = new UserUtil(visitor);
     }
      ScenarioUtil jc = new ScenarioUtil();
-      PublicParameter pp = new PublicParameter();
+      PublicParameterOnline pp = new PublicParameterOnline();
       public String shopId="-1";
 
     /**
@@ -255,7 +249,7 @@ public class BusinessUtil {
      */
     public IScene createFissionActivityScene(Long voucherId) {
         SupporterUtil supporterUtil = new SupporterUtil(visitor);
-        PublicParameter pp = new PublicParameter();
+        PublicParameterOnline pp = new PublicParameterOnline();
         List<String> picList = new ArrayList<>();
         picList.add(supporterUtil.getPicPath());
         // 创建被邀请者和分享者的信息字段
@@ -332,7 +326,7 @@ public class BusinessUtil {
     public IScene createRecruitActivityScene(Long voucherId, boolean successReward, int rewardReceiveType, boolean isNeedApproval) {
         List<String> picList = new ArrayList<>();
         SupporterUtil supporterUtil = new SupporterUtil(visitor);
-        PublicParameter pp = new PublicParameter();
+        PublicParameterOnline pp = new PublicParameterOnline();
         picList.add(0,supporterUtil.getPicPath());
         //填写报名所需要信息
         List<Boolean> isShow = new ArrayList<>();
@@ -395,7 +389,7 @@ public class BusinessUtil {
     public IScene createRecruitActivityScene(Long voucherId, boolean successReward, int rewardReceiveType, boolean isNeedApproval,Boolean type) {
         List<String> picList = new ArrayList<>();
         SupporterUtil supporterUtil = new SupporterUtil(visitor);
-        PublicParameter pp = new PublicParameter();
+        PublicParameterOnline pp = new PublicParameterOnline();
         picList.add(0,supporterUtil.getPicPath());
         //填写报名所需要信息
         List<Boolean> isShow = new ArrayList<>();
@@ -458,7 +452,7 @@ public class BusinessUtil {
         Long voucherId = response.getJSONArray("reward_vouchers").getJSONObject(0).getLong("id");
         List<String> picList = new ArrayList<>();
         SupporterUtil supporterUtil = new SupporterUtil(visitor);
-        PublicParameter pp = new PublicParameter();
+        PublicParameterOnline pp = new PublicParameterOnline();
         picList.add(supporterUtil.getPicPath());
         //填写报名所需要信息
         List<Boolean> isShow = new ArrayList<>();
@@ -723,7 +717,7 @@ public class BusinessUtil {
             activityRegisterApplet(id1,"13373166806","郭丽雅",2,"1513814362@qq.com","22","女","其他");
             ids.add(id1);
             //登录PC
-            jc.pcLogin(pp.phone1, pp.password);
+            user.loginPc(EnumAccount.ADMINISTRATOR_ONLINE);
         }
         return ids;
 
@@ -995,8 +989,7 @@ public class BusinessUtil {
      */
     public String appointmentActivityStatus(Long activityId) {
         //登录小程序
-        user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
-
+        user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
         JSONObject lastValue = null;
         IScene scene = AppointmentActivityListScene.builder().lastValue(lastValue).size(20).build();
         JSONObject response = visitor.invokeApi(scene);
@@ -1187,7 +1180,7 @@ public class BusinessUtil {
         JSONArray registerItems = new JSONArray();
         Long activityId=0L;
         //在活动详情中获得招募活动的报名信息
-        user.loginPc(EnumAccount.WINSENSE_LAB_DAILY);
+        user.loginPc(EnumAccount.ADMINISTRATOR_ONLINE);
         JSONObject response = getRecruitActivityDetailDate(id);
         JSONArray registerInformationList = response.getJSONArray("register_information_list");
         for (int i = 0; i< registerInformationList.size(); i++) {
@@ -1229,7 +1222,7 @@ public class BusinessUtil {
                 registerItems.add(jsonObjectEMail);
             }
         }
-        user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+        user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
         //获取小程序推荐列表
         JSONObject object=getAppletArticleList();
         JSONArray list=getAppletArticleList().getJSONArray("list");
@@ -1250,7 +1243,7 @@ public class BusinessUtil {
     public void activityRegisterApplet(Long id) {
         JSONArray registerItems = new JSONArray();
         Long activityId=0L;
-        user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+        user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
         //获取小程序推荐列表
         JSONObject object=getAppletArticleList();
         JSONArray list=getAppletArticleList().getJSONArray("list");
@@ -1295,7 +1288,7 @@ public class BusinessUtil {
      */
     public List<Long> voucherNotUseId(){
         //登录小程序
-        user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+        user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
         JSONArray list=jc.appletVoucherList(null,"USED",100).getJSONArray("list");
         List<Long> voucherCodes= new ArrayList<>();
         List<Long> ids= new ArrayList<>();
@@ -1307,7 +1300,7 @@ public class BusinessUtil {
             }
         }
         //登录PC
-        jc.pcLogin(pp.phone1, pp.password);
+         user.loginPc(EnumAccount.ADMINISTRATOR_ONLINE);
         //获取PC中对应的优惠券
 
         return ids;

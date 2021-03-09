@@ -27,6 +27,7 @@ public class DataCaseOnline extends TestCaseCommon implements TestCaseStd {
     ScenarioUtilOnline jc = ScenarioUtilOnline.getInstance();
     jiaoChenInfoOnline info = new jiaoChenInfoOnline();
     PublicParmOnline pp = new PublicParmOnline();
+    CommonConfig commonConfig = new CommonConfig();
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
@@ -35,7 +36,6 @@ public class DataCaseOnline extends TestCaseCommon implements TestCaseStd {
     @Override
     public void initial() {
         logger.debug("before class initial");
-        CommonConfig commonConfig = new CommonConfig();
         //替换checklist的相关信息
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
         commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
@@ -49,6 +49,7 @@ public class DataCaseOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.dingHook = EnumDingTalkWebHook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
         commonConfig.shopId = EnumTestProduce.JIAOCHEN_ONLINE.getShopId();
+        commonConfig.roleId="395";
         beforeClassInit(commonConfig);
         logger.debug("jc: " + jc);
 
@@ -97,7 +98,7 @@ public class DataCaseOnline extends TestCaseCommon implements TestCaseStd {
             int bef = jc.shopPage(1, 1, "").getInteger("total");
 
             //每次修改固定shop
-            jc.editShop(20709L, info.logo, simple_name, name, arr, district_code, address, sale_tel, service_tel, Double.valueOf(longitude),
+            jc.editShop(20709L, info.getLogo(), simple_name, name, arr, district_code, address, sale_tel, service_tel, Double.valueOf(longitude),
                     Double.valueOf(latitude), appointment_status, washing_status);
             int after = jc.shopPage(1, 1, "").getInteger("total");
             int num = after - bef;
@@ -143,11 +144,11 @@ public class DataCaseOnline extends TestCaseCommon implements TestCaseStd {
 
             //创建前品牌数
             int bef = jc.brandPage(1, 10, "", "").getInteger("total");
-            jc.addBrand(info.stringone, info.logo);
+            jc.addBrand(info.stringone, info.getLogo());
             Long id = jc.brandPage(1, 10, "", "").getJSONArray("list").getJSONObject(0).getLong("id");
             //创建后品牌数
             int afteradd = jc.brandPage(1, 10, "", "").getInteger("total");
-            jc.editBrand(id, info.stringsix, info.logo);
+            jc.editBrand(id, info.stringsix, info.getLogo());
             //修改后品牌数
             int afteredit = jc.brandPage(1, 10, "", "").getInteger("total");
             //删除品牌
@@ -266,7 +267,7 @@ public class DataCaseOnline extends TestCaseCommon implements TestCaseStd {
             int bef = jc.appletBrandList().getJSONArray("list").size();
 
             jc.pcLogin("15711200001", "000000");
-            jc.addBrand(info.stringone, info.logo);
+            jc.addBrand(info.stringone, info.getLogo());
             Long id = jc.brandPage(1, 10, "", "").getJSONArray("list").getJSONObject(0).getLong("id");
 
             jc.appletLoginToken(pp.appletTocken);

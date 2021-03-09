@@ -13,7 +13,7 @@ public class Constant {
     public static Object[][]receptionManageFilter_pram() {
         return new String[][]{
                 {"plate_number", "plate_number"},
-//                {"reception_sale_name", "reception_sale_name"},
+                {"reception_sale_id", "reception_sale_name"},
                 {"customer_name","customer_name"},
                 {"reception_status","reception_status"},
                 {"customer_phone","customer_phone"},
@@ -78,7 +78,7 @@ public class Constant {
                 {"confirm_status", "appointment_status_name"},
                 {"customer_phone", "customer_phone"},
                 {"is_overtime", "is_overtime"},
-//               {"service_sale_id", "service_sale_id"},
+                {"service_sale_id", "customer_manager"},
         };
     }
 
@@ -168,8 +168,8 @@ public class Constant {
         return new String[][]{
                 {"package_name", "package_name"},
                 {"creator", "creator"},
-                {"package_status","status"}
-//                {"shop_name", "shop_name"},
+                {"package_status","status"},
+                {"shop_id", "shop_name"},
         };
     }
 
@@ -255,7 +255,7 @@ public class Constant {
                 {"name", "name"},
                 {"apply_name", "apply_name"},
                 {"status", "status_name"},
-//                {"apply_group", "apply_group"},
+                {"apply_group", "apply_group"},
 
         };
     }
@@ -331,8 +331,8 @@ public class Constant {
         return new String[][]{
                 {"name", "name"},
                 {"phone", "phone"},
-//                {"role_id", "role_id"},
-//                {"shop_id", "shop_id"},
+                {"role_id", "role_id"},
+                {"shop_id", "shop_id"},
         };
     }
 
@@ -405,7 +405,6 @@ public class Constant {
                 {"customer_phone", "customer_phone"},
                 {"customer_type", "customer_vip_type_name"},
                 {"adjust_shop_id", "adjust_shop_name"},
-
 //                {"adjust_start_time", "adjust_start_time"},
 //                {"adjust_end_time", "adjust_end_time"},
 
@@ -462,7 +461,7 @@ public class Constant {
                 {"customer_name", "customer_name"},
                 {"vip_type", "vip_type_name"},
                 {"customer_phone", "customer_phone"},
-//                {"shop_id", "shop_name"},
+                {"shop_id", "shop_name"},
 //                {"dial_start", "dial_start"},
 //                {"dial_end", "dial_end"},
 
@@ -478,14 +477,14 @@ public class Constant {
     public static Object[][] evaluatePageFilter_pram(){
         return new String[][]{
                 {"plate_number", "plate_number"},
-//                {"service_sale_id", "service_sale_name"},
+                {"service_sale_id", "service_sale_name"},
                 {"evaluate_type", "evaluate_type_name"},
                 {"shop_id", "shop_id"},
                 {"customer_name", "customer_name"},
                 {"score", "score"},
                 {"is_follow_up", "follow_up_remark"},
                 {"customer_phone", "customer_phone"},
-                {"is_have_msg", "describe"},
+                {"is_have_msg", "suggestion"},
 //                {"source_create_start", "source_create_start"},
 //                {"source_create_end", "source_create_end"},
 //                {"evaluate_start", "evaluate_start"},
@@ -521,7 +520,7 @@ public class Constant {
         return new String[][]{
                 {"order_number", "order_number"},
                 {"commodity_name", "commodity_name"},
-//                {"bind_phone", "bind_phone"},
+                {"bind_phone", "bind_phone"},
 //                {"start_pay_time", "start_pay_time"},
 //                {"end_pay_time", "end_pay_time"},
 
@@ -537,7 +536,7 @@ public class Constant {
     public static Object[][] storeSalesPageFilter_pram(){
         return new String[][]{
                 {"sales_phone", "sales_phone"},
-//                {"shop_id", "shop_name"},
+                {"shop_id", "shop_name"},
 
         };
     }

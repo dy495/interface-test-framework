@@ -34,13 +34,15 @@ public abstract class BaseVoucher extends AbstractGenerator implements IVoucher 
             Preconditions.checkArgument(!isEmpty(), "visitor is null");
             logger("FIND " + voucherStatus.name() + " START");
             Preconditions.checkArgument(counter(voucherStatus) < 4, voucherStatus.getName() + " 状态执行次数大于3次，强行停止，请检查此状态生成");
-            List<VoucherPage> vouchers = resultCollectToBean(VoucherPageScene.builder().build(), VoucherPage.class);
-            VoucherPage voucher = vouchers.stream().filter(e -> e.getVoucherStatus().equals(voucherStatus.name())).findFirst().orElse(null);
-            if (voucher != null) {
+            List<VoucherPage> voucherList = resultCollectToBean(VoucherPageScene.builder().build(), VoucherPage.class);
+            VoucherPage voucherPage = voucherStatus.name().equals(VoucherStatusEnum.WORKING.name())
+                    ? voucherList.stream().filter(e -> e.getVoucherStatus().equals(voucherStatus.name()) && e.getSurplusInventory() > 0).findFirst().orElse(null)
+                    : voucherList.stream().filter(e -> e.getVoucherStatus().equals(voucherStatus.name())).findFirst().orElse(null);
+            if (voucherPage != null) {
                 logger("FIND " + voucherStatus.name() + " FINISH");
-                logger("voucherId is: " + voucher.getVoucherId());
-                logger("voucherName is：" + voucher.getVoucherName());
-                return voucher.getVoucherId();
+                logger("voucherId is: " + voucherPage.getVoucherId());
+                logger("voucherName is：" + voucherPage.getVoucherName());
+                return voucherPage.getVoucherId();
             }
             logger(voucherStatus.name() + " DIDN'T FIND ");
             voucherStatus.getVoucherBuilder().buildVoucher().execute(visitor, voucherScene);

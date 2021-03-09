@@ -2365,6 +2365,7 @@ public class ScenarioUtil extends TestCaseCommon {
         String url = "/jiaochen/pc/voucher-manage/verification-record";
         JSONObject json = new JSONObject();
         json.put("shopId", shopId);
+        json.put("voucher_id", id);
         json.put("page", page);
         json.put("size", size);
         json.put("start_time", start_time);
@@ -2601,16 +2602,16 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-12-16
      */
-    public JSONObject articleTimeFilterManage(String shopId, String page, String size, String start_time, String end_time, String register_start_date, String register_end_date) {
+    public JSONObject articleTimeFilterManage(String shopId, String page, String size, String create_start, String create_end, String modify_start, String modify_end) {
         String url = "/jiaochen/pc/operation/article/page";
         JSONObject json = new JSONObject();
         json.put("shopId", shopId);
         json.put("page", page);
         json.put("size", size);
-        json.put("start_time", start_time);
-        json.put("end_time", end_time);
-        json.put("register_start_date", register_start_date);
-        json.put("register_end_date", register_end_date);
+        json.put("create_start", create_start);
+        json.put("create_end", create_end);
+        json.put("modify_start", modify_start);
+        json.put("modify_end", modify_end);
         return invokeApi(url, json);
     }
 
@@ -2804,6 +2805,20 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("page", page);
         json.put("size", size);
         json.put("name", name);
+
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description:门店列表
+     * @author: gly
+     * @time: 2020-11-24
+     */
+    public JSONObject shopListFilterManage( String page, String size) {
+        String url = "/jiaochen/pc/shop/page";
+        JSONObject json = new JSONObject();
+        json.put("page", page);
+        json.put("size", size);
 
         return invokeApi(url, json);
     }
@@ -3058,6 +3073,23 @@ public class ScenarioUtil extends TestCaseCommon {
         if (pram != null) {
             json.put(pram, result);
         }
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description:导出记录列表
+     * @author: gly
+     * @time: 2020-11-24
+     */
+    public JSONObject exportListFilterManage1(String shopId, String page, String size, String endTime, String startTime) {
+        String url = "/jiaochen/pc/record/export/page";
+        JSONObject json = new JSONObject();
+        json.put("shopId", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        json.put("end_time", endTime);
+        json.put("start_time", startTime);
+
         return invokeApi(url, json);
     }
 
@@ -3718,7 +3750,7 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     /**
-     * @description :会员权益列表
+     * @description :洗车列表
      * * * @author: gly
      * @date :2020/01/07
      **/
@@ -3728,6 +3760,22 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("shop_id", shopId);
         json.put("page", page);
         json.put("size", size);
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description :洗车列表
+     * * * @author: gly
+     * @date :2020/01/07
+     **/
+    public JSONObject washCarManagerPage(String shopId, String page, String size,String washStartTime,String washEndTime) {
+        String url = "/jiaochen/pc/vip-marketing/wash-car-manager/page";
+        JSONObject json = new JSONObject();
+        json.put("shop_id", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        json.put("wash_end_time", washEndTime);
+        json.put("wash_start_time", washStartTime);
         return invokeApi(url, json);
     }
 
@@ -3742,6 +3790,22 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("shop_id", shopId);
         json.put("page", page);
         json.put("size", size);
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description :调整次数记录列表
+     * * * @author: gly
+     * @date :2020/01/07
+     **/
+    public JSONObject adjustNumberRecord(String shopId, String page, String size,String adjustStartTime,String adjustEndTime) {
+        String url = "/jiaochen/pc/vip-marketing/wash-car-manager/adjust-number/record";
+        JSONObject json = new JSONObject();
+        json.put("shop_id", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        json.put("adjust_end_time", adjustEndTime);
+        json.put("adjust_start_time", adjustStartTime);
         return invokeApi(url, json);
     }
     /**
@@ -4022,7 +4086,7 @@ public class ScenarioUtil extends TestCaseCommon {
         json1.put("days",er.days);
         json1.put("mileage",er.mileage);
 
-        return invokeApi(url,json1);
+        return invokeApi(url,json1,er.checkcode);
     }
 
     public JSONObject editRemindMethod(pccreateRemind er) {
@@ -5137,6 +5201,7 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(url,json);
     }
 
+
     /**
      * @description :V2.0洗车管理列表
      * @date :2021/2/1
@@ -5257,6 +5322,24 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     /**
+     * @description :V2.0优惠券领取记录
+     * @date :2021/2/2
+     **/
+    public JSONObject voucherManageSendRecord(String page,String size,String id ,String startTime,String endTime,String useStartTime,String useEndTime) {
+        String url = "/jiaochen/pc/voucher-manage/send-record";
+        JSONObject json=new JSONObject();
+        json.put("page",page);
+        json.put("size",size);
+        json.put("id",id);
+        json.put("start_time",startTime);
+        json.put("end_time",endTime);
+        json.put("use_end_time",useStartTime);
+        json.put("use_start_time",useEndTime);
+
+        return invokeApi(url,json);
+    }
+
+    /**
      * @description :V2.0优惠券作废记录
      * @date :2021/2/2
      **/
@@ -5296,6 +5379,23 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     /**
+     * @description :V2.0优惠券作废记录
+     * @date :2021/2/2
+     **/
+    public JSONObject voucherInvalidPage(String page,String size,String id ,String startTime,String endTime,String invalidStartTime,String invalidEndTime) {
+        String url = "/jiaochen/pc/voucher-manage/voucher-invalid-page";
+        JSONObject json=new JSONObject();
+        json.put("page",page);
+        json.put("size",size);
+        json.put("id",id);
+        json.put("start_time",startTime);
+        json.put("end_time",endTime);
+        json.put("invalid_start_time",invalidStartTime);
+        json.put("invalid_end_time",invalidEndTime);
+        return invokeApi(url,json);
+    }
+
+    /**
      * @description :pc道路救援
      * @date :2021/2/2
      **/
@@ -5308,6 +5408,21 @@ public class ScenarioUtil extends TestCaseCommon {
         if (pram != null){
             json.put(pram, result);
         }
+        return invokeApi(url,json);
+    }
+
+    /**
+     * @description :pc道路救援
+     * @date :2021/2/2
+     **/
+    public JSONObject rescuePage1(String shopId,String page,String size,String dialtart,String dialEnd) {
+        String url = "/jiaochen/pc/manage/rescue/page";
+        JSONObject json=new JSONObject();
+        json.put("page",page);
+        json.put("size",size);
+        json.put("dial_end",dialEnd);
+        json.put("dial_start",dialtart);
+
         return invokeApi(url,json);
     }
 
@@ -5341,6 +5456,22 @@ public class ScenarioUtil extends TestCaseCommon {
         if (pram != null){
             json.put(pram, result);
         }
+        return invokeApi(url,json);
+    }
+    /**
+     * @description :PC评价列表
+     * @date :2021/2/2
+     **/
+    public JSONObject evaluatePage(String shopId,String page,String size,String evaluateStart,String evaluateEnd,String sourceCreateStart,String sourceCreateEnd) {
+        String url = "/jiaochen/pc/manage/evaluate/page";
+        JSONObject json=new JSONObject();
+        json.put("page",page);
+        json.put("size",size);
+        json.put("evaluate_end",evaluateEnd);
+        json.put("evaluate_start",evaluateStart);
+        json.put("source_create_end",sourceCreateEnd);
+        json.put("source_create_start",sourceCreateStart);
+
         return invokeApi(url,json);
     }
 
@@ -5388,6 +5519,22 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :PC精品商城-商城套餐
      * @date :2021/2/2
      **/
+    public JSONObject storeCommodityPage1(String shopId,String page,String size,String startCreateDate,String endCreateDate) {
+        String url = "/jiaochen/pc/store/commodity/page";
+        JSONObject json=new JSONObject();
+        json.put("page",page);
+        json.put("size",size);
+        json.put("shop_id",shopId);
+        json.put("end_create_date",endCreateDate);
+        json.put("start_create_date",startCreateDate);
+
+        return invokeApi(url,json);
+    }
+
+    /**
+     * @description :PC精品商城-商城套餐
+     * @date :2021/2/2
+     **/
     public JSONObject storeCommodityPage(StoreCommodityPageVariable variable) {
         String url = "/jiaochen/pc/manage/evaluate/page";
         JSONObject json=new JSONObject();
@@ -5413,6 +5560,21 @@ public class ScenarioUtil extends TestCaseCommon {
         if (pram != null){
             json.put(pram, result);
         }
+        return invokeApi(url,json);
+    }
+    /**
+     * @description :PC精品商城-商城订单
+     * @date :2021/2/2
+     **/
+    public JSONObject storeOrderPage1(String shopId,String page,String size,String startPayTime,String endPayTime) {
+        String url = "/jiaochen/pc/store/order/page";
+        JSONObject json=new JSONObject();
+        json.put("page",page);
+        json.put("size",size);
+        json.put("shop_id",shopId);
+        json.put("start_pay_time",startPayTime);
+        json.put("end_pay_time",endPayTime);
+
         return invokeApi(url,json);
     }
 
@@ -5622,6 +5784,101 @@ public class ScenarioUtil extends TestCaseCommon {
         if (pram != null) {
             json.put(pram, result);
         }
+        return invokeApi(url, json);
+    }
+
+    /**
+     * 门店列表
+     * @return
+     */
+    public JSONObject shopListPage() {
+        JSONObject json = new JSONObject();
+        String url = "/jiaochen/pc/login-user/shop-list";
+
+        return invokeApi(url, json);
+    }
+
+    /**
+     * 销售顾问列表下拉
+     * @return
+     */
+    public JSONObject saleList(Long shop_id) {
+        JSONObject json = new JSONObject();
+        String url = "/jiaochen/pc/customer-manage/pre-sale-customer/sales-list";
+        json.put("shop_id",shop_id);
+        return invokeApi(url, json);
+    }
+
+    /**
+     * 车辆model列表下拉
+     * @return
+     */
+    public JSONObject modelList(Long shop_id) {
+        JSONObject json = new JSONObject();
+        String url = "/jiaochen/pc/customer-manage/pre-sale-customer/model-list";
+        json.put("shop_id",shop_id);
+        return invokeApi(url, json);
+    }
+
+    /**
+     * 创建潜客
+     * @return
+     */
+    public JSONObject createPotentialCstm(String customer_name,String customer_phone,String customer_type,String sex,Long car_model_id,
+                                          Long shop_id,String salesId,Boolean ... chk) {
+        JSONObject json = new JSONObject();
+        String url = "/jiaochen/pc/customer-manage/pre-sale-customer/create-potential-customer";
+        json.put("customer_name",customer_name);
+        json.put("customer_phone",customer_phone);
+        json.put("customer_type",customer_type);
+        json.put("sex",sex);
+        json.put("car_model_id",car_model_id);
+        json.put("shop_id",shop_id);
+        json.put("salesId",salesId);
+        if (chk.length>0){
+            return invokeApi(url, json,chk[0]);
+        }
+        else {
+            return invokeApi(url, json);
+        }
+
+    }
+
+    /**
+     * 创建订单
+     * @return
+     */
+    public JSONObject createCstm(String customer_name,String customer_phone,String customer_type,String sex,Long car_model_id,
+                                          Long shop_id,String salesId,String purchase_car_date,String vehicle_chassis_code,Boolean ... chk) {
+        JSONObject json = new JSONObject();
+        String url = "/jiaochen/pc/customer-manage/pre-sale-customer/create-customer";
+        json.put("customer_name",customer_name);
+        json.put("customer_phone",customer_phone);
+        json.put("customer_type",customer_type);
+        json.put("sex",sex);
+        json.put("car_model_id",car_model_id);
+        json.put("shop_id",shop_id);
+        json.put("salesId",salesId);
+        json.put("purchase_car_date",purchase_car_date);
+        json.put("vehicle_chassis_code",vehicle_chassis_code);
+        if (chk.length>0){
+            return invokeApi(url, json,chk[0]);
+        }
+        else {
+            return invokeApi(url, json);
+        }
+    }
+
+    /**
+     * 接待人列表
+     * @return
+     */
+    public JSONObject authListPage(String authType,String shopId) {
+        JSONObject json = new JSONObject();
+        json.put("auth_type", authType);
+        json.put("shop_id", shopId);
+        String url = "/jiaochen/pc/staff/auth-list";
+
         return invokeApi(url, json);
     }
 

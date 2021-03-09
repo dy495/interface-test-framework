@@ -1142,7 +1142,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
             //编辑品类-不更换图片
 
-            int code3 = jc.categoryEdit(false,id,name+"1","FIRST_CATEGORY","",null).getInteger("code");
+            int code3 = jc.categoryEdit(false,id,name,"FIRST_CATEGORY","",null).getInteger("code");
             Preconditions.checkArgument(code3==1000,"编辑不传图片状态码期待1000，实际"+code3);
 
             //删除启用品类
@@ -1615,7 +1615,6 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(obj.containsKey("num"),"品牌"+id+"无商品数量");
                 Preconditions.checkArgument(obj.containsKey("last_modify_time"),"品牌"+id+"无最新修改时间");
                 Preconditions.checkArgument(obj.containsKey("modify_sale_name"),"品牌"+id+"无修改人");
-
             }
 
         } catch (AssertionError e) {
@@ -2508,12 +2507,11 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             JSONArray list = jc.exchangeDetail(1,50,null,null,null,null,null).getJSONArray("list");
             for (int i = 0 ; i < list.size();i++){
                 JSONObject obj = list.getJSONObject(i);
-                Preconditions.checkArgument(obj.containsKey("exchange_customer_name"),"未展示客户名称");
-                Preconditions.checkArgument(obj.containsKey("phone"),"未展示客户手机号");
-                Preconditions.checkArgument(obj.containsKey("exchange_type"),"未展示兑换类型");
-                Preconditions.checkArgument(obj.containsKey("stock_detail"),"未展示库存明细");
-                Preconditions.checkArgument(obj.containsKey("order_code"),"未展示订单号");
-                Preconditions.checkArgument(obj.containsKey("operate_time"),"未展示操作时间");
+                Preconditions.checkArgument(obj.containsKey("exchange_customer_name"),obj.getString("phone")+"未展示客户名称");
+                Preconditions.checkArgument(obj.containsKey("phone"),obj.getString("exchange_customer_name")+"未展示客户手机号");
+                Preconditions.checkArgument(obj.containsKey("exchange_type"),obj.getString("exchange_customer_name")+"未展示兑换类型");
+                Preconditions.checkArgument(obj.containsKey("stock_detail"),obj.getString("exchange_customer_name")+"未展示库存明细");
+                Preconditions.checkArgument(obj.containsKey("operate_time"),obj.getString("exchange_customer_name")+"未展示操作时间");
             }
 
         } catch (AssertionError e) {
@@ -3171,6 +3169,174 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             saveData("删除规格品牌品类");
         }
     }
+
+    @Test(dataProvider = "CSTMINFO")
+    public void newPotentialCustomer(String name,String phone,String type,String sex,String mess,String chk) {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            int bef = jc.preSleCustomerManage(null,"1","1",null,null).getInteger("total");
+            Long shop_id = info.oneshopid;
+            Long car_model_id = jc.modelList(shop_id).getJSONArray("list").getJSONObject(0).getLong("modelId");
+            String salesId = jc.saleList(shop_id).getJSONArray("list").getJSONObject(0).getString("sales_id");
+            int code = jc.createPotentialCstm(name,phone,type,sex,car_model_id,shop_id,salesId,false).getInteger("code");
+            int after = jc.preSleCustomerManage(null,"1","1",null,null).getInteger("total");
+            if (chk.equals("false")){
+                Preconditions.checkArgument(code==1001,mess+"期待失败，实际"+code);
+            }
+            else {
+                int sum = after - bef;
+                Preconditions.checkArgument(code==1000,mess+"期待创建成功，实际"+code);
+                Preconditions.checkArgument(sum==1,mess+"期待创建成功列表+1，实际增加"+sum);
+                int code2 = jc.createPotentialCstm(name,phone,type,sex,car_model_id,shop_id,salesId,false).getInteger("code");
+                Preconditions.checkArgument(code2==1001,"使用列表中存在的手机号期待创建失败，实际"+code);
+            }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("创建潜客");
+        }
+    }
+
+    @DataProvider(name = "CSTMINFO")
+    public Object[] customerInfo(){
+        return new String[][]{ // 姓名 手机号 类型 性别  提示语 正常/异常
+
+                {"我","1381172"+Integer.toString((int)((Math.random()*9+1)*1000)),"PERSON","0","姓名一个字","true"},
+                {info.stringfifty,"1381172"+Integer.toString((int)((Math.random()*9+1)*1000)),"CORPORATION","1","姓名50个字","true"},
+                {info.stringsix,"1381172"+Integer.toString((int)((Math.random()*9+1)*100)),"CORPORATION","1","手机号10位","false"},
+                {info.stringsix,"1381172"+Integer.toString((int)((Math.random()*9+1)*10000)),"CORPORATION","1","手机号12位","false"},
+                {info.stringfifty+"1","1381172"+Integer.toString((int)((Math.random()*9+1)*1000)),"CORPORATION","1","姓名51位","false"},
+
+        };
+    }
+
+    @Test
+    public void newPotentialCustomerErr() {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+
+            Long shop_id = info.oneshopid;
+            Long car_model_id = jc.modelList(shop_id).getJSONArray("list").getJSONObject(0).getLong("modelId");
+            String salesId = jc.saleList(shop_id).getJSONArray("list").getJSONObject(0).getString("sales_id");
+            String name="name"+System.currentTimeMillis();
+            String phone="1391172"+Integer.toString((int)((Math.random()*9+1)*1000));
+            String type="PERSON";
+            String sex="0";
+            //不填写姓名
+            int code = jc.createPotentialCstm(null,phone,type,sex,car_model_id,shop_id,salesId,false).getInteger("code");
+            Preconditions.checkArgument(code==1001,"不填写姓名期待失败，实际"+code);
+
+            //不填写手机号
+            int code1 = jc.createPotentialCstm(name,null,type,sex,car_model_id,shop_id,salesId,false).getInteger("code");
+            Preconditions.checkArgument(code1==1001,"不填写手机号期待失败，实际"+code);
+
+            //不填写类型
+            int code2 = jc.createPotentialCstm(name,phone,null,sex,car_model_id,shop_id,salesId,false).getInteger("code");
+            Preconditions.checkArgument(code2==1001,"不填写车主类型期待失败，实际"+code);
+
+            //不填写性别
+            int code3 = jc.createPotentialCstm(name,phone,type,null,car_model_id,shop_id,salesId,false).getInteger("code");
+            Preconditions.checkArgument(code3==1001,"不填写性别期待失败，实际"+code);
+
+            //不填写意向车型 bug 7866
+//            int code4 = jc.createPotentialCstm(name,phone,type,sex,null,shop_id,salesId,false).getInteger("code");
+//            Preconditions.checkArgument(code4==1001,"不填写意向车型期待失败，实际"+code);
+
+            //不填写所属门店
+            int code5 = jc.createPotentialCstm(name,phone,type,sex,car_model_id,null,salesId,false).getInteger("code");
+            Preconditions.checkArgument(code5==1001,"不填写所属门店期待失败，实际"+code);
+
+//            //不填写所属销售 bug 7866
+//            int code6 = jc.createPotentialCstm(name,phone,type,sex,car_model_id,shop_id,null,false).getInteger("code");
+//            Preconditions.checkArgument(code6==1001,"不填写所属销售期待失败，实际"+code);
+
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("创建潜客");
+        }
+    }
+
+    @Test(dataProvider = "CSTMINFO")
+    public void newCstmRecord(String name,String phone,String type,String sex,String mess,String chk) {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+
+            Long shop_id = info.oneshopid;
+            Long car_model_id = jc.modelList(shop_id).getJSONArray("list").getJSONObject(0).getLong("modelId");
+            String salesId = jc.saleList(shop_id).getJSONArray("list").getJSONObject(0).getString("sales_id");
+
+
+            if (chk.equals("false")){
+                int code = jc.createCstm(name,phone,type,sex,car_model_id,shop_id,salesId,dt.getHistoryDate(0),"ASDFUGGDSF12"+Integer.toString((int)((Math.random()*9+1)*10000)),false).getInteger("code");
+                Preconditions.checkArgument(code==1001,mess+"期待失败，实际"+code);
+            }
+            else {
+                int code1 = jc.createCstm(name,info.donephone,type,sex,car_model_id,shop_id,salesId,dt.getHistoryDate(0),"ASDFUGGDSF02"+Integer.toString((int)((Math.random()*9+1)*10000)),false).getInteger("code");
+                Preconditions.checkArgument(code1==1000,mess+"期待创建成功，实际"+code1);
+
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("创建成交记录");
+        }
+    }
+
+    @Test
+    public void newCstmRecordErr() {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+
+            Long shop_id = info.oneshopid;
+            Long car_model_id = jc.modelList(shop_id).getJSONArray("list").getJSONObject(0).getLong("modelId");
+            String salesId = jc.saleList(shop_id).getJSONArray("list").getJSONObject(0).getString("sales_id");
+            String name="name"+System.currentTimeMillis();
+            String phone=info.donephone;
+            String type="PERSON";
+            String sex="0";
+
+
+//            int code = jc.createCstm(name,phone,type,sex,car_model_id,shop_id,salesId,dt.getHistoryDate(1),"ASDFUGGDSF12"+Integer.toString((int)((Math.random()*9+1)*10000)),false).getInteger("code");
+//            Preconditions.checkArgument(code==1001,"购车日期大于当前时间期待失败，实际"+code);
+
+            int code1 = jc.createCstm(name,phone,type,sex,car_model_id,shop_id,salesId,dt.getHistoryDate(-1),"ASDFUGGDSF1"+Integer.toString((int)((Math.random()*9+1)*10000)),false).getInteger("code");
+            Preconditions.checkArgument(code1==1001,"底盘号16位期待失败，实际"+code1);
+
+            int code2 = jc.createCstm(name,phone,type,sex,car_model_id,shop_id,salesId,dt.getHistoryDate(-1),"ASDFUGGDSF111"+Integer.toString((int)((Math.random()*9+1)*10000)),false).getInteger("code");
+            Preconditions.checkArgument(code2==1001,"底盘号18位期待失败，实际"+code2);
+
+            int code3 = jc.createCstm(name,info.phone,type,sex,car_model_id,shop_id,salesId,dt.getHistoryDate(-1),"ASDFUGGDSF11"+Integer.toString((int)((Math.random()*9+1)*10000)),false).getInteger("code");
+            Preconditions.checkArgument(code3==1001,"手机号未注册小程序期待失败，实际"+code3);
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("创建成交记录异常条件");
+        }
+    }
+
+
 
 
 

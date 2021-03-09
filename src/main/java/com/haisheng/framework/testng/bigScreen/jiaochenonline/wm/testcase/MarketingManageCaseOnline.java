@@ -1834,6 +1834,40 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     }
 
     //ok
+    @Test(description = "套餐管理--创建套餐，拒绝，套餐状态为已拒绝")
+    public void packageManager_data_9() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            //创建套餐前列表数量
+            IScene packageFormPageScene = PackageFormPageScene.builder().build();
+            int total = packageFormPageScene.execute(visitor, true).getInteger("total");
+            //创建套餐
+            JSONArray voucherArray = util.getVoucherArray(voucherId, 10);
+            String packageName = util.createPackage(voucherArray, com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.UseRangeEnum.CURRENT);
+            Long packageId = util.getPackageId(packageName);
+            //创建套餐后列表数量
+            int newTotal = packageFormPageScene.execute(visitor, true).getInteger("total");
+            CommonUtil.checkResult("创建套餐后套餐列表数", total + 1, newTotal);
+            //列表内容校验
+            PackagePage packagePage = util.collectBean(PackageFormPageScene.builder().packageName(packageName).build(), PackagePage.class).get(0);
+            CommonUtil.checkResult(packageName + " 套餐价格", "49.99", packagePage.getPrice());
+            CommonUtil.checkResult(packageName + " 套餐有效期", 30, packagePage.getValidity());
+            CommonUtil.checkResult(packageName + " 套餐内含卡券数", 10, packagePage.getVoucherNumber());
+            CommonUtil.checkResult(packageName + " 客户有效期", 1, packagePage.getCustomerUseValidity());
+            CommonUtil.checkResult(packageName + " 审核状态", AuditStatusEnum.AUDITING.getName(), packagePage.getAuditStatusName());
+            //审核不通过
+            AuditPackageStatusScene.builder().id(packageId).status(AuditStatusEnum.REFUSAL.name()).build().execute(visitor, true);
+            PackagePage newPackagePage = util.collectBean(PackageFormPageScene.builder().packageName(packageName).build(), PackagePage.class).get(0);
+            CommonUtil.checkResult(packageName + " 审核状态", AuditStatusEnum.REFUSAL.getName(), newPackagePage.getAuditStatusName());
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐管理--套餐管理--创建套餐，拒绝，套餐状态为已拒绝");
+        }
+    }
+
+    //ok
     @Test(description = "套餐表单--创建套餐，套餐名称异常")
     public void packageManager_system_1() {
         logger.logCaseStart(caseResult.getCaseName());

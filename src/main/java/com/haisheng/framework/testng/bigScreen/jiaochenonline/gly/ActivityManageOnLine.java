@@ -1,29 +1,29 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.gly;
+package com.haisheng.framework.testng.bigScreen.jiaochenonline.gly;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.gly.util.BusinessUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.util.PublicParameter;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletVoucherInfo;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherSendRecord;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityApprovalStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpload;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
+import com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.util.BusinessUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
-import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.ImageUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -34,15 +34,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ActivityManage extends TestCaseCommon implements TestCaseStd {
+public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd {
     ScenarioUtil jc = new ScenarioUtil();
-    private static final EnumTestProduce product = EnumTestProduce.JIAOCHEN_DAILY;
-    //private static final EnumAppletToken APPLET_USER = EnumAppletToken.JC_GLY_DAILY;
+    private static final EnumTestProduce product = EnumTestProduce.JIAOCHEN_ONLINE;
+    private static final EnumAccount ADMINISTRATOR=EnumAccount.ADMINISTRATOR_ONLINE;
     public Visitor visitor = new Visitor(product);
-    BusinessUtil businessUtil = new BusinessUtil(visitor);
+//    BusinessUtil businessUtil = new BusinessUtil(visitor);
+    BusinessUtilOnline businessUtil=new BusinessUtilOnline(visitor);
     SupporterUtil supporterUtil = new SupporterUtil(visitor);
     PublicParameter pp = new PublicParameter();
     UserUtil user = new UserUtil(visitor);
+    CommonConfig commonConfig = new CommonConfig();
+
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
@@ -50,22 +53,23 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
     @BeforeClass
     @Override
     public void initial() {
-        logger.debug("before classs initial");
-        CommonConfig commonConfig = new CommonConfig();
+        logger.debug("before class initial");
+//        jc.changeIpPort(EnumTestProduce.JIAOCHEN_ONLINE.getAddress());
         //替换checklist的相关信息
-        commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_JIAOCHEN_DAILY_SERVICE;
-        commonConfig.checklistQaOwner = "郭丽雅";
+        commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
+        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
+        commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
         commonConfig.product = product.getAbbreviation();
+        commonConfig.referer = product.getReferer();
         //替换jenkins-job的相关信息
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "jc-daily-test");
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_ONLINE_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
         //替换钉钉推送
-        commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
+        commonConfig.dingHook = EnumDingTalkWebHook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
-        commonConfig.referer = "https://servicewechat.com/wxbd41de85739a00c7/0/page-frame.html";
+        commonConfig.roleId = product.getRoleId();
+        commonConfig.referer = product.getReferer();
         commonConfig.shopId = product.getShopId();
-        commonConfig.roleId = "603";
         beforeClassInit(commonConfig);
         logger.debug("jc: " + jc);
     }
@@ -85,7 +89,8 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
-        jc.pcLogin("13114785236", pp.password);
+        user.loginPc(ADMINISTRATOR);
+//        jc.pcLogin(pp.phone,pp.password);
     }
 
 
@@ -118,7 +123,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             //获取活动的状态
             int statusPassed = businessUtil.getActivityStatus(activityId2);
             //登录小程序
-            user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+            user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
             //获取小程序推荐列表
             JSONObject object = businessUtil.getAppletArticleList();
             JSONArray list = businessUtil.getAppletArticleList().getJSONArray("list");
@@ -159,11 +164,11 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             //获取活动的状态
             int statusPassed = businessUtil.getActivityStatus(activityId);
             //登录小程序
-            user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+            user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
             //小程序报名此活动
             businessUtil.activityRegisterApplet(activityId, "13373166806", "郭丽雅", 2, "1513814362@qq.com", "22", "女","其他");
             //登录PC
-            jc.pcLogin(pp.phone1, pp.password);
+            user.loginPc(ADMINISTRATOR);
             //审批通过小程序活动报名
             List<Long> ids = businessUtil.RegisterAppletIds(activityId);
             businessUtil.getRegisterApprovalPassed(activityId, ids.get(0));
@@ -172,7 +177,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             String voucherCode = vList.get(0).getVoucherCode();
             System.err.println("-----获取卡券码-----" + voucherCode);
             //登录小程序
-            user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+            user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
             //获取小程序活动的识别码
             String title = null;
             JSONArray list = businessUtil.getAppletArticleList().getJSONArray("list");
@@ -570,11 +575,11 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             //审批通过招募活动
             businessUtil.getApprovalPassed(activityId);
             //登录小程序
-            user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+            user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
             //小程序报名此活动
             businessUtil.activityRegisterApplet(activityId);
             //登录PC
-            jc.pcLogin(pp.phone1, pp.password);
+            user.loginPc(ADMINISTRATOR);
             //审批通过之前报名成功的数量
             int passedBefore = businessUtil.getRegisterData(activityId).getInteger("passed");
             //审批通过小程序活动报名
@@ -615,12 +620,16 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             int registerNum = 0;
             //获取进行中的活动存在待审批数量的ID
             List<Long> ids = businessUtil.getRecruitActivityWorkingApproval();
+            System.err.println("ids:"+ids);
             //审批通过之前报名成功的数量
             int failedBefore = businessUtil.getRegisterData(ids.get(0)).getInteger("failed");
+            System.err.println("failedBefore:"+failedBefore);
             //报名待审批的ID合集
             List<Long> idArray = businessUtil.registerApproval(ids.get(0));
+            System.err.println("idArray:"+idArray);
             //审批不通过其中一条报名
-            businessUtil.getRegisterApprovalReject(ids.get(0), idArray.get(0));
+            String message=businessUtil.getRegisterApprovalReject(ids.get(0), idArray.get(0));
+            System.err.println("----审批不通过其中一条报名message-------:"+message);
             //审批通过的活动人数
             int pages = businessUtil.getRegisterPage(ids.get(0)).getInteger("pages");
             for (int page = 1; page <= pages; page++) {
@@ -632,11 +641,13 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                     if (idArray.get(0).equals(idOne) && statusName.equals("已拒绝")) {
                         int num = List.getJSONObject(i).getInteger("register_num");
                         registerNum += num;
+                        System.err.println("----registerNum-------:"+registerNum);
                     }
                 }
             }
             //审批通过之后报名成功的数量
             int failedAfter = businessUtil.getRegisterData(ids.get(0)).getInteger("failed");
+            System.err.println("----failedAfter-------:"+failedAfter);
             Preconditions.checkArgument(failedAfter > 0 && failedAfter == (failedBefore + registerNum), "审批不通过的人数为:" + registerNum);
 
         } catch (AssertionError | Exception e) {
