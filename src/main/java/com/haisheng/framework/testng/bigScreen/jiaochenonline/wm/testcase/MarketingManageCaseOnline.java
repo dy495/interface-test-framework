@@ -1750,7 +1750,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
                 int voucherCountSum = packageDetail.getVoucherList().stream().map(e -> (JSONObject) e).mapToInt(e -> e.getInteger("voucher_count")).sum();
                 CommonUtil.checkResultPlus(packagePage.getPackageName() + " 列表价格", packagePage.getPrice().equals("0") ? "0.00" : packagePage.getPrice(), "详情价格", packageDetail.getPackagePrice());
                 CommonUtil.checkResultPlus(packagePage.getPackageName() + " 列表有效期", packagePage.getValidity(), "详情有效期", packageDetail.getValidity());
-                CommonUtil.checkResultPlus(packagePage.getPackageName() + " 列表有效期", packagePage.getVoucherNumber(), "详情有效期", voucherCountSum);
+                CommonUtil.checkResultPlus(packagePage.getPackageName() + " 卡券数量", packagePage.getVoucherNumber(), "详情卡券数量", voucherCountSum);
                 CommonUtil.checkResultPlus(packagePage.getPackageName() + " 列表客户套餐有效期", packagePage.getCustomerUseValidity(), "详情客户套餐有效期", packageDetail.getCustomerUseValidity());
                 CommonUtil.logger(packagePage.getPackageName());
             });
@@ -2974,29 +2974,30 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
         }
     }
 
-    //ok
-    @Test(description = "消息管理--选择套餐时，套餐过期，提交时提示：套餐不允许发送，请重新选择")
+    //bug
+    @Test(description = "消息管理--选择套餐时，套餐过期，提交时提示：已过套餐有效期")
     public void messageManager_system_13() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //发消息
             long packageId = util.getPackagePage(PackageStatusEnum.EXPIRED).getPackageId();
             String packageName = util.getPackageName(packageId);
+            SwitchPackageStatusScene.builder().id(packageId).status(true).build().execute(visitor, true);
             IScene pushMessageScene = PushMessageScene.builder().pushTarget(AppletPushTargetEnum.PERSONNEL_CUSTOMER.getId())
                     .telList(getList(APPLET_USER_ONE.getPhone())).messageName(EnumDesc.MESSAGE_TITLE.getDesc())
                     .messageContent(EnumDesc.VOUCHER_DESC.getDesc()).type(1).voucherOrPackageList(getList(packageId))
                     .useDays("10").ifSendImmediately(true).build();
             String message = visitor.invokeApi(pushMessageScene, false).getString("message");
             String err = "已过套餐有效期";
-            CommonUtil.checkResult("推送过期套餐" + packageName, err, message);
+            CommonUtil.checkResult("推送过期套餐：" + packageName, err, message);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("消息管理--选择套餐时，套餐被关闭，提交时提示：套餐不允许发送，请重新选择");
+            saveData("消息管理--选择套餐时，套餐被关闭，提交时提示：已过套餐有效期");
         }
     }
 
-    //ok
+    //bug
     @Test(description = "消息管理--选择套餐时，套餐内包含无库存卡券，提交时提示：套餐不允许发送，请重新选择")
     public void messageManager_system_14() {
         logger.logCaseStart(caseResult.getCaseName());
