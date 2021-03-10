@@ -450,8 +450,8 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
      * @time:
      */
 
-    public JSONObject patrolShopRealV3A(String district_code, String[] shop_type, String shop_name, String shop_manager, Integer page, Integer size) throws Exception {
-        String url = "/patrol/shop/page/real-time";
+    public JSONObject patrolShopRealV3A(String district_code, String[] shop_type, String shop_name, String shop_manager, Integer page, Integer size,Integer sort_type_order) throws Exception {
+        String url = "/patrol/shop/page/passenger-flow";
         JSONObject object = new JSONObject();
         object.put("district_code", district_code);
         object.put("shop_type", shop_type);
@@ -459,6 +459,7 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
         object.put("shop_manager", shop_manager);
         object.put("page", page);
         object.put("size", size);
+        object.put("sort_type_order", sort_type_order);
         String res = httpPostWithCheckCode(url, JSON.toJSONString(object), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
