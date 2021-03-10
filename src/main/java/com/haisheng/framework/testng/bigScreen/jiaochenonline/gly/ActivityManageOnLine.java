@@ -2,6 +2,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline.gly;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.google.inject.internal.cglib.core.$ReflectUtils;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
@@ -22,7 +23,6 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.util.BusinessUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
-import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.util.ImageUtil;
 import org.testng.annotations.AfterClass;
@@ -54,7 +54,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
     @Override
     public void initial() {
         logger.debug("before class initial");
-//        jc.changeIpPort(EnumTestProduce.JIAOCHEN_ONLINE.getAddress());
+        jc.changeIpPort(EnumTestProduce.JIAOCHEN_ONLINE.getAddress());
         //替换checklist的相关信息
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
         commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
@@ -175,10 +175,9 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             //获取卡券码
             List<VoucherSendRecord> vList = supporterUtil.getVoucherSendRecordList(voucherId);
             String voucherCode = vList.get(0).getVoucherCode();
-            System.err.println("-----获取卡券码-----" + voucherCode);
             //登录小程序
             user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
-            //获取小程序活动的识别码
+            //获取小程序活动的id
             String title = null;
             JSONArray list = businessUtil.getAppletArticleList().getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
@@ -192,7 +191,8 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             //查询是否获得此卡券(通过卡券码查询，看看能否有此卡券的返回值)
             AppletVoucherInfo voucher = supporterUtil.getAppletVoucherInfo(voucherCode);
             //小程序我的报名列表
-            JSONArray list1 = jc.appletMyActually(null, "20").getJSONArray("list");
+            JSONArray list1 = jc.appletMyActually(null, "10").getJSONArray("list");
+            System.err.println(list1);
             for (int i = 0; i < list1.size(); i++) {
                 String title1 = list1.getJSONObject(i).getString("title");
                 if (title1.equals(title)) {
@@ -218,6 +218,19 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             saveData("创建招募活动-活动审批通过-报名活动-点击审批提醒进入报名审批页面-审批通过活动报名-取消活动");
         }
     }
+    @Test(enabled = false)
+    public void justTry(){
+        try {
+            user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
+           businessUtil.appointmentActivityStatusNew();
+
+        }catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("测试呀呀呀呀");
+        }
+    }
+
 
 
     /**

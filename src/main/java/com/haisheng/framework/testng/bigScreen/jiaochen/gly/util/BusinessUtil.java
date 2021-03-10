@@ -996,7 +996,6 @@ public class BusinessUtil {
     public String appointmentActivityStatus(Long activityId) {
         //登录小程序
         user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
-
         JSONObject lastValue = null;
         IScene scene = AppointmentActivityListScene.builder().lastValue(lastValue).size(20).build();
         JSONObject response = visitor.invokeApi(scene);
@@ -1016,23 +1015,32 @@ public class BusinessUtil {
 
                 }
             }
-//            else {
-//                IScene scene1 = AppointmentActivityListScene.builder().lastValue(lastValue).size(20).build();
-//                JSONObject response1 = visitor.invokeApi(scene1);
-//                lastValue = response1.getJSONObject("last_value");
-//                System.err.println("------------"+lastValue);
-//                IScene scene2 = AppointmentActivityListScene.builder().lastValue(lastValue).size(20).build();
-//                JSONObject response2 = visitor.invokeApi(scene2);
-//                JSONArray list = response2.getJSONArray("list");
-//                for (int i = 0; i < list.size(); i++) {
-//                    Long id = list.getJSONObject(i).getLong("id");
-//                    if (activityId.equals(id)) {
-//                        status = list.getJSONObject(i).getString("status_name");
-//                        System.err.println("-------------"+status);
-//                    }
-//                }
-//            }
         }
+        return status;
+    }
+
+    /**
+     * 根据活动ID返回活动的状态  ------新写的，晚点测试可行性
+     */
+    public String appointmentActivityStatusNew(Long activityId) {
+        //登录小程序
+        user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+        JSONObject lastValue = null;
+        JSONArray list=null;
+        String status = "";
+        do{
+            IScene scene = AppointmentActivityListScene.builder().lastValue(lastValue).size(20).build();
+            JSONObject response = visitor.invokeApi(scene);
+            lastValue = response.getJSONObject("last_value");
+            list = response.getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                Long id = list.getJSONObject(i).getLong("id");
+                if (activityId.equals(id)) {
+                    status = list.getJSONObject(i).getString("status_name");
+                }
+            }
+        }while(list.size()>=20);
+
         return status;
     }
 

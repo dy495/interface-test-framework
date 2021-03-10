@@ -120,7 +120,6 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             //登录小程序
             user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             //获取小程序推荐列表
-            JSONObject object = businessUtil.getAppletArticleList();
             JSONArray list = businessUtil.getAppletArticleList().getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int itemId = list.getJSONObject(i).getInteger("itemId");
@@ -158,6 +157,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             businessUtil.getApprovalPassed(activityId);
             //获取活动的状态
             int statusPassed = businessUtil.getActivityStatus(activityId);
+            System.err.println(activityId+"--------"+statusPassed);
             //登录小程序
             user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             //小程序报名此活动
@@ -208,9 +208,22 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
 //            Preconditions.checkArgument(numBefore==numAfter+1,"取消活动以后此卡券的数量没有-1");
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("创建招募活动-活动审批通过-报名活动-点击审批提醒进入报名审批页面-审批通过活动报名-取消活动");
+        }
+    }
+
+    @Test
+    public void justTry(){
+        try {
+            user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+            businessUtil.activityRegisterApplet(565L, "13373166806", "郭丽雅", 2, "1513814362@qq.com", "22", "女","其他");
+
+        }catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("测试呀呀呀呀");
         }
     }
 

@@ -465,7 +465,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
             for (int page = 1; page <= pages; page++) {
                 JSONArray list = jc.afterSleCustomerTimeManage("", String.valueOf(page),"10",startTime,endTime,startTime,endTime).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
-                    String orderDate = list.getJSONObject(i).containsKey("deliver_date")?list.getJSONObject(i).getString("deliver_date").substring(0,10):startTime;
+                    String orderDate = list.getJSONObject(i).containsKey("start_order_date")?list.getJSONObject(i).getString("start_order_date").substring(0,10):startTime;
                     String importDate = list.getJSONObject(i).containsKey("import_date")?list.getJSONObject(i).getString("import_date").substring(0,10):startTime;
                     Preconditions.checkArgument(orderDate.compareTo(startTime)>=0&&orderDate.compareTo(endTime)<=0, "订单开始时间："+startTime+" 订单结束时间："+endTime+" 列表中的开单时间为："+orderDate);
                     Preconditions.checkArgument(importDate.compareTo(startTime)>=0&&importDate.compareTo(endTime)<=0, "创建开始时间："+startTime+" 创建结束时间："+endTime+" 列表中的导入时间为："+importDate);

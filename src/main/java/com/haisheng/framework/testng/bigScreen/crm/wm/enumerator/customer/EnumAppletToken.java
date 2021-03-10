@@ -36,7 +36,7 @@ public enum EnumAppletToken {
 
     JC_LXQ_DAILY(EnumProduce.JC.name(), "31Z9jgBlSsTIqRTYxOWaKw==", "", false, "", "13436941018"),
 
-    JC_GLY_DAILY(EnumProduce.JC.name(), "2gpB74ifS20YIAZpbrvU8w==", "Max", true, "", "13373166806"),
+    JC_GLY_DAILY(EnumProduce.JC.name(), "1nxb35B/gDlj6Q88uD5yEA==", "Max", true, "", "13373166806"),
     JC_GLY_ONLINE(EnumProduce.JC.name(), "iCMVUEzq+zOmzldZM2awEQ==", "Max", false, "", "13373166806"),
     ;
 

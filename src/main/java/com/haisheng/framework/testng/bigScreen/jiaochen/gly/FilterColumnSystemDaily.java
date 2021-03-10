@@ -463,7 +463,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
             for (int page = 1; page <= pages; page++) {
                 JSONArray list = jc.afterSleCustomerTimeManage("", String.valueOf(page),"10",startTime,endTime,startTime,endTime).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
-                    String orderDate = list.getJSONObject(i).containsKey("deliver_date")?list.getJSONObject(i).getString("deliver_date").substring(0,10):startTime;
+                    String orderDate = list.getJSONObject(i).containsKey("start_order_date")?list.getJSONObject(i).getString("start_order_date").substring(0,10):startTime;
                     String importDate = list.getJSONObject(i).containsKey("import_date")?list.getJSONObject(i).getString("import_date").substring(0,10):startTime;
                     Preconditions.checkArgument(orderDate.compareTo(startTime)>=0&&orderDate.compareTo(endTime)<=0, "订单开始时间："+startTime+" 订单结束时间："+endTime+" 列表中的开单时间为："+orderDate);
                     Preconditions.checkArgument(importDate.compareTo(startTime)>=0&&importDate.compareTo(endTime)<=0, "创建开始时间："+startTime+" 创建结束时间："+endTime+" 列表中的导入时间为："+importDate);
@@ -2041,7 +2041,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
 
 
     /**
-     * @description :优惠券审批-筛选栏单项查询
+     * @description :优惠券审批-筛选栏单项查询      申请门店查询，已提bug（7882）
      * @date :2020/11/24
      **/
     @Test(dataProvider = "SELECT_applyListFilter", dataProviderClass = Constant.class)
@@ -2094,7 +2094,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("卡券申请单项查询，结果校验");
+            saveData("优惠券审批单项查询，结果校验");
         }
     }
 
@@ -3916,7 +3916,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
     }
 
     /**
-     * @deprecated V2.0评价列表--筛选栏单项搜索
+     * @deprecated V2.0评价列表--筛选栏单项搜索      是否留言有问题，已提bug【7884】
      * @date :2021-2-2
      */
     @Test(dataProvider = "SELECT_evaluatePageFilter", dataProviderClass = Constant.class)
@@ -3964,7 +3964,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                         JSONArray list = jc.evaluatePage("", String.valueOf(page),"10", pram, result1).getJSONArray("list");
                         for (int i = 0; i < list.size(); i++) {
                             String Flag = list.getJSONObject(i).getString(output);
-                            System.out.println("评价列表按" + result + "查询，结果错误" + Flag);
+                            System.out.println("评价列表按" + result1 + "查询，结果错误" + Flag);
                             if(result1.equals("false")){
                                 Preconditions.checkArgument(Flag.isEmpty(), "评价列表按未留言筛选,查询结果不为空" );
                             }else{
@@ -3977,6 +3977,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     String saleId=businessUtil.authNameTransformId(result,"AFTER_SALE_RECEPTION");
                     String name=businessUtil.getAuthNameExist(result,"AFTER_SALE_RECEPTION");
                     JSONObject response1 = jc.evaluatePage("", "1", "10",pram, saleId);
+                    System.out.println(saleId+"------"+response1);
                     int pages = response1.getInteger("pages")>10?10:response1.getInteger("pages");
                     for (int page = 1; page <= pages; page++) {
                         JSONArray list = jc.evaluatePage("", String.valueOf(page),"10", pram, saleId).getJSONArray("list");
@@ -3984,6 +3985,18 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                             String Flag = list.getJSONObject(i).getString(output);
                             System.out.println("评价列表按" + name + "查询，结果错误" + Flag);
                             Preconditions.checkArgument(Flag.contains(name), "评价列表按" + name + "查询，结果错误" + Flag);
+                        }
+                    }
+                }else if(pram.equals("plate_number")){
+                    String result = response.getJSONArray("list").getJSONObject(0).containsKey("plate_number")?response.getJSONArray("list").getJSONObject(0).getString(output):"浙A12345";
+                    JSONObject response1 = jc.evaluatePage("", "1", "10",pram, result);
+                    int pages = response1.getInteger("pages")>10?10:response1.getInteger("pages");
+                    for (int page = 1; page <= pages; page++) {
+                        JSONArray list = jc.evaluatePage("", String.valueOf(page),"10", pram, result).getJSONArray("list");
+                        for (int i = 0; i < list.size(); i++) {
+                            String Flag = list.getJSONObject(i).getString(output);
+                            System.out.println("评价列表按" + result + "查询，结果错误" + Flag);
+                            Preconditions.checkArgument(Flag.contains(result), "评价列表按" + result + "查询，结果错误" + Flag);
                         }
                     }
                 }else{
