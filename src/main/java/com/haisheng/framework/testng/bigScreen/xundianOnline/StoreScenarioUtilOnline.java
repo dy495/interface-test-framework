@@ -510,6 +510,26 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
+    public JSONObject shopPageMemberV31(String district_code, JSONArray shop_type, String shop_name, String shop_manager, String member_type, Integer member_type_order, Integer page, Integer size) throws Exception {
+        String url = "/patrol/shop/page/member";
+        JSONObject object = new JSONObject();
+        object.put("district_code", district_code);
+        object.put("shop_type", shop_type);
+        object.put("shop_name", shop_name);
+        object.put("shop_manager", shop_manager);
+        object.put("member_type", member_type);
+        object.put("member_type_order", member_type_order);
+        object.put("page", page);
+        object.put("size", size);
+        String res = httpPostWithCheckCode(url, JSON.toJSONString(object), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:8.1.5 会员门店列表V3.0
+     * @author: qingqing
+     * @time:
+     */
     public JSONObject shopPageMemberV3(String district_code, String shop_type, String shop_name, String shop_manager, String member_type, Integer member_type_order, Integer page, Integer size) throws Exception {
         String url = "/patrol/shop/page/member";
         String json =
@@ -707,6 +727,28 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
     }
 
     /**-------------------------------------------------------------8.5 会员相关---------------------------------------------**/
+
+
+    /**---------------------------------8.3 门店新增客户-------------------------**/
+    /**
+     * @description:8.3门店列表
+     * @author:
+     * @time:
+     */
+    public JSONObject NewUser(String district_code,JSONArray shop_type,String shop_name,String shop_manager,String member_type,Integer member_type_order,int page,int size) throws Exception {
+        String url = "/patrol/shop/page/passenger-flow";
+        JSONObject json = new JSONObject();
+        json.put("district_code", district_code);
+        json.put("shop_type", shop_type);
+        json.put("shop_name",shop_name);
+        json.put("shop_manager", shop_manager);
+        json.put("member_type", member_type);
+        json.put("member_type_order", member_type_order);
+        json.put("page", page);
+        json.put("size", size);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
 
 
 
