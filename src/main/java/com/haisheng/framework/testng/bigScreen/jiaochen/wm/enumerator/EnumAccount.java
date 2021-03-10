@@ -16,6 +16,10 @@ public enum EnumAccount {
     MARKETING_ONLINE("15321527989", "000000", "营销管理", false, ""),
 
     ADMINISTRATOR_ONLINE("15711200001", "000000", "系统管理员", false, "轿辰线上测试"),
+
+    RECEPTION_ONLINE("15037286011", "000000", "接待顾问1", false, "接待顾问2"),
+
+    RECEPTION_DAILY("13402050025", "000000", "接待顾问1", false, "接待顾问2"),
     ;
 
     EnumAccount(String phone, String password, String role, boolean isDaily, String name) {

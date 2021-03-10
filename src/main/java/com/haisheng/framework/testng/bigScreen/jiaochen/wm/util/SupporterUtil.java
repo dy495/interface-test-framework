@@ -1106,7 +1106,7 @@ public class SupporterUtil extends BaseUtil {
      * @return 门店id
      */
     public Integer getShopId() {
-        return visitor.isOnline() ? 20034 : 50401;
+        return visitor.isOnline() ? 20032 : 46522;
     }
 
     /**

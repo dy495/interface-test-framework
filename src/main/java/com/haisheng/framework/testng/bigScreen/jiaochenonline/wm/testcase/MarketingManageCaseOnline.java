@@ -314,7 +314,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             CommonUtil.checkResult(voucherName + " 变更记录列表数", changeRecordTotal + 1, newChangeRecordTotal);
             //校验变更记录变更事项
             VoucherChangeRecord voucherChangeRecord = util.collectBean(scene, VoucherChangeRecord.class).get(0);
-            CommonUtil.checkResult(voucherName + " 变更时间",data , voucherChangeRecord.getTime());
+            CommonUtil.checkResult(voucherName + " 变更时间", data, voucherChangeRecord.getTime());
             CommonUtil.checkResult(voucherName + " 变更记录变更事项", ChangeItemEnum.INVALIDED.getName(), voucherChangeRecord.getChangeItem());
             CommonUtil.checkResult(voucherName + " 操作人", ADMINISTRATOR.getName(), voucherChangeRecord.getOperateSaleName());
             CommonUtil.checkResult(voucherName + " 操作人角色", ADMINISTRATOR.getRole(), voucherChangeRecord.getOperateSaleRole());
@@ -3112,7 +3112,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             user.loginApplet(APPLET_USER_ONE);
             JSONArray taskList = AppletShareTaskListScene.builder().build().execute(visitor, true).getJSONArray("task_list");
             String finalDescription = description;
-            taskList.stream().map(e -> (JSONObject) e).forEach(e -> CommonUtil.checkResult(e.getString("task_name") + "的内容", finalDescription + "+1000积分.", e.getString("award_description")));
+            taskList.stream().map(e -> (JSONObject) e).forEach(e -> CommonUtil.checkResult(e.getString("task_name") + "的内容", finalDescription, e.getString("award_description")));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -3152,6 +3152,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             int awardScore = response.getInteger("award_score") >= 1999 ? 1 : response.getInteger("award_score");
             int recordTotal = SignInConfigChangeRecordScene.builder().signInConfigId(signInConfigId).build().execute(visitor, true).getInteger("total");
             //变更积分&说明
+            String data = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm");
             SignInConfigEditScene.builder().signInConfigId(signInConfigId).awardScore(awardScore + 1).explain(EnumDesc.FAULT_DESCRIPTION.getDesc()).build().execute(visitor, true);
             //变更后列表数
             int newRecordTotal = SignInConfigChangeRecordScene.builder().signInConfigId(signInConfigId).build().execute(visitor, true).getInteger("total");
@@ -3159,7 +3160,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             //变更内容
             JSONObject newResponse = SignInConfigChangeRecordScene.builder().build().execute(visitor, true).getJSONArray("list").getJSONObject(0);
             CommonUtil.checkResult("操作员手机号", ADMINISTRATOR.getPhone(), newResponse.getString("operate_phone"));
-            CommonUtil.checkResult("操作时间", DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm"), newResponse.getString("operate_date"));
+            CommonUtil.checkResult("操作时间", data, newResponse.getString("operate_date"));
             CommonUtil.checkResult("变更积分", awardScore + 1, newResponse.getInteger("change_score"));
             CommonUtil.checkResult("变更备注", EnumDesc.FAULT_DESCRIPTION.getDesc(), newResponse.getString("change_remark"));
         } catch (Exception | AssertionError e) {
@@ -3262,7 +3263,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     }
 
     //ok
-    @Test(description = "任务管理--修改分享内容，积分异常")
+    @Test(description = "任务管理--修改分享内容，积分异常", enabled = false)
     public void vipMarketing_system_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

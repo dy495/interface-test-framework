@@ -51,9 +51,9 @@ import java.util.stream.Collectors;
  * @date 2021/1/29 11:17
  */
 public class BusinessManageCaseOnline extends TestCaseCommon implements TestCaseStd {
-    CommonConfig commonConfig = new CommonConfig();
+
     private static final EnumTestProduce product = EnumTestProduce.JIAOCHEN_ONLINE;
-    private static final EnumAccount ADMINISTRATOR = EnumAccount.ADMINISTRATOR_ONLINE;
+    private static final EnumAccount ADMINISTRATOR = EnumAccount.RECEPTION_ONLINE;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_ONLINE;
     //访问者
     public Visitor visitor = new Visitor(product);
@@ -67,6 +67,7 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
     @Override
     public void initial() {
         logger.debug("before class initial");
+        CommonConfig commonConfig = new CommonConfig();
         //替换checklist的相关信息
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
         commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
@@ -79,8 +80,8 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
         //替换钉钉推送
         commonConfig.dingHook = EnumDingTalkWebHook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
-        commonConfig.shopId = product.getShopId();
-        commonConfig.roleId = product.getRoleId();
+        commonConfig.shopId = "20032";
+        commonConfig.roleId = "424";
         beforeClassInit(commonConfig);
     }
 
@@ -480,7 +481,6 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
     public void customerManager_data_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            commonConfig.shopId = "20034";
             Double[] doubles = {1.00, 2.99, 3.66, 50.1};
             JSONObject jsonObject = CarModelPageScene.builder().build().execute(visitor, true).getJSONArray("list").getJSONObject(0);
             Integer id = jsonObject.getInteger("id");
@@ -492,7 +492,6 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            commonConfig.shopId = product.getShopId();
             saveData("预约管理--保养配置，修改保养价格");
         }
     }

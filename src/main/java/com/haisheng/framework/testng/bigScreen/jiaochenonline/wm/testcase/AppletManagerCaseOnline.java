@@ -61,7 +61,7 @@ import java.util.stream.Collectors;
  */
 public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce product = EnumTestProduce.JIAOCHEN_ONLINE;
-    private static final EnumAccount ADMINISTRATOR = EnumAccount.ADMINISTRATOR_ONLINE;
+    private static final EnumAccount ADMINISTRATOR = EnumAccount.RECEPTION_ONLINE;
     //小程序用户
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_ONLINE;
     //访问者
