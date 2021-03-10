@@ -3087,7 +3087,7 @@ public class FeidanMiniApiDataConsistencyDaily {
     public JSONObject creatRole() throws Exception {
         JSONArray arr = new JSONArray();
         arr.add("149");
-        arr.add("150");
+//        arr.add("150");
         arr.add("151");
         arr.add("152");
         arr.add("153");

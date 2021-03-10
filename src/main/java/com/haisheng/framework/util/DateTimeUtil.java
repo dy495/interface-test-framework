@@ -504,6 +504,13 @@ public class DateTimeUtil {
         String before = new SimpleDateFormat("HH:mm").format(beforeD);
         return before;
     }
+    public String getHHmm(int n,String pattern) {
+        Calendar beforeTime = Calendar.getInstance();
+        beforeTime.add(Calendar.MINUTE, n);// n分钟之前/之后的时间
+        Date beforeD = beforeTime.getTime();
+        String before = new SimpleDateFormat("HH:mm:ss").format(beforeD);
+        return before;
+    }
 
     public long get0OclockStamp(int n) throws ParseException { //前第n天的0点时间戳
         Calendar c = Calendar.getInstance();

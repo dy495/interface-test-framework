@@ -547,6 +547,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
     public void Jc_hexiaoAB(String num) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            appLogin(pp.jdgw,pp.jdgwpassword,pp.roleidJdgw);
             int code = jc.verification(num, false).getInteger("code");
             Preconditions.checkArgument(code == 1001, "异常核销码，返回不是1001，code:" + code);
         } catch (AssertionError | Exception e) {

@@ -1744,7 +1744,7 @@ public class FeidanMiniApiSystemtestDaily {
         try {
             JSONArray arr = new JSONArray();
             arr.add("149");
-            arr.add("150");
+//            arr.add("150");
             arr.add("151");
             arr.add("152");
             arr.add("153");
@@ -1830,7 +1830,7 @@ public class FeidanMiniApiSystemtestDaily {
         try {
             JSONArray arr = new JSONArray();
             arr.add("149");
-            arr.add("150");
+//            arr.add("150");
             arr.add("151");
             arr.add("152");
             arr.add("153");
@@ -1876,7 +1876,6 @@ public class FeidanMiniApiSystemtestDaily {
 
         try {
             JSONArray arr = new JSONArray();
-            arr.add("150");
             arr.add("151");
             String name = "重复名字";
             String desc = "重复说明";
@@ -2115,7 +2114,7 @@ public class FeidanMiniApiSystemtestDaily {
     public JSONObject creatRole() throws Exception {
         JSONArray arr = new JSONArray();
         arr.add("149");
-        arr.add("150");
+//        arr.add("150");
         arr.add("151");
         arr.add("152");
         arr.add("153");

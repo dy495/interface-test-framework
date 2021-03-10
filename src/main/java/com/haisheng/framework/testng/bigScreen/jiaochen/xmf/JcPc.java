@@ -654,6 +654,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
     public void Jc_pcReceipt() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            appLogin(pp.jdgw,pp.jdgwpassword,pp.roleidJdgw);
             JSONObject data = jc.pcManageReception(pp.carplate, true);
             String jsonpath = "$.arrive_times&&$.customers[*].voucher_list[*]&&$.er_code_url&&$.last_reception_sale_name&&$.last_arrive_time&&$.plate_number";
             jpu.spiltString(data.toJSONString(), jsonpath);

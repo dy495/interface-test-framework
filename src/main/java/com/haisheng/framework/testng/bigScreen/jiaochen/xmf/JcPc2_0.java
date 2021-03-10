@@ -479,10 +479,13 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
 
     }
 
-//    @Test  //新建智能提醒（公里数）,由于智能提醒隔天生效，故此case一天运行一次  明天调试
+    @Test  //新建智能提醒（公里数）,由于智能提醒隔天生效，故此case一天运行一次  明天调试
     public void CreateRemindCheck() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+//            System.out.println(dt.getHistoryDate(-1096));
+//            System.out.println(dt.getHHmm(0,"HH:mm:ss"));
+            dt.getHHmm(0);
             String maile="2001";
             //前提新建好一个任务
             //查询小程序卡券数量
@@ -496,7 +499,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             //查询小程序卡券数量
             jc.appletLoginToken(pp.appletTocken);
             int totalAfter=pf.getVoucherTotal();
-
+            PoiUtils.importCustomer(maile);
             pcLogin(pp.jdgw,pp.jdgwpassword,pp.roleidJdgw);
             jc.pcWorkOrder(pp.importFilepath);      //导入工单文件的路径=新建excel 路径
             jc.appletLoginToken(pp.appletTocken);
@@ -511,9 +514,9 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
 //            er.days="1";            //提醒天数
             er.mileage=maile;        //提醒公里数
             Integer RemindId =jc.createRemindMethod(er).getInteger("id");
-
-            Preconditions.checkArgument(totalAfter-totalAfter2==0,"公里数同一任务只触发一次智能提醒，小程序收不到卡券");
-            Preconditions.checkArgument(totalAfter-total==1,"触发智能提醒，小程序收到卡券");
+//            公里数同一任务只触发一次智能提醒，小程序收不到卡券
+            Preconditions.checkArgument(totalAfter-totalAfter2==0,"第一次导入工单后卡券数:"+totalAfter+";第二次导入工单数："+totalAfter2);
+            Preconditions.checkArgument(totalAfter-total==1,"第一次导入工单后卡券数："+totalAfter+"；导入工单前卡券数："+total);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
