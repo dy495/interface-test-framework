@@ -480,7 +480,7 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
     public void customerManager_data_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            commonConfig.shopId = "46522";
+            commonConfig.shopId = "20034";
             Double[] doubles = {1.00, 2.99, 3.66, 50.1};
             JSONObject jsonObject = CarModelPageScene.builder().build().execute(visitor, true).getJSONArray("list").getJSONObject(0);
             Integer id = jsonObject.getInteger("id");
