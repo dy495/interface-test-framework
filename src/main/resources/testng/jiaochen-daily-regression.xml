@@ -12,9 +12,9 @@
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.lxq.SystemCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.lxq.DataCase"/>
             <!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.emunListCheckNotNull"/>-->
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcPc"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcPc2_0"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcApp"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.pc.JcPc"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.pc.JcPc2_0"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.app.JcApp"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcApplet"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.gly.ActivityManage"/>
             <!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcAppAppointment"/>-->
@@ -24,8 +24,8 @@
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcAppointmentRelate"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcCancleAppointment"/>
             <!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcAppAppointment"/>-->
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcPcReceptionRelate"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcPcAffirmReception"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.pc.JcPcReceptionRelate"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.pc.JcPcAffirmReception"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase.MarketingManageCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase.BusinessManageCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase.IntegralCenterCase"/>

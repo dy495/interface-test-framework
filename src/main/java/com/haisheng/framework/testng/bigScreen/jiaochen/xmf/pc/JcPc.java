@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.xmf;
+package com.haisheng.framework.testng.bigScreen.jiaochen.xmf.pc;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -8,6 +8,9 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobN
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Constant;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.DataAbnormal;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.SelectReception;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.pcAppointmentConfig;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;

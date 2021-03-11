@@ -1,5 +1,7 @@
-package com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf;
+package com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.app;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.bean.DataTemp;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
@@ -7,6 +9,8 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTest
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
+import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.JcFunctionOnline;
+import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.PublicParmOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -26,12 +30,12 @@ import java.lang.reflect.Method;
  * @date :2020/12/18 16:45
  **/
 
-public class JcPcAffirmReceptionOnLine extends TestCaseCommon implements TestCaseStd {
+public class JcAppAffirmReceptionOnLine extends TestCaseCommon implements TestCaseStd {
 
     ScenarioUtil jc = new ScenarioUtil();
     private QADbProxy qaDbProxy = QADbProxy.getInstance();
     public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
-    String dataName = "pc_receptionOnLine";
+    String dataName = "app_receptionOnLine";
 
     JcFunctionOnline pf = new JcFunctionOnline();
     PublicParmOnline pp = new PublicParmOnline();
@@ -70,7 +74,7 @@ public class JcPcAffirmReceptionOnLine extends TestCaseCommon implements TestCas
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);
-        jc.pcLogin(pp.jdgw, pp.jdgwpassword);
+        jc.appLogin(pp.jdgw, pp.jdgwpassword);
 
 
     }
@@ -119,7 +123,8 @@ public class JcPcAffirmReceptionOnLine extends TestCaseCommon implements TestCas
             dataTemp.setApp_all_reception(appTodayTask[3]);
             //pc 完成接待
             Integer receptionId=qaDbUtil.selsetDataTempOne("appointmentId",dataName);
-            jc.pcFinishReception((long)receptionId,pp.shopIdZ);
+            jc.appLogin(pp.jdgw, pp.jdgwpassword);
+            jc.finishReception(receptionId.longValue(),Long.parseLong(pp.shopIdZ));
             dataTemp.setAppointmentId((long)receptionId);
             qaDbUtil.updateDataAll(dataTemp);
         } catch (AssertionError | Exception e) {
@@ -174,6 +179,69 @@ public class JcPcAffirmReceptionOnLine extends TestCaseCommon implements TestCas
             appendFailReason(e.toString());
         } finally {
             saveData("接待后，app今日任务分子分母+1");
+        }
+    }
+
+    @Test(description = "今日任务数==今日数据各列数据之和")  //ok
+    public void taskEquelDate() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            jc.appLogin(pp.jdgw, pp.jdgwpassword);
+            String name=pp.nameJdgw;
+            String type = "all";   //home \all
+            //获取今日任务数
+            int tasknum[] = pf.appTask();
+
+            Integer appointmentcountZ = 0;  //预约
+            Integer appointmentcountM = 0;
+
+            Integer receptioncountZ = 0;  //接待
+            Integer receptioncountM = 0;
+
+            Integer followcountZ = 0;  //跟进
+            Integer followcountM = 0;
+            //今日数据
+            JSONArray todaydate = jc.apptodayDate(type, null, 100).getJSONArray("list");
+
+            for (int i = 0; i < todaydate.size(); i++) {
+                JSONObject list_data = todaydate.getJSONObject(i);
+                //待处理预约数和
+                String pending_appointment = list_data.getString("pending_appointment");
+                if (!pending_appointment.contains("-")) {
+                    String[] appointment = pending_appointment.split("/");
+                    appointmentcountZ += Integer.valueOf(appointment[0]);
+                    appointmentcountM += Integer.valueOf(appointment[1]);
+                }
+
+                //接待
+                String pending_reception = list_data.getString("pending_reception");
+                if (!pending_reception.contains("-")) {
+                    String[] reception = pending_reception.split("/");
+                    receptioncountZ += Integer.parseInt(reception[0]);
+                    receptioncountM += Integer.parseInt(reception[1]);
+                }
+                //跟进
+                //接待
+                String pending_foll = list_data.getString("pending_follow");
+                if (!pending_reception.contains("-")) {
+                    String[] reception = pending_foll.split("/");
+                    followcountZ += Integer.parseInt(reception[0]);
+                    followcountM += Integer.parseInt(reception[1]);
+                }
+
+            }
+            Preconditions.checkArgument(tasknum[0] == appointmentcountZ, name + "今日任务未处理预约数:" + tasknum[0] + "!=今日数据处理数据和" + appointmentcountZ);
+            Preconditions.checkArgument(tasknum[1] == appointmentcountM, name + "今日任务总预约数:" + tasknum[1] + "!=今日数据处理数据和" + appointmentcountM);
+            Preconditions.checkArgument(tasknum[2] == receptioncountZ, name + "今日任务未处理接待数:" + tasknum[2] + "!=今日数据处理数据和" + receptioncountZ);
+            Preconditions.checkArgument(tasknum[3] == receptioncountM, name + "今日任务总接待数:" + tasknum[3] + "!=今日数据处理数据和" + receptioncountM);
+
+            Preconditions.checkArgument(tasknum[4] == followcountZ, name + "今日任务未处理跟进数:" + tasknum[4] + "!=今日数据处理数据和" + followcountZ);
+            Preconditions.checkArgument(tasknum[5] == followcountM, name + "今日任务总跟进数:" + tasknum[5] + "!=今日数据处理数据和" + followcountM);
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("轿辰-今日任务数=今日数据各列数据之和");
         }
     }
 

@@ -1,10 +1,12 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.xmf;
+package com.haisheng.framework.testng.bigScreen.jiaochen.xmf.pc;
 
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.bean.DataTemp;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;

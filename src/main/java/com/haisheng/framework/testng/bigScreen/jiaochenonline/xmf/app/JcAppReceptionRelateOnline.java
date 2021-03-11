@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.xmf;
+package com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.app;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -7,6 +7,10 @@ import com.haisheng.framework.model.bean.DataTemp;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
+import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.JcFunctionOnline;
+import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.PublicParmOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -26,52 +30,52 @@ import java.lang.reflect.Method;
  * @date :2020/12/18 16:45
  **/
 
-public class JcAppReceptionRelate extends TestCaseCommon implements TestCaseStd {
+public class JcAppReceptionRelateOnline extends TestCaseCommon implements TestCaseStd {
 
     ScenarioUtil jc = new ScenarioUtil();
     private QADbProxy qaDbProxy = QADbProxy.getInstance();
     public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
-    JcFunction pf = new JcFunction();
-    PublicParm pp = new PublicParm();
-    String dataName = "app_reception";
+    String dataName = "app_receptionOnLine";
 
-
+    JcFunctionOnline pf = new JcFunctionOnline();
+    PublicParmOnline pp = new PublicParmOnline();
     public void initial1() {
         logger.debug("before classs initial");
         CommonConfig commonConfig = new CommonConfig();
+        jc.changeIpPort(EnumTestProduce.JIAOCHEN_ONLINE.getAddress());
 
 
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
-        commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.referer = EnumTestProduce.JIAOCHEN_DAILY.getReferer();
-//        commonConfig.referer=getJcReferdaily();
-
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
+        commonConfig.checklistQaOwner = "xmf";
+        commonConfig.referer = EnumTestProduce.JIAOCHEN_ONLINE.getReferer();
+        commonConfig.product = EnumTestProduce.JIAOCHEN_ONLINE.name();
 
         //replace backend gateway url
         //commonConfig.gateway = "";
 
         //replace jenkins job name
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_ONLINE_TEST.getJobName());
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_ONLINE.getDesc() + commonConfig.checklistQaOwner);
 
-        //replace ding f
+
+        //replace ding push conf
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};
-
+//        commonConfig.referer="http://dev.dealer-jc.winsenseos.cn/authpage/login";
         //set shop id
-
         commonConfig.shopId = pp.shopIdZ;
-        commonConfig.roleId = pp.roleidJdgw;
+        commonConfig.roleId=pp.roleidJdgw;
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);
         jc.appLogin(pp.jdgw, pp.jdgwpassword);
+
 
     }
 
@@ -118,7 +122,7 @@ public class JcAppReceptionRelate extends TestCaseCommon implements TestCaseStd 
             dataTemp.setApp_surplus_reception(appTodayTask[2]);
             dataTemp.setApp_all_reception(appTodayTask[3]);
             //接待
-            dataTemp.setAppointmentId(pf.startReception("京QWER123")[0]);
+            dataTemp.setAppointmentId(pf.startReception(pp.carplate7)[0]);
 
             qaDbUtil.updateDataAll(dataTemp);
         } catch (AssertionError | Exception e) {
