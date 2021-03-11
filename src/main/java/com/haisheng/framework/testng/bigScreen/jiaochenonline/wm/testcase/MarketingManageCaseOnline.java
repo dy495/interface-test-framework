@@ -1486,7 +1486,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
         }
     }
 
-    //ok
+    //bug
     @Test(description = "卡券申请--发出数量（首发）=【卡券表单】发行库存数量")
     public void voucherApply_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -1500,7 +1500,9 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
                 String voucherName = voucherPage.getVoucherName();
                 IScene applyPageScene = ApplyPageScene.builder().name(voucherName).build();
                 List<ApplyPage> applyPageList = util.collectBean(applyPageScene, ApplyPage.class);
-                Integer num = Objects.requireNonNull(applyPageList.stream().filter(e -> e.getName().equals(voucherName) && e.getApplyTypeName().equals(ApplyTypeEnum.VOUCHER.getName())).findFirst().orElse(null)).getNum();
+                ApplyPage applyPage = applyPageList.stream().filter(e -> e.getName().equals(voucherName) && e.getApplyTypeName().equals(ApplyTypeEnum.VOUCHER.getName())).findFirst().orElse(null);
+                Preconditions.checkArgument(applyPage != null, voucherName + " 在审核列表为空");
+                Integer num = applyPage.getNum();
                 CommonUtil.checkResultPlus(voucherName + "发行库存数量", stock, "发出数量（首发）", num);
                 CommonUtil.logger(voucherName);
             });
@@ -2114,7 +2116,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     public void packageManager_system_9() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String[] phones = {null, "", "11111111111", "1532152798", "13654973499", "010-8888888"};
+            String[] phones = {null, "", "1532152798", "13654973499", "010-8888888"};
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             JSONArray voucherList = util.getVoucherArray(voucherId, 10);
             Arrays.stream(phones).forEach(phone -> {
@@ -2766,6 +2768,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
         }
     }
 
+
     //ok
     @Test(description = "消息管理--发送给发送多人时客户名称为全部&联系方式&车牌号码显示为空", priority = 1)
     public void messageManager_data_6() {
@@ -3152,7 +3155,6 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             int awardScore = response.getInteger("award_score") >= 1999 ? 1 : response.getInteger("award_score");
             int recordTotal = SignInConfigChangeRecordScene.builder().signInConfigId(signInConfigId).build().execute(visitor, true).getInteger("total");
             //变更积分&说明
-            String data = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm");
             SignInConfigEditScene.builder().signInConfigId(signInConfigId).awardScore(awardScore + 1).explain(EnumDesc.FAULT_DESCRIPTION.getDesc()).build().execute(visitor, true);
             //变更后列表数
             int newRecordTotal = SignInConfigChangeRecordScene.builder().signInConfigId(signInConfigId).build().execute(visitor, true).getInteger("total");
@@ -3160,7 +3162,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             //变更内容
             JSONObject newResponse = SignInConfigChangeRecordScene.builder().build().execute(visitor, true).getJSONArray("list").getJSONObject(0);
             CommonUtil.checkResult("操作员手机号", ADMINISTRATOR.getPhone(), newResponse.getString("operate_phone"));
-            CommonUtil.checkResult("操作时间", data, newResponse.getString("operate_date"));
+            CommonUtil.checkResult("操作时间", DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm"), newResponse.getString("operate_date"));
             CommonUtil.checkResult("变更积分", awardScore + 1, newResponse.getInteger("change_score"));
             CommonUtil.checkResult("变更备注", EnumDesc.FAULT_DESCRIPTION.getDesc(), newResponse.getString("change_remark"));
         } catch (Exception | AssertionError e) {

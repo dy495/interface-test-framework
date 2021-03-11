@@ -67,7 +67,6 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
     //封装方法
     public SupporterUtil util = new SupporterUtil(visitor);
 
-
     @BeforeClass
     @Override
     public void initial() {
@@ -314,7 +313,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             CommonUtil.checkResult(voucherName + " 变更记录列表数", changeRecordTotal + 1, newChangeRecordTotal);
             //校验变更记录变更事项
             VoucherChangeRecord voucherChangeRecord = util.collectBean(scene, VoucherChangeRecord.class).get(0);
-            CommonUtil.checkResult(voucherName + " 变更时间",data , voucherChangeRecord.getTime());
+            CommonUtil.checkResult(voucherName + " 变更时间", data, voucherChangeRecord.getTime());
             CommonUtil.checkResult(voucherName + " 变更记录变更事项", ChangeItemEnum.INVALIDED.getName(), voucherChangeRecord.getChangeItem());
             CommonUtil.checkResult(voucherName + " 操作人", ADMINISTRATOR.getName(), voucherChangeRecord.getOperateSaleName());
             CommonUtil.checkResult(voucherName + " 操作人角色", ADMINISTRATOR.getRole(), voucherChangeRecord.getOperateSaleRole());
@@ -1486,7 +1485,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //ok
+    //bug
     @Test(description = "卡券申请--发出数量（首发）=【卡券表单】发行库存数量")
     public void voucherApply_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -1500,7 +1499,9 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
                 String voucherName = voucherPage.getVoucherName();
                 IScene applyPageScene = ApplyPageScene.builder().name(voucherName).build();
                 List<ApplyPage> applyPageList = util.collectBean(applyPageScene, ApplyPage.class);
-                Integer num = Objects.requireNonNull(applyPageList.stream().filter(e -> e.getName().equals(voucherName) && e.getApplyTypeName().equals(ApplyTypeEnum.VOUCHER.getName())).findFirst().orElse(null)).getNum();
+                ApplyPage applyPage = applyPageList.stream().filter(e -> e.getName().equals(voucherName) && e.getApplyTypeName().equals(ApplyTypeEnum.VOUCHER.getName())).findFirst().orElse(null);
+                Preconditions.checkArgument(applyPage != null, voucherName + " 在审核列表为空");
+                Integer num = applyPage.getNum();
                 CommonUtil.checkResultPlus(voucherName + "发行库存数量", stock, "发出数量（首发）", num);
                 CommonUtil.logger(voucherName);
             });
@@ -2114,7 +2115,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
     public void packageManager_system_9() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String[] phones = {null, "", "11111111111", "1532152798", "13654973499", "010-8888888"};
+            String[] phones = {null, "", "1532152798", "13654973499", "010-8888888"};
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             JSONArray voucherList = util.getVoucherArray(voucherId, 10);
             Arrays.stream(phones).forEach(phone -> {
