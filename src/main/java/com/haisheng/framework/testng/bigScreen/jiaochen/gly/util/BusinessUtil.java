@@ -135,6 +135,19 @@ public class BusinessUtil {
         rewardVouchers.add(object);
         return rewardVouchers;
     }
+    /**
+     * @description :创建招募活动-卡券奖励
+     * @date :2021/1/24
+     **/
+    public JSONArray getRewardVouchers(Long id, int type, String num) {
+        JSONArray rewardVouchers = new JSONArray();
+        JSONObject object = new JSONObject();
+        object.put("id", id);
+        object.put("type", type);
+        object.put("num", num);
+        rewardVouchers.add(object);
+        return rewardVouchers;
+    }
 
     /**
      * 获取随机4位数
@@ -180,6 +193,15 @@ public class BusinessUtil {
         Date endDate = DateTimeUtil.addDay(new Date(), 10);
         return DateTimeUtil.getFormat(endDate, "yyyy-MM-dd HH:mm");
     }
+    /**
+     * 获取当前时间
+     */
+    public String getDateTime(int day) {
+        Date endDate = DateTimeUtil.addDay(new Date(), day);
+        return DateTimeUtil.getFormat(endDate, "yyyy-MM-dd HH:mm");
+    }
+
+
 
     /**
      * 判断剩余库存
