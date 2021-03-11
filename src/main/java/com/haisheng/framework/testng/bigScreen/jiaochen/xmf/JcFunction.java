@@ -131,6 +131,7 @@ public class JcFunction {
 
     //app开始接待，并返回接待id
     public Long[] startReception(String carPlate) throws Exception {
+
         appStartReception sr = new appStartReception();
         JSONObject data = jc.appReceptionAdmit(carPlate).getJSONArray("customers").getJSONObject(0);
         Long result[] = new Long[2];

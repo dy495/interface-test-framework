@@ -254,7 +254,8 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
     public void CommodityList() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject data=jc.StoreCommodityList("1","10","");
+            JSONObject data=jc.StoreCommodityList("1","10",null);
+            System.out.println(IpPort);
             jpu.spiltString(data.toJSONString(),"$.list[*].id&&$.list[*].commodity_name&&$.list[*].commodity_specification&&$.list[*].distribution_manner&&$.list[*].volume_name&&$.list[*].period_of_validity&&$.list[*].commodity_amount&&$.list[*].affiliation&&$.list[*].price&&$.list[*].commission&&$.list[*].invitation_payment&&$.list[*].status&&$.list[*].status_name&&$.list[*].create_date");
 
         } catch (AssertionError | Exception e) {

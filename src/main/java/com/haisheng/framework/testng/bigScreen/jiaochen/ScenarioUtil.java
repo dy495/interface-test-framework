@@ -3948,7 +3948,7 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     public JSONObject StoreCommodityList(String page, String size, String commodity_name) {
-        String url = "/business-jiaochen/pc/store/commodity/page";
+        String url = "/jiaochen/pc/store/commodity/page";
         JSONObject json1 = new JSONObject();
         json1.put("page", page);
         json1.put("size", size);
@@ -3991,7 +3991,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2021/1/13 14:17
      **/
     public JSONObject EditStoreCommodity(pcCreateStoreCommodity er) {
-        String url = "/business-jiaochen/pc/store/commodity/edit";
+        String url = "/jiaochen/pc/store/commodity/edit";
         JSONObject json1 = new JSONObject();
         json1.put("id", er.id);
         json1.put("commodity_name", er.commodity_name);
@@ -4025,7 +4025,7 @@ public class ScenarioUtil extends TestCaseCommon {
 
     //商品订单详情
     public JSONObject StoreOrderDetail(String order_number) {
-        String url = "/business-jiaochen/pc/store/order/detail";
+        String url = "/jiaochen/pc/store/order/detail";
         JSONObject json1 = new JSONObject();
         json1.put("order_number", order_number);
 
@@ -4034,7 +4034,7 @@ public class ScenarioUtil extends TestCaseCommon {
 
     //编辑订单
     public JSONObject EditOrder(pcEditStoreOrder er) {
-        String url = "/business-jiaochen/pc/store/order/edit";
+        String url = "/jiaochen/pc/store/order/edit";
         JSONObject json1 = new JSONObject();
         json1.put("order_number", er.order_number);
         json1.put("express_number", er.express_number);
@@ -4083,7 +4083,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @date :2021/1/13 19:45
      **/
     public JSONObject remindPage(String page, String size, String item) {
-        String url = "/business-jiaochen/pc/manage/intelligent-remind/page";
+        String url = "/jiaochen/pc/manage/intelligent-remind/page";
         JSONObject json1 = new JSONObject();
         json1.put("page", page);
         json1.put("size", size);

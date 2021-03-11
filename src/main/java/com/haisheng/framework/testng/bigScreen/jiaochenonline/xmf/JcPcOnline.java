@@ -31,16 +31,13 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
     PublicParmOnline pp = new PublicParmOnline();
     JcFunctionOnline pf = new JcFunctionOnline();
     JsonPathUtil jpu = new JsonPathUtil();
-    FileUtil file = new FileUtil();
-    Random random = new Random();
+
     public int page = 1;
     public int size = 50;
     public String name = "创建角色xia";
     public String email = "";
     public String phone = "";
 
-    Integer status = 1;
-    String type = "PHONE";
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name

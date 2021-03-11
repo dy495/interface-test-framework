@@ -41,7 +41,7 @@ public class PublicParmOnline {
     public String jdgwName="接待顾问x"; //单个店的客户的数据  登录密码
 
     public String dzphone="15037286014";   //中关村店长
-    public String dzroleId="426";
+    public String dzroleId="439";
     public String dzcode="000000";
 
     //---------2.0---------

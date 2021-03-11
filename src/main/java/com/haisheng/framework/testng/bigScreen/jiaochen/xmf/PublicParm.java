@@ -23,7 +23,7 @@ public class PublicParm {
     public String shichangPassword = "";
     public String verification_code = "3MR9C7";   //夏夏的核销码
     public String carModelId = "14";
-    public String car_id = "24";    //小程序车id  plate_number=京QWER123
+    public String car_id = "24";    //小程序车id
     public String carplate = "浙QWER123";      //编辑小程序车牌号
     public String carplate7 = "津DAASSE";      //编辑小程序车牌号
 
@@ -40,7 +40,7 @@ public class PublicParm {
 
     public String jdgw = "13402050050";  //xx ,属于中关村店
     public String roleidJdgw="2945"; //拥有接待权限的校色id
-    public String nameJdgw="自动化专用角色"; //拥有接待权限的校色id
+    public String nameJdgw="自动化专用账号"; //拥有接待权限的校色id
     public String jdgw2 = "13402050050";  //xx2 ,属于中关村店
     public String jdgwpassword = "000000"; //单个店的客户的数据  登录密码
     public String jdgwName = "自动化专用账号"; //单个店的客户的数据  登录密码

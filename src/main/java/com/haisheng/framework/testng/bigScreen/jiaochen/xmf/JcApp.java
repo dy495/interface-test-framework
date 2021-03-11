@@ -174,8 +174,8 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(tasknum[2] == receptioncountZ, name + "今日任务未处理接待数:" + tasknum[2] + "!=今日数据处理数据和" + receptioncountZ);
             Preconditions.checkArgument(tasknum[3] == receptioncountM, name + "今日任务总接待数:" + tasknum[3] + "!=今日数据处理数据和" + receptioncountM);
 
-            Preconditions.checkArgument(tasknum[4] == followcountZ, name + "今日任务未处理接待数:" + tasknum[4] + "!=今日数据处理数据和" + followcountZ);
-            Preconditions.checkArgument(tasknum[5] == followcountM, name + "今日任务总接待数:" + tasknum[5] + "!=今日数据处理数据和" + followcountM);
+            Preconditions.checkArgument(tasknum[4] == followcountZ, name + "今日任务未处理跟进数:" + tasknum[4] + "!=今日数据处理数据和" + followcountZ);
+            Preconditions.checkArgument(tasknum[5] == followcountM, name + "今日任务总跟进数:" + tasknum[5] + "!=今日数据处理数据和" + followcountM);
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -188,6 +188,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
     public void Jc_appointmentPageAndtodaydate() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            appLogin(pp.jdgw,pp.jdgwpassword,pp.roleidJdgw);
             //app今日任务数
             int tasknum[] = pf.appTask();
 
@@ -358,174 +359,6 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "app接待,接待任务列表+1,完成接待列表数-1")
-    public void Jc_reception() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //接待前，接待任务列表总数
-            int total = jc.appreceptionPage(null, 10).getInteger("total");
-
-            //开始接待
-            Long id[] = pf.startReception(pp.carplate7);
-
-            JSONObject dd = jc.appreceptionPage(null, 10);
-            int totalA = dd.getInteger("total");
-            String shopId = dd.getJSONArray("list").getJSONObject(0).getString("shop_id");
-
-            //完成接待
-            jc.finishReception(id[0], id[1]);
-            int totalC = jc.appreceptionPage(null, 10).getInteger("total");
-
-            Preconditions.checkArgument(totalA - total == 1, "接待后接待列表未+1,接待前：" + total + "，接待后：" + totalA);
-            Preconditions.checkArgument(totalA - totalC == 1, "完成接待后接待列表未-1,接待前：" + totalA + "，接待后：" + totalA);
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("轿辰-app接待,接待任务+1,完成接待，接待任务-1");
-        }
-    }
-
-    @Test(description = "app接待车牌号7位，汉字+字母",enabled = false)  //受接待车牌次数限制，此 case与上一个case合并
-    public void Jc_reception2() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-
-            Long id[] = pf.startReception(pp.carplate7);
-
-            jc.finishReception(id[0], id[1]);
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("app接待车牌号7位，汉字+字母");
-        }
-    }
-
-    @Test(description = "app接待,今日任务分子、分母+1，完成接待分子-1，分母-0")    //一次
-    public void Jc_receptionTodayTask() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //接待前，今日任务
-            int tasknum[] = pf.appTask();
-            //开始接待
-            Long id[] = pf.startReception(pp.carplate);
-            int tasknumA[] = pf.appTask();
-            //完成接待
-            jc.finishReception(id[0], id[1]);
-            int tasknumB[] = pf.appTask();
-
-            Preconditions.checkArgument(tasknumA[2] - tasknum[2] == 1, "接待后分子+1 ");
-            Preconditions.checkArgument(tasknumA[3] - tasknum[3] == 1, "接待后分母+1");
-
-            Preconditions.checkArgument(tasknumA[2] - tasknumB[2] == 1, "完成接待后分子-1 ");
-            Preconditions.checkArgument(tasknumA[3] - tasknumB[3] == 0, "完成接待后分母-0");
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("轿辰-app接待,接待任务+1,完成接待，接待任务-1");
-        }
-    }
-
-
-    @Test(description = "app接待,pc接待管理列表+1")   //二次
-    public void AJc_receptionPcPage() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //pc登录
-            pcLogin(pp.jdgw, pp.jdgwpassword,pp.roleidJdgw);
-            //接待前，接待任务列表总数
-            int total = jc.receptionManage(pp.shopIdZ, "1", "10", "", "").getInteger("total");
-
-            //app登录 开始接待
-            appLogin(pp.jdgw, pp.jdgwpassword,pp.roleidJdgw);
-            Long id[] = pf.startReception(pp.carplate);
-
-            //pc登录
-            pcLogin(pp.jdgw, pp.jdgwpassword,pp.roleidJdgw);
-
-            int totalA = jc.receptionManage(pp.shopIdZ, "1", "10", "", "").getInteger("total");
-
-            //完成接待
-//            jc.appLogin(pp.jdgw, pp.jdgwpassword);
-//            jc.finishReception(id[0], id[1]);
-
-            //pc登录
-//            pcLogin(pp.jdgw, pp.jdgwpassword,pp.roleidJdgw);
-
-            int totalC = jc.receptionManage(pp.shopIdZ, "1", "10", "", "").getInteger("total");
-
-            Preconditions.checkArgument(totalA - total == 1, "接待后接待列表未+1,接待前：" + total + "，接待后：" + totalA);
-            Preconditions.checkArgument(totalA - totalC == 0, "完成接待后接待列表未-0,接待前：" + totalA + "，接待后：" + totalA);
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            jc.appLogin(pp.gwphone, pp.gwpassword);   //最后app登录
-            saveData("轿辰-app接待,接待任务+1,完成接待，接待任务-1");
-        }
-    }
-
-    @Test(description = "app取消接待,接待任务列表-1，今日任务数分子分母都-1" )
-    public void BJc_canclereception() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            appLogin(pp.jdgw, pp.jdgwpassword,pp.roleidJdgw);
-            //开始接待
-            Long id[] = new Long[2];
-            JSONObject dd = jc.appreceptionPage(null, 10).getJSONArray("list").getJSONObject(0);
-            id[0] = dd.getLong("id");
-            id[1] = dd.getLong("shop_id");
-
-            int total = jc.appreceptionPage(null, 10).getInteger("total");
-            int tasknum[] = pf.appTask();
-
-            //取消接待
-            jc.cancleReception(id[0], id[1]);
-            int totalA = jc.appreceptionPage(null, 10).getInteger("total");
-            int tasknumA[] = pf.appTask();
-
-            Preconditions.checkArgument(total - totalA == 1, "取消接待后接待列表未-1,接待前：" + total + "，接待后：" + totalA);
-            Preconditions.checkArgument(tasknum[2] - tasknumA[2] == 1, "取消接待后今日任务-1,接待前：" + tasknum[2] + "，接待后：" + tasknumA[2]);
-            Preconditions.checkArgument(tasknum[3] - tasknumA[3] == 1, "取消接待后今日任务未-1,接待前：" + tasknum[3] + "，接待后：" + tasknumA[3]);
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("轿辰-app取消接待,接待任务-1,今日任务-1");
-        }
-    }
-
-    //**************************今日数据******************************
-    @Test(description = "app接待,今日数据分子、分母+1，完成接待分子-1，分母-0")   //三次
-    public void Jc_receptionTodayDate() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            appLogin(pp.jdgw, pp.jdgwpassword,pp.roleidJdgw);
-            String type = "all";
-            String name = pp.jdgwName; //Todo:账号名称, 或者店铺的名字
-            //接待前，今日任务
-            int tasknum[] = pf.apptodayDate(type, name);
-            //开始接待
-            Long id[] = pf.startReception(pp.carplate);
-            int tasknumA[] = pf.apptodayDate(type, name);
-            //完成接待
-            jc.finishReception(id[0], id[1]);
-            int tasknumB[] = pf.apptodayDate(type, name);
-
-            Preconditions.checkArgument(tasknumA[2] - tasknum[2] == 1, "接待后分子+1 ");
-            Preconditions.checkArgument(tasknumA[3] - tasknum[3] == 1, "接待后分母+1");
-
-            Preconditions.checkArgument(tasknumA[2] - tasknumB[2] == 1, "完成接待后分子-1 ");
-            Preconditions.checkArgument(tasknumA[3] - tasknumB[3] == 0, "完成接待后分母-0");
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("轿辰-app接待,今日数据待处理接待+1,完成接待，待处理接待-1");
-        }
-    }
 
     @DataProvider(name = "HEXIAONUM")
     public static Object[] hexiaonum() {   //异常核销码集合  (正常：17-19数字)
@@ -571,45 +404,6 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    /**
-     * @description :消息记录查询
-     * @date :2020/12/10 21:08
-     **/
-
-//    @Test()
-    public void messageFormOneFilter2() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            pcLogin(pp.gwphone, pp.gwpassword,pp.roleId);
-            JSONArray result = jc.enummap().getJSONArray("PUSH_REASON_TYPE");
-
-            Map<String, String> map = new HashMap<String, String>();
-            for (int i = 0; i < result.size(); i++) {
-                String tt = result.getJSONObject(i).getString("key");
-                String vv = result.getJSONObject(i).getString("value");
-                map.put(tt, vv);
-            }
-            Set<String> keySet = map.keySet();
-            Iterator<String> t = keySet.iterator();
-            while (t.hasNext()) {
-                String key = t.next();
-                System.out.println("key:" + key);
-                JSONArray respon1 = jc.pushMsgListFilterManage("-1", "1", "10", "message_type", key).getJSONArray("list");
-                String temp = map.get(key);
-                for (int j = 0; j < respon1.size(); j++) {
-                    String resultA = respon1.getJSONObject(j).getString("message_type_name");
-                    Preconditions.checkArgument(resultA.equals(temp), resultA + ":" + temp);
-                    System.out.println("start:" + key + "___---------------------result:" + temp);
-                }
-            }
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            appLogin(pp.jdgw, pp.jdgwpassword,pp.roleId);
-            saveData("消息表单单项查询，结果校验");
-        }
-    }
 
     @Test(description = "登录登出验证")
     public void Jc_apploginNor() {
@@ -620,7 +414,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-
+            appLogin(pp.jdgw,pp.jdgwpassword,pp.roleidJdgw);
             saveData("登录登出校验");
         }
     }
@@ -705,7 +499,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
 
 //    2.0 变更接待  调试时需注意账号登录登出顺序
     @Test(description = "app变更接待,接待任务变更")
-    public void Jc_recepchangetion() {
+    public void AJc_recepchangetion() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //开始接待
@@ -737,6 +531,40 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             saveData("轿辰-appapp变更接待,接待任务变更");
+        }
+    }
+
+    @Test(description = "app取消接待,接待任务列表-1，今日任务数分子分母都-1" )
+    public void BJc_canclereception() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            appLogin(pp.jdgw, pp.jdgwpassword,pp.roleidJdgw);
+            //开始接待
+            Long id[] = new Long[2];
+            JSONObject dd = jc.appreceptionPage(null, 10).getJSONArray("list").getJSONObject(0);
+            if(dd.size()==0){
+                throw new Exception("暂无接待");
+            }
+
+            id[0] = dd.getLong("id");
+            id[1] = dd.getLong("shop_id");
+
+            int total = jc.appreceptionPage(null, 10).getInteger("total");
+            int tasknum[] = pf.appTask();
+
+            //取消接待
+            jc.cancleReception(id[0], id[1]);
+            int totalA = jc.appreceptionPage(null, 10).getInteger("total");
+            int tasknumA[] = pf.appTask();
+
+            Preconditions.checkArgument(total - totalA == 1, "取消接待后接待列表未-1,接待前：" + total + "，接待后：" + totalA);
+            Preconditions.checkArgument(tasknum[2] - tasknumA[2] == 1, "取消接待后今日任务-1,接待前：" + tasknum[2] + "，接待后：" + tasknumA[2]);
+            Preconditions.checkArgument(tasknum[3] - tasknumA[3] == 1, "取消接待后今日任务未-1,接待前：" + tasknum[3] + "，接待后：" + tasknumA[3]);
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("轿辰-app取消接待,接待任务-1,今日任务-1");
         }
     }
 
@@ -806,6 +634,185 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             saveData("新增/删除接待权限账户，接待人原列表+-1");
+        }
+    }
+
+    //    @Test(description = "app接待,接待任务列表+1,完成接待列表数-1")
+    public void Jc_reception() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //接待前，接待任务列表总数
+            int total = jc.appreceptionPage(null, 10).getInteger("total");
+
+            //开始接待
+            Long id[] = pf.startReception(pp.carplate7);
+
+            JSONObject dd = jc.appreceptionPage(null, 10);
+            int totalA = dd.getInteger("total");
+            String shopId = dd.getJSONArray("list").getJSONObject(0).getString("shop_id");
+
+            //完成接待
+            jc.finishReception(id[0], id[1]);
+            int totalC = jc.appreceptionPage(null, 10).getInteger("total");
+
+            Preconditions.checkArgument(totalA - total == 1, "接待后接待列表未+1,接待前：" + total + "，接待后：" + totalA);
+            Preconditions.checkArgument(totalA - totalC == 1, "完成接待后接待列表未-1,接待前：" + totalA + "，接待后：" + totalA);
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("轿辰-app接待,接待任务+1,完成接待，接待任务-1");
+        }
+    }
+
+    //    @Test(description = "app接待车牌号7位，汉字+字母",enabled = false)  //受接待车牌次数限制，此 case与上一个case合并
+    public void Jc_reception2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            Long id[] = pf.startReception(pp.carplate7);
+
+            jc.finishReception(id[0], id[1]);
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("app接待车牌号7位，汉字+字母");
+        }
+    }
+
+    //    @Test(description = "app接待,今日任务分子、分母+1，完成接待分子-1，分母-0")    //一次
+    public void Jc_receptionTodayTask() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //接待前，今日任务
+            int tasknum[] = pf.appTask();
+            //开始接待
+            Long id[] = pf.startReception(pp.carplate);
+            int tasknumA[] = pf.appTask();
+            //完成接待
+            jc.finishReception(id[0], id[1]);
+            int tasknumB[] = pf.appTask();
+
+            Preconditions.checkArgument(tasknumA[2] - tasknum[2] == 1, "接待后分子+1 ");
+            Preconditions.checkArgument(tasknumA[3] - tasknum[3] == 1, "接待后分母+1");
+
+            Preconditions.checkArgument(tasknumA[2] - tasknumB[2] == 1, "完成接待后分子-1 ");
+            Preconditions.checkArgument(tasknumA[3] - tasknumB[3] == 0, "完成接待后分母-0");
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("轿辰-app接待,接待任务+1,完成接待，接待任务-1");
+        }
+    }
+
+
+    //    @Test(description = "app接待,pc接待管理列表+1")   //二次
+    public void AJc_receptionPcPage() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //pc登录
+            pcLogin(pp.jdgw, pp.jdgwpassword,pp.roleidJdgw);
+            //接待前，接待任务列表总数
+            int total = jc.receptionManage(pp.shopIdZ, "1", "10", "", "").getInteger("total");
+
+            //app登录 开始接待
+            appLogin(pp.jdgw, pp.jdgwpassword,pp.roleidJdgw);
+            Long id[] = pf.startReception(pp.carplate);
+
+            //pc登录
+            pcLogin(pp.jdgw, pp.jdgwpassword,pp.roleidJdgw);
+
+            int totalA = jc.receptionManage(pp.shopIdZ, "1", "10", "", "").getInteger("total");
+
+            //完成接待
+//            jc.appLogin(pp.jdgw, pp.jdgwpassword);
+//            jc.finishReception(id[0], id[1]);
+
+            //pc登录
+//            pcLogin(pp.jdgw, pp.jdgwpassword,pp.roleidJdgw);
+
+            int totalC = jc.receptionManage(pp.shopIdZ, "1", "10", "", "").getInteger("total");
+
+            Preconditions.checkArgument(totalA - total == 1, "接待后接待列表未+1,接待前：" + total + "，接待后：" + totalA);
+            Preconditions.checkArgument(totalA - totalC == 0, "完成接待后接待列表未-0,接待前：" + totalA + "，接待后：" + totalA);
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            jc.appLogin(pp.gwphone, pp.gwpassword);   //最后app登录
+            saveData("轿辰-app接待,接待任务+1,完成接待，接待任务-1");
+        }
+    }
+
+    /**
+     * @description :消息记录查询
+     * @date :2020/12/10 21:08
+     **/
+
+//    @Test()
+    public void messageFormOneFilter2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            pcLogin(pp.gwphone, pp.gwpassword,pp.roleId);
+            JSONArray result = jc.enummap().getJSONArray("PUSH_REASON_TYPE");
+
+            Map<String, String> map = new HashMap<String, String>();
+            for (int i = 0; i < result.size(); i++) {
+                String tt = result.getJSONObject(i).getString("key");
+                String vv = result.getJSONObject(i).getString("value");
+                map.put(tt, vv);
+            }
+            Set<String> keySet = map.keySet();
+            Iterator<String> t = keySet.iterator();
+            while (t.hasNext()) {
+                String key = t.next();
+                System.out.println("key:" + key);
+                JSONArray respon1 = jc.pushMsgListFilterManage("-1", "1", "10", "message_type", key).getJSONArray("list");
+                String temp = map.get(key);
+                for (int j = 0; j < respon1.size(); j++) {
+                    String resultA = respon1.getJSONObject(j).getString("message_type_name");
+                    Preconditions.checkArgument(resultA.equals(temp), resultA + ":" + temp);
+                    System.out.println("start:" + key + "___---------------------result:" + temp);
+                }
+            }
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            appLogin(pp.jdgw, pp.jdgwpassword,pp.roleId);
+            saveData("消息表单单项查询，结果校验");
+        }
+    }
+
+    //**************************今日数据******************************
+//    @Test(description = "app接待,今日数据分子、分母+1，完成接待分子-1，分母-0")   //三次
+    public void Jc_receptionTodayDate() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            appLogin(pp.jdgw, pp.jdgwpassword,pp.roleidJdgw);
+            String type = "all";
+            String name = pp.jdgwName; //Todo:账号名称, 或者店铺的名字
+            //接待前，今日任务
+            int tasknum[] = pf.apptodayDate(type, name);
+            //开始接待
+            Long id[] = pf.startReception(pp.carplate);
+            int tasknumA[] = pf.apptodayDate(type, name);
+            //完成接待
+            jc.finishReception(id[0], id[1]);
+            int tasknumB[] = pf.apptodayDate(type, name);
+
+            Preconditions.checkArgument(tasknumA[2] - tasknum[2] == 1, "接待后分子+1 ");
+            Preconditions.checkArgument(tasknumA[3] - tasknum[3] == 1, "接待后分母+1");
+
+            Preconditions.checkArgument(tasknumA[2] - tasknumB[2] == 1, "完成接待后分子-1 ");
+            Preconditions.checkArgument(tasknumA[3] - tasknumB[3] == 0, "完成接待后分母-0");
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("轿辰-app接待,今日数据待处理接待+1,完成接待，待处理接待-1");
         }
     }
 
