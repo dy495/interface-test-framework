@@ -46,7 +46,6 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
     UserUtil user = new UserUtil(visitor);
     CommonConfig commonConfig = new CommonConfig();
 
-
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
      */
@@ -58,7 +57,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         //替换checklist的相关信息
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
         commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
-        commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
+        commonConfig.checklistQaOwner = EnumChecklistUser.GLY.getName();
         commonConfig.product = product.getAbbreviation();
         commonConfig.referer = product.getReferer();
         //替换jenkins-job的相关信息
@@ -445,7 +444,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                 int registerPassedNum = 0;
                 //报名列表的返回值
                 JSONObject pageRes = businessUtil.getRegisterPage(ids.get(j));
-                int pages = pageRes.getInteger("pages");
+                int pages = pageRes.getInteger("pages")>20?20:pageRes.getInteger("pages");
                 for (int page = 1; page <= pages; page++) {
                     IScene scene = ManageRegisterPageScene.builder().page(page).size(10).activityId(ids.get(j)).build();
                     JSONArray list = visitor.invokeApi(scene).getJSONArray("list");
@@ -461,7 +460,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                 //报名数据的返回值
                 JSONObject dataRes = businessUtil.getRegisterData(ids.get(j));
                 //活动名额
-                int quota = dataRes.getInteger("quota");
+                int quota = dataRes.containsKey("quota")?dataRes.getInteger("quota"):50;
                 //报名总人数（已报名）
                 int total = dataRes.getInteger("total");
                 //待审批人数
@@ -495,7 +494,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                 int registerNum = 0;
                 //报名列表的返回值
                 JSONObject pageRes = businessUtil.getRegisterPage(ids.get(j));
-                int pages = pageRes.getInteger("pages");
+                int pages = pageRes.getInteger("pages")>20?20:pageRes.getInteger("pages");
                 for (int page = 1; page <= pages; page++) {
                     IScene scene = ManageRegisterPageScene.builder().page(page).size(10).activityId(ids.get(j)).build();
                     JSONArray list = visitor.invokeApi(scene).getJSONArray("list");
@@ -510,7 +509,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                 //报名数据的返回值
                 JSONObject dataRes = businessUtil.getRegisterData(ids.get(j));
                 //活动名额
-                int quota = dataRes.getInteger("quota");
+                int quota = dataRes.containsKey("quota")?dataRes.getInteger("quota"):50;
                 //报名总人数
                 int total = dataRes.getInteger("total");
                 //待审批人数

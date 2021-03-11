@@ -1020,26 +1020,28 @@ public class BusinessUtil {
     }
 
     /**
-     * 根据活动ID返回活动的状态  ------新写的，晚点测试可行性
+     * 根据活动ID返回活动的状态  ------新写的，晚点测试可行性  Long activityId
      */
-    public String appointmentActivityStatusNew(Long activityId) {
-        //登录小程序
-        user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
-        JSONObject lastValue = null;
-        JSONArray list=null;
+    public String appointmentActivityStatusNew() {
+        Integer lastValue = null;
+        JSONArray list;
         String status = "";
         do{
-            IScene scene = AppointmentActivityListScene.builder().lastValue(lastValue).size(20).build();
+            IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
             JSONObject response = visitor.invokeApi(scene);
-            lastValue = response.getJSONObject("last_value");
+            lastValue = response.getInteger("last_value");
+            System.err.println(lastValue);
             list = response.getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                Long id = list.getJSONObject(i).getLong("id");
-                if (activityId.equals(id)) {
-                    status = list.getJSONObject(i).getString("status_name");
-                }
-            }
-        }while(list.size()>=20);
+            System.err.println(lastValue+"----"+list.size());
+            list.stream().map(e->(JSONObject)e).map(e->e.getInteger("id")).forEach(System.err::println);
+//            for (int i = 0; i < list.size(); i++) {
+//                Long id = list.getJSONObject(i).getLong("id");
+//                System.out.println(i+"-------"+id);
+////                if (activityId.equals(id)) {
+////                    status = list.getJSONObject(i).getString("status_name");
+////                }
+//            }
+        }while(list.size()==10);
 
         return status;
     }
