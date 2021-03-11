@@ -2338,6 +2338,25 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
     }
 
+
+    /**
+     * @description:2.1 获取卡片列表
+     * @author:
+     * @time:
+     */
+    public JSONObject cardDetail(String card_type) throws Exception {
+        String url = "/store/m-app/auth/card/card-detail";
+        JSONObject json = new JSONObject();
+        json.put("card_type",card_type);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+
+
+    }
+
+
+
     /**
      * @description:2.1 搜索筛选-门店类型列表
      * @author: qingqing

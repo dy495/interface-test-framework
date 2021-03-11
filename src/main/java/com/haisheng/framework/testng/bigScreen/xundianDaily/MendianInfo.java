@@ -99,6 +99,26 @@ public class MendianInfo {
 
     }
 
+
+
+    public final JSONArray getpicFour(Integer type) throws Exception {
+        String base64 = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/猫.png");
+        JSONObject obj = xd.upload_pic(base64,shop_id_01,type);
+        JSONArray pic_list = new JSONArray();
+        JSONObject obj1 = new JSONObject();
+        obj1.put("pic_path",obj.getString("pic_path"));
+        obj1.put("device_id",deviceId);
+        //obj1.put("time",System.currentTimeMillis());
+        pic_list.add(obj1);
+        pic_list.add(obj1);
+        pic_list.add(obj1);
+        pic_list.add(obj1);
+        return pic_list;
+
+    }
+
+
+
     public static String getImgStr(String imgFile) { //图片转base64
         // 将图片文件转化为字节数组字符串，并对其进行Base64编码处理
 
