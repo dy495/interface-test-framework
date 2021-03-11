@@ -53,7 +53,7 @@ import java.util.stream.Collectors;
 public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
     CommonConfig commonConfig = new CommonConfig();
     private static final EnumTestProduce product = EnumTestProduce.JIAOCHEN_DAILY;
-    private static final EnumAccount ADMINISTRATOR = EnumAccount.WINSENSE_LAB_DAILY;
+    private static final EnumAccount ADMINISTRATOR = EnumAccount.RECEPTION_DAILY;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_DAILY;
     //访问者
     public Visitor visitor = new Visitor(product);
@@ -80,7 +80,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.dingHook = EnumDingTalkWebHook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
         commonConfig.shopId = product.getShopId();
-        commonConfig.roleId = product.getRoleId();
+        commonConfig.roleId = "2942";
         beforeClassInit(commonConfig);
     }
 
@@ -480,7 +480,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
     public void customerManager_data_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            commonConfig.shopId = "46522";
+            commonConfig.shopId = "49195";
             Double[] doubles = {1.00, 2.99, 3.66, 50.1};
             JSONObject jsonObject = CarModelPageScene.builder().build().execute(visitor, true).getJSONArray("list").getJSONObject(0);
             Integer id = jsonObject.getInteger("id");

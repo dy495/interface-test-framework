@@ -61,7 +61,7 @@ import java.util.stream.Collectors;
  */
 public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce product = EnumTestProduce.JIAOCHEN_DAILY;
-    private static final EnumAccount ADMINISTRATOR = EnumAccount.WINSENSE_LAB_DAILY;
+    private static final EnumAccount ADMINISTRATOR = EnumAccount.RECEPTION_DAILY;
     //小程序用户
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_DAILY;
     //访问者
@@ -88,9 +88,9 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
         //替换钉钉推送
         commonConfig.dingHook = EnumDingTalkWebHook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
-        commonConfig.roleId = product.getRoleId();
+        commonConfig.roleId = "3824";
         commonConfig.referer = product.getReferer();
-        commonConfig.shopId = product.getShopId();
+        commonConfig.shopId = "46522";
         beforeClassInit(commonConfig);
     }
 

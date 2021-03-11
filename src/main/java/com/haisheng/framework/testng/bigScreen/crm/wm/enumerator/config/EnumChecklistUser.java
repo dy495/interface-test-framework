@@ -12,6 +12,8 @@ public enum EnumChecklistUser {
     WM("王敏"),
 
     QQ("青青"),
+
+    GLY("郭丽雅");
     ;
 
     EnumChecklistUser(String name) {

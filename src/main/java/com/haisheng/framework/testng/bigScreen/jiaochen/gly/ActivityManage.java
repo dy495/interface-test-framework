@@ -218,10 +218,10 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
     public void justTry(){
         try {
             user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
-            businessUtil.activityRegisterApplet(565L, "13373166806", "郭丽雅", 2, "1513814362@qq.com", "22", "女","其他");
-
+            businessUtil.appointmentActivityStatusNew();
+//            supporterUtil.getAppletVoucherNum();
         }catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+           collectMessage(e);
         } finally {
             saveData("测试呀呀呀呀");
         }
@@ -440,7 +440,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                 int registerPassedNum = 0;
                 //报名列表的返回值
                 JSONObject pageRes = businessUtil.getRegisterPage(ids.get(j));
-                int pages = pageRes.getInteger("pages");
+                int pages = pageRes.getInteger("pages")>10?10:pageRes.getInteger("pages");
                 for (int page = 1; page <= pages; page++) {
                     IScene scene = ManageRegisterPageScene.builder().page(page).size(10).activityId(ids.get(j)).build();
                     JSONArray list = visitor.invokeApi(scene).getJSONArray("list");
@@ -456,7 +456,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                 //报名数据的返回值
                 JSONObject dataRes = businessUtil.getRegisterData(ids.get(j));
                 //活动名额
-                int quota = dataRes.getInteger("quota");
+                int quota = dataRes.containsKey("quota")? dataRes.getInteger("quota"):50;
                 //报名总人数（已报名）
                 int total = dataRes.getInteger("total");
                 //待审批人数
@@ -490,7 +490,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                 int registerNum = 0;
                 //报名列表的返回值
                 JSONObject pageRes = businessUtil.getRegisterPage(ids.get(j));
-                int pages = pageRes.getInteger("pages");
+                int pages = pageRes.getInteger("pages")>10?10:pageRes.getInteger("pages");
                 for (int page = 1; page <= pages; page++) {
                     IScene scene = ManageRegisterPageScene.builder().page(page).size(10).activityId(ids.get(j)).build();
                     JSONArray list = visitor.invokeApi(scene).getJSONArray("list");
@@ -505,7 +505,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                 //报名数据的返回值
                 JSONObject dataRes = businessUtil.getRegisterData(ids.get(j));
                 //活动名额
-                int quota = dataRes.getInteger("quota");
+                int quota = dataRes.containsKey("quota")? dataRes.getInteger("quota"):50;
                 //报名总人数
                 int total = dataRes.getInteger("total");
                 //待审批人数
