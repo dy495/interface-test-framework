@@ -41,10 +41,8 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     PublicMethod method = new PublicMethod();
     private static final EnumAccount zjl = EnumAccount.ZJL_DAILY;
-    private static final EnumAccount fw = EnumAccount.FW_BAOYANG_DAILY;
+    private static final EnumAccount fw = EnumAccount.MAINTAIN;
     private static final int size = 100;
-    int zjlNum = 0;
-    int gw_num = 0;
 
     @BeforeClass
     @Override
@@ -625,7 +623,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(total, todayReturnVisitNumber, listSize);
             //预约保养
             int id = getTimeId(date);
-            crm.appointmentMaintain((long) getCarId(), customerName, customerPhoneNumber,  (long) id);
+            crm.appointmentMaintain((long) getCarId(), customerName, customerPhoneNumber, (long) id);
             UserUtil.login(zjl);
             JSONObject response1 = crm.returnVisitRecordAfterSalePage(1, size, "");
             int total1 = response1.getInteger("total");
@@ -1214,7 +1212,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
         try {
             //预约保养
             int id = getTimeId(date);
-            crm.appointmentMaintain((long) getCarId(), customerName, customerPhoneNumber,  (long) id);
+            crm.appointmentMaintain((long) getCarId(), customerName, customerPhoneNumber, (long) id);
             //完成接待
             int afterRecordId = method.getAfterRecordId(false, 30);
             method.completeReception(String.valueOf(afterRecordId));
