@@ -19,7 +19,7 @@ public class UserUtil {
         if (enumAccount == null) {
             throw new DataException("enumAccount is null");
         }
-        if (enumAccount.getEnvironment().equals("daily")) {
+        if (enumAccount.getIsDaily()) {
             crm.login(enumAccount.getAccount(), enumAccount.getPassword());
         } else {
             crmOnline.login(enumAccount.getAccount(), enumAccount.getPassword());

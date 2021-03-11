@@ -106,7 +106,7 @@ public class ContentOperationCase extends TestCaseCommon implements TestCaseStd 
         }
     }
 
-    //ok
+    //bug
     @Test(description = "banner--跳转活动/文章的条数=展示中的文章+进行中或者已结束活动条数之和")
     public void banner_data_1() {
         logger.logCaseStart(caseResult.getCaseName());

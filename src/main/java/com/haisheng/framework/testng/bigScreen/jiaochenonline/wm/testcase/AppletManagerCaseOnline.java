@@ -88,7 +88,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
         //替换钉钉推送
         commonConfig.dingHook = EnumDingTalkWebHook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
-        commonConfig.roleId = product.getRoleId();
+        commonConfig.roleId = "2227";
         commonConfig.referer = product.getReferer();
         commonConfig.shopId = product.getShopId();
         beforeClassInit(commonConfig);
