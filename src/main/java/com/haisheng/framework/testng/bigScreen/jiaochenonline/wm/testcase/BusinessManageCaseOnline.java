@@ -11,7 +11,6 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletVou
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.AfterSaleCustomerPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.ReceptionPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherSendRecord;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.WechatCustomerPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.CustomerLabelTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.common.EnableStatusEnum;
@@ -21,7 +20,6 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.AfterSaleCustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.RepairPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.WechatCustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.manager.CarModelEditScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.manager.CarModelPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.BuyPackageRecordScene;
@@ -51,10 +49,10 @@ import java.util.stream.Collectors;
  * @date 2021/1/29 11:17
  */
 public class BusinessManageCaseOnline extends TestCaseCommon implements TestCaseStd {
-
     private static final EnumTestProduce product = EnumTestProduce.JIAOCHEN_ONLINE;
     private static final EnumAccount ADMINISTRATOR = EnumAccount.RECEPTION_ONLINE;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_ONLINE;
+    CommonConfig commonConfig = new CommonConfig();
     //访问者
     public Visitor visitor = new Visitor(product);
     //登录工具
@@ -67,7 +65,6 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
     @Override
     public void initial() {
         logger.debug("before class initial");
-        CommonConfig commonConfig = new CommonConfig();
         //替换checklist的相关信息
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
         commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
@@ -80,8 +77,8 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
         //替换钉钉推送
         commonConfig.dingHook = EnumDingTalkWebHook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
-        commonConfig.shopId = "20032";
-        commonConfig.roleId = "424";
+        commonConfig.shopId = product.getShopId();
+        commonConfig.roleId = "2227";
         beforeClassInit(commonConfig);
     }
 
@@ -105,7 +102,7 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
     public void receptionManage_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone()).build();
+            IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).build();
             ReceptionPage receptionPage = util.collectBean(receptionPageScene, ReceptionPage.class).get(0);
             String platNumber = receptionPage.getPlateNumber();
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
@@ -155,7 +152,7 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
     public void receptionManage_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone()).build();
+            IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).build();
             ReceptionPage receptionPage = util.collectBean(receptionPageScene, ReceptionPage.class).get(0);
             String platNumber = receptionPage.getPlateNumber();
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
@@ -212,7 +209,7 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
     public void receptionManage_data_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone()).build();
+            IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).build();
             ReceptionPage receptionPage = util.collectBean(receptionPageScene, ReceptionPage.class).get(0);
             String platNumber = receptionPage.getPlateNumber();
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
@@ -262,7 +259,7 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
     public void receptionManage_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone()).build();
+            IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).build();
             ReceptionPage receptionPage = util.collectBean(receptionPageScene, ReceptionPage.class).get(0);
             String platNumber = receptionPage.getPlateNumber();
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
@@ -401,30 +398,6 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
         }
     }
 
-    //逻辑不对
-    @Test(description = "客户管理--【小程序客户】对应的总金额=对应手机号的【售后客户】的维修记录的产值之和", enabled = false)
-    public void customerManager_data_3() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            IScene wechatCustomerPageScene = WechatCustomerPageScene.builder().build();
-            List<WechatCustomerPage> wechatCustomerPageList = util.collectBean(wechatCustomerPageScene, WechatCustomerPage.class);
-            wechatCustomerPageList.forEach(wechatCustomerPage -> {
-                CommonUtil.valueView(wechatCustomerPage.getCustomerName());
-                String phone = wechatCustomerPage.getCustomerPhone();
-                Double price = wechatCustomerPage.getTotalPrice() == null ? 0 : wechatCustomerPage.getTotalPrice();
-                IScene afterSaleCustomerPageScene = AfterSaleCustomerPageScene.builder().customerPhone(phone).build();
-                List<JSONObject> jsonObjectList = util.collectBean(afterSaleCustomerPageScene, JSONObject.class);
-                Double priceLitSum = jsonObjectList.stream().map(e -> e.getDouble("total_price") == null ? 0 : e.getDouble("total_price")).collect(Collectors.toList()).stream().mapToDouble(e -> e).sum();
-                CommonUtil.checkResultPlus(wechatCustomerPage.getCustomerPhone() + " 总金额", price, "产值之和", priceLitSum);
-                CommonUtil.logger(wechatCustomerPage.getCustomerName());
-            });
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("客户管理--【小程序客户】对应的总金额=对应手机号的【售后客户】的维修记录的产值之和");
-        }
-    }
-
     //ok
     @Test(description = "客户管理--相同底盘号的客户最新里程数相等")
     public void customerManager_data_4() {
@@ -481,6 +454,7 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
     public void customerManager_data_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            commonConfig.shopId = "20034";
             Double[] doubles = {1.00, 2.99, 3.66, 50.1};
             JSONObject jsonObject = CarModelPageScene.builder().build().execute(visitor, true).getJSONArray("list").getJSONObject(0);
             Integer id = jsonObject.getInteger("id");
@@ -492,6 +466,7 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
+            commonConfig.shopId = product.getShopId();
             saveData("预约管理--保养配置，修改保养价格");
         }
     }

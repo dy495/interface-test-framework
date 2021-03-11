@@ -51,7 +51,7 @@ import java.util.stream.Collectors;
  * @date 2021/1/29 11:17
  */
 public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
-
+    CommonConfig commonConfig = new CommonConfig();
     private static final EnumTestProduce product = EnumTestProduce.JIAOCHEN_DAILY;
     private static final EnumAccount ADMINISTRATOR = EnumAccount.RECEPTION_DAILY;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_DAILY;
@@ -66,7 +66,6 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
     @BeforeClass
     @Override
     public void initial() {
-        CommonConfig commonConfig = new CommonConfig();
         logger.debug("before class initial");
         //替换checklist的相关信息
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
@@ -81,7 +80,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.dingHook = EnumDingTalkWebHook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
         commonConfig.shopId = product.getShopId();
-        commonConfig.roleId = product.getRoleId();
+        commonConfig.roleId = "2942";
         beforeClassInit(commonConfig);
     }
 
@@ -481,6 +480,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
     public void customerManager_data_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            commonConfig.shopId = "49195";
             Double[] doubles = {1.00, 2.99, 3.66, 50.1};
             JSONObject jsonObject = CarModelPageScene.builder().build().execute(visitor, true).getJSONArray("list").getJSONObject(0);
             Integer id = jsonObject.getInteger("id");
@@ -492,6 +492,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
+            commonConfig.shopId = product.getShopId();
             saveData("预约管理--保养配置，修改保养价格");
         }
     }

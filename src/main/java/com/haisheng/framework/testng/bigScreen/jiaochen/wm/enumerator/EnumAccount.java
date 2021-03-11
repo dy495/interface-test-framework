@@ -9,6 +9,10 @@ public enum EnumAccount {
 
     MARKETING_DAILY("15321527989", "000000", "营销管理", true, ""),
 
+    RECEPTION_DAILY("13402050025", "000000", "接待顾问1", true, "接待顾问2"),
+
+    RECEPTION_ONLINE("15037286013", "000000", "接待顾问1", false, "接待顾问2"),
+
     ADMINISTRATOR_DAILY("15711300001", "000000", "系统管理员", true, "轿辰"),
 
     WINSENSE_LAB_DAILY("13114785236", "000000", "系统管理员", true, "轿辰（赢识测试）"),
@@ -17,9 +21,7 @@ public enum EnumAccount {
 
     ADMINISTRATOR_ONLINE("15711200001", "000000", "系统管理员", false, "轿辰线上测试"),
 
-    RECEPTION_ONLINE("15037286011", "000000", "接待顾问1", false, "接待顾问2"),
 
-    RECEPTION_DAILY("13402050025", "000000", "接待顾问1", false, "接待顾问2"),
     ;
 
     EnumAccount(String phone, String password, String role, boolean isDaily, String name) {
