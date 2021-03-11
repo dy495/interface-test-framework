@@ -318,7 +318,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             int tasknum[] = pf.appTask();
 
             //pc登录  预约记录页该顾问今日数据
-            pcLogin(pp.gwphone, pp.gwpassword,pp.roleidJdgw);
+            pcLogin(pp.gwphone, pp.gwpassword,pp.roleId);
             IScene scene = appointmentRecodeSelect.builder().page("1")
                     .size("10")
                     .create_end(dt.getHistoryDate(0))

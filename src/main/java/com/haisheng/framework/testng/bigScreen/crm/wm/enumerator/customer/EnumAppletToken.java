@@ -16,7 +16,7 @@ public enum EnumAppletToken {
 
     BSJ_WM_SMALL_DAILY(EnumProduce.BSJ.name(), "usxKib/bBsV+ahtyvx+/RA==", "纯牛奶", true, "", "15321527989"),
 
-    BSJ_XMF_DAILY(EnumProduce.BSJ.name(), "xYbesUkHQTXI0Zf5Cbp/FQ==", "@@@", true, "", "15037286013"),
+    BSJ_XMF_DAILY(EnumProduce.BSJ.name(), "anZxfh+0HTb863SNkyZzaw==", "@@@", true, "", "15037286013"),
 
     BSJ_GLY_DAILY(EnumProduce.BSJ.name(), "ykcw+P7/BrfMSFfxHQkfdg==", "Max", true, "", "13373166806"),
 

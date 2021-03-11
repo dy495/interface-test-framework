@@ -43,7 +43,7 @@ public class PublicParm {
     public String samephone= "13936966369";  //展厅客户手机号2
     public String linephone= "17783875772";  //线索客户手机号
     public String linephone2= "18967887890";  //线索客户手机号
-    public String samePlate= "吉E000000";  //系统已存在的车牌号
+    public String samePlate= "吉Q64650";  //系统已存在的车牌号
 
     public Integer car_type = 1;
     public Integer car_model = 36;
