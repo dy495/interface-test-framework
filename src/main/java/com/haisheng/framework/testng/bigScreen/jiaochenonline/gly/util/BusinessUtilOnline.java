@@ -988,55 +988,44 @@ public class BusinessUtilOnline {
      * 根据活动ID返回活动的状态
      */
     public String appointmentActivityStatus(Long activityId) {
-        //登录小程序
-        user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
-        JSONObject lastValue = null;
-        IScene scene = AppointmentActivityListScene.builder().lastValue(lastValue).size(20).build();
-        JSONObject response = visitor.invokeApi(scene);
-        String status = "";
-        int total = response.getInteger("total");
-        int pages = total / 100 + 1;
-        for (int page = 1; page <=pages; page++) {
-            if (pages <= 1) {
-                IScene scene1 = AppointmentActivityListScene.builder().lastValue(lastValue).size(20).build();
-                JSONObject response1 = visitor.invokeApi(scene1);
-                JSONArray list = response1.getJSONArray("list");
-                for (int i = 0; i < list.size(); i++) {
-                    Long id = list.getJSONObject(i).getLong("id");
-                    if (activityId.equals(id)) {
-                        status = list.getJSONObject(i).getString("status_name");
-                    }
-
-                }
-            }
-        }
-        return status;
-    }
-
-    /**
-     * 根据活动ID返回活动的状态  ------新写的，晚点测试可行性  Long activityId
-     */
-    public String appointmentActivityStatusNew() {
-        //登录小程序
-        user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
-        JSONObject lastValue = null;
+        Integer lastValue = null;
         JSONArray list=null;
         String status = "";
         do{
-            IScene scene = AppointmentActivityListScene.builder().lastValue(lastValue).size(20).build();
-            JSONObject response = visitor.invokeApi(scene);
-            lastValue = response.getJSONObject("last_value");
-            list = response.getJSONArray("list");
+            IScene scene = AppointmentActivityListScene.builder().lastValue(lastValue).size(10).build();
+            JSONObject response1 = visitor.invokeApi(scene);
+            lastValue = response1.getInteger("last_value");
+            list = response1.getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 Long id = list.getJSONObject(i).getLong("id");
-                System.out.println(i+"-----------"+id+"======="+lastValue);
-//                if (activityId.equals(id)) {
-//                    status = list.getJSONObject(i).getString("status_name");
-//                }
-            }
-        }while(list.size()>=20);
+                if (activityId.equals(id)) {
+                    status = list.getJSONObject(i).getString("status_name");
+                }
 
+            }
+        }while(list.size()==10);
         return status;
+    }
+
+    public String appointmentActivityTitleNew(Long activityId) {
+        JSONObject lastValue = null;
+        JSONArray list;
+        String title="";
+        do{
+            IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
+            JSONObject response = visitor.invokeApi(scene);
+            lastValue = response.getJSONObject("last_value");
+            System.err.println(lastValue);
+            list = response.getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                Long itemId = list.getJSONObject(i).getLong("itemId");
+                if (activityId.equals(itemId)) {
+                    title = list.getJSONObject(i).getString("title");
+                }
+            }
+        }while(list.size()==10);
+
+        return title;
     }
 
 /**
@@ -1149,10 +1138,21 @@ public class BusinessUtilOnline {
     /**
      * 获取小程序-首页-文章列表-更多的返回值
      */
-    public JSONObject getAppletArticleList() {
-        IScene scene = AppletArticleListScene.builder().lastValue(null).size(100).build();
-        JSONObject response = visitor.invokeApi(scene);
-        return response;
+    public int getAppletArticleList() {
+        //获取小程序推荐列表
+        JSONObject lastValue=null;
+        JSONArray list=null;
+        JSONObject object=null;
+        int num=0;
+        do{
+            IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
+            JSONObject response1 = visitor.invokeApi(scene);
+            lastValue = response1.getJSONObject("last_value");
+            System.err.println(lastValue);
+            list = response1.getJSONArray("list");
+            num+=list.size();
+        }while(list.size()==10);
+        return num;
     }
 
 
@@ -1234,15 +1234,22 @@ public class BusinessUtilOnline {
         }
         user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
         //获取小程序推荐列表
-        JSONObject object=getAppletArticleList();
-        JSONArray list=getAppletArticleList().getJSONArray("list");
-        int lastValue=object.getInteger("last_value");
-        for(int i=0;i<list.size();i++){
-            int itemId=list.getJSONObject(i).getInteger("itemId");
-            if(id==itemId){
-                activityId=list.getJSONObject(i).getLong("id");
+        String title="";
+        JSONObject lastValue=null;
+        JSONArray list=null;
+        do{
+            IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
+            JSONObject response1 = visitor.invokeApi(scene);
+            lastValue = response1.getJSONObject("last_value");
+            System.err.println(lastValue);
+            list = response1.getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                int itemId=list.getJSONObject(i).getInteger("itemId");
+                if(id==itemId){
+                    activityId=list.getJSONObject(i).getLong("id");
+                }
             }
-        }
+        }while(list.size()==10);
         IScene scene = ArticleActivityRegisterScene.builder().id(activityId).registerItems(registerItems).build();
         visitor.invokeApi(scene);
     }
@@ -1251,30 +1258,43 @@ public class BusinessUtilOnline {
      * 小程序报名招募活动---不填写个人信息
      */
     public void activityRegisterApplet(Long id) {
+        JSONObject lastValue=null;
+        JSONArray list=null;
         JSONArray registerItems = new JSONArray();
         Long activityId=0L;
-        user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
+        user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
         //获取小程序推荐列表
-        JSONObject object=getAppletArticleList();
-        JSONArray list=getAppletArticleList().getJSONArray("list");
-        int lastValue=object.getInteger("last_value");
-        for(int i=0;i<list.size();i++){
-            int itemId=list.getJSONObject(i).getInteger("itemId");
-            if(id==itemId){
-                activityId=list.getJSONObject(i).getLong("id");
+        do{
+            IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
+            JSONObject response1 = visitor.invokeApi(scene);
+            lastValue = response1.getJSONObject("last_value");
+            list = response1.getJSONArray("list");
+            for(int i=0;i<list.size();i++){
+                int itemId=list.getJSONObject(i).getInteger("itemId");
+                if(id==itemId){
+                    activityId=list.getJSONObject(i).getLong("id");
+                }
             }
-        }
+        }while(list.size()==10);
         IScene scene = ArticleActivityRegisterScene.builder().id(activityId).registerItems(registerItems).build();
         visitor.invokeApi(scene);
     }
 
     /**
-     * V2.0小程序-我的报名-报名列表
+     * V2.0小程序-我的报名-报名列表--报名条数
      */
-    public JSONObject appointmentActivityList() {
-        IScene scene = AppointmentActivityListScene.builder().lastValue(null).size(10).build();
-        JSONObject response = visitor.invokeApi(scene);
-        return response;
+    public int appointmentActivityList() {
+        Integer lastValue = null;
+        JSONArray list=null;
+        int num=0;
+        do{
+            IScene scene = AppointmentActivityListScene.builder().lastValue(lastValue).size(10).build();
+            JSONObject response1 = visitor.invokeApi(scene);
+            lastValue = response1.getInteger("last_value");
+            list = response1.getJSONArray("list");
+            num+=list.size();
+        }while(list.size()==10);
+        return num;
     }
 
     /**

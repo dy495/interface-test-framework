@@ -10,7 +10,7 @@ import lombok.Builder;
 @Builder
 public class AppointmentActivityListScene extends BaseScene {
     private final int size;
-    private final JSONObject lastValue;
+    private final Integer lastValue;
 
     @Override
     public JSONObject getRequestBody() {

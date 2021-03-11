@@ -14,6 +14,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherSendRe
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityApprovalStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.AppletArticleListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpload;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
@@ -101,6 +102,8 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Boolean flag = false;
+            JSONObject lastValue=null;
+            JSONArray list=null;
             //获取一个卡券
             Long voucherId = businessUtil.getVoucherId();
             //创建裂变活动
@@ -119,14 +122,19 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             int statusPassed = businessUtil.getActivityStatus(activityId2);
             //登录小程序
             user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
-            //获取小程序推荐列表
-            JSONArray list = businessUtil.getAppletArticleList().getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                int itemId = list.getJSONObject(i).getInteger("itemId");
-                if (activityId2 == itemId) {
-                    flag = true;
+            //获取小程序推荐列表  判断裂变活动是否创建成功
+            do{
+                IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
+                JSONObject response1 = visitor.invokeApi(scene);
+                lastValue = response1.getJSONObject("last_value");
+                list = response1.getJSONArray("list");
+                for (int i = 0; i < list.size(); i++) {
+                    int itemId = list.getJSONObject(i).getInteger("itemId");
+                    if (activityId2 == itemId) {
+                        flag = true;
+                    }
                 }
-            }
+            }while(list.size()==10);
             Preconditions.checkArgument(status == ActivityStatusEnum.PENDING.getId(), "待审核的活动状态为：" + status);
             Preconditions.checkArgument(statusRevoke == ActivityStatusEnum.REVOKE.getId(), "已撤销的活动状态为：" + statusRevoke);
             Preconditions.checkArgument(statusPassed == ActivityStatusEnum.PASSED.getId(), "审批通过的活动状态为：" + statusPassed);
@@ -151,6 +159,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             Long voucherId = businessUtil.getVoucherId();
             //创建招募活动
             Long activityId = businessUtil.createRecruitActivity(voucherId, true, 0, true);
+            System.err.println("--------------"+activityId);
             //获取活动的状态
             int status = businessUtil.getActivityStatus(activityId);
             //审批通过招募活动
@@ -173,15 +182,9 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             System.err.println("-----获取卡券码-----" + voucherCode);
             //登录小程序
             user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
-            //获取小程序活动的识别码
-            String title = null;
-            JSONArray list = businessUtil.getAppletArticleList().getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                int itemId = list.getJSONObject(i).getInteger("itemId");
-                if (activityId == itemId) {
-                    title = list.getJSONObject(i).getString("title");
-                }
-            }
+            //获取小程序活动对应的title  PC的活动ID=小程序的itemId
+            String title = businessUtil.appointmentActivityTitleNew(activityId);
+            System.err.println("AD:"+activityId+"      title:"+title);
             //获取【我的卡券】列表条数
 //            int numBefore=jc.appletVoucherList(null,"GENERAL",100).getJSONArray("list").size();
             //查询是否获得此卡券(通过卡券码查询，看看能否有此卡券的返回值)
@@ -218,8 +221,23 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
     public void justTry(){
         try {
             user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
-            businessUtil.appointmentActivityStatusNew();
+//            Long id=0L;
+//            businessUtil.activityRegisterApplet(741L, "13373166806", "郭丽雅", 2, "1513814362@qq.com", "22", "女","其他");
+//            businessUtil.appointmentActivityTitleNew(666L);
 //            supporterUtil.getAppletVoucherNum();
+//            JSONArray list1 = jc.appletMyActually(null, "20").getJSONArray("list");
+//            for (int i = 0; i < list1.size(); i++) {
+//                String title1 = list1.getJSONObject(i).getString("title");
+//                if (title1.equals("招募活动5953哈哈哈哈哈")) {
+//                    id = list1.getJSONObject(i).getLong("id");
+//                    System.out.println("--------"+id);
+//                    break;
+//                }
+//            }
+//            businessUtil.activityCancelScene(id);
+            String activityStatus = businessUtil.appointmentActivityStatus(445L);
+            System.out.println("---------"+activityStatus);
+//            System.err.println(businessUtil.getAppletArticleList());
         }catch (AssertionError | Exception e) {
            collectMessage(e);
         } finally {
@@ -568,7 +586,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * 报名列表-审批通过1条，报名成功&报名成功列表--报名人数不填写     不ok
+     * 报名列表-审批通过1条，报名成功&报名成功列表--报名人数不填写     ok
      */
     @Test()
     public void activityRegisterDate91() {

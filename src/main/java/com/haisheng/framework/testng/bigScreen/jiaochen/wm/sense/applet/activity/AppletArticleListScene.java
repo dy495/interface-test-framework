@@ -9,7 +9,7 @@ import lombok.Builder;
  */
 @Builder
 public class AppletArticleListScene extends BaseScene {
-    private final Integer lastValue;
+    private final JSONObject lastValue;
     private final Integer size;
 
     @Override
