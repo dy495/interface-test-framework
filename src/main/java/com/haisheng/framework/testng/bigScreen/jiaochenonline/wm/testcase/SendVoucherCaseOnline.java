@@ -43,7 +43,7 @@ import java.util.Objects;
  */
 public class SendVoucherCaseOnline extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce PRODUCT = EnumTestProduce.JIAOCHEN_ONLINE;
-    private static final EnumAccount ALL_AUTHORITY_ONLINE = EnumAccount.ALL_AUTHORITY_ONLINE;
+    private static final EnumAccount ALL_AUTHORITY = EnumAccount.ALL_AUTHORITY_ONLINE;
     private static final EnumAccount MARKETING = EnumAccount.MARKETING_ONLINE;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_ONLINE;
     public Visitor visitor = new Visitor(PRODUCT);
@@ -81,7 +81,7 @@ public class SendVoucherCaseOnline extends TestCaseCommon implements TestCaseStd
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-        user.loginPc(ALL_AUTHORITY_ONLINE);
+        user.loginPc(ALL_AUTHORITY);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
@@ -231,7 +231,7 @@ public class SendVoucherCaseOnline extends TestCaseCommon implements TestCaseStd
             user.loginApplet(APPLET_USER_ONE);
             util.activityRegister(activityId);
             //审批通过
-            user.loginPc(ALL_AUTHORITY_ONLINE);
+            user.loginPc(ALL_AUTHORITY);
             IScene manageRegisterScene = ManageRegisterScene.builder().status(ActivityApprovalStatusEnum.PENDING.getId()).activityId(activityId).build();
             JSONArray list = visitor.invokeApi(manageRegisterScene).getJSONArray("list");
             Long id = Objects.requireNonNull(list.stream().map(e -> (JSONObject) e).filter(e -> e.getString("customer_phone").equals(MARKETING.getPhone())).findFirst().orElse(null)).getLong("id");

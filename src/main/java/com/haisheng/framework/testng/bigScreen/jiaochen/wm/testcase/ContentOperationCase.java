@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
  */
 public class ContentOperationCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce PRODUCE = EnumTestProduce.JIAOCHEN_DAILY;
-    private static final EnumAccount ALL_AUTHORITY_DAILY = EnumAccount.ALL_AUTHORITY_DAILY;
+    private static final EnumAccount ALL_AUTHORITY = EnumAccount.ALL_AUTHORITY_DAILY;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_DAILY;
     public Visitor visitor = new Visitor(PRODUCE);
     public UserUtil user = new UserUtil(visitor);
@@ -65,7 +65,7 @@ public class ContentOperationCase extends TestCaseCommon implements TestCaseStd 
         commonConfig.product = PRODUCE.getAbbreviation();
         commonConfig.referer = PRODUCE.getReferer();
         commonConfig.shopId = PRODUCE.getShopId();
-        commonConfig.roleId = ALL_AUTHORITY_DAILY.getRoleId();
+        commonConfig.roleId = ALL_AUTHORITY.getRoleId();
         beforeClassInit(commonConfig);
     }
 
@@ -78,7 +78,7 @@ public class ContentOperationCase extends TestCaseCommon implements TestCaseStd 
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-        user.loginPc(ALL_AUTHORITY_DAILY);
+        user.loginPc(ALL_AUTHORITY);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
