@@ -665,7 +665,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             }
             CommonUtil.valueView(total, todayReturnVisitNumber, listSize);
             //取消试驾
-            UserUtil.loginApplet(EnumAppletToken.BSJ_WM_SMALL_DAILY);
+            UserUtil.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             int id = crm.appointmentList(0L, EnumAppointmentType.MAINTAIN.getType(), 20).getJSONArray("list").getJSONObject(0).getInteger("id");
             crm.appointmentCancel(id);
             UserUtil.login(zjl);
@@ -1555,7 +1555,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
      * @return 时间id
      */
     private Integer getTimeId(String date) {
-        UserUtil.loginApplet(EnumAppletToken.BSJ_WM_SMALL_DAILY);
+        UserUtil.loginApplet(EnumAppletToken.BSJ_GLY_DAILY);
         JSONArray list = crm.timeList(EnumAppointmentType.MAINTAIN.getType(), date).getJSONArray("list");
         for (int i = 0; i < list.size(); i++) {
             if (!(list.getJSONObject(i).getInteger("left_num") == 0)) {

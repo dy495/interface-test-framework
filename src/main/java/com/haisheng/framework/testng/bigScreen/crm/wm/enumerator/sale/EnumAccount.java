@@ -33,12 +33,6 @@ public enum EnumAccount {
      */
     MAINTAIN("baoyang", getPassword("123456"), "uid_8e706fc6", true, "baoyang"),
 
-
-    /**
-     * 前台
-     */
-//    QT_DAILY("qt", getPassword("123456"), "uid_05e8599f", true, ""),
-
     /**
      * 保时捷线上销售顾问
      */

@@ -6,6 +6,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.gly.util.PublicParameter;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityApprovalStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityStatusEnum;
@@ -41,7 +42,7 @@ public class BusinessUtilOnline {
         UserUtil user = new UserUtil(visitor);
     }
      ScenarioUtil jc = new ScenarioUtil();
-      PublicParameterOnline pp = new PublicParameterOnline();
+    PublicParameter pp = new PublicParameter();
       public String shopId="-1";
 
     /**
@@ -130,6 +131,19 @@ public class BusinessUtilOnline {
         rewardVouchers.add(object);
         return rewardVouchers;
     }
+    /**
+     * @description :创建招募活动-卡券奖励
+     * @date :2021/1/24
+     **/
+    public JSONArray getRewardVouchers(Long id, int type, String num) {
+        JSONArray rewardVouchers = new JSONArray();
+        JSONObject object = new JSONObject();
+        object.put("id", id);
+        object.put("type", type);
+        object.put("num", num);
+        rewardVouchers.add(object);
+        return rewardVouchers;
+    }
 
     /**
      * 获取随机4位数
@@ -173,6 +187,14 @@ public class BusinessUtilOnline {
      */
     public String getEndDate() {
         Date endDate = DateTimeUtil.addDay(new Date(), 10);
+        return DateTimeUtil.getFormat(endDate, "yyyy-MM-dd HH:mm");
+    }
+
+    /**
+     * 获取当前时间
+     */
+    public String getDateTime(int day) {
+        Date endDate = DateTimeUtil.addDay(new Date(), day);
         return DateTimeUtil.getFormat(endDate, "yyyy-MM-dd HH:mm");
     }
 
@@ -249,7 +271,7 @@ public class BusinessUtilOnline {
      */
     public IScene createFissionActivityScene(Long voucherId) {
         SupporterUtil supporterUtil = new SupporterUtil(visitor);
-        PublicParameterOnline pp = new PublicParameterOnline();
+        PublicParameter pp = new PublicParameter();
         List<String> picList = new ArrayList<>();
         picList.add(supporterUtil.getPicPath());
         // 创建被邀请者和分享者的信息字段
@@ -326,7 +348,7 @@ public class BusinessUtilOnline {
     public IScene createRecruitActivityScene(Long voucherId, boolean successReward, int rewardReceiveType, boolean isNeedApproval) {
         List<String> picList = new ArrayList<>();
         SupporterUtil supporterUtil = new SupporterUtil(visitor);
-        PublicParameterOnline pp = new PublicParameterOnline();
+        PublicParameter pp = new PublicParameter();
         picList.add(0,supporterUtil.getPicPath());
         //填写报名所需要信息
         List<Boolean> isShow = new ArrayList<>();
@@ -389,7 +411,7 @@ public class BusinessUtilOnline {
     public IScene createRecruitActivityScene(Long voucherId, boolean successReward, int rewardReceiveType, boolean isNeedApproval,Boolean type) {
         List<String> picList = new ArrayList<>();
         SupporterUtil supporterUtil = new SupporterUtil(visitor);
-        PublicParameterOnline pp = new PublicParameterOnline();
+        PublicParameter pp = new PublicParameter();
         picList.add(0,supporterUtil.getPicPath());
         //填写报名所需要信息
         List<Boolean> isShow = new ArrayList<>();
@@ -452,7 +474,7 @@ public class BusinessUtilOnline {
         Long voucherId = response.getJSONArray("reward_vouchers").getJSONObject(0).getLong("id");
         List<String> picList = new ArrayList<>();
         SupporterUtil supporterUtil = new SupporterUtil(visitor);
-        PublicParameterOnline pp = new PublicParameterOnline();
+        PublicParameter pp = new PublicParameter();
         picList.add(supporterUtil.getPicPath());
         //填写报名所需要信息
         List<Boolean> isShow = new ArrayList<>();
@@ -717,7 +739,7 @@ public class BusinessUtilOnline {
             activityRegisterApplet(id1,"13373166806","郭丽雅",2,"1513814362@qq.com","22","女","其他");
             ids.add(id1);
             //登录PC
-            user.loginPc(EnumAccount.ADMINISTRATOR_ONLINE);
+            user.loginPc(EnumAccount.ALL_AUTHORITY_ONLINE);
         }
         return ids;
 
@@ -1190,7 +1212,7 @@ public class BusinessUtilOnline {
         JSONArray registerItems = new JSONArray();
         Long activityId=0L;
         //在活动详情中获得招募活动的报名信息
-        user.loginPc(EnumAccount.ADMINISTRATOR_ONLINE);
+        user.loginPc(EnumAccount.ALL_AUTHORITY_ONLINE);
         JSONObject response = getRecruitActivityDetailDate(id);
         JSONArray registerInformationList = response.getJSONArray("register_information_list");
         for (int i = 0; i< registerInformationList.size(); i++) {
@@ -1262,7 +1284,7 @@ public class BusinessUtilOnline {
         JSONArray list=null;
         JSONArray registerItems = new JSONArray();
         Long activityId=0L;
-        user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+        user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
         //获取小程序推荐列表
         do{
             IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
@@ -1330,7 +1352,7 @@ public class BusinessUtilOnline {
             }
         }
         //登录PC
-         user.loginPc(EnumAccount.ADMINISTRATOR_ONLINE);
+         user.loginPc(EnumAccount.ALL_AUTHORITY_ONLINE);
         //获取PC中对应的优惠券
 
         return ids;

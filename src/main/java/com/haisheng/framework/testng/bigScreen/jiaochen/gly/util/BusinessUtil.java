@@ -2,10 +2,8 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.gly.util;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.google.inject.internal.util.$ImmutableList;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.crm.wm.bean.Activity;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
@@ -13,6 +11,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.A
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.RegisterInfoEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.AppletArticleListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.AppointmentActivityCancelScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.AppointmentActivityListScene;
@@ -23,18 +22,13 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanag
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherFormPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
-import com.haisheng.framework.testng.commonDataStructure.LogMine;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
-import org.testng.annotations.Test;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
-import static com.haisheng.framework.testng.commonCase.TestCaseCommon.caseResult;
 
 public class BusinessUtil {
 
@@ -1221,7 +1215,7 @@ public class BusinessUtil {
         JSONArray registerItems = new JSONArray();
         Long activityId=0L;
         //在活动详情中获得招募活动的报名信息
-        user.loginPc(EnumAccount.WINSENSE_LAB_DAILY);
+        user.loginPc(EnumAccount.ALL_AUTHORITY_DAILY);
         JSONObject response = getRecruitActivityDetailDate(id);
         JSONArray registerInformationList = response.getJSONArray("register_information_list");
         for (int i = 0; i< registerInformationList.size(); i++) {

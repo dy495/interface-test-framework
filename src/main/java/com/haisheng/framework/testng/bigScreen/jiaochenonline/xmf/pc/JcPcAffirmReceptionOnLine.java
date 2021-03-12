@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf;
+package com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.pc;
 
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.bean.DataTemp;
@@ -7,6 +7,8 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTest
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
+import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.JcFunctionOnline;
+import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.PublicParmOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -22,20 +24,19 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 
 /**
- * @description :pc 开始接待  运行单个test时，需将inintal中的存储操作函数注释掉
+ * @description :pc完成接待,数据一致性 运行单个test时，需将inintal中的存储操作函数注释掉
  * @date :2020/12/18 16:45
  **/
 
-public class JcPcReceptionRelateOnline extends TestCaseCommon implements TestCaseStd {
+public class JcPcAffirmReceptionOnLine extends TestCaseCommon implements TestCaseStd {
 
     ScenarioUtil jc = new ScenarioUtil();
     private QADbProxy qaDbProxy = QADbProxy.getInstance();
     public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
-    JcFunctionOnline pf = new JcFunctionOnline();
-    PublicParmOnline pp = new PublicParmOnline();
     String dataName = "pc_receptionOnLine";
 
-
+    JcFunctionOnline pf = new JcFunctionOnline();
+    PublicParmOnline pp = new PublicParmOnline();
     public void initial1() {
         logger.debug("before classs initial");
         CommonConfig commonConfig = new CommonConfig();
@@ -76,6 +77,7 @@ public class JcPcReceptionRelateOnline extends TestCaseCommon implements TestCas
 
     }
 
+
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
      */
@@ -108,7 +110,6 @@ public class JcPcReceptionRelateOnline extends TestCaseCommon implements TestCas
     //操作
     public void BeforeStart() {
         try {
-            //创建一个活动，保存活动id,活动已报名，已入选，小程序活动数，报名人数，总数
             DataTemp dataTemp = new DataTemp();
             dataTemp.setDataName(dataName);
             dataTemp.setPcAppointmentRecordNum(pf.pcReceptionPage());  //pc接待管理数
@@ -118,9 +119,10 @@ public class JcPcReceptionRelateOnline extends TestCaseCommon implements TestCas
             dataTemp.setApp_all_appointment(appTodayTask[1]);
             dataTemp.setApp_surplus_reception(appTodayTask[2]);
             dataTemp.setApp_all_reception(appTodayTask[3]);
-            //pc 接待
-            dataTemp.setAppointmentId(pf.pcstartReception(pp.carplate));
-
+            //pc 完成接待
+            Integer receptionId=qaDbUtil.selsetDataTempOne("appointmentId",dataName);
+            jc.pcFinishReception((long)receptionId,pp.shopIdZ);
+            dataTemp.setAppointmentId((long)receptionId);
             qaDbUtil.updateDataAll(dataTemp);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -137,7 +139,7 @@ public class JcPcReceptionRelateOnline extends TestCaseCommon implements TestCas
             int result2 = pf.pcReceptionPage();  //先调取函数可先验证此接口，在验证数据
             int result1 = qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum", dataName);
             System.out.println(result1 + ":" + result2);
-            Preconditions.checkArgument(result2 - result1 == 1, "接待后pc接待列表+1,接待前：" + result1 + "接待后：" + result2);
+            Preconditions.checkArgument(result2 - result1 == 0, "接待后pc接待列表+1,接待前：" + result1 + "接待后：" + result2);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -152,7 +154,7 @@ public class JcPcReceptionRelateOnline extends TestCaseCommon implements TestCas
             int result2 = pf.appReceptionPage();  //先调取函数可先验证此接口，在验证数据
             int result1 = qaDbUtil.selsetDataTempOne("appReceiptage", dataName);
             System.out.println(result1 + ":" + result2);
-            Preconditions.checkArgument(result2 - result1 == 1, "接待后app接待任务列数,接待前：" + result1 + "接待后：" + result2);
+            Preconditions.checkArgument(result2 - result1 == -1, "接待后app接待任务列数,接待前：" + result1 + "接待后：" + result2);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -168,8 +170,8 @@ public class JcPcReceptionRelateOnline extends TestCaseCommon implements TestCas
 
             int app_surplus_reception = qaDbUtil.selsetDataTempOne("app_surplus_reception", dataName);
             int app_all_reception = qaDbUtil.selsetDataTempOne("app_all_reception", dataName);
-            Preconditions.checkArgument(appTask[2] - app_surplus_reception == 1, "接待后app今日任务appSurplusAppointment,接待前：" + app_surplus_reception + "接待后：" + appTask[2]);
-            Preconditions.checkArgument(appTask[3] - app_all_reception == 1, "接待后app今日任务app_all_appointment,接待前：" + app_all_reception + "接待后：" + appTask[3]);
+            Preconditions.checkArgument(appTask[2] - app_surplus_reception == -1, "接待后app今日任务appSurplusAppointment,接待前：" + app_surplus_reception + "接待后：" + appTask[2]);
+            Preconditions.checkArgument(appTask[3] - app_all_reception == 0, "接待后app今日任务app_all_appointment,接待前：" + app_all_reception + "接待后：" + appTask[3]);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {

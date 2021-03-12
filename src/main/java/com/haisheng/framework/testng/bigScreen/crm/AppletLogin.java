@@ -193,8 +193,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
     @DataProvider(name = "BSJ_APPLET_TOKENS_DAILY")
     public static Object[] bsj_appletTokens_daily() {
         return new String[]{
-//                EnumAppletToken.BSJ_WM_DAILY.getToken(),
-//                EnumAppletToken.BSJ_WM_SMALL_DAILY.getToken(),
+                EnumAppletToken.BSJ_WM_DAILY.getToken(),
                 EnumAppletToken.BSJ_XMF_DAILY.getToken(),
                 EnumAppletToken.BSJ_GLY_DAILY.getToken(),
         };

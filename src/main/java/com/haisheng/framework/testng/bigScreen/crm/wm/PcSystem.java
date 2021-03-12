@@ -44,7 +44,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
     PublicMethod method = new PublicMethod();
     private static final EnumAccount zjl = EnumAccount.ZJL_DAILY;
     private static final EnumAppletToken sale = EnumAppletToken.BSJ_WM_DAILY;
-    private static final EnumAppletToken afterSale = EnumAppletToken.BSJ_WM_SMALL_DAILY;
+    private static final EnumAppletToken afterSale = EnumAppletToken.BSJ_GLY_DAILY;
     private static final EnumCarModel car = EnumCarModel.PANAMERA_TURBO_S_E_HYBRID_SPORT_TURISMO;
     private static final int SIZE = 100;
 

@@ -12,19 +12,17 @@ import java.util.Arrays;
  * 若失效统一修改此类，统一管理
  */
 public enum EnumAppletToken {
-    BSJ_WM_DAILY(EnumProduce.BSJ.name(), "pR9YaWL+SUN3c4hpgP9ymg==", "w", true, "oQwmJ5Lm1mlt4HXbxYuZi8L7CW90", "15321527989"),
+    BSJ_WM_DAILY(EnumProduce.BSJ.name(), "D6Ns8hkbn8YMg0bAkuT1Lg==", "w", true, "oQwmJ5Lm1mlt4HXbxYuZi8L7CW90", "15321527989"),
 
-    BSJ_WM_SMALL_DAILY(EnumProduce.BSJ.name(), "usxKib/bBsV+ahtyvx+/RA==", "纯牛奶", true, "", "15321527989"),
-
-    BSJ_XMF_DAILY(EnumProduce.BSJ.name(), "anZxfh+0HTb863SNkyZzaw==", "@@@", true, "", "15037286013"),
+    BSJ_XMF_DAILY(EnumProduce.BSJ.name(), "X1vn9SlgXS1ohNyW9qRCjg==", "@@@", true, "", "15037286013"),
 
     BSJ_GLY_DAILY(EnumProduce.BSJ.name(), "MLlSMAp5oXR7cGuCfY6+NA==", "Max", true, "", "13373166806"),
 
     BSJ_XMF_ONLINE(EnumProduce.BSJ.name(), "cMzFau3/cRA7nTf/r3X3GQ==", "@@@", false, "", "15037286013"),
 
-    BSJ_WM_ONLINE(EnumProduce.BSJ.name(), "6nJhC4e34NB7jcqUVOonRQ==", "w", false, "", "15321527989"),
+    BSJ_WM_ONLINE(EnumProduce.BSJ.name(), "m0XhSoGDFBdWwLt/XA2URA==", "w", false, "", "15321527989"),
 
-    BSJ_WM_SMALL_ONLINE(EnumProduce.BSJ.name(), "Fhh9NQmWUe+iNT+hOlivvg==", "纯牛奶", false, "", "15321527989"),
+    BSJ_WM_SMALL_ONLINE(EnumProduce.BSJ.name(), "UhqugJ3HUDI7BRKnIvxxKg==", "纯牛奶", false, "", "15321527989"),
 
     JC_WM_DAILY(EnumProduce.JC.name(), "eVvKxoI0LSCdMQJoN3Qg7g==", "", true, "", "15321527989"),
 
@@ -37,6 +35,7 @@ public enum EnumAppletToken {
     JC_LXQ_DAILY(EnumProduce.JC.name(), "31Z9jgBlSsTIqRTYxOWaKw==", "", false, "", "13436941018"),
 
     JC_GLY_DAILY(EnumProduce.JC.name(), "1nxb35B/gDlj6Q88uD5yEA==", "Max", true, "", "13373166806"),
+
     JC_GLY_ONLINE(EnumProduce.JC.name(), "iCMVUEzq+zOmzldZM2awEQ==", "Max", false, "", "13373166806"),
     ;
 
