@@ -451,7 +451,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     }
 
     /**
-     * @description 售后客户查询-时间的筛选
+     * @description 售后客户查询-时间的筛选      开单时间存在问题，已提bug（7982）
      * @date :2020/12/16
      **/
     @Test(enabled = true)
