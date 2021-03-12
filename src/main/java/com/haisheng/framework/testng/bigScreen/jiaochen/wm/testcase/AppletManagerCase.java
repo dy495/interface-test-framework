@@ -20,16 +20,13 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherSourceEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.reception.after.ReceptionStatusEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.scenemaker.SceneAttribute;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.scenemaker.SceneMarker;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.util.HtmlUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.AppFollowUpCompleteScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.task.AppAppointmentHandleScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.task.AppAppointmentReceptionScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.task.AppReceptionFinishReceptionScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.task.AppReceptionReceptorChangePageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.appointmentmanager.AppointmentPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.EditExchangeStockScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.ExchangeDetailedScene;
@@ -535,16 +532,5 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
         } finally {
             saveData("小程序--签到--积分增加&积分明细记录增加类型");
         }
-    }
-
-    @Test
-    public void test() {
-        List<SceneAttribute> sceneAttributeList = HtmlUtil.parseHtml("http://192.168.50.3/api-doc/business-jiaochen/app/index.html");
-        sceneAttributeList.forEach(e -> new SceneMarker.Builder()
-                .templatePath("src\\main\\resources\\template")
-                .templateName("sceneTemplate.ftl")
-                .parentPath("src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/sense")
-                .sceneAttribute(e)
-                .buildMarker().execute());
     }
 }
