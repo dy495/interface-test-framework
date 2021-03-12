@@ -303,7 +303,7 @@ public class PublicMethod {
      */
     public void appointment(EnumAppointmentType type, String date) {
         EnumCarModel carModel = EnumCarModel.PANAMERA;
-        UserUtil.loginApplet(EnumAppletToken.BSJ_WM_SMALL_DAILY);
+        UserUtil.loginApplet(EnumAppletToken.BSJ_GLY_DAILY);
         String carId = String.valueOf(getCarId());
         int id = getTimeId(type.getType(), date);
         IScene scene;

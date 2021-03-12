@@ -12,9 +12,7 @@ import java.util.Arrays;
  * 若失效统一修改此类，统一管理
  */
 public enum EnumAppletToken {
-    BSJ_WM_DAILY(EnumProduce.BSJ.name(), "yyRfLs1be+YKFDPHJs2eMg==", "w", true, "oQwmJ5Lm1mlt4HXbxYuZi8L7CW90", "15321527989"),
-
-    BSJ_WM_SMALL_DAILY(EnumProduce.BSJ.name(), "1BrLQrsSQjlX9tPW3mFung==", "纯牛奶", true, "", "15321527989"),
+    BSJ_WM_DAILY(EnumProduce.BSJ.name(), "D6Ns8hkbn8YMg0bAkuT1Lg==", "w", true, "oQwmJ5Lm1mlt4HXbxYuZi8L7CW90", "15321527989"),
 
     BSJ_XMF_DAILY(EnumProduce.BSJ.name(), "X1vn9SlgXS1ohNyW9qRCjg==", "@@@", true, "", "15037286013"),
 
@@ -37,6 +35,7 @@ public enum EnumAppletToken {
     JC_LXQ_DAILY(EnumProduce.JC.name(), "31Z9jgBlSsTIqRTYxOWaKw==", "", false, "", "13436941018"),
 
     JC_GLY_DAILY(EnumProduce.JC.name(), "1nxb35B/gDlj6Q88uD5yEA==", "Max", true, "", "13373166806"),
+
     JC_GLY_ONLINE(EnumProduce.JC.name(), "iCMVUEzq+zOmzldZM2awEQ==", "Max", false, "", "13373166806"),
     ;
 
