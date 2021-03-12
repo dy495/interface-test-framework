@@ -544,7 +544,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             Calendar calendar=Calendar.getInstance();
 
             int day=calendar.get(Calendar.DAY_OF_WEEK);
-            if(3%2==1&&day!=Calendar.SATURDAY){  //如果是星期数数是基数且不是周日
+            if(day%2==0&&day!=Calendar.SUNDAY){  //如果是星期数数是基数且不是周日
                 //查询小程序卡券数量
                 jc.appletLoginToken(pp.getAppletTockenOther);
                 int totalAfter=pf.getVoucherTotal();

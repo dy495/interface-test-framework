@@ -55,10 +55,10 @@ public class PublicParm {
     public String StoreCommodityId="85";  //TODO:编辑需要的商品套餐的名字
     public String importFilepath="src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/importfile.xlsx";   //导入工单文件路径
     //其他小程序用户tocken和车牌号信息
-    public String getAppletTockenOther="R4M7UpQ2+Q3L0QbxGA32iA==";
-    public  String CarplateOther="浙ZXCV123";
+    public String getAppletTockenOther=EnumAppletToken.JC_XMF_DAILY.getToken();
+    public  String CarplateOther="豫GBBA11";
     public String userid="uid_0216a935"; //xx的userId;
-    public String userid2="uid_5eabfb9c"; //xx2的userId;
+    public String userid2="uid_5eabfb9c"; //店长的userId;
 
     public int ordeId=10; // 订单Id
     public String filepath11="src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/1_1.jpg";

@@ -22,6 +22,7 @@ import com.haisheng.framework.util.DateTimeUtil;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
+import java.sql.Array;
 import java.util.*;
 
 public class JcApp extends TestCaseCommon implements TestCaseStd {
@@ -505,19 +506,30 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
     public void AJc_recepchangetion() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            //开始接待
+                       //开始接待
             Long id[] = pf.startReception(pp.carplate7);
             //变更接待前
             int total = jc.appreceptionPage(null, 10).getInteger("total");
             int tasknum[] = pf.appTask();
 
+            appLogin(pp.dzphone,pp.dzcode,pp.dzroleId);
+            int totalDz = jc.appreceptionPage(null, 10).getInteger("total");
+            int tasknumDZ[] = pf.appTask();
+
             jc.receptorChange(id[0], id[1],pp.userid2);    //变更接待
 
             //变更接待后
+            int total2Dz = jc.appreceptionPage(null, 10).getInteger("total");
+            int tasknumADz[] = pf.appTask();
+
+
+            appLogin(pp.jdgw,pp.jdgwpassword,pp.roleidJdgw);
             int total2 = jc.appreceptionPage(null, 10).getInteger("total");
             int tasknumA[] = pf.appTask();
+
             appLogin(pp.dzphone,pp.dzcode,pp.dzroleId);
             jc.receptorChange(id[0], id[1],pp.userid);    //变更接待，变回来
+
             appLogin(pp.jdgw,pp.jdgwpassword,pp.roleidJdgw);
             int total3 = jc.appreceptionPage(null, 10).getInteger("total");
 
@@ -529,6 +541,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
 
             Preconditions.checkArgument(tasknumA[2] - tasknum[2] == -1, "变更接待后今日任务-分子+1 ");
             Preconditions.checkArgument(tasknumA[3] - tasknum[3] == -1, "变更接待后今日任务-分母+1");
+            Preconditions.checkArgument(Arrays.equals(tasknumDZ,tasknumADz),"变更接待前后，店长今日数据变更了");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
