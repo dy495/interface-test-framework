@@ -1220,6 +1220,24 @@ public class StoreScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res);
     }
 
+    public JSONObject organizationAccountAddTwo(String account,String name,String number,String leaderUid,String type,String email,String phone,int status,JSONArray roleIdList,JSONArray shopIdList) throws Exception {
+        String url = "/patrol/organization/role/add";
+        JSONObject json = new JSONObject();
+        json.put("account",account);
+        json.put("name",name);
+        json.put("number",number);
+        json.put("leaderUid",leaderUid);
+        json.put("type",type);
+        json.put("email",email);
+        json.put("phone",phone);
+        json.put("status",status);
+        json.put("roleIdList",roleIdList);
+        json.put("shopIdList",shopIdList);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
 
     /**
      * @description:11.1.3 账号详情
@@ -1268,6 +1286,26 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
         return JSON.parseObject(res);
     }
+
+    public JSONObject organizationAccountEditTwo(String account,String name,String number,String leaderUid,String type,String email,String phone,int status,JSONArray roleIdList,JSONArray shopIdList) throws Exception {
+        String url = "/patrol/organization/account/edit";
+        JSONObject json = new JSONObject();
+        json.put("account",account);
+        json.put("name",name);
+        json.put("number",number);
+        json.put("leaderUid",leaderUid);
+        json.put("type",type);
+        json.put("email",email);
+        json.put("phone",phone);
+        json.put("status",status);
+        json.put("roleIdList",roleIdList);
+        json.put("shopIdList",shopIdList);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+
 
     /**
      * @description:11.1.5 账号删除
@@ -1412,6 +1450,19 @@ public class StoreScenarioUtil extends TestCaseCommon {
     }
 
 
+    public JSONObject organizationRoleAddTwo(String roleName,int superiorRoleId,String description,JSONArray moduleIds) throws Exception {
+        String url = "/patrol/organization/role/add";
+        JSONObject json = new JSONObject();
+        json.put("roleName",roleName);
+        json.put("superiorRoleId",superiorRoleId);
+        json.put("description",description);
+        json.put("moduleIds",moduleIds);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+
     /**
      * @description:11.2.4 角色详情
      * @author: qingqing
@@ -1450,6 +1501,21 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
         return JSON.parseObject(res);
     }
+
+
+    public JSONObject organizationRoleEditTwo(int roleId,int superiorRoleId,String roleName, String description, JSONArray moduleIds) throws Exception {
+        String url = "/patrol/organization/role/edit";
+        JSONObject json = new JSONObject();
+        json.put("roleId",roleId);
+        json.put("superiorRoleId",superiorRoleId);
+        json.put("roleName",roleName);
+        json.put("description",description);
+        json.put("moduleIds",moduleIds);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
 
     /**
      * @description:11.2.6 角色删除
