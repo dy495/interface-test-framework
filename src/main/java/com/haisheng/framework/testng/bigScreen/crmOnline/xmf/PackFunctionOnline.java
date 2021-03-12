@@ -25,6 +25,7 @@ public class PackFunctionOnline {
     }
 
     public String username(String sale_id) throws Exception {
+        crm.login(pp.superManger,pp.superpassword);
         String userLoginName = "";
         JSONArray userlist = crm.userPage(1, 100).getJSONArray("list");
         for (int i = 0; i < userlist.size(); i++) {
@@ -194,6 +195,7 @@ public class PackFunctionOnline {
         ll.add(0, list);
 
         //创建接待
+        crm.login(pp.qiantai,pp.qtpassword);
         crm.creatReception2("FIRST_VISIT", ll);
         crm.login(userLoginName, pp.adminpassword);
 
