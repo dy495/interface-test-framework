@@ -55,18 +55,13 @@ import java.util.stream.Collectors;
  * @date 2021/1/29 11:17
  */
 public class MarketingManageCaseOnline extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduce product = EnumTestProduce.JIAOCHEN_ONLINE;
-    private static final EnumAccount ADMINISTRATOR = EnumAccount.ADMINISTRATOR_ONLINE;
-    //小程序用户
+    private static final EnumTestProduce PRODUCE = EnumTestProduce.JIAOCHEN_ONLINE;
+    private static final EnumAccount ALL_AUTHORITY_ONLINE = EnumAccount.ALL_AUTHORITY_ONLINE;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_ONLINE;
     private static final EnumAppletToken APPLET_USER_TWO = EnumAppletToken.JC_XMF_ONLINE;
-    //访问者
-    public Visitor visitor = new Visitor(product);
-    //登录工具
+    public Visitor visitor = new Visitor(PRODUCE);
     public UserUtil user = new UserUtil(visitor);
-    //封装方法
     public SupporterUtil util = new SupporterUtil(visitor);
-
 
     @BeforeClass
     @Override
@@ -77,17 +72,16 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
         commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
-        commonConfig.product = product.getAbbreviation();
-        commonConfig.referer = product.getReferer();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_ONLINE_TEST.getJobName());
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = EnumDingTalkWebHook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
-        commonConfig.roleId = product.getRoleId();
-        commonConfig.referer = product.getReferer();
-        commonConfig.shopId = product.getShopId();
+        commonConfig.product = PRODUCE.getAbbreviation();
+        commonConfig.referer = PRODUCE.getReferer();
+        commonConfig.shopId = PRODUCE.getShopId();
+        commonConfig.roleId = ALL_AUTHORITY_ONLINE.getRoleId();
         beforeClassInit(commonConfig);
     }
 
@@ -100,7 +94,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-        user.loginPc(ADMINISTRATOR);
+        user.loginPc(ALL_AUTHORITY_ONLINE);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
@@ -316,9 +310,9 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             VoucherChangeRecord voucherChangeRecord = util.collectBean(scene, VoucherChangeRecord.class).get(0);
             CommonUtil.checkResult(voucherName + " 变更时间", data, voucherChangeRecord.getTime());
             CommonUtil.checkResult(voucherName + " 变更记录变更事项", ChangeItemEnum.INVALIDED.getName(), voucherChangeRecord.getChangeItem());
-            CommonUtil.checkResult(voucherName + " 操作人", ADMINISTRATOR.getName(), voucherChangeRecord.getOperateSaleName());
-            CommonUtil.checkResult(voucherName + " 操作人角色", ADMINISTRATOR.getRole(), voucherChangeRecord.getOperateSaleRole());
-            CommonUtil.checkResult(voucherName + " 操作人账号", ADMINISTRATOR.getPhone(), voucherChangeRecord.getOperateSaleAccount());
+            CommonUtil.checkResult(voucherName + " 操作人", ALL_AUTHORITY_ONLINE.getName(), voucherChangeRecord.getOperateSaleName());
+            CommonUtil.checkResult(voucherName + " 操作人角色", ALL_AUTHORITY_ONLINE.getRole(), voucherChangeRecord.getOperateSaleRole());
+            CommonUtil.checkResult(voucherName + " 操作人账号", ALL_AUTHORITY_ONLINE.getPhone(), voucherChangeRecord.getOperateSaleAccount());
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -359,9 +353,9 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             //校验变更记录变更事项
             VoucherChangeRecord voucherChangeRecord = util.collectBean(changeRecordScene, VoucherChangeRecord.class).get(0);
             CommonUtil.checkResult(voucherName + " 变更记录变更事项", ChangeItemEnum.ADD.getName() + 10 + "张", voucherChangeRecord.getChangeItem());
-            CommonUtil.checkResult(voucherName + " 操作人", ADMINISTRATOR.getName(), voucherChangeRecord.getOperateSaleName());
-            CommonUtil.checkResult(voucherName + " 操作人角色", ADMINISTRATOR.getRole(), voucherChangeRecord.getOperateSaleRole());
-            CommonUtil.checkResult(voucherName + " 操作人账号", ADMINISTRATOR.getPhone(), voucherChangeRecord.getOperateSaleAccount());
+            CommonUtil.checkResult(voucherName + " 操作人", ALL_AUTHORITY_ONLINE.getName(), voucherChangeRecord.getOperateSaleName());
+            CommonUtil.checkResult(voucherName + " 操作人角色", ALL_AUTHORITY_ONLINE.getRole(), voucherChangeRecord.getOperateSaleRole());
+            CommonUtil.checkResult(voucherName + " 操作人账号", ALL_AUTHORITY_ONLINE.getPhone(), voucherChangeRecord.getOperateSaleAccount());
             //增发记录状态=已通过
             JSONObject newResponse = visitor.invokeApi(additionalRecordScene).getJSONArray("list").getJSONObject(0);
             CommonUtil.checkResult(voucherName + " 增发记录状态", AdditionalRecordStatusEnum.AGREE.getName(), newResponse.getString("status_name"));
@@ -491,9 +485,9 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             VoucherChangeRecord voucherChangeRecord = util.collectBean(changeRecordScene, VoucherChangeRecord.class).get(0);
             CommonUtil.checkResult(voucherName + " 变更时间", DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm"), voucherChangeRecord.getTime());
             CommonUtil.checkResult(voucherName + " 变更记录变更事项", ChangeItemEnum.INVALIDED.getName(), voucherChangeRecord.getChangeItem());
-            CommonUtil.checkResult(voucherName + " 操作人", ADMINISTRATOR.getName(), voucherChangeRecord.getOperateSaleName());
-            CommonUtil.checkResult(voucherName + " 操作人角色", ADMINISTRATOR.getRole(), voucherChangeRecord.getOperateSaleRole());
-            CommonUtil.checkResult(voucherName + " 操作人账号", ADMINISTRATOR.getPhone(), voucherChangeRecord.getOperateSaleAccount());
+            CommonUtil.checkResult(voucherName + " 操作人", ALL_AUTHORITY_ONLINE.getName(), voucherChangeRecord.getOperateSaleName());
+            CommonUtil.checkResult(voucherName + " 操作人角色", ALL_AUTHORITY_ONLINE.getRole(), voucherChangeRecord.getOperateSaleRole());
+            CommonUtil.checkResult(voucherName + " 操作人账号", ALL_AUTHORITY_ONLINE.getPhone(), voucherChangeRecord.getOperateSaleAccount());
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -536,9 +530,9 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             //校验变更记录变更事项
             VoucherChangeRecord voucherChangeRecord = util.collectBean(changeRecordScene, VoucherChangeRecord.class).get(0);
             CommonUtil.checkResult(voucherName + " 变更记录变更事项", ChangeItemEnum.ADD.getName() + "10张", voucherChangeRecord.getChangeItem());
-            CommonUtil.checkResult(voucherName + " 操作人", ADMINISTRATOR.getName(), voucherChangeRecord.getOperateSaleName());
-            CommonUtil.checkResult(voucherName + " 操作人角色", ADMINISTRATOR.getRole(), voucherChangeRecord.getOperateSaleRole());
-            CommonUtil.checkResult(voucherName + " 操作人账号", ADMINISTRATOR.getPhone(), voucherChangeRecord.getOperateSaleAccount());
+            CommonUtil.checkResult(voucherName + " 操作人", ALL_AUTHORITY_ONLINE.getName(), voucherChangeRecord.getOperateSaleName());
+            CommonUtil.checkResult(voucherName + " 操作人角色", ALL_AUTHORITY_ONLINE.getRole(), voucherChangeRecord.getOperateSaleRole());
+            CommonUtil.checkResult(voucherName + " 操作人账号", ALL_AUTHORITY_ONLINE.getPhone(), voucherChangeRecord.getOperateSaleAccount());
             //增发记录状体=已通过
             JSONObject newResponse = visitor.invokeApi(additionalRecordScene);
             String newStatusName = newResponse.getJSONArray("list").getJSONObject(0).getString("status_name");
@@ -592,9 +586,9 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             //校验变更记录变更事项
             VoucherChangeRecord voucherChangeRecord = util.collectBean(changeRecordScene, VoucherChangeRecord.class).get(0);
             CommonUtil.checkResult(voucherName + " 变更记录变更事项", ChangeItemEnum.INVALIDED.getName(), voucherChangeRecord.getChangeItem());
-            CommonUtil.checkResult(voucherName + " 操作人", ADMINISTRATOR.getName(), voucherChangeRecord.getOperateSaleName());
-            CommonUtil.checkResult(voucherName + " 操作人角色", ADMINISTRATOR.getRole(), voucherChangeRecord.getOperateSaleRole());
-            CommonUtil.checkResult(voucherName + " 操作人账号", ADMINISTRATOR.getPhone(), voucherChangeRecord.getOperateSaleAccount());
+            CommonUtil.checkResult(voucherName + " 操作人", ALL_AUTHORITY_ONLINE.getName(), voucherChangeRecord.getOperateSaleName());
+            CommonUtil.checkResult(voucherName + " 操作人角色", ALL_AUTHORITY_ONLINE.getRole(), voucherChangeRecord.getOperateSaleRole());
+            CommonUtil.checkResult(voucherName + " 操作人账号", ALL_AUTHORITY_ONLINE.getPhone(), voucherChangeRecord.getOperateSaleAccount());
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -639,9 +633,9 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             VoucherChangeRecord voucherChangeRecord = voucherChangeRecords.get(0);
             String changeItem = voucherChangeRecord.getChangeItem();
             CommonUtil.checkResult(voucherName + " 变更记录变更事项", ChangeItemEnum.ADD.getName() + "1张", changeItem);
-            CommonUtil.checkResult(voucherName + " 操作人", ADMINISTRATOR.getName(), voucherChangeRecord.getOperateSaleName());
-            CommonUtil.checkResult(voucherName + " 操作人角色", ADMINISTRATOR.getRole(), voucherChangeRecord.getOperateSaleRole());
-            CommonUtil.checkResult(voucherName + " 操作人账号", ADMINISTRATOR.getPhone(), voucherChangeRecord.getOperateSaleAccount());
+            CommonUtil.checkResult(voucherName + " 操作人", ALL_AUTHORITY_ONLINE.getName(), voucherChangeRecord.getOperateSaleName());
+            CommonUtil.checkResult(voucherName + " 操作人角色", ALL_AUTHORITY_ONLINE.getRole(), voucherChangeRecord.getOperateSaleRole());
+            CommonUtil.checkResult(voucherName + " 操作人账号", ALL_AUTHORITY_ONLINE.getPhone(), voucherChangeRecord.getOperateSaleAccount());
             //增发记录状体=已通过
             JSONObject newResponse = visitor.invokeApi(additionalRecordScene);
             String newStatusName = newResponse.getJSONArray("list").getJSONObject(0).getString("status_name");
@@ -731,7 +725,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             int appletVoucherNum = util.getAppletVoucherNum();
             int appletPackageNum = util.getAppletPackageNum();
             //购买临时套餐
-            user.loginPc(ADMINISTRATOR);
+            user.loginPc(ALL_AUTHORITY_ONLINE);
             JSONArray voucherList = util.getVoucherArray(voucherId, 1);
             util.buyTemporaryPackage(voucherList, 1);
             util.makeSureBuyPackage("临时套餐");
@@ -776,7 +770,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             user.loginApplet(APPLET_USER_ONE);
             int appletVoucherNum = util.getAppletVoucherNum();
             int appletPackageNum = util.getAppletPackageNum();
-            user.loginPc(ADMINISTRATOR);
+            user.loginPc(ALL_AUTHORITY_ONLINE);
             //购买固定套餐
             util.buyFixedPackage(packageId, 1);
             //确认支付
@@ -820,7 +814,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             int appletVoucherNum = util.getAppletVoucherNum();
             int appletPackageNum = util.getAppletPackageNum();
             //临时套餐
-            user.loginPc(ADMINISTRATOR);
+            user.loginPc(ALL_AUTHORITY_ONLINE);
             JSONArray voucherList = util.getVoucherArray(voucherId, 1);
             util.buyTemporaryPackage(voucherList, 0);
             util.makeSureBuyPackage("临时套餐");
@@ -864,7 +858,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             user.loginApplet(APPLET_USER_ONE);
             int appletVoucherNum = util.getAppletVoucherNum();
             int appletPackageNum = util.getAppletPackageNum();
-            user.loginPc(ADMINISTRATOR);
+            user.loginPc(ALL_AUTHORITY_ONLINE);
             //赠送固定套餐
             util.buyFixedPackage(packageId, 0);
             //确认支付
@@ -901,7 +895,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             //作废前数据
             user.loginApplet(APPLET_USER_ONE);
             int voucherCherNum = util.getAppletVoucherNum();
-            user.loginPc(ADMINISTRATOR);
+            user.loginPc(ALL_AUTHORITY_ONLINE);
             List<VoucherInvalidPage> voucherInvalidPages = util.getVoucherInvalidList(voucherId);
             IScene voucherInfoScene = VoucherInfoScene.builder().id(voucherId).build();
             int totalInvalid = visitor.invokeApi(voucherInfoScene).getInteger("total_invalid");
@@ -915,8 +909,8 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             List<VoucherInvalidPage> newVoucherInvalidPages = util.getVoucherInvalidList(voucherId);
             CommonUtil.checkResult(voucherName + " 作废后作废记录列表数", voucherInvalidPages.size() + 1, newVoucherInvalidPages.size());
             CommonUtil.checkResult(voucherName + " 作废后领取人电话", APPLET_USER_ONE.getPhone(), newVoucherInvalidPages.get(0).getCustomerPhone());
-            CommonUtil.checkResult(voucherName + " 作废后作废人姓名", ADMINISTRATOR.getName(), newVoucherInvalidPages.get(0).getInvalidName());
-            CommonUtil.checkResult(voucherName + " 作废后作废人电话", ADMINISTRATOR.getPhone(), newVoucherInvalidPages.get(0).getInvalidPhone());
+            CommonUtil.checkResult(voucherName + " 作废后作废人姓名", ALL_AUTHORITY_ONLINE.getName(), newVoucherInvalidPages.get(0).getInvalidName());
+            CommonUtil.checkResult(voucherName + " 作废后作废人电话", ALL_AUTHORITY_ONLINE.getPhone(), newVoucherInvalidPages.get(0).getInvalidPhone());
             CommonUtil.checkResult(voucherName + " 作废后作废说明", EnumDesc.INVALID_REASON.getDesc(), newVoucherInvalidPages.get(0).getInvalidDescription());
             CommonUtil.checkResult(voucherCode + " 作废后共作废数", totalInvalid + 1, visitor.invokeApi(voucherInfoScene).getInteger("total_invalid"));
             user.loginApplet(APPLET_USER_ONE);
@@ -1046,7 +1040,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             IScene voucherVerificationScene = AppletVoucherVerificationScene.builder().id(String.valueOf(appletVoucherId)).verificationCode(code).build();
             visitor.invokeApi(voucherVerificationScene);
             //核销之后数据
-            user.loginPc(ADMINISTRATOR);
+            user.loginPc(ALL_AUTHORITY_ONLINE);
             List<VerificationRecord> newVerificationRecords = util.collectBean(verificationRecordScene, VerificationRecord.class);
             CommonUtil.checkResult(voucherName + " 核销记录列表数", verificationRecords.size() + 1, newVerificationRecords.size());
             CommonUtil.checkResult(voucherCode + " 核销渠道", VerifyChannelEnum.ACTIVE.getName(), newVerificationRecords.get(0).getVerificationChannelName());
@@ -1074,7 +1068,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             user.loginApplet(APPLET_USER_TWO);
             int receiveVoucherNum = util.getAppletVoucherNum();
             //转移
-            user.loginPc(ADMINISTRATOR);
+            user.loginPc(ALL_AUTHORITY_ONLINE);
             int messageNum = visitor.invokeApi(PushMsgPageScene.builder().build()).getInteger("total");
             IScene transferScene = TransferScene.builder().transferPhone(APPLET_USER_ONE.getPhone()).receivePhone(APPLET_USER_TWO.getPhone()).voucherIds(getList(id)).build();
             visitor.invokeApi(transferScene);
@@ -1095,7 +1089,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             int newReceiveVoucherNum = util.getAppletVoucherNum();
             CommonUtil.checkResult("接收者我的卡券数", receiveVoucherNum + 1, newReceiveVoucherNum);
             //pc消息记录+1
-            user.loginPc(ADMINISTRATOR);
+            user.loginPc(ALL_AUTHORITY_ONLINE);
             JSONObject messageResponse = visitor.invokeApi(PushMsgPageScene.builder().build());
             int newMessageNum = messageResponse.getInteger("total");
             CommonUtil.checkResult("消息记录数", messageNum + 1, newMessageNum);
@@ -1295,7 +1289,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             String voucherName = appletVoucher.getTitle();
             Long voucherId = appletVoucher.getId();
             //转移
-            user.loginPc(ADMINISTRATOR);
+            user.loginPc(ALL_AUTHORITY_ONLINE);
             IScene scene = TransferScene.builder().transferPhone(APPLET_USER_ONE.getPhone()).receivePhone(APPLET_USER_TWO.getPhone()).voucherIds(getList(voucherId)).build();
             String message = visitor.invokeApi(scene, false).getString("message");
             String err = "卡券【" + voucherName + "】已被使用或已过期，请重新选择！";
@@ -1318,7 +1312,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             String voucherName = appletVoucher.getTitle();
             Long voucherId = appletVoucher.getId();
             //转移
-            user.loginPc(ADMINISTRATOR);
+            user.loginPc(ALL_AUTHORITY_ONLINE);
             IScene scene = TransferScene.builder().transferPhone(APPLET_USER_ONE.getPhone()).receivePhone(APPLET_USER_TWO.getPhone()).voucherIds(getList(voucherId)).build();
             String message = visitor.invokeApi(scene, false).getString("message");
             String err = "卡券【" + voucherName + "】已被使用或已过期，请重新选择！";
@@ -1342,7 +1336,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             String voucherName = appletVoucher.getTitle();
             Long voucherId = appletVoucher.getId();
             //转移
-            user.loginPc(ADMINISTRATOR);
+            user.loginPc(ALL_AUTHORITY_ONLINE);
             Arrays.stream(phones).forEach(phone -> {
                 IScene scene = TransferScene.builder().transferPhone(phone).receivePhone(APPLET_USER_ONE.getPhone()).voucherIds(getList(voucherId)).build();
                 String message = visitor.invokeApi(scene, false).getString("message");
@@ -1368,7 +1362,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             String voucherName = appletVoucher.getTitle();
             Long voucherId = appletVoucher.getId();
             //转移
-            user.loginPc(ADMINISTRATOR);
+            user.loginPc(ALL_AUTHORITY_ONLINE);
             Arrays.stream(phones).forEach(phone -> {
                 IScene scene = TransferScene.builder().transferPhone(APPLET_USER_ONE.getPhone()).receivePhone(phone).voucherIds(getList(voucherId)).build();
                 String message = visitor.invokeApi(scene, false).getString("message");
@@ -1591,7 +1585,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            user.loginPc(ADMINISTRATOR);
+            user.loginPc(ALL_AUTHORITY_ONLINE);
             util.switchVerificationStatus(code, true);
             saveData("核销人员--卡券核销时将核销人状态关闭，提示核销失败");
         }
@@ -2650,7 +2644,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             user.loginApplet(APPLET_USER_ONE);
             int packageNum = util.getAppletPackageNum();
             int voucherNum = util.getAppletVoucherNum();
-            user.loginPc(ADMINISTRATOR);
+            user.loginPc(ALL_AUTHORITY_ONLINE);
             PackagePage packagePage = util.getPackagePage(PackageStatusEnum.AGREE);
             packageId = packagePage.getPackageId();
             String packageName = packagePage.getPackageName();
@@ -2670,7 +2664,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            user.loginPc(ADMINISTRATOR);
+            user.loginPc(ALL_AUTHORITY_ONLINE);
             IScene switchPackageStatusScene = SwitchPackageStatusScene.builder().id(packageId).status(true).build();
             visitor.invokeApi(switchPackageStatusScene);
             saveData("套餐表单--购买套餐，确认购买前，套餐状态改为关闭，再确认购买小程序会收到套餐/卡券");
@@ -2740,7 +2734,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             int appletVoucherNum = util.getAppletVoucherNum();
             int appletMessageNum = util.getAppletMessageNum();
             int appletPackageNum = util.getAppletPackageNum();
-            user.loginPc(ADMINISTRATOR);
+            user.loginPc(ALL_AUTHORITY_ONLINE);
             String date = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm");
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             //发送消息
@@ -3137,7 +3131,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             IScene messageFormPageScene = AppletSignInDetailScene.builder().build();
             Integer signInScore = visitor.invokeApi(messageFormPageScene).getInteger("sign_in_score");
             CommonUtil.checkResultPlus("pc修改后签到积分为", 999, "小程序签到可得积分为", signInScore);
-            user.loginPc(ADMINISTRATOR);
+            user.loginPc(ALL_AUTHORITY_ONLINE);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -3161,7 +3155,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             CommonUtil.checkResult("签到任务变更记录总数", recordTotal + 1, newRecordTotal);
             //变更内容
             JSONObject newResponse = SignInConfigChangeRecordScene.builder().build().execute(visitor, true).getJSONArray("list").getJSONObject(0);
-            CommonUtil.checkResult("操作员手机号", ADMINISTRATOR.getPhone(), newResponse.getString("operate_phone"));
+            CommonUtil.checkResult("操作员手机号", ALL_AUTHORITY_ONLINE.getPhone(), newResponse.getString("operate_phone"));
             CommonUtil.checkResult("操作时间", DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm"), newResponse.getString("operate_date"));
             CommonUtil.checkResult("变更积分", awardScore + 1, newResponse.getInteger("change_score"));
             CommonUtil.checkResult("变更备注", EnumDesc.FAULT_DESCRIPTION.getDesc(), newResponse.getString("change_remark"));

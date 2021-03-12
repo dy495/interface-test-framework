@@ -717,7 +717,7 @@ public class BusinessUtilOnline {
             activityRegisterApplet(id1,"13373166806","郭丽雅",2,"1513814362@qq.com","22","女","其他");
             ids.add(id1);
             //登录PC
-            user.loginPc(EnumAccount.ADMINISTRATOR_ONLINE);
+            user.loginPc(EnumAccount.ALL_AUTHORITY_ONLINE);
         }
         return ids;
 
@@ -1190,7 +1190,7 @@ public class BusinessUtilOnline {
         JSONArray registerItems = new JSONArray();
         Long activityId=0L;
         //在活动详情中获得招募活动的报名信息
-        user.loginPc(EnumAccount.ADMINISTRATOR_ONLINE);
+        user.loginPc(EnumAccount.ALL_AUTHORITY_ONLINE);
         JSONObject response = getRecruitActivityDetailDate(id);
         JSONArray registerInformationList = response.getJSONArray("register_information_list");
         for (int i = 0; i< registerInformationList.size(); i++) {
@@ -1330,7 +1330,7 @@ public class BusinessUtilOnline {
             }
         }
         //登录PC
-         user.loginPc(EnumAccount.ADMINISTRATOR_ONLINE);
+         user.loginPc(EnumAccount.ALL_AUTHORITY_ONLINE);
         //获取PC中对应的优惠券
 
         return ids;

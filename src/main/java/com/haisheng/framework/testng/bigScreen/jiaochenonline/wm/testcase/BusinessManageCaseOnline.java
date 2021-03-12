@@ -49,17 +49,13 @@ import java.util.stream.Collectors;
  * @date 2021/1/29 11:17
  */
 public class BusinessManageCaseOnline extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduce product = EnumTestProduce.JIAOCHEN_ONLINE;
-    private static final EnumAccount ADMINISTRATOR = EnumAccount.RECEPTION_ONLINE;
+    private static final EnumTestProduce PRODUCE = EnumTestProduce.JIAOCHEN_ONLINE;
+    private static final EnumAccount ALL_AUTHORITY_ONLINE = EnumAccount.ALL_AUTHORITY_ONLINE;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_ONLINE;
-    CommonConfig commonConfig = new CommonConfig();
-    //访问者
-    public Visitor visitor = new Visitor(product);
-    //登录工具
+    public Visitor visitor = new Visitor(PRODUCE);
     public UserUtil user = new UserUtil(visitor);
-    //封装方法
     public SupporterUtil util = new SupporterUtil(visitor);
-
+    public CommonConfig commonConfig = new CommonConfig();
 
     @BeforeClass
     @Override
@@ -69,16 +65,16 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
         commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
-        commonConfig.product = product.getAbbreviation();
-        commonConfig.referer = product.getReferer();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_ONLINE_TEST.getJobName());
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = EnumDingTalkWebHook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
-        commonConfig.shopId = product.getShopId();
-        commonConfig.roleId = "2227";
+        commonConfig.product = PRODUCE.getAbbreviation();
+        commonConfig.referer = PRODUCE.getReferer();
+        commonConfig.shopId = PRODUCE.getShopId();
+        commonConfig.roleId = ALL_AUTHORITY_ONLINE.getRoleId();
         beforeClassInit(commonConfig);
     }
 
@@ -91,7 +87,7 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-        user.loginPc(ADMINISTRATOR);
+        user.loginPc(ALL_AUTHORITY_ONLINE);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
@@ -117,7 +113,7 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
             int appletVoucherNum = util.getAppletVoucherNum();
             int appletPackageNum = util.getAppletPackageNum();
             //购买临时套餐
-            user.loginPc(ADMINISTRATOR);
+            user.loginPc(ALL_AUTHORITY_ONLINE);
             JSONArray voucherList = util.getVoucherArray(voucherId, 1);
             util.receptionBuyTemporaryPackage(voucherList, 1);
             util.makeSureBuyPackage("临时套餐");
@@ -171,7 +167,7 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
             int appletMessageMessageNum = util.getAppletMessageNum();
             int appletVoucherNum = util.getAppletVoucherNum();
             int appletPackageNum = util.getAppletPackageNum();
-            user.loginPc(ADMINISTRATOR);
+            user.loginPc(ALL_AUTHORITY_ONLINE);
             //购买固定套餐
             util.receptionBuyFixedPackage(packageId, 1);
             //确认支付
@@ -224,7 +220,7 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
             int appletVoucherNum = util.getAppletVoucherNum();
             int appletPackageNum = util.getAppletPackageNum();
             //赠送临时套餐
-            user.loginPc(ADMINISTRATOR);
+            user.loginPc(ALL_AUTHORITY_ONLINE);
             JSONArray voucherList = util.getVoucherArray(voucherId, 1);
             util.receptionBuyTemporaryPackage(voucherList, 0);
             util.makeSureBuyPackage("临时套餐");
@@ -278,7 +274,7 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
             int appletMessageMessageNum = util.getAppletMessageNum();
             int appletVoucherNum = util.getAppletVoucherNum();
             int appletPackageNum = util.getAppletPackageNum();
-            user.loginPc(ADMINISTRATOR);
+            user.loginPc(ALL_AUTHORITY_ONLINE);
             //赠送固定套餐
             util.receptionBuyFixedPackage(packageId, 0);
             //确认支付
@@ -331,7 +327,7 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
             user.loginApplet(APPLET_USER_ONE);
             int appletVoucherNum = util.getAppletVoucherNum();
             int appletPackageNum = util.getAppletPackageNum();
-            user.loginPc(ADMINISTRATOR);
+            user.loginPc(ALL_AUTHORITY_ONLINE);
             //赠送固定套餐
             util.receptionBuyFixedPackage(packageId, 0);
             //取消支付
@@ -368,7 +364,7 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
             int appletVoucherNum = util.getAppletVoucherNum();
             int appletPackageNum = util.getAppletPackageNum();
             //赠送临时套餐
-            user.loginPc(ADMINISTRATOR);
+            user.loginPc(ALL_AUTHORITY_ONLINE);
             JSONArray voucherList = util.getVoucherArray(voucherId, 1);
             util.receptionBuyTemporaryPackage(voucherList, 0);
             util.cancelSoldPackage("临时套餐");
@@ -454,7 +450,7 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
     public void customerManager_data_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            commonConfig.shopId = "20034";
+            commonConfig.shopId = ALL_AUTHORITY_ONLINE.getReceptionShopId();
             Double[] doubles = {1.00, 2.99, 3.66, 50.1};
             JSONObject jsonObject = CarModelPageScene.builder().build().execute(visitor, true).getJSONArray("list").getJSONObject(0);
             Integer id = jsonObject.getInteger("id");
@@ -466,7 +462,7 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            commonConfig.shopId = product.getShopId();
+            commonConfig.shopId = PRODUCE.getShopId();
             saveData("预约管理--保养配置，修改保养价格");
         }
     }
