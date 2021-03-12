@@ -12,9 +12,9 @@ import java.util.Arrays;
  * 若失效统一修改此类，统一管理
  */
 public enum EnumAppletToken {
-    BSJ_WM_DAILY(EnumProduce.BSJ.name(), "0Q1v4zp4ls4WSCry8hIhww==", "w", true, "oQwmJ5Lm1mlt4HXbxYuZi8L7CW90", "15321527989"),
+    BSJ_WM_DAILY(EnumProduce.BSJ.name(), "yyRfLs1be+YKFDPHJs2eMg==", "w", true, "oQwmJ5Lm1mlt4HXbxYuZi8L7CW90", "15321527989"),
 
-    BSJ_WM_SMALL_DAILY(EnumProduce.BSJ.name(), "rgxNaMrmP7Mr4IIDvBMpjQ==", "纯牛奶", true, "", "15321527989"),
+    BSJ_WM_SMALL_DAILY(EnumProduce.BSJ.name(), "1BrLQrsSQjlX9tPW3mFung==", "纯牛奶", true, "", "15321527989"),
 
     BSJ_XMF_DAILY(EnumProduce.BSJ.name(), "anZxfh+0HTb863SNkyZzaw==", "@@@", true, "", "15037286013"),
 
