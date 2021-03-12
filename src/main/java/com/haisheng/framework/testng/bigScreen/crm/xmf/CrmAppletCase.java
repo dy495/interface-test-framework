@@ -401,7 +401,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int num = crm.myCarList().getJSONArray("list").size();
-            String plate_number = "沪W336699";
+            String plate_number = pp.samePlate;
             crm.myCarAddCode(car_type, car_model, plate_number).getLong("code");
             int numA = crm.myCarList().getJSONArray("list").size();
             Preconditions.checkArgument(numA - num == 0, "添加重复车牌，不重复显示");

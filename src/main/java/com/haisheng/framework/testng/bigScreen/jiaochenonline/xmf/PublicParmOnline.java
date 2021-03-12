@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 
 public class PublicParmOnline {
+    public int num=5;
     public String roleId="395";
     public String shopId="-1";   //门店Id
     public String shopIdZ="20032";   //门店Id 中关村店
