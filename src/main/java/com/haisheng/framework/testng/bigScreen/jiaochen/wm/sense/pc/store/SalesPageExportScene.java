@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.manage;
+package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.store;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -6,13 +6,13 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/manage/intelligent-remind/page的接口
+ * /jiaochen/pc/store/sales/page/export的接口
  *
  * @author wangmin
  * @date 2021-03-15 10:12:39
  */
 @Builder
-public class IntelligentRemindPageScene extends BaseScene {
+public class SalesPageExportScene extends BaseScene {
     /**
      * 描述 页码 大于0
      * 是否必填 true
@@ -28,11 +28,18 @@ public class IntelligentRemindPageScene extends BaseScene {
     private final Integer size;
 
     /**
-     * 描述 提醒项目（提醒类型）名
+     * 描述 分销员手机号
      * 是否必填 false
      * 版本 v2.0
      */
-    private final String item;
+    private final String salesPhone;
+
+    /**
+     * 描述 门店
+     * 是否必填 false
+     * 版本 v2.0
+     */
+    private final Long shopId;
 
 
     @Override
@@ -40,12 +47,13 @@ public class IntelligentRemindPageScene extends BaseScene {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);
-        object.put("item", item);
+        object.put("sales_phone", salesPhone);
+        object.put("shop_id", shopId);
         return object;
     }
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/manage/intelligent-remind/page";
+        return "/jiaochen/pc/store/sales/page/export";
     }
 }

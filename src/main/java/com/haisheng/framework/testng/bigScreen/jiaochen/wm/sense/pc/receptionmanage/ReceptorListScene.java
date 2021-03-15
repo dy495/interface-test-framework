@@ -1,31 +1,21 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/reception-manage/receptor/list的接口
- *
- * @author wangmin
- * @date 2021-03-12 17:23:18
+ * 接待人员列表
  */
 @Builder
 public class ReceptorListScene extends BaseScene {
-    /**
-     * 描述 门店id
-     * 是否必填 true
-     * 版本 v2.0
-     */
-    private final Long shopId;
-
+    private final Integer shopId;
 
     @Override
-    public JSONObject getRequestBody(){
-        JSONObject object = new JSONObject();
-        object.put("shop_id", shopId);
-        return object;
+    public JSONObject getRequestBody() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("shop_id", shopId);
+        return jsonObject;
     }
 
     @Override

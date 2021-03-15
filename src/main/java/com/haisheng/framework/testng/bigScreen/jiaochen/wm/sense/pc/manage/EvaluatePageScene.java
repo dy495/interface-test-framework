@@ -1,142 +1,24 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.manage;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/manage/evaluate/page的接口
- *
- * @author wangmin
- * @date 2021-03-12 17:23:18
+ * 评价列表
  */
 @Builder
 public class EvaluatePageScene extends BaseScene {
-    /**
-     * 描述 页码 大于0
-     * 是否必填 true
-     * 版本 v1.0
-     */
-    private final Integer page;
-
-    /**
-     * 描述 页大小 范围为[1,100]
-     * 是否必填 true
-     * 版本 v1.0
-     */
-    private final Integer size;
-
-    /**
-     * 描述 车牌号
-     * 是否必填 false
-     * 版本 v2.0
-     */
-    private final String plateNumber;
-
-    /**
-     * 描述 客户经理id 通过权限员工列表获取下拉列表 auth_type 为 AFTER_SALE_RECEPTION
-     * 是否必填 false
-     * 版本 v2.0
-     */
-    private final String serviceSaleId;
-
-    /**
-     * 描述 评价类型 通用枚举接口获取，key为EVALUATE_TYPE
-     * 是否必填 false
-     * 版本 v2.0
-     */
-    private final Integer evaluateType;
-
-    /**
-     * 描述 归属门店
-     * 是否必填 false
-     * 版本 v2.0
-     */
-    private final Long shopId;
-
-    /**
-     * 描述 客户名称
-     * 是否必填 false
-     * 版本 v2.0
-     */
-    private final String customerName;
-
-    /**
-     * 描述 评价星级 （1-5）
-     * 是否必填 false
-     * 版本 v2.0
-     */
-    private final Integer score;
-
-    /**
-     * 描述 评价时间范围查询开始日期
-     * 是否必填 false
-     * 版本 v2.0
-     */
-    private final String evaluateStart;
-
-    /**
-     * 描述 评价时间范围查询结束日期
-     * 是否必填 false
-     * 版本 v2.0
-     */
-    private final String evaluateEnd;
-
-    /**
-     * 描述 是否跟进
-     * 是否必填 false
-     * 版本 v2.0
-     */
-    private final Boolean isFollowUp;
-
-    /**
-     * 描述 客户联系方式
-     * 是否必填 false
-     * 版本 v2.0
-     */
-    private final String customerPhone;
-
-    /**
-     * 描述 是否留言
-     * 是否必填 false
-     * 版本 v2.0
-     */
-    private final Boolean isHaveMsg;
-
-    /**
-     * 描述 来源项生成时间（任务时间）范围查询开始日期
-     * 是否必填 false
-     * 版本 v2.0
-     */
-    private final String sourceCreateStart;
-
-    /**
-     * 描述 来源项生成时间（任务时间）范围查询结束日期
-     * 是否必填 false
-     * 版本 v2.0
-     */
-    private final String sourceCreateEnd;
-
+    @Builder.Default
+    private Integer page = 1;
+    @Builder.Default
+    private Integer size = 10;
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);
-        object.put("plate_number", plateNumber);
-        object.put("service_sale_id", serviceSaleId);
-        object.put("evaluate_type", evaluateType);
-        object.put("shop_id", shopId);
-        object.put("customer_name", customerName);
-        object.put("score", score);
-        object.put("evaluate_start", evaluateStart);
-        object.put("evaluate_end", evaluateEnd);
-        object.put("is_follow_up", isFollowUp);
-        object.put("customer_phone", customerPhone);
-        object.put("is_have_msg", isHaveMsg);
-        object.put("source_create_start", sourceCreateStart);
-        object.put("source_create_end", sourceCreateEnd);
         return object;
     }
 
@@ -144,4 +26,15 @@ public class EvaluatePageScene extends BaseScene {
     public String getPath() {
         return "/jiaochen/pc/manage/evaluate/page";
     }
+
+    @Override
+    public void setPage(Integer page) {
+        this.page = page;
+    }
+
+    @Override
+    public void setSize(Integer size) {
+        this.size = size;
+    }
+
 }

@@ -9,7 +9,7 @@ import lombok.Builder;
  * /jiaochen/pc/manage/maintain/car-model/edit的接口
  *
  * @author wangmin
- * @date 2021-03-12 17:23:17
+ * @date 2021-03-15 10:12:39
  */
 @Builder
 public class MaintainCarModelEditScene extends BaseScene {

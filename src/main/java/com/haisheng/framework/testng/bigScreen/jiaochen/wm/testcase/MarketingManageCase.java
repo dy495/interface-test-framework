@@ -24,9 +24,9 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.WechatCustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.MessageFormPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.PushMessageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.PackageListScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.ReceptionVoucherListScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanage.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.PackageListScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.ReceptionVoucherListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.record.PushMsgPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vipmarketing.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPageScene;
@@ -2395,7 +2395,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             packageId = util.getPackagePage(PackageStatusEnum.AGREE).getPackageId();
             String packageName = util.getPackageName(packageId);
             //关闭套餐
-            IScene switchPackageStatusScene = SwitchPackageStatusScene.builder().id(packageId).status(false).build();
+            IScene switchPackageStatusScene = PackageFormSwitchPackageStatusScene.builder().id(packageId).status(false).build();
             visitor.invokeApi(switchPackageStatusScene);
             //购买固定套餐
             IScene purchaseFixedPackageScene = PurchaseFixedPackageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone())
@@ -2408,7 +2408,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            IScene switchPackageStatusScene = SwitchPackageStatusScene.builder().id(packageId).status(true).build();
+            IScene switchPackageStatusScene = PackageFormSwitchPackageStatusScene.builder().id(packageId).status(true).build();
             visitor.invokeApi(switchPackageStatusScene);
             saveData("套餐表单--购买/赠送固定套餐时，将套餐关闭，确认时会有提示：此套餐已关闭");
         }
@@ -2654,7 +2654,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             //购买套餐
             util.buyFixedPackage(packageId, 1);
             //将套餐关闭
-            IScene switchPackageStatusScene = SwitchPackageStatusScene.builder().id(packageId).status(false).build();
+            IScene switchPackageStatusScene = PackageFormSwitchPackageStatusScene.builder().id(packageId).status(false).build();
             visitor.invokeApi(switchPackageStatusScene);
             //确认购买
             util.makeSureBuyPackage(packageName);
@@ -2667,7 +2667,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             collectMessage(e);
         } finally {
             user.loginPc(ALL_AUTHORITY);
-            IScene switchPackageStatusScene = SwitchPackageStatusScene.builder().id(packageId).status(true).build();
+            IScene switchPackageStatusScene = PackageFormSwitchPackageStatusScene.builder().id(packageId).status(true).build();
             visitor.invokeApi(switchPackageStatusScene);
             saveData("套餐表单--购买套餐，确认购买前，套餐状态改为关闭，再确认购买小程序会收到套餐/卡券");
         }
@@ -2956,7 +2956,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             //发消息
             packageId = util.getPackagePage(PackageStatusEnum.AGREE).getPackageId();
             //关闭套餐
-            IScene switchPackageStatusScene = SwitchPackageStatusScene.builder().id(packageId).status(false).build();
+            IScene switchPackageStatusScene = PackageFormSwitchPackageStatusScene.builder().id(packageId).status(false).build();
             visitor.invokeApi(switchPackageStatusScene);
             IScene pushMessageScene = PushMessageScene.builder().pushTarget(AppletPushTargetEnum.PERSONNEL_CUSTOMER.getId())
                     .telList(getList(APPLET_USER_ONE.getPhone())).messageName(EnumDesc.MESSAGE_TITLE.getDesc())
@@ -2968,7 +2968,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            IScene switchPackageStatusScene = SwitchPackageStatusScene.builder().id(packageId).status(true).build();
+            IScene switchPackageStatusScene = PackageFormSwitchPackageStatusScene.builder().id(packageId).status(true).build();
             visitor.invokeApi(switchPackageStatusScene);
             saveData("消息管理--选择套餐时，套餐被关闭，提交时提示：套餐不允许发送，请重新选择");
         }
@@ -2982,7 +2982,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             //发消息
             long packageId = util.getPackagePage(PackageStatusEnum.EXPIRED).getPackageId();
             String packageName = util.getPackageName(packageId);
-            SwitchPackageStatusScene.builder().id(packageId).status(true).build().execute(visitor, true);
+            PackageFormSwitchPackageStatusScene.builder().id(packageId).status(true).build().execute(visitor, true);
             IScene pushMessageScene = PushMessageScene.builder().pushTarget(AppletPushTargetEnum.PERSONNEL_CUSTOMER.getId())
                     .telList(getList(APPLET_USER_ONE.getPhone())).messageName(EnumDesc.MESSAGE_TITLE.getDesc())
                     .messageContent(EnumDesc.VOUCHER_DESC.getDesc()).type(1).voucherOrPackageList(getList(packageId))

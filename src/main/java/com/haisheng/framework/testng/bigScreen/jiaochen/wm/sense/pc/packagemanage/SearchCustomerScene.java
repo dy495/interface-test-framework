@@ -1,28 +1,21 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanage;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/package-manage/search-customer的接口
+ * 套餐管理 -> 手机号查询客户信息
  *
  * @author wangmin
- * @date 2021-03-12 17:23:18
+ * @date 2021/1/25 18:00
  */
 @Builder
 public class SearchCustomerScene extends BaseScene {
-    /**
-     * 描述 No comments found.
-     * 是否必填 false
-     * 版本 -
-     */
     private final String customerPhone;
 
-
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("customer_phone", customerPhone);
         return object;

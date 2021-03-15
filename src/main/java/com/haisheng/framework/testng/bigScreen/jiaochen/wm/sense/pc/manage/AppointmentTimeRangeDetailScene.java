@@ -9,7 +9,7 @@ import lombok.Builder;
  * /jiaochen/pc/manage/appointment/time-range/detail的接口
  *
  * @author wangmin
- * @date 2021-03-12 17:23:17
+ * @date 2021-03-15 10:12:39
  */
 @Builder
 public class AppointmentTimeRangeDetailScene extends BaseScene {

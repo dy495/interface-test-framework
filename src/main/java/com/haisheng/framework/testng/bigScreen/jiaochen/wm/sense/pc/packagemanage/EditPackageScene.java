@@ -5,98 +5,39 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
+import java.util.List;
+
 /**
- * /jiaochen/pc/package-manage/edit-package的接口
- *
- * @author wangmin
- * @date 2021-03-12 17:23:18
+ * 套餐管理 -> 修改套餐
  */
 @Builder
 public class EditPackageScene extends BaseScene {
-    /**
-     * 描述 门店列表
-     * 是否必填 true
-     * 版本 v1.0
-     */
-    private final JSONArray shopIds;
-
-    /**
-     * 描述 套餐名称
-     * 是否必填 true
-     * 版本 v1.0
-     */
     private final String packageName;
-
-    /**
-     * 描述 有效期
-     * 是否必填 true
-     * 版本 v1.0
-     */
     private final Integer validity;
-
-    /**
-     * 描述 客户使用有效期
-     * 是否必填 true
-     * 版本 v2.0
-     */
+    private final String packageDescription;
+    private final JSONArray voucherList;
+    private final String packagePrice;
+    private final List<Long> shopIds;
+    private final Boolean status;
+    private final String id;
+    private final String subjectType;
+    private final Long subjectId;
     private final Integer customerUseValidity;
 
-    /**
-     * 描述 卡券列表
-     * 是否必填 true
-     * 版本 v1.0
-     */
-    private final JSONArray voucherList;
-
-    /**
-     * 描述 套餐价格
-     * 是否必填 true
-     * 版本 v1.0
-     */
-    private final Double packagePrice;
-
-    /**
-     * 描述 套餐说明
-     * 是否必填 true
-     * 版本 v1.0
-     */
-    private final String packageDescription;
-
-    /**
-     * 描述 是否开启状态
-     * 是否必填 true
-     * 版本 v1.0
-     */
-    private final Boolean status;
-
-    /**
-     * 描述 主体名称
-     * 是否必填 true
-     * 版本 v1.0
-     */
-    private final String subjectType;
-
-    /**
-     * 描述 主体id
-     * 是否必填 false
-     * 版本 v1.0
-     */
-    private final Long subjectId;
-
-
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
-        object.put("shop_ids", shopIds);
         object.put("package_name", packageName);
         object.put("validity", validity);
-        object.put("customer_use_validity", customerUseValidity);
+        object.put("package_description", packageDescription);
         object.put("voucher_list", voucherList);
         object.put("package_price", packagePrice);
-        object.put("package_description", packageDescription);
+        object.put("shop_ids", shopIds);
         object.put("status", status);
+        object.put("id", id);
         object.put("subject_type", subjectType);
         object.put("subject_id", subjectId);
+        object.put("customer_use_validity", customerUseValidity);
         return object;
     }
 

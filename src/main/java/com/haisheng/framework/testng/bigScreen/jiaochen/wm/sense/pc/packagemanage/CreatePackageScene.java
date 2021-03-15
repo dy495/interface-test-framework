@@ -5,98 +5,40 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
+import java.util.List;
+
 /**
- * /jiaochen/pc/package-manage/create-package的接口
+ * 套餐管理 -> 创建套餐
  *
- * @author wangmin
- * @date 2021-03-12 17:23:18
+ * @author wwangmin
+ * @date 2020-11-24
  */
 @Builder
 public class CreatePackageScene extends BaseScene {
-    /**
-     * 描述 门店列表
-     * 是否必填 true
-     * 版本 v1.0
-     */
-    private final JSONArray shopIds;
-
-    /**
-     * 描述 套餐名称
-     * 是否必填 true
-     * 版本 v1.0
-     */
     private final String packageName;
-
-    /**
-     * 描述 有效期
-     * 是否必填 true
-     * 版本 v1.0
-     */
-    private final Integer validity;
-
-    /**
-     * 描述 客户使用有效期
-     * 是否必填 true
-     * 版本 v2.0
-     */
+    private final String validity;
+    private final String packageDescription;
+    private final JSONArray voucherList;
+    private final Double packagePrice;
+    private final List<Long> shopIds;
+    private final String subjectType;
+    private final Long subjectId;
+    private final Boolean status;
     private final Integer customerUseValidity;
 
-    /**
-     * 描述 卡券列表
-     * 是否必填 true
-     * 版本 v1.0
-     */
-    private final JSONArray voucherList;
-
-    /**
-     * 描述 套餐价格
-     * 是否必填 true
-     * 版本 v1.0
-     */
-    private final Double packagePrice;
-
-    /**
-     * 描述 套餐说明
-     * 是否必填 true
-     * 版本 v1.0
-     */
-    private final String packageDescription;
-
-    /**
-     * 描述 是否开启状态
-     * 是否必填 true
-     * 版本 v1.0
-     */
-    private final Boolean status;
-
-    /**
-     * 描述 主体名称
-     * 是否必填 true
-     * 版本 v1.0
-     */
-    private final String subjectType;
-
-    /**
-     * 描述 主体id
-     * 是否必填 false
-     * 版本 v1.0
-     */
-    private final Long subjectId;
-
-
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
-        object.put("shop_ids", shopIds);
         object.put("package_name", packageName);
         object.put("validity", validity);
-        object.put("customer_use_validity", customerUseValidity);
+        object.put("package_description", packageDescription);
         object.put("voucher_list", voucherList);
         object.put("package_price", packagePrice);
-        object.put("package_description", packageDescription);
-        object.put("status", status);
+        object.put("shop_ids", shopIds);
         object.put("subject_type", subjectType);
         object.put("subject_id", subjectId);
+        object.put("status", status);
+        object.put("customer_use_validity", customerUseValidity);
         return object;
     }
 
@@ -104,4 +46,5 @@ public class CreatePackageScene extends BaseScene {
     public String getPath() {
         return "/jiaochen/pc/package-manage/create-package";
     }
+
 }

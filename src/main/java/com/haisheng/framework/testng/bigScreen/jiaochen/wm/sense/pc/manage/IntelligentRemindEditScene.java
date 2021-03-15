@@ -9,7 +9,7 @@ import lombok.Builder;
  * /jiaochen/pc/manage/intelligent-remind/edit的接口
  *
  * @author wangmin
- * @date 2021-03-12 17:23:18
+ * @date 2021-03-15 10:12:39
  */
 @Builder
 public class IntelligentRemindEditScene extends BaseScene {
@@ -29,7 +29,7 @@ public class IntelligentRemindEditScene extends BaseScene {
 
     /**
      * 描述 奖励卡券
-     * 是否必填 true
+     * 是否必填 false
      * 版本 v2.0
      */
     private final JSONArray vouchers;

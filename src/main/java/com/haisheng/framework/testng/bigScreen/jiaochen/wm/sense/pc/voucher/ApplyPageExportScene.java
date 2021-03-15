@@ -10,7 +10,7 @@ import java.util.List;
  * 卡券申请分页
  */
 @Builder
-public class ApplyPageExport extends BaseScene {
+public class ApplyPageExportScene extends BaseScene {
     @Builder.Default
     private Integer page = 1;
     @Builder.Default

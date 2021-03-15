@@ -47,7 +47,7 @@ public abstract class AbstractMarker implements IMarker {
                     File file = new File(parentPath);
                     if (!file.exists()) {
                         logger.info("开始创建文件所在文件夹 :{}", parentPath);
-                        Preconditions.checkArgument(file.mkdirs(), "创建文件夹失败 !");
+                        Preconditions.checkArgument(file.mkdirs(), "文件夹创建失败 !");
                         logger.info("文件所在文件夹创建成功 !");
                     }
                     //step2 获取模版路径
@@ -63,6 +63,8 @@ public abstract class AbstractMarker implements IMarker {
                         // step6 输出文件
                         template.process(dataMap, out);
                         logger.info("----------{}----------", "恭喜~ 文件创建成功 !");
+                    } else {
+                        logger.info("----------{}----------", "文件已存在 !");
                     }
                 }
             }

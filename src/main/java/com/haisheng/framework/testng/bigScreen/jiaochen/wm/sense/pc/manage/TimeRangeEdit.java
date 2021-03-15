@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.manager;
+package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.manage;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
