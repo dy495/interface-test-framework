@@ -21,17 +21,14 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.reception.after.ReceptionStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.AppFollowUpCompleteScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.task.AppAppointmentHandleScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.task.AppAppointmentReceptionScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.task.AppReceptionFinishReceptionScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.task.AppReceptionReceptorChangePageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.appointmentmanager.AppointmentPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.EditExchangeStockScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.ExchangeDetailedScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.ExchangePageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.IntegralExchangeRulesScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.ReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.ReceptorChangeScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.AddVoucherScene;
@@ -465,6 +462,11 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
                 exchangePage = a;
                 voucherId = util.getExchangeGoodsContainVoucher(exchangePage.getId()).getVoucherId();
             }
+            //编辑为不限兑换次数
+            EditExchangeGoodsScene.builder().exchangeEndTime(exchangePage.getEndUseTime()).exchangeGoodsType(exchangePage.getExchangeType())
+                    .exchangeNum(exchangePage.getExchangeNumber()).exchangePeopleNum(10).exchangePrice(exchangePage.getExchangePrice())
+                    .exchangeStartTime(exchangePage.getBeginUseTime()).goodsId(voucherId).id(exchangePage.getId())
+                    .isLimit(false).build().execute(visitor, true);
             VoucherPage voucherPage = util.getVoucherPage(voucherId);
             user.loginApplet(APPLET_USER_ONE);
             int appletVoucherNum = util.getAppletVoucherNum();
