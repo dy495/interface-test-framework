@@ -725,7 +725,7 @@ public class BusinessUtil {
                       Long id = list.getJSONObject(i).getLong("id");
                       ids.add(id);
                   }
-              }
+               }
             }
         }
         //创建活动并审批
@@ -1215,7 +1215,7 @@ public class BusinessUtil {
         JSONArray registerItems = new JSONArray();
         Long activityId=0L;
         //在活动详情中获得招募活动的报名信息
-        user.loginPc(EnumAccount.ALL_AUTHORITY_DAILY);
+        jc.pcLogin(pp.phone1,pp.password);
         JSONObject response = getRecruitActivityDetailDate(id);
         JSONArray registerInformationList = response.getJSONArray("register_information_list");
         for (int i = 0; i< registerInformationList.size(); i++) {

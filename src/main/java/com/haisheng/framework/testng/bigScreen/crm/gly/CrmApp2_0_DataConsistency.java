@@ -404,7 +404,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
     public void afterSaleRepairAllGEToday() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            crm.login(wx_name, pwd);
+            crm.login(zjl_name, pwd);
             JSONObject obj = crm.repairAppointmentDriverNum();
             int total = obj.getInteger("appointment_total_number");
             int today = obj.getInteger("appointment_today_number");
@@ -442,7 +442,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
     public void afterSaleRepairNewChkRecpname() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            crm.login(wx_name, pwd);
+            crm.login(zjl_name, pwd);
             JSONObject response = crm.repairAppointmentlist();
             JSONArray maintain = response.getJSONArray("list");
             int pages = response.getInteger("pages");
@@ -452,8 +452,8 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
                     for (int i = 0; i < size; i++) {
                         JSONObject obj = maintain.getJSONObject(i);
                         if (obj.getString("customer_type_name").equals("新客") && obj.getString("service_status_name").equals("预约中")) {
-                            String userName = obj.getString("user_name");
-                            Preconditions.checkArgument(userName.equals(wx_name), "所属顾问为" + userName);
+                            String userName = obj.getString("service_sale_name");
+                            Preconditions.checkArgument(userName.equals(zjl_name), "所属顾问为" + userName);
                         }
                     }
                 }
@@ -1018,7 +1018,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
     @Test()
     public void activityTaskPage() {
         try {
-            crm.login(wx_name, pwd);
+            crm.login(zjl_name, pwd);
             int total = crm.activityTaskPage(1, 10).getInteger("total");
             if (total > 0) {
                 for (int i = 1; i < total; i++) {
@@ -1049,7 +1049,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         logger.logCaseStart(caseResult.getCaseName());
         String date = DateTimeUtil.getFormat(new Date());
         try {
-            crm.login(wx_name, pwd);
+            crm.login(zjl_name, pwd);
             int total = crm.activityTaskPage(1, 10).getInteger("total");
             int s = CommonUtil.getTurningPage(total, 100);
             for (int i = 1; i < s; i++) {
