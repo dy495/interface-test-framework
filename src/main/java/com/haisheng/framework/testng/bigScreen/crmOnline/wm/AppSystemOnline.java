@@ -96,14 +96,12 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
             int total3 = crm.dccList(customerName.substring(0, 1), "", startDate, endDate, "1", "10").getInteger("total");
             int total4 = crm.dccList(customerPhone.substring(0, 3), "", startDate, endDate, "1", "10").getInteger("total");
             int total5 = crm.dccList("", "", "", "", "1", "10").getInteger("total");
-            int total6 = crm.dccList("", String.valueOf(EnumCustomerLevel.C.getId()), "", "", "1", "10").getInteger("total");
             Preconditions.checkArgument(total > 0, "dcc客户按照客户名称模糊搜索失败");
             Preconditions.checkArgument(total1 > 0, "dcc客户按照电话模糊搜索失败");
             Preconditions.checkArgument(total2 > 0, "按照日期筛选，开始时间<=结束时间失败");
             Preconditions.checkArgument(total3 > 0, "按照客户名称+日期筛选失败");
             Preconditions.checkArgument(total4 > 0, "按照联系电话+日期筛选失败");
             Preconditions.checkArgument(total5 > 0, "搜索全部客户失败");
-            Preconditions.checkArgument(total6 > 0, "按照等级筛选失败");
         } catch (Exception | AssertionError e) {
             appendFailReason(e.toString());
         } finally {
