@@ -522,6 +522,76 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+
+
+
+
+    //注册会员，会员管理列表+1，通过搜索框进行搜索
+    @Test
+    public void MemberList(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+           //通过搜索框搜索会员
+            JSONArray list = md.MemberList(page,size,"","","","","").getJSONArray("list");
+            String member_ID = "11223344";
+            String member_name = "测试会员11@@aaa";
+            String base64 = "src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/猫.png";
+            String birthday = "1998-10-01";
+            JSONObject res = md.RegisterMember(base64,member_ID,member_name,phone,birthday,"",1);
+            checkArgument(res.getInteger("code") == 1000, "添加会员成功");
+
+            JSONArray list0 = md.MemberList(page,size,"","","","","").getJSONArray("list");
+            Integer a = list0.size()-list.size();
+            checkArgument(a==1, "新注册一个会员，会员列表实际添加了"+a);
+
+            JSONArray list1 = md.MemberList(page,size,member_ID,member_name,phone,"","").getJSONArray("list");
+//            会员id
+            String memberId = list.getString(2);
+            String memberName = list.getString(3);
+            String memberPhone = list.getString(4);
+            checkArgument(member_ID.equals(memberId), "输入的会员id:" + member_ID + "返回的会员id"+ memberId);
+            checkArgument(member_name.equals(memberName), "输入的会员姓名:" + member_name + "返回的会员姓名"+ memberName);
+            checkArgument(memberPhone.equals(memberPhone), "输入的会员姓名:" + phone + "返回的会员姓名"+ memberPhone);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("注册会员，并且通过搜索框搜索会员");
+        }
+    }
+
+    //会员身份添加、删除
+    @Test
+    public void AddMember(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Integer total = md.Member(page,size).getInteger("total");
+            String identity = "测试VIP！";
+            JSONObject res =  md.AddMember(identity);
+            checkArgument(res.getInteger("code") == 1000, "添加会员身份成功");
+            Integer total1 = md.Member(page,size).getInteger("total");
+            int a = total1-total;
+            checkArgument(a==1, "添加会员身份后，身份列表+1，实际添加了"+a);
+            JSONArray list = md.Member(page,size).getJSONArray("list");
+            int id = list.getInteger(0);
+            JSONObject res1 = md.DeleteMember(id);
+            checkArgument(res1.getInteger("code") == 1000, "删除会员身份成功");
+            Integer total2 = md.Member(page,size).getInteger("total");
+            int b = total1-total2;
+            checkArgument(b==1, "删除会员身份后，身份列表-1，实际减少了"+b);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("会员身份添加，删除，");
+
+        }
+    }
+
+
 //    //新建预置位、新建预置位不加名称、新建预置位不加时间、新建预置位后列表+1、删除一个预置位列表-1
 //    @Test(dataProvider = "device_id",dataProviderClass = DataProviderMethod.class)
 //    public void createPreset(String device_id) {
