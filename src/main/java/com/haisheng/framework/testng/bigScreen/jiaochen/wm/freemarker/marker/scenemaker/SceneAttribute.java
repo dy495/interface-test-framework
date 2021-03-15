@@ -18,6 +18,7 @@ public class SceneAttribute implements Serializable {
     private String link;
     private String url;
     private List<ApiAttribute> apiAttributeList;
+    private String suffix;
 
     @Override
     public String toString() {
@@ -25,6 +26,7 @@ public class SceneAttribute implements Serializable {
                 + "    link :" + link
                 + "    url :" + url
                 + "    List<ApiAttribute> :" + apiAttributeList
+                + "    suffix ：" + suffix
                 + "}";
     }
 }

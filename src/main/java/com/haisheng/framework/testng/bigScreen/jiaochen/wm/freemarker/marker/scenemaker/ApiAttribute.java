@@ -1,7 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.scenemaker;
 
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.enumerator.ValTypeEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.util.TransformUtil;
+import com.haisheng.framework.util.CommonUtil;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -27,7 +27,7 @@ public class ApiAttribute {
         this.description = builder.description;
         this.required = builder.required;
         this.since = builder.since;
-        this.buildParam = parameter.contains("-") || parameter.contains("_") ? TransformUtil.lineToHump(parameter, false) : parameter;
+        this.buildParam = parameter.contains("-") || parameter.contains("_") ? CommonUtil.lineToHump(parameter, false) : parameter;
     }
 
     @Setter

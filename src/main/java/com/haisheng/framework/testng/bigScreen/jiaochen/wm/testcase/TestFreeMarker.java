@@ -1,11 +1,14 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase;
 
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.factory.HtmlFactory;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.scenemaker.SceneAttribute;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.scenemaker.SceneMarker;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.util.HtmlUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.parse.BeanParse;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.parse.IParse;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.parse.SceneParse;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.List;
 
 /**
  * @author wangmin
@@ -14,14 +17,30 @@ import java.util.Objects;
 public class TestFreeMarker {
 
     @Test
-    public void testFreeMaker() {
-        String[] htmlPath = {"http://192.168.50.3/api-doc/business-jiaochen/pc/index.html"};
-        Arrays.stream(htmlPath).forEach(html -> Objects.requireNonNull(HtmlUtil.parseHtml(html)).forEach(e -> new SceneMarker.Builder()
+    public void createScene() {
+        String htmlPath = "http://192.168.50.3/api-doc/business-jiaochen/pc/index.html";
+        IParse parse = new SceneParse.Builder().build();
+        List<SceneAttribute> sceneAttributeList = new HtmlFactory().getObjectAttribute(htmlPath, parse);
+        sceneAttributeList.forEach(e -> new SceneMarker.Builder()
                 .templatePath("src\\main\\resources\\template")
                 .templateName("sceneTemplate.ftl")
-                .parentPath("src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/sense")
+                .parentPath("src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/s")
                 .sceneAttribute(e)
                 .buildMarker()
-                .execute()));
+                .execute());
+    }
+
+    @Test
+    public void createBean() {
+        String htmlPath = "http://192.168.50.3/api-doc/business-jiaochen/pc/index.html";
+        IParse parse = new BeanParse.Builder().build();
+        List<SceneAttribute> sceneAttributeList = new HtmlFactory().getObjectAttribute(htmlPath, parse);
+        sceneAttributeList.forEach(e -> new SceneMarker.Builder()
+                .templatePath("src\\main\\resources\\template")
+                .templateName("beanTemplate.ftl")
+                .parentPath("src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/b")
+                .sceneAttribute(e)
+                .buildMarker()
+                .execute());
     }
 }

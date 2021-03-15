@@ -1,94 +1,38 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanage;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/customer-manage/pre-sale-customer/page的接口
- *
- * @author wangmin
- * @date 2021-03-12 17:23:18
+ * 客户管理 -> 销售客户列表
  */
 @Builder
 public class PreSaleCustomerPageScene extends BaseScene {
-    /**
-     * 描述 页码 大于0
-     * 是否必填 true
-     * 版本 v1.0
-     */
-    private final Integer page;
-
-    /**
-     * 描述 页大小 范围为[1,100]
-     * 是否必填 true
-     * 版本 v1.0
-     */
-    private final Integer size;
-
-    /**
-     * 描述 客户名称
-     * 是否必填 false
-     * 版本 v1.0
-     */
     private final String customerName;
-
-    /**
-     * 描述 客户手机
-     * 是否必填 false
-     * 版本 v1.0
-     */
     private final String customerPhone;
-
-    /**
-     * 描述 服务顾问姓名
-     * 是否必填 false
-     * 版本 v1.0
-     */
-    private final String saleName;
-
-    /**
-     * 描述 客户类型
-     * 是否必填 false
-     * 版本 v1.0
-     */
     private final String customerType;
-
-    /**
-     * 描述 性别
-     * 是否必填 false
-     * 版本 v1.0
-     */
+    private final String saleName;
     private final String sex;
-
-    /**
-     * 描述 创建开始时间
-     * 是否必填 false
-     * 版本 v1.0
-     */
     private final String startTime;
-
-    /**
-     * 描述 创建结束时间
-     * 是否必填 false
-     * 版本 v1.0
-     */
     private final String endTime;
-
+    @Builder.Default
+    private final Integer page = 1;
+    @Builder.Default
+    private final Integer size = 10;
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
-        object.put("page", page);
-        object.put("size", size);
         object.put("customer_name", customerName);
         object.put("customer_phone", customerPhone);
         object.put("sale_name", saleName);
         object.put("customer_type", customerType);
+        object.put("page", page);
+        object.put("size", size);
         object.put("sex", sex);
-        object.put("start_time", startTime);
-        object.put("end_time", endTime);
+        object.put("startTime", startTime);
+        object.put("endTime", endTime);
         return object;
     }
 

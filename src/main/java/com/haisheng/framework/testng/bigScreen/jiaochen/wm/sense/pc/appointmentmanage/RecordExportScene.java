@@ -9,7 +9,7 @@ import lombok.Builder;
  * /jiaochen/pc/appointment-manage/record/export的接口
  *
  * @author wangmin
- * @date 2021-03-12 17:23:18
+ * @date 2021-03-15 14:05:12
  */
 @Builder
 public class RecordExportScene extends BaseScene {

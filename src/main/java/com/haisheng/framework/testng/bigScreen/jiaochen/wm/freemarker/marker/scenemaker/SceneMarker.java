@@ -2,12 +2,12 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.sc
 
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.enumerator.FileFormatEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.enumerator.KeywordEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.enumerator.TestProduceEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.enumerator.IpPortEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.AbstractMarker;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.IMarker;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.Structure;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.util.DateUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.util.TransformUtil;
+import com.haisheng.framework.util.CommonUtil;
+import com.haisheng.framework.util.DateTimeUtil;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -23,6 +23,7 @@ import java.util.Map;
 public class SceneMarker extends AbstractMarker {
     private String outputPath;
     private String className;
+    private final String suffix;
     private final String parentPath;
     private final String date;
     private final String urlPath;
@@ -31,7 +32,8 @@ public class SceneMarker extends AbstractMarker {
 
     protected SceneMarker(Builder builder) {
         super(builder);
-        this.date = DateUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
+        this.suffix = builder.sceneAttribute.getSuffix();
+        this.date = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
         this.parentPath = builder.parentPath;
         this.urlPath = builder.sceneAttribute.getUrl();
         this.apiAttributeList = builder.sceneAttribute.getApiAttributeList();
@@ -71,7 +73,7 @@ public class SceneMarker extends AbstractMarker {
                 sb.append(urlPathList[i]);
             }
         }
-        className = TransformUtil.lineToHump(sb.toString(), true) + "Scene";
+        className = CommonUtil.lineToHump(sb.toString(), true) + suffix;
         className = urlPath.contains("m-app") ? "App" + className : urlPath.contains("applet") ? "Applet" + className : className;
         sb.setLength(0);
         for (int i = 1; i < index; i++) {
@@ -130,13 +132,13 @@ public class SceneMarker extends AbstractMarker {
     }
 
     public static String[] urlPathParse(String url) {
-        String str = url.replace(TestProduceEnum.getContainAddress(url) + "/", "");
+        String str = url.replace(IpPortEnum.getContainAddress(url) + "/", "");
         String newStr = str.substring(0, 1).contains("/") ? str.replaceFirst("/", "") : str;
         return newStr.split("/");
     }
 
     public static String urlExcludeIpPort(String url) {
-        String str = url.replace(TestProduceEnum.getContainAddress(url), "");
+        String str = url.replace(IpPortEnum.getContainAddress(url), "");
         return str.substring(0, 2).contains("//") ? str.replaceFirst("/", "") : str;
     }
 }

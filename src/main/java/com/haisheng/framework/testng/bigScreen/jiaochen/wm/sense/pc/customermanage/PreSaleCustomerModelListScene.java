@@ -9,7 +9,7 @@ import lombok.Builder;
  * /jiaochen/pc/customer-manage/pre-sale-customer/model-list的接口
  *
  * @author wangmin
- * @date 2021-03-12 17:23:18
+ * @date 2021-03-15 14:06:44
  */
 @Builder
 public class PreSaleCustomerModelListScene extends BaseScene {
