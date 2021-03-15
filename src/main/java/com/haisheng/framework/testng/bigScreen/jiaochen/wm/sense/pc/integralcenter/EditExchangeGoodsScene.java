@@ -24,7 +24,7 @@ public class EditExchangeGoodsScene extends BaseScene {
         JSONObject object = new JSONObject();
         object.put("exchange_goods_type", exchangeGoodsType);
         object.put("goods_id", goodsId);
-        object.put("exchange_price", exchangeGoodsType);
+        object.put("exchange_price", exchangePrice);
         object.put("is_limit", isLimit);
         object.put("exchange_people_num", exchangePeopleNum);
         object.put("exchange_start_time", exchangeStartTime);
