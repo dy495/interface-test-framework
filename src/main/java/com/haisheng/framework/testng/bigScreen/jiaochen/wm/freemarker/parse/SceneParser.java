@@ -1,6 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.parse;
 
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.scenemaker.ApiAttribute;
+import org.jetbrains.annotations.NotNull;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -11,14 +12,13 @@ import java.util.List;
  * @author wangmin
  * @date 2021/3/15 12:31
  */
-public class SceneParse extends AbstractParse {
-
-    public SceneParse(Builder builder) {
+public class SceneParser extends AbstractParser {
+    public SceneParser(AbstractBuilder builder) {
         super(builder);
     }
 
     @Override
-    protected List<ApiAttribute> getApiAttributeList(Elements spreadElements) {
+    protected List<ApiAttribute> getApiAttributeList(@NotNull Elements spreadElements) {
         if (spreadElements.size() == 2) {
             Elements trs = spreadElements.first().select("tbody").select("tr");
             List<ApiAttribute> apiAttributeList = new ArrayList<>();
@@ -47,8 +47,9 @@ public class SceneParse extends AbstractParse {
 
     public static class Builder extends AbstractBuilder {
 
-        public SceneParse build() {
-            return new SceneParse(this);
+        @Override
+        IParser buildParas() {
+            return new SceneParser(this);
         }
     }
 }

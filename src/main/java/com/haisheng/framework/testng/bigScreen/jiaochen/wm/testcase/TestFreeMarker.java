@@ -3,9 +3,9 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.factory.HtmlFactory;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.scenemaker.SceneAttribute;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.scenemaker.SceneMarker;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.parse.BeanParse;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.parse.IParse;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.parse.SceneParse;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.parse.BeanParser;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.parse.IParser;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.parse.SceneParser;
 import org.testng.annotations.Test;
 
 import java.util.List;
@@ -19,7 +19,7 @@ public class TestFreeMarker {
     @Test
     public void createScene() {
         String htmlPath = "http://192.168.50.3/api-doc/business-jiaochen/pc/index.html";
-        IParse parse = new SceneParse.Builder().build();
+        IParser parse = new SceneParser.Builder().build();
         List<SceneAttribute> sceneAttributeList = new HtmlFactory().getObjectAttribute(htmlPath, parse);
         sceneAttributeList.forEach(e -> new SceneMarker.Builder()
                 .templatePath("src\\main\\resources\\template")
@@ -33,7 +33,7 @@ public class TestFreeMarker {
     @Test
     public void createBean() {
         String htmlPath = "http://192.168.50.3/api-doc/business-jiaochen/pc/index.html";
-        IParse parse = new BeanParse.Builder().build();
+        IParser parse = new BeanParser.Builder().build();
         List<SceneAttribute> sceneAttributeList = new HtmlFactory().getObjectAttribute(htmlPath, parse);
         sceneAttributeList.forEach(e -> new SceneMarker.Builder()
                 .templatePath("src\\main\\resources\\template")

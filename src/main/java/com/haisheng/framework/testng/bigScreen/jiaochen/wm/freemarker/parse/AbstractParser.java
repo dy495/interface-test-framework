@@ -11,6 +11,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.jetbrains.annotations.NotNull;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -26,17 +27,16 @@ import java.util.List;
  * @date 2021/3/15 12:32
  */
 
-public abstract class AbstractParse implements IParse {
-    protected static final Logger logger = LoggerFactory.getLogger(AbstractParse.class);
+public abstract class AbstractParser implements IParser {
+    protected static final Logger logger = LoggerFactory.getLogger(AbstractParser.class);
     @Setter
     private String htmlUrl;
 
-    public AbstractParse(AbstractParse.AbstractBuilder builder) {
+    public AbstractParser(@NotNull AbstractParser.AbstractBuilder builder) {
         this.htmlUrl = builder.htmlUrl;
     }
 
     public List<SceneAttribute> getSceneAttributeList() {
-        Preconditions.checkArgument(htmlUrl != null, "html地址为空");
         logger.info("html开始解析");
         List<SceneAttribute> sceneAttributeList = new ArrayList<>();
         Elements sect1s = getElementById("content").getElementsByClass("sect1");
@@ -46,7 +46,9 @@ public abstract class AbstractParse implements IParse {
                 SceneAttribute sceneAttribute = new SceneAttribute();
                 String link = sect2.select("h3").select("[class='link']").text();
                 sceneAttribute.setLink(link);
-                Elements urlElements = sect2.select("[class='paragraph']").stream().filter(e -> e.select("strong").text().equals("URL:")).map(e -> e.select("a").select("[class='bare']")).findFirst().orElse(null);
+                Elements urlElements = sect2.select("[class='paragraph']").stream()
+                        .filter(e -> e.select("strong").text().equals("URL:"))
+                        .map(e -> e.select("a").select("[class='bare']")).findFirst().orElse(null);
                 String url = urlElements == null ? null : urlElements.text().replaceAll("\u00a0", "");
                 sceneAttribute.setUrl(url);
                 Elements spreadElements = sect2.select("[class='tableblock frame-all grid-all spread']");
@@ -86,6 +88,11 @@ public abstract class AbstractParse implements IParse {
     public abstract static class AbstractBuilder {
         private String htmlUrl;
 
-        public abstract IParse build();
+        abstract IParser buildParas();
+
+        public IParser build() {
+            Preconditions.checkArgument(htmlUrl != null, "html地址为空");
+            return buildParas();
+        }
     }
 }
