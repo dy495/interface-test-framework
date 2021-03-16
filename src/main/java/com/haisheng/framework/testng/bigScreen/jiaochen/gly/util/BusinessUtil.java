@@ -1451,7 +1451,7 @@ public class BusinessUtil {
                 shopId=list.getJSONObject(i).getString("id");
             }else if(shopName.equals("集团管理")){
                 shopId=list.getJSONObject(0).getString("id");
-            }else{
+            }else if(i==list.size()-1&&shopId.isEmpty()){
                 shopId=list.getJSONObject(0).getString("id");
             }
         }
@@ -1469,7 +1469,7 @@ public class BusinessUtil {
             String shopName=list.getJSONObject(i).getString("name");
             if(name.equals(shopName)){
                 nameBack=shopName;
-            }else{
+            }else if(i==list.size()-1&&nameBack.isEmpty()){
                 nameBack=list.getJSONObject(0).getString("name");
             }
         }

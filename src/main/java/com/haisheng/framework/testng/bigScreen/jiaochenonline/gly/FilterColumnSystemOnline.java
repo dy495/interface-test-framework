@@ -160,15 +160,12 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :接待管理-筛选栏参数全填查询
      * @date :2020/11/28
      **/
-    @Test(enabled = false)
-    public void selectAppointmentRecodeAllFilter() {
+    @Test(enabled = true)
+    public void seltrueectAppointmentRecodeAllFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Object[][] ss = Constant.receptionManageFilter_pram();
             SelectReception sr = new SelectReception();
-            JSONArray object = null;
-//            String startTime=  dt.getHistoryDate(-5);
-//            String endTime=  dt.getHistoryDate(5);
             JSONArray res = jc.receptionManage("", "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
@@ -205,7 +202,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :接待管路-筛选栏参数多项查询
      * @date :2020/11/28
      **/
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void selectAppointmentRecodeSomeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -822,24 +819,27 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :预约记录-筛选栏填写全部参数查询
      * @date :2020/11/24
      **/
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void appointmentRecordAllFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Object[][] flag = Constant.appointmentRecordFilter_pram();
-            com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.appointmentRecordVariable variable = new com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.appointmentRecordVariable();
+            appointmentRecordVariable variable = new appointmentRecordVariable();
             JSONArray res = jc.appointmentRecordManage("", "1", "10", "", "").getJSONArray("list");
             String confirmStatus = res.getJSONObject(0).getString("appointment_status_name");
             String status = messageFormCustomerTurnMethod("MAINTAIN_CONFIRM_STATUS", confirmStatus);
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
+                String saleId=businessUtil.authNameTransformId(data.getString(flag[6][1].toString()),"MAINTAIN_DISTRIBUTION");
+                String name=businessUtil.getAuthNameExist(data.getString(flag[6][1].toString()),"MAINTAIN_DISTRIBUTION");
+                System.out.println(data.getString(flag[6][1].toString())+"----------"+name);
                 variable.plate_number = data.getString(flag[0][1].toString());
                 variable.shop_id = data.getString(flag[1][1].toString());
                 variable.customer_name = data.getString(flag[2][1].toString());
                 variable.confirm_status = status;
                 variable.customer_phone = data.getString(flag[4][1].toString());
                 variable.is_overtime = data.getString(flag[5][1].toString());
-//                variable.service_sale_id = data.getString(flag[6][1].toString());
+                variable.service_sale_id = saleId;
                 variable.page = "1";
                 variable.size = "10";
 
@@ -851,7 +851,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                 Preconditions.checkArgument(result.getString(flag[3][1].toString()).contains(confirmStatus), "参数全部输入的查询的" + result.getString(flag[3][1].toString()) + "与列表信息的第一行的" + confirmStatus + "不一致");
                 Preconditions.checkArgument(result.getString(flag[4][1].toString()).contains(variable.customer_phone), "参数全部输入的查询的" + variable.customer_phone + "与列表信息的第一行的" + result.getString(flag[4][1].toString()) + "不一致");
                 Preconditions.checkArgument(result.getString(flag[5][1].toString()).contains(variable.is_overtime), "参数全部输入的查询的" + variable.is_overtime + "与列表信息的第一行的" + result.getString(flag[5][1].toString()) + "不一致");
-//                Preconditions.checkArgument(result.getString(flag[6][1].toString()).contains(variable.service_sale_id), "参数全部输入的查询的" + variable.service_sale_id + "与列表信息的第一行的" + result.getString(flag[6][1].toString()) + "不一致");
+                Preconditions.checkArgument(name.contains(data.getString(flag[6][1].toString())), "参数全部输入的查询的" + variable.service_sale_id + "与列表信息的第一行的" + result.getString(flag[6][1].toString()) + "不一致");
 
             } else {
                 Preconditions.checkArgument(res==null, "接待列表系统错误,请联系开发人员");
@@ -867,7 +867,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :预约记录-筛选栏填写参数多项查询
      * @date :2020/11/28
      **/
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void appointmentRecordSomeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

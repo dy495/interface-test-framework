@@ -158,15 +158,13 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      * @description :接待管理-筛选栏参数全填查询
      * @date :2020/11/28
      **/
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void selectAppointmentRecodeAllFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Object[][] ss = Constant.receptionManageFilter_pram();
             SelectReception sr = new SelectReception();
             JSONArray object = null;
-//            String startTime=  dt.getHistoryDate(-5);
-//            String endTime=  dt.getHistoryDate(5);
             JSONArray res = jc.receptionManage("", "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
@@ -203,7 +201,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      * @description :接待管路-筛选栏参数多项查询
      * @date :2020/11/28
      **/
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void selectAppointmentRecodeSomeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -255,20 +253,6 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
         }
     }
 
-//    @Test
-//    public void Jc_erCode() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            JSONObject data = jc.apperCOde();
-//            String jsonpath = "$.er_code_url1";
-//            jpu.spiltString(data.toJSONString(), jsonpath);
-//
-//        } catch (AssertionError | Exception e) {
-//            appendFailReason(e.toString());
-//        } finally {
-//            saveData("轿辰-app个人中心，小程序码返回结果不为空");
-//        }
-//    }
 
     /**
      * @description :销售客户查询-筛选栏单项查询
@@ -820,7 +804,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      * @description :预约记录-筛选栏填写全部参数查询
      * @date :2020/11/24
      **/
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void appointmentRecordAllFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -831,13 +815,16 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
             String status = messageFormCustomerTurnMethod("MAINTAIN_CONFIRM_STATUS", confirmStatus);
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
+                String saleId=businessUtil.authNameTransformId(data.getString(flag[6][1].toString()),"MAINTAIN_DISTRIBUTION");
+                String name=businessUtil.getAuthNameExist(data.getString(flag[6][1].toString()),"MAINTAIN_DISTRIBUTION");
+                System.out.println(data.getString(flag[6][1].toString())+"----------"+name);
                 variable.plate_number = data.getString(flag[0][1].toString());
                 variable.shop_id = data.getString(flag[1][1].toString());
                 variable.customer_name = data.getString(flag[2][1].toString());
                 variable.confirm_status = status;
                 variable.customer_phone = data.getString(flag[4][1].toString());
                 variable.is_overtime = data.getString(flag[5][1].toString());
-//                variable.service_sale_id = data.getString(flag[6][1].toString());
+                variable.service_sale_id = saleId;
                 variable.page = "1";
                 variable.size = "10";
 
@@ -849,7 +836,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 Preconditions.checkArgument(result.getString(flag[3][1].toString()).contains(confirmStatus), "参数全部输入的查询的" + result.getString(flag[3][1].toString()) + "与列表信息的第一行的" + confirmStatus + "不一致");
                 Preconditions.checkArgument(result.getString(flag[4][1].toString()).contains(variable.customer_phone), "参数全部输入的查询的" + variable.customer_phone + "与列表信息的第一行的" + result.getString(flag[4][1].toString()) + "不一致");
                 Preconditions.checkArgument(result.getString(flag[5][1].toString()).contains(variable.is_overtime), "参数全部输入的查询的" + variable.is_overtime + "与列表信息的第一行的" + result.getString(flag[5][1].toString()) + "不一致");
-//                Preconditions.checkArgument(result.getString(flag[6][1].toString()).contains(variable.service_sale_id), "参数全部输入的查询的" + variable.service_sale_id + "与列表信息的第一行的" + result.getString(flag[6][1].toString()) + "不一致");
+                Preconditions.checkArgument(name.contains(data.getString(flag[6][1].toString())), "参数全部输入的查询的" + variable.service_sale_id + "与列表信息的第一行的" + result.getString(flag[6][1].toString()) + "不一致");
 
             } else {
                 Preconditions.checkArgument(res==null, "接待列表系统错误,请联系开发人员");
@@ -865,7 +852,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      * @description :预约记录-筛选栏填写参数多项查询
      * @date :2020/11/28
      **/
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void appointmentRecordSomeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -4506,6 +4493,136 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
             saveData("V2.0活动管理-报名管理列表--筛选栏单项搜索 ");
         }
     }
+
+
+    /**
+     * @deprecated V3.0积分中心-积分客户管理--筛选栏单项搜索
+     * @date :2021-3-16
+     */
+    @Test(enabled = false)
+    public void integralCenterCustomerPageOneFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject response=jc.integralCenterCustomerPage(1,10,"");
+            JSONArray list=response.getJSONArray("list");
+            String phone=list.getJSONObject(0).containsKey("customer_name")?list.getJSONObject(0).getString("customer_name"):list.getJSONObject(1).getString("customer_name");
+            JSONObject response1=jc.integralCenterCustomerPage(1,10,phone);
+            JSONArray list1=response1.getJSONArray("list");
+            String phone1=list1.getJSONObject(0).containsKey("customer_name")?list1.getJSONObject(0).getString("customer_name"):list1.getJSONObject(1).getString("customer_name");
+            Preconditions.checkArgument(phone.equals(phone),"积分客户管理按照："+phone+" 查询，结果为："+phone1);
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("V3.0积分中心-积分客户管理--筛选栏单项搜索 ");
+        }
+    }
+
+    /**
+     * @deprecated V3.0积分中心-客户积分变更记录--筛选栏单项搜索
+     * @date :2021-3-16
+     */
+    @Test(enabled = false)
+    public void customerIntegralChangeRecordPageOneFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject response=jc.customerIntegralChangeRecordPage(1,10,"","","");
+            JSONArray list=response.getJSONArray("list");
+            String phone=list.getJSONObject(0).containsKey("customer_name")?list.getJSONObject(0).getString("customer_name"):list.getJSONObject(1).getString("customer_name");
+            JSONObject response1=jc.customerIntegralChangeRecordPage(1,10,phone,"","");
+            JSONArray list1=response1.getJSONArray("list");
+            String phone1=list1.getJSONObject(0).containsKey("customer_name")?list1.getJSONObject(0).getString("customer_name"):list1.getJSONObject(1).getString("customer_name");
+            Preconditions.checkArgument(phone.equals(phone),"客户积分变更记录按照："+phone+" 查询，结果为："+phone1);
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("V3.0积分中心-客户积分变更记录--筛选栏单项搜索 ");
+        }
+    }
+
+    /**
+     * @deprecated V3.0积分中心-客户积分变更记录--筛选栏时间搜索
+     * @date :2021-3-16
+     */
+    @Test(enabled = false)
+    public void customerIntegralChangeRecordPageTimeFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String startTime=  dt.getHistoryDate(-30);
+            String endTime=  dt.getHistoryDate(30);
+            JSONObject response=jc.customerIntegralChangeRecordPage(1,10,"",startTime,endTime);
+            int pages = response.getInteger("pages")>10?10:response.getInteger("pages");
+            for (int page = 1; page <= pages; page++) {
+                JSONArray list = jc.customerIntegralChangeRecordPage(page,10,"",startTime,endTime).getJSONArray("list");
+                for (int i = 0; i < list.size(); i++) {
+                    String time = list.getJSONObject(i).containsKey("time")?list.getJSONObject(i).getString("time").substring(0,10):startTime;
+                    Preconditions.checkArgument(time.compareTo(startTime)>=0&&time.compareTo(endTime)<=0, "开始时间："+startTime+" 结束时间："+endTime +"列表中的支付时间:"+time);
+                }
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("V3.0积分中心-客户积分变更记录--筛选栏时间搜索 ");
+        }
+    }
+
+
+
+    /**
+     * @deprecated V3.0卡券管理-增发记录-筛选栏单项搜索
+     * @date :2021-3-16
+     */
+    @Test(dataProvider = "SELECT_voucherManageAdditionalRecordFilter", dataProviderClass = Constant.class)
+    public void voucherManageAdditionalRecordOneFilter(String pram,String output){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject response = jc.additionalRecordPage("1", "10", "", "");
+            if (response.getJSONArray("list").size() > 0) {
+                String result = response.getJSONArray("list").getJSONObject(0).getString(output);
+                JSONObject response1 = jc.additionalRecordPage( "1", "10",pram, result);
+                int pages = response1.getInteger("pages");
+                for (int page = 1; page <= pages; page++) {
+                    JSONArray list = jc.additionalRecordPage(String.valueOf(page),"10", pram, result).getJSONArray("list");
+                    for (int i = 0; i < list.size(); i++) {
+                        String Flag = list.getJSONObject(i).getString(output);
+                        Preconditions.checkArgument(Flag.contains(result), "卡券管理-增发记录列表按" + result + "查询，结果错误" + Flag);
+                    }
+                }
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("V3.0卡券管理-增发记录-筛选栏单项搜索 ");
+        }
+    }
+
+    /**
+     * @deprecated V3.0卡券管理-增发记录-筛选栏时间搜索
+     * @date :2021-3-16
+     */
+    @Test(enabled = false)
+    public void voucherManageAdditionalRecordTimeFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String startTime=  dt.getHistoryDate(-30);
+            String endTime=  dt.getHistoryDate(30);
+            JSONObject response=jc.additionalRecordTimePage("1","10",startTime,endTime);
+            int pages = response.getInteger("pages")>10?10:response.getInteger("pages");
+            for (int page = 1; page <= pages; page++) {
+                JSONArray list = jc.additionalRecordTimePage(String.valueOf(page),"10",startTime,endTime).getJSONArray("list");
+                for (int i = 0; i < list.size(); i++) {
+                    String time = list.getJSONObject(i).containsKey("time")?list.getJSONObject(i).getString("time").substring(0,10):startTime;
+                    Preconditions.checkArgument(time.compareTo(startTime)>=0&&time.compareTo(endTime)<=0, "开始时间："+startTime+" 结束时间："+endTime +"列表中的增发时间:"+time);
+                }
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("V3.0卡券管理-增发记录-筛选栏时间搜索 ");
+        }
+    }
+
+
+
 
 
 

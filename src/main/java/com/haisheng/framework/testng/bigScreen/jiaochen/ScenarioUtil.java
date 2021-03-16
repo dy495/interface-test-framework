@@ -5906,7 +5906,6 @@ public class ScenarioUtil extends TestCaseCommon {
     /**
      * 接待人列表
      *
-     * @return
      */
     public JSONObject authListPage(String authType, String shopId) {
         JSONObject json = new JSONObject();
@@ -5916,5 +5915,67 @@ public class ScenarioUtil extends TestCaseCommon {
 
         return invokeApi(url, json);
     }
+
+    /**
+     * V3.0积分客户管理
+     *2021/3/6
+     */
+    public JSONObject integralCenterCustomerPage(int page,int size,String customerPhone){
+        JSONObject json = new JSONObject();
+        json.put("page", page);
+        json.put("size", size);
+        json.put("customer_phone", customerPhone);
+        String url = "/jiaochen/pc/integral-center/customer/page";
+        return invokeApi(url, json);
+    }
+
+    /**
+     * V3.0积分客户管理
+     *2021/3/6
+     */
+    public JSONObject customerIntegralChangeRecordPage(int page,int size,String customerPhone,String changeStart,String changeEnd){
+        JSONObject json = new JSONObject();
+        json.put("page", page);
+        json.put("size", size);
+        json.put("change_start", changeStart);
+        json.put("customer_phone", customerPhone);
+        json.put("change_end", changeEnd);
+        String url = "/jiaochen/pc/integral-center/customer-integral/change-record/page";
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description :增发记录
+     * * * @author: gly
+     * @date :2020/01/07
+     **/
+    public JSONObject additionalRecordPage(String page, String size,String pram,String result) {
+        String url = "/jiaochen/pc/voucher-manage/additional-record";
+        JSONObject json = new JSONObject();
+        json.put("shop_id", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        if (pram != null) {
+            json.put(pram, result);
+        }
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description :增发记录
+     * * * @author: gly
+     * @date :2020/01/07
+     **/
+    public JSONObject additionalRecordTimePage(String page, String size,String addStartTime,String addEndTime) {
+        String url = "/jiaochen/pc/voucher-manage/additional-record";
+        JSONObject json = new JSONObject();
+        json.put("page", page);
+        json.put("size", size);
+        json.put("add_start_time", addStartTime);
+        json.put("add_end_time", addEndTime);
+
+        return invokeApi(url, json);
+    }
+
 
 }
