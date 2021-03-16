@@ -685,7 +685,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
     }
 
     /**
-     * @description:会员到访列表
+     * @description:删除会员
      * @author:
      * @time:
      */
@@ -1365,7 +1365,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
     }
 
     public JSONObject organizationAccountAddTwo(String account,String name,String number,String leaderUid,String type,String email,String phone,int status,JSONArray roleIdList,JSONArray shopIdList) throws Exception {
-        String url = "/patrol/organization/role/add";
+        String url = "/patrol/organization/account/add";
         JSONObject json = new JSONObject();
         json.put("account",account);
         json.put("name",name);
@@ -1485,6 +1485,48 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
+
+
+    /**
+     * @description:上级领导下拉列表
+     * @author:
+     * @time:
+     */
+    public JSONObject leaderList() throws Exception {
+        String url = "/patrol/organization/account/leader/list";
+        JSONObject json = new JSONObject();
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+
+    /**
+     * @description:权限包列表
+     * @author:
+     * @time:
+     */
+    public JSONObject rolePackage(int superior_role_id) throws Exception {
+        String url = "/patrol/organization/role-management/query-permission-map";
+        JSONObject json = new JSONObject();
+        json.put("superior_role_id",superior_role_id);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    /**
+     * @description:权限包列表
+     * @author:
+     * @time:
+     */
+    public JSONObject superiorList() throws Exception {
+        String url = "/patrol/organization/role/superior/list";
+        JSONObject json = new JSONObject();
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
 
     /**
      * @description:11.1.7 角色列表

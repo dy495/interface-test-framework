@@ -2,6 +2,7 @@ package com.haisheng.framework.testng.bigScreen.xundianDaily.zt;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
@@ -15,6 +16,7 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
+import com.haisheng.framework.testng.service.ApiRequest;
 import com.haisheng.framework.util.CommonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -313,6 +315,28 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    //非自定义导出报表
+    @Test
+    public void ReportExport() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray list = xd.reportList(1,100,null,null,null,null).getJSONArray("list");
+            if (list.size()>0){
+                JSONArray shop_id_List = new JSONArray();
+                shop_id_List.add("");
+                int id = list.getJSONObject(0).getInteger("id");
+                int code = xd.customizeReportExport(id,"","",shop_id_List,"","","").getInteger("code");
+                Preconditions.checkArgument(code==1000,"非自定义导出报表 id="+id+", 状态码"+code);
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC非自定义导出报表");
+        }
+    }
 
     //自定义导出报表
     @Test
@@ -324,8 +348,8 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
             shop_id_List.add("43072");
             String start_time = "2021-03-11";
             String end_time = "2021-03-14";
-            JSONArray list = xd.customizeReportExport(2,"CHECK_REPORT","MONTH",shop_id_List,start_time,end_time,"aaa").getJSONArray("list");
-//            checkArgument(isAbnormal==0, "异常图片" + "!=图片返回的状态" + isAbnormal);
+            JSONObject res = xd.customizeReportExport(2,"CHECK_REPORT","MONTH",shop_id_List,start_time,end_time,"aaa");
+            checkArgument(res.getInteger("code") == 1000, "自定义导出报表状态码"+res.getInteger("code"));
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -524,43 +548,6 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
 
 
-
-
-    //注册会员，会员管理列表+1，通过搜索框进行搜索
-    @Test
-    public void MemberList(){
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-           //通过搜索框搜索会员
-            JSONArray list = md.MemberList(page,size,"","","","","").getJSONArray("list");
-            String member_ID = "11223344";
-            String member_name = "测试会员11@@aaa";
-            String base64 = "src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/猫.png";
-            String birthday = "1998-10-01";
-            JSONObject res = md.RegisterMember(base64,member_ID,member_name,phone,birthday,"",1);
-            checkArgument(res.getInteger("code") == 1000, "添加会员成功");
-
-            JSONArray list0 = md.MemberList(page,size,"","","","","").getJSONArray("list");
-            Integer a = list0.size()-list.size();
-            checkArgument(a==1, "新注册一个会员，会员列表实际添加了"+a);
-
-            JSONArray list1 = md.MemberList(page,size,member_ID,member_name,phone,"","").getJSONArray("list");
-//            会员id
-            String memberId = list.getString(2);
-            String memberName = list.getString(3);
-            String memberPhone = list.getString(4);
-            checkArgument(member_ID.equals(memberId), "输入的会员id:" + member_ID + "返回的会员id"+ memberId);
-            checkArgument(member_name.equals(memberName), "输入的会员姓名:" + member_name + "返回的会员姓名"+ memberName);
-            checkArgument(memberPhone.equals(memberPhone), "输入的会员姓名:" + phone + "返回的会员姓名"+ memberPhone);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("注册会员，并且通过搜索框搜索会员");
-        }
-    }
-
     //会员身份添加、删除
     @Test
     public void AddMember(){
@@ -590,6 +577,68 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
         }
     }
+
+
+    //注册会员，会员管理列表+1，通过搜索框进行搜索
+    @Test(dataProvider = "FACE_URL",dataProviderClass = DataProviderMethod.class)
+    public void MemberList(String face_url){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+           //通过搜索框搜索会员
+            JSONArray list = md.MemberList(page,size,"","","","","").getJSONArray("list");
+            String member_ID = "11223344";
+            String member_name = "测试会员11@@aaa";
+            String birthday = "1998-10-01";
+            JSONObject res = md.RegisterMember(face_url,member_ID,member_name,phone,birthday,"",1);
+            checkArgument(res.getInteger("code") == 1000, "添加会员成功");
+
+            JSONArray list0 = md.MemberList(page,size,"","","","","").getJSONArray("list");
+            Integer a = list0.size()-list.size();
+            checkArgument(a==1, "新注册一个会员，会员列表实际添加了"+a);
+
+            JSONArray list1 = md.MemberList(page,size,member_ID,member_name,phone,"","").getJSONArray("list");
+//            会员id
+            String memberId = list1.getString(2);
+            String memberName = list1.getString(3);
+            String memberPhone = list1.getString(4);
+            checkArgument(member_ID.equals(memberId), "输入的会员id:" + member_ID + "返回的会员id"+ memberId);
+            checkArgument(member_name.equals(memberName), "输入的会员姓名:" + member_name + "返回的会员姓名"+ memberName);
+            checkArgument(memberPhone.equals(phone), "输入的会员电话:" + phone + "返回的会员电话"+ memberPhone);
+
+            //获取会员列表页第一个会员的id
+            JSONArray list2 = md.MemberList(page,size,"","","","","").getJSONArray("list");
+            Integer id = list2.getInteger(0);
+
+
+            //为了进到会员编辑页
+            JSONObject res1 =  md.MemberDetail(id);
+            checkArgument(res1.getInteger("code") == 1000, "查看会员详情成功");
+            //编辑会员
+            String Base64 = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/三分之二脸.jpg";
+            String MemberId = "221122";
+            String MemberName = "测试编辑A！";
+            String phone = "13666666666";
+            String Birthday = "1996-01-01";
+            String uesrId = "000";
+            JSONObject res2 = md.MemberUpdate(Base64,MemberId,MemberName,phone,Birthday,uesrId,1);
+            checkArgument(res2.getInteger("code") == 1000, "编辑会员成功");
+
+
+            //删除会员
+            JSONArray list3 = md.MemberList(page,size,"","","","","").getJSONArray("list");
+            Integer id2 = list3.getInteger(0);
+            JSONObject res3 = md.MemberDelete(id2);
+            checkArgument(res3.getInteger("code") == 1000, "删除会员成功");
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("注册会员，并且通过搜索框搜索会员，编辑会员，删除会员");
+        }
+    }
+
 
 
 //    //新建预置位、新建预置位不加名称、新建预置位不加时间、新建预置位后列表+1、删除一个预置位列表-1
