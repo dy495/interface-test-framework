@@ -2,7 +2,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.gly;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.*;
@@ -24,7 +24,7 @@ import java.util.*;
 public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseStd {
     ScenarioUtil jc = new ScenarioUtil();
     private static final EnumTestProduce product = EnumTestProduce.JIAOCHEN_DAILY;
-    public Visitor visitor = new Visitor(product);
+    public VisitorProxy visitor = new VisitorProxy(product);
     BusinessUtil businessUtil=new BusinessUtil(visitor);
     CommonConfig commonConfig = new CommonConfig();
     PublicParm pp = new PublicParm();

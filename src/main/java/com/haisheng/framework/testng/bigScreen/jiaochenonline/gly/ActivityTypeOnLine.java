@@ -3,7 +3,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline.gly;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
@@ -32,7 +32,7 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
     ScenarioUtil jc = new ScenarioUtil();
     private static final EnumTestProduce product = EnumTestProduce.JIAOCHEN_ONLINE;
     private static final EnumAccount ADMINISTRATOR=EnumAccount.ALL_AUTHORITY_ONLINE;
-    public Visitor visitor = new Visitor(product);
+    public VisitorProxy visitor = new VisitorProxy(product);
     //    BusinessUtil businessUtil = new BusinessUtil(visitor);
     BusinessUtilOnline businessUtil=new BusinessUtilOnline(visitor);
     SupporterUtil supporterUtil = new SupporterUtil(visitor);

@@ -1,6 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher;
 
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -18,7 +18,7 @@ public class VoucherGenerator extends BaseVoucher {
     }
 
     @Override
-    public void execute(Visitor visitor, IScene scene) {
+    public void execute(VisitorProxy visitor, IScene scene) {
 
     }
 

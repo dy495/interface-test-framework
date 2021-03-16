@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterators;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
@@ -3077,7 +3077,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     public void show() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Visitor visitor =new Visitor(EnumTestProduce.JIAOCHEN_DAILY);
+            VisitorProxy visitor =new VisitorProxy(EnumTestProduce.JIAOCHEN_DAILY);
 
             Long voucherId=new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.INVALIDED).buildVoucher().getVoucherId();
 

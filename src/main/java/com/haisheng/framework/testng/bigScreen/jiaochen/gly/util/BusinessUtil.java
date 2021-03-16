@@ -2,11 +2,10 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.gly.util;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityApprovalStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.RegisterInfoEnum;
@@ -32,10 +31,10 @@ import java.util.*;
 
 public class BusinessUtil {
 
-   private final Visitor visitor;
+   private final VisitorProxy visitor;
    private final UserUtil user;
 
-    public BusinessUtil(Visitor visitor) {
+    public BusinessUtil(VisitorProxy visitor) {
         this.visitor = visitor;
         this.user=new UserUtil(visitor);
     }

@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.google.inject.internal.util.$Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
@@ -35,7 +35,7 @@ import java.text.SimpleDateFormat;
 import static com.google.common.base.Preconditions.checkArgument;
 
 public class JcApplet extends TestCaseCommon implements TestCaseStd {
-    Visitor visitor = new Visitor(EnumTestProduce.JIAOCHEN_DAILY);
+    VisitorProxy visitor = new VisitorProxy(EnumTestProduce.JIAOCHEN_DAILY);
     private static final EnumAccount administrator = EnumAccount.ALL_AUTHORITY_DAILY;
     ScenarioUtil jc = new ScenarioUtil();
     SupporterUtil util = new SupporterUtil(visitor);

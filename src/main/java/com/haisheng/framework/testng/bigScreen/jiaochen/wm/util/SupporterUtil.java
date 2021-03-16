@@ -2,10 +2,9 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.util;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.util.BaseUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppAppointmentPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppFollowUpPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppReceptionPage;
@@ -57,6 +56,8 @@ import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -68,15 +69,17 @@ import java.util.stream.Collectors;
  * @author wangmin
  * @date 2021/1/20 13:36
  */
-public class SupporterUtil extends BaseUtil {
-    private final Visitor visitor;
+public class SupporterUtil {
+    public static final Logger logger = LoggerFactory.getLogger(SupporterUtil.class);
+    public static final Integer SIZE = 100;
+    private final VisitorProxy visitor;
 
     /**
      * 构造函数
      *
      * @param visitor visitor
      */
-    public SupporterUtil(Visitor visitor) {
+    public SupporterUtil(VisitorProxy visitor) {
         this.visitor = visitor;
     }
 

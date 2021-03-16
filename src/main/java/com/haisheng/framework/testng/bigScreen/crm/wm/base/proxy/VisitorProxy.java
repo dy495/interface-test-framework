@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.crm.wm.base.agency;
+package com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -10,12 +10,12 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.util.StringUtils;
 
 /**
- * 调用接口类
+ * 调用http请求的代理
  *
  * @author wangmin
  * @date 2021/1/20 13:36
  */
-public class Visitor extends TestCaseCommon {
+public class VisitorProxy extends TestCaseCommon {
 
     private final EnumTestProduce product;
 
@@ -24,7 +24,7 @@ public class Visitor extends TestCaseCommon {
      *
      * @param product 调用产品
      */
-    public Visitor(EnumTestProduce product) {
+    public VisitorProxy(EnumTestProduce product) {
         this.product = product;
     }
 

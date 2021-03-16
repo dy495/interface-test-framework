@@ -1,7 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase;
 
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
@@ -60,7 +60,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce PRODUCE = EnumTestProduce.JIAOCHEN_DAILY;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.ALL_AUTHORITY_DAILY;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_DAILY;
-    public Visitor visitor = new Visitor(PRODUCE);
+    public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public UserUtil user = new UserUtil(visitor);
     public SupporterUtil util = new SupporterUtil(visitor);
 
@@ -102,7 +102,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
-    @Test(description = "预约保养->确认预约->点接待->变更接待->完成接待->评价->跟进")
+    @Test(description = "预约保养->确认预约->点接待->变更接待->完成接待->评价->跟进",enabled = false)
     public void appointmentManager_maintain() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -216,7 +216,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
-    @Test(description = "预约维修->确认预约->点接待->变更接待->完成接待->评价->跟进")
+    @Test(description = "预约维修->确认预约->点接待->变更接待->完成接待->评价->跟进",enabled = false)
     public void appointmentManager_repair() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

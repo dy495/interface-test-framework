@@ -2,7 +2,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.util;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
@@ -33,10 +33,10 @@ import java.util.*;
 
 public class BusinessUtilOnline {
 
-   private final Visitor visitor;
+   private final VisitorProxy visitor;
    private final UserUtil user;
 
-    public BusinessUtilOnline(Visitor visitor) {
+    public BusinessUtilOnline(VisitorProxy visitor) {
         this.visitor = visitor;
         this.user=new UserUtil(visitor);
         UserUtil user = new UserUtil(visitor);

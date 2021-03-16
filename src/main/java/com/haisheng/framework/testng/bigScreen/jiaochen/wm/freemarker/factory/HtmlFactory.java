@@ -1,7 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.factory;
 
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.scenemaker.SceneAttribute;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.parse.IParser;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,8 +14,8 @@ import java.util.List;
 public class HtmlFactory {
     public static final Logger logger = LoggerFactory.getLogger(HtmlFactory.class);
 
-    public List<SceneAttribute> getObjectAttribute(String htmlUrl, IParser parse) {
+    public <T> List<T> getObjectAttribute(String htmlUrl, @NotNull IParser parse) {
         parse.setHtmlUrl(htmlUrl);
-        return parse.getSceneAttributeList();
+        return (List<T>) parse.getSceneAttributeList();
     }
 }

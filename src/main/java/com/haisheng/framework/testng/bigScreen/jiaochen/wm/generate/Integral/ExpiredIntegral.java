@@ -1,7 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.Integral;
 
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.ExchangeGoodsDetail;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.IntegralExchangeStatusEnum;
@@ -27,7 +27,7 @@ public class ExpiredIntegral extends BaseIntegral {
     }
 
     @Override
-    public void execute(@NotNull Visitor visitor, IScene scene) {
+    public void execute(@NotNull VisitorProxy visitor, IScene scene) {
         logger("CREATE EXPIRED START");
         String exchangeStartTime = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), -2), "yyyy-MM-dd HH:mm:ss");
         String exchangeEndTime = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), -1), "yyyy-MM-dd HH:mm:ss");

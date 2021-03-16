@@ -1,6 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.Integral;
 
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.IntegralExchangeStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.ExchangeSwitchStatusScene;
@@ -21,7 +21,7 @@ public class CloseIntegral extends BaseIntegral {
     }
 
     @Override
-    public void execute(@NotNull Visitor visitor, IScene scene) {
+    public void execute(@NotNull VisitorProxy visitor, IScene scene) {
         logger("CREATE CLOSE START");
         Long integralId = new IntegralGenerator.Builder().IntegralExchangeStatus(IntegralExchangeStatusEnum.WORKING).buildIntegralExchange().getIntegralId();
         super.visitor = visitor;

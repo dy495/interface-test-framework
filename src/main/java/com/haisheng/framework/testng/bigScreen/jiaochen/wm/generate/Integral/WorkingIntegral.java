@@ -1,7 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.Integral;
 
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.ExchangePage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.IntegralExchangeStatusEnum;
@@ -26,7 +26,7 @@ public class WorkingIntegral extends BaseIntegral {
     }
 
     @Override
-    public void execute(@NotNull Visitor visitor, IScene scene) {
+    public void execute(@NotNull VisitorProxy visitor, IScene scene) {
         logger("CREATE WORKING START");
         List<ExchangePage> exchangePageLis = resultCollectToBean(ExchangePageScene.builder().build(), ExchangePage.class);
         ExchangePage exchangePage = exchangePageLis.stream().filter(e -> e.getStatusName().equals(IntegralExchangeStatusEnum.CLOSE.getDesc())).findFirst().orElse(null);

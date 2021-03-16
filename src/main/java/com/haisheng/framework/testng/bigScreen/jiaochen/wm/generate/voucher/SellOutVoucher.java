@@ -2,7 +2,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.ApplyPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
@@ -33,7 +33,7 @@ public class SellOutVoucher extends BaseVoucher {
     }
 
     @Override
-    public void execute(Visitor visitor, IScene scene) {
+    public void execute(VisitorProxy visitor, IScene scene) {
         logger("CREATE SELL OUT START");
         super.visitor = visitor;
         String voucherName = new SupporterUtil(visitor).createVoucher(1, VoucherTypeEnum.CUSTOM);

@@ -1,7 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.crm.wm.base.scene;
 
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 
 /**
  * 场景接口
@@ -25,6 +25,6 @@ public interface IScene {
      * @param checkCode 是否校验code
      * @return response.data|response 校验时返回response.data/不校验时返回response
      */
-    JSONObject execute(Visitor visitor, boolean checkCode);
+    JSONObject execute(VisitorProxy visitor, boolean checkCode);
 
 }

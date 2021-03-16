@@ -1,7 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher;
 
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
@@ -55,7 +55,7 @@ public abstract class BaseVoucher extends AbstractGenerator implements IVoucher 
     }
 
     @Override
-    public abstract void execute(Visitor visitor, IScene scene);
+    public abstract void execute(VisitorProxy visitor, IScene scene);
 
     public static abstract class BaseBuilder extends AbstractGenerator.AbstractBuilder<BaseBuilder> {
         private VoucherStatusEnum voucherStatus;

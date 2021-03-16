@@ -2,7 +2,6 @@ package com.haisheng.framework.testng.bigScreen.crm.wm.util;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.util.BaseUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumDingTalkWebHook;
 import com.haisheng.framework.util.DateTimeUtil;
 import org.apache.http.HttpResponse;
@@ -12,13 +11,16 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DingPushUtil extends BaseUtil {
+public class DingPushUtil {
+    public static final Logger logger = LoggerFactory.getLogger(DingPushUtil.class);
     private static final String WEBHOOK_TOKEN = EnumDingTalkWebHook.BA.getWebHook();
 
     public static void sendText(String msg, String sql, String caseName) {
