@@ -1453,7 +1453,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             int total = data.getInteger("total");
             Preconditions.checkArgument(today_number <= month_number, "今日试驾总数>本月共计");
             Preconditions.checkArgument(month_number <= total_number, "本月共计>累计");
-            Preconditions.checkArgument(total_number <= total, "今日累计>列表总数");
+            Preconditions.checkArgument(total_number <= total, "今日累计:"+total+">列表总数"+total_number);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {

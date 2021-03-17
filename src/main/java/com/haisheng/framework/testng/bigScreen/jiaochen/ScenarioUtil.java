@@ -893,7 +893,7 @@ public class ScenarioUtil extends TestCaseCommon {
                 "{" +
                         "\"name\" :\"" + name + "\",\n" +
                         "\"description\" :\"" + description + "\",\n" +
-                        "\"module_id\" :" + module_id + "\n" +
+                        "\"auth_list\" :" + module_id + "\n" +
 
                         "} ";
 
