@@ -442,7 +442,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         try {
             crm.login(cstm.baoshijie, cstm.pwd);
             String userName = "" + System.currentTimeMillis();
-            int roleId = 13;
+            int roleId =13 ;
             String userLoginName = userName;
             String userid = pf.createUserId(userLoginName, roleId);
             String phone2 = pf.genPhoneNum();

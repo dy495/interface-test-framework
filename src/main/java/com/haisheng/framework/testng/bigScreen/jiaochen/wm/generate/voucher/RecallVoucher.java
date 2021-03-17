@@ -1,6 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher;
 
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.RecallVoucherScene;
@@ -21,7 +21,7 @@ public class RecallVoucher extends BaseVoucher {
     }
 
     @Override
-    public void execute(@NotNull Visitor visitor, IScene scene) {
+    public void execute(@NotNull VisitorProxy visitor, IScene scene) {
         logger("CREATE RECALL START");
         Long voucherId = new VoucherGenerator.Builder().voucherStatus(VoucherStatusEnum.WAITING).visitor(visitor).buildVoucher().getVoucherId();
         super.visitor = visitor;

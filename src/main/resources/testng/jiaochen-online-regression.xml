@@ -9,6 +9,11 @@
 
     <test name="daily-rgn" preserve-order="true">
         <classes>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.app.JcAppOnline"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.app.JcAppReceptionRelateOnline"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.app.JcAppAffirmReceptionOnLine"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.pc.JcPcReceptionRelateOnline"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.pc.JcPcAffirmReceptionOnLine"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.lxq.SystemCaseOnline"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.lxq.DataCaseOnline"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.FilterColumnSystemOnline"/>
@@ -17,7 +22,7 @@
             <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.testcase.IntegralCenterCaseOnline"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.testcase.MarketingManageCaseOnline"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.testcase.ContentOperationCaseOnline"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.JcAppOnline"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.app.JcAppOnline"/>
 
         </classes>
     </test>

@@ -356,21 +356,21 @@ public class StorePcCaseOnline extends TestCaseCommon implements TestCaseStd {
             int size = 10;
             int num = 0;
             int num1 = 0;
-            JSONArray storeList = md.patrolShopRealV3A(district_code, shopType, shopName, shopManager, page, size).getJSONArray("list");
+            JSONArray storeList = md.patrolShopRealV3A(district_code, shopType, shopName, shopManager, page, size,null).getJSONArray("list");
             for (int i = 0; i < storeList.size(); i++) {
                 Preconditions.checkArgument(storeList.getJSONObject(i).getString("type").equals("NORMAL") || storeList.getJSONObject(i).getString("type").equals("COMMUNITY"), "筛选栏多选数据有问题");
             }
 
             //单选
             String[] shopType1 = new String[]{"NORMAL"};
-            JSONArray storeList1 = md.patrolShopRealV3A(district_code, shopType1, shopName, shopManager, page, size).getJSONArray("list");
+            JSONArray storeList1 = md.patrolShopRealV3A(district_code, shopType1, shopName, shopManager, page, size,null).getJSONArray("list");
             for (int j = 0; j < storeList1.size(); j++) {
                 Preconditions.checkArgument(storeList1.getJSONObject(j).getString("type").equals("NORMAL"), "筛选栏单选数据有问题");
             }
 
             //全选
             String[] shopType2 = new String[]{"NORMAL", "COMMUNITY", "PLAZA", "FLAGSHIP"};
-            JSONArray storeList2 = md.patrolShopRealV3A(district_code, shopType2, shopName, shopManager, page, size).getJSONArray("list");
+            JSONArray storeList2 = md.patrolShopRealV3A(district_code, shopType2, shopName, shopManager, page, size,null).getJSONArray("list");
             for (int m = 0; m < storeList2.size(); m++) {
                 num++;
                 System.out.println("num为  " + num);
@@ -379,7 +379,7 @@ public class StorePcCaseOnline extends TestCaseCommon implements TestCaseStd {
 
             //不选
             String[] shopType3 = new String[]{};
-            JSONArray storeList3 = md.patrolShopRealV3A(district_code, shopType3, shopName, shopManager, page, size).getJSONArray("list");
+            JSONArray storeList3 = md.patrolShopRealV3A(district_code, shopType3, shopName, shopManager, page, size,null).getJSONArray("list");
             for (int n = 0; n < storeList3.size(); n++) {
                 num1++;
                 //System.out.println("num1为  "+num1);
@@ -405,7 +405,7 @@ public class StorePcCaseOnline extends TestCaseCommon implements TestCaseStd {
         int page = 1;
         int size = 10;
         try {
-            JSONArray storeList = md.patrolShopRealV3A(district_code, shopType, shopName, shopManager, page, size).getJSONArray("list");
+            JSONArray storeList = md.patrolShopRealV3A(district_code, shopType, shopName, shopManager, page, size,null).getJSONArray("list");
             for (int i = 0; i < storeList.size(); i++) {
                 String string = storeList.getJSONObject(i).getString("name");
                 if (string != null && string.contains(shopName)) {
@@ -714,7 +714,6 @@ public class StorePcCaseOnline extends TestCaseCommon implements TestCaseStd {
             JSONArray list = md.organizationAccountPage("", "", "", "", "", "", page, size).getJSONArray("list");
             String name = list.getJSONObject(0).getString("name");
             String email = list.getJSONObject(0).getString("email");
-            String phone = list.getJSONObject(2).getString("phone");
 
             //根据账号名称筛选
             JSONArray list1 = md.organizationAccountPage(name, "", "", "", "", "", page, size).getJSONArray("list");
@@ -724,9 +723,9 @@ public class StorePcCaseOnline extends TestCaseCommon implements TestCaseStd {
             JSONArray list2 = md.organizationAccountPage("", "", email, "", "", "", page, size).getJSONArray("list");
             checkArgument(email.equals(list2.getJSONObject(0).getString("email")), "根据email" + email + "进行筛选的结果和筛选条件不一致");
 
-            //根据phone筛选
-            JSONArray list3 = md.organizationAccountPage("", "", "", phone, "", "", page, size).getJSONArray("list");
-            checkArgument(phone.equals(list3.getJSONObject(0).getString("phone")), "根据email" + phone + "进行筛选的结果和筛选条件不一致");
+
+            JSONArray list3 = md.organizationAccountPage("", "", "", "17777777771", "", "", page, size).getJSONArray("list");
+            checkArgument("17777777771".equals(list3.getJSONObject(0).getString("phone")), "根据phone" + "17777777771" + "进行筛选的结果和筛选条件不一致");
 
 
         } catch (AssertionError e) {

@@ -805,13 +805,16 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "前台老客解绑")
+    @Test(description = "前台老客解绑",enabled = false)
     public void jiebang() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray list = crm.markcustomerList().getJSONArray("list");
 
             JSONObject dd = pf.customermess(list, "老客");
+            if(dd.size()==0){
+                throw new Exception("暂无老客到访，无法解绑");
+            }
             String analysis_customer_id = dd.getString("analysis_customer_id");
             String customer_id = dd.getString("customer_id");
 

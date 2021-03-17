@@ -6,7 +6,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAp
 
 
 public class PublicParm {
-    public int num = 5;
+    public int num = 4;
     public String roleId = "603";
     public String gwphone = "13114785236"; //超级管理员
     public String gwpassword = "000000"; //单个店的客户的数据  登录密码
@@ -23,7 +23,7 @@ public class PublicParm {
     public String shichangPassword = "";
     public String verification_code = "3MR9C7";   //夏夏的核销码
     public String carModelId = "14";
-    public String car_id = "24";    //小程序车id  plate_number=京QWER123
+    public String car_id = "24";    //小程序车id
     public String carplate = "浙QWER123";      //编辑小程序车牌号
     public String carplate7 = "津DAASSE";      //编辑小程序车牌号
 
@@ -40,7 +40,7 @@ public class PublicParm {
 
     public String jdgw = "13402050050";  //xx ,属于中关村店
     public String roleidJdgw="2945"; //拥有接待权限的校色id
-    public String nameJdgw="自动化专用角色"; //拥有接待权限的校色id
+    public String nameJdgw="自动化专用账号"; //拥有接待权限的校色id
     public String jdgw2 = "13402050050";  //xx2 ,属于中关村店
     public String jdgwpassword = "000000"; //单个店的客户的数据  登录密码
     public String jdgwName = "自动化专用账号"; //单个店的客户的数据  登录密码
@@ -55,10 +55,10 @@ public class PublicParm {
     public String StoreCommodityId="85";  //TODO:编辑需要的商品套餐的名字
     public String importFilepath="src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/importfile.xlsx";   //导入工单文件路径
     //其他小程序用户tocken和车牌号信息
-    public String getAppletTockenOther="R4M7UpQ2+Q3L0QbxGA32iA==";
-    public  String CarplateOther="浙ZXCV123";
+    public String getAppletTockenOther=EnumAppletToken.JC_XMF_DAILY.getToken();
+    public  String CarplateOther="豫GBBA11";
     public String userid="uid_0216a935"; //xx的userId;
-    public String userid2="uid_5eabfb9c"; //xx2的userId;
+    public String userid2="uid_5eabfb9c"; //店长的userId;
 
     public int ordeId=10; // 订单Id
     public String filepath11="src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/1_1.jpg";

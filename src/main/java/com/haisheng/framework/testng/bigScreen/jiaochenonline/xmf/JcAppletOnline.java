@@ -7,7 +7,6 @@ import com.google.inject.internal.util.$Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appletActivityRegister;
-import com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.VariableOnLine.registerListVariable;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -104,6 +103,7 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
     public void mycarConsistency() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            jc.appletLoginToken(pp.appletTocken);
             int count = pf.carListNumber(pp.carStyleId);
             String plate_number = "蒙JKIO123";
             String car_idBefore = pf.appletAddCar(plate_number);
@@ -388,11 +388,11 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
             jc.appletactivityRegister(ar);
 
             jc.pcLogin(pp.shichang, pp.shichangPassword);
-            registerListVariable sv = new registerListVariable();
-            JSONObject ll = jc.registerListFilterManage(sv);
-            String appointment_id = ll.getJSONArray("list").getJSONObject(0).getString("id");
+//            registerListVariable sv = new registerListVariable();
+//            JSONObject ll = jc.registerListFilterManage(sv);
+//            String appointment_id = ll.getJSONArray("list").getJSONObject(0).getString("id");
             JSONArray passItem = new JSONArray();
-            passItem.add(appointment_id);    //审批取得id与预约id是否一致？？ TODO:
+//            passItem.add(appointment_id);    //审批取得id与预约id是否一致？？ TODO:
             //审批
             jc.approvalArticle(passItem, "APPROVAL_CONFIRM(");
             //活动报名审批后

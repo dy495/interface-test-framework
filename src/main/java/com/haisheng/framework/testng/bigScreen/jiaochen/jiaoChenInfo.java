@@ -3,7 +3,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.lxq.create.pcCreateExchangeGoods;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
@@ -329,7 +329,7 @@ public class jiaoChenInfo {
 
     //新建虚拟积分商品
     public Long newFictitious(){
-        Visitor visitor =new Visitor(EnumTestProduce.JIAOCHEN_DAILY);
+        VisitorProxy visitor =new VisitorProxy(EnumTestProduce.JIAOCHEN_DAILY);
 
         pcCreateExchangeGoods ex = new pcCreateExchangeGoods();
         ex.chkcode=true;

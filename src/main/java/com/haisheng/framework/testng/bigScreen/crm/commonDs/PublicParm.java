@@ -19,8 +19,8 @@ public class PublicParm {
 
 //    public String weixiuGuwen = "weixiu";     //维修顾问
 
-    public Long mycarId = 537L;   //车id待定
-    public Long mycarId2 = 419L;   //车id待定
+    public Long mycarId = 22L;   //车id待定
+    public Long mycarId2 = 21L;   //车id待定
 
     public String xiaoshouGuwen = "销售顾问xia";      //销售账号
     public String xsgwPassword = "e10adc3949ba59abbe56e057f20f883e";
@@ -34,7 +34,7 @@ public class PublicParm {
     public String customer_phone_numberO = "17770601557";  //京GV15666
 //    public String customer_phone_numberO = "17715942601";
     public String customer_phone_numberE = "17767880967";
-    public String belongSaleId="uid_7e94cd07";
+    public String belongSaleId="uid_6628907b";
 
 
     public String chengeReceiptPhone = "17768996973";
@@ -43,7 +43,7 @@ public class PublicParm {
     public String samephone= "13936966369";  //展厅客户手机号2
     public String linephone= "17783875772";  //线索客户手机号
     public String linephone2= "18967887890";  //线索客户手机号
-    public String samePlate= "吉E000000";  //系统已存在的车牌号
+    public String samePlate= "京GV15666";  //系统已存在的车牌号
 
     public Integer car_type = 1;
     public Integer car_model = 36;

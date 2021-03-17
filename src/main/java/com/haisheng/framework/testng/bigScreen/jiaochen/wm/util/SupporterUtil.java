@@ -2,10 +2,9 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.util;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.util.BaseUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppAppointmentPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppFollowUpPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppReceptionPage;
@@ -22,41 +21,43 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.appointmen
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.commodity.CommodityStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.app.AppFollowUpPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.app.tack.AppAppointmentPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.app.tack.AppReceptionPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.app.tack.AppReceptionReceptorListScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.AppFollowUpPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.task.AppAppointmentPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.task.AppReceptionPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.task.AppReceptionReceptorListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.Integralmall.GoodsManagePageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.FissionVoucherAddScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.ManageApprovalScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.ManageRecruitAddScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.appointmentmanager.AppointmentPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.appointmentmanager.TimeTableListScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.appointmentmanage.AppointmentPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.appointmentmanage.TimeTableListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpload;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.CommoditySpecificationsListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.CreateExchangeGoodsScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.ExchangeGoodsStockScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.ExchangePageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.loginuser.ShopListScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.manager.EvaluatePageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.manage.EvaluatePageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.GroupTotalScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.PushMessageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.operation.ArticleList;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.ReceptionPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.ReceptionPurchaseFixedPackageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.ReceptionPurchaseTemporaryPackageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.ReceptionVoucherListScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.userange.Detail;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.userange.SubjectList;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanage.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.ReceptionPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.ReceptionPurchaseFixedPackageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.ReceptionPurchaseTemporaryPackageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.ReceptionVoucherListScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.userange.DetailScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.userange.SubjectListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.Approval;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApprovalScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.*;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -68,15 +69,17 @@ import java.util.stream.Collectors;
  * @author wangmin
  * @date 2021/1/20 13:36
  */
-public class SupporterUtil extends BaseUtil {
-    private final Visitor visitor;
+public class SupporterUtil {
+    public static final Logger logger = LoggerFactory.getLogger(SupporterUtil.class);
+    public static final Integer SIZE = 100;
+    private final VisitorProxy visitor;
 
     /**
      * 构造函数
      *
      * @param visitor visitor
      */
-    public SupporterUtil(Visitor visitor) {
+    public SupporterUtil(VisitorProxy visitor) {
         this.visitor = visitor;
     }
 
@@ -222,7 +225,7 @@ public class SupporterUtil extends BaseUtil {
      * @return 主体类型
      */
     public String getSubjectType() {
-        IScene scene = SubjectList.builder().build();
+        IScene scene = SubjectListScene.builder().build();
         JSONArray array = visitor.invokeApi(scene).getJSONArray("list");
         return Objects.requireNonNull(array.stream().map(e -> (JSONObject) e).findFirst().orElse(null)).getString("subject_key");
     }
@@ -252,7 +255,7 @@ public class SupporterUtil extends BaseUtil {
      * @return 品牌id
      */
     public List<Long> getBrandIdList() {
-        IScene scene = Detail.builder().build();
+        IScene scene = DetailScene.builder().build();
         JSONArray array = visitor.invokeApi(scene).getJSONArray("list");
         return array.stream().map(e -> (JSONObject) e).map(e -> e.getLong("id")).collect(Collectors.toList());
     }
@@ -551,7 +554,7 @@ public class SupporterUtil extends BaseUtil {
         IScene scene = ApplyPageScene.builder().name(voucherName).state(ApplyStatusEnum.AUDITING.getId()).build();
         List<ApplyPage> voucherApplies = collectBean(scene, ApplyPage.class);
         Long applyId = voucherApplies.stream().filter(e -> e.getName().equals(voucherName)).map(ApplyPage::getId).findFirst().orElse(null);
-        visitor.invokeApi(Approval.builder().id(applyId).status(status).build());
+        visitor.invokeApi(ApprovalScene.builder().id(applyId).status(status).build());
     }
 
     //--------------------------------------------------套餐----------------------------------------------------------
@@ -1106,7 +1109,7 @@ public class SupporterUtil extends BaseUtil {
      * @return 门店id
      */
     public Integer getShopId() {
-        return visitor.isOnline() ? 20034 : 50401;
+        return visitor.isOnline() ? 20034 : 46522;
     }
 
     /**

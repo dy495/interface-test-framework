@@ -131,6 +131,7 @@ public class JcFunction {
 
     //app开始接待，并返回接待id
     public Long[] startReception(String carPlate) throws Exception {
+
         appStartReception sr = new appStartReception();
         JSONObject data = jc.appReceptionAdmit(carPlate).getJSONArray("customers").getJSONObject(0);
         Long result[] = new Long[2];
@@ -177,13 +178,16 @@ public class JcFunction {
     //app今日任务数据
     public int[] appTask() {
         JSONObject data = jc.appTask();
-        int sum[] = new int[4];
+        int sum[] = new int[6];
         //预约
         sum[0] = data.getInteger("surplus_appointment");   //分子
         sum[1] = data.getInteger("all_appointment");     //分母
         //接待
         sum[2] = data.getInteger("surplus_reception");  //分子
         sum[3] = data.getInteger("all_reception");      //分母
+
+        sum[4] = data.getInteger("surplus_follow");  //分子
+        sum[5] = data.getInteger("all_follow");      //分母
         return sum;
     }
 

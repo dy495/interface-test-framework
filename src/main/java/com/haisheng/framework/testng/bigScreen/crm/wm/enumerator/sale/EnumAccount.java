@@ -14,75 +14,65 @@ import org.springframework.util.StringUtils;
 public enum EnumAccount {
 
     /**
-     * 销售顾问
+     * 总经理
      */
-    XS_TEMP_DAILY("xsgwtemp", getPassword("123456"), "uid_41786c76", "daily", "销售顾问temp"),
+    ZJL_DAILY("zjl", getPassword("123456"), "uid_e5d21cbc", true, "zjl"),
 
     /**
-     * 销售顾问
+     * 销售顾问xia
      */
-    XS_DAILY("wm", getPassword("123456"), "", "daily", "wm"),
+    SALE_XIA("销售顾问xia", getPassword("123456"), "uid_6628907b", true, "销售顾问xia"),
+
+    /**
+     * 销售顾问wang
+     */
+    SALE_WANG("wm", getPassword("123456"), "", true, "wm"),
 
     /**
      * 保养顾问
      */
-    FW_BAOYANG_DAILY("by", getPassword("123456"), "", "daily", "baoyangr"),
-
-    /**
-     * 总经理
-     */
-    ZJL_DAILY("wzjl", getPassword("123456"), "uid_f6c92fe0", "daily", "wzjl"),
-
-    /**
-     * 总经理
-     */
-    WZJL_DAILY("wzjl", getPassword("123456"), "", "daily", "wzjl"),
-
-    /**
-     * 前台
-     */
-    QT_DAILY("qt", getPassword("123456"), "uid_05e8599f", "daily", ""),
+    MAINTAIN("baoyang", getPassword("123456"), "uid_8e706fc6", true, "baoyang"),
 
     /**
      * 保时捷线上销售顾问
      */
-    XS_11_ONLINE("11", getPassword("ys123456"), "uid_c01f9419", "online", "11"),
+    XS_11_ONLINE("11", getPassword("ys123456"), "uid_c01f9419", false, "11"),
 
     /**
      * 保时捷线上销售顾问
      */
-    XS_22_ONLINE("22", getPassword("ys123456"), "uid_da55f38d", "online", "22"),
+    XS_22_ONLINE("22", getPassword("ys123456"), "uid_da55f38d", false, "22"),
 
     /**
      * 销售顾问
      */
-    XS_CS_ONLINE("cs", getPassword("ys123456"), "", "online", "cs"),
+    XS_CS_ONLINE("cs", getPassword("ys123456"), "", false, "cs"),
 
     /**
      * 前台
      */
-    QT_ONLINE("qt", getPassword("ys123456"), "uid_8ef9ee4c", "online", "销售前台"),
+    QT_ONLINE("qt", getPassword("ys123456"), "uid_8ef9ee4c", false, "销售前台"),
 
     /**
      * 保养顾问
      */
-    FW_55_ONLINE("55", getPassword("ys123456"), "uid_b4c2c8e2", "online", "保养顾问"),
+    FW_55_ONLINE("55", getPassword("ys123456"), "uid_b4c2c8e2", false, "保养顾问"),
 
     /**
      * 保时捷线上总经
      */
-    ZJL_ONLINE("zjl", getPassword("ys123456"), "uid_a6452755", "online", "总经理"),
+    ZJL_ONLINE("zjl", getPassword("ys123456"), "uid_4f27fd2c", false, "zjl"),
 
     /**
      * 客户使用保时捷线上，不要轻易使用
      */
-    ZJ_ONLINE_PORSCHE("xszj", getPassword("123456"), "", "online", "");
+    ZJ_ONLINE_PORSCHE("xszj", getPassword("123456"), "", false, "");
 
-    EnumAccount(String account, String password, String uid, String environment, String username) {
+    EnumAccount(String account, String password, String uid, Boolean isDaily, String username) {
         this.account = account;
         this.password = password;
         this.uid = uid;
-        this.environment = environment;
+        this.isDaily = isDaily;
         this.username = username;
     }
 
@@ -96,7 +86,7 @@ public enum EnumAccount {
     private final String uid;
 
     @Getter
-    private final String environment;
+    private final Boolean isDaily;
 
     @Getter
     private final String username;

@@ -1,12 +1,12 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher;
 
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.ApplyPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.ApplyStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.Approval;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApprovalScene;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -25,7 +25,7 @@ public class RejectVoucher extends BaseVoucher {
     }
 
     @Override
-    public void execute(Visitor visitor, IScene scene) {
+    public void execute(VisitorProxy visitor, IScene scene) {
         logger("CREATE REJECT START");
         Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WAITING).buildVoucher().getVoucherId();
         super.visitor = visitor;
@@ -54,7 +54,7 @@ public class RejectVoucher extends BaseVoucher {
         IScene scene = ApplyPageScene.builder().name(voucherName).state(ApplyStatusEnum.AUDITING.getId()).build();
         List<ApplyPage> voucherApplies = resultCollectToBean(scene, ApplyPage.class);
         Long id = Objects.requireNonNull(voucherApplies.stream().filter(e -> e.getName().equals(voucherName)).findFirst().orElse(null)).getId();
-        visitor.invokeApi(Approval.builder().id(id).status(status).build());
+        visitor.invokeApi(ApprovalScene.builder().id(id).status(status).build());
     }
 
 }

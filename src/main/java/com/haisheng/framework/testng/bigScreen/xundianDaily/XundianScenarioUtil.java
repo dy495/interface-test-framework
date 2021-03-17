@@ -528,12 +528,13 @@ public class XundianScenarioUtil extends TestCaseCommon {
     }
 
     //适用于现场巡店
-    public JSONObject checkStartapp(Long shop_id, String check_type, Integer reset) throws Exception {
+    public JSONObject checkStartapp(Long shop_id, String check_type, Integer reset,boolean is_personalized_check_list) throws Exception {
         String url = "/store/m-app/auth/shop/checks/start";
         JSONObject json = new JSONObject();
         json.put("shop_id", shop_id);
         json.put("check_type", check_type);
         json.put("reset", reset);
+        json.put("is_personalized_check_list", is_personalized_check_list);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -838,6 +839,24 @@ public class XundianScenarioUtil extends TestCaseCommon {
     }
 
     /**
+     * @description :截屏留痕+限时整改时间
+     * @date :2020/6/25 13:56
+     **/
+    public JSONObject problemMarkTime(String responsor_id, Long list_id, Long item_id, JSONArray pic_list, String audit_comment,int limit_time) throws Exception {
+        String url = "/patrol/shop/problem/mark";
+        JSONObject json = new JSONObject();
+        json.put("responsor_id", responsor_id);
+        json.put("list_id", list_id);
+        json.put("item_id", item_id);
+        json.put("pic_list", pic_list);
+        json.put("shop_id", getXunDianShop());
+        json.put("audit_comment", audit_comment);
+        json.put("limit_time", limit_time);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
      * @description :截屏留痕时，获取店铺整改负责人uid  /patrol/m/shop/problem/responsors
      * @date :2020/6/25 16:47
      **/
@@ -860,6 +879,23 @@ public class XundianScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
+
+    /**
+     * @description :远程巡店时，批量处理清单清单项数
+     * @date :
+     **/
+    public JSONObject submitAllItem(int shop_id,int patrol_id,int list_id) throws Exception {
+        String url = "patrol/shop/check/item/submit_all_item";
+        JSONObject json = new JSONObject();
+        json.put("shop_id", shop_id);
+        json.put("patrol_id,", patrol_id);
+        json.put("list_id", list_id);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
 
 
     /**
@@ -1609,6 +1645,25 @@ public class XundianScenarioUtil extends TestCaseCommon {
 
         return JSON.parseObject(res);
     }
+
+
+    //我的报表-自定义导出
+    public JSONObject customizeReportExport(Integer id,String report_type,String report_time_dimension,JSONArray shop_id_List,String start_time,String end_time,String data_dimension) throws Exception {
+        String url = "/patrol/download-center/report-export";
+        JSONObject json = new JSONObject();
+        json.put("id",id);
+        json.put("report_type",report_type);
+        json.put("report_time_dimension",report_time_dimension);
+        json.put("shop_id_List",shop_id_List);
+        json.put("start_time",start_time);
+        json.put("end_time",end_time);
+        json.put("data_dimension",data_dimension);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
 
     //下载任务-任务类型枚举
     public JSONObject downldTaskType() throws Exception {

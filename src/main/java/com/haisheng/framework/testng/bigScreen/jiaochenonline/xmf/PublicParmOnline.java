@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 
 public class PublicParmOnline {
+    public int num=5;
     public String roleId="395";
     public String shopId="-1";   //门店Id
     public String shopIdZ="20032";   //门店Id 中关村店
@@ -41,7 +42,7 @@ public class PublicParmOnline {
     public String jdgwName="接待顾问x"; //单个店的客户的数据  登录密码
 
     public String dzphone="15037286014";   //中关村店长
-    public String dzroleId="426";
+    public String dzroleId="439";
     public String dzcode="000000";
 
     //---------2.0---------

@@ -2,10 +2,11 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.util;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.gly.util.PublicParameter;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityApprovalStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityStatusEnum;
@@ -32,16 +33,16 @@ import java.util.*;
 
 public class BusinessUtilOnline {
 
-   private final Visitor visitor;
+   private final VisitorProxy visitor;
    private final UserUtil user;
 
-    public BusinessUtilOnline(Visitor visitor) {
+    public BusinessUtilOnline(VisitorProxy visitor) {
         this.visitor = visitor;
         this.user=new UserUtil(visitor);
         UserUtil user = new UserUtil(visitor);
     }
      ScenarioUtil jc = new ScenarioUtil();
-      PublicParameterOnline pp = new PublicParameterOnline();
+    PublicParameter pp = new PublicParameter();
       public String shopId="-1";
 
     /**
@@ -130,6 +131,19 @@ public class BusinessUtilOnline {
         rewardVouchers.add(object);
         return rewardVouchers;
     }
+    /**
+     * @description :创建招募活动-卡券奖励
+     * @date :2021/1/24
+     **/
+    public JSONArray getRewardVouchers(Long id, int type, String num) {
+        JSONArray rewardVouchers = new JSONArray();
+        JSONObject object = new JSONObject();
+        object.put("id", id);
+        object.put("type", type);
+        object.put("num", num);
+        rewardVouchers.add(object);
+        return rewardVouchers;
+    }
 
     /**
      * 获取随机4位数
@@ -173,6 +187,14 @@ public class BusinessUtilOnline {
      */
     public String getEndDate() {
         Date endDate = DateTimeUtil.addDay(new Date(), 10);
+        return DateTimeUtil.getFormat(endDate, "yyyy-MM-dd HH:mm");
+    }
+
+    /**
+     * 获取当前时间
+     */
+    public String getDateTime(int day) {
+        Date endDate = DateTimeUtil.addDay(new Date(), day);
         return DateTimeUtil.getFormat(endDate, "yyyy-MM-dd HH:mm");
     }
 
@@ -249,7 +271,7 @@ public class BusinessUtilOnline {
      */
     public IScene createFissionActivityScene(Long voucherId) {
         SupporterUtil supporterUtil = new SupporterUtil(visitor);
-        PublicParameterOnline pp = new PublicParameterOnline();
+        PublicParameter pp = new PublicParameter();
         List<String> picList = new ArrayList<>();
         picList.add(supporterUtil.getPicPath());
         // 创建被邀请者和分享者的信息字段
@@ -326,7 +348,7 @@ public class BusinessUtilOnline {
     public IScene createRecruitActivityScene(Long voucherId, boolean successReward, int rewardReceiveType, boolean isNeedApproval) {
         List<String> picList = new ArrayList<>();
         SupporterUtil supporterUtil = new SupporterUtil(visitor);
-        PublicParameterOnline pp = new PublicParameterOnline();
+        PublicParameter pp = new PublicParameter();
         picList.add(0,supporterUtil.getPicPath());
         //填写报名所需要信息
         List<Boolean> isShow = new ArrayList<>();
@@ -389,7 +411,7 @@ public class BusinessUtilOnline {
     public IScene createRecruitActivityScene(Long voucherId, boolean successReward, int rewardReceiveType, boolean isNeedApproval,Boolean type) {
         List<String> picList = new ArrayList<>();
         SupporterUtil supporterUtil = new SupporterUtil(visitor);
-        PublicParameterOnline pp = new PublicParameterOnline();
+        PublicParameter pp = new PublicParameter();
         picList.add(0,supporterUtil.getPicPath());
         //填写报名所需要信息
         List<Boolean> isShow = new ArrayList<>();
@@ -452,7 +474,7 @@ public class BusinessUtilOnline {
         Long voucherId = response.getJSONArray("reward_vouchers").getJSONObject(0).getLong("id");
         List<String> picList = new ArrayList<>();
         SupporterUtil supporterUtil = new SupporterUtil(visitor);
-        PublicParameterOnline pp = new PublicParameterOnline();
+        PublicParameter pp = new PublicParameter();
         picList.add(supporterUtil.getPicPath());
         //填写报名所需要信息
         List<Boolean> isShow = new ArrayList<>();
@@ -717,7 +739,7 @@ public class BusinessUtilOnline {
             activityRegisterApplet(id1,"13373166806","郭丽雅",2,"1513814362@qq.com","22","女","其他");
             ids.add(id1);
             //登录PC
-            user.loginPc(EnumAccount.ADMINISTRATOR_ONLINE);
+            user.loginPc(EnumAccount.ALL_AUTHORITY_ONLINE);
         }
         return ids;
 
@@ -988,45 +1010,44 @@ public class BusinessUtilOnline {
      * 根据活动ID返回活动的状态
      */
     public String appointmentActivityStatus(Long activityId) {
-        //登录小程序
-        user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
-        JSONObject lastValue = null;
-        IScene scene = AppointmentActivityListScene.builder().lastValue(lastValue).size(20).build();
-        JSONObject response = visitor.invokeApi(scene);
+        Integer lastValue = null;
+        JSONArray list=null;
         String status = "";
-        int total = response.getInteger("total");
-        int pages = total / 100 + 1;
-        for (int page = 1; page <=pages; page++) {
-            if (pages <= 1) {
-                IScene scene1 = AppointmentActivityListScene.builder().lastValue(lastValue).size(20).build();
-                JSONObject response1 = visitor.invokeApi(scene1);
-                JSONArray list = response1.getJSONArray("list");
-                for (int i = 0; i < list.size(); i++) {
-                    Long id = list.getJSONObject(i).getLong("id");
-                    if (activityId.equals(id)) {
-                        status = list.getJSONObject(i).getString("status_name");
-                    }
+        do{
+            IScene scene = AppointmentActivityListScene.builder().lastValue(lastValue).size(10).build();
+            JSONObject response1 = visitor.invokeApi(scene);
+            lastValue = response1.getInteger("last_value");
+            list = response1.getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                Long id = list.getJSONObject(i).getLong("id");
+                if (activityId.equals(id)) {
+                    status = list.getJSONObject(i).getString("status_name");
+                }
 
+            }
+        }while(list.size()==10);
+        return status;
+    }
+
+    public String appointmentActivityTitleNew(Long activityId) {
+        JSONObject lastValue = null;
+        JSONArray list;
+        String title="";
+        do{
+            IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
+            JSONObject response = visitor.invokeApi(scene);
+            lastValue = response.getJSONObject("last_value");
+            System.err.println(lastValue);
+            list = response.getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                Long itemId = list.getJSONObject(i).getLong("itemId");
+                if (activityId.equals(itemId)) {
+                    title = list.getJSONObject(i).getString("title");
                 }
             }
-//            else {
-//                IScene scene1 = AppointmentActivityListScene.builder().lastValue(lastValue).size(20).build();
-//                JSONObject response1 = visitor.invokeApi(scene1);
-//                lastValue = response1.getJSONObject("last_value");
-//                System.err.println("------------"+lastValue);
-//                IScene scene2 = AppointmentActivityListScene.builder().lastValue(lastValue).size(20).build();
-//                JSONObject response2 = visitor.invokeApi(scene2);
-//                JSONArray list = response2.getJSONArray("list");
-//                for (int i = 0; i < list.size(); i++) {
-//                    Long id = list.getJSONObject(i).getLong("id");
-//                    if (activityId.equals(id)) {
-//                        status = list.getJSONObject(i).getString("status_name");
-//                        System.err.println("-------------"+status);
-//                    }
-//                }
-//            }
-        }
-        return status;
+        }while(list.size()==10);
+
+        return title;
     }
 
 /**
@@ -1139,10 +1160,21 @@ public class BusinessUtilOnline {
     /**
      * 获取小程序-首页-文章列表-更多的返回值
      */
-    public JSONObject getAppletArticleList() {
-        IScene scene = AppletArticleListScene.builder().lastValue(null).size(100).build();
-        JSONObject response = visitor.invokeApi(scene);
-        return response;
+    public int getAppletArticleList() {
+        //获取小程序推荐列表
+        JSONObject lastValue=null;
+        JSONArray list=null;
+        JSONObject object=null;
+        int num=0;
+        do{
+            IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
+            JSONObject response1 = visitor.invokeApi(scene);
+            lastValue = response1.getJSONObject("last_value");
+            System.err.println(lastValue);
+            list = response1.getJSONArray("list");
+            num+=list.size();
+        }while(list.size()==10);
+        return num;
     }
 
 
@@ -1180,7 +1212,7 @@ public class BusinessUtilOnline {
         JSONArray registerItems = new JSONArray();
         Long activityId=0L;
         //在活动详情中获得招募活动的报名信息
-        user.loginPc(EnumAccount.ADMINISTRATOR_ONLINE);
+        user.loginPc(EnumAccount.ALL_AUTHORITY_ONLINE);
         JSONObject response = getRecruitActivityDetailDate(id);
         JSONArray registerInformationList = response.getJSONArray("register_information_list");
         for (int i = 0; i< registerInformationList.size(); i++) {
@@ -1224,15 +1256,22 @@ public class BusinessUtilOnline {
         }
         user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
         //获取小程序推荐列表
-        JSONObject object=getAppletArticleList();
-        JSONArray list=getAppletArticleList().getJSONArray("list");
-        int lastValue=object.getInteger("last_value");
-        for(int i=0;i<list.size();i++){
-            int itemId=list.getJSONObject(i).getInteger("itemId");
-            if(id==itemId){
-                activityId=list.getJSONObject(i).getLong("id");
+        String title="";
+        JSONObject lastValue=null;
+        JSONArray list=null;
+        do{
+            IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
+            JSONObject response1 = visitor.invokeApi(scene);
+            lastValue = response1.getJSONObject("last_value");
+            System.err.println(lastValue);
+            list = response1.getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                int itemId=list.getJSONObject(i).getInteger("itemId");
+                if(id==itemId){
+                    activityId=list.getJSONObject(i).getLong("id");
+                }
             }
-        }
+        }while(list.size()==10);
         IScene scene = ArticleActivityRegisterScene.builder().id(activityId).registerItems(registerItems).build();
         visitor.invokeApi(scene);
     }
@@ -1241,30 +1280,43 @@ public class BusinessUtilOnline {
      * 小程序报名招募活动---不填写个人信息
      */
     public void activityRegisterApplet(Long id) {
+        JSONObject lastValue=null;
+        JSONArray list=null;
         JSONArray registerItems = new JSONArray();
         Long activityId=0L;
         user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
         //获取小程序推荐列表
-        JSONObject object=getAppletArticleList();
-        JSONArray list=getAppletArticleList().getJSONArray("list");
-        int lastValue=object.getInteger("last_value");
-        for(int i=0;i<list.size();i++){
-            int itemId=list.getJSONObject(i).getInteger("itemId");
-            if(id==itemId){
-                activityId=list.getJSONObject(i).getLong("id");
+        do{
+            IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
+            JSONObject response1 = visitor.invokeApi(scene);
+            lastValue = response1.getJSONObject("last_value");
+            list = response1.getJSONArray("list");
+            for(int i=0;i<list.size();i++){
+                int itemId=list.getJSONObject(i).getInteger("itemId");
+                if(id==itemId){
+                    activityId=list.getJSONObject(i).getLong("id");
+                }
             }
-        }
+        }while(list.size()==10);
         IScene scene = ArticleActivityRegisterScene.builder().id(activityId).registerItems(registerItems).build();
         visitor.invokeApi(scene);
     }
 
     /**
-     * V2.0小程序-我的报名-报名列表
+     * V2.0小程序-我的报名-报名列表--报名条数
      */
-    public JSONObject appointmentActivityList() {
-        IScene scene = AppointmentActivityListScene.builder().lastValue(null).size(10).build();
-        JSONObject response = visitor.invokeApi(scene);
-        return response;
+    public int appointmentActivityList() {
+        Integer lastValue = null;
+        JSONArray list=null;
+        int num=0;
+        do{
+            IScene scene = AppointmentActivityListScene.builder().lastValue(lastValue).size(10).build();
+            JSONObject response1 = visitor.invokeApi(scene);
+            lastValue = response1.getInteger("last_value");
+            list = response1.getJSONArray("list");
+            num+=list.size();
+        }while(list.size()==10);
+        return num;
     }
 
     /**
@@ -1300,7 +1352,7 @@ public class BusinessUtilOnline {
             }
         }
         //登录PC
-         user.loginPc(EnumAccount.ADMINISTRATOR_ONLINE);
+         user.loginPc(EnumAccount.ALL_AUTHORITY_ONLINE);
         //获取PC中对应的优惠券
 
         return ids;

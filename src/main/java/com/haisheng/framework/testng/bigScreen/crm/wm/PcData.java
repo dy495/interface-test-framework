@@ -33,7 +33,7 @@ public class PcData extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     PublicMethod method = new PublicMethod();
     private static final EnumAccount zjl = EnumAccount.ZJL_DAILY;
-    private static final EnumAccount xs = EnumAccount.XS_TEMP_DAILY;
+    private static final EnumAccount xs = EnumAccount.SALE_XIA;
     private static final EnumCarModel car = EnumCarModel.PANAMERA_TEN_YEARS_EDITION;
     private static final int size = 100;
 

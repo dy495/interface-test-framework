@@ -1116,12 +1116,12 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
                 phone.append(a);
             }
             crm.registeredCustomer((long) activityTaskId, "夏", phone.toString());
-            //添加第51个
+
             Long code = crm.registeredCustomerCode((long) activityTaskId, "夏蝈蝈", phone.toString());
             Preconditions.checkArgument(code == 1001, "app添加报过名的电话，应该失败");
             crm.login(adminname, adminpassword);
-            crm.articleStatusChange(id);
-            crm.articleDelete(id);
+//            crm.articleStatusChange(id);
+//            crm.articleDelete(id);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -2244,13 +2244,13 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //         @Test(description = "删除用户管理中多余用户数据")
+//             @Test(description = "删除用户管理中多余用户数据")
     public void deleteuser() {
         try {
             crm.login(baoshijie, adminpassword);
 //              for(int j=0;j<5;j++) {
             JSONArray list = crm.userPage(1, 10).getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
+            for (int i = 1; i < list.size(); i++) {
                 String userid = list.getJSONObject(i).getString("user_id"); //获取用户id
                 crm.userDel(userid);
             }

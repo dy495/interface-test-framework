@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.google.inject.internal.util.$Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
@@ -35,8 +35,8 @@ import java.text.SimpleDateFormat;
 import static com.google.common.base.Preconditions.checkArgument;
 
 public class JcApplet extends TestCaseCommon implements TestCaseStd {
-    Visitor visitor = new Visitor(EnumTestProduce.JIAOCHEN_DAILY);
-    private static final EnumAccount administrator = EnumAccount.ADMINISTRATOR_DAILY;
+    VisitorProxy visitor = new VisitorProxy(EnumTestProduce.JIAOCHEN_DAILY);
+    private static final EnumAccount administrator = EnumAccount.ALL_AUTHORITY_DAILY;
     ScenarioUtil jc = new ScenarioUtil();
     SupporterUtil util = new SupporterUtil(visitor);
     LoginUtil user = new LoginUtil();
@@ -86,12 +86,12 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
     }
 
     //pc登录
-    public void pcLogin(String phone, String verificationCode,String roleId) {
+    public void pcLogin(String phone, String verificationCode, String roleId) {
         String path = "/jiaochen/login-pc";
         JSONObject object = new JSONObject();
         object.put("phone", phone);
         object.put("verification_code", verificationCode);
-        commonConfig.roleId=roleId;
+        commonConfig.roleId = roleId;
         httpPost(path, object, EnumTestProduce.JIAOCHEN_DAILY.getAddress());
     }
 
@@ -652,13 +652,13 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
     public void recuse() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            pcLogin(pp.gwphone, pp.gwpassword,pp.roleId);
+            pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
             int total = jc.pcrescuePage(1, 10).getInteger("total");
 
             jc.appletLoginToken(pp.appletTocken);
             jc.rescueApply(pp.shopIdZ, pp.coordinate);
 
-            pcLogin(pp.gwphone, pp.gwpassword,pp.roleId);
+            pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
             int totalAfter = jc.pcrescuePage(1, 10).getInteger("total");
             Preconditions.checkArgument(totalAfter - total == 1, "申请道路救援，pc救援列表+1");
 
@@ -668,16 +668,17 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
             saveData("申请道路救援，pc救援列表+1");
         }
     }
+
     //获取某种状态的门店数量
-    public Integer getshopNumber(String status){
-        JSONObject data=jc.shopPage(1,10,null);
-        int count=0;
-        int pages=data.getInteger("pages");
-        for(int i=0;i<pages;i++){
-            JSONArray list=jc.shopPage(i+1,10,null).getJSONArray("list");
-            for(int j=0;j<list.size();j++){
-                String  status1=list.getJSONObject(j).getString(status);
-                if(status1.equals("ENABLE")){
+    public Integer getshopNumber(String status) {
+        JSONObject data = jc.shopPage(1, 10, null);
+        int count = 0;
+        int pages = data.getInteger("pages");
+        for (int i = 0; i < pages; i++) {
+            JSONArray list = jc.shopPage(i + 1, 10, null).getJSONArray("list");
+            for (int j = 0; j < list.size(); j++) {
+                String status1 = list.getJSONObject(j).getString(status);
+                if (status1.equals("ENABLE")) {
                     count++;
                 }
             }
@@ -690,16 +691,16 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
     public void recuseShopList() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            pcLogin(pp.gwphone,pp.gwpassword,pp.roleId);
-            commonConfig.shopId=pp.shopId;
-            int openShoptotal=getshopNumber("status");
+            pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
+            commonConfig.shopId = pp.shopId;
+            int openShoptotal = getshopNumber("status");
             jc.appletLoginToken(pp.appletTocken);
-            int total=jc.rescueShopList(pp.coordinate,"null").getJSONArray("list").size();  //TODO：接口没有返回门店列表总数，暂取list的size
-            Preconditions.checkArgument(openShoptotal==total,"道路救援门店数!=门店管理开启的门店");
+            int total = jc.rescueShopList(pp.coordinate, "null").getJSONArray("list").size();  //TODO：接口没有返回门店列表总数，暂取list的size
+            Preconditions.checkArgument(openShoptotal == total, "道路救援门店数!=门店管理开启的门店");
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
-            commonConfig.shopId=pp.shopIdZ;
+            commonConfig.shopId = pp.shopIdZ;
             saveData("道路救援");
         }
     }
@@ -709,24 +710,25 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
     public void washShopList() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            pcLogin(pp.gwphone,pp.gwpassword,pp.roleId);
-            commonConfig.shopId=pp.shopId;
-            int openShoptotal=getshopNumber("washing_status");
+            pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
+            commonConfig.shopId = pp.shopId;
+            int openShoptotal = getshopNumber("washing_status");
             jc.appletLoginToken(pp.appletTocken);
-            int total=jc.carWashShopList(pp.coordinate).getJSONArray("list").size();    //TODO：接口没有返回门店列表总数，暂取list的size
-            Preconditions.checkArgument(openShoptotal==total,"免费洗车门店数!=门店管理洗车开启的门店");
+            int total = jc.carWashShopList(pp.coordinate).getJSONArray("list").size();    //TODO：接口没有返回门店列表总数，暂取list的size
+            Preconditions.checkArgument(openShoptotal == total, "免费洗车门店数!=门店管理洗车开启的门店");
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
-            commonConfig.shopId=pp.shopIdZ;
+            commonConfig.shopId = pp.shopIdZ;
             saveData("免费洗车门店数=门店管理开启的门店");
         }
     }
+
     @Test(description = "洗车，剩余次数-1，pc洗车管理+1")
     public void washCar() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            pcLogin(pp.jdgw, pp.gwpassword,pp.roleidJdgw);
+            pcLogin(pp.jdgw, pp.gwpassword, pp.roleidJdgw);
             int total = jc.washCarManagerPage(pp.shopIdZ, "1", "10").getInteger("total");  //洗车管理数
 
             jc.appletLoginToken(pp.appletTocken);
@@ -735,7 +737,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
             jc.carWsah(pp.shopIdZ);
             int washCarTimesAfter = jc.washTimes().getInteger("remainNumber");
 
-            pcLogin(pp.jdgw, pp.gwpassword,pp.roleidJdgw);
+            pcLogin(pp.jdgw, pp.gwpassword, pp.roleidJdgw);
 
             int totalAfter = jc.washCarManagerPage(pp.shopIdZ, "1", "10").getInteger("total");
 

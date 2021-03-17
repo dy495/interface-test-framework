@@ -67,7 +67,7 @@ public class DataCase extends TestCaseCommon implements TestCaseStd {
 
         //set shop id
         commonConfig.shopId = "-1";
-        commonConfig.roleId="603";
+        commonConfig.roleId = "603";
         beforeClassInit(commonConfig);
 
 
@@ -88,7 +88,7 @@ public class DataCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
-        jc.pcLogin("13114785236","000000");
+        jc.pcLogin("13114785236", "000000");
     }
 
 
@@ -171,7 +171,7 @@ public class DataCase extends TestCaseCommon implements TestCaseStd {
 
             //每次修改固定shop
             jc.editShop(49522L, info.getLogo(), simple_name, name, arr, district_code, address, sale_tel, service_tel, Double.valueOf(longitude),
-                    Double.valueOf(latitude), appointment_status, washing_status);
+                    Double.valueOf(latitude), appointment_status, washing_status, sale_tel);
             int after = jc.shopPage(1, 1, "").getInteger("total");
             int num = after - bef;
 
@@ -459,10 +459,6 @@ public class DataCase extends TestCaseCommon implements TestCaseStd {
         jc.appletLoginToken(pp.appletTocken);
         jc.appletCarModelList(info.BrandID, info.CarStyleID);
     }
-
-
-
-
 
 
 }

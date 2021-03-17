@@ -302,6 +302,209 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
     }
 
+
+    // 今日进店客流==今日进店客流详情中今日进店客流
+    @Test
+    public void customerFlow(Boolean is_read) throws Exception{
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取卡片list
+            JSONArray list = md.cardList("HOME_TOP",null,10).getJSONArray("list");
+            //获取result
+            JSONObject result = list.getJSONObject(0).getJSONObject("result");
+            //获取累计进店客流
+            Integer total_enter_customer_uv = result.getInteger("total_enter_customer_uv");
+            //获取进店客流详情中的进店客流
+            JSONArray items = md.cardDetail("TOTAL_ENTER_CUSTOMER_FLOW").getJSONArray("items");
+            Integer items_value = items.getInteger(1);
+            checkArgument(total_enter_customer_uv==items_value, "今日进店客流总数==今日进店客流详情中今日进店客流总数");
+
+            //获取今日进店客流列表
+            JSONObject today_enter_customer_flow = result.getJSONObject("today_enter_customer_flow");
+            //获取今日进店客流
+            Integer today_enter_customer_uv = today_enter_customer_flow.getInteger("today_enter_customer_uv");
+            Integer items_value1 = items.getInteger(1);
+            checkArgument(today_enter_customer_uv==items_value1, "今日进店客流==今日进店客流详情中今日进店客流");
+
+            //获取今日进店客流得同比
+            Number yesterday_enter_customer_qoq = today_enter_customer_flow.getInteger("last_week_enter_customer_qoq");
+            //获取今日进店客流的环比
+            Number last_week_enter_customer_qoq = today_enter_customer_flow.getInteger("yesterday_enter_customer_qoq");
+            //获取详情中的环比和同比
+            Number before_day = items.getInteger(3);
+            Number before_week = items.getInteger(4);
+            checkArgument(yesterday_enter_customer_qoq==before_day, "今日进店客流同比==今日进店客流详情中今日进店客流同比");
+            checkArgument(last_week_enter_customer_qoq==before_week, "今日进店客流环比比==今日进店客流详情中今日进店客流环比");
+
+            //获取今日进店新客
+            JSONObject today_new_customer_flow = result.getJSONObject("today_new_customer_flow");
+            Integer today_new_customer_uv = today_new_customer_flow.getInteger("today_new_customer_uv");
+            Integer items_value2 = items.getInteger(1);
+            checkArgument(today_new_customer_uv==items_value2, "今日进店新客==今日进店客流详情中今日进店新客");
+            //获取今日进店新客的同比
+            Number last_week_new_customer_qoq = today_new_customer_flow.getInteger("last_week_new_customer_qoq");
+            Number yesterday_new_customer_qoq = today_new_customer_flow.getInteger("yesterday_new_customer_qoq");
+            Number before_day1 = items.getInteger(3);
+            Number before_week1 = items.getInteger(4);
+            checkArgument(last_week_new_customer_qoq==before_week1, "今日进店客流同比==今日进店客流详情中今日新客同比");
+            checkArgument(yesterday_new_customer_qoq==before_day1, "今日进店客流环比比==今日进店客流详情中今日新客环比");
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("今日进店客流数据==今日进店客流中的各分数据");
+        }
+
+    }
+
+    //交易数据方面
+//    @Test
+//    public void  tradeCustomer(Boolean is_read) throws Exception{
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            //获取卡片list
+//            JSONArray list = md.cardList("HOME_TOP",null,10).getJSONArray("list");
+//            //获取result
+//            JSONObject result = list.getJSONObject(1).getJSONObject("result");
+//            //获取累计交易客流
+//            Integer total_enter_customer_uv = result.getInteger("total_enter_customer_uv");
+//            //获取累计交易客流
+//            JSONArray items = md.cardDetail("TOTAL_TRANS_CUSTOMER_FLOW").getJSONArray("items");
+//            Integer items_value = items.getInteger(1);
+//            checkArgument(total_enter_customer_uv==items_value, "今日进店客流总数==今日进店客流详情中今日进店客流总数");
+//
+//            //获取今日进店客流列表
+//            JSONObject today_enter_customer_flow = result.getJSONObject("today_enter_customer_flow");
+//            //获取今日进店客流
+//            Integer today_enter_customer_uv = today_enter_customer_flow.getInteger("today_enter_customer_uv");
+//            Integer items_value1 = items.getInteger(1);
+//            checkArgument(today_enter_customer_uv==items_value1, "今日进店客流==今日进店客流详情中今日进店客流");
+//
+//            //获取今日进店客流得同比
+//            Number yesterday_enter_customer_qoq = today_enter_customer_flow.getInteger("last_week_enter_customer_qoq");
+//            //获取今日进店客流的环比
+//            Number last_week_enter_customer_qoq = today_enter_customer_flow.getInteger("yesterday_enter_customer_qoq");
+//            //获取详情中的环比和同比
+//            Number before_day = items.getInteger(3);
+//            Number before_week = items.getInteger(4);
+//            checkArgument(yesterday_enter_customer_qoq==before_day, "今日进店客流同比==今日进店客流详情中今日进店客流同比");
+//            checkArgument(last_week_enter_customer_qoq==before_week, "今日进店客流环比比==今日进店客流详情中今日进店客流环比");
+//
+//            //获取今日进店新客
+//            JSONObject today_new_customer_flow = result.getJSONObject("today_new_customer_flow");
+//            Integer today_new_customer_uv = today_new_customer_flow.getInteger("today_new_customer_uv");
+//            Integer items_value2 = items.getInteger(1);
+//            checkArgument(today_new_customer_uv==items_value2, "今日进店新客==今日进店客流详情中今日进店新客");
+//            //获取今日进店新客的同比
+//            Number last_week_new_customer_qoq = today_new_customer_flow.getInteger("last_week_new_customer_qoq");
+//            Number yesterday_new_customer_qoq = today_new_customer_flow.getInteger("yesterday_new_customer_qoq");
+//            Number before_day1 = items.getInteger(3);
+//            Number before_week1 = items.getInteger(4);
+//            checkArgument(last_week_new_customer_qoq==before_day1, "今日进店客流同比==今日进店客流详情中今日新客同比");
+//            checkArgument(yesterday_new_customer_qoq==before_week1, "今日进店客流环比比==今日进店客流详情中今日新客环比");
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("今日进店客流数据==今日进店客流中的各分数据");
+//        }
+//
+//    }
+    // 今日进店客流==今日进店客流详情中今日进店客流
+    @Test
+    public void  orderForm(Boolean is_read) throws Exception{
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取卡片list
+            JSONArray list = md.cardList("HOME_TOP",null,10).getJSONArray("list");
+            //获取result
+            JSONObject result = list.getJSONObject(2).getJSONObject("result");
+            //获取累计订单
+            Integer total_order_number = result.getInteger("total_order_number");
+            //获取订单详情中的累计订单数
+            JSONArray items = md.cardDetail("TOTAL_ORDER").getJSONArray("items");
+            Integer items_value = items.getInteger(1);
+            checkArgument(total_order_number==items_value, "累计订单数==累计订单详情中的累计订单数");
+
+            //获取今日订单数
+            JSONObject today_order = result.getJSONObject("today_order");
+            Integer today_order_number = today_order.getInteger("today_order_number");
+            Integer items_value1 = items.getInteger(1);
+            checkArgument(today_order_number==items_value1, "今日订单数==订单详情中的今日订单数");
+
+            //今日订单的环比和同比
+            Number last_week_order_qoq = today_order.getInteger("last_week_order_qoq");
+            Number yesterday_order_qoq = today_order.getInteger("yesterday_order_qoq");
+            Number before_day = items.getInteger(3);
+            Number before_week = items.getInteger(4);
+            checkArgument(last_week_order_qoq==before_week, "今日订单的环比==订单详情中的今日订单数环比");
+            checkArgument(yesterday_order_qoq==before_day, "今日订单数的同比==订单详情中的今日订单数同比");
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("累计订单数==订单详情中的每个数据");
+        }
+    }
+
+
+    @Test
+    public void  OrderTurnover(Boolean is_read) throws Exception{
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取卡片list
+            JSONArray list = md.cardList("HOME_TOP",null,10).getJSONArray("list");
+            //获取result
+            JSONObject result = list.getJSONObject(3).getJSONObject("result");
+            //获取累计营业额
+            Number total_turnover = result.getInteger("total_turnover");
+            //获取营业额详情中的累计营业额
+            JSONArray items = md.cardDetail("TOTAL_TURNOVER").getJSONArray("items");
+            Integer items_value = items.getInteger(1);
+            checkArgument(total_turnover==items_value, "累计营业额==营业额详情中的累计营业额");
+
+            //获取今日营业额
+            JSONObject today_customer_univalence = result.getJSONObject("today_customer_univalence");
+            Number today_customer_univalence1 = today_customer_univalence.getInteger("today_customer_univalence");
+            Integer items_value1 = items.getInteger(1);
+            checkArgument(today_customer_univalence1==items_value1, "今日营业额==订单详情中的今日营业额");
+
+            //今日订单的环比和同比
+            Number last_week_customer_univalence_qoq = today_customer_univalence.getInteger("last_week_customer_univalence_qoq");
+            Number yesterday_customer_univalence_qoq = today_customer_univalence.getInteger("yesterday_customer_univalence_qoq");
+            Number before_day = items.getInteger(3);
+            Number before_week = items.getInteger(4);
+            checkArgument(last_week_customer_univalence_qoq==before_week, "今日营业额的环比==订单详情中的今日营业额环比");
+            checkArgument(yesterday_customer_univalence_qoq==before_day, "今日营业额的同比==订单详情中的今日订单数同比");
+
+
+            //获取今日客单价
+            JSONObject today_turnover = result.getJSONObject("today_turnover");
+            Number today_turnover1 = today_turnover.getInteger("today_turnover");
+            Integer items_value2 = items.getInteger(1);
+            checkArgument(today_turnover1==items_value2, "今日客单价==订单详情中的今日客单价");
+
+            //今日客单价的环比和同比
+            Number last_week_turnover_qoq = today_turnover.getInteger("last_week_turnover_qoq");
+            Number yesterday_turnover_qoq = today_turnover.getInteger("yesterday_turnover_qoq");
+            Number before_day1 = items.getInteger(3);
+            Number before_week1 = items.getInteger(4);
+            checkArgument(last_week_turnover_qoq==before_week1, "今日客单价的环比==订单详情中的今日客单价环比");
+            checkArgument(yesterday_turnover_qoq==before_day1, "今日客单价的同比==订单详情中的今日客单价同比");
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("累计营业额==营业额详情中的每个数据");
+        }
+    }
+
 }
 
 

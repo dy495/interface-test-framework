@@ -90,7 +90,7 @@ public class XundianAppDataOnline extends TestCaseCommon implements TestCaseStd 
 
 
             //开始巡店,获取巡店清单&每个清单的项目&patrol_id
-            JSONObject obj = xd.checkStartapp(info.shop_id_01,type,1);
+            JSONObject obj = xd.checkStartapp(info.shop_id_01,type,1,true);
             Long patrolID = obj.getLong("id");
             JSONArray checklist = obj.getJSONArray("check_lists");
 
@@ -150,7 +150,7 @@ public class XundianAppDataOnline extends TestCaseCommon implements TestCaseStd 
             int checkedbefore = 0 ;
 
             //重置检查清单，开始巡店
-            JSONObject obj = xd.checkStartapp(info.shop_id_01,type,1);
+            JSONObject obj = xd.checkStartapp(info.shop_id_01,type,1,true);
             Long patrolID = obj.getLong("id");
             JSONArray checklist = obj.getJSONArray("check_lists");
             //第一个清单的已检查数量
@@ -166,7 +166,7 @@ public class XundianAppDataOnline extends TestCaseCommon implements TestCaseStd 
 
 
             //重新巡店，不重置清单，查看第一个清单完成数量
-            int checkedafter = xd.checkStartapp(info.shop_id_01,type,0).getJSONArray("check_lists").getJSONObject(0).getInteger("checked");
+            int checkedafter = xd.checkStartapp(info.shop_id_01,type,0,true).getJSONArray("check_lists").getJSONObject(0).getInteger("checked");
             int a = checkedafter - checkedbefore;
             Preconditions.checkArgument(a==1,"提交一个"+mes+"执行项，分子增加了"+a);
 
@@ -188,7 +188,7 @@ public class XundianAppDataOnline extends TestCaseCommon implements TestCaseStd 
     public void xdOnePgae3(String type, String chinesetype) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray chklist = xd.checkStartapp(info.shop_id_01,type,1).getJSONArray("check_lists");
+            JSONArray chklist = xd.checkStartapp(info.shop_id_01,type,1,true).getJSONArray("check_lists");
             for (int i=0; i < chklist.size(); i++){
                 JSONObject eachlist = chklist.getJSONObject(i);
                 int total = eachlist.getInteger("total"); //分母数
@@ -216,7 +216,7 @@ public class XundianAppDataOnline extends TestCaseCommon implements TestCaseStd 
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            JSONArray chklist = xd.checkStartapp(info.shop_id_01,type,0).getJSONArray("check_lists");
+            JSONArray chklist = xd.checkStartapp(info.shop_id_01,type,0,true).getJSONArray("check_lists");
             for (int i=0; i < chklist.size(); i++){
                 int itemsum = 0;
                 JSONObject eachlist = chklist.getJSONObject(i);
@@ -252,7 +252,7 @@ public class XundianAppDataOnline extends TestCaseCommon implements TestCaseStd 
             int bef2 = xd.shopChecksPage(1,1,info.shop_id_01).getInteger("total");
 
             //巡店
-            info.xdOperate(info.shop_id_01,type,1,Integer.parseInt(result));
+            info.xdOperate(info.shop_id_01,type,1,Integer.parseInt(result),true);
             int after = xd.getShopChecksPage(info.shop_id_01,null,null,null,null,null,1,null).getInteger("total");
 
             int after2 = xd.shopChecksPage(1,1,info.shop_id_01).getInteger("total");
@@ -279,7 +279,7 @@ public class XundianAppDataOnline extends TestCaseCommon implements TestCaseStd 
             int bef1 =xd.xunDianCenterselect(1,1,info.shop_id_01_chin).getJSONArray("list").getJSONObject(0).getInteger("patrol_num");
             int bef2 = xd.xd_report_list("",info.shop_id_01_chin,"","",null,1,1).getInteger("total");
             //巡店
-            info.xdOperate(info.shop_id_01,type,1,Integer.parseInt(result));
+            info.xdOperate(info.shop_id_01,type,1,Integer.parseInt(result),true);
             int after1 =xd.xunDianCenterselect(1,1,info.shop_id_01_chin).getJSONArray("list").getJSONObject(0).getInteger("patrol_num");
             int after2 = xd.xd_report_list(null,info.shop_id_01_chin,null,null,null,1,1).getInteger("total");
 
@@ -304,7 +304,7 @@ public class XundianAppDataOnline extends TestCaseCommon implements TestCaseStd 
 
             double bef1 =xd.xd_analysis_data().getDouble("today_patrol_pass_rate");
             //巡店
-            info.xdOperate(info.shop_id_01,type,1,2);
+            info.xdOperate(info.shop_id_01,type,1,2,true);
             double after1 =xd.xd_analysis_data().getDouble("today_patrol_pass_rate");
             double add1 = after1 - bef1;
 
@@ -326,7 +326,7 @@ public class XundianAppDataOnline extends TestCaseCommon implements TestCaseStd 
 
             double bef1 =xd.xd_analysis_data().getDouble("today_patrol_pass_rate");
             //巡店
-            info.xdOperate(info.shop_id_01,type,1,1);
+            info.xdOperate(info.shop_id_01,type,1,1,true);
             double after1 =xd.xd_analysis_data().getDouble("today_patrol_pass_rate");
             double add1 = after1 - bef1;
 

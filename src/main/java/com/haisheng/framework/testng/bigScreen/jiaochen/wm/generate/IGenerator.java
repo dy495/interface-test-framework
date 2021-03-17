@@ -1,6 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate;
 
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 
 /**
@@ -21,5 +21,5 @@ public interface IGenerator {
      *
      * @param visitor 访问者
      */
-    void execute(Visitor visitor, IScene scene);
+    void execute(VisitorProxy visitor, IScene scene);
 }

@@ -1,7 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.crm.wm.base.scene;
 
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 
 /**
  * 场景抽象类
@@ -63,7 +63,7 @@ public abstract class BaseScene implements IScene {
      * @return 接口返回值
      */
     @Override
-    public JSONObject execute(Visitor visitor, boolean checkCode) {
+    public JSONObject execute(VisitorProxy visitor, boolean checkCode) {
         return visitor.invokeApi(getPath(), getRequestBody(), checkCode);
     }
 }

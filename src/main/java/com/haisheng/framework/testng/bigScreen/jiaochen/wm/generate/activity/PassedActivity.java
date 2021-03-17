@@ -1,6 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.activity;
 
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.ManageApprovalScene;
@@ -22,7 +22,7 @@ public class PassedActivity extends BaseActivity {
     }
 
     @Override
-    public void execute(Visitor visitor, IScene scene) {
+    public void execute(VisitorProxy visitor, IScene scene) {
         logger("CREATE WORKING START");
         super.visitor = visitor;
         Long activityId = new ActivityGenerator.Builder().visitor(visitor).createScene(scene).activityStatusEnum(ActivityStatusEnum.PENDING).buildActivity().getActivityId();

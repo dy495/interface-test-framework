@@ -1,6 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.activity;
 
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.ManagerPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityStatusEnum;
@@ -40,7 +40,7 @@ public abstract class BaseActivity extends AbstractGenerator implements IActivit
     }
 
     @Override
-    public abstract void execute(Visitor visitor, IScene scene);
+    public abstract void execute(VisitorProxy visitor, IScene scene);
 
     public static abstract class BaseBuilder extends AbstractBuilder<BaseBuilder> {
         private ActivityStatusEnum activityStatus;

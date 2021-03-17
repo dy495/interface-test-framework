@@ -141,6 +141,16 @@ public class Constant {
                 {"voucher_name", "voucher_name"},
                 {"sender", "sender"},
 
+//                {"voucher_name", "voucher_name"},  v3.0 all
+//                {"customer_name", "customer_name"},
+//                {"customer_phone", "customer_phone"},
+//                {"verify_start_time", "verify_start_time"},
+//                {"verify_end_time", "verify_end_time"},
+//                {"verify_sale_name", "verify_sale_name"},
+//                {"verify_sale_phone", "verify_sale_phone"},
+//                {"verify_code", "verify_code"},
+//                {"verify_channel", "verify_channel"},
+
         };
     }
 
@@ -423,10 +433,10 @@ public class Constant {
                 {"receive_phone", "customer_phone"},
                 {"use_status", "voucher_use_status"},
                 {"customer_label", "customer_label_name"},
-//                {"start_time", "start_time"},
-//                {"end_time", "end_time"},
-//                {"use_start_time", "use_start_time"},
-//                {"use_end_time", "use_end_time"},
+
+//                {"voucher_name", "voucher_name"},  v3.0
+//                {"send_channel", "send_channel"},  v3.0
+
 
 
         };
@@ -444,10 +454,9 @@ public class Constant {
                 {"receive_phone", "customer_phone"},
                 {"invalid_name", "invalid_name"},
                 {"invalidPhone", "invalid_phone"},
-//                {"invalid_start_time", "invalid_start_time"},
-//                {"invalid_end_time", "invalid_end_time"},
-//                {"start_time", "start_time"},
-//                {"end_time", "end_time"},
+
+//                {"voucher_name", "voucher_name"},   v3.0
+
         };
     }
     /**
@@ -569,6 +578,26 @@ public class Constant {
 
         };
     }
+
+    /**
+     * @description:v2.0-PC卡券管理-增发记录
+     * @author: gly
+     * @time: 2020-3-16
+     */
+    @DataProvider(name = "SELECT_voucherManageAdditionalRecordFilter")
+    public static Object[][] voucherManageAdditionalRecordFilter_pram(){
+        return new String[][]{
+                {"voucher_name", "voucher_name"},
+                {"add_start_time", "add_start_time"},
+                {"add_end_time", "add_end_time"},
+                {"sale_name", "sale_name"},
+                {"sale_phone", "sale_phone"}
+
+        };
+    }
+
+
+
 
 
 

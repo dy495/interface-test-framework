@@ -613,6 +613,150 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
 
 
+    /**---------------------------------门店会员管理-------------------------**/
+    /**
+     * @description:会员信息列表
+     * @author:
+     * @time:
+     */
+    public JSONObject MemberList(int page,int size,String member_id,String member_name,String phone,String user_id,String identity) throws Exception {
+        String url = "/patrol/member/list";
+        JSONObject json = new JSONObject();
+        json.put("page",page);
+        json.put("size",size);
+        json.put("member_id", member_id);
+        json.put("member_name", member_name);
+        json.put("phone", phone);
+        json.put("user_id",user_id);
+        json.put("identity", identity);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:注册会员
+     * @author:
+     * @time:
+     */
+    public JSONObject RegisterMember(String pic_path,String member_id,String member_name,String phone,String birthday,String user_id,int identityId) throws Exception {
+        String url = "/patrol/member/register";
+        JSONObject json = new JSONObject();
+        json.put("pic_path", pic_path);
+        json.put("member_id", member_id);
+        json.put("member_name", member_name);
+        json.put("phone", phone);
+        json.put("birthday",birthday);
+        json.put("user_id",user_id);
+        json.put("identity", identityId);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:会员详情
+     * @author:
+     * @time:
+     */
+    public JSONObject MemberDetail(int id) throws Exception {
+        String url = "/patrol/member/detail";
+        JSONObject json = new JSONObject();
+        json.put("id",id);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:更新会员信息
+     * @author:
+     * @time:
+     */
+    public JSONObject MemberUpdate(String pic_path,String member_id,String member_name,String phone,String birthday,String user_id,int identityId) throws Exception {
+        String url = "/patrol/member/detail";
+        JSONObject json = new JSONObject();
+        json.put("pic_path",pic_path);
+        json.put("member_id",member_id);
+        json.put("member_name",member_name);
+        json.put("phone",phone);
+        json.put("birthday",birthday);
+        json.put("user_id",user_id);
+        json.put("identityId",identityId);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:删除会员
+     * @author:
+     * @time:
+     */
+    public JSONObject MemberDelete(int id) throws Exception {
+        String url = "/patrol/member/delete";
+        JSONObject json = new JSONObject();
+        json.put("id",id);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    /**
+     * @description:会员到访列表
+     * @author:
+     * @time:
+     */
+    public JSONObject MemberVisit(String user_id,String name,String shop_name) throws Exception {
+        String url = "/patrol/member/visit/list";
+        JSONObject json = new JSONObject();
+        json.put("user_id", user_id);
+        json.put("name",name);
+        json.put("shop_name", shop_name);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+
+    /**--------------------------------- 会员身份-------------------------**/
+    /**
+     * @description:会员身份列表
+     * @author:
+     * @time:
+     */
+    public JSONObject Member(int page,int size) throws Exception {
+        String url = "/patrol/member/identity/list";
+        JSONObject json = new JSONObject();
+        json.put("page",page);
+        json.put("size",size);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:会员身份添加
+     * @author:
+     * @time:
+     */
+    public JSONObject AddMember(String identity) throws Exception {
+        String url = "/patrol/member/identity/add";
+        JSONObject json = new JSONObject();
+        json.put("identity", identity);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:会员身份删除
+     * @author:
+     * @time:
+     */
+    public JSONObject DeleteMember(int id) throws Exception {
+        String url = "/patrol/member/identity/delete";
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
     /**---------------------------------8.3 历史客流-------------------------**/
     /**
      * @description:8.3.1 到店趋势V3.0---8.3.1.1 获取天气类型列表
@@ -1220,6 +1364,24 @@ public class StoreScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res);
     }
 
+    public JSONObject organizationAccountAddTwo(String account,String name,String number,String leaderUid,String type,String email,String phone,int status,JSONArray roleIdList,JSONArray shopIdList) throws Exception {
+        String url = "/patrol/organization/account/add";
+        JSONObject json = new JSONObject();
+        json.put("account",account);
+        json.put("name",name);
+        json.put("number",number);
+        json.put("leaderUid",leaderUid);
+        json.put("type",type);
+        json.put("email",email);
+        json.put("phone",phone);
+        json.put("status",status);
+        json.put("roleIdList",roleIdList);
+        json.put("shopIdList",shopIdList);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
 
     /**
      * @description:11.1.3 账号详情
@@ -1269,6 +1431,26 @@ public class StoreScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res);
     }
 
+    public JSONObject organizationAccountEditTwo(String account,String name,String number,String leaderUid,String type,String email,String phone,int status,JSONArray roleIdList,JSONArray shopIdList) throws Exception {
+        String url = "/patrol/organization/account/edit";
+        JSONObject json = new JSONObject();
+        json.put("account",account);
+        json.put("name",name);
+        json.put("number",number);
+        json.put("leaderUid",leaderUid);
+        json.put("type",type);
+        json.put("email",email);
+        json.put("phone",phone);
+        json.put("status",status);
+        json.put("roleIdList",roleIdList);
+        json.put("shopIdList",shopIdList);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+
+
     /**
      * @description:11.1.5 账号删除
      * @author: qingqing
@@ -1303,6 +1485,48 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
+
+
+    /**
+     * @description:上级领导下拉列表
+     * @author:
+     * @time:
+     */
+    public JSONObject leaderList() throws Exception {
+        String url = "/patrol/organization/account/leader/list";
+        JSONObject json = new JSONObject();
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+
+    /**
+     * @description:权限包列表
+     * @author:
+     * @time:
+     */
+    public JSONObject rolePackage(int superior_role_id) throws Exception {
+        String url = "/patrol/organization/role-management/query-permission-map";
+        JSONObject json = new JSONObject();
+        json.put("superior_role_id",superior_role_id);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    /**
+     * @description:权限包列表
+     * @author:
+     * @time:
+     */
+    public JSONObject superiorList() throws Exception {
+        String url = "/patrol/organization/role/superior/list";
+        JSONObject json = new JSONObject();
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
 
     /**
      * @description:11.1.7 角色列表
@@ -1412,6 +1636,19 @@ public class StoreScenarioUtil extends TestCaseCommon {
     }
 
 
+    public JSONObject organizationRoleAddTwo(String roleName,int superiorRoleId,String description,JSONArray moduleIds) throws Exception {
+        String url = "/patrol/organization/role/add";
+        JSONObject json = new JSONObject();
+        json.put("roleName",roleName);
+        json.put("superiorRoleId",superiorRoleId);
+        json.put("description",description);
+        json.put("moduleIds",moduleIds);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+
     /**
      * @description:11.2.4 角色详情
      * @author: qingqing
@@ -1450,6 +1687,21 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
         return JSON.parseObject(res);
     }
+
+
+    public JSONObject organizationRoleEditTwo(int roleId,int superiorRoleId,String roleName, String description, JSONArray moduleIds) throws Exception {
+        String url = "/patrol/organization/role/edit";
+        JSONObject json = new JSONObject();
+        json.put("roleId",roleId);
+        json.put("superiorRoleId",superiorRoleId);
+        json.put("roleName",roleName);
+        json.put("description",description);
+        json.put("moduleIds",moduleIds);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
 
     /**
      * @description:11.2.6 角色删除
@@ -2337,6 +2589,25 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
 
     }
+
+
+    /**
+     * @description:2.1 获取卡片详情
+     * @author:
+     * @time:
+     */
+    public JSONObject cardDetail(String card_type) throws Exception {
+        String url = "/store/m-app/auth/card/card-detail";
+        JSONObject json = new JSONObject();
+        json.put("card_type",card_type);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+
+
+    }
+
+
 
     /**
      * @description:2.1 搜索筛选-门店类型列表

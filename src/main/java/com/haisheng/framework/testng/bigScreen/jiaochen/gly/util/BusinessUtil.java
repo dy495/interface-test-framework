@@ -2,18 +2,15 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.gly.util;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.google.inject.internal.util.$ImmutableList;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.crm.wm.bean.Activity;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityApprovalStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.RegisterInfoEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.activity.ActivityGenerator;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.AppletArticleListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.AppointmentActivityCancelScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.AppointmentActivityListScene;
@@ -24,25 +21,20 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanag
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherFormPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
-import com.haisheng.framework.testng.commonDataStructure.LogMine;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
-import org.testng.annotations.Test;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static com.haisheng.framework.testng.commonCase.TestCaseCommon.caseResult;
-
 public class BusinessUtil {
 
-   private final Visitor visitor;
+   private final VisitorProxy visitor;
    private final UserUtil user;
 
-    public BusinessUtil(Visitor visitor) {
+    public BusinessUtil(VisitorProxy visitor) {
         this.visitor = visitor;
         this.user=new UserUtil(visitor);
     }
@@ -136,6 +128,19 @@ public class BusinessUtil {
         rewardVouchers.add(object);
         return rewardVouchers;
     }
+    /**
+     * @description :创建招募活动-卡券奖励
+     * @date :2021/1/24
+     **/
+    public JSONArray getRewardVouchers(Long id, int type, String num) {
+        JSONArray rewardVouchers = new JSONArray();
+        JSONObject object = new JSONObject();
+        object.put("id", id);
+        object.put("type", type);
+        object.put("num", num);
+        rewardVouchers.add(object);
+        return rewardVouchers;
+    }
 
     /**
      * 获取随机4位数
@@ -181,6 +186,15 @@ public class BusinessUtil {
         Date endDate = DateTimeUtil.addDay(new Date(), 10);
         return DateTimeUtil.getFormat(endDate, "yyyy-MM-dd HH:mm");
     }
+    /**
+     * 获取当前时间
+     */
+    public String getDateTime(int day) {
+        Date endDate = DateTimeUtil.addDay(new Date(), day);
+        return DateTimeUtil.getFormat(endDate, "yyyy-MM-dd HH:mm");
+    }
+
+
 
     /**
      * 判断剩余库存
@@ -710,7 +724,7 @@ public class BusinessUtil {
                       Long id = list.getJSONObject(i).getLong("id");
                       ids.add(id);
                   }
-              }
+               }
             }
         }
         //创建活动并审批
@@ -994,46 +1008,48 @@ public class BusinessUtil {
      * 根据活动ID返回活动的状态
      */
     public String appointmentActivityStatus(Long activityId) {
-        //登录小程序
-        user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
-
-        JSONObject lastValue = null;
-        IScene scene = AppointmentActivityListScene.builder().lastValue(lastValue).size(20).build();
-        JSONObject response = visitor.invokeApi(scene);
+        Integer lastValue = null;
+        JSONArray list=null;
         String status = "";
-        int total = response.getInteger("total");
-        int pages = total / 100 + 1;
-        for (int page = 1; page <=pages; page++) {
-            if (pages <= 1) {
-                IScene scene1 = AppointmentActivityListScene.builder().lastValue(lastValue).size(20).build();
-                JSONObject response1 = visitor.invokeApi(scene1);
-                JSONArray list = response1.getJSONArray("list");
-                for (int i = 0; i < list.size(); i++) {
-                    Long id = list.getJSONObject(i).getLong("id");
-                    if (activityId.equals(id)) {
-                        status = list.getJSONObject(i).getString("status_name");
-                    }
+        do{
+            IScene scene = AppointmentActivityListScene.builder().lastValue(lastValue).size(10).build();
+            JSONObject response1 = visitor.invokeApi(scene);
+            lastValue = response1.getInteger("last_value");
+            list = response1.getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                Long id = list.getJSONObject(i).getLong("id");
+                System.out.println(i+"---------"+id);
+                if (activityId.equals(id)) {
+                    status = list.getJSONObject(i).getString("status_name");
+                }
 
+            }
+        }while(list.size()==10);
+        return status;
+    }
+
+    /**
+     * 更多活动列表-根据活动ID返回活动的标题
+     */
+    public String appointmentActivityTitleNew(Long activityId) {
+        JSONObject lastValue = null;
+        JSONArray list;
+        String title="";
+        do{
+            IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
+            JSONObject response = visitor.invokeApi(scene);
+            lastValue = response.getJSONObject("last_value");
+            System.err.println(lastValue);
+            list = response.getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                Long itemId = list.getJSONObject(i).getLong("itemId");
+                if (activityId.equals(itemId)) {
+                    title = list.getJSONObject(i).getString("title");
                 }
             }
-//            else {
-//                IScene scene1 = AppointmentActivityListScene.builder().lastValue(lastValue).size(20).build();
-//                JSONObject response1 = visitor.invokeApi(scene1);
-//                lastValue = response1.getJSONObject("last_value");
-//                System.err.println("------------"+lastValue);
-//                IScene scene2 = AppointmentActivityListScene.builder().lastValue(lastValue).size(20).build();
-//                JSONObject response2 = visitor.invokeApi(scene2);
-//                JSONArray list = response2.getJSONArray("list");
-//                for (int i = 0; i < list.size(); i++) {
-//                    Long id = list.getJSONObject(i).getLong("id");
-//                    if (activityId.equals(id)) {
-//                        status = list.getJSONObject(i).getString("status_name");
-//                        System.err.println("-------------"+status);
-//                    }
-//                }
-//            }
-        }
-        return status;
+        }while(list.size()==10);
+
+        return title;
     }
 
 /**
@@ -1144,12 +1160,23 @@ public class BusinessUtil {
     }
 
     /**
-     * 获取小程序-首页-文章列表-更多的返回值
+     * 获取小程序-首页-文章列表-文章条数
      */
-    public JSONObject getAppletArticleList() {
-        IScene scene = AppletArticleListScene.builder().lastValue(null).size(100).build();
-        JSONObject response = visitor.invokeApi(scene);
-        return response;
+    public int getAppletArticleList() {
+        //获取小程序推荐列表
+        JSONObject lastValue=null;
+        JSONArray list=null;
+        JSONObject object=null;
+        int num=0;
+        do{
+            IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
+            JSONObject response1 = visitor.invokeApi(scene);
+            lastValue = response1.getJSONObject("last_value");
+            System.err.println(lastValue);
+            list = response1.getJSONArray("list");
+            num+=list.size();
+        }while(list.size()==10);
+        return num;
     }
 
 
@@ -1187,7 +1214,7 @@ public class BusinessUtil {
         JSONArray registerItems = new JSONArray();
         Long activityId=0L;
         //在活动详情中获得招募活动的报名信息
-        user.loginPc(EnumAccount.WINSENSE_LAB_DAILY);
+        jc.pcLogin(pp.phone1,pp.password);
         JSONObject response = getRecruitActivityDetailDate(id);
         JSONArray registerInformationList = response.getJSONArray("register_information_list");
         for (int i = 0; i< registerInformationList.size(); i++) {
@@ -1231,15 +1258,22 @@ public class BusinessUtil {
         }
         user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
         //获取小程序推荐列表
-        JSONObject object=getAppletArticleList();
-        JSONArray list=getAppletArticleList().getJSONArray("list");
-        int lastValue=object.getInteger("last_value");
-        for(int i=0;i<list.size();i++){
-            int itemId=list.getJSONObject(i).getInteger("itemId");
-            if(id==itemId){
-                activityId=list.getJSONObject(i).getLong("id");
+        String title="";
+        JSONObject lastValue=null;
+        JSONArray list=null;
+        do{
+            IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
+            JSONObject response1 = visitor.invokeApi(scene);
+            lastValue = response1.getJSONObject("last_value");
+            System.err.println(lastValue);
+            list = response1.getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                int itemId=list.getJSONObject(i).getInteger("itemId");
+                if(id==itemId){
+                    activityId=list.getJSONObject(i).getLong("id");
+                }
             }
-        }
+        }while(list.size()==10);
         IScene scene = ArticleActivityRegisterScene.builder().id(activityId).registerItems(registerItems).build();
         visitor.invokeApi(scene);
     }
@@ -1248,30 +1282,43 @@ public class BusinessUtil {
      * 小程序报名招募活动---不填写个人信息
      */
     public void activityRegisterApplet(Long id) {
+        JSONObject lastValue=null;
+        JSONArray list=null;
         JSONArray registerItems = new JSONArray();
         Long activityId=0L;
         user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
         //获取小程序推荐列表
-        JSONObject object=getAppletArticleList();
-        JSONArray list=getAppletArticleList().getJSONArray("list");
-        int lastValue=object.getInteger("last_value");
-        for(int i=0;i<list.size();i++){
-            int itemId=list.getJSONObject(i).getInteger("itemId");
-            if(id==itemId){
-                activityId=list.getJSONObject(i).getLong("id");
+        do{
+            IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
+            JSONObject response1 = visitor.invokeApi(scene);
+            lastValue = response1.getJSONObject("last_value");
+            list = response1.getJSONArray("list");
+            for(int i=0;i<list.size();i++){
+                int itemId=list.getJSONObject(i).getInteger("itemId");
+                if(id==itemId){
+                    activityId=list.getJSONObject(i).getLong("id");
+                }
             }
-        }
+        }while(list.size()==10);
         IScene scene = ArticleActivityRegisterScene.builder().id(activityId).registerItems(registerItems).build();
         visitor.invokeApi(scene);
     }
 
     /**
-     * V2.0小程序-我的报名-报名列表
+     * V2.0小程序-我的报名-报名列表--报名条数
      */
-    public JSONObject appointmentActivityList() {
-        IScene scene = AppointmentActivityListScene.builder().lastValue(null).size(10).build();
-        JSONObject response = visitor.invokeApi(scene);
-        return response;
+    public int appointmentActivityList() {
+        Integer lastValue = null;
+        JSONArray list=null;
+        int num=0;
+        do{
+            IScene scene = AppointmentActivityListScene.builder().lastValue(lastValue).size(10).build();
+            JSONObject response1 = visitor.invokeApi(scene);
+            lastValue = response1.getInteger("last_value");
+            list = response1.getJSONArray("list");
+            num+=list.size();
+        }while(list.size()==10);
+        return num;
     }
 
     /**
@@ -1404,7 +1451,7 @@ public class BusinessUtil {
                 shopId=list.getJSONObject(i).getString("id");
             }else if(shopName.equals("集团管理")){
                 shopId=list.getJSONObject(0).getString("id");
-            }else{
+            }else if(i==list.size()-1&&shopId.isEmpty()){
                 shopId=list.getJSONObject(0).getString("id");
             }
         }
@@ -1422,7 +1469,7 @@ public class BusinessUtil {
             String shopName=list.getJSONObject(i).getString("name");
             if(name.equals(shopName)){
                 nameBack=shopName;
-            }else{
+            }else if(i==list.size()-1&&nameBack.isEmpty()){
                 nameBack=list.getJSONObject(0).getString("name");
             }
         }
@@ -1450,6 +1497,7 @@ public class BusinessUtil {
         }
         return activityId;
     }
+
 
 
 }

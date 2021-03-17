@@ -2,7 +2,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.util.CommonUtil;
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +24,7 @@ public abstract class AbstractGenerator implements IGenerator {
     protected static final int SIZE = 100;
     protected final StringBuilder errorMsg;
     protected int counter = 0;
-    protected Visitor visitor;
+    protected VisitorProxy visitor;
 
     protected AbstractGenerator(@NotNull AbstractBuilder<?> abstractBuilder) {
         this.visitor = abstractBuilder.visitor;
@@ -37,10 +37,10 @@ public abstract class AbstractGenerator implements IGenerator {
     }
 
     @Override
-    public abstract void execute(Visitor visitor, IScene scene);
+    public abstract void execute(VisitorProxy visitor, IScene scene);
 
     public static abstract class AbstractBuilder<T extends AbstractBuilder<?>> {
-        private Visitor visitor;
+        private VisitorProxy visitor;
 
         /**
          * 传入访问者
@@ -49,7 +49,7 @@ public abstract class AbstractGenerator implements IGenerator {
          * @param visitor visitor
          * @return AbstractBuilder
          */
-        public T visitor(Visitor visitor) {
+        public T visitor(VisitorProxy visitor) {
             this.visitor = visitor;
             return (T) this;
         }

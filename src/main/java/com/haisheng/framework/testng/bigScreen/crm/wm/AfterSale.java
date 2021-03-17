@@ -41,10 +41,8 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     PublicMethod method = new PublicMethod();
     private static final EnumAccount zjl = EnumAccount.ZJL_DAILY;
-    private static final EnumAccount fw = EnumAccount.FW_BAOYANG_DAILY;
+    private static final EnumAccount fw = EnumAccount.MAINTAIN;
     private static final int size = 100;
-    int zjlNum = 0;
-    int gw_num = 0;
 
     @BeforeClass
     @Override
@@ -625,7 +623,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(total, todayReturnVisitNumber, listSize);
             //预约保养
             int id = getTimeId(date);
-            crm.appointmentMaintain((long) getCarId(), customerName, customerPhoneNumber,  (long) id);
+            crm.appointmentMaintain((long) getCarId(), customerName, customerPhoneNumber, (long) id);
             UserUtil.login(zjl);
             JSONObject response1 = crm.returnVisitRecordAfterSalePage(1, size, "");
             int total1 = response1.getInteger("total");
@@ -667,7 +665,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             }
             CommonUtil.valueView(total, todayReturnVisitNumber, listSize);
             //取消试驾
-            UserUtil.loginApplet(EnumAppletToken.BSJ_WM_SMALL_DAILY);
+            UserUtil.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             int id = crm.appointmentList(0L, EnumAppointmentType.MAINTAIN.getType(), 20).getJSONArray("list").getJSONObject(0).getInteger("id");
             crm.appointmentCancel(id);
             UserUtil.login(zjl);
@@ -1214,7 +1212,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
         try {
             //预约保养
             int id = getTimeId(date);
-            crm.appointmentMaintain((long) getCarId(), customerName, customerPhoneNumber,  (long) id);
+            crm.appointmentMaintain((long) getCarId(), customerName, customerPhoneNumber, (long) id);
             //完成接待
             int afterRecordId = method.getAfterRecordId(false, 30);
             method.completeReception(String.valueOf(afterRecordId));
@@ -1262,13 +1260,11 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             for (int i = 1; i < s; i++) {
                 JSONArray list1 = crm.afterSaleCustomerList(findParam, "", "", i, size).getJSONArray("list");
                 for (int j = 0; j < list1.size(); j++) {
-                    String resultPlateNumber = list1.getJSONObject(j).getString("plate_number");
-                    Preconditions.checkArgument(resultPlateNumber.contains(findParam), "按照车牌号查询失败,搜索参数为：" + findParam);
+                    list1.stream().map(e -> (JSONObject) e).forEach(e -> Preconditions.checkArgument(e.getString("plate_number").contains(findParam), "按照车牌号查询失败,搜索参数为：" + findParam));
                 }
             }
         } catch (Exception | AssertionError e) {
-            e.printStackTrace();
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("售后--售后客户--车牌号/联系方式筛选");
         }
@@ -1294,13 +1290,10 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             int s = CommonUtil.getTurningPage(total, size);
             for (int i = 1; i < s; i++) {
                 JSONArray list1 = crm.afterSaleCustomerList(findParam, "", "", i, size).getJSONArray("list");
-                for (int j = 0; j < list1.size(); j++) {
-                    String resultPlateNumber = list1.getJSONObject(i).getString("customer_phone_number");
-                    Preconditions.checkArgument(resultPlateNumber.contains(findParam), "按电话号查询失败,搜索参数为：" + findParam);
-                }
+                list1.stream().map(e -> (JSONObject) e).forEach(e -> Preconditions.checkArgument(e.getString("customer_phone_number").contains(findParam), "按电话号查询失败,搜索参数为：" + findParam));
             }
         } catch (Exception | AssertionError e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("售后--售后客户--车牌号/联系方式筛选");
         }
@@ -1557,7 +1550,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
      * @return 时间id
      */
     private Integer getTimeId(String date) {
-        UserUtil.loginApplet(EnumAppletToken.BSJ_WM_SMALL_DAILY);
+        UserUtil.loginApplet(EnumAppletToken.BSJ_GLY_DAILY);
         JSONArray list = crm.timeList(EnumAppointmentType.MAINTAIN.getType(), date).getJSONArray("list");
         for (int i = 0; i < list.size(); i++) {
             if (!(list.getJSONObject(i).getInteger("left_num") == 0)) {

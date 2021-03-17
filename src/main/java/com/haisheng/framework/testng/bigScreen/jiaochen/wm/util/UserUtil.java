@@ -1,6 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.util;
 
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
@@ -9,9 +9,9 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.loginuser.Lo
 import org.jetbrains.annotations.NotNull;
 
 public class UserUtil {
-    private final Visitor visitor;
+    private final VisitorProxy visitor;
 
-    public UserUtil(Visitor visitor) {
+    public UserUtil(VisitorProxy visitor) {
         this.visitor = visitor;
     }
 

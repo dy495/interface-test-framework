@@ -2,7 +2,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.gly;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
@@ -14,6 +14,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherSendRe
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityApprovalStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.AppletArticleListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpload;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
@@ -38,7 +39,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
     ScenarioUtil jc = new ScenarioUtil();
     private static final EnumTestProduce product = EnumTestProduce.JIAOCHEN_DAILY;
     //private static final EnumAppletToken APPLET_USER = EnumAppletToken.JC_GLY_DAILY;
-    public Visitor visitor = new Visitor(product);
+    public VisitorProxy visitor = new VisitorProxy(product);
     BusinessUtil businessUtil = new BusinessUtil(visitor);
     SupporterUtil supporterUtil = new SupporterUtil(visitor);
     PublicParameter pp = new PublicParameter();
@@ -101,6 +102,8 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Boolean flag = false;
+            JSONObject lastValue=null;
+            JSONArray list=null;
             //获取一个卡券
             Long voucherId = businessUtil.getVoucherId();
             //创建裂变活动
@@ -119,15 +122,19 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             int statusPassed = businessUtil.getActivityStatus(activityId2);
             //登录小程序
             user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
-            //获取小程序推荐列表
-            JSONObject object = businessUtil.getAppletArticleList();
-            JSONArray list = businessUtil.getAppletArticleList().getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                int itemId = list.getJSONObject(i).getInteger("itemId");
-                if (activityId2 == itemId) {
-                    flag = true;
+            //获取小程序推荐列表  判断裂变活动是否创建成功
+            do{
+                IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
+                JSONObject response1 = visitor.invokeApi(scene);
+                lastValue = response1.getJSONObject("last_value");
+                list = response1.getJSONArray("list");
+                for (int i = 0; i < list.size(); i++) {
+                    int itemId = list.getJSONObject(i).getInteger("itemId");
+                    if (activityId2 == itemId) {
+                        flag = true;
+                    }
                 }
-            }
+            }while(list.size()==10);
             Preconditions.checkArgument(status == ActivityStatusEnum.PENDING.getId(), "待审核的活动状态为：" + status);
             Preconditions.checkArgument(statusRevoke == ActivityStatusEnum.REVOKE.getId(), "已撤销的活动状态为：" + statusRevoke);
             Preconditions.checkArgument(statusPassed == ActivityStatusEnum.PASSED.getId(), "审批通过的活动状态为：" + statusPassed);
@@ -152,12 +159,14 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             Long voucherId = businessUtil.getVoucherId();
             //创建招募活动
             Long activityId = businessUtil.createRecruitActivity(voucherId, true, 0, true);
+            System.err.println("--------------"+activityId);
             //获取活动的状态
             int status = businessUtil.getActivityStatus(activityId);
             //审批通过招募活动
             businessUtil.getApprovalPassed(activityId);
             //获取活动的状态
             int statusPassed = businessUtil.getActivityStatus(activityId);
+            System.err.println(activityId+"--------"+statusPassed);
             //登录小程序
             user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             //小程序报名此活动
@@ -173,15 +182,9 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             System.err.println("-----获取卡券码-----" + voucherCode);
             //登录小程序
             user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
-            //获取小程序活动的识别码
-            String title = null;
-            JSONArray list = businessUtil.getAppletArticleList().getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                int itemId = list.getJSONObject(i).getInteger("itemId");
-                if (activityId == itemId) {
-                    title = list.getJSONObject(i).getString("title");
-                }
-            }
+            //获取小程序活动对应的title  PC的活动ID=小程序的itemId
+            String title = businessUtil.appointmentActivityTitleNew(activityId);
+            System.err.println("AD:"+activityId+"      title:"+title);
             //获取【我的卡券】列表条数
 //            int numBefore=jc.appletVoucherList(null,"GENERAL",100).getJSONArray("list").size();
             //查询是否获得此卡券(通过卡券码查询，看看能否有此卡券的返回值)
@@ -208,9 +211,37 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
 //            Preconditions.checkArgument(numBefore==numAfter+1,"取消活动以后此卡券的数量没有-1");
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("创建招募活动-活动审批通过-报名活动-点击审批提醒进入报名审批页面-审批通过活动报名-取消活动");
+        }
+    }
+
+    @Test
+    public void justTry(){
+        try {
+            user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+//            Long id=0L;
+//            businessUtil.activityRegisterApplet(741L, "13373166806", "郭丽雅", 2, "1513814362@qq.com", "22", "女","其他");
+//            businessUtil.appointmentActivityTitleNew(666L);
+//            supporterUtil.getAppletVoucherNum();
+//            JSONArray list1 = jc.appletMyActually(null, "20").getJSONArray("list");
+//            for (int i = 0; i < list1.size(); i++) {
+//                String title1 = list1.getJSONObject(i).getString("title");
+//                if (title1.equals("招募活动5953哈哈哈哈哈")) {
+//                    id = list1.getJSONObject(i).getLong("id");
+//                    System.out.println("--------"+id);
+//                    break;
+//                }
+//            }
+//            businessUtil.activityCancelScene(id);
+            String activityStatus = businessUtil.appointmentActivityStatus(445L);
+            System.out.println("---------"+activityStatus);
+//            System.err.println(businessUtil.getAppletArticleList());
+        }catch (AssertionError | Exception e) {
+           collectMessage(e);
+        } finally {
+            saveData("测试呀呀呀呀");
         }
     }
 
@@ -427,7 +458,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                 int registerPassedNum = 0;
                 //报名列表的返回值
                 JSONObject pageRes = businessUtil.getRegisterPage(ids.get(j));
-                int pages = pageRes.getInteger("pages");
+                int pages = pageRes.getInteger("pages")>10?10:pageRes.getInteger("pages");
                 for (int page = 1; page <= pages; page++) {
                     IScene scene = ManageRegisterPageScene.builder().page(page).size(10).activityId(ids.get(j)).build();
                     JSONArray list = visitor.invokeApi(scene).getJSONArray("list");
@@ -443,7 +474,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                 //报名数据的返回值
                 JSONObject dataRes = businessUtil.getRegisterData(ids.get(j));
                 //活动名额
-                int quota = dataRes.getInteger("quota");
+                int quota = dataRes.containsKey("quota")? dataRes.getInteger("quota"):50;
                 //报名总人数（已报名）
                 int total = dataRes.getInteger("total");
                 //待审批人数
@@ -477,7 +508,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                 int registerNum = 0;
                 //报名列表的返回值
                 JSONObject pageRes = businessUtil.getRegisterPage(ids.get(j));
-                int pages = pageRes.getInteger("pages");
+                int pages = pageRes.getInteger("pages")>10?10:pageRes.getInteger("pages");
                 for (int page = 1; page <= pages; page++) {
                     IScene scene = ManageRegisterPageScene.builder().page(page).size(10).activityId(ids.get(j)).build();
                     JSONArray list = visitor.invokeApi(scene).getJSONArray("list");
@@ -492,7 +523,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                 //报名数据的返回值
                 JSONObject dataRes = businessUtil.getRegisterData(ids.get(j));
                 //活动名额
-                int quota = dataRes.getInteger("quota");
+                int quota = dataRes.containsKey("quota")? dataRes.getInteger("quota"):50;
                 //报名总人数
                 int total = dataRes.getInteger("total");
                 //待审批人数
@@ -555,7 +586,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * 报名列表-审批通过1条，报名成功&报名成功列表--报名人数不填写     不ok
+     * 报名列表-审批通过1条，报名成功&报名成功列表--报名人数不填写     ok
      */
     @Test()
     public void activityRegisterDate91() {
@@ -1324,7 +1355,405 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * 创建招募活动-校验已作废的优惠券
+     * 2021/3/11
+     * -----------------------------------------------创建招募活动异常校验-------------------------------------------
+     */
+
+    /**
+     *创建招募活动--标题的异常情况{不填写、21位}
+     */
+    @Test(description = "创建招募活动--标题的异常情况{不填写、21位}")
+    public void RecruitActivityTitleException9() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            List<Integer> labels = new ArrayList<>();
+            labels.add(1000);
+            labels.add(1);
+            labels.add(100);
+            labels.add(2000);
+            labels.add(3000);
+            List<String> picList = new ArrayList<>();
+            SupporterUtil supporterUtil = new SupporterUtil(visitor);
+            PublicParameter pp = new PublicParameter();
+            picList.add(0, supporterUtil.getPicPath());
+            //填写报名所需要信息
+            List<Boolean> isShow = new ArrayList<>();
+            isShow.add(true);
+            isShow.add(true);
+            isShow.add(true);
+            isShow.add(true);
+            isShow.add(true);
+            isShow.add(true);
+            isShow.add(true);
+            List<Boolean> isRequired = new ArrayList<>();
+            isRequired.add(false);
+            isRequired.add(false);
+            isRequired.add(false);
+            isRequired.add(false);
+            isRequired.add(false);
+            isRequired.add(false);
+            isRequired.add(false);
+            JSONArray registerInformationList = this.businessUtil.getRegisterInformationList(isShow, isRequired);
+            //报名成功奖励
+            JSONArray registerObject = businessUtil.getRewardVouchers(voucherId, 1, businessUtil.getVoucherSurplusInventory(voucherId));
+            //卡券有效期
+            JSONObject voucherValid = businessUtil.getVoucherValid(2, null, null, 10);
+            //创建招募活动-共有的--基础信息
+            String[] title = pp.titleException;
+            for (int i = 0; i < title.length; i++) {
+                ManageRecruitAddScene.ManageRecruitAddSceneBuilder builder = ManageRecruitAddScene.builder()
+                        .type(2)
+                        .participationLimitType(0)
+                        .title(title[i])
+                        .startDate(businessUtil.getStartDate())
+                        .endDate(businessUtil.getEndDate())
+                        .applyStart(businessUtil.getStartDate())
+                        .applyEnd(businessUtil.getEndDate())
+                        .isLimitQuota(true)
+                        .quota(10)
+                        .subjectType(supporterUtil.getSubjectType())
+                        .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
+                        .label("BARGAIN")
+                        .picList(picList)
+                        .rule(pp.rule)
+                        .registerInformationList(registerInformationList)
+                        .successReward(true)
+                        .rewardReceiveType(0)
+                        .isNeedApproval(true);
+                if (true) {
+                    builder.rewardVouchers(registerObject)
+                            .voucherValid(voucherValid);
+                }
+                IScene scene = builder.build();
+                String message = visitor.invokeApi(scene, false).getString("message");
+                Preconditions.checkArgument(message.equals("活动名称长度为[1,20]") || message.equals("活动名称不能为空"), "创建招募活动--标题的异常情况{不填写、21位},标题异常情况创建成功");
+            }
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("创建招募活动--标题的异常情况{不填写、21位}");
+        }
+    }
+
+    /**
+     *创建招募活动--活动时间的异常情况{今天之前，一年以后}      存在问题：已提bug（7981）
+     */
+    @Test(description = "创建招募活动--活动时间的异常情况{今天之前，一年以后}")
+    public void RecruitActivityTitleException10() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            List<Integer> labels = new ArrayList<>();
+            labels.add(1000);
+            labels.add(1);
+            labels.add(100);
+            labels.add(2000);
+            labels.add(3000);
+            List<String> picList = new ArrayList<>();
+            SupporterUtil supporterUtil = new SupporterUtil(visitor);
+            PublicParameter pp = new PublicParameter();
+            picList.add(0, supporterUtil.getPicPath());
+            //填写报名所需要信息
+            List<Boolean> isShow = new ArrayList<>();
+            isShow.add(true);
+            isShow.add(true);
+            isShow.add(true);
+            isShow.add(true);
+            isShow.add(true);
+            isShow.add(true);
+            isShow.add(true);
+            List<Boolean> isRequired = new ArrayList<>();
+            isRequired.add(false);
+            isRequired.add(false);
+            isRequired.add(false);
+            isRequired.add(false);
+            isRequired.add(false);
+            isRequired.add(false);
+            isRequired.add(false);
+            JSONArray registerInformationList = this.businessUtil.getRegisterInformationList(isShow, isRequired);
+            //报名成功奖励
+            JSONArray registerObject = businessUtil.getRewardVouchers(voucherId, 1, businessUtil.getVoucherSurplusInventory(voucherId));
+            //卡券有效期
+            JSONObject voucherValid = businessUtil.getVoucherValid(2, null, null, 10);
+            //创建招募活动-共有的--基础信息
+            String[] activityTime = {businessUtil.getDateTime(-8),businessUtil.getDateTime(+370)};
+            for(int i=0;i<activityTime.length;i++){
+                ManageRecruitAddScene.ManageRecruitAddSceneBuilder builder = ManageRecruitAddScene.builder()
+                        .type(2)
+                        .participationLimitType(0)
+                        .title("招募-活动时间异常情况" + (int) (Math.random() * 10000))
+                        .startDate(activityTime[i])
+                        .endDate(activityTime[i])
+                        .applyStart(activityTime[i])
+                        .applyEnd(activityTime[i])
+                        .isLimitQuota(true)
+                        .quota(10)
+                        .subjectType(supporterUtil.getSubjectType())
+                        .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
+                        .label("BARGAIN")
+                        .picList(picList)
+                        .rule(pp.rule)
+                        .registerInformationList(registerInformationList)
+                        .successReward(true)
+                        .rewardReceiveType(0)
+                        .isNeedApproval(true);
+                if (true) {
+                    builder.rewardVouchers(registerObject)
+                            .voucherValid(voucherValid);
+                }
+                IScene scene = builder.build();
+                String message = visitor.invokeApi(scene, false).getString("message");
+                Preconditions.checkArgument(message.equals("活动结束日期不早于今日") || message.equals("活动名称不能为空"), "创建招募活动--活动时间的异常情况{今天之前，一年以后},时间异常情况创建成功");
+
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("创建招募活动--活动时间的异常情况{今天之前，一年以后}");
+        }
+    }
+
+    /**
+     *创建招募活动--活动名额的异常情况{"",10000}        ----不能为空，前端做的限制，后端没有限制
+     */
+    @Test(description = "创建招募活动--活动名额的异常情况{空,10000}")
+    public void RecruitActivityTitleException11() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            List<Integer> labels = new ArrayList<>();
+            labels.add(1000);
+            labels.add(1);
+            labels.add(100);
+            labels.add(2000);
+            labels.add(3000);
+            List<String> picList = new ArrayList<>();
+            SupporterUtil supporterUtil = new SupporterUtil(visitor);
+            PublicParameter pp = new PublicParameter();
+            picList.add(0, supporterUtil.getPicPath());
+            //填写报名所需要信息
+            List<Boolean> isShow = new ArrayList<>();
+            isShow.add(true);
+            isShow.add(true);
+            isShow.add(true);
+            isShow.add(true);
+            isShow.add(true);
+            isShow.add(true);
+            isShow.add(true);
+            List<Boolean> isRequired = new ArrayList<>();
+            isRequired.add(false);
+            isRequired.add(false);
+            isRequired.add(false);
+            isRequired.add(false);
+            isRequired.add(false);
+            isRequired.add(false);
+            isRequired.add(false);
+            JSONArray registerInformationList = this.businessUtil.getRegisterInformationList(isShow, isRequired);
+            //报名成功奖励
+            JSONArray registerObject = businessUtil.getRewardVouchers(voucherId, 1, businessUtil.getVoucherSurplusInventory(voucherId));
+            //卡券有效期
+            JSONObject voucherValid = businessUtil.getVoucherValid(2, null, null, 10);
+            //创建招募活动-共有的--基础信息
+            ManageRecruitAddScene.ManageRecruitAddSceneBuilder builder = ManageRecruitAddScene.builder()
+                    .type(2)
+                    .participationLimitType(0)
+                    .title("招募-活动时间异常情况" + (int) (Math.random() * 10000))
+                    .startDate(businessUtil.getStartDate())
+                    .endDate(businessUtil.getEndDate())
+                    .applyStart(businessUtil.getStartDate())
+                    .applyEnd(businessUtil.getEndDate())
+                    .isLimitQuota(true)
+                    .quota(10000)
+                    .subjectType(supporterUtil.getSubjectType())
+                    .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
+                    .label("BARGAIN")
+                    .picList(picList)
+                    .rule(pp.rule)
+                    .registerInformationList(registerInformationList)
+                    .successReward(true)
+                    .rewardReceiveType(0)
+                    .isNeedApproval(true);
+            if (true) {
+                builder.rewardVouchers(registerObject)
+                        .voucherValid(voucherValid);
+            }
+            IScene scene = builder.build();
+            String message = visitor.invokeApi(scene, false).getString("message");
+            Preconditions.checkArgument(message.equals("限制名额数取值范围为[1,9999]") , "创建招募活动--活动名额的异常情况{空,51},招募人数异常情况创建成功");
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("创建招募活动--活动名额的异常情况{空,51}");
+        }
+    }
+
+    /**
+     *创建招募活动--活动规则的异常情况{"",2001}
+     */
+    @Test(description = "创建招募活动--活动规则的异常情况{空,2001} ")
+    public void RecruitActivityTitleException12() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            List<Integer> labels = new ArrayList<>();
+            labels.add(1000);
+            labels.add(1);
+            labels.add(100);
+            labels.add(2000);
+            labels.add(3000);
+            List<String> picList = new ArrayList<>();
+            SupporterUtil supporterUtil = new SupporterUtil(visitor);
+            PublicParameter pp = new PublicParameter();
+            picList.add(0, supporterUtil.getPicPath());
+            //填写报名所需要信息
+            List<Boolean> isShow = new ArrayList<>();
+            isShow.add(true);
+            isShow.add(true);
+            isShow.add(true);
+            isShow.add(true);
+            isShow.add(true);
+            isShow.add(true);
+            isShow.add(true);
+            List<Boolean> isRequired = new ArrayList<>();
+            isRequired.add(false);
+            isRequired.add(false);
+            isRequired.add(false);
+            isRequired.add(false);
+            isRequired.add(false);
+            isRequired.add(false);
+            isRequired.add(false);
+            JSONArray registerInformationList = this.businessUtil.getRegisterInformationList(isShow, isRequired);
+            //报名成功奖励
+            JSONArray registerObject = businessUtil.getRewardVouchers(voucherId, 1, businessUtil.getVoucherSurplusInventory(voucherId));
+            //卡券有效期
+            JSONObject voucherValid = businessUtil.getVoucherValid(2, null, null, 10);
+            //创建招募活动-共有的--基础信息
+            String[] rule = pp.ruleException;
+            for (int i = 0; i < rule.length; i++) {
+                ManageRecruitAddScene.ManageRecruitAddSceneBuilder builder = ManageRecruitAddScene.builder()
+                        .type(2)
+                        .participationLimitType(0)
+                        .title("招募-活动时间异常情况" + (int) (Math.random() * 10000))
+                        .startDate(businessUtil.getStartDate())
+                        .endDate(businessUtil.getEndDate())
+                        .applyStart(businessUtil.getStartDate())
+                        .applyEnd(businessUtil.getEndDate())
+                        .isLimitQuota(true)
+                        .quota(5)
+                        .subjectType(supporterUtil.getSubjectType())
+                        .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
+                        .label("BARGAIN")
+                        .picList(picList)
+                        .rule(rule[i])
+                        .registerInformationList(registerInformationList)
+                        .successReward(true)
+                        .rewardReceiveType(0)
+                        .isNeedApproval(true);
+                if (true) {
+                    builder.rewardVouchers(registerObject)
+                            .voucherValid(voucherValid);
+                }
+                IScene scene = builder.build();
+                String message = visitor.invokeApi(scene, false).getString("message");
+                Preconditions.checkArgument(message.equals("活动规则字数为[1,2000]") , "创建招募活动--活动规则的异常情况{空,2001},活动规则异常创建成功");
+            }
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("创建招募活动--活动规则的异常情况{空,2001} ");
+        }
+    }
+
+    /**
+     *创建招募活动--优惠券发行张数的异常情况{"",大于库存，0}
+     */
+    @Test(description = "创建招募活动--优惠券发行张数的异常情况{null,大于库存，0} ")
+    public void RecruitActivityTitleException13() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            List<Integer> labels = new ArrayList<>();
+            labels.add(1000);
+            labels.add(1);
+            labels.add(100);
+            labels.add(2000);
+            labels.add(3000);
+            List<String> picList = new ArrayList<>();
+            SupporterUtil supporterUtil = new SupporterUtil(visitor);
+            PublicParameter pp = new PublicParameter();
+            picList.add(0, supporterUtil.getPicPath());
+            //填写报名所需要信息
+            List<Boolean> isShow = new ArrayList<>();
+            isShow.add(true);
+            isShow.add(true);
+            isShow.add(true);
+            isShow.add(true);
+            isShow.add(true);
+            isShow.add(true);
+            isShow.add(true);
+            List<Boolean> isRequired = new ArrayList<>();
+            isRequired.add(false);
+            isRequired.add(false);
+            isRequired.add(false);
+            isRequired.add(false);
+            isRequired.add(false);
+            isRequired.add(false);
+            isRequired.add(false);
+            //卡券有效期
+            JSONObject voucherValid = businessUtil.getVoucherValid(2, null, null, 10);
+            //创建招募活动-共有的--基础信息
+            String surplus = businessUtil.getSurplusInventory(voucherId);
+            String[] num = {"0",surplus + 1,""};
+            // 创建被邀请者和分享者的信息字段
+            for (int i = 0; i < num.length; i++) {
+                JSONArray registerInformationList = this.businessUtil.getRegisterInformationList(isShow, isRequired);
+                //报名成功奖励
+                JSONArray registerObject = businessUtil.getRewardVouchers(voucherId, 1, num[i]);
+                ManageRecruitAddScene.ManageRecruitAddSceneBuilder builder = ManageRecruitAddScene.builder()
+                        .type(2)
+                        .participationLimitType(0)
+                        .title("招募-活动时间异常情况" + (int) (Math.random() * 10000))
+                        .startDate(businessUtil.getStartDate())
+                        .endDate(businessUtil.getEndDate())
+                        .applyStart(businessUtil.getStartDate())
+                        .applyEnd(businessUtil.getEndDate())
+                        .isLimitQuota(true)
+                        .quota(5)
+                        .subjectType(supporterUtil.getSubjectType())
+                        .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
+                        .label("BARGAIN")
+                        .picList(picList)
+                        .rule(pp.rule)
+                        .registerInformationList(registerInformationList)
+                        .successReward(true)
+                        .rewardReceiveType(0)
+                        .isNeedApproval(true);
+                if (true) {
+                    builder.rewardVouchers(registerObject)
+                            .voucherValid(voucherValid);
+                }
+                IScene scene = builder.build();
+                String message = visitor.invokeApi(scene, false).getString("message");
+                Preconditions.checkArgument(message.equals("卡券数量不能为空") || message.equals("奖励数量不能为空") || message.contains("库存不足，请重新选择") || message.equals("奖励数量至少一张"), "被邀请者优惠券配置异常情况为：" + num[i]);
+            }
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("创建招募活动--优惠券发行张数的异常情况{null,大于库存，0} ");
+        }
+    }
+
+
+
+
+
+    /**
+     * 创建招募活动-校验已作废的优惠券----------------------优惠券校验---------------
      */
     @Test
     public void activityInvalidVoucher() {
@@ -1457,7 +1886,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             IScene scene = builder.build();
             String message = visitor.invokeApi(scene, false).getString("message");
             System.out.println(message);
-            Preconditions.checkArgument(message.contains("库存不足，请重新选择") || message.contains("已售罄"), "作废优惠券的校验，message返回结果为：" + message);
+            Preconditions.checkArgument(message.contains("库存不足，请重新选择") || message.contains("已售罄"), "已售罄优惠券的校验，message返回结果为：" + message);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -1528,7 +1957,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             IScene scene = builder.build();
             String message = visitor.invokeApi(scene, false).getString("message");
             System.out.println(message);
-            Preconditions.checkArgument(message.contains("库存不足，请重新选择") || message.contains("暂停发放"), "作废优惠券的校验，message返回结果为：" + message);
+            Preconditions.checkArgument(message.contains("库存不足，请重新选择") || message.contains("暂停发放"), "暂停发放优惠券的校验，message返回结果为：" + message);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -1537,10 +1966,15 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
     }
 
 
+
+    /**
+     *-------------------------创建小程序活动的状态----------------------------
+     */
+
     /**
      * 创建裂变活动-参与客户限制为【部分】，部分中的标签选择全部的
      */
-    @Test
+    @Test(enabled = false)
     public void activityChooseLabelsSome() {
         try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
@@ -1589,7 +2023,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
     /**
      * 创建招募活动-参与客户限制为【部分】，部分中的标签选择全部的
      */
-    @Test
+    @Test(enabled = false)
     public void activityChooseLabels() {
         try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
@@ -1664,7 +2098,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
     /**
      * 创建裂变活动-客户标签
      */
-    @Test
+    @Test(enabled = false)
     public void activityLabels() {
         try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
@@ -1717,7 +2151,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
     /**
      * 招募活动，报名信息全为非必填项
      */
-    @Test
+    @Test(enabled = false)
     public void activityRegistrationIssue() {
         try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
@@ -1795,7 +2229,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
     /**
      * 招募活动，报名信息为空
      */
-    @Test
+    @Test(enabled = false)
     public void activityRegistrationNUll() {
         try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();

@@ -1255,13 +1255,11 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
             for (int i = 1; i < s; i++) {
                 JSONArray list1 = crm.afterSaleCustomerList(findParam, "", "", i, size).getJSONArray("list");
                 for (int j = 0; j < list1.size(); j++) {
-                    String resultPlateNumber = list1.getJSONObject(j).getString("plate_number");
-                    Preconditions.checkArgument(resultPlateNumber.contains(findParam), "按照车牌号查询失败,搜索参数为：" + findParam);
+                    list1.stream().map(e -> (JSONObject) e).forEach(e -> Preconditions.checkArgument(e.getString("plate_number").contains(findParam), "按照车牌号查询失败,搜索参数为：" + findParam));
                 }
             }
         } catch (Exception | AssertionError e) {
-            e.printStackTrace();
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("售后--售后客户--车牌号/联系方式筛选");
         }
@@ -1287,13 +1285,10 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
             int s = CommonUtil.getTurningPage(total, size);
             for (int i = 1; i < s; i++) {
                 JSONArray list1 = crm.afterSaleCustomerList(findParam, "", "", i, size).getJSONArray("list");
-                for (int j = 0; j < list1.size(); j++) {
-                    String resultPlateNumber = list1.getJSONObject(i).getString("customer_phone_number");
-                    Preconditions.checkArgument(resultPlateNumber.contains(findParam), "按电话号查询失败,搜索参数为：" + findParam);
-                }
+                list1.stream().map(e -> (JSONObject) e).forEach(e -> Preconditions.checkArgument(e.getString("customer_phone_number").contains(findParam), "按电话号查询失败,搜索参数为：" + findParam));
             }
         } catch (Exception | AssertionError e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("售后--售后客户--车牌号/联系方式筛选");
         }

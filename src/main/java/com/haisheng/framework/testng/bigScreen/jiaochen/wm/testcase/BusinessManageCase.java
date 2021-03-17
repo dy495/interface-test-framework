@@ -3,7 +3,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.agency.Visitor;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
@@ -19,13 +19,13 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherUseStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.AfterSaleCustomerPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.RepairPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanager.WechatCustomerPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.manager.CarModelEditScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.manager.CarModelPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanager.BuyPackageRecordScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanager.ReceptionPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanage.AfterSaleCustomerPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanage.RepairPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanage.WechatCustomerPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.manage.CarModelEditScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.manage.CarModelPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanage.BuyPackageRecordScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.ReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherInfoScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
@@ -51,17 +51,13 @@ import java.util.stream.Collectors;
  * @date 2021/1/29 11:17
  */
 public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
-    CommonConfig commonConfig = new CommonConfig();
-    private static final EnumTestProduce product = EnumTestProduce.JIAOCHEN_DAILY;
-    private static final EnumAccount ADMINISTRATOR = EnumAccount.WINSENSE_LAB_DAILY;
+    private static final EnumTestProduce PRODUCE = EnumTestProduce.JIAOCHEN_DAILY;
+    private static final EnumAccount ALL_AUTHORITY = EnumAccount.ALL_AUTHORITY_DAILY;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_DAILY;
-    //访问者
-    public Visitor visitor = new Visitor(product);
-    //登录工具
+    public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public UserUtil user = new UserUtil(visitor);
-    //封装方法
     public SupporterUtil util = new SupporterUtil(visitor);
-
+    public CommonConfig commonConfig = new CommonConfig();
 
     @BeforeClass
     @Override
@@ -71,16 +67,16 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
         commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_DAILY_SERVICE.getId();
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
-        commonConfig.product = product.getAbbreviation();
-        commonConfig.referer = product.getReferer();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = EnumDingTalkWebHook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
-        commonConfig.shopId = product.getShopId();
-        commonConfig.roleId = product.getRoleId();
+        commonConfig.product = PRODUCE.getAbbreviation();
+        commonConfig.referer = PRODUCE.getReferer();
+        commonConfig.shopId = PRODUCE.getShopId();
+        commonConfig.roleId = ALL_AUTHORITY.getRoleId();
         beforeClassInit(commonConfig);
     }
 
@@ -93,7 +89,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-        user.loginPc(ADMINISTRATOR);
+        user.loginPc(ALL_AUTHORITY);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
@@ -119,7 +115,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
             int appletVoucherNum = util.getAppletVoucherNum();
             int appletPackageNum = util.getAppletPackageNum();
             //购买临时套餐
-            user.loginPc(ADMINISTRATOR);
+            user.loginPc(ALL_AUTHORITY);
             JSONArray voucherList = util.getVoucherArray(voucherId, 1);
             util.receptionBuyTemporaryPackage(voucherList, 1);
             util.makeSureBuyPackage("临时套餐");
@@ -173,7 +169,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
             int appletMessageMessageNum = util.getAppletMessageNum();
             int appletVoucherNum = util.getAppletVoucherNum();
             int appletPackageNum = util.getAppletPackageNum();
-            user.loginPc(ADMINISTRATOR);
+            user.loginPc(ALL_AUTHORITY);
             //购买固定套餐
             util.receptionBuyFixedPackage(packageId, 1);
             //确认支付
@@ -226,7 +222,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
             int appletVoucherNum = util.getAppletVoucherNum();
             int appletPackageNum = util.getAppletPackageNum();
             //赠送临时套餐
-            user.loginPc(ADMINISTRATOR);
+            user.loginPc(ALL_AUTHORITY);
             JSONArray voucherList = util.getVoucherArray(voucherId, 1);
             util.receptionBuyTemporaryPackage(voucherList, 0);
             util.makeSureBuyPackage("临时套餐");
@@ -280,7 +276,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
             int appletMessageMessageNum = util.getAppletMessageNum();
             int appletVoucherNum = util.getAppletVoucherNum();
             int appletPackageNum = util.getAppletPackageNum();
-            user.loginPc(ADMINISTRATOR);
+            user.loginPc(ALL_AUTHORITY);
             //赠送固定套餐
             util.receptionBuyFixedPackage(packageId, 0);
             //确认支付
@@ -333,7 +329,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
             user.loginApplet(APPLET_USER_ONE);
             int appletVoucherNum = util.getAppletVoucherNum();
             int appletPackageNum = util.getAppletPackageNum();
-            user.loginPc(ADMINISTRATOR);
+            user.loginPc(ALL_AUTHORITY);
             //赠送固定套餐
             util.receptionBuyFixedPackage(packageId, 0);
             //取消支付
@@ -370,7 +366,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
             int appletVoucherNum = util.getAppletVoucherNum();
             int appletPackageNum = util.getAppletPackageNum();
             //赠送临时套餐
-            user.loginPc(ADMINISTRATOR);
+            user.loginPc(ALL_AUTHORITY);
             JSONArray voucherList = util.getVoucherArray(voucherId, 1);
             util.receptionBuyTemporaryPackage(voucherList, 0);
             util.cancelSoldPackage("临时套餐");
@@ -480,7 +476,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
     public void customerManager_data_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            commonConfig.shopId = "46522";
+            commonConfig.shopId = ALL_AUTHORITY.getReceptionShopId();
             Double[] doubles = {1.00, 2.99, 3.66, 50.1};
             JSONObject jsonObject = CarModelPageScene.builder().build().execute(visitor, true).getJSONArray("list").getJSONObject(0);
             Integer id = jsonObject.getInteger("id");
@@ -492,7 +488,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            commonConfig.shopId = product.getShopId();
+            commonConfig.shopId = PRODUCE.getShopId();
             saveData("预约管理--保养配置，修改保养价格");
         }
     }
