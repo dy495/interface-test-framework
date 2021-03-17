@@ -82,7 +82,8 @@ public class XundianPcCase extends TestCaseCommon implements TestCaseStd {
             //获取整改处理人
             String responsorId = xd.problemesponsors().getJSONArray("list").getJSONObject(0).getString("id");
             String audit_comment = "pc 截屏留痕推送给门店负责人";
-            xd.problemMarkTime("uid_142b23e9", listId, itemId, pic_list, audit_comment,20);
+            JSONObject res =  xd.problemMarkTime(responsorId, listId, itemId, pic_list, audit_comment,20);
+            checkArgument(res.getInteger("code") == 1000, "截图四张失败时状态码"+res.getInteger("code"));
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {

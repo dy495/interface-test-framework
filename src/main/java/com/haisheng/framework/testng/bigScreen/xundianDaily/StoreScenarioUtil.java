@@ -638,9 +638,10 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject RegisterMember(String pic_path,String member_id,String member_name,String phone,String birthday,String user_id,int identityId) throws Exception {
+    public JSONObject RegisterMember(Integer id,String pic_path,String member_id,String member_name,String phone,String birthday,String user_id,int identityId) throws Exception {
         String url = "/patrol/member/register";
         JSONObject json = new JSONObject();
+        json.put("id",id);
         json.put("pic_path", pic_path);
         json.put("member_id", member_id);
         json.put("member_name", member_name);

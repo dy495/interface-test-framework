@@ -493,7 +493,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
                 JSONArray list0 = md.MemberVisit(userId,name,"").getJSONArray("list");
                 for(int i=0;i<list0.size();i++){
                     String userId1 = list.getJSONObject(0).getString("user_id");
-                    String Name = list0.getJSONObject(i).getString("shop_name");
+                    String Name = list0.getJSONObject(i).getString("name");
                     Preconditions.checkArgument(userId1.equals(userId),"根据"+userId+"查询，返回的结果"+userId1);
                     Preconditions.checkArgument(Name.equals(name),"根据"+name+"查询，返回的结果"+Name);
                 }
@@ -519,11 +519,11 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
                 String userId = list.getJSONObject(0).getString("user_id");
                 String name = list.getJSONObject(0).getString("name");
                 String shopName = list.getJSONObject(0).getString("shop_name");
-                JSONArray list0 = md.MemberVisit(userId,name,"").getJSONArray("list");
+                JSONArray list0 = md.MemberVisit(userId,name,shopName).getJSONArray("list");
                 for(int i=0;i<list0.size();i++){
-                    String userId1 = list.getJSONObject(0).getString("user_id");
-                    String Name = list0.getJSONObject(i).getString("shop_name");
-                    String shopName1 = list.getJSONObject(0).getString("shop_name");
+                    String userId1 = list.getJSONObject(i).getString("user_id");
+                    String Name = list0.getJSONObject(i).getString("name");
+                    String shopName1 = list.getJSONObject(i).getString("shop_name");
                     Preconditions.checkArgument(userId1.equals(userId),"根据"+userId+"查询，返回的结果"+userId1);
                     Preconditions.checkArgument(Name.equals(name),"根据"+name+"查询，返回的结果"+Name);
                     Preconditions.checkArgument(shopName.equals(shopName1),"根据"+shopName+"查询，返回的结果"+shopName1);

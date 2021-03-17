@@ -589,7 +589,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
             String member_ID = "11223344";
             String member_name = "测试会员11@@aaa";
             String birthday = "1998-10-01";
-            JSONObject res = md.RegisterMember(face_url,member_ID,member_name,phone,birthday,"",1);
+            JSONObject res = md.RegisterMember(1,null,face_url,member_ID,member_name,phone,birthday,1);
             checkArgument(res.getInteger("code") == 1000, "添加会员成功");
 
             JSONArray list0 = md.MemberList(page,size,"","","","","").getJSONArray("list");
@@ -612,7 +612,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
             //为了进到会员编辑页
             JSONObject res1 =  md.MemberDetail(id);
-            checkArgument(res1.getInteger("code") == 1000, "查看会员详情成功");
+            checkArgument(res1.getInteger("code") == 1000, "查看会员详情失败时状态码"+res1.getInteger("code"));
             //编辑会员
             String Base64 = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/三分之二脸.jpg";
             String MemberId = "221122";
@@ -621,14 +621,14 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
             String Birthday = "1996-01-01";
             String uesrId = "000";
             JSONObject res2 = md.MemberUpdate(Base64,MemberId,MemberName,phone,Birthday,uesrId,1);
-            checkArgument(res2.getInteger("code") == 1000, "编辑会员成功");
+            checkArgument(res2.getInteger("code") == 1000, "编辑会员失败时状态码"+res2.getInteger("code"));
 
 
             //删除会员
             JSONArray list3 = md.MemberList(page,size,"","","","","").getJSONArray("list");
             Integer id2 = list3.getInteger(0);
             JSONObject res3 = md.MemberDelete(id2);
-            checkArgument(res3.getInteger("code") == 1000, "删除会员成功");
+            checkArgument(res3.getInteger("code") == 1000, "删除会员失败时状态码"+res3.getInteger("code"));
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -639,6 +639,55 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+
+    //注册会员的异常情况
+    @Test(dataProvider = "FACE_URL",dataProviderClass = DataProviderMethod.class)
+    public void regMemError(String face_url){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //注册会员时不传入人脸
+            JSONObject res = md.RegisterMember(null,"","211","qq11啊","13656788899","1998-10-01","",1);
+            checkArgument(res.getInteger("code") != 1000, "注册会员时不传入人脸也注册成功了返回的message"+res.getString("message"));
+
+            //注册会员时会员电话重复
+            JSONObject res0 = md.RegisterMember(null,face_url,"212","这是一个二",phone,"1998-10-01","",1);
+            checkArgument(res0.getInteger("code") != 1000, "注册会员时电话重复也注册成功了返回的message"+res.getString("message"));
+
+            //注册会员时会员名称过长
+            JSONObject res1 = md.RegisterMember(null,face_url,"213","这是一个二十一字的名字我也不知道怎么说就是","13656788899","1998-10-01","",1);
+            checkArgument(res1.getInteger("code") != 1000, "注册会员时名字长度超过也注册成功了返回的message"+res.getString("message"));
+
+            //注册会员时电话是12位
+            JSONObject res2 = md.RegisterMember(null,face_url,"214","啊","136567888991","1998-10-01","",1);
+            checkArgument(res2.getInteger("code") != 1000, "注册会员时电话12位也注册成功了返回的message"+res.getString("message"));
+
+            //注册会员时电话是10位
+            JSONObject res3 = md.RegisterMember(null,face_url,"215","啊1","1365678889","1998-10-01","",1);
+            checkArgument(res3.getInteger("code") != 1000, "注册会员时电话10位也注册成功了返回的message"+res.getString("message"));
+
+            //注册会员时电话有英文中文特殊字符
+            JSONObject res4 = md.RegisterMember(null,face_url,"216","啊2","1365678￥啊a89","1998-10-01","",1);
+            checkArgument(res4.getInteger("code") != 1000, "注册会员时电话有英文等也注册成功了返回的message"+res.getString("message"));
+
+            //注册会员时选择未来日期
+            JSONObject res5 = md.RegisterMember(null,face_url,"217","啊3","1365678889","2998-10-01","",1);
+            checkArgument(res5.getInteger("code") != 1000, "注册会员时选择未来日期message"+res.getString("message"));
+
+            //注册会员时memberid相同
+            JSONObject res6 = md.RegisterMember(null,face_url,"12345678","啊4","1365678889","1998-10-01","",1);
+            checkArgument(res6.getInteger("code") != 1000, "注册会员时选择未来日期message"+res.getString("message"));
+
+            //注册会员时全都为空
+            JSONObject res7 = md.RegisterMember(null,"","","","","","",-1);
+            checkArgument(res7.getInteger("code") != 1000, "注册会员时全都为空"+res.getString("message"));
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("注册会员的异常情况");
+        }
+    }
 
 
 //    //新建预置位、新建预置位不加名称、新建预置位不加时间、新建预置位后列表+1、删除一个预置位列表-1
