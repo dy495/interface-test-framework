@@ -1161,8 +1161,8 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
     }
 
     /**
-     * @description :核销记录-筛选栏单项查询
-     * @date :2020/11/24
+     * @description :V3.0核销记录-筛选栏单项查询
+     * @date :2020/3/17
      **/
     @Test(dataProvider = "SELECT_verificationRecordFilter", dataProviderClass = Constant.class)
     public void verificationRecordOneFilter(String pram, String output) {
@@ -3407,8 +3407,8 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
     }
 
     /**
-     * @deprecated V2.0-优惠券领取记录--筛选栏单项搜索
-     * @date :2021-2-2
+     * @deprecated V3.0-优惠券领取记录--筛选栏单项搜索
+     * @date :2021-3-17
      */
     @Test(dataProvider = "SELECT_voucherManageSendRecordFilter", dataProviderClass = Constant.class)
     public void voucherManageSendRecordOneFilter(String pram,String output){
