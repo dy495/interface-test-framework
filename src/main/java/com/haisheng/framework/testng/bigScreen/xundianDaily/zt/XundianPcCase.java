@@ -67,7 +67,7 @@ public class XundianPcCase extends TestCaseCommon implements TestCaseStd {
 
     //pc特殊截屏（四张图片截取成功）+事件时间
     @Test
-    public void problemMark() {
+    public void problemMark() throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //JSONObject list = xd.checkStart("\"REMOTE\"", 1); //进入远程巡店

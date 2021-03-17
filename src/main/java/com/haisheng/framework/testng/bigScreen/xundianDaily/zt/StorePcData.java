@@ -317,7 +317,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
     //非自定义导出报表
     @Test
-    public void ReportExport() {
+    public void ReportExport() throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray list = xd.reportList(1,100,null,null,null,null).getJSONArray("list");
@@ -349,7 +349,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
             String start_time = "2021-03-11";
             String end_time = "2021-03-14";
             JSONObject res = xd.customizeReportExport(2,"CHECK_REPORT","MONTH",shop_id_List,start_time,end_time,"aaa");
-            checkArgument(res.getInteger("code") == 1000, "自定义导出报表状态码"+res.getInteger("code"));
+            Preconditions.checkArgument(res.getInteger("code") == 1000, "自定义导出报表状态码"+res.getInteger("code"));
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -362,7 +362,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
     //新建角色
     @Test
-    public void user_add() {
+    public void user_add() throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
 
         try {
@@ -377,13 +377,13 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
             JSONObject res = md.organizationRoleAddTwo(name, 1,description, moduleId);
             Integer code = res.getInteger("code");
             Integer role_id = md.organizationRolePage(name, page, size).getJSONArray("list").getJSONObject(0).getInteger("role_id");
-            checkArgument(code == 1000, "新增角色失败了");
+            Preconditions.checkArgument(code == 1000, "新增角色失败了");
             Integer roleNum1 = md.organizationRolePage("", page, size).getInteger("total");
-            checkArgument(roleNum1-roleNum == 1, "新增角色后，角色列表没有+1");
+            Preconditions.checkArgument(roleNum1-roleNum == 1, "新增角色后，角色列表没有+1");
             //编辑角色
             String name1 = "自动化在编辑";
             Integer code1 = md.organizationRoleEditTwo(role_id, 1,name1, description, moduleId).getInteger("code");
-            checkArgument(code1 == 1000, "编辑角色的信息失败了");
+            Preconditions.checkArgument(code1 == 1000, "编辑角色的信息失败了");
             //列表中编辑过的角色是否已更新
             JSONArray list1 = md.organizationRolePage(name1, page, size).getJSONArray("list");
             String role_name = list1.getJSONObject(0).getString("role_name");
@@ -392,8 +392,8 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
             if (name.equals(role_name)) {
                 Integer code2 = md.organizationRoleDelete(role_id).getInteger("code");
                 Integer roleNum2 = md.organizationRolePage("", page, size).getInteger("total");
-                checkArgument(code2 == 1000, "删除角色:" + role_id + "失败了");
-                checkArgument(roleNum1-roleNum2 == 1, "删除角色后，角色列表没有-1");
+                Preconditions.checkArgument(code2 == 1000, "删除角色:" + role_id + "失败了");
+                Preconditions.checkArgument(roleNum1-roleNum2 == 1, "删除角色后，角色列表没有-1");
             }
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -407,7 +407,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
 
     @Test
-    public void user_add_work() {
+    public void user_add_work() throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray moduleId = new JSONArray();
@@ -416,19 +416,19 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
             //新增角色名称20个字的角色
             String description = "青青测试给店长自动化用的角色";
             JSONObject res = md.organizationRoleAddTwo("这是一个二十字的角色名称是的是的是的是的",1, description, moduleId);
-            checkArgument(res.getInteger("code") == 1000, "角色名称为20个字，创建失败");
+            Preconditions.checkArgument(res.getInteger("code") == 1000, "角色名称为20个字，创建失败");
             //新增角色名称20个字英文+中文+数字的角色
             JSONObject res1 = md.organizationRoleAddTwo("这是一个二十字的角色名称AABB1111",1, description, moduleId);
-            checkArgument(res1.getInteger("code") == 1000, "角色名称为中文+字母+数字，创建失败");
+            Preconditions.checkArgument(res1.getInteger("code") == 1000, "角色名称为中文+字母+数字，创建失败");
             //新增角色名称20个字英文+中文+数字+字符的角色
             JSONObject res2 = md.organizationRoleAddTwo("这是一个二十字的角色名称AABB11.。",1, description, moduleId);
-            checkArgument(res2.getInteger("code") == 1000, "角色名称为中文+字母+数字+字符，创建失败");
+            Preconditions.checkArgument(res2.getInteger("code") == 1000, "角色名称为中文+字母+数字+字符，创建失败");
             //新增角色名称21个字角色
             JSONObject res3 = md.organizationRoleAddTwo("这是一个二十一字的角色名称是的是的是的是的", 1,description, moduleId);
-            checkArgument(res3.getString("message").equals("角色名称需要在1-20个字内"), "角色名称为21个字，创建成功");
+            Preconditions.checkArgument(res3.getString("message").equals("角色名称需要在1-20个字内"), "角色名称为21个字，创建成功");
             //新增重复角色名称的角色
             JSONObject res4 = md.organizationRoleAddTwo("这是一个二十字的角色名称AABB11.。",1,description, moduleId);
-            checkArgument(res4.getString("message").equals("新增角色异常:当前角色名称已存在！请勿重复添加"), "重复的角色名称，创建成功");
+            Preconditions.checkArgument(res4.getString("message").equals("新增角色异常:当前角色名称已存在！请勿重复添加"), "重复的角色名称，创建成功");
             //将账户使用次数为0的角色删除
             mds.deleteRole();
         } catch (AssertionError e) {
@@ -445,7 +445,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
      * ====================新增角色(权限说明校验)======================
      */
     @Test
-    public void user_add_work1() {
+    public void user_add_work1() throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray moduleId = new JSONArray();
@@ -454,16 +454,16 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
             moduleId.add(10);
             //新增角色权限说明50个字的角色
             JSONObject res = md.organizationRoleAddTwo("auto名字3", 1,"不是这是一个二十字的角色名称是的是的是的不是的的不是的好的好还需要二十个字现在是三十七了吧刚好五个字", moduleId);
-            checkArgument(res.getInteger("code") == 1000, "角色权限说明为50个字，创建失败");
+            Preconditions.checkArgument(res.getInteger("code") == 1000, "角色权限说明为50个字，创建失败");
             //新增角色权限说明角色字英文+中文+数字的角色
             JSONObject res1 = md.organizationRoleAddTwo("auto名字1",1, "22一个二十字的角色名称AABB", moduleId);
-            checkArgument(res1.getInteger("code") == 1000, "角色权限说明中文+字母+数字，创建失败");
+            Preconditions.checkArgument(res1.getInteger("code") == 1000, "角色权限说明中文+字母+数字，创建失败");
             //新增角色权限说明角色英文+中文+数字+字符的角色
             JSONObject res2 = md.organizationRoleAddTwo("auto名字2",1, "这是一个二十字色名称BB11.。", moduleId);
-            checkArgument(res2.getInteger("code") == 1000, "角色权限说明为中文+字母+数字+字符，创建失败");
+            Preconditions.checkArgument(res2.getInteger("code") == 1000, "角色权限说明为中文+字母+数字+字符，创建失败");
             //新增角色权限说明51个字的角色
             JSONObject res3 = md.organizationRoleAddTwo("auto名字4",1, "不是这是一个二十字的角色名称是的是的是的不是的的不是的好的好还需要二十个字现在是三十七了吧刚好五个字多", moduleId);
-            checkArgument(res3.getString("message").equals("角色名称需要在1-50个字内"), "角色权限说明为51个字，创建成功");
+            Preconditions.checkArgument(res3.getString("message").equals("角色名称需要在1-50个字内"), "角色权限说明为51个字，创建成功");
             mds.deleteRole();
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -481,7 +481,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
      * ====================新增账号======================
      */
     @Test
-    public void accountAdd_Phone() {
+    public void accountAdd_Phone() throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray roleIdList = new JSONArray();
@@ -493,17 +493,17 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
             //用phone新增一个账号
             JSONObject res = md.organizationAccountAddTwo("",name,"123456","uid_ef6d2de5", type,"", phone,status,roleIdList,shopIdList);
             Integer code = res.getInteger("code");
-            checkArgument(code == 1000, "用手机号:" + phone + "新增一个账号失败了");
+            Preconditions.checkArgument(code == 1000, "用手机号:" + phone + "新增一个账号失败了");
             //从列表获取刚刚新增的那个账户的名称进行搜获获取她的account
             JSONArray accountList = md.organizationAccountPage(name, "", "", phone, "", "", page, size).getJSONArray("list");
             String account = accountList.getJSONObject(0).getString("account");
             //新建后编辑账号
             JSONObject res1 = md.organizationAccountEditTwo(account,"qqqqq","111","uid_ef6d2de5",type,"",phone,status,roleIdList,shopIdList);
             Integer code2 = res1.getInteger("code");
-            checkArgument(code2 == 1000, "用姓名:" + "qqqqq" + "编辑一个账号失败了");
+            Preconditions.checkArgument(code2 == 1000, "用姓名:" + "qqqqq" + "编辑一个账号失败了");
             //新建成功以后删除新建的账号
             Integer code1 = md.organizationAccountDelete(account).getInteger("code");
-            checkArgument(code1 == 1000, "删除手机号的账号:" + phone + "失败了");
+            Preconditions.checkArgument(code1 == 1000, "删除手机号的账号:" + phone + "失败了");
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -514,7 +514,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test
-    public void accountAdd_Email() {
+    public void accountAdd_Email() throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray roleIdList = new JSONArray();
@@ -526,17 +526,17 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
             //用email新增一个账号
             JSONObject res = md.organizationAccountAddTwo("",name,"123456","uid_ef6d2de5", type,email, "",status,roleIdList,shopIdList);
             Integer code = res.getInteger("code");
-            checkArgument(code == 1000, "用邮箱号:" + email + "新增一个账号失败了");
+            Preconditions.checkArgument(code == 1000, "用邮箱号:" + email + "新增一个账号失败了");
             //从列表获取刚刚新增的那个账户的名称进行搜获获取她的account
             JSONArray accountList = md.organizationAccountPage(name, "", email,"", "", "", page, size).getJSONArray("list");
             String account = accountList.getJSONObject(0).getString("account");
             //新建后编辑账号
             JSONObject res1 = md.organizationAccountEditTwo(account,"qqqqq","111","uid_ef6d2de5",type,"",phone,status,roleIdList,shopIdList);
             Integer code2 = res1.getInteger("code");
-            checkArgument(code2 == 1000, "用姓名:" + "qqqqq" + "编辑一个账号失败了");
+            Preconditions.checkArgument(code2 == 1000, "用姓名:" + "qqqqq" + "编辑一个账号失败了");
             //新建成功以后删除新建的账号
             Integer code1 = md.organizationAccountDelete(account).getInteger("code");
-            checkArgument(code1 == 1000, "删邮箱的账号:" + email + "失败了");
+            Preconditions.checkArgument(code1 == 1000, "删邮箱的账号:" + email + "失败了");
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -550,23 +550,23 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
     //会员身份添加、删除
     @Test
-    public void AddMember(){
+    public void AddMember() throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Integer total = md.Member(page,size).getInteger("total");
             String identity = "测试VIP！";
             JSONObject res =  md.AddMember(identity);
-            checkArgument(res.getInteger("code") == 1000, "添加会员身份成功");
+            Preconditions.checkArgument(res.getInteger("code") == 1000, "添加会员身份成功");
             Integer total1 = md.Member(page,size).getInteger("total");
             int a = total1-total;
-            checkArgument(a==1, "添加会员身份后，身份列表+1，实际添加了"+a);
+            Preconditions.checkArgument(a==1, "添加会员身份后，身份列表+1，实际添加了"+a);
             JSONArray list = md.Member(page,size).getJSONArray("list");
             int id = list.getInteger(0);
             JSONObject res1 = md.DeleteMember(id);
-            checkArgument(res1.getInteger("code") == 1000, "删除会员身份成功");
+            Preconditions. checkArgument(res1.getInteger("code") == 1000, "删除会员身份成功");
             Integer total2 = md.Member(page,size).getInteger("total");
             int b = total1-total2;
-            checkArgument(b==1, "删除会员身份后，身份列表-1，实际减少了"+b);
+            Preconditions.checkArgument(b==1, "删除会员身份后，身份列表-1，实际减少了"+b);
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -581,7 +581,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
     //注册会员，会员管理列表+1，通过搜索框进行搜索
     @Test(dataProvider = "FACE_URL",dataProviderClass = DataProviderMethod.class)
-    public void MemberList(String face_url){
+    public void MemberList(String face_url) throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
            //通过搜索框搜索会员
@@ -590,20 +590,20 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
             String member_name = "测试会员11@@aaa";
             String birthday = "1998-10-01";
             JSONObject res = md.RegisterMember(1,null,face_url,member_ID,member_name,phone,birthday,1);
-            checkArgument(res.getInteger("code") == 1000, "添加会员成功");
+            Preconditions.checkArgument(res.getInteger("code") == 1000, "添加会员成功");
 
             JSONArray list0 = md.MemberList(page,size,"","","","","").getJSONArray("list");
             Integer a = list0.size()-list.size();
-            checkArgument(a==1, "新注册一个会员，会员列表实际添加了"+a);
+            Preconditions.checkArgument(a==1, "新注册一个会员，会员列表实际添加了"+a);
 
             JSONArray list1 = md.MemberList(page,size,member_ID,member_name,phone,"","").getJSONArray("list");
 //            会员id
             String memberId = list1.getString(2);
             String memberName = list1.getString(3);
             String memberPhone = list1.getString(4);
-            checkArgument(member_ID.equals(memberId), "输入的会员id:" + member_ID + "返回的会员id"+ memberId);
-            checkArgument(member_name.equals(memberName), "输入的会员姓名:" + member_name + "返回的会员姓名"+ memberName);
-            checkArgument(memberPhone.equals(phone), "输入的会员电话:" + phone + "返回的会员电话"+ memberPhone);
+            Preconditions.checkArgument(member_ID.equals(memberId), "输入的会员id:" + member_ID + "返回的会员id"+ memberId);
+            Preconditions.checkArgument(member_name.equals(memberName), "输入的会员姓名:" + member_name + "返回的会员姓名"+ memberName);
+            Preconditions.checkArgument(memberPhone.equals(phone), "输入的会员电话:" + phone + "返回的会员电话"+ memberPhone);
 
             //获取会员列表页第一个会员的id
             JSONArray list2 = md.MemberList(page,size,"","","","","").getJSONArray("list");
@@ -612,7 +612,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
             //为了进到会员编辑页
             JSONObject res1 =  md.MemberDetail(id);
-            checkArgument(res1.getInteger("code") == 1000, "查看会员详情失败时状态码"+res1.getInteger("code"));
+            Preconditions.checkArgument(res1.getInteger("code") == 1000, "查看会员详情失败时状态码"+res1.getInteger("code"));
             //编辑会员
             String Base64 = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/三分之二脸.jpg";
             String MemberId = "221122";
@@ -621,14 +621,14 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
             String Birthday = "1996-01-01";
             String uesrId = "000";
             JSONObject res2 = md.MemberUpdate(Base64,MemberId,MemberName,phone,Birthday,uesrId,1);
-            checkArgument(res2.getInteger("code") == 1000, "编辑会员失败时状态码"+res2.getInteger("code"));
+            Preconditions.checkArgument(res2.getInteger("code") == 1000, "编辑会员失败时状态码"+res2.getInteger("code"));
 
 
             //删除会员
             JSONArray list3 = md.MemberList(page,size,"","","","","").getJSONArray("list");
             Integer id2 = list3.getInteger(0);
             JSONObject res3 = md.MemberDelete(id2);
-            checkArgument(res3.getInteger("code") == 1000, "删除会员失败时状态码"+res3.getInteger("code"));
+            Preconditions.checkArgument(res3.getInteger("code") == 1000, "删除会员失败时状态码"+res3.getInteger("code"));
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -642,44 +642,44 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
     //注册会员的异常情况
     @Test(dataProvider = "FACE_URL",dataProviderClass = DataProviderMethod.class)
-    public void regMemError(String face_url){
+    public void regMemError(String face_url) throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //注册会员时不传入人脸
             JSONObject res = md.RegisterMember(null,"","211","qq11啊","13656788899","1998-10-01","",1);
-            checkArgument(res.getInteger("code") != 1000, "注册会员时不传入人脸也注册成功了返回的message"+res.getString("message"));
+            Preconditions.checkArgument(res.getInteger("code") != 1000, "注册会员时不传入人脸也注册成功了返回的message"+res.getString("message"));
 
             //注册会员时会员电话重复
             JSONObject res0 = md.RegisterMember(null,face_url,"212","这是一个二",phone,"1998-10-01","",1);
-            checkArgument(res0.getInteger("code") != 1000, "注册会员时电话重复也注册成功了返回的message"+res.getString("message"));
+            Preconditions.checkArgument(res0.getInteger("code") != 1000, "注册会员时电话重复也注册成功了返回的message"+res.getString("message"));
 
             //注册会员时会员名称过长
             JSONObject res1 = md.RegisterMember(null,face_url,"213","这是一个二十一字的名字我也不知道怎么说就是","13656788899","1998-10-01","",1);
-            checkArgument(res1.getInteger("code") != 1000, "注册会员时名字长度超过也注册成功了返回的message"+res.getString("message"));
+            Preconditions.checkArgument(res1.getInteger("code") != 1000, "注册会员时名字长度超过也注册成功了返回的message"+res.getString("message"));
 
             //注册会员时电话是12位
             JSONObject res2 = md.RegisterMember(null,face_url,"214","啊","136567888991","1998-10-01","",1);
-            checkArgument(res2.getInteger("code") != 1000, "注册会员时电话12位也注册成功了返回的message"+res.getString("message"));
+            Preconditions.checkArgument(res2.getInteger("code") != 1000, "注册会员时电话12位也注册成功了返回的message"+res.getString("message"));
 
             //注册会员时电话是10位
             JSONObject res3 = md.RegisterMember(null,face_url,"215","啊1","1365678889","1998-10-01","",1);
-            checkArgument(res3.getInteger("code") != 1000, "注册会员时电话10位也注册成功了返回的message"+res.getString("message"));
+            Preconditions.checkArgument(res3.getInteger("code") != 1000, "注册会员时电话10位也注册成功了返回的message"+res.getString("message"));
 
             //注册会员时电话有英文中文特殊字符
             JSONObject res4 = md.RegisterMember(null,face_url,"216","啊2","1365678￥啊a89","1998-10-01","",1);
-            checkArgument(res4.getInteger("code") != 1000, "注册会员时电话有英文等也注册成功了返回的message"+res.getString("message"));
+            Preconditions.checkArgument(res4.getInteger("code") != 1000, "注册会员时电话有英文等也注册成功了返回的message"+res.getString("message"));
 
             //注册会员时选择未来日期
             JSONObject res5 = md.RegisterMember(null,face_url,"217","啊3","1365678889","2998-10-01","",1);
-            checkArgument(res5.getInteger("code") != 1000, "注册会员时选择未来日期message"+res.getString("message"));
+            Preconditions.checkArgument(res5.getInteger("code") != 1000, "注册会员时选择未来日期message"+res.getString("message"));
 
             //注册会员时memberid相同
             JSONObject res6 = md.RegisterMember(null,face_url,"12345678","啊4","1365678889","1998-10-01","",1);
-            checkArgument(res6.getInteger("code") != 1000, "注册会员时选择未来日期message"+res.getString("message"));
+            Preconditions.checkArgument(res6.getInteger("code") != 1000, "注册会员时选择未来日期message"+res.getString("message"));
 
             //注册会员时全都为空
             JSONObject res7 = md.RegisterMember(null,"","","","","","",-1);
-            checkArgument(res7.getInteger("code") != 1000, "注册会员时全都为空"+res.getString("message"));
+            Preconditions.checkArgument(res7.getInteger("code") != 1000, "注册会员时全都为空"+res.getString("message"));
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -689,10 +689,59 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    //注册完会员后自动生成人物id
+    @Test(dataProvider = "FACE_URL",dataProviderClass = DataProviderMethod.class)
+    public void MemRwId() throws Exception{
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //注册会员
+            String member = "113342";
+            JSONObject res = md.RegisterMember(null,"",member,"11啊","13656788899","1998-10-01","1",1);
+            Preconditions.checkArgument(res.getInteger("code") == 1000, "注册会员失败，失败原因返回的message"+res.getString("message"));
+
+            JSONArray list = md.MemberList(page,size,member,"","","","").getJSONArray("list");
+            String userId = list.getJSONObject(0).getString("user_id");
+            Preconditions.checkArgument(userId.length()==0, "注册会员后没有生成user_id"+userId);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("注册会员成功后自动生成人物id");
+        }
+    }
+
+
+    //添加会员身份的异常情况
+    @Test()
+    public void identity() throws Exception{
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //身份名称为空
+            JSONObject res = md.AddMember("");
+            Preconditions.checkArgument(res.getInteger("code")==1000, "身份名称为空也添加成功"+res.getInteger("code"));
+
+            //身份名称过长
+            JSONObject res1 = md.AddMember("11111111111111111111111111111111111");
+            Preconditions.checkArgument(res1.getInteger("code")==1000, "身份名称过长也添加成功"+res.getInteger("code"));
+
+            //身份名称重复
+            JSONObject res2 = md.AddMember("VIP");
+            Preconditions.checkArgument(res2.getInteger("code")==1000, "身份名称重复也添加成功"+res.getInteger("code"));
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("添加会员身份特殊情况");
+        }
+    }
+
+
 
 //    //新建预置位、新建预置位不加名称、新建预置位不加时间、新建预置位后列表+1、删除一个预置位列表-1
 //    @Test(dataProvider = "device_id",dataProviderClass = DataProviderMethod.class)
-//    public void createPreset(String device_id) {
+//    public void createPreset(String device_id) throws Exception{
 //        logger.logCaseStart(caseResult.getCaseName());
 //        try {
 //            //获取预置位列表
