@@ -1340,13 +1340,13 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject organizationRoleAdd(String name, String description, JSONArray module_id) throws Exception {
+    public JSONObject organizationRoleAdd(String name, String description, JSONArray module_ids) throws Exception {
         String url = "/patrol/organization/role/add";
         String json =
                 "{" +
                         "\"name\" :\"" + name + "\",\n" +
                         "\"description\" :\"" + description + "\",\n" +
-                        "\"module_id\" :" + module_id + "\n" +
+                        "\"module_ids\" :" + module_ids + "\n" +
 
                         "} ";
 

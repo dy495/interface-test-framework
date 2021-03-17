@@ -1856,8 +1856,6 @@ public class StoreDataCenter extends TestCaseCommon implements TestCaseStd {
         try {
             //从新增顾客占比部分获取付费会员部分得付费会员占比
             String transform_ring =  mds.getTransform_single("PAID",shop_id_01,"transform_ring");
-
-
             //获取客户趋势图中昨日新增的付费会员人数
             JSONArray list = md.single_newCount_pic(shop_id_01,"RECENT_FOURTEEN").getJSONArray("list");
             double paid1 = 0;
@@ -2404,7 +2402,6 @@ public class StoreDataCenter extends TestCaseCommon implements TestCaseStd {
                 yesterdayPv = yesterdayPv != null ? yesterdayPv : 0;
                 count += yesterdayPv;
             }
-
            // Preconditions.checkArgument((count == pv), "实时客流中，昨日到访各个时段的pv之和" + count + ">历史客流中截至日期的的pv=" + pv + "。报错门店的shopId=" + shop_id);
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -2415,5 +2412,7 @@ public class StoreDataCenter extends TestCaseCommon implements TestCaseStd {
             saveData("实时客流中，今日到访各个时段的pv之和");
         }
     }
+
+
 }
 

@@ -1396,13 +1396,13 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject organizationRoleAdd(String name, String description, JSONArray module_id) throws Exception {
+    public JSONObject organizationRoleAdd(String name, String description, JSONArray module_ids) throws Exception {
         String url = "/patrol/organization/role/add";
         String json =
                 "{" +
                         "\"name\" :\"" + name + "\",\n" +
                         "\"description\" :\"" + description + "\",\n" +
-                        "\"module_id\" :" + module_id + "\n" +
+                        "\"module_ids\" :" + module_ids + "\n" +
 
                         "} ";
 
@@ -2653,7 +2653,146 @@ public class StoreScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-//------------------------------------------------------------------------------------------------------------------
+    /**
+     * @description:7.6门店实时数据总览-多店
+     * @author:
+     * @time:
+     */
+    public JSONObject real_shopTotal() throws Exception {
+        String path = "/patrol/real-time/all/shop/total";
+        String json =
+                "{} ";
+
+        String res = httpPostWithCheckCode(path, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    /**
+     * @description:7.7门店小时级别实时客流-多店
+     * @author:
+     * @time:
+     */
+    public JSONObject real_shopPv() throws Exception {
+        String path = "/patrol/real-time/all/shop/pv";
+        String json =
+                "{} ";
+
+        String res = httpPostWithCheckCode(path, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:7.8门店小时级别实时客流-多店
+     * @author:
+     * @time:
+     */
+    public JSONObject real_shopUv() throws Exception {
+        String path  = "/patrol/real-time/all/shop/uv";
+        String json =
+                "{} ";
+
+        String res = httpPostWithCheckCode(path, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:7.9. 门店pc 小时级别实时客流pv & uv-多店
+     * @author:
+     * @time:
+     */
+    public JSONObject real_shop_PUv() throws Exception {
+        String path = "/patrol/real-time/all/shop/pv-uv";
+        String json =
+                "{} ";
+
+        String res = httpPostWithCheckCode(path, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    /**
+     * @description:5.8. 客群漏斗-多店旗舰店
+     * @author:
+     * @time:
+     */
+    public JSONObject history_shop_all() throws Exception {
+        String path = "/patrol/history/shop/all/conversion";
+        String json =
+                "{} ";
+
+        String res = httpPostWithCheckCode(path, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:5.9. 到店时段分布-多店
+     * @author:
+     * @time:
+     */
+    public JSONObject history_shop_hourData() throws Exception {
+        String path = "/history/shop/all/hour-data";
+        String json =
+                "{} ";
+
+        String res = httpPostWithCheckCode(path, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:5.10. 年龄性别分布-多店
+     * @author:
+     * @time:
+     */
+    public JSONObject history_shop_ageData() throws Exception {
+        String path = "/patrol/history/shop/all/age-gender/distribution";
+        String json =
+                "{} ";
+
+        String res = httpPostWithCheckCode(path, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:5.11. 到店趋势数据-多店
+     * @author:
+     * @time:
+     */
+    public JSONObject history_shop_arrivData() throws Exception {
+        String path = "/patrol/history/shop/all/trend-pv-uv";
+        String json =
+                "{} ";
+
+        String res = httpPostWithCheckCode(path, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    /**
+     * @description:5.12. 获取到店趋势数据 天级别-多店
+     * @author:
+     * @time:
+     */
+    public JSONObject history_shop_dayData() throws Exception {
+        String path = "/patrol/history/shop/all/day/trend-pv-uv";
+        String json =
+                "{} ";
+
+        String res = httpPostWithCheckCode(path, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:5.1. 权限下门店列表
+     * @author:
+     * @time:
+     */
+    public JSONObject getAuthI_shopId() throws Exception {
+        String path = "/patrol/shop/auth";
+        String json =
+                "{} ";
+
+        String res = httpPostWithCheckCode(path, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
 
     public JSONObject invokeApi(IScene scene) {
         return invokeApi(scene, true);
@@ -2666,6 +2805,8 @@ public class StoreScenarioUtil extends TestCaseCommon {
     private JSONObject invokeApi(String path, JSONObject requestBody) {
         return invokeApi(path, requestBody, true);
     }
+
+
 }
 
 

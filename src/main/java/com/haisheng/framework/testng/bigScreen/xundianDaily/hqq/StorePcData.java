@@ -758,6 +758,115 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    /**
+     * ====================pc客流概览【实时客流】中今日到访人数==登录账号权限下【各门店下实时客流】的今日到访人数之和======================
+     */
+    @Test
+    public void customer_data1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+             //获取权限下门店的shopId---todo
+            JSONArray shop_list = md.getAuthI_shopId().getJSONArray("shop_list");
+            Integer pvs = 0;
+            Integer uvs = 0;
+            for(int i=0;i<shop_list.size();i++){
+                Long shop_id = shop_list. getJSONObject(i).getLong("shop_id");
+                JSONArray list = md.realTimeShopPvV3(shop_id).getJSONArray("list");
+                Integer pv = list.getJSONObject(0).getInteger("value");
+                Integer uv = list.getJSONObject(1).getInteger("value");
+                if(pv!=null && uv !=null){
+                     pvs +=pv;
+                     uvs +=uv;
+                }
+            }
+            JSONArray list = md.real_shopTotal().getJSONArray("list");
+            int value1 = list.getJSONObject(0).getInteger("value");
+            int value2 = list.getJSONObject(1).getInteger("value");
 
+            Preconditions.checkArgument((pvs == value1), "pc客流概览【实时客流】中今日到访人次=" + value1 + "==登录账号权限下【各门店下实时客流】的今日到访人次之和=" + pvs + "。报错门店的shopId=" + shop_id);
+            Preconditions.checkArgument((uvs == value2), "pc客流概览【实时客流】中今日到访人数=" + value2 + "==登录账号权限下【各门店下实时客流】的今日到访人数之和=" + uvs + "。报错门店的shopId=" + shop_id);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("pc客流概览【实时客流】中今日到访人数==登录账号权限下【各门店下实时客流】的今日到访人数之和");
+        }
+    }
+
+    /**
+     * ====================pc客流概览曲线图【实时客流】中今日到访人数之和==登录账号权限下【各门店下实时客流】曲线图中的今日到访人数之和的相加结果======================
+     */
+    @Test
+    public void customer_data2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取权限下门店的shopId---todo
+            JSONArray shop_list = md.getAuthI_shopId().getJSONArray("shop_list");
+            Integer today_pvs = 0;
+            Integer today_uvs = 0;
+            for(int i=0;i<shop_list.size();i++){
+                Long shop_id = shop_list. getJSONObject(i).getLong("shop_id");
+                JSONArray list = md.realTimeShopPvV3(shop_id).getJSONArray("list");
+                for(int j=0;j<list.size();j++){
+                   Integer today_pv = list.getJSONObject(j).getInteger("today_pv");
+                   Integer today_uv = list.getJSONObject(j).getInteger("today_uv");
+                    today_pvs +=today_pv;
+                    today_uvs +=today_uv;
+                }
+            }
+            JSONArray list = md.real_shop_PUv().getJSONArray("list");
+            int value1 = list.getJSONObject(0).getInteger("value");
+            int value2 = list.getJSONObject(1).getInteger("value");
+
+            Preconditions.checkArgument((today_pvs == value1), "pc客流概览曲线图【实时客流】中今日到访人次之和=" + value1 + "==登录账号权限下【各门店下实时客流】曲线图中的今日到访人次之和的相加结果=" + today_pvs + "。报错门店的shopId=" + shop_id);
+            Preconditions.checkArgument((today_uvs == value2), "pc客流概览曲线图【实时客流】中今日到访人数之和=" + value2 + "==登录账号权限下【各门店下实时客流】曲线图中的今日到访人数之和的相加结果=" + today_uvs + "。报错门店的shopId=" + shop_id);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("pc客流概览【实时客流】中今日到访人数==登录账号权限下【各门店下实时客流】的今日到访人数之和");
+        }
+    }
+
+    /**
+     * ====================pc客流概览曲线图【实时客流】中今日到访人数之和==登录账号权限下【各门店下实时客流】曲线图中的今日到访人数之和的相加结果======================
+     */
+    @Test
+    public void customer_data3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取权限下门店的shopId---todo
+            JSONArray shop_list = md.getAuthI_shopId().getJSONArray("shop_list");
+            Integer today_pvs = 0;
+            Integer today_uvs = 0;
+            for(int i=0;i<shop_list.size();i++){
+                Long shop_id = shop_list. getJSONObject(i).getLong("shop_id");
+                JSONArray list = md.realTimeShopPvV3(shop_id).getJSONArray("list");
+                for(int j=0;j<list.size();j++){
+                    Integer today_pv = list.getJSONObject(j).getInteger("today_pv");
+                    Integer today_uv = list.getJSONObject(j).getInteger("today_uv");
+                    today_pvs +=today_pv;
+                    today_uvs +=today_uv;
+                }
+            }
+            JSONArray list = md.real_shop_PUv().getJSONArray("list");
+            int value1 = list.getJSONObject(0).getInteger("value");
+            int value2 = list.getJSONObject(1).getInteger("value");
+
+            Preconditions.checkArgument((today_pvs == value1), "pc客流概览曲线图【实时客流】中今日到访人次之和=" + value1 + "==登录账号权限下【各门店下实时客流】曲线图中的今日到访人次之和的相加结果=" + today_pvs + "。报错门店的shopId=" + shop_id);
+            Preconditions.checkArgument((today_uvs == value2), "pc客流概览曲线图【实时客流】中今日到访人数之和=" + value2 + "==登录账号权限下【各门店下实时客流】曲线图中的今日到访人数之和的相加结果=" + today_uvs + "。报错门店的shopId=" + shop_id);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("pc客流概览【实时客流】中今日到访人数==登录账号权限下【各门店下实时客流】的今日到访人数之和");
+        }
+    }
 }
 
