@@ -699,7 +699,7 @@ public class SupporterUtil {
      */
     public String createPackage(JSONArray voucherList, UseRangeEnum anEnum) {
         String packageName = createPackageName(anEnum);
-        IScene scene = CreatePackageScene.builder().packageName(packageName).validity("30").packageDescription(getDesc())
+        IScene scene = CreatePackageScene.builder().packageName(packageName).packageDescription(getDesc())
                 .subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType())).voucherList(voucherList)
                 .packagePrice(49.99).status(true).customerUseValidity(1).shopIds(getShopIdList(3)).build();
         visitor.invokeApi(scene);

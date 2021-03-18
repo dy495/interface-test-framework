@@ -5,20 +5,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.arronlong.httpclientutil.HttpClientUtil;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.MendianInfo;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.StoreScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.XundianScenarioUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
-import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.ImageUtil;
-import org.jooq.util.derby.sys.Sys;
 import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
 
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class XdPackageData extends TestCaseCommon {
