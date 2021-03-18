@@ -620,7 +620,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
             String phone = "13666666666";
             String Birthday = "1996-01-01";
             String uesrId = "000";
-            JSONObject res2 = md.MemberUpdate(Base64,MemberId,MemberName,phone,Birthday,uesrId,1);
+            JSONObject res2 = md.MemberUpdate(1,Base64,MemberId,MemberName,phone,Birthday,uesrId,1);
             Preconditions.checkArgument(res2.getInteger("code") == 1000, "编辑会员失败时状态码"+res2.getInteger("code"));
 
 

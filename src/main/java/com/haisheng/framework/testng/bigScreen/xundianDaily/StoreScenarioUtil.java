@@ -638,7 +638,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject RegisterMember(Integer id,String pic_path,String member_id,String member_name,String phone,String birthday,String user_id,int identityId) throws Exception {
+    public JSONObject RegisterMember(Integer id,String pic_path,String member_id,String member_name,String phone,String birthday,String user_id,int identity) throws Exception {
         String url = "/patrol/member/register";
         JSONObject json = new JSONObject();
         json.put("id",id);
@@ -648,7 +648,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
         json.put("phone", phone);
         json.put("birthday",birthday);
         json.put("user_id",user_id);
-        json.put("identity", identityId);
+        json.put("identity", identity);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -671,16 +671,17 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject MemberUpdate(String pic_path,String member_id,String member_name,String phone,String birthday,String user_id,int identityId) throws Exception {
-        String url = "/patrol/member/detail";
+    public JSONObject MemberUpdate(Integer id,String pic_path,String member_id,String member_name,String phone,String birthday,String user_id,int identity) throws Exception {
+        String url = "/patrol/member/update";
         JSONObject json = new JSONObject();
+        json.put("id",id);
         json.put("pic_path",pic_path);
         json.put("member_id",member_id);
         json.put("member_name",member_name);
         json.put("phone",phone);
         json.put("birthday",birthday);
         json.put("user_id",user_id);
-        json.put("identityId",identityId);
+        json.put("identity",identity);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -694,6 +695,19 @@ public class StoreScenarioUtil extends TestCaseCommon {
         String url = "/patrol/member/delete";
         JSONObject json = new JSONObject();
         json.put("id",id);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:上传图片并校验人物信息
+     * @author:
+     * @time:
+     */
+    public JSONObject checkPic(String picData) throws Exception {
+        String url = "/patrol/member/upload_check";
+        JSONObject json = new JSONObject();
+        json.put("picData",picData);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -715,8 +729,6 @@ public class StoreScenarioUtil extends TestCaseCommon {
     }
 
 
-
-    /**--------------------------------- 会员身份-------------------------**/
     /**
      * @description:会员身份列表
      * @author:
