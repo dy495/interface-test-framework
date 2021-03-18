@@ -6,7 +6,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * ${path}的接口
+ * ${description}的接口
  *
  * @author wangmin
  * @date ${date}

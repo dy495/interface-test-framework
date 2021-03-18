@@ -8,7 +8,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * ${path}的bean
+ * ${description}的bean
  *
  * @author wangmin
  * @date ${date}

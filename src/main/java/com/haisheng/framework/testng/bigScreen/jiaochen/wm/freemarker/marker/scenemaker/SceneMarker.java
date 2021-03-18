@@ -23,6 +23,7 @@ import java.util.Map;
 public class SceneMarker extends AbstractMarker {
     private String outputPath;
     private String className;
+    private final String description;
     private final String suffix;
     private final String parentPath;
     private final String date;
@@ -37,6 +38,7 @@ public class SceneMarker extends AbstractMarker {
         this.parentPath = builder.parentPath;
         this.urlPath = builder.sceneAttribute.getUrl();
         this.apiAttributeList = builder.sceneAttribute.getApiAttributeList();
+        this.description = builder.sceneAttribute.getDescription();
     }
 
     @Override
@@ -103,6 +105,7 @@ public class SceneMarker extends AbstractMarker {
         dataMap.put("packageName", packageName);
         dataMap.put("className", className);
         dataMap.put("path", urlExcludeIpPort(urlPath));
+        dataMap.put("description", description);
     }
 
     public static class Builder extends AbstractMarker.AbstractBuilder<Builder> {

@@ -8,7 +8,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.parse.IPar
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.parse.SceneParser;
 import org.testng.annotations.Test;
 
-import java.util.List;
+import java.util.Arrays;
 
 /**
  * @author wangmin
@@ -19,9 +19,11 @@ public class TestFreeMarker {
     @Test
     public void createScene() {
         String htmlPath = "http://192.168.50.3/api-doc/business-jiaochen/pc/index.html";
-        IParser parse = new SceneParser.Builder().build();
-        List<SceneAttribute> sceneAttributeList = new HtmlFactory().getObjectAttribute(htmlPath, parse);
-        sceneAttributeList.forEach(e -> new SceneMarker.Builder()
+        IParser<SceneAttribute> sceneParser = new SceneParser.Builder().htmlUrl(htmlPath).build();
+        String suffix = sceneParser.findFirst().getDescription();
+        System.err.println(suffix);
+        SceneAttribute[] sceneAttributeList = new HtmlFactory().getAttribute(sceneParser);
+        Arrays.stream(sceneAttributeList).forEach(e -> new SceneMarker.Builder()
                 .templatePath("src\\main\\resources\\template")
                 .templateName("sceneTemplate.ftl")
                 .parentPath("src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/s")
@@ -33,9 +35,9 @@ public class TestFreeMarker {
     @Test
     public void createBean() {
         String htmlPath = "http://192.168.50.3/api-doc/business-jiaochen/pc/index.html";
-        IParser parse = new BeanParser.Builder().build();
-        List<SceneAttribute> sceneAttributeList = new HtmlFactory().getObjectAttribute(htmlPath, parse);
-        sceneAttributeList.forEach(e -> new SceneMarker.Builder()
+        IParser<SceneAttribute> beanParser = new BeanParser.Builder().htmlUrl(htmlPath).build();
+        SceneAttribute[] sceneAttributeList = new HtmlFactory().getAttribute(beanParser);
+        Arrays.stream(sceneAttributeList).forEach(e -> new SceneMarker.Builder()
                 .templatePath("src\\main\\resources\\template")
                 .templateName("beanTemplate.ftl")
                 .parentPath("src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/b")
