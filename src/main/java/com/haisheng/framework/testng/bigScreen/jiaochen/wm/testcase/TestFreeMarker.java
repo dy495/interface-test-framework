@@ -1,6 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase;
 
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.factory.HtmlFactory;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.scenemaker.ApiAttribute;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.scenemaker.SceneAttribute;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.scenemaker.SceneMarker;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.parse.BeanParser;
@@ -9,6 +10,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.parse.Scen
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author wangmin
@@ -20,8 +22,8 @@ public class TestFreeMarker {
     public void createScene() {
         String htmlPath = "http://192.168.50.3/api-doc/business-jiaochen/pc/index.html";
         IParser<SceneAttribute> sceneParser = new SceneParser.Builder().htmlUrl(htmlPath).build();
-        String suffix = sceneParser.findFirst().getDescription();
-        System.err.println(suffix);
+        List<ApiAttribute> apiAttributeList = sceneParser.findFirst().getApiAttributeList();
+        System.err.println(apiAttributeList);
         SceneAttribute[] sceneAttributeList = new HtmlFactory().getAttribute(sceneParser);
         Arrays.stream(sceneAttributeList).forEach(e -> new SceneMarker.Builder()
                 .templatePath("src\\main\\resources\\template")

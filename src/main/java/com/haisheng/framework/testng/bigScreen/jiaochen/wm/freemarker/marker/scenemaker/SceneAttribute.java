@@ -15,7 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 public class SceneAttribute implements Serializable {
-    private String description;
+    private String pathDesc;
     private String url;
     private String suffix;
     private List<ApiAttribute> apiAttributeList;
@@ -23,7 +23,7 @@ public class SceneAttribute implements Serializable {
     @Override
     public String toString() {
         return "SceneAttribute:{"
-                + "    link :" + description
+                + "    link :" + pathDesc
                 + "    url :" + url
                 + "    suffix ：" + suffix
                 + "    List<ApiAttribute> :" + apiAttributeList
