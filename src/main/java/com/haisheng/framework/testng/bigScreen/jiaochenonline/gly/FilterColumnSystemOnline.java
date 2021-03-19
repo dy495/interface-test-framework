@@ -161,11 +161,12 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @date :2020/11/28
      **/
     @Test(enabled = true)
-    public void seltrueectAppointmentRecodeAllFilter() {
+    public void selectAppointmentRecodeAllFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Object[][] ss = Constant.receptionManageFilter_pram();
             SelectReception sr = new SelectReception();
+            JSONArray object = null;
             JSONArray res = jc.receptionManage("", "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
@@ -254,20 +255,6 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         }
     }
 
-//    @Test
-//    public void Jc_erCode() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            JSONObject data = jc.apperCOde();
-//            String jsonpath = "$.er_code_url1";
-//            jpu.spiltString(data.toJSONString(), jsonpath);
-//
-//        } catch (AssertionError | Exception e) {
-//            appendFailReason(e.toString());
-//        } finally {
-//            saveData("轿辰-app个人中心，小程序码返回结果不为空");
-//        }
-//    }
 
     /**
      * @description :销售客户查询-筛选栏单项查询
@@ -337,7 +324,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Object[][] flag = Constant.preSleCustomerManage_pram();
-            com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.PreSleCustomerVariable variable = new com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.PreSleCustomerVariable();
+            PreSleCustomerVariable variable = new PreSleCustomerVariable();
             JSONArray res = jc.preSleCustomerManage(shopId, "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
@@ -372,7 +359,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Object[][] flag = Constant.preSleCustomerManage_pram();
-            com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.PreSleCustomerVariable variable = new com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.PreSleCustomerVariable();
+            PreSleCustomerVariable variable = new PreSleCustomerVariable();
             JSONArray res = jc.preSleCustomerManage(shopId, "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
@@ -426,19 +413,49 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
             JSONObject respond = jc.afterSleCustomerManage("", "1", "10", "", "");
             if (respond.getJSONArray("list").size() > 0) {
                 String result = respond.getJSONArray("list").getJSONObject(0).getString(output);
-                if (result != null) {
-                    JSONObject respond1 = jc.afterSleCustomerManage("", "1", "10", pram, result);
-                    int pages = respond1.getInteger("pages")>10?10:respond1.getInteger("pages");
-                    for (int page = 1; page <= pages; page++) {
-                        JSONArray list = jc.afterSleCustomerManage("", String.valueOf(page), "10", pram, result).getJSONArray("list");
-                        for (int i = 0; i < list.size(); i++) {
-                            String Flag = list.getJSONObject(i).getString(output);
-                            Preconditions.checkArgument(Flag.contains(result), "售后客户管理按" + result + "查询，结果错误" + Flag);
+                if(pram.equals("registration_status")){
+                    String result1 = respond.getJSONArray("list").getJSONObject(0).getString(output).equals("是")?"true":"false";
+                    if (result != null) {
+                        JSONObject respond1 = jc.afterSleCustomerManage("", "1", "10", pram, result1);
+                        int pages = respond1.getInteger("pages")>10?10:respond1.getInteger("pages");
+                        for (int page = 1; page <= pages; page++) {
+                            JSONArray list = jc.afterSleCustomerManage("", String.valueOf(page), "10", pram, result1).getJSONArray("list");
+                            for (int i = 0; i < list.size(); i++) {
+                                String Flag = list.getJSONObject(i).getString(output);
+                                System.out.println("售后客户管理按" + result + "查询，结果错误" + Flag);
+                                Preconditions.checkArgument(Flag.contains(result), "售后客户管理按" + result + "查询，结果错误" + Flag);
+                            }
+                        }
+                    }
+                }else if(pram.equals("brand_id")){
+                    String result1 = businessUtil.brandPageExchange(result);
+                    if (result != null) {
+                        JSONObject respond1 = jc.afterSleCustomerManage("", "1", "10", pram, result1);
+                        int pages = respond1.getInteger("pages")>10?10:respond1.getInteger("pages");
+                        for (int page = 1; page <= pages; page++) {
+                            JSONArray list = jc.afterSleCustomerManage("", String.valueOf(page), "10", pram, result1).getJSONArray("list");
+                            for (int i = 0; i < list.size(); i++) {
+                                String Flag = list.getJSONObject(i).getString(output);
+                                System.out.println("售后客户管理按" + result + "查询，结果错误" + Flag);
+                                Preconditions.checkArgument(Flag.contains(result), "售后客户管理按" + result + "查询，结果错误" + Flag);
+                            }
+                        }
+                    }
+                }else{
+                    if (result != null) {
+                        JSONObject respond1 = jc.afterSleCustomerManage("", "1", "10", pram, result);
+                        int pages = respond1.getInteger("pages")>10?10:respond1.getInteger("pages");
+                        for (int page = 1; page <= pages; page++) {
+                            JSONArray list = jc.afterSleCustomerManage("", String.valueOf(page), "10", pram, result).getJSONArray("list");
+                            for (int i = 0; i < list.size(); i++) {
+                                String Flag = list.getJSONObject(i).getString(output);
+                                System.out.println("售后客户管理按" + result + "查询，结果错误" + Flag);
+                                Preconditions.checkArgument(Flag.contains(result), "售后客户管理按" + result + "查询，结果错误" + Flag);
+                            }
                         }
                     }
                 }
-            } else {
-                Preconditions.checkArgument(respond.getJSONArray("list") == null, "接待列表系统错误,请联系开发人员");
+
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -448,7 +465,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     }
 
     /**
-     * @description 售后客户查询-时间的筛选      开单时间存在问题，已提bug（7982）
+     * @description 售后客户查询-时间的筛选
      * @date :2020/12/16
      **/
     @Test(enabled = true)
@@ -484,7 +501,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Object[][] flag = Constant.afterSleCustomerManage_pram();
-            com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.AfterSleCustomerVariable variable = new com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.AfterSleCustomerVariable();
+            AfterSleCustomerVariable variable = new AfterSleCustomerVariable();
             JSONArray res = jc.afterSleCustomerManage("", "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
@@ -519,7 +536,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Object[][] flag = Constant.afterSleCustomerManage_pram();
-            com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.AfterSleCustomerVariable variable = new com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.AfterSleCustomerVariable();
+            AfterSleCustomerVariable variable = new AfterSleCustomerVariable();
             JSONArray res = jc.afterSleCustomerManage("", "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
@@ -647,7 +664,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Object[][] flag = Constant.weChatSleCustomerManage_pram();
-            com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.weChatSleCustomerVariable variable = new com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.weChatSleCustomerVariable();
+            weChatSleCustomerVariable variable = new weChatSleCustomerVariable();
             JSONArray res = jc.weChatSleCustomerManage(shopId, "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
@@ -683,7 +700,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Object[][] flag = Constant.weChatSleCustomerManage_pram();
-            com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.weChatSleCustomerVariable variable = new com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.weChatSleCustomerVariable();
+            weChatSleCustomerVariable variable = new weChatSleCustomerVariable();
             JSONArray res = jc.weChatSleCustomerManage(shopId, "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
@@ -870,7 +887,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Object[][] flag = Constant.appointmentRecordFilter_pram();
-            com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.appointmentRecordVariable variable = new com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.appointmentRecordVariable();
+            appointmentRecordVariable variable = new appointmentRecordVariable();
             JSONArray res = jc.appointmentRecordManage("", "1", "10", "", "").getJSONArray("list");
             String confirmStatus = res.getJSONObject(0).getString("appointment_status_name");
             String status = messageFormCustomerTurnMethod("MAINTAIN_CONFIRM_STATUS", confirmStatus);
@@ -918,21 +935,21 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     }
 
     /**
-     * @description :保养配置-筛选栏单项查询   ---配置中关村店,生产商筛选有问题，已提bug（7877）
+     * @description :保养配置-筛选栏单项查询   ---配置中关村店
      * @date :2020/11/24
      **/
     @Test(dataProvider = "SELECT_maintainFilter", dataProviderClass = Constant.class)
     public void maintainOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            commonConfig.shopId=shopOne;
-            JSONObject respond = jc.maintainFilterManage(shopOne, "1", "10", "", "");
+            commonConfig.shopId="49195";
+            JSONObject respond = jc.maintainFilterManage("49195", "1", "10", "", "");
             if (respond.getJSONArray("list").size() > 0) {
                 String result = respond.getJSONArray("list").getJSONObject(0).getString(output);
-                JSONObject respond1 = jc.maintainFilterManage(shopOne, "1", "10", pram, result);
+                JSONObject respond1 = jc.maintainFilterManage("49195", "1", "10", pram, result);
                 int pages = respond1.getInteger("pages");
                 for (int page = 1; page <= pages; page++) {
-                    JSONArray list = jc.maintainFilterManage(shopOne, String.valueOf(page),"10", pram, result).getJSONArray("list");
+                    JSONArray list = jc.maintainFilterManage("49195", String.valueOf(page),"10", pram, result).getJSONArray("list");
                     for (int i = 0; i < list.size(); i++) {
                         String Flag = list.getJSONObject(i).getString(output);
                         Preconditions.checkArgument(Flag.contains(result), "保养配置按" + result + "查询，结果错误" + Flag);
@@ -957,10 +974,10 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void maintainALLFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            commonConfig.shopId=shopOne;
+            commonConfig.shopId="49195";
             Object[][] flag = Constant.maintainFilter_pram();
-            com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.maintainVariable variable = new com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.maintainVariable();
-            JSONArray res = jc.maintainFilterManage(shopOne, "1", "10", "", "").getJSONArray("list");
+            maintainVariable variable = new maintainVariable();
+            JSONArray res = jc.maintainFilterManage("49195", "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
                 variable.brand_name = data.getString(flag[0][1].toString());
@@ -969,7 +986,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                 variable.year = data.getString(flag[3][1].toString());
                 variable.page = "1";
                 variable.size = "10";
-                variable.shop_id=shopOne;
+                variable.shop_id="49195";
                 //全部筛选之后的结果
                 JSONObject result = jc.maintainFilterManage(variable).getJSONArray("list").getJSONObject(0);
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[0][1])).contains(variable.brand_name), "参数全部输入的查询的" + variable.brand_name + "与列表信息的第一行的" + result.getString(flag[0][1].toString()) + "不一致");
@@ -996,10 +1013,10 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void maintainSomeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            commonConfig.shopId=shopOne;
+            commonConfig.shopId="49195";
             Object[][] flag = Constant.maintainFilter_pram();
-            com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.maintainVariable variable = new com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.maintainVariable();
-            JSONArray res = jc.maintainFilterManage(shopOne, "1", "10", "", "").getJSONArray("list");
+            maintainVariable variable = new maintainVariable();
+            JSONArray res = jc.maintainFilterManage("49195", "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
                 variable.brand_name = data.getString(flag[0][1].toString());
@@ -1007,7 +1024,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                 variable.car_model = data.getString(flag[2][1].toString());
                 variable.page = "1";
                 variable.size = "10";
-                variable.shop_id = shopOne;
+                variable.shop_id = "49195";
 
                 //全部筛选之后的结果
                 JSONArray result = jc.maintainFilterManage(variable).getJSONArray("list");
@@ -1037,8 +1054,8 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void maintainEmptyFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            commonConfig.shopId=shopOne;
-            jc.maintainFilterManage("", "1", "10", "", "").getJSONArray("list");
+            commonConfig.shopId="49195";
+            jc.maintainFilterManage("49195", "1", "10", "", "").getJSONArray("list");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -1087,7 +1104,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Object[][] flag = Constant.voucherFormFilter_pram();
-            com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.voucherFormVariable variable = new com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.voucherFormVariable();
+            voucherFormVariable variable = new voucherFormVariable();
             JSONArray res = jc.voucherFormFilterManage("", "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
@@ -1126,7 +1143,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Object[][] flag = Constant.voucherFormFilter_pram();
-            com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.voucherFormVariable variable = new com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.voucherFormVariable();
+            voucherFormVariable variable = new voucherFormVariable();
             JSONArray res = jc.voucherFormFilterManage("", "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
@@ -1174,26 +1191,39 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     }
 
     /**
-     * @description :核销记录-筛选栏单项查询
-     * @date :2020/11/24
+     * @description :V3.0核销记录-筛选栏单项查询
+     * @date :2020/3/17
      **/
-    @Test(enabled = false,dataProvider = "SELECT_verificationRecordFilter", dataProviderClass = Constant.class)
+    @Test(dataProvider = "SELECT_verificationRecordFilter", dataProviderClass = Constant.class)
     public void verificationRecordOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject response=jc.voucherFormFilterManage(shopId, "1", "10", "", "");
-            String id=response.getJSONArray("list").getJSONObject(0).getString("voucher_id");
-            System.err.println(id);
-            JSONObject respond = jc.verificationReordFilterManage(shopId,id, "1", "10", "", "");
+            JSONObject respond = jc.verificationReordFilterManage("", "1", "10", "", "");
             if (respond.getJSONArray("list").size() > 0) {
-                String result = respond.getJSONArray("list").getJSONObject(0).getString(output);
-                JSONObject respond1 = jc.verificationReordFilterManage(shopId,id, "1", "10", pram, result);
-                int pages = respond1.getInteger("pages");
-                for (int page = 1; page <= pages; page++) {
-                    JSONArray list = jc.verificationReordFilterManage("", id,String.valueOf(page),"10", pram, result).getJSONArray("list");
-                    for (int i = 0; i < list.size(); i++) {
-                        String Flag = list.getJSONObject(i).getString(output);
-                        Preconditions.checkArgument(Flag.contains(result), "核销记录管理按" + result + "查询，结果错误" + Flag);
+                if(pram.equals("verify_channel")){
+                    String result = respond.getJSONArray("list").getJSONObject(0).getString(output);
+                    String result1 = respond.getJSONArray("list").getJSONObject(0).getString(output).equals("主动核销")?"0":"1";
+                    JSONObject respond1 = jc.verificationReordFilterManage(shopId, "1", "10", pram, result1);
+                    int pages = respond1.getInteger("pages")>10?10:respond1.getInteger("pages");
+                    for (int page = 1; page <= pages; page++) {
+                        JSONArray list = jc.verificationReordFilterManage("",String.valueOf(page),"10", pram, result1).getJSONArray("list");
+                        for (int i = 0; i < list.size(); i++) {
+                            String Flag = list.getJSONObject(i).getString(output);
+                            System.out.println("核销记录管理按" + result + "查询，结果错误" + Flag);
+                            Preconditions.checkArgument(Flag.contains(result), "核销记录管理按" + result + "查询，结果错误" + Flag);
+                        }
+                    }
+                }else{
+                    String result = respond.getJSONArray("list").getJSONObject(0).getString(output);
+                    JSONObject respond1 = jc.verificationReordFilterManage(shopId, "1", "10", pram, result);
+                    int pages = respond1.getInteger("pages")>10?10:respond1.getInteger("pages");
+                    for (int page = 1; page <= pages; page++) {
+                        JSONArray list = jc.verificationReordFilterManage("",String.valueOf(page),"10", pram, result).getJSONArray("list");
+                        for (int i = 0; i < list.size(); i++) {
+                            String Flag = list.getJSONObject(i).getString(output);
+                            System.out.println("核销记录管理按" + result + "查询，结果错误" + Flag);
+                            Preconditions.checkArgument(Flag.contains(result), "核销记录管理按" + result + "查询，结果错误" + Flag);
+                        }
                     }
                 }
             }
@@ -1245,7 +1275,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
             JSONObject response=jc.voucherFormFilterManage(shopId, "1", "10", "", "");
             String id=response.getJSONArray("list").getJSONObject(0).getString("id");
             Object[][] flag = Constant.verificationRecordFilter_pram();
-            com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.verificationRecordVariable variable = new com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.verificationRecordVariable();
+            verificationRecordVariable variable = new verificationRecordVariable();
             JSONArray res = jc.verificationReordFilterManage(shopId,id, "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
@@ -1278,7 +1308,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
             JSONObject response=jc.voucherFormFilterManage(shopId, "1", "10", "", "");
             String id=response.getJSONArray("list").getJSONObject(0).getString("id");
             Object[][] flag = Constant.verificationRecordFilter_pram();
-            com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.verificationRecordVariable variable = new com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.verificationRecordVariable();
+            verificationRecordVariable variable = new verificationRecordVariable();
             JSONArray res = jc.verificationReordFilterManage(shopId, id,"1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
@@ -1357,7 +1387,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Object[][] flag = Constant.verificationPeopleFilter_pram();
-            com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.verificationPeopleVariable variable = new com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.verificationPeopleVariable();
+            verificationPeopleVariable variable = new verificationPeopleVariable();
             JSONArray res = jc.verificationPeopleFilterManage(shopId, "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
@@ -1391,7 +1421,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Object[][] flag = Constant.verificationPeopleFilter_pram();
-            com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.verificationPeopleVariable variable = new com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.verificationPeopleVariable();
+            verificationPeopleVariable variable = new verificationPeopleVariable();
             JSONArray res = jc.verificationPeopleFilterManage(shopId, "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
@@ -1529,7 +1559,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Object[][] flag = Constant.packageFormFilter_pram();
-            com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.packageFormVariable variable = new com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.packageFormVariable();
+            packageFormVariable variable = new packageFormVariable();
             JSONArray res = jc.packageFormFilterManage("", "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
@@ -1563,7 +1593,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Object[][] flag = Constant.packageFormFilter_pram();
-            com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.packageFormVariable variable = new com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.packageFormVariable();
+            packageFormVariable variable = new packageFormVariable();
             JSONArray res = jc.packageFormFilterManage("", "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
@@ -1683,7 +1713,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Object[][] flag = Constant.buyPackageRecordFilter_pram();
-            com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.buyPackageVariable variable = new com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.buyPackageVariable();
+            buyPackageVariable variable = new buyPackageVariable();
             JSONArray res = jc.buyPackageRecordFilterManage("", "1", "10", "", "").getJSONArray("list");
             String payTypeName=res.getJSONObject(0).getString("pay_type_name");
             int sendType=payTypeName.equals("售出")?1:0;
@@ -1718,7 +1748,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Object[][] flag = Constant.buyPackageRecordFilter_pram();
-            com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.buyPackageVariable variable = new com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.buyPackageVariable();
+            buyPackageVariable variable = new buyPackageVariable();
             JSONArray res = jc.buyPackageRecordFilterManage(shopId, "1", "10", "", "").getJSONArray("list");
             String payTypeName=res.getJSONObject(0).getString("pay_type_name");
             int sendType=payTypeName.equals("售出")?1:0;
@@ -1846,7 +1876,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Object[][] flag = Constant.messageFormFilter_pram();
-            com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.messageFormVariable variable = new com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.messageFormVariable();
+            messageFormVariable variable = new messageFormVariable();
             JSONArray res = jc.messageFormFilterManage("", "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
@@ -1880,7 +1910,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Object[][] flag = Constant.messageFormFilter_pram();
-            com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.messageFormVariable variable = new com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.messageFormVariable();
+            messageFormVariable variable = new messageFormVariable();
             JSONArray res = jc.messageFormFilterManage("", "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
@@ -1988,7 +2018,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Object[][] flag = Constant.articleFilter_pram();
-            com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.articleVariable variable = new com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.articleVariable();
+            articleVariable variable = new articleVariable();
             JSONArray res = jc.articleFilterManage(shopId, "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
@@ -2041,7 +2071,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
 
 
     /**
-     * @description :优惠券审批-筛选栏单项查询
+     * @description :优惠券审批-筛选栏单项查询      申请门店查询，已提bug（7882）
      * @date :2020/11/24
      **/
     @Test(dataProvider = "SELECT_applyListFilter", dataProviderClass = Constant.class)
@@ -2094,7 +2124,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("卡券申请单项查询，结果校验");
+            saveData("优惠券审批单项查询，结果校验");
         }
     }
 
@@ -2132,7 +2162,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Object[][] flag = Constant.applyListFilter_pram();
-            com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.applyListVariable variable = new com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.applyListVariable();
+            applyListVariable variable = new applyListVariable();
             JSONArray res = jc.applyListFilterManage(shopId, "1", "10", "", "").getJSONArray("list");
             String statusNameRespon = res.getJSONObject(0).getString("status_name");
             String statusName = messageFormCustomerTurnMethod("VOUCHER_AUDIT_STATUS_LIST", statusNameRespon);
@@ -2168,7 +2198,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Object[][] flag = Constant.applyListFilter_pram();
-            com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.applyListVariable variable = new applyListVariable();
+            applyListVariable variable = new applyListVariable();
             JSONArray res = jc.applyListFilterManage(shopId, "1", "10", "", "").getJSONArray("list");
             String statusNameRespon = res.getJSONObject(0).getString("status_name");
             String statusName = messageFormCustomerTurnMethod("VOUCHER_AUDIT_STATUS_LIST", statusNameRespon);
@@ -2376,7 +2406,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try {
 //            String id = jc.brandListFilterManage(shopId, "1", "10", "", "").getJSONArray("list").getJSONObject(0).getString("id");
-            String id="65";//自动化车系
+            String id="61";//自动化车系
             JSONObject respond = jc.carStyleListFilterManage(shopId, "1", "10", id, "", "");
             if (respond.getJSONArray("list").size() > 0) {
                 String result = respond.getJSONArray("list").getJSONObject(0).getString(pram);
@@ -2424,7 +2454,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void carModelListOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String brandId = "65";
+            String brandId = "61";
             String styleId = jc.carStyleListFilterManage(shopId, "1", "10", "", brandId).getJSONArray("list").getJSONObject(0).getString("id");
             JSONObject respond = jc.carModelListFilterManage1(shopId, "1", "10", "", "", brandId, styleId);
             if (respond.getJSONArray("list").size() > 0) {
@@ -2439,6 +2469,8 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                         Preconditions.checkArgument(Flag.contains(result), "车型列表按" + result + "查询，结果错误" + Flag);
                     }
                 }
+            } else {
+                Preconditions.checkArgument(respond.getJSONArray("list") == null, "接待列表系统错误,请联系开发人员");
             }
 
         } catch (AssertionError | Exception e) {
@@ -2452,12 +2484,12 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :车型列表-筛选栏填写全部参数查询
      * @date :2020/11/27
      **/
-    @Test(enabled = true)
+    @Test()
     public void carModelListAllFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Object[][] flag = Constant.carModelListFilter_pram();
-            String brand_id = "65";//自动化车型
+            String brand_id = "61";//自动化车型
             String style_id = jc.carStyleListFilterManage(shopId, "1", "10", "", brand_id).getJSONArray("list").getJSONObject(0).getString("id");
             JSONObject res = jc.carModelListFilterManage1(shopId, "1", "10", "", "", brand_id, style_id);
             JSONArray list=res.getJSONArray("list");
@@ -2469,6 +2501,8 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                 JSONObject result = jc.carModelListFilterManage1(shopId, "1", "10", name, year, brand_id, style_id).getJSONArray("list").getJSONObject(0);
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[0][1])).contains(name), "参数全部输入的查询的" + name + "与列表信息的第一行的" + result.getString(flag[0][1].toString()) + "不一致");
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[1][1])).contains(year), "参数全部输入的查询的" + year + "与列表信息的第一行的" + result.getString(flag[1][1].toString()) + "不一致");
+            } else {
+                Preconditions.checkArgument(list== null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -2486,7 +2520,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Object[][] flag = Constant.carModelListFilter_pram();
-            String brand_id = "65";
+            String brand_id = "61";
             String style_id = jc.carStyleListFilterManage(shopId, "1", "10", "", brand_id).getJSONArray("list").getJSONObject(0).getString("id");
             JSONObject res = jc.carModelListFilterManage1(shopId, "1", "10", "", "", brand_id, style_id);
             JSONArray list=res.getJSONArray("list");
@@ -2496,6 +2530,8 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                 //全部筛选之后的结果
                 JSONObject result = jc.carModelListFilterManage1(shopId, "1", "10", name, "", brand_id, style_id).getJSONArray("list").getJSONObject(0);
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[0][1])).contains(name), "参数全部输入的查询的" + name + "与列表信息的第一行的" + result.getString(flag[0][1].toString()) + "不一致");
+            } else {
+                Preconditions.checkArgument(list == null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -3075,7 +3111,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void intelligentRemindList(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            commonConfig.shopId=shopOne;//指定中关村门店
+            commonConfig.shopId="49195";//指定中关村门店
             JSONObject response=jc.remindPage("1","10","","","");
             String item=response.getJSONArray("list").getJSONObject(0).getString("item");
             JSONObject response1=jc.remindPage("1","10","","item",item);
@@ -3397,41 +3433,24 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         }
     }
 
-    /**
-     * @description :V2.0-调整次数记录-筛选栏不填写查询
-     * @date :2021-2-1
-     **/
-    @Test()
-    public void AdjustNumberRecordEmptyFilter(){
-        logger.logCaseStart(caseResult.getCaseName());
-        try{
-            JSONArray res = jc.adjustNumberRecord("1","10","","").getJSONArray("list");
-        }catch(AssertionError|Exception e){
-            appendFailReason(e.toString());
-        }finally{
-            saveData("V2.0-调整次数记录-筛选栏不填写查询");
-        }
-    }
 
     /**
-     * @deprecated V2.0-优惠券领取记录--筛选栏单项搜索
-     * @date :2021-2-2
+     * @deprecated V3.0-优惠券领取记录--筛选栏单项搜索
+     * @date :2021-3-17
      */
-    @Test(enabled = false,dataProvider = "SELECT_voucherManageSendRecordFilter", dataProviderClass = Constant.class)
+    @Test(dataProvider = "SELECT_voucherManageSendRecordFilter", dataProviderClass = Constant.class)
     public void voucherManageSendRecordOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject jsonObject=jc.oucherFormVoucherPage("","1","10");
-            String id = jsonObject.getJSONArray("list").getJSONObject(0).getString("id");
-            JSONObject response = jc.voucherManageSendRecord("1", "10",id, "", "");
+            JSONObject response = jc.voucherManageSendRecord("1", "10","", "");
             if (response.getJSONArray("list").size() > 0) {
-                if(pram.equals("customer_label")){
-                    String result1 = "COMMON";
-                    String result="普通会员";
-                    JSONObject response1 = jc.voucherManageSendRecord( "1", "10",id, pram, result1);
+                if(pram.equals("send_channel")){
+                    String result = response.getJSONArray("list").getJSONObject(0).getString(output);
+                    String result1 = businessUtil.enumMapSendChannelList(result);
+                    JSONObject response1 = jc.voucherManageSendRecord( "1", "10",pram, result1);
                     int pages = response1.getInteger("pages")>10?10:response1.getInteger("pages");
                     for (int page = 1; page <= pages; page++) {
-                        JSONArray list = jc.voucherManageSendRecord( String.valueOf(page),"10",id, pram, result1).getJSONArray("list");
+                        JSONArray list = jc.voucherManageSendRecord( String.valueOf(page),"10", pram, result1).getJSONArray("list");
                         for (int i = 0; i < list.size(); i++) {
                             String Flag = list.getJSONObject(i).getString(output);
                             System.out.println("优惠券领取记录按" + result + "查询，结果错误" + Flag);
@@ -3440,10 +3459,10 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                     }
                 }else{
                     String result = response.getJSONArray("list").getJSONObject(0).getString(output);
-                    JSONObject response1 = jc.voucherManageSendRecord( "1", "10",id, pram, result);
+                    JSONObject response1 = jc.voucherManageSendRecord( "1", "10", pram, result);
                     int pages = response1.getInteger("pages");
                     for (int page = 1; page <= pages; page++) {
-                        JSONArray list = jc.voucherManageSendRecord( String.valueOf(page),"10",id, pram, result).getJSONArray("list");
+                        JSONArray list = jc.voucherManageSendRecord( String.valueOf(page),"10",pram, result).getJSONArray("list");
                         for (int i = 0; i < list.size(); i++) {
                             String Flag = list.getJSONObject(i).getString(output);
                             System.out.println("优惠券领取记录按" + result + "查询，结果错误" + Flag);
@@ -3459,16 +3478,15 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         }
     }
 
+
     /**
      * @description 优惠券领取记录-时间的筛选
      * @date :2020/12/16
      **/
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void voucherManageSendRecordTimeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject jsonObject=jc.oucherFormVoucherPage("","1","10");
-            String id = jsonObject.getJSONArray("list").getJSONObject(0).getString("id");
             String startTime=  dt.getHistoryDate(-30);
             String endTime=  dt.getHistoryDate(30);
             JSONObject respond=jc.voucherManageSendRecord1("1","10",startTime,endTime);
@@ -3497,8 +3515,6 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void voucherManageSendRecordAllFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject jsonObject=jc.oucherFormVoucherPage(shopId,"1","10");
-            String id = jsonObject.getJSONArray("list").getJSONObject(0).getString("id");
             Object[][] flag = Constant.voucherManageSendRecordFilter_pram();
             VoucherManageSendVariable variable = new VoucherManageSendVariable();
             JSONArray res = jc.voucherManageSendRecord( "1", "10","", "").getJSONArray("list");
@@ -3532,8 +3548,6 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void voucherManageSendRecordSomeFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject jsonObject=jc.oucherFormVoucherPage(shopId,"1","10");
-            String id = jsonObject.getJSONArray("list").getJSONObject(0).getString("id");
             Object[][] flag = Constant.voucherManageSendRecordFilter_pram();
             VoucherManageSendVariable variable = new VoucherManageSendVariable();
             JSONArray res = jc.voucherManageSendRecord( "1", "10", "", "").getJSONArray("list");
@@ -3575,22 +3589,20 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     }
 
     /**
-     * @deprecated V2.0-优惠券作废记录--筛选栏单项搜索
+     * @deprecated V3.0-优惠券作废记录--筛选栏单项搜索
      * @date :2021-2-2
      */
     @Test(dataProvider = "SELECT_voucherInvalidPageFilter", dataProviderClass = Constant.class)
     public void voucherInvalidPageOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject jsonObject=jc.oucherFormVoucherPage("","1","10");
-            String id = jsonObject.getJSONArray("list").getJSONObject(0).getString("id");
-            JSONObject response = jc.voucherInvalidPage("", "1", "10",id, "", "");
+            JSONObject response = jc.voucherInvalidPage("", "1", "10","", "");
             if (response.getJSONArray("list").size() > 0) {
                 String result = response.getJSONArray("list").getJSONObject(0).getString(output);
-                JSONObject response1 = jc.voucherInvalidPage("", "1", "10",id,pram, result);
+                JSONObject response1 = jc.voucherInvalidPage("", "1", "10",pram, result);
                 int pages = response1.getInteger("pages");
                 for (int page = 1; page <= pages; page++) {
-                    JSONArray list = jc.voucherInvalidPage("", String.valueOf(page),"10",id, pram, result).getJSONArray("list");
+                    JSONArray list = jc.voucherInvalidPage("", String.valueOf(page),"10", pram, result).getJSONArray("list");
                     for (int i = 0; i < list.size(); i++) {
                         String Flag = list.getJSONObject(i).getString(output);
                         System.out.println("优惠券作废记录按" + result + "查询，结果错误" + Flag);
@@ -3601,7 +3613,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("V2.0-优惠券作废记录--筛选栏单项搜索");
+            saveData("V3.0-优惠券作废记录--筛选栏单项搜索");
         }
     }
 
@@ -3613,19 +3625,15 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void voucherInvalidRecordTimeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject jsonObject=jc.oucherFormVoucherPage("","1","10");
-            String id = jsonObject.getJSONArray("list").getJSONObject(0).getString("id");
             String startTime=  dt.getHistoryDate(-30);
             String endTime=  dt.getHistoryDate(30);
-            JSONObject respond=jc.voucherInvalidPage("1","10",id,startTime,endTime,startTime,endTime);
+            JSONObject respond=jc.voucherInvalidPage1("","1","10",startTime,endTime);
             int pages = respond.getInteger("pages")>10?10:respond.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = jc.voucherInvalidPage(String.valueOf(page),"10",id,startTime,endTime,startTime,endTime).getJSONArray("list");
+                JSONArray list = jc.voucherInvalidPage1("",String.valueOf(page),"10",startTime,endTime).getJSONArray("list");
                 System.err.println(list);
                 for (int i = 0; i < list.size(); i++) {
-                    String sendTime = list.getJSONObject(i).containsKey("send_time")?list.getJSONObject(i).getString("send_time").substring(0,10):startTime;
                     String invalidTime = list.getJSONObject(i).containsKey("invalid_time")?list.getJSONObject(i).getString("invalid_time").substring(0,10):startTime;
-                    Preconditions.checkArgument(sendTime.compareTo(startTime)>=0&&sendTime.compareTo(endTime)<=0, "开始时间："+startTime+" 结束时间："+endTime +"列表中的领取时间时间:"+sendTime);
                     Preconditions.checkArgument(invalidTime.compareTo(startTime)>=0&&invalidTime.compareTo(endTime)<=0, "开始时间："+startTime+" 结束时间："+endTime +"列表中的有效的开始时间:"+invalidTime);
                 };
             }
@@ -3637,18 +3645,16 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     }
 
     /**
-     * @deprecated V2.0-优惠券作废记录--筛选栏全部填写搜索
+     * @deprecated V3.0-优惠券作废记录--筛选栏全部填写搜索
      * @date :2021-2-2
      */
     @Test(enabled = false)
     public void voucherInvalidPageAllFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject jsonObject=jc.oucherFormVoucherPage(shopId,"1","10");
-            String id = jsonObject.getJSONArray("list").getJSONObject(0).getString("id");
             Object[][] flag = Constant.voucherInvalidPageFilter_pram();
             VoucherInvalidPageVariable variable = new VoucherInvalidPageVariable();
-            JSONArray res = jc.voucherInvalidPage("", "1", "10", "","", "").getJSONArray("list");
+            JSONArray res = jc.voucherInvalidPage("", "1", "10","", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
                 variable.receiver = data.getString(flag[0][1].toString());
@@ -3657,7 +3663,6 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                 variable.invalidPhone = data.getString(flag[3][1].toString());
                 variable.page = "1";
                 variable.size = "10";
-                variable.id=id;
                 //全部筛选之后的结果
                 JSONObject result = jc.voucherInvalidPage(variable).getJSONArray("list").getJSONObject(0);
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[0][1])).contains( variable.receiver),"参数输入的查询的"+ variable.receiver+"与列表信息的第一行的"+result.getString(flag[0][1].toString())+"不一致");
@@ -3675,18 +3680,16 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     }
 
     /**
-     * @deprecated V2.0-优惠券作废记录--筛选栏多项填写搜索
+     * @deprecated V3.0-优惠券作废记录--筛选栏多项填写搜索
      * @date :2021-2-2
      */
     @Test(enabled = false)
     public void voucherInvalidPageSomeFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject jsonObject=jc.oucherFormVoucherPage(shopId,"1","10");
-            String id = jsonObject.getJSONArray("list").getJSONObject(0).getString("id");
             Object[][] flag = Constant.voucherInvalidPageFilter_pram();
             VoucherInvalidPageVariable variable = new VoucherInvalidPageVariable();
-            JSONArray res = jc.voucherInvalidPage("", "1", "10", "","", "").getJSONArray("list");
+            JSONArray res = jc.voucherInvalidPage("", "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
 //                variable.receiver = data.getString(flag[0][1].toString());
@@ -3695,7 +3698,6 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                 variable.invalidPhone = data.getString(flag[3][1].toString());
                 variable.page = "1";
                 variable.size = "10";
-                variable.id=id;
                 //全部筛选之后的结果
                 JSONObject result = jc.voucherInvalidPage(variable).getJSONArray("list").getJSONObject(0);
 //                Preconditions.checkArgument(result.getString(String.valueOf(flag[0][1])).contains( variable.receiver),"参数输入的查询的"+ variable.receiver+"与列表信息的第一行的"+result.getString(flag[0][1].toString())+"不一致");
@@ -3713,16 +3715,14 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     }
 
     /**
-     * @description :V2.0-优惠券作废记录--筛选栏不填写查询
+     * @description :V3.0-优惠券作废记录--筛选栏不填写查询
      * @date :2021-2-1
      **/
     @Test()
     public void voucherInvalidPageEmptyFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            JSONObject jsonObject=jc.oucherFormVoucherPage("","1","10");
-            String id = jsonObject.getJSONArray("list").getJSONObject(0).getString("id");
-            JSONArray res = jc.voucherInvalidPage("","1","10",id,"","").getJSONArray("list");
+            JSONArray res = jc.voucherInvalidPage("","1","10","","").getJSONArray("list");
         }catch(AssertionError|Exception e){
             appendFailReason(e.toString());
         }finally{
@@ -3902,7 +3902,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     }
 
     /**
-     * @deprecated V2.0评价列表--筛选栏单项搜索
+     * @deprecated V2.0评价列表--筛选栏单项搜索      是否留言有问题，已提bug【7884】
      * @date :2021-2-2
      */
     @Test(dataProvider = "SELECT_evaluatePageFilter", dataProviderClass = Constant.class)
@@ -3950,7 +3950,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                         JSONArray list = jc.evaluatePage("", String.valueOf(page),"10", pram, result1).getJSONArray("list");
                         for (int i = 0; i < list.size(); i++) {
                             String Flag = list.getJSONObject(i).getString(output);
-                            System.out.println("评价列表按" + result + "查询，结果错误" + Flag);
+                            System.out.println("评价列表按" + result1 + "查询，结果错误" + Flag);
                             if(result1.equals("false")){
                                 Preconditions.checkArgument(Flag.isEmpty(), "评价列表按未留言筛选,查询结果不为空" );
                             }else{
@@ -3963,6 +3963,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                     String saleId=businessUtil.authNameTransformId(result,"AFTER_SALE_RECEPTION");
                     String name=businessUtil.getAuthNameExist(result,"AFTER_SALE_RECEPTION");
                     JSONObject response1 = jc.evaluatePage("", "1", "10",pram, saleId);
+                    System.out.println(saleId+"------"+response1);
                     int pages = response1.getInteger("pages")>10?10:response1.getInteger("pages");
                     for (int page = 1; page <= pages; page++) {
                         JSONArray list = jc.evaluatePage("", String.valueOf(page),"10", pram, saleId).getJSONArray("list");
@@ -3970,6 +3971,18 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                             String Flag = list.getJSONObject(i).getString(output);
                             System.out.println("评价列表按" + name + "查询，结果错误" + Flag);
                             Preconditions.checkArgument(Flag.contains(name), "评价列表按" + name + "查询，结果错误" + Flag);
+                        }
+                    }
+                }else if(pram.equals("plate_number")){
+                    String result = response.getJSONArray("list").getJSONObject(0).containsKey("plate_number")?response.getJSONArray("list").getJSONObject(0).getString(output):"浙A12345";
+                    JSONObject response1 = jc.evaluatePage("", "1", "10",pram, result);
+                    int pages = response1.getInteger("pages")>10?10:response1.getInteger("pages");
+                    for (int page = 1; page <= pages; page++) {
+                        JSONArray list = jc.evaluatePage("", String.valueOf(page),"10", pram, result).getJSONArray("list");
+                        for (int i = 0; i < list.size(); i++) {
+                            String Flag = list.getJSONObject(i).getString(output);
+                            System.out.println("评价列表按" + result + "查询，结果错误" + Flag);
+                            Preconditions.checkArgument(Flag.contains(result), "评价列表按" + result + "查询，结果错误" + Flag);
                         }
                     }
                 }else{
@@ -4479,4 +4492,134 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
             saveData("V2.0活动管理-报名管理列表--筛选栏单项搜索 ");
         }
     }
+
+
+    /**
+     * @deprecated V3.0积分中心-积分客户管理--筛选栏单项搜索
+     * @date :2021-3-16
+     */
+    @Test(enabled = false)
+    public void integralCenterCustomerPageOneFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject response=jc.integralCenterCustomerPage(1,10,"");
+            JSONArray list=response.getJSONArray("list");
+            String phone=list.getJSONObject(0).containsKey("customer_name")?list.getJSONObject(0).getString("customer_name"):list.getJSONObject(1).getString("customer_name");
+            JSONObject response1=jc.integralCenterCustomerPage(1,10,phone);
+            JSONArray list1=response1.getJSONArray("list");
+            String phone1=list1.getJSONObject(0).containsKey("customer_name")?list1.getJSONObject(0).getString("customer_name"):list1.getJSONObject(1).getString("customer_name");
+            Preconditions.checkArgument(phone.equals(phone),"积分客户管理按照："+phone+" 查询，结果为："+phone1);
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("V3.0积分中心-积分客户管理--筛选栏单项搜索 ");
+        }
+    }
+
+    /**
+     * @deprecated V3.0积分中心-客户积分变更记录--筛选栏单项搜索
+     * @date :2021-3-16
+     */
+    @Test(enabled = false)
+    public void customerIntegralChangeRecordPageOneFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject response=jc.customerIntegralChangeRecordPage(1,10,"","","");
+            JSONArray list=response.getJSONArray("list");
+            String phone=list.getJSONObject(0).containsKey("customer_name")?list.getJSONObject(0).getString("customer_name"):list.getJSONObject(1).getString("customer_name");
+            JSONObject response1=jc.customerIntegralChangeRecordPage(1,10,phone,"","");
+            JSONArray list1=response1.getJSONArray("list");
+            String phone1=list1.getJSONObject(0).containsKey("customer_name")?list1.getJSONObject(0).getString("customer_name"):list1.getJSONObject(1).getString("customer_name");
+            Preconditions.checkArgument(phone.equals(phone),"客户积分变更记录按照："+phone+" 查询，结果为："+phone1);
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("V3.0积分中心-客户积分变更记录--筛选栏单项搜索 ");
+        }
+    }
+
+    /**
+     * @deprecated V3.0积分中心-客户积分变更记录--筛选栏时间搜索
+     * @date :2021-3-16
+     */
+    @Test(enabled = false)
+    public void customerIntegralChangeRecordPageTimeFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String startTime=  dt.getHistoryDate(-30);
+            String endTime=  dt.getHistoryDate(30);
+            JSONObject response=jc.customerIntegralChangeRecordPage(1,10,"",startTime,endTime);
+            int pages = response.getInteger("pages")>10?10:response.getInteger("pages");
+            for (int page = 1; page <= pages; page++) {
+                JSONArray list = jc.customerIntegralChangeRecordPage(page,10,"",startTime,endTime).getJSONArray("list");
+                for (int i = 0; i < list.size(); i++) {
+                    String time = list.getJSONObject(i).containsKey("time")?list.getJSONObject(i).getString("time").substring(0,10):startTime;
+                    Preconditions.checkArgument(time.compareTo(startTime)>=0&&time.compareTo(endTime)<=0, "开始时间："+startTime+" 结束时间："+endTime +"列表中的支付时间:"+time);
+                }
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("V3.0积分中心-客户积分变更记录--筛选栏时间搜索 ");
+        }
+    }
+
+
+
+    /**
+     * @deprecated V3.0卡券管理-增发记录-筛选栏单项搜索
+     * @date :2021-3-16
+     */
+    @Test(dataProvider = "SELECT_voucherManageAdditionalRecordFilter", dataProviderClass = Constant.class)
+    public void voucherManageAdditionalRecordOneFilter(String pram,String output){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject response = jc.additionalRecordPage("1", "10", "", "");
+            if (response.getJSONArray("list").size() > 0) {
+                String result = response.getJSONArray("list").getJSONObject(0).getString(output);
+                JSONObject response1 = jc.additionalRecordPage( "1", "10",pram, result);
+                int pages = response1.getInteger("pages");
+                for (int page = 1; page <= pages; page++) {
+                    JSONArray list = jc.additionalRecordPage(String.valueOf(page),"10", pram, result).getJSONArray("list");
+                    for (int i = 0; i < list.size(); i++) {
+                        String Flag = list.getJSONObject(i).getString(output);
+                        System.out.println("卡券管理-增发记录列表按" + result + "查询，结果错误" + Flag);
+                        Preconditions.checkArgument(Flag.contains(result), "卡券管理-增发记录列表按" + result + "查询，结果错误" + Flag);
+                    }
+                }
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("V3.0卡券管理-增发记录-筛选栏单项搜索 ");
+        }
+    }
+
+    /**
+     * @deprecated V3.0卡券管理-增发记录-筛选栏时间搜索
+     * @date :2021-3-16
+     */
+    @Test(enabled = true)
+    public void voucherManageAdditionalRecordTimeFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String startTime=  dt.getHistoryDate(-30);
+            String endTime=  dt.getHistoryDate(30);
+            JSONObject response=jc.additionalRecordTimePage("1","10",startTime,endTime);
+            System.out.println("---------"+response);
+            int pages = response.getInteger("pages")>10?10:response.getInteger("pages");
+            for (int page = 1; page <= pages; page++) {
+                JSONArray list = jc.additionalRecordTimePage(String.valueOf(page),"10",startTime,endTime).getJSONArray("list");
+                for (int i = 0; i < list.size(); i++) {
+                    String time = list.getJSONObject(i).containsKey("time")?list.getJSONObject(i).getString("time").substring(0,10):startTime;
+                    Preconditions.checkArgument(time.compareTo(startTime)>=0&&time.compareTo(endTime)<=0, "开始时间："+startTime+" 结束时间："+endTime +"列表中的增发时间:"+time);
+                }
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("V3.0卡券管理-增发记录-筛选栏时间搜索 ");
+        }
+    }
+
 }

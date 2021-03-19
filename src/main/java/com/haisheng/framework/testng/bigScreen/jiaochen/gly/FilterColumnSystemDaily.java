@@ -3491,22 +3491,6 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
         }
     }
 
-    /**
-     * @description 核销记录查询-时间的筛选
-     * @date :2020/12/16
-     **/
-    @Test(enabled = true)
-    public void testTry() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            String key=businessUtil.enumMapSendChannelList("自动推送");
-            System.err.println(key);
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("ceshiya ");
-        }
-    }
 
     /**
      * @description 优惠券领取记录-时间的筛选

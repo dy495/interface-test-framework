@@ -216,35 +216,6 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
-    public void justTry(){
-        try {
-            user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
-//            Long id=0L;
-//            businessUtil.activityRegisterApplet(741L, "13373166806", "郭丽雅", 2, "1513814362@qq.com", "22", "女","其他");
-//            businessUtil.appointmentActivityTitleNew(666L);
-//            supporterUtil.getAppletVoucherNum();
-//            JSONArray list1 = jc.appletMyActually(null, "20").getJSONArray("list");
-//            for (int i = 0; i < list1.size(); i++) {
-//                String title1 = list1.getJSONObject(i).getString("title");
-//                if (title1.equals("招募活动5953哈哈哈哈哈")) {
-//                    id = list1.getJSONObject(i).getLong("id");
-//                    System.out.println("--------"+id);
-//                    break;
-//                }
-//            }
-//            businessUtil.activityCancelScene(id);
-            String activityStatus = businessUtil.appointmentActivityStatus(445L);
-            System.out.println("---------"+activityStatus);
-//            System.err.println(businessUtil.getAppletArticleList());
-        }catch (AssertionError | Exception e) {
-           collectMessage(e);
-        } finally {
-            saveData("测试呀呀呀呀");
-        }
-    }
-
-
     /**
      * 创建1个招募活动和个裂变活动
      */
@@ -372,7 +343,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             int numAfter =businessUtil.changeRecordPage(ids.get(0)).getJSONArray("list").size();
             System.err.println(numAfter);
             System.err.println(title+"-------"+rule);
-            String content = list.getJSONObject(0).getString("content");
+            String content = businessUtil.changeRecordPage(ids.get(0)).getJSONArray("list").getJSONObject(0).getString("content");
             Preconditions.checkArgument(title.contains("编辑过后的招募活动") && rule.equals(pp.EditRule), "编辑后的活动名字为：" + title + "  编辑后的活动规则为：" + rule);
             Preconditions.checkArgument(numAfter == numBefore + 1 && content.equals("编辑活动"), "编辑前变更记录的条数为：" + numBefore + "编辑后的变更记录的条数为：" + numAfter + "  编辑后变更记录新增的内容为：" + content);
         } catch (AssertionError | Exception e) {
