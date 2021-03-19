@@ -1700,8 +1700,8 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             //列表内容校验
             PackagePage packagePage = util.collectBean(PackageFormPageScene.builder().packageName(packageName).build(), PackagePage.class).get(0);
             CommonUtil.checkResult(packageName + " 套餐价格", "49.99", packagePage.getPrice());
-            CommonUtil.checkResult(packageName + " 套餐内含卡券数", 10, packagePage.getVoucherNumber());
-            CommonUtil.checkResult(packageName + " 客户有效期", 1, packagePage.getCustomerUseValidity());
+            CommonUtil.checkResult(packageName + " 套餐内含卡券数", 1, packagePage.getVoucherNumber());
+            CommonUtil.checkResult(packageName + " 客户有效期", "10天", packagePage.getCustomerUseValidity());
             CommonUtil.checkResult(packageName + " 审核状态", AuditStatusEnum.AUDITING.getName(), packagePage.getAuditStatusName());
             //审核通过
             AuditPackageStatusScene.builder().id(packageId).status(AuditStatusEnum.AGREE.name()).build().execute(visitor, true);
@@ -1747,7 +1747,6 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
                 int voucherCountSum = packageDetail.getVoucherList().stream().map(e -> (JSONObject) e).mapToInt(e -> e.getInteger("voucher_count")).sum();
                 CommonUtil.checkResultPlus(packagePage.getPackageName() + " 列表价格", packagePage.getPrice().equals("0") ? "0.00" : packagePage.getPrice(), "详情价格", packageDetail.getPackagePrice());
                 CommonUtil.checkResultPlus(packagePage.getPackageName() + " 卡券数量", packagePage.getVoucherNumber(), "详情卡券数量", voucherCountSum);
-                CommonUtil.checkResultPlus(packagePage.getPackageName() + " 列表客户套餐有效期", packagePage.getCustomerUseValidity(), "详情客户套餐有效期", packageDetail.getCustomerUseValidity());
                 CommonUtil.logger(packagePage.getPackageName());
             });
         } catch (Exception | AssertionError e) {
@@ -1838,7 +1837,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             PackagePage packagePage = util.collectBean(PackageFormPageScene.builder().packageName(packageName).build(), PackagePage.class).get(0);
             CommonUtil.checkResult(packageName + " 套餐价格", "49.99", packagePage.getPrice());
             CommonUtil.checkResult(packageName + " 套餐内含卡券数", 10, packagePage.getVoucherNumber());
-            CommonUtil.checkResult(packageName + " 客户有效期", 10, packagePage.getCustomerUseValidity());
+            CommonUtil.checkResult(packageName + " 客户有效期", "10天", packagePage.getCustomerUseValidity());
             CommonUtil.checkResult(packageName + " 审核状态", AuditStatusEnum.AUDITING.getName(), packagePage.getAuditStatusName());
             //审核不通过
             AuditPackageStatusScene.builder().id(packageId).status(AuditStatusEnum.REFUSAL.name()).build().execute(visitor, true);

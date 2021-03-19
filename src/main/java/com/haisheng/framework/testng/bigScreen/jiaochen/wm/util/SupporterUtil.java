@@ -586,23 +586,9 @@ public class SupporterUtil {
      * @return 套餐信息
      */
     public PackagePage getPackagePage(PackageStatusEnum packageStatusEnum) {
-        String format = "yyyy-MM-dd HH:mm";
-        String today = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd") + " 00:00";
-        long todayUnix = Long.parseLong(DateTimeUtil.dateToStamp(today, format));
         IScene packageFormPageScene = PackageFormPageScene.builder().build();
         List<PackagePage> packagePageList = collectBean(packageFormPageScene, PackagePage.class);
         return packagePageList.stream().filter(e -> e.getAuditStatusName().equals(packageStatusEnum.getName())).findFirst().orElse(null);
-    }
-
-    /**
-     * 获取套餐信息
-     *
-     * @param packageId 套餐id
-     * @return 套餐信息
-     */
-    public PackagePage getPackagePage(Long packageId) {
-        String packageName = getPackageName(packageId);
-        return getPackagePage(packageName);
     }
 
     /**

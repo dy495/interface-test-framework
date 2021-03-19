@@ -14,7 +14,7 @@ public class PackagePage implements Serializable {
      * 客户有效期
      */
     @JSONField(name = "customer_use_validity")
-    private Integer customerUseValidity;
+    private String customerUseValidity;
 
     /**
      * 审核状态
