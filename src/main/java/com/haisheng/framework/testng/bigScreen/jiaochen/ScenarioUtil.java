@@ -893,7 +893,7 @@ public class ScenarioUtil extends TestCaseCommon {
                 "{" +
                         "\"name\" :\"" + name + "\",\n" +
                         "\"description\" :\"" + description + "\",\n" +
-                        "\"module_id\" :" + module_id + "\n" +
+                        "\"auth_list\" :" + module_id + "\n" +
 
                         "} ";
 
@@ -2354,6 +2354,23 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("page", page);
         json.put("size", size);
         json.put("voucher_id", id);
+        if (pram != null) {
+            json.put(pram, result);
+        }
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description:V 3.0核销记录
+     * @author: gly
+     * @time: 2020-11-24
+     */
+    public JSONObject verificationReordFilterManage(String shopId,  String page, String size, String pram, String result) {
+        String url = "/jiaochen/pc/voucher-manage/verification-record";
+        JSONObject json = new JSONObject();
+        json.put("shopId", shopId);
+        json.put("page", page);
+        json.put("size", size);
         if (pram != null) {
             json.put(pram, result);
         }
@@ -5335,8 +5352,23 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :V2.0优惠券领取记录
      * @date :2021/2/2
      **/
-    public JSONObject voucherManageSendRecord(String page, String size, String id, String param, String result) {
+    public JSONObject voucherManageSendRecord(String page, String size, String param, String result) {
         String url = "/jiaochen/pc/voucher-manage/send-record";
+        JSONObject json = new JSONObject();
+        json.put("page", page);
+        json.put("size", size);
+        if (param != null) {
+            json.put(param, result);
+        }
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description :V2.0优惠券领取记录
+     * @date :2021/2/2
+     **/
+    public JSONObject voucherManageSendRecord(String page, String size,String id, String param, String result) {
+        String url = "/jiaochen/pc/voucher-manage/additional-record";
         JSONObject json = new JSONObject();
         json.put("page", page);
         json.put("size", size);
@@ -5348,19 +5380,16 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     /**
-     * @description :V2.0优惠券领取记录
+     * @description :V3.0优惠券领取记录
      * @date :2021/2/2
      **/
-    public JSONObject voucherManageSendRecord(String page, String size, String id, String startTime, String endTime, String useStartTime, String useEndTime) {
+    public JSONObject voucherManageSendRecord1(String page, String size, String startTime, String endTime) {
         String url = "/jiaochen/pc/voucher-manage/send-record";
         JSONObject json = new JSONObject();
         json.put("page", page);
         json.put("size", size);
-        json.put("id", id);
         json.put("start_time", startTime);
         json.put("end_time", endTime);
-        json.put("use_end_time", useStartTime);
-        json.put("use_start_time", useEndTime);
 
         return invokeApi(url, json);
     }
@@ -5398,6 +5427,41 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("size", size);
         json.put("shop_id", shopId);
         json.put("id", id);
+        if (param != null) {
+            json.put(param, result);
+        }
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description :V2.0优惠券作废记录
+     * @date :2021/2/2
+     **/
+    public JSONObject voucherInvalidPage1(String shopId, String page, String size, String invalidStartTime , String invalidEndTime) {
+        String url = "/jiaochen/pc/voucher-manage/voucher-invalid-page";
+        JSONObject json = new JSONObject();
+        json.put("page", page);
+        json.put("size", size);
+        json.put("shop_id", shopId);
+        json.put("invalid_end_time", invalidEndTime);
+        json.put("invalid_start_time", invalidStartTime);
+
+        return invokeApi(url, json);
+    }
+
+
+
+
+    /**
+     * @description :V2.0优惠券作废记录
+     * @date :2021/2/2
+     **/
+    public JSONObject voucherInvalidPage(String shopId, String page, String size,String param, String result) {
+        String url = "/jiaochen/pc/voucher-manage/voucher-invalid-page";
+        JSONObject json = new JSONObject();
+        json.put("page", page);
+        json.put("size", size);
+        json.put("shop_id", shopId);
         if (param != null) {
             json.put(param, result);
         }
@@ -5952,7 +6016,6 @@ public class ScenarioUtil extends TestCaseCommon {
     public JSONObject additionalRecordPage(String page, String size,String pram,String result) {
         String url = "/jiaochen/pc/voucher-manage/additional-record";
         JSONObject json = new JSONObject();
-        json.put("shop_id", shopId);
         json.put("page", page);
         json.put("size", size);
         if (pram != null) {
@@ -5973,7 +6036,6 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("size", size);
         json.put("add_start_time", addStartTime);
         json.put("add_end_time", addEndTime);
-
         return invokeApi(url, json);
     }
 

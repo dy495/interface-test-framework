@@ -188,7 +188,7 @@ public class appointLimit extends TestCaseCommon implements TestCaseStd {
     public void Amaintian_pcConsistency() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String appointment_date = dt.getHistoryDate(0);
+            String appointment_date = dt.getHistoryDate(1);
             //预约保养前：  1.pc端登录，记录原始预约保养总数 A
             crm.login(adminname, adminpassword);
             JSONObject pcdataA = crm.mainAppointmentpage(1, 10);
@@ -336,7 +336,7 @@ public class appointLimit extends TestCaseCommon implements TestCaseStd {
     public void Arepair_pcConsistency() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String appointment_date = dt.getHistoryDate(0);
+            String appointment_date = dt.getHistoryDate(1);
             //预约维修前：  1.pc端登录，记录原始预约保养总数 A
             crm.login(adminname, adminpassword);
             JSONObject pcdataA = crm.repairAppointmentpage(1, 10);

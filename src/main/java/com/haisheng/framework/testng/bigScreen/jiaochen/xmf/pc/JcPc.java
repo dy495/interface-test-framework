@@ -168,7 +168,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             pcLogin(pp.gwphone,pp.gwpassword,pp.roleId);
             String description = "自动化测试给店长用的角色";
             JSONArray moduleId = pp.roleList;
-            //新增一个角色
+            //新增一个角色organizationRoleAdd
             JSONObject res = jc.organizationRoleAdd(name, description, moduleId, true);
             String id = jc.roleListFilterManage("", "1" , "10", "name", name).getJSONArray("list").getJSONObject(0).getString("id");
             //编辑角色

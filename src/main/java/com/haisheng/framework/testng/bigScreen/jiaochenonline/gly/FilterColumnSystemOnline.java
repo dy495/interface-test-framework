@@ -423,11 +423,11 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void selectAfterSleCustomerManageOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject respond = jc.afterSleCustomerManage(shopId, "1", "10", "", "");
+            JSONObject respond = jc.afterSleCustomerManage("", "1", "10", "", "");
             if (respond.getJSONArray("list").size() > 0) {
                 String result = respond.getJSONArray("list").getJSONObject(0).getString(output);
                 if (result != null) {
-                    JSONObject respond1 = jc.afterSleCustomerManage(shopId, "1", "10", pram, result);
+                    JSONObject respond1 = jc.afterSleCustomerManage("", "1", "10", pram, result);
                     int pages = respond1.getInteger("pages")>10?10:respond1.getInteger("pages");
                     for (int page = 1; page <= pages; page++) {
                         JSONArray list = jc.afterSleCustomerManage("", String.valueOf(page), "10", pram, result).getJSONArray("list");
@@ -485,7 +485,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         try {
             Object[][] flag = Constant.afterSleCustomerManage_pram();
             com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.AfterSleCustomerVariable variable = new com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.AfterSleCustomerVariable();
-            JSONArray res = jc.afterSleCustomerManage(shopId, "1", "10", "", "").getJSONArray("list");
+            JSONArray res = jc.afterSleCustomerManage("", "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
 //                variable.vehicle_chassis_code = (data.getString(flag[0][1].toString())==null)?"":data.getString(flag[0][1].toString());
@@ -493,7 +493,6 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                 variable.customer_phone = data.getString(flag[2][1].toString());
                 variable.size = "10";
                 variable.page="1";
-                variable.shop_id = "-1";
                 //全部筛选之后的结果
                 JSONObject result = jc.afterSleCustomerManage(variable).getJSONArray("list").getJSONObject(0);
                 if(variable.vehicle_chassis_code!=null){
@@ -521,14 +520,13 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         try {
             Object[][] flag = Constant.afterSleCustomerManage_pram();
             com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.AfterSleCustomerVariable variable = new com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.AfterSleCustomerVariable();
-            JSONArray res = jc.afterSleCustomerManage(shopId, "1", "10", "", "").getJSONArray("list");
+            JSONArray res = jc.afterSleCustomerManage("", "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
                 variable.vehicle_chassis_code = data.getString(flag[0][1].toString());
                 variable.customer_name = data.getString(flag[1][1].toString());
                 variable.page = "1";
                 variable.size = "10";
-                variable.shop_id = "-1";
                 //全部筛选之后的结果
                 JSONArray result = jc.afterSleCustomerManage(variable).getJSONArray("list");
                 for (int i = 0; i < result.size(); i++) {
@@ -1179,7 +1177,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :核销记录-筛选栏单项查询
      * @date :2020/11/24
      **/
-    @Test(dataProvider = "SELECT_verificationRecordFilter", dataProviderClass = Constant.class)
+    @Test(enabled = false,dataProvider = "SELECT_verificationRecordFilter", dataProviderClass = Constant.class)
     public void verificationRecordOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -3419,7 +3417,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @deprecated V2.0-优惠券领取记录--筛选栏单项搜索
      * @date :2021-2-2
      */
-    @Test(dataProvider = "SELECT_voucherManageSendRecordFilter", dataProviderClass = Constant.class)
+    @Test(enabled = false,dataProvider = "SELECT_voucherManageSendRecordFilter", dataProviderClass = Constant.class)
     public void voucherManageSendRecordOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -3473,19 +3471,15 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
             String id = jsonObject.getJSONArray("list").getJSONObject(0).getString("id");
             String startTime=  dt.getHistoryDate(-30);
             String endTime=  dt.getHistoryDate(30);
-            JSONObject respond=jc.voucherManageSendRecord("1","10",id,startTime,endTime,startTime,endTime);
+            JSONObject respond=jc.voucherManageSendRecord1("1","10",startTime,endTime);
             int pages = respond.getInteger("pages")>10?10:respond.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = jc.voucherManageSendRecord(String.valueOf(page),"10",id,startTime,endTime,startTime,endTime).getJSONArray("list");
+                JSONArray list = jc.voucherManageSendRecord1(String.valueOf(page),"10",startTime,endTime).getJSONArray("list");
                 System.err.println(list);
                 for (int i = 0; i < list.size(); i++) {
                     String sendTime = list.getJSONObject(i).containsKey("send_time")?list.getJSONObject(i).getString("send_time").substring(0,10):startTime;
-                    String validityTimeStart = list.getJSONObject(i).containsKey("validity_time")?list.getJSONObject(i).getString("validity_time").substring(0,10):startTime;
-                    String validityTimeEnd = list.getJSONObject(i).containsKey("validity_time")?list.getJSONObject(i).getString("validity_time").substring(18,27):startTime;
                     System.out.println("开始时间："+startTime+" 结束时间："+endTime +"列表中的领取时间时间:"+sendTime);
-                    System.out.println("validityTime开始时间："+validityTimeStart+" 结束时间："+validityTimeEnd);
                     Preconditions.checkArgument(sendTime.compareTo(startTime)>=0&&sendTime.compareTo(endTime)<=0, "开始时间："+startTime+" 结束时间："+endTime +"列表中的领取时间时间:"+sendTime);
-                    Preconditions.checkArgument(validityTimeStart.compareTo(startTime)>=0&&validityTimeStart.compareTo(endTime)<=0&&validityTimeEnd.compareTo(startTime)>=0&&validityTimeEnd.compareTo(endTime)<=0, "开始时间："+startTime+" 结束时间："+endTime +"列表中的有效的开始时间:"+validityTimeStart+"列表中的有效的结束时间:"+validityTimeEnd);
                 };
             }
         } catch (AssertionError | Exception e) {
@@ -3507,7 +3501,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
             String id = jsonObject.getJSONArray("list").getJSONObject(0).getString("id");
             Object[][] flag = Constant.voucherManageSendRecordFilter_pram();
             VoucherManageSendVariable variable = new VoucherManageSendVariable();
-            JSONArray res = jc.voucherManageSendRecord( "1", "10", "","", "").getJSONArray("list");
+            JSONArray res = jc.voucherManageSendRecord( "1", "10","", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
                 variable.receiver = data.getString(flag[0][1].toString());
@@ -3516,7 +3510,6 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                 variable.customerLabel = data.getString(flag[3][1].toString());
                 variable.page = "1";
                 variable.size = "10";
-                variable.id=id;
                 //全部筛选之后的结果
                 JSONObject result = jc.voucherManageSendRecord(variable).getJSONArray("list").getJSONObject(0);
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[0][1])).contains( variable.receiver),"参数全部输入的查询的"+ variable.receiver+"与列表信息的第一行的"+result.getString(flag[0][1].toString())+"不一致");
@@ -3543,14 +3536,13 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
             String id = jsonObject.getJSONArray("list").getJSONObject(0).getString("id");
             Object[][] flag = Constant.voucherManageSendRecordFilter_pram();
             VoucherManageSendVariable variable = new VoucherManageSendVariable();
-            JSONArray res = jc.voucherManageSendRecord( "1", "10","", "", "").getJSONArray("list");
+            JSONArray res = jc.voucherManageSendRecord( "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
                 variable.receiver = data.getString(flag[0][1].toString());
                 variable.receivePhone = data.getString(flag[1][1].toString());
 //                variable.useStatus = data.getString(flag[2][1].toString());
 //                variable.customerLabel = data.getString(flag[7][1].toString());
-                variable.id=id;
                 variable.page = "1";
                 variable.size = "10";
                 //全部筛选之后的结果
@@ -3574,9 +3566,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void voucherManageSendRecordEmptyFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            JSONObject jsonObject=jc.oucherFormVoucherPage("","1","10");
-            String id = jsonObject.getJSONArray("list").getJSONObject(0).getString("id");
-            JSONArray res = jc.voucherManageSendRecord("1","10",id,"","").getJSONArray("list");
+            JSONArray res = jc.voucherManageSendRecord("1","10","","").getJSONArray("list");
         }catch(AssertionError|Exception e){
             appendFailReason(e.toString());
         }finally{

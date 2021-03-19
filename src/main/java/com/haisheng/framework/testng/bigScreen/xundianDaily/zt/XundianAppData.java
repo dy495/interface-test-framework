@@ -242,7 +242,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
     //app[首页实时客流分析] 今日到访人数<= [趋势图]今天各时段人数之和
     @Test
-    public void todayNum() throws Exception{
+    public void todayNumUv() throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray homeList = md.cardList("HOME_BELOW", null, 10).getJSONArray("list");
@@ -271,7 +271,39 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    //巡店记录详情，打开展示报告信息
+    //app[首页实时客流分析] 今日到访人次== [趋势图]今天各时段人次之和
+    @Test
+    public void todayNumPv() throws Exception{
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray homeList = md.cardList("HOME_BELOW", null, 10).getJSONArray("list");
+//            Integer todayUv = homeList.getJSONObject(0).getJSONObject("result").getInteger("today_uv");
+            JSONObject resultList = homeList.getJSONObject(0).getJSONObject("result");
+//            Integer todayUv = resultList.getJSONObject(0).getInteger("today_uv");
+            Integer todayPv = resultList.getJSONObject("total_number").getInteger("today_pv");
+            int todayPvCount = 0;
+            JSONArray trendList = homeList.getJSONObject(0).getJSONObject("result").getJSONArray("trend_list");
+            for (int i = 0; i < trendList.size(); i++) {
+                Integer pv = trendList.getJSONObject(i).getInteger("today_pv");
+                if (pv == null) {
+                    pv = 0;
+                }
+                todayPvCount += pv;
+            }
+            CommonUtil.valueView(todayPv, todayPvCount);
+            checkArgument(todayPv == todayPvCount, "app首页实时客流分析中今日到访人数" + todayPv + "app趋势图中各时间段人数" + todayPvCount);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("app首页实时客流分钟中今日到访人数 <= app趋势图中今天各时段人数之和");
+        }
+
+    }
+
+
+    //APP巡店记录详情，打开展示报告信息
     @Test(dataProvider = "is_read",dataProviderClass = DataProviderMethod.class)
     public void ReportList(Boolean is_read) throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
@@ -305,7 +337,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
     // 今日进店客流==今日进店客流详情中今日进店客流
     @Test
-    public void customerFlow(Boolean is_read) throws Exception{
+    public void customerFlow() throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取卡片list
@@ -324,7 +356,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             //获取今日进店客流
             Integer today_enter_customer_uv = today_enter_customer_flow.getInteger("today_enter_customer_uv");
             Integer items_value1 = items.getInteger(1);
-            checkArgument(today_enter_customer_uv==items_value1, "今日进店客流==今日进店客流详情中今日进店客流");
+            checkArgument(today_enter_customer_uv == items_value1, "今日进店客流==今日进店客流详情中今日进店客流");
 
             //获取今日进店客流得同比
             Number yesterday_enter_customer_qoq = today_enter_customer_flow.getInteger("last_week_enter_customer_qoq");
@@ -414,7 +446,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 //    }
     // 今日进店客流==今日进店客流详情中今日进店客流
     @Test
-    public void  orderForm(Boolean is_read) throws Exception{
+    public void  orderForm() throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取卡片list
@@ -452,7 +484,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
 
     @Test
-    public void  OrderTurnover(Boolean is_read) throws Exception{
+    public void  OrderTurnover() throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取卡片list
@@ -503,6 +535,162 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
         } finally {
             saveData("累计营业额==营业额详情中的每个数据");
         }
+    }
+
+
+    //app实时客流趋势图中的uv==客流概览趋势图中的uv
+    @Test
+    public void allShoptodayNum() throws Exception{
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //app趋势图中uv
+            JSONArray homeList = md.cardList("HOME_BELOW", null, 10).getJSONArray("list");
+            int appTodayUvCount = 0;
+            JSONArray trendList = homeList.getJSONObject(0).getJSONObject("result").getJSONArray("trend_list");
+            for (int i = 0; i < trendList.size(); i++) {
+                Integer uv = trendList.getJSONObject(i).getInteger("today_uv");
+                if (uv == null) {
+                    uv = 0;
+                }
+                appTodayUvCount += uv;
+            }
+            //pc趋势图中的uv
+            int pcTodayUvCount = 0;
+            JSONArray list = md.real_shop_PUv().getJSONArray("list");
+            for (int j=0;j<list.size();j++){
+                Integer uv = list.getJSONObject(j).getInteger("today_uv");
+                if (uv == null) {
+                    uv = 0;
+                }
+                pcTodayUvCount += uv;
+            }
+            CommonUtil.valueView( pcTodayUvCount,appTodayUvCount);
+            checkArgument(appTodayUvCount==pcTodayUvCount, "app实时客流趋势图uv" + appTodayUvCount + "pc实时趋势图中uv" + pcTodayUvCount);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("app实时客流趋势图uv == pc实时趋势图中uv");
+        }
+
+    }
+
+
+    //app实时客流趋势图中的pv==客流概览趋势图中的pv
+    @Test
+    public void allShoptodayNum1() throws Exception{
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //app趋势图中Pv
+            JSONArray homeList = md.cardList("HOME_BELOW", null, 10).getJSONArray("list");
+            int appTodayPvCount = 0;
+            JSONArray trendList = homeList.getJSONObject(0).getJSONObject("result").getJSONArray("trend_list");
+            for (int i = 0; i < trendList.size(); i++) {
+                Integer pv = trendList.getJSONObject(i).getInteger("today_pv");
+                if (pv == null) {
+                    pv = 0;
+                }
+                appTodayPvCount += pv;
+            }
+            //pc趋势图中的Pv
+            int pcTodayPvCount = 0;
+            JSONArray list = md.real_shop_PUv().getJSONArray("list");
+            for (int j=0;j<list.size();j++){
+                Integer pv = list.getJSONObject(j).getInteger("today_pv");
+                if (pv == null) {
+                    pv = 0;
+                }
+                pcTodayPvCount += pv;
+            }
+            CommonUtil.valueView( pcTodayPvCount,appTodayPvCount);
+            checkArgument(appTodayPvCount==pcTodayPvCount, "app实时客流趋势图Pv" + appTodayPvCount + "pc实时趋势图中Pv" + pcTodayPvCount);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("app实时客流趋势图Pv == pc实时趋势图中Pv");
+        }
+
+    }
+
+
+    //app实时客流趋势图中的yesterdayuv==客流概览趋势图中的yesterdayuv
+    @Test
+    public void allShoptodayNum2() throws Exception{
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //app趋势图中uv
+            JSONArray homeList = md.cardList("HOME_BELOW", null, 10).getJSONArray("list");
+            int appYesterdayUvCount = 0;
+            JSONArray trendList = homeList.getJSONObject(0).getJSONObject("result").getJSONArray("trend_list");
+            for (int i = 0; i < trendList.size(); i++) {
+                Integer uv = trendList.getJSONObject(i).getInteger("yesterday_uv");
+                if (uv == null) {
+                    uv = 0;
+                }
+                appYesterdayUvCount += uv;
+            }
+            //pc趋势图中的uv
+            int pcYesterdayUvCount = 0;
+            JSONArray list = md.real_shop_PUv().getJSONArray("list");
+            for (int j=0;j<list.size();j++){
+                Integer uv = list.getJSONObject(j).getInteger("yesterday_uv");
+                if (uv == null) {
+                    uv = 0;
+                }
+                pcYesterdayUvCount += uv;
+            }
+            CommonUtil.valueView( pcYesterdayUvCount,appYesterdayUvCount);
+            checkArgument(appYesterdayUvCount==pcYesterdayUvCount, "app实时客流趋势图昨日uv" + appYesterdayUvCount + "pc实时趋势图中昨日uv" + pcYesterdayUvCount);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("app实时客流趋势图昨日uv == pc实时趋势图中昨日uv");
+        }
+
+    }
+
+
+    //app实时客流趋势图中昨日pv==客流概览趋势图中昨日的pv
+    @Test
+    public void allShoptodayNum3() throws Exception{
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //app趋势图中Pv
+            JSONArray homeList = md.cardList("HOME_BELOW", null, 10).getJSONArray("list");
+            int appYesterdayPvCount = 0;
+            JSONArray trendList = homeList.getJSONObject(0).getJSONObject("result").getJSONArray("trend_list");
+            for (int i = 0; i < trendList.size(); i++) {
+                Integer pv = trendList.getJSONObject(i).getInteger("yesterday_pv");
+                if (pv == null) {
+                    pv = 0;
+                }
+                appYesterdayPvCount += pv;
+            }
+            //pc趋势图中的Pv
+            int pcYesterdayPvCount = 0;
+            JSONArray list = md.real_shop_PUv().getJSONArray("list");
+            for (int j=0;j<list.size();j++){
+                Integer pv = list.getJSONObject(j).getInteger("yesterday_pv");
+                if (pv == null) {
+                    pv = 0;
+                }
+                pcYesterdayPvCount += pv;
+            }
+            CommonUtil.valueView( pcYesterdayPvCount,appYesterdayPvCount);
+            checkArgument(appYesterdayPvCount==pcYesterdayPvCount, "app实时客流趋势图昨日Pv" + appYesterdayPvCount + "pc实时趋势图中昨日Pv" + pcYesterdayPvCount);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("app实时客流趋势图昨日Pv == pc实时趋势图中昨日Pv");
+        }
+
     }
 
 }

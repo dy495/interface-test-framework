@@ -47,6 +47,9 @@ public class Constant {
                 {"vehicle_chassis_code", "vehicle_chassis_code"},
                 {"customer_name","repair_customer_name"},
                 {"customer_phone","repair_customer_phone"},
+                {"registration_status","registration_status_name"},
+                {"brand_id","brand_name"},
+                {"shop_id","shop_id"},
 
         };
     }
@@ -139,17 +142,11 @@ public class Constant {
     public static Object[][] verificationRecordFilter_pram(){
         return new String[][]{
                 {"voucher_name", "voucher_name"},
-                {"sender", "sender"},
-
-//                {"voucher_name", "voucher_name"},  v3.0 all
-//                {"customer_name", "customer_name"},
-//                {"customer_phone", "customer_phone"},
-//                {"verify_start_time", "verify_start_time"},
-//                {"verify_end_time", "verify_end_time"},
-//                {"verify_sale_name", "verify_sale_name"},
-//                {"verify_sale_phone", "verify_sale_phone"},
-//                {"verify_code", "verify_code"},
-//                {"verify_channel", "verify_channel"},
+                {"customer_name", "customer_name"},
+                {"verify_sale_phone", "customer_phone"},
+                {"verify_code", "verify_code"},
+                {"verify_sale_phone", "verification_account"},
+                {"verify_channel", "verification_channel_name"},
 
         };
     }
@@ -193,7 +190,8 @@ public class Constant {
         return new String[][]{
                 {"package_name", "package_name"},
                 {"send_type", "pay_type_name"},
-                {"sender","package_belongs"}
+                {"sender","package_belongs"},
+                {"customer_phone", "customer_phone"},
 
         };
     }
@@ -431,14 +429,8 @@ public class Constant {
         return new String[][]{
                 {"receiver", "customer_name"},
                 {"receive_phone", "customer_phone"},
-                {"use_status", "voucher_use_status"},
-                {"customer_label", "customer_label_name"},
-
-//                {"voucher_name", "voucher_name"},  v3.0
-//                {"send_channel", "send_channel"},  v3.0
-
-
-
+                {"voucher_name", "voucher_name"},
+                {"send_channel", "send_channel_name"},
         };
     }
 
@@ -454,8 +446,7 @@ public class Constant {
                 {"receive_phone", "customer_phone"},
                 {"invalid_name", "invalid_name"},
                 {"invalidPhone", "invalid_phone"},
-
-//                {"voucher_name", "voucher_name"},   v3.0
+                {"voucher_name", "voucher_name"}
 
         };
     }
@@ -588,10 +579,8 @@ public class Constant {
     public static Object[][] voucherManageAdditionalRecordFilter_pram(){
         return new String[][]{
                 {"voucher_name", "voucher_name"},
-                {"add_start_time", "add_start_time"},
-                {"add_end_time", "add_end_time"},
-                {"sale_name", "sale_name"},
-                {"sale_phone", "sale_phone"}
+                {"sale_name", "operate_sale_name"},
+                {"sale_phone", "operate_sale_account"}
 
         };
     }

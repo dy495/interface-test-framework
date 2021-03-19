@@ -15,18 +15,18 @@ import java.util.List;
 @Getter
 @Setter
 public class SceneAttribute implements Serializable {
-    private String link;
+    private String pathDesc;
     private String url;
-    private List<ApiAttribute> apiAttributeList;
     private String suffix;
+    private List<ApiAttribute> apiAttributeList;
 
     @Override
     public String toString() {
         return "SceneAttribute:{"
-                + "    link :" + link
+                + "    link :" + pathDesc
                 + "    url :" + url
-                + "    List<ApiAttribute> :" + apiAttributeList
                 + "    suffix ：" + suffix
+                + "    List<ApiAttribute> :" + apiAttributeList
                 + "}";
     }
 }

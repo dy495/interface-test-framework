@@ -468,7 +468,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             System.out.println(commonConfig.roleId);
            pcLogin(pp.gwphone, pp.gwpassword,pp.roleId);
             int messagePctotal = jc.pushMsgListFilterManage("-1", "1", "10", null, null).getInteger("total");
-            int verificationReordPctotal = jc.verificationReordFilterManage("-1", "","1", "10", null, null).getInteger("total");
+            int verificationReordPctotal = jc.verificationReordFilterManage("-1", voucher_code[2],"1", "10", null, null).getInteger("total");
 
             //核销记录总数
             appLogin(pp.jdgw, pp.jdgwpassword,pp.roleidJdgw);
@@ -484,12 +484,12 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
 
            pcLogin(pp.gwphone, pp.gwpassword,pp.roleId);
             int messagePctotalA = jc.pushMsgListFilterManage("-1", "1", "10", null, null).getInteger("total");
-            int verificationReordPctotalA = jc.verificationReordFilterManage("-1","", "1", "10", null, null).getInteger("total");
+            int verificationReordPctotalA = jc.verificationReordFilterManage("-1",voucher_code[2], "1", "10", null, null).getInteger("total");
 
 
             Preconditions.checkArgument(messagePctotalA - messagePctotal == 1, "核销后pc消息总数没-1");
-            Preconditions.checkArgument(verificationReordPctotalA - verificationReordPctotal == 1, "核销后pc核销记录记录总数没-1");
-            Preconditions.checkArgument(totalA - total == 1, "核销后记录总数没-1");
+//            Preconditions.checkArgument(verificationReordPctotalA - verificationReordPctotal == 1, "核销后pc核销记录记录总数没-1");
+            Preconditions.checkArgument(totalA - total == 1, "核销后记录总数没+1"+totalA+":"+total);
             Preconditions.checkArgument(messageName.equals("您的卡券【" + voucher_code[1] + "】已被核销，请立即查看"));
 
 

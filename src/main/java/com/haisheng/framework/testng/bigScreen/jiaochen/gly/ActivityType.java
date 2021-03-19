@@ -999,7 +999,7 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
                     .registerInformationList(registerInformationList)
                     .successReward(true)
                     .rewardReceiveType(0)
-                    .isNeedApproval(true);
+                    .isNeedApproval(false);
             if (true) {
                 builder.rewardVouchers(registerObject)
                         .voucherValid(voucherValid);

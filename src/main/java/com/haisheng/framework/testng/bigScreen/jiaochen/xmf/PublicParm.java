@@ -90,8 +90,9 @@ public class PublicParm {
 
     public JSONArray getRoleList() {
         JSONArray moduleId2 = new JSONArray();
-        moduleId2.add(136);
-        moduleId2.add(137);
+        moduleId2.add(104);
+        moduleId2.add(148);
+        moduleId2.add(142);
         return moduleId2;
     }
 

@@ -3,7 +3,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.gly.util;
 public class PublicParameter {
 
     //登录账号、密码
-    public String phone="15711300001";
+    public String phone="15711200001";
     public String phone1="13114785236";
     public String password="000000";
     //固定的卡券套餐ID
@@ -11,7 +11,7 @@ public class PublicParameter {
     //活动规则
     public String rule="这个是一个简单的活动规则";
     //编辑后的活动名字
-    public String editTitle="编辑过后的招募活动";
+    public String editTitle="编辑过后的招募活动"+(int) (Math.random() * 10000);
     //活动规则
     public String EditRule="编辑后的活动规则";
     //招募活动名称

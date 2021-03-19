@@ -171,7 +171,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
 
     //会员到访列表中的人物id，可以在会员信息列表中搜索出来
     @Test
-    public void MemUserId(){
+    public void MemUserId ()throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //会员身份列表页获取人物id
@@ -191,7 +191,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
 
     //会员信息通过会员id筛选
     @Test(dataProvider = "memberId",dataProviderClass = DataProviderMethod.class)
-    public void searchMember(String memberId) {
+    public void searchMember(String memberId) throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray list = md.MemberList(page,size,memberId,"","","","").getJSONArray("list");
@@ -210,7 +210,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
 
     //会员信息通过姓名筛选
     @Test(dataProvider = "memberName",dataProviderClass = DataProviderMethod.class)
-    public void searchMember1(String memberName) {
+    public void searchMember1(String memberName) throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray list = md.MemberList(page,size,"",memberName,"","","").getJSONArray("list");
@@ -230,7 +230,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
 
     //会员信息列表通过电话筛选
     @Test(dataProvider = "memberPhone",dataProviderClass = DataProviderMethod.class)
-    public void searchMember2(String memberPhone) {
+    public void searchMember2(String memberPhone) throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray list = md.MemberList(page,size,"","",memberPhone,"","").getJSONArray("list");
@@ -249,7 +249,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
 
     //会员信息列表通过人物id筛选
     @Test(dataProvider = "userId",dataProviderClass = DataProviderMethod.class)
-    public void searchMember3(String userId) {
+    public void searchMember3(String userId) throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray list = md.MemberList(page,size,"","","",userId,"").getJSONArray("list");
@@ -270,7 +270,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
 
     //会员信息列表通过会员身份筛选
     @Test(dataProvider = "identity",dataProviderClass = DataProviderMethod.class)
-    public void searchMember4(String identity) {
+    public void searchMember4(String identity) throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray list = md.MemberList(page,size,"","","","",identity).getJSONArray("list");
@@ -288,9 +288,37 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+
+
     //会员信息列表通过会员id和会员姓名筛选
     @Test()
-    public void searchMember5() {
+    public void searchMember5() throws Exception{
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray list = md.MemberList(page,size,"","","","","").getJSONArray("list");
+            if (list.size()!=0){
+                String memberId = list.getJSONObject(0).getString("member_id");
+                JSONArray list0 = md.MemberList(page,size,memberId,"","","","").getJSONArray("list");
+                for(int i=0;i<list0.size();i++){
+                    String memberId1 = list0.getJSONObject(i).getString("member_id");
+                    String memberName1 = list0.getJSONObject(i).getString("member_name");
+                    Preconditions.checkArgument(memberId.equals(memberId1),"根据"+memberId+"查询，返回的结果"+memberId1);
+                }
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("会员信息列表通过会员id搜索");
+        }
+    }
+
+
+    //会员信息列表通过会员id和会员姓名筛选
+    @Test()
+    public void searchMember6() throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray list = md.MemberList(page,size,"","","","","").getJSONArray("list");
@@ -317,7 +345,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
 
     //会员信息列表通过会员id和会员姓名+联系电话筛选
     @Test()
-    public void searchMember6() {
+    public void searchMember7() throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray list = md.MemberList(page,size,"","","","","").getJSONArray("list");
@@ -349,7 +377,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
 
     //会员信息列表通过会员id和会员姓名+联系电话+人物id筛选
     @Test()
-    public void searchMember7() {
+    public void searchMember8() throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray list = md.MemberList(page,size,"","","","","").getJSONArray("list");
@@ -382,7 +410,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
 
     //会员信息列表通过会员id和会员姓名+联系电话+人物id+会员身份筛选
     @Test()
-    public void searchMember8() {
+    public void searchMember9() throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray list = md.MemberList(page,size,"","","","","").getJSONArray("list");
@@ -422,7 +450,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
 
     //会员到访列表通过user_id查询
     @Test(dataProvider = "visitId",dataProviderClass = DataProviderMethod.class)
-    public void memberVisits(String visitId){
+    public void memberVisits(String visitId) throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray list = md.MemberVisit(visitId,"","").getJSONArray("list");
@@ -442,7 +470,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
 
     //会员到访列表通过name查询
     @Test(dataProvider = "visitName",dataProviderClass = DataProviderMethod.class)
-    public void memberVisits1(String visitName){
+    public void memberVisits1(String visitName) throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray list = md.MemberVisit("",visitName,"").getJSONArray("list");
@@ -462,7 +490,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
 
     //会员到访列表通过shop_name查询
     @Test(dataProvider = "visitShopName",dataProviderClass = DataProviderMethod.class)
-    public void memberVisits2(String visitShopName){
+    public void memberVisits2(String visitShopName) throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray list = md.MemberVisit("","",visitShopName).getJSONArray("list");
@@ -483,7 +511,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
 
     //会员到访列表通过user_id+name查询
     @Test()
-    public void memberVisits3(){
+    public void memberVisits3() throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray list = md.MemberVisit("","","").getJSONArray("list");
@@ -493,7 +521,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
                 JSONArray list0 = md.MemberVisit(userId,name,"").getJSONArray("list");
                 for(int i=0;i<list0.size();i++){
                     String userId1 = list.getJSONObject(0).getString("user_id");
-                    String Name = list0.getJSONObject(i).getString("shop_name");
+                    String Name = list0.getJSONObject(i).getString("name");
                     Preconditions.checkArgument(userId1.equals(userId),"根据"+userId+"查询，返回的结果"+userId1);
                     Preconditions.checkArgument(Name.equals(name),"根据"+name+"查询，返回的结果"+Name);
                 }
@@ -511,7 +539,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
 
     //会员到访列表通过user_id+name+shop_name查询
     @Test()
-    public void memberVisits4(){
+    public void memberVisits4() throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray list = md.MemberVisit("","","").getJSONArray("list");
@@ -519,11 +547,11 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
                 String userId = list.getJSONObject(0).getString("user_id");
                 String name = list.getJSONObject(0).getString("name");
                 String shopName = list.getJSONObject(0).getString("shop_name");
-                JSONArray list0 = md.MemberVisit(userId,name,"").getJSONArray("list");
+                JSONArray list0 = md.MemberVisit(userId,name,shopName).getJSONArray("list");
                 for(int i=0;i<list0.size();i++){
-                    String userId1 = list.getJSONObject(0).getString("user_id");
-                    String Name = list0.getJSONObject(i).getString("shop_name");
-                    String shopName1 = list.getJSONObject(0).getString("shop_name");
+                    String userId1 = list.getJSONObject(i).getString("user_id");
+                    String Name = list0.getJSONObject(i).getString("name");
+                    String shopName1 = list.getJSONObject(i).getString("shop_name");
                     Preconditions.checkArgument(userId1.equals(userId),"根据"+userId+"查询，返回的结果"+userId1);
                     Preconditions.checkArgument(Name.equals(name),"根据"+name+"查询，返回的结果"+Name);
                     Preconditions.checkArgument(shopName.equals(shopName1),"根据"+shopName+"查询，返回的结果"+shopName1);
