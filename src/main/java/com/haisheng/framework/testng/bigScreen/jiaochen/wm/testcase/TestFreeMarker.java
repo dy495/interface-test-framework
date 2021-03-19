@@ -40,12 +40,12 @@ public class TestFreeMarker {
                 .execute());
     }
 
-    @Test
-    public void testSql() {
+//    @Test
+//    public void testSql() {
 //        DSLContext create = DSL.using("jdbc:mysql://rm-2zeg4an1kr1437xu6no.mysql.rds.aliyuncs.com/onepiece", "qa_wr", "qa_wr1234");
 //        create.selectQuery().addConditions();
 //        Result<Record> result = create.selectFrom("t_case").where("id=1").limit(100).fetch().;
 //        Row row = result.fieldsRow();
 //        System.err.println(field);
-    }
+//    }
 }

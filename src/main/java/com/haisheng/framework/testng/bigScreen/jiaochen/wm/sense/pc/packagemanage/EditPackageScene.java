@@ -13,7 +13,6 @@ import java.util.List;
 @Builder
 public class EditPackageScene extends BaseScene {
     private final String packageName;
-    private final Integer validity;
     private final String packageDescription;
     private final JSONArray voucherList;
     private final String packagePrice;
@@ -22,13 +21,13 @@ public class EditPackageScene extends BaseScene {
     private final String id;
     private final String subjectType;
     private final Long subjectId;
-    private final Integer customerUseValidity;
+    private final Integer expireType;
+    private final Integer expiryDate;
 
     @Override
     public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("package_name", packageName);
-        object.put("validity", validity);
         object.put("package_description", packageDescription);
         object.put("voucher_list", voucherList);
         object.put("package_price", packagePrice);
@@ -37,7 +36,8 @@ public class EditPackageScene extends BaseScene {
         object.put("id", id);
         object.put("subject_type", subjectType);
         object.put("subject_id", subjectId);
-        object.put("customer_use_validity", customerUseValidity);
+        object.put("expiry_date", expiryDate);
+        object.put("expire_type", expireType);
         return object;
     }
 

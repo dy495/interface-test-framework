@@ -38,7 +38,6 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
-import org.jetbrains.annotations.NotNull;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -1701,7 +1700,6 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             //列表内容校验
             PackagePage packagePage = util.collectBean(PackageFormPageScene.builder().packageName(packageName).build(), PackagePage.class).get(0);
             CommonUtil.checkResult(packageName + " 套餐价格", "49.99", packagePage.getPrice());
-            CommonUtil.checkResult(packageName + " 套餐有效期", 30, packagePage.getValidity());
             CommonUtil.checkResult(packageName + " 套餐内含卡券数", 10, packagePage.getVoucherNumber());
             CommonUtil.checkResult(packageName + " 客户有效期", 1, packagePage.getCustomerUseValidity());
             CommonUtil.checkResult(packageName + " 审核状态", AuditStatusEnum.AUDITING.getName(), packagePage.getAuditStatusName());
@@ -1748,7 +1746,6 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
                 PackageDetail packageDetail = util.getPackageDetail(packagePage.getPackageId());
                 int voucherCountSum = packageDetail.getVoucherList().stream().map(e -> (JSONObject) e).mapToInt(e -> e.getInteger("voucher_count")).sum();
                 CommonUtil.checkResultPlus(packagePage.getPackageName() + " 列表价格", packagePage.getPrice().equals("0") ? "0.00" : packagePage.getPrice(), "详情价格", packageDetail.getPackagePrice());
-                CommonUtil.checkResultPlus(packagePage.getPackageName() + " 列表有效期", packagePage.getValidity(), "详情有效期", packageDetail.getValidity());
                 CommonUtil.checkResultPlus(packagePage.getPackageName() + " 卡券数量", packagePage.getVoucherNumber(), "详情卡券数量", voucherCountSum);
                 CommonUtil.checkResultPlus(packagePage.getPackageName() + " 列表客户套餐有效期", packagePage.getCustomerUseValidity(), "详情客户套餐有效期", packageDetail.getCustomerUseValidity());
                 CommonUtil.logger(packagePage.getPackageName());
@@ -1769,24 +1766,13 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             int packageListSize = packageListScene.execute(visitor, true).getJSONArray("list").size();
             IScene packageFormPageScene = PackageFormPageScene.builder().packageStatus(true).build();
             List<PackagePage> packagePages = util.collectBean(packageFormPageScene, PackagePage.class);
-            int packageCount = (int) packagePages.stream().filter(this::compareTime).count();
+            int packageCount = packagePages.size();
             CommonUtil.checkResultPlus("未取消&未过期套餐数", packageListSize, "购买套餐下拉列表数", packageCount);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
             saveData("套餐管理--购买套餐--下拉可选择的套餐数量=未取消&未过期的套餐数");
         }
-    }
-
-    @NotNull
-    private Boolean compareTime(@NotNull PackagePage packagePage) {
-        String format = "yyyy-MM-dd HH:mm";
-        String today = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd") + " 00:00";
-        long todayUnix = Long.parseLong(DateTimeUtil.dateToStamp(today, format));
-        String createTime = packagePage.getCreateTime();
-        Integer validity = packagePage.getValidity();
-        long unix = Long.parseLong(DateTimeUtil.dateToStamp(createTime, format)) + (long) validity * 24 * 60 * 60 * 1000;
-        return unix >= todayUnix;
     }
 
     //ok
@@ -1876,7 +1862,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             Arrays.stream(strings).forEach(name -> {
                 IScene scene = CreatePackageScene.builder().packageName(name).packageDescription(util.getDesc())
                         .subjectType(util.getSubjectType()).subjectId(util.getSubjectDesc(util.getSubjectType())).expireType(2).expiryDate("10")
-                        .voucherList(voucherList).packagePrice(5000.00).status(true).shopIds(util.getShopIdList()).build();
+                        .voucherList(voucherList).packagePrice("5000.00").status(true).shopIds(util.getShopIdList()).build();
                 String message = visitor.invokeApi(scene, false).getString("message");
                 String err = StringUtils.isEmpty(name) ? "套餐名称不能为空" : "套餐名称输入应大于2字小于20字";
                 CommonUtil.checkResult("套餐名称为：" + name, err, message);
@@ -1900,7 +1886,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             Arrays.stream(strings).forEach(desc -> {
                 IScene scene = CreatePackageScene.builder().packageName(util.createPackageName(UseRangeEnum.BRAND)).packageDescription(desc)
                         .subjectType(util.getSubjectType()).subjectId(util.getSubjectDesc(util.getSubjectType())).expireType(2).expiryDate("10")
-                        .voucherList(voucherList).packagePrice(5000.00).status(true).shopIds(util.getShopIdList()).build();
+                        .voucherList(voucherList).packagePrice("5000.00").status(true).shopIds(util.getShopIdList()).build();
                 String message = visitor.invokeApi(scene, false).getString("message");
                 String err = StringUtils.isEmpty(desc) ? "套餐说明不能为空" : "套餐说明不能超过200字";
                 CommonUtil.checkResult("套餐名称为：" + desc, err, message);
@@ -1924,7 +1910,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             Arrays.stream(strings).forEach(subjectType -> {
                 IScene scene = CreatePackageScene.builder().packageName(util.createPackageName(UseRangeEnum.BRAND)).packageDescription(util.getDesc())
                         .subjectType(subjectType).subjectId(util.getSubjectDesc(util.getSubjectType())).voucherList(voucherList)
-                        .packagePrice(5000.00).expireType(2).expiryDate("12").shopIds(util.getShopIdList()).status(true).build();
+                        .packagePrice("5000.00").expireType(2).expiryDate("12").shopIds(util.getShopIdList()).status(true).build();
                 String message = visitor.invokeApi(scene, false).getString("message");
                 String err = "主体类型不存在";
                 CommonUtil.checkResult("主体类型为" + subjectType, err, message);
@@ -1945,7 +1931,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             JSONArray voucherList = util.getVoucherArray(voucherId, 1);
             IScene scene = CreatePackageScene.builder().packageName(util.createPackageName(UseRangeEnum.BRAND)).packageDescription(util.getDesc())
-                    .subjectType(UseRangeEnum.STORE.name()).voucherList(voucherList).packagePrice(5000.00).expireType(2)
+                    .subjectType(UseRangeEnum.STORE.name()).voucherList(voucherList).packagePrice("5000.00").expireType(2)
                     .expiryDate("12").shopIds(util.getShopIdList()).status(true).build();
             String message = visitor.invokeApi(scene, false).getString("message");
             String err = "主体详情不能为空";
@@ -1963,7 +1949,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = CreatePackageScene.builder().packageName(util.createPackageName(UseRangeEnum.BRAND))
-                    .packageDescription(util.getDesc()).subjectType(UseRangeEnum.CURRENT.name()).packagePrice(5000.00)
+                    .packageDescription(util.getDesc()).subjectType(UseRangeEnum.CURRENT.name()).packagePrice("5000.00")
                     .expireType(2).expiryDate("12").shopIds(util.getShopIdList()).status(true).build();
             String message = visitor.invokeApi(scene, false).getString("message");
             String err = "所选卡券不能为空";
@@ -1980,7 +1966,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
     public void packageManager_system_7() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Double[] doubles = {null, 100000000.01, -3.55};
+            String[] doubles = {null, "100000000.01", "-3.55"};
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             JSONArray voucherList = util.getVoucherArray(voucherId, 1);
             Arrays.stream(doubles).forEach(packagePrice -> {
@@ -2007,7 +1993,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             JSONArray voucherList = util.getVoucherArray(voucherId, 1);
             IScene scene = CreatePackageScene.builder().packageName(util.createPackageName(UseRangeEnum.BRAND))
-                    .packageDescription(util.getDesc()).subjectType(UseRangeEnum.STORE.name()).packagePrice(499.99)
+                    .packageDescription(util.getDesc()).subjectType(UseRangeEnum.STORE.name()).packagePrice("499.99")
                     .voucherList(voucherList).expireType(2).expiryDate("10").status(true).build();
             String message = visitor.invokeApi(scene, false).getString("message");
             String err = "套餐适用门店列表不能为空";
@@ -2029,7 +2015,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             JSONArray voucherList = util.getVoucherArray(voucherId, 10);
             IScene scene = CreatePackageScene.builder().packageName(util.createPackageName(UseRangeEnum.BRAND))
                     .packageDescription(util.getDesc()).subjectType(util.getSubjectType()).subjectId(util.getSubjectDesc(util.getSubjectType()))
-                    .packagePrice(499.99).status(true).voucherList(voucherList).shopIds(util.getShopIdList())
+                    .packagePrice("499.99").status(true).voucherList(voucherList).shopIds(util.getShopIdList())
                     .expireType(2).expiryDate("10").build();
             String message = visitor.invokeApi(scene, false).getString("message");
             String err = "卡券【" + voucherName + "】已被作废，请重新选择！";
@@ -2051,7 +2037,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             JSONArray voucherList = util.getVoucherArray(voucherId, 10);
             IScene scene = CreatePackageScene.builder().packageName(util.createPackageName(UseRangeEnum.BRAND))
                     .packageDescription(util.getDesc()).subjectType(util.getSubjectType()).subjectId(util.getSubjectDesc(util.getSubjectType()))
-                    .packagePrice(499.99).status(true).voucherList(voucherList).shopIds(util.getShopIdList())
+                    .packagePrice("499.99").status(true).voucherList(voucherList).shopIds(util.getShopIdList())
                     .expireType(2).expiryDate("10").build();
             String message = visitor.invokeApi(scene, false).getString("message");
             String err = "卡券已被拒绝或者已取消，请重新选择！";
@@ -2073,7 +2059,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             JSONArray voucherList = util.getVoucherArray(voucherId, 10);
             IScene scene = CreatePackageScene.builder().packageName(util.createPackageName(UseRangeEnum.BRAND))
                     .packageDescription(util.getDesc()).subjectType(util.getSubjectType()).subjectId(util.getSubjectDesc(util.getSubjectType()))
-                    .packagePrice(499.99).status(true).voucherList(voucherList).shopIds(util.getShopIdList())
+                    .packagePrice("499.99").status(true).voucherList(voucherList).shopIds(util.getShopIdList())
                     .expireType(2).expiryDate("10").build();
             String message = visitor.invokeApi(scene, false).getString("message");
             String err = "卡券已被拒绝或者已取消，请重新选择！";
@@ -2482,7 +2468,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
                 IScene scene = EditPackageScene.builder().packageName(packageName).packageDescription(EnumDesc.MESSAGE_DESC.getDesc())
                         .subjectType(subjectType).subjectId(util.getSubjectDesc(util.getSubjectType()))
                         .voucherList(voucherArray).packagePrice("1.11").status(true).shopIds(util.getShopIdList())
-                        .id(String.valueOf(packageId)).customerUseValidity(1).validity(1).build();
+                        .id(String.valueOf(packageId)).expireType(2).expiryDate(3650).build();
                 String message = visitor.invokeApi(scene, false).getString("message");
                 String err = StringUtils.isEmpty(subjectType) ? "主体类型不存在" : "主体类型不存在";
                 CommonUtil.checkResult("修改主体类型为：" + subjectType, err, message);
@@ -2504,7 +2490,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             long packageId = util.getPackagePage(PackageStatusEnum.REFUSAL).getPackageId();
             String packageName = util.getPackageName(packageId);
             IScene scene = EditPackageScene.builder().packageName(packageName).packageDescription(EnumDesc.MESSAGE_DESC.getDesc())
-                    .subjectType(UseRangeEnum.STORE.name()).validity(2000).voucherList(voucherArray).packagePrice("1.11")
+                    .subjectType(UseRangeEnum.STORE.name()).expireType(2).expiryDate(2).voucherList(voucherArray).packagePrice("1.11")
                     .status(true).shopIds(util.getShopIdList()).id(String.valueOf(packageId)).build();
             String message = visitor.invokeApi(scene, false).getString("message");
             String err = "主体详情不能为空";
@@ -2530,7 +2516,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             String packageName = util.getPackageName(packageId);
             list.forEach(e -> {
                 IScene scene = EditPackageScene.builder().packageName(packageName).packageDescription(EnumDesc.MESSAGE_DESC.getDesc())
-                        .subjectType(util.getSubjectType()).validity(2000).packagePrice("1.11").voucherList(e)
+                        .subjectType(util.getSubjectType()).expireType(2).expiryDate(23).packagePrice("1.11").voucherList(e)
                         .status(true).shopIds(util.getShopIdList()).id(String.valueOf(packageId)).build();
                 String message = visitor.invokeApi(scene, false).getString("message");
                 String err = e == null ? "所选卡券不能为空" : "卡券数量不能超过10张";
@@ -2555,7 +2541,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             String[] prices = {"100000000.01", "10000000001", null, ""};
             Arrays.stream(prices).forEach(price -> {
                 IScene scene = EditPackageScene.builder().packageName(packageName).packageDescription(EnumDesc.MESSAGE_DESC.getDesc())
-                        .subjectType(util.getSubjectType()).validity(2000).packagePrice(price).voucherList(voucherArray)
+                        .subjectType(util.getSubjectType()).expireType(2).expiryDate(2).packagePrice(price).voucherList(voucherArray)
                         .status(true).shopIds(util.getShopIdList()).id(String.valueOf(packageId)).build();
                 String message = visitor.invokeApi(scene, false).getString("message");
                 String err = StringUtils.isEmpty(price) ? "套餐价格不能为空" : "套餐价格不能大于100,000,000";
@@ -2578,7 +2564,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             long packageId = util.getPackagePage(PackageStatusEnum.REFUSAL).getPackageId();
             String packageName = util.getPackageName(packageId);
             IScene scene = EditPackageScene.builder().packageName(packageName).packageDescription(EnumDesc.MESSAGE_DESC.getDesc())
-                    .subjectType(util.getSubjectType()).validity(2000).packagePrice("99.99").voucherList(voucherArray)
+                    .subjectType(util.getSubjectType()).expireType(2).expiryDate(122).packagePrice("99.99").voucherList(voucherArray)
                     .status(true).id(String.valueOf(packageId)).build();
             String message = visitor.invokeApi(scene, false).getString("message");
             String err = "套餐适用门店列表不能为空";

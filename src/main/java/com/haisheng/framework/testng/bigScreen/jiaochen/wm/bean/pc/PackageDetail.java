@@ -11,11 +11,6 @@ import java.io.Serializable;
  */
 @Data
 public class PackageDetail implements Serializable {
-    /**
-     * 有效期
-     */
-    @JSONField(name = "validity")
-    private Integer validity;
 
     /**
      * 客户有效期
@@ -59,5 +54,11 @@ public class PackageDetail implements Serializable {
      */
     @JSONField(name = "voucher_list")
     private JSONArray voucherList;
+
+    @JSONField(name = "expiry_date")
+    private Integer expiryDate;
+
+    @JSONField(name = "expire_type")
+    private Integer expireType;
 }
 

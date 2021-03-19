@@ -19,13 +19,11 @@ public class CreatePackageScene extends BaseScene {
     private final String validity;
     private final String packageDescription;
     private final JSONArray voucherList;
-    //todo packagePrice的类型->String
-    private final Double packagePrice;
+    private final String packagePrice;
     private final List<Long> shopIds;
     private final String subjectType;
     private final Long subjectId;
     private final Boolean status;
-    private final Integer customerUseValidity;
     private final Integer expireType;
     private final String expiryDate;
 
@@ -41,7 +39,6 @@ public class CreatePackageScene extends BaseScene {
         object.put("subject_type", subjectType);
         object.put("subject_id", subjectId);
         object.put("status", status);
-        object.put("customer_use_validity", customerUseValidity);
         object.put("expire_type", expireType);
         object.put("expiry_date", expiryDate);
         return object;

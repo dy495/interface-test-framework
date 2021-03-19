@@ -591,21 +591,7 @@ public class SupporterUtil {
         long todayUnix = Long.parseLong(DateTimeUtil.dateToStamp(today, format));
         IScene packageFormPageScene = PackageFormPageScene.builder().build();
         List<PackagePage> packagePageList = collectBean(packageFormPageScene, PackagePage.class);
-        if (packageStatusEnum.getName().equals(PackageStatusEnum.EXPIRED.getName())) {
-            return packagePageList.stream().filter(e -> getValidityUnix(e, format) < todayUnix && e.getAuditStatusName().equals(PackageStatusEnum.AGREE.getName())).findFirst().orElse(null);
-        } else {
-            return packagePageList.stream().filter(e -> e.getAuditStatusName().equals(packageStatusEnum.getName())).findFirst().orElse(null);
-        }
-    }
-
-    /**
-     * 获取有效时间戳
-     *
-     * @param packagePage 套餐列表
-     * @return 有效时间戳
-     */
-    private Long getValidityUnix(PackagePage packagePage, String format) {
-        return Long.parseLong(DateTimeUtil.dateToStamp(packagePage.getCreateTime(), format)) + (long) packagePage.getValidity() * 24 * 60 * 60 * 1000;
+        return packagePageList.stream().filter(e -> e.getAuditStatusName().equals(packageStatusEnum.getName())).findFirst().orElse(null);
     }
 
     /**
@@ -719,11 +705,10 @@ public class SupporterUtil {
      */
     public String createPackage(JSONArray voucherList, UseRangeEnum anEnum) {
         String packageName = createPackageName(anEnum);
-        CreatePackageScene.CreatePackageSceneBuilder builder = CreatePackageScene.builder().packageName(packageName).packageDescription(getDesc())
+        IScene scene = CreatePackageScene.builder().packageName(packageName).packageDescription(getDesc())
                 .subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType())).voucherList(voucherList)
-                .packagePrice(49.99).status(true).shopIds(getShopIdList(3));
-        builder = visitor.isOnline() ? builder.customerUseValidity(10) : builder.expireType(2).expiryDate("10");
-        visitor.invokeApi(builder.build());
+                .packagePrice("49.99").status(true).shopIds(getShopIdList(3)).expireType(2).expiryDate("10").build();
+        visitor.invokeApi(scene);
         return packageName;
     }
 
@@ -765,9 +750,9 @@ public class SupporterUtil {
     public String editPackageContainVoucher(Long packageId, JSONArray voucherList) {
         PackageDetail packageDetail = getPackageDetail(packageId);
         IScene editPackageScene = EditPackageScene.builder().packageName(packageDetail.getPackageName()).packageDescription(packageDetail.getPackageDescription())
-                .validity(packageDetail.getValidity()).subjectType(packageDetail.getSubjectType()).subjectId(packageDetail.getSubjectId())
+                .subjectType(packageDetail.getSubjectType()).subjectId(packageDetail.getSubjectId())
                 .voucherList(voucherList).packagePrice(packageDetail.getPackagePrice()).status(true).shopIds(getShopIdList(3))
-                .id(String.valueOf(packageId)).customerUseValidity(packageDetail.getCustomerUseValidity()).build();
+                .id(String.valueOf(packageId)).build();
         visitor.invokeApi(editPackageScene);
         return packageDetail.getPackageName();
     }
@@ -782,9 +767,9 @@ public class SupporterUtil {
     public void editPackage(Long packageId, JSONArray voucherList) {
         String packageName = getPackageName(packageId);
         IScene editPackageScene = EditPackageScene.builder().packageName(packageName).packageDescription(EnumDesc.VOUCHER_DESC.getDesc())
-                .validity(2000).subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType()))
+                .subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType()))
                 .voucherList(voucherList).packagePrice("1.11").status(true).shopIds(getShopIdList(3))
-                .id(String.valueOf(packageId)).build();
+                .id(String.valueOf(packageId)).expireType(2).expiryDate(12).build();
         visitor.invokeApi(editPackageScene);
     }
 
@@ -800,9 +785,9 @@ public class SupporterUtil {
         Long packageId = packagePages.stream().filter(e -> !EnumVP.isContains(e.getPackageName())).map(PackagePage::getPackageId).findFirst().orElse(null);
         String packageName = getPackageName(packageId);
         IScene editPackageScene = EditPackageScene.builder().packageName(packageName).packageDescription(EnumDesc.VOUCHER_DESC.getDesc())
-                .validity(2000).subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType()))
+                .subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType()))
                 .voucherList(voucherList).packagePrice("1.11").status(true).shopIds(getShopIdList(3))
-                .id(String.valueOf(packageId)).build();
+                .id(String.valueOf(packageId)).expireType(2).expiryDate(12).build();
         visitor.invokeApi(editPackageScene);
         return packageName;
     }

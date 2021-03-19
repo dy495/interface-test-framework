@@ -18,7 +18,7 @@ public enum PackageStatusEnum {
     AGREE(1, "已通过"),
     REFUSAL(2, "已拒绝"),
     CANCEL(3, "已取消"),
-    EXPIRED(4, "已过期");
+    ;
 
     PackageStatusEnum(Integer id, String name) {
         this.name = name;
