@@ -780,15 +780,11 @@ public class StoreScenarioUtil extends TestCaseCommon {
      */
     public JSONObject historyShopTrendV3(String cycle_type, String month, long shop_id) throws Exception {
         String url = "/patrol/history/shop/trend-pv-uv";
-        String json =
-                "{" +
-                        "\"cycle_type\" :\"" + cycle_type + "\",\n" +
-                        "\"month\" :\"" + month + "\",\n" +
-                        "\"shop_id\" :" + shop_id + "\n" +
-                        "} ";
-
-        String res = httpPostWithCheckCode(url, json, IpPort);
-
+        JSONObject json = new JSONObject();
+        json.put("cycle_type", cycle_type);
+        json.put("month", month);
+        json.put("shop_id",shop_id);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
 
@@ -1238,16 +1234,13 @@ public class StoreScenarioUtil extends TestCaseCommon {
      */
     public JSONObject historyShopConversionV3(long shop_id, String cycle_type, String month) throws Exception {
         String url = "/patrol/history/shop/conversion";
-        String json =
-                "{" +
-                        "\"shop_id\" :" + shop_id + ",\n" +
-                        "\"cycle_type\" :\"" + cycle_type + "\",\n" +
-                        "\"month\" :\"" + month + "\"\n" +
-                        "} ";
-
-        String res = httpPostWithCheckCode(url, json, IpPort);
-
+        JSONObject json = new JSONObject();
+        json.put("shop_id",shop_id);
+        json.put("cycle_type",cycle_type);
+        json.put("month",month);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
+
     }
 
     /**
@@ -3000,7 +2993,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject history_shop_hourData() throws Exception {
-        String path = "/history/shop/all/hour-data";
+        String path = "/patrol/history/shop/all/hour-data";
         String json =
                 "{} ";
 
@@ -3027,12 +3020,11 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject history_shop_arrivData() throws Exception {
+    public JSONObject history_shop_arrivData(String cycle_type) throws Exception {
         String path = "/patrol/history/shop/all/trend-pv-uv";
-        String json =
-                "{} ";
-
-        String res = httpPostWithCheckCode(path, json, IpPort);
+        JSONObject json = new JSONObject();
+        json.put("cycle_type",cycle_type);
+        String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
     /**

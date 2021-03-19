@@ -336,7 +336,7 @@ public class StoreDataCenter extends TestCaseCommon implements TestCaseStd {
     /**
      * ====================消费者到店趋势中各天pv累计==到店客群总人次======================
      */
-   // @Test()
+   @Test()
     public void mpvTotals() {
         logger.logCaseStart(caseResult.getCaseName());
         
