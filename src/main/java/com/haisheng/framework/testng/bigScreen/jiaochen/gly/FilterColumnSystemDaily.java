@@ -1202,7 +1202,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     String result = respond.getJSONArray("list").getJSONObject(0).getString(output);
                     String result1 = respond.getJSONArray("list").getJSONObject(0).getString(output).equals("主动核销")?"0":"1";
                     JSONObject respond1 = jc.verificationReordFilterManage(shopId, "1", "10", pram, result1);
-                    int pages = respond1.getInteger("pages");
+                    int pages = respond1.getInteger("pages")>10?10:respond1.getInteger("pages");
                     for (int page = 1; page <= pages; page++) {
                         JSONArray list = jc.verificationReordFilterManage("",String.valueOf(page),"10", pram, result1).getJSONArray("list");
                         for (int i = 0; i < list.size(); i++) {
@@ -1214,7 +1214,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 }else{
                     String result = respond.getJSONArray("list").getJSONObject(0).getString(output);
                     JSONObject respond1 = jc.verificationReordFilterManage(shopId, "1", "10", pram, result);
-                    int pages = respond1.getInteger("pages");
+                    int pages = respond1.getInteger("pages")>10?10:respond1.getInteger("pages");
                     for (int page = 1; page <= pages; page++) {
                         JSONArray list = jc.verificationReordFilterManage("",String.valueOf(page),"10", pram, result).getJSONArray("list");
                         for (int i = 0; i < list.size(); i++) {

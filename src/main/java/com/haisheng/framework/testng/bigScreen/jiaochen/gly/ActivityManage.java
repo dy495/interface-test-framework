@@ -357,7 +357,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取进行中的活动ID
-            List<Long> ids = businessUtil.getActivityWorking();
+            List<Long> ids = businessUtil.getRecruitActivityWorking();
             //编辑前-变更记录条数
             JSONArray list = businessUtil.changeRecordPage(ids.get(0)).getJSONArray("list");
             int numBefore = list.size();
@@ -373,7 +373,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             System.err.println(numAfter);
             System.err.println(title+"-------"+rule);
             String content = list.getJSONObject(0).getString("content");
-            Preconditions.checkArgument(title.equals(pp.editTitle) && rule.equals(pp.EditRule), "编辑后的活动名字为：" + title + "  编辑后的活动规则为：" + rule);
+            Preconditions.checkArgument(title.contains("编辑过后的招募活动") && rule.equals(pp.EditRule), "编辑后的活动名字为：" + title + "  编辑后的活动规则为：" + rule);
             Preconditions.checkArgument(numAfter == numBefore + 1 && content.equals("编辑活动"), "编辑前变更记录的条数为：" + numBefore + "编辑后的变更记录的条数为：" + numAfter + "  编辑后变更记录新增的内容为：" + content);
         } catch (AssertionError | Exception e) {
             collectMessage(e);
@@ -2742,6 +2742,49 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
+     * 创建裂变活动-优惠券领取后使用天数为3651
+     */
+
+    @Test(description = "创建裂变活动-优惠券领取后使用天数为3651")
+    public void fissionVoucherTitleException9() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //添加活动图片
+            List<String> picList = new ArrayList<>();
+            picList.add(businessUtil.getPicPath());
+            //获取优惠券ID
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            //获取优惠券库存
+            String surplus = businessUtil.getSurplusInventory(voucherId);
+            JSONObject invitedVoucher = businessUtil.getInvitedVoucher(voucherId, 1, "1", 2, "", "", 3);
+            JSONObject shareVoucher = businessUtil.getShareVoucher(voucherId, 1, "1", 2, "", "", 3651);
+            IScene scene = FissionVoucherAddScene.builder()
+                    .type(1)
+                    .participationLimitType(0)
+                    .receiveLimitType(0)
+                    .title(pp.fissionVoucherName)
+                    .rule(pp.rule)
+                    .startDate(businessUtil.getStartDate())
+                    .endDate(businessUtil.getEndDate())
+                    .subjectType(supporterUtil.getSubjectType())
+                    .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
+                    .label("RED_PAPER")
+                    .picList(picList)
+                    .shareNum("3")
+                    .shareVoucher(shareVoucher)
+                    .invitedVoucher(invitedVoucher)
+                    .build();
+            String message = visitor.invokeApi(scene, false).getString("message");
+            Preconditions.checkArgument(message.equals("卡券有效天数范围为[1,3650]"), "优惠券领取后使用天数为3651，创建成功");
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("创建裂变活动-优惠券领取后使用天数为3651");
+        }
+    }
+
+    /**
      * 2021/3/11
      * -----------------------------------------------创建招募活动异常校验-------------------------------------------
      */
@@ -3132,6 +3175,82 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             saveData("创建招募活动--优惠券发行张数的异常情况{null,大于库存，0} ");
+        }
+    }
+
+    /**
+     *创建招募活动--优惠券有效期为3651天
+     */
+    @Test(description = "创建招募活动--优惠券有效期为3651天 ")
+    public void RecruitActivityTitleException14() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            List<Integer> labels = new ArrayList<>();
+            labels.add(1000);
+            labels.add(1);
+            labels.add(100);
+            labels.add(2000);
+            labels.add(3000);
+            List<String> picList = new ArrayList<>();
+            SupporterUtil supporterUtil = new SupporterUtil(visitor);
+            PublicParameter pp = new PublicParameter();
+            picList.add(0, supporterUtil.getPicPath());
+            //填写报名所需要信息
+            List<Boolean> isShow = new ArrayList<>();
+            isShow.add(true);
+            isShow.add(true);
+            isShow.add(true);
+            isShow.add(true);
+            isShow.add(true);
+            isShow.add(true);
+            isShow.add(true);
+            List<Boolean> isRequired = new ArrayList<>();
+            isRequired.add(false);
+            isRequired.add(false);
+            isRequired.add(false);
+            isRequired.add(false);
+            isRequired.add(false);
+            isRequired.add(false);
+            isRequired.add(false);
+            //卡券有效期
+            JSONObject voucherValid = businessUtil.getVoucherValid(2, null, null, 3651);
+            //创建招募活动-共有的--基础信息
+            String surplus = businessUtil.getSurplusInventory(voucherId);
+            JSONArray registerInformationList = this.businessUtil.getRegisterInformationList(isShow, isRequired);
+            //报名成功奖励
+            JSONArray registerObject = businessUtil.getRewardVouchers(voucherId, 1,businessUtil.getVoucherSurplusInventory(voucherId));
+            ManageRecruitAddScene.ManageRecruitAddSceneBuilder builder = ManageRecruitAddScene.builder()
+                    .type(2)
+                    .participationLimitType(0)
+                    .title("招募-活动时间异常情况" + (int) (Math.random() * 10000))
+                    .startDate(businessUtil.getStartDate())
+                    .endDate(businessUtil.getEndDate())
+                    .applyStart(businessUtil.getStartDate())
+                    .applyEnd(businessUtil.getEndDate())
+                    .isLimitQuota(true)
+                    .quota(5)
+                    .subjectType(supporterUtil.getSubjectType())
+                    .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
+                    .label("BARGAIN")
+                    .picList(picList)
+                    .rule(pp.rule)
+                    .registerInformationList(registerInformationList)
+                    .successReward(true)
+                    .rewardReceiveType(0)
+                    .isNeedApproval(true);
+            if (true) {
+                builder.rewardVouchers(registerObject)
+                        .voucherValid(voucherValid);
+            }
+            IScene scene = builder.build();
+            String message = visitor.invokeApi(scene, false).getString("message");
+            Preconditions.checkArgument(message.equals("卡券有效天数范围为[1,3650]"), "优惠券有效期为3651天，创建成功" );
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("创建招募活动--优惠券有效期为3651天");
         }
     }
 
