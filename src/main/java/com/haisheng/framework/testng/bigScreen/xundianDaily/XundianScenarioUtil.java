@@ -842,14 +842,14 @@ public class XundianScenarioUtil extends TestCaseCommon {
      * @description :截屏留痕+限时整改时间
      * @date :2020/6/25 13:56
      **/
-    public JSONObject problemMarkTime(String responsor_id, Long list_id, Long item_id, JSONArray pic_list, String audit_comment,int limit_time) throws Exception {
+    public JSONObject problemMarkTime(String responsor_id, Long list_id, Long item_id, JSONArray pic_list,int shop_id,String audit_comment,int limit_time) throws Exception {
         String url = "/patrol/shop/problem/mark";
         JSONObject json = new JSONObject();
         json.put("responsor_id", responsor_id);
         json.put("list_id", list_id);
         json.put("item_id", item_id);
         json.put("pic_list", pic_list);
-        json.put("shop_id", getXunDianShop());
+        json.put("shop_id", shop_id);
         json.put("audit_comment", audit_comment);
         json.put("limit_time", limit_time);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);

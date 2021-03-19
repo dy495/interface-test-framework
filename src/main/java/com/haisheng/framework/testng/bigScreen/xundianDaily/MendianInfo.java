@@ -91,6 +91,7 @@ public class MendianInfo {
         JSONArray pic_list = new JSONArray();
         JSONObject obj1 = new JSONObject();
         obj1.put("pic_path",obj.getString("pic_path"));
+
         obj1.put("device_id",deviceId);
         //obj1.put("time",System.currentTimeMillis());
         pic_list.add(obj1);
@@ -103,16 +104,35 @@ public class MendianInfo {
 
     public final JSONArray getpicFour(Integer type) throws Exception {
         String base64 = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/猫.png");
+
         JSONObject obj = xd.upload_pic(base64,shop_id_01,type);
+        JSONObject obj2 = xd.upload_pic(base64,shop_id_01,type);
+        JSONObject obj3 = xd.upload_pic(base64,shop_id_01,type);
+        JSONObject obj4 = xd.upload_pic(base64,shop_id_01,type);
+
         JSONArray pic_list = new JSONArray();
         JSONObject obj1 = new JSONObject();
+        JSONObject obj5 = new JSONObject();
+        JSONObject obj6 = new JSONObject();
+        JSONObject obj7 = new JSONObject();
+
         obj1.put("pic_path",obj.getString("pic_path"));
         obj1.put("device_id",deviceId);
+
+        obj5.put("pic_path",obj.getString("pic_path"));
+        obj5.put("device_id",deviceId);
+
+        obj6.put("pic_path",obj.getString("pic_path"));
+        obj6.put("device_id",deviceId);
+
+        obj7.put("pic_path",obj.getString("pic_path"));
+        obj7.put("device_id",deviceId);
+
         //obj1.put("time",System.currentTimeMillis());
         pic_list.add(obj1);
-        pic_list.add(obj1);
-        pic_list.add(obj1);
-        pic_list.add(obj1);
+        pic_list.add(obj2);
+        pic_list.add(obj3);
+        pic_list.add(obj4);
         return pic_list;
 
     }

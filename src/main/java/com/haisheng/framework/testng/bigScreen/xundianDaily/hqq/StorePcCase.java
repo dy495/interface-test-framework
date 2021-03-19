@@ -478,7 +478,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
             moduleId.add(9);
 
             //新增一个角色
-            JSONObject res = md.organizationRoleAdd(name, description, moduleId);
+            JSONObject res = md.organizationRoleAdd(name,2, description, moduleId);
             Integer code = res.getInteger("code");
 
             Long role_id = md.organizationRolePage(name, page, size).getJSONArray("list").getJSONObject(0).getLong("role_id");
@@ -528,23 +528,23 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
 
             //新增角色名称20个字的角色
             String description = "青青测试给店长自动化用的角色";
-            JSONObject res = md.organizationRoleAdd("这是一个二十字的角色名称是的是的是的", description, moduleId);
+            JSONObject res = md.organizationRoleAdd("这是一个二十字的角色名称是的是的是的",2, description, moduleId);
             checkArgument(res.getInteger("code") == 1000, "角色名称为20个字，创建失败");
 
             //新增角色名称20个字英文+中文+数字的角色
-            JSONObject res1 = md.organizationRoleAdd("这是一个二十字的角色名称AABB1111", description, moduleId);
+            JSONObject res1 = md.organizationRoleAdd("这是一个二十字的角色名称AABB1111",2, description, moduleId);
             checkArgument(res1.getInteger("code") == 1000, "角色名称为中文+字母+数字，创建失败");
 
             //新增角色名称20个字英文+中文+数字+字符的角色
-            JSONObject res2 = md.organizationRoleAdd("这是一个二十字的角色名称AABB11.。", description, moduleId);
+            JSONObject res2 = md.organizationRoleAdd("这是一个二十字的角色名称AABB11.。",2, description, moduleId);
             checkArgument(res2.getInteger("code") == 1000, "角色名称为中文+字母+数字+字符，创建失败");
 
             //新增角色名称21个字角色
-            JSONObject res3 = md.organizationRoleAdd("这是一个二十一字的角色名称是的是的是的是的", description, moduleId);
+            JSONObject res3 = md.organizationRoleAdd("这是一个二十一字的角色名称是的是的是的是的",2, description, moduleId);
             checkArgument(res3.getString("message").equals("角色名称需要在1-20个字内"), "角色名称为21个字，创建成功");
 
             //新增重复角色名称的角色
-            JSONObject res4 = md.organizationRoleAdd("这是一个二十字的角色名称AABB11.。", description, moduleId);
+            JSONObject res4 = md.organizationRoleAdd("这是一个二十字的角色名称AABB11.。",2, description, moduleId);
             checkArgument(res4.getString("message").equals("新增角色异常:当前角色名称已存在！请勿重复添加"), "重复的角色名称，创建成功");
 
 
@@ -578,19 +578,19 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
             moduleId.add(10);
 
             //新增角色权限说明50个字的角色
-            JSONObject res = md.organizationRoleAdd("auto名字3", "不是这是一个二十字的角色名称是的是的是的不是的的不是的好的好还需要二十个字现在是三十七了吧刚好五个字", moduleId);
+            JSONObject res = md.organizationRoleAdd("auto名字3",2, "不是这是一个二十字的角色名称是的是的是的不是的的不是的好的好还需要二十个字现在是三十七了吧刚好五个字", moduleId);
             checkArgument(res.getInteger("code") == 1000, "角色权限说明为50个字，创建失败");
 
             //新增角色权限说明角色字英文+中文+数字的角色
-            JSONObject res1 = md.organizationRoleAdd("auto名字1", "22一个二十字的角色名称AABB", moduleId);
+            JSONObject res1 = md.organizationRoleAdd("auto名字1",2, "22一个二十字的角色名称AABB", moduleId);
             checkArgument(res1.getInteger("code") == 1000, "角色权限说明中文+字母+数字，创建失败");
 
             //新增角色权限说明角色英文+中文+数字+字符的角色
-            JSONObject res2 = md.organizationRoleAdd("auto名字2", "这是一个二十字色名称BB11.。", moduleId);
+            JSONObject res2 = md.organizationRoleAdd("auto名字2",2, "这是一个二十字色名称BB11.。", moduleId);
             checkArgument(res2.getInteger("code") == 1000, "角色权限说明为中文+字母+数字+字符，创建失败");
 
             //新增角色权限说明51个字的角色
-            JSONObject res3 = md.organizationRoleAdd("auto名字4", "不是这是一个二十字的角色名称是的是的是的不是的的不是的好的好还需要二十个字现在是三十七了吧刚好五个字多", moduleId);
+            JSONObject res3 = md.organizationRoleAdd("auto名字4",2, "不是这是一个二十字的角色名称是的是的是的不是的的不是的好的好还需要二十个字现在是三十七了吧刚好五个字多", moduleId);
             checkArgument(res3.getString("message").equals("角色名称需要在1-50个字内"), "角色权限说明为51个字，创建成功");
 
             mds.deleteRole();

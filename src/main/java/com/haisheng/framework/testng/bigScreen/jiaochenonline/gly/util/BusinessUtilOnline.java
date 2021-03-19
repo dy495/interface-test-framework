@@ -869,7 +869,7 @@ public class BusinessUtilOnline {
             activityRegisterApplet(id1,"13373166806","郭丽雅",2,"1513814362@qq.com","22","女","其他");
             ids.add(id1);
             //登录PC
-            jc.pcLogin(pp.phone1, pp.password);
+            jc.pcLogin(pp.phone, pp.password);
         }
         return ids;
 
@@ -2057,6 +2057,42 @@ public class BusinessUtilOnline {
             }
         }
         return title;
+    }
+
+    /**
+     * 获取领取渠道的相关的字段，以及字段的转化
+     */
+    public String enumMapSendChannelList(String sendChannelName){
+        JSONArray list=jc.enummap().getJSONArray("SEND_CHANNEL_LIST");
+        String key="";
+        for(int i=0;i<list.size();i++){
+            String value=list.getJSONObject(i).getString("value");
+            if(value.equals(sendChannelName)){
+                key=list.getJSONObject(i).getString("key");
+                System.err.println(key);
+            }
+        }
+        return key;
+    }
+
+    /**
+     * 通过品牌名称获取品牌的ID
+     */
+    public String brandPageExchange(String brandNme){
+        JSONObject response=jc.brandListFilterManage3("","1","10","");
+        int pages=response.getInteger("pages");
+        String brandId="";
+        for(int page=1;page<=pages;page++){
+            JSONArray list=jc.brandListFilterManage3("", String.valueOf(page),"10","").getJSONArray("list");
+            for(int i=0;i<list.size();i++){
+                String name=list.getJSONObject(i).getString("name");
+                if(name.equals(brandNme)){
+                    brandId=list.getJSONObject(i).getString("id");
+                    System.err.println(brandId);
+                }
+            }
+        }
+        return brandId;
     }
 
 

@@ -406,145 +406,146 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
 
 
-    @Test
-    public void user_add_work() throws Exception{
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONArray moduleId = new JSONArray();
-            moduleId.add(7);
-            moduleId.add(9);
-            //新增角色名称20个字的角色
-            String description = "青青测试给店长自动化用的角色";
-            JSONObject res = md.organizationRoleAddTwo("这是一个二十字的角色名称是的是的是的是的",1, description, moduleId);
-            Preconditions.checkArgument(res.getInteger("code") == 1000, "角色名称为20个字，创建失败");
-            //新增角色名称20个字英文+中文+数字的角色
-            JSONObject res1 = md.organizationRoleAddTwo("这是一个二十字的角色名称AABB1111",1, description, moduleId);
-            Preconditions.checkArgument(res1.getInteger("code") == 1000, "角色名称为中文+字母+数字，创建失败");
-            //新增角色名称20个字英文+中文+数字+字符的角色
-            JSONObject res2 = md.organizationRoleAddTwo("这是一个二十字的角色名称AABB11.。",1, description, moduleId);
-            Preconditions.checkArgument(res2.getInteger("code") == 1000, "角色名称为中文+字母+数字+字符，创建失败");
-            //新增角色名称21个字角色
-            JSONObject res3 = md.organizationRoleAddTwo("这是一个二十一字的角色名称是的是的是的是的", 1,description, moduleId);
-            Preconditions.checkArgument(res3.getString("message").equals("角色名称需要在1-20个字内"), "角色名称为21个字，创建成功");
-            //新增重复角色名称的角色
-            JSONObject res4 = md.organizationRoleAddTwo("这是一个二十字的角色名称AABB11.。",1,description, moduleId);
-            Preconditions.checkArgument(res4.getString("message").equals("新增角色异常:当前角色名称已存在！请勿重复添加"), "重复的角色名称，创建成功");
-            //将账户使用次数为0的角色删除
-            mds.deleteRole();
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("新增角色(名称校验)");
-        }
+//    @Test
+//    public void user_add_work() throws Exception{
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            JSONArray moduleId = new JSONArray();
+//            moduleId.add(7);
+//            moduleId.add(9);
+//            //新增角色名称20个字的角色
+//            String description = "青青测试给店长自动化用的角色";
+////            {"name":"13212","description":"123123","superior_role_id":2,"module_ids":[7,78,9,17,79,10,11,18,12,13,40,14,15,16,39]}
+//            JSONObject res = md.organizationRoleAddTwo("这是一个二十字的角色名称是的",2, description, moduleId);
+//            Preconditions.checkArgument(res.getInteger("code") == 1000, "角色名称为20个字，创建失败");
+//            新增角色名称20个字英文+中文+数字的角色
+//            JSONObject res1 = md.organizationRoleAddTwo("这是一个二十字的角色名称AABB1111",2, description, moduleId);
+//            Preconditions.checkArgument(res1.getInteger("code") == 1000, "角色名称为中文+字母+数字，创建失败");
+//            //新增角色名称20个字英文+中文+数字+字符的角色
+//            JSONObject res2 = md.organizationRoleAddTwo("这是一个二十字的角色名称AABB11.。",2, description, moduleId);
+//            Preconditions.checkArgument(res2.getInteger("code") == 1000, "角色名称为中文+字母+数字+字符，创建失败");
+//            //新增角色名称21个字角色
+//            JSONObject res3 = md.organizationRoleAddTwo("这是一个二十一字的角色名称是的是的是asdasdasdsadasd", 2,description, moduleId);
+//            Preconditions.checkArgument(res3.getString("message").equals("角色名称需要在1-20个字内"), "角色名称为21个字，创建成功");
+//            //新增重复角色名称的角色
+//            JSONObject res4 = md.organizationRoleAddTwo("这是一个二十字的角色名称AABB11.。",2,description, moduleId);
+//            Preconditions.checkArgument(res4.getString("message").equals("新增角色异常:当前角色名称已存在！请勿重复添加"), "重复的角色名称，创建成功");
+//            //将账户使用次数为0的角色删除
+//            mds.deleteRole();
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("新增角色(名称校验)");
+//        }
+//
+//    }
 
-    }
-
-    /**
-     * ====================新增角色(权限说明校验)======================
-     */
-    @Test
-    public void user_add_work1() throws Exception{
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONArray moduleId = new JSONArray();
-            moduleId.add(7);
-            moduleId.add(9);
-            moduleId.add(10);
-            //新增角色权限说明50个字的角色
-            JSONObject res = md.organizationRoleAddTwo("auto名字3", 1,"不是这是一个二十字的角色名称是的是的是的不是的的不是的好的好还需要二十个字现在是三十七了吧刚好五个字", moduleId);
-            Preconditions.checkArgument(res.getInteger("code") == 1000, "角色权限说明为50个字，创建失败");
-            //新增角色权限说明角色字英文+中文+数字的角色
-            JSONObject res1 = md.organizationRoleAddTwo("auto名字1",1, "22一个二十字的角色名称AABB", moduleId);
-            Preconditions.checkArgument(res1.getInteger("code") == 1000, "角色权限说明中文+字母+数字，创建失败");
-            //新增角色权限说明角色英文+中文+数字+字符的角色
-            JSONObject res2 = md.organizationRoleAddTwo("auto名字2",1, "这是一个二十字色名称BB11.。", moduleId);
-            Preconditions.checkArgument(res2.getInteger("code") == 1000, "角色权限说明为中文+字母+数字+字符，创建失败");
-            //新增角色权限说明51个字的角色
-            JSONObject res3 = md.organizationRoleAddTwo("auto名字4",1, "不是这是一个二十字的角色名称是的是的是的不是的的不是的好的好还需要二十个字现在是三十七了吧刚好五个字多", moduleId);
-            Preconditions.checkArgument(res3.getString("message").equals("角色名称需要在1-50个字内"), "角色权限说明为51个字，创建成功");
-            mds.deleteRole();
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("新增角色(权限说明校验)");
-        }
-
-    }
-
-
-
-    /**
-     * ====================新增账号======================
-     */
-    @Test
-    public void accountAdd_Phone() throws Exception{
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONArray roleIdList = new JSONArray();
-            roleIdList.add(2);
-            JSONArray shopIdList = new JSONArray();
-            shopIdList.add(4116);
-            int status = 1;
-            String type = "PHONE";
-            //用phone新增一个账号
-            JSONObject res = md.organizationAccountAddTwo("",name,"123456","uid_ef6d2de5", type,"", phone,status,roleIdList,shopIdList);
-            Integer code = res.getInteger("code");
-            Preconditions.checkArgument(code == 1000, "用手机号:" + phone + "新增一个账号失败了");
-            //从列表获取刚刚新增的那个账户的名称进行搜获获取她的account
-            JSONArray accountList = md.organizationAccountPage(name, "", "", phone, "", "", page, size).getJSONArray("list");
-            String account = accountList.getJSONObject(0).getString("account");
-            //新建后编辑账号
-            JSONObject res1 = md.organizationAccountEditTwo(account,"qqqqq","111","uid_ef6d2de5",type,"",phone,status,roleIdList,shopIdList);
-            Integer code2 = res1.getInteger("code");
-            Preconditions.checkArgument(code2 == 1000, "用姓名:" + "qqqqq" + "编辑一个账号失败了");
-            //新建成功以后删除新建的账号
-            Integer code1 = md.organizationAccountDelete(account).getInteger("code");
-            Preconditions.checkArgument(code1 == 1000, "删除手机号的账号:" + phone + "失败了");
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("用手机号新增账号,编辑账号,删除账号");
-        }
-    }
-
-    @Test
-    public void accountAdd_Email() throws Exception{
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONArray roleIdList = new JSONArray();
-            roleIdList.add(2);
-            JSONArray shopIdList = new JSONArray();
-            shopIdList.add(4116);
-            int status = 1;
-            String type = "EMAIL";
-            //用email新增一个账号
-            JSONObject res = md.organizationAccountAddTwo("",name,"123456","uid_ef6d2de5", type,email, "",status,roleIdList,shopIdList);
-            Integer code = res.getInteger("code");
-            Preconditions.checkArgument(code == 1000, "用邮箱号:" + email + "新增一个账号失败了");
-            //从列表获取刚刚新增的那个账户的名称进行搜获获取她的account
-            JSONArray accountList = md.organizationAccountPage(name, "", email,"", "", "", page, size).getJSONArray("list");
-            String account = accountList.getJSONObject(0).getString("account");
-            //新建后编辑账号
-            JSONObject res1 = md.organizationAccountEditTwo(account,"qqqqq","111","uid_ef6d2de5",type,"",phone,status,roleIdList,shopIdList);
-            Integer code2 = res1.getInteger("code");
-            Preconditions.checkArgument(code2 == 1000, "用姓名:" + "qqqqq" + "编辑一个账号失败了");
-            //新建成功以后删除新建的账号
-            Integer code1 = md.organizationAccountDelete(account).getInteger("code");
-            Preconditions.checkArgument(code1 == 1000, "删邮箱的账号:" + email + "失败了");
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("用邮箱号新增账号,编辑账号,删除账号");
-        }
-    }
+//    /**
+//     * ====================新增角色(权限说明校验)======================
+//     */
+//    @Test
+//    public void user_add_work1() throws Exception{
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            JSONArray moduleId = new JSONArray();
+//            moduleId.add(7);
+//            moduleId.add(9);
+//            moduleId.add(10);
+//            //新增角色权限说明50个字的角色
+//            JSONObject res = md.organizationRoleAddTwo("auto名字3", 1,"不是这是一个二十字的角色名称是的是的是的不是的的不是的好的好还需要二十个字现在是三十七了吧刚好五个字", moduleId);
+//            Preconditions.checkArgument(res.getInteger("code") == 1000, "角色权限说明为50个字，创建失败");
+//            //新增角色权限说明角色字英文+中文+数字的角色
+//            JSONObject res1 = md.organizationRoleAddTwo("auto名字1",1, "22一个二十字的角色名称AABB", moduleId);
+//            Preconditions.checkArgument(res1.getInteger("code") == 1000, "角色权限说明中文+字母+数字，创建失败");
+//            //新增角色权限说明角色英文+中文+数字+字符的角色
+//            JSONObject res2 = md.organizationRoleAddTwo("auto名字2",1, "这是一个二十字色名称BB11.。", moduleId);
+//            Preconditions.checkArgument(res2.getInteger("code") == 1000, "角色权限说明为中文+字母+数字+字符，创建失败");
+//            //新增角色权限说明51个字的角色
+//            JSONObject res3 = md.organizationRoleAddTwo("auto名字4",1, "不是这是一个二十字的角色名称是的是的是的不是的的不是的好的好还需要二十个字现在是三十七了吧刚好五个字多", moduleId);
+//            Preconditions.checkArgument(res3.getString("message").equals("角色名称需要在1-50个字内"), "角色权限说明为51个字，创建成功");
+//            mds.deleteRole();
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("新增角色(权限说明校验)");
+//        }
+//
+//    }
+//
+//
+//
+//    /**
+//     * ====================新增账号======================
+//     */
+//    @Test
+//    public void accountAdd_Phone() throws Exception{
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            JSONArray roleIdList = new JSONArray();
+//            roleIdList.add(2);
+//            JSONArray shopIdList = new JSONArray();
+//            shopIdList.add(4116);
+//            int status = 1;
+//            String type = "PHONE";
+//            //用phone新增一个账号
+//            JSONObject res = md.organizationAccountAddTwo("",name,"123456","uid_ef6d2de5", type,"", phone,status,roleIdList,shopIdList);
+//            Integer code = res.getInteger("code");
+//            Preconditions.checkArgument(code == 1000, "用手机号:" + phone + "新增一个账号失败了");
+//            //从列表获取刚刚新增的那个账户的名称进行搜获获取她的account
+//            JSONArray accountList = md.organizationAccountPage(name, "", "", phone, "", "", page, size).getJSONArray("list");
+//            String account = accountList.getJSONObject(0).getString("account");
+//            //新建后编辑账号
+//            JSONObject res1 = md.organizationAccountEditTwo(account,"qqqqq","111","uid_ef6d2de5",type,"",phone,status,roleIdList,shopIdList);
+//            Integer code2 = res1.getInteger("code");
+//            Preconditions.checkArgument(code2 == 1000, "用姓名:" + "qqqqq" + "编辑一个账号失败了");
+//            //新建成功以后删除新建的账号
+//            Integer code1 = md.organizationAccountDelete(account).getInteger("code");
+//            Preconditions.checkArgument(code1 == 1000, "删除手机号的账号:" + phone + "失败了");
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("用手机号新增账号,编辑账号,删除账号");
+//        }
+//    }
+//
+//    @Test
+//    public void accountAdd_Email() throws Exception{
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            JSONArray roleIdList = new JSONArray();
+//            roleIdList.add(2);
+//            JSONArray shopIdList = new JSONArray();
+//            shopIdList.add(4116);
+//            int status = 1;
+//            String type = "EMAIL";
+//            //用email新增一个账号
+//            JSONObject res = md.organizationAccountAddTwo("",name,"123456","uid_ef6d2de5", type,email, "",status,roleIdList,shopIdList);
+//            Integer code = res.getInteger("code");
+//            Preconditions.checkArgument(code == 1000, "用邮箱号:" + email + "新增一个账号失败了");
+//            //从列表获取刚刚新增的那个账户的名称进行搜获获取她的account
+//            JSONArray accountList = md.organizationAccountPage(name, "", email,"", "", "", page, size).getJSONArray("list");
+//            String account = accountList.getJSONObject(0).getString("account");
+//            //新建后编辑账号
+//            JSONObject res1 = md.organizationAccountEditTwo(account,"qqqqq","111","uid_ef6d2de5",type,"",phone,status,roleIdList,shopIdList);
+//            Integer code2 = res1.getInteger("code");
+//            Preconditions.checkArgument(code2 == 1000, "用姓名:" + "qqqqq" + "编辑一个账号失败了");
+//            //新建成功以后删除新建的账号
+//            Integer code1 = md.organizationAccountDelete(account).getInteger("code");
+//            Preconditions.checkArgument(code1 == 1000, "删邮箱的账号:" + email + "失败了");
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("用邮箱号新增账号,编辑账号,删除账号");
+//        }
+//    }
 
 
 

@@ -82,8 +82,8 @@ public class XundianPcCase extends TestCaseCommon implements TestCaseStd {
             //获取整改处理人
             String responsorId = xd.problemesponsors().getJSONArray("list").getJSONObject(0).getString("id");
             String audit_comment = "pc 截屏留痕推送给门店负责人";
-            JSONObject res =  xd.problemMarkTime(responsorId, listId, itemId, pic_list, audit_comment,20);
-            checkArgument(res.getInteger("code") == 1000, "截图四张失败message+"+res.getString("message"));
+            xd.problemMarkTime("uid_91df0ddd", listId, itemId, pic_list,43072, audit_comment,20);
+//            checkArgument(res.getInteger("code") == 1000, "截图四张失败message+"+res.getString("message"));
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -94,142 +94,142 @@ public class XundianPcCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    @Test
-    public void problemMark1() throws Exception{
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //JSONObject list = xd.checkStart("\"REMOTE\"", 1); //进入远程巡店
-            JSONObject data = xd.problemeItems();
-
-            //截屏图片
-            JSONArray pic_list = info.getpicFour(0);
-            //获取整改处理人
-            String responsorId = xd.problemesponsors().getJSONArray("list").getJSONObject(0).getString("id");
-            String audit_comment = "pc 截屏留痕推送给门店负责人";
-            JSONObject res =  xd.problemMarkTime(responsorId, null, null, pic_list, audit_comment,20);
-            checkArgument(res.getInteger("code") != 1000, "执行项为空特殊留痕也成功了message+"+res.getString("message"));
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("pc执行项为空特殊留痕也成功了");
-        }
-    }
-
-
-    @Test
-    public void problemMark2() throws Exception{
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //JSONObject list = xd.checkStart("\"REMOTE\"", 1); //进入远程巡店
-            JSONObject data = xd.problemeItems();
-
-            JSONArray check_lists = data.getJSONArray("list");  //执行清单列表
-            long listId = check_lists.getJSONObject(0).getInteger("id"); //取一个执行清单
-//            取执行清单的一个执行项
-            long itemId = check_lists.getJSONObject(0).getJSONArray("check_items").getJSONObject(0).getLong("id");
-            //截屏图片
-            JSONArray pic_list = info.getpicFour(0);
-            //获取整改处理人
-            String responsorId = xd.problemesponsors().getJSONArray("list").getJSONObject(0).getString("id");
-            String audit_comment = "pc 截屏留痕推送给门店负责人";
-            JSONObject res =  xd.problemMarkTime("", listId, itemId, pic_list, audit_comment,20);
-            checkArgument(res.getInteger("code") != 1000, "处理人为空也成功了message+"+res.getString("message"));
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("pc特殊截屏处理人为空也成功了");
-        }
-    }
-
-
-    @Test
-    public void problemMark3() throws Exception{
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //JSONObject list = xd.checkStart("\"REMOTE\"", 1); //进入远程巡店
-            JSONObject data = xd.problemeItems();
-
-            JSONArray check_lists = data.getJSONArray("list");  //执行清单列表
-            long listId = check_lists.getJSONObject(0).getInteger("id"); //取一个执行清单
-//            取执行清单的一个执行项
-            long itemId = check_lists.getJSONObject(0).getJSONArray("check_items").getJSONObject(0).getLong("id");
-            //截屏图片
-            JSONArray pic_list = info.getpicFour(0);
-            //获取整改处理人
-            String responsorId = xd.problemesponsors().getJSONArray("list").getJSONObject(0).getString("id");
-//            String audit_comment = "pc 截屏留痕推送给门店负责人";
-            String audit_comment = "审核意见" + CommonUtil.getRandom(100);
-            JSONObject res =  xd.problemMarkTime(responsorId, listId, itemId, pic_list, audit_comment,20);
-            checkArgument(res.getInteger("code") != 1000, "处理意见大于100字也成功了message+"+res.getString("message"));
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("pc特殊截屏处理意见大于100字也成功了");
-        }
-    }
-
-    @Test
-    public void problemMark4() throws Exception{
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //JSONObject list = xd.checkStart("\"REMOTE\"", 1); //进入远程巡店
-            JSONObject data = xd.problemeItems();
-
-            JSONArray check_lists = data.getJSONArray("list");  //执行清单列表
-            long listId = check_lists.getJSONObject(0).getInteger("id"); //取一个执行清单
-//            取执行清单的一个执行项
-            long itemId = check_lists.getJSONObject(0).getJSONArray("check_items").getJSONObject(0).getLong("id");
-            //截屏图片
-            JSONArray pic_list = info.getpicFour(0);
-            //获取整改处理人
-            String responsorId = xd.problemesponsors().getJSONArray("list").getJSONObject(0).getString("id");
-//            String audit_comment = "pc 截屏留痕推送给门店负责人";
-            String audit_comment = "审核意见" + CommonUtil.getRandom(100);
-            JSONObject res =  xd.problemMarkTime(responsorId, listId, itemId, pic_list, "",20);
-            checkArgument(res.getInteger("code") != 1000, "处理意见为空也成功了message+"+res.getString("message"));
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("pc特殊截屏处理意见为空");
-        }
-    }
-
-
-    @Test
-    public void problemMark5() throws Exception{
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //JSONObject list = xd.checkStart("\"REMOTE\"", 1); //进入远程巡店
-            JSONObject data = xd.problemeItems();
-
-            JSONArray check_lists = data.getJSONArray("list");  //执行清单列表
-            long listId = check_lists.getJSONObject(0).getInteger("id"); //取一个执行清单
-//            取执行清单的一个执行项
-            long itemId = check_lists.getJSONObject(0).getJSONArray("check_items").getJSONObject(0).getLong("id");
-            //截屏图片
+//    @Test
+//    public void problemMark1() throws Exception{
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            //JSONObject list = xd.checkStart("\"REMOTE\"", 1); //进入远程巡店
+//            JSONObject data = xd.problemeItems();
+//
+//            //截屏图片
 //            JSONArray pic_list = info.getpicFour(0);
-            JSONArray pic_list = new JSONArray();
-            //获取整改处理人
-            String responsorId = xd.problemesponsors().getJSONArray("list").getJSONObject(0).getString("id");
-          String audit_comment = "pc 截屏留痕推送给门店负责人";
-            JSONObject res =  xd.problemMarkTime(responsorId, listId, itemId, pic_list, audit_comment,20);
-            checkArgument(res.getInteger("code") != 1000, "图片为空也成功了message+"+res.getString("message"));
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("pc特殊截屏没有图片");
-        }
-    }
+//            //获取整改处理人
+//            String responsorId = xd.problemesponsors().getJSONArray("list").getJSONObject(0).getString("id");
+//            String audit_comment = "pc 截屏留痕推送给门店负责人";
+//            JSONObject res =  xd.problemMarkTime(responsorId, null, null, pic_list,43072, audit_comment,20);
+//            checkArgument(res.getString("source").equals("配置清单id不能为空"), "执行项为空特殊留痕也成功了message+"+res.getString("message"));
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("pc执行项为空特殊留痕也成功了");
+//        }
+//    }
+//
+//
+//    @Test
+//    public void problemMark2() throws Exception{
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            //JSONObject list = xd.checkStart("\"REMOTE\"", 1); //进入远程巡店
+//            JSONObject data = xd.problemeItems();
+//
+//            JSONArray check_lists = data.getJSONArray("list");  //执行清单列表
+//            long listId = check_lists.getJSONObject(0).getInteger("id"); //取一个执行清单
+////            取执行清单的一个执行项
+//            long itemId = check_lists.getJSONObject(0).getJSONArray("check_items").getJSONObject(0).getLong("id");
+//            //截屏图片
+//            JSONArray pic_list = info.getpicFour(0);
+//            //获取整改处理人
+//            String responsorId = xd.problemesponsors().getJSONArray("list").getJSONObject(0).getString("id");
+//            String audit_comment = "pc 截屏留痕推送给门店负责人";
+//            JSONObject res =  xd.problemMarkTime("", listId, itemId, pic_list, 43072,audit_comment,20);
+//            checkArgument(res.getInteger("code") != 1000, "处理人为空也成功了message+"+res.getString("message"));
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("pc特殊截屏处理人为空也成功了");
+//        }
+//    }
+//
+//
+//    @Test
+//    public void problemMark3() throws Exception{
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            //JSONObject list = xd.checkStart("\"REMOTE\"", 1); //进入远程巡店
+//            JSONObject data = xd.problemeItems();
+//
+//            JSONArray check_lists = data.getJSONArray("list");  //执行清单列表
+//            long listId = check_lists.getJSONObject(0).getInteger("id"); //取一个执行清单
+////            取执行清单的一个执行项
+//            long itemId = check_lists.getJSONObject(0).getJSONArray("check_items").getJSONObject(0).getLong("id");
+//            //截屏图片
+//            JSONArray pic_list = info.getpicFour(0);
+//            //获取整改处理人
+//            String responsorId = xd.problemesponsors().getJSONArray("list").getJSONObject(0).getString("id");
+////            String audit_comment = "pc 截屏留痕推送给门店负责人";
+//            String audit_comment = "审核意见" + CommonUtil.getRandom(100);
+//            JSONObject res =  xd.problemMarkTime(responsorId, listId, itemId, pic_list, 43072,audit_comment,20);
+//            checkArgument(res.getInteger("code") != 1000, "处理意见大于100字也成功了message+"+res.getString("message"));
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("pc特殊截屏处理意见大于100字也成功了");
+//        }
+//    }
+//
+//    @Test
+//    public void problemMark4() throws Exception{
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            //JSONObject list = xd.checkStart("\"REMOTE\"", 1); //进入远程巡店
+//            JSONObject data = xd.problemeItems();
+//
+//            JSONArray check_lists = data.getJSONArray("list");  //执行清单列表
+//            long listId = check_lists.getJSONObject(0).getInteger("id"); //取一个执行清单
+////            取执行清单的一个执行项
+//            long itemId = check_lists.getJSONObject(0).getJSONArray("check_items").getJSONObject(0).getLong("id");
+//            //截屏图片
+//            JSONArray pic_list = info.getpicFour(0);
+//            //获取整改处理人
+//            String responsorId = xd.problemesponsors().getJSONArray("list").getJSONObject(0).getString("id");
+////            String audit_comment = "pc 截屏留痕推送给门店负责人";
+//            String audit_comment = "审核意见" + CommonUtil.getRandom(100);
+//            JSONObject res =  xd.problemMarkTime(responsorId, listId, itemId, pic_list,43072,"" ,20);
+//            checkArgument(res.getInteger("code") != 1000, "处理意见为空也成功了message+"+res.getString("message"));
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("pc特殊截屏处理意见为空");
+//        }
+//    }
+//
+//
+//    @Test
+//    public void problemMark5() throws Exception{
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            //JSONObject list = xd.checkStart("\"REMOTE\"", 1); //进入远程巡店
+//            JSONObject data = xd.problemeItems();
+//
+//            JSONArray check_lists = data.getJSONArray("list");  //执行清单列表
+//            long listId = check_lists.getJSONObject(0).getInteger("id"); //取一个执行清单
+////            取执行清单的一个执行项
+//            long itemId = check_lists.getJSONObject(0).getJSONArray("check_items").getJSONObject(0).getLong("id");
+//            //截屏图片
+////            JSONArray pic_list = info.getpicFour(0);
+//            JSONArray pic_list = new JSONArray();
+//            //获取整改处理人
+//            String responsorId = xd.problemesponsors().getJSONArray("list").getJSONObject(0).getString("id");
+//          String audit_comment = "pc 截屏留痕推送给门店负责人";
+//            JSONObject res =  xd.problemMarkTime(responsorId, listId, itemId, pic_list,43072, audit_comment,20);
+//            checkArgument(res.getInteger("code") != 1000, "图片为空也成功了message+"+res.getString("message"));
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("pc特殊截屏没有图片");
+//        }
+//    }
 }
 
 
