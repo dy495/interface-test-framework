@@ -52,8 +52,9 @@ public abstract class AbstractHtmlParser implements IParser<SceneAttribute> {
                 SceneAttribute sceneAttribute = new SceneAttribute();
                 String link = sect2.select("h3").select("[class='link']").text();
                 sceneAttribute.setPathDesc(link);
-                String url = sect2.select("[class='paragraph']").stream().filter(e -> e.select("strong").text().equals("URL:")).map(e -> e.select("a").select("[class='bare']"))
-                        .map(e -> e.text().replaceAll("\u00a0", "")).findFirst().orElse(null);
+                String url = sect2.select("[class='paragraph']").stream().filter(e -> e.select("strong")
+                        .text().equals("URL:")).map(e -> e.select("a").select("[class='bare']")).map(e -> e.text()
+                        .replaceAll("\u00a0", "")).findFirst().orElse(null);
                 sceneAttribute.setUrl(url);
                 Elements spreadElements = sect2.select("[class='tableblock frame-all grid-all spread']");
                 List<ApiAttribute> apiAttributeList = getApiAttributeList(spreadElements);

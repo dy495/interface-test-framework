@@ -306,9 +306,19 @@ public class SupporterUtil {
      * @return 卡券名
      */
     public String getVoucherName(long voucherId) {
-        IScene scene = VoucherPageScene.builder().build();
-        List<VoucherPage> vouchers = collectBean(scene, VoucherPage.class);
-        return vouchers.stream().filter(e -> e.getVoucherId().equals(voucherId)).map(VoucherPage::getVoucherName).findFirst().orElse(null);
+        String voucherName = null;
+        JSONObject response = VoucherPageScene.builder().build().execute(visitor, true);
+        int total = response.getInteger("total");
+        int s = CommonUtil.getTurningPage(total, SIZE);
+        for (int i = 1; i < s; i++) {
+            JSONArray array = VoucherPageScene.builder().page(i).size(SIZE).build().execute(visitor, true).getJSONArray("list");
+            List<VoucherPage> voucherPageList = array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, VoucherPage.class)).collect(Collectors.toList());
+            voucherName = voucherPageList.stream().filter(e -> e.getVoucherId().equals(voucherId)).map(VoucherPage::getVoucherName).findFirst().orElse(null);
+            if (voucherName != null) {
+                break;
+            }
+        }
+        return voucherName;
     }
 
     /**
@@ -318,9 +328,19 @@ public class SupporterUtil {
      * @return 卡券id(Long)
      */
     public Long getVoucherId(String voucherName) {
-        IScene scene = VoucherPageScene.builder().build();
-        List<VoucherPage> vouchers = collectBean(scene, VoucherPage.class);
-        return vouchers.stream().filter(e -> e.getVoucherName().equals(voucherName)).map(VoucherPage::getVoucherId).findFirst().orElse(null);
+        Long voucherId = null;
+        JSONObject response = VoucherPageScene.builder().build().execute(visitor, true);
+        int total = response.getInteger("total");
+        int s = CommonUtil.getTurningPage(total, SIZE);
+        for (int i = 1; i < s; i++) {
+            JSONArray array = VoucherPageScene.builder().page(i).size(SIZE).build().execute(visitor, true).getJSONArray("list");
+            List<VoucherPage> voucherPageList = array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, VoucherPage.class)).collect(Collectors.toList());
+            voucherId = voucherPageList.stream().filter(e -> e.getVoucherName().equals(voucherName)).map(VoucherPage::getVoucherId).findFirst().orElse(null);
+            if (voucherId != null) {
+                break;
+            }
+        }
+        return voucherId;
     }
 
     /**
@@ -699,10 +719,11 @@ public class SupporterUtil {
      */
     public String createPackage(JSONArray voucherList, UseRangeEnum anEnum) {
         String packageName = createPackageName(anEnum);
-        IScene scene = CreatePackageScene.builder().packageName(packageName).packageDescription(getDesc())
+        CreatePackageScene.CreatePackageSceneBuilder builder = CreatePackageScene.builder().packageName(packageName).packageDescription(getDesc())
                 .subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType())).voucherList(voucherList)
-                .packagePrice(49.99).status(true).customerUseValidity(1).shopIds(getShopIdList(3)).build();
-        visitor.invokeApi(scene);
+                .packagePrice(49.99).status(true).shopIds(getShopIdList(3));
+        builder = visitor.isOnline() ? builder.customerUseValidity(10) : builder.expireType(2).expiryDate("10");
+        visitor.invokeApi(builder.build());
         return packageName;
     }
 

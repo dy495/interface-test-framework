@@ -1,5 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
@@ -8,8 +10,10 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.AbstractGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherFormPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherPageScene;
+import com.haisheng.framework.util.CommonUtil;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 卡券生成抽象类
@@ -34,10 +38,20 @@ public abstract class BaseVoucher extends AbstractGenerator implements IVoucher 
             Preconditions.checkArgument(!isEmpty(), "visitor is null");
             logger("FIND " + voucherStatus.name() + " START");
             Preconditions.checkArgument(counter(voucherStatus) < 4, voucherStatus.getName() + " 状态执行次数大于3次，强行停止，请检查此状态生成");
-            List<VoucherPage> voucherList = resultCollectToBean(VoucherPageScene.builder().build(), VoucherPage.class);
-            VoucherPage voucherPage = voucherStatus.name().equals(VoucherStatusEnum.WORKING.name())
-                    ? voucherList.stream().filter(e -> e.getVoucherStatus().equals(voucherStatus.name()) && e.getSurplusInventory() > 0).findFirst().orElse(null)
-                    : voucherList.stream().filter(e -> e.getVoucherStatus().equals(voucherStatus.name())).findFirst().orElse(null);
+            VoucherPage voucherPage = null;
+            JSONObject response = VoucherPageScene.builder().build().execute(visitor, true);
+            int total = response.getInteger("total");
+            int s = CommonUtil.getTurningPage(total, SIZE);
+            for (int i = 1; i < s; i++) {
+                JSONArray array = VoucherPageScene.builder().page(i).size(SIZE).build().execute(visitor, true).getJSONArray("list");
+                List<VoucherPage> voucherPageList = array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, VoucherPage.class)).collect(Collectors.toList());
+                voucherPage = voucherStatus.name().equals(VoucherStatusEnum.WORKING.name())
+                        ? voucherPageList.stream().filter(e -> e.getVoucherStatus().equals(voucherStatus.name()) && e.getSurplusInventory() > 0).findFirst().orElse(null)
+                        : voucherPageList.stream().filter(e -> e.getVoucherStatus().equals(voucherStatus.name())).findFirst().orElse(null);
+                if (voucherPage != null) {
+                    break;
+                }
+            }
             if (voucherPage != null) {
                 logger("FIND " + voucherStatus.name() + " FINISH");
                 logger("voucherId is: " + voucherPage.getVoucherId());

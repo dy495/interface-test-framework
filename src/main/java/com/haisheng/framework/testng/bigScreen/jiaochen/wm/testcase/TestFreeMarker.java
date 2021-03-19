@@ -1,16 +1,12 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase;
 
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.factory.HtmlFactory;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.scenemaker.ApiAttribute;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.scenemaker.SceneAttribute;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.scenemaker.SceneMarker;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.parse.BeanParser;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.parse.IParser;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.parse.SceneParser;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author wangmin
@@ -21,10 +17,7 @@ public class TestFreeMarker {
     @Test
     public void createScene() {
         String htmlPath = "http://192.168.50.3/api-doc/business-jiaochen/pc/index.html";
-        IParser<SceneAttribute> sceneParser = new SceneParser.Builder().htmlUrl(htmlPath).build();
-        List<ApiAttribute> apiAttributeList = sceneParser.findFirst().getApiAttributeList();
-        System.err.println(apiAttributeList);
-        SceneAttribute[] sceneAttributeList = new HtmlFactory().getAttribute(sceneParser);
+        SceneAttribute[] sceneAttributeList = new SceneParser.Builder().htmlUrl(htmlPath).build().getAttributeList();
         Arrays.stream(sceneAttributeList).forEach(e -> new SceneMarker.Builder()
                 .templatePath("src\\main\\resources\\template")
                 .templateName("sceneTemplate.ftl")
@@ -37,8 +30,7 @@ public class TestFreeMarker {
     @Test
     public void createBean() {
         String htmlPath = "http://192.168.50.3/api-doc/business-jiaochen/pc/index.html";
-        IParser<SceneAttribute> beanParser = new BeanParser.Builder().htmlUrl(htmlPath).build();
-        SceneAttribute[] sceneAttributeList = new HtmlFactory().getAttribute(beanParser);
+        SceneAttribute[] sceneAttributeList = new BeanParser.Builder().htmlUrl(htmlPath).build().getAttributeList();
         Arrays.stream(sceneAttributeList).forEach(e -> new SceneMarker.Builder()
                 .templatePath("src\\main\\resources\\template")
                 .templateName("beanTemplate.ftl")
@@ -51,7 +43,8 @@ public class TestFreeMarker {
     @Test
     public void testSql() {
 //        DSLContext create = DSL.using("jdbc:mysql://rm-2zeg4an1kr1437xu6no.mysql.rds.aliyuncs.com/onepiece", "qa_wr", "qa_wr1234");
-//        Result<Record> result = create.selectFrom("t_case").where("id=1").limit(100).fetch();
+//        create.selectQuery().addConditions();
+//        Result<Record> result = create.selectFrom("t_case").where("id=1").limit(100).fetch().;
 //        Row row = result.fieldsRow();
 //        System.err.println(field);
     }
