@@ -353,7 +353,7 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
     }
 
     //bug
-    @Test(description = "积分兑换--修改实体积分兑换库存，减少大于当前库存的数")
+    @Test(description = "积分兑换--修改实体积分兑换库存，减少大于当前库存的数", enabled = false)
     public void integralExchange_system_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
