@@ -639,6 +639,9 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             //获取进行中的活动存在待审批数量的ID
             List<Long> ids = businessUtil.getRecruitActivityWorkingApproval();
             System.err.println("ids:"+ids);
+            sleep(3);
+            //刷新作用
+            jc.activityPage(1,10);
             //审批通过之前报名成功的数量
             int failedBefore = businessUtil.getRegisterData(ids.get(0)).getInteger("failed");
             System.err.println("failedBefore:"+failedBefore);
