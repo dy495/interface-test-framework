@@ -2955,6 +2955,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             JSONObject jsonObject = visitor.invokeApi(memberCenterEquityListScene).getJSONArray("equity_list").getJSONObject(0);
             CommonUtil.checkResult(jsonObject.getString("equity_name") + "开启状态", UseStatusEnum.DISABLE.name(), jsonObject.getString("equity_status"));
             //再开启
+            user.loginPc(ALL_AUTHORITY);
             EquityStartOrCloseScene.builder().equityId(equityId).equityStatus(UseStatusEnum.ENABLE.name()).build().execute(visitor, true);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
