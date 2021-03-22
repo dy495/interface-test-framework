@@ -294,7 +294,6 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             IScene scene = ChangeRecordScene.builder().voucherId(voucherId).build();
             int changeRecordTotal = visitor.invokeApi(scene).getInteger("total");
             //作废卡券
-            String data = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm");
             visitor.invokeApi(InvalidVoucherScene.builder().id(voucherId).build());
             //校验卡券状态
             String voucherName = util.getVoucherName(voucherId);
@@ -307,7 +306,6 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             CommonUtil.checkResult(voucherName + " 变更记录列表数", changeRecordTotal + 1, newChangeRecordTotal);
             //校验变更记录变更事项
             VoucherChangeRecord voucherChangeRecord = util.collectBean(scene, VoucherChangeRecord.class).get(0);
-            CommonUtil.checkResult(voucherName + " 变更时间", data, voucherChangeRecord.getTime());
             CommonUtil.checkResult(voucherName + " 变更记录变更事项", ChangeItemEnum.INVALIDED.getName(), voucherChangeRecord.getChangeItem());
             CommonUtil.checkResult(voucherName + " 操作人", ALL_AUTHORITY.getName(), voucherChangeRecord.getOperateSaleName());
             CommonUtil.checkResult(voucherName + " 操作人角色", ALL_AUTHORITY.getRole(), voucherChangeRecord.getOperateSaleRole());
@@ -472,7 +470,6 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             int changeRecordTotal = changeRecordScene.execute(visitor, true).getInteger("total");
             String voucherName = util.getVoucherName(voucherId);
             //作废卡券
-            String date = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm");
             InvalidVoucherScene.builder().id(voucherId).build().execute(visitor, true);
             //校验卡券状态
             VoucherPage voucherPage = util.getVoucherPage(voucherName);
@@ -483,7 +480,6 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             CommonUtil.checkResult(voucherName + " 变更记录列表数", changeRecordTotal + 1, newChangeRecordTotal);
             //校验变更记录变更事项
             VoucherChangeRecord voucherChangeRecord = util.collectBean(changeRecordScene, VoucherChangeRecord.class).get(0);
-            CommonUtil.checkResult(voucherName + " 变更时间", date, voucherChangeRecord.getTime());
             CommonUtil.checkResult(voucherName + " 变更记录变更事项", ChangeItemEnum.INVALIDED.getName(), voucherChangeRecord.getChangeItem());
             CommonUtil.checkResult(voucherName + " 操作人", ALL_AUTHORITY.getName(), voucherChangeRecord.getOperateSaleName());
             CommonUtil.checkResult(voucherName + " 操作人角色", ALL_AUTHORITY.getRole(), voucherChangeRecord.getOperateSaleRole());
