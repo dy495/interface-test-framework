@@ -20,7 +20,7 @@ public class HtmlFactory {
      */
     public <T> T[] getAttribute(@NotNull IParser<?> parser) {
         if (parser instanceof SceneParser || parser instanceof BeanParser) {
-            return (T[]) parser.getAttributeList();
+            return (T[]) parser.getAttributes();
         } else {
             return null;
         }

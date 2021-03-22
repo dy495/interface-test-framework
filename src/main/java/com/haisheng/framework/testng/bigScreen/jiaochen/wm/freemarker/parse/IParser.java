@@ -10,7 +10,7 @@ public interface IParser<T> {
 
     String getSuffix();
 
-    T[] getAttributeList();
+    T[] getAttributes();
 
     T findFirst();
 }

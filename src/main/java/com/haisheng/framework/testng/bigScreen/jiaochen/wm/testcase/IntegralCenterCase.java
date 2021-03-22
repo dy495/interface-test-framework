@@ -424,7 +424,9 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
         try {
             IScene exchangePageScene = ExchangePageScene.builder().status(IntegralExchangeStatusEnum.WORKING.name()).exchangeType(CommodityTypeEnum.REAL.name()).build();
             ExchangePage a = util.collectBean(exchangePageScene, ExchangePage.class).stream().filter(e -> !e.getExchangedAndSurplus().split("/")[1].equals("0") && e.getExchangePrice() == 1).findFirst().orElse(null);
-            ExchangePage exchangePage = a == null ? util.CreateExchangeRealGoods() : a;
+            ExchangePage exchangePage = a == null ? util.createExchangeRealGoods() : a;
+            //不限兑换次数
+            util.modifyExchangeGoodsLimit(exchangePage.getId(), exchangePage.getExchangeType(), false);
             List<Integer> exchangedAndSurplusList = Arrays.stream(exchangePage.getExchangedAndSurplus().split("/")).map(Integer::valueOf).collect(Collectors.toList());
             user.loginApplet(APPLET_USER_ONE);
             int score = AppletDetailScene.builder().build().execute(visitor, true).getInteger("score");

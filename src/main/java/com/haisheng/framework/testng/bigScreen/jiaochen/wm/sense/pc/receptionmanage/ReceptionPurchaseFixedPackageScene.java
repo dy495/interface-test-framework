@@ -14,7 +14,8 @@ public class ReceptionPurchaseFixedPackageScene extends BaseScene {
     private final String customerPhone;
     private final Long packageId;
     private final String packagePrice;
-    private final String expiryDate;
+    private final Integer expiryDate;
+    private final Integer expireType;
     private final String carType;
     private final Integer selectNumber;
     private final String remark;
@@ -38,6 +39,7 @@ public class ReceptionPurchaseFixedPackageScene extends BaseScene {
         object.put("car_type", carType);
         object.put("select_number", selectNumber);
         object.put("expiry_date", expiryDate);
+        object.put("expire_type", expireType);
         object.put("remark", remark);
         object.put("extended_insurance_year", extendedInsuranceYear);
         object.put("extended_insurance_copies", extendedInsuranceCopies);

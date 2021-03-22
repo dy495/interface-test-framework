@@ -2,8 +2,9 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.util;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
+import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.exception.DataException;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppAppointmentPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppFollowUpPage;
@@ -21,11 +22,11 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.appointmen
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.commodity.CommodityStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.AppFollowUpPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.task.AppAppointmentPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.task.AppReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.task.AppReceptionReceptorListScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.Integralmall.GoodsManagePageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.FissionVoucherAddScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.ManageApprovalScene;
@@ -33,20 +34,16 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.Man
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.appointmentmanage.AppointmentPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.appointmentmanage.TimeTableListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpload;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.CommoditySpecificationsListScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.CreateExchangeGoodsScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.ExchangeGoodsStockScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.ExchangePageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.loginuser.ShopListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.manage.EvaluatePageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.GroupTotalScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.PushMessageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.operation.ArticleList;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanage.PurchaseFixedPackageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanage.PurchaseTemporaryPackageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanage.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.ReceptionPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.ReceptionPurchaseFixedPackageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.ReceptionPurchaseTemporaryPackageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.ReceptionVoucherListScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.userange.DetailScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.userange.SubjectListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPageScene;
@@ -603,6 +600,12 @@ public class SupporterUtil {
         return packagePages.stream().filter(e -> e.getPackageName().equals(packageName)).findFirst().orElse(null);
     }
 
+    public PackagePage getPackagePage(Long packageId) {
+        IScene scene = PackageFormPageScene.builder().build();
+        List<PackagePage> packagePages = collectBean(scene, PackagePage.class);
+        return packagePages.stream().filter(e -> e.getPackageId().equals(packageId)).findFirst().orElse(null);
+    }
+
     /**
      * 获取套餐id
      *
@@ -710,37 +713,9 @@ public class SupporterUtil {
         return voucherList.stream().map(e -> (JSONObject) e).map(e -> e.getLong("voucher_id")).collect(Collectors.toList());
     }
 
-    /**
-     * 获取套餐包含的卡券
-     *
-     * @param packageId 套餐id
-     * @param kind      种类
-     * @return 卡券id集合
-     */
-    public List<Long> getPackageContainVoucher(Long packageId, Integer kind) {
-        return getPackageContainVoucher(packageId).subList(0, kind);
-    }
-
     public PackageDetail getPackageDetail(Long packageId) {
         IScene packageDetailScene = PackageDetailScene.builder().id(packageId).build();
         return JSONObject.toJavaObject(visitor.invokeApi(packageDetailScene), PackageDetail.class);
-    }
-
-    /**
-     * 编辑指定套餐包含的卡券
-     *
-     * @param packageId   套餐 id
-     * @param voucherList 所含卡券列表
-     * @return 套餐名
-     */
-    public String editPackageContainVoucher(Long packageId, JSONArray voucherList) {
-        PackageDetail packageDetail = getPackageDetail(packageId);
-        IScene editPackageScene = EditPackageScene.builder().packageName(packageDetail.getPackageName()).packageDescription(packageDetail.getPackageDescription())
-                .subjectType(packageDetail.getSubjectType()).subjectId(packageDetail.getSubjectId())
-                .voucherList(voucherList).packagePrice(packageDetail.getPackagePrice()).status(true).shopIds(getShopIdList(3))
-                .id(String.valueOf(packageId)).build();
-        visitor.invokeApi(editPackageScene);
-        return packageDetail.getPackageName();
     }
 
     /**
@@ -750,13 +725,24 @@ public class SupporterUtil {
      * @param voucherList 所含卡券列表
      * @return 套餐名
      */
-    public void editPackage(Long packageId, JSONArray voucherList) {
-        String packageName = getPackageName(packageId);
-        IScene editPackageScene = EditPackageScene.builder().packageName(packageName).packageDescription(EnumDesc.VOUCHER_DESC.getDesc())
-                .subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType()))
-                .voucherList(voucherList).packagePrice("1.11").status(true).shopIds(getShopIdList(3))
-                .id(String.valueOf(packageId)).expireType(2).expiryDate(12).build();
+    public String editPackage(Long packageId, JSONArray voucherList) {
+        IScene scene = PackageDetailScene.builder().id(packageId).build();
+        PackageDetail packageDetail = JSONObject.toJavaObject(scene.execute(visitor, true), PackageDetail.class);
+        Preconditions.checkArgument(packageDetail != null, packageId + " 套餐没找到相关信息");
+        IScene editPackageScene = EditPackageScene.builder()
+                .packageName(packageDetail.getPackageName())
+                .packageDescription(packageDetail.getPackageDescription())
+                .subjectType(packageDetail.getSubjectType())
+                .subjectId(packageDetail.getSubjectId())
+                .status(packageDetail.getStatus())
+                .packagePrice(packageDetail.getPackagePrice())
+                .expiryDate(packageDetail.getExpiryDate())
+                .expireType(packageDetail.getExpireType())
+                .voucherList(voucherList)
+                .shopIds(getShopIdList(3))
+                .id(String.valueOf(packageId)).build();
         visitor.invokeApi(editPackageScene);
+        return packageDetail.getPackageName();
     }
 
     /**
@@ -830,7 +816,8 @@ public class SupporterUtil {
      */
     public void buyFixedPackage(Long packageId, int type) {
         IScene purchaseFixedPackageScene = PurchaseFixedPackageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone())
-                .carType(PackageUseTypeEnum.ALL_CAR.name()).packageId(packageId).packagePrice("1.00").expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc())
+                .carType(PackageUseTypeEnum.ALL_CAR.name()).packageId(packageId).packagePrice("1.00").expiryDate("1")
+                .remark(EnumDesc.VOUCHER_DESC.getDesc())
                 .subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType()))
                 .extendedInsuranceYear(10).extendedInsuranceCopies(10).type(type).build();
         visitor.invokeApi(purchaseFixedPackageScene);
@@ -843,38 +830,23 @@ public class SupporterUtil {
      * @param type      0赠送/1购买
      */
     public void receptionBuyFixedPackage(Long packageId, int type) {
+        JSONArray list = PackageListScene.builder().build().execute(visitor, true).getJSONArray("list");
+        JSONObject jsonObject = list.stream().map(e -> (JSONObject) e).filter(e -> e.getLong("package_id").equals(packageId)).findFirst().orElse(null);
+        Preconditions.checkArgument(jsonObject != null, packageId + " 套餐没找到相关信息");
+        Integer expiryDate = jsonObject.getInteger("expiry_date");
+        Integer expireType = jsonObject.getInteger("expire_type");
+        String packagePrice = jsonObject.getString("package_price");
         IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone()).build();
         ReceptionPage receptionPage = collectBean(receptionPageScene, ReceptionPage.class).get(0);
         //购买套餐
-        IScene purchaseScene = ReceptionPurchaseFixedPackageScene.builder().customerPhone("").carType(PackageUseTypeEnum.RECEPTION_CAR.name())
-                .plateNumber(receptionPage.getPlateNumber()).packageId(packageId).shopId(receptionPage.getShopId())
-                .packagePrice("1.11").expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc())
-                .subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType()))
-                .extendedInsuranceYear("").extendedInsuranceCopies("").type(type).receptionId(receptionPage.getId())
-                .customerId(receptionPage.getCustomerId()).build();
+        IScene purchaseScene = ReceptionPurchaseFixedPackageScene.builder().customerId(receptionPage.getCustomerId())
+                .customerPhone("").carType(PackageUseTypeEnum.RECEPTION_CAR.name()).expireType(expireType).expiryDate(expiryDate)
+                .extendedInsuranceCopies("").extendedInsuranceYear("").packageId(packageId).packagePrice(packagePrice)
+                .plateNumber(receptionPage.getPlateNumber()).receptionId(receptionPage.getId()).remark(EnumDesc.VOUCHER_DESC.getDesc())
+                .shopId(receptionPage.getShopId()).subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType())).type(type)
+                .build();
         visitor.invokeApi(purchaseScene);
     }
-
-
-    /**
-     * 接待时购买临时套餐
-     *
-     * @param receptionId 接待id
-     * @param voucherName 包含卡券名称
-     * @param type        0赠送/1购买
-     */
-    public void receptionBuyTemporaryPackage(Integer receptionId, String voucherName, int type) {
-        JSONArray voucherList = getVoucherInfoArray(voucherName, 1);
-        ReceptionPage receptionPage = getReceptionPageById(receptionId);
-        //购买套餐
-        IScene purchaseScene = ReceptionPurchaseTemporaryPackageScene.builder().customerPhone("").carType(PackageUseTypeEnum.RECEPTION_CAR.name())
-                .plateNumber(receptionPage.getPlateNumber()).voucherList(voucherList)
-                .expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc()).subjectType(getSubjectType())
-                .subjectId(getSubjectDesc(getSubjectType())).extendedInsuranceCopies("").extendedInsuranceYear("")
-                .type(type).receptionId(receptionPage.getId()).customerId(receptionPage.getCustomerId()).build();
-        visitor.invokeApi(purchaseScene);
-    }
-
 
     /**
      * 接待时购买临时套餐
@@ -887,11 +859,11 @@ public class SupporterUtil {
         IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone()).build();
         ReceptionPage receptionPage = collectBean(receptionPageScene, ReceptionPage.class).get(0);
         //购买套餐
-        IScene purchaseScene = ReceptionPurchaseTemporaryPackageScene.builder().customerPhone("").carType(PackageUseTypeEnum.RECEPTION_CAR.name())
-                .plateNumber(receptionPage.getPlateNumber()).voucherList(voucherList)
-                .expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc()).subjectType(getSubjectType())
-                .subjectId(getSubjectDesc(getSubjectType())).extendedInsuranceCopies("").extendedInsuranceYear("")
-                .type(type).receptionId(receptionPage.getId()).customerId(receptionPage.getCustomerId()).build();
+        IScene purchaseScene = ReceptionPurchaseTemporaryPackageScene.builder().customerId(receptionPage.getCustomerId())
+                .customerPhone("").carType(PackageUseTypeEnum.RECEPTION_CAR.name()).expireType(2).expiryDate("10")
+                .extendedInsuranceCopies("").extendedInsuranceYear("").plateNumber(receptionPage.getPlateNumber())
+                .receptionId(receptionPage.getId()).remark(EnumDesc.VOUCHER_DESC.getDesc()).shopId(receptionPage.getShopId())
+                .subjectId(getSubjectDesc(getSubjectType())).subjectType(getSubjectType()).voucherList(voucherList).type(type).build();
         visitor.invokeApi(purchaseScene);
     }
 
@@ -905,11 +877,11 @@ public class SupporterUtil {
         IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone()).build();
         ReceptionPage receptionPage = collectBean(receptionPageScene, ReceptionPage.class).get(0);
         //购买套餐
-        IScene purchaseScene = ReceptionPurchaseTemporaryPackageScene.builder().customerPhone("").carType(PackageUseTypeEnum.RECEPTION_CAR.name())
-                .plateNumber(receptionPage.getPlateNumber()).voucherList(voucherList).shopId(receptionPage.getShopId())
-                .expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc()).subjectType(getSubjectType())
-                .subjectId(getSubjectDesc(getSubjectType())).extendedInsuranceCopies("").extendedInsuranceYear("")
-                .type(type).receptionId(receptionPage.getId()).customerId(receptionPage.getCustomerId()).build();
+        IScene purchaseScene = ReceptionPurchaseTemporaryPackageScene.builder().customerId(receptionPage.getCustomerId())
+                .carType(PackageUseTypeEnum.RECEPTION_CAR.name()).customerPhone("").expireType(2).expiryDate("10")
+                .extendedInsuranceCopies("").extendedInsuranceYear("").plateNumber(receptionPage.getPlateNumber())
+                .receptionId(receptionPage.getId()).remark(EnumDesc.VOUCHER_DESC.getDesc()).shopId(receptionPage.getShopId())
+                .subjectId(getSubjectDesc(getSubjectType())).subjectType(getSubjectType()).type(type).voucherList(voucherList).build();
         visitor.invokeApi(purchaseScene);
     }
 
@@ -1675,8 +1647,8 @@ public class SupporterUtil {
      *
      * @return 积分兑换id
      */
-    public ExchangePage CreateExchangeRealGoods() {
-        return CreateExchangeRealGoods(1);
+    public ExchangePage createExchangeRealGoods() {
+        return createExchangeRealGoods(1);
     }
 
     /**
@@ -1684,7 +1656,7 @@ public class SupporterUtil {
      *
      * @return 积分兑换商品
      */
-    public ExchangePage CreateExchangeRealGoods(int stock) {
+    public ExchangePage createExchangeRealGoods(int stock) {
         String exchangeStartTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
         String exchangeEndTime = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 30), "yyyy-MM-dd HH:mm:ss");
         JSONArray specificationList = new JSONArray();
@@ -1700,8 +1672,11 @@ public class SupporterUtil {
         });
         //创建积分兑换
         CreateExchangeGoodsScene.builder().exchangeGoodsType(CommodityTypeEnum.REAL.name()).goodsId(goodsId)
-                .isLimit(true).exchangePeopleNum("10").specificationList(specificationList).exchangeStartTime(exchangeStartTime)
-                .exchangePrice("1").exchangeEndTime(exchangeEndTime).build().execute(visitor, true);
+                .exchangePrice("1").isLimit(true).exchangePeopleNum("10")
+                .specificationList(specificationList).expireType(2).useDays("10")
+                .exchangeStartTime(exchangeStartTime)
+                .exchangeEndTime(exchangeEndTime)
+                .build().execute(visitor, true);
         return collectBean(ExchangePageScene.builder().build(), ExchangePage.class).get(0);
     }
 
@@ -1711,13 +1686,12 @@ public class SupporterUtil {
      * @param voucherId 卡券id
      * @return 积分兑换商品
      */
-    public ExchangePage CreateExchangeFictitiousGoods(Long voucherId) {
-        String exchangeStartTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
-        String exchangeEndTime = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 30), "yyyy-MM-dd HH:mm:ss");
+    public ExchangePage createExchangeFictitiousGoods(Long voucherId) {
         //创建积分兑换
         CreateExchangeGoodsScene.builder().exchangeGoodsType(CommodityTypeEnum.FICTITIOUS.name()).goodsId(voucherId)
-                .exchangeNum("1").isLimit(true).exchangePeopleNum("10").exchangeStartTime(exchangeStartTime)
-                .exchangePrice("1").exchangeEndTime(exchangeEndTime).build().execute(visitor, true);
+                .exchangePrice("1").isLimit(true).exchangePeopleNum("10")
+                .expireType(2).useDays("10").exchangeNum("1")
+                .build().execute(visitor, true);
         return collectBean(ExchangePageScene.builder().build(), ExchangePage.class).get(0);
     }
 
@@ -1730,6 +1704,19 @@ public class SupporterUtil {
     public VoucherPage getExchangeGoodsContainVoucher(Long id) {
         String voucherName = ExchangeGoodsStockScene.builder().id(id).build().execute(visitor, true).getString("goods_name");
         return getVoucherPage(voucherName);
+    }
+
+    public void modifyExchangeGoodsLimit(Long exchangeGoodsId, String exchangeGoodsType, Boolean isLimit) {
+        IScene scene = ExchangeGoodsDetailScene.builder().id(exchangeGoodsId).build();
+        ExchangeGoodsDetail exchangeGoodsDetail = JSONObject.toJavaObject(scene.execute(visitor, true), ExchangeGoodsDetail.class);
+        EditExchangeGoodsScene.EditExchangeGoodsSceneBuilder builder = EditExchangeGoodsScene.builder()
+                .exchangeGoodsType(exchangeGoodsDetail.getExchangeGoodsType()).goodsId(exchangeGoodsDetail.getGoodsId())
+                .exchangePrice(exchangeGoodsDetail.getExchangePrice()).exchangeNum(exchangeGoodsDetail.getExchangeNum())
+                .isLimit(isLimit).id(exchangeGoodsDetail.getId());
+        builder = isLimit ? builder.exchangePeopleNum(1) : builder;
+        builder = exchangeGoodsType.equals(CommodityTypeEnum.REAL.name()) ? builder.exchangeStartTime(exchangeGoodsDetail.getExchangeStartTime())
+                .exchangeEndTime(exchangeGoodsDetail.getExchangeEndTime()) : builder.expireType(2).useDays(10);
+        builder.build().execute(visitor, true);
     }
 
     //-------------------------------------------------------活动---------------------------------------------------
