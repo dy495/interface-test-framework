@@ -358,30 +358,30 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             int today_enter_customer_uv = today_enter_customer_flow.getInteger("today_enter_customer_uv");
             int items_value1 = items.getJSONObject(2).getInteger("item_value");
             CommonUtil.valueView(today_enter_customer_uv, items_value1);
-            checkArgument(today_enter_customer_uv == items_value1, "今日进店客流==今日进店客流详情中今日进店客流");
+            checkArgument(today_enter_customer_uv == items_value1, "今日进店客流！=今日进店客流详情中今日进店客流");
 
             //获取今日进店客流得同比
-            int yesterday_enter_customer_qoq = today_enter_customer_flow.getInteger("last_week_enter_customer_qoq");
+            int yesterday_enter_customer_qoq = today_enter_customer_flow.getInteger("yesterday_enter_customer_qoq");
             //获取今日进店客流的环比
-            int last_week_enter_customer_qoq = today_enter_customer_flow.getInteger("yesterday_enter_customer_qoq");
+            int last_week_enter_customer_qoq = today_enter_customer_flow.getInteger("last_week_enter_customer_qoq");
             //获取详情中的环比和同比
             int before_day = items.getJSONObject(2).getInteger("before_day");
             int before_week = items.getJSONObject(2).getInteger("before_week");
-            checkArgument(yesterday_enter_customer_qoq==before_day, "今日进店客流同比==今日进店客流详情中今日进店客流同比");
-            checkArgument(last_week_enter_customer_qoq==before_week, "今日进店客流环比比==今日进店客流详情中今日进店客流环比");
+            checkArgument(yesterday_enter_customer_qoq==before_day, "今日进店客流同比！=今日进店客流详情中今日进店客流同比");
+            checkArgument(last_week_enter_customer_qoq==before_week, "今日进店客流环比比！=今日进店客流详情中今日进店客流环比");
 //
 //            获取今日进店新客
             JSONObject today_new_customer_flow = result.getJSONObject("today_new_customer_flow");
             int today_new_customer_uv = today_new_customer_flow.getInteger("today_new_customer_uv");
             int items_value2 = items.getJSONObject(1).getInteger("item_value");
-            checkArgument(today_new_customer_uv==items_value2, "今日进店新客==今日进店客流详情中今日进店新客");
+            checkArgument(today_new_customer_uv==items_value2, "今日进店新客！=今日进店客流详情中今日进店新客");
             //获取今日进店新客的同比
             int last_week_new_customer_qoq = today_new_customer_flow.getInteger("last_week_new_customer_qoq");
             int yesterday_new_customer_qoq = today_new_customer_flow.getInteger("yesterday_new_customer_qoq");
             int before_day1 = items.getJSONObject(1).getInteger("before_day");
             int before_week1 = items.getJSONObject(1).getInteger("before_week");
-            checkArgument(last_week_new_customer_qoq==before_week1, "今日进店客流同比==今日进店客流详情中今日新客同比");
-            checkArgument(yesterday_new_customer_qoq==before_day1, "今日进店客流环比比==今日进店客流详情中今日新客环比");
+            checkArgument(last_week_new_customer_qoq==before_week1, "今日进店新客同比！=今日进店新客中今日新客同比");
+            checkArgument(yesterday_new_customer_qoq==before_day1, "今日进店新客环比比==今日进店新客中今日新客环比");
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {

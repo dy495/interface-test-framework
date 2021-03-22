@@ -1561,14 +1561,14 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
     }
 
     //我的报表-列表
-    public JSONObject reportList(int page,int size, String report_name, String report_type,String report_time_dimensio,String shop_name) throws Exception {
+    public JSONObject reportList(int page,int size, String report_name, String report_type,String report_time_dimension,String shop_name) throws Exception {
         String url = "/patrol/download-center/my-report";
         JSONObject json = new JSONObject();
         json.put("page",page);
         json.put("size",size);
         json.put("report_name",report_name);
         json.put("report_type",report_type);
-        json.put("report_time_dimensio",report_time_dimensio);
+        json.put("report_time_dimension",report_time_dimension);
         json.put("shop_name",shop_name);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
 

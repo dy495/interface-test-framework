@@ -704,10 +704,10 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject checkPic(String picData) throws Exception {
+    public JSONObject checkPic(String image) throws Exception {
         String url = "/patrol/member/upload_check";
         JSONObject json = new JSONObject();
-        json.put("picData",picData);
+        json.put("image",image);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
