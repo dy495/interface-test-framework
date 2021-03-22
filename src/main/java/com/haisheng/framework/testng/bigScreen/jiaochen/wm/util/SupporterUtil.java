@@ -1687,11 +1687,12 @@ public class SupporterUtil {
      * @return 积分兑换商品
      */
     public ExchangePage createExchangeFictitiousGoods(Long voucherId) {
+        String exchangeStartTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
+        String exchangeEndTime = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 30), "yyyy-MM-dd HH:mm:ss");
         //创建积分兑换
         CreateExchangeGoodsScene.builder().exchangeGoodsType(CommodityTypeEnum.FICTITIOUS.name()).goodsId(voucherId)
-                .exchangePrice("1").isLimit(true).exchangePeopleNum("10")
-                .expireType(2).useDays("10").exchangeNum("1")
-                .build().execute(visitor, true);
+                .exchangePrice("1").isLimit(true).exchangePeopleNum("10").exchangeStartTime(exchangeStartTime)
+                .exchangeEndTime(exchangeEndTime).expireType(2).useDays("10").exchangeNum("1").build().execute(visitor, true);
         return collectBean(ExchangePageScene.builder().build(), ExchangePage.class).get(0);
     }
 

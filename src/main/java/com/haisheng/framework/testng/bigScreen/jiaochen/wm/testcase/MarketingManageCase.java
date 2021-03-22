@@ -2949,17 +2949,19 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene equityPageScene = EquityPageScene.builder().build();
-            Integer equityId = getResponseByEquityPageScene(equityPageScene).getInteger("equity_id");
-            //关闭权益
-            IScene equityStartOrCloseScene = EquityStartOrCloseScene.builder().equityId(equityId).equityStatus(UseStatusEnum.DISABLE.name()).build();
-            visitor.invokeApi(equityStartOrCloseScene);
+            JSONObject response = getResponseByEquityPageScene(equityPageScene);
+            Integer equityId = response.getInteger("equity_id");
+            String status = response.getString("status");
+            if (status.equals(UseStatusEnum.DISABLE.name())) {
+                CommonUtil.warning("已经是禁用状态");
+            } else {
+                //关闭权益
+                EquityStartOrCloseScene.builder().equityId(equityId).equityStatus(UseStatusEnum.DISABLE.name()).build().execute(visitor, true);
+            }
             user.loginApplet(APPLET_USER_ONE);
             IScene memberCenterEquityListScene = AppletMemberCenterHomePageScene.builder().build();
             JSONObject jsonObject = visitor.invokeApi(memberCenterEquityListScene).getJSONArray("equity_list").getJSONObject(0);
             CommonUtil.checkResult(jsonObject.getString("equity_name") + "开启状态", UseStatusEnum.DISABLE.name(), jsonObject.getString("equity_status"));
-            //再开启
-            user.loginPc(ALL_AUTHORITY);
-            EquityStartOrCloseScene.builder().equityId(equityId).equityStatus(UseStatusEnum.ENABLE.name()).build().execute(visitor, true);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -2973,16 +2975,20 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene equityPageScene = EquityPageScene.builder().build();
-            Integer equityId = getResponseByEquityPageScene(equityPageScene).getInteger("equity_id");
-            //开启权益
-            IScene equityStartOrCloseScene = EquityStartOrCloseScene.builder().equityId(equityId).equityStatus(UseStatusEnum.ENABLE.name()).build();
-            visitor.invokeApi(equityStartOrCloseScene);
+            JSONObject response = getResponseByEquityPageScene(equityPageScene);
+            Integer equityId = response.getInteger("equity_id");
+            String status = response.getString("status");
+            if (status.equals(UseStatusEnum.ENABLE.name())) {
+                CommonUtil.warning("已经是开启状态");
+            } else {
+                //开启权益
+                EquityStartOrCloseScene.builder().equityId(equityId).equityStatus(UseStatusEnum.ENABLE.name()).build().execute(visitor, true);
+            }
             user.loginApplet(APPLET_USER_ONE);
             IScene memberCenterEquityListScene = AppletMemberCenterHomePageScene.builder().build();
             JSONObject jsonObject = visitor.invokeApi(memberCenterEquityListScene).getJSONArray("equity_list").getJSONObject(0);
             CommonUtil.checkResult(jsonObject.getString("equity_name") + "开启状态", UseStatusEnum.ENABLE.name(), jsonObject.getString("equity_status"));
             user.loginPc(ALL_AUTHORITY);
-            EquityStartOrCloseScene.builder().equityId(equityId).equityStatus(UseStatusEnum.DISABLE.name()).build();
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
