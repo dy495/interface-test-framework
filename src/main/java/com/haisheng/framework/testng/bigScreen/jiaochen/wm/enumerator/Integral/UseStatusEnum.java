@@ -16,7 +16,7 @@ public enum UseStatusEnum {
      */
     DISABLE("禁用");
 
-    private String name;
+    private final String name;
 
     UseStatusEnum(String name) {
         this.name = name;

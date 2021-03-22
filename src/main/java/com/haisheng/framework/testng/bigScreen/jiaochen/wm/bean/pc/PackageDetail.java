@@ -60,5 +60,14 @@ public class PackageDetail implements Serializable {
 
     @JSONField(name = "expire_type")
     private Integer expireType;
+
+    @JSONField(name = "id")
+    private Long id;
+
+    @JSONField(name = "status")
+    private Boolean status;
+
+    @JSONField(name = "shop_ids")
+    private JSONArray shopIds;
 }
 

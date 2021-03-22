@@ -17,7 +17,7 @@ public class TestFreeMarker {
     @Test
     public void createScene() {
         String htmlPath = "http://192.168.50.3/api-doc/business-jiaochen/pc/index.html";
-        SceneAttribute[] sceneAttributeList = new SceneParser.Builder().htmlUrl(htmlPath).build().getAttributeList();
+        SceneAttribute[] sceneAttributeList = new SceneParser.Builder().htmlUrl(htmlPath).build().getAttributes();
         Arrays.stream(sceneAttributeList).forEach(e -> new SceneMarker.Builder()
                 .templatePath("src\\main\\resources\\template")
                 .templateName("sceneTemplate.ftl")
@@ -30,7 +30,7 @@ public class TestFreeMarker {
     @Test
     public void createBean() {
         String htmlPath = "http://192.168.50.3/api-doc/business-jiaochen/pc/index.html";
-        SceneAttribute[] sceneAttributeList = new BeanParser.Builder().htmlUrl(htmlPath).build().getAttributeList();
+        SceneAttribute[] sceneAttributeList = new BeanParser.Builder().htmlUrl(htmlPath).build().getAttributes();
         Arrays.stream(sceneAttributeList).forEach(e -> new SceneMarker.Builder()
                 .templatePath("src\\main\\resources\\template")
                 .templateName("beanTemplate.ftl")

@@ -1953,8 +1953,6 @@ public class BusinessUtil {
                 shopId=list.getJSONObject(i).getString("shop_id");
             }else if(shopName.equals("集团管理")){
                 shopId=list.getJSONObject(0).getString("shop_id");
-            }else{
-                shopId=list.getJSONObject(0).getString("shop_id");
             }
         }
         return shopId;
@@ -1971,7 +1969,7 @@ public class BusinessUtil {
             String shopName=list.getJSONObject(i).getString("shop_name");
             if(name.equals(shopName)){
                 nameBack=shopName;
-            }else{
+            }else if(i==list.size()-1&&nameBack.equals("")){
                 nameBack=list.getJSONObject(0).getString("shop_name");
             }
         }
@@ -1991,7 +1989,7 @@ public class BusinessUtil {
                 shopId=list.getJSONObject(i).getString("id");
             }else if(shopName.equals("集团管理")){
                 shopId=list.getJSONObject(0).getString("id");
-            }else if(i==list.size()-1&&shopId.isEmpty()){
+            }else if(i==list.size()-1&&shopId.equals("")){
                 shopId=list.getJSONObject(0).getString("id");
             }
         }

@@ -18,6 +18,8 @@ public class EditExchangeGoodsScene extends BaseScene {
     private final String exchangeEndTime;
     private final Long id;
     private final Integer exchangeNum;
+    private final Integer expireType;
+    private final Integer useDays;
 
     @Override
     public JSONObject getRequestBody() {
@@ -31,6 +33,8 @@ public class EditExchangeGoodsScene extends BaseScene {
         object.put("exchange_end_time", exchangeEndTime);
         object.put("id", id);
         object.put("exchange_num", exchangeNum);
+        object.put("expire_type", exchangePrice);
+        object.put("use_days", useDays);
         return object;
     }
 

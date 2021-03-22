@@ -1489,13 +1489,15 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 String result = respond.getJSONArray("list").getJSONObject(0).getString(output);
                 if(pram.equals("shop_id")){
                     String shopId=businessUtil.shopNameTransformId(result);
-                    String shopName=businessUtil.getShopNameExist(result);;
+                    String shopName=businessUtil.getShopNameExist(result);
+                    System.out.println(shopId+"--------"+shopName);
                    JSONObject respond1 = jc.packageFormFilterManage("", "1", "10", pram, shopId);
                    int pages = respond1.getInteger("pages")>10?10:respond1.getInteger("pages");
                    for (int page = 1; page <= pages; page++) {
                        JSONArray list = jc.packageFormFilterManage("", String.valueOf(page),"10", pram, shopId).getJSONArray("list");
                        for (int i = 0; i < list.size(); i++) {
                            String Flag = list.getJSONObject(i).getString(output);
+                           System.out.println("套餐表单管理按" + shopName + "查询，结果错误" + Flag);
                            Preconditions.checkArgument(Flag.contains(shopName), "套餐表单管理按" + shopName + "查询，结果错误" + Flag);
                        }
                    }
@@ -3972,11 +3974,10 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                         }
                     }
                 }else if(pram.equals("service_sale_id")){
-                    String result = response.getJSONArray("list").getJSONObject(0).getString(output);
+                    String result = response.getJSONArray("list").getJSONObject(0).containsKey("service_sale_name")?response.getJSONArray("list").getJSONObject(0).getString(output):"Max";
                     String saleId=businessUtil.authNameTransformId(result,"AFTER_SALE_RECEPTION");
                     String name=businessUtil.getAuthNameExist(result,"AFTER_SALE_RECEPTION");
                     JSONObject response1 = jc.evaluatePage("", "1", "10",pram, saleId);
-                    System.out.println(saleId+"------"+response1);
                     int pages = response1.getInteger("pages")>10?10:response1.getInteger("pages");
                     for (int page = 1; page <= pages; page++) {
                         JSONArray list = jc.evaluatePage("", String.valueOf(page),"10", pram, saleId).getJSONArray("list");

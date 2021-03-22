@@ -15,6 +15,7 @@ public class ReceptionPurchaseTemporaryPackageScene extends BaseScene {
     private final String plateNumber;
     private final JSONArray voucherList;
     private final String expiryDate;
+    private final Integer expireType;
     private final String remark;
     private final String subjectType;
     private final Long subjectId;
@@ -32,6 +33,7 @@ public class ReceptionPurchaseTemporaryPackageScene extends BaseScene {
         object.put("car_type", carType);
         object.put("plate_number", plateNumber);
         object.put("voucher_list", voucherList);
+        object.put("expire_type", expireType);
         object.put("expiry_date", expiryDate);
         object.put("remark", remark);
         object.put("subject_type", subjectType);

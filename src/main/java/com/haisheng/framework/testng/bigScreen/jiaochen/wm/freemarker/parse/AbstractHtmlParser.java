@@ -38,11 +38,11 @@ public abstract class AbstractHtmlParser implements IParser<SceneAttribute> {
 
     @Override
     public SceneAttribute findFirst() {
-        return getAttributeList()[0];
+        return getAttributes()[0];
     }
 
     @Override
-    public SceneAttribute[] getAttributeList() {
+    public SceneAttribute[] getAttributes() {
         logger.info("html开始解析");
         List<SceneAttribute> sceneAttributeList = new ArrayList<>();
         Elements sect1s = getElementById().getElementsByClass("sect1");

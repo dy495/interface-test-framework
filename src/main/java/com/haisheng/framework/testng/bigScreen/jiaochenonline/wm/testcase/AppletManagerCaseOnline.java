@@ -358,7 +358,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
         try {
             IScene exchangePageScene = ExchangePageScene.builder().status(IntegralExchangeStatusEnum.WORKING.name()).exchangeType(CommodityTypeEnum.REAL.name()).build();
             ExchangePage a = util.collectBean(exchangePageScene, ExchangePage.class).stream().filter(e -> e.getExchangedAndSurplus().split("/")[1].equals("0")).findFirst().orElse(null);
-            ExchangePage exchangePage = a == null ? util.CreateExchangeRealGoods(0) : a;
+            ExchangePage exchangePage = a == null ? util.createExchangeRealGoods(0) : a;
             user.loginApplet(APPLET_USER_ONE);
             int specificationId = AppletCommodityDetailScene.builder().id(exchangePage.getId()).build().execute(visitor, true).getJSONArray("specification_compose_list").getJSONObject(0).getInteger("id");
             AppletShippingAddress appletShippingAddress = AppletShippingAddressListScene.builder().build().execute(visitor, true).getJSONArray("list").stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppletShippingAddress.class)).collect(Collectors.toList()).get(0);
@@ -387,7 +387,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
                 AddVoucherScene.builder().id(voucherId).addNumber(1).build().execute(visitor, true);
                 String voucherName = util.getVoucherName(voucherId);
                 util.applyVoucher(voucherName, "1");
-                exchangePage = util.CreateExchangeFictitiousGoods(voucherId);
+                exchangePage = util.createExchangeFictitiousGoods(voucherId);
                 util.pushMessage(0, true, voucherId);
             } else {
                 exchangePage = a;
@@ -416,7 +416,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
             ExchangePage exchangePage;
             if (a == null) {
                 Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-                exchangePage = util.CreateExchangeFictitiousGoods(voucherId);
+                exchangePage = util.createExchangeFictitiousGoods(voucherId);
                 EditExchangeStockScene.builder().id(exchangePage.getId()).changeStockType(ChangeStockTypeEnum.MINUS.name()).num("1").goodsName(exchangePage.getGoodsName()).type(exchangePage.getExchangeType()).build().execute(visitor, true);
             } else {
                 exchangePage = a;
@@ -450,7 +450,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
                 if (b == null) {
                     //如果没有创建一个库存为1并且包含卡券剩余库存>0的积分商品
                     voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-                    exchangePage = util.CreateExchangeFictitiousGoods(voucherId);
+                    exchangePage = util.createExchangeFictitiousGoods(voucherId);
                 } else {
                     //如果有给此积分商品增加一个库存
                     exchangePage = b;
@@ -463,10 +463,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
                 voucherId = util.getExchangeGoodsContainVoucher(exchangePage.getId()).getVoucherId();
             }
             //编辑为不限兑换次数
-            EditExchangeGoodsScene.builder().exchangeEndTime(exchangePage.getEndUseTime()).exchangeGoodsType(exchangePage.getExchangeType())
-                    .exchangeNum(exchangePage.getExchangeNumber()).exchangePeopleNum(10).exchangePrice(exchangePage.getExchangePrice())
-                    .exchangeStartTime(exchangePage.getBeginUseTime()).goodsId(voucherId).id(exchangePage.getId())
-                    .isLimit(false).build().execute(visitor, true);
+            util.modifyExchangeGoodsLimit(exchangePage.getId(),exchangePage.getExchangeType(),false);
             VoucherPage voucherPage = util.getVoucherPage(voucherId);
             user.loginApplet(APPLET_USER_ONE);
             int appletVoucherNum = util.getAppletVoucherNum();

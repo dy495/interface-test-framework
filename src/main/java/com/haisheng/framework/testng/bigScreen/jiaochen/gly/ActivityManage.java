@@ -755,7 +755,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * 活动审批--审批通过，待审批-1&审批通过+1      ok
+     * 活动审批--审批通过，待审批-1&审批通过+1   ok
      */
     @Test
     public void activityApproval14() {
