@@ -33,7 +33,7 @@ public class jiaoChenInfo {
     public final String  district_code= "222402";
     public final String phone = "1380110"+Integer.toString((int)((Math.random()*9+1)*1000));//手机号
     public final String donephone = "15843317232";//成交客户手机号
-    public final Long oneshopid = 49309L;
+    public final Long oneshopid = 46439L;
 
     //日常
     public final long BrandID = 61L;//自动化用的品牌id

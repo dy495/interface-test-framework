@@ -5907,14 +5907,26 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     /**
+     * 车辆style列表下拉
+     *
+     * @return
+     */
+    public JSONObject styleList(Long shop_id) {
+        JSONObject json = new JSONObject();
+        String url = "/jiaochen/pc/customer-manage/pre-sale-customer/style-list";
+        json.put("shop_id", shop_id);
+        return invokeApi(url, json);
+    }
+
+    /**
      * 车辆model列表下拉
      *
      * @return
      */
-    public JSONObject modelList(Long shop_id) {
+    public JSONObject modelList(Long style_id) {
         JSONObject json = new JSONObject();
         String url = "/jiaochen/pc/customer-manage/pre-sale-customer/model-list";
-        json.put("shop_id", shop_id);
+        json.put("style_id", style_id);
         return invokeApi(url, json);
     }
 
@@ -5923,14 +5935,15 @@ public class ScenarioUtil extends TestCaseCommon {
      *
      * @return
      */
-    public JSONObject createPotentialCstm(String customer_name, String customer_phone, String customer_type, String sex, Long car_model_id,
-                                          Long shop_id, String salesId, Boolean... chk) {
+    public JSONObject createPotentialCstm(String customer_name, String customer_phone, String customer_type, String sex, Long car_style_id,
+                                          Long car_model_id, Long shop_id, String salesId, Boolean... chk) {
         JSONObject json = new JSONObject();
         String url = "/jiaochen/pc/customer-manage/pre-sale-customer/create-potential-customer";
         json.put("customer_name", customer_name);
         json.put("customer_phone", customer_phone);
         json.put("customer_type", customer_type);
         json.put("sex", sex);
+        json.put("car_style_id", car_style_id);
         json.put("car_model_id", car_model_id);
         json.put("shop_id", shop_id);
         json.put("salesId", salesId);
@@ -5947,7 +5960,7 @@ public class ScenarioUtil extends TestCaseCommon {
      *
      * @return
      */
-    public JSONObject createCstm(String customer_name, String customer_phone, String customer_type, String sex, Long car_model_id,
+    public JSONObject createCstm(String customer_name, String customer_phone, String customer_type, String sex, Long car_style_id, Long car_model_id,
                                  Long shop_id, String salesId, String purchase_car_date, String vehicle_chassis_code, Boolean... chk) {
         JSONObject json = new JSONObject();
         String url = "/jiaochen/pc/customer-manage/pre-sale-customer/create-customer";
@@ -5955,6 +5968,7 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("customer_phone", customer_phone);
         json.put("customer_type", customer_type);
         json.put("sex", sex);
+        json.put("car_style_id", car_style_id);
         json.put("car_model_id", car_model_id);
         json.put("shop_id", shop_id);
         json.put("salesId", salesId);

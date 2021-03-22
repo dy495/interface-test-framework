@@ -3178,9 +3178,10 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
             int bef = jc.preSleCustomerManage(null,"1","1",null,null).getInteger("total");
             Long shop_id = info.oneshopid;
-            Long car_model_id = jc.modelList(shop_id).getJSONArray("list").getJSONObject(0).getLong("modelId");
+            Long car_style_id = jc.styleList(shop_id).getJSONArray("list").getJSONObject(0).getLong("style_id");
+            Long car_model_id = jc.modelList(car_style_id).getJSONArray("list").getJSONObject(0).getLong("model_id");
             String salesId = jc.saleList(shop_id).getJSONArray("list").getJSONObject(0).getString("sales_id");
-            int code = jc.createPotentialCstm(name,phone,type,sex,car_model_id,shop_id,salesId,false).getInteger("code");
+            int code = jc.createPotentialCstm(name,phone,type,sex,car_style_id,car_model_id,shop_id,salesId,false).getInteger("code");
             int after = jc.preSleCustomerManage(null,"1","1",null,null).getInteger("total");
             if (chk.equals("false")){
                 Preconditions.checkArgument(code==1001,mess+"期待失败，实际"+code);
@@ -3189,7 +3190,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
                 int sum = after - bef;
                 Preconditions.checkArgument(code==1000,mess+"期待创建成功，实际"+code);
                 Preconditions.checkArgument(sum==1,mess+"期待创建成功列表+1，实际增加"+sum);
-                int code2 = jc.createPotentialCstm(name,phone,type,sex,car_model_id,shop_id,salesId,false).getInteger("code");
+                int code2 = jc.createPotentialCstm(name,phone,type,sex,car_style_id,car_model_id,shop_id,salesId,false).getInteger("code");
                 Preconditions.checkArgument(code2==1001,"使用列表中存在的手机号期待创建失败，实际"+code);
             }
         } catch (AssertionError e) {
@@ -3205,7 +3206,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     public Object[] customerInfo(){
         return new String[][]{ // 姓名 手机号 类型 性别  提示语 正常/异常
 
-                {"我","1381172"+Integer.toString((int)((Math.random()*9+1)*1000)),"PERSON","0","姓名一个字","true"},
+                {"我","1382172"+Integer.toString((int)((Math.random()*9+1)*1000)),"PERSON","0","姓名一个字","true"},
                 {info.stringfifty,"1381172"+Integer.toString((int)((Math.random()*9+1)*1000)),"CORPORATION","1","姓名50个字","true"},
                 {info.stringsix,"1381172"+Integer.toString((int)((Math.random()*9+1)*100)),"CORPORATION","1","手机号10位","false"},
                 {info.stringsix,"1381172"+Integer.toString((int)((Math.random()*9+1)*10000)),"CORPORATION","1","手机号12位","false"},
@@ -3222,26 +3223,27 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
 
             Long shop_id = info.oneshopid;
-            Long car_model_id = jc.modelList(shop_id).getJSONArray("list").getJSONObject(0).getLong("modelId");
+            Long car_style_id = jc.styleList(shop_id).getJSONArray("list").getJSONObject(0).getLong("style_id");
+            Long car_model_id = jc.modelList(car_style_id).getJSONArray("list").getJSONObject(0).getLong("model_id");
             String salesId = jc.saleList(shop_id).getJSONArray("list").getJSONObject(0).getString("sales_id");
             String name="name"+System.currentTimeMillis();
             String phone="1391172"+Integer.toString((int)((Math.random()*9+1)*1000));
             String type="PERSON";
             String sex="0";
             //不填写姓名
-            int code = jc.createPotentialCstm(null,phone,type,sex,car_model_id,shop_id,salesId,false).getInteger("code");
+            int code = jc.createPotentialCstm(null,phone,type,sex,car_style_id,car_model_id,shop_id,salesId,false).getInteger("code");
             Preconditions.checkArgument(code==1001,"不填写姓名期待失败，实际"+code);
 
             //不填写手机号
-            int code1 = jc.createPotentialCstm(name,null,type,sex,car_model_id,shop_id,salesId,false).getInteger("code");
+            int code1 = jc.createPotentialCstm(name,null,type,sex,car_style_id,car_model_id,shop_id,salesId,false).getInteger("code");
             Preconditions.checkArgument(code1==1001,"不填写手机号期待失败，实际"+code);
 
             //不填写类型
-            int code2 = jc.createPotentialCstm(name,phone,null,sex,car_model_id,shop_id,salesId,false).getInteger("code");
+            int code2 = jc.createPotentialCstm(name,phone,null,sex,car_style_id,car_model_id,shop_id,salesId,false).getInteger("code");
             Preconditions.checkArgument(code2==1001,"不填写车主类型期待失败，实际"+code);
 
             //不填写性别
-            int code3 = jc.createPotentialCstm(name,phone,type,null,car_model_id,shop_id,salesId,false).getInteger("code");
+            int code3 = jc.createPotentialCstm(name,phone,type,null,car_style_id,car_model_id,shop_id,salesId,false).getInteger("code");
             Preconditions.checkArgument(code3==1001,"不填写性别期待失败，实际"+code);
 
             //不填写意向车型 bug 7866
@@ -3249,7 +3251,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 //            Preconditions.checkArgument(code4==1001,"不填写意向车型期待失败，实际"+code);
 
             //不填写所属门店
-            int code5 = jc.createPotentialCstm(name,phone,type,sex,car_model_id,null,salesId,false).getInteger("code");
+            int code5 = jc.createPotentialCstm(name,phone,type,sex,car_style_id,car_model_id,null,salesId,false).getInteger("code");
             Preconditions.checkArgument(code5==1001,"不填写所属门店期待失败，实际"+code);
 
 //            //不填写所属销售 bug 7866
@@ -3275,16 +3277,17 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
 
             Long shop_id = info.oneshopid;
-            Long car_model_id = jc.modelList(shop_id).getJSONArray("list").getJSONObject(0).getLong("modelId");
+            Long car_style_id = jc.styleList(shop_id).getJSONArray("list").getJSONObject(0).getLong("style_id");
+            Long car_model_id = jc.modelList(car_style_id).getJSONArray("list").getJSONObject(0).getLong("model_id");
             String salesId = jc.saleList(shop_id).getJSONArray("list").getJSONObject(0).getString("sales_id");
 
 
             if (chk.equals("false")){
-                int code = jc.createCstm(name,phone,type,sex,car_model_id,shop_id,salesId,dt.getHistoryDate(0),"ASDFUGGDSF12"+Integer.toString((int)((Math.random()*9+1)*10000)),false).getInteger("code");
+                int code = jc.createCstm(name,phone,type,sex,car_style_id,car_model_id,shop_id,salesId,dt.getHistoryDate(0),"ASDFUGGDSF12"+Integer.toString((int)((Math.random()*9+1)*10000)),false).getInteger("code");
                 Preconditions.checkArgument(code==1001,mess+"期待失败，实际"+code);
             }
             else {
-                int code1 = jc.createCstm(name,info.donephone,type,sex,car_model_id,shop_id,salesId,dt.getHistoryDate(0),"ASDFUGGDSF02"+Integer.toString((int)((Math.random()*9+1)*10000)),false).getInteger("code");
+                int code1 = jc.createCstm(name,info.donephone,type,sex,car_style_id,car_model_id,shop_id,salesId,dt.getHistoryDate(0),"ASDFUGGDSF02"+Integer.toString((int)((Math.random()*9+1)*10000)),false).getInteger("code");
                 Preconditions.checkArgument(code1==1000,mess+"期待创建成功，实际"+code1);
 
             }
@@ -3306,7 +3309,8 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
 
             Long shop_id = info.oneshopid;
-            Long car_model_id = jc.modelList(shop_id).getJSONArray("list").getJSONObject(0).getLong("modelId");
+            Long car_style_id = jc.styleList(shop_id).getJSONArray("list").getJSONObject(0).getLong("style_id");
+            Long car_model_id = jc.modelList(car_style_id).getJSONArray("list").getJSONObject(0).getLong("model_id");
             String salesId = jc.saleList(shop_id).getJSONArray("list").getJSONObject(0).getString("sales_id");
             String name="name"+System.currentTimeMillis();
             String phone=info.donephone;
@@ -3317,13 +3321,13 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 //            int code = jc.createCstm(name,phone,type,sex,car_model_id,shop_id,salesId,dt.getHistoryDate(1),"ASDFUGGDSF12"+Integer.toString((int)((Math.random()*9+1)*10000)),false).getInteger("code");
 //            Preconditions.checkArgument(code==1001,"购车日期大于当前时间期待失败，实际"+code);
 
-            int code1 = jc.createCstm(name,phone,type,sex,car_model_id,shop_id,salesId,dt.getHistoryDate(-1),"ASDFUGGDSF1"+Integer.toString((int)((Math.random()*9+1)*10000)),false).getInteger("code");
+            int code1 = jc.createCstm(name,phone,type,sex,car_style_id,car_model_id,shop_id,salesId,dt.getHistoryDate(-1),"ASDFUGGDSF1"+Integer.toString((int)((Math.random()*9+1)*10000)),false).getInteger("code");
             Preconditions.checkArgument(code1==1001,"底盘号16位期待失败，实际"+code1);
 
-            int code2 = jc.createCstm(name,phone,type,sex,car_model_id,shop_id,salesId,dt.getHistoryDate(-1),"ASDFUGGDSF111"+Integer.toString((int)((Math.random()*9+1)*10000)),false).getInteger("code");
+            int code2 = jc.createCstm(name,phone,type,sex,car_style_id,car_model_id,shop_id,salesId,dt.getHistoryDate(-1),"ASDFUGGDSF111"+Integer.toString((int)((Math.random()*9+1)*10000)),false).getInteger("code");
             Preconditions.checkArgument(code2==1001,"底盘号18位期待失败，实际"+code2);
 
-            int code3 = jc.createCstm(name,info.phone,type,sex,car_model_id,shop_id,salesId,dt.getHistoryDate(-1),"ASDFUGGDSF11"+Integer.toString((int)((Math.random()*9+1)*10000)),false).getInteger("code");
+            int code3 = jc.createCstm(name,info.phone,type,sex,car_style_id,car_model_id,shop_id,salesId,dt.getHistoryDate(-1),"ASDFUGGDSF11"+Integer.toString((int)((Math.random()*9+1)*10000)),false).getInteger("code");
             Preconditions.checkArgument(code3==1001,"手机号未注册小程序期待失败，实际"+code3);
 
 
