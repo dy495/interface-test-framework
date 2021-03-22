@@ -866,7 +866,7 @@ public class BusinessUtilOnline {
             //审批活动
             getApprovalPassed(id1);
             //小程序报名
-            activityRegisterApplet(id1,"13373166806","郭丽雅",2,"1513814362@qq.com","22","女","其他");
+            activityRegisterApplet(ids.get(0),"13373166806","郭丽雅",2,"1513814362@qq.com","22","女","其他");
             ids.add(id1);
             //登录PC
             jc.pcLogin(pp.phone, pp.password);
