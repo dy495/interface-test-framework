@@ -33,7 +33,7 @@ public class EditExchangeGoodsScene extends BaseScene {
         object.put("exchange_end_time", exchangeEndTime);
         object.put("id", id);
         object.put("exchange_num", exchangeNum);
-        object.put("expire_type", exchangePrice);
+        object.put("expire_type", expireType);
         object.put("use_days", useDays);
         return object;
     }

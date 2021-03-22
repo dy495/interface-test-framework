@@ -1712,10 +1712,10 @@ public class SupporterUtil {
         EditExchangeGoodsScene.EditExchangeGoodsSceneBuilder builder = EditExchangeGoodsScene.builder()
                 .exchangeGoodsType(exchangeGoodsDetail.getExchangeGoodsType()).goodsId(exchangeGoodsDetail.getGoodsId())
                 .exchangePrice(exchangeGoodsDetail.getExchangePrice()).exchangeNum(exchangeGoodsDetail.getExchangeNum())
+                .exchangeStartTime(exchangeGoodsDetail.getExchangeStartTime()).exchangeEndTime(exchangeGoodsDetail.getExchangeEndTime())
                 .isLimit(isLimit).id(exchangeGoodsDetail.getId());
         builder = isLimit ? builder.exchangePeopleNum(1) : builder;
-        builder = exchangeGoodsType.equals(CommodityTypeEnum.REAL.name()) ? builder.exchangeStartTime(exchangeGoodsDetail.getExchangeStartTime())
-                .exchangeEndTime(exchangeGoodsDetail.getExchangeEndTime()) : builder.expireType(2).useDays(10);
+        builder = exchangeGoodsType.equals(CommodityTypeEnum.REAL.name()) ? builder : builder.expireType(2).useDays(10);
         builder.build().execute(visitor, true);
     }
 

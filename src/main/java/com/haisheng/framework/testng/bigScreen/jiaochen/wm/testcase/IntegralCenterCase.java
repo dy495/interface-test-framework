@@ -113,7 +113,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
                     int stockDetail = a.getInteger("stock_detail");
                     s.set(exchangeType.equals("ADD") ? s.addAndGet(stockDetail) : s.addAndGet(-stockDetail));
                 });
-                CommonUtil.checkResultPlus(goodsName + "兑换品库存明细加和", s.get(), "当前库存", goodsStock);
+                CommonUtil.checkResultPlus(goodsName + " 兑换品库存明细加和", s.get(), "当前库存", goodsStock);
                 CommonUtil.logger(goodsName);
             });
         } catch (Exception | AssertionError e) {

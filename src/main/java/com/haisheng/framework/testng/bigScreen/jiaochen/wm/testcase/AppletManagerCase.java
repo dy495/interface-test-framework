@@ -359,6 +359,8 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             IScene exchangePageScene = ExchangePageScene.builder().status(IntegralExchangeStatusEnum.WORKING.name()).exchangeType(CommodityTypeEnum.REAL.name()).build();
             ExchangePage a = util.collectBean(exchangePageScene, ExchangePage.class).stream().filter(e -> e.getExchangedAndSurplus().split("/")[1].equals("0")).findFirst().orElse(null);
             ExchangePage exchangePage = a == null ? util.createExchangeRealGoods(0) : a;
+            //修改为可兑换多次
+            util.modifyExchangeGoodsLimit(exchangePage.getId(), exchangePage.getExchangeType(), false);
             user.loginApplet(APPLET_USER_ONE);
             int specificationId = AppletCommodityDetailScene.builder().id(exchangePage.getId()).build().execute(visitor, true).getJSONArray("specification_compose_list").getJSONObject(0).getInteger("id");
             AppletShippingAddress appletShippingAddress = AppletShippingAddressListScene.builder().build().execute(visitor, true).getJSONArray("list").stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppletShippingAddress.class)).collect(Collectors.toList()).get(0);
@@ -463,7 +465,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
                 voucherId = util.getExchangeGoodsContainVoucher(exchangePage.getId()).getVoucherId();
             }
             //编辑为不限兑换次数
-            util.modifyExchangeGoodsLimit(exchangePage.getId(),exchangePage.getExchangeType(),false);
+            util.modifyExchangeGoodsLimit(exchangePage.getId(), exchangePage.getExchangeType(), false);
             VoucherPage voucherPage = util.getVoucherPage(voucherId);
             user.loginApplet(APPLET_USER_ONE);
             int appletVoucherNum = util.getAppletVoucherNum();
