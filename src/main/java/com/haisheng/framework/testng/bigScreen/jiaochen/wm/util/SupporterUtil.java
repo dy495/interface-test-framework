@@ -558,7 +558,7 @@ public class SupporterUtil {
         logger.info("time is:{}", time);
         IScene scene = ApplyPageScene.builder().name(voucherName).build();
         List<ApplyPage> voucherApplies = collectBean(scene, ApplyPage.class);
-        return voucherApplies.stream().filter(e -> e.getName().equals(voucherName) && e.getApplyTime().equals(time)).findFirst().orElse(null);
+        return voucherApplies.stream().filter(e -> e.getName().equals(voucherName) && e.getApplyTime().contains(time)).findFirst().orElse(null);
     }
 
     /**
