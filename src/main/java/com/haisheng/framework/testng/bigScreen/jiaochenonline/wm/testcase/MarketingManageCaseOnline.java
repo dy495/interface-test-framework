@@ -3050,7 +3050,6 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             int awardScore = response.getInteger("award_score") >= 1999 ? 1 : response.getInteger("award_score");
             int recordTotal = SignInConfigChangeRecordScene.builder().signInConfigId(signInConfigId).build().execute(visitor, true).getInteger("total");
             //变更积分&说明
-            String date = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm");
             SignInConfigEditScene.builder().signInConfigId(signInConfigId).awardScore(awardScore + 1).explain(EnumDesc.FAULT_DESCRIPTION.getDesc()).build().execute(visitor, true);
             //变更后列表数
             int newRecordTotal = SignInConfigChangeRecordScene.builder().signInConfigId(signInConfigId).build().execute(visitor, true).getInteger("total");
@@ -3058,7 +3057,6 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             //变更内容
             JSONObject newResponse = SignInConfigChangeRecordScene.builder().build().execute(visitor, true).getJSONArray("list").getJSONObject(0);
             CommonUtil.checkResult("操作员手机号", ALL_AUTHORITY.getPhone(), newResponse.getString("operate_phone"));
-            CommonUtil.checkResult("操作时间", date, newResponse.getString("operate_date"));
             CommonUtil.checkResult("变更积分", awardScore + 1, newResponse.getInteger("change_score"));
             CommonUtil.checkResult("变更备注", EnumDesc.FAULT_DESCRIPTION.getDesc(), newResponse.getString("change_remark"));
         } catch (Exception | AssertionError e) {
