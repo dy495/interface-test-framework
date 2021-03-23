@@ -18,6 +18,10 @@ public class PublicParameter {
     public String RecruitName="招募活动"+(int) (Math.random() * 10000);
     //裂变活动名称
     public String fissionVoucherName="裂变活动"+(int) (Math.random() * 10000);
+    //编辑裂变活动名称
+    public String fissionVoucherNameEdit="编辑过的裂变活动"+(int) (Math.random() * 10000);
+    //编辑裂变活动规则
+    public String EditFissionRule="编辑后的裂变活动规则";
     //活动地址
     public String address="北京海淀中关村SOHO-10-16";
     //活动的领取次数限制异常情况

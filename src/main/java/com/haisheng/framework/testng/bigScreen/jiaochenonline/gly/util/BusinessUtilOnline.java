@@ -305,6 +305,39 @@ public class BusinessUtilOnline {
     }
 
     /**
+     *编辑裂变活动
+     */
+    public IScene fissionActivityEditScene(Long activityId){
+        Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+        SupporterUtil supporterUtil = new SupporterUtil(visitor);
+        PublicParameter pp = new PublicParameter();
+        List<String> picList = new ArrayList<>();
+        picList.add(supporterUtil.getPicPath());
+        // 创建被邀请者和分享者的信息字段
+        JSONObject invitedVoucher = getInvitedVoucher(voucherId, 1, String.valueOf(getVoucherSurplusInventory(voucherId)), 2, "", "", 1);
+        JSONObject shareVoucher = getShareVoucher(voucherId, 1, String.valueOf(getVoucherSurplusInventory(voucherId)), 2, "", "", 1);
+        //编辑裂变活动
+        return FissionVoucherEditScene.builder()
+                .id(activityId)
+                .type(1)
+                .participationLimitType(0)
+                .receiveLimitType(0)
+                .title(pp.fissionVoucherNameEdit)
+                .rule(pp.EditFissionRule)
+                .startDate(getStartDate())
+                .endDate(getEndDate())
+                .subjectType(supporterUtil.getSubjectType())
+                .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
+                .label("RED_PAPER")
+                .picList(picList)
+                .shareNum("3")
+                .shareVoucher(shareVoucher)
+                .invitedVoucher(invitedVoucher)
+                .build();
+
+    }
+
+    /**
      * 创建招募活动--需要审批的活动
      *
      * @return 活动id
@@ -1639,6 +1672,23 @@ public class BusinessUtilOnline {
     public JSONObject getFissionActivityDetail(Long activityId) {
         IScene scene = ManageDetailScene.builder().id(activityId).build();
         JSONObject response = visitor.invokeApi(scene).getJSONObject("fission_voucher_info").getJSONObject("reward_vouchers");
+        return response;
+    }
+    /**
+     * 招募活动裂变详情页返回值
+     */
+    public JSONObject getFissionActivityDetailDate1(Long activityId) {
+        IScene scene = ManageDetailScene.builder().id(activityId).build();
+        JSONObject response = visitor.invokeApi(scene);
+        return response;
+    }
+
+    /**
+     * 裂变活动裂变详情页-获取返回值在【活动奖励】内部
+     */
+    public JSONObject getFissionActivityDetailData(Long activityId) {
+        IScene scene = ManageDetailScene.builder().id(activityId).build();
+        JSONObject response = visitor.invokeApi(scene).getJSONObject("fission_voucher_info");
         return response;
     }
 

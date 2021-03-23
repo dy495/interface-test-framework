@@ -25,6 +25,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -273,8 +274,8 @@ public class BusinessUtil {
         List<String> picList = new ArrayList<>();
         picList.add(supporterUtil.getPicPath());
         // 创建被邀请者和分享者的信息字段
-        JSONObject invitedVoucher = getInvitedVoucher(voucherId, 1, String.valueOf(getVoucherSurplusInventory(voucherId)), 2, "", "", 3);
-        JSONObject shareVoucher = getShareVoucher(voucherId, 1, String.valueOf(getVoucherSurplusInventory(voucherId)), 2, "", "", 3);
+        JSONObject invitedVoucher = getInvitedVoucher(voucherId, 1, String.valueOf(Math.min(getVoucherSurplusInventory(voucherId), 10)), 2, "", "", 3);
+        JSONObject shareVoucher = getShareVoucher(voucherId, 1, String.valueOf(Math.min(getVoucherSurplusInventory(voucherId), 10)), 2, "", "", 3);
         return FissionVoucherAddScene.builder()
                 .type(1)
                 .participationLimitType(0)
@@ -535,7 +536,7 @@ public class BusinessUtil {
     }
 
     /**
-     * 编辑活动
+     * 编辑招募活动
      */
     public String activityEditScene(Long id) {
         //获取一个卡券
@@ -594,6 +595,60 @@ public class BusinessUtil {
         String message = visitor.invokeApi(scene,false).getString("message");
         return message;
     }
+
+    /**
+     *编辑裂变活动
+     */
+    public IScene fissionActivityEditScene(Long activityId){
+        Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+        SupporterUtil supporterUtil = new SupporterUtil(visitor);
+        PublicParameter pp = new PublicParameter();
+        List<String> picList = new ArrayList<>();
+        picList.add(supporterUtil.getPicPath());
+        // 创建被邀请者和分享者的信息字段
+        JSONObject invitedVoucher = getInvitedVoucher(voucherId, 1, String.valueOf(getVoucherSurplusInventory(voucherId)), 2, "", "", 1);
+        JSONObject shareVoucher = getShareVoucher(voucherId, 1, String.valueOf(getVoucherSurplusInventory(voucherId)), 2, "", "", 1);
+       //编辑裂变活动
+        return FissionVoucherEditScene.builder()
+                .id(activityId)
+                .type(1)
+                .participationLimitType(0)
+                .receiveLimitType(0)
+                .title(pp.fissionVoucherNameEdit)
+                .rule(pp.EditFissionRule)
+                .startDate(getStartDate())
+                .endDate(getEndDate())
+                .subjectType(supporterUtil.getSubjectType())
+                .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
+                .label("RED_PAPER")
+                .picList(picList)
+                .shareNum("3")
+                .shareVoucher(shareVoucher)
+                .invitedVoucher(invitedVoucher)
+                .build();
+
+    }
+    /**
+     * 获取图片地址
+     *
+     * @return 图片地址
+     */
+    public String getPicturePath() {
+        String path = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/活动.jpeg";
+        return getPicPath(path);
+    }
+    public String getPicPath(String picPath) {
+        return getPicPath(picPath, "3:2");
+    }
+
+    public String getPicPath(String picPath, String ratioStr) {
+        String picture = new ImageUtil().getImageBinary(picPath);
+        String[] strings = ratioStr.split(":");
+        double ratio = BigDecimal.valueOf(Double.parseDouble(strings[0]) / Double.parseDouble(strings[1])).divide(new BigDecimal(1), 4, BigDecimal.ROUND_HALF_UP).doubleValue();
+        IScene scene = FileUpload.builder().isPermanent(false).permanentPicType(0).pic(picture).ratioStr(ratioStr).ratio(ratio).build();
+        return visitor.invokeApi(scene).getString("pic_path");
+    }
+
 
     /**
      * 获取图片地址
@@ -1634,13 +1689,33 @@ public class BusinessUtil {
     }
 
     /**
-     * 裂变活动详情页-获取返回值在【活动奖励】内部
+     * 招募活动裂变详情页返回值
+     */
+    public JSONObject getFissionActivityDetailDate1(Long activityId) {
+        IScene scene = ManageDetailScene.builder().id(activityId).build();
+        JSONObject response = visitor.invokeApi(scene);
+        return response;
+    }
+
+    /**
+     * 裂变活动裂变详情页-获取返回值
+     */
+    public JSONObject getFissionActivityDetailData(Long activityId) {
+        IScene scene = ManageDetailScene.builder().id(activityId).build();
+        JSONObject response = visitor.invokeApi(scene).getJSONObject("fission_voucher_info");
+        return response;
+    }
+
+    /**
+     * 裂变活动裂变详情页-获取返回值在【活动奖励】内部
      */
     public JSONObject getFissionActivityDetail(Long activityId) {
         IScene scene = ManageDetailScene.builder().id(activityId).build();
         JSONObject response = visitor.invokeApi(scene).getJSONObject("fission_voucher_info").getJSONObject("reward_vouchers");
         return response;
     }
+
+
 
     /**
      * 报名数据-返回值（data）
