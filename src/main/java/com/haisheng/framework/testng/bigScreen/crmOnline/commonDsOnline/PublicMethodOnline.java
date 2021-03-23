@@ -71,7 +71,7 @@ public class PublicMethodOnline {
         }
         SaleInfo saleInfo = new SaleInfo();
         saleInfo.setUserId(null);
-        saleInfo.setUserName("总经理");
+        saleInfo.setUserName("zjl");
         saleInfo.setAccount("zjl");
         list.add(saleInfo);
         return list;

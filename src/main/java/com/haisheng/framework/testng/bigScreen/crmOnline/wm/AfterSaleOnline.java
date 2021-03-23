@@ -44,8 +44,6 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
     private static final EnumAccount zjl = EnumAccount.ZJL_ONLINE;
     private static final EnumAccount fw = EnumAccount.FW_55_ONLINE;
     private static final int size = 100;
-    int zjl_num = 0;
-    int gw_num = 0;
 
     @BeforeClass
     @Override
@@ -313,12 +311,12 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
         List<SaleInfo> saleInfos = method.getSaleList("服务顾问");
         saleInfos.forEach(info -> {
             CommonUtil.valueView(info.getUserName());
-            if (info.getUserName().contains("总经理")) {
+            if (info.getUserName().contains("zjl")) {
                 crm.login(info.getAccount(), zjl.getPassword());
                 int zjlNum = crm.invokeApi(scene).getInteger(type);
                 map.put("zjlNum", zjlNum);
             }
-            if (!info.getUserName().contains("总经理")) {
+            if (!info.getUserName().contains("zjl")) {
                 crm.login(info.getAccount(), zjl.getPassword());
                 gwNum.addAndGet(crm.invokeApi(scene).getInteger(type));
             }
