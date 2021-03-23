@@ -265,25 +265,25 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    //会员信息列表通过会员身份筛选
-    @Test(dataProvider = "identity",dataProviderClass = DataProviderMethod.class)
-    public void searchMember4(String identity) throws Exception{
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONArray list = md.MemberList(page,size,null,null,null,null,identity).getJSONArray("list");
-            for (int j = 0 ; j < list.size();j++) {
-                String memIdentity = list.getJSONObject(j).getString("identity");
-                Preconditions.checkArgument(memIdentity.contains(identity), "根据" + identity + "查询，结果包含" + memIdentity);
-            }
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("会员信息列表通过会员身份搜索");
-        }
-    }
+//    //会员信息列表通过会员身份筛选
+//    @Test(dataProvider = "identity",dataProviderClass = DataProviderMethod.class)
+//    public void searchMember4(String identity) throws Exception{
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            JSONArray list = md.MemberList(page,size,null,null,null,null,identity).getJSONArray("list");
+//            for (int j = 0 ; j < list.size();j++) {
+//                String memIdentity = list.getJSONObject(j).getString("identity");
+//                Preconditions.checkArgument(memIdentity.contains(identity), "根据" + identity + "查询，结果包含" + memIdentity);
+//            }
+//
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("会员信息列表通过会员身份搜索");
+//        }
+//    }
 
 
 
