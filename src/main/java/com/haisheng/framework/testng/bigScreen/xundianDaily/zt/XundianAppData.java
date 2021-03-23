@@ -484,46 +484,47 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //营业额
     @Test
     public void  OrderTurnover() throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取卡片list
             JSONArray list = md.cardList("HOME_TOP",null,10).getJSONArray("list");
-            //获取result
+//            //获取result
             JSONObject result = list.getJSONObject(3).getJSONObject("result");
-            //获取累计营业额
+//            //获取累计营业额
             int total_turnover = result.getInteger("total_turnover");
-            //获取营业额详情中的累计营业额
+//            //获取营业额详情中的累计营业额
             JSONArray items = md.cardDetail("TOTAL_TURNOVER").getJSONArray("items");
             int items_value = items.getJSONObject(0).getInteger("item_value");
+//
             checkArgument(total_turnover==items_value, "累计营业额==营业额详情中的累计营业额");
 
-            //获取今日营业额
-            JSONObject today_customer_univalence = result.getJSONObject("today_customer_univalence");
-            int today_customer_univalence1 = today_customer_univalence.getInteger("today_customer_univalence");
+//            //获取今日营业额
+            JSONObject today_customer_univalence = result.getJSONObject("today_turnover");
+            int today_customer_univalence1 = today_customer_univalence.getInteger("today_turnover");
             int items_value1 = items.getJSONObject(1).getInteger("item_value");
+//            CommonUtil.valueView(today_customer_univalence1, items_value1);
             checkArgument(today_customer_univalence1==items_value1, "今日营业额==订单详情中的今日营业额");
 
-            //今日订单的环比和同比
-            int last_week_customer_univalence_qoq = today_customer_univalence.getInteger("last_week_customer_univalence_qoq");
-            int yesterday_customer_univalence_qoq = today_customer_univalence.getInteger("yesterday_customer_univalence_qoq");
+            //今日营业额的环比和同比
+            int last_week_customer_univalence_qoq = today_customer_univalence.getInteger("last_week_turnover_qoq");
+            int yesterday_customer_univalence_qoq = today_customer_univalence.getInteger("yesterday_turnover_qoq");
             int before_day = items.getJSONObject(1).getInteger("before_day");
             int before_week = items.getJSONObject(1).getInteger("before_week");
             checkArgument(last_week_customer_univalence_qoq==before_week, "今日营业额的环比==订单详情中的今日营业额环比");
             checkArgument(yesterday_customer_univalence_qoq==before_day, "今日营业额的同比==订单详情中的今日订单数同比");
-
-
-            //获取今日客单价
-            JSONObject today_turnover = result.getJSONObject("today_turnover");
-            int today_turnover1 = today_turnover.getInteger("today_turnover");
+//
+//
+//            //获取今日客单价
+            JSONObject today_turnover = result.getJSONObject("today_customer_univalence");
+            int today_turnover1 = today_turnover.getInteger("today_customer_univalence");
             int items_value2 = items.getJSONObject(2).getInteger("item_value");
             checkArgument(today_turnover1==items_value2, "今日客单价==订单详情中的今日客单价");
 
-            //今日客单价的环比和同比
-            int last_week_turnover_qoq = today_turnover.getInteger("last_week_turnover_qoq");
-            int yesterday_turnover_qoq = today_turnover.getInteger("yesterday_turnover_qoq");
+//            //今日客单价的环比和同比
+            int last_week_turnover_qoq = today_turnover.getInteger("last_week_customer_univalence_qoq");
+            int yesterday_turnover_qoq = today_turnover.getInteger("yesterday_customer_univalence_qoq");
             int before_day1 = items.getJSONObject(1).getInteger("before_day");
             int before_week1 = items.getJSONObject(1).getInteger("before_week");
             checkArgument(last_week_turnover_qoq==before_week1, "今日客单价的环比==订单详情中的今日客单价环比");
