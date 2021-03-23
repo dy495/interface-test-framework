@@ -2125,13 +2125,13 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-            JSONArray voucherList = util.getVoucherArray(voucherId, 11);
+            JSONArray voucherList = util.getVoucherArray(voucherId, 101);
             IScene purchaseTemporaryPackageScene = PurchaseTemporaryPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
                     .carType(PackageUseTypeEnum.ALL_CAR.name()).voucherList(voucherList).expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc())
                     .subjectType(util.getSubjectType()).subjectId(util.getSubjectDesc(util.getSubjectType())).extendedInsuranceYear("1")
                     .extendedInsuranceCopies("1").type(1).build();
             String message = visitor.invokeApi(purchaseTemporaryPackageScene, false).getString("message");
-            String err = voucherList == null ? "卡券列表不能为空" : "卡券数量不能超过10张";
+            String err = voucherList == null ? "卡券列表不能为空" : "卡券数量不能超过100张";
             CommonUtil.checkResult("卡券数量为" + voucherList, err, message);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -2482,7 +2482,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
         try {
             List<JSONArray> list = new ArrayList<>();
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-            JSONArray voucherArray = util.getVoucherArray(voucherId, 15);
+            JSONArray voucherArray = util.getVoucherArray(voucherId, 101);
             list.add(voucherArray);
             list.add(null);
             long packageId = util.getPackagePage(PackageStatusEnum.REFUSAL).getPackageId();
@@ -2492,14 +2492,14 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
                         .subjectType(util.getSubjectType()).expireType(2).expiryDate(23).packagePrice("1.11").voucherList(e)
                         .status(true).shopIds(util.getShopIdList()).id(String.valueOf(packageId)).build();
                 String message = visitor.invokeApi(scene, false).getString("message");
-                String err = e == null ? "所选卡券不能为空" : "卡券数量不能超过10张";
+                String err = e == null ? "所选卡券不能为空" : "卡券数量不能超过100张";
                 CommonUtil.checkResult("编辑所选卡券为：" + e, err, message);
                 CommonUtil.logger(e);
             });
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐表单--修改套餐，主体类型异常");
+            saveData("套餐表单--修改套餐，包含卡券异常");
         }
     }
 
