@@ -316,8 +316,8 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
             JSONArray voucherList = util.getVoucherArray(voucherId, 1);
-            String packageName = util.editPackage(voucherList);
-            Long packageId = util.getPackageId(packageName);
+            Long packageId = PackageListScene.builder().build().execute(visitor, true).getJSONArray("list").getJSONObject(0).getLong("package_id");
+            String packageName = util.editPackage(packageId,voucherList);
             //购买前数据
             Long surplusInventory = util.getVoucherPage(voucherName).getSurplusInventory();
             IScene buyPackageRecordScene = BuyPackageRecordScene.builder().build();

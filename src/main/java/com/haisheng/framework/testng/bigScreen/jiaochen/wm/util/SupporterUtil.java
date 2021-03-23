@@ -3,7 +3,6 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.util;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppAppointmentPage;
@@ -29,7 +28,6 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.task.AppRe
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.task.AppReceptionReceptorListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.Integralmall.GoodsManagePageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.FissionVoucherAddScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.ManageApprovalScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.ManageRecruitAddScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.appointmentmanage.AppointmentPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.appointmentmanage.TimeTableListScene;
@@ -40,10 +38,10 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.manage.Evalu
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.GroupTotalScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.PushMessageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.operation.ArticleList;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanage.PurchaseFixedPackageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanage.PurchaseTemporaryPackageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanage.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.ReceptionPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.ReceptionPurchaseFixedPackageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.ReceptionPurchaseTemporaryPackageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.userange.DetailScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.userange.SubjectListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPageScene;
@@ -374,17 +372,6 @@ public class SupporterUtil {
     }
 
     /**
-     * 获取卡券作废记录
-     *
-     * @param voucherName 卡券名称
-     * @return 作废记录列表
-     */
-    public List<VoucherInvalidPage> getVoucherInvalidList(String voucherName) {
-        Long voucherId = getVoucherId(voucherName);
-        return getVoucherInvalidList(voucherId);
-    }
-
-    /**
      * 获取重复的核销人员
      *
      * @return 电话号
@@ -421,31 +408,6 @@ public class SupporterUtil {
     /**
      * 获取卡券集合
      *
-     * @param voucherKind  卡券种类
-     * @param voucherCount 卡券数量
-     * @return 卡券集合
-     */
-    public JSONArray getVoucherArray(int voucherKind, Integer... voucherCount) {
-        if (voucherCount.length != voucherKind) {
-            throw new DataException("卡券种类数量与给定每个卡券数量不一致");
-        }
-        JSONArray voucherArray = new JSONArray();
-        IScene scene = ReceptionVoucherListScene.builder().build();
-        List<VoucherList> voucherLists = visitor.invokeApi(scene).getJSONArray("list").stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, VoucherList.class)).collect(Collectors.toList());
-        List<VoucherList> subVoucherLists = voucherLists.subList(0, voucherKind);
-        for (int i = 0; i < subVoucherLists.size(); i++) {
-            JSONObject object = new JSONObject();
-            object.put("voucher_id", subVoucherLists.get(i).getVoucherId());
-            object.put("voucher_name", subVoucherLists.get(i).getVoucherName());
-            object.put("voucher_count", voucherCount[i]);
-            voucherArray.add(object);
-        }
-        return voucherArray;
-    }
-
-    /**
-     * 获取卡券集合
-     *
      * @return 卡券集合
      */
     public JSONArray getVoucherArray() {
@@ -469,35 +431,6 @@ public class SupporterUtil {
         jsonObject.put("voucher_count", voucherCount);
         array.add(jsonObject);
         return array;
-    }
-
-    /**
-     * 获取卡券集合
-     *
-     * @param voucherName  卡券名称
-     * @param voucherCount 卡券数量
-     * @return 卡券集合
-     */
-    public JSONArray getVoucherArray(String voucherName, Integer voucherCount) {
-        Long voucherId = getVoucherId(voucherName);
-        return getVoucherArray(voucherId, voucherCount);
-    }
-
-    /**
-     * 获取卡券集合
-     *
-     * @param voucherName  卡券名
-     * @param voucherCount 卡券数量
-     * @return 卡券信息集合
-     */
-    public JSONArray getVoucherInfoArray(String voucherName, Integer voucherCount) {
-        JSONArray voucherList = new JSONArray();
-        IScene scene = VoucherPageScene.builder().voucherName(voucherName).build();
-        JSONArray list = visitor.invokeApi(scene).getJSONArray("list");
-        JSONObject jsonObject = Objects.requireNonNull(list.stream().map(e -> (JSONObject) e).filter(e -> e.getString("voucher_name").equals(voucherName)).findFirst().orElse(null));
-        jsonObject.put("voucher_count", voucherCount);
-        voucherList.add(jsonObject);
-        return voucherList;
     }
 
     /**
@@ -656,16 +589,6 @@ public class SupporterUtil {
     }
 
     /**
-     * 套餐确认支付
-     *
-     * @param packageId 套餐id
-     */
-    public void makeSureBuyPackage(Long packageId) {
-        String packageName = getPackageName(packageId);
-        makeSureBuyPackage(packageName);
-    }
-
-    /**
      * 创建一个套餐名
      *
      * @return 套餐名
@@ -793,22 +716,6 @@ public class SupporterUtil {
     }
 
     /**
-     * 购买临时套餐
-     *
-     * @param voucherName 包含的卡券名称
-     * @param type        0赠送/1购买
-     */
-    public void buyTemporaryPackage(String voucherName, int type) {
-        JSONArray voucherList = getVoucherArray(voucherName, 1);
-        IScene temporaryScene = PurchaseTemporaryPackageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone())
-                .carType(PackageUseTypeEnum.RECEPTION_CAR.name()).plateNumber(getPlatNumber(EnumAccount.MARKETING_DAILY.getPhone()))
-                .voucherList(voucherList).expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc())
-                .subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType()))
-                .extendedInsuranceYear("1").extendedInsuranceCopies("1").type(type).build();
-        visitor.invokeApi(temporaryScene);
-    }
-
-    /**
      * 购买固定套餐
      *
      * @param packageId 包含的固定套餐
@@ -830,12 +737,12 @@ public class SupporterUtil {
      * @param type      0赠送/1购买
      */
     public void receptionBuyFixedPackage(Long packageId, int type) {
-        JSONArray list = PackageListScene.builder().build().execute(visitor, true).getJSONArray("list");
-        JSONObject jsonObject = list.stream().map(e -> (JSONObject) e).filter(e -> e.getLong("package_id").equals(packageId)).findFirst().orElse(null);
-        Preconditions.checkArgument(jsonObject != null, packageId + " 套餐没找到相关信息");
-        Integer expiryDate = jsonObject.getInteger("expiry_date");
-        Integer expireType = jsonObject.getInteger("expire_type");
-        String packagePrice = jsonObject.getString("package_price");
+        JSONObject data = PackageDetailScene.builder().id(packageId).build().execute(visitor, true);
+        PackageDetail packageDetail = JSONObject.toJavaObject(data, PackageDetail.class);
+        Preconditions.checkArgument(packageDetail != null, "没找到 " + packageId + " 套餐相关信息");
+        Integer expiryDate = packageDetail.getExpiryDate();
+        Integer expireType = packageDetail.getExpireType();
+        String packagePrice = packageDetail.getPackagePrice();
         IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone()).build();
         ReceptionPage receptionPage = collectBean(receptionPageScene, ReceptionPage.class).get(0);
         //购买套餐
@@ -845,25 +752,6 @@ public class SupporterUtil {
                 .plateNumber(receptionPage.getPlateNumber()).receptionId(receptionPage.getId()).remark(EnumDesc.VOUCHER_DESC.getDesc())
                 .shopId(receptionPage.getShopId()).subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType())).type(type)
                 .build();
-        visitor.invokeApi(purchaseScene);
-    }
-
-    /**
-     * 接待时购买临时套餐
-     *
-     * @param voucherName 包含卡券名称
-     * @param type        0赠送/1购买
-     */
-    public void receptionBuyTemporaryPackage(String voucherName, int type) {
-        JSONArray voucherList = getVoucherInfoArray(voucherName, 1);
-        IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone()).build();
-        ReceptionPage receptionPage = collectBean(receptionPageScene, ReceptionPage.class).get(0);
-        //购买套餐
-        IScene purchaseScene = ReceptionPurchaseTemporaryPackageScene.builder().customerId(receptionPage.getCustomerId())
-                .customerPhone("").carType(PackageUseTypeEnum.RECEPTION_CAR.name()).expireType(2).expiryDate("10")
-                .extendedInsuranceCopies("").extendedInsuranceYear("").plateNumber(receptionPage.getPlateNumber())
-                .receptionId(receptionPage.getId()).remark(EnumDesc.VOUCHER_DESC.getDesc()).shopId(receptionPage.getShopId())
-                .subjectId(getSubjectDesc(getSubjectType())).subjectType(getSubjectType()).voucherList(voucherList).type(type).build();
         visitor.invokeApi(purchaseScene);
     }
 
@@ -907,21 +795,6 @@ public class SupporterUtil {
         long sendTime = Long.parseLong(DateTimeUtil.dateToStamp(d));
         builder = immediately ? builder.ifSendImmediately(true) : builder.ifSendImmediately(false).sendTime(sendTime);
         visitor.invokeApi(builder.build());
-    }
-
-    /**
-     * 校验消息详情
-     */
-    public void checkMessageDetail(String messageType, String messageTypeName, String sendTime, String content, String phone, String customerName, String customerTypeName) {
-        IScene pushMessageScene = PushMessageScene.builder().build();
-        PushMsgRecord pushMsgRecord = collectBean(pushMessageScene, PushMsgRecord.class).get(0);
-        CommonUtil.checkResult("推送原因", messageType, pushMsgRecord.getMessageType());
-        CommonUtil.checkResult("推送原因名称", messageTypeName, pushMsgRecord.getCustomerTypeName());
-        CommonUtil.checkResult("推送时间", sendTime, pushMsgRecord.getSendTime());
-        CommonUtil.checkResult("消息内容", content, pushMsgRecord.getContent());
-        CommonUtil.checkResult("联系电话", phone, pushMsgRecord.getPhone());
-        CommonUtil.checkResult("接收人", customerName, pushMsgRecord.getCustomerName());
-        CommonUtil.checkResult("客户类型", customerTypeName, pushMsgRecord.getCustomerTypeName());
     }
 
     //----------------------------------------------------预约记录-------------------------------------------------------
@@ -1094,29 +967,6 @@ public class SupporterUtil {
         IScene appletCarListScene = AppletCarListScene.builder().build();
         JSONArray jsonArray = visitor.invokeApi(appletCarListScene).getJSONArray("list");
         return Objects.requireNonNull(jsonArray.stream().map(e -> (JSONObject) e).findFirst().orElse(null)).getInteger("id");
-    }
-
-    /**
-     * 获取小程序卡券编号
-     *
-     * @return 卡券编号
-     */
-    public long getAppletVoucherId(String voucherName) {
-        List<Long> voucherList = new ArrayList<>();
-        Integer id = null;
-        Integer status = null;
-        JSONArray list;
-        do {
-            IScene scene = AppletVoucherListScene.builder().type("GENERAL").size(20).id(id).status(status).build();
-            JSONObject response = visitor.invokeApi(scene);
-            JSONObject lastValue = response.getJSONObject("last_value");
-            id = lastValue.getInteger("id");
-            status = lastValue.getInteger("status");
-            list = response.getJSONArray("list");
-            voucherList.addAll(list.stream().map(e -> (JSONObject) e).filter(e -> e.getString("title") != null && e.getString("title").equals(voucherName) && !e.getString("status_name").equals(VoucherUseStatusEnum.EXPIRED.getName()) && !e.getString("status_name").equals(VoucherUseStatusEnum.IS_USED.getName())).map(e -> e.getLong("id")).collect(Collectors.toList()));
-            logger.info("id:{},status:{}", id, status);
-        } while (list.size() == 20);
-        return voucherList.get(0);
     }
 
     /**
@@ -1377,154 +1227,6 @@ public class SupporterUtil {
         return appletExchangeRecordList;
     }
 
-//
-//    /**
-//     * 小程序我的报名列表
-//     *
-//     * @return 报名数量
-//     */
-//    public int getAppletArticleNum() {
-//        Long lastValue = null;
-//        int listSize = 0;
-//        JSONArray array;
-//        do {
-//            IScene scene = AppointmentActivityListScene.builder().lastValue(lastValue).size(20).build();
-//            JSONObject response = visitor.invokeApi(scene);
-//            lastValue = response.getLong("last_value");
-//            array = response.getJSONArray("list");
-//            listSize += array.size();
-//        } while (array.size() == 20);
-//        return listSize;
-//    }
-//
-//    /**
-//     * 获取小程序报名活动集合
-//     *
-//     * @return 报名活动集合
-//     */
-//    public List<AppointmentActivity> getAppletArticleList() {
-//        List<AppointmentActivity> list = new ArrayList<>();
-//        Long lastValue = null;
-//        JSONArray array;
-//        do {
-//            IScene scene = AppointmentActivityListScene.builder().lastValue(lastValue).size(20).build();
-//            JSONObject response = visitor.invokeApi(scene);
-//            lastValue = response.getLong("last_value");
-//            array = response.getJSONArray("list");
-//            list.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppointmentActivity.class)).collect(Collectors.toList()));
-//        } while (array.size() == 20);
-//        return list;
-//    }
-//
-//    /**
-//     * 获取能报名的文章id
-//     *
-//     * @param count 活动数量
-//     */
-//    public List<Long> getCanApplyArticleList(Integer count) {
-//        List<Long> activityIds = new ArrayList<>();
-//        String startDate = "2020-12-01";
-//        String endDate = DateTimeUtil.addDayFormat(new Date(), 365);
-//        ArticlePage.ArticlePageBuilder builder = ArticlePage.builder().registerStartDate(startDate).registerEndDate(endDate);
-//        int total = jc.invokeApi(builder.build()).getInteger("total");
-//        int s = CommonUtil.getTurningPage(total, size);
-//        for (int i = 1; i < s; i++) {
-//            JSONArray array = jc.invokeApi(builder.page(i).size(size).build()).getJSONArray("list");
-//            activityIds.addAll(array.stream().map(e -> (JSONObject) e).filter(e -> e.getString("register_end_date").compareTo(DateTimeUtil.getFormat(new Date())) > 0
-//                    && e.getInteger("total_quota") > 100).map(e -> e.getLong("id")).collect(Collectors.toList()));
-//        }
-//        return count == null ? activityIds : activityIds.subList(0, count);
-//    }
-//
-
-//    /**
-//     * 获取活动名称
-//     *
-//     * @param articleId 活动id
-//     * @return 活动名称
-//     */
-//    public String getArticleName(Long articleId) {
-//        IScene scene = ArticlePage.builder().build();
-//        List<OperationArticle> operationArticles = collectBean(scene, OperationArticle.class);
-//        return operationArticles.stream().filter(e -> e.getId().equals(articleId)).map(OperationArticle::getTitle).findFirst().orElse(null);
-//    }
-
-//    /**
-//     * 获取含有待审批的申请
-//     * 如果没有时需要提供token报名一个活动
-//     * 使用此方法后需要重新登录pc
-//     *
-//     * @param token 小程序token
-//     * @return 活动id
-//     */
-//    public OperationRegister getContainApplyRegisterInfo(EnumAppletToken token) {
-//        Long articleId;
-//        List<OperationRegister> operationRegisters = getRegisterList();
-//        OperationRegister operationRegister = operationRegisters.stream().filter(e -> getApprovalList(e.getId()).stream().anyMatch(approval -> approval.getStatusName().equals("待审批"))).findFirst().orElse(null);
-//        if (operationRegister == null) {
-//            articleId = getCanApplyArticleList(1).get(0);
-//            new LoginUtil().loginApplet(token);
-//            applyArticle(articleId);
-//            new LoginUtil().login(EnumAccount.ADMINISTRATOR);
-//        } else {
-//            articleId = operationRegister.getId();
-//        }
-//        return getRegisterInfo(articleId);
-//    }
-
-//    /**
-//     * 获取报名详情
-//     *
-//     * @param articleId 活动id
-//     * @return 报名详情
-//     */
-//    public OperationRegister getRegisterInfo(Long articleId) {
-//        return getRegisterList().stream().filter(e -> e.getId().equals(articleId)).map(e -> JSON.parseObject(JSON.toJSONString(e), OperationRegister.class)).findFirst().orElse(null);
-//    }
-//
-//    /**
-//     * 获取报名列表
-//     *
-//     * @return 报名列表
-//     */
-//    public List<OperationRegister> getRegisterList() {
-//        IScene scene = RegisterPage.builder().build();
-//        return collectBean(scene, OperationRegister.class);
-//    }
-//
-//    /**
-//     * 获取待审批列表
-//     *
-//     * @param articleId 文章id
-//     * @return 审批详情
-//     */
-//    public List<OperationApproval> getApprovalList(Long articleId) {
-//        IScene scene = ApprovalPage.builder().articleId(String.valueOf(articleId)).build();
-//        return collectBean(scene, OperationApproval.class);
-//    }
-//
-//    /**
-//     * 获取文章id
-//     *
-//     * @return 文章id集合
-//     */
-//    public List<Long> getArticleIdList() {
-//        IScene scene = ArticleList.builder().build();
-//        JSONArray array = visitor.invokeApi(scene).getJSONArray("list");
-//        return array.stream().map(e -> (JSONObject) e).map(e -> e.getLong("id")).collect(Collectors.toList());
-//    }
-//
-
-    /**
-     * 活动报名
-     *
-     * @param activityId 活动id
-     */
-    public void activityRegister(Long activityId) {
-        IScene scene = AppletActivityRegisterScene.builder().id(activityId).name(EnumAccount.MARKETING_DAILY.name()).phone(EnumAccount.MARKETING_DAILY.getPhone()).num(1).build();
-        visitor.invokeApi(scene, false);
-    }
-
     //--------------------------------------------------app------------------------------------------------------------
 
     /**
@@ -1730,18 +1432,6 @@ public class SupporterUtil {
     public List<Long> getArticleIdList() {
         JSONArray array = visitor.invokeApi(ArticleList.builder().build()).getJSONArray("list");
         return array.stream().map(e -> (JSONObject) e).map(e -> e.getLong("id")).collect(Collectors.toList());
-    }
-
-    /**
-     * 活动审批
-     *
-     * @param status     201通过/301不通过
-     * @param activityId 活动id
-     */
-    public void approvalActivity(Integer status, Long... activityId) {
-        List<Long> ids = new ArrayList<>(Arrays.asList(activityId));
-        IScene manageApprovalScene = ManageApprovalScene.builder().ids(ids).status(status).build();
-        visitor.invokeApi(manageApprovalScene);
     }
 
     /**
