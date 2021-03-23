@@ -487,12 +487,12 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
         IScene scene = AfterSaleCustomerListScene.builder().build();
         saleInfos.forEach(info -> {
             CommonUtil.valueView(info.getUserName());
-            if (info.getUserName().contains("总经理")) {
+            if (info.getUserName().contains("zjl")) {
                 crm.login(info.getAccount(), zjl.getPassword());
                 int zjlNum = crm.invokeApi(scene).getInteger(type);
                 map.put("zjlNum", zjlNum);
             }
-            if (!info.getUserName().contains("总经理")) {
+            if (!info.getUserName().contains("zjl")) {
                 crm.login(info.getAccount(), zjl.getPassword());
                 gwNum.addAndGet(crm.invokeApi(scene).getInteger(type));
             }
