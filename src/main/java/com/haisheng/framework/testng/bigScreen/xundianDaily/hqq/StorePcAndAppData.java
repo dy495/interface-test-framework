@@ -50,10 +50,10 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistQaOwner = EnumChecklistUser.QQ.getName();
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.XUNDIAN_DAILY_TEST.getJobName());
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.MENDIAN_DAILY.getDesc());
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.XUNDIAN_DAILY.getDesc());
         commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.pushRd = new String[]{"15898182672", "18513118484", "18810332354", "15084928847"};
-        commonConfig.shopId = EnumTestProduce.MENDIAN_DAILY.getShopId();
+        commonConfig.shopId = EnumTestProduce.XUNDIAN_DAILY.getShopId();
         commonConfig.checklistQaOwner = "青青";
         beforeClassInit(commonConfig);
         logger.debug("store " + md);

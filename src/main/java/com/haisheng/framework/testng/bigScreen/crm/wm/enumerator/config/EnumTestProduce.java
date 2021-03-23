@@ -20,7 +20,7 @@ public enum EnumTestProduce {
 
     JIAOCHEN_ONLINE("汽车-轿辰 赢识线上 ", "https://servicewechat.com/wxbd41de85739a00c7/31/page-frame.html", "http://nb.jiaochenclub.com/", "-1", "JC", "395"),
 
-    MENDIAN_DAILY("门店 日常", "", "", "4116", "XD", ""),
+    XUNDIAN_DAILY("门店 日常", "", "", "4116", "XD", ""),
     ;
 
     EnumTestProduce(String desc, String referer, String address, String shopId, String abbreviation, String roleId) {
