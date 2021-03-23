@@ -305,6 +305,39 @@ public class BusinessUtilOnline {
     }
 
     /**
+     *编辑裂变活动
+     */
+    public IScene fissionActivityEditScene(Long activityId){
+        Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+        SupporterUtil supporterUtil = new SupporterUtil(visitor);
+        PublicParameter pp = new PublicParameter();
+        List<String> picList = new ArrayList<>();
+        picList.add(supporterUtil.getPicPath());
+        // 创建被邀请者和分享者的信息字段
+        JSONObject invitedVoucher = getInvitedVoucher(voucherId, 1, String.valueOf(getVoucherSurplusInventory(voucherId)), 2, "", "", 1);
+        JSONObject shareVoucher = getShareVoucher(voucherId, 1, String.valueOf(getVoucherSurplusInventory(voucherId)), 2, "", "", 1);
+        //编辑裂变活动
+        return FissionVoucherEditScene.builder()
+                .id(activityId)
+                .type(1)
+                .participationLimitType(0)
+                .receiveLimitType(0)
+                .title(pp.fissionVoucherNameEdit)
+                .rule(pp.EditFissionRule)
+                .startDate(getStartDate())
+                .endDate(getEndDate())
+                .subjectType(supporterUtil.getSubjectType())
+                .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
+                .label("RED_PAPER")
+                .picList(picList)
+                .shareNum("3")
+                .shareVoucher(shareVoucher)
+                .invitedVoucher(invitedVoucher)
+                .build();
+
+    }
+
+    /**
      * 创建招募活动--需要审批的活动
      *
      * @return 活动id
@@ -855,20 +888,20 @@ public class BusinessUtilOnline {
                     if (waitingAuditNum >= 1) {
                         Long id = list.getJSONObject(i).getLong("id");
                         ids.add(id);
+                        System.out.println("-----------------"+ids);
                     }
                 }
             }
         }
         //创建活动并审批
-        if (ids.isEmpty()) {
+        if (ids.size()==0) {
             //创建活动
             Long id1 = createRecruitActivityApproval();
             //审批活动
             getApprovalPassed(id1);
             //小程序报名
-            activityRegisterApplet(ids.get(0),"13373166806","郭丽雅",2,"1513814362@qq.com","22","女","其他");
             ids.add(id1);
-            //登录PC
+            activityRegisterApplet(ids.get(0),"13373166806","郭丽雅",2,"1513814362@qq.com","22","女","其他");
             jc.pcLogin(pp.phone, pp.password);
         }
         return ids;
@@ -1641,6 +1674,23 @@ public class BusinessUtilOnline {
         JSONObject response = visitor.invokeApi(scene).getJSONObject("fission_voucher_info").getJSONObject("reward_vouchers");
         return response;
     }
+    /**
+     * 招募活动裂变详情页返回值
+     */
+    public JSONObject getFissionActivityDetailDate1(Long activityId) {
+        IScene scene = ManageDetailScene.builder().id(activityId).build();
+        JSONObject response = visitor.invokeApi(scene);
+        return response;
+    }
+
+    /**
+     * 裂变活动裂变详情页-获取返回值在【活动奖励】内部
+     */
+    public JSONObject getFissionActivityDetailData(Long activityId) {
+        IScene scene = ManageDetailScene.builder().id(activityId).build();
+        JSONObject response = visitor.invokeApi(scene).getJSONObject("fission_voucher_info");
+        return response;
+    }
 
     /**
      * 报名数据-返回值（data）
@@ -1754,7 +1804,7 @@ public class BusinessUtilOnline {
         JSONArray registerItems = new JSONArray();
         Long activityId=0L;
         //在活动详情中获得招募活动的报名信息
-        user.loginPc(EnumAccount.ALL_AUTHORITY_ONLINE);
+        user.loginPc(EnumAccount.ALL_JC_ONLINE);
         JSONObject response = getRecruitActivityDetailDate(id);
         JSONArray registerInformationList = response.getJSONArray("register_information_list");
         for (int i = 0; i< registerInformationList.size(); i++) {
@@ -1894,7 +1944,7 @@ public class BusinessUtilOnline {
             }
         }
         //登录PC
-         user.loginPc(EnumAccount.ALL_AUTHORITY_ONLINE);
+         user.loginPc(EnumAccount.ALL_JC_ONLINE);
         //获取PC中对应的优惠券
 
         return ids;

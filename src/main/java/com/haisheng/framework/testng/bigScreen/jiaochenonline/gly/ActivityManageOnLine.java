@@ -38,7 +38,7 @@ import java.util.List;
 public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd {
     ScenarioUtil jc = new ScenarioUtil();
     private static final EnumTestProduce product = EnumTestProduce.JIAOCHEN_ONLINE;
-    private static final EnumAccount ADMINISTRATOR=EnumAccount.ALL_AUTHORITY_ONLINE;
+    private static final EnumAccount ADMINISTRATOR=EnumAccount.ALL_JC_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(product);
 //    BusinessUtil businessUtil = new BusinessUtil(visitor);
     BusinessUtilOnline businessUtil=new BusinessUtilOnline(visitor);
@@ -546,6 +546,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             int registerNum = 0;
             //获取进行中的活动存在待审批数量的ID
             List<Long> ids = businessUtil.getRecruitActivityWorkingApproval();
+            System.err.println(ids);
             //审批通过之前报名成功的数量
             int passedBefore = businessUtil.getRegisterData(ids.get(0)).getInteger("passed");
             //报名待审批的ID合集
@@ -577,6 +578,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             saveData("报名列表-审批通过1条，报名成功&报名成功列表");
         }
     }
+
 
     /**
      * 报名列表-审批通过1条，报名成功&报名成功列表--报名人数不填写     不ok
@@ -628,6 +630,19 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         }
     }
 
+    @Test()
+    public void justTry1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            System.err.println("-------:"+businessUtil.getRecruitActivityDetailDate(971L));
+    } catch (AssertionError | Exception e) {
+            collectMessage(e) ;
+        } finally {
+            saveData("ceshiya ");
+        }
+    }
+
     /**
      * 报名列表-审批不通过1条，报名失败
      */
@@ -640,8 +655,6 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             List<Long> ids = businessUtil.getRecruitActivityWorkingApproval();
             System.err.println("ids:"+ids);
             sleep(3);
-            //刷新作用
-            jc.activityPage(1,10);
             //审批通过之前报名成功的数量
             int failedBefore = businessUtil.getRegisterData(ids.get(0)).getInteger("failed");
             System.err.println("failedBefore:"+failedBefore);

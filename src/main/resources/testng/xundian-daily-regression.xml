@@ -20,6 +20,9 @@
             <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.lxq.XundianAppSystem"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.lxq.XundianPCSystem"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.zt.XundianAppData"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.zt.StorePcCase"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.zt.StorePcData"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.zt.XundianPcCase"></class>
         </classes>
     </test>
 </suite>

@@ -856,6 +856,8 @@ public class XundianScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+
+
     /**
      * @description :截屏留痕时，获取店铺整改负责人uid  /patrol/m/shop/problem/responsors
      * @date :2020/6/25 16:47

@@ -106,7 +106,7 @@ public class XundianPCSystemOnline extends TestCaseCommon implements TestCaseStd
         }
     }
 
-    @Test
+//    @Test
     public void myReportShowChk2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

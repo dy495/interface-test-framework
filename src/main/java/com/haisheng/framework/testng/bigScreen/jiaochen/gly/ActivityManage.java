@@ -1772,78 +1772,73 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
      * 活动管理-【已撤销】的活动-编辑：名称，活动规则----裂变活动
      * 2021-3-17
      */
-    @Test(enabled = false,description = "活动管理-【已撤销】的活动-编辑")
+    @Test(enabled = true,description = "活动管理-【已撤销】的活动-编辑")
     public void revokeFissionActivityEdit(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取已撤销活动的ID
             List<Long> ids =  businessUtil.getFissionActivityRevoke();
             System.err.println("----ids:"+ids.get(0));
-            //编辑已撤销的活动
-            //获取一个卡券
-            Long voucherId = businessUtil.getVoucherId();
-            List<String> picList = new ArrayList<>();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             SupporterUtil supporterUtil = new SupporterUtil(visitor);
             PublicParameter pp = new PublicParameter();
+            List<String> picList = new ArrayList<>();
             picList.add(supporterUtil.getPicPath());
-            //填写报名所需要信息
-            List<Boolean> isShow = new ArrayList<>();
-            isShow.add(true);
-            isShow.add(true);
-            isShow.add(true);
-            isShow.add(true);
-            isShow.add(true);
-            isShow.add(true);
-            isShow.add(true);
-            List<Boolean> isRequired = new ArrayList<>();
-            isRequired.add(true);
-            isRequired.add(true);
-            isRequired.add(true);
-            isRequired.add(true);
-            isRequired.add(true);
-            isRequired.add(true);
-            isRequired.add(true);
-            JSONArray registerInformationList = businessUtil.getRegisterInformationList(isShow, isRequired);
-            //报名成功奖励
-            JSONArray registerObject = businessUtil.getRewardVouchers(voucherId, 1, businessUtil.getVoucherSurplusInventory(voucherId));
-            //卡券有效期
-            JSONObject voucherValid = businessUtil.getVoucherValid(2, "", "", 10);
-            IScene scene = ManageRecruitEditScene.builder()
-                    .type(2)
+            // 创建被邀请者和分享者的信息字段
+            JSONObject invitedVoucher = businessUtil.getInvitedVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherSurplusInventory(voucherId)), 2, "", "", 1);
+            JSONObject shareVoucher = businessUtil.getShareVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherSurplusInventory(voucherId)), 2, "", "", 1);
+            //所属主体
+            String subject=supporterUtil.getSubjectType();
+            //开始时间和结束时间
+            String startTime=businessUtil.getStartDate();
+            String endTime=businessUtil.getEndDate();
+            //编辑裂变活动
+            IScene scene= FissionVoucherEditScene.builder()
                     .id(ids.get(0))
-                    .title(pp.editTitle)
-                    .rule(pp.EditRule)
+                    .type(1)
                     .participationLimitType(0)
-                    .rule(pp.EditRule)
-                    .startDate(businessUtil.getStartDate())
-                    .endDate(businessUtil.getEndDate())
-                    .subjectType(supporterUtil.getSubjectType())
+                    .receiveLimitType(0)
+                    .title(pp.fissionVoucherNameEdit)
+                    .rule(pp.EditFissionRule)
+                    .startDate(startTime)
+                    .endDate(endTime)
+                    .subjectType(subject)
                     .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
                     .label("RED_PAPER")
                     .picList(picList)
-                    .applyStart(businessUtil.getStartDate())
-                    .applyEnd(businessUtil.getEndDate())
-                    .isLimitQuota(true)
-                    .quota(2)
-                    .address(pp.address)
-                    .registerInformationList(registerInformationList)
-                    .successReward(true)
-                    .rewardReceiveType(0)
-                    .isNeedApproval(true)
-                    .rewardVouchers(registerObject)
-                    .voucherValid(voucherValid)
+                    .shareNum("2")
+                    .shareVoucher(shareVoucher)
+                    .invitedVoucher(invitedVoucher)
                     .build();
-            String message = visitor.invokeApi(scene,false).getString("message");
-            System.out.println("-----"+message);
-            //获取活动详情
-            IScene scene1=ManageDetailScene.builder().id(ids.get(0)).build();
-            JSONObject object=visitor.invokeApi(scene1);
-            String title=object.getString("title");
-            String rule=object.getJSONObject("recruit_activity_info").getString("rule");
-            System.out.println(title+"--------"+rule);
-            Preconditions.checkArgument(message.equals("success")&&title.equals(pp.editTitle)&&rule.equals(pp.EditRule), "已撤销的活动编辑失败");
+
+            //编辑已撤销的活动
+            String message=visitor.invokeApi(scene,false).getString("message");
+            System.out.println("---------"+message);
+            //获取活动详情中编辑后的标题和活动规则
+            JSONObject response=businessUtil.getFissionActivityDetailDate1(ids.get(0));
+            JSONObject response1=businessUtil.getFissionActivityDetailData(ids.get(0));
+            String title = response.getString("title");
+            String rule =response1.getString("rule");
+            String participationLimitType=response.getString("participation_limit_type");
+            String receiveLimitType=response1.getString("receive_limit_type");
+            String startDate=response.getString("start_date");
+            String endDate=response.getString("end_date");
+            String shareNum=response1.getString("share_num");
+            String subjectType=response.getString("subject_type");
+            String label=response.getString("label");
+            String picName=response.getJSONArray("pic_list").getJSONObject(0).getString("pic_path");
+            Long invitedVoucherId=response1.getJSONObject("invited_voucher").getLong("id");
+            Long shareVoucherId=response1.getJSONObject("share_voucher").getLong("id");
+            System.out.println(invitedVoucherId+"----------"+voucherId+"----------"+title+"----------"+rule+"--------"+participationLimitType+"----------"+receiveLimitType+"--------"+startTime+"----------"+endTime+"--------"+shareNum+"----------"+subjectType+"--------"+label+"----------"+picName+"--------"+startDate+"----------"+endDate);
+            Preconditions.checkArgument(message.equals("success")&&title.contains("编辑过的裂变活动")&&rule.equals(pp.EditFissionRule), "已撤销的活动编辑失败1");
+            Preconditions.checkArgument(participationLimitType.equals("0")&&receiveLimitType.equals("0"), "已撤销的活动编辑失败2");
+            Preconditions.checkArgument(startDate.equals(startTime)&&endDate.equals(endTime), "已撤销的活动编辑失败3"+startDate+"   "+startTime+"   "+endDate+"   "+endTime);
+            Preconditions.checkArgument(shareNum.equals("2")&&subjectType.equals(subject)&&label.equals("RED_PAPER"), "已撤销的活动编辑失败4");
+//            Preconditions.checkArgument(picName.contains("活动.jpeg"), "已撤销的活动编辑失败");
+            Preconditions.checkArgument(voucherId.equals(invitedVoucherId) && shareVoucherId.equals(voucherId), "已撤销的活动编辑失败5  "+voucherId+"   "+voucherId+"    "+shareVoucherId);
+
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("活动管理-【已撤销】的活动-编辑");
         }
@@ -1903,7 +1898,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取审核未通过活动的ID
-            List<Long> ids = businessUtil.getRecruitActivityReject();
+            List<Long> ids = businessUtil.getFissionActivityWait();
             //删除进行中的活动
             String message = businessUtil.getDelActivity(ids.get(0));
             Preconditions.checkArgument(message.equals("success"), "删除【审核未通过】的活动的message为：" + message);
@@ -1918,80 +1913,72 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
      * 活动管理-【审核未通过】的活动-编辑：名称，活动规则----裂变活动
      * 2021-3-17
      */
-    @Test(enabled = false,description = "活动管理-【审核未通过】的活动-编辑")
+    @Test(enabled = true,description = "活动管理-【审核未通过】的活动-编辑")
     public void rejectFissionActivityEdit(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取审核未通过活动的ID
-            List<Long> ids =  businessUtil.getFissontActivityReject();
+            List<Long> ids = businessUtil.getFissontActivityReject();
             System.err.println("----ids:"+ids.get(0));
-            //编辑审核未通过的活动
-            //获取一个卡券
-            Long voucherId = businessUtil.getVoucherId();
-            List<String> picList = new ArrayList<>();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             SupporterUtil supporterUtil = new SupporterUtil(visitor);
             PublicParameter pp = new PublicParameter();
-            picList.add(supporterUtil.getPicPath());
-            //填写报名所需要信息
-            List<Boolean> isShow = new ArrayList<>();
-            isShow.add(true);
-            isShow.add(true);
-            isShow.add(true);
-            isShow.add(true);
-            isShow.add(true);
-            isShow.add(true);
-            isShow.add(true);
-            List<Boolean> isRequired = new ArrayList<>();
-            isRequired.add(true);
-            isRequired.add(true);
-            isRequired.add(true);
-            isRequired.add(true);
-            isRequired.add(true);
-            isRequired.add(true);
-            isRequired.add(true);
-            JSONArray registerInformationList = businessUtil.getRegisterInformationList(isShow, isRequired);
-            //报名成功奖励
-            JSONArray registerObject = businessUtil.getRewardVouchers(voucherId, 1, businessUtil.getVoucherSurplusInventory(voucherId));
-            //卡券有效期
-            JSONObject voucherValid = businessUtil.getVoucherValid(2, "", "", 10);
-            IScene scene = ManageRecruitEditScene.builder()
-                    .type(2)
+            List<String> picList = new ArrayList<>();
+            picList.add(businessUtil.getPicturePath());
+            // 创建被邀请者和分享者的信息字段
+            JSONObject invitedVoucher = businessUtil.getInvitedVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherSurplusInventory(voucherId)), 2, "", "", 1);
+            JSONObject shareVoucher = businessUtil.getShareVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherSurplusInventory(voucherId)), 2, "", "", 1);
+            //所属主体
+            String subject=supporterUtil.getSubjectType();
+            //开始时间和结束时间
+            String startTime=businessUtil.getStartDate();
+            String endTime=businessUtil.getEndDate();
+            //编辑裂变活动
+            IScene scene= FissionVoucherEditScene.builder()
                     .id(ids.get(0))
-                    .title(pp.editTitle)
-                    .rule(pp.EditRule)
+                    .type(1)
                     .participationLimitType(0)
-                    .rule(pp.EditRule)
-                    .startDate(businessUtil.getStartDate())
-                    .endDate(businessUtil.getEndDate())
-                    .subjectType(supporterUtil.getSubjectType())
+                    .receiveLimitType(0)
+                    .title(pp.fissionVoucherNameEdit)
+                    .rule(pp.EditFissionRule)
+                    .startDate(startTime)
+                    .endDate(endTime)
+                    .subjectType(subject)
                     .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
                     .label("RED_PAPER")
                     .picList(picList)
-                    .applyStart(businessUtil.getStartDate())
-                    .applyEnd(businessUtil.getEndDate())
-                    .isLimitQuota(true)
-                    .quota(2)
-                    .address(pp.address)
-                    .registerInformationList(registerInformationList)
-                    .successReward(true)
-                    .rewardReceiveType(0)
-                    .isNeedApproval(true)
-                    .rewardVouchers(registerObject)
-                    .voucherValid(voucherValid)
+                    .shareNum("2")
+                    .shareVoucher(shareVoucher)
+                    .invitedVoucher(invitedVoucher)
                     .build();
-            String message = visitor.invokeApi(scene,false).getString("message");
-            System.out.println("-----"+message);
-            //获取活动详情
-            IScene scene1=ManageDetailScene.builder().id(ids.get(0)).build();
-            JSONObject object=visitor.invokeApi(scene1);
-            String title=object.getString("title");
-            String rule=object.getJSONObject("recruit_activity_info").getString("rule");
-            //获取活动状态
-            int status=businessUtil.getActivityStatus(ids.get(0));
-            System.out.println(title+"--------"+rule);
-            System.err.println(ids);
-            Preconditions.checkArgument(message.equals("success")&&title.equals(pp.editTitle)&&rule.equals(pp.EditRule)&&status==ActivityStatusEnum.PENDING.getId(), "审核未通过的活动编辑失败");
-        } catch (AssertionError | Exception e) {
+
+            //编辑已撤销的活动
+            String message=visitor.invokeApi(scene,false).getString("message");
+            System.out.println("---------"+message);
+            //获取活动详情中编辑后的标题和活动规则
+            JSONObject response=businessUtil.getFissionActivityDetailDate1(ids.get(0));
+            JSONObject response1=businessUtil.getFissionActivityDetailData(ids.get(0));
+            String title = response.getString("title");
+            String rule =response1.getString("rule");
+            String participationLimitType=response.getString("participation_limit_type");
+            String receiveLimitType=response1.getString("receive_limit_type");
+            String startDate=response.getString("start_date");
+            String endDate=response.getString("end_date");
+            String shareNum=response1.getString("share_num");
+            String subjectType=response.getString("subject_type");
+            String label=response.getString("label");
+            String picName=response.getJSONArray("pic_list").getJSONObject(0).getString("pic_path");
+            Long invitedVoucherId=response1.getJSONObject("invited_voucher").getLong("id");
+            Long shareVoucherId=response1.getJSONObject("share_voucher").getLong("id");
+            System.out.println(invitedVoucherId+"----------"+voucherId+"----------"+title+"----------"+rule+"--------"+participationLimitType+"----------"+receiveLimitType+"--------"+startTime+"----------"+endTime+"--------"+shareNum+"----------"+subjectType+"--------"+label+"----------"+picName+"--------"+startDate+"----------"+endDate);
+            Preconditions.checkArgument(message.equals("success")&&title.contains("编辑过的裂变活动")&&rule.equals(pp.EditFissionRule), "已撤销的活动编辑失败1");
+            Preconditions.checkArgument(participationLimitType.equals("0")&&receiveLimitType.equals("0"), "已撤销的活动编辑失败2");
+            Preconditions.checkArgument(startDate.equals(startTime)&&endDate.equals(endTime), "已撤销的活动编辑失败3"+startDate+"   "+startTime+"   "+endDate+"   "+endTime);
+            Preconditions.checkArgument(shareNum.equals("2")&&subjectType.equals(subject)&&label.equals("RED_PAPER"), "已撤销的活动编辑失败4");
+//            Preconditions.checkArgument(picName.contains("活动.jpeg"), "已撤销的活动编辑失败");
+            Preconditions.checkArgument(voucherId.equals(invitedVoucherId) && shareVoucherId.equals(voucherId), "已撤销的活动编辑失败5  "+voucherId+"   "+voucherId+"    "+shareVoucherId);
+        }catch(Exception|AssertionError e){
+            e.printStackTrace();
             appendFailReason(e.toString());
         } finally {
             saveData("活动管理-【审核未通过】的活动-编辑");
@@ -2143,24 +2130,22 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
      * 活动管理-【进行中】的活动-编辑：名称，活动规则----裂变活动
      * 2021-3-17
      */
-    @Test(enabled = false,description = "活动管理-【进行中】的活动-编辑")
+    @Test(enabled = true,description = "活动管理-【进行中】的活动-编辑")
     public void workingFissionActivityEdit(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取进行中活动的ID
-            List<Long> ids =  businessUtil.getFissionActivityWorking();
+            List<Long> ids = businessUtil.getFissionActivityWorking();
             System.err.println("----ids:"+ids.get(0));
-            //编辑活动名称、活动名额
-            String message = businessUtil.activityEditScene(ids.get(0));
-            System.err.println("--------" + message);
+            //编辑进行中的活动
+            IScene scene =businessUtil.fissionActivityEditScene(ids.get(0));
+            String message=visitor.invokeApi(scene,false).getString("message");
+            System.out.println("---------"+message);
             //获取活动详情中编辑后的标题和活动规则
-            String title = businessUtil.getRecruitActivityDetailDate1(ids.get(0)).getString("title");
-            String rule = businessUtil.getRecruitActivityDetailDate(ids.get(0)).getString("rule");
-            //获取活动状态
-            int status=businessUtil.getActivityStatus(ids.get(0));
-            System.out.println(title+"--------"+rule);
-            Preconditions.checkArgument(message.equals("success")&&title.contains("编辑过后的招募活动")&&rule.equals(pp.EditRule), "进行中的活动编辑失败");
-        } catch (AssertionError | Exception e) {
+            String title = businessUtil.getFissionActivityDetailDate1(ids.get(0)).getString("title");
+            String rule = businessUtil.getFissionActivityDetailData(ids.get(0)).getString("rule");
+            System.out.println(title+"----------"+rule);
+            Preconditions.checkArgument(message.equals("success")&&title.contains("编辑过的裂变活动")&&rule.equals(pp.EditFissionRule), "进行中的活动编辑失败");   } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("活动管理-【进行中】的活动-编辑");
@@ -2266,24 +2251,22 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
      * 活动管理-【未开始】的活动-编辑：名称，活动规则----裂变活动
      * 2021-3-17
      */
-    @Test(enabled = false,description = "活动管理-【进行中】的活动-编辑")
+    @Test(enabled = true,description = "活动管理-【进行中】的活动-编辑")
     public void promotionFissionActivityEdit(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取未开始活动的ID
             List<Long> ids =  businessUtil.getFissionActivityWaitingStar();
             System.err.println("----ids:"+ids.get(0));
-            //编辑活动名称、活动名额
-            String message = businessUtil.activityEditScene(ids.get(0));
-            System.err.println("--------" + message);
+            //编辑未开始的活动
+            IScene scene =businessUtil.fissionActivityEditScene(ids.get(0));
+            String message=visitor.invokeApi(scene,false).getString("message");
+            System.out.println("---------"+message);
             //获取活动详情中编辑后的标题和活动规则
-            String title = businessUtil.getRecruitActivityDetailDate1(ids.get(0)).getString("title");
-            String rule = businessUtil.getRecruitActivityDetailDate(ids.get(0)).getString("rule");
-            //获取活动状态
-            int status=businessUtil.getActivityStatus(ids.get(0));
-            System.out.println(title+"--------"+rule);
-            Preconditions.checkArgument(message.equals("success")&&title.contains("编辑过后的招募活动")&&rule.equals(pp.EditRule), "进行中的活动编辑失败");
-        } catch (AssertionError | Exception e) {
+            String title = businessUtil.getFissionActivityDetailDate1(ids.get(0)).getString("title");
+            String rule = businessUtil.getFissionActivityDetailData(ids.get(0)).getString("rule");
+            System.out.println(title+"----------"+rule);
+            Preconditions.checkArgument(message.equals("success")&&title.contains("编辑过的裂变活动")&&rule.equals(pp.EditFissionRule), "未开始的活动编辑失败");} catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("活动管理-【未开始】的活动-编辑");
