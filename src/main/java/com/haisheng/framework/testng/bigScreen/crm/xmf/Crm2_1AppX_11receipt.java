@@ -55,7 +55,7 @@ public class Crm2_1AppX_11receipt extends TestCaseCommon implements TestCaseStd 
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-daily-test");
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_DAILY.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.PORSCHE_DAILY.getDesc() + commonConfig.checklistQaOwner);
 
         //replace ding push conf
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
@@ -64,7 +64,7 @@ public class Crm2_1AppX_11receipt extends TestCaseCommon implements TestCaseStd 
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = EnumTestProduce.CRM_DAILY.getShopId();
+        commonConfig.shopId = EnumTestProduce.PORSCHE_DAILY.getShopId();
         beforeClassInit(commonConfig);
 
         logger.debug("crm: " + crm);

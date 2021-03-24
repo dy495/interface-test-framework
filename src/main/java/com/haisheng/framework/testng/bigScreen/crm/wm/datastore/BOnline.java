@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class BOnline extends TestCaseCommon implements TestCaseStd {
-    private static final String shopId = EnumTestProduce.CRM_ONLINE.getShopId();
+    private static final String shopId = EnumTestProduce.PORSCHE_ONLINE.getShopId();
     private static final EnumAccount zjl = EnumAccount.ZJL_ONLINE;
     private static final int day = -1;
     private static final int size = 100;

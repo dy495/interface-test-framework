@@ -30,7 +30,7 @@ public class A extends TestCaseCommon implements TestCaseStd {
     PublicMethod method = new PublicMethod();
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     private static final EnumAccount zjl = EnumAccount.ZJL_DAILY;
-    private static final String shopId = EnumTestProduce.CRM_DAILY.getShopId();
+    private static final String shopId = EnumTestProduce.PORSCHE_DAILY.getShopId();
 
     @BeforeClass
     @Override

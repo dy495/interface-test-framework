@@ -28,7 +28,7 @@ public class PcDataPagePorsche extends TestCaseCommon implements TestCaseStd {
 
     CrmScenarioUtilOnline crm = CrmScenarioUtilOnline.getInstance();
     private static final EnumAccount zj = EnumAccount.ZJ_ONLINE_PORSCHE;
-    private static final String shopId = EnumTestProduce.CRM_ONLINE_PORSCHE.getShopId();
+    private static final String shopId = EnumTestProduce.PORSCHE_ONLINE_CLIENT.getShopId();
 
     @BeforeClass
     @Override
@@ -41,7 +41,7 @@ public class PcDataPagePorsche extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.CRM_ONLINE_TEST.getJobName());
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_ONLINE_PORSCHE.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.PORSCHE_ONLINE_CLIENT.getDesc() + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = EnumDingTalkWebHook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId

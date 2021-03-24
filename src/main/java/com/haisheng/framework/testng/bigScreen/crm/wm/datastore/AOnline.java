@@ -30,7 +30,7 @@ public class AOnline extends TestCaseCommon implements TestCaseStd {
     PublicMethodOnline method = new PublicMethodOnline();
     CrmScenarioUtilOnline crm = CrmScenarioUtilOnline.getInstance();
     private static final EnumAccount zjl = EnumAccount.ZJL_ONLINE;
-    private static final String shopId = EnumTestProduce.CRM_ONLINE.getShopId();
+    private static final String shopId = EnumTestProduce.PORSCHE_ONLINE.getShopId();
 
     @BeforeClass
     @Override

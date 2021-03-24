@@ -45,7 +45,7 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
         commonConfig.product = EnumProduce.BSJ.name();
-        commonConfig.referer = EnumTestProduce.CRM_DAILY.getReferer();
+        commonConfig.referer = EnumTestProduce.PORSCHE_DAILY.getReferer();
         //replace backend gateway url
         //commonConfig.gateway = "";
 
@@ -53,7 +53,7 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-daily-test");
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_DAILY.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.PORSCHE_DAILY.getDesc() + commonConfig.checklistQaOwner);
 
         //replace ding push conf
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
@@ -62,7 +62,7 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = EnumTestProduce.CRM_DAILY.getShopId();
+        commonConfig.shopId = EnumTestProduce.PORSCHE_DAILY.getShopId();
         beforeClassInit(commonConfig);
 
         logger.debug("crm: " + crm);
