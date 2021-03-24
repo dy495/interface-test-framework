@@ -11,7 +11,8 @@ public enum EnumProduce {
     JC("轿辰"),
 
     YT("运通"),
-    ;
+
+    INS("ins");
 
     EnumProduce(String name) {
         this.name = name;

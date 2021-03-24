@@ -37,6 +37,10 @@ public enum EnumAppletToken {
     JC_GLY_DAILY(EnumProduce.JC.name(), "1nxb35B/gDlj6Q88uD5yEA==", "Max", true, "", "13373166806"),
 
     JC_GLY_ONLINE(EnumProduce.JC.name(), "iCMVUEzq+zOmzldZM2awEQ==", "Max", false, "", "13373166806"),
+
+    INS_TT_DAILY(EnumProduce.INS.name(), "", "Zt198053", false, "", "13604609869"),
+
+    INS_TT_ONLINE(EnumProduce.INS.name(), "", "Zt198053", true, "", "13604609869"),
     ;
 
     EnumAppletToken(String product, String token, String wechatName, boolean isDaily, String wechatId, String phone) {
