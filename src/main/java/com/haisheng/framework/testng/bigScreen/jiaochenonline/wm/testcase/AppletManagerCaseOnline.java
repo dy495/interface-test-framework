@@ -531,6 +531,25 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
     }
 
     //ok
+    @Test(description = "小程序--积分商城，我可兑换的商品所需积分均小于我现有积分")
+    public void integralMall_system_6() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            user.loginApplet(APPLET_USER_ONE);
+            List<AppletCommodity> appletCommodityList = util.getAppletCommodityList(SortTypeEnum.DOWN.name(), true);
+            Integer score = AppletUserInfoDetailScene.builder().build().invoke(visitor, true).getInteger("score");
+            appletCommodityList.forEach(e -> {
+                CommonUtil.valueView(score, e.getPresentIntegralPrice());
+                Preconditions.checkArgument(e.getPresentIntegralPrice() <= score, "我的总积分：" + score + e.getCommodityName() + "所需积分" + e.getPresentIntegralPrice());
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("小程序--积分商城，我可兑换的商品所需积分均小于我现有积分");
+        }
+    }
+
+    //ok
     @Test(description = "小程序--签到--积分增加&积分明细记录增加类型")
     public void integralCenter_system_5() {
         logger.logCaseStart(caseResult.getCaseName());
