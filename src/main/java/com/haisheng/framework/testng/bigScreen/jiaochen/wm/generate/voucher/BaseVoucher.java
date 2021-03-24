@@ -39,11 +39,11 @@ public abstract class BaseVoucher extends AbstractGenerator implements IVoucher 
             logger("FIND " + voucherStatus.name() + " START");
             Preconditions.checkArgument(counter(voucherStatus) < 4, voucherStatus.getName() + " 状态执行次数大于3次，强行停止，请检查此状态生成");
             VoucherPage voucherPage = null;
-            JSONObject response = VoucherPageScene.builder().build().execute(visitor, true);
+            JSONObject response = VoucherPageScene.builder().build().invoke(visitor, true);
             int total = response.getInteger("total");
             int s = CommonUtil.getTurningPage(total, SIZE);
             for (int i = 1; i < s; i++) {
-                JSONArray array = VoucherPageScene.builder().page(i).size(SIZE).build().execute(visitor, true).getJSONArray("list");
+                JSONArray array = VoucherPageScene.builder().page(i).size(SIZE).build().invoke(visitor, true).getJSONArray("list");
                 List<VoucherPage> voucherPageList = array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, VoucherPage.class)).collect(Collectors.toList());
                 voucherPage = voucherStatus.name().equals(VoucherStatusEnum.WORKING.name())
                         ? voucherPageList.stream().filter(e -> e.getVoucherStatus().equals(voucherStatus.name()) && e.getSurplusInventory() > 0).findFirst().orElse(null)

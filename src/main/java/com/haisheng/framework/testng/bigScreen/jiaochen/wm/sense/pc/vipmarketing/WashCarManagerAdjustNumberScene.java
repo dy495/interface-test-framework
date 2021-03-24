@@ -1,6 +1,5 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vipmarketing;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
@@ -18,7 +17,7 @@ public class WashCarManagerAdjustNumberScene extends BaseScene {
      * 是否必填 false
      * 版本 v2.0
      */
-    private final Integer adjustNumber;
+    private final String adjustNumber;
 
     /**
      * 描述 客户手机号
@@ -36,7 +35,7 @@ public class WashCarManagerAdjustNumberScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("adjust_number", adjustNumber);
         object.put("customer_phone", customerPhone);

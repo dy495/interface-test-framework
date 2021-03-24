@@ -71,7 +71,7 @@ public class SellOutVoucher extends BaseVoucher {
     private void buyTemporaryPackage(String voucherName) {
         JSONArray voucherList = getVoucherArray(voucherName);
         IScene temporaryScene = PurchaseTemporaryPackageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone())
-                .carType(PackageUseTypeEnum.ALL_CAR.name()).voucherList(voucherList).expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc())
+                .carType(PackageUseTypeEnum.ALL_CAR.name()).voucherList(voucherList).expiryDate("1").remark(EnumDesc.DESC_BETWEEN_20_30.getDesc())
                 .subjectType(UseRangeEnum.CURRENT.name()).extendedInsuranceYear("1").extendedInsuranceCopies("1").type(0).build();
         visitor.invokeApi(temporaryScene);
     }

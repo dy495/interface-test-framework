@@ -91,7 +91,7 @@ public class ContentOperationCaseOnline extends TestCaseCommon implements TestCa
         try {
             String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
             String base64 = new ImageUtil().getImageBinary(filePath);
-            String message = FileUpload.builder().pic(base64).permanentPicType(0).isPermanent(false).ratio(1.5).ratioStr("3：2").build().execute(visitor, false).getString("message");
+            String message = FileUpload.builder().pic(base64).permanentPicType(0).isPermanent(false).ratio(1.5).ratioStr("3：2").build().invoke(visitor, false).getString("message");
             String err = "图片宽高比不符合3：2的要求";
             CommonUtil.checkResult("图片比", "非3：2", err, message);
         } catch (Exception | AssertionError e) {

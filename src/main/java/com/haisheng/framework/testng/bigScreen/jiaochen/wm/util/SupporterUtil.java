@@ -180,7 +180,7 @@ public class SupporterUtil {
      * @return 描述
      */
     public String getDesc() {
-        return EnumDesc.VOUCHER_DESC.getDesc();
+        return EnumDesc.DESC_BETWEEN_20_30.getDesc();
     }
 
     /**
@@ -276,7 +276,7 @@ public class SupporterUtil {
         for (Long shopId : shopIdList) {
             List<Long> shopList = new ArrayList<>();
             shopList.add(shopId);
-            int total = GroupTotalScene.builder().pushTarget(AppletPushTargetEnum.SHOP_CUSTOMER.getId()).shopList(shopList).build().execute(visitor, true).getInteger("total");
+            int total = GroupTotalScene.builder().pushTarget(AppletPushTargetEnum.SHOP_CUSTOMER.getId()).shopList(shopList).build().invoke(visitor, true).getInteger("total");
             if (total > 1) {
                 return shopId;
             }
@@ -302,11 +302,11 @@ public class SupporterUtil {
      */
     public String getVoucherName(long voucherId) {
         String voucherName = null;
-        JSONObject response = VoucherPageScene.builder().build().execute(visitor, true);
+        JSONObject response = VoucherPageScene.builder().build().invoke(visitor, true);
         int total = response.getInteger("total");
         int s = CommonUtil.getTurningPage(total, SIZE);
         for (int i = 1; i < s; i++) {
-            JSONArray array = VoucherPageScene.builder().page(i).size(SIZE).build().execute(visitor, true).getJSONArray("list");
+            JSONArray array = VoucherPageScene.builder().page(i).size(SIZE).build().invoke(visitor, true).getJSONArray("list");
             List<VoucherPage> voucherPageList = array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, VoucherPage.class)).collect(Collectors.toList());
             voucherName = voucherPageList.stream().filter(e -> e.getVoucherId().equals(voucherId)).map(VoucherPage::getVoucherName).findFirst().orElse(null);
             if (voucherName != null) {
@@ -324,11 +324,11 @@ public class SupporterUtil {
      */
     public Long getVoucherId(String voucherName) {
         Long voucherId = null;
-        JSONObject response = VoucherPageScene.builder().build().execute(visitor, true);
+        JSONObject response = VoucherPageScene.builder().build().invoke(visitor, true);
         int total = response.getInteger("total");
         int s = CommonUtil.getTurningPage(total, SIZE);
         for (int i = 1; i < s; i++) {
-            JSONArray array = VoucherPageScene.builder().page(i).size(SIZE).build().execute(visitor, true).getJSONArray("list");
+            JSONArray array = VoucherPageScene.builder().page(i).size(SIZE).build().invoke(visitor, true).getJSONArray("list");
             List<VoucherPage> voucherPageList = array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, VoucherPage.class)).collect(Collectors.toList());
             voucherId = voucherPageList.stream().filter(e -> e.getVoucherName().equals(voucherName)).map(VoucherPage::getVoucherId).findFirst().orElse(null);
             if (voucherId != null) {
@@ -650,7 +650,7 @@ public class SupporterUtil {
      */
     public String editPackage(Long packageId, JSONArray voucherList) {
         IScene scene = PackageDetailScene.builder().id(packageId).build();
-        PackageDetail packageDetail = JSONObject.toJavaObject(scene.execute(visitor, true), PackageDetail.class);
+        PackageDetail packageDetail = JSONObject.toJavaObject(scene.invoke(visitor, true), PackageDetail.class);
         Preconditions.checkArgument(packageDetail != null, packageId + " 套餐没找到相关信息");
         IScene editPackageScene = EditPackageScene.builder()
                 .packageName(packageDetail.getPackageName())
@@ -679,7 +679,7 @@ public class SupporterUtil {
         List<PackagePage> packagePages = collectBean(packageFormPageScene, PackagePage.class);
         Long packageId = packagePages.stream().filter(e -> !EnumVP.isContains(e.getPackageName())).map(PackagePage::getPackageId).findFirst().orElse(null);
         String packageName = getPackageName(packageId);
-        IScene editPackageScene = EditPackageScene.builder().packageName(packageName).packageDescription(EnumDesc.VOUCHER_DESC.getDesc())
+        IScene editPackageScene = EditPackageScene.builder().packageName(packageName).packageDescription(EnumDesc.DESC_BETWEEN_20_30.getDesc())
                 .subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType()))
                 .voucherList(voucherList).packagePrice("1.11").status(true).shopIds(getShopIdList(3))
                 .id(String.valueOf(packageId)).expireType(2).expiryDate(12).build();
@@ -709,7 +709,7 @@ public class SupporterUtil {
     public void buyTemporaryPackage(JSONArray voucherList, int type) {
         IScene temporaryScene = PurchaseTemporaryPackageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone())
                 .carType(PackageUseTypeEnum.RECEPTION_CAR.name()).plateNumber(getPlatNumber(EnumAccount.MARKETING_DAILY.getPhone()))
-                .voucherList(voucherList).expiryDate("1").remark(EnumDesc.VOUCHER_DESC.getDesc())
+                .voucherList(voucherList).expiryDate("1").remark(EnumDesc.DESC_BETWEEN_20_30.getDesc())
                 .subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType()))
                 .extendedInsuranceYear("1").extendedInsuranceCopies("1").type(type).build();
         visitor.invokeApi(temporaryScene);
@@ -724,7 +724,7 @@ public class SupporterUtil {
     public void buyFixedPackage(Long packageId, int type) {
         IScene purchaseFixedPackageScene = PurchaseFixedPackageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone())
                 .carType(PackageUseTypeEnum.ALL_CAR.name()).packageId(packageId).packagePrice("1.00").expiryDate("1")
-                .remark(EnumDesc.VOUCHER_DESC.getDesc())
+                .remark(EnumDesc.DESC_BETWEEN_20_30.getDesc())
                 .subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType()))
                 .extendedInsuranceYear(10).extendedInsuranceCopies(10).type(type).build();
         visitor.invokeApi(purchaseFixedPackageScene);
@@ -737,7 +737,7 @@ public class SupporterUtil {
      * @param type      0赠送/1购买
      */
     public void receptionBuyFixedPackage(Long packageId, int type) {
-        JSONObject data = PackageDetailScene.builder().id(packageId).build().execute(visitor, true);
+        JSONObject data = PackageDetailScene.builder().id(packageId).build().invoke(visitor, true);
         PackageDetail packageDetail = JSONObject.toJavaObject(data, PackageDetail.class);
         Preconditions.checkArgument(packageDetail != null, "没找到 " + packageId + " 套餐相关信息");
         Integer expiryDate = packageDetail.getExpiryDate();
@@ -749,7 +749,7 @@ public class SupporterUtil {
         IScene purchaseScene = ReceptionPurchaseFixedPackageScene.builder().customerId(receptionPage.getCustomerId())
                 .customerPhone("").carType(PackageUseTypeEnum.RECEPTION_CAR.name()).expireType(expireType).expiryDate(expiryDate)
                 .extendedInsuranceCopies("").extendedInsuranceYear("").packageId(packageId).packagePrice(packagePrice)
-                .plateNumber(receptionPage.getPlateNumber()).receptionId(receptionPage.getId()).remark(EnumDesc.VOUCHER_DESC.getDesc())
+                .plateNumber(receptionPage.getPlateNumber()).receptionId(receptionPage.getId()).remark(EnumDesc.DESC_BETWEEN_20_30.getDesc())
                 .shopId(receptionPage.getShopId()).subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType())).type(type)
                 .build();
         visitor.invokeApi(purchaseScene);
@@ -768,7 +768,7 @@ public class SupporterUtil {
         IScene purchaseScene = ReceptionPurchaseTemporaryPackageScene.builder().customerId(receptionPage.getCustomerId())
                 .carType(PackageUseTypeEnum.RECEPTION_CAR.name()).customerPhone("").expireType(2).expiryDate("10")
                 .extendedInsuranceCopies("").extendedInsuranceYear("").plateNumber(receptionPage.getPlateNumber())
-                .receptionId(receptionPage.getId()).remark(EnumDesc.VOUCHER_DESC.getDesc()).shopId(receptionPage.getShopId())
+                .receptionId(receptionPage.getId()).remark(EnumDesc.DESC_BETWEEN_20_30.getDesc()).shopId(receptionPage.getShopId())
                 .subjectId(getSubjectDesc(getSubjectType())).subjectType(getSubjectType()).type(type).voucherList(voucherList).build();
         visitor.invokeApi(purchaseScene);
     }
@@ -789,7 +789,7 @@ public class SupporterUtil {
         List<String> phoneList = new ArrayList<>();
         phoneList.add(EnumAccount.MARKETING_DAILY.getPhone());
         PushMessageScene.PushMessageSceneBuilder builder = PushMessageScene.builder().pushTarget(AppletPushTargetEnum.PERSONNEL_CUSTOMER.getId())
-                .telList(phoneList).messageName(EnumDesc.MESSAGE_TITLE.getDesc()).messageContent(EnumDesc.MESSAGE_DESC.getDesc())
+                .telList(phoneList).messageName(EnumDesc.DESC_BETWEEN_1_10.getDesc()).messageContent(EnumDesc.DESC_BETWEEN_40_50.getDesc())
                 .type(type).voucherOrPackageList(voucherOrPackageList).useDays("10");
         String d = DateTimeUtil.getFormat(DateTimeUtil.addSecond(new Date(), 80), "yyyy-MM-dd HH:mm:ss");
         long sendTime = Long.parseLong(DateTimeUtil.dateToStamp(d));
@@ -925,7 +925,7 @@ public class SupporterUtil {
         AppointmentSubmitScene.AppointmentSubmitSceneBuilder builder = AppointmentSubmitScene.builder().type(type.name()).carId(getCarId())
                 .shopId(getShopId()).staffId(getStaffId()).timeId(getTimeId(date)).appointmentName("隔壁小王").appointmentPhone("15321527989");
         if (type.name().equals(AppointmentTypeEnum.REPAIR.name())) {
-            builder.faultDescription(EnumDesc.FAULT_DESCRIPTION.getDesc());
+            builder.faultDescription(EnumDesc.DESC_BETWEEN_15_20.getDesc());
         }
         return visitor.invokeApi(builder.build()).getInteger("id");
     }
@@ -1201,7 +1201,7 @@ public class SupporterUtil {
         Integer lastValue = null;
         JSONArray array;
         do {
-            JSONObject response = AppletExchangeRecordScene.builder().lastValue(lastValue).size(20).status(null).build().execute(visitor, true);
+            JSONObject response = AppletExchangeRecordScene.builder().lastValue(lastValue).size(20).status(null).build().invoke(visitor, true);
             lastValue = response.getInteger("last_value");
             array = response.getJSONArray("list");
             listSize += array.size();
@@ -1219,7 +1219,7 @@ public class SupporterUtil {
         Integer lastValue = null;
         JSONArray array;
         do {
-            JSONObject response = AppletExchangeRecordScene.builder().lastValue(lastValue).size(20).status(null).build().execute(visitor, true);
+            JSONObject response = AppletExchangeRecordScene.builder().lastValue(lastValue).size(20).status(null).build().invoke(visitor, true);
             lastValue = response.getInteger("last_value");
             array = response.getJSONArray("list");
             appletExchangeRecordList.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppletExchangeRecord.class)).collect(Collectors.toList()));
@@ -1362,9 +1362,9 @@ public class SupporterUtil {
         String exchangeStartTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
         String exchangeEndTime = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 30), "yyyy-MM-dd HH:mm:ss");
         JSONArray specificationList = new JSONArray();
-        JSONObject response = GoodsManagePageScene.builder().goodsStatus(CommodityStatusEnum.UP.name()).build().execute(visitor, true).getJSONArray("list").getJSONObject(0);
+        JSONObject response = GoodsManagePageScene.builder().goodsStatus(CommodityStatusEnum.UP.name()).build().invoke(visitor, true).getJSONArray("list").getJSONObject(0);
         long goodsId = response.getLong("id");
-        JSONArray specificationDetailList = CommoditySpecificationsListScene.builder().id(goodsId).build().execute(visitor, true).getJSONArray("specification_detail_list");
+        JSONArray specificationDetailList = CommoditySpecificationsListScene.builder().id(goodsId).build().invoke(visitor, true).getJSONArray("specification_detail_list");
         specificationDetailList.forEach(e -> {
             JSONObject specificationDetail = (JSONObject) e;
             JSONObject jsonObject = new JSONObject();
@@ -1378,7 +1378,7 @@ public class SupporterUtil {
                 .specificationList(specificationList).expireType(2).useDays("10")
                 .exchangeStartTime(exchangeStartTime)
                 .exchangeEndTime(exchangeEndTime)
-                .build().execute(visitor, true);
+                .build().invoke(visitor, true);
         return collectBean(ExchangePageScene.builder().build(), ExchangePage.class).get(0);
     }
 
@@ -1394,7 +1394,7 @@ public class SupporterUtil {
         //创建积分兑换
         CreateExchangeGoodsScene.builder().exchangeGoodsType(CommodityTypeEnum.FICTITIOUS.name()).goodsId(voucherId)
                 .exchangePrice("1").isLimit(true).exchangePeopleNum("10").exchangeStartTime(exchangeStartTime)
-                .exchangeEndTime(exchangeEndTime).expireType(2).useDays("10").exchangeNum("1").build().execute(visitor, true);
+                .exchangeEndTime(exchangeEndTime).expireType(2).useDays("10").exchangeNum("1").build().invoke(visitor, true);
         return collectBean(ExchangePageScene.builder().build(), ExchangePage.class).get(0);
     }
 
@@ -1405,13 +1405,13 @@ public class SupporterUtil {
      * @return 卡券信息
      */
     public VoucherPage getExchangeGoodsContainVoucher(Long id) {
-        String voucherName = ExchangeGoodsStockScene.builder().id(id).build().execute(visitor, true).getString("goods_name");
+        String voucherName = ExchangeGoodsStockScene.builder().id(id).build().invoke(visitor, true).getString("goods_name");
         return getVoucherPage(voucherName);
     }
 
     public void modifyExchangeGoodsLimit(Long exchangeGoodsId, String exchangeGoodsType, Boolean isLimit) {
         IScene scene = ExchangeGoodsDetailScene.builder().id(exchangeGoodsId).build();
-        ExchangeGoodsDetail exchangeGoodsDetail = JSONObject.toJavaObject(scene.execute(visitor, true), ExchangeGoodsDetail.class);
+        ExchangeGoodsDetail exchangeGoodsDetail = JSONObject.toJavaObject(scene.invoke(visitor, true), ExchangeGoodsDetail.class);
         EditExchangeGoodsScene.EditExchangeGoodsSceneBuilder builder = EditExchangeGoodsScene.builder()
                 .exchangeGoodsType(exchangeGoodsDetail.getExchangeGoodsType()).goodsId(exchangeGoodsDetail.getGoodsId())
                 .exchangePrice(exchangeGoodsDetail.getExchangePrice()).exchangeNum(exchangeGoodsDetail.getExchangeNum())
@@ -1419,7 +1419,7 @@ public class SupporterUtil {
                 .isLimit(isLimit).id(exchangeGoodsDetail.getId());
         builder = isLimit ? builder.exchangePeopleNum(1) : builder;
         builder = exchangeGoodsType.equals(CommodityTypeEnum.REAL.name()) ? builder : builder.expireType(2).useDays(10);
-        builder.build().execute(visitor, true);
+        builder.build().invoke(visitor, true);
     }
 
     //-------------------------------------------------------活动---------------------------------------------------
@@ -1567,7 +1567,7 @@ public class SupporterUtil {
                 .participationLimitType(0)
                 .receiveLimitType(0)
                 .title(ActivityTypeEnum.FISSION_VOUCHER.getName())
-                .rule(EnumDesc.ACTIVITY_DESC.getDesc())
+                .rule(EnumDesc.DESC_BETWEEN_40_50.getDesc())
                 .startDate(getStartDate())
                 .endDate(getEndDate())
                 .subjectType(supporterUtil.getSubjectType())
@@ -1639,7 +1639,7 @@ public class SupporterUtil {
                 .participationLimitType(0)
                 .receiveLimitType(0)
                 .title(ActivityTypeEnum.FISSION_VOUCHER.getName())
-                .rule(EnumDesc.ACTIVITY_DESC.getDesc())
+                .rule(EnumDesc.DESC_BETWEEN_40_50.getDesc())
                 .startDate(getStartDate())
                 .endDate(getEndDate())
                 .subjectType(supporterUtil.getSubjectType())
@@ -1650,7 +1650,7 @@ public class SupporterUtil {
                 .applyEnd(getEndDate())
                 .isLimitQuota(true)
                 .quota(2)
-                .address(EnumDesc.MESSAGE_TITLE.getDesc())
+                .address(EnumDesc.DESC_BETWEEN_1_10.getDesc())
                 .registerInformationList(registerInformationList)
                 .successReward(true)
                 .rewardReceiveType(rewardReceiveType)

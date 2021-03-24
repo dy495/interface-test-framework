@@ -33,10 +33,10 @@ public class NoStartIntegral extends BaseIntegral {
         String exchangeEndTime = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), +3), "yyyy-MM-dd HH:mm:ss");
         Long integralId = new IntegralGenerator.Builder().IntegralExchangeStatus(IntegralExchangeStatusEnum.EXPIRED).buildIntegralExchange().getIntegralId();
         super.visitor = visitor;
-        ExchangeGoodsDetail exchangeGoodsDetail = JSONObject.toJavaObject(ExchangeGoodsDetailedScene.builder().id(integralId).build().execute(visitor, true), ExchangeGoodsDetail.class);
+        ExchangeGoodsDetail exchangeGoodsDetail = JSONObject.toJavaObject(ExchangeGoodsDetailedScene.builder().id(integralId).build().invoke(visitor, true), ExchangeGoodsDetail.class);
         EditExchangeGoodsScene.builder().exchangeGoodsType(exchangeGoodsDetail.getExchangeGoodsType()).goodsId(exchangeGoodsDetail.getGoodsId()).exchangePrice(exchangeGoodsDetail.getExchangePrice())
                 .exchangeNum(exchangeGoodsDetail.getExchangeNum()).isLimit(exchangeGoodsDetail.getIsLimit()).exchangePeopleNum(exchangeGoodsDetail.getExchangePeopleNum())
-                .exchangeStartTime(exchangeStartTime).exchangeEndTime(exchangeEndTime).id(integralId).build().execute(visitor, true);
+                .exchangeStartTime(exchangeStartTime).exchangeEndTime(exchangeEndTime).id(integralId).build().invoke(visitor, true);
         logger("CREATE NO_START FINISH");
     }
 

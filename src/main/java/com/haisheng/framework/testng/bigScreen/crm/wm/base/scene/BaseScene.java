@@ -63,7 +63,7 @@ public abstract class BaseScene implements IScene {
      * @return 接口返回值
      */
     @Override
-    public JSONObject execute(VisitorProxy visitor, boolean checkCode) {
+    public JSONObject invoke(VisitorProxy visitor, boolean checkCode) {
         return visitor.invokeApi(getPath(), getRequestBody(), checkCode);
     }
 }
