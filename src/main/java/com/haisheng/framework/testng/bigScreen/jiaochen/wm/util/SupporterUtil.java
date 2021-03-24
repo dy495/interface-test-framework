@@ -15,6 +15,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccoun
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumVP;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.CommodityTypeEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.SortTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.RegisterInfoEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.appointment.AppointmentTypeEnum;
@@ -1227,6 +1228,46 @@ public class SupporterUtil {
         return appletExchangeRecordList;
     }
 
+    /**
+     * 获取小程序积分商城列表
+     *
+     * @param integralSort 排序方式
+     * @param status       是否可兑换
+     * @return List<AppletCommodity>
+     */
+    public List<AppletCommodity> getAppletCommodityList(String integralSort, Boolean status) {
+        List<AppletCommodity> appletCommodityListList = new ArrayList<>();
+        JSONObject lastValue = null;
+        JSONArray array;
+        do {
+            JSONObject data = AppletCommodityListScene.builder().lastValue(lastValue).size(10).integralSort(integralSort).status(status).build().invoke(visitor, true);
+            lastValue = data.getJSONObject("last_value");
+            array = data.getJSONArray("list");
+            appletCommodityListList.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppletCommodity.class)).collect(Collectors.toList()));
+        } while (array.size() == 10);
+        return appletCommodityListList;
+
+    }
+
+    /**
+     * 获取小程序积分商城数量
+     *
+     * @return 数量
+     */
+    public int getAppletCommodityListNum() {
+        int listSie = 0;
+        JSONObject lastValue = null;
+        JSONArray array;
+        do {
+            JSONObject data = AppletCommodityListScene.builder().lastValue(lastValue).size(10).integralSort(SortTypeEnum.DOWN.name()).status(false).build().invoke(visitor, true);
+            lastValue = data.getJSONObject("last_value");
+            array = data.getJSONArray("list");
+            listSie += array.size();
+        } while (array.size() == 10);
+        return listSie;
+
+    }
+
     //--------------------------------------------------app------------------------------------------------------------
 
     /**
@@ -1512,8 +1553,7 @@ public class SupporterUtil {
      * @param voucherEnd           卡券有效结束日期 卡券有效期类型为1（时间段）必填
      * @param voucherEffectiveDays 卡券有效天数 卡券有效期类型为2（有效天数）必填
      **/
-    public JSONObject getVoucherValid(int expireType, String voucherStart, String voucherEnd,
-                                      int voucherEffectiveDays) {
+    public JSONObject getVoucherValid(int expireType, String voucherStart, String voucherEnd, int voucherEffectiveDays) {
         JSONObject voucherValid = new JSONObject();
         voucherValid.put("expire_type", expireType);
         if (expireType == 1) {

@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.testcase;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.aliyun.openservices.shade.org.apache.commons.lang3.StringUtils;
+import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
@@ -116,13 +117,58 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
                     int stockDetail = a.getInteger("stock_detail");
                     s.set(exchangeType.equals("ADD") ? s.addAndGet(stockDetail) : s.addAndGet(-stockDetail));
                 });
-                CommonUtil.checkResultPlus(goodsName + "兑换品库存明细加和", s.get(), "当前库存", goodsStock);
+                CommonUtil.checkResultPlus(goodsName + " 兑换品库存明细加和", s.get(), "当前库存", goodsStock);
                 CommonUtil.logger(goodsName);
             });
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
             saveData("积分兑换--库存详情--当前库存=兑换品库存明细加和");
+        }
+    }
+
+    //ok
+    @Test(description = "积分明细--创建实物积分兑换，积分兑换列表+1")
+    public void integralExchange_data_2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int total = ExchangePageScene.builder().build().invoke(visitor, true).getInteger("total");
+            //创建实物兑换
+            ExchangePage exchangePage = util.createExchangeRealGoods();
+            int newTotal = ExchangePageScene.builder().build().invoke(visitor, true).getInteger("total");
+            CommonUtil.checkResult("创建积分兑换后积分兑换总数", total + 1, newTotal);
+            CommonUtil.checkResult("创建积分兑换后状态", IntegralExchangeStatusEnum.WORKING.getDesc(), exchangePage.getStatusName());
+            CommonUtil.checkResult("创建积分兑换后状态", IntegralExchangeStatusEnum.WORKING.name(), exchangePage.getStatus());
+            //删除商品
+            ChangeSwitchStatusScene.builder().id(exchangePage.getId()).status(false).build().invoke(visitor, true);
+            DeleteExchangeGoodsScene.builder().id(exchangePage.getId()).build().invoke(visitor, true);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("积分明细--创建实物积分兑换，积分兑换列表+1");
+        }
+    }
+
+    //ok
+    @Test(description = "积分明细--创建虚拟积分兑换，积分兑换列表+1")
+    public void integralExchange_data_3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int total = ExchangePageScene.builder().build().invoke(visitor, true).getInteger("total");
+            Long voucherId = new VoucherGenerator.Builder().voucherStatus(VoucherStatusEnum.WORKING).visitor(visitor).buildVoucher().getVoucherId();
+            //创建实物兑换
+            ExchangePage exchangePage = util.createExchangeFictitiousGoods(voucherId);
+            int newTotal = ExchangePageScene.builder().build().invoke(visitor, true).getInteger("total");
+            CommonUtil.checkResult("创建积分兑换后积分兑换总数", total + 1, newTotal);
+            CommonUtil.checkResult("创建积分兑换后状态", IntegralExchangeStatusEnum.WORKING.getDesc(), exchangePage.getStatusName());
+            CommonUtil.checkResult("创建积分兑换后状态", IntegralExchangeStatusEnum.WORKING.name(), exchangePage.getStatus());
+            //删除商品
+            ChangeSwitchStatusScene.builder().id(exchangePage.getId()).status(false).build().invoke(visitor, true);
+            DeleteExchangeGoodsScene.builder().id(exchangePage.getId()).build().invoke(visitor, true);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("积分明细--创建虚拟积分兑换，积分兑换列表+1");
         }
     }
 
@@ -541,6 +587,41 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
             collectMessage(e);
         } finally {
             saveData("积分兑换--创建实体积分兑换->小程序兑换实体商品->发货->确认收货->取消");
+        }
+    }
+
+    //ok
+    @Test(description = "积分兑换--置顶某一积分兑换，小程序人气推荐置顶该兑换，再置顶一个积分兑换，人气推荐刷新第一位，原第一位降到第二位")
+    public void integralExchange_system_16() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject response = ExchangePageScene.builder().status(IntegralExchangeStatusEnum.WORKING.name()).build().invoke(visitor, true);
+            Long id = response.getJSONArray("list").getJSONObject(0).getLong("id");
+            Preconditions.checkArgument(id != null, "不存在积分兑换商品");
+            //置顶
+            MakeTopScene.builder().id(id).build().invoke(visitor, true);
+            //小程序人气推荐
+            user.loginApplet(APPLET_USER_ONE);
+            JSONArray list = AppletHomePageScene.builder().build().invoke(visitor, true).getJSONArray("recommend_list");
+            Long appletId = list.getJSONObject(0).getLong("id");
+            CommonUtil.checkResult("人气推荐第一项", id, appletId);
+            user.loginPc(ALL_AUTHORITY);
+            //再置顶第二个积分兑换
+            JSONObject response1 = ExchangePageScene.builder().status(IntegralExchangeStatusEnum.WORKING.name()).build().invoke(visitor, true);
+            Long id1 = response1.getJSONArray("list").getJSONObject(1).getLong("id");
+            Preconditions.checkArgument(id1 != null, "不存在积分兑换商品");
+            //置顶
+            MakeTopScene.builder().id(id1).build().invoke(visitor, true);
+            user.loginApplet(APPLET_USER_ONE);
+            JSONArray list1 = AppletHomePageScene.builder().build().invoke(visitor, true).getJSONArray("recommend_list");
+            Long appletId1 = list1.getJSONObject(0).getLong("id");
+            Long appletId2 = list1.getJSONObject(1).getLong("id");
+            CommonUtil.checkResult("人气推荐第一项", id1, appletId1);
+            CommonUtil.checkResult("人气推荐第二项", id, appletId2);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("积分兑换--置顶某一积分兑换，小程序人气推荐置顶该兑换，再置顶一个积分兑换，人气推荐刷新第一位，原第一位降到第二位");
         }
     }
 

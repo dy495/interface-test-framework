@@ -2,16 +2,16 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity;
 
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.activity.BaseActivity;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.activity.PendingActivity;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.activity.PassedActivity;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.activity.PendingActivity;
 import lombok.Getter;
 
 import java.util.Arrays;
 import java.util.Optional;
 
 /**
- * @author wangmin
- * @date 2020/12/23  16:26
+ * @author : wangmin
+ * @date :  2020/12/23  16:26
  */
 public enum ActivityStatusEnum {
     /**

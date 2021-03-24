@@ -10,7 +10,7 @@ import lombok.Builder;
 @Builder
 public class AppletCommodityListScene extends BaseScene {
     private final Integer size;
-    private final Integer lastValue;
+    private final JSONObject lastValue;
     private final String integralSort;
     private final Boolean status;
 

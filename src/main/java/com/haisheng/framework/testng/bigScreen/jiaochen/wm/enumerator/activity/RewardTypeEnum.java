@@ -3,8 +3,8 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity;
 import com.google.common.base.Preconditions;
 
 /**
- * @author wangmin
- * @date  2021/1/20  15:09
+ * @author : wangmin
+ * @date :  2021/1/20  15:09
  */
 public enum RewardTypeEnum {
     /**

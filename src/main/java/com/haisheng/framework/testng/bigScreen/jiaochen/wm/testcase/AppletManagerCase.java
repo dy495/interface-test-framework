@@ -1,19 +1,19 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppReceptionReceptorList;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletCommodity;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletIntegralRecord;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletShippingAddress;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.ChangeStockTypeEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.CommodityTypeEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.IntegralExchangeStatusEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.appointment.AppointmentConfirmStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.appointment.AppointmentTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.AppletCodeBusinessTypeEnum;
@@ -28,7 +28,10 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.task.AppAp
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.task.AppReceptionFinishReceptionScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.task.AppReceptionReceptorChangePageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.appointmentmanage.AppointmentPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.EditExchangeStockScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.ExchangeDetailedScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.ExchangePageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.IntegralExchangeRulesScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.ReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.ReceptorChangeScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.AddVoucherScene;
@@ -352,6 +355,23 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
+    @Test(description = "小程序--积分商城商品数量=pc进行中的积分兑换数量")
+    public void integralMall_data_2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            user.loginApplet(APPLET_USER_ONE);
+            int appletCommodityListNum = util.getAppletCommodityListNum();
+            user.loginPc(ALL_AUTHORITY);
+            int total = ExchangePageScene.builder().status(IntegralExchangeStatusEnum.WORKING.name()).build().invoke(visitor, true).getInteger("total");
+            CommonUtil.checkResultPlus("小程序积分商城商品数量", appletCommodityListNum, "pc进行中的积分兑换数量", total);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("小程序--积分商城商品数量=pc进行中的积分兑换数量");
+        }
+    }
+
+    //ok
     @Test(description = "小程序--积分兑换--兑换库存不足的实体商品，提示：商品库存不足")
     public void integralMall_system_1() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -485,6 +505,28 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             collectMessage(e);
         } finally {
             saveData("小程序--积分兑换--兑换无库存的虚拟商品");
+        }
+    }
+
+    //ok
+    @Test(description = "小程序--积分商城倒序排序，积分一次减少")
+    public void integralMall_system_5() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            user.loginApplet(APPLET_USER_ONE);
+            List<AppletCommodity> appletCommodityList = util.getAppletCommodityList(SortTypeEnum.DOWN.name(), false);
+            for (int i = 0; i < appletCommodityList.size(); i++) {
+                if (i != appletCommodityList.size() - 1) {
+                    Integer firstPrice = appletCommodityList.get(i).getPresentIntegralPrice();
+                    Integer secondPrice = appletCommodityList.get(i + 1).getPresentIntegralPrice();
+                    CommonUtil.valueView("第" + i + "个" + firstPrice, "第" + (i + 1) + "个" + secondPrice);
+                    Preconditions.checkArgument(firstPrice >= secondPrice, "第" + i + "个商品需要积分：" + firstPrice + " 第" + (i + 1) + "个商品需要积分：" + secondPrice);
+                }
+            }
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("小程序--积分商城倒序排序，积分一次减少");
         }
     }
 

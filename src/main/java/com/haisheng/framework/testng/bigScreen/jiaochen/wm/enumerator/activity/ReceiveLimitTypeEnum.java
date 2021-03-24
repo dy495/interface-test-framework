@@ -6,8 +6,8 @@ import java.util.Arrays;
 import java.util.Optional;
 
 /**
- * @author wangmin
- * @date  2020/12/23  15:31
+ * @author : wangmin
+ * @date :  2020/12/23  15:31
  */
 public enum ReceiveLimitTypeEnum {
 
