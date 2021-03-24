@@ -27,6 +27,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -643,6 +644,27 @@ public class BusinessUtilOnline {
     }
 
     /**
+     * 获取图片地址
+     *
+     * @return 图片地址
+     */
+    public String getPicturePath() {
+        String path = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/活动.jpeg";
+        return getPicPath(path);
+    }
+    public String getPicPath(String picPath) {
+        return getPicPath(picPath, "3:2");
+    }
+
+    public String getPicPath(String picPath, String ratioStr) {
+        String picture = new ImageUtil().getImageBinary(picPath);
+        String[] strings = ratioStr.split(":");
+        double ratio = BigDecimal.valueOf(Double.parseDouble(strings[0]) / Double.parseDouble(strings[1])).divide(new BigDecimal(1), 4, BigDecimal.ROUND_HALF_UP).doubleValue();
+        IScene scene = FileUpload.builder().isPermanent(false).permanentPicType(0).pic(picture).ratioStr(ratioStr).ratio(ratio).build();
+        return visitor.invokeApi(scene).getString("pic_path");
+    }
+
+    /**
      * 获取优惠券的库存
      */
     public String getSurplusInventory(Long id) {
@@ -971,7 +993,7 @@ public class BusinessUtilOnline {
     /**
      * 查询列表中的状态为【审核未通过的ID】
      */
-    public List<Long> getFissontActivityReject() {
+    public List<Long> getFissionActivityReject() {
         List<Long> ids = new ArrayList<>();
         //活动列表
         IScene scene = ActivityManageListScene.builder().page(1).size(10).build();

@@ -1885,9 +1885,8 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
             JSONArray res = jc.messageFormFilterManage("", "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
-                variable.shop_id = (data.getString(flag[0][1].toString())==null)?"":data.getString(flag[0][1].toString());
-                variable.customer_name = (data.getString(flag[1][1].toString())==null)?"":data.getString(flag[1][1].toString());
-                variable.send_account = (data.getString(flag[3][1].toString())==null)?"":data.getString(flag[3][1].toString());
+                variable.customer_name = data.containsKey(flag[1][1].toString())?data.getString(flag[1][1].toString()):"";
+                variable.send_account = data.containsKey(flag[3][1].toString())?data.getString(flag[3][1].toString()):"";
                 variable.page = "1";
                 variable.size = "10";
                 //全部筛选之后的结果

@@ -991,7 +991,7 @@ public class BusinessUtil {
     /**
      * 查询列表中的状态为【审核未通过的ID】
      */
-    public List<Long> getFissontActivityReject() {
+    public List<Long> getFissionActivityReject() {
         List<Long> ids = new ArrayList<>();
         //活动列表
         IScene scene = ActivityManageListScene.builder().page(1).size(10).build();

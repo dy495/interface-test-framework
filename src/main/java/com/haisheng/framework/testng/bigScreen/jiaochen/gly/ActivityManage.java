@@ -1066,7 +1066,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             List<String> picList = new ArrayList<>();
             SupporterUtil supporterUtil = new SupporterUtil(visitor);
             PublicParameter pp = new PublicParameter();
-            picList.add(supporterUtil.getPicPath());
+            picList.add(businessUtil.getPicturePath());
             //填写报名所需要信息
             List<Boolean> isShow = new ArrayList<>();
             isShow.add(true);
@@ -1089,16 +1089,16 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             JSONArray registerObject = businessUtil.getRewardVouchers(voucherId, 1, businessUtil.getVoucherSurplusInventory(voucherId));
             //卡券有效期
             JSONObject voucherValid = businessUtil.getVoucherValid(2, "", "", 10);
+            String subject= supporterUtil.getSubjectType();
             IScene scene = ManageRecruitEditScene.builder()
                     .type(2)
                     .id(ids.get(0))
                     .title(pp.editTitle)
-                    .rule(pp.EditRule)
                     .participationLimitType(0)
                     .rule(pp.EditRule)
                     .startDate(businessUtil.getStartDate())
                     .endDate(businessUtil.getEndDate())
-                    .subjectType(supporterUtil.getSubjectType())
+                    .subjectType(subject)
                     .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
                     .label("RED_PAPER")
                     .picList(picList)
@@ -1113,6 +1113,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                     .isNeedApproval(true)
                     .rewardVouchers(registerObject)
                     .voucherValid(voucherValid)
+                    .address("呀呀呀呀呀呀呀呀呀呀地址")
                     .build();
             String message = visitor.invokeApi(scene,false).getString("message");
             System.out.println("-----"+message);
@@ -1121,8 +1122,31 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             JSONObject object=visitor.invokeApi(scene1);
             String title=object.getString("title");
             String rule=object.getJSONObject("recruit_activity_info").getString("rule");
-            System.out.println(title+"--------"+rule);
-            Preconditions.checkArgument(message.equals("success")&&title.equals(pp.editTitle)&&rule.equals(pp.EditRule), "已撤销的活动编辑失败");
+            String participationLimitType=object.getString("participation_limit_type");
+            String startDate=object.getString("start_date");
+            String endDate=object.getString("end_date");
+            String applyStart=object.getJSONObject("recruit_activity_info").getString("apply_start");
+            String applyEnd=object.getJSONObject("recruit_activity_info").getString("apply_end");
+            String quota=object.getJSONObject("recruit_activity_info").getString("quota");
+            String subjectType=object.getString("subject_type");
+            String label=object.getString("label");
+            String address=object.getJSONObject("recruit_activity_info").getString("address");
+            Long id=object.getJSONObject("recruit_activity_info").getJSONArray("reward_vouchers").getJSONObject(0).getLong("id");
+            String approval=object.getJSONObject("recruit_activity_info").getString("is_need_approval");
+            String picName=object.getJSONArray("pic_list").getJSONObject(0).getString("pic_path");
+            String content = businessUtil.changeRecordPage(ids.get(0)).getJSONArray("list").getJSONObject(0).getString("content");
+            System.out.println("---------"+picName);
+            System.out.println(title+"--------"+rule+"--------"+participationLimitType+"--------"+startDate+"--------"+endDate+"--------"+applyStart+"--------"+applyEnd+"--------"+quota+"--------"+subjectType+"--------"+label+"--------"+address+"--------"+approval+"--------"+id+"--------"+voucherId);
+            Preconditions.checkArgument(message.equals("success")&&title.equals(pp.editTitle)&&rule.equals(pp.EditRule), "已撤销的活动编辑失败1");
+            Preconditions.checkArgument(participationLimitType.equals("0")&&quota.equals("2"), "已撤销的活动编辑失败2");
+            Preconditions.checkArgument(startDate.equals(businessUtil.getStartDate())&&endDate.equals(businessUtil.getEndDate()), "已撤销的活动编辑失败3");
+            Preconditions.checkArgument(applyStart.equals(businessUtil.getStartDate())&&applyEnd.equals(businessUtil.getEndDate()), "已撤销的活动编辑失败4");
+            Preconditions.checkArgument(subjectType.equals(subject)&&label.equals("RED_PAPER"), "已撤销的活动编辑失败5");
+//            Preconditions.checkArgument(picName.contains("活动.jpeg"), "已撤销的活动编辑失败");
+            Preconditions.checkArgument(address.equals("呀呀呀呀呀呀呀呀呀呀地址")&&id.equals(voucherId)&&approval.equals("true"), "已撤销的活动编辑失败6");
+            Preconditions.checkArgument(content.equals("编辑活动"),"变更记录中的变更事项没有更新");
+
+
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -1212,7 +1236,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             List<String> picList = new ArrayList<>();
             SupporterUtil supporterUtil = new SupporterUtil(visitor);
             PublicParameter pp = new PublicParameter();
-            picList.add(supporterUtil.getPicPath());
+            picList.add(businessUtil.getPicturePath());
             //填写报名所需要信息
             List<Boolean> isShow = new ArrayList<>();
             isShow.add(true);
@@ -1235,16 +1259,16 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             JSONArray registerObject = businessUtil.getRewardVouchers(voucherId, 1, businessUtil.getVoucherSurplusInventory(voucherId));
             //卡券有效期
             JSONObject voucherValid = businessUtil.getVoucherValid(2, "", "", 10);
+            String subject= supporterUtil.getSubjectType();
             IScene scene = ManageRecruitEditScene.builder()
                     .type(2)
                     .id(ids.get(0))
                     .title(pp.editTitle)
-                    .rule(pp.EditRule)
                     .participationLimitType(0)
                     .rule(pp.EditRule)
                     .startDate(businessUtil.getStartDate())
                     .endDate(businessUtil.getEndDate())
-                    .subjectType(supporterUtil.getSubjectType())
+                    .subjectType(subject)
                     .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
                     .label("RED_PAPER")
                     .picList(picList)
@@ -1259,6 +1283,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                     .isNeedApproval(true)
                     .rewardVouchers(registerObject)
                     .voucherValid(voucherValid)
+                    .address("呀呀呀呀呀呀呀呀呀呀地址")
                     .build();
             String message = visitor.invokeApi(scene,false).getString("message");
             System.out.println("-----"+message);
@@ -1267,11 +1292,30 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             JSONObject object=visitor.invokeApi(scene1);
             String title=object.getString("title");
             String rule=object.getJSONObject("recruit_activity_info").getString("rule");
-            //获取活动状态
-            int status=businessUtil.getActivityStatus(ids.get(0));
-            System.out.println(title+"--------"+rule);
-            System.err.println(ids);
-            Preconditions.checkArgument(message.equals("success")&&title.equals(pp.editTitle)&&rule.equals(pp.EditRule)&&status==ActivityStatusEnum.PENDING.getId(), "审核未通过的活动编辑失败");
+            String participationLimitType=object.getString("participation_limit_type");
+            String startDate=object.getString("start_date");
+            String endDate=object.getString("end_date");
+            String applyStart=object.getJSONObject("recruit_activity_info").getString("apply_start");
+            String applyEnd=object.getJSONObject("recruit_activity_info").getString("apply_end");
+            String quota=object.getJSONObject("recruit_activity_info").getString("quota");
+            String subjectType=object.getString("subject_type");
+            String label=object.getString("label");
+            String address=object.getJSONObject("recruit_activity_info").getString("address");
+            Long id=object.getJSONObject("recruit_activity_info").getJSONArray("reward_vouchers").getJSONObject(0).getLong("id");
+            String approval=object.getJSONObject("recruit_activity_info").getString("is_need_approval");
+            String picName=object.getJSONArray("pic_list").getJSONObject(0).getString("pic_path");
+            String content = businessUtil.changeRecordPage(ids.get(0)).getJSONArray("list").getJSONObject(0).getString("content");
+
+            System.out.println("---------"+picName);
+            System.out.println(title+"--------"+rule+"--------"+participationLimitType+"--------"+startDate+"--------"+endDate+"--------"+applyStart+"--------"+applyEnd+"--------"+quota+"--------"+subjectType+"--------"+label+"--------"+address+"--------"+approval+"--------"+id+"--------"+voucherId);
+            Preconditions.checkArgument(message.equals("success")&&title.equals(pp.editTitle)&&rule.equals(pp.EditRule), "审核未通过的活动编辑失败1");
+            Preconditions.checkArgument(participationLimitType.equals("0")&&quota.equals("2"), "审核未通过的活动编辑失败2");
+            Preconditions.checkArgument(startDate.equals(businessUtil.getStartDate())&&endDate.equals(businessUtil.getEndDate()), "审核未通过的活动编辑失败3");
+            Preconditions.checkArgument(applyStart.equals(businessUtil.getStartDate())&&applyEnd.equals(businessUtil.getEndDate()), "审核未通过的活动编辑失败4");
+            Preconditions.checkArgument(subjectType.equals(subject)&&label.equals("RED_PAPER"), "审核未通过的活动编辑失败5");
+//            Preconditions.checkArgument(picName.contains("活动.jpeg"), "审核未通过的活动编辑失败");
+            Preconditions.checkArgument(address.equals("呀呀呀呀呀呀呀呀呀呀地址")&&id.equals(voucherId)&&approval.equals("true"), "审核未通过的活动编辑失败6");
+            Preconditions.checkArgument(content.equals("编辑活动"),"变更记录中的变更事项没有更新");
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -1439,8 +1483,9 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             String rule = businessUtil.getRecruitActivityDetailDate(ids.get(0)).getString("rule");
             //获取活动状态
             int status=businessUtil.getActivityStatus(ids.get(0));
+            String content = businessUtil.changeRecordPage(ids.get(0)).getJSONArray("list").getJSONObject(0).getString("content");
             System.out.println(title+"--------"+rule);
-            Preconditions.checkArgument(message.equals("success")&&title.contains("编辑过后的招募活动")&&rule.equals(pp.EditRule), "进行中的活动编辑失败");
+            Preconditions.checkArgument(message.equals("success")&&title.contains("编辑过后的招募活动")&&rule.equals(pp.EditRule)&&content.equals("编辑活动"), "进行中的活动编辑失败");
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -1562,8 +1607,10 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             String rule = businessUtil.getRecruitActivityDetailDate(ids.get(0)).getString("rule");
             //获取活动状态
             int status=businessUtil.getActivityStatus(ids.get(0));
+            String content = businessUtil.changeRecordPage(ids.get(0)).getJSONArray("list").getJSONObject(0).getString("content");
+
             System.out.println(title+"--------"+rule);
-            Preconditions.checkArgument(message.equals("success")&&title.contains("编辑过后的招募活动")&&rule.equals(pp.EditRule), "进行中的活动编辑失败");
+            Preconditions.checkArgument(message.equals("success")&&title.contains("编辑过后的招募活动")&&rule.equals(pp.EditRule)&&content.equals("编辑活动"), "进行中的活动编辑失败");
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -1783,7 +1830,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             SupporterUtil supporterUtil = new SupporterUtil(visitor);
             PublicParameter pp = new PublicParameter();
             List<String> picList = new ArrayList<>();
-            picList.add(supporterUtil.getPicPath());
+            picList.add(businessUtil.getPicturePath());
             // 创建被邀请者和分享者的信息字段
             JSONObject invitedVoucher = businessUtil.getInvitedVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherSurplusInventory(voucherId)), 2, "", "", 1);
             JSONObject shareVoucher = businessUtil.getShareVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherSurplusInventory(voucherId)), 2, "", "", 1);
@@ -1829,6 +1876,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             String picName=response.getJSONArray("pic_list").getJSONObject(0).getString("pic_path");
             Long invitedVoucherId=response1.getJSONObject("invited_voucher").getLong("id");
             Long shareVoucherId=response1.getJSONObject("share_voucher").getLong("id");
+            String content = businessUtil.changeRecordPage(ids.get(0)).getJSONArray("list").getJSONObject(0).getString("content");
             System.out.println(invitedVoucherId+"----------"+voucherId+"----------"+title+"----------"+rule+"--------"+participationLimitType+"----------"+receiveLimitType+"--------"+startTime+"----------"+endTime+"--------"+shareNum+"----------"+subjectType+"--------"+label+"----------"+picName+"--------"+startDate+"----------"+endDate);
             Preconditions.checkArgument(message.equals("success")&&title.contains("编辑过的裂变活动")&&rule.equals(pp.EditFissionRule), "已撤销的活动编辑失败1");
             Preconditions.checkArgument(participationLimitType.equals("0")&&receiveLimitType.equals("0"), "已撤销的活动编辑失败2");
@@ -1836,7 +1884,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(shareNum.equals("2")&&subjectType.equals(subject)&&label.equals("RED_PAPER"), "已撤销的活动编辑失败4");
 //            Preconditions.checkArgument(picName.contains("活动.jpeg"), "已撤销的活动编辑失败");
             Preconditions.checkArgument(voucherId.equals(invitedVoucherId) && shareVoucherId.equals(voucherId), "已撤销的活动编辑失败5  "+voucherId+"   "+voucherId+"    "+shareVoucherId);
-
+            Preconditions.checkArgument(content.equals("编辑活动"),"变更记录中的变更事项没有更新");
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
@@ -1853,7 +1901,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取审核未通过活动的ID
-            List<Long> ids = businessUtil.getFissontActivityReject();
+            List<Long> ids = businessUtil.getFissionActivityReject();
             //获取审核未通过的活动名称
             String title=businessUtil.getActivityTitle(ids.get(0));
             //获取活动详情中的此活动的名称
@@ -1876,7 +1924,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取审核未通过活动的ID
-            List<Long> ids = businessUtil.getFissontActivityReject();
+            List<Long> ids = businessUtil.getFissionActivityReject();
             //获取审核未通过的活动名称
             String title=businessUtil.getActivityTitle(ids.get(0));
             //置顶【审核未通过的活动】
@@ -1898,7 +1946,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取审核未通过活动的ID
-            List<Long> ids = businessUtil.getFissionActivityWait();
+            List<Long> ids = businessUtil.getFissionActivityReject();
             //删除进行中的活动
             String message = businessUtil.getDelActivity(ids.get(0));
             Preconditions.checkArgument(message.equals("success"), "删除【审核未通过】的活动的message为：" + message);
@@ -1918,7 +1966,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取审核未通过活动的ID
-            List<Long> ids = businessUtil.getFissontActivityReject();
+            List<Long> ids = businessUtil.getFissionActivityReject();
             System.err.println("----ids:"+ids.get(0));
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             SupporterUtil supporterUtil = new SupporterUtil(visitor);
@@ -1970,6 +2018,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             String picName=response.getJSONArray("pic_list").getJSONObject(0).getString("pic_path");
             Long invitedVoucherId=response1.getJSONObject("invited_voucher").getLong("id");
             Long shareVoucherId=response1.getJSONObject("share_voucher").getLong("id");
+            String content = businessUtil.changeRecordPage(ids.get(0)).getJSONArray("list").getJSONObject(0).getString("content");
             System.out.println(invitedVoucherId+"----------"+voucherId+"----------"+title+"----------"+rule+"--------"+participationLimitType+"----------"+receiveLimitType+"--------"+startTime+"----------"+endTime+"--------"+shareNum+"----------"+subjectType+"--------"+label+"----------"+picName+"--------"+startDate+"----------"+endDate);
             Preconditions.checkArgument(message.equals("success")&&title.contains("编辑过的裂变活动")&&rule.equals(pp.EditFissionRule), "已撤销的活动编辑失败1");
             Preconditions.checkArgument(participationLimitType.equals("0")&&receiveLimitType.equals("0"), "已撤销的活动编辑失败2");
@@ -1977,6 +2026,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(shareNum.equals("2")&&subjectType.equals(subject)&&label.equals("RED_PAPER"), "已撤销的活动编辑失败4");
 //            Preconditions.checkArgument(picName.contains("活动.jpeg"), "已撤销的活动编辑失败");
             Preconditions.checkArgument(voucherId.equals(invitedVoucherId) && shareVoucherId.equals(voucherId), "已撤销的活动编辑失败5  "+voucherId+"   "+voucherId+"    "+shareVoucherId);
+            Preconditions.checkArgument(content.equals("编辑活动"),"变更记录中的变更事项没有更新");
         }catch(Exception|AssertionError e){
             e.printStackTrace();
             appendFailReason(e.toString());
@@ -2145,7 +2195,8 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             String title = businessUtil.getFissionActivityDetailDate1(ids.get(0)).getString("title");
             String rule = businessUtil.getFissionActivityDetailData(ids.get(0)).getString("rule");
             System.out.println(title+"----------"+rule);
-            Preconditions.checkArgument(message.equals("success")&&title.contains("编辑过的裂变活动")&&rule.equals(pp.EditFissionRule), "进行中的活动编辑失败");   } catch (AssertionError | Exception e) {
+            String content = businessUtil.changeRecordPage(ids.get(0)).getJSONArray("list").getJSONObject(0).getString("content");
+            Preconditions.checkArgument(message.equals("success")&&title.contains("编辑过的裂变活动")&&rule.equals(pp.EditFissionRule)&&content.equals("编辑活动"), "进行中的活动编辑失败");   } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("活动管理-【进行中】的活动-编辑");
@@ -2257,16 +2308,15 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
         try {
             //获取未开始活动的ID
             List<Long> ids =  businessUtil.getFissionActivityWaitingStar();
-            System.err.println("----ids:"+ids.get(0));
             //编辑未开始的活动
             IScene scene =businessUtil.fissionActivityEditScene(ids.get(0));
             String message=visitor.invokeApi(scene,false).getString("message");
-            System.out.println("---------"+message);
             //获取活动详情中编辑后的标题和活动规则
             String title = businessUtil.getFissionActivityDetailDate1(ids.get(0)).getString("title");
             String rule = businessUtil.getFissionActivityDetailData(ids.get(0)).getString("rule");
             System.out.println(title+"----------"+rule);
-            Preconditions.checkArgument(message.equals("success")&&title.contains("编辑过的裂变活动")&&rule.equals(pp.EditFissionRule), "未开始的活动编辑失败");} catch (AssertionError | Exception e) {
+            String content = businessUtil.changeRecordPage(ids.get(0)).getJSONArray("list").getJSONObject(0).getString("content");
+            Preconditions.checkArgument(message.equals("success")&&title.contains("编辑过的裂变活动")&&rule.equals(pp.EditFissionRule)&&content.equals("编辑活动"), "未开始的活动编辑失败");} catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("活动管理-【未开始】的活动-编辑");
@@ -2329,26 +2379,6 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
     }
 
 
-
-
-
-
-
-
-
-    @Test()
-    public void tryTest() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //获取审核未通过活动的ID
-            List<Long> ids =  businessUtil.getActivityReject();
-            System.err.println("----ids:"+ids.get(0));
-             } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("活动管理-【审核未通过】的活动-置顶");
-        }
-    }
 
 
 

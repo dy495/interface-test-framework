@@ -29,7 +29,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -899,55 +898,9 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
     }
 
 
-/**
- * ==============================活动列表的各个状态=======================
- */
-
-
     /**
-     * 活动管理-活动审批通过 进行中 ok
+     * ---------------------------------------------------------招募活动的各个状态---------------------------------------------------
      */
-    @Test(description = "活动管理-活动审批通过")
-    public void activityApproval() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //获取列表中状态为【待审批】的活动ID
-            List<Long> ids = businessUtil.getActivityWaitingApproval();
-            //通过待审批的活动
-            String message = businessUtil.getApprovalPassed(ids.get(0));
-            //获取刚才通过的活动的状态
-            int status = businessUtil.getActivityApprovalStatus(ids.get(0));
-            Preconditions.checkArgument(status == ActivityStatusEnum.PASSED.getId(), "审批通过后活动的状态为：" + status);
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("活动管理-活动审批通过=进行中");
-        }
-    }
-
-    /**
-     * 活动管理-活动审批未通过 ok
-     */
-    @Test(description = "活动管理-活动审批未通过")
-    public void activityNotApproval() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //获取列表中状态为【待审批】的活动ID
-            List<Long> ids = businessUtil.getActivityWaitingApproval();
-            //审批不通过待审批的活动
-            businessUtil.getApprovalReject(ids.get(0));
-            //获取刚才不通过的活动的状态
-            int status = businessUtil.getActivityStatus(ids.get(0));
-            Preconditions.checkArgument(status == ActivityStatusEnum.REJECT.getId(), "审批未通过后活动的状态为：" + status);
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("活动管理-活动审批未通过");
-        }
-    }
-
 
 
     /**
@@ -959,7 +912,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取待审核活动的ID
-            List<Long> ids = businessUtil.getActivityWaitingApproval();
+            List<Long> ids = businessUtil.getRecruitActivityWaitingApproval();
             //获取待审核的活动名称
             String title=businessUtil.getActivityTitle(ids.get(0));
             //获取活动详情中的此活动的名称
@@ -972,7 +925,6 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             saveData("活动管理-【待审核】的活动-查看");
         }
     }
-
     /**
      * 活动管理-撤回【待审批】的活动   ok
      */
@@ -981,7 +933,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取待审批活动的ID
-            List<Long> ids = businessUtil.getActivityWait();
+            List<Long> ids = businessUtil.getRecruitActivityWaitingApproval();
             //撤回待审批的活动
             String message = businessUtil.getRevokeActivity(ids.get(0));
             //获取刚才通过的活动的状态
@@ -1004,7 +956,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取待审核活动的ID
-            List<Long> ids = businessUtil.getActivityWaitingApproval();
+            List<Long> ids = businessUtil.getRecruitActivityWaitingApproval();
             //获取待审核的活动名称
             String title=businessUtil.getActivityTitle(ids.get(0));
             //置顶【待审批的活动】
@@ -1028,7 +980,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取已撤销活动的ID
-            List<Long> ids = businessUtil.getActivityRevoke();
+            List<Long> ids = businessUtil.getRecruitActivityRevoke();
             //获取已撤销的活动名称
             String title=businessUtil.getActivityTitle(ids.get(0));
             //获取活动详情中的此活动的名称
@@ -1052,7 +1004,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取已撤销活动的ID
-            List<Long> ids = businessUtil.getActivityRevoke();
+            List<Long> ids = businessUtil.getRecruitActivityRevoke();
             //获取已撤销的活动名称
             String title=businessUtil.getActivityTitle(ids.get(0));
             //置顶【已撤销的活动】
@@ -1076,7 +1028,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取已撤销活动的ID
-            List<Long> ids = businessUtil.getActivityRevoke();
+            List<Long> ids = businessUtil.getRecruitActivityRevoke();
             //删除已撤销的活动
             String message = businessUtil.getDelActivity(ids.get(0));
             Preconditions.checkArgument(message.equals("success"), "已撤销的活动删除失败");
@@ -1104,7 +1056,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             List<String> picList = new ArrayList<>();
             SupporterUtil supporterUtil = new SupporterUtil(visitor);
             PublicParameter pp = new PublicParameter();
-            picList.add(supporterUtil.getPicPath());
+            picList.add(businessUtil.getPicturePath());
             //填写报名所需要信息
             List<Boolean> isShow = new ArrayList<>();
             isShow.add(true);
@@ -1127,16 +1079,16 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             JSONArray registerObject = businessUtil.getRewardVouchers(voucherId, 1, businessUtil.getVoucherSurplusInventory(voucherId));
             //卡券有效期
             JSONObject voucherValid = businessUtil.getVoucherValid(2, "", "", 10);
+            String subject= supporterUtil.getSubjectType();
             IScene scene = ManageRecruitEditScene.builder()
                     .type(2)
                     .id(ids.get(0))
                     .title(pp.editTitle)
-                    .rule(pp.EditRule)
                     .participationLimitType(0)
                     .rule(pp.EditRule)
                     .startDate(businessUtil.getStartDate())
                     .endDate(businessUtil.getEndDate())
-                    .subjectType(supporterUtil.getSubjectType())
+                    .subjectType(subject)
                     .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
                     .label("RED_PAPER")
                     .picList(picList)
@@ -1151,6 +1103,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                     .isNeedApproval(true)
                     .rewardVouchers(registerObject)
                     .voucherValid(voucherValid)
+                    .address("呀呀呀呀呀呀呀呀呀呀地址")
                     .build();
             String message = visitor.invokeApi(scene,false).getString("message");
             System.out.println("-----"+message);
@@ -1159,8 +1112,31 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             JSONObject object=visitor.invokeApi(scene1);
             String title=object.getString("title");
             String rule=object.getJSONObject("recruit_activity_info").getString("rule");
-            System.out.println(title+"--------"+rule);
-            Preconditions.checkArgument(message.equals("success")&&title.equals(pp.editTitle)&&rule.equals(pp.EditRule), "已撤销的活动编辑失败");
+            String participationLimitType=object.getString("participation_limit_type");
+            String startDate=object.getString("start_date");
+            String endDate=object.getString("end_date");
+            String applyStart=object.getJSONObject("recruit_activity_info").getString("apply_start");
+            String applyEnd=object.getJSONObject("recruit_activity_info").getString("apply_end");
+            String quota=object.getJSONObject("recruit_activity_info").getString("quota");
+            String subjectType=object.getString("subject_type");
+            String label=object.getString("label");
+            String address=object.getJSONObject("recruit_activity_info").getString("address");
+            Long id=object.getJSONObject("recruit_activity_info").getJSONArray("reward_vouchers").getJSONObject(0).getLong("id");
+            String approval=object.getJSONObject("recruit_activity_info").getString("is_need_approval");
+            String picName=object.getJSONArray("pic_list").getJSONObject(0).getString("pic_path");
+            String content = businessUtil.changeRecordPage(ids.get(0)).getJSONArray("list").getJSONObject(0).getString("content");
+            System.out.println("---------"+picName);
+            System.out.println(title+"--------"+rule+"--------"+participationLimitType+"--------"+startDate+"--------"+endDate+"--------"+applyStart+"--------"+applyEnd+"--------"+quota+"--------"+subjectType+"--------"+label+"--------"+address+"--------"+approval+"--------"+id+"--------"+voucherId);
+            Preconditions.checkArgument(message.equals("success")&&title.equals(pp.editTitle)&&rule.equals(pp.EditRule), "已撤销的活动编辑失败1");
+            Preconditions.checkArgument(participationLimitType.equals("0")&&quota.equals("2"), "已撤销的活动编辑失败2");
+            Preconditions.checkArgument(startDate.equals(businessUtil.getStartDate())&&endDate.equals(businessUtil.getEndDate()), "已撤销的活动编辑失败3");
+            Preconditions.checkArgument(applyStart.equals(businessUtil.getStartDate())&&applyEnd.equals(businessUtil.getEndDate()), "已撤销的活动编辑失败4");
+            Preconditions.checkArgument(subjectType.equals(subject)&&label.equals("RED_PAPER"), "已撤销的活动编辑失败5");
+//            Preconditions.checkArgument(picName.contains("活动.jpeg"), "已撤销的活动编辑失败");
+            Preconditions.checkArgument(address.equals("呀呀呀呀呀呀呀呀呀呀地址")&&id.equals(voucherId)&&approval.equals("true"), "已撤销的活动编辑失败6");
+            Preconditions.checkArgument(content.equals("编辑活动"),"变更记录中的变更事项没有更新");
+
+
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -1177,7 +1153,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取审核未通过活动的ID
-            List<Long> ids = businessUtil.getActivityReject();
+            List<Long> ids = businessUtil.getRecruitActivityReject();
             //获取审核未通过的活动名称
             String title=businessUtil.getActivityTitle(ids.get(0));
             //获取活动详情中的此活动的名称
@@ -1200,7 +1176,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取审核未通过活动的ID
-            List<Long> ids = businessUtil.getActivityReject();
+            List<Long> ids = businessUtil.getRecruitActivityReject();
             //获取审核未通过的活动名称
             String title=businessUtil.getActivityTitle(ids.get(0));
             //置顶【审核未通过的活动】
@@ -1214,7 +1190,6 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             saveData("活动管理-【审核未通过】的活动-置顶");
         }
     }
-
     /**
      * 活动管理-删除【审核未通过】的活动       ok
      */
@@ -1223,7 +1198,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取审核未通过活动的ID
-            List<Long> ids = businessUtil.getActivityReject();
+            List<Long> ids = businessUtil.getRecruitActivityReject();
             //删除进行中的活动
             String message = businessUtil.getDelActivity(ids.get(0));
             Preconditions.checkArgument(message.equals("success"), "删除【审核未通过】的活动的message为：" + message);
@@ -1243,7 +1218,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取审核未通过活动的ID
-            List<Long> ids =  businessUtil.getActivityReject();
+            List<Long> ids =  businessUtil.getRecruitActivityReject();
             System.err.println("----ids:"+ids.get(0));
             //编辑审核未通过的活动
             //获取一个卡券
@@ -1251,7 +1226,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             List<String> picList = new ArrayList<>();
             SupporterUtil supporterUtil = new SupporterUtil(visitor);
             PublicParameter pp = new PublicParameter();
-            picList.add(supporterUtil.getPicPath());
+            picList.add(businessUtil.getPicturePath());
             //填写报名所需要信息
             List<Boolean> isShow = new ArrayList<>();
             isShow.add(true);
@@ -1274,16 +1249,16 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             JSONArray registerObject = businessUtil.getRewardVouchers(voucherId, 1, businessUtil.getVoucherSurplusInventory(voucherId));
             //卡券有效期
             JSONObject voucherValid = businessUtil.getVoucherValid(2, "", "", 10);
+            String subject= supporterUtil.getSubjectType();
             IScene scene = ManageRecruitEditScene.builder()
                     .type(2)
                     .id(ids.get(0))
                     .title(pp.editTitle)
-                    .rule(pp.EditRule)
                     .participationLimitType(0)
                     .rule(pp.EditRule)
                     .startDate(businessUtil.getStartDate())
                     .endDate(businessUtil.getEndDate())
-                    .subjectType(supporterUtil.getSubjectType())
+                    .subjectType(subject)
                     .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
                     .label("RED_PAPER")
                     .picList(picList)
@@ -1298,6 +1273,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                     .isNeedApproval(true)
                     .rewardVouchers(registerObject)
                     .voucherValid(voucherValid)
+                    .address("呀呀呀呀呀呀呀呀呀呀地址")
                     .build();
             String message = visitor.invokeApi(scene,false).getString("message");
             System.out.println("-----"+message);
@@ -1306,11 +1282,30 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             JSONObject object=visitor.invokeApi(scene1);
             String title=object.getString("title");
             String rule=object.getJSONObject("recruit_activity_info").getString("rule");
-            //获取活动状态
-            int status=businessUtil.getActivityStatus(ids.get(0));
-            System.out.println(title+"--------"+rule);
-            System.err.println(ids);
-            Preconditions.checkArgument(message.equals("success")&&title.equals(pp.editTitle)&&rule.equals(pp.EditRule)&&status==ActivityStatusEnum.PENDING.getId(), "审核未通过的活动编辑失败");
+            String participationLimitType=object.getString("participation_limit_type");
+            String startDate=object.getString("start_date");
+            String endDate=object.getString("end_date");
+            String applyStart=object.getJSONObject("recruit_activity_info").getString("apply_start");
+            String applyEnd=object.getJSONObject("recruit_activity_info").getString("apply_end");
+            String quota=object.getJSONObject("recruit_activity_info").getString("quota");
+            String subjectType=object.getString("subject_type");
+            String label=object.getString("label");
+            String address=object.getJSONObject("recruit_activity_info").getString("address");
+            Long id=object.getJSONObject("recruit_activity_info").getJSONArray("reward_vouchers").getJSONObject(0).getLong("id");
+            String approval=object.getJSONObject("recruit_activity_info").getString("is_need_approval");
+            String picName=object.getJSONArray("pic_list").getJSONObject(0).getString("pic_path");
+            String content = businessUtil.changeRecordPage(ids.get(0)).getJSONArray("list").getJSONObject(0).getString("content");
+
+            System.out.println("---------"+picName);
+            System.out.println(title+"--------"+rule+"--------"+participationLimitType+"--------"+startDate+"--------"+endDate+"--------"+applyStart+"--------"+applyEnd+"--------"+quota+"--------"+subjectType+"--------"+label+"--------"+address+"--------"+approval+"--------"+id+"--------"+voucherId);
+            Preconditions.checkArgument(message.equals("success")&&title.equals(pp.editTitle)&&rule.equals(pp.EditRule), "审核未通过的活动编辑失败1");
+            Preconditions.checkArgument(participationLimitType.equals("0")&&quota.equals("2"), "审核未通过的活动编辑失败2");
+            Preconditions.checkArgument(startDate.equals(businessUtil.getStartDate())&&endDate.equals(businessUtil.getEndDate()), "审核未通过的活动编辑失败3");
+            Preconditions.checkArgument(applyStart.equals(businessUtil.getStartDate())&&applyEnd.equals(businessUtil.getEndDate()), "审核未通过的活动编辑失败4");
+            Preconditions.checkArgument(subjectType.equals(subject)&&label.equals("RED_PAPER"), "审核未通过的活动编辑失败5");
+//            Preconditions.checkArgument(picName.contains("活动.jpeg"), "审核未通过的活动编辑失败");
+            Preconditions.checkArgument(address.equals("呀呀呀呀呀呀呀呀呀呀地址")&&id.equals(voucherId)&&approval.equals("true"), "审核未通过的活动编辑失败6");
+            Preconditions.checkArgument(content.equals("编辑活动"),"变更记录中的变更事项没有更新");
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -1326,7 +1321,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取已取消活动的ID
-            List<Long> ids = businessUtil.getActivityCancel();
+            List<Long> ids = businessUtil.getRecruitActivityCancel();
             //获取已取消的活动名称
             String title=businessUtil.getActivityTitle(ids.get(0));
             //获取活动详情中的此活动的名称
@@ -1350,7 +1345,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取已取消活动的ID
-            List<Long> ids = businessUtil.getActivityCancel();
+            List<Long> ids = businessUtil.getRecruitActivityCancel();
             //获取已取消的活动名称
             String title=businessUtil.getActivityTitle(ids.get(0));
             //置顶【已取消的活动】
@@ -1374,7 +1369,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取进行中活动的ID
-            List<Long> ids = businessUtil.getActivityWorking();
+            List<Long> ids = businessUtil.getRecruitActivityWorking();
             //获取进行中的活动名称
             String title=businessUtil.getActivityTitle(ids.get(0));
             //获取活动详情中的此活动的名称
@@ -1398,7 +1393,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取进行中活动的ID
-            List<Long> ids = businessUtil.getActivityWorking();
+            List<Long> ids = businessUtil.getRecruitActivityWorking();
             //获取进行中的活动名称
             String title=businessUtil.getActivityTitle(ids.get(0));
             //置顶【进行中的活动】
@@ -1418,6 +1413,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             saveData("活动管理-【进行中】的活动-置顶");
         }
     }
+
     /**
      * 活动管理-推广【进行中】的活动
      */
@@ -1426,7 +1422,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取进行中活动的ID
-            List<Long> ids = businessUtil.getActivityWorking();
+            List<Long> ids = businessUtil.getRecruitActivityWorking();
             //推广进行中的活动
             String appletCodeUrl = businessUtil.getPromotionActivity(ids.get(0));
             Preconditions.checkArgument(!appletCodeUrl.equals(""), "推广【进行中】的活动的小程序二维码的返回值为空");
@@ -1445,7 +1441,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取进行中活动的ID
-            List<Long> ids = businessUtil.getActivityWorking();
+            List<Long> ids = businessUtil.getRecruitActivityWorking();
             //取消进行中的活动
             businessUtil.getCancelActivity(ids.get(0));
             //获取活动的状态
@@ -1477,8 +1473,9 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             String rule = businessUtil.getRecruitActivityDetailDate(ids.get(0)).getString("rule");
             //获取活动状态
             int status=businessUtil.getActivityStatus(ids.get(0));
+            String content = businessUtil.changeRecordPage(ids.get(0)).getJSONArray("list").getJSONObject(0).getString("content");
             System.out.println(title+"--------"+rule);
-            Preconditions.checkArgument(message.equals("success")&&title.contains("编辑过后的招募活动")&&rule.equals(pp.EditRule), "进行中的活动编辑失败");
+            Preconditions.checkArgument(message.equals("success")&&title.contains("编辑过后的招募活动")&&rule.equals(pp.EditRule)&&content.equals("编辑活动"), "进行中的活动编辑失败");
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -1582,6 +1579,36 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
     }
 
     /**
+     * 活动管理-【未开始】的活动-编辑：名称，活动规则----招募活动
+     * 2021-3-17
+     */
+    @Test(description = "活动管理-【进行中】的活动-编辑")
+    public void promotionRecruitActivityEdit(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取未开始活动的ID
+            List<Long> ids =  businessUtil.getRecruitActivityWaitingStar();
+            System.err.println("----ids:"+ids.get(0));
+            //编辑活动名称、活动名额
+            String message = businessUtil.activityEditScene(ids.get(0));
+            System.err.println("--------" + message);
+            //获取活动详情中编辑后的标题和活动规则
+            String title = businessUtil.getRecruitActivityDetailDate1(ids.get(0)).getString("title");
+            String rule = businessUtil.getRecruitActivityDetailDate(ids.get(0)).getString("rule");
+            //获取活动状态
+            int status=businessUtil.getActivityStatus(ids.get(0));
+            String content = businessUtil.changeRecordPage(ids.get(0)).getJSONArray("list").getJSONObject(0).getString("content");
+
+            System.out.println(title+"--------"+rule);
+            Preconditions.checkArgument(message.equals("success")&&title.contains("编辑过后的招募活动")&&rule.equals(pp.EditRule)&&content.equals("编辑活动"), "进行中的活动编辑失败");
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("活动管理-【未开始】的活动-编辑");
+        }
+    }
+
+    /**
      * 活动管理-【已过期】的活动-查看
      * 2021-3-17
      */
@@ -1635,6 +1662,713 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             saveData("活动管理-【已过期】的活动-置顶");
         }
     }
+
+
+    /**
+     * ---------------------------------裂变活动的各个状态-----------------------------------------------------------------
+     */
+
+
+    /**
+     * 活动管理-【待审核】的活动-查看
+     * 2021-3-17
+     */
+    @Test(description = "活动管理-【待审核】的活动-查看")
+    public void revokeFissionActivityCheck() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取待审核活动的ID
+            List<Long> ids = businessUtil.getFissionActivityWaitingApproval();
+            //获取待审核的活动名称
+            String title=businessUtil.getActivityTitle(ids.get(0));
+            //获取活动详情中的此活动的名称
+            IScene scene=ManageDetailScene.builder().id(ids.get(0)).build();
+            String title1=visitor.invokeApi(scene).getString("title");
+            Preconditions.checkArgument(title.equals(title1), "现在活动的名称为：" + title);
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("活动管理-【待审核】的活动-查看");
+        }
+    }
+    /**
+     * 活动管理-撤回【待审批】的活动   ok
+     */
+    @Test(description = "活动管理-【待审批】的活动撤回")
+    public void revokeApprovalsFissionActivity() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取待审批活动的ID
+            List<Long> ids = businessUtil.getFissionActivityWaitingApproval();
+            //撤回待审批的活动
+            String message = businessUtil.getRevokeActivity(ids.get(0));
+            //获取刚才通过的活动的状态
+            int status = businessUtil.getActivityStatus(ids.get(0));
+            Preconditions.checkArgument(status == ActivityStatusEnum.REVOKE.getId(), "撤回的待审批的活动,现活动的状态为：" + ActivityStatusEnum.REVOKE.getStatusName());
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("活动管理-活动审批未通过");
+        }
+    }
+
+    /**
+     * 活动管理-【待审核】的活动-置顶
+     * 2021-3-17
+     */
+    @Test(description = "活动管理-【待审核】的活动-置顶")
+    public void pendingFissionActivityTop() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取待审核活动的ID
+            List<Long> ids = businessUtil.getFissionActivityWaitingApproval();
+            //获取待审核的活动名称
+            String title=businessUtil.getActivityTitle(ids.get(0));
+            //置顶【待审批的活动】
+            IScene scene=ActivityManageTopScene.builder().id(ids.get(0)).build();
+            String message=visitor.invokeApi(scene,false).getString("message");
+            System.out.println(title+"-------"+message);
+            Preconditions.checkArgument(message.equals("活动未审核通过！暂不能置顶"), "现在活动的名称为：" + message);
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("活动管理-【待审核】的活动-置顶");
+        }
+    }
+
+    /**
+     * 活动管理-【已撤销】的活动-查看
+     * 2021-3-17
+     */
+    @Test(description = "活动管理-【已撤销】的活动-查看")
+    public void pendingFissionActivityCheck() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取已撤销活动的ID
+            List<Long> ids = businessUtil.getFissionActivityRevoke();
+            //获取已撤销的活动名称
+            String title=businessUtil.getActivityTitle(ids.get(0));
+            //获取活动详情中的此活动的名称
+            IScene scene=ManageDetailScene.builder().id(ids.get(0)).build();
+            String title1=visitor.invokeApi(scene).getString("title");
+            System.out.println(title+"-------"+title1);
+            Preconditions.checkArgument(title.equals(title1), "现在活动的名称为：" + title);
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("活动管理-【已撤销】的活动-查看");
+        }
+    }
+
+    /**
+     * 活动管理-【已撤销】的活动-置顶
+     * 2021-3-17
+     */
+    @Test(description = "活动管理-【已撤销】的活动-置顶")
+    public void revokeFissionActivityTop() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取已撤销活动的ID
+            List<Long> ids = businessUtil.getFissionActivityRevoke();
+            //获取已撤销的活动名称
+            String title=businessUtil.getActivityTitle(ids.get(0));
+            //置顶【已撤销的活动】
+            IScene scene=ActivityManageTopScene.builder().id(ids.get(0)).build();
+            String message=visitor.invokeApi(scene,false).getString("message");
+            System.out.println(title+"-------"+message);
+            Preconditions.checkArgument(message.equals("活动未审核通过！暂不能置顶"), "置顶已撤销的活动的相关提示:" + message);
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("活动管理-【已撤销】的活动-置顶");
+        }
+    }
+
+    /**
+     * 活动管理-【已撤销】的活动-删除
+     * 2021-3-17
+     */
+    @Test(description = "活动管理-【已撤销】的活动-删除")
+    public void revokeFissionActivityDele() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取已撤销活动的ID
+            List<Long> ids = businessUtil.getFissionActivityRevoke();
+            //删除已撤销的活动
+            String message = businessUtil.getDelActivity(ids.get(0));
+            Preconditions.checkArgument(message.equals("success"), "已撤销的活动删除失败");
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("活动管理-【已撤销】的活动-删除");
+        }
+    }
+
+    /**
+     * 活动管理-【已撤销】的活动-编辑：名称，活动规则----裂变活动
+     * 2021-3-17
+     */
+    @Test(enabled = true,description = "活动管理-【已撤销】的活动-编辑")
+    public void revokeFissionActivityEdit(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取已撤销活动的ID
+            List<Long> ids =  businessUtil.getFissionActivityRevoke();
+            System.err.println("----ids:"+ids.get(0));
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            SupporterUtil supporterUtil = new SupporterUtil(visitor);
+            PublicParameter pp = new PublicParameter();
+            List<String> picList = new ArrayList<>();
+            picList.add(businessUtil.getPicturePath());
+            // 创建被邀请者和分享者的信息字段
+            JSONObject invitedVoucher = businessUtil.getInvitedVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherSurplusInventory(voucherId)), 2, "", "", 1);
+            JSONObject shareVoucher = businessUtil.getShareVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherSurplusInventory(voucherId)), 2, "", "", 1);
+            //所属主体
+            String subject=supporterUtil.getSubjectType();
+            //开始时间和结束时间
+            String startTime=businessUtil.getStartDate();
+            String endTime=businessUtil.getEndDate();
+            //编辑裂变活动
+            IScene scene= FissionVoucherEditScene.builder()
+                    .id(ids.get(0))
+                    .type(1)
+                    .participationLimitType(0)
+                    .receiveLimitType(0)
+                    .title(pp.fissionVoucherNameEdit)
+                    .rule(pp.EditFissionRule)
+                    .startDate(startTime)
+                    .endDate(endTime)
+                    .subjectType(subject)
+                    .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
+                    .label("RED_PAPER")
+                    .picList(picList)
+                    .shareNum("2")
+                    .shareVoucher(shareVoucher)
+                    .invitedVoucher(invitedVoucher)
+                    .build();
+
+            //编辑已撤销的活动
+            String message=visitor.invokeApi(scene,false).getString("message");
+            System.out.println("---------"+message);
+            //获取活动详情中编辑后的标题和活动规则
+            JSONObject response=businessUtil.getFissionActivityDetailDate1(ids.get(0));
+            JSONObject response1=businessUtil.getFissionActivityDetailData(ids.get(0));
+            String title = response.getString("title");
+            String rule =response1.getString("rule");
+            String participationLimitType=response.getString("participation_limit_type");
+            String receiveLimitType=response1.getString("receive_limit_type");
+            String startDate=response.getString("start_date");
+            String endDate=response.getString("end_date");
+            String shareNum=response1.getString("share_num");
+            String subjectType=response.getString("subject_type");
+            String label=response.getString("label");
+            String picName=response.getJSONArray("pic_list").getJSONObject(0).getString("pic_path");
+            Long invitedVoucherId=response1.getJSONObject("invited_voucher").getLong("id");
+            Long shareVoucherId=response1.getJSONObject("share_voucher").getLong("id");
+            String content = businessUtil.changeRecordPage(ids.get(0)).getJSONArray("list").getJSONObject(0).getString("content");
+            System.out.println(invitedVoucherId+"----------"+voucherId+"----------"+title+"----------"+rule+"--------"+participationLimitType+"----------"+receiveLimitType+"--------"+startTime+"----------"+endTime+"--------"+shareNum+"----------"+subjectType+"--------"+label+"----------"+picName+"--------"+startDate+"----------"+endDate);
+            Preconditions.checkArgument(message.equals("success")&&title.contains("编辑过的裂变活动")&&rule.equals(pp.EditFissionRule), "已撤销的活动编辑失败1");
+            Preconditions.checkArgument(participationLimitType.equals("0")&&receiveLimitType.equals("0"), "已撤销的活动编辑失败2");
+            Preconditions.checkArgument(startDate.equals(startTime)&&endDate.equals(endTime), "已撤销的活动编辑失败3"+startDate+"   "+startTime+"   "+endDate+"   "+endTime);
+            Preconditions.checkArgument(shareNum.equals("2")&&subjectType.equals(subject)&&label.equals("RED_PAPER"), "已撤销的活动编辑失败4");
+//            Preconditions.checkArgument(picName.contains("活动.jpeg"), "已撤销的活动编辑失败");
+            Preconditions.checkArgument(voucherId.equals(invitedVoucherId) && shareVoucherId.equals(voucherId), "已撤销的活动编辑失败5  "+voucherId+"   "+voucherId+"    "+shareVoucherId);
+            Preconditions.checkArgument(content.equals("编辑活动"),"变更记录中的变更事项没有更新");
+        } catch (AssertionError | Exception e) {
+            collectMessage(e);
+        } finally {
+            saveData("活动管理-【已撤销】的活动-编辑");
+        }
+    }
+
+    /**
+     * 活动管理-【审核未通过】的活动-查看
+     * 2021-3-17
+     */
+    @Test(description = "活动管理-【审核未通过】的活动-查看")
+    public void rejectFissionActivityCheck() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取审核未通过活动的ID
+            List<Long> ids = businessUtil.getFissionActivityReject();
+            //获取审核未通过的活动名称
+            String title=businessUtil.getActivityTitle(ids.get(0));
+            //获取活动详情中的此活动的名称
+            IScene scene=ManageDetailScene.builder().id(ids.get(0)).build();
+            String title1=visitor.invokeApi(scene).getString("title");
+            System.out.println(title+"-------"+title1);
+            Preconditions.checkArgument(title.equals(title1), "现在活动的名称为：" + title);
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("活动管理-【审核未通过】的活动-查看");
+        }
+    }
+    /**
+     * 活动管理-【审核未通过】的活动-置顶
+     * 2021-3-17
+     */
+    @Test(description = "活动管理-【审核未通过】的活动-置顶")
+    public void rejectFissionActivityTop() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取审核未通过活动的ID
+            List<Long> ids = businessUtil.getFissionActivityReject();
+            //获取审核未通过的活动名称
+            String title=businessUtil.getActivityTitle(ids.get(0));
+            //置顶【审核未通过的活动】
+            IScene scene=ActivityManageTopScene.builder().id(ids.get(0)).build();
+            String message=visitor.invokeApi(scene,false).getString("message");
+            System.out.println(title+"-------"+message);
+            Preconditions.checkArgument(message.equals("活动未审核通过！暂不能置顶"), "置顶审核不通过的活动的相关提示:" + message);
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("活动管理-【审核未通过】的活动-置顶");
+        }
+    }
+    /**
+     * 活动管理-删除【审核未通过】的活动       ok
+     */
+    @Test(description = "活动管理-删除【审核未通过】的活动")
+    public void delWorkingFissionActivity() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取审核未通过活动的ID
+            List<Long> ids = businessUtil.getFissionActivityReject();
+            //删除进行中的活动
+            String message = businessUtil.getDelActivity(ids.get(0));
+            Preconditions.checkArgument(message.equals("success"), "删除【审核未通过】的活动的message为：" + message);
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("活动管理-删除【审核未通过】的活动");
+        }
+    }
+
+    /**
+     * 活动管理-【审核未通过】的活动-编辑：名称，活动规则----裂变活动
+     * 2021-3-17
+     */
+    @Test(enabled = true,description = "活动管理-【审核未通过】的活动-编辑")
+    public void rejectFissionActivityEdit(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取审核未通过活动的ID
+            List<Long> ids = businessUtil.getFissionActivityReject();
+            System.err.println("----ids:"+ids.get(0));
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            SupporterUtil supporterUtil = new SupporterUtil(visitor);
+            PublicParameter pp = new PublicParameter();
+            List<String> picList = new ArrayList<>();
+            picList.add(businessUtil.getPicturePath());
+            // 创建被邀请者和分享者的信息字段
+            JSONObject invitedVoucher = businessUtil.getInvitedVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherSurplusInventory(voucherId)), 2, "", "", 1);
+            JSONObject shareVoucher = businessUtil.getShareVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherSurplusInventory(voucherId)), 2, "", "", 1);
+            //所属主体
+            String subject=supporterUtil.getSubjectType();
+            //开始时间和结束时间
+            String startTime=businessUtil.getStartDate();
+            String endTime=businessUtil.getEndDate();
+            //编辑裂变活动
+            IScene scene= FissionVoucherEditScene.builder()
+                    .id(ids.get(0))
+                    .type(1)
+                    .participationLimitType(0)
+                    .receiveLimitType(0)
+                    .title(pp.fissionVoucherNameEdit)
+                    .rule(pp.EditFissionRule)
+                    .startDate(startTime)
+                    .endDate(endTime)
+                    .subjectType(subject)
+                    .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
+                    .label("RED_PAPER")
+                    .picList(picList)
+                    .shareNum("2")
+                    .shareVoucher(shareVoucher)
+                    .invitedVoucher(invitedVoucher)
+                    .build();
+
+            //编辑已撤销的活动
+            String message=visitor.invokeApi(scene,false).getString("message");
+            System.out.println("---------"+message);
+            //获取活动详情中编辑后的标题和活动规则
+            JSONObject response=businessUtil.getFissionActivityDetailDate1(ids.get(0));
+            JSONObject response1=businessUtil.getFissionActivityDetailData(ids.get(0));
+            String title = response.getString("title");
+            String rule =response1.getString("rule");
+            String participationLimitType=response.getString("participation_limit_type");
+            String receiveLimitType=response1.getString("receive_limit_type");
+            String startDate=response.getString("start_date");
+            String endDate=response.getString("end_date");
+            String shareNum=response1.getString("share_num");
+            String subjectType=response.getString("subject_type");
+            String label=response.getString("label");
+            String picName=response.getJSONArray("pic_list").getJSONObject(0).getString("pic_path");
+            Long invitedVoucherId=response1.getJSONObject("invited_voucher").getLong("id");
+            Long shareVoucherId=response1.getJSONObject("share_voucher").getLong("id");
+            String content = businessUtil.changeRecordPage(ids.get(0)).getJSONArray("list").getJSONObject(0).getString("content");
+            System.out.println(invitedVoucherId+"----------"+voucherId+"----------"+title+"----------"+rule+"--------"+participationLimitType+"----------"+receiveLimitType+"--------"+startTime+"----------"+endTime+"--------"+shareNum+"----------"+subjectType+"--------"+label+"----------"+picName+"--------"+startDate+"----------"+endDate);
+            Preconditions.checkArgument(message.equals("success")&&title.contains("编辑过的裂变活动")&&rule.equals(pp.EditFissionRule), "已撤销的活动编辑失败1");
+            Preconditions.checkArgument(participationLimitType.equals("0")&&receiveLimitType.equals("0"), "已撤销的活动编辑失败2");
+            Preconditions.checkArgument(startDate.equals(startTime)&&endDate.equals(endTime), "已撤销的活动编辑失败3"+startDate+"   "+startTime+"   "+endDate+"   "+endTime);
+            Preconditions.checkArgument(shareNum.equals("2")&&subjectType.equals(subject)&&label.equals("RED_PAPER"), "已撤销的活动编辑失败4");
+//            Preconditions.checkArgument(picName.contains("活动.jpeg"), "已撤销的活动编辑失败");
+            Preconditions.checkArgument(voucherId.equals(invitedVoucherId) && shareVoucherId.equals(voucherId), "已撤销的活动编辑失败5  "+voucherId+"   "+voucherId+"    "+shareVoucherId);
+            Preconditions.checkArgument(content.equals("编辑活动"),"变更记录中的变更事项没有更新");
+        }catch(Exception|AssertionError e){
+            e.printStackTrace();
+            appendFailReason(e.toString());
+        } finally {
+            saveData("活动管理-【审核未通过】的活动-编辑");
+        }
+    }
+    /**
+     * 活动管理-【已取消】的活动-查看
+     * 2021-3-17
+     */
+    @Test(description = "活动管理-【已取消】的活动-查看")
+    public void canceledFissionActivityCheck() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取已取消活动的ID
+            List<Long> ids = businessUtil.getFissionActivityCancel();
+            //获取已取消的活动名称
+            String title=businessUtil.getActivityTitle(ids.get(0));
+            //获取活动详情中的此活动的名称
+            IScene scene=ManageDetailScene.builder().id(ids.get(0)).build();
+            String title1=visitor.invokeApi(scene).getString("title");
+            System.out.println(title+"-------"+title1);
+            Preconditions.checkArgument(title.equals(title1), "现在活动的名称为：" + title);
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("活动管理-【已取消】的活动-查看");
+        }
+    }
+
+    /**
+     * 活动管理-【已取消】的活动-置顶
+     * 2021-3-17
+     */
+    @Test(description = "活动管理-【已取消】的活动-置顶")
+    public void canceledFissionActivityTop() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取已取消活动的ID
+            List<Long> ids = businessUtil.getFissionActivityCancel();
+            //获取已取消的活动名称
+            String title=businessUtil.getActivityTitle(ids.get(0));
+            //置顶【已取消的活动】
+            IScene scene=ActivityManageTopScene.builder().id(ids.get(0)).build();
+            String message=visitor.invokeApi(scene,false).getString("message");
+            System.out.println(title+"-------"+message);
+            Preconditions.checkArgument(message.equals("success"), "置顶已取消的活动的相关提示:" + message);
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("活动管理-【已取消】的活动-置顶");
+        }
+    }
+
+    /**
+     * 活动管理-【进行中】的活动-查看
+     * 2021-3-17
+     */
+    @Test(description = "活动管理-【进行中】的活动-查看")
+    public void workingFissionActivityCheck(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取进行中活动的ID
+            List<Long> ids = businessUtil.getFissionActivityWorking();
+            //获取进行中的活动名称
+            String title=businessUtil.getActivityTitle(ids.get(0));
+            //获取活动详情中的此活动的名称
+            IScene scene=ManageDetailScene.builder().id(ids.get(0)).build();
+            String title1=visitor.invokeApi(scene).getString("title");
+            System.out.println(title+"-------"+title1);
+            Preconditions.checkArgument(title.equals(title1), "现在活动的名称为：" + title);
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("活动管理-【进行中】的活动-查看");
+        }
+    }
+
+    /**
+     * 活动管理-【进行中】的活动-置顶
+     * 2021-3-17
+     */
+    @Test(description = "活动管理-【进行中】的活动-置顶")
+    public void workingFissionActivityTop() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取进行中活动的ID
+            List<Long> ids = businessUtil.getFissionActivityWorking();
+            //获取进行中的活动名称
+            String title=businessUtil.getActivityTitle(ids.get(0));
+            //置顶【进行中的活动】
+            IScene scene=ActivityManageTopScene.builder().id(ids.get(0)).build();
+            String message=visitor.invokeApi(scene,false).getString("message");
+            System.out.println(title+"-------"+message);
+            //小程序中第一个为此活动
+            user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
+            JSONObject response=businessUtil.appointmentActivityTitleNew();
+            Long itemId=response.getJSONArray("list").getJSONObject(0).getLong("itemId");
+            jc.pcLogin(pp.phone, pp.password);
+            Preconditions.checkArgument(ids.get(0).equals(itemId), "PC进行中活动的ID为：" + ids.get(0)+"小程序中的更多中的活动ID为："+itemId);
+            Preconditions.checkArgument(message.equals("success"), "置顶进行中的活动的相关提示:" + message);
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("活动管理-【进行中】的活动-置顶");
+        }
+    }
+
+    /**
+     * 活动管理-推广【进行中】的活动
+     */
+    @Test(description = "活动管理-推广【进行中】的活动")
+    public void promotionFissionWorkingActivity() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取进行中活动的ID
+            List<Long> ids = businessUtil.getFissionActivityWorking();
+            //推广进行中的活动
+            String appletCodeUrl = businessUtil.getPromotionActivity(ids.get(0));
+            Preconditions.checkArgument(!appletCodeUrl.equals(""), "推广【进行中】的活动的小程序二维码的返回值为空");
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("活动管理-推广【进行中】的活动");
+        }
+    }
+
+    /**
+     * 活动管理-取消【进行中】的活动     ok
+     */
+    @Test(description = "活动管理-推广【进行中】的活动")
+    public void cancelWorkingFissionActivity() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取进行中活动的ID
+            List<Long> ids = businessUtil.getFissionActivityWorking();
+            //取消进行中的活动
+            businessUtil.getCancelActivity(ids.get(0));
+            //获取活动的状态
+            int status = businessUtil.getActivityStatus(ids.get(0));
+            Preconditions.checkArgument(status == ActivityStatusEnum.CANCELED.getId(), "现在活动的状态为：" + status);
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("活动管理-取消【进行中】的活动");
+        }
+    }
+
+    /**
+     * 活动管理-【进行中】的活动-编辑：名称，活动规则----裂变活动
+     * 2021-3-17
+     */
+    @Test(enabled = true,description = "活动管理-【进行中】的活动-编辑")
+    public void workingFissionActivityEdit(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取进行中活动的ID
+            List<Long> ids = businessUtil.getFissionActivityWorking();
+            System.err.println("----ids:"+ids.get(0));
+            //编辑进行中的活动
+            IScene scene =businessUtil.fissionActivityEditScene(ids.get(0));
+            String message=visitor.invokeApi(scene,false).getString("message");
+            System.out.println("---------"+message);
+            //获取活动详情中编辑后的标题和活动规则
+            String title = businessUtil.getFissionActivityDetailDate1(ids.get(0)).getString("title");
+            String rule = businessUtil.getFissionActivityDetailData(ids.get(0)).getString("rule");
+            System.out.println(title+"----------"+rule);
+            String content = businessUtil.changeRecordPage(ids.get(0)).getJSONArray("list").getJSONObject(0).getString("content");
+            Preconditions.checkArgument(message.equals("success")&&title.contains("编辑过的裂变活动")&&rule.equals(pp.EditFissionRule)&&content.equals("编辑活动"), "进行中的活动编辑失败");   } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("活动管理-【进行中】的活动-编辑");
+        }
+    }
+
+    /**
+     * 活动管理-【未开始】的活动-查看
+     * 2021-3-17
+     */
+    @Test(description = "活动管理-【未开始】的活动-查看")
+    public void waitingStarFissionActivityCheck(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取未开始活动的ID
+            List<Long> ids = businessUtil.getFissionActivityWaitingStar();
+            //获取未开始的活动名称
+            String title=businessUtil.getActivityTitle(ids.get(0));
+            //获取活动详情中的此活动的名称
+            IScene scene=ManageDetailScene.builder().id(ids.get(0)).build();
+            String title1=visitor.invokeApi(scene).getString("title");
+            System.out.println(title+"-------"+title1);
+            Preconditions.checkArgument(title.equals(title1), "现在活动的名称为：" + title);
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("活动管理-【未开始】的活动-查看");
+        }
+    }
+
+    /**
+     * 活动管理-【未开始】的活动-置顶
+     * 2021-3-17
+     */
+    @Test(description = "活动管理-【未开始】的活动-置顶")
+    public void waitingStarFissionActivityTop() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取未开始活动的ID
+            List<Long> ids = businessUtil.getFissionActivityWaitingStar();
+            //获取未开始的活动名称
+            String title=businessUtil.getActivityTitle(ids.get(0));
+            //置顶【未开始的活动】
+            IScene scene=ActivityManageTopScene.builder().id(ids.get(0)).build();
+            String message=visitor.invokeApi(scene,false).getString("message");
+            System.out.println(title+"-------"+message);
+            //小程序中第一个为此活动
+            user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
+            JSONObject response=businessUtil.appointmentActivityTitleNew();
+            Long itemId=response.getJSONArray("list").getJSONObject(0).getLong("itemId");
+            jc.pcLogin(pp.phone, pp.password);
+            Preconditions.checkArgument(ids.get(0).equals(itemId), "PC未开始活动的ID为：" + ids.get(0)+"小程序中的更多中的活动ID为："+itemId);
+            Preconditions.checkArgument(message.equals("success"), "置顶未开始的活动的相关提示:" + message);
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("活动管理-【未开始】的活动-置顶");
+        }
+    }
+    /**
+     * 活动管理-取消【未开始】的活动
+     */
+    @Test(description = "活动管理-推广【未开始】的活动")
+    public void cancelWaitingStarFissionActivity() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取未开始活动的ID
+            List<Long> ids = businessUtil.getFissionActivityWaitingStar();
+            //取消未开始的活动
+            businessUtil.getCancelActivity(ids.get(0));
+            //获取活动的状态
+            int status = businessUtil.getActivityStatus(ids.get(0));
+            System.err.println("------"+status);
+            Preconditions.checkArgument(status == ActivityStatusEnum.CANCELED.getId(), "现在活动的状态为：" + status);
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("活动管理-取消【未开始】的活动");
+        }
+    }
+
+    /**
+     * 活动管理-推广【未开始】的活动  推广
+     */
+    @Test(description = "活动管理-推广【未开始】的活动")
+    public void promotionWaitingStarFissionActivity() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取未开始活动的ID
+            List<Long> ids = businessUtil.getFissionActivityWaitingStar();
+            //推广未开始的活动
+            String appletCodeUrl = businessUtil.getPromotionActivity(ids.get(0));
+            System.err.println(appletCodeUrl+"--------"+ids);
+            Preconditions.checkArgument(!appletCodeUrl.equals(""), "推广【未开始】的活动的小程序二维码的返回值为空");
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("活动管理-推广【未开始】的活动");
+        }
+    }
+
+    /**
+     * 活动管理-【未开始】的活动-编辑：名称，活动规则----裂变活动
+     * 2021-3-17
+     */
+    @Test(enabled = true,description = "活动管理-【进行中】的活动-编辑")
+    public void promotionFissionActivityEdit(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取未开始活动的ID
+            List<Long> ids =  businessUtil.getFissionActivityWaitingStar();
+            //编辑未开始的活动
+            IScene scene =businessUtil.fissionActivityEditScene(ids.get(0));
+            String message=visitor.invokeApi(scene,false).getString("message");
+            //获取活动详情中编辑后的标题和活动规则
+            String title = businessUtil.getFissionActivityDetailDate1(ids.get(0)).getString("title");
+            String rule = businessUtil.getFissionActivityDetailData(ids.get(0)).getString("rule");
+            System.out.println(title+"----------"+rule);
+            String content = businessUtil.changeRecordPage(ids.get(0)).getJSONArray("list").getJSONObject(0).getString("content");
+            Preconditions.checkArgument(message.equals("success")&&title.contains("编辑过的裂变活动")&&rule.equals(pp.EditFissionRule)&&content.equals("编辑活动"), "未开始的活动编辑失败");} catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("活动管理-【未开始】的活动-编辑");
+        }
+    }
+
+    /**
+     * 活动管理-【已过期】的活动-查看
+     * 2021-3-17
+     */
+    @Test(description = "活动管理-【已过期】的活动-查看")
+    public void FinishFissionActivityCheck(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取已过期活动的ID
+            List<Long> ids = businessUtil.getFissionActivityFinish();
+            //获取已过期的活动名称
+            String title=businessUtil.getActivityTitle(ids.get(0));
+            //获取活动详情中的此活动的名称
+            IScene scene=ManageDetailScene.builder().id(ids.get(0)).build();
+            String title1=visitor.invokeApi(scene).getString("title");
+            System.out.println(title+"-------"+title1);
+            Preconditions.checkArgument(title.equals(title1), "现在活动的名称为：" + title);
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("活动管理-【已过期】的活动-查看");
+        }
+    }
+
+    /**
+     * 活动管理-【已过期】的活动-置顶
+     * 2021-3-17
+     */
+    @Test(description = "活动管理-【已过期】的活动-置顶")
+    public void FinishFissionActivityTop() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取已过期活动的ID
+            List<Long> ids = businessUtil.getFissionActivityFinish();
+            //获取已过期的活动名称
+            String title=businessUtil.getActivityTitle(ids.get(0));
+            //置顶【已过期的活动】
+            IScene scene=ActivityManageTopScene.builder().id(ids.get(0)).build();
+            String message=visitor.invokeApi(scene,false).getString("message");
+            System.out.println(title+"-------"+message);
+            //小程序中第一个为此活动
+            user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
+            JSONObject response=businessUtil.appointmentActivityTitleNew();
+            Long itemId=response.getJSONArray("list").getJSONObject(0).getLong("itemId");
+            jc.pcLogin(pp.phone, pp.password);
+            System.out.println("PC已过期活动的ID为：" + ids.get(0)+"小程序中的更多中的活动ID为："+itemId);
+            Preconditions.checkArgument(ids.get(0).equals(itemId), "PC已过期活动的ID为：" + ids.get(0)+"小程序中的更多中的活动ID为："+itemId);
+            Preconditions.checkArgument(message.equals("success"), "置顶已过期的活动的相关提示:" + message);
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("活动管理-【已过期】的活动-置顶");
+        }
+    }
+
+
 
 
 
