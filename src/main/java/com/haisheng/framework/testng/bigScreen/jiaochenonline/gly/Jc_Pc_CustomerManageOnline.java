@@ -3,10 +3,9 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline.gly;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumDingTalkWebHook;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
+import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.CommonPram;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -21,10 +20,12 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 
 public class Jc_Pc_CustomerManageOnline extends TestCaseCommon implements TestCaseStd {
-    ScenarioUtilOnline jc = new ScenarioUtilOnline();
+    ScenarioUtil jc = new ScenarioUtil();
     public String shopId = "-1";
     CommonPram cp = new CommonPram();
     public String appletTocken = EnumAppletToken.JC_GLY_DAILY.getToken();
+    private static final EnumTestProduce product = EnumTestProduce.JIAOCHEN_ONLINE;
+    CommonConfig commonConfig = new CommonConfig();
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
@@ -32,11 +33,11 @@ public class Jc_Pc_CustomerManageOnline extends TestCaseCommon implements TestCa
     @BeforeClass
     @Override
     public void initial() {
-        logger.debug("before classs initial");
-        CommonConfig commonConfig = new CommonConfig();
+        logger.debug("before class initial");
+        jc.changeIpPort(EnumTestProduce.JIAOCHEN_ONLINE.getAddress());
         //替换checklist的相关信息
-        commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
+        commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
+        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
         commonConfig.checklistQaOwner = "郭丽雅";
         commonConfig.product = EnumProduce.JC.name();
         //替换jenkins-job的相关信息
@@ -46,6 +47,8 @@ public class Jc_Pc_CustomerManageOnline extends TestCaseCommon implements TestCa
         commonConfig.dingHook = EnumDingTalkWebHook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
         commonConfig.shopId = EnumTestProduce.JIAOCHEN_ONLINE.getShopId();
+        commonConfig.referer = product.getReferer();
+        commonConfig.roleId = "395";
         beforeClassInit(commonConfig);
         logger.debug("jc: " + jc);
     }
@@ -181,15 +184,21 @@ public class Jc_Pc_CustomerManageOnline extends TestCaseCommon implements TestCa
                 JSONArray list = jc.preSleCustomerManage("", String.valueOf(page), "10", "", "").getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     String shopName = list.getJSONObject(i).getString("shop_name");
-                    String ownerTypeName = list.getJSONObject(i).getString("owner_type_name");
-                    String customerTypeName = list.getJSONObject(i).getString("customer_type_name");
+                    String brandName = list.getJSONObject(i).getString("brand_name");
                     String registrationStatusName = list.getJSONObject(i).getString("registration_status_name");
+//                    String plateNumber = list.getJSONObject(i).getString("plate_number");
+                    String sex = list.getJSONObject(i).getString("sex");
                     String customerName = list.getJSONObject(i).getString("customer_name");
                     String customerPhone = list.getJSONObject(i).getString("customer_phone");
-                    String sex = list.getJSONObject(i).getString("sex");
                     String createDate = list.getJSONObject(i).getString("create_date");
-                    String saleName = list.getJSONObject(i).getString("sale_name");
-                    Preconditions.checkArgument(shopName != null && ownerTypeName != null && customerTypeName != null && registrationStatusName != null && customerPhone != null && customerName != null && sex != null && createDate != null && saleName != null, "销售客户列表中第 " + (i + 1) + "行，列表项为空");
+                    System.out.println("shopName"+shopName);
+                    System.out.println("brandName"+brandName);
+                    System.out.println("registrationStatusName"+registrationStatusName);
+                    System.out.println("sex"+sex);
+                    System.out.println("customerName"+customerName);
+                    System.out.println("customerPhone"+customerPhone);
+                    System.out.println("createDate"+createDate);
+                    Preconditions.checkArgument(shopName != null && customerName != null && customerPhone != null && registrationStatusName != null && customerPhone != null && customerName != null && sex != null && createDate != null, "销售客户列表中第 " + (i + 1) + "行，列表项为空");
                 }
             }
         } catch (AssertionError | Exception e) {
@@ -259,8 +268,8 @@ public class Jc_Pc_CustomerManageOnline extends TestCaseCommon implements TestCa
     public void customerManage_System8() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject respon = jc.afterSleCustomerManage("", "1", "10", "", "");
-            int pages = respon.getInteger("pages");
+            JSONObject respond = jc.afterSleCustomerManage("", "1", "10", "", "");
+            int pages = respond.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
                 JSONArray list = jc.afterSleCustomerManage("", String.valueOf(page), "10", "", "").getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {

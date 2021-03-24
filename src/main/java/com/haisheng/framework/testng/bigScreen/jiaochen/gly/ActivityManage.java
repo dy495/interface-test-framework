@@ -15,6 +15,8 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.A
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.AppletArticleListScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.ArticleVoucherList;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.ArticleVoucherReceiveScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpload;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
@@ -3707,12 +3709,25 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             businessUtil.getApprovalPassed(activityId);
             //小程序报名活动(报名信息不填写)
             businessUtil.activityRegisterApplet(activityId,"","",1,"","","","");
-
             Preconditions.checkArgument(activityId > 0, "招募活动，报名信息全为非必填项");
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("招募活动，报名信息全为非必填项");
+        }
+    }
+
+    @Test
+    public void justTry(){
+        try{
+            //获取报名管理中的信息
+            IScene scene3=ManageRegisterPageScene.builder().page(1).size(10).activityId(1028L).build();
+            Long registerId=visitor.invokeApi(scene3).getJSONArray("list").getJSONObject(0).getLong("id");
+            System.out.println("---------registerId:"+registerId);
+        }catch (AssertionError | Exception e) {
+            collectMessage(e);
+        } finally {
+            saveData("ceshishsis ");
         }
     }
 
@@ -3791,6 +3806,197 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+
+    /**
+     *-----------------------------------小程序活动相关代码校验------------------------------------
+     */
+
+
+    /**
+     * 小程序报名审批并通过，可以看见领券的小喇叭
+     */
+    /**
+     * 招募活动，报名成功自动发放，小程序中小喇叭中优惠券的状态为已领取
+     */
+    @Test(enabled = true)
+    public void activityVoucherStatus1() {
+        try {
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            List<Integer> labels = new ArrayList<>();
+            labels.add(1000);
+            labels.add(1);
+            labels.add(100);
+            labels.add(2000);
+            labels.add(3000);
+            List<String> picList = new ArrayList<>();
+            SupporterUtil supporterUtil = new SupporterUtil(visitor);
+            PublicParameter pp = new PublicParameter();
+            picList.add(0, supporterUtil.getPicPath());
+            //填写报名所需要信息
+            List<Boolean> isShow = new ArrayList<>();
+            isShow.add(false);
+            isShow.add(false);
+            isShow.add(false);
+            isShow.add(false);
+            isShow.add(false);
+            isShow.add(false);
+            isShow.add(false);
+            List<Boolean> isRequired = new ArrayList<>();
+            isRequired.add(false);
+            isRequired.add(false);
+            isRequired.add(false);
+            isRequired.add(false);
+            isRequired.add(false);
+            isRequired.add(false);
+            isRequired.add(false);
+            JSONArray registerInformationList = this.businessUtil.getRegisterInformationList(isShow, isRequired);
+            //报名成功奖励
+            JSONArray registerObject = businessUtil.getRewardVouchers(voucherId, 1, businessUtil.getVoucherSurplusInventory(voucherId));
+            //卡券有效期
+            JSONObject voucherValid = businessUtil.getVoucherValid(2, null, null, 10);
+            //创建招募活动-共有的--基础信息
+            ManageRecruitAddScene.ManageRecruitAddSceneBuilder builder = ManageRecruitAddScene.builder()
+                    .type(2)
+                    .participationLimitType(0)
+                    .title("招募-报名信息非必填" + (int) (Math.random() * 10000))
+                    .startDate(businessUtil.getStartDate())
+                    .endDate(businessUtil.getEndDate())
+                    .applyStart(businessUtil.getStartDate())
+                    .applyEnd(businessUtil.getEndDate())
+                    .isLimitQuota(true)
+                    .quota(10)
+                    .subjectType(supporterUtil.getSubjectType())
+                    .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
+                    .label("BARGAIN")
+                    .picList(picList)
+                    .rule(pp.rule)
+                    .registerInformationList(registerInformationList)
+                    .successReward(true)
+                    .rewardReceiveType(0)
+                    .isNeedApproval(true);
+            if (true) {
+                builder.rewardVouchers(registerObject)
+                        .voucherValid(voucherValid);
+            }
+            IScene scene = builder.build();
+            Long activityId = visitor.invokeApi(scene).getLong("id");
+            //审批通过招募活动
+            businessUtil.getApprovalPassed(activityId);
+            //小程序报名活动(报名信息不填写)
+            businessUtil.activityRegisterApplet(activityId,"","",1,"","","","");
+            jc.pcLogin(pp.phone1,pp.password);
+            //获取报名管理中的信息
+            IScene scene3=ManageRegisterPageScene.builder().page(1).size(10).activityId(activityId).build();
+            Long registerId=visitor.invokeApi(scene3).getJSONArray("list").getJSONObject(0).getLong("id");
+            System.out.println("---------registerId:"+registerId);
+            //报名审批通过
+            businessUtil.getRegisterApprovalPassed(activityId,registerId);
+            //登录小程序
+            user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+            //查看小程序中此活动对应的小喇叭中的卡券的状态
+            String isReceived=businessUtil.articleVoucher(activityId);
+            System.err.println("----------------"+isReceived);
+            Preconditions.checkArgument(isReceived.equals("true"));
+        } catch (AssertionError | Exception e) {
+            collectMessage(e);
+        } finally {
+            saveData("招募活动，报名信息全为非必填项");
+        }
+    }
+
+    @Test(enabled = true)
+    public void activityVoucherStatus2() {
+        try {
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            List<Integer> labels = new ArrayList<>();
+            labels.add(1000);
+            labels.add(1);
+            labels.add(100);
+            labels.add(2000);
+            labels.add(3000);
+            List<String> picList = new ArrayList<>();
+            SupporterUtil supporterUtil = new SupporterUtil(visitor);
+            PublicParameter pp = new PublicParameter();
+            picList.add(0, supporterUtil.getPicPath());
+            //填写报名所需要信息
+            List<Boolean> isShow = new ArrayList<>();
+            isShow.add(false);
+            isShow.add(false);
+            isShow.add(false);
+            isShow.add(false);
+            isShow.add(false);
+            isShow.add(false);
+            isShow.add(false);
+            List<Boolean> isRequired = new ArrayList<>();
+            isRequired.add(false);
+            isRequired.add(false);
+            isRequired.add(false);
+            isRequired.add(false);
+            isRequired.add(false);
+            isRequired.add(false);
+            isRequired.add(false);
+            JSONArray registerInformationList = this.businessUtil.getRegisterInformationList(isShow, isRequired);
+            //报名成功奖励
+            JSONArray registerObject = businessUtil.getRewardVouchers(voucherId, 1, businessUtil.getVoucherSurplusInventory(voucherId));
+            //卡券有效期
+            JSONObject voucherValid = businessUtil.getVoucherValid(2, null, null, 10);
+            //创建招募活动-共有的--基础信息
+            ManageRecruitAddScene.ManageRecruitAddSceneBuilder builder = ManageRecruitAddScene.builder()
+                    .type(2)
+                    .participationLimitType(0)
+                    .title("招募-报名信息非必填" + (int) (Math.random() * 10000))
+                    .startDate(businessUtil.getStartDate())
+                    .endDate(businessUtil.getEndDate())
+                    .applyStart(businessUtil.getStartDate())
+                    .applyEnd(businessUtil.getEndDate())
+                    .isLimitQuota(true)
+                    .quota(10)
+                    .subjectType(supporterUtil.getSubjectType())
+                    .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
+                    .label("BARGAIN")
+                    .picList(picList)
+                    .rule(pp.rule)
+                    .registerInformationList(registerInformationList)
+                    .successReward(true)
+                    .rewardReceiveType(1)
+                    .isNeedApproval(true);
+            if (true) {
+                builder.rewardVouchers(registerObject)
+                        .voucherValid(voucherValid);
+            }
+            IScene scene = builder.build();
+            Long activityId = visitor.invokeApi(scene).getLong("id");
+            //审批通过招募活动
+            businessUtil.getApprovalPassed(activityId);
+            //小程序报名活动(报名信息不填写)
+            businessUtil.activityRegisterApplet(activityId,"","",1,"","","","");
+            jc.pcLogin(pp.phone1,pp.password);
+            //获取报名管理中的信息
+            IScene scene3=ManageRegisterPageScene.builder().page(1).size(10).activityId(activityId).build();
+            Long registerId=visitor.invokeApi(scene3).getJSONArray("list").getJSONObject(0).getLong("id");
+            System.out.println("---------registerId:"+registerId);
+            //报名审批通过
+            businessUtil.getRegisterApprovalPassed(activityId,registerId);
+            //登录小程序
+            user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+            //查看小程序中此活动对应的小喇叭中的卡券的状态
+            String isReceivedBefoer=businessUtil.articleVoucher(activityId);
+            System.err.println("----------------"+isReceivedBefoer);
+            //小程序中手动领取优惠券
+            Long id=businessUtil.appointmentActivityId(activityId);
+            //获取小程序中的卡券ID
+            long vId=businessUtil.articleVoucherData(activityId).getJSONArray("list").getJSONObject(0).getLong("id");
+            IScene scene4= ArticleVoucherReceiveScene.builder().articleId(id).voucherId(vId).build();
+            String message=visitor.invokeApi(scene4,false).getString("message");
+            String isReceivedAfter=businessUtil.articleVoucher(activityId);
+            System.out.println(isReceivedAfter+"--------"+message);
+            Preconditions.checkArgument(isReceivedBefoer.equals("false")&&isReceivedAfter.equals("true"));
+        } catch (AssertionError | Exception e) {
+            collectMessage(e);
+        } finally {
+            saveData("招募活动，报名信息全为非必填项");
+        }
+    }
 
 
 
