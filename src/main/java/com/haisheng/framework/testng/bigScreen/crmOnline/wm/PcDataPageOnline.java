@@ -139,8 +139,8 @@ public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
     private void compareFourData(final String type, String str) {
         List<SaleInfo> saleInfos = method.getSaleList("销售顾问");
         Arrays.stream(EnumFindType.values()).forEach(e -> {
-            int gwSum = saleInfos.stream().filter(info -> !info.getUserName().contains("总经理")).map(info -> getTypeValue(e, info.getUserId(), type)).collect(Collectors.toList()).stream().mapToInt(a -> a).sum();
-            int zjlNum = saleInfos.stream().filter(info -> info.getUserName().contains("总经理")).map(info -> getTypeValue(e, info.getUserId(), type)).collect(Collectors.toList()).get(0);
+            int gwSum = saleInfos.stream().filter(info -> !info.getUserName().contains("zjl")).map(info -> getTypeValue(e, info.getUserId(), type)).collect(Collectors.toList()).stream().mapToInt(a -> a).sum();
+            int zjlNum = saleInfos.stream().filter(info -> info.getUserName().contains("zjl")).map(info -> getTypeValue(e, info.getUserId(), type)).collect(Collectors.toList()).get(0);
             CommonUtil.valueView("各顾问之和：" + gwSum, "总经理：" + zjlNum);
             Preconditions.checkArgument(zjlNum >= gwSum, e.getName() + "【不选销售顾问】累计" + str + "：" + zjlNum + " 各个销售顾问累计" + str + "：" + gwSum);
             CommonUtil.logger(e.getName());
