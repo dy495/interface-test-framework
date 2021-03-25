@@ -49,7 +49,6 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         afterClassClean();
     }
 
-
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
@@ -78,8 +77,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
             commonConfig.pushRd = new String[]{EnumAppletToken.getPhoneByToken(token)};
             new PorscheUser(visitor).loginApplet(EnumAppletToken.getEnumByToken(token));
             Response response = invokePorsche(visitor);
-            int code = response.getCode();
-            Preconditions.checkArgument(code == 1000, token + " " + response.getMsg());
+            Preconditions.checkArgument(response.getCode() == 1000, token + " " + response.getMsg());
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
@@ -99,8 +97,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
             commonConfig.pushRd = new String[]{EnumAppletToken.getPhoneByToken(token)};
             new PorscheUser(visitor).loginApplet(EnumAppletToken.getEnumByToken(token));
             Response response = invokePorsche(visitor);
-            int code = response.getCode();
-            Preconditions.checkArgument(code == 1000, token + " " + response.getMsg());
+            Preconditions.checkArgument(response.getCode() == 1000, token + " " + response.getMsg());
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {

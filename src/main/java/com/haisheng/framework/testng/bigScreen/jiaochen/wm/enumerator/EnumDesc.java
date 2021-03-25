@@ -3,8 +3,9 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator;
 import lombok.Getter;
 
 public enum EnumDesc {
+    DESC_BETWEEN_1_5("1"),
 
-    DESC_BETWEEN_1_10("来自土星的消息"),
+    DESC_BETWEEN_5_10("来自土星的消息"),
 
     DESC_BETWEEN_10_15("不是价值客户，作废卡券"),
 

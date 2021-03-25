@@ -790,7 +790,7 @@ public class SupporterUtil {
         List<String> phoneList = new ArrayList<>();
         phoneList.add(EnumAccount.MARKETING_DAILY.getPhone());
         PushMessageScene.PushMessageSceneBuilder builder = PushMessageScene.builder().pushTarget(AppletPushTargetEnum.PERSONNEL_CUSTOMER.getId())
-                .telList(phoneList).messageName(EnumDesc.DESC_BETWEEN_1_10.getDesc()).messageContent(EnumDesc.DESC_BETWEEN_40_50.getDesc())
+                .telList(phoneList).messageName(EnumDesc.DESC_BETWEEN_5_10.getDesc()).messageContent(EnumDesc.DESC_BETWEEN_40_50.getDesc())
                 .type(type).voucherOrPackageList(voucherOrPackageList).useDays("10");
         String d = DateTimeUtil.getFormat(DateTimeUtil.addSecond(new Date(), 80), "yyyy-MM-dd HH:mm:ss");
         long sendTime = Long.parseLong(DateTimeUtil.dateToStamp(d));
@@ -1690,7 +1690,7 @@ public class SupporterUtil {
                 .applyEnd(getEndDate())
                 .isLimitQuota(true)
                 .quota(2)
-                .address(EnumDesc.DESC_BETWEEN_1_10.getDesc())
+                .address(EnumDesc.DESC_BETWEEN_5_10.getDesc())
                 .registerInformationList(registerInformationList)
                 .successReward(true)
                 .rewardReceiveType(rewardReceiveType)

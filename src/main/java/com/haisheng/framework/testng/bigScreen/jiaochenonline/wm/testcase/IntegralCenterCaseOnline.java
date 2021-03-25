@@ -13,6 +13,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletInt
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletShippingAddress;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.ChangeStockTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.CommodityTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.IntegralExchangeStatusEnum;
@@ -92,6 +93,130 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
+    }
+
+    //ok
+    @Test(description = "积分客户管理--增加某人积分")
+    public void integralCustomerPage_data_1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            user.loginApplet(APPLET_USER_ONE);
+            Integer score = AppletUserInfoDetailScene.builder().build().invoke(visitor, true).getInteger("score");
+            user.loginPc(ALL_AUTHORITY);
+            //变更记录
+            IScene scene = CustomerIntegralChangeRecordPageScene.builder().build();
+            List<ChangeRecord> changeRecordList = util.collectBean(scene, ChangeRecord.class);
+            JSONObject data = CustomerPageScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).build().invoke(visitor, true);
+            Long id = data.getJSONArray("list").getJSONObject(0).getLong("id");
+            CustomerIntegralChangeScene.builder().id(id).changeType(ChangeStockTypeEnum.ADD.name()).remark(EnumDesc.DESC_BETWEEN_5_10.getDesc()).integral(1L).build().invoke(visitor, true);
+            //变更记录
+            List<ChangeRecord> newChangeRecordList = util.collectBean(scene, ChangeRecord.class);
+            CommonUtil.checkResult("增加积分后，变更记录页列表条数", changeRecordList.size() + 1, newChangeRecordList.size());
+            //变更内容
+            CommonUtil.checkResult("联系方式", APPLET_USER_ONE.getPhone(), newChangeRecordList.get(0).getCustomerPhone());
+            CommonUtil.checkResult("操作人", ALL_AUTHORITY.getName(), newChangeRecordList.get(0).getOperatorName());
+            CommonUtil.checkResult("操作账号", ALL_AUTHORITY.getPhone(), newChangeRecordList.get(0).getOperatorAccount());
+            CommonUtil.checkResult("积分变动", "+1", newChangeRecordList.get(0).getIntegral());
+            CommonUtil.checkResult("剩余积分", String.valueOf(score + 1), newChangeRecordList.get(0).getLeft());
+            CommonUtil.checkResult("备注", EnumDesc.DESC_BETWEEN_5_10.getDesc(), newChangeRecordList.get(0).getRemark());
+            ExchangeDetailed exchangeDetailed = util.collectBean(ExchangeDetailedScene.builder().phone(APPLET_USER_ONE.getPhone()).build(), ExchangeDetailed.class).get(0);
+            CommonUtil.checkResult("pc积分明细变更内容", 1, exchangeDetailed.getStockDetail());
+            CommonUtil.checkResult("pc积分明细兑换类型", ChangeStockTypeEnum.ADD.getDescription(), exchangeDetailed.getExchangeTypeName());
+            CommonUtil.checkResult("pc积分明细变更类型", ChangeStockTypeEnum.ADD.name(), exchangeDetailed.getExchangeType());
+            user.loginApplet(APPLET_USER_ONE);
+            Integer newScore = AppletUserInfoDetailScene.builder().build().invoke(visitor, true).getInteger("score");
+            CommonUtil.checkResult("变更积分后" + APPLET_USER_ONE.getPhone() + "的积分为", score + 1, newScore);
+            AppletIntegralRecord appletIntegralRecord = util.getAppletIntegralRecordList().get(0);
+            CommonUtil.checkResult("applet积分明细变更内容", EnumDesc.DESC_BETWEEN_5_10.getDesc(), appletIntegralRecord.getName());
+            CommonUtil.checkResult("applet积分明细变更积分", "1", appletIntegralRecord.getIntegral());
+            CommonUtil.checkResult("applet积分明细变更类型", ChangeStockTypeEnum.ADD.name(), appletIntegralRecord.getChangeType());
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("积分客户管理--增加某人积分");
+        }
+    }
+
+    //ok
+    @Test(description = "积分客户管理--减少某人积分")
+    public void integralCustomerPage_data_2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            user.loginApplet(APPLET_USER_ONE);
+            Integer score = AppletUserInfoDetailScene.builder().build().invoke(visitor, true).getInteger("score");
+            user.loginPc(ALL_AUTHORITY);
+            //变更记录
+            IScene scene = CustomerIntegralChangeRecordPageScene.builder().build();
+            List<ChangeRecord> changeRecordList = util.collectBean(scene, ChangeRecord.class);
+            JSONObject data = CustomerPageScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).build().invoke(visitor, true);
+            Long id = data.getJSONArray("list").getJSONObject(0).getLong("id");
+            CustomerIntegralChangeScene.builder().id(id).changeType(ChangeStockTypeEnum.MINUS.name()).remark(EnumDesc.DESC_BETWEEN_5_10.getDesc()).integral(1L).build().invoke(visitor, true);
+            //变更记录
+            List<ChangeRecord> newChangeRecordList = util.collectBean(scene, ChangeRecord.class);
+            CommonUtil.checkResult("增加积分后，变更记录页列表条数", changeRecordList.size() + 1, newChangeRecordList.size());
+            //变更内容
+            CommonUtil.checkResult("联系方式", APPLET_USER_ONE.getPhone(), newChangeRecordList.get(0).getCustomerPhone());
+            CommonUtil.checkResult("操作人", ALL_AUTHORITY.getName(), newChangeRecordList.get(0).getOperatorName());
+            CommonUtil.checkResult("操作账号", ALL_AUTHORITY.getPhone(), newChangeRecordList.get(0).getOperatorAccount());
+            CommonUtil.checkResult("积分变动", "-1", newChangeRecordList.get(0).getIntegral());
+            CommonUtil.checkResult("剩余积分", String.valueOf(score - 1), newChangeRecordList.get(0).getLeft());
+            CommonUtil.checkResult("备注", EnumDesc.DESC_BETWEEN_5_10.getDesc(), newChangeRecordList.get(0).getRemark());
+            ExchangeDetailed exchangeDetailed = util.collectBean(ExchangeDetailedScene.builder().phone(APPLET_USER_ONE.getPhone()).build(), ExchangeDetailed.class).get(0);
+            CommonUtil.checkResult("pc积分明细变更内容", 1, exchangeDetailed.getStockDetail());
+            CommonUtil.checkResult("pc积分明细兑换类型", ChangeStockTypeEnum.MINUS.getDescription(), exchangeDetailed.getExchangeTypeName());
+            CommonUtil.checkResult("pc积分明细变更类型", ChangeStockTypeEnum.MINUS.name(), exchangeDetailed.getExchangeType());
+            user.loginApplet(APPLET_USER_ONE);
+            Integer newScore = AppletUserInfoDetailScene.builder().build().invoke(visitor, true).getInteger("score");
+            CommonUtil.checkResult("变更积分后" + APPLET_USER_ONE.getPhone() + "的积分为", score - 1, newScore);
+            AppletIntegralRecord appletIntegralRecord = util.getAppletIntegralRecordList().get(0);
+            CommonUtil.checkResult("applet积分明细变更内容", EnumDesc.DESC_BETWEEN_5_10.getDesc(), appletIntegralRecord.getName());
+            CommonUtil.checkResult("applet积分明细变更积分", "1", appletIntegralRecord.getIntegral());
+            CommonUtil.checkResult("applet积分明细变更类型", ChangeStockTypeEnum.MINUS.name(), appletIntegralRecord.getChangeType());
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("积分客户管理--减少某人积分");
+        }
+    }
+
+    //ok
+    @Test(description = "积分客户管理--增加某人积分异常")
+    public void integralCustomerPage_system_1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject data = CustomerPageScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).build().invoke(visitor, true);
+            Long id = data.getJSONArray("list").getJSONObject(0).getLong("id");
+            Long[] integrals = {0L, null, 100001L};
+            Arrays.stream(integrals).forEach(integral -> {
+                String message = CustomerIntegralChangeScene.builder().id(id).changeType(ChangeStockTypeEnum.ADD.name()).remark(EnumDesc.DESC_BETWEEN_5_10.getDesc()).integral(integral).build().invoke(visitor, false).getString("message");
+                String err = integral == null ? "积分变更类型不能为空" : "变更积分取值范围[1,100000]";
+                CommonUtil.checkResult("增加积分" + integral, err, message);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("积分客户管理--增加某人积分异常");
+        }
+    }
+
+    //ok
+    @Test(description = "积分客户管理--扣减某人减积分大于剩余积分")
+    public void integralCustomerPage_system_2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray list = CustomerPageScene.builder().build().invoke(visitor, true).getJSONArray("list");
+            JSONObject data = list.stream().map(e -> (JSONObject) e).filter(e -> Long.parseLong(e.getString("integral")) < 100000L).findFirst().orElse(null);
+            Preconditions.checkArgument(data != null, "没找到剩余积分<100000的客户");
+            Long integral = data.getLong("integral");
+            Long id = data.getLong("id");
+            String message = CustomerIntegralChangeScene.builder().id(id).changeType(ChangeStockTypeEnum.MINUS.name()).remark(EnumDesc.DESC_BETWEEN_5_10.getDesc()).integral(integral + 1).build().invoke(visitor, false).getString("message");
+            String err = "积分不足";
+            CommonUtil.checkResult("增加积分" + integral, err, message);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("积分客户管理--扣减某人减积分大于剩余积分");
+        }
     }
 
     //ok

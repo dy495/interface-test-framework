@@ -2690,7 +2690,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             //发送消息
             String pushTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm");
             IScene scene = PushMessageScene.builder().pushTarget(AppletPushTargetEnum.SHOP_CUSTOMER.getId()).shopList(list)
-                    .messageName(EnumDesc.DESC_BETWEEN_1_10.getDesc()).messageContent(EnumDesc.DESC_BETWEEN_40_50.getDesc())
+                    .messageName(EnumDesc.DESC_BETWEEN_5_10.getDesc()).messageContent(EnumDesc.DESC_BETWEEN_40_50.getDesc())
                     .ifSendImmediately(true).build();
             visitor.invokeApi(scene);
             IScene messageFormPageScene = MessageFormPageScene.builder().build();
@@ -2769,7 +2769,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             String content = visitor.invokeApi(appletMessageDetailScene).getString("content");
             String title = visitor.invokeApi(appletMessageDetailScene).getString("title");
             CommonUtil.checkResult("消息内容", EnumDesc.DESC_BETWEEN_40_50.getDesc(), content);
-            CommonUtil.checkResult("消息标题", EnumDesc.DESC_BETWEEN_1_10.getDesc(), title);
+            CommonUtil.checkResult("消息标题", EnumDesc.DESC_BETWEEN_5_10.getDesc(), title);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -2806,7 +2806,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             String[] contents = {null, EnumDesc.DESC_BETWEEN_200_300.getDesc()};
             Arrays.stream(contents).forEach(content -> {
                 IScene pushMessageScene = PushMessageScene.builder().pushTarget(AppletPushTargetEnum.PERSONNEL_CUSTOMER.getId())
-                        .telList(getList(APPLET_USER_ONE.getPhone())).messageName(EnumDesc.DESC_BETWEEN_1_10.getDesc())
+                        .telList(getList(APPLET_USER_ONE.getPhone())).messageName(EnumDesc.DESC_BETWEEN_5_10.getDesc())
                         .messageContent(content).type(1).build();
                 String message = visitor.invokeApi(pushMessageScene, false).getString("message");
                 String err = StringUtils.isEmpty(content) ? "消息内容不能为空" : "消息内容长度范围[2,200]";
@@ -2827,7 +2827,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             //发消息
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.INVALIDED).buildVoucher().getVoucherId();
             IScene pushMessageScene = PushMessageScene.builder().pushTarget(AppletPushTargetEnum.PERSONNEL_CUSTOMER.getId())
-                    .telList(getList(APPLET_USER_ONE.getPhone())).messageName(EnumDesc.DESC_BETWEEN_1_10.getDesc())
+                    .telList(getList(APPLET_USER_ONE.getPhone())).messageName(EnumDesc.DESC_BETWEEN_5_10.getDesc())
                     .messageContent(EnumDesc.DESC_BETWEEN_20_30.getDesc()).type(0).voucherOrPackageList(getList(voucherId))
                     .useDays("10").ifSendImmediately(true).build();
             String message = visitor.invokeApi(pushMessageScene, false).getString("message");
@@ -2848,7 +2848,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             //发消息
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.SELL_OUT).buildVoucher().getVoucherId();
             IScene pushMessageScene = PushMessageScene.builder().pushTarget(AppletPushTargetEnum.PERSONNEL_CUSTOMER.getId())
-                    .telList(getList(APPLET_USER_ONE.getPhone())).messageName(EnumDesc.DESC_BETWEEN_1_10.getDesc())
+                    .telList(getList(APPLET_USER_ONE.getPhone())).messageName(EnumDesc.DESC_BETWEEN_5_10.getDesc())
                     .messageContent(EnumDesc.DESC_BETWEEN_20_30.getDesc()).type(0).voucherOrPackageList(getList(voucherId))
                     .useDays("10").ifSendImmediately(true).build();
             String message = visitor.invokeApi(pushMessageScene, false).getString("message");
@@ -2873,7 +2873,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             IScene switchPackageStatusScene = PackageFormSwitchPackageStatusScene.builder().id(packageId).status(false).build();
             visitor.invokeApi(switchPackageStatusScene);
             IScene pushMessageScene = PushMessageScene.builder().pushTarget(AppletPushTargetEnum.PERSONNEL_CUSTOMER.getId())
-                    .telList(getList(APPLET_USER_ONE.getPhone())).messageName(EnumDesc.DESC_BETWEEN_1_10.getDesc())
+                    .telList(getList(APPLET_USER_ONE.getPhone())).messageName(EnumDesc.DESC_BETWEEN_5_10.getDesc())
                     .messageContent(EnumDesc.DESC_BETWEEN_20_30.getDesc()).type(1).voucherOrPackageList(getList(packageId))
                     .useDays("10").ifSendImmediately(true).build();
             String message = visitor.invokeApi(pushMessageScene, false).getString("message");
@@ -2897,7 +2897,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             Long packageId = util.editPackage(voucherId, 1);
             //发消息
             IScene pushMessageScene = PushMessageScene.builder().pushTarget(AppletPushTargetEnum.PERSONNEL_CUSTOMER.getId())
-                    .telList(getList(APPLET_USER_ONE.getPhone())).messageName(EnumDesc.DESC_BETWEEN_1_10.getDesc())
+                    .telList(getList(APPLET_USER_ONE.getPhone())).messageName(EnumDesc.DESC_BETWEEN_5_10.getDesc())
                     .messageContent(EnumDesc.DESC_BETWEEN_20_30.getDesc()).type(1).voucherOrPackageList(getList(packageId))
                     .useDays("10").ifSendImmediately(true).build();
             String message = visitor.invokeApi(pushMessageScene, false).getString("message");
@@ -2917,7 +2917,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     public void vipMarketing_system_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String[] desc = {EnumDesc.DESC_BETWEEN_15_20.getDesc(), EnumDesc.DESC_BETWEEN_1_10.getDesc(), EnumDesc.DESC_BETWEEN_10_15.getDesc()};
+            String[] desc = {EnumDesc.DESC_BETWEEN_15_20.getDesc(), EnumDesc.DESC_BETWEEN_5_10.getDesc(), EnumDesc.DESC_BETWEEN_10_15.getDesc()};
             IScene scene = EquityPageScene.builder().build();
             JSONObject equityPageScene = getResponseByEquityPageScene(scene);
             Integer equityId = equityPageScene.getInteger("equity_id");
@@ -3048,7 +3048,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     public void vipMarketing_system_10() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String[] strings = {EnumDesc.DESC_BETWEEN_15_20.getDesc(), EnumDesc.DESC_BETWEEN_1_10.getDesc(), EnumDesc.DESC_BETWEEN_10_15.getDesc()};
+            String[] strings = {EnumDesc.DESC_BETWEEN_15_20.getDesc(), EnumDesc.DESC_BETWEEN_5_10.getDesc(), EnumDesc.DESC_BETWEEN_10_15.getDesc()};
             IVoucher voucher = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher();
             Integer voucherId = Math.toIntExact(voucher.getVoucherId());
             IScene shareManagerPageScene = ShareManagerPageScene.builder().build();
@@ -3176,7 +3176,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             IScene adjustNumberRecordScene = WashCarManagerAdjustNumberRecordScene.builder().build();
             int washRecordTotal = visitor.invokeApi(adjustNumberRecordScene).getInteger("total");
             //增加洗车次数
-            WashCarManagerAdjustNumberScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).adjustNumber("1").remark(EnumDesc.DESC_BETWEEN_1_10.getDesc()).build().invoke(visitor, true);
+            WashCarManagerAdjustNumberScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).adjustNumber("1").remark(EnumDesc.DESC_BETWEEN_5_10.getDesc()).build().invoke(visitor, true);
             //调整记录次数
             int newWashRecordTotal = visitor.invokeApi(adjustNumberRecordScene).getInteger("total");
             IScene newAdjustNumberRecordScene = WashCarManagerAdjustNumberRecordScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).build();
