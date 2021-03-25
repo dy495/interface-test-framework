@@ -2,7 +2,7 @@ package com.haisheng.framework.testng.bigScreen.crmOnline.xmf;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crmOnline.PublicParmOnline;
 import com.haisheng.framework.testng.bigScreen.crmOnline.xmf.interfaceOnline.finishReceiveOnline;
 import com.haisheng.framework.util.DateTimeUtil;

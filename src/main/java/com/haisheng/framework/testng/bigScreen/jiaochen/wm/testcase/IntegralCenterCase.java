@@ -7,7 +7,7 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletExchangeRecord;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletIntegralRecord;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletShippingAddress;

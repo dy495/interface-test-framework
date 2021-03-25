@@ -5,7 +5,7 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.bean.Response;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.applet.AppointmentTestDriverScene;
 import com.haisheng.framework.testng.bigScreen.crmOnline.CrmScenarioUtilOnline;

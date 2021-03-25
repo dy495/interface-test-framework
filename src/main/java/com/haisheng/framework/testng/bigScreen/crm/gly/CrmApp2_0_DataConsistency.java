@@ -5,9 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.aliyun.openservices.shade.org.apache.commons.codec.binary.Base64;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -75,7 +74,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         //commonConfig.gateway = "";
         //replace jenkins job name
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-daily-test");
-        commonConfig.product = EnumProduce.BSJ.name();
+        commonConfig.product = EnumTestProduce.PORSCHE_DAILY.getAbbreviation();
         //replace product name for ding push
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.PORSCHE_DAILY.getDesc() + commonConfig.checklistQaOwner);
         //replace ding push conf

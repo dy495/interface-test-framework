@@ -5,7 +5,7 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.util.BusinessUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.util.PublicParameter;
@@ -15,7 +15,6 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.A
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.AppletArticleListScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.ArticleVoucherList;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.ArticleVoucherReceiveScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpload;

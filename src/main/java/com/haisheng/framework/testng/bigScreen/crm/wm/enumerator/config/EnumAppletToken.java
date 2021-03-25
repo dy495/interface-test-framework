@@ -1,6 +1,5 @@
-package com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer;
+package com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config;
 
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import lombok.Getter;
 
 import java.util.Arrays;

@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PackFunction;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicParm;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.finishReceive;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -46,7 +45,7 @@ public class Crm2_1AppX_11receipt extends TestCaseCommon implements TestCaseStd 
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.product = EnumProduce.BSJ.name();
+        commonConfig.product = EnumTestProduce.PORSCHE_DAILY.getAbbreviation();
 
         //replace backend gateway url
         //commonConfig.gateway = "";

@@ -1,7 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.crm.wm.util;
 
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.crmOnline.CrmScenarioUtilOnline;

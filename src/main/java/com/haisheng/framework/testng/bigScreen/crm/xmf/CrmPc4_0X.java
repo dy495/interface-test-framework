@@ -5,9 +5,8 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PackFunction;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicParm;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -43,7 +42,7 @@ public class CrmPc4_0X extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.product = EnumProduce.BSJ.name();
+        commonConfig.product = EnumTestProduce.PORSCHE_DAILY.getAbbreviation();
         commonConfig.referer = EnumTestProduce.PORSCHE_DAILY.getReferer();
 
         //replace backend gateway url

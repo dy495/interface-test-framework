@@ -43,7 +43,7 @@ public class PcDataOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
         commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
-        commonConfig.product = EnumProduce.BSJ.name();
+        commonConfig.product = EnumTestProduce.PORSCHE_ONLINE.getAbbreviation();
         commonConfig.referer = EnumTestProduce.PORSCHE_ONLINE.getReferer();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.CRM_ONLINE_TEST.getJobName());

@@ -3,7 +3,6 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.xmf;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appletAppointment;
@@ -42,7 +41,7 @@ public class JcAppAppointment extends TestCaseCommon implements TestCaseStd {
         commonConfig.referer = EnumTestProduce.JIAOCHEN_DAILY.getReferer();
 //        commonConfig.referer=getJcReferdaily();
 
-        commonConfig.product = EnumProduce.JC.name();
+        commonConfig.product = EnumTestProduce.JIAOCHEN_DAILY.getAbbreviation();
 
 
         //replace backend gateway url

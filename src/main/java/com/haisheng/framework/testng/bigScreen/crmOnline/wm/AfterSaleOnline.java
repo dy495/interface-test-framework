@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.bean.SaleInfo;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppointmentType;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerInfo;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.other.EnumOperation;
@@ -54,7 +54,7 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
         commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
-        commonConfig.product = EnumProduce.BSJ.name();
+        commonConfig.product = EnumTestProduce.PORSCHE_DAILY.getAbbreviation();
         commonConfig.referer = EnumTestProduce.PORSCHE_ONLINE.getReferer();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.CRM_ONLINE_TEST.getJobName());

@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterators;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.pcCreateGoods;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -43,7 +43,7 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
         commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
         commonConfig.checklistQaOwner = "吕雪晴";
-        commonConfig.product = EnumProduce.JC.name();
+        commonConfig.product = EnumTestProduce.JIAOCHEN_DAILY.getAbbreviation();
         commonConfig.referer = EnumTestProduce.JIAOCHEN_DAILY.getReferer();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.CRM_ONLINE_TEST.getJobName());

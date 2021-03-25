@@ -6,7 +6,6 @@ import com.google.common.base.Preconditions;
 import com.google.inject.internal.util.$Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.registerListVariable;
@@ -58,7 +57,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.product = EnumProduce.JC.name();
+        commonConfig.product = EnumTestProduce.JIAOCHEN_DAILY.getAbbreviation();
 
         //replace backend gateway url
         //commonConfig.gateway = "";
