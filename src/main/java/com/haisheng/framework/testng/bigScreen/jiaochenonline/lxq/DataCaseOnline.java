@@ -99,7 +99,7 @@ public class DataCaseOnline extends TestCaseCommon implements TestCaseStd {
 
             //每次修改固定shop
             jc.editShop(20709L, info.getLogo(), simple_name, name, arr, district_code, address, sale_tel, service_tel, Double.valueOf(longitude),
-                    Double.valueOf(latitude), appointment_status, washing_status);
+                    Double.valueOf(latitude), appointment_status, washing_status,sale_tel);
             int after = jc.shopPage(1, 1, "").getInteger("total");
             int num = after - bef;
 
