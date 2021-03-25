@@ -3855,12 +3855,20 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             System.out.println("---------registerId:"+registerId);
             //报名审批通过
             businessUtil.getRegisterApprovalPassed(activityId,registerId);
+//            //获取卡券码
+            List<VoucherSendRecord> vList = supporterUtil.getVoucherSendRecordList(voucherId);
+            String voucherCode = vList.get(0).getVoucherCode();
             //登录小程序
             user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
             //查看小程序中此活动对应的小喇叭中的卡券的状态
             String isReceived=businessUtil.articleVoucher(activityId);
             System.err.println("----------------"+isReceived);
-            Preconditions.checkArgument(isReceived.equals("true"));
+//            //查询是否获得此卡券(通过卡券码查询，看看能否有此卡券的返回值)
+            AppletVoucherInfo voucher = supporterUtil.getAppletVoucherInfo(voucherCode);
+            String code=voucher.getVoucherCode();
+            System.out.println(code+"---------------voucher:---"+voucher);
+            Preconditions.checkArgument(isReceived.equals("true")&&code.equals(voucherCode),"小程序活动中小喇叭的状态："+isReceived+"    在小程序中查到的卡券码为："+code);
+
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
@@ -3943,14 +3951,12 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             //获取报名管理中的信息
             IScene scene3=ManageRegisterPageScene.builder().page(1).size(10).activityId(activityId).build();
             Long registerId=visitor.invokeApi(scene3).getJSONArray("list").getJSONObject(0).getLong("id");
-            System.out.println("---------registerId:"+registerId);
             //报名审批通过
             businessUtil.getRegisterApprovalPassed(activityId,registerId);
             //登录小程序
             user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
             //查看小程序中此活动对应的小喇叭中的卡券的状态
-            String isReceivedBefoer=businessUtil.articleVoucher(activityId);
-            System.err.println("----------------"+isReceivedBefoer);
+            String isReceivedBefore=businessUtil.articleVoucher(activityId);
             //小程序中手动领取优惠券
             Long id=businessUtil.appointmentActivityId(activityId);
             //获取小程序中的卡券ID
@@ -3958,8 +3964,20 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             IScene scene4= ArticleVoucherReceiveScene.builder().articleId(id).voucherId(vId).build();
             String message=visitor.invokeApi(scene4,false).getString("message");
             String isReceivedAfter=businessUtil.articleVoucher(activityId);
-            System.out.println(isReceivedAfter+"--------"+message);
-            Preconditions.checkArgument(isReceivedBefoer.equals("false")&&isReceivedAfter.equals("true"));
+            //登录PC
+            jc.pcLogin(pp.phone,pp.password);
+            //获取卡券码
+            List<VoucherSendRecord> vList = supporterUtil.getVoucherSendRecordList(voucherId);
+            String voucherCode = vList.get(0).getVoucherCode();
+            //登录小程序
+            user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
+            //查询是否获得此卡券(通过卡券码查询，看看能否有此卡券的返回值)
+            AppletVoucherInfo voucher = supporterUtil.getAppletVoucherInfo(voucherCode);
+            String code=voucher.getVoucherCode();
+            System.out.println(code+"---------------voucher:---"+voucher);
+
+            Preconditions.checkArgument(isReceivedBefore.equals("false")&&isReceivedAfter.equals("true")&&code.equals(voucherCode),"招募活动中卡券领取失败||小程序没有到账");
+
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {

@@ -114,7 +114,7 @@ public class Constant {
                 {"creator_name", "creator_name"},
                 {"creator_account", "creator_account"},
                 {"voucher_status","voucher_status"},
-                {"voucher_type","voucher_name"}
+//                {"voucher_type","voucher_name"}   返回字段中没有此字段
 
         };
     }

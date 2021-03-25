@@ -2239,14 +2239,14 @@ public class ScenarioUtil extends TestCaseCommon {
      * @time: 2020-11-24
      */
     public JSONObject voucherFormFilterManage(voucherFormVariable variable) {
-        String url = "/jiaochen/pc/voucher-manage/voucher-form/page";
+        String url = "/jiaochen/pc/voucher-manage/voucher-form/voucher-page";
         JSONObject json = new JSONObject();
         json.put("shopId", variable.shop_id);
         json.put("page", variable.page);
         json.put("size", variable.size);
         json.put("subject_name", variable.subject_name);
         json.put("voucher_status", variable.voucher_status);
-        json.put("voucher_name", variable.creator_name);
+        json.put("voucher_name", variable.voucher_name);
         json.put("voucher_type", variable.voucher_type);
         json.put("creator_name", variable.creator_name);
         json.put("creator_account", variable.creator_account);
@@ -2260,7 +2260,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @time: 2020-11-24
      */
     public JSONObject voucherFormFilterManage(String shopId, String page, String size, String pram, String result) {
-        String url = "/jiaochen/pc/voucher-manage/voucher-form/page";
+        String url = "/jiaochen/pc/voucher-manage/voucher-form/voucher-page";
         JSONObject json = new JSONObject();
         json.put("shopId", shopId);
         json.put("page", page);
@@ -2402,10 +2402,13 @@ public class ScenarioUtil extends TestCaseCommon {
     public JSONObject verificationReordFilterManage(verificationRecordVariable variable) {
         String url = "/jiaochen/pc/voucher-manage/verification-record";
         JSONObject json = new JSONObject();
+        json.put("customer_name", variable.customer_name);
+        json.put("customer_phone", variable.customer_phone);
+        json.put("verify_channel", variable.verification_channel_name);
+        json.put("verify_code", variable.verification_code);
+        json.put("verify_sale_phone", variable.verification_account);
         json.put("voucher_name", variable.voucher_name);
-        json.put("sender", variable.sender);
-        json.put("start_time", variable.start_time);
-        json.put("end_time", variable.start_time);
+
         json.put("page", variable.page);
         json.put("size", variable.size);
 
@@ -6052,6 +6055,31 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("add_end_time", addEndTime);
         return invokeApi(url, json);
     }
+
+    /**
+     * @description ：主体类型接口
+     * * * @author: gly
+     * @date :2020/03/25
+     **/
+    public JSONObject subjectList() {
+        String url = "/jiaochen/pc/use-range/subject-list";
+        JSONObject json = new JSONObject();
+
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description :优惠券状态接口
+     * * * @author: gly
+     * @date :2020/03/25
+     **/
+    public JSONObject activityStatus() {
+        String url = "/jiaochen/pc/enum-map";
+        JSONObject json = new JSONObject();
+
+        return invokeApi(url, json);
+    }
+
 
 
 }

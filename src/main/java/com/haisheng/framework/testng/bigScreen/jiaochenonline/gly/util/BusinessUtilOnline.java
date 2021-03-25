@@ -2212,5 +2212,22 @@ public class BusinessUtilOnline {
         return object;
     }
 
+    /**
+     * 主体类型的查询
+     */
+    public String getSubjectList(String subjectName){
+        //定义主体的字段
+        String subjectKey="";
+        //获取主题状态的列表
+        JSONArray list=jc.subjectList().getJSONArray("list");
+        for(int i=0;i<list.size();i++){
+            String subjectValue=list.getJSONObject(i).getString("subject_value");
+            if(subjectValue.equals(subjectName)){
+                subjectKey=list.getJSONObject(i).getString("subject_key");
+            }
+        }
+        return subjectKey;
+    }
+
 
 }

@@ -2255,12 +2255,12 @@ public class ScenarioUtilOnline extends TestCaseCommon {
     public JSONObject verificationReordFilterManage(verificationRecordVariable variable) {
         String url = "/jiaochen/pc/voucher-manage/verification-record";
         JSONObject json = new JSONObject();
+        json.put("customer_name", variable.voucher_name);
+        json.put("customer_phone", variable.customer_phone);
+        json.put("verify_channel", variable.verification_channel_name);
+        json.put("verify_code", variable.verification_code);
+        json.put("verify_sale_phone", variable.verification_account);
         json.put("voucher_name", variable.voucher_name);
-        json.put("sender", variable.sender);
-        json.put("start_time", variable.start_time);
-        json.put("end_time", variable.start_time);
-        json.put("page", variable.page);
-        json.put("size", variable.size);
 
         return invokeApi(url, json);
     }
