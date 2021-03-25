@@ -13,10 +13,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.A
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.RegisterInfoEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.AppletArticleListScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.AppointmentActivityCancelScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.AppointmentActivityListScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.ArticleActivityRegisterScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpload;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherDetailScene;
@@ -1647,6 +1644,30 @@ public class BusinessUtilOnline {
         return response;
     }
 
+    /**
+     * 更多活动列表-根据活动ID返回活动的小程序活动id
+     */
+    public Long appointmentActivityId(Long activityId) {
+        JSONObject lastValue = null;
+        JSONArray list;
+        Long id=0L;
+        do{
+            IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
+            JSONObject response = visitor.invokeApi(scene);
+            lastValue = response.getJSONObject("last_value");
+            System.err.println(lastValue);
+            list = response.getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                Long itemId = list.getJSONObject(i).getLong("itemId");
+                if (activityId.equals(itemId)) {
+                    id = list.getJSONObject(i).getLong("id");
+                }
+            }
+        }while(list.size()==10);
+
+        return id;
+    }
+
 /**
  * ---------------------------------------------获取页面返回值---------------------------------------------
  */
@@ -2165,6 +2186,30 @@ public class BusinessUtilOnline {
             }
         }
         return brandId;
+    }
+
+    /**
+     * 判断小程序中小喇叭中卡券的状态
+     */
+    public String articleVoucher(Long activityId){
+        //获取此活动对应的小程序ID
+        Long id=appointmentActivityId(activityId);
+        //查看小喇叭中的优惠券
+        IScene scene2= ArticleVoucherList.builder().id(id).build();
+        String isReceived=visitor.invokeApi(scene2).getJSONArray("list").getJSONObject(0).getString("is_received");
+        return isReceived;
+    }
+
+    /**
+     * 判断小程序中小喇叭的状态
+     */
+    public JSONObject articleVoucherData(Long activityId){
+        //获取此活动对应的小程序ID
+        Long id=appointmentActivityId(activityId);
+        //查看小喇叭中的优惠券
+        IScene scene2= ArticleVoucherList.builder().id(id).build();
+        JSONObject object=visitor.invokeApi(scene2);
+        return object;
     }
 
 
