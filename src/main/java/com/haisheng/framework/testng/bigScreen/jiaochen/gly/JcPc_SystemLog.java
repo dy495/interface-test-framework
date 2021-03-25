@@ -27,7 +27,7 @@ import static com.aliyun.openservices.shade.com.alibaba.rocketmq.common.UtilAll.
 
 public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
     CommonConfig commonConfig = new CommonConfig();
-    private static final EnumTestProduce product = EnumTestProduce.JIAOCHEN_DAILY;
+    private static final EnumTestProduce product = EnumTestProduce.JC_DAILY;
     ScenarioUtil jc = new ScenarioUtil();
     PublicParm pp = new PublicParm();
     //    JsonPathUtil jpu = new JsonPathUtil();

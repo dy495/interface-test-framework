@@ -30,7 +30,7 @@ import java.util.List;
 
 public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
     ScenarioUtil jc = new ScenarioUtil();
-    private static final EnumTestProduce product = EnumTestProduce.JIAOCHEN_ONLINE;
+    private static final EnumTestProduce product = EnumTestProduce.JC_ONLINE;
     private static final EnumAccount ADMINISTRATOR=EnumAccount.ALL_AUTHORITY_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(product);
     //    BusinessUtil businessUtil = new BusinessUtil(visitor);
@@ -47,7 +47,7 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
     @Override
     public void initial() {
         logger.debug("before class initial");
-        jc.changeIpPort(EnumTestProduce.JIAOCHEN_ONLINE.getAddress());
+        jc.changeIpPort(EnumTestProduce.JC_ONLINE.getAddress());
         //替换checklist的相关信息
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
         commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();

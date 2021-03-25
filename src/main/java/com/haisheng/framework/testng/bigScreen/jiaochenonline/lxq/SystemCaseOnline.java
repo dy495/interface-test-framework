@@ -43,15 +43,15 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
         commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
         commonConfig.checklistQaOwner = "吕雪晴";
-        commonConfig.product = EnumTestProduce.JIAOCHEN_DAILY.getAbbreviation();
-        commonConfig.referer = EnumTestProduce.JIAOCHEN_DAILY.getReferer();
+        commonConfig.product = EnumTestProduce.JC_DAILY.getAbbreviation();
+        commonConfig.referer = EnumTestProduce.JC_DAILY.getReferer();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.CRM_ONLINE_TEST.getJobName());
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_ONLINE.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JC_ONLINE.getDesc() + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = EnumDingTalkWebHook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
-        commonConfig.shopId = EnumTestProduce.JIAOCHEN_ONLINE.getShopId();
+        commonConfig.shopId = EnumTestProduce.JC_ONLINE.getShopId();
         commonConfig.roleId="395";
         beforeClassInit(commonConfig);
         logger.debug("jc: " + jc);

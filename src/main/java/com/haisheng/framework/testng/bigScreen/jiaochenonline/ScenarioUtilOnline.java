@@ -22,8 +22,8 @@ import java.util.List;
  */
 public class ScenarioUtilOnline extends TestCaseCommon {
     private static volatile ScenarioUtilOnline instance = null;
-    private static final String IpPort = EnumTestProduce.JIAOCHEN_ONLINE.getAddress();
-    private static final String shopId = EnumTestProduce.JIAOCHEN_ONLINE.getShopId();
+    private static final String IpPort = EnumTestProduce.JC_ONLINE.getAddress();
+    private static final String shopId = EnumTestProduce.JC_ONLINE.getShopId();
 
     /**
      * 单例

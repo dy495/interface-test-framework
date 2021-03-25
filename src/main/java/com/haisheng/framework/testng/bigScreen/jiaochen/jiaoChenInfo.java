@@ -329,7 +329,7 @@ public class jiaoChenInfo {
 
     //新建虚拟积分商品
     public Long newFictitious(){
-        VisitorProxy visitor =new VisitorProxy(EnumTestProduce.JIAOCHEN_DAILY);
+        VisitorProxy visitor =new VisitorProxy(EnumTestProduce.JC_DAILY);
 
         pcCreateExchangeGoods ex = new pcCreateExchangeGoods();
         ex.chkcode=true;

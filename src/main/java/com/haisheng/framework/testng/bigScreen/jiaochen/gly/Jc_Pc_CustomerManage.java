@@ -27,7 +27,7 @@ public class Jc_Pc_CustomerManage extends TestCaseCommon implements TestCaseStd 
     CommonPram cp = new CommonPram();
     public String appletTocken = EnumAppletToken.JC_GLY_DAILY.getToken();
     CommonConfig commonConfig = new CommonConfig();
-    private static final EnumTestProduce product = EnumTestProduce.JIAOCHEN_DAILY;
+    private static final EnumTestProduce product = EnumTestProduce.JC_DAILY;
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
      */

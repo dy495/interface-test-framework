@@ -23,23 +23,23 @@ public enum EnumAppletToken {
 
     BSJ_WM_SMALL_ONLINE(EnumTestProduce.PORSCHE_DAILY.getAbbreviation(), "UhqugJ3HUDI7BRKnIvxxKg==", "纯牛奶", false, "", "15321527989"),
 
-    JC_WM_DAILY(EnumTestProduce.JIAOCHEN_DAILY.getAbbreviation(), "eVvKxoI0LSCdMQJoN3Qg7g==", "", true, "", "15321527989"),
+    JC_WM_DAILY(EnumTestProduce.JC_DAILY.getAbbreviation(), "eVvKxoI0LSCdMQJoN3Qg7g==", "", true, "", "15321527989"),
 
-    JC_WM_ONLINE(EnumTestProduce.JIAOCHEN_DAILY.getAbbreviation(), "aTcP39Q3mJAUauGwmq2VMg==", "", false, "", "15321527989"),
+    JC_WM_ONLINE(EnumTestProduce.JC_DAILY.getAbbreviation(), "aTcP39Q3mJAUauGwmq2VMg==", "", false, "", "15321527989"),
 
-    JC_XMF_DAILY(EnumTestProduce.JIAOCHEN_DAILY.getAbbreviation(), "hZiYL+y2QvANm4IfJFka9A==", "", false, "", "15037286013"),
+    JC_XMF_DAILY(EnumTestProduce.JC_DAILY.getAbbreviation(), "hZiYL+y2QvANm4IfJFka9A==", "", false, "", "15037286013"),
 
-    JC_XMF_ONLINE(EnumTestProduce.JIAOCHEN_DAILY.getAbbreviation(), "cu7N+XqQ0AFa5QHXmqUm2A==", "", false, "", "15037286013"),
+    JC_XMF_ONLINE(EnumTestProduce.JC_DAILY.getAbbreviation(), "cu7N+XqQ0AFa5QHXmqUm2A==", "", false, "", "15037286013"),
 
-    JC_LXQ_DAILY(EnumTestProduce.JIAOCHEN_DAILY.getAbbreviation(), "31Z9jgBlSsTIqRTYxOWaKw==", "", false, "", "13436941018"),
+    JC_LXQ_DAILY(EnumTestProduce.JC_DAILY.getAbbreviation(), "31Z9jgBlSsTIqRTYxOWaKw==", "", false, "", "13436941018"),
 
-    JC_GLY_DAILY(EnumTestProduce.JIAOCHEN_DAILY.getAbbreviation(), "1nxb35B/gDlj6Q88uD5yEA==", "Max", true, "", "13373166806"),
+    JC_GLY_DAILY(EnumTestProduce.JC_DAILY.getAbbreviation(), "1nxb35B/gDlj6Q88uD5yEA==", "Max", true, "", "13373166806"),
 
-    JC_GLY_ONLINE(EnumTestProduce.JIAOCHEN_DAILY.getAbbreviation(), "iCMVUEzq+zOmzldZM2awEQ==", "Max", false, "", "13373166806"),
+    JC_GLY_ONLINE(EnumTestProduce.JC_DAILY.getAbbreviation(), "iCMVUEzq+zOmzldZM2awEQ==", "Max", false, "", "13373166806"),
 
-    INS_TT_DAILY(EnumTestProduce.INS_DAILY.getAbbreviation(), "", "Zt198053", false, "", "13604609869"),
+    INS_ZT_DAILY(EnumTestProduce.INS_DAILY.getAbbreviation(), "", "Zt198053", false, "", "13604609869"),
 
-    INS_TT_ONLINE(EnumTestProduce.INS_DAILY.getAbbreviation(), "", "Zt198053", true, "", "13604609869"),
+    INS_ZT_ONLINE(EnumTestProduce.INS_DAILY.getAbbreviation(), "", "Zt198053", true, "", "13604609869"),
     ;
 
     EnumAppletToken(String abbreviation, String token, String wechatName, boolean isDaily, String wechatId, String phone) {

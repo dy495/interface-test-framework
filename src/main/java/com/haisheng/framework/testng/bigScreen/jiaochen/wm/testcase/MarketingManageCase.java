@@ -57,7 +57,7 @@ import java.util.stream.Collectors;
  * @date 2021/1/29 11:17
  */
 public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduce PRODUCE = EnumTestProduce.JIAOCHEN_DAILY;
+    private static final EnumTestProduce PRODUCE = EnumTestProduce.JC_DAILY;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.ALL_AUTHORITY_DAILY;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_DAILY;
     private static final EnumAppletToken APPLET_USER_TWO = EnumAppletToken.JC_XMF_DAILY;

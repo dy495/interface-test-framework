@@ -41,10 +41,10 @@ public class XundianPcCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistQaOwner = EnumChecklistUser.QQ.getName();
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.XUNDIAN_DAILY_TEST.getJobName());
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.XUNDIAN_DAILY.getDesc());
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.XD_DAILY.getDesc());
         commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.pushRd = new String[]{"15898182672", "18513118484", "18810332354", "15084928847"};
-        commonConfig.shopId = EnumTestProduce.XUNDIAN_DAILY.getShopId();
+        commonConfig.shopId = EnumTestProduce.XD_DAILY.getShopId();
         beforeClassInit(commonConfig);
         logger.debug("xundian " + xd);
         xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");

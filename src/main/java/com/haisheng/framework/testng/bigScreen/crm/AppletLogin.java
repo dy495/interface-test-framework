@@ -119,7 +119,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
     public void JC_applet_daily(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            EnumTestProduce produce = EnumTestProduce.JIAOCHEN_DAILY;
+            EnumTestProduce produce = EnumTestProduce.JC_DAILY;
             commonConfig.shopId = produce.getShopId();
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, produce.getDesc());
             //TODO 待更改
@@ -139,7 +139,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
     public void JC_applet_online(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            EnumTestProduce produce = EnumTestProduce.JIAOCHEN_ONLINE;
+            EnumTestProduce produce = EnumTestProduce.JC_ONLINE;
             commonConfig.shopId = produce.getShopId();
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, produce.getDesc());
             commonConfig.referer = produce.getReferer();

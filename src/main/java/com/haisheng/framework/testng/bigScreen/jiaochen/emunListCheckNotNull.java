@@ -58,7 +58,7 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JC_DAILY.getDesc() + commonConfig.checklistQaOwner);
 
         //replace ding push conf
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
@@ -69,7 +69,7 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
         //set shop id
         commonConfig.shopId = "-1";
         commonConfig.shopId="603";
-        commonConfig.referer = EnumTestProduce.JIAOCHEN_DAILY.getReferer();
+        commonConfig.referer = EnumTestProduce.JC_DAILY.getReferer();
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);

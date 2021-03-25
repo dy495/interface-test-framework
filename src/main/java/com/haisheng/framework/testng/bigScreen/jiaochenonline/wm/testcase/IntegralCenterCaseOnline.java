@@ -50,7 +50,7 @@ import java.util.stream.Collectors;
  * @date 2021/1/29 11:17
  */
 public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduce PRODUCE = EnumTestProduce.JIAOCHEN_ONLINE;
+    private static final EnumTestProduce PRODUCE = EnumTestProduce.JC_ONLINE;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.ALL_AUTHORITY_ONLINE;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);

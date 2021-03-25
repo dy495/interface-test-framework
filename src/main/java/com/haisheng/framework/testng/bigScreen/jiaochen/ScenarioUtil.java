@@ -23,7 +23,7 @@ import java.util.List;
 public class ScenarioUtil extends TestCaseCommon {
     private static volatile ScenarioUtil instance = null;
     //    private static final String IpPort = EnumTestProduce.JIAOCHEN_DAILY.getAddress();
-    private static final String shopId = EnumTestProduce.JIAOCHEN_DAILY.getShopId();
+    private static final String shopId = EnumTestProduce.JC_DAILY.getShopId();
 
     /**
      * 单例

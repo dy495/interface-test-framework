@@ -37,17 +37,17 @@ public class ListKeyCheck extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_JIAOCHEN_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "郭丽雅";
-        commonConfig.product = EnumTestProduce.JIAOCHEN_DAILY.getAbbreviation();
+        commonConfig.product = EnumTestProduce.JC_DAILY.getAbbreviation();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "jc-daily-test");
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JC_DAILY.getDesc() + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //放入shopId
-        commonConfig.shopId = EnumTestProduce.JIAOCHEN_DAILY.getShopId();
+        commonConfig.shopId = EnumTestProduce.JC_DAILY.getShopId();
         beforeClassInit(commonConfig);
         logger.debug("jc: " + jc);
-        commonConfig.referer = EnumTestProduce.JIAOCHEN_DAILY.getReferer();
+        commonConfig.referer = EnumTestProduce.JC_DAILY.getReferer();
     }
 
     @AfterClass

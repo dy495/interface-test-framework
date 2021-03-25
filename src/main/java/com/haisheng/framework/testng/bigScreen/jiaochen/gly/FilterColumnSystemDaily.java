@@ -23,7 +23,7 @@ import java.util.*;
 
 public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseStd {
     ScenarioUtil jc = new ScenarioUtil();
-    private static final EnumTestProduce product = EnumTestProduce.JIAOCHEN_DAILY;
+    private static final EnumTestProduce product = EnumTestProduce.JC_DAILY;
     public VisitorProxy visitor = new VisitorProxy(product);
     BusinessUtil businessUtil=new BusinessUtil(visitor);
     CommonConfig commonConfig = new CommonConfig();

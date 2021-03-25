@@ -22,7 +22,6 @@ import com.haisheng.framework.util.DateTimeUtil;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
-import java.sql.Array;
 import java.util.*;
 
 public class JcApp extends TestCaseCommon implements TestCaseStd {
@@ -49,7 +48,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.referer = EnumTestProduce.JIAOCHEN_DAILY.getReferer();
+        commonConfig.referer = EnumTestProduce.JC_DAILY.getReferer();
 //        commonConfig.referer=getJcReferdaily();
 
 
@@ -60,7 +59,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JC_DAILY.getDesc() + commonConfig.checklistQaOwner);
 
         //replace ding f
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
@@ -85,7 +84,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         object.put("phone", username);
         object.put("verification_code", password);
         commonConfig.roleId=roleId;
-        httpPost(path, object, EnumTestProduce.JIAOCHEN_DAILY.getAddress());
+        httpPost(path, object, EnumTestProduce.JC_DAILY.getAddress());
     }
 
     //pc登录
@@ -95,7 +94,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         object.put("phone", phone);
         object.put("verification_code", verificationCode);
         commonConfig.roleId=roleId;
-        httpPost(path, object, EnumTestProduce.JIAOCHEN_DAILY.getAddress());
+        httpPost(path, object, EnumTestProduce.JC_DAILY.getAddress());
     }
 
     @AfterClass

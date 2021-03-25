@@ -16,11 +16,11 @@ public enum EnumTestProduce {
 
     PORSCHE_ONLINE_CLIENT("汽车-保时捷 保时捷线上 ", "", "http://porsche.dealer-ydauto.winsenseos.com", "12732", "BSJ", ""),
 
-    JIAOCHEN_DAILY("汽车-轿辰 日常 ", "https://servicewechat.com/wxbd41de85739a00c7/0/page-frame.html", "http://dev.dealer-jc.winsenseos.cn", "-1", "JC", "603"),
+    JC_DAILY("汽车-轿辰 日常 ", "https://servicewechat.com/wxbd41de85739a00c7/0/page-frame.html", "http://dev.dealer-jc.winsenseos.cn", "-1", "JC", "603"),
 
-    JIAOCHEN_ONLINE("汽车-轿辰 赢识线上 ", "https://servicewechat.com/wxbd41de85739a00c7/31/page-frame.html", "http://nb.jiaochenclub.com/", "-1", "JC", "395"),
+    JC_ONLINE("汽车-轿辰 赢识线上 ", "https://servicewechat.com/wxbd41de85739a00c7/31/page-frame.html", "http://nb.jiaochenclub.com", "-1", "JC", "395"),
 
-    XUNDIAN_DAILY("门店 日常", "", "", "4116", "XD", ""),
+    XD_DAILY("门店 日常", "", "", "4116", "XD", ""),
 
     INS_DAILY("门店-ins 日常", "", "", "", "INS", ""),
 
