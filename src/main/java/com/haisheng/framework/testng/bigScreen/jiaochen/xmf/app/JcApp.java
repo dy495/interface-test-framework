@@ -147,28 +147,31 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
 
             for (int i = 0; i < todaydate.size(); i++) {
                 JSONObject list_data = todaydate.getJSONObject(i);
-                //待处理预约数和
+//                待处理预约数和
                 String pending_appointment = list_data.getString("pending_appointment");
                 if (!pending_appointment.contains("-")) {
                     String[] appointment = pending_appointment.split("/");
                     appointmentcountZ += Integer.valueOf(appointment[0]);
                     appointmentcountM += Integer.valueOf(appointment[1]);
+
                 }
 
                 //接待
                 String pending_reception = list_data.getString("pending_reception");
                 if (!pending_reception.contains("-")) {
                     String[] reception = pending_reception.split("/");
-                    receptioncountZ += Integer.parseInt(reception[0]);
-                    receptioncountM += Integer.parseInt(reception[1]);
+                    receptioncountZ += Integer.valueOf(reception[0]);
+                    receptioncountM += Integer.valueOf(reception[1]);
                 }
                 //跟进
                 //接待
                 String pending_foll = list_data.getString("pending_follow");
-                if (!pending_reception.contains("-")) {
+                if (!pending_foll.contains("-")) {
                     String[] reception = pending_foll.split("/");
-                    followcountZ += Integer.parseInt(reception[0]);
-                    followcountM += Integer.parseInt(reception[1]);
+                    followcountZ += Integer.valueOf(reception[0]);
+                    followcountM += Integer.valueOf(reception[1]);
+
+
                 }
 
             }

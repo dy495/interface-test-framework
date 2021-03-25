@@ -487,8 +487,8 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
     public void CreateRemindCheck() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-//            System.out.println(dt.getHistoryDate(-1096));
-//            System.out.println(dt.getHHmm(0,"HH:mm:ss"));
+            System.out.println(dt.getHistoryDate(-181));
+            System.out.println(dt.getHHmm(0,"HH:mm:ss"));
             dt.getHHmm(0);
             String maile="2001";
             //前提新建好一个任务
