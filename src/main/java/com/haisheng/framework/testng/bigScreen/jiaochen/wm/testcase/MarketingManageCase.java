@@ -3261,7 +3261,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             String[] strings = {null, EnumDesc.DESC_BETWEEN_1000_2000.getDesc(), ""};
             Arrays.stream(strings).forEach(detail -> {
                 String message = WashCarManagerEditEquityScene.builder().equityDetail(detail).build().invoke(visitor, false).getString("message");
-                String err = StringUtils.isEmpty(detail) ? "洗车权益说明不能为空" : "洗车规则说明只能在1-1000字";
+                String err = detail == null ? "洗车权益说明不能为空" : "洗车规则说明只能在1-1000字";
                 CommonUtil.checkResult("pc端洗车权益内容为", detail, err, message);
             });
         } catch (Exception | AssertionError e) {

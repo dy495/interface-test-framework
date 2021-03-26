@@ -30,10 +30,10 @@ public enum VoucherTypeEnum {
      */
     CUSTOM("自定义券"),
 
-    /**
-     * 抵金券
-     */
-    CASH_COUPON("抵金券"),
+//    /**
+//     * 抵金券
+//     */
+//    CASH_COUPON("抵金券"),
     ;
 
     private final String desc;
