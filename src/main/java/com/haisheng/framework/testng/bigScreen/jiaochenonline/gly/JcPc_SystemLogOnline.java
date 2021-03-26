@@ -344,8 +344,8 @@ public class JcPc_SystemLogOnline extends TestCaseCommon implements TestCaseStd 
         phone.add("13373166806");
         try {
             //查看消息记录的总条数
-            JSONObject respon = jc.pushMsgListFilterManage("", "1", "10", "", "");
-            int total = respon.getInteger("total");
+            JSONObject respond = jc.pushMsgListFilterManage("", "1", "10", "", "");
+            int total = respond.getInteger("total");
             //推送个人消息-13373166806
             jc.pushMessage(true, messageContent, messageName, "2", phone);
             int sendCount = jc.messageFormFilterManage("", "1", "10", "customer_name", "Giant").getJSONArray("list").getJSONObject(0).getInteger("send_count");

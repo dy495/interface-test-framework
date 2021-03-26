@@ -897,21 +897,19 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void maintainOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            commonConfig.shopId="49195";
-            JSONObject respond = jc.maintainFilterManage("49195", "1", "10", "", "");
+            commonConfig.shopId="20032";
+            JSONObject respond = jc.maintainFilterManage("20032", "1", "10", "", "");
             if (respond.getJSONArray("list").size() > 0) {
                 String result = respond.getJSONArray("list").getJSONObject(0).getString(output);
-                JSONObject respond1 = jc.maintainFilterManage("49195", "1", "10", pram, result);
+                JSONObject respond1 = jc.maintainFilterManage("20032", "1", "10", pram, result);
                 int pages = respond1.getInteger("pages");
                 for (int page = 1; page <= pages; page++) {
-                    JSONArray list = jc.maintainFilterManage("49195", String.valueOf(page),"10", pram, result).getJSONArray("list");
+                    JSONArray list = jc.maintainFilterManage("20032", String.valueOf(page),"10", pram, result).getJSONArray("list");
                     for (int i = 0; i < list.size(); i++) {
                         String Flag = list.getJSONObject(i).getString(output);
                         Preconditions.checkArgument(Flag.contains(result), "保养配置按" + result + "查询，结果错误" + Flag);
                     }
                 }
-            } else {
-                Preconditions.checkArgument(respond.getJSONArray("list") == null, "接待列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -929,10 +927,10 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void maintainALLFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            commonConfig.shopId="49195";
+            commonConfig.shopId="20032";
             Object[][] flag = Constant.maintainFilter_pram();
             maintainVariable variable = new maintainVariable();
-            JSONArray res = jc.maintainFilterManage("49195", "1", "10", "", "").getJSONArray("list");
+            JSONArray res = jc.maintainFilterManage("20032", "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
                 variable.brand_name = data.getString(flag[0][1].toString());
@@ -941,17 +939,14 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                 variable.year = data.getString(flag[3][1].toString());
                 variable.page = "1";
                 variable.size = "10";
-                variable.shop_id="49195";
+                variable.shop_id="20032";
                 //全部筛选之后的结果
                 JSONObject result = jc.maintainFilterManage(variable).getJSONArray("list").getJSONObject(0);
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[0][1])).contains(variable.brand_name), "参数全部输入的查询的" + variable.brand_name + "与列表信息的第一行的" + result.getString(flag[0][1].toString()) + "不一致");
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[1][1])).contains(variable.manufacturer), "参数全部输入的查询的" + variable.manufacturer + "与列表信息的第一行的" + result.getString(flag[1][1].toString()) + "不一致");
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[2][1])).contains(variable.car_model), "参数全部输入的查询的" + variable.car_model + "与列表信息的第一行的" + result.getString(flag[2][1].toString()) + "不一致");
                 Preconditions.checkArgument(result.getString(String.valueOf(flag[3][1])).contains(variable.year), "参数全部输入的查询的" + variable.year + "与列表信息的第一行的" + result.getString(flag[3][1].toString()) + "不一致");
-            } else {
-                Preconditions.checkArgument(res == null, "接待列表系统错误,请联系开发人员");
             }
-
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -968,10 +963,10 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void maintainSomeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            commonConfig.shopId="49195";
+            commonConfig.shopId="20032";
             Object[][] flag = Constant.maintainFilter_pram();
             maintainVariable variable = new maintainVariable();
-            JSONArray res = jc.maintainFilterManage("49195", "1", "10", "", "").getJSONArray("list");
+            JSONArray res = jc.maintainFilterManage("20032", "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
                 variable.brand_name = data.getString(flag[0][1].toString());
@@ -979,7 +974,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                 variable.car_model = data.getString(flag[2][1].toString());
                 variable.page = "1";
                 variable.size = "10";
-                variable.shop_id = "49195";
+                variable.shop_id = "20032";
 
                 //全部筛选之后的结果
                 JSONArray result = jc.maintainFilterManage(variable).getJSONArray("list");
@@ -1009,8 +1004,8 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void maintainEmptyFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            commonConfig.shopId="49195";
-            jc.maintainFilterManage("49195", "1", "10", "", "").getJSONArray("list");
+            commonConfig.shopId="20032";
+            jc.maintainFilterManage("20032", "1", "10", "", "").getJSONArray("list");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -3073,7 +3068,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void intelligentRemindList(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            commonConfig.shopId="49195";//指定中关村门店
+            commonConfig.shopId="20032";//指定中关村门店
             JSONObject response=jc.remindPage("1","10","","","");
             String item=response.getJSONArray("list").getJSONObject(0).getString("item");
             JSONObject response1=jc.remindPage("1","10","","item",item);
