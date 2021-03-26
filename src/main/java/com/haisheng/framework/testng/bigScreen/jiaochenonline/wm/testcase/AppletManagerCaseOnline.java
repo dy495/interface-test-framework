@@ -105,14 +105,14 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
     }
 
     //ok
-    @Test(description = "预约保养->确认预约->点接待->变更接待->完成接待->评价->跟进", enabled = false)
+    @Test(description = "预约保养->确认预约->点接待->变更接待->完成接待->评价->跟进")
     public void appointmentManager_maintain() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int i = 0;
             Integer shopId = util.getShopId();
             IScene appointmentPageScene = AppointmentPageScene.builder().build();
-            int appointmentPageTotal = visitor.invokeApi(appointmentPageScene).getInteger("total");
+            int appointmentPageTotal = appointmentPageScene.invoke(visitor, true).getInteger("total");
             int appointmentNumber = util.appointmentNumber(DateTimeUtil.addDay(new Date(), i));
             user.loginApp(ALL_AUTHORITY);
             int appAppointmentNum = util.getAppointmentPageNum();
@@ -128,7 +128,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
             user.loginPc(ALL_AUTHORITY);
             int newAppointmentNumber = util.appointmentNumber(DateTimeUtil.addDay(new Date(), i));
             CommonUtil.checkResult("pc预约看板分子数", appointmentNumber + 1, newAppointmentNumber);
-            int newAppointmentPageTotal = visitor.invokeApi(appointmentPageScene).getInteger("total");
+            int newAppointmentPageTotal = appointmentPageScene.invoke(visitor, true).getInteger("total");
             CommonUtil.checkResult("pc预约记录列表数", appointmentPageTotal + 1, newAppointmentPageTotal);
             AppointmentPage appointmentPage = util.getAppointmentPageById(appointmentId);
             CommonUtil.checkResult("预约类型", AppointmentTypeEnum.MAINTAIN.getValue(), appointmentPage.getTypeName());
@@ -140,8 +140,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
             //确认预约
             user.loginApp(ALL_AUTHORITY);
             int makeSureAppointmentNum = util.getAppointmentPageNum();
-            IScene appointmentHandleScene = AppAppointmentHandleScene.builder().id(appointmentId).shopId(shopId).type(10).build();
-            visitor.invokeApi(appointmentHandleScene);
+            AppAppointmentHandleScene.builder().id(appointmentId).shopId(shopId).type(10).build().invoke(visitor, true);
             Integer newMakeSureAppAppointmentNum = util.getAppointmentPageNum();
             CommonUtil.checkResult("app预约记录数", makeSureAppointmentNum, newMakeSureAppAppointmentNum);
             user.loginPc(ALL_AUTHORITY);
@@ -155,13 +154,12 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
             user.loginApp(ALL_AUTHORITY);
             int appReceptionPageNum = util.getReceptionPageNum();
             user.loginPc(ALL_AUTHORITY);
-            int pcReceptionPageNum = visitor.invokeApi(ReceptionPageScene.builder().build()).getInteger("total");
-            IScene appointmentReceptionScene = AppAppointmentReceptionScene.builder().id(appointmentId).build();
-            visitor.invokeApi(appointmentReceptionScene);
+            int pcReceptionPageNum = ReceptionPageScene.builder().build().invoke(visitor, true).getInteger("total");
+            AppAppointmentReceptionScene.builder().id(appointmentId).build().invoke(visitor, true);
             int newAppReceptionPageNum = util.getReceptionPageNum();
             CommonUtil.checkResult("app接待页列表数", appReceptionPageNum + 1, newAppReceptionPageNum);
             user.loginPc(ALL_AUTHORITY);
-            int newPcReceptionPageNum = visitor.invokeApi(ReceptionPageScene.builder().build()).getInteger("total");
+            int newPcReceptionPageNum = ReceptionPageScene.builder().build().invoke(visitor, true).getInteger("total");
             CommonUtil.checkResult("pc接待列表数", pcReceptionPageNum + 1, newPcReceptionPageNum);
             ReceptionPage receptionPage = util.getFirstReceptionPage();
             CommonUtil.checkResult("接待状态", ReceptionStatusEnum.IN_RECEPTION.getStatusName(), receptionPage.getReceptionStatusName());
@@ -174,19 +172,16 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
             user.loginApp(ALL_AUTHORITY);
             AppReceptionReceptorList receptorList = util.getReceptorList();
             String uid = receptorList.getUid();
-            IScene receptionReceptorChangePageScene = AppReceptionReceptorChangePageScene.builder().id(receptionId).receptorId(uid).shopId(shopId).build();
-            visitor.invokeApi(receptionReceptorChangePageScene);
+            AppReceptionReceptorChangePageScene.builder().id(receptionId).receptorId(uid).shopId(shopId).build().invoke(visitor, true);
             user.loginPc(ALL_AUTHORITY);
             ReceptionPage newReceptionPage = util.getReceptionPageById(receptionId);
             CommonUtil.checkResult("变更接待后接待人员", receptorList.getName(), newReceptionPage.getReceptionSaleName());
             user.loginPc(ALL_AUTHORITY);
-            IScene receptorChangeScene = ReceptorChangeScene.builder().id(receptionId).receptorId(util.getReceptorList(ALL_AUTHORITY).getUid()).shopId(shopId).build();
-            visitor.invokeApi(receptorChangeScene);
+            ReceptorChangeScene.builder().id(receptionId).receptorId(util.getReceptorList(ALL_AUTHORITY).getUid()).shopId(shopId).build().invoke(visitor, true);
             //登录此人app完成接待
             user.loginApp(ALL_AUTHORITY);
             int finishReceptionNum = util.getReceptionPageNum();
-            IScene receptionFinishReceptionScene = AppReceptionFinishReceptionScene.builder().id(receptionId).shopId(shopId).build();
-            visitor.invokeApi(receptionFinishReceptionScene);
+            AppReceptionFinishReceptionScene.builder().id(receptionId).shopId(shopId).build().invoke(visitor, true);
             int newFinishReceptionNum = util.getReceptionPageNum();
             CommonUtil.checkResult("完成接待后，app接待列表数", finishReceptionNum - 1, newFinishReceptionNum);
             user.loginPc(ALL_AUTHORITY);
@@ -216,6 +211,12 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
         } finally {
             saveData("预约保养->确认预约->点接待->变更接待->完成接待->评价->跟进");
         }
+    }
+
+    @Test
+    public void test() {
+        VoucherPage voucherPage = util.getVoucherPage(78L);
+        System.err.println(voucherPage.getVoucherName());
     }
 
     //ok

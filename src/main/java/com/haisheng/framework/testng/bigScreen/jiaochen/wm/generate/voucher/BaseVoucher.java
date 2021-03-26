@@ -114,8 +114,7 @@ public abstract class BaseVoucher extends AbstractGenerator implements IVoucher 
      */
     protected String getVoucherName(Long voucherId) {
         IScene scene = VoucherPageScene.builder().build();
-        List<VoucherPage> vouchers = resultCollectToBean(scene, VoucherPage.class);
-        return vouchers.stream().filter(e -> e.getVoucherId().equals(voucherId)).map(VoucherPage::getVoucherName).findFirst().orElse(null);
+        return findBeanByField(scene, VoucherPage.class, "voucher_id", voucherId).getVoucherName();
     }
 
     /**
@@ -126,8 +125,7 @@ public abstract class BaseVoucher extends AbstractGenerator implements IVoucher 
      */
     protected Long getVoucherId(String voucherName) {
         IScene scene = VoucherFormPageScene.builder().voucherName(voucherName).build();
-        List<VoucherPage> vouchers = resultCollectToBean(scene, VoucherPage.class);
-        return vouchers.stream().filter(e -> e.getVoucherName().equals(voucherName)).map(VoucherPage::getVoucherId).findFirst().orElse(null);
+        return findBeanByField(scene, VoucherPage.class, "voucher_name", voucherName).getVoucherId();
     }
 
     /**

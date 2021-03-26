@@ -98,6 +98,33 @@ public abstract class AbstractGenerator implements IGenerator {
     }
 
     /**
+     * 收集结果
+     * 结果为bean类型
+     *
+     * @param scene 接口场景
+     * @param bean  bean类
+     * @param key   指定的key
+     * @param value 指定key的指定value
+     * @param <T>   T
+     * @return bean
+     */
+    public <T> T findBeanByField(IScene scene, Class<T> bean, String key, Object value) {
+        int total = scene.invoke(visitor, true).getInteger("total");
+        int s = CommonUtil.getTurningPage(total, SIZE);
+        for (int i = 1; i < s; i++) {
+            scene.setPage(i);
+            scene.setSize(SIZE);
+            JSONArray array = scene.invoke(visitor, true).getJSONArray("list");
+            T clazz = array.stream().map(e -> (JSONObject) e).filter(e -> e.getObject(key, value.getClass()).equals(value)).findFirst().map(e -> JSONObject.toJavaObject(e, bean)).orElse(null);
+            if (clazz != null) {
+                return clazz;
+            }
+        }
+        return null;
+    }
+
+
+    /**
      * 判断visitor是否为空
      *
      * @return boolean

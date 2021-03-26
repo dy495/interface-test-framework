@@ -102,6 +102,32 @@ public class SupporterUtil {
     }
 
     /**
+     * 收集结果
+     * 结果为bean类型
+     *
+     * @param scene 接口场景
+     * @param bean  bean类
+     * @param key   指定的key
+     * @param value 指定key的指定value
+     * @param <T>   T
+     * @return bean
+     */
+    public <T> T findBeanByField(IScene scene, Class<T> bean, String key, Object value) {
+        int total = scene.invoke(visitor, true).getInteger("total");
+        int s = CommonUtil.getTurningPage(total, SIZE);
+        for (int i = 1; i < s; i++) {
+            scene.setPage(i);
+            scene.setSize(SIZE);
+            JSONArray array = scene.invoke(visitor, true).getJSONArray("list");
+            T clazz = array.stream().map(e -> (JSONObject) e).filter(e -> e.getObject(key, value.getClass()).equals(value)).findFirst().map(e -> JSONObject.toJavaObject(e, bean)).orElse(null);
+            if (clazz != null) {
+                return clazz;
+            }
+        }
+        return null;
+    }
+
+    /**
      * 创建4种优惠券
      *
      * @param stock 卡券库存
@@ -259,11 +285,20 @@ public class SupporterUtil {
     /**
      * 获取门店id
      *
+     * @param count 数量
+     * @return 门店id
+     */
+    public List<Long> getShopIdList(Integer count) {
+        return getShopIdList().subList(0, count);
+    }
+
+    /**
+     * 获取门店id
+     *
      * @return 门店id
      */
     public List<Long> getShopIdList() {
-        IScene scene = ShopListScene.builder().build();
-        JSONArray array = visitor.invokeApi(scene).getJSONArray("list");
+        JSONArray array = ShopListScene.builder().build().invoke(visitor, true).getJSONArray("list");
         return array.stream().map(e -> (JSONObject) e).map(e -> e.getLong("shop_id")).collect(Collectors.toList());
     }
 
@@ -286,35 +321,13 @@ public class SupporterUtil {
     }
 
     /**
-     * 获取门店id
-     *
-     * @param count 数量
-     * @return 门店id
-     */
-    public List<Long> getShopIdList(Integer count) {
-        return getShopIdList().subList(0, count);
-    }
-
-    /**
      * 获取卡券名称
      *
      * @param voucherId 卡券id
      * @return 卡券名
      */
     public String getVoucherName(long voucherId) {
-        String voucherName = null;
-        JSONObject response = VoucherPageScene.builder().build().invoke(visitor, true);
-        int total = response.getInteger("total");
-        int s = CommonUtil.getTurningPage(total, SIZE);
-        for (int i = 1; i < s; i++) {
-            JSONArray array = VoucherPageScene.builder().page(i).size(SIZE).build().invoke(visitor, true).getJSONArray("list");
-            List<VoucherPage> voucherPageList = array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, VoucherPage.class)).collect(Collectors.toList());
-            voucherName = voucherPageList.stream().filter(e -> e.getVoucherId().equals(voucherId)).map(VoucherPage::getVoucherName).findFirst().orElse(null);
-            if (voucherName != null) {
-                break;
-            }
-        }
-        return voucherName;
+        return getVoucherPage(voucherId).getVoucherName();
     }
 
     /**
@@ -324,19 +337,7 @@ public class SupporterUtil {
      * @return 卡券id(Long)
      */
     public Long getVoucherId(String voucherName) {
-        Long voucherId = null;
-        JSONObject response = VoucherPageScene.builder().build().invoke(visitor, true);
-        int total = response.getInteger("total");
-        int s = CommonUtil.getTurningPage(total, SIZE);
-        for (int i = 1; i < s; i++) {
-            JSONArray array = VoucherPageScene.builder().page(i).size(SIZE).build().invoke(visitor, true).getJSONArray("list");
-            List<VoucherPage> voucherPageList = array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, VoucherPage.class)).collect(Collectors.toList());
-            voucherId = voucherPageList.stream().filter(e -> e.getVoucherName().equals(voucherName)).map(VoucherPage::getVoucherId).findFirst().orElse(null);
-            if (voucherId != null) {
-                break;
-            }
-        }
-        return voucherId;
+        return getVoucherPage(voucherName).getVoucherId();
     }
 
     /**
@@ -378,8 +379,7 @@ public class SupporterUtil {
      * @return 电话号
      */
     public String getRepetitionVerificationPhone() {
-        IScene scene = VerificationPeopleScene.builder().build();
-        JSONArray array = visitor.invokeApi(scene).getJSONArray("list");
+        JSONArray array = VerificationPeopleScene.builder().build().invoke(visitor, true).getJSONArray("list");
         return array.stream().map(e -> (JSONObject) e).map(e -> e.getString("verification_phone")).findFirst().orElse(null);
     }
 
@@ -391,8 +391,7 @@ public class SupporterUtil {
      */
     public VoucherPage getVoucherPage(String voucherName) {
         IScene scene = VoucherPageScene.builder().voucherName(voucherName).build();
-        List<VoucherPage> vouchers = collectBean(scene, VoucherPage.class);
-        return vouchers.stream().filter(e -> e.getVoucherName().equals(voucherName)).findFirst().orElse(null);
+        return findBeanByField(scene, VoucherPage.class, "voucher_name", voucherName);
     }
 
     /**
@@ -402,8 +401,8 @@ public class SupporterUtil {
      * @return 卡券页信息
      */
     public VoucherPage getVoucherPage(Long voucherId) {
-        String voucherName = getVoucherName(voucherId);
-        return getVoucherPage(voucherName);
+        IScene scene = VoucherPageScene.builder().build();
+        return findBeanByField(scene, VoucherPage.class, "voucher_id", voucherId);
     }
 
     /**
@@ -452,8 +451,7 @@ public class SupporterUtil {
      * @return 车牌号
      */
     public String getPlatNumber(String phone) {
-        IScene scene = SearchCustomerScene.builder().customerPhone(phone).build();
-        JSONArray plateList = visitor.invokeApi(scene).getJSONArray("plate_list");
+        JSONArray plateList = SearchCustomerScene.builder().customerPhone(phone).build().invoke(visitor, true).getJSONArray("plate_list");
         return plateList.stream().map(e -> (JSONObject) e).map(e -> e.getString("plate_number")).findFirst().orElse(null);
     }
 
@@ -466,8 +464,7 @@ public class SupporterUtil {
      */
     public ApplyPage getAuditingApplyPage(String voucherName) {
         IScene scene = ApplyPageScene.builder().name(voucherName).state(ApplyStatusEnum.AUDITING.getId()).build();
-        List<ApplyPage> voucherApplies = collectBean(scene, ApplyPage.class);
-        return voucherApplies.stream().filter(e -> e.getName().equals(voucherName)).findFirst().orElse(null);
+        return findBeanByField(scene, ApplyPage.class, "name", voucherName);
     }
 
     /**
@@ -478,8 +475,7 @@ public class SupporterUtil {
      */
     public ApplyPage getApplyPage(String voucherName) {
         IScene scene = ApplyPageScene.builder().name(voucherName).build();
-        List<ApplyPage> voucherApplies = collectBean(scene, ApplyPage.class);
-        return voucherApplies.stream().filter(e -> e.getName().equals(voucherName)).findFirst().orElse(null);
+        return findBeanByField(scene, ApplyPage.class, "name", voucherName);
     }
 
     /**
@@ -503,9 +499,8 @@ public class SupporterUtil {
      */
     public void applyVoucher(String voucherName, String status) {
         IScene scene = ApplyPageScene.builder().name(voucherName).state(ApplyStatusEnum.AUDITING.getId()).build();
-        List<ApplyPage> voucherApplies = collectBean(scene, ApplyPage.class);
-        Long applyId = voucherApplies.stream().filter(e -> e.getName().equals(voucherName)).map(ApplyPage::getId).findFirst().orElse(null);
-        visitor.invokeApi(ApprovalScene.builder().id(applyId).status(status).build());
+        ApplyPage applyPage = findBeanByField(scene, ApplyPage.class, "name", voucherName);
+        ApprovalScene.builder().id(applyPage.getId()).status(status).build().invoke(visitor, true);
     }
 
     //--------------------------------------------------套餐----------------------------------------------------------
@@ -518,8 +513,7 @@ public class SupporterUtil {
      */
     public PackagePage getPackagePage(PackageStatusEnum packageStatusEnum) {
         IScene packageFormPageScene = PackageFormPageScene.builder().build();
-        List<PackagePage> packagePageList = collectBean(packageFormPageScene, PackagePage.class);
-        return packagePageList.stream().filter(e -> e.getAuditStatusName().equals(packageStatusEnum.getName())).findFirst().orElse(null);
+        return findBeanByField(packageFormPageScene, PackagePage.class, "audit_status_name", packageStatusEnum.getName());
     }
 
     /**
@@ -530,14 +524,18 @@ public class SupporterUtil {
      */
     public PackagePage getPackagePage(String packageName) {
         IScene scene = PackageFormPageScene.builder().packageName(packageName).build();
-        List<PackagePage> packagePages = collectBean(scene, PackagePage.class);
-        return packagePages.stream().filter(e -> e.getPackageName().equals(packageName)).findFirst().orElse(null);
+        return findBeanByField(scene, PackagePage.class, "package_name", packageName);
     }
 
+    /**
+     * 获取套餐信息
+     *
+     * @param packageId 套餐id
+     * @return 套餐信息
+     */
     public PackagePage getPackagePage(Long packageId) {
         IScene scene = PackageFormPageScene.builder().build();
-        List<PackagePage> packagePages = collectBean(scene, PackagePage.class);
-        return packagePages.stream().filter(e -> e.getPackageId().equals(packageId)).findFirst().orElse(null);
+        return findBeanByField(scene, PackagePage.class, "id", packageId);
     }
 
     /**
@@ -547,9 +545,7 @@ public class SupporterUtil {
      * @return 套餐id
      */
     public Long getPackageId(String packageName) {
-        IScene scene = PackageFormPageScene.builder().packageName(packageName).build();
-        List<PackagePage> packagePages = collectBean(scene, PackagePage.class);
-        return packagePages.stream().filter(e -> e.getPackageName().equals(packageName)).map(PackagePage::getPackageId).findFirst().orElse(null);
+        return getPackagePage(packageName).getPackageId();
     }
 
     /**
@@ -559,9 +555,7 @@ public class SupporterUtil {
      * @return 套餐名
      */
     public String getPackageName(Long packageId) {
-        IScene scene = PackageFormPageScene.builder().build();
-        List<PackagePage> packagePages = collectBean(scene, PackagePage.class);
-        return packagePages.stream().filter(e -> e.getPackageId().equals(packageId)).map(PackagePage::getPackageName).findFirst().orElse(null);
+        return getPackagePage(packageId).getPackageName();
     }
 
     /**
@@ -570,11 +564,9 @@ public class SupporterUtil {
      * @param packageName 套餐名
      */
     public void makeSureBuyPackage(String packageName) {
-        //获取确认支付id
         IScene scene = BuyPackageRecordScene.builder().packageName(packageName).size(SIZE / 10).build();
-        JSONArray list = visitor.invokeApi(scene).getJSONArray("list");
-        Long id = list.stream().map(e -> (JSONObject) e).filter(e -> e.getString("package_name").equals(packageName)).map(e -> e.getLong("id")).findFirst().orElse(null);
-        visitor.invokeApi(MakeSureBuyScene.builder().id(id).auditStatus("AGREE").build());
+        JSONObject jsonObject = findBeanByField(scene, JSONObject.class, "package_name", packageName);
+        MakeSureBuyScene.builder().id(jsonObject.getLong("id")).auditStatus("AGREE").build().invoke(visitor, true);
     }
 
     /**
@@ -639,7 +631,7 @@ public class SupporterUtil {
 
     public PackageDetail getPackageDetail(Long packageId) {
         IScene packageDetailScene = PackageDetailScene.builder().id(packageId).build();
-        return JSONObject.toJavaObject(visitor.invokeApi(packageDetailScene), PackageDetail.class);
+        return JSONObject.toJavaObject(packageDetailScene.invoke(visitor, true), PackageDetail.class);
     }
 
     /**
@@ -807,9 +799,8 @@ public class SupporterUtil {
      * @return 预约信息
      */
     public AppointmentPage getAppointmentPageById(Integer appointmentId) {
-        IScene appointmentPageScene = AppointmentPageScene.builder().build();
-        List<AppointmentPage> appointmentPageList = collectBean(appointmentPageScene, AppointmentPage.class);
-        return appointmentPageList.stream().filter(e -> e.getId().equals(appointmentId)).findFirst().orElse(null);
+        IScene scene = AppointmentPageScene.builder().build();
+        return findBeanByField(scene, AppointmentPage.class, "id", appointmentId);
     }
 
     //----------------------------------------------------接待记录-------------------------------------------------------
@@ -822,8 +813,7 @@ public class SupporterUtil {
      */
     public ReceptionPage getReceptionPageById(Integer receptionId) {
         IScene receptionPageScene = ReceptionPageScene.builder().build();
-        List<ReceptionPage> receptionPageList = collectBean(receptionPageScene, ReceptionPage.class);
-        return receptionPageList.stream().filter(e -> e.getId().equals(receptionId)).findFirst().orElse(null);
+        return findBeanByField(receptionPageScene, ReceptionPage.class, "id", receptionId);
     }
 
     /**
@@ -832,9 +822,8 @@ public class SupporterUtil {
      * @return 接待信息
      */
     public ReceptionPage getFirstReceptionPage() {
-        IScene receptionPageScene = ReceptionPageScene.builder().build();
-        List<ReceptionPage> receptionPageList = collectBean(receptionPageScene, ReceptionPage.class);
-        return receptionPageList.stream().findFirst().orElse(null);
+        JSONObject receptionPage = ReceptionPageScene.builder().build().invoke(visitor, true).getJSONArray("list").getJSONObject(0);
+        return JSONObject.toJavaObject(receptionPage, ReceptionPage.class);
     }
 
 
@@ -899,8 +888,7 @@ public class SupporterUtil {
     public void switchVerificationStatus(String code, boolean status) {
         IScene verificationPeopleScene = VerificationPeopleScene.builder().verificationCode(code).build();
         long id = visitor.invokeApi(verificationPeopleScene).getJSONArray("list").getJSONObject(0).getLong("id");
-        IScene switchVerificationStatusScene = SwitchVerificationStatusScene.builder().id(id).status(status).build();
-        visitor.invokeApi(switchVerificationStatusScene);
+        SwitchVerificationStatusScene.builder().id(id).status(status).build().invoke(visitor, true);
     }
 
     /**
@@ -966,8 +954,9 @@ public class SupporterUtil {
      */
     public Integer getCarId() {
         IScene appletCarListScene = AppletCarListScene.builder().build();
-        JSONArray jsonArray = visitor.invokeApi(appletCarListScene).getJSONArray("list");
-        return Objects.requireNonNull(jsonArray.stream().map(e -> (JSONObject) e).findFirst().orElse(null)).getInteger("id");
+        JSONObject jsonObject = visitor.invokeApi(appletCarListScene).getJSONArray("list").getJSONObject(0);
+        Preconditions.checkArgument(jsonObject != null, "小程序我的爱车为空");
+        return jsonObject.getInteger("id");
     }
 
     /**
@@ -1382,7 +1371,7 @@ public class SupporterUtil {
 
     public ExchangePage getExchangePage(Long id) {
         IScene exchangePageScene = ExchangePageScene.builder().build();
-        return collectBean(exchangePageScene, ExchangePage.class).stream().filter(e -> e.getId().equals(id)).findFirst().orElse(null);
+        return findBeanByField(exchangePageScene, ExchangePage.class, "id", id);
     }
 
     /**
