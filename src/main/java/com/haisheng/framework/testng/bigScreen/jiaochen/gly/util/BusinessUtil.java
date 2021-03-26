@@ -6,14 +6,18 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityApprovalStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.RegisterInfoEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.AppletPushTargetEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpload;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.PushMessageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherDetailScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherFormPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherPageScene;
@@ -1655,7 +1659,6 @@ public class BusinessUtil {
             IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
             JSONObject response = visitor.invokeApi(scene);
             lastValue = response.getJSONObject("last_value");
-            System.err.println(lastValue);
             list = response.getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 Long itemId = list.getJSONObject(i).getLong("itemId");
@@ -1808,7 +1811,6 @@ public class BusinessUtil {
             IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
             JSONObject response1 = visitor.invokeApi(scene);
             lastValue = response1.getJSONObject("last_value");
-            System.err.println(lastValue);
             list = response1.getJSONArray("list");
             num+=list.size();
         }while(list.size()==10);
@@ -1901,7 +1903,6 @@ public class BusinessUtil {
             IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
             JSONObject response1 = visitor.invokeApi(scene);
             lastValue = response1.getJSONObject("last_value");
-            System.err.println(lastValue);
             list = response1.getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int itemId=list.getJSONObject(i).getInteger("itemId");
@@ -2234,7 +2235,26 @@ public class BusinessUtil {
     }
 
 
-
+    /**
+     * 消息推送
+     *
+     * @param type               推送优惠类型 0：卡券，1：套餐
+     * @param voucherOrPackageId 卡券id
+     * @param immediately        是否立即发送
+     * @return 发出去的卡券id
+     */
+    public void pushMessage(Integer type, boolean immediately, Long... voucherOrPackageId) {
+        List<Long> voucherOrPackageList = new ArrayList<>(Arrays.asList(voucherOrPackageId));
+        List<String> phoneList = new ArrayList<>();
+        phoneList.add("13373166806");
+        PushMessageScene.PushMessageSceneBuilder builder = PushMessageScene.builder().pushTarget(AppletPushTargetEnum.PERSONNEL_CUSTOMER.getId())
+                .telList(phoneList).messageName(EnumDesc.DESC_BETWEEN_5_10.getDesc()).messageContent(EnumDesc.DESC_BETWEEN_40_50.getDesc())
+                .type(type).voucherOrPackageList(voucherOrPackageList).useDays("10");
+        String d = DateTimeUtil.getFormat(DateTimeUtil.addSecond(new Date(), 80), "yyyy-MM-dd HH:mm:ss");
+        long sendTime = Long.parseLong(DateTimeUtil.dateToStamp(d));
+        builder = immediately ? builder.ifSendImmediately(true) : builder.ifSendImmediately(false).sendTime(sendTime);
+        visitor.invokeApi(builder.build());
+    }
 
 
 

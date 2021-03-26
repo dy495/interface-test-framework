@@ -37,9 +37,9 @@ public class Constant {
     }
 
     /**
-     * @description:售后管理列表-筛选栏
+     * @description:V3.1售后管理列表-筛选栏
      * @author: gly
-     * @time: 2020-11-24
+     * @time: 2021/3/26
      */
     @DataProvider(name = "SELECT_AfterSleCustomerManageFilter")
     public static Object[][] afterSleCustomerManage_pram() {
@@ -50,6 +50,10 @@ public class Constant {
                 {"registration_status","registration_status_name"},
                 {"brand_id","brand_name"},
                 {"shop_id","shop_id"},
+
+//                {"vehicle_chassis_code","vehicle_chassis_code"},
+//                {"shop_id","shop_id"},
+//                {"shop_id","shop_id"},
 
         };
     }
@@ -582,6 +586,87 @@ public class Constant {
                 {"sale_name", "operate_sale_name"},
                 {"sale_phone", "operate_sale_account"}
 
+        };
+    }
+
+    /**
+     * @description:v3.1在线专家列表
+     * @author: gly
+     * @time: 2020-3-26
+     */
+    @DataProvider(name = "SELECT_onlineExpertsPageListLRecordFilter")
+    public static Object[][] onlineExpertsPageListRecordFilter_pram(){
+        return new String[][]{
+                {"shop_id", "shop_name"},
+                {"follow_login_name", "follow_login_name"},
+                {"follow_sales_name", "follow_sales_name"},
+                {"customer_name", "customer_name"},
+                {"customer_phone", "customer_phone"},
+                {"is_over_time", "is_over_time"},
+
+        };
+    }
+
+    /**
+     * @description:v3.1专属服务列表
+     * @author: gly
+     * @time: 2020-3-26
+     */
+    @DataProvider(name = "SELECT_dedicatedServicePageListLRecordFilter")
+    public static Object[][] dedicatedServicePageListRecordFilter_pram(){
+        return new String[][]{
+                {"shop_id", "shop_name"},
+                {"follow_login_name", "follow_login_name"},
+                {"follow_sales_name", "follow_sales_name"},
+                {"customer_name", "customer_name"},
+                {"customer_phone", "customer_phone"},
+                {"is_over_time", "is_over_time"},
+                {"car_model_id", "car_model_id"},
+
+        };
+    }
+
+    /**
+     * @description:v3.1销售客户接待列表
+     * @author: gly
+     * @time: 2020-3-26
+     */
+    @DataProvider(name = "SELECT_preSalesReceptionPageRecordFilter")
+    public static Object[][] preSalesReceptionPageRecordFilter_pram(){
+        return new String[][]{
+                {"shop_id", "shop_name"},
+                {"customer_name", "customer_name"},
+                {"phone", "phone"},
+                {"car_style_id", "car_style_id"},
+                {"pre_sale_name", "pre_sale_name"},
+                {"pre_sale_account", "pre_sale_account"},
+        };
+    }
+
+    /**
+     * @description:v3.1销售客户接待列表
+     * @author: gly
+     * @time: 2020-3-26
+     */
+    @DataProvider(name = "SELECT_lossCustomerPageRecordFilter")
+    public static Object[][] lossCustomerPageRecordFilter_pram(){
+        return new String[][]{
+                {"customer_name", "customer_phone"},
+                {"customer_name", "customer_name"},
+                {"vehicle_chassis_code", "vehicle_chassis_code"},
+        };
+    }
+
+    /**
+     * @description:v3.1销售客户接待列表
+     * @author: gly
+     * @time: 2020-3-26
+     */
+    @DataProvider(name = "SELECT_loginLogStaffRecordFilter")
+    public static Object[][] loginLogStaffRecordFilter_pram(){
+        return new String[][]{
+                {"name", "name"},
+                {"phone", "phone"},
         };
     }
 
