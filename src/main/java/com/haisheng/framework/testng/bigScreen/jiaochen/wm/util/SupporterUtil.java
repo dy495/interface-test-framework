@@ -571,7 +571,7 @@ public class SupporterUtil {
      */
     public void makeSureBuyPackage(String packageName) {
         //获取确认支付id
-        IScene scene = BuyPackageRecordScene.builder().packageName(packageName).size(SIZE).build();
+        IScene scene = BuyPackageRecordScene.builder().packageName(packageName).size(SIZE / 10).build();
         JSONArray list = visitor.invokeApi(scene).getJSONArray("list");
         Long id = list.stream().map(e -> (JSONObject) e).filter(e -> e.getString("package_name").equals(packageName)).map(e -> e.getLong("id")).findFirst().orElse(null);
         visitor.invokeApi(MakeSureBuyScene.builder().id(id).auditStatus("AGREE").build());
