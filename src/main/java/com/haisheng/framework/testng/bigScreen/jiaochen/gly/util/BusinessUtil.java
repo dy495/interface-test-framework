@@ -545,7 +545,7 @@ public class BusinessUtil {
         List<String> picList = new ArrayList<>();
         SupporterUtil supporterUtil = new SupporterUtil(visitor);
         PublicParameter pp = new PublicParameter();
-        picList.add(supporterUtil.getPicPath());
+        picList.add(getPicturePath());
         //填写报名所需要信息
         List<Boolean> isShow = new ArrayList<>();
         isShow.add(true);
@@ -605,7 +605,7 @@ public class BusinessUtil {
         SupporterUtil supporterUtil = new SupporterUtil(visitor);
         PublicParameter pp = new PublicParameter();
         List<String> picList = new ArrayList<>();
-        picList.add(supporterUtil.getPicPath());
+        picList.add(getPicturePath());
         // 创建被邀请者和分享者的信息字段
         JSONObject invitedVoucher = getInvitedVoucher(voucherId, 1, String.valueOf(getVoucherSurplusInventory(voucherId)), 2, "", "", 1);
         JSONObject shareVoucher = getShareVoucher(voucherId, 1, String.valueOf(getVoucherSurplusInventory(voucherId)), 2, "", "", 1);

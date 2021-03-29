@@ -3909,8 +3909,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             saveData("招募活动，报名成功自动发放，小程序中小喇叭中优惠券的状态为已领取");
         }
     }
-
-
+    
     /**
      * 小程序报名审批并通过，卡券为手动领取，卡券状态为未领取，再次领取卡券，卡券的状态为，已领取
      */
