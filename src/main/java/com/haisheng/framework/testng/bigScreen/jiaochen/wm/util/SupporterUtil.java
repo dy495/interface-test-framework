@@ -129,6 +129,32 @@ public class SupporterUtil {
     }
 
     /**
+     * 收集结果
+     * 结果为bean类型
+     *
+     * @param scene 接口场景
+     * @param bean  bean类
+     * @param key   指定的key
+     * @param value 指定key的指定value
+     * @param <T>   T
+     * @return bean
+     */
+    public <T> T collectBeanByField(@NotNull IScene scene, Class<T> bean, String key, Object value, Integer size) {
+        int total = scene.invoke(visitor, true).getInteger("total");
+        int s = CommonUtil.getTurningPage(total, size);
+        for (int i = 1; i < s; i++) {
+            scene.setPage(i);
+            scene.setSize(size);
+            JSONArray array = scene.invoke(visitor, true).getJSONArray("list");
+            T clazz = array.stream().map(e -> (JSONObject) e).filter(e -> e.getObject(key, value.getClass()).equals(value)).findFirst().map(e -> JSONObject.toJavaObject(e, bean)).orElse(null);
+            if (clazz != null) {
+                return clazz;
+            }
+        }
+        return null;
+    }
+
+    /**
      * 创建4种优惠券
      *
      * @param stock 卡券库存
@@ -563,7 +589,7 @@ public class SupporterUtil {
      */
     public void makeSureBuyPackage(String packageName) {
         IScene scene = BuyPackageRecordScene.builder().packageName(packageName).size(SIZE / 10).build();
-        JSONObject jsonObject = collectBeanByField(scene, JSONObject.class, "package_name", packageName);
+        JSONObject jsonObject = collectBeanByField(scene, JSONObject.class, "package_name", packageName, SIZE / 10);
         MakeSureBuyScene.builder().id(jsonObject.getLong("id")).auditStatus("AGREE").build().invoke(visitor, true);
     }
 
@@ -573,7 +599,7 @@ public class SupporterUtil {
      * @param packageName 套餐名
      */
     public void cancelSoldPackage(String packageName) {
-        IScene scene = BuyPackageRecordScene.builder().packageName(packageName).size(SIZE).build();
+        IScene scene = BuyPackageRecordScene.builder().packageName(packageName).size(SIZE / 10).build();
         JSONArray list = visitor.invokeApi(scene).getJSONArray("list");
         Long id = list.stream().map(e -> (JSONObject) e).filter(e -> e.getString("package_name").equals(packageName)).map(e -> e.getLong("id")).findFirst().orElse(null);
         CancelSoldPackageScene.builder().id(id).id(id).build().invoke(visitor, true);

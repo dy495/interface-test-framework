@@ -98,7 +98,7 @@ public class SellOutVoucher extends AbstractVoucher {
      */
     private void makeSureBuyPackage() {
         //获取确认支付id
-        IScene scene = BuyPackageRecordScene.builder().packageName("临时套餐").size(SIZE).build();
+        IScene scene = BuyPackageRecordScene.builder().packageName("临时套餐").size(SIZE / 10).build();
         JSONArray list = visitor.invokeApi(scene).getJSONArray("list");
         Long id = list.stream().map(e -> (JSONObject) e).filter(e -> e.getString("package_name").equals("临时套餐")).map(e -> e.getLong("id")).findFirst().orElse(null);
         visitor.invokeApi(MakeSureBuyScene.builder().id(id).auditStatus("AGREE").build());
