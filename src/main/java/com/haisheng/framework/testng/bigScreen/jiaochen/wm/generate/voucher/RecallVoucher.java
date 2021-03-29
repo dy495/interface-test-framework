@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
  * @author wangmin
  * @date 2021/1/20 16:41
  */
-public class RecallVoucher extends BaseVoucher {
+public class RecallVoucher extends AbstractVoucher {
 
     public RecallVoucher(Builder builder) {
         super(builder);

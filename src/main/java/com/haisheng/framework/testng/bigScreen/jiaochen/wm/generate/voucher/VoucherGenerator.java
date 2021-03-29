@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
  * @author wangmin
  * @date 2021/1/20 14:54
  */
-public class VoucherGenerator extends BaseVoucher {
+public class VoucherGenerator extends AbstractVoucher {
 
     public VoucherGenerator(Builder builder) {
         super(builder);
@@ -24,7 +24,7 @@ public class VoucherGenerator extends BaseVoucher {
 
     @Setter
     @Accessors(chain = true, fluent = true)
-    public static class Builder extends BaseVoucher.BaseBuilder {
+    public static class Builder extends AbstractVoucher.BaseBuilder {
 
         @Override
         public IVoucher buildVoucher() {

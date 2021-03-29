@@ -20,7 +20,7 @@ import java.util.Date;
  * @author wangmin
  * @date 2021/1/20 16:41
  */
-public class ExpiredIntegral extends BaseIntegral {
+public class ExpiredIntegral extends AbstractIntegral {
 
     public ExpiredIntegral(Builder builder) {
         super(builder);

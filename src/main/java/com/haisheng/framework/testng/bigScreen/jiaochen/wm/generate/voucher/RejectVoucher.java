@@ -19,7 +19,7 @@ import java.util.Objects;
  * @author wangmin
  * @date 2021/1/21 16:53
  */
-public class RejectVoucher extends BaseVoucher {
+public class RejectVoucher extends AbstractVoucher {
     public RejectVoucher(Builder builder) {
         super(builder);
     }
@@ -36,7 +36,7 @@ public class RejectVoucher extends BaseVoucher {
 
     @Setter
     @Accessors(chain = true, fluent = true)
-    public static class Builder extends BaseVoucher.BaseBuilder {
+    public static class Builder extends AbstractVoucher.BaseBuilder {
 
         @Override
         public IVoucher buildVoucher() {

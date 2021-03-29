@@ -5,7 +5,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.ExchangePage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.IntegralExchangeStatusEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.AbstractGenerator;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.BeanGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.ExchangePageScene;
 
 import java.util.List;
@@ -16,11 +16,11 @@ import java.util.List;
  * @author wangmin
  * @date 2021/1/20 14:38
  */
-public abstract class BaseIntegral extends AbstractGenerator implements IIntegral {
+public abstract class AbstractIntegral extends BeanGenerator implements IIntegral {
     protected IntegralExchangeStatusEnum integralExchangeStatus;
     private final IScene integralScene;
 
-    public BaseIntegral(BaseBuilder baseBuilder) {
+    public AbstractIntegral(BaseBuilder baseBuilder) {
         super(baseBuilder);
         this.integralExchangeStatus = baseBuilder.integralExchangeStatus;
         this.integralScene = baseBuilder.integralScene;

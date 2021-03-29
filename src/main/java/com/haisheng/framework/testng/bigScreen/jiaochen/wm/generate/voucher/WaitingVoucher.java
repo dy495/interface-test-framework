@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
  * @author wangmin
  * @date 2021/1/20 15:35
  */
-public class WaitingVoucher extends BaseVoucher {
+public class WaitingVoucher extends AbstractVoucher {
 
     public WaitingVoucher(Builder builder) {
         super(builder);

@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
  * @author wangmin
  * @date 2021/1/20 14:54
  */
-public class IntegralGenerator extends BaseIntegral {
+public class IntegralGenerator extends AbstractIntegral {
 
     public IntegralGenerator(Builder builder) {
         super(builder);

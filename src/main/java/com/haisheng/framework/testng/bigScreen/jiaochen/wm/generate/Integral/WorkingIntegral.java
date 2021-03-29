@@ -19,7 +19,7 @@ import java.util.List;
  * @author wangmin
  * @date 2021/1/20 16:41
  */
-public class WorkingIntegral extends BaseIntegral {
+public class WorkingIntegral extends AbstractIntegral {
 
     public WorkingIntegral(Builder builder) {
         super(builder);

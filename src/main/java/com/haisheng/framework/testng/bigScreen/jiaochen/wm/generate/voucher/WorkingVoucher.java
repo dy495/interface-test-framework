@@ -20,7 +20,7 @@ import java.util.Objects;
  * @author wangmin
  * @date 2021/1/20 16:41
  */
-public class WorkingVoucher extends BaseVoucher {
+public class WorkingVoucher extends AbstractVoucher {
 
     public WorkingVoucher(Builder builder) {
         super(builder);

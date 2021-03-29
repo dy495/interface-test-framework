@@ -22,4 +22,7 @@ public interface IGenerator {
      * @param visitor 访问者
      */
     void execute(VisitorProxy visitor, IScene scene);
+
+
+    void HI();
 }

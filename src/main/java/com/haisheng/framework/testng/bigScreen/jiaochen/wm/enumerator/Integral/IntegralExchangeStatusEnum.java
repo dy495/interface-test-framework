@@ -24,9 +24,9 @@ public enum IntegralExchangeStatusEnum {
     @Getter
     private final String desc;
     @Getter
-    private final BaseIntegral.BaseBuilder integralBuilder;
+    private final AbstractIntegral.BaseBuilder integralBuilder;
 
-    IntegralExchangeStatusEnum(String desc, BaseIntegral.BaseBuilder integralBuilder) {
+    IntegralExchangeStatusEnum(String desc, AbstractIntegral.BaseBuilder integralBuilder) {
         this.desc = desc;
         this.integralBuilder = integralBuilder;
     }

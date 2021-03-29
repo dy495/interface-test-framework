@@ -20,7 +20,7 @@ import java.util.Date;
  * @author wangmin
  * @date 2021/1/20 16:41
  */
-public class NoStartIntegral extends BaseIntegral {
+public class NoStartIntegral extends AbstractIntegral {
 
     public NoStartIntegral(Builder builder) {
         super(builder);

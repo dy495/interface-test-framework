@@ -27,7 +27,7 @@ import java.util.Objects;
  * @author wangmin
  * @date 2021/1/25 14:04
  */
-public class SellOutVoucher extends BaseVoucher {
+public class SellOutVoucher extends AbstractVoucher {
     public SellOutVoucher(Builder builder) {
         super(builder);
     }
