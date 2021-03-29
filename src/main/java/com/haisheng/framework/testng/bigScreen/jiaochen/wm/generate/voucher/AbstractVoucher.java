@@ -7,7 +7,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.BeanGenerator;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.BaseGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherFormPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherPageScene;
 import com.haisheng.framework.util.CommonUtil;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  * @author wangmin
  * @date 2021/1/20 14:38
  */
-public abstract class AbstractVoucher extends BeanGenerator implements IVoucher {
+public abstract class AbstractVoucher extends BaseGenerator implements IVoucher {
     protected VoucherStatusEnum voucherStatus;
     private final IScene voucherScene;
 
@@ -35,7 +35,6 @@ public abstract class AbstractVoucher extends BeanGenerator implements IVoucher 
     public Long getVoucherId() {
         try {
             VoucherStatusEnum.findById(voucherStatus.getId());
-            Preconditions.checkArgument(!isEmpty(), "visitor is null");
             logger("FIND " + voucherStatus.name() + " START");
             Preconditions.checkArgument(counter(voucherStatus) < 4, voucherStatus.getName() + " 状态执行次数大于3次，强行停止，请检查此状态生成");
             VoucherPage voucherPage = getVoucherPage();
@@ -58,7 +57,7 @@ public abstract class AbstractVoucher extends BeanGenerator implements IVoucher 
     @Override
     public abstract void execute(VisitorProxy visitor, IScene scene);
 
-    public static abstract class BaseBuilder extends BeanGenerator.AbstractBuilder<BaseBuilder> {
+    public static abstract class BaseBuilder extends BaseGenerator.AbstractBuilder<BaseBuilder> {
         private VoucherStatusEnum voucherStatus;
         private IScene voucherScene;
 

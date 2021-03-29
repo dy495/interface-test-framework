@@ -2,6 +2,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.util.CommonUtil;
@@ -19,42 +20,21 @@ import java.util.stream.Collectors;
  * @author wangmin
  * @date 2021/1/22 11:30
  */
-public abstract class BeanGenerator implements IGenerator {
-    protected static final Logger logger = LoggerFactory.getLogger(BeanGenerator.class);
+public abstract class BaseGenerator implements IGenerator {
+    protected static final Logger logger = LoggerFactory.getLogger(BaseGenerator.class);
     protected static final int SIZE = 100;
     protected final StringBuilder errorMsg;
     protected int counter = 0;
     protected VisitorProxy visitor;
 
-    protected BeanGenerator(@NotNull AbstractBuilder<?> abstractBuilder) {
+    {
         HI();
-        this.visitor = abstractBuilder.visitor;
-        this.errorMsg = new StringBuilder(16);
     }
 
-    @Override
-    public void HI() {
-        System.out.println(" ......................我佛慈悲......................");
-        System.out.println("                       _oo0oo_                      ");
-        System.out.println("                      o8888888o                     ");
-        System.out.println("                      88\" . \"88                     ");
-        System.out.println("                      (| -_- |)                     ");
-        System.out.println("                      0\\  =  /0                     ");
-        System.out.println("                    ___/‘---’\\___                   ");
-        System.out.println("                  .' \\|       |/ '.                 ");
-        System.out.println("                 / \\\\|||  :  |||// \\                ");
-        System.out.println("                / _||||| -卍-|||||_ \\               ");
-        System.out.println("               |   | \\\\\\  -  /// |   |              ");
-        System.out.println("               | \\_|  ''\\---/''  |_/ |              ");
-        System.out.println("               \\  .-\\__  '-'  ___/-. /              ");
-        System.out.println("             ___'. .'  /--.--\\  '. .'___            ");
-        System.out.println("          .\"\" ‘<  ‘.___\\_<|>_/___.’ >’ \"\".          ");
-        System.out.println("         | | :  ‘- \\‘.;‘\\ _ /’;.’/ - ’ : | |        ");
-        System.out.println("         \\  \\ ‘_.   \\_ __\\ /__ _/   .-’ /  /        ");
-        System.out.println("     =====‘-.____‘.___ \\_____/___.-’___.-’=====     ");
-        System.out.println("                       ‘=---=’                      ");
-        System.out.println("                                                    ");
-        System.out.println("....................佛祖开光 ,永无BUG...................");
+    protected BaseGenerator(@NotNull AbstractBuilder<?> abstractBuilder) {
+        Preconditions.checkArgument(abstractBuilder.visitor != null, "visitor is null");
+        this.visitor = abstractBuilder.visitor;
+        this.errorMsg = new StringBuilder(16);
     }
 
     @Override
@@ -149,16 +129,6 @@ public abstract class BeanGenerator implements IGenerator {
         return null;
     }
 
-
-    /**
-     * 判断visitor是否为空
-     *
-     * @return boolean
-     */
-    protected Boolean isEmpty() {
-        return visitor == null;
-    }
-
     /**
      * 步骤标记
      *
@@ -171,5 +141,29 @@ public abstract class BeanGenerator implements IGenerator {
     protected void clear() {
         this.visitor = null;
         this.counter = 0;
+    }
+
+    public void HI() {
+        System.out.println(" ......................我佛慈悲......................");
+        System.out.println("                       _oo0oo_                      ");
+        System.out.println("                      o8888888o                     ");
+        System.out.println("                      88\" . \"88                     ");
+        System.out.println("                      (| -_- |)                     ");
+        System.out.println("                      0\\  =  /0                     ");
+        System.out.println("                    ___/‘---’\\___                   ");
+        System.out.println("                  .' \\|       |/ '.                 ");
+        System.out.println("                 / \\\\|||  :  |||// \\                ");
+        System.out.println("                / _||||| -卍-|||||_ \\               ");
+        System.out.println("               |   | \\\\\\  -  /// |   |              ");
+        System.out.println("               | \\_|  ''\\---/''  |_/ |              ");
+        System.out.println("               \\  .-\\__  '-'  ___/-. /              ");
+        System.out.println("             ___'. .'  /--.--\\  '. .'___            ");
+        System.out.println("          .\"\" ‘<  ‘.___\\_<|>_/___.’ >’ \"\".          ");
+        System.out.println("         | | :  ‘- \\‘.;‘\\ _ /’;.’/ - ’ : | |        ");
+        System.out.println("         \\  \\ ‘_.   \\_ __\\ /__ _/   .-’ /  /        ");
+        System.out.println("     =====‘-.____‘.___ \\_____/___.-’___.-’=====     ");
+        System.out.println("                       ‘=---=’                      ");
+        System.out.println("                                                    ");
+        System.out.println("....................佛祖开光 ,永无BUG...................");
     }
 }

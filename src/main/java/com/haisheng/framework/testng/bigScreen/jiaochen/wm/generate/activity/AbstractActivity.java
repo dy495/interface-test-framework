@@ -4,7 +4,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.ManagerPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityStatusEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.BeanGenerator;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.BaseGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.ManagerPageScene;
 
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.List;
  * @author wangmin
  * @date 2021/1/22 13:45
  */
-public abstract class AbstractActivity extends BeanGenerator implements IActivity {
+public abstract class AbstractActivity extends BaseGenerator implements IActivity {
     protected ActivityStatusEnum activityStatus;
     protected final IScene activityScene;
 
