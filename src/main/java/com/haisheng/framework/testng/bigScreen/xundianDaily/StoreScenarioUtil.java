@@ -3083,7 +3083,119 @@ public class StoreScenarioUtil extends TestCaseCommon {
         return invokeApi(path, requestBody, true);
     }
 
+    /**
+     * @description:5.1. 门店消费记录列表
+     * @author:
+     * @time:
+     */
+    public JSONObject consumption_page(String shop_name,String member_name,String member_phone,int page,int size) throws Exception {
+        String path = "/patrol/member/consumption/page";
+        JSONObject json = new JSONObject();
+        json.put("shop_name",shop_name);
+        json.put("member_name",member_name);
+        json.put("member_phone",member_phone);
+        String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    /**
+     * @description:5.2. 订单详情
+     * @author:
+     * @time:
+     */
+    public JSONObject consumption_detail(String order_number) throws Exception {
+        String path = "/patrol/member/consumption/detail";
+        JSONObject json = new JSONObject();
+        json.put("order_number",order_number);
+        String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
 
+    /**
+     * @description:6.1. 会员等级列表
+     * @author
+     * @time:
+     */
+    public JSONObject member_level_page(String level_name,int page,int size) throws Exception {
+        String path = "/patrol/member/level/list";
+        JSONObject json = new JSONObject();
+        json.put("level_name",level_name);
+        String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:6.2. 会员等级详情
+     * @author:
+     * @time:
+     */
+    public JSONObject member_level_detail(String id) throws Exception {
+        String path = "/patrol/member/level/detail";
+        JSONObject json = new JSONObject();
+        json.put("id",id);
+        String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:6.3. 会员等级更新
+     * @author:
+     * @time:
+     */
+    public JSONObject member_level_update(Long id,String level_name,String level_icon_path,String level_condition_desc,String level_benefits_desc,String level_experience,String level_sort,int experience_exchange,int integral_exchange,boolean is_hide) throws Exception {
+        String path = "/patrol/member/level/update";
+        JSONObject json = new JSONObject();
+        json.put("id",id);
+        json.put("level_name",level_name);
+        json.put("level_icon_path",level_icon_path);
+        json.put("level_condition_desc",level_condition_desc);
+        json.put("level_benefits_desc",level_benefits_desc);
+        json.put("level_experience",level_experience);
+        json.put("level_sort",level_sort);
+        json.put("experience_exchange",experience_exchange);
+        json.put("integral_exchange",integral_exchange);
+        json.put("is_hide",is_hide);
+        String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:6.4. 会员等级删除
+     * @author:
+     * @time:
+     */
+    public JSONObject member_level_delete(String id) throws Exception {
+        String path = "/patrol/member/level/update";
+        JSONObject json = new JSONObject();
+        json.put("id",id);
+        String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:6.5. 会员等级添加
+     * @author:
+     * @time:
+     */
+    public JSONObject member_level_add(String id) throws Exception {
+        String path = "/patrol/member/level/add";
+        JSONObject json = new JSONObject();
+        json.put("id",id);
+        String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description:6.6. 会员等级隐藏状态更新
+     * @author:
+     * @time:
+     */
+    public JSONObject member_level_hide(String id) throws Exception {
+        String path = "patrol/member/level/hide_update";
+        JSONObject json = new JSONObject();
+        json.put("id",id);
+        String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
 }
 
 
