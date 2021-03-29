@@ -2281,19 +2281,19 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    /**
-     * @description:7.9. 门店pc 小时级别实时客流pv & uv-多店
-     * @author:
-     * @time:
-     */
-    public JSONObject real_shop_PUv() throws Exception {
-        String path = "/patrol/real-time/all/shop/pv-uv";
-        String json =
-                "{} ";
-
-        String res = httpPostWithCheckCode(path, json, IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
-    }
+//    /**
+//     * @description:7.9. 门店pc 小时级别实时客流pv & uv-多店
+//     * @author:
+//     * @time:
+//     */
+//    public JSONObject real_shop_PUv() throws Exception {
+//        String path = "/patrol/real-time/all/shop/pv-uv";
+//        String json =
+//                "{} ";
+//
+//        String res = httpPostWithCheckCode(path, json, IpPort);
+//        return JSON.parseObject(res).getJSONObject("data");
+//    }
 
 
     /**
