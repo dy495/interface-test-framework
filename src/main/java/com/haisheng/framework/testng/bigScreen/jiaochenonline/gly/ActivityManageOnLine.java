@@ -823,7 +823,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                 int status = businessUtil.getActivityStatus(ids.get(0));
                 Preconditions.checkArgument(waitAfter == (waitBefore - 1), "活动审批数后的待审批数量：" + waitAfter + "活动审批数前的待审批数量：" + waitBefore);
                 Preconditions.checkArgument(passedAfter == (passedBefore + 1), "活动审批数后的审批通过数量：" + passedAfter + "活动审批数前的审批通过数量：" + passedBefore);
-                Preconditions.checkArgument(status == ActivityStatusEnum.PASSED.getId(), "活动审批数后活动的状态应为【进行中】，此时为为：" + status);
+                Preconditions.checkArgument(status == ActivityStatusEnum.WAITING_START.getId()||status == ActivityStatusEnum.PASSED.getId(), "活动审批数后活动的状态应为【进行中】或者【未开始】，此时为为：" + status);
 
             }
         } catch (AssertionError | Exception e) {
