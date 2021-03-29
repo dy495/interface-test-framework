@@ -164,7 +164,6 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             ReceptionPage receptionPage = util.getFirstReceptionPage();
             CommonUtil.checkResult("接待状态", ReceptionStatusEnum.IN_RECEPTION.getStatusName(), receptionPage.getReceptionStatusName());
             CommonUtil.checkResult("接待类型", "预约", receptionPage.getReceptionTypeName());
-            CommonUtil.checkResult("接待时间", DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm"), receptionPage.getReceptionTime());
             CommonUtil.checkResult("接待人", ALL_AUTHORITY.getName(), receptionPage.getReceptionSaleName());
             CommonUtil.checkResult("注册状态", "已注册", receptionPage.getRegistrationStatusName());
             //变更接待
@@ -187,7 +186,6 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             user.loginPc(ALL_AUTHORITY);
             ReceptionPage finishReceptionPage = util.getReceptionPageById(receptionId);
             CommonUtil.checkResult("完成接待后pc接待列表接待状态", ReceptionStatusEnum.FINISH.getStatusName(), finishReceptionPage.getReceptionStatusName());
-            CommonUtil.checkResult("完成接待后pc完成时间", DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm"), finishReceptionPage.getFinishTime());
             //评价
             user.loginPc(ALL_AUTHORITY);
             List<EvaluatePage> evaluatePageList = util.getEvaluatePageList();
@@ -213,14 +211,8 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
-    public void test() {
-        VoucherPage voucherPage = util.getVoucherPage(78L);
-        System.err.println(voucherPage.getVoucherName());
-    }
-
     //ok
-    @Test(description = "预约维修->确认预约->点接待->变更接待->完成接待->评价->跟进", enabled = false)
+    @Test(description = "预约维修->确认预约->点接待->变更接待->完成接待->评价->跟进")
     public void appointmentManager_repair() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -281,7 +273,6 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             ReceptionPage receptionPage = util.getFirstReceptionPage();
             CommonUtil.checkResult("接待状态", ReceptionStatusEnum.IN_RECEPTION.getStatusName(), receptionPage.getReceptionStatusName());
             CommonUtil.checkResult("接待类型", "预约", receptionPage.getReceptionTypeName());
-            CommonUtil.checkResult("接待时间", DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm"), receptionPage.getReceptionTime());
             CommonUtil.checkResult("接待人", ALL_AUTHORITY.getName(), receptionPage.getReceptionSaleName());
             CommonUtil.checkResult("注册状态", "已注册", receptionPage.getRegistrationStatusName());
             //变更接待
@@ -306,7 +297,6 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             user.loginPc(ALL_AUTHORITY);
             ReceptionPage finishReceptionPage = util.getReceptionPageById(receptionId);
             CommonUtil.checkResult("完成接待后pc接待列表接待状态", ReceptionStatusEnum.FINISH.getStatusName(), finishReceptionPage.getReceptionStatusName());
-            CommonUtil.checkResult("完成接待后pc完成时间", DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm"), finishReceptionPage.getFinishTime());
             //评价
             user.loginPc(ALL_AUTHORITY);
             List<EvaluatePage> evaluatePageList = util.getEvaluatePageList();
