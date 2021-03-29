@@ -164,6 +164,6 @@ public abstract class BaseGenerator implements IGenerator {
         System.out.println("     =====‘-.____‘.___ \\_____/___.-’___.-’=====     ");
         System.out.println("                       ‘=---=’                      ");
         System.out.println("                                                    ");
-        System.out.println("....................佛祖开光 ,永无BUG...................");
+        System.out.println("....................佛祖开光 ,尽早下班...................");
     }
 }

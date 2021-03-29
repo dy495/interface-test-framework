@@ -68,7 +68,7 @@ import java.util.stream.Collectors;
  */
 public class SupporterUtil {
     public static final Logger logger = LoggerFactory.getLogger(SupporterUtil.class);
-    public static final Integer SIZE = 100;
+    public final static Integer SIZE = 100;
     private final VisitorProxy visitor;
 
     /**
@@ -114,32 +114,10 @@ public class SupporterUtil {
      * @return bean
      */
     public <T> T collectBeanByField(@NotNull IScene scene, Class<T> bean, String key, Object value) {
-        int total = scene.invoke(visitor, true).getInteger("total");
-        int s = CommonUtil.getTurningPage(total, SIZE);
-        for (int i = 1; i < s; i++) {
-            scene.setPage(i);
-            scene.setSize(SIZE);
-            JSONArray array = scene.invoke(visitor, true).getJSONArray("list");
-            T clazz = array.stream().map(e -> (JSONObject) e).filter(e -> e.getObject(key, value.getClass()).equals(value)).findFirst().map(e -> JSONObject.toJavaObject(e, bean)).orElse(null);
-            if (clazz != null) {
-                return clazz;
-            }
+        int size = SIZE;
+        if (scene instanceof BuyPackageRecordScene) {
+            size = SIZE / 10;
         }
-        return null;
-    }
-
-    /**
-     * 收集结果
-     * 结果为bean类型
-     *
-     * @param scene 接口场景
-     * @param bean  bean类
-     * @param key   指定的key
-     * @param value 指定key的指定value
-     * @param <T>   T
-     * @return bean
-     */
-    public <T> T collectBeanByField(@NotNull IScene scene, Class<T> bean, String key, Object value, Integer size) {
         int total = scene.invoke(visitor, true).getInteger("total");
         int s = CommonUtil.getTurningPage(total, size);
         for (int i = 1; i < s; i++) {
@@ -589,7 +567,7 @@ public class SupporterUtil {
      */
     public void makeSureBuyPackage(String packageName) {
         IScene scene = BuyPackageRecordScene.builder().packageName(packageName).size(SIZE / 10).build();
-        JSONObject jsonObject = collectBeanByField(scene, JSONObject.class, "package_name", packageName, SIZE / 10);
+        JSONObject jsonObject = collectBeanByField(scene, JSONObject.class, "package_name", packageName);
         MakeSureBuyScene.builder().id(jsonObject.getLong("id")).auditStatus("AGREE").build().invoke(visitor, true);
     }
 
