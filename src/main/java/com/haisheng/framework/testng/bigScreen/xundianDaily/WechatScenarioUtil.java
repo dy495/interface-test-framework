@@ -93,7 +93,7 @@ public class WechatScenarioUtil extends TestCaseCommon {
         String url = "/car-platform/applet/article/list";
         String json =
                 "{} ";
-        String res = httpPostWithCheckCode(url, json, IpPort);
+        String res = httpPostWithCheckCode(url,json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
 
@@ -217,6 +217,88 @@ public class WechatScenarioUtil extends TestCaseCommon {
      */
     public JSONObject memberInfo() throws Exception {
         String url = "/patrol/wechat/member/info";
+        String json =
+                "{} ";
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     *@description: 查看附近门店
+     *@author:
+     *@time:
+     */
+    public JSONObject nearShops(String shop_name,double longitude,double latitude) throws Exception {
+        String url = "/store/m-app/auth/shop/find-near-shops";
+        JSONObject json = new JSONObject();
+        json.put("shop_name",shop_name);
+        json.put("longitude",longitude);
+        json.put("latitude",latitude);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     *@description: 口味排行
+     *@author:
+     *@time:
+     */
+    public JSONObject tasteSort(Integer number) throws Exception {
+        String url = "/store/m-app/auth/taste/sort";
+        JSONObject json = new JSONObject();
+        json.put("number",number);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     *@description: 新品推荐
+     *@author:
+     *@time:
+     */
+    public JSONObject newProduct(Integer id) throws Exception {
+        String url = "/store/m-app/auth/taste/new-product-recommend";
+        JSONObject json = new JSONObject();
+        json.put("id",id);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     *@description: 提交反馈
+     *@author:
+     *@time:
+     */
+    public JSONObject submitFeedback(Integer feedback_type_id,Integer feedback_score,String feedback_message) throws Exception {
+        String url = "/store/m-app/auth/feedback/submit-feedback";
+        JSONObject json = new JSONObject();
+        json.put("feedback_type_id",feedback_type_id);
+        json.put("feedback_score",feedback_score);
+        json.put("feedback_message",feedback_message);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     *@description: 反馈奖励
+     *@author:
+     *@time:
+     */
+    public JSONObject awardFeedback(int size) throws Exception {
+        String url = "/store/m-app/auth/feedback/award-feedback";
+        JSONObject json = new JSONObject();
+        json.put("size",size);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     *@description: 获取所有反馈类型
+     *@author:
+     *@time:
+     */
+    public JSONObject queryAll() throws Exception {
+        String url = "/store/m-app/auth/feedback/feedback-type/query-all";
         String json =
                 "{} ";
         String res = httpPostWithCheckCode(url, json, IpPort);

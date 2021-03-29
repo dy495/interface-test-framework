@@ -3482,6 +3482,20 @@ public class StoreScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
+    /**
+     *@description: INS口味详情查询
+     *@author:
+     *@time:
+     */
+    public JSONObject seachTasteInfo(Integer id) throws Exception {
+        String url = "/patrol/taste/search-info";
+        JSONObject json = new JSONObject();
+        json.put("id",id);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
     /**
      * @description:21.3. 删除口味
      * @author:
@@ -3492,6 +3506,39 @@ public class StoreScenarioUtil extends TestCaseCommon {
         JSONObject json = new JSONObject();
         json.put("tasteId",tasteId);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     *@description: INS编辑口味
+     *@author:
+     *@time:
+     */
+    public JSONObject updateTaste(Integer id,String taste_image_path,String head_image_path,String taste_name,String taste_explain,Integer users,Boolean recommend) throws Exception {
+        String url = "/patrol/taste/update";
+        JSONObject json = new JSONObject();
+        json.put("id",id);
+        json.put("taste_image_path",taste_image_path);
+        json.put("head_image_path",head_image_path);
+        json.put("taste_name",taste_name);
+        json.put("taste_explain",taste_explain);
+        json.put("users",users);
+        json.put("recommend",recommend);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     *@description: INS编辑口味是否加入排行
+     *@author:
+     *@time:
+     */
+    public JSONObject updateRecommend(Integer id,Boolean recommend) throws Exception {
+        String url = "/patrol/taste/update-recommend";
+        JSONObject json = new JSONObject();
+        json.put("id",id);
+        json.put("recommend",recommend);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
 
@@ -3527,6 +3574,246 @@ public class StoreScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    /**
+     *@description: INS搜索评论详情
+     *@author:
+     *@time:
+     */
+    public JSONObject seachCommentInfo(Integer id) throws Exception {
+        String url = "/patrol/taste/search-comment-info";
+        JSONObject json = new JSONObject();
+        json.put("comment_id",id);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     *@description: INS编辑评论
+     *@author:
+     *@time:
+     */
+    public JSONObject updateComment(Integer id,String comment_user_image_path,String comment_user_name,String comment_message,Integer comment_stars,Boolean visible,List comment_images_path) throws Exception {
+        String url = "/patrol/taste/update-comment";
+        JSONObject json = new JSONObject();
+        json.put("id",id);
+        json.put("comment_user_image_path",comment_user_image_path);
+        json.put("comment_user_name",comment_user_name);
+        json.put("comment_message",comment_message);
+        json.put("comment_stars",comment_stars);
+        json.put("visible",visible);
+        json.put("comment_images_path",comment_images_path);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     *@description: INS编辑评论是否可见
+     *@author:
+     *@time:
+     */
+    public JSONObject seachCommentVisible(Integer id,Boolean visible) throws Exception {
+        String url = "/patrol/taste/update-comment-visible";
+        JSONObject json = new JSONObject();
+        json.put("comment_id",id);
+        json.put("visible",visible);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     *@description: INS删除评论
+     *@author:
+     *@time:
+     */
+    public JSONObject deleteComment(Integer comment_id) throws Exception {
+        String url = "/patrol/taste/delete-comment";
+        JSONObject json = new JSONObject();
+        json.put("comment_id",comment_id);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     *@description: INS新增门店
+     *@author:
+     *@time:
+     */
+    public JSONObject createShop(String shop_image_path,String shop_name,String label,String opening_time,String closing_time,String manager_name,String manager_phone,String city,String address,double longitude,double latitude,List<String> pos_ids,Integer recommended) throws Exception {
+        String url = "/patrol/shop/create";
+        JSONObject json = new JSONObject();
+        json.put("shop_image_path",shop_image_path);
+        json.put("shop_name",shop_name);
+        json.put("label",label);
+        json.put("opening_time",opening_time);
+        json.put("closing_time",closing_time);
+        json.put("manager_name",manager_name);
+        json.put("manager_phone",manager_phone);
+        json.put("city",city);
+        json.put("address",address);
+        json.put("longitude",longitude);
+        json.put("latitude",latitude);
+        json.put("pos_ids",pos_ids);
+        json.put("recommended",recommended);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    /**
+     *@description: INS搜索门店
+     *@author:
+     *@time:
+     */
+    public JSONObject searchShop(String shop_name,String manager_name,String city,Boolean status,int page,int size) throws Exception {
+        String url = "/patrol/shop/search";
+        JSONObject json = new JSONObject();
+        json.put("shop_name",shop_name);
+        json.put("manager_name",manager_name);
+        json.put("city",city);
+        json.put("status",status);
+        json.put("page",page);
+        json.put("size",size);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     *@description: INS搜索门店详情
+     *@author:
+     *@time:
+     */
+    public JSONObject searchShopInfo(Integer id) throws Exception {
+        String url = "/patrol/shop/search-info";
+        JSONObject json = new JSONObject();
+        json.put("id",id);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     *@description: INS编辑门店
+     *@author:
+     *@time:
+     */
+    public JSONObject createShop(Integer id,String shop_image_path,String shop_name,String label,String opening_time,String closing_time,String manager_name,String manager_phone,String city,String address,double longitude,double latitude,List<String> pos_ids,Integer recommended,Boolean status) throws Exception {
+        String url = "/patrol/shop/update";
+        JSONObject json = new JSONObject();
+        json.put("id",id);
+        json.put("shop_image_path",shop_image_path);
+        json.put("shop_name",shop_name);
+        json.put("label",label);
+        json.put("opening_time",opening_time);
+        json.put("closing_time",closing_time);
+        json.put("manager_name",manager_name);
+        json.put("manager_phone",manager_phone);
+        json.put("city",city);
+        json.put("address",address);
+        json.put("longitude",longitude);
+        json.put("latitude",latitude);
+        json.put("pos_ids",pos_ids);
+        json.put("recommended",recommended);
+        json.put("status",status);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     *@description: INS编辑门店状态
+     *@author:
+     *@time:
+     */
+    public JSONObject updateStatus(Integer id,Boolean status) throws Exception {
+        String url = "/patrol/shop/update-status";
+        JSONObject json = new JSONObject();
+        json.put("id",id);
+        json.put("status",status);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    /**
+     *@description: INS删除门店
+     *@author:
+     *@time:
+     */
+    public JSONObject deleteShop(Integer shop_id) throws Exception {
+        String url = "/patrol/shop/delete";
+        JSONObject json = new JSONObject();
+        json.put("shop_id",shop_id);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     *@description: INS反馈列表查询
+     *@author:
+     *@time:
+     */
+    public JSONObject feedbackList(String user_name,Integer feedback_type_id,int page,int size) throws Exception {
+        String url = "/patrol/feedback/list";
+        JSONObject json = new JSONObject();
+        json.put("user_name",user_name);
+        json.put("feedback_type_id",feedback_type_id);
+        json.put("page",page);
+        json.put("size",size);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    /**
+     *@description: INS添加礼品
+     *@time:
+     */
+    public JSONObject addGift(Integer feedback_id,Integer feedback_gift) throws Exception {
+        String url = "/patrol/feedback/add-gift";
+        JSONObject json = new JSONObject();
+        json.put("feedback_id",feedback_id);
+        json.put("feedback_gift",feedback_gift);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     *@description: INS修改是否展示反馈
+     *@time:
+     */
+    public JSONObject updateVisible(Integer feedback_id,Boolean visible) throws Exception {
+        String url = "/patrol/feedback/update-visible";
+        JSONObject json = new JSONObject();
+        json.put("feedback_id",feedback_id);
+        json.put("visible",visible);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     *@description: INS编辑反馈类型
+     *@time:
+     */
+    public JSONObject updateFeedbackType(Integer feedback_type_id,String feedback_type,String feedback_message) throws Exception {
+        String url = "/patrol/feedback/feedback-type/update";
+        JSONObject json = new JSONObject();
+        json.put("feedback_type_id",feedback_type_id);
+        json.put("feedback_type",feedback_type);
+        json.put("feedback_message",feedback_message);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     *@description: 获取所有反馈类型
+     *@author:
+     *@time:
+     */
+    public JSONObject feedbackTypeAll() throws Exception {
+        String url = "/patrol/feedback/feedback-type/query-all";
+        String json =
+                "{} ";
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
 }
 
 
