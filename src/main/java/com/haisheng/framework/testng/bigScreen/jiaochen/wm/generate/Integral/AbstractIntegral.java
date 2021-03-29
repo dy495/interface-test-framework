@@ -5,7 +5,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.ExchangePage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.IntegralExchangeStatusEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.AbstractGenerator;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.BaseGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.ExchangePageScene;
 
 import java.util.List;
@@ -16,11 +16,11 @@ import java.util.List;
  * @author wangmin
  * @date 2021/1/20 14:38
  */
-public abstract class BaseIntegral extends AbstractGenerator implements IIntegral {
+public abstract class AbstractIntegral extends BaseGenerator implements IIntegral {
     protected IntegralExchangeStatusEnum integralExchangeStatus;
     private final IScene integralScene;
 
-    public BaseIntegral(BaseBuilder baseBuilder) {
+    public AbstractIntegral(BaseBuilder baseBuilder) {
         super(baseBuilder);
         this.integralExchangeStatus = baseBuilder.integralExchangeStatus;
         this.integralScene = baseBuilder.integralScene;
@@ -30,7 +30,6 @@ public abstract class BaseIntegral extends AbstractGenerator implements IIntegra
     public Long getIntegralId() {
         try {
             IntegralExchangeStatusEnum.findByDesc(integralExchangeStatus.getDesc());
-            Preconditions.checkArgument(!isEmpty(), "visitor is null");
             logger("FIND " + integralExchangeStatus.name() + " START");
             Preconditions.checkArgument(counter(integralExchangeStatus) < 4, integralExchangeStatus.getDesc() + " 状态执行次数大于3次，强行停止，请检查此状态生成");
             List<ExchangePage> exchangePageLis = resultCollectToBean(ExchangePageScene.builder().build(), ExchangePage.class);

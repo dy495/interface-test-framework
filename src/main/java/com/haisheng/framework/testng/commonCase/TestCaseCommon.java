@@ -53,7 +53,7 @@ public class TestCaseCommon {
     public static HttpConfig config;
     public static String response = "";
     public static String authorization;
-    public static String IpPort=EnumTestProduce.JIAOCHEN_DAILY.getAddress();
+    public static String IpPort=EnumTestProduce.JC_DAILY.getAddress();
     private static CommonConfig commonConfig = null;
     private boolean FAIL = false;
     private final String DEBUG = System.getProperty("DEBUG", "true");
@@ -498,6 +498,9 @@ public class TestCaseCommon {
         return "13260";
     }
 
+    public String getXunDianShopOnline1() {
+        return "14630";
+    }
 
     private void dingPushFinal(boolean isFAIL) {
         if (DEBUG.trim().toLowerCase().equals("false") && isFAIL) {

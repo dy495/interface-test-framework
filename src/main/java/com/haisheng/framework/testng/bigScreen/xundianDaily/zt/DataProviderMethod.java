@@ -43,6 +43,7 @@ public class DataProviderMethod {
                 "110",
                 "119",
                 "11223344",
+                "uid_2cd5f8b4"
         };
     }
 
@@ -50,8 +51,9 @@ public class DataProviderMethod {
     public Object[] memberName() {
         return new String[]{
                 "测试角色1",
-                "测试角色2",
-                "测试角色3",
+                "小姐姐",
+                "小2姐",
+                "小姐姐2"
         };
     }
 
@@ -61,6 +63,8 @@ public class DataProviderMethod {
                 "1234567790",
                 "123123213213",
                 "123123123123",
+                "13604609869",
+                "136"
         };
     }
 
@@ -70,9 +74,39 @@ public class DataProviderMethod {
                 "wqd12er32ref122312dse21122",
                 "11321rfdsf13r3r43gqwe23rf4",
                 "12ede2f_3e2defqfec_13fsd2e",
+                "2fd55722-9109-4fa8-b084-fcb9d93a4b2f"
         };
     }
 
+
+
+    @DataProvider(name = "userIdName")
+    public Object[] userIdName() {
+        return new String[][]{
+                {"uid_2cd5f8b4","小姐姐"},
+                {"uid_2cd5f8b4","小姐姐2"},
+
+        };
+    }
+
+    @DataProvider(name = "userList1")
+    public Object[] userList1() {
+        return new String[][]{
+                {"uid_2cd5f8b4","小姐姐","13604609869"},
+                {"uid_2cd5f8b4","小姐姐2","13604609869"},
+
+        };
+    }
+
+
+    @DataProvider(name = "userList2")
+    public Object[] userList2() {
+        return new String[][]{
+                {"uid_2cd5f8b4","小姐姐","13604609869","2fd55722-9109-4fa8-b084-fcb9d93a4b2f"},
+                {"uid_2cd5f8b4","小姐姐2","13604609869","2fd55722-9109-4fa8-b084-fcb9d93a4b2f"},
+
+        };
+    }
 
     @DataProvider(name = "identity")
     public Object[] identity() {
@@ -80,6 +114,7 @@ public class DataProviderMethod {
                 "123",
                 "234",
                 "345",
+                "130"
         };
     }
 
@@ -115,7 +150,7 @@ public class DataProviderMethod {
     @DataProvider(name = "FACE_URL")
     public static Object[] face_url(){
         return new String[]{
-                "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/正脸.jpg",
+                "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/女人脸.jpg",
 
         };
     }

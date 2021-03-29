@@ -14,6 +14,9 @@ public enum EnumAccount {
     ALL_AUTHORITY_ONLINE("15037286013", "000000", "所有权限", false, "接待顾问2", "2227", "20034"),
 
     MARKETING_ONLINE("15321527989", "000000", "营销管理", false, "", "", ""),
+
+    ALL_JC_ONLINE("15711200001", "000000", "所有权限", false, "轿辰线上", "395", "-1"),
+
     ;
 
     EnumAccount(String phone, String password, String role, boolean isDaily, String name, String roleId, String receptionShopId) {

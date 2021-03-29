@@ -19,7 +19,11 @@
             <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.heyShop.StoreDataForHS"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.lxq.XundianAppDataOnline"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.lxq.XundianAppSystemOnline"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.lxq.XundianPCSystemOnline">
+            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.lxq.XundianPCSystemOnline"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.zt.StorePcCase"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.zt.StorePcData"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.zt.XundianAppData"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.zt.XundianPcCase">
                 <methods>
                     <exclude name="myReportFilter1"/>
                 </methods>

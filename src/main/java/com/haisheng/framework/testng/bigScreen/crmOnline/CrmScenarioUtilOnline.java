@@ -8,8 +8,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.arronlong.httpclientutil.HttpClientUtil;
+import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -59,7 +60,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
     /***
      * 方法区，不同产品的测试场景各不相同，自行更改
      */
-    public String IpPort = EnumTestProduce.CRM_ONLINE.getAddress();
+    public String IpPort = EnumTestProduce.PORSCHE_ONLINE.getAddress();
 
     //----------------------登陆--------------------
     public void login(String userName, String password) {
@@ -72,6 +73,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         long start = System.currentTimeMillis();
         try {
             response = HttpClientUtil.post(config);
+            Preconditions.checkArgument(response != null, userName + "登陆失败");
             authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
             logger.info("authorization:" + authorization);
         } catch (Exception e) {
@@ -2761,7 +2763,7 @@ public class CrmScenarioUtilOnline extends TestCaseCommon {
         String url = "/porsche/customer/edit";
         JSONObject object = new JSONObject();
         object.put("customer_id", customerId);
-        object.put("shop_id", EnumTestProduce.CRM_ONLINE.getShopId());
+        object.put("shop_id", EnumTestProduce.PORSCHE_ONLINE.getShopId());
         object.put("customer_name", customerName);
         object.put("customer_phone", customerPhone);
         object.put("customer_level", customerLevel);

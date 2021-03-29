@@ -1,8 +1,8 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity;
 
 /**
- * @author wangmin
- * @date  2020/12/23  16:26
+ * @author : wangmin
+ * @date :  2020/12/23  16:26
  */
 public enum  TargetTypeEnum {
 

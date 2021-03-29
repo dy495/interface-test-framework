@@ -84,9 +84,10 @@ public class XundianPCSystem extends TestCaseCommon implements TestCaseStd {
                 JSONObject obj = list.getJSONObject(j);
                 Preconditions.checkArgument(obj.containsKey("report_name"),"未展示报表名称");
                 Preconditions.checkArgument(obj.containsKey("report_type"),"未展示报表类型");
-                Preconditions.checkArgument(obj.containsKey("report_update_time"),"未展示报表更新时间");
                 Preconditions.checkArgument(obj.containsKey("shop_name"),"未展示相关门店");
                 Preconditions.checkArgument(obj.containsKey("report_time_dimension"),"未展示报表时间维度");
+                if(obj.getString("report_time_dimension").equals("自然月"))
+                    Preconditions.checkArgument(obj.containsKey("report_update_time"),"未展示报表更新时间");
             }
 
         } catch (AssertionError e) {
@@ -98,30 +99,30 @@ public class XundianPCSystem extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
-    public void myReportShowChk2() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONArray list = xd.reportList(1,50,null,null,null,null).getJSONArray("list");
-            List save = new ArrayList();
-            for (int i = 0; i < list.size();i++){
-                JSONObject obj = list.getJSONObject(i);
-                String time = obj.getString("report_update_time")+":000";
-                String a = dt.dateToTimestamp("yyyy-MM-dd HH:mm:ss:000",time);
-                save.add(a); //每个时间转时间戳
-            }
-            //新建一个由大到小的list
-            List newBittoSmall = save;
-            Collections.sort(newBittoSmall,Collections.reverseOrder());
-            Preconditions.checkArgument(newBittoSmall.equals(save),"未倒叙排列");
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("PC[我的报表]，校验根据报表更新时间倒叙排列");
-        }
-    }
+//    @Test
+//    public void myReportShowChk2() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            JSONArray list = xd.reportList(1,50,null,null,null,null).getJSONArray("list");
+//            List save = new ArrayList();
+//            for (int i = 0; i < list.size();i++){
+//                JSONObject obj = list.getJSONObject(i);
+//                String time = obj.getString("report_update_time")+":000";
+//                String a = dt.dateToTimestamp("yyyy-MM-dd HH:mm:ss:000",time);
+//                save.add(a); //每个时间转时间戳
+//            }
+//            //新建一个由大到小的list
+//            List newBittoSmall = save;
+//            Collections.sort(newBittoSmall,Collections.reverseOrder());
+//            Preconditions.checkArgument(newBittoSmall.equals(save),"未倒叙排列");
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("PC[我的报表]，校验根据报表更新时间倒叙排列");
+//        }
+//    }
 
     @Test
     public void myReportFilter1() {
@@ -234,13 +235,19 @@ public class XundianPCSystem extends TestCaseCommon implements TestCaseStd {
     public void myReportFilter6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String type = xd.reporttype().getJSONArray("list").getJSONObject(0).getString("type");
-            String time = xd.reporttime().getJSONArray("list").getJSONObject(0).getString("type");
-            JSONArray list = xd.reportList(1,100,null,type,time,null).getJSONArray("list");
-            for (int j = 0 ; j < list.size();j++){
-                String reporttime = list.getJSONObject(j).getString("report_time_dimension");
-                String reporttype = list.getJSONObject(j).getString("report_type");
-                Preconditions.checkArgument(reporttime.equals(time) && reporttype.equals(type),"根据时间维度="+time+"&&报表类型="+type+"查询，结果包含时间维度="+reporttime+"&&报表类型="+reporttype);
+            String type = xd.reporttype().getJSONArray("list").getJSONObject(0).getString("value");
+            String type0 = xd.reporttype().getJSONArray("list").getJSONObject(0).getString("type");
+            JSONArray list0 = xd.reporttime().getJSONArray("list");
+            for(int i=0;i<list0.size();i++){
+                String time = list0.getJSONObject(i).getString("value");
+                String time0 = list0.getJSONObject(i).getString("type");
+                JSONArray list = xd.reportList(1,10,null,type,time,null).getJSONArray("list");
+                for (int j = 0 ; j < list.size();j++){
+                    String reporttime = list.getJSONObject(j).getString("report_time_dimension");
+                    String reporttype = list.getJSONObject(j).getString("report_type");
+                    Preconditions.checkArgument(reporttime.equals(time0) && reporttype.equals(type0),"根据时间维度="+time+"&&报表类型="+type+"查询，结果包含时间维度="+reporttime+"&&报表类型="+reporttype);
+                }
+
             }
 
         } catch (AssertionError e) {
@@ -258,10 +265,12 @@ public class XundianPCSystem extends TestCaseCommon implements TestCaseStd {
         try {
 
             JSONArray list = xd.reportList(1,100,null,null,null,null).getJSONArray("list");
+            JSONArray list0 = new JSONArray();
+
             if (list.size()>0){
                 int id = list.getJSONObject(0).getInteger("id");
-                int code = xd.reportExport(id).getInteger("code");
-                Preconditions.checkArgument(code==1000,"导出报表 id="+id+", 状态码"+code);
+                xd.customizeReportExport(id,null,null,null,"2021-03-21","2021-03-21",null);
+//                Preconditions.checkArgument(res.getInteger("code")==1000,"自定义导出报表 id="+id+", 状态码"+res.getInteger("code"));
             }
 
         } catch (AssertionError e) {
@@ -269,7 +278,7 @@ public class XundianPCSystem extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("PC[我的报表],根据时间维度和报表类型组合筛选");
+            saveData("PC[我的报表],自定义导出报表");
         }
     }
 

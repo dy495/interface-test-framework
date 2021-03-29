@@ -3,9 +3,8 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.gly;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -27,7 +26,8 @@ public class Jc_Pc_CustomerManage extends TestCaseCommon implements TestCaseStd 
     public String shopId = "-1";
     CommonPram cp = new CommonPram();
     public String appletTocken = EnumAppletToken.JC_GLY_DAILY.getToken();
-
+    CommonConfig commonConfig = new CommonConfig();
+    private static final EnumTestProduce product = EnumTestProduce.JC_DAILY;
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
      */
@@ -35,22 +35,22 @@ public class Jc_Pc_CustomerManage extends TestCaseCommon implements TestCaseStd 
     @Override
     public void initial() {
         logger.debug("before classs initial");
-        CommonConfig commonConfig = new CommonConfig();
         //替换checklist的相关信息
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_JIAOCHEN_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "郭丽雅";
-        commonConfig.product = EnumProduce.JC.name();
+        commonConfig.product = product.getAbbreviation();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "jc-daily-test");
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //放入shopId
-        commonConfig.shopId = EnumTestProduce.JIAOCHEN_DAILY.getShopId();
+        commonConfig.referer = "https://servicewechat.com/wxbd41de85739a00c7/0/page-frame.html";
+        commonConfig.shopId = product.getShopId();
+        commonConfig.roleId = "603";
         beforeClassInit(commonConfig);
         logger.debug("jc: " + jc);
-        commonConfig.referer = EnumTestProduce.JIAOCHEN_DAILY.getReferer();
     }
 
     @AfterClass

@@ -1,7 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.xundianDaily.zt;
 
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
@@ -15,7 +14,6 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import com.haisheng.framework.util.CommonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.*;
@@ -43,10 +41,10 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistQaOwner = EnumChecklistUser.QQ.getName();
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.XUNDIAN_DAILY_TEST.getJobName());
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.MENDIAN_DAILY.getDesc());
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.XD_DAILY.getDesc());
         commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.pushRd = new String[]{"15898182672", "18513118484", "18810332354", "15084928847"};
-        commonConfig.shopId = EnumTestProduce.MENDIAN_DAILY.getShopId();
+        commonConfig.shopId = EnumTestProduce.XD_DAILY.getShopId();
         beforeClassInit(commonConfig);
         logger.debug("xundian " + xd);
         xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
@@ -170,34 +168,34 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
 
 
     //会员到访列表中的人物id，可以在会员信息列表中搜索出来
-    @Test
-    public void MemUserId ()throws Exception{
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //会员身份列表页获取人物id
-            JSONArray list = md.MemberVisit("","","").getJSONArray("list");
-            String userid = list.getJSONObject(0).getString("user_id");
-            JSONArray list1 = md.MemberList(page,size,"","","",userid,"").getJSONArray("list");
-            String userId = list1.getJSONObject(0).getString("user_id");
-            checkArgument(userid.equals(userId), "会员到访页人物id"+userid+"进行搜索"+"会员信息列表页搜索出的"+userId);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("会员到访列表中的人物id在会员信息页");
-        }
-    }
+//    @Test
+//    public void MemUserId ()throws Exception{
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            //会员身份列表页获取人物id
+//            JSONArray list = md.MemberVisit("","","").getJSONArray("list");
+//            String userid = list.getJSONObject(0).getString("user_id");
+//            JSONArray list1 = md.MemberList(page,size,"","","",userid,"").getJSONArray("list");
+//            String userId = list1.getJSONObject(0).getString("user_id");
+//            checkArgument(userid.equals(userId), "会员到访页人物id"+userid+"进行搜索"+"会员信息列表页搜索出的"+userId);
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("会员到访列表中的人物id在会员信息页");
+//        }
+//    }
 
     //会员信息通过会员id筛选
     @Test(dataProvider = "memberId",dataProviderClass = DataProviderMethod.class)
     public void searchMember(String memberId) throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray list = md.MemberList(page,size,memberId,"","","","").getJSONArray("list");
+            JSONArray list = md.MemberList(page,size,memberId,null,null,null,null).getJSONArray("list");
             for (int j = 0 ; j < list.size();j++) {
                 String memId = list.getJSONObject(j).getString("member_id");
-                Preconditions.checkArgument(memId.contains(memberId),"根据"+memberId+"查询，结果包含"+memId);
+                Preconditions.checkArgument(memId.equals(memberId),"根据"+memberId+"查询，结果包含"+memId);
             }
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -208,12 +206,12 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //会员信息通过姓名筛选
+    //会员信息通过姓名筛选（包阔模糊搜索和精确搜索）
     @Test(dataProvider = "memberName",dataProviderClass = DataProviderMethod.class)
     public void searchMember1(String memberName) throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray list = md.MemberList(page,size,"",memberName,"","","").getJSONArray("list");
+            JSONArray list = md.MemberList(page,size,null,memberName,null,null,null).getJSONArray("list");
             for (int j = 0 ; j < list.size();j++) {
                 String memName = list.getJSONObject(j).getString("member_name");
                 Preconditions.checkArgument(memName.contains(memberName),"根据"+memberName+"查询，结果包含"+memName);
@@ -233,7 +231,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
     public void searchMember2(String memberPhone) throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray list = md.MemberList(page,size,"","",memberPhone,"","").getJSONArray("list");
+            JSONArray list = md.MemberList(page,size,null,null,memberPhone,null,null).getJSONArray("list");
             for (int j = 0 ; j < list.size();j++) {
                 String memPhone = list.getJSONObject(j).getString("phone");
                 Preconditions.checkArgument(memPhone.contains(memberPhone), "根据" + memberPhone + "查询，结果包含" + memPhone);
@@ -252,12 +250,11 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
     public void searchMember3(String userId) throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray list = md.MemberList(page,size,"","","",userId,"").getJSONArray("list");
+            JSONArray list = md.MemberList(page,size,null,null,null,userId,null).getJSONArray("list");
             for (int j = 0 ; j < list.size();j++) {
                 String memUserId = list.getJSONObject(j).getString("user_id");
                 Preconditions.checkArgument(memUserId.contains(userId), "根据" + userId + "查询，结果包含" + memUserId);
             }
-
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -268,71 +265,46 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    //会员信息列表通过会员身份筛选
-    @Test(dataProvider = "identity",dataProviderClass = DataProviderMethod.class)
-    public void searchMember4(String identity) throws Exception{
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONArray list = md.MemberList(page,size,"","","","",identity).getJSONArray("list");
-            for (int j = 0 ; j < list.size();j++) {
-                String memIdentity = list.getJSONObject(j).getString("identity");
-                Preconditions.checkArgument(memIdentity.contains(identity), "根据" + identity + "查询，结果包含" + memIdentity);
-            }
+//    //会员信息列表通过会员身份筛选
+//    @Test(dataProvider = "identity",dataProviderClass = DataProviderMethod.class)
+//    public void searchMember4(String identity) throws Exception{
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            JSONArray list = md.MemberList(page,size,null,null,null,null,identity).getJSONArray("list");
+//            for (int j = 0 ; j < list.size();j++) {
+//                String memIdentity = list.getJSONObject(j).getString("identity");
+//                Preconditions.checkArgument(memIdentity.contains(identity), "根据" + identity + "查询，结果包含" + memIdentity);
+//            }
+//
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("会员信息列表通过会员身份搜索");
+//        }
+//    }
 
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("会员信息列表通过会员身份搜索");
-        }
-    }
 
 
 
-    //会员信息列表通过会员id和会员姓名筛选
-    @Test()
-    public void searchMember5() throws Exception{
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONArray list = md.MemberList(page,size,"","","","","").getJSONArray("list");
-            if (list.size()!=0){
-                String memberId = list.getJSONObject(0).getString("member_id");
-                JSONArray list0 = md.MemberList(page,size,memberId,"","","","").getJSONArray("list");
-                for(int i=0;i<list0.size();i++){
-                    String memberId1 = list0.getJSONObject(i).getString("member_id");
-                    String memberName1 = list0.getJSONObject(i).getString("member_name");
-                    Preconditions.checkArgument(memberId.equals(memberId1),"根据"+memberId+"查询，返回的结果"+memberId1);
-                }
-            }
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("会员信息列表通过会员id搜索");
-        }
-    }
 
 
     //会员信息列表通过会员id和会员姓名筛选
-    @Test()
-    public void searchMember6() throws Exception{
+    @Test(dataProvider = "userIdName",dataProviderClass = DataProviderMethod.class)
+    public void searchMember5(String userId,String userName ) throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray list = md.MemberList(page,size,"","","","","").getJSONArray("list");
-            if (list.size()!=0){
-                String memberId = list.getJSONObject(0).getString("member_id");
-                String memberName = list.getJSONObject(0).getString("member_name");
-                JSONArray list0 = md.MemberList(page,size,memberId,memberName,"","","").getJSONArray("list");
-                for(int i=0;i<list0.size();i++){
-                    String memberId1 = list0.getJSONObject(i).getString("member_id");
-                    String memberName1 = list0.getJSONObject(i).getString("member_name");
-                    Preconditions.checkArgument(memberId.equals(memberId1),"根据"+memberId+"查询，返回的结果"+memberId1);
-                    Preconditions.checkArgument(memberName.equals(memberName1),"根据"+memberName+"查询，返回结果"+memberName1);
-                }
+            JSONArray list0 = md.MemberList(page,size,userId,userName,null,null,null).getJSONArray("list");
+            if (list0.size()!=0){
+                String memberId1 = list0.getJSONObject(0).getString("member_id");
+                String memberName1 = list0.getJSONObject(0).getString("member_name");
+                Preconditions.checkArgument(userId.equals(memberId1),"根据"+userId+"查询，返回的结果"+memberId1);
+                Preconditions.checkArgument(userName.equals(memberName1),"根据"+userName+"查询，返回结果"+memberName1);
             }
+
+//                }
+//            }
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -344,26 +316,19 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //会员信息列表通过会员id和会员姓名+联系电话筛选
-    @Test()
-    public void searchMember7() throws Exception{
+    @Test(dataProvider = "userList1",dataProviderClass = DataProviderMethod.class)
+    public void searchMember6(String userId,String userName,String phone) throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray list = md.MemberList(page,size,"","","","","").getJSONArray("list");
-            if (list.size()!=0){
-                String memberId = list.getJSONObject(0).getString("member_id");
-                String memberName = list.getJSONObject(0).getString("member_name");
-                String memberPhone = list.getJSONObject(0).getString("phone");
-                JSONArray list0 = md.MemberList(page,size,memberId,memberName,memberPhone,"","").getJSONArray("list");
-                for(int i=0;i<list0.size();i++){
-                    String memberId1 = list0.getJSONObject(i).getString("member_id");
-                    String memberName1 = list0.getJSONObject(i).getString("member_name");
-                    String memberPhone1 = list0.getJSONObject(i).getString("phone");
-                    Preconditions.checkArgument(memberId.equals(memberId1),"根据"+memberId+"查询，返回的结果"+memberId1);
-                    Preconditions.checkArgument(memberName.equals(memberName1),"根据"+memberName+"查询，返回结果"+memberName1);
-                    Preconditions.checkArgument(memberPhone.equals(memberPhone1),"根据"+memberPhone+"查询，返回结果"+memberPhone1);
+            JSONArray list0 = md.MemberList(page,size,userId,userName,phone,null,null).getJSONArray("list");
+            if (list0.size()!=0){
+                String memberId = list0.getJSONObject(0).getString("member_id");
+                String memberName = list0.getJSONObject(0).getString("member_name");
+                String memberPhone = list0.getJSONObject(0).getString("phone");
+                Preconditions.checkArgument(userId.equals(memberId),"根据"+userId+"查询，返回的结果"+memberId);
+                Preconditions.checkArgument(userName.equals(memberName),"根据"+userName+"查询，返回结果"+memberName);
+                Preconditions.checkArgument(phone.equals(memberPhone),"根据"+phone+"查询，返回结果"+memberPhone);
                 }
-
-            }
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -376,27 +341,20 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
 
 
     //会员信息列表通过会员id和会员姓名+联系电话+人物id筛选
-    @Test()
-    public void searchMember8() throws Exception{
+    @Test(dataProvider = "userList2",dataProviderClass = DataProviderMethod.class)
+    public void searchMember7(String userId,String userName,String phone,String memberUserId) throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray list = md.MemberList(page,size,"","","","","").getJSONArray("list");
-            if (list.size()!=0){
-                String memberId = list.getJSONObject(0).getString("member_id");
-                String memberName = list.getJSONObject(0).getString("member_name");
-                String memberPhone = list.getJSONObject(0).getString("phone");
-                String memberUserId = list.getJSONObject(0).getString("user_id");
-                JSONArray list0 = md.MemberList(page,size,memberId,memberName,memberPhone,memberUserId,"").getJSONArray("list");
-                for(int i=0;i<list0.size();i++){
-                    String memberId1 = list0.getJSONObject(i).getString("member_id");
-                    String memberName1 = list0.getJSONObject(i).getString("member_name");
-                    String memberPhone1 = list0.getJSONObject(i).getString("phone");
-                    String memberUserId1 = list0.getJSONObject(i).getString("user_id");
-                    Preconditions.checkArgument(memberId.equals(memberId1),"根据"+memberId+"查询，返回的结果"+memberId1);
-                    Preconditions.checkArgument(memberName.equals(memberName1),"根据"+memberName+"查询，返回结果"+memberName1);
-                    Preconditions.checkArgument(memberPhone.equals(memberPhone1),"根据"+memberPhone+"查询，返回结果"+memberPhone1);
-                    Preconditions.checkArgument(memberUserId.equals(memberUserId1),"根据"+memberUserId+"查询，返回结果"+memberUserId1);
-                }
+            JSONArray list0 = md.MemberList(page,size,userId,userName,phone,memberUserId,null).getJSONArray("list");
+            if (list0.size()!=0){
+                String memberId = list0.getJSONObject(0).getString("member_id");
+                String memberName = list0.getJSONObject(0).getString("member_name");
+                String memberPhone = list0.getJSONObject(0).getString("phone");
+                String memberUId = list0.getJSONObject(0).getString("user_id");
+                Preconditions.checkArgument(userId.equals(memberId),"根据"+userId+"查询，返回的结果"+memberId);
+                Preconditions.checkArgument(userName.equals(memberName),"根据"+userName+"查询，返回结果"+memberName);
+                Preconditions.checkArgument(phone.equals(memberPhone),"根据"+phone+"查询，返回结果"+memberPhone);
+                Preconditions.checkArgument(memberUId.equals(memberUserId),"根据"+memberUserId+"查询，返回结果"+memberUId);
             }
 
         } catch (AssertionError e) {
@@ -408,164 +366,164 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //会员信息列表通过会员id和会员姓名+联系电话+人物id+会员身份筛选
-    @Test()
-    public void searchMember9() throws Exception{
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONArray list = md.MemberList(page,size,"","","","","").getJSONArray("list");
-            if (list.size()!=0){
-                String memberId = list.getJSONObject(0).getString("member_id");
-                String memberName = list.getJSONObject(0).getString("member_name");
-                String memberPhone = list.getJSONObject(0).getString("phone");
-                String memberUserId = list.getJSONObject(0).getString("user_id");
-                String memberidentity = list.getJSONObject(0).getString("identity");
-                JSONArray list0 = md.MemberList(page,size,memberId,memberName,memberPhone,memberUserId,memberidentity).getJSONArray("list");
-                for(int i=0;i<list0.size();i++){
-                    String memberId1 = list0.getJSONObject(i).getString("member_id");
-                    String memberName1 = list0.getJSONObject(i).getString("member_name");
-                    String memberPhone1 = list0.getJSONObject(i).getString("phone");
-                    String memberUserId1 = list0.getJSONObject(i).getString("user_id");
-                    String memberidentity1 = list.getJSONObject(i).getString("identity");
-                    Preconditions.checkArgument(memberId.equals(memberId1),"根据"+memberId+"查询，返回的结果"+memberId1);
-                    Preconditions.checkArgument(memberName.equals(memberName1),"根据"+memberName+"查询，返回结果"+memberName1);
-                    Preconditions.checkArgument(memberPhone.equals(memberPhone1),"根据"+memberPhone+"查询，返回结果"+memberPhone1);
-                    Preconditions.checkArgument(memberUserId.equals(memberUserId1),"根据"+memberUserId+"查询，返回结果"+memberUserId1);
-                    Preconditions.checkArgument(memberidentity.equals(memberidentity1),"根据"+memberidentity+"查询，返回结果"+memberidentity1);
-                }
+//    //会员信息列表通过会员id和会员姓名+联系电话+人物id+会员身份筛选
+//    @Test()
+//    public void searchMember8() throws Exception{
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            JSONArray list = md.MemberList(page,size,"","","","","").getJSONArray("list");
+//            if (list.size()!=0){
+//                String memberId = list.getJSONObject(0).getString("member_id");
+//                String memberName = list.getJSONObject(0).getString("member_name");
+//                String memberPhone = list.getJSONObject(0).getString("phone");
+//                String memberUserId = list.getJSONObject(0).getString("user_id");
+//                String memberidentity = list.getJSONObject(0).getString("identity");
+//                JSONArray list0 = md.MemberList(page,size,memberId,memberName,memberPhone,memberUserId,memberidentity).getJSONArray("list");
+//                for(int i=0;i<list0.size();i++){
+//                    String memberId1 = list0.getJSONObject(i).getString("member_id");
+//                    String memberName1 = list0.getJSONObject(i).getString("member_name");
+//                    String memberPhone1 = list0.getJSONObject(i).getString("phone");
+//                    String memberUserId1 = list0.getJSONObject(i).getString("user_id");
+//                    String memberidentity1 = list.getJSONObject(i).getString("identity");
+//                    Preconditions.checkArgument(memberId.equals(memberId1),"根据"+memberId+"查询，返回的结果"+memberId1);
+//                    Preconditions.checkArgument(memberName.equals(memberName1),"根据"+memberName+"查询，返回结果"+memberName1);
+//                    Preconditions.checkArgument(memberPhone.equals(memberPhone1),"根据"+memberPhone+"查询，返回结果"+memberPhone1);
+//                    Preconditions.checkArgument(memberUserId.equals(memberUserId1),"根据"+memberUserId+"查询，返回结果"+memberUserId1);
+//                    Preconditions.checkArgument(memberidentity.equals(memberidentity1),"根据"+memberidentity+"查询，返回结果"+memberidentity1);
+//                }
+//
+////                Preconditions.checkArgument(memberId.equals(memberId1) && memberName.equals(memberName1) && memberPhone.equals(memberPhone1) && memberUserId.equals(memberUserId1)&&memberidentity.equals(memberidentity1)
+////                        ,"根据会员id="+memberId+"&&会员姓名="+memberName+"&&会员电话="+memberPhone+"&&人物id"+memberUserId+"&&人物身份"+memberidentity+"查询，结果包含门店名称="+reportresult+"&&报表类型="+reporttype);
+//            }
+//
+//
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("会员信息列表通过会员id+会员姓名+会员电话+人物id+会员身份搜索");
+//        }
+//    }
 
-//                Preconditions.checkArgument(memberId.equals(memberId1) && memberName.equals(memberName1) && memberPhone.equals(memberPhone1) && memberUserId.equals(memberUserId1)&&memberidentity.equals(memberidentity1)
-//                        ,"根据会员id="+memberId+"&&会员姓名="+memberName+"&&会员电话="+memberPhone+"&&人物id"+memberUserId+"&&人物身份"+memberidentity+"查询，结果包含门店名称="+reportresult+"&&报表类型="+reporttype);
-            }
-
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("会员信息列表通过会员id+会员姓名+会员电话+人物id+会员身份搜索");
-        }
-    }
-
-    //会员到访列表通过user_id查询
-    @Test(dataProvider = "visitId",dataProviderClass = DataProviderMethod.class)
-    public void memberVisits(String visitId) throws Exception{
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONArray list = md.MemberVisit(visitId,"","").getJSONArray("list");
-            for(int i=0;i<list.size();i++){
-                String userId = list.getJSONObject(i).getString("user_id");
-                Preconditions.checkArgument(userId.equals(visitId),"根据"+visitId+"查询，返回的结果"+userId);
-            }
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("会员到访列表通过user_id查询");
-        }
-    }
-
-    //会员到访列表通过name查询
-    @Test(dataProvider = "visitName",dataProviderClass = DataProviderMethod.class)
-    public void memberVisits1(String visitName) throws Exception{
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONArray list = md.MemberVisit("",visitName,"").getJSONArray("list");
-            for(int i=0;i<list.size();i++){
-                String userName = list.getJSONObject(i).getString("name");
-                Preconditions.checkArgument(userName.equals(visitName),"根据"+visitName+"查询，返回的结果"+userName);
-            }
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("会员到访列表通过name查询");
-        }
-    }
-
-    //会员到访列表通过shop_name查询
-    @Test(dataProvider = "visitShopName",dataProviderClass = DataProviderMethod.class)
-    public void memberVisits2(String visitShopName) throws Exception{
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONArray list = md.MemberVisit("","",visitShopName).getJSONArray("list");
-            for(int i=0;i<list.size();i++){
-                String shopName = list.getJSONObject(i).getString("shop_name");
-                Preconditions.checkArgument(shopName.equals(visitShopName),"根据"+visitShopName+"查询，返回的结果"+shopName);
-            }
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("会员到访列表通过shop_name查询");
-        }
-    }
-
-
-    //会员到访列表通过user_id+name查询
-    @Test()
-    public void memberVisits3() throws Exception{
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONArray list = md.MemberVisit("","","").getJSONArray("list");
-            if(list.size()!=0){
-                String userId = list.getJSONObject(0).getString("user_id");
-                String name = list.getJSONObject(0).getString("name");
-                JSONArray list0 = md.MemberVisit(userId,name,"").getJSONArray("list");
-                for(int i=0;i<list0.size();i++){
-                    String userId1 = list.getJSONObject(0).getString("user_id");
-                    String Name = list0.getJSONObject(i).getString("name");
-                    Preconditions.checkArgument(userId1.equals(userId),"根据"+userId+"查询，返回的结果"+userId1);
-                    Preconditions.checkArgument(Name.equals(name),"根据"+name+"查询，返回的结果"+Name);
-                }
-            }
-
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("会员到访列表通过user_id+name查询");
-        }
-    }
-
-    //会员到访列表通过user_id+name+shop_name查询
-    @Test()
-    public void memberVisits4() throws Exception{
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONArray list = md.MemberVisit("","","").getJSONArray("list");
-            if(list.size()!=0){
-                String userId = list.getJSONObject(0).getString("user_id");
-                String name = list.getJSONObject(0).getString("name");
-                String shopName = list.getJSONObject(0).getString("shop_name");
-                JSONArray list0 = md.MemberVisit(userId,name,shopName).getJSONArray("list");
-                for(int i=0;i<list0.size();i++){
-                    String userId1 = list.getJSONObject(i).getString("user_id");
-                    String Name = list0.getJSONObject(i).getString("name");
-                    String shopName1 = list.getJSONObject(i).getString("shop_name");
-                    Preconditions.checkArgument(userId1.equals(userId),"根据"+userId+"查询，返回的结果"+userId1);
-                    Preconditions.checkArgument(Name.equals(name),"根据"+name+"查询，返回的结果"+Name);
-                    Preconditions.checkArgument(shopName.equals(shopName1),"根据"+shopName+"查询，返回的结果"+shopName1);
-                }
-            }
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("会员到访列表通过user_id+name+shop_name查询");
-        }
-    }
+//    //会员到访列表通过user_id查询
+//    @Test(dataProvider = "visitId",dataProviderClass = DataProviderMethod.class)
+//    public void memberVisits(String visitId) throws Exception{
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            JSONArray list = md.MemberVisit(visitId,"","").getJSONArray("list");
+//            for(int i=0;i<list.size();i++){
+//                String userId = list.getJSONObject(i).getString("user_id");
+//                Preconditions.checkArgument(userId.equals(visitId),"根据"+visitId+"查询，返回的结果"+userId);
+//            }
+//
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("会员到访列表通过user_id查询");
+//        }
+//    }
+//
+//    //会员到访列表通过name查询
+//    @Test(dataProvider = "visitName",dataProviderClass = DataProviderMethod.class)
+//    public void memberVisits1(String visitName) throws Exception{
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            JSONArray list = md.MemberVisit("",visitName,"").getJSONArray("list");
+//            for(int i=0;i<list.size();i++){
+//                String userName = list.getJSONObject(i).getString("name");
+//                Preconditions.checkArgument(userName.equals(visitName),"根据"+visitName+"查询，返回的结果"+userName);
+//            }
+//
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("会员到访列表通过name查询");
+//        }
+//    }
+//
+//    //会员到访列表通过shop_name查询
+//    @Test(dataProvider = "visitShopName",dataProviderClass = DataProviderMethod.class)
+//    public void memberVisits2(String visitShopName) throws Exception{
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            JSONArray list = md.MemberVisit("","",visitShopName).getJSONArray("list");
+//            for(int i=0;i<list.size();i++){
+//                String shopName = list.getJSONObject(i).getString("shop_name");
+//                Preconditions.checkArgument(shopName.equals(visitShopName),"根据"+visitShopName+"查询，返回的结果"+shopName);
+//            }
+//
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("会员到访列表通过shop_name查询");
+//        }
+//    }
+//
+//
+//    //会员到访列表通过user_id+name查询
+//    @Test()
+//    public void memberVisits3() throws Exception{
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            JSONArray list = md.MemberVisit("","","").getJSONArray("list");
+//            if(list.size()!=0){
+//                String userId = list.getJSONObject(0).getString("user_id");
+//                String name = list.getJSONObject(0).getString("name");
+//                JSONArray list0 = md.MemberVisit(userId,name,"").getJSONArray("list");
+//                for(int i=0;i<list0.size();i++){
+//                    String userId1 = list.getJSONObject(0).getString("user_id");
+//                    String Name = list0.getJSONObject(i).getString("name");
+//                    Preconditions.checkArgument(userId1.equals(userId),"根据"+userId+"查询，返回的结果"+userId1);
+//                    Preconditions.checkArgument(Name.equals(name),"根据"+name+"查询，返回的结果"+Name);
+//                }
+//            }
+//
+//
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("会员到访列表通过user_id+name查询");
+//        }
+//    }
+//
+//    //会员到访列表通过user_id+name+shop_name查询
+//    @Test()
+//    public void memberVisits4() throws Exception{
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            JSONArray list = md.MemberVisit("","","").getJSONArray("list");
+//            if(list.size()!=0){
+//                String userId = list.getJSONObject(0).getString("user_id");
+//                String name = list.getJSONObject(0).getString("name");
+//                String shopName = list.getJSONObject(0).getString("shop_name");
+//                JSONArray list0 = md.MemberVisit(userId,name,shopName).getJSONArray("list");
+//                for(int i=0;i<list0.size();i++){
+//                    String userId1 = list.getJSONObject(i).getString("user_id");
+//                    String Name = list0.getJSONObject(i).getString("name");
+//                    String shopName1 = list.getJSONObject(i).getString("shop_name");
+//                    Preconditions.checkArgument(userId1.equals(userId),"根据"+userId+"查询，返回的结果"+userId1);
+//                    Preconditions.checkArgument(Name.equals(name),"根据"+name+"查询，返回的结果"+Name);
+//                    Preconditions.checkArgument(shopName.equals(shopName1),"根据"+shopName+"查询，返回的结果"+shopName1);
+//                }
+//            }
+//
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("会员到访列表通过user_id+name+shop_name查询");
+//        }
+//    }
 }
 
 

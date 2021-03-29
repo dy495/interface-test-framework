@@ -2,7 +2,6 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase;
 
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.scenemaker.SceneAttribute;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.scenemaker.SceneMarker;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.parse.BeanParser;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.parse.SceneParser;
 import org.testng.annotations.Test;
 
@@ -16,28 +15,21 @@ public class TestFreeMarker {
 
     @Test
     public void createScene() {
-        String htmlPath = "http://192.168.50.3/api-doc/business-jiaochen/pc/index.html";
-        SceneAttribute[] sceneAttributeList = new SceneParser.Builder().htmlUrl(htmlPath).build().getAttributes();
-        Arrays.stream(sceneAttributeList).forEach(e -> new SceneMarker.Builder()
-                .templatePath("src\\main\\resources\\template")
-                .templateName("sceneTemplate.ftl")
-                .parentPath("src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/s")
-                .sceneAttribute(e)
-                .buildMarker()
-                .execute());
-    }
-
-    @Test
-    public void createBean() {
-        String htmlPath = "http://192.168.50.3/api-doc/business-jiaochen/pc/index.html";
-        SceneAttribute[] sceneAttributeList = new BeanParser.Builder().htmlUrl(htmlPath).build().getAttributes();
-        Arrays.stream(sceneAttributeList).forEach(e -> new SceneMarker.Builder()
-                .templatePath("src\\main\\resources\\template")
-                .templateName("beanTemplate.ftl")
-                .parentPath("src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/b")
-                .sceneAttribute(e)
-                .buildMarker()
-                .execute());
+        String[] htmlPaths = {
+                "http://192.168.50.3/api-doc/business-jiaochen/applet/index.html",
+                "http://192.168.50.3/api-doc/business-jiaochen/pc/index.html",
+                "http://192.168.50.3/api-doc/business-jiaochen/app/index.html",
+        };
+        Arrays.stream(htmlPaths).forEach(htmlPath -> {
+            SceneAttribute[] sceneAttributeList = new SceneParser.Builder().htmlUrl(htmlPath).build().getAttributes();
+            Arrays.stream(sceneAttributeList).forEach(sceneAttribute -> new SceneMarker.Builder()
+                    .templatePath("src\\main\\resources\\template")
+                    .templateName("sceneTemplate.ftl")
+                    .parentPath("src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/sense")
+                    .sceneAttribute(sceneAttribute)
+                    .buildMarker()
+                    .execute());
+        });
     }
 
 //    @Test

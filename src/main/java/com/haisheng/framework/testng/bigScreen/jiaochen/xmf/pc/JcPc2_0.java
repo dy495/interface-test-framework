@@ -49,7 +49,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
     private QADbProxy qaDbProxy = QADbProxy.getInstance();
     public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
     CommonConfig commonConfig = new CommonConfig();
-    public String IpPort = EnumTestProduce.JIAOCHEN_DAILY.getAddress();
+    public String IpPort = EnumTestProduce.JC_DAILY.getAddress();
 
 
 
@@ -67,8 +67,8 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "xmf";
-        commonConfig.referer = EnumTestProduce.JIAOCHEN_DAILY.getReferer();
-        commonConfig.product = EnumTestProduce.JIAOCHEN_DAILY.name();
+        commonConfig.referer = EnumTestProduce.JC_DAILY.getReferer();
+        commonConfig.product = EnumTestProduce.JC_DAILY.name();
 
         //replace backend gateway url
         //commonConfig.gateway = "";
@@ -77,7 +77,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JC_DAILY.getDesc() + commonConfig.checklistQaOwner);
 
 
         //replace ding push conf
@@ -103,7 +103,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         object.put("phone", username);
         object.put("verification_code", password);
         commonConfig.roleId=roleId;
-        httpPost(path, object, EnumTestProduce.JIAOCHEN_DAILY.getAddress());
+        httpPost(path, object, EnumTestProduce.JC_DAILY.getAddress());
     }
 
     //pc登录
@@ -113,7 +113,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         object.put("phone", phone);
         object.put("verification_code", verificationCode);
         commonConfig.roleId=roleId;
-        httpPost(path, object, EnumTestProduce.JIAOCHEN_DAILY.getAddress());
+        httpPost(path, object, EnumTestProduce.JC_DAILY.getAddress());
     }
     @AfterClass
     @Override
@@ -487,8 +487,8 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
     public void CreateRemindCheck() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-//            System.out.println(dt.getHistoryDate(-1096));
-//            System.out.println(dt.getHHmm(0,"HH:mm:ss"));
+            System.out.println(dt.getHistoryDate(-181));
+            System.out.println(dt.getHHmm(0,"HH:mm:ss"));
             dt.getHHmm(0);
             String maile="2001";
             //前提新建好一个任务

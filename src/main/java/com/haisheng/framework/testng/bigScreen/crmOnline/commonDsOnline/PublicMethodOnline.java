@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.bean.SaleInfo;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppointmentType;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarModel;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
@@ -71,7 +71,7 @@ public class PublicMethodOnline {
         }
         SaleInfo saleInfo = new SaleInfo();
         saleInfo.setUserId(null);
-        saleInfo.setUserName("总经理");
+        saleInfo.setUserName("zjl");
         saleInfo.setAccount("zjl");
         list.add(saleInfo);
         return list;

@@ -2,7 +2,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.xmf;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
 
 
 public class PublicParm {
@@ -50,6 +50,7 @@ public class PublicParm {
     public String dzcode = "000000";
 
     //---------2.0---------
+    public String String_50="一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十";
     public String String_20="一二三四五六七八九十一二三四五六七八九十";
     public String String_200="一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十";
     public String StoreCommodityId="85";  //TODO:编辑需要的商品套餐的名字

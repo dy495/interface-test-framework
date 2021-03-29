@@ -43,15 +43,15 @@ public class PcDataOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
         commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
-        commonConfig.product = EnumProduce.BSJ.name();
-        commonConfig.referer = EnumTestProduce.CRM_ONLINE.getReferer();
+        commonConfig.product = EnumTestProduce.PORSCHE_ONLINE.getAbbreviation();
+        commonConfig.referer = EnumTestProduce.PORSCHE_ONLINE.getReferer();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.CRM_ONLINE_TEST.getJobName());
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_ONLINE.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.PORSCHE_ONLINE.getDesc() + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = EnumDingTalkWebHook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
-        commonConfig.shopId = EnumTestProduce.CRM_ONLINE.getShopId();
+        commonConfig.shopId = EnumTestProduce.PORSCHE_ONLINE.getShopId();
         beforeClassInit(commonConfig);
         logger.debug("crm: " + crm);
     }
@@ -410,37 +410,6 @@ public class PcDataOnline extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             saveData("销售客户管理--小程序--今日人数=按今日搜索展示列表条数");
-        }
-    }
-
-    @Test(description = "销售客户管理--小程序--预约试驾=小程序“我的”预约试驾条数,预约保养=小程序“我的”预约保养条数,预约维修=小程序“我的”预约维修条数", enabled = false)
-    public void myCustomer_data_13() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            UserUtil.loginApplet(EnumAppletToken.BSJ_WM_ONLINE);
-            int testDriverTotal = crm.appointmentList(0L, EnumAppointmentType.TEST_DRIVE.getType(), 100).getInteger("total");
-            int maintainTotal = crm.appointmentList(0L, EnumAppointmentType.MAINTAIN.getType(), 100).getInteger("total");
-            int repairTotal = crm.appointmentList(0L, EnumAppointmentType.REPAIR.getType(), 100).getInteger("total");
-            UserUtil.login(zjl);
-            JSONArray list = crm.wechatCustomerList("", "", 1, 2 << 10).getJSONArray("list");
-            int appointmentTestDriver = 0;
-            int appointmentMend = 0;
-            int appointmentMaintain = 0;
-            for (int i = 0; i < list.size(); i++) {
-                if (list.getJSONObject(i).getString("wechat_id").equals(EnumAppletToken.BSJ_WM_DAILY.getWechatId())) {
-                    appointmentTestDriver = list.getJSONObject(i).getInteger("appointment_test_driver");
-                    appointmentMaintain = list.getJSONObject(i).getInteger("appointment_maintain");
-                    appointmentMend = list.getJSONObject(i).getInteger("appointment_mend");
-                }
-            }
-            CommonUtil.valueView(testDriverTotal, maintainTotal, repairTotal, appointmentTestDriver, appointmentMaintain, appointmentMend);
-            Preconditions.checkArgument(testDriverTotal == appointmentTestDriver, "pc端预约试驾次数为：" + testDriverTotal + "小程序我的试驾预约总数：" + appointmentTestDriver);
-            Preconditions.checkArgument(maintainTotal == appointmentMaintain, "pc端预约保养次数为：" + maintainTotal + "小程序我的保养预约总数：" + appointmentMaintain);
-            Preconditions.checkArgument(repairTotal == appointmentMend, "pc端预约维修次数为：" + repairTotal + "小程序我的维修预约总数：" + appointmentMend);
-        } catch (Exception | AssertionError e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("销售客户管理--小程序--预约试驾=小程序“我的”预约试驾条数,预约保养=小程序“我的”预约保养条数,预约维修=小程序“我的”预约维修条数");
         }
     }
 }

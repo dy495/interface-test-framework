@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 
 public class B extends TestCaseCommon implements TestCaseStd {
     private static final EnumAccount zjl = EnumAccount.ZJL_DAILY;
-    private static final String shopId = EnumTestProduce.CRM_DAILY.getShopId();
+    private static final String shopId = EnumTestProduce.PORSCHE_DAILY.getShopId();
     private static final int day = -1;
     private static final int size = 100;
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();

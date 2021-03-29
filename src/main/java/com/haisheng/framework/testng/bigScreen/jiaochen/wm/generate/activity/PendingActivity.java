@@ -12,7 +12,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.Vouc
  * @author wangmin
  * @date 2021/1/27 14:01
  */
-public class PendingActivity extends BaseActivity {
+public class PendingActivity extends AbstractActivity {
     protected PendingActivity(BaseBuilder baseBuilder) {
         super(baseBuilder);
     }

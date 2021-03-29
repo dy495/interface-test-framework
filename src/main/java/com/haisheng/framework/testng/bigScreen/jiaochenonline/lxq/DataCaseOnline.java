@@ -40,15 +40,15 @@ public class DataCaseOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
         commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
         commonConfig.checklistQaOwner = "吕雪晴";
-        commonConfig.product = EnumProduce.JC.name();
-        commonConfig.referer = EnumTestProduce.JIAOCHEN_ONLINE.getReferer();
+        commonConfig.product = EnumTestProduce.JC_DAILY.getAbbreviation();
+        commonConfig.referer = EnumTestProduce.JC_ONLINE.getReferer();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.CRM_ONLINE_TEST.getJobName());
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_ONLINE.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JC_ONLINE.getDesc() + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = EnumDingTalkWebHook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
-        commonConfig.shopId = EnumTestProduce.JIAOCHEN_ONLINE.getShopId();
+        commonConfig.shopId = EnumTestProduce.JC_ONLINE.getShopId();
         commonConfig.roleId="395";
         beforeClassInit(commonConfig);
         logger.debug("jc: " + jc);
@@ -99,7 +99,7 @@ public class DataCaseOnline extends TestCaseCommon implements TestCaseStd {
 
             //每次修改固定shop
             jc.editShop(20709L, info.getLogo(), simple_name, name, arr, district_code, address, sale_tel, service_tel, Double.valueOf(longitude),
-                    Double.valueOf(latitude), appointment_status, washing_status);
+                    Double.valueOf(latitude), appointment_status, washing_status,sale_tel);
             int after = jc.shopPage(1, 1, "").getInteger("total");
             int num = after - bef;
 

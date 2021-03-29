@@ -10,17 +10,21 @@ import lombok.Getter;
  */
 public enum EnumTestProduce {
 
-    CRM_DAILY("汽车-保时捷 日常 ", "https://servicewechat.com/wx5102264595be8c23/0/page-frame.html", "http://dev.porsche.dealer-ydauto.winsenseos.cn", "22728", "BSJ", ""),
+    PORSCHE_DAILY("汽车-保时捷 日常 ", "https://servicewechat.com/wx5102264595be8c23/0/page-frame.html", "http://dev.porsche.dealer-ydauto.winsenseos.cn", "22728", "BSJ", ""),
 
-    CRM_ONLINE("汽车-保时捷 赢识线上 ", "https://servicewechat.com/wx0cf070e8eed63e90/5/page-frame.html", "http://porsche.dealer-ydauto.winsenseos.com", "12928", "BSJ", ""),
+    PORSCHE_ONLINE("汽车-保时捷 赢识线上 ", "https://servicewechat.com/wx0cf070e8eed63e90/5/page-frame.html", "http://porsche.dealer-ydauto.winsenseos.com", "12928", "BSJ", ""),
 
-    CRM_ONLINE_PORSCHE("汽车-保时捷 保时捷线上 ", "", CRM_ONLINE.getAddress(), "12732", "BSJ", ""),
+    PORSCHE_ONLINE_CLIENT("汽车-保时捷 保时捷线上 ", "", "http://porsche.dealer-ydauto.winsenseos.com", "12732", "BSJ", ""),
 
-    JIAOCHEN_DAILY("汽车-轿辰 日常 ", "https://servicewechat.com/wxbd41de85739a00c7/0/page-frame.html", "http://dev.dealer-jc.winsenseos.cn", "-1", "JC", "603"),
+    JC_DAILY("汽车-轿辰 日常 ", "https://servicewechat.com/wxbd41de85739a00c7/0/page-frame.html", "http://dev.dealer-jc.winsenseos.cn", "-1", "JC", "603"),
 
-    JIAOCHEN_ONLINE("汽车-轿辰 赢识线上 ", "https://servicewechat.com/wxbd41de85739a00c7/31/page-frame.html", "http://nb.jiaochenclub.com/", "-1", "JC", "395"),
+    JC_ONLINE("汽车-轿辰 赢识线上 ", "https://servicewechat.com/wxbd41de85739a00c7/31/page-frame.html", "http://nb.jiaochenclub.com", "-1", "JC", "395"),
 
-    MENDIAN_DAILY("门店 日常", "", "", "4116", "XD", ""),
+    XD_DAILY("门店 日常", "", "", "4116", "XD", ""),
+
+    INS_DAILY("门店-ins 日常", "", "", "", "INS", ""),
+
+    INS_ONLINE("门店-ins 赢识线上", "", "", "", "INS", ""),
     ;
 
     EnumTestProduce(String desc, String referer, String address, String shopId, String abbreviation, String roleId) {

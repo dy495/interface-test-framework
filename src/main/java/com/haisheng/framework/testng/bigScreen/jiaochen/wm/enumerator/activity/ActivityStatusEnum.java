@@ -1,17 +1,17 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity;
 
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.activity.BaseActivity;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.activity.PendingActivity;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.activity.AbstractActivity;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.activity.PassedActivity;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.activity.PendingActivity;
 import lombok.Getter;
 
 import java.util.Arrays;
 import java.util.Optional;
 
 /**
- * @author wangmin
- * @date 2020/12/23  16:26
+ * @author : wangmin
+ * @date :  2020/12/23  16:26
  */
 public enum ActivityStatusEnum {
     /**
@@ -40,9 +40,9 @@ public enum ActivityStatusEnum {
     @Getter
     private final boolean isCanPromotion;
     @Getter
-    public final BaseActivity.BaseBuilder activityBuilder;
+    public final AbstractActivity.BaseBuilder activityBuilder;
 
-    ActivityStatusEnum(Integer id, String statusName, boolean isCanDelete, boolean isCanRevoke, boolean isCanEdit, boolean isCanCancel, boolean isCanPromotion, BaseActivity.BaseBuilder activityBuilder) {
+    ActivityStatusEnum(Integer id, String statusName, boolean isCanDelete, boolean isCanRevoke, boolean isCanEdit, boolean isCanCancel, boolean isCanPromotion, AbstractActivity.BaseBuilder activityBuilder) {
         this.id = id;
         this.statusName = statusName;
         this.isCanDelete = isCanDelete;

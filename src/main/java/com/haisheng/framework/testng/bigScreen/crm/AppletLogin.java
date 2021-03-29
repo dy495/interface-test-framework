@@ -2,26 +2,23 @@ package com.haisheng.framework.testng.bigScreen.crm;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.bean.Response;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.crm.wm.scene.applet.AppointmentTestDriverScene;
-import com.haisheng.framework.testng.bigScreen.crmOnline.CrmScenarioUtilOnline;
-import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.crm.wm.scene.applet.AppletPorscheAMessageListScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.util.PorscheUser;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletVoucherListScene;
-import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import com.haisheng.framework.util.DateTimeUtil;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
-import java.util.Date;
 
 /**
  * @author : yu
@@ -29,10 +26,6 @@ import java.util.Date;
  */
 
 public class AppletLogin extends TestCaseCommon implements TestCaseStd {
-    CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
-    CrmScenarioUtilOnline crmOnline = CrmScenarioUtilOnline.getInstance();
-    ScenarioUtil jc = ScenarioUtil.getInstance();
-    ScenarioUtilOnline jcOnline = ScenarioUtilOnline.getInstance();
     CommonConfig commonConfig = new CommonConfig();
 
     @BeforeClass
@@ -56,7 +49,6 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         afterClassClean();
     }
 
-
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
@@ -77,16 +69,15 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
     public void BSJ_applet_daily(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            commonConfig.shopId = EnumTestProduce.CRM_DAILY.getShopId();
-            commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_DAILY.getDesc());
-            commonConfig.referer = EnumTestProduce.CRM_DAILY.getReferer();
+            EnumTestProduce produce = EnumTestProduce.PORSCHE_DAILY;
+            VisitorProxy visitor = new VisitorProxy(produce);
+            commonConfig.shopId = produce.getShopId();
+            commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, produce.getDesc());
+            commonConfig.referer = produce.getReferer();
             commonConfig.pushRd = new String[]{EnumAppletToken.getPhoneByToken(token)};
-            crm.appletLoginToken(token);
-            Response response = getPorsche(1);
-            int code = response.getCode();
-            Preconditions.checkArgument(code == 1000, token + " " + response.getMsg());
-            Long appointId = response.getData().getLong("appointment_id");
-            crm.cancle(appointId);
+            new PorscheUser(visitor).loginApplet(EnumAppletToken.getEnumByToken(token));
+            Response response = invokePorsche(visitor);
+            Preconditions.checkArgument(response.getCode() == 1000, token + " " + response.getMsg());
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
@@ -98,16 +89,15 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
     public void BSJ_applet_online(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            commonConfig.shopId = EnumTestProduce.CRM_ONLINE.getShopId();
-            commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_ONLINE.getDesc());
-            commonConfig.referer = EnumTestProduce.CRM_ONLINE.getReferer();
+            EnumTestProduce produce = EnumTestProduce.PORSCHE_ONLINE;
+            VisitorProxy visitor = new VisitorProxy(produce);
+            commonConfig.shopId = produce.getShopId();
+            commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, produce.getDesc());
+            commonConfig.referer = produce.getReferer();
             commonConfig.pushRd = new String[]{EnumAppletToken.getPhoneByToken(token)};
-            crmOnline.appletLoginToken(token);
-            Response response = getPorsche(2);
-            int code = response.getCode();
-            Preconditions.checkArgument(code == 1000, token + " " + response.getMsg());
-            Long appointId = response.getData().getLong("appointment_id");
-            crmOnline.cancle(appointId);
+            new PorscheUser(visitor).loginApplet(EnumAppletToken.getEnumByToken(token));
+            Response response = invokePorsche(visitor);
+            Preconditions.checkArgument(response.getCode() == 1000, token + " " + response.getMsg());
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
@@ -119,14 +109,14 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
     public void JC_applet_daily(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            EnumTestProduce produce = EnumTestProduce.JIAOCHEN_DAILY;
+            EnumTestProduce produce = EnumTestProduce.JC_DAILY;
+            VisitorProxy visitor = new VisitorProxy(produce);
             commonConfig.shopId = produce.getShopId();
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, produce.getDesc());
-            //TODO 待更改
             commonConfig.referer = produce.getReferer();
             commonConfig.pushRd = new String[]{EnumAppletToken.getPhoneByToken(token)};
-            jc.appletLoginToken(token);
-            Response response = getJiaoChen(3);
+            new UserUtil(visitor).loginApplet(EnumAppletToken.getEnumByToken(token));
+            Response response = invokeJC(visitor);
             Preconditions.checkArgument(response.getCode() == 1000, token + " " + response.getMessage());
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -139,13 +129,14 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
     public void JC_applet_online(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            EnumTestProduce produce = EnumTestProduce.JIAOCHEN_ONLINE;
+            EnumTestProduce produce = EnumTestProduce.JC_ONLINE;
+            VisitorProxy visitor = new VisitorProxy(produce);
             commonConfig.shopId = produce.getShopId();
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, produce.getDesc());
             commonConfig.referer = produce.getReferer();
             commonConfig.pushRd = new String[]{EnumAppletToken.getPhoneByToken(token)};
-            jcOnline.appletLoginToken(token);
-            Response response = getJiaoChen(4);
+            new UserUtil(visitor).loginApplet(EnumAppletToken.getEnumByToken(token));
+            Response response = invokeJC(visitor);
             Preconditions.checkArgument(response.getCode() == 1000, token + " " + response.getMessage());
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -154,40 +145,18 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    private Response getPorsche(int produceCode) {
-        String date = DateTimeUtil.addDayFormat(new Date(), 100);
-        String customerName = "自动化";
-        String customerPhoneNumber = "15037296015";
-        int carModel = produceCode == 1 ? 36 : 81;
-        IScene scene = AppointmentTestDriverScene.builder().customerGender("MALE").customerName(customerName)
-                .customerPhoneNumber(customerPhoneNumber).appointmentDate(date).carModel(carModel).carStyle(1).build();
-        return getResponseInfo(produceCode, scene);
+    private Response invokePorsche(VisitorProxy visitor) {
+        JSONObject response = AppletPorscheAMessageListScene.builder().lastValue(null).size(20).build().invoke(visitor, false);
+        return getResponseInfo(response);
     }
 
-    private Response getJiaoChen(int produceCode) {
-        IScene scene = AppletVoucherListScene.builder().type("GENERAL").size(20).build();
-        return getResponseInfo(produceCode, scene);
+    private Response invokeJC(VisitorProxy visitor) {
+        JSONObject response = AppletVoucherListScene.builder().type("GENERAL").size(20).build().invoke(visitor, false);
+        return getResponseInfo(response);
     }
 
-    private Response getResponseInfo(int produceCode, IScene scene) {
-        JSONObject data;
-        switch (produceCode) {
-            case 1:
-                data = crm.invokeApi(scene, false);
-                break;
-            case 2:
-                data = crmOnline.invokeApi(scene, false);
-                break;
-            case 3:
-                data = jc.invokeApi(scene, false);
-                break;
-            case 4:
-                data = jcOnline.invokeApi(scene, false);
-                break;
-            default:
-                throw new IllegalStateException("无此产品代号");
-        }
-        return JSONObject.toJavaObject(data, Response.class);
+    private Response getResponseInfo(JSONObject response) {
+        return JSONObject.toJavaObject(response, Response.class);
     }
 
     @DataProvider(name = "BSJ_APPLET_TOKENS_DAILY")
@@ -213,7 +182,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         return new String[]{
                 EnumAppletToken.JC_WM_DAILY.getToken(),
                 EnumAppletToken.JC_XMF_DAILY.getToken(),
-                EnumAppletToken.JC_GLY_DAILY.getToken()
+                EnumAppletToken.JC_GLY_DAILY.getToken(),
         };
     }
 

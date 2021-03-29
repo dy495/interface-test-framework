@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
  * @author wangmin
  * @date 2021/1/20 16:41
  */
-public class CloseIntegral extends BaseIntegral {
+public class CloseIntegral extends AbstractIntegral {
 
     public CloseIntegral(Builder builder) {
         super(builder);
@@ -25,7 +25,7 @@ public class CloseIntegral extends BaseIntegral {
         logger("CREATE CLOSE START");
         Long integralId = new IntegralGenerator.Builder().IntegralExchangeStatus(IntegralExchangeStatusEnum.WORKING).buildIntegralExchange().getIntegralId();
         super.visitor = visitor;
-        ExchangeSwitchStatusScene.builder().id(integralId).status(true).build().execute(visitor, true);
+        ExchangeSwitchStatusScene.builder().id(integralId).status(true).build().invoke(visitor, true);
         logger("CREATE CLOSE FINISH");
     }
 

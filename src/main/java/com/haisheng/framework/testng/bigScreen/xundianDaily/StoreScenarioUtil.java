@@ -633,6 +633,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+
     /**
      * @description:注册会员
      * @author:
@@ -651,6 +652,20 @@ public class StoreScenarioUtil extends TestCaseCommon {
         json.put("identity", identity);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
+    }
+    public JSONObject RegisterMember1(Integer id,String pic_path,String member_id,String member_name,String phone,String birthday,String user_id,int identity) throws Exception {
+        String url = "/patrol/member/register";
+        JSONObject json = new JSONObject();
+        json.put("id",id);
+        json.put("pic_path", pic_path);
+        json.put("member_id", member_id);
+        json.put("member_name", member_name);
+        json.put("phone", phone);
+        json.put("birthday",birthday);
+        json.put("user_id",user_id);
+        json.put("identity", identity);
+//        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return invokeApi(url, JSONObject.parseObject(json.toJSONString()), false);
     }
 
     /**
@@ -704,10 +719,10 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject checkPic(String picData) throws Exception {
+    public JSONObject checkPic(String image) throws Exception {
         String url = "/patrol/member/upload_check";
         JSONObject json = new JSONObject();
-        json.put("picData",picData);
+        json.put("image",image);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -754,6 +769,14 @@ public class StoreScenarioUtil extends TestCaseCommon {
         json.put("identity", identity);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public JSONObject AddMember1(String identity) throws Exception {
+        String url = "/patrol/member/identity/add";
+        JSONObject json = new JSONObject();
+        json.put("identity", identity);
+//        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return invokeApi(url, JSONObject.parseObject(json.toJSONString()), false);
     }
 
     /**

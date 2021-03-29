@@ -22,8 +22,8 @@ import java.util.List;
  */
 public class ScenarioUtilOnline extends TestCaseCommon {
     private static volatile ScenarioUtilOnline instance = null;
-    private static final String IpPort = EnumTestProduce.JIAOCHEN_ONLINE.getAddress();
-    private static final String shopId = EnumTestProduce.JIAOCHEN_ONLINE.getShopId();
+    private static final String IpPort = EnumTestProduce.JC_ONLINE.getAddress();
+    private static final String shopId = EnumTestProduce.JC_ONLINE.getShopId();
 
     /**
      * 单例
@@ -2255,12 +2255,12 @@ public class ScenarioUtilOnline extends TestCaseCommon {
     public JSONObject verificationReordFilterManage(verificationRecordVariable variable) {
         String url = "/jiaochen/pc/voucher-manage/verification-record";
         JSONObject json = new JSONObject();
+        json.put("customer_name", variable.voucher_name);
+        json.put("customer_phone", variable.customer_phone);
+        json.put("verify_channel", variable.verification_channel_name);
+        json.put("verify_code", variable.verification_code);
+        json.put("verify_sale_phone", variable.verification_account);
         json.put("voucher_name", variable.voucher_name);
-        json.put("sender", variable.sender);
-        json.put("start_time", variable.start_time);
-        json.put("end_time", variable.start_time);
-        json.put("page", variable.page);
-        json.put("size", variable.size);
 
         return invokeApi(url, json);
     }
@@ -3079,7 +3079,7 @@ public class ScenarioUtilOnline extends TestCaseCommon {
 
     public JSONObject editShop(Long id, String avatar_path, String simple_name, String name, JSONArray brand_list, String district_code, String address,
                                String sale_tel, String service_tel, double longitude, double latitude,
-                               String appointment_status, String washing_status) { // 预约状态：ENABLE（开启） DISABLE（关闭）
+                               String appointment_status, String washing_status, String rescue_tel) { // 预约状态：ENABLE（开启） DISABLE（关闭）
         String url = "/jiaochen/pc/shop/edit";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -3095,6 +3095,7 @@ public class ScenarioUtilOnline extends TestCaseCommon {
         json.put("latitude", latitude);
         json.put("appointment_status", appointment_status);
         json.put("washing_status", washing_status);
+        json.put("rescue_tel", rescue_tel);
         String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(result).getJSONObject("data");
     }
@@ -5049,4 +5050,117 @@ public class ScenarioUtilOnline extends TestCaseCommon {
         json.put("size", size);
         return invokeApi(url, json);
     }
+
+    /**
+     * 创建潜客
+     *
+     * @return
+     */
+    public JSONObject createPotentialCstm(String customer_name, String customer_phone, String customer_type, String sex, Long car_style_id,
+                                          Long car_model_id, Long shop_id, String salesId, Boolean... chk) {
+        JSONObject json = new JSONObject();
+        String url = "/jiaochen/pc/customer-manage/pre-sale-customer/create-potential-customer";
+        json.put("customer_name", customer_name);
+        json.put("customer_phone", customer_phone);
+        json.put("customer_type", customer_type);
+        json.put("sex", sex);
+        json.put("car_style_id", car_style_id);
+        json.put("car_model_id", car_model_id);
+        json.put("shop_id", shop_id);
+        json.put("salesId", salesId);
+        if (chk.length > 0) {
+            return invokeApi(url, json, chk[0]);
+        } else {
+            return invokeApi(url, json);
+        }
+
+    }
+
+    /**
+     * 创建订单
+     *
+     * @return
+     */
+    public JSONObject createCstm(String customer_name, String customer_phone, String customer_type, String sex, Long car_style_id, Long car_model_id,
+                                 Long shop_id, String salesId, String purchase_car_date, String vehicle_chassis_code, Boolean... chk) {
+        JSONObject json = new JSONObject();
+        String url = "/jiaochen/pc/customer-manage/pre-sale-customer/create-customer";
+        json.put("customer_name", customer_name);
+        json.put("customer_phone", customer_phone);
+        json.put("customer_type", customer_type);
+        json.put("sex", sex);
+        json.put("car_style_id", car_style_id);
+        json.put("car_model_id", car_model_id);
+        json.put("shop_id", shop_id);
+        json.put("salesId", salesId);
+        json.put("purchase_car_date", purchase_car_date);
+        json.put("vehicle_chassis_code", vehicle_chassis_code);
+        if (chk.length > 0) {
+            return invokeApi(url, json, chk[0]);
+        } else {
+            return invokeApi(url, json);
+        }
+    }
+
+    /**
+     * 接待人列表
+     *
+     */
+    public JSONObject authListPage(String authType, String shopId) {
+        JSONObject json = new JSONObject();
+        json.put("auth_type", authType);
+        json.put("shop_id", shopId);
+        String url = "/jiaochen/pc/staff/auth-list";
+
+        return invokeApi(url, json);
+    }
+
+    /**
+     * 门店列表
+     *
+     * @return
+     */
+    public JSONObject shopListPage() {
+        JSONObject json = new JSONObject();
+        String url = "/jiaochen/pc/login-user/shop-list";
+
+        return invokeApi(url, json);
+    }
+
+    /**
+     * 销售顾问列表下拉
+     *
+     * @return
+     */
+    public JSONObject saleList(Long shop_id) {
+        JSONObject json = new JSONObject();
+        String url = "/jiaochen/pc/customer-manage/pre-sale-customer/sales-list";
+        json.put("shop_id", shop_id);
+        return invokeApi(url, json);
+    }
+
+    /**
+     * 车辆style列表下拉
+     *
+     * @return
+     */
+    public JSONObject styleList(Long shop_id) {
+        JSONObject json = new JSONObject();
+        String url = "/jiaochen/pc/customer-manage/pre-sale-customer/style-list";
+        json.put("shop_id", shop_id);
+        return invokeApi(url, json);
+    }
+
+    /**
+     * 车辆model列表下拉
+     *
+     * @return
+     */
+    public JSONObject modelList(Long style_id) {
+        JSONObject json = new JSONObject();
+        String url = "/jiaochen/pc/customer-manage/pre-sale-customer/model-list";
+        json.put("style_id", style_id);
+        return invokeApi(url, json);
+    }
+
 }

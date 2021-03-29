@@ -2,13 +2,19 @@ package com.haisheng.framework.testng.bigScreen.crm.wm.base.scene;
 
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
+import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * 场景抽象类
  *
  * @author wangmin
  */
+@Setter
 public abstract class BaseScene implements IScene {
+    protected Integer size;
+    protected Integer page;
+
     /**
      * 子类实现提供请求体
      *
@@ -36,26 +42,6 @@ public abstract class BaseScene implements IScene {
     }
 
     /**
-     * 提供子类修改page的方法
-     *
-     * @param page 页码
-     */
-    @Override
-    public void setPage(Integer page) {
-
-    }
-
-    /**
-     * 提供子类修改size的方法
-     *
-     * @param size 页码尺寸
-     */
-    @Override
-    public void setSize(Integer size) {
-
-    }
-
-    /**
      * 提供调用接口的能力
      *
      * @param visitor   要执行的产品
@@ -63,7 +49,7 @@ public abstract class BaseScene implements IScene {
      * @return 接口返回值
      */
     @Override
-    public JSONObject execute(VisitorProxy visitor, boolean checkCode) {
+    public JSONObject invoke(@NotNull VisitorProxy visitor, boolean checkCode) {
         return visitor.invokeApi(getPath(), getRequestBody(), checkCode);
     }
 }

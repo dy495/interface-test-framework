@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
  * @author wangmin
  * @date 2021/1/20 16:41
  */
-public class StopVoucher extends BaseVoucher {
+public class StopVoucher extends AbstractVoucher {
 
     public StopVoucher(Builder builder) {
         super(builder);

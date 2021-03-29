@@ -7,8 +7,6 @@ import com.haisheng.framework.model.bean.DataTemp;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.JcFunctionOnline;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.PublicParmOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -42,15 +40,15 @@ public class JcAppAffirmReceptionOnLine extends TestCaseCommon implements TestCa
     public void initial1() {
         logger.debug("before classs initial");
         CommonConfig commonConfig = new CommonConfig();
-        jc.changeIpPort(EnumTestProduce.JIAOCHEN_ONLINE.getAddress());
+        jc.changeIpPort(EnumTestProduce.JC_ONLINE.getAddress());
 
 
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "xmf";
-        commonConfig.referer = EnumTestProduce.JIAOCHEN_ONLINE.getReferer();
-        commonConfig.product = EnumTestProduce.JIAOCHEN_ONLINE.name();
+        commonConfig.referer = EnumTestProduce.JC_ONLINE.getReferer();
+        commonConfig.product = EnumTestProduce.JC_ONLINE.name();
 
         //replace backend gateway url
         //commonConfig.gateway = "";
@@ -59,7 +57,7 @@ public class JcAppAffirmReceptionOnLine extends TestCaseCommon implements TestCa
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_ONLINE_TEST.getJobName());
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_ONLINE.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JC_ONLINE.getDesc() + commonConfig.checklistQaOwner);
 
 
         //replace ding push conf

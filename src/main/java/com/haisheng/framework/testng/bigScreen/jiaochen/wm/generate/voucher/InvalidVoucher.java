@@ -11,7 +11,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanag
  * @author wangmin
  * @date 2021/1/22 15:49
  */
-public class InvalidVoucher extends BaseVoucher {
+public class InvalidVoucher extends AbstractVoucher {
     public InvalidVoucher(Builder builder) {
         super(builder);
     }

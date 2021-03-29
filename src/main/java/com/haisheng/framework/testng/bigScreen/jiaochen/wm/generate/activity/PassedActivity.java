@@ -16,7 +16,7 @@ import java.util.List;
  * @author wangmin
  * @date 2021/1/27 13:58
  */
-public class PassedActivity extends BaseActivity {
+public class PassedActivity extends AbstractActivity {
     protected PassedActivity(Builder builder) {
         super(builder);
     }
@@ -32,7 +32,7 @@ public class PassedActivity extends BaseActivity {
 
     @Setter
     @Accessors(chain = true, fluent = true)
-    public static class Builder extends BaseActivity.BaseBuilder {
+    public static class Builder extends AbstractActivity.BaseBuilder {
 
         @Override
         public IActivity buildActivity() {

@@ -6,7 +6,6 @@ import com.google.common.base.Preconditions;
 import com.google.inject.internal.util.$Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.registerListVariable;
@@ -35,7 +34,7 @@ import java.text.SimpleDateFormat;
 import static com.google.common.base.Preconditions.checkArgument;
 
 public class JcApplet extends TestCaseCommon implements TestCaseStd {
-    VisitorProxy visitor = new VisitorProxy(EnumTestProduce.JIAOCHEN_DAILY);
+    VisitorProxy visitor = new VisitorProxy(EnumTestProduce.JC_DAILY);
     private static final EnumAccount administrator = EnumAccount.ALL_AUTHORITY_DAILY;
     ScenarioUtil jc = new ScenarioUtil();
     SupporterUtil util = new SupporterUtil(visitor);
@@ -58,7 +57,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.product = EnumProduce.JC.name();
+        commonConfig.product = EnumTestProduce.JC_DAILY.getAbbreviation();
 
         //replace backend gateway url
         //commonConfig.gateway = "";
@@ -67,12 +66,12 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_DAILY.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JC_DAILY.getDesc() + commonConfig.checklistQaOwner);
 
         //replace ding push conf
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.referer = EnumTestProduce.JIAOCHEN_DAILY.getReferer();
+        commonConfig.referer = EnumTestProduce.JC_DAILY.getReferer();
 
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};
@@ -92,7 +91,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         object.put("phone", phone);
         object.put("verification_code", verificationCode);
         commonConfig.roleId = roleId;
-        httpPost(path, object, EnumTestProduce.JIAOCHEN_DAILY.getAddress());
+        httpPost(path, object, EnumTestProduce.JC_DAILY.getAddress());
     }
 
     @AfterClass

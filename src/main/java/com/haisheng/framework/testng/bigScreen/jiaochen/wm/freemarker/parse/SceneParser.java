@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
  * @date 2021/3/15 12:31
  */
 public class SceneParser extends AbstractHtmlParser {
-    public SceneParser(AbstractBuilder builder) {
+    public SceneParser(Builder builder) {
         super(builder);
     }
 

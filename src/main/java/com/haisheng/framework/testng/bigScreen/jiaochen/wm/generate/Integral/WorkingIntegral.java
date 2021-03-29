@@ -19,7 +19,7 @@ import java.util.List;
  * @author wangmin
  * @date 2021/1/20 16:41
  */
-public class WorkingIntegral extends BaseIntegral {
+public class WorkingIntegral extends AbstractIntegral {
 
     public WorkingIntegral(Builder builder) {
         super(builder);
@@ -31,10 +31,10 @@ public class WorkingIntegral extends BaseIntegral {
         List<ExchangePage> exchangePageLis = resultCollectToBean(ExchangePageScene.builder().build(), ExchangePage.class);
         ExchangePage exchangePage = exchangePageLis.stream().filter(e -> e.getStatusName().equals(IntegralExchangeStatusEnum.CLOSE.getDesc())).findFirst().orElse(null);
         if (exchangePage != null) {
-            ExchangeSwitchStatusScene.builder().id(exchangePage.getId()).status(true).build().execute(visitor, true);
+            ExchangeSwitchStatusScene.builder().id(exchangePage.getId()).status(true).build().invoke(visitor, true);
         } else {
             Preconditions.checkArgument(scene != null, "scene不能为空");
-            scene.execute(visitor, true);
+            scene.invoke(visitor, true);
         }
         super.visitor = visitor;
         logger("CREATE WORKING FINISH");

@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.bean.SaleInfo;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppointmentType;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerInfo;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.other.EnumOperation;
@@ -44,8 +44,6 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
     private static final EnumAccount zjl = EnumAccount.ZJL_ONLINE;
     private static final EnumAccount fw = EnumAccount.FW_55_ONLINE;
     private static final int size = 100;
-    int zjl_num = 0;
-    int gw_num = 0;
 
     @BeforeClass
     @Override
@@ -56,15 +54,15 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
         commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
-        commonConfig.product = EnumProduce.BSJ.name();
-        commonConfig.referer = EnumTestProduce.CRM_ONLINE.getReferer();
+        commonConfig.product = EnumTestProduce.PORSCHE_DAILY.getAbbreviation();
+        commonConfig.referer = EnumTestProduce.PORSCHE_ONLINE.getReferer();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.CRM_ONLINE_TEST.getJobName());
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.CRM_ONLINE.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.PORSCHE_ONLINE.getDesc() + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = EnumDingTalkWebHook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
-        commonConfig.shopId = EnumTestProduce.CRM_ONLINE.getShopId();
+        commonConfig.shopId = EnumTestProduce.PORSCHE_ONLINE.getShopId();
         beforeClassInit(commonConfig);
         logger.debug("crm: " + crm);
     }
@@ -313,12 +311,12 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
         List<SaleInfo> saleInfos = method.getSaleList("服务顾问");
         saleInfos.forEach(info -> {
             CommonUtil.valueView(info.getUserName());
-            if (info.getUserName().contains("总经理")) {
+            if (info.getUserName().contains("zjl")) {
                 crm.login(info.getAccount(), zjl.getPassword());
                 int zjlNum = crm.invokeApi(scene).getInteger(type);
                 map.put("zjlNum", zjlNum);
             }
-            if (!info.getUserName().contains("总经理")) {
+            if (!info.getUserName().contains("zjl")) {
                 crm.login(info.getAccount(), zjl.getPassword());
                 gwNum.addAndGet(crm.invokeApi(scene).getInteger(type));
             }
@@ -489,12 +487,12 @@ public class AfterSaleOnline extends TestCaseCommon implements TestCaseStd {
         IScene scene = AfterSaleCustomerListScene.builder().build();
         saleInfos.forEach(info -> {
             CommonUtil.valueView(info.getUserName());
-            if (info.getUserName().contains("总经理")) {
+            if (info.getUserName().contains("zjl")) {
                 crm.login(info.getAccount(), zjl.getPassword());
                 int zjlNum = crm.invokeApi(scene).getInteger(type);
                 map.put("zjlNum", zjlNum);
             }
-            if (!info.getUserName().contains("总经理")) {
+            if (!info.getUserName().contains("zjl")) {
                 crm.login(info.getAccount(), zjl.getPassword());
                 gwNum.addAndGet(crm.invokeApi(scene).getInteger(type));
             }

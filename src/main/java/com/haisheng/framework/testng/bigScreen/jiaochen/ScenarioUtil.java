@@ -23,7 +23,7 @@ import java.util.List;
 public class ScenarioUtil extends TestCaseCommon {
     private static volatile ScenarioUtil instance = null;
     //    private static final String IpPort = EnumTestProduce.JIAOCHEN_DAILY.getAddress();
-    private static final String shopId = EnumTestProduce.JIAOCHEN_DAILY.getShopId();
+    private static final String shopId = EnumTestProduce.JC_DAILY.getShopId();
 
     /**
      * 单例
@@ -2239,14 +2239,14 @@ public class ScenarioUtil extends TestCaseCommon {
      * @time: 2020-11-24
      */
     public JSONObject voucherFormFilterManage(voucherFormVariable variable) {
-        String url = "/jiaochen/pc/voucher-manage/voucher-form/page";
+        String url = "/jiaochen/pc/voucher-manage/voucher-form/voucher-page";
         JSONObject json = new JSONObject();
         json.put("shopId", variable.shop_id);
         json.put("page", variable.page);
         json.put("size", variable.size);
         json.put("subject_name", variable.subject_name);
         json.put("voucher_status", variable.voucher_status);
-        json.put("voucher_name", variable.creator_name);
+        json.put("voucher_name", variable.voucher_name);
         json.put("voucher_type", variable.voucher_type);
         json.put("creator_name", variable.creator_name);
         json.put("creator_account", variable.creator_account);
@@ -2260,7 +2260,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @time: 2020-11-24
      */
     public JSONObject voucherFormFilterManage(String shopId, String page, String size, String pram, String result) {
-        String url = "/jiaochen/pc/voucher-manage/voucher-form/page";
+        String url = "/jiaochen/pc/voucher-manage/voucher-form/voucher-page";
         JSONObject json = new JSONObject();
         json.put("shopId", shopId);
         json.put("page", page);
@@ -2402,10 +2402,13 @@ public class ScenarioUtil extends TestCaseCommon {
     public JSONObject verificationReordFilterManage(verificationRecordVariable variable) {
         String url = "/jiaochen/pc/voucher-manage/verification-record";
         JSONObject json = new JSONObject();
+        json.put("customer_name", variable.customer_name);
+        json.put("customer_phone", variable.customer_phone);
+        json.put("verify_channel", variable.verification_channel_name);
+        json.put("verify_code", variable.verification_code);
+        json.put("verify_sale_phone", variable.verification_account);
         json.put("voucher_name", variable.voucher_name);
-        json.put("sender", variable.sender);
-        json.put("start_time", variable.start_time);
-        json.put("end_time", variable.start_time);
+
         json.put("page", variable.page);
         json.put("size", variable.size);
 
@@ -6053,5 +6056,170 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(url, json);
     }
 
+    /**
+     * @description ：主体类型接口
+     * * * @author: gly
+     * @date :2020/03/25
+     **/
+    public JSONObject subjectList() {
+        String url = "/jiaochen/pc/use-range/subject-list";
+        JSONObject json = new JSONObject();
+
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description :优惠券状态接口
+     * * * @author: gly
+     * @date :2020/03/25
+     **/
+    public JSONObject activityStatus() {
+        String url = "/jiaochen/pc/enum-map";
+        JSONObject json = new JSONObject();
+
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description :V3.1在线专家
+     * * * @author: gly
+     * @date :2020/03/25
+     **/
+    public JSONObject onlineExpertsPageList(String page, String size,String pram,String result) {
+        String url = "/jiaochen/pc/consult-management/online-experts-page-list";
+        JSONObject json = new JSONObject();
+        json.put("page", page);
+        json.put("size", size);
+        if (pram != null) {
+            json.put(pram, result);
+        }
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description :V3.1专属服务顾问
+     * * * @author: gly
+     * @date :2020/03/25
+     **/
+    public JSONObject dedicatedServicePageList(String page, String size,String pram,String result) {
+        String url = "/jiaochen/pc/consult-management/dedicated-service-page-list";
+        JSONObject json = new JSONObject();
+        json.put("page", page);
+        json.put("size", size);
+        if (pram != null) {
+            json.put(pram, result);
+        }
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description :V3.1销售客户管理
+     * * * @author: gly
+     * @date :2020/03/25
+     **/
+    public JSONObject preSalesReceptionPage(String page, String size,String pram,String result) {
+        String url = "/jiaochen/pc/pre-sales-reception/page";
+        JSONObject json = new JSONObject();
+        json.put("page", page);
+        json.put("size", size);
+        if (pram != null) {
+            json.put(pram, result);
+        }
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description :V3.1销售客户管理
+     * * * @author: gly
+     * @date :2020/03/25
+     **/
+    public JSONObject lossCustomerPage(String page, String size,String pram,String result) {
+        String url = "/jiaochen/pc/customer-manage/loss-customer/page";
+        JSONObject json = new JSONObject();
+        json.put("page", page);
+        json.put("size", size);
+        if (pram != null) {
+            json.put(pram, result);
+        }
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description: V3.1售后管理列表-时间筛选
+     * @author: gly
+     * @time: 2021/3/26
+     */
+    public JSONObject lossCustomerTimeManage( String page, String size, String create_start_time, String create_end_time, String order_start_time, String order_end_time) {
+        String url = "/jiaochen/pc/customer-manage/loss-customer/page";
+        JSONObject json1 = new JSONObject();
+        json1.put("page", page);
+        json1.put("size", size);
+        json1.put("create_start_time", create_start_time);
+        json1.put("create_end_time", create_end_time);
+        json1.put("order_start_time", order_start_time);
+        json1.put("order_end_time", order_end_time);
+        return invokeApi(url, json1);
+    }
+
+    /**
+     * @description: V3.1专属服务顾问列表-时间筛选
+     * @author: gly
+     * @time: 2021/3/26
+     */
+    public JSONObject lossCustomerTimeManage( String page, String size, String consult_date_start, String consult_date_end) {
+        String url = "/jiaochen/pc/consult-management/dedicated-service-page-list";
+        JSONObject json1 = new JSONObject();
+        json1.put("page", page);
+        json1.put("size", size);
+        json1.put("consult_date_start", consult_date_start);
+        json1.put("consult_date_end", consult_date_end);
+        return invokeApi(url, json1);
+    }
+
+    /**
+     * @description: V3.1在线专家表-时间筛选
+     * @author: gly
+     * @time: 2021/3/26
+     */
+    public JSONObject onlineExpertsPageListTimeManage( String page, String size, String consult_date_start, String consult_date_end) {
+        String url = "/jiaochen/pc/consult-management/online-experts-page-list";
+        JSONObject json1 = new JSONObject();
+        json1.put("page", page);
+        json1.put("size", size);
+        json1.put("consult_date_start", consult_date_start);
+        json1.put("consult_date_end", consult_date_end);
+        return invokeApi(url, json1);
+    }
+
+    /**
+     * @description: V3.1登录日志
+     * @author: gly
+     * @time: 2021/3/26
+     */
+    public JSONObject loginLogStaffTimeManage(String page, String size,String pram,String result) {
+        String url = "/jiaochen/pc/login-log/staff";
+        JSONObject json = new JSONObject();
+        json.put("page", page);
+        json.put("size", size);
+        if (pram != null) {
+            json.put(pram, result);
+        }
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description: V3.1登录日志-时间筛选
+     * @author: gly
+     * @time: 2021/3/26
+     */
+    public JSONObject loginLogStaffTimeManageTime(String page, String size,String start_date,String end_date) {
+        String url = "/jiaochen/pc/login-log/staff";
+        JSONObject json = new JSONObject();
+        json.put("page", page);
+        json.put("size", size);
+        json.put("start_date", start_date);
+        json.put("end_date", end_date);
+        return invokeApi(url, json);
+    }
 
 }

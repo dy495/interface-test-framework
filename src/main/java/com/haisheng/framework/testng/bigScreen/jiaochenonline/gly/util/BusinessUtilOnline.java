@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.util.PublicParameter;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
@@ -13,10 +13,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.A
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.RegisterInfoEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.AppletArticleListScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.AppointmentActivityCancelScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.AppointmentActivityListScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.ArticleActivityRegisterScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpload;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherDetailScene;
@@ -27,6 +24,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -302,6 +300,39 @@ public class BusinessUtilOnline {
         IScene scene = createFissionActivityScene(voucherId);
         Long activityId = visitor.invokeApi(scene).getLong("id");
         return activityId;
+    }
+
+    /**
+     *编辑裂变活动
+     */
+    public IScene fissionActivityEditScene(Long activityId){
+        Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+        SupporterUtil supporterUtil = new SupporterUtil(visitor);
+        PublicParameter pp = new PublicParameter();
+        List<String> picList = new ArrayList<>();
+        picList.add(supporterUtil.getPicPath());
+        // 创建被邀请者和分享者的信息字段
+        JSONObject invitedVoucher = getInvitedVoucher(voucherId, 1, String.valueOf(getVoucherSurplusInventory(voucherId)), 2, "", "", 1);
+        JSONObject shareVoucher = getShareVoucher(voucherId, 1, String.valueOf(getVoucherSurplusInventory(voucherId)), 2, "", "", 1);
+        //编辑裂变活动
+        return FissionVoucherEditScene.builder()
+                .id(activityId)
+                .type(1)
+                .participationLimitType(0)
+                .receiveLimitType(0)
+                .title(pp.fissionVoucherNameEdit)
+                .rule(pp.EditFissionRule)
+                .startDate(getStartDate())
+                .endDate(getEndDate())
+                .subjectType(supporterUtil.getSubjectType())
+                .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
+                .label("RED_PAPER")
+                .picList(picList)
+                .shareNum("3")
+                .shareVoucher(shareVoucher)
+                .invitedVoucher(invitedVoucher)
+                .build();
+
     }
 
     /**
@@ -610,6 +641,27 @@ public class BusinessUtilOnline {
     }
 
     /**
+     * 获取图片地址
+     *
+     * @return 图片地址
+     */
+    public String getPicturePath() {
+        String path = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/活动.jpeg";
+        return getPicPath(path);
+    }
+    public String getPicPath(String picPath) {
+        return getPicPath(picPath, "3:2");
+    }
+
+    public String getPicPath(String picPath, String ratioStr) {
+        String picture = new ImageUtil().getImageBinary(picPath);
+        String[] strings = ratioStr.split(":");
+        double ratio = BigDecimal.valueOf(Double.parseDouble(strings[0]) / Double.parseDouble(strings[1])).divide(new BigDecimal(1), 4, BigDecimal.ROUND_HALF_UP).doubleValue();
+        IScene scene = FileUpload.builder().isPermanent(false).permanentPicType(0).pic(picture).ratioStr(ratioStr).ratio(ratio).build();
+        return visitor.invokeApi(scene).getString("pic_path");
+    }
+
+    /**
      * 获取优惠券的库存
      */
     public String getSurplusInventory(Long id) {
@@ -855,20 +907,20 @@ public class BusinessUtilOnline {
                     if (waitingAuditNum >= 1) {
                         Long id = list.getJSONObject(i).getLong("id");
                         ids.add(id);
+                        System.out.println("-----------------"+ids);
                     }
                 }
             }
         }
         //创建活动并审批
-        if (ids.isEmpty()) {
+        if (ids.size()==0) {
             //创建活动
             Long id1 = createRecruitActivityApproval();
             //审批活动
             getApprovalPassed(id1);
             //小程序报名
-            activityRegisterApplet(ids.get(0),"13373166806","郭丽雅",2,"1513814362@qq.com","22","女","其他");
             ids.add(id1);
-            //登录PC
+            activityRegisterApplet(ids.get(0),"13373166806","郭丽雅",2,"1513814362@qq.com","22","女","其他");
             jc.pcLogin(pp.phone, pp.password);
         }
         return ids;
@@ -938,7 +990,7 @@ public class BusinessUtilOnline {
     /**
      * 查询列表中的状态为【审核未通过的ID】
      */
-    public List<Long> getFissontActivityReject() {
+    public List<Long> getFissionActivityReject() {
         List<Long> ids = new ArrayList<>();
         //活动列表
         IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
@@ -1592,6 +1644,30 @@ public class BusinessUtilOnline {
         return response;
     }
 
+    /**
+     * 更多活动列表-根据活动ID返回活动的小程序活动id
+     */
+    public Long appointmentActivityId(Long activityId) {
+        JSONObject lastValue = null;
+        JSONArray list;
+        Long id=0L;
+        do{
+            IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
+            JSONObject response = visitor.invokeApi(scene);
+            lastValue = response.getJSONObject("last_value");
+            System.err.println(lastValue);
+            list = response.getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                Long itemId = list.getJSONObject(i).getLong("itemId");
+                if (activityId.equals(itemId)) {
+                    id = list.getJSONObject(i).getLong("id");
+                }
+            }
+        }while(list.size()==10);
+
+        return id;
+    }
+
 /**
  * ---------------------------------------------获取页面返回值---------------------------------------------
  */
@@ -1639,6 +1715,23 @@ public class BusinessUtilOnline {
     public JSONObject getFissionActivityDetail(Long activityId) {
         IScene scene = ManageDetailScene.builder().id(activityId).build();
         JSONObject response = visitor.invokeApi(scene).getJSONObject("fission_voucher_info").getJSONObject("reward_vouchers");
+        return response;
+    }
+    /**
+     * 招募活动裂变详情页返回值
+     */
+    public JSONObject getFissionActivityDetailDate1(Long activityId) {
+        IScene scene = ManageDetailScene.builder().id(activityId).build();
+        JSONObject response = visitor.invokeApi(scene);
+        return response;
+    }
+
+    /**
+     * 裂变活动裂变详情页-获取返回值在【活动奖励】内部
+     */
+    public JSONObject getFissionActivityDetailData(Long activityId) {
+        IScene scene = ManageDetailScene.builder().id(activityId).build();
+        JSONObject response = visitor.invokeApi(scene).getJSONObject("fission_voucher_info");
         return response;
     }
 
@@ -1754,7 +1847,7 @@ public class BusinessUtilOnline {
         JSONArray registerItems = new JSONArray();
         Long activityId=0L;
         //在活动详情中获得招募活动的报名信息
-        user.loginPc(EnumAccount.ALL_AUTHORITY_ONLINE);
+        user.loginPc(EnumAccount.ALL_JC_ONLINE);
         JSONObject response = getRecruitActivityDetailDate(id);
         JSONArray registerInformationList = response.getJSONArray("register_information_list");
         for (int i = 0; i< registerInformationList.size(); i++) {
@@ -1894,7 +1987,7 @@ public class BusinessUtilOnline {
             }
         }
         //登录PC
-         user.loginPc(EnumAccount.ALL_AUTHORITY_ONLINE);
+         user.loginPc(EnumAccount.ALL_JC_ONLINE);
         //获取PC中对应的优惠券
 
         return ids;
@@ -2093,6 +2186,47 @@ public class BusinessUtilOnline {
             }
         }
         return brandId;
+    }
+
+    /**
+     * 判断小程序中小喇叭中卡券的状态
+     */
+    public String articleVoucher(Long activityId){
+        //获取此活动对应的小程序ID
+        Long id=appointmentActivityId(activityId);
+        //查看小喇叭中的优惠券
+        IScene scene2= ArticleVoucherList.builder().id(id).build();
+        String isReceived=visitor.invokeApi(scene2).getJSONArray("list").getJSONObject(0).getString("is_received");
+        return isReceived;
+    }
+
+    /**
+     * 判断小程序中小喇叭的状态
+     */
+    public JSONObject articleVoucherData(Long activityId){
+        //获取此活动对应的小程序ID
+        Long id=appointmentActivityId(activityId);
+        //查看小喇叭中的优惠券
+        IScene scene2= ArticleVoucherList.builder().id(id).build();
+        JSONObject object=visitor.invokeApi(scene2);
+        return object;
+    }
+
+    /**
+     * 主体类型的查询
+     */
+    public String getSubjectList(String subjectName){
+        //定义主体的字段
+        String subjectKey="";
+        //获取主题状态的列表
+        JSONArray list=jc.subjectList().getJSONArray("list");
+        for(int i=0;i<list.size();i++){
+            String subjectValue=list.getJSONObject(i).getString("subject_value");
+            if(subjectValue.equals(subjectName)){
+                subjectKey=list.getJSONObject(i).getString("subject_key");
+            }
+        }
+        return subjectKey;
     }
 
 

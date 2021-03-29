@@ -13,12 +13,14 @@ public class ExchangeDetailedScene extends BaseScene {
     private Integer page = 1;
     @Builder.Default
     private Integer size = 10;
+    private final String phone;
 
     @Override
     public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);
+        object.put("phone", phone);
         return object;
     }
 

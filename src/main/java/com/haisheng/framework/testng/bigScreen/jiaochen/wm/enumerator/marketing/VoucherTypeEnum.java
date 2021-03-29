@@ -28,7 +28,13 @@ public enum VoucherTypeEnum {
     /**
      * 自定义券
      */
-    CUSTOM("自定义券");
+    CUSTOM("自定义券"),
+
+//    /**
+//     * 抵金券
+//     */
+//    CASH_COUPON("抵金券"),
+    ;
 
     private final String desc;
 

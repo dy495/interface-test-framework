@@ -4,19 +4,20 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppletToken;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityApprovalStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.RegisterInfoEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.AppletPushTargetEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.AppletArticleListScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.AppointmentActivityCancelScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.AppointmentActivityListScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.ArticleActivityRegisterScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpload;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.PushMessageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherDetailScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherFormPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherPageScene;
@@ -25,6 +26,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -273,8 +275,8 @@ public class BusinessUtil {
         List<String> picList = new ArrayList<>();
         picList.add(supporterUtil.getPicPath());
         // 创建被邀请者和分享者的信息字段
-        JSONObject invitedVoucher = getInvitedVoucher(voucherId, 1, String.valueOf(getVoucherSurplusInventory(voucherId)), 2, "", "", 3);
-        JSONObject shareVoucher = getShareVoucher(voucherId, 1, String.valueOf(getVoucherSurplusInventory(voucherId)), 2, "", "", 3);
+        JSONObject invitedVoucher = getInvitedVoucher(voucherId, 1, String.valueOf(Math.min(getVoucherSurplusInventory(voucherId), 10)), 2, "", "", 3);
+        JSONObject shareVoucher = getShareVoucher(voucherId, 1, String.valueOf(Math.min(getVoucherSurplusInventory(voucherId), 10)), 2, "", "", 3);
         return FissionVoucherAddScene.builder()
                 .type(1)
                 .participationLimitType(0)
@@ -535,7 +537,7 @@ public class BusinessUtil {
     }
 
     /**
-     * 编辑活动
+     * 编辑招募活动
      */
     public String activityEditScene(Long id) {
         //获取一个卡券
@@ -594,6 +596,60 @@ public class BusinessUtil {
         String message = visitor.invokeApi(scene,false).getString("message");
         return message;
     }
+
+    /**
+     *编辑裂变活动
+     */
+    public IScene fissionActivityEditScene(Long activityId){
+        Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+        SupporterUtil supporterUtil = new SupporterUtil(visitor);
+        PublicParameter pp = new PublicParameter();
+        List<String> picList = new ArrayList<>();
+        picList.add(supporterUtil.getPicPath());
+        // 创建被邀请者和分享者的信息字段
+        JSONObject invitedVoucher = getInvitedVoucher(voucherId, 1, String.valueOf(getVoucherSurplusInventory(voucherId)), 2, "", "", 1);
+        JSONObject shareVoucher = getShareVoucher(voucherId, 1, String.valueOf(getVoucherSurplusInventory(voucherId)), 2, "", "", 1);
+       //编辑裂变活动
+        return FissionVoucherEditScene.builder()
+                .id(activityId)
+                .type(1)
+                .participationLimitType(0)
+                .receiveLimitType(0)
+                .title(pp.fissionVoucherNameEdit)
+                .rule(pp.EditFissionRule)
+                .startDate(getStartDate())
+                .endDate(getEndDate())
+                .subjectType(supporterUtil.getSubjectType())
+                .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
+                .label("RED_PAPER")
+                .picList(picList)
+                .shareNum("3")
+                .shareVoucher(shareVoucher)
+                .invitedVoucher(invitedVoucher)
+                .build();
+
+    }
+    /**
+     * 获取图片地址
+     *
+     * @return 图片地址
+     */
+    public String getPicturePath() {
+        String path = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/活动.jpeg";
+        return getPicPath(path);
+    }
+    public String getPicPath(String picPath) {
+        return getPicPath(picPath, "3:2");
+    }
+
+    public String getPicPath(String picPath, String ratioStr) {
+        String picture = new ImageUtil().getImageBinary(picPath);
+        String[] strings = ratioStr.split(":");
+        double ratio = BigDecimal.valueOf(Double.parseDouble(strings[0]) / Double.parseDouble(strings[1])).divide(new BigDecimal(1), 4, BigDecimal.ROUND_HALF_UP).doubleValue();
+        IScene scene = FileUpload.builder().isPermanent(false).permanentPicType(0).pic(picture).ratioStr(ratioStr).ratio(ratio).build();
+        return visitor.invokeApi(scene).getString("pic_path");
+    }
+
 
     /**
      * 获取图片地址
@@ -936,7 +992,7 @@ public class BusinessUtil {
     /**
      * 查询列表中的状态为【审核未通过的ID】
      */
-    public List<Long> getFissontActivityReject() {
+    public List<Long> getFissionActivityReject() {
         List<Long> ids = new ArrayList<>();
         //活动列表
         IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
@@ -1592,6 +1648,29 @@ public class BusinessUtil {
         return title;
     }
 
+    /**
+     * 更多活动列表-根据活动ID返回活动的小程序活动id
+     */
+    public Long appointmentActivityId(Long activityId) {
+        JSONObject lastValue = null;
+        JSONArray list;
+        Long id=0L;
+        do{
+            IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
+            JSONObject response = visitor.invokeApi(scene);
+            lastValue = response.getJSONObject("last_value");
+            list = response.getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                Long itemId = list.getJSONObject(i).getLong("itemId");
+                if (activityId.equals(itemId)) {
+                    id = list.getJSONObject(i).getLong("id");
+                }
+            }
+        }while(list.size()==10);
+
+        return id;
+    }
+
 /**
  * ---------------------------------------------获取也买你返回值---------------------------------------------
  */
@@ -1634,13 +1713,33 @@ public class BusinessUtil {
     }
 
     /**
-     * 裂变活动详情页-获取返回值在【活动奖励】内部
+     * 招募活动裂变详情页返回值
+     */
+    public JSONObject getFissionActivityDetailDate1(Long activityId) {
+        IScene scene = ManageDetailScene.builder().id(activityId).build();
+        JSONObject response = visitor.invokeApi(scene);
+        return response;
+    }
+
+    /**
+     * 裂变活动裂变详情页-获取返回值
+     */
+    public JSONObject getFissionActivityDetailData(Long activityId) {
+        IScene scene = ManageDetailScene.builder().id(activityId).build();
+        JSONObject response = visitor.invokeApi(scene).getJSONObject("fission_voucher_info");
+        return response;
+    }
+
+    /**
+     * 裂变活动裂变详情页-获取返回值在【活动奖励】内部
      */
     public JSONObject getFissionActivityDetail(Long activityId) {
         IScene scene = ManageDetailScene.builder().id(activityId).build();
         JSONObject response = visitor.invokeApi(scene).getJSONObject("fission_voucher_info").getJSONObject("reward_vouchers");
         return response;
     }
+
+
 
     /**
      * 报名数据-返回值（data）
@@ -1712,7 +1811,6 @@ public class BusinessUtil {
             IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
             JSONObject response1 = visitor.invokeApi(scene);
             lastValue = response1.getJSONObject("last_value");
-            System.err.println(lastValue);
             list = response1.getJSONArray("list");
             num+=list.size();
         }while(list.size()==10);
@@ -1805,7 +1903,6 @@ public class BusinessUtil {
             IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
             JSONObject response1 = visitor.invokeApi(scene);
             lastValue = response1.getJSONObject("last_value");
-            System.err.println(lastValue);
             list = response1.getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int itemId=list.getJSONObject(i).getInteger("itemId");
@@ -1816,6 +1913,7 @@ public class BusinessUtil {
         }while(list.size()==10);
         IScene scene = ArticleActivityRegisterScene.builder().id(activityId).registerItems(registerItems).build();
         visitor.invokeApi(scene);
+
     }
 
     /**
@@ -2093,6 +2191,69 @@ public class BusinessUtil {
             }
         }
         return brandId;
+    }
+
+    /**
+     * 判断小程序中小喇叭中卡券的状态
+     */
+    public String articleVoucher(Long activityId){
+        //获取此活动对应的小程序ID
+        Long id=appointmentActivityId(activityId);
+        //查看小喇叭中的优惠券
+        IScene scene2= ArticleVoucherList.builder().id(id).build();
+        String isReceived=visitor.invokeApi(scene2).getJSONArray("list").getJSONObject(0).getString("is_received");
+        return isReceived;
+    }
+
+    /**
+     * 判断小程序中小喇叭的状态
+     */
+    public JSONObject articleVoucherData(Long activityId){
+        //获取此活动对应的小程序ID
+        Long id=appointmentActivityId(activityId);
+        //查看小喇叭中的优惠券
+        IScene scene2= ArticleVoucherList.builder().id(id).build();
+        JSONObject object=visitor.invokeApi(scene2);
+        return object;
+    }
+
+    /**
+     * 主体类型的查询
+     */
+    public String getSubjectList(String subjectName){
+        //定义主体的字段
+        String subjectKey="";
+       //获取主题状态的列表
+        JSONArray list=jc.subjectList().getJSONArray("list");
+        for(int i=0;i<list.size();i++){
+           String subjectValue=list.getJSONObject(i).getString("subject_value");
+           if(subjectValue.equals(subjectName)){
+                subjectKey=list.getJSONObject(i).getString("subject_key");
+           }
+        }
+        return subjectKey;
+    }
+
+
+    /**
+     * 消息推送
+     *
+     * @param type               推送优惠类型 0：卡券，1：套餐
+     * @param voucherOrPackageId 卡券id
+     * @param immediately        是否立即发送
+     * @return 发出去的卡券id
+     */
+    public void pushMessage(Integer type, boolean immediately, Long... voucherOrPackageId) {
+        List<Long> voucherOrPackageList = new ArrayList<>(Arrays.asList(voucherOrPackageId));
+        List<String> phoneList = new ArrayList<>();
+        phoneList.add("13373166806");
+        PushMessageScene.PushMessageSceneBuilder builder = PushMessageScene.builder().pushTarget(AppletPushTargetEnum.PERSONNEL_CUSTOMER.getId())
+                .telList(phoneList).messageName(EnumDesc.DESC_BETWEEN_5_10.getDesc()).messageContent(EnumDesc.DESC_BETWEEN_40_50.getDesc())
+                .type(type).voucherOrPackageList(voucherOrPackageList).useDays("10");
+        String d = DateTimeUtil.getFormat(DateTimeUtil.addSecond(new Date(), 80), "yyyy-MM-dd HH:mm:ss");
+        long sendTime = Long.parseLong(DateTimeUtil.dateToStamp(d));
+        builder = immediately ? builder.ifSendImmediately(true) : builder.ifSendImmediately(false).sendTime(sendTime);
+        visitor.invokeApi(builder.build());
     }
 
 

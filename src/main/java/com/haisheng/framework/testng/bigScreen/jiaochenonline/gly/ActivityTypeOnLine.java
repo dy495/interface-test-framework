@@ -11,8 +11,10 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.gly.util.PublicParameter
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.ArticleVoucherReceiveScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.FissionVoucherAddScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.ManageRecruitAddScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.ManageRegisterPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.util.BusinessUtilOnline;
@@ -30,8 +32,8 @@ import java.util.List;
 
 public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
     ScenarioUtil jc = new ScenarioUtil();
-    private static final EnumTestProduce product = EnumTestProduce.JIAOCHEN_ONLINE;
-    private static final EnumAccount ADMINISTRATOR=EnumAccount.ALL_AUTHORITY_ONLINE;
+    private static final EnumTestProduce product = EnumTestProduce.JC_ONLINE;
+    private static final EnumAccount ADMINISTRATOR=EnumAccount.ALL_JC_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(product);
     //    BusinessUtil businessUtil = new BusinessUtil(visitor);
     BusinessUtilOnline businessUtil=new BusinessUtilOnline(visitor);
@@ -47,7 +49,7 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
     @Override
     public void initial() {
         logger.debug("before class initial");
-        jc.changeIpPort(EnumTestProduce.JIAOCHEN_ONLINE.getAddress());
+        jc.changeIpPort(EnumTestProduce.JC_ONLINE.getAddress());
         //替换checklist的相关信息
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
         commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
@@ -1022,6 +1024,8 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
             saveData("招募活动，报名信息为空");
         }
     }
+
+
 
 
 

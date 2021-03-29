@@ -43,13 +43,13 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
     public void initial() {
         logger.debug("before classs initial");
 
-        jc.changeIpPort(EnumTestProduce.JIAOCHEN_ONLINE.getAddress());
+        jc.changeIpPort(EnumTestProduce.JC_ONLINE.getAddress());
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.referer = EnumTestProduce.JIAOCHEN_ONLINE.getReferer();
-        commonConfig.product = EnumTestProduce.JIAOCHEN_ONLINE.getAbbreviation();
+        commonConfig.referer = EnumTestProduce.JC_ONLINE.getReferer();
+        commonConfig.product = EnumTestProduce.JC_ONLINE.getAbbreviation();
 
 //        commonConfig.referer=getJcReferOnline();
 
@@ -61,7 +61,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-daily-test");
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JIAOCHEN_ONLINE.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JC_ONLINE.getDesc() + commonConfig.checklistQaOwner);
 
         //replace ding f
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
@@ -84,7 +84,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
         object.put("phone", username);
         object.put("verification_code", password);
         commonConfig.roleId=roleId;
-        httpPost(path, object, EnumTestProduce.JIAOCHEN_ONLINE.getAddress());
+        httpPost(path, object, EnumTestProduce.JC_ONLINE.getAddress());
     }
 
     //pc登录
@@ -94,7 +94,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
         object.put("phone", phone);
         object.put("verification_code", verificationCode);
         commonConfig.roleId=roleId;
-        httpPost(path, object, EnumTestProduce.JIAOCHEN_ONLINE.getAddress());
+        httpPost(path, object, EnumTestProduce.JC_ONLINE.getAddress());
     }
 
     @AfterClass

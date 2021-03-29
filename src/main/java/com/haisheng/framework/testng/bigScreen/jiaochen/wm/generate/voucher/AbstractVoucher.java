@@ -7,7 +7,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.AbstractGenerator;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.BaseGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherFormPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherPageScene;
 import com.haisheng.framework.util.CommonUtil;
@@ -21,11 +21,11 @@ import java.util.stream.Collectors;
  * @author wangmin
  * @date 2021/1/20 14:38
  */
-public abstract class BaseVoucher extends AbstractGenerator implements IVoucher {
+public abstract class AbstractVoucher extends BaseGenerator implements IVoucher {
     protected VoucherStatusEnum voucherStatus;
     private final IScene voucherScene;
 
-    public BaseVoucher(BaseBuilder baseBuilder) {
+    public AbstractVoucher(BaseBuilder baseBuilder) {
         super(baseBuilder);
         this.voucherStatus = baseBuilder.voucherStatus;
         this.voucherScene = baseBuilder.voucherScene;
@@ -35,23 +35,9 @@ public abstract class BaseVoucher extends AbstractGenerator implements IVoucher 
     public Long getVoucherId() {
         try {
             VoucherStatusEnum.findById(voucherStatus.getId());
-            Preconditions.checkArgument(!isEmpty(), "visitor is null");
             logger("FIND " + voucherStatus.name() + " START");
             Preconditions.checkArgument(counter(voucherStatus) < 4, voucherStatus.getName() + " 状态执行次数大于3次，强行停止，请检查此状态生成");
-            VoucherPage voucherPage = null;
-            JSONObject response = VoucherPageScene.builder().build().execute(visitor, true);
-            int total = response.getInteger("total");
-            int s = CommonUtil.getTurningPage(total, SIZE);
-            for (int i = 1; i < s; i++) {
-                JSONArray array = VoucherPageScene.builder().page(i).size(SIZE).build().execute(visitor, true).getJSONArray("list");
-                List<VoucherPage> voucherPageList = array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, VoucherPage.class)).collect(Collectors.toList());
-                voucherPage = voucherStatus.name().equals(VoucherStatusEnum.WORKING.name())
-                        ? voucherPageList.stream().filter(e -> e.getVoucherStatus().equals(voucherStatus.name()) && e.getSurplusInventory() > 0).findFirst().orElse(null)
-                        : voucherPageList.stream().filter(e -> e.getVoucherStatus().equals(voucherStatus.name())).findFirst().orElse(null);
-                if (voucherPage != null) {
-                    break;
-                }
-            }
+            VoucherPage voucherPage = getVoucherPage();
             if (voucherPage != null) {
                 logger("FIND " + voucherStatus.name() + " FINISH");
                 logger("voucherId is: " + voucherPage.getVoucherId());
@@ -71,7 +57,7 @@ public abstract class BaseVoucher extends AbstractGenerator implements IVoucher 
     @Override
     public abstract void execute(VisitorProxy visitor, IScene scene);
 
-    public static abstract class BaseBuilder extends AbstractGenerator.AbstractBuilder<BaseBuilder> {
+    public static abstract class BaseBuilder extends BaseGenerator.AbstractBuilder<BaseBuilder> {
         private VoucherStatusEnum voucherStatus;
         private IScene voucherScene;
 
@@ -106,6 +92,24 @@ public abstract class BaseVoucher extends AbstractGenerator implements IVoucher 
 
     }
 
+    protected VoucherPage getVoucherPage() {
+        VoucherPage voucherPage = null;
+        JSONObject response = VoucherPageScene.builder().build().invoke(visitor, true);
+        int total = response.getInteger("total");
+        int s = CommonUtil.getTurningPage(total, SIZE);
+        for (int i = 1; i < s; i++) {
+            JSONArray array = VoucherPageScene.builder().page(i).size(SIZE).build().invoke(visitor, true).getJSONArray("list");
+            List<VoucherPage> voucherPageList = array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, VoucherPage.class)).collect(Collectors.toList());
+            voucherPage = voucherStatus.name().equals(VoucherStatusEnum.WORKING.name())
+                    ? voucherPageList.stream().filter(e -> e.getVoucherStatus().equals(voucherStatus.name()) && e.getSurplusInventory() > 0).findFirst().orElse(null)
+                    : voucherPageList.stream().filter(e -> e.getVoucherStatus().equals(voucherStatus.name())).findFirst().orElse(null);
+            if (voucherPage != null) {
+                break;
+            }
+        }
+        return voucherPage;
+    }
+
     /**
      * 获取卡券名称
      *
@@ -114,8 +118,7 @@ public abstract class BaseVoucher extends AbstractGenerator implements IVoucher 
      */
     protected String getVoucherName(Long voucherId) {
         IScene scene = VoucherPageScene.builder().build();
-        List<VoucherPage> vouchers = resultCollectToBean(scene, VoucherPage.class);
-        return vouchers.stream().filter(e -> e.getVoucherId().equals(voucherId)).map(VoucherPage::getVoucherName).findFirst().orElse(null);
+        return findBeanByField(scene, VoucherPage.class, "voucher_id", voucherId).getVoucherName();
     }
 
     /**
@@ -126,8 +129,7 @@ public abstract class BaseVoucher extends AbstractGenerator implements IVoucher 
      */
     protected Long getVoucherId(String voucherName) {
         IScene scene = VoucherFormPageScene.builder().voucherName(voucherName).build();
-        List<VoucherPage> vouchers = resultCollectToBean(scene, VoucherPage.class);
-        return vouchers.stream().filter(e -> e.getVoucherName().equals(voucherName)).map(VoucherPage::getVoucherId).findFirst().orElse(null);
+        return findBeanByField(scene, VoucherPage.class, "voucher_name", voucherName).getVoucherId();
     }
 
     /**
@@ -138,9 +140,6 @@ public abstract class BaseVoucher extends AbstractGenerator implements IVoucher 
      */
     private Integer counter(VoucherStatusEnum voucherStatusEnum) {
         logger("计数器次数：" + counter);
-        if (this.voucherStatus == voucherStatusEnum) {
-            return counter += 1;
-        }
-        return counter;
+        return this.voucherStatus == voucherStatusEnum ? counter += 1 : counter;
     }
 }
