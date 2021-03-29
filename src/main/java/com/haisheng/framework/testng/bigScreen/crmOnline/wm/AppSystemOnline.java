@@ -815,7 +815,7 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-//            saveData("销售--回访任务--列表项包括:所属销售、客户等级、客户名称、联系电话、意向车系、回访类型、是否完成");
+            saveData("销售--回访任务--列表项包括:所属销售、客户等级、客户名称、联系电话、意向车系、回访类型、是否完成");
         }
     }
 
