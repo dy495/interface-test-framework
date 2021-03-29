@@ -3207,18 +3207,18 @@ public class StoreScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    /**
-     * @description:6.6. 会员等级隐藏状态更新
-     * @author:
-     * @time:
-     */
-    public JSONObject member_level_hide(String id) throws Exception {
-        String path = "patrol/member/level/hide_update";
-        JSONObject json = new JSONObject();
-        json.put("id",id);
-        String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
-    }
+//    /**
+//     * @description:6.6. 会员等级隐藏状态更新
+//     * @author:
+//     * @time:
+//     */
+//    public JSONObject member_level_hide(String id) throws Exception {
+//        String path = "patrol/member/level/hide_update";
+//        JSONObject json = new JSONObject();
+//        json.put("id",id);
+//        String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
+//        return JSON.parseObject(res).getJSONObject("data");
+//    }
 }
 
 

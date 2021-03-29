@@ -812,14 +812,14 @@ public class XundianPcData extends TestCaseCommon implements TestCaseStd {
              double count = 0;
              for(int i=0;i<list.size();i++){
                 Integer patrol_num = list.getJSONObject(i).getInteger("patrol_num");
+              //  String last_time = list.getJSONObject(i).getString("last_patrol_time").substring(0,10);
+               // String today=dt.getHistoryDate(0);
                 if(patrol_num != 0 && patrol_num != null ){
                     count++;
                 }
              }
-
             //获取该账号下巡店中心列表中的门店数量
             double total = xd.ShopPage(page,size).getInteger("total");
-
              //根据计算公式得到巡店整体覆盖率
             String coverage_rate=  CommonUtil.getPercent(count,total,4);
           //  String coverage_rate =  ss.replace("%","");
