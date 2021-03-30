@@ -24,7 +24,7 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 
 public class XundianPcCase extends TestCaseCommon implements TestCaseStd {
-    public static final Logger log = LoggerFactory.getLogger(StorePcAndAppData.class);
+//    public static final Logger log = LoggerFactory.getLogger(StorePcAndAppData.class);
     public static final int size = 100;
     XundianScenarioUtil xd = XundianScenarioUtil.getInstance();
     StoreScenarioUtil md = StoreScenarioUtil.getInstance();
@@ -38,7 +38,7 @@ public class XundianPcCase extends TestCaseCommon implements TestCaseStd {
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_MENDIAN_DAILY_SERVICE;
-        commonConfig.checklistQaOwner = EnumChecklistUser.QQ.getName();
+        commonConfig.checklistQaOwner = "周涛";
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.XUNDIAN_DAILY_TEST.getJobName());
         //replace product name for ding push
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.XD_DAILY.getDesc());

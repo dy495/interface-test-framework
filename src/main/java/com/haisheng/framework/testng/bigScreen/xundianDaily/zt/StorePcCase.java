@@ -38,7 +38,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_MENDIAN_DAILY_SERVICE;
-        commonConfig.checklistQaOwner = EnumChecklistUser.QQ.getName();
+        commonConfig.checklistQaOwner = "周涛";
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.XUNDIAN_DAILY_TEST.getJobName());
         //replace product name for ding push
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.XD_DAILY.getDesc());
@@ -365,6 +365,10 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
             saveData("会员信息列表通过会员id+会员姓名+会员电话+人物id搜索");
         }
     }
+
+    /**
+     * -------------------------------------INS相关---------------------------------------------------------------------------
+     */
 
 //    //会员信息列表通过会员id和会员姓名+联系电话+人物id+会员身份筛选
 //    @Test()

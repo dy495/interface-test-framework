@@ -3420,10 +3420,10 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject feedback_delete(int feedbackId) throws Exception {
+    public JSONObject feedback_delete(Integer feedback_id) throws Exception {
         String path = "/patrol/feedback/delete";
         JSONObject json = new JSONObject();
-        json.put("feedbackId",feedbackId);
+        json.put("feedback_id",feedback_id);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -3432,11 +3432,11 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject feedback_delete(String feedbackType,String feedbackMessage) throws Exception {
+    public JSONObject feedback_delete(String feedback_type,String feedback_message) throws Exception {
         String path = "/patrol/feedback/feedback-type/add";
         JSONObject json = new JSONObject();
-        json.put("feedbackType",feedbackType);
-        json.put("feedbackMessage",feedbackMessage);
+        json.put("feedbackType",feedback_type);
+        json.put("feedbackMessage",feedback_message);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -3445,10 +3445,10 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject feedback_delete(Long feedbackTypeId) throws Exception {
+    public JSONObject feedback_delete(int feedback_type_id) throws Exception {
         String path = "/patrol/feedback/feedback-type/delete";
         JSONObject json = new JSONObject();
-        json.put("feedbackTypeId",feedbackTypeId);
+        json.put("feedback_type_id",feedback_type_id);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -3457,12 +3457,13 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject taste_add(String tasteImage,String tasteName,String tasteExplain,int users,boolean recommend) throws Exception {
+    public JSONObject taste_add(String taste_image_path,String head_image_path,String taste_name,String taste_explain,int users,boolean recommend) throws Exception {
         String path = "/patrol/taste/add";
         JSONObject json = new JSONObject();
-        json.put("tasteImage",tasteImage);
-        json.put("tasteName",tasteName);
-        json.put("tasteExplain",tasteExplain);
+        json.put("taste_image_path",taste_image_path);
+        json.put("head_image_path",head_image_path);
+        json.put("taste_name",taste_name);
+        json.put("taste_explain",taste_explain);
         json.put("users",users);
         json.put("recommend",recommend);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
@@ -3476,6 +3477,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
     public JSONObject taste_search(String taste_name,int page,int size) throws Exception {
         String path = "/patrol/taste/search";
         JSONObject json = new JSONObject();
+//        json.put("referer",referer);
         json.put("taste_name",taste_name);
         json.put("page",page);
         json.put("size",size);
@@ -3491,6 +3493,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
     public JSONObject seachTasteInfo(Integer id) throws Exception {
         String url = "/patrol/taste/search-info";
         JSONObject json = new JSONObject();
+//        json.put("referer",referer);
         json.put("id",id);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
@@ -3504,6 +3507,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
     public JSONObject taste_delete(int tasteId) throws Exception {
         String path = "/patrol/taste/delete";
         JSONObject json = new JSONObject();
+//        json.put("referer",referer);
         json.put("tasteId",tasteId);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
@@ -3517,6 +3521,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
     public JSONObject updateTaste(Integer id,String taste_image_path,String head_image_path,String taste_name,String taste_explain,Integer users,Boolean recommend) throws Exception {
         String url = "/patrol/taste/update";
         JSONObject json = new JSONObject();
+//        json.put("referer",referer);
         json.put("id",id);
         json.put("taste_image_path",taste_image_path);
         json.put("head_image_path",head_image_path);
@@ -3547,15 +3552,16 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject taste_add_comment(String commentUserImage,String commentUserName,String commentMessage,int commentStars,boolean visible,JSONArray commentImages) throws Exception {
+    public JSONObject taste_add_comment(int taste_id,String comment_user_image_path,String comment_user_name,String comment_message,int comment_stars,boolean visible,List comment_images_path) throws Exception {
         String path = "/patrol/taste/add-comment";
         JSONObject json = new JSONObject();
-        json.put("commentUserImage",commentUserImage);
-        json.put("commentUserName",commentUserName);
-        json.put("commentMessage",commentMessage);
-        json.put("commentStars",commentStars);
+        json.put("taste_id",taste_id);
+        json.put("comment_user_image_path",comment_user_image_path);
+        json.put("comment_user_name",comment_user_name);
+        json.put("comment_message",comment_message);
+        json.put("comment_stars",comment_stars);
         json.put("visible",visible);
-        json.put("commentImages",commentImages);
+        json.put("comment_images_path",comment_images_path);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -3564,9 +3570,10 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject taste_search_comment(int page,int size,String taste_name) throws Exception {
+    public JSONObject taste_search_comment(int taste_id,int page,int size,String taste_name) throws Exception {
         String path = "/patrol/taste/search-comment";
         JSONObject json = new JSONObject();
+        json.put("taste_id",taste_id);
         json.put("page",page);
         json.put("size",size);
         json.put("taste_name",taste_name);
@@ -3582,7 +3589,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
     public JSONObject seachCommentInfo(Integer id) throws Exception {
         String url = "/patrol/taste/search-comment-info";
         JSONObject json = new JSONObject();
-        json.put("comment_id",id);
+        json.put("id",id);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -3614,7 +3621,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
     public JSONObject seachCommentVisible(Integer id,Boolean visible) throws Exception {
         String url = "/patrol/taste/update-comment-visible";
         JSONObject json = new JSONObject();
-        json.put("comment_id",id);
+        json.put("id",id);
         json.put("visible",visible);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
@@ -3812,6 +3819,32 @@ public class StoreScenarioUtil extends TestCaseCommon {
         String json =
                 "{} ";
         String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     *@description: INS反馈类型列表查询
+     *@time:
+     */
+    public JSONObject feedbackList(int feedback_type,int page,int size) throws Exception {
+        String url = "/patrol/feedback/feedback-type/list";
+        JSONObject json = new JSONObject();
+        json.put("feedback_type",feedback_type);
+        json.put("page",page);
+        json.put("size",size);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     *@description: INS反馈类型详情查询
+     *@time:
+     */
+    public JSONObject feedbackInfo(int id) throws Exception {
+        String url = "/patrol/feedback/feedback-type/info";
+        JSONObject json = new JSONObject();
+        json.put("id",id);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
 }
