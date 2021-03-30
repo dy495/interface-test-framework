@@ -2,7 +2,6 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.util.CommonUtil;
@@ -32,7 +31,6 @@ public abstract class BaseGenerator implements IGenerator {
     }
 
     protected BaseGenerator(@NotNull AbstractBuilder<?> abstractBuilder) {
-        Preconditions.checkArgument(abstractBuilder.visitor != null, "visitor is null");
         this.visitor = abstractBuilder.visitor;
         this.errorMsg = new StringBuilder(16);
     }
@@ -79,6 +77,10 @@ public abstract class BaseGenerator implements IGenerator {
         protected IGenerator build() {
             return buildProduct();
         }
+    }
+
+    public boolean isEmpty() {
+        return visitor == null;
     }
 
     /**

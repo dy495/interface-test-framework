@@ -35,6 +35,7 @@ public abstract class AbstractVoucher extends BaseGenerator implements IVoucher 
     public Long getVoucherId() {
         try {
             VoucherStatusEnum.findById(voucherStatus.getId());
+            Preconditions.checkArgument(!isEmpty(), "visitor is null");
             logger("FIND " + voucherStatus.name() + " START");
             Preconditions.checkArgument(counter(voucherStatus) < 4, voucherStatus.getName() + " 状态执行次数大于3次，强行停止，请检查此状态生成");
             VoucherPage voucherPage = getVoucherPage();
