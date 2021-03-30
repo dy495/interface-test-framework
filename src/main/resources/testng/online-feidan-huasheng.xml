@@ -9,6 +9,7 @@
     <test name="online-monitor" preserve-order="true">
         <classes>
             <class name="com.haisheng.framework.testng.bigScreen.feidanOnline.FeidanHuaShengOnline"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.feidanOnline.FeidanHengYuOnline"></class>
         </classes>
     </test>
 
