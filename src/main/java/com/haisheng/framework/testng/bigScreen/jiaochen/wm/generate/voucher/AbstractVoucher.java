@@ -93,7 +93,12 @@ public abstract class AbstractVoucher extends BaseGenerator implements IVoucher 
 
     }
 
-    protected VoucherPage getVoucherPage() {
+    /**
+     * 获取卡券表单
+     *
+     * @return 卡券表单
+     */
+    private VoucherPage getVoucherPage() {
         VoucherPage voucherPage = null;
         JSONObject response = VoucherPageScene.builder().build().invoke(visitor, true);
         int total = response.getInteger("total");
