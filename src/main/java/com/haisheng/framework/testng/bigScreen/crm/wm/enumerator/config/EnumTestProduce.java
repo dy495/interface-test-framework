@@ -22,7 +22,7 @@ public enum EnumTestProduce {
 
     XD_DAILY("门店 日常", "", "", "4116", "XD", ""),
 
-    INS_DAILY("门店-ins 日常", "", "", "", "INS", ""),
+    INS_DAILY("门店-ins 日常", "", "http://dev.inspect.store.winsenseos.cn", "", "INS", ""),
 
     INS_ONLINE("门店-ins 赢识线上", "", "", "", "INS", ""),
     ;
