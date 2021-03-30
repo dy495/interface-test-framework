@@ -10,9 +10,6 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.Appr
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import java.util.List;
-import java.util.Objects;
-
 /**
  * 拒绝状态
  *
@@ -52,9 +49,8 @@ public class RejectVoucher extends AbstractVoucher {
      */
     public void applyVoucher(String voucherName, String status) {
         IScene scene = ApplyPageScene.builder().name(voucherName).state(ApplyStatusEnum.AUDITING.getId()).build();
-        List<ApplyPage> voucherApplies = resultCollectToBean(scene, ApplyPage.class);
-        Long id = Objects.requireNonNull(voucherApplies.stream().filter(e -> e.getName().equals(voucherName)).findFirst().orElse(null)).getId();
-        visitor.invokeApi(ApprovalScene.builder().id(id).status(status).build());
+        ApplyPage applyPage = findBeanByField(scene, ApplyPage.class, "name", voucherName);
+        Long id = applyPage.getId();
+        ApprovalScene.builder().id(id).status(status).build().invoke(visitor, true);
     }
-
 }

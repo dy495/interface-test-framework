@@ -263,7 +263,9 @@ public class SupporterUtil {
      * @return 主体详情
      */
     public Long getSubjectDesc(String subjectType) {
-        Preconditions.checkArgument(StringUtils.isNotEmpty(subjectType), "主体类型为空");
+        if (StringUtils.isEmpty(subjectType)) {
+            return null;
+        }
         switch (subjectType) {
             case "STORE":
                 return getShopIdList().get(0);

@@ -18,9 +18,6 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.Appl
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApprovalScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 
-import java.util.List;
-import java.util.Objects;
-
 /**
  * 无库存状态
  *
@@ -58,9 +55,9 @@ public class SellOutVoucher extends AbstractVoucher {
      */
     private void applyVoucher(String voucherName) {
         IScene scene = ApplyPageScene.builder().name(voucherName).state(ApplyStatusEnum.AUDITING.getId()).build();
-        List<ApplyPage> voucherApplies = resultCollectToBean(scene, ApplyPage.class);
-        Long id = Objects.requireNonNull(voucherApplies.stream().filter(e -> e.getName().equals(voucherName)).findFirst().orElse(null)).getId();
-        visitor.invokeApi(ApprovalScene.builder().id(id).status("1").build());
+        ApplyPage applyPage = findBeanByField(scene, ApplyPage.class, "name", voucherName);
+        Long id = applyPage.getId();
+        ApprovalScene.builder().id(id).status("1").build().invoke(visitor, true);
     }
 
     /**

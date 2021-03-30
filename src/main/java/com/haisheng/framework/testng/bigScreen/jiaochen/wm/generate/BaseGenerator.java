@@ -9,10 +9,6 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 /**
  * 生成器的抽象类
  *
@@ -81,28 +77,6 @@ public abstract class BaseGenerator implements IGenerator {
 
     public boolean isEmpty() {
         return visitor == null;
-    }
-
-    /**
-     * 收集结果
-     * 结果为bean类型
-     *
-     * @param scene 接口场景
-     * @param bean  bean类
-     * @param <T>   T
-     * @return bean的集合
-     */
-    protected <T> List<T> resultCollectToBean(IScene scene, Class<T> bean) {
-        List<T> list = new ArrayList<>();
-        int total = visitor.invokeApi(scene).getInteger("total");
-        int s = CommonUtil.getTurningPage(total, SIZE);
-        for (int i = 1; i < s; i++) {
-            scene.setPage(i);
-            scene.setSize(SIZE);
-            JSONArray array = visitor.invokeApi(scene).getJSONArray("list");
-            list.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, bean)).collect(Collectors.toList()));
-        }
-        return list;
     }
 
     /**
