@@ -102,8 +102,8 @@ public abstract class AbstractVoucher extends BaseGenerator implements IVoucher 
             JSONArray array = VoucherPageScene.builder().page(i).size(SIZE).build().invoke(visitor, true).getJSONArray("list");
             List<VoucherPage> voucherPageList = array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, VoucherPage.class)).collect(Collectors.toList());
             voucherPage = voucherStatus.name().equals(VoucherStatusEnum.WORKING.name())
-                    ? voucherPageList.stream().filter(e -> e.getVoucherStatus().equals(voucherStatus.name()) && e.getSurplusInventory() > 0).findFirst().orElse(null)
-                    : voucherPageList.stream().filter(e -> e.getVoucherStatus().equals(voucherStatus.name())).findFirst().orElse(null);
+                    ? voucherPageList.stream().filter(e -> e.getVoucherStatus().equals(voucherStatus.name()) && e.getSurplusInventory() > 0 && !e.getVoucherName().contains("专用")).findFirst().orElse(null)
+                    : voucherPageList.stream().filter(e -> e.getVoucherStatus().equals(voucherStatus.name()) && !e.getVoucherName().contains("专用")).findFirst().orElse(null);
             if (voucherPage != null) {
                 break;
             }

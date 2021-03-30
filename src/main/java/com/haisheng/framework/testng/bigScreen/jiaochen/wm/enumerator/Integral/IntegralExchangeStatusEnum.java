@@ -1,7 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral;
 
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.Integral.*;
 import lombok.Getter;
 
 import java.util.Arrays;
@@ -15,20 +14,17 @@ import java.util.Optional;
  */
 public enum IntegralExchangeStatusEnum {
 
-    NOT_START("未开始", new NoStartIntegral.Builder()),
-    WORKING("进行中", new WorkingIntegral.Builder()),
-    CLOSE("已关闭", new CloseIntegral.Builder()),
-    EXPIRED("已过期", new ExpiredIntegral.Builder()),
-    INVALID("已失效", null);
+    NOT_START("未开始"),
+    WORKING("进行中"),
+    CLOSE("已关闭"),
+    EXPIRED("已过期"),
+    INVALID("已失效");
 
     @Getter
     private final String desc;
-    @Getter
-    private final AbstractIntegral.BaseBuilder integralBuilder;
 
-    IntegralExchangeStatusEnum(String desc, AbstractIntegral.BaseBuilder integralBuilder) {
+    IntegralExchangeStatusEnum(String desc) {
         this.desc = desc;
-        this.integralBuilder = integralBuilder;
     }
 
     public static IntegralExchangeStatusEnum findByDesc(String statusName) {
