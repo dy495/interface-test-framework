@@ -75,6 +75,11 @@ public abstract class BaseGenerator implements IGenerator {
         }
     }
 
+    /**
+     * 判断visitor是空
+     *
+     * @return boolean
+     */
     public boolean isEmpty() {
         return visitor == null;
     }
@@ -97,7 +102,8 @@ public abstract class BaseGenerator implements IGenerator {
             scene.setPage(i);
             scene.setSize(SIZE);
             JSONArray array = scene.invoke(visitor, true).getJSONArray("list");
-            T clazz = array.stream().map(e -> (JSONObject) e).filter(e -> e.getObject(key, value.getClass()).equals(value)).findFirst().map(e -> JSONObject.toJavaObject(e, bean)).orElse(null);
+            T clazz = array.stream().map(e -> (JSONObject) e).filter(e -> e.getObject(key, value.getClass())
+                    .equals(value)).findFirst().map(e -> JSONObject.toJavaObject(e, bean)).orElse(null);
             if (clazz != null) {
                 return clazz;
             }
@@ -114,11 +120,17 @@ public abstract class BaseGenerator implements IGenerator {
         logger.info("---------------------------------------[ {} ]---------------------------------------", str);
     }
 
+    /**
+     * 清空visitor&计数器
+     */
     protected void clear() {
         this.visitor = null;
         this.counter = 0;
     }
 
+    /**
+     * 欢迎使用
+     */
     public void HI() {
         System.out.println(" ......................我佛慈悲......................");
         System.out.println("                       _oo0oo_                      ");
