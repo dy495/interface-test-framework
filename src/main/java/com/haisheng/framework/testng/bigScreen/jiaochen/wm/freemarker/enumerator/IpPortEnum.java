@@ -23,6 +23,8 @@ public enum IpPortEnum {
     JIAOCHEN_ONLINE("http://nb.jiaochenclub.com"),
 
     MENDIAN_DAILY("http://http:/dev.inspect.store.winsenseos.cn"),
+
+    INS_DAIY("http://api.litemall.winsenseos.com"),
     ;
 
     IpPortEnum(String ipPort) {

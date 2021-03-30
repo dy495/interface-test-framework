@@ -228,7 +228,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             exchangePageList.stream().filter(e -> Long.parseLong(DateTimeUtil.dateToStamp(e.getString("begin_use_time"))) >= time).forEach(e -> {
                 int id = e.getInteger("id");
                 AtomicInteger s = new AtomicInteger();
-                IScene exchangeStockScene = ExchangeStockScene.builder().id(String.valueOf(id)).build();
+                IScene exchangeStockScene = ExchangeGoodsStockScene.builder().id(String.valueOf(id)).build();
                 JSONObject response = visitor.invokeApi(exchangeStockScene);
                 String goodsName = response.getString("goods_name");
                 int goodsStock = response.getInteger("goods_stock");
@@ -333,7 +333,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             collectMessage(e);
         } finally {
             long id = ExchangePageScene.builder().build().invoke(visitor, true).getJSONArray("list").getJSONObject(0).getLong("id");
-            ExchangeSwitchStatusScene.builder().id(id).status(false).build().invoke(visitor, true);
+            ChangeSwitchStatusScene.builder().id(id).status(false).build().invoke(visitor, true);
             DeleteExchangeGoodsScene.builder().id(id).build().invoke(visitor, true);
             saveData("积分兑换--创建实体积分兑换");
         }
@@ -369,7 +369,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             collectMessage(e);
         } finally {
             long id = ExchangePageScene.builder().build().invoke(visitor, true).getJSONArray("list").getJSONObject(0).getLong("id");
-            ExchangeSwitchStatusScene.builder().id(id).status(false).build().invoke(visitor, true);
+            ChangeSwitchStatusScene.builder().id(id).status(false).build().invoke(visitor, true);
             DeleteExchangeGoodsScene.builder().id(id).build().invoke(visitor, true);
             saveData("积分兑换--创建虚拟积分兑换");
         }
@@ -455,7 +455,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             Long id = exchangePageList.stream().filter(e -> Integer.parseInt(e.getExchangedAndSurplus().split("/")[1]) < 10).map(ExchangePage::getId).findFirst().orElse(0L);
             IScene exchangeStockPageScene = ExchangeStockPageScene.builder().id(String.valueOf(id)).build();
             int exchangeStockPageListSize = util.collectBean(exchangeStockPageScene, ExchangeStockPage.class).size();
-            String goodsName = ExchangeGoodsStockScene.builder().id(id).build().invoke(visitor, true).getString("goods_name");
+            String goodsName = ExchangeGoodsStockScene.builder().id(String.valueOf(id)).build().invoke(visitor, true).getString("goods_name");
             JSONObject specificationDetail = ExchangeCommoditySpecificationsListScene.builder().id(id).build().invoke(visitor, true).getJSONArray("specification_detail_list").getJSONObject(0);
             String firstSpecificationsName = specificationDetail.getString("first_specifications_name");
             Integer num = specificationDetail.getInteger("num");
@@ -499,7 +499,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             IScene exchangePageScene = ExchangePageScene.builder().exchangeType(CommodityTypeEnum.REAL.name()).build();
             List<ExchangePage> exchangePageList = util.collectBean(exchangePageScene, ExchangePage.class);
             Long id = exchangePageList.stream().filter(e -> Integer.parseInt(e.getExchangedAndSurplus().split("/")[1]) < 10).map(ExchangePage::getId).findFirst().orElse(0L);
-            String goodsName = ExchangeGoodsStockScene.builder().id(id).build().invoke(visitor, true).getString("goods_name");
+            String goodsName = ExchangeGoodsStockScene.builder().id(String.valueOf(id)).build().invoke(visitor, true).getString("goods_name");
             JSONObject specificationDetail = ExchangeCommoditySpecificationsListScene.builder().id(id).build().invoke(visitor, true).getJSONArray("specification_detail_list").getJSONObject(0);
             String[] strings = {"99.99", null, "", "-11", "0"};
             Arrays.stream(strings).forEach(num -> {
@@ -528,7 +528,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             IScene exchangePageScene = ExchangePageScene.builder().exchangeType(CommodityTypeEnum.REAL.name()).build();
             List<ExchangePage> exchangePageList = util.collectBean(exchangePageScene, ExchangePage.class);
             Long id = exchangePageList.stream().map(ExchangePage::getId).findFirst().orElse(0L);
-            String goodsName = ExchangeGoodsStockScene.builder().id(id).build().invoke(visitor, true).getString("goods_name");
+            String goodsName = ExchangeGoodsStockScene.builder().id(String.valueOf(id)).build().invoke(visitor, true).getString("goods_name");
             JSONObject specificationDetail = ExchangeCommoditySpecificationsListScene.builder().id(id).build().invoke(visitor, true).getJSONArray("specification_detail_list").getJSONObject(0);
             String message = EditExchangeStockScene.builder().changeStockType(ChangeStockTypeEnum.MINUS.name()).num(String.valueOf(specificationDetail.getInteger("num") + 1)).id(specificationDetail.getLong("id")).goodsName(goodsName).type(CommodityTypeEnum.REAL.name()).build().invoke(visitor, false).getString("message");
             String err = "减少库存量需小于等于当前库存量";
@@ -548,7 +548,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             IScene exchangePageScene = ExchangePageScene.builder().exchangeType(CommodityTypeEnum.FICTITIOUS.name()).build();
             List<ExchangePage> exchangePageList = util.collectBean(exchangePageScene, ExchangePage.class);
             Long id = exchangePageList.stream().map(ExchangePage::getId).findFirst().orElse(0L);
-            JSONObject exchangeGoodsStockResponse = ExchangeGoodsStockScene.builder().id(id).build().invoke(visitor, true);
+            JSONObject exchangeGoodsStockResponse = ExchangeGoodsStockScene.builder().id(String.valueOf(id)).build().invoke(visitor, true);
             Integer goodsStock = exchangeGoodsStockResponse.getInteger("goods_stock");
             String goodsName = exchangeGoodsStockResponse.getString("goods_name");
             Long surplusInventory = util.getVoucherPage(goodsName).getSurplusInventory();
@@ -573,7 +573,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             IScene exchangePageScene = ExchangePageScene.builder().exchangeType(CommodityTypeEnum.FICTITIOUS.name()).build();
             List<ExchangePage> exchangePageList = util.collectBean(exchangePageScene, ExchangePage.class);
             Long id = exchangePageList.stream().map(ExchangePage::getId).findFirst().orElse(0L);
-            JSONObject exchangeGoodsStockResponse = ExchangeGoodsStockScene.builder().id(id).build().invoke(visitor, true);
+            JSONObject exchangeGoodsStockResponse = ExchangeGoodsStockScene.builder().id(String.valueOf(id)).build().invoke(visitor, true);
             Integer goodsStock = exchangeGoodsStockResponse.getInteger("goods_stock");
             String goodsName = exchangeGoodsStockResponse.getString("goods_name");
             long num = goodsStock + 1;

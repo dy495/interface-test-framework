@@ -9,7 +9,7 @@ import lombok.Builder;
  */
 @Builder
 public class ExchangeGoodsStockScene extends BaseScene {
-    private final Long id;
+    private final String id;
 
     @Override
     public JSONObject getRequestBody() {

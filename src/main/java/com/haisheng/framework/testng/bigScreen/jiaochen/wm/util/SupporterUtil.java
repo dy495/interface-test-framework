@@ -1436,7 +1436,7 @@ public class SupporterUtil {
      * @return 卡券信息
      */
     public VoucherPage getExchangeGoodsContainVoucher(Long id) {
-        String voucherName = ExchangeGoodsStockScene.builder().id(id).build().invoke(visitor, true).getString("goods_name");
+        String voucherName = ExchangeGoodsStockScene.builder().id(String.valueOf(id)).build().invoke(visitor, true).getString("goods_name");
         return getVoucherPage(voucherName);
     }
 
