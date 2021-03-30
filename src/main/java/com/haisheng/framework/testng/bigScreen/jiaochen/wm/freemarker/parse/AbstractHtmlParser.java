@@ -37,11 +37,6 @@ public abstract class AbstractHtmlParser implements IParser<SceneAttribute> {
     public abstract String getSuffix();
 
     @Override
-    public SceneAttribute findFirst() {
-        return getAttributes()[0];
-    }
-
-    @Override
     public SceneAttribute[] getAttributes() {
         logger.info("html开始解析");
         List<SceneAttribute> sceneAttributeList = new ArrayList<>();

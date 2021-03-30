@@ -3,6 +3,11 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.scenemaker.SceneAttribute;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.scenemaker.SceneMarker;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.parse.SceneParser;
+import org.jooq.DSLContext;
+import org.jooq.Record;
+import org.jooq.Result;
+import org.jooq.Row;
+import org.jooq.impl.DSL;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
@@ -32,12 +37,13 @@ public class TestFreeMarker {
         });
     }
 
-//    @Test
-//    public void testSql() {
-//        DSLContext create = DSL.using("jdbc:mysql://rm-2zeg4an1kr1437xu6no.mysql.rds.aliyuncs.com/onepiece", "qa_wr", "qa_wr1234");
-//        create.selectQuery().addConditions();
-//        Result<Record> result = create.selectFrom("t_case").where("id=1").limit(100).fetch().;
-//        Row row = result.fieldsRow();
+    @Test
+    public void testSql() {
+        DSLContext create = DSL.using("jdbc:mysql://rm-2zeg4an1kr1437xu6no.mysql.rds.aliyuncs.com/onepiece", "qa_wr", "qa_wr1234");
+        create.selectQuery().addConditions();
+        Result<Record> result = create.selectFrom("t_case").where("id=1").limit(100).fetch();
+        Row row = result.fieldsRow();
+        StringBuilder sb = new StringBuilder();
 //        System.err.println(field);
-//    }
+    }
 }

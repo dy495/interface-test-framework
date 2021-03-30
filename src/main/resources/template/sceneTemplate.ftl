@@ -25,7 +25,7 @@ public class ${className} extends BaseScene {
     </#list>
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         <#list attrs as attr>
         object.put("${attr.parameter}", ${attr.buildParam});

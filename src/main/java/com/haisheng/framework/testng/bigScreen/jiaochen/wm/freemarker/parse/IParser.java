@@ -11,6 +11,4 @@ public interface IParser<T> {
     String getSuffix();
 
     T[] getAttributes();
-
-    T findFirst();
 }
