@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.enumerator.FileFormatEnum;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
@@ -11,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -25,11 +27,13 @@ public abstract class AbstractMarker implements IMarker {
     protected final static Logger logger = LoggerFactory.getLogger(AbstractMarker.class);
     private final String templatePath;
     private final String templateName;
+    private final String templateFile;
     protected Structure structure;
 
     protected AbstractMarker(AbstractBuilder<?> abstractBuilder) {
         this.templatePath = abstractBuilder.templatePath;
         this.templateName = abstractBuilder.templateName;
+        this.templateFile = abstractBuilder.templateFile;
     }
 
     @Override
@@ -81,6 +85,62 @@ public abstract class AbstractMarker implements IMarker {
         }
     }
 
+    @Override
+    public void execute2() {
+        init();
+        // step1 创建freeMarker配置实例
+        Configuration configuration = new Configuration();
+        Writer out = null;
+        try {
+            //获取数据结构
+            Structure structure = getStructure();
+            if (structure != null) {
+                if (StringUtils.isNotEmpty(structure.getOutputPath()) && StringUtils.isNotEmpty(structure.getClassName())) {
+                    //step2 获取模版路径
+                    configuration.setDirectoryForTemplateLoading(new File(templatePath));
+                    //step4 加载模版文件
+                    Template template = configuration.getTemplate(templateName);
+                    //step3 创建数据模型
+                    Map<String, Object> dataMap = structure.getDataMap();
+                    if (dataMap.containsKey("attrs")) {
+                        ArrayList a = (ArrayList) dataMap.get("attrs");
+                        if (a.size() < 4) {
+                            File docFile = new File(templateFile);
+                            if (!checkName(docFile, structure.getClassName())) {
+                                out = new BufferedWriter(new FileWriter(docFile, true));
+                                template.process(dataMap, out);
+                            }
+                        }
+                    }
+
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (null != out) {
+                    out.flush();
+                }
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
+    }
+
+    public static boolean checkName(File file, String name) throws Exception {
+        BufferedReader read = new BufferedReader(new FileReader(file));
+        String a ;
+        while ((a=read.readLine()) != null ) {
+            System.out.println(a);
+            if (a.contains(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     /**
      * 子类继承
      * 赋值初始化
@@ -90,6 +150,12 @@ public abstract class AbstractMarker implements IMarker {
     public abstract static class AbstractBuilder<T extends AbstractBuilder<?>> {
         private String templatePath;
         private String templateName;
+        private String templateFile;
+
+        public T templateFile(String templateFile) {
+            this.templateFile = templateFile;
+            return (T) this;
+        }
 
         /**
          * 模板路径

@@ -13,6 +13,8 @@ public interface IMarker {
      */
     void execute();
 
+    void execute2();
+
     /**
      * 放入数据结构
      *

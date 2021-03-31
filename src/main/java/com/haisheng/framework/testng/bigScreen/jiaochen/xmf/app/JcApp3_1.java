@@ -22,6 +22,7 @@ import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.ReadContext;
 import org.testng.annotations.*;
 
+import java.awt.peer.LabelPeer;
 import java.lang.reflect.Method;
 import java.util.Random;
 
@@ -235,13 +236,18 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
                     .vin("ASDFGGGHH")   //底盘号
                     .build();
             jc.invokeApi(appbuycar);
-
+            //购车记录数
             IScene customerDetail=AppCustomerDetailScene.builder().id(Long.valueOf(reception[0])).build();
-
             JSONObject orderList=jc.invokeApi(customerDetail);
             ReadContext context = JsonPath.parse(orderList);
-            JSONArray ll=context.read("$data.order_list");  //
+            JSONArray ll=context.read("$data.order_list");  //array 大小即为记录条数
 
+            //备注
+            IScene appCustomerRemark=AppCustomerRemarkScene.builder()
+                    .remark("备注记录你来过")
+                    .id(Long.valueOf(reception[0]))
+                    .shopId(Long.valueOf(pp.shopIdZ)).build();
+            jc.invokeApi(appCustomerRemark);
 
 
 
@@ -251,6 +257,47 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
             saveData("买车购车记录+1");
         }
     }
+
+    @Test(description = "销售变更接待")
+    public void changeReception() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String phone = pf.genPhoneNum();
+            //接待新客
+            String[] reception = salereception(phone);
+            //编辑客户信息
+            IScene appcustomerEdit2 = AppCustomerEditScene.builder()
+                    .id(Long.valueOf(reception[0]))
+                    .customerName("一个字")
+                    .customerPhone(phone)
+                    .estimatedBuyTime(dt.getHistoryDate(0))
+                    .carModel(Long.valueOf(pp.carModelId))
+                    .build();
+            JSONObject data1 = jc.invokeApi(appcustomerEdit2);
+
+
+
+            //变更接待
+            IScene appreceptionChange=AppReceptorChangeScene.builder().receptorId(pp.useridxs)
+                    .shopId(Long.valueOf(pp.shopIdZ))
+                    .id(Long.valueOf(reception[0]))
+                    .build();
+
+            //店长登录 变更接待
+
+            appreceptionChange=AppReceptorChangeScene.builder().receptorId(pp.useridxs)
+                    .shopId(Long.valueOf(pp.shopIdZ))
+                    .id(Long.valueOf(reception[0]))
+                    .build();
+
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("变更接待+1");
+        }
+    }
+
 
 
 }

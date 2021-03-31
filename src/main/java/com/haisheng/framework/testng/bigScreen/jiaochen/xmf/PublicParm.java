@@ -61,6 +61,10 @@ public class PublicParm {
     public String userid="uid_0216a935"; //xx的userId;
     public String userid2="uid_5eabfb9c"; //店长的userId;
 
+    //3.0
+    public String useridxs="uid_5eabfb9c"; //销售的userId;
+
+
     public int ordeId=10; // 订单Id
     public String filepath11="src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/1_1.jpg";
     //---------2.0---------
