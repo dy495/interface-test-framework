@@ -19,10 +19,11 @@
             <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.FilterColumnSystemOnline"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.ActivityManageOnLine"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.JcPc_SystemLogOnline"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.testcase.BusinessManageCaseOnline"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.testcase.IntegralCenterCaseOnline"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.testcase.MarketingManageCaseOnline"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.testcase.ContentOperationCaseOnline"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.BusinessManageCaseOnline"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.VoucherManagerCaseOnline"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.IntegralCenterCaseOnline"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.MarketingManageCaseOnline"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.ContentOperationCaseOnline"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.app.JcAppOnline"/>
 
         </classes>

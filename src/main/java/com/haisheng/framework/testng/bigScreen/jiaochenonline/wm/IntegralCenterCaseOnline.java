@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.testcase;
+package com.haisheng.framework.testng.bigScreen.jiaochenonline.wm;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;

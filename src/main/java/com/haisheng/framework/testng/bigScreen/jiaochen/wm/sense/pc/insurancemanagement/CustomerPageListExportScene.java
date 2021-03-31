@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 16.2. 投保客户列表导出-导出 (池)(2021-03-11)的接口
+ * 10.2. 投保客户列表导出-导出 (池)(2021-03-11)
  *
  * @author wangmin
- * @date 2021-03-24 14:32:27
+ * @date 2021-03-31 12:32:56
  */
 @Builder
 public class CustomerPageListExportScene extends BaseScene {
@@ -127,7 +127,7 @@ public class CustomerPageListExportScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);

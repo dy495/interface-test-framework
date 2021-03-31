@@ -5,7 +5,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 34.27. 客户积分变更记录分页 (谢志东) v2.2 （2021-03-16）的接口
+ * 34.27. 客户积分变更记录分页 (谢志东) v2.2 （2021-03-16）
  *
  * @author wangmin
  * @date 2021-03-24 14:32:27

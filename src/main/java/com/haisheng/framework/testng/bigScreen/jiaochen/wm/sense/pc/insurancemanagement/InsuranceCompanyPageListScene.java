@@ -1,15 +1,14 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.insurancemanagement;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 16.7. 投保公司列表（池）（分页）（2021-03-05）的接口
+ * 10.7. 投保公司列表（池）（分页）（2021-03-05）
  *
  * @author wangmin
- * @date 2021-03-24 14:32:27
+ * @date 2021-03-31 12:32:56
  */
 @Builder
 public class InsuranceCompanyPageListScene extends BaseScene {
@@ -29,7 +28,7 @@ public class InsuranceCompanyPageListScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);

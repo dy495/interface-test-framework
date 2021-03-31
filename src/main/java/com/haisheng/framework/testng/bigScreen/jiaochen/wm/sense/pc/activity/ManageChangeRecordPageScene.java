@@ -1,15 +1,14 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/activity/manage/change/record/page的接口
+ * 22.23. 活动变更记录分页 （谢）（2020-12-23）
  *
  * @author wangmin
- * @date 2021-03-12 17:23:18
+ * @date 2021-03-31 12:50:51
  */
 @Builder
 public class ManageChangeRecordPageScene extends BaseScene {
@@ -36,7 +35,7 @@ public class ManageChangeRecordPageScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);

@@ -17,8 +17,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpload;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherDetailScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherFormPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherFormVoucherPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 import com.haisheng.framework.util.DateTimeUtil;
@@ -218,11 +217,11 @@ public class BusinessUtilOnline {
      */
     public List<Long> getWaitingWorkingVoucherIds() {
         List<Long> voucherIds = new ArrayList<>();
-        IScene scene = VoucherFormPageScene.builder().page(1).size(10).build();
+        IScene scene = VoucherFormVoucherPageScene.builder().page(1).size(10).build();
         JSONObject response = visitor.invokeApi(scene);
         int pages = response.getInteger("pages");
         for (int page = 1; page <= pages; page++) {
-            IScene scene1 = VoucherFormPageScene.builder().page(page).size(10).build();
+            IScene scene1 = VoucherFormVoucherPageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 Long voucherId = list.getJSONObject(i).getLong("id");
@@ -241,11 +240,11 @@ public class BusinessUtilOnline {
     public List<Long> getVoucherIds() {
         SupporterUtil su = new SupporterUtil(visitor);
         List<Long> voucherIds = new ArrayList<>();
-        IScene scene = VoucherFormPageScene.builder().page(1).size(10).build();
+        IScene scene = VoucherFormVoucherPageScene.builder().page(1).size(10).build();
         JSONObject response = visitor.invokeApi(scene);
         int pages = response.getInteger("pages");
         for (int page = 1; page <= pages; page++) {
-            IScene scene1 = VoucherFormPageScene.builder().page(page).size(10).build();
+            IScene scene1 = VoucherFormVoucherPageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 Long voucherId = list.getJSONObject(i).getLong("id");
@@ -665,11 +664,11 @@ public class BusinessUtilOnline {
      * 获取优惠券的库存
      */
     public String getSurplusInventory(Long id) {
-        IScene scene1 = VoucherPageScene.builder().page(1).size(10).build();
+        IScene scene1 = VoucherFormVoucherPageScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(scene1).getInteger("pages");
         String surplusInventory = "";
         for (int page = 1; page <= pages; page++) {
-            IScene scene2 = VoucherPageScene.builder().page(page).size(10).build();
+            IScene scene2 = VoucherFormVoucherPageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene2).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 Long voucherId = list.getJSONObject(i).getLong("voucher_id");

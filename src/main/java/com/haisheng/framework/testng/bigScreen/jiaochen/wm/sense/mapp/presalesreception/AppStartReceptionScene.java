@@ -1,12 +1,11 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 5.2. 开始接待车主车辆（谢）v3.0 （2021-03-16）的接口
+ * 5.2. 开始接待车主车辆（谢）v3.0 （2021-03-16）
  *
  * @author wangmin
  * @date 2021-03-24 14:44:47
@@ -43,7 +42,7 @@ public class AppStartReceptionScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("customer_id", customerId);
         object.put("car_style", carStyle);

@@ -8,8 +8,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.BaseGenerator;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherFormPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherFormVoucherPageScene;
 import com.haisheng.framework.util.CommonUtil;
 
 import java.util.List;
@@ -100,11 +99,11 @@ public abstract class AbstractVoucher extends BaseGenerator implements IVoucher 
      */
     private VoucherPage getVoucherPage() {
         VoucherPage voucherPage = null;
-        JSONObject response = VoucherPageScene.builder().build().invoke(visitor, true);
+        JSONObject response = VoucherFormVoucherPageScene.builder().build().invoke(visitor, true);
         int total = response.getInteger("total");
         int s = CommonUtil.getTurningPage(total, SIZE);
         for (int i = 1; i < s; i++) {
-            JSONArray array = VoucherPageScene.builder().page(i).size(SIZE).build().invoke(visitor, true).getJSONArray("list");
+            JSONArray array = VoucherFormVoucherPageScene.builder().page(i).size(SIZE).build().invoke(visitor, true).getJSONArray("list");
             List<VoucherPage> voucherPageList = array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, VoucherPage.class)).collect(Collectors.toList());
             voucherPage = voucherStatus.name().equals(VoucherStatusEnum.WORKING.name())
                     ? voucherPageList.stream().filter(e -> e.getVoucherStatus().equals(voucherStatus.name()) && e.getSurplusInventory() > 0 && !e.getVoucherName().contains("专用")).findFirst().orElse(null)
@@ -123,7 +122,7 @@ public abstract class AbstractVoucher extends BaseGenerator implements IVoucher 
      * @return 卡券名
      */
     protected String getVoucherName(Long voucherId) {
-        IScene scene = VoucherPageScene.builder().build();
+        IScene scene = VoucherFormVoucherPageScene.builder().build();
         return findBeanByField(scene, VoucherPage.class, "voucher_id", voucherId).getVoucherName();
     }
 
@@ -134,7 +133,7 @@ public abstract class AbstractVoucher extends BaseGenerator implements IVoucher 
      * @return 卡券id
      */
     protected Long getVoucherId(String voucherName) {
-        IScene scene = VoucherFormPageScene.builder().voucherName(voucherName).build();
+        IScene scene = VoucherFormVoucherPageScene.builder().voucherName(voucherName).build();
         return findBeanByField(scene, VoucherPage.class, "voucher_name", voucherName).getVoucherId();
     }
 

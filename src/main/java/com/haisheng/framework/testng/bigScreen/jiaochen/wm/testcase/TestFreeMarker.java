@@ -6,7 +6,6 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.parse.Scen
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
-import org.jooq.Row;
 import org.jooq.impl.DSL;
 import org.testng.annotations.Test;
 
@@ -38,12 +37,20 @@ public class TestFreeMarker {
     }
 
     @Test
-    public void testSql() {
+    public void testJooq() {
         DSLContext create = DSL.using("jdbc:mysql://rm-2zeg4an1kr1437xu6no.mysql.rds.aliyuncs.com/onepiece", "qa_wr", "qa_wr1234");
         create.selectQuery().addConditions();
         Result<Record> result = create.selectFrom("t_case").where("id=1").limit(100).fetch();
-        Row row = result.fieldsRow();
-        StringBuilder sb = new StringBuilder();
-//        System.err.println(field);
+    }
+
+    @Test
+    public void testMybatis() {
+//        SqlSessionFactoryBuilder builder = new SqlSessionFactoryBuilder();
+//        InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("src/main/resources/configuration.xml");
+//        //配置文件
+//        SqlSessionFactory sqlSessionFactory = builder.build(inputStream);
+//        SqlSession sqlSession = sqlSessionFactory.openSession(true);
+//        sqlSession.insert()
+
     }
 }

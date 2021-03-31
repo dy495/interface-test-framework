@@ -27,6 +27,12 @@ public class VoucherPage implements Serializable {
     private Long surplusInventory;
 
     /**
+     * 可用库存
+     */
+    @JSONField(name = "allow_use_inventory")
+    private Integer allowUseInventory;
+
+    /**
      * 累计发出
      */
     @JSONField(name = "cumulative_delivery")

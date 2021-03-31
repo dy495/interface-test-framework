@@ -5,10 +5,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 15.5. 套餐取消 v2.3（张小龙） 2021-03-17的接口
+ * 14.5. 套餐取消 v2.3（张小龙） 2021-03-17
  *
  * @author wangmin
- * @date 2021-03-25 16:20:00
+ * @date 2021-03-31 12:01:33
  */
 @Builder
 public class CancelPackageScene extends BaseScene {
@@ -21,7 +21,7 @@ public class CancelPackageScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("id", id);
         return object;
@@ -29,6 +29,6 @@ public class CancelPackageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/car-platform/pc/package-manage/cancel-package";
+        return "/jiaochen/pc/package-manage/cancel-package";
     }
 }

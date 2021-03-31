@@ -1,18 +1,17 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.insurancemanagement;
+package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.presalesreception;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 10.13. 投保任务（池）（2021-03-05）
+ * 15.2. 接待导出（谢）v3.0 （2021-03-30）
  *
  * @author wangmin
- * @date 2021-03-31 12:32:56
+ * @date 2021-03-31 12:01:33
  */
 @Builder
-public class InsuranceTaskPageScene extends BaseScene {
+public class ExportScene extends BaseScene {
     /**
      * 描述 页码 大于0
      * 是否必填 true
@@ -28,67 +27,67 @@ public class InsuranceTaskPageScene extends BaseScene {
     private final Integer size;
 
     /**
-     * 描述 归属门店
+     * 描述 门店Id
      * 是否必填 false
      * 版本 v3.0
      */
     private final Long shopId;
 
     /**
-     * 描述 车辆品牌
-     * 是否必填 false
-     * 版本 v3.0
-     */
-    private final Long carBrandId;
-
-    /**
-     * 描述 跟进账号
-     * 是否必填 false
-     * 版本 v3.0
-     */
-    private final String followLoginName;
-
-    /**
-     * 描述 跟进人员
-     * 是否必填 false
-     * 版本 v3.0
-     */
-    private final String followSalesName;
-
-    /**
-     * 描述 创建开始时间
-     * 是否必填 false
-     * 版本 v3.0
-     */
-    private final String taskDateStart;
-
-    /**
-     * 描述 创建结束时间
-     * 是否必填 false
-     * 版本 v3.0
-     */
-    private final String taskDateEnd;
-
-    /**
-     * 描述 联系人
+     * 描述 客户名称
      * 是否必填 false
      * 版本 v3.0
      */
     private final String customerName;
 
     /**
-     * 描述 联系电话
+     * 描述 客户手机号
      * 是否必填 false
      * 版本 v3.0
      */
-    private final String phone1;
+    private final String phone;
 
     /**
-     * 描述 是否超时
+     * 描述 车系Id
      * 是否必填 false
      * 版本 v3.0
      */
-    private final Boolean isOverTime;
+    private final Long carStyleId;
+
+    /**
+     * 描述 销售名称
+     * 是否必填 false
+     * 版本 v3.0
+     */
+    private final String preSaleName;
+
+    /**
+     * 描述 销售账号
+     * 是否必填 false
+     * 版本 v3.0
+     */
+    private final String preSaleAccount;
+
+    /**
+     * 描述 接待日期
+     * 是否必填 false
+     * 版本 v3.0
+     */
+    private final String receptionStart;
+
+    /**
+     * 描述 接待日期
+     * 是否必填 false
+     * 版本 v3.0
+     */
+    private final String receptionEnd;
+
+    /**
+     * 描述 导出类型 ALL：导出全部，CURRENT_PAGE：导出当前页，SPECIFIED_DATA：导出特定数据
+     * 是否必填 true
+     * 版本 v3.0
+     */
+    private final String exportType;
 
 
     @Override
@@ -97,19 +96,19 @@ public class InsuranceTaskPageScene extends BaseScene {
         object.put("page", page);
         object.put("size", size);
         object.put("shop_id", shopId);
-        object.put("car_brand_id", carBrandId);
-        object.put("follow_login_name", followLoginName);
-        object.put("follow_sales_name", followSalesName);
-        object.put("task_date_start", taskDateStart);
-        object.put("task_date_end", taskDateEnd);
         object.put("customer_name", customerName);
-        object.put("phone1", phone1);
-        object.put("is_over_time", isOverTime);
+        object.put("phone", phone);
+        object.put("car_style_id", carStyleId);
+        object.put("pre_sale_name", preSaleName);
+        object.put("pre_sale_account", preSaleAccount);
+        object.put("reception_start", receptionStart);
+        object.put("reception_end", receptionEnd);
+        object.put("export_type", exportType);
         return object;
     }
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/insurance-management/insurance-task-page";
+        return "/jiaochen/pc/pre-sales-reception/export";
     }
 }

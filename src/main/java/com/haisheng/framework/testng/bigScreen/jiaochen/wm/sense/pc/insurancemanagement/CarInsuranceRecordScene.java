@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 16.4. 车辆投保记录 （池）（2021-03-05）的接口
+ * 10.4. 车辆投保记录 （池）（2021-03-05）
  *
  * @author wangmin
- * @date 2021-03-24 14:32:27
+ * @date 2021-03-31 12:32:56
  */
 @Builder
 public class CarInsuranceRecordScene extends BaseScene {
@@ -36,7 +36,7 @@ public class CarInsuranceRecordScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);

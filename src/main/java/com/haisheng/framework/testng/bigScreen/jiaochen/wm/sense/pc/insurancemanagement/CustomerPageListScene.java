@@ -1,18 +1,17 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.insurancemanagement;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/insurance-management/customer-pageList的接口
+ * 10.1. 投保客户列表 （池）（2021-03-05）
  *
  * @author wangmin
- * @date 2021-03-12 17:23:18
+ * @date 2021-03-31 12:32:56
  */
 @Builder
-public class CustomerPagelistScene extends BaseScene {
+public class CustomerPageListScene extends BaseScene {
     /**
      * 描述 页码 大于0
      * 是否必填 true
@@ -113,7 +112,7 @@ public class CustomerPagelistScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);
@@ -134,6 +133,6 @@ public class CustomerPagelistScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/insurance-management/customer-pageList";
+        return "/jiaochen/pc/insurance-management/customer-page-list";
     }
 }

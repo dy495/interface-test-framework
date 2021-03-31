@@ -5,10 +5,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/applet-login的接口
+ * 15.1. 微信小程序登录（谢）
  *
  * @author wangmin
- * @date 2021-03-12 18:06:01
+ * @date 2021-03-31 13:03:22
  */
 @Builder
 public class AppletAppletLoginScene extends BaseScene {
@@ -21,7 +21,7 @@ public class AppletAppletLoginScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("code", code);
         return object;

@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/insurance-management/insurance-company-delete的接口
+ * 10.8. 投保公司删除（池）（2021-03-05）
  *
  * @author wangmin
- * @date 2021-03-12 17:23:18
+ * @date 2021-03-31 12:32:56
  */
 @Builder
 public class InsuranceCompanyDeleteScene extends BaseScene {
@@ -22,7 +22,7 @@ public class InsuranceCompanyDeleteScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("insurance_company_id", insuranceCompanyId);
         return object;

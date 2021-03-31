@@ -1,15 +1,14 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanage;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 10.22. 流失客户列表 (杨) v3.0的接口
+ * 6.23. 流失客户列表 (杨) v3.0
  *
  * @author wangmin
- * @date 2021-03-24 14:32:26
+ * @date 2021-03-31 12:32:56
  */
 @Builder
 public class LossCustomerPageScene extends BaseScene {
@@ -97,9 +96,16 @@ public class LossCustomerPageScene extends BaseScene {
      */
     private final Long brandId;
 
+    /**
+     * 描述 No comments found.
+     * 是否必填 false
+     * 版本 -
+     */
+    private final Boolean isLoss;
+
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);
@@ -113,6 +119,7 @@ public class LossCustomerPageScene extends BaseScene {
         object.put("shop_id", shopId);
         object.put("registration_status", registrationStatus);
         object.put("brand_id", brandId);
+        object.put("isLoss", isLoss);
         return object;
     }
 

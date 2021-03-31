@@ -1,15 +1,14 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.operation;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/operation/article/edit的接口
+ * 24.4. 内容运营 : 编辑文章 （谢）（2020-12-22）
  *
  * @author wangmin
- * @date 2021-03-12 17:23:18
+ * @date 2021-03-31 12:04:39
  */
 @Builder
 public class ArticleEditScene extends BaseScene {
@@ -36,7 +35,7 @@ public class ArticleEditScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("id", id);
         object.put("title", title);

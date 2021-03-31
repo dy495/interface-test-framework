@@ -1,20 +1,19 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.insurancemanagement;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/insurance-management/buy-insurance的接口
+ * 10.5. 购买 （池）（2021-03-05）
  *
  * @author wangmin
- * @date 2021-03-12 17:23:18
+ * @date 2021-03-31 12:32:56
  */
 @Builder
 public class BuyInsuranceScene extends BaseScene {
     /**
-     * 描述 列表中id
+     * 描述 id
      * 是否必填 false
      * 版本 v3.0
      */
@@ -36,7 +35,7 @@ public class BuyInsuranceScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("id", id);
         object.put("insurance_company_id", insuranceCompanyId);

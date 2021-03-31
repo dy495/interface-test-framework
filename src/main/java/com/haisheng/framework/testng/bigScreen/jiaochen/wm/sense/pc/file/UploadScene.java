@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/file/upload的接口
+ * 27.5. 通用文件上传接口
  *
  * @author wangmin
- * @date 2021-03-12 17:23:18
+ * @date 2021-03-31 12:32:56
  */
 @Builder
 public class UploadScene extends BaseScene {
@@ -43,7 +43,7 @@ public class UploadScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("pic", pic);
         object.put("permanent_pic_type", permanentPicType);

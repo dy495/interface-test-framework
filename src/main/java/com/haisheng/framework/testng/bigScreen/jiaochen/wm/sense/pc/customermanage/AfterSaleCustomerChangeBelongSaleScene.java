@@ -1,18 +1,31 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanage;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 10.18. 售后变更所属销售 (杨)v3.0的接口
+ * 6.19. 售后变更所属销售 (杨)v3.0
  *
  * @author wangmin
- * @date 2021-03-24 14:32:26
+ * @date 2021-03-31 12:32:56
  */
 @Builder
 public class AfterSaleCustomerChangeBelongSaleScene extends BaseScene {
+    /**
+     * 描述 门店Id
+     * 是否必填 true
+     * 版本 v3.0
+     */
+    private final Long shopId;
+
+    /**
+     * 描述 车辆Id
+     * 是否必填 true
+     * 版本 v3.0
+     */
+    private final Long cardId;
+
     /**
      * 描述 客户Id
      * 是否必填 true
@@ -29,8 +42,10 @@ public class AfterSaleCustomerChangeBelongSaleScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
+        object.put("shop_id", shopId);
+        object.put("card_id", cardId);
         object.put("customer_id", customerId);
         object.put("sale_id", saleId);
         return object;

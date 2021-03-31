@@ -46,7 +46,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionman
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.userange.DetailScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.userange.SubjectListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApprovalScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyApprovalScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.*;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
@@ -193,7 +193,7 @@ public class SupporterUtil {
     public String createVoucherName(VoucherTypeEnum typeEnum) {
         int num = CommonUtil.getRandom(1, 100000);
         String voucherName = typeEnum.getDesc() + num;
-        IScene scene = VoucherPageScene.builder().voucherName(voucherName).build();
+        IScene scene = VoucherFormVoucherPageScene.builder().voucherName(voucherName).build();
         List<VoucherPage> vouchers = collectBean(scene, VoucherPage.class);
         if (vouchers.isEmpty()) {
             return voucherName;
@@ -394,7 +394,7 @@ public class SupporterUtil {
      * @return 卡券页信息
      */
     public VoucherPage getVoucherPage(String voucherName) {
-        IScene scene = VoucherPageScene.builder().voucherName(voucherName).build();
+        IScene scene = VoucherFormVoucherPageScene.builder().voucherName(voucherName).build();
         return collectBeanByField(scene, VoucherPage.class, "voucher_name", voucherName);
     }
 
@@ -405,7 +405,7 @@ public class SupporterUtil {
      * @return 卡券页信息
      */
     public VoucherPage getVoucherPage(Long voucherId) {
-        IScene scene = VoucherPageScene.builder().build();
+        IScene scene = VoucherFormVoucherPageScene.builder().build();
         return collectBeanByField(scene, VoucherPage.class, "voucher_id", voucherId);
     }
 
@@ -504,7 +504,7 @@ public class SupporterUtil {
     public void applyVoucher(String voucherName, String status) {
         IScene scene = ApplyPageScene.builder().name(voucherName).state(ApplyStatusEnum.AUDITING.getId()).build();
         ApplyPage applyPage = collectBeanByField(scene, ApplyPage.class, "name", voucherName);
-        ApprovalScene.builder().id(applyPage.getId()).status(status).build().invoke(visitor, true);
+        ApplyApprovalScene.builder().id(applyPage.getId()).status(status).build().invoke(visitor, true);
     }
 
     //--------------------------------------------------套餐----------------------------------------------------------

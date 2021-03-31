@@ -1,15 +1,14 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.presalesreception;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 18.7. 变更销售接待（杨）v3.0 （2021-03-16）的接口
+ * 15.9. 变更销售接待（谢）v3.0 （2021-03-16）
  *
  * @author wangmin
- * @date 2021-03-24 14:32:27
+ * @date 2021-03-31 12:01:33
  */
 @Builder
 public class ReceptorChangeScene extends BaseScene {
@@ -36,7 +35,7 @@ public class ReceptorChangeScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("id", id);
         object.put("shop_id", shopId);

@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/insurance-management/insurance-record的接口
+ * 10.11. 全部投保记录（池）（2021-03-05）
  *
  * @author wangmin
- * @date 2021-03-12 17:23:18
+ * @date 2021-03-31 12:32:56
  */
 @Builder
 public class InsuranceRecordScene extends BaseScene {
@@ -106,7 +106,7 @@ public class InsuranceRecordScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);

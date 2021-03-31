@@ -1,12 +1,11 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 5.8. 确认购车（谢）v3.0 （2021-03-16）的接口
+ * 5.8. 确认购车（谢）v3.0 （2021-03-16）
  *
  * @author wangmin
  * @date 2021-03-24 14:44:47
@@ -43,7 +42,7 @@ public class AppBuyCarScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("id", id);
         object.put("shop_id", shopId);

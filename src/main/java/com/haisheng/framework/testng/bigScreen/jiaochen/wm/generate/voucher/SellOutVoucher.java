@@ -15,7 +15,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanag
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanage.MakeSureBuyScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanage.PurchaseTemporaryPackageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApprovalScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyApprovalScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 
 /**
@@ -57,7 +57,7 @@ public class SellOutVoucher extends AbstractVoucher {
         IScene scene = ApplyPageScene.builder().name(voucherName).state(ApplyStatusEnum.AUDITING.getId()).build();
         ApplyPage applyPage = findBeanByField(scene, ApplyPage.class, "name", voucherName);
         Long id = applyPage.getId();
-        ApprovalScene.builder().id(id).status("1").build().invoke(visitor, true);
+        ApplyApprovalScene.builder().id(id).status("1").build().invoke(visitor, true);
     }
 
     /**

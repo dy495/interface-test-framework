@@ -1,91 +1,48 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
-/**
- * /jiaochen/pc/voucher-manage/voucher-form/voucher-page的接口
- *
- * @author wangmin
- * @date 2021-03-12 17:23:17
- */
 @Builder
 public class VoucherFormVoucherPageScene extends BaseScene {
-    /**
-     * 描述 页码 大于0
-     * 是否必填 true
-     * 版本 v1.0
-     */
-    private final Integer page;
-
-    /**
-     * 描述 页大小 范围为[1,100]
-     * 是否必填 true
-     * 版本 v1.0
-     */
-    private final Integer size;
-
-    /**
-     * 描述 状态
-     * 是否必填 false
-     * 版本 v2.0
-     */
     private final String voucherStatus;
-
-    /**
-     * 描述 优惠券类型
-     * 是否必填 false
-     * 版本 v2.0
-     */
     private final String voucherType;
-
-    /**
-     * 描述 卡券名称
-     * 是否必填 false
-     * 版本 v2.0
-     */
     private final String voucherName;
-
-    /**
-     * 描述 归属
-     * 是否必填 false
-     * 版本 v2.0
-     */
     private final String subjectName;
-
-    /**
-     * 描述 创建者姓名
-     * 是否必填 false
-     * 版本 v2.0
-     */
     private final String creatorName;
-
-    /**
-     * 描述 创建者账号
-     * 是否必填 false
-     * 版本 v2.0
-     */
     private final String creatorAccount;
-
+    @Builder.Default
+    private Integer page = 1;
+    @Builder.Default
+    private Integer size = 10;
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
-        object.put("page", page);
-        object.put("size", size);
         object.put("voucher_status", voucherStatus);
         object.put("voucher_type", voucherType);
         object.put("voucher_name", voucherName);
         object.put("subject_name", subjectName);
         object.put("creator_name", creatorName);
         object.put("creator_account", creatorAccount);
+        object.put("page", page);
+        object.put("size", size);
         return object;
     }
 
     @Override
     public String getPath() {
         return "/jiaochen/pc/voucher-manage/voucher-form/voucher-page";
+    }
+
+    @Override
+    public void setPage(Integer page) {
+        this.page = page;
+    }
+
+    @Override
+    public void setSize(Integer size) {
+        this.size = size;
     }
 }

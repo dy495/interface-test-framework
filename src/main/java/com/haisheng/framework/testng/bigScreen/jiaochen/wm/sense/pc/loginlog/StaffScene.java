@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 26.1. 员工登录日志-分页 （华成裕）的接口
+ * 28.1. 员工登录日志-分页 （华成裕）
  *
  * @author wangmin
- * @date 2021-03-24 14:32:27
+ * @date 2021-03-31 12:29:35
  */
 @Builder
 public class StaffScene extends BaseScene {
@@ -57,7 +57,7 @@ public class StaffScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);

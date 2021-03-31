@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/insurance-management/insurance-company-edit的接口
+ * 10.9. 保险公司维护（池）（2021-03-05）
  *
  * @author wangmin
- * @date 2021-03-12 17:23:18
+ * @date 2021-03-31 12:32:56
  */
 @Builder
 public class InsuranceCompanyEditScene extends BaseScene {
@@ -29,7 +29,7 @@ public class InsuranceCompanyEditScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("insurance_company_id", insuranceCompanyId);
         object.put("insurance_company_name", insuranceCompanyName);

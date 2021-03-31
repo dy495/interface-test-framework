@@ -6,7 +6,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.ApplyPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.ApplyStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApprovalScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyApprovalScene;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
@@ -53,6 +53,6 @@ public class WorkingVoucher extends AbstractVoucher {
         IScene scene = ApplyPageScene.builder().name(voucherName).state(ApplyStatusEnum.AUDITING.getId()).build();
         ApplyPage applyPage = findBeanByField(scene, ApplyPage.class, "name", voucherName);
         Long id = applyPage.getId();
-        ApprovalScene.builder().id(id).status(status).build().invoke(visitor, true);
+        ApplyApprovalScene.builder().id(id).status(status).build().invoke(visitor, true);
     }
 }
