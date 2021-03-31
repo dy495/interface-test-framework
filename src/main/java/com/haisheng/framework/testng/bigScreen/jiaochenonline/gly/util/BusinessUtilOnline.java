@@ -577,7 +577,7 @@ public class BusinessUtilOnline {
         List<String> picList = new ArrayList<>();
         SupporterUtil supporterUtil = new SupporterUtil(visitor);
         PublicParameter pp = new PublicParameter();
-        picList.add(supporterUtil.getPicPath());
+        picList.add(getPicturePath());
         //填写报名所需要信息
         List<Boolean> isShow = new ArrayList<>();
         isShow.add(true);
