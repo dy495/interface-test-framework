@@ -195,29 +195,29 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         };
     }
 
-    @Test(dataProvider = "INS_APPLET_TOKENS_DAILY", dataProviderClass = AppletLogin.class)
-    public void INS_applet_daily(String token) {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            EnumTestProduce produce = EnumTestProduce.INS_DAILY;
-            VisitorProxy visitor = new VisitorProxy(produce);
-            commonConfig.shopId = produce.getShopId();
-            commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, produce.getDesc());
-            commonConfig.referer = produce.getReferer();
-            commonConfig.pushRd = new String[]{EnumAppletToken.getPhoneByToken(token)};
-            new PorscheUser(visitor).loginApplet(EnumAppletToken.getEnumByToken(token));
-            Response response = invokePorsche(visitor);
-            Preconditions.checkArgument(response.getCode() == 1000, token + " " + response.getMsg());
-        } catch (AssertionError | Exception e) {
-            collectMessage(e);
-        } finally {
-            saveData("INS小程序每小时登陆一次，防止失效");
-        }
-    }
-    @DataProvider(name = "INS_APPLET_TOKENS_DAILY")
-    public static Object[] ins_appletTokens_daily() {
-        return new String[]{
-                EnumAppletToken.INS_ZT_DAILY.getToken(),
-        };
-    }
+//    @Test(dataProvider = "INS_APPLET_TOKENS_DAILY", dataProviderClass = AppletLogin.class)
+//    public void INS_applet_daily(String token) {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            EnumTestProduce produce = EnumTestProduce.INS_DAILY;
+//            VisitorProxy visitor = new VisitorProxy(produce);
+//            commonConfig.shopId = produce.getShopId();
+//            commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, produce.getDesc());
+//            commonConfig.referer = produce.getReferer();
+//            commonConfig.pushRd = new String[]{EnumAppletToken.getPhoneByToken(token)};
+//            new PorscheUser(visitor).loginApplet(EnumAppletToken.getEnumByToken(token));
+//            Response response = invokePorsche(visitor);
+//            Preconditions.checkArgument(response.getCode() == 1000, token + " " + response.getMsg());
+//        } catch (AssertionError | Exception e) {
+//            collectMessage(e);
+//        } finally {
+//            saveData("INS小程序每小时登陆一次，防止失效");
+//        }
+//    }
+//    @DataProvider(name = "INS_APPLET_TOKENS_DAILY")
+//    public static Object[] ins_appletTokens_daily() {
+//        return new String[]{
+//                EnumAppletToken.INS_ZT_DAILY.getToken(),
+//        };
+//    }
 }
