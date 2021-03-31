@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 10.25. 流失客户维修记录-导出 (杨) v3.0的接口
+ * 6.26. 流失客户维修记录-导出 (杨) v3.0
  *
  * @author wangmin
- * @date 2021-03-24 14:32:26
+ * @date 2021-03-31 12:32:56
  */
 @Builder
 public class LossCustomerRepairPageExportScene extends BaseScene {
@@ -57,7 +57,7 @@ public class LossCustomerRepairPageExportScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);

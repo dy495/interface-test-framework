@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/integral-mall/create-brand的接口
+ * 31.11. 创建品牌 (张小龙) v2.0
  *
  * @author wangmin
- * @date 2021-03-12 17:23:18
+ * @date 2021-03-31 12:29:35
  */
 @Builder
 public class CreateBrandScene extends BaseScene {
@@ -43,7 +43,7 @@ public class CreateBrandScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("id", id);
         object.put("brand_name", brandName);

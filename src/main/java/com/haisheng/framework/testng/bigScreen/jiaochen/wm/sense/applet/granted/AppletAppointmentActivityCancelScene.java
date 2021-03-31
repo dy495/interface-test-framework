@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/applet/granted/appointment/activity/cancel的接口
+ * 16.4. 小程序-我的-报名取消 （谢）
  *
  * @author wangmin
- * @date 2021-03-12 17:53:04
+ * @date 2021-03-31 13:03:22
  */
 @Builder
 public class AppletAppointmentActivityCancelScene extends BaseScene {
@@ -22,7 +22,7 @@ public class AppletAppointmentActivityCancelScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("id", id);
         return object;

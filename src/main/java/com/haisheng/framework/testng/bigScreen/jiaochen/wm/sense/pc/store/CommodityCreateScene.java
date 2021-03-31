@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/store/commodity/create的接口
+ * 4.3. 特惠商品创建 v2.0(池)
  *
  * @author wangmin
- * @date 2021-03-12 17:23:18
+ * @date 2021-03-31 12:47:26
  */
 @Builder
 public class CommodityCreateScene extends BaseScene {
@@ -78,7 +78,7 @@ public class CommodityCreateScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("commodity_name", commodityName);
         object.put("commodity_specification", commoditySpecification);

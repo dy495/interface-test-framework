@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/integral-mall/category-page的接口
+ * 31.1. 商品品类列表 (张小龙) v2.0
  *
  * @author wangmin
- * @date 2021-03-12 17:23:18
+ * @date 2021-03-31 12:29:35
  */
 @Builder
 public class CategoryPageScene extends BaseScene {
@@ -57,7 +57,7 @@ public class CategoryPageScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);

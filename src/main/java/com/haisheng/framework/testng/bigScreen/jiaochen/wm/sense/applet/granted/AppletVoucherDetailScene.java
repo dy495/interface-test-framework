@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/applet/granted/voucher/detail的接口
+ * 2.3. 我的卡券详情 (张小龙) v1.0
  *
  * @author wangmin
- * @date 2021-03-12 17:53:03
+ * @date 2021-03-31 13:03:22
  */
 @Builder
 public class AppletVoucherDetailScene extends BaseScene {
@@ -22,7 +22,7 @@ public class AppletVoucherDetailScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("id", id);
         return object;

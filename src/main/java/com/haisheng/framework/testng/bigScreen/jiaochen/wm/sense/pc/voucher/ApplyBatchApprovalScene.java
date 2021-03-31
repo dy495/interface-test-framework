@@ -6,23 +6,23 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/voucher/apply/batch-approval的接口
+ * 8.4. 卡券批量审批 （张小龙） v3.0
  *
  * @author wangmin
- * @date 2021-03-12 17:23:17
+ * @date 2021-03-31 12:47:27
  */
 @Builder
 public class ApplyBatchApprovalScene extends BaseScene {
     /**
      * 描述 批量审批记录id
-     * 是否必填 false
+     * 是否必填 true
      * 版本 v3.0
      */
     private final JSONArray ids;
 
     /**
      * 描述 状态 1 通过，2 拒绝
-     * 是否必填 false
+     * 是否必填 true
      * 版本 v1.0
      */
     private final Integer status;
@@ -36,7 +36,7 @@ public class ApplyBatchApprovalScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("ids", ids);
         object.put("status", status);

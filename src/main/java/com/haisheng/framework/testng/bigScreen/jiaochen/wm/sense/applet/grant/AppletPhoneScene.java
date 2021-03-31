@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/applet/grant/phone的接口
+ * 15.3. 授权其他手机号（xie）（2021-01-21）
  *
  * @author wangmin
- * @date 2021-03-12 17:53:04
+ * @date 2021-03-31 13:03:22
  */
 @Builder
 public class AppletPhoneScene extends BaseScene {
@@ -29,7 +29,7 @@ public class AppletPhoneScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("phone", phone);
         object.put("verification_code", verificationCode);

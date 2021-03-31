@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/m-app/personal-center/write-off-records/page的接口
+ * 6.2. app 我的核销记录分页（张小龙）
  *
  * @author wangmin
- * @date 2021-03-12 18:09:47
+ * @date 2021-03-31 13:03:23
  */
 @Builder
 public class AppWriteOffRecordsPageScene extends BaseScene {
@@ -29,7 +29,7 @@ public class AppWriteOffRecordsPageScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("size", size);
         object.put("last_value", lastValue);

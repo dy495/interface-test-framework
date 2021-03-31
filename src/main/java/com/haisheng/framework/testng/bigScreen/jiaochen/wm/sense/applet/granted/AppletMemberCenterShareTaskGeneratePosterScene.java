@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/applet/granted/member-center/share-task/generate-Poster的接口
+ * 14.10. 生成分享二维码 (池) v2.0
  *
  * @author wangmin
- * @date 2021-03-12 17:53:04
+ * @date 2021-03-31 13:03:22
  */
 @Builder
 public class AppletMemberCenterShareTaskGeneratePosterScene extends BaseScene {
@@ -29,7 +29,7 @@ public class AppletMemberCenterShareTaskGeneratePosterScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("business_type", businessType);
         object.put("taskId", taskId);

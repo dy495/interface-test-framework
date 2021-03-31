@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/applet/granted/member-center/car-wash/start的接口
+ * 14.5. 开始洗车 (池) v2.0
  *
  * @author wangmin
- * @date 2021-03-12 17:53:03
+ * @date 2021-03-31 13:03:22
  */
 @Builder
 public class AppletMemberCenterCarWashStartScene extends BaseScene {
@@ -22,7 +22,7 @@ public class AppletMemberCenterCarWashStartScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("car_wash_shop_id", carWashShopId);
         return object;

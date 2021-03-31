@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/reception-manage/cancel-reception的接口
+ * 16.8. 取消接待 （谢）
  *
  * @author wangmin
- * @date 2021-03-15 10:02:41
+ * @date 2021-03-31 12:47:27
  */
 @Builder
 public class CancelReceptionScene extends BaseScene {
@@ -29,7 +29,7 @@ public class CancelReceptionScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("id", id);
         object.put("shopId", shopId);

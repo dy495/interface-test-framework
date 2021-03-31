@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/record/import/page的接口
+ * 19.1. 导入记录 v1.0 (池)
  *
  * @author wangmin
- * @date 2021-03-12 17:23:17
+ * @date 2021-03-31 12:47:27
  */
 @Builder
 public class ImportPageScene extends BaseScene {
@@ -57,7 +57,7 @@ public class ImportPageScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);

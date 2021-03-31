@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/shop/add的接口
+ * 33.4. 添加门店 （杨）（2021-03-23）
  *
  * @author wangmin
- * @date 2021-03-12 17:23:18
+ * @date 2021-03-31 12:47:27
  */
 @Builder
 public class AddScene extends BaseScene {
@@ -70,6 +70,20 @@ public class AddScene extends BaseScene {
     private final String serviceTel;
 
     /**
+     * 描述 门店客服电话
+     * 是否必填 true
+     * 版本 v3.0
+     */
+    private final String customerServiceTel;
+
+    /**
+     * 描述 门店救援电话
+     * 是否必填 true
+     * 版本 v2.0
+     */
+    private final String rescueTel;
+
+    /**
      * 描述 门店经度
      * 是否必填 true
      * 版本 v1.0
@@ -85,7 +99,7 @@ public class AddScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("name", name);
         object.put("simple_name", simpleName);
@@ -95,6 +109,8 @@ public class AddScene extends BaseScene {
         object.put("address", address);
         object.put("sale_tel", saleTel);
         object.put("service_tel", serviceTel);
+        object.put("customer_service_tel", customerServiceTel);
+        object.put("rescue_tel", rescueTel);
         object.put("longitude", longitude);
         object.put("latitude", latitude);
         return object;

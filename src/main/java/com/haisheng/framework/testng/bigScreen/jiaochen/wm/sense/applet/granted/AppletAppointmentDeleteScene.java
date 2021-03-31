@@ -6,15 +6,15 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/applet/granted/appointment/delete的接口
+ * 7.7. 删除预约 （谢）v3.0（2021-03-12）
  *
  * @author wangmin
- * @date 2021-03-12 17:53:03
+ * @date 2021-03-31 13:03:22
  */
 @Builder
 public class AppletAppointmentDeleteScene extends BaseScene {
     /**
-     * 描述 预约类型 MAINTAIN：保养，REPAIR：维修
+     * 描述 预约类型 详见字典表《预约类型》v3.0（2021-03-12）
      * 是否必填 true
      * 版本 v2.0
      */
@@ -29,7 +29,7 @@ public class AppletAppointmentDeleteScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("type", type);
         object.put("id", id);

@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/applet/granted/integral-mall/commodity-list的接口
+ * 1.3. 小程序 - 积分商城商品列表 (张小龙) v2.0
  *
  * @author wangmin
- * @date 2021-03-12 17:53:03
+ * @date 2021-03-31 13:03:21
  */
 @Builder
 public class AppletIntegralMallCommodityListScene extends BaseScene {
@@ -43,7 +43,7 @@ public class AppletIntegralMallCommodityListScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("size", size);
         object.put("last_value", lastValue);

@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/brand/edit的接口
+ * 26.6. 编辑品牌（谢）
  *
  * @author wangmin
- * @date 2021-03-12 17:23:18
+ * @date 2021-03-31 12:47:27
  */
 @Builder
 public class EditScene extends BaseScene {
@@ -36,7 +36,7 @@ public class EditScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("name", name);
         object.put("logoPath", logoPath);

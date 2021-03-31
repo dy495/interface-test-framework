@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/applet/granted/appointment/activity/list的接口
+ * 16.3. 小程序-我的-我的报名 （谢）
  *
  * @author wangmin
- * @date 2021-03-12 17:53:04
+ * @date 2021-03-31 13:03:22
  */
 @Builder
 public class AppletAppointmentActivityListScene extends BaseScene {
@@ -29,7 +29,7 @@ public class AppletAppointmentActivityListScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("size", size);
         object.put("last_value", lastValue);

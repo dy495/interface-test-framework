@@ -1,14 +1,15 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/applet/verification-code的接口
+ * 15.2. 获取小程序验证码（谢）
  *
  * @author wangmin
- * @date 2021-03-12 18:03:09
+ * @date 2021-03-31 13:03:22
  */
 @Builder
 public class AppletVerificationCodeScene extends BaseScene {
@@ -28,7 +29,7 @@ public class AppletVerificationCodeScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("phone", phone);
         object.put("type", type);

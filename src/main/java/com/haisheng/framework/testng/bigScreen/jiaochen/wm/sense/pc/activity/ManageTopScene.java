@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/activity/manage/top的接口
+ * 22.2. 内容运营 : 活动置顶 （谢）（2020-03-02）
  *
  * @author wangmin
- * @date 2021-03-15 10:12:39
+ * @date 2021-03-31 12:50:51
  */
 @Builder
 public class ManageTopScene extends BaseScene {
@@ -22,7 +22,7 @@ public class ManageTopScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("id", id);
         return object;

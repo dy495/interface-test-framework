@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/store/commodity/page/export的接口
+ * 4.2. 特惠商品导出 (华成裕)
  *
  * @author wangmin
- * @date 2021-03-15 10:12:39
+ * @date 2021-03-31 12:47:26
  */
 @Builder
 public class CommodityPageExportScene extends BaseScene {
@@ -64,7 +64,7 @@ public class CommodityPageExportScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);

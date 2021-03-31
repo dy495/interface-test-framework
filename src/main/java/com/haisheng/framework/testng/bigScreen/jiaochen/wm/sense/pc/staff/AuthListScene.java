@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/staff/auth-list的接口
+ * 34.7. 权限员工列表 （谢） （2020-12-23）
  *
  * @author wangmin
- * @date 2021-03-12 17:23:18
+ * @date 2021-03-31 12:47:27
  */
 @Builder
 public class AuthListScene extends BaseScene {
@@ -29,7 +29,7 @@ public class AuthListScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("auth_type", authType);
         object.put("shop_id", shopId);

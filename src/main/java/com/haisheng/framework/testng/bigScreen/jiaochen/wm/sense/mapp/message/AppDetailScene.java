@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/m-app/message/detail的接口
+ * 8.2. 获取消息详情（张小龙）（2021-03-11）v3.0 modify
  *
  * @author wangmin
- * @date 2021-03-12 18:09:47
+ * @date 2021-03-31 13:03:23
  */
 @Builder
 public class AppDetailScene extends BaseScene {
@@ -22,7 +22,7 @@ public class AppDetailScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("id", id);
         return object;

@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/shop/show-shop-extension的接口
+ * 33.7. 查看门店洗车二维码(池)
  *
  * @author wangmin
- * @date 2021-03-12 17:23:18
+ * @date 2021-03-31 12:47:27
  */
 @Builder
 public class ShowShopExtensionScene extends BaseScene {
@@ -22,7 +22,7 @@ public class ShowShopExtensionScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("shop_id", shopId);
         return object;

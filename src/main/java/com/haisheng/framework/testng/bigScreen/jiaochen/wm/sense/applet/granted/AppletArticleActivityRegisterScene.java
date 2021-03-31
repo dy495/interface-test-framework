@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/applet/granted/article/activity/register的接口
+ * 16.1. 小程序-文章详情-活动报名 （谢）
  *
  * @author wangmin
- * @date 2021-03-12 17:53:04
+ * @date 2021-03-31 13:03:22
  */
 @Builder
 public class AppletArticleActivityRegisterScene extends BaseScene {
@@ -29,7 +29,7 @@ public class AppletArticleActivityRegisterScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("id", id);
         object.put("register_items", registerItems);

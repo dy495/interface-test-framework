@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/integral-mall/goods-manage/export的接口
+ * 31.25. 商品导出 （华成裕）（2020-12-24）
  *
  * @author wangmin
- * @date 2021-03-12 17:23:18
+ * @date 2021-03-31 12:29:35
  */
 @Builder
 public class GoodsManageExportScene extends BaseScene {
@@ -85,7 +85,7 @@ public class GoodsManageExportScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);

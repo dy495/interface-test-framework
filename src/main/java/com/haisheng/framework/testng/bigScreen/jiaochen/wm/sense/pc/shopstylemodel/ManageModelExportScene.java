@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 9.2. 保养、维修车型配置导出，替换"原保养配置导出"（谢）V3.0（2020-12-23）的接口
+ * 18.2. 保养、维修车型配置导出，替换"原保养配置导出"（谢）V3.0（2020-12-23）
  *
  * @author wangmin
- * @date 2021-03-25 16:20:00
+ * @date 2021-03-31 12:47:27
  */
 @Builder
 public class ManageModelExportScene extends BaseScene {
@@ -85,7 +85,7 @@ public class ManageModelExportScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);
@@ -102,6 +102,6 @@ public class ManageModelExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/car-platform/pc/shop-style-model/manage/model/export";
+        return "/jiaochen/pc/shop-style-model/manage/model/export";
     }
 }

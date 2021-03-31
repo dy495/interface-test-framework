@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/appointment-manage/record/export的接口
+ * 2.2. 预约记录导出（华成裕）（2020-12-23）
  *
  * @author wangmin
- * @date 2021-03-15 14:05:12
+ * @date 2021-03-31 12:47:26
  */
 @Builder
 public class RecordExportScene extends BaseScene {
@@ -28,8 +28,8 @@ public class RecordExportScene extends BaseScene {
     private final Integer size;
 
     /**
-     * 描述 预约类型 MAINTAIN：保养，REPAIR：维修
-     * 是否必填 false
+     * 描述 预约类型 见字典表《预约类型》
+     * 是否必填 true
      * 版本 v2.0
      */
     private final String type;
@@ -84,14 +84,14 @@ public class RecordExportScene extends BaseScene {
     private final Integer confirmStatus;
 
     /**
-     * 描述 创建日期范围查询开始日期
+     * 描述 预约申请日期范围查询开始日期
      * 是否必填 false
      * 版本 v1.0
      */
     private final String createStart;
 
     /**
-     * 描述 创建日期范围查询结束日期
+     * 描述 预约申请日期范围查询结束日期
      * 是否必填 false
      * 版本 v1.0
      */
@@ -126,6 +126,41 @@ public class RecordExportScene extends BaseScene {
     private final Boolean isOvertime;
 
     /**
+     * 描述 接待日期范围查询开始日期
+     * 是否必填 false
+     * 版本 v3.0
+     */
+    private final String receptionStart;
+
+    /**
+     * 描述 预约日期范围查询结束日期
+     * 是否必填 false
+     * 版本 v3.0
+     */
+    private final String receptionEnd;
+
+    /**
+     * 描述 取消日期范围查询开始日期
+     * 是否必填 false
+     * 版本 v3.0
+     */
+    private final String cancelStart;
+
+    /**
+     * 描述 取消日期范围查询结束日期
+     * 是否必填 false
+     * 版本 v3.0
+     */
+    private final String cancelEnd;
+
+    /**
+     * 描述 预约日期范围查询结束日期
+     * 是否必填 false
+     * 版本 v3.0
+     */
+    private final String cancelAccount;
+
+    /**
      * 描述 导出类型 ALL：导出全部，CURRENT_PAGE：导出当前页，SPECIFIED_DATA：导出特定数据
      * 是否必填 true
      * 版本 v2.0
@@ -141,7 +176,7 @@ public class RecordExportScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);
@@ -159,6 +194,11 @@ public class RecordExportScene extends BaseScene {
         object.put("confirm_end", confirmEnd);
         object.put("customer_phone", customerPhone);
         object.put("is_overtime", isOvertime);
+        object.put("reception_start", receptionStart);
+        object.put("reception_end", receptionEnd);
+        object.put("cancel_start", cancelStart);
+        object.put("cancel_end", cancelEnd);
+        object.put("cancel_account", cancelAccount);
         object.put("export_type", exportType);
         object.put("ids", ids);
         return object;

@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/vip-marketing/share-manager/start-or-close的接口
+ * 20.21. 分享管理任务开启或关闭(池) v2.0
  *
  * @author wangmin
- * @date 2021-03-12 17:23:17
+ * @date 2021-03-31 12:47:27
  */
 @Builder
 public class ShareManagerStartOrCloseScene extends BaseScene {
@@ -29,7 +29,7 @@ public class ShareManagerStartOrCloseScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("id", id);
         object.put("status", status);

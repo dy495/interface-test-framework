@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/applet/model/list的接口
+ * 8.3. 车型列表
  *
  * @author wangmin
- * @date 2021-03-12 17:53:03
+ * @date 2021-03-31 13:03:22
  */
 @Builder
 public class AppletListScene extends BaseScene {
@@ -29,7 +29,7 @@ public class AppletListScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("brandId", brandId);
         object.put("styleId", styleId);

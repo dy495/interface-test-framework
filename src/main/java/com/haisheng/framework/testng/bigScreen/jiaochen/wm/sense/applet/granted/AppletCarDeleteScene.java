@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/applet/granted/car/delete的接口
+ * 3.3. 删除我的车辆 (池) v1.0
  *
  * @author wangmin
- * @date 2021-03-12 17:53:03
+ * @date 2021-03-31 13:03:22
  */
 @Builder
 public class AppletCarDeleteScene extends BaseScene {
@@ -36,7 +36,7 @@ public class AppletCarDeleteScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("id", id);
         object.put("plate_number", plateNumber);

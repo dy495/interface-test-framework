@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/package-manage/buy-package-record/export的接口
+ * 14.11. 套餐购买记录导出 （华成裕）（2020-12-23）
  *
  * @author wangmin
- * @date 2021-03-15 10:12:39
+ * @date 2021-03-31 12:01:33
  */
 @Builder
 public class BuyPackageRecordExportScene extends BaseScene {
@@ -63,6 +63,13 @@ public class BuyPackageRecordExportScene extends BaseScene {
     private final Integer sendType;
 
     /**
+     * 描述 客户手机号
+     * 是否必填 false
+     * 版本 v2.3
+     */
+    private final String customerPhone;
+
+    /**
      * 描述 导出类型 ALL：导出全部，CURRENT_PAGE：导出当前页，SPECIFIED_DATA：导出特定数据
      * 是否必填 true
      * 版本 v2.0
@@ -78,7 +85,7 @@ public class BuyPackageRecordExportScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);
@@ -87,6 +94,7 @@ public class BuyPackageRecordExportScene extends BaseScene {
         object.put("start_time", startTime);
         object.put("end_time", endTime);
         object.put("send_type", sendType);
+        object.put("customer_phone", customerPhone);
         object.put("export_type", exportType);
         object.put("ids", ids);
         return object;

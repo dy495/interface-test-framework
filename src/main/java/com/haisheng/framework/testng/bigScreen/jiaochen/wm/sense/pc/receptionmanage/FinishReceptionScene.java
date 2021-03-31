@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/reception-manage/finish-reception的接口
+ * 16.7. 完成接待 （谢）
  *
  * @author wangmin
- * @date 2021-03-15 10:02:41
+ * @date 2021-03-31 12:47:27
  */
 @Builder
 public class FinishReceptionScene extends BaseScene {
@@ -29,7 +29,7 @@ public class FinishReceptionScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("id", id);
         object.put("shop_id", shopId);

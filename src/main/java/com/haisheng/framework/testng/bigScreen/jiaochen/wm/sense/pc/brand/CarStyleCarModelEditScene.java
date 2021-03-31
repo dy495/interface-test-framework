@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/brand/car-style/car-model/edit的接口
+ * 26.20. 编辑品牌车型（谢）
  *
  * @author wangmin
- * @date 2021-03-12 17:23:18
+ * @date 2021-03-31 12:47:27
  */
 @Builder
 public class CarStyleCarModelEditScene extends BaseScene {
@@ -57,7 +57,7 @@ public class CarStyleCarModelEditScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("brand_id", brandId);
         object.put("style_id", styleId);

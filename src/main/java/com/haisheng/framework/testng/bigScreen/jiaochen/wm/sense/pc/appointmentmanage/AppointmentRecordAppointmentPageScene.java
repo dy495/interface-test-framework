@@ -1,14 +1,15 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.appointmentmanage;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/appointment-manage/appointment-record/appointment-page的接口
+ * 2.1. 预约记录分页（谢）v3.0（2021-03-22）
  *
  * @author wangmin
- * @date 2021-03-15 14:05:12
+ * @date 2021-03-31 12:47:26
  */
 @Builder
 public class AppointmentRecordAppointmentPageScene extends BaseScene {
@@ -27,8 +28,8 @@ public class AppointmentRecordAppointmentPageScene extends BaseScene {
     private final Integer size;
 
     /**
-     * 描述 预约类型 MAINTAIN：保养，REPAIR：维修
-     * 是否必填 false
+     * 描述 预约类型 见字典表《预约类型》
+     * 是否必填 true
      * 版本 v2.0
      */
     private final String type;
@@ -83,14 +84,14 @@ public class AppointmentRecordAppointmentPageScene extends BaseScene {
     private final Integer confirmStatus;
 
     /**
-     * 描述 创建日期范围查询开始日期
+     * 描述 预约申请日期范围查询开始日期
      * 是否必填 false
      * 版本 v1.0
      */
     private final String createStart;
 
     /**
-     * 描述 创建日期范围查询结束日期
+     * 描述 预约申请日期范围查询结束日期
      * 是否必填 false
      * 版本 v1.0
      */
@@ -124,9 +125,44 @@ public class AppointmentRecordAppointmentPageScene extends BaseScene {
      */
     private final Boolean isOvertime;
 
+    /**
+     * 描述 接待日期范围查询开始日期
+     * 是否必填 false
+     * 版本 v3.0
+     */
+    private final String receptionStart;
+
+    /**
+     * 描述 预约日期范围查询结束日期
+     * 是否必填 false
+     * 版本 v3.0
+     */
+    private final String receptionEnd;
+
+    /**
+     * 描述 取消日期范围查询开始日期
+     * 是否必填 false
+     * 版本 v3.0
+     */
+    private final String cancelStart;
+
+    /**
+     * 描述 取消日期范围查询结束日期
+     * 是否必填 false
+     * 版本 v3.0
+     */
+    private final String cancelEnd;
+
+    /**
+     * 描述 预约日期范围查询结束日期
+     * 是否必填 false
+     * 版本 v3.0
+     */
+    private final String cancelAccount;
+
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);
@@ -144,6 +180,11 @@ public class AppointmentRecordAppointmentPageScene extends BaseScene {
         object.put("confirm_end", confirmEnd);
         object.put("customer_phone", customerPhone);
         object.put("is_overtime", isOvertime);
+        object.put("reception_start", receptionStart);
+        object.put("reception_end", receptionEnd);
+        object.put("cancel_start", cancelStart);
+        object.put("cancel_end", cancelEnd);
+        object.put("cancel_account", cancelAccount);
         return object;
     }
 

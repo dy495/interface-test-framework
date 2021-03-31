@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/integral-center/exchange-detail/export的接口
+ * 30.16. 积分兑换明细导出 (华成裕) （2020-12-24）
  *
  * @author wangmin
- * @date 2021-03-12 17:23:18
+ * @date 2021-03-31 12:29:35
  */
 @Builder
 public class ExchangeDetailExportScene extends BaseScene {
@@ -63,6 +63,20 @@ public class ExchangeDetailExportScene extends BaseScene {
     private final String exchangeEndTime;
 
     /**
+     * 描述 手机号
+     * 是否必填 false
+     * 版本 v2.2
+     */
+    private final String phone;
+
+    /**
+     * 描述 手机号
+     * 是否必填 false
+     * 版本 v2.2
+     */
+    private final Long customerId;
+
+    /**
      * 描述 导出类型 ALL：导出全部，CURRENT_PAGE：导出当前页，SPECIFIED_DATA：导出特定数据
      * 是否必填 true
      * 版本 v2.0
@@ -78,7 +92,7 @@ public class ExchangeDetailExportScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);
@@ -87,6 +101,8 @@ public class ExchangeDetailExportScene extends BaseScene {
         object.put("exchange_type", exchangeType);
         object.put("exchange_start_time", exchangeStartTime);
         object.put("exchange_end_time", exchangeEndTime);
+        object.put("phone", phone);
+        object.put("customerId", customerId);
         object.put("export_type", exportType);
         object.put("ids", ids);
         return object;

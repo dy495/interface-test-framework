@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/m-app/task/reception/start-reception的接口
+ * 5.2. 开始接待车主车辆（谢）
  *
  * @author wangmin
- * @date 2021-03-12 18:09:47
+ * @date 2021-03-31 13:03:23
  */
 @Builder
 public class AppReceptionStartReceptionScene extends BaseScene {
@@ -29,7 +29,7 @@ public class AppReceptionStartReceptionScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("customer_id", customerId);
         object.put("plate_number", plateNumber);

@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/manage/intelligent-remind/add的接口
+ * 11.1. 新增智能提醒项 （谢）（2021-01-05）
  *
  * @author wangmin
- * @date 2021-03-15 10:12:39
+ * @date 2021-03-31 12:29:35
  */
 @Builder
 public class IntelligentRemindAddScene extends BaseScene {
@@ -57,7 +57,7 @@ public class IntelligentRemindAddScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("item", item);
         object.put("content", content);

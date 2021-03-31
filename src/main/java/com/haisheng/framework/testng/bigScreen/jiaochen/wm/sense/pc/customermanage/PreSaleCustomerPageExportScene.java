@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/customer-manage/pre-sale-customer/page/export的接口
+ * 6.2. 销售客户列表-导出 (华成裕) v2.0
  *
  * @author wangmin
- * @date 2021-03-15 14:06:44
+ * @date 2021-03-31 12:32:56
  */
 @Builder
 public class PreSaleCustomerPageExportScene extends BaseScene {
@@ -92,7 +92,7 @@ public class PreSaleCustomerPageExportScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);

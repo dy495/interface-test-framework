@@ -1,14 +1,15 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.consultmanagement;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 8.1. 续保咨询列表（池）（2021-03-08）的接口
+ * 5.1. 续保咨询列表（池）（2021-03-08）
  *
  * @author wangmin
- * @date 2021-03-24 14:32:26
+ * @date 2021-03-31 12:36:16
  */
 @Builder
 public class RenewInsurancePageListScene extends BaseScene {
@@ -34,11 +35,11 @@ public class RenewInsurancePageListScene extends BaseScene {
     private final Long shopId;
 
     /**
-     * 描述 品牌
+     * 描述 车型
      * 是否必填 false
      * 版本 v3.0
      */
-    private final Long brandId;
+    private final Long modelId;
 
     /**
      * 描述 跟进人员
@@ -67,6 +68,13 @@ public class RenewInsurancePageListScene extends BaseScene {
      * 版本 v3.0
      */
     private final String taskDateEnd;
+
+    /**
+     * 描述 品牌
+     * 是否必填 false
+     * 版本 v3.0
+     */
+    private final Long brandId;
 
     /**
      * 描述 联系人
@@ -105,12 +113,12 @@ public class RenewInsurancePageListScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);
         object.put("shop_id", shopId);
-        object.put("brand_id", brandId);
+        object.put("model_id", modelId);
         object.put("follow_sales_name", followSalesName);
         object.put("follow_login_name", followLoginName);
         object.put("task_date_start", taskDateStart);

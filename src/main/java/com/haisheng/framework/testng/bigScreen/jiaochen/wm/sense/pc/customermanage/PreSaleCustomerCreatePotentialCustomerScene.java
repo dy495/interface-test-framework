@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/customer-manage/pre-sale-customer/create-potential-customer的接口
+ * 6.4. 创建潜客 (池) （2021-3-15）
  *
  * @author wangmin
- * @date 2021-03-15 14:06:44
+ * @date 2021-03-31 12:32:56
  */
 @Builder
 public class PreSaleCustomerCreatePotentialCustomerScene extends BaseScene {
@@ -49,6 +49,13 @@ public class PreSaleCustomerCreatePotentialCustomerScene extends BaseScene {
     private final Long carModelId;
 
     /**
+     * 描述 意向车系
+     * 是否必填 true
+     * 版本 v3.0
+     */
+    private final Long carStyleId;
+
+    /**
      * 描述 所属门店
      * 是否必填 false
      * 版本 v2.0
@@ -64,13 +71,14 @@ public class PreSaleCustomerCreatePotentialCustomerScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("customer_name", customerName);
         object.put("customer_phone", customerPhone);
         object.put("customer_type", customerType);
         object.put("sex", sex);
         object.put("car_model_id", carModelId);
+        object.put("car_style_id", carStyleId);
         object.put("shop_id", shopId);
         object.put("salesId", salesId);
         return object;

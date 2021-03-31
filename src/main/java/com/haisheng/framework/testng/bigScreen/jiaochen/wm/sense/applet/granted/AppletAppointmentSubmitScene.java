@@ -6,15 +6,15 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/applet/granted/appointment/submit的接口
+ * 7.4. 提交预约 （谢）v3.0（2021-03-29）
  *
  * @author wangmin
- * @date 2021-03-12 17:53:03
+ * @date 2021-03-31 13:03:22
  */
 @Builder
 public class AppletAppointmentSubmitScene extends BaseScene {
     /**
-     * 描述 预约类型 MAINTAIN：保养，REPAIR：维修
+     * 描述 预约类型 详见字典表《预约类型》v3.0（2021-03-12）
      * 是否必填 true
      * 版本 v2.0
      */
@@ -42,11 +42,18 @@ public class AppletAppointmentSubmitScene extends BaseScene {
     private final Long timeId;
 
     /**
-     * 描述 预约车辆id
-     * 是否必填 true
+     * 描述 预约车辆id type为保养维修时不能为空
+     * 是否必填 false
      * 版本 v1.0
      */
     private final Long carId;
+
+    /**
+     * 描述 预约车系id type为试驾时不能为空
+     * 是否必填 false
+     * 版本 v3.0
+     */
+    private final Long carStyleId;
 
     /**
      * 描述 预约人姓名
@@ -64,7 +71,7 @@ public class AppletAppointmentSubmitScene extends BaseScene {
 
     /**
      * 描述 故障描述
-     * 是否必填 true
+     * 是否必填 false
      * 版本 v2.0
      */
     private final String faultDescription;
@@ -78,13 +85,14 @@ public class AppletAppointmentSubmitScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("type", type);
         object.put("shop_id", shopId);
         object.put("staff_id", staffId);
         object.put("time_id", timeId);
         object.put("car_id", carId);
+        object.put("car_style_id", carStyleId);
         object.put("appointment_name", appointmentName);
         object.put("appointment_phone", appointmentPhone);
         object.put("fault_description", faultDescription);

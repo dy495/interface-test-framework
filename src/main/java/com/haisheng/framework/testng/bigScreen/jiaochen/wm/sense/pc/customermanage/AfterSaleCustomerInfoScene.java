@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 10.16. 售后客户详情(杨)v3.0的接口
+ * 6.17. 售后客户详情(杨)v3.0
  *
  * @author wangmin
- * @date 2021-03-24 14:32:26
+ * @date 2021-03-31 12:32:56
  */
 @Builder
 public class AfterSaleCustomerInfoScene extends BaseScene {
@@ -36,7 +36,7 @@ public class AfterSaleCustomerInfoScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("car_id", carId);
         object.put("shop_id", shopId);

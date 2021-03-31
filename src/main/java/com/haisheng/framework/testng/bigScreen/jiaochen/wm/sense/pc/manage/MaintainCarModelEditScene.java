@@ -6,13 +6,20 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/manage/maintain/car-model/edit的接口
+ * 3.3. 
  *
  * @author wangmin
- * @date 2021-03-15 10:12:39
+ * @date 2021-03-31 12:29:35
  */
 @Builder
 public class MaintainCarModelEditScene extends BaseScene {
+    /**
+     * 描述 预约类型 MAINTAIN：保养，REPAIR：维修
+     * 是否必填 true
+     * 版本 v3.0
+     */
+    private final String type;
+
     /**
      * 描述 车型id
      * 是否必填 true
@@ -28,7 +35,7 @@ public class MaintainCarModelEditScene extends BaseScene {
     private final Double price;
 
     /**
-     * 描述 保养预约状态 ENABLE：开启，DISABLE：关闭
+     * 描述 预约状态 ENABLE：开启，DISABLE：关闭
      * 是否必填 false
      * 版本 v1.0
      */
@@ -36,8 +43,9 @@ public class MaintainCarModelEditScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
+        object.put("type", type);
         object.put("id", id);
         object.put("price", price);
         object.put("status", status);

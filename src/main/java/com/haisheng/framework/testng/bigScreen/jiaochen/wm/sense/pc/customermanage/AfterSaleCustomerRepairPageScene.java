@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/customer-manage/after-sale-customer/repair-page的接口
+ * 6.20. 维修记录 (池) v1.0
  *
  * @author wangmin
- * @date 2021-03-15 14:06:44
+ * @date 2021-03-31 12:32:56
  */
 @Builder
 public class AfterSaleCustomerRepairPageScene extends BaseScene {
@@ -43,7 +43,7 @@ public class AfterSaleCustomerRepairPageScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);

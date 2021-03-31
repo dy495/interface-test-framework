@@ -6,16 +6,55 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 活动管理-活动报名导出
+ * 22.21. 活动报名导出 （谢）（2020-12-23）
+ *
+ * @author wangmin
+ * @date 2021-03-31 12:50:51
  */
 @Builder
 public class ManageRegisterExportScene extends BaseScene {
+    /**
+     * 描述 页码 大于0
+     * 是否必填 true
+     * 版本 v1.0
+     */
     private final Integer page;
+
+    /**
+     * 描述 页大小 范围为[1,100]
+     * 是否必填 true
+     * 版本 v1.0
+     */
     private final Integer size;
-    private final Integer activityId;
-    private final Integer  status;
-    private  final String exportType;
+
+    /**
+     * 描述 活动id
+     * 是否必填 true
+     * 版本 v2.0
+     */
+    private final Long activityId;
+
+    /**
+     * 描述 报名状态 1：待审批，101：已通过，201：已拒绝，401：已取消，501：已结束
+     * 是否必填 false
+     * 版本 v2.0
+     */
+    private final Integer status;
+
+    /**
+     * 描述 导出类型 ALL：导出全部，CURRENT_PAGE：导出当前页，SPECIFIED_DATA：导出特定数据
+     * 是否必填 true
+     * 版本 v2.0
+     */
+    private final String exportType;
+
+    /**
+     * 描述 导出数据id列表，特定数据时必填
+     * 是否必填 false
+     * 版本 v2.0
+     */
     private final JSONArray ids;
+
 
     @Override
     public JSONObject getRequestBody() {
@@ -33,6 +72,4 @@ public class ManageRegisterExportScene extends BaseScene {
     public String getPath() {
         return "/jiaochen/pc/activity/manage/register/export";
     }
-
-
 }

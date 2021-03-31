@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/applet/granted/integral-mall/create-address的接口
+ * 1.6. 小程序 - 积分商城创建收货地址 (张小龙) v2.0
  *
  * @author wangmin
- * @date 2021-03-12 17:53:03
+ * @date 2021-03-31 13:03:22
  */
 @Builder
 public class AppletIntegralMallCreateAddressScene extends BaseScene {
@@ -50,7 +50,7 @@ public class AppletIntegralMallCreateAddressScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("name", name);
         object.put("phone", phone);

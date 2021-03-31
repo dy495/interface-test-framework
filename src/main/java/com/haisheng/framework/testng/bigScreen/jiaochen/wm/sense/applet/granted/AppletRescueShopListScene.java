@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/applet/granted/rescue/shop/list的接口
+ * 12.1. 救援门店列表 （谢） （2021-01-06）
  *
  * @author wangmin
- * @date 2021-03-12 17:53:03
+ * @date 2021-03-31 13:03:22
  */
 @Builder
 public class AppletRescueShopListScene extends BaseScene {
@@ -29,7 +29,7 @@ public class AppletRescueShopListScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("coordinate", coordinate);
         object.put("washingStatus", washingStatus);

@@ -6,15 +6,15 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/manage/evaluate/config/detail的接口
+ * 7.4. 评价配置详情（谢）v3.0（2021-03-12）
  *
  * @author wangmin
- * @date 2021-03-15 10:12:39
+ * @date 2021-03-31 12:29:35
  */
 @Builder
 public class EvaluateConfigDetailScene extends BaseScene {
     /**
-     * 描述 评价类型 1：预约评价，2：新车评价
+     * 描述 评价类型 枚举见字典表《评价类型》
      * 是否必填 true
      * 版本 v2.0
      */
@@ -22,7 +22,7 @@ public class EvaluateConfigDetailScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("type", type);
         return object;

@@ -6,13 +6,27 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 8.5. 专属服务咨询列表 （池）(2021-03-12)的接口
+ * 5.5. 专属服务咨询列表 （池）(2021-03-12)
  *
  * @author wangmin
- * @date 2021-03-24 14:32:26
+ * @date 2021-03-31 12:36:16
  */
 @Builder
 public class DedicatedServicePageListScene extends BaseScene {
+    /**
+     * 描述 页码 大于0
+     * 是否必填 true
+     * 版本 v1.0
+     */
+    private final Integer page;
+
+    /**
+     * 描述 页大小 范围为[1,100]
+     * 是否必填 true
+     * 版本 v1.0
+     */
+    private final Integer size;
+
     /**
      * 描述 归属门店
      * 是否必填 false
@@ -92,8 +106,10 @@ public class DedicatedServicePageListScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
+        object.put("page", page);
+        object.put("size", size);
         object.put("shop_id", shopId);
         object.put("follow_date_start", followDateStart);
         object.put("follow_date_end", followDateEnd);

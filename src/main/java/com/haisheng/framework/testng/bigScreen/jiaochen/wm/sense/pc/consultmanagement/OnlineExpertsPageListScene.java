@@ -6,13 +6,27 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/consult-management/online-experts-page-list的接口
+ * 5.4. 在线专家咨询列表 （池）(2021-03-08)
  *
  * @author wangmin
- * @date 2021-03-12 17:23:17
+ * @date 2021-03-31 12:36:16
  */
 @Builder
 public class OnlineExpertsPageListScene extends BaseScene {
+    /**
+     * 描述 页码 大于0
+     * 是否必填 true
+     * 版本 v1.0
+     */
+    private final Integer page;
+
+    /**
+     * 描述 页大小 范围为[1,100]
+     * 是否必填 true
+     * 版本 v1.0
+     */
+    private final Integer size;
+
     /**
      * 描述 归属门店
      * 是否必填 false
@@ -47,6 +61,13 @@ public class OnlineExpertsPageListScene extends BaseScene {
      * 版本 v3.0
      */
     private final String followSalesName;
+
+    /**
+     * 描述 车型id
+     * 是否必填 false
+     * 版本 -
+     */
+    private final Long carModelId;
 
     /**
      * 描述 咨询时间
@@ -85,13 +106,16 @@ public class OnlineExpertsPageListScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
+        object.put("page", page);
+        object.put("size", size);
         object.put("shop_id", shopId);
         object.put("follow_date_start", followDateStart);
         object.put("follow_date_end", followDateEnd);
         object.put("follow_login_name", followLoginName);
         object.put("follow_sales_name", followSalesName);
+        object.put("car_model_id", carModelId);
         object.put("consult_date_start", consultDateStart);
         object.put("consult_date_end", consultDateEnd);
         object.put("customer_name", customerName);

@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/store/order/edit的接口
+ * 4.11. 编辑订单 v2.0(池)
  *
  * @author wangmin
- * @date 2021-03-12 17:23:18
+ * @date 2021-03-31 12:47:26
  */
 @Builder
 public class OrderEditScene extends BaseScene {
@@ -64,7 +64,7 @@ public class OrderEditScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("id", id);
         object.put("express_number", expressNumber);

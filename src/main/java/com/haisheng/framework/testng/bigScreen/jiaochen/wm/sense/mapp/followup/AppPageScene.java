@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/m-app/follow-up/page的接口
+ * 1.1. app评价跟进列表（谢）（2020-12-15）
  *
  * @author wangmin
- * @date 2021-03-12 18:09:47
+ * @date 2021-03-31 13:03:23
  */
 @Builder
 public class AppPageScene extends BaseScene {
@@ -27,12 +27,20 @@ public class AppPageScene extends BaseScene {
      */
     private final JSONObject lastValue;
 
+    /**
+     * 描述 跟进类型
+     * 是否必填 false
+     * 版本 v3.0
+     */
+    private final String type;
+
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("size", size);
         object.put("last_value", lastValue);
+        object.put("type", type);
         return object;
     }
 

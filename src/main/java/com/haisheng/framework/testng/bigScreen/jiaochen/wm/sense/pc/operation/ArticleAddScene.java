@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/operation/article/add的接口
+ * 24.3. 内容运营 : 创建文章 （谢）（2020-12-22）
  *
  * @author wangmin
- * @date 2021-03-12 17:23:18
+ * @date 2021-03-31 12:04:39
  */
 @Builder
 public class ArticleAddScene extends BaseScene {
@@ -50,7 +50,7 @@ public class ArticleAddScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("title", title);
         object.put("pic_type", picType);

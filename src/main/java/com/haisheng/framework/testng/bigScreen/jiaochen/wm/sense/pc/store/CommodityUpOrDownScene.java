@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/store/commodity/up-or-down的接口
+ * 4.6. 特惠商品上架或下架 v2.0(池)
  *
  * @author wangmin
- * @date 2021-03-12 17:23:18
+ * @date 2021-03-31 12:47:26
  */
 @Builder
 public class CommodityUpOrDownScene extends BaseScene {
@@ -29,7 +29,7 @@ public class CommodityUpOrDownScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("status", status);
         object.put("id", id);

@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/reception-manage/purchase-fixed-package的接口
+ * 16.9. 购买固定套餐（张小龙）(2020-12-17)
  *
  * @author wangmin
- * @date 2021-03-15 10:02:41
+ * @date 2021-03-31 12:47:27
  */
 @Builder
 public class PurchaseFixedPackageScene extends BaseScene {
@@ -40,6 +40,20 @@ public class PurchaseFixedPackageScene extends BaseScene {
      * 版本 v1.0
      */
     private final Integer expiryDate;
+
+    /**
+     * 描述 有效期开始时间
+     * 是否必填 false
+     * 版本 v2.2
+     */
+    private final String beginUseTime;
+
+    /**
+     * 描述 有效期结束时间
+     * 是否必填 false
+     * 版本 v2.2
+     */
+    private final String endUseTime;
 
     /**
      * 描述 套餐说明
@@ -99,12 +113,14 @@ public class PurchaseFixedPackageScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("reception_id", receptionId);
         object.put("shop_id", shopId);
         object.put("car_type", carType);
         object.put("expiry_date", expiryDate);
+        object.put("begin_use_time", beginUseTime);
+        object.put("end_use_time", endUseTime);
         object.put("remark", remark);
         object.put("subject_type", subjectType);
         object.put("subject_id", subjectId);

@@ -1,19 +1,20 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.appointmentmanage;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/appointment-manage/maintain/time/list的接口
+ * 2.6. 获取可变更预约时间段列表（谢）（2020-12-28）
  *
  * @author wangmin
- * @date 2021-03-15 14:05:12
+ * @date 2021-03-31 12:47:26
  */
 @Builder
 public class MaintainTimeListScene extends BaseScene {
     /**
-     * 描述 预约类型 REPAIR：维修，MAINTAIN：保养
+     * 描述 预约类型 取值见字典表《预约类型》v3.0
      * 是否必填 true
      * 版本 v2.0
      */
@@ -35,7 +36,7 @@ public class MaintainTimeListScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("type", type);
         object.put("shop_id", shopId);

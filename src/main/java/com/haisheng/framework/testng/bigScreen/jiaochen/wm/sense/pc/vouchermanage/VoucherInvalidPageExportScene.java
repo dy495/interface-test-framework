@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/voucher-manage/voucher-invalid-page/export的接口
+ * 21.19. 作废记录-导出 （华成裕） v2.0
  *
  * @author wangmin
- * @date 2021-03-12 17:23:17
+ * @date 2021-03-31 12:47:27
  */
 @Builder
 public class VoucherInvalidPageExportScene extends BaseScene {
@@ -35,7 +35,7 @@ public class VoucherInvalidPageExportScene extends BaseScene {
     private final Long id;
 
     /**
-     * 描述 领取人
+     * 描述 客户名称
      * 是否必填 false
      * 版本 v2.0
      */
@@ -91,6 +91,13 @@ public class VoucherInvalidPageExportScene extends BaseScene {
     private final String invalidEndTime;
 
     /**
+     * 描述 卡券名称
+     * 是否必填 false
+     * 版本 v2.2
+     */
+    private final String voucherName;
+
+    /**
      * 描述 导出类型 ALL：导出全部，CURRENT_PAGE：导出当前页，SPECIFIED_DATA：导出特定数据
      * 是否必填 true
      * 版本 v2.0
@@ -106,7 +113,7 @@ public class VoucherInvalidPageExportScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);
@@ -119,6 +126,7 @@ public class VoucherInvalidPageExportScene extends BaseScene {
         object.put("invalidPhone", invalidPhone);
         object.put("invalid_start_time", invalidStartTime);
         object.put("invalid_end_time", invalidEndTime);
+        object.put("voucher_name", voucherName);
         object.put("export_type", exportType);
         object.put("ids", ids);
         return object;

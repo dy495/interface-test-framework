@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/voucher/apply/export的接口
+ * 8.2. 卡券审批申请导出 （华成裕） （2020-12-24）
  *
  * @author wangmin
- * @date 2021-03-12 17:23:17
+ * @date 2021-03-31 12:47:27
  */
 @Builder
 public class ApplyExportScene extends BaseScene {
@@ -30,21 +30,21 @@ public class ApplyExportScene extends BaseScene {
     /**
      * 描述 优惠券名称
      * 是否必填 false
-     * 版本 v1.0
+     * 版本 v3.0
      */
     private final String name;
 
     /**
      * 描述 申请人姓名
      * 是否必填 false
-     * 版本 v1.0
+     * 版本 v3.0
      */
     private final String applyName;
 
     /**
      * 描述 优惠券状态 通用枚举接口获取，key为 VOUCHER_AUDIT_STATUS_LIST
      * 是否必填 false
-     * 版本 v1.0
+     * 版本 v3.0
      */
     private final Integer status;
 
@@ -78,15 +78,15 @@ public class ApplyExportScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);
         object.put("name", name);
         object.put("apply_name", applyName);
         object.put("status", status);
-        object.put("subjectType", subjectType);
-        object.put("subjectId", subjectId);
+        object.put("subject_type", subjectType);
+        object.put("subject_id", subjectId);
         object.put("export_type", exportType);
         object.put("ids", ids);
         return object;

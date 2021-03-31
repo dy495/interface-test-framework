@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 10.7. 车系列表 (池)v3.0 （2021-3-15）的接口
+ * 6.7. 车系列表 (池)v3.0 （2021-3-15）
  *
  * @author wangmin
- * @date 2021-03-24 14:32:26
+ * @date 2021-03-31 12:32:56
  */
 @Builder
 public class PreSaleCustomerStyleListScene extends BaseScene {
@@ -22,7 +22,7 @@ public class PreSaleCustomerStyleListScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("shop_id", shopId);
         return object;

@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/manage/maintain/car-model/export的接口
+ * 3.2. 
  *
  * @author wangmin
- * @date 2021-03-15 10:12:39
+ * @date 2021-03-31 12:29:35
  */
 @Builder
 public class MaintainCarModelExportScene extends BaseScene {
@@ -26,6 +26,13 @@ public class MaintainCarModelExportScene extends BaseScene {
      * 版本 v1.0
      */
     private final Integer size;
+
+    /**
+     * 描述 预约类型 MAINTAIN：保养，REPAIR：维修
+     * 是否必填 true
+     * 版本 v3.0
+     */
+    private final String type;
 
     /**
      * 描述 品牌
@@ -78,10 +85,11 @@ public class MaintainCarModelExportScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);
+        object.put("type", type);
         object.put("brand_name", brandName);
         object.put("manufacturer", manufacturer);
         object.put("car_style", carStyle);

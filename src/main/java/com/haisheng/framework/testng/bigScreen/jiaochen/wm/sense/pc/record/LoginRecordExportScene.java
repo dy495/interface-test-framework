@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 4.8. 登陆日志导出 (杨) v3.0的接口
+ * 19.9. 登陆日志导出 (杨) v3.0
  *
  * @author wangmin
- * @date 2021-03-24 14:32:26
+ * @date 2021-03-31 12:47:27
  */
 @Builder
 public class LoginRecordExportScene extends BaseScene {
@@ -28,11 +28,11 @@ public class LoginRecordExportScene extends BaseScene {
     private final Integer size;
 
     /**
-     * 描述 登陆日期
+     * 描述 登陆开始日期
      * 是否必填 false
      * 版本 v3.0
      */
-    private final String loginDate;
+    private final String login_date;
 
     /**
      * 描述 登陆名称
@@ -64,11 +64,11 @@ public class LoginRecordExportScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);
-        object.put("login_date", loginDate);
+        object.put("login__date", login_date);
         object.put("login_name", loginName);
         object.put("login_account", loginAccount);
         object.put("export_type", exportType);

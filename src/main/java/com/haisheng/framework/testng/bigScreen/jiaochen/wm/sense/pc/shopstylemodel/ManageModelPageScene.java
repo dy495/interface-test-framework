@@ -1,14 +1,15 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shopstylemodel;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 9.1. 保养、维修车型配置分页，替换"原保养配置分页"（谢）V3.0（2021-03-22）的接口
+ * 18.1. 保养、维修车型配置分页，替换"原保养配置分页"（谢）V3.0（2021-03-22）
  *
  * @author wangmin
- * @date 2021-03-25 16:20:00
+ * @date 2021-03-31 12:47:27
  */
 @Builder
 public class ManageModelPageScene extends BaseScene {
@@ -70,7 +71,7 @@ public class ManageModelPageScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);
@@ -85,6 +86,6 @@ public class ManageModelPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/car-platform/pc/shop-style-model/manage/model/page";
+        return "/jiaochen/pc/shop-style-model/manage/model/page";
     }
 }

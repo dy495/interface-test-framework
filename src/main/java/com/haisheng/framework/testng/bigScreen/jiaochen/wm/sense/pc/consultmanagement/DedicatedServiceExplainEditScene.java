@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 8.9. 专属服务页面配置（池）（2021-03-08）的接口
+ * 5.9. 专属服务说明配置（池）（2021-03-08）
  *
  * @author wangmin
- * @date 2021-03-24 14:32:26
+ * @date 2021-03-31 12:36:16
  */
 @Builder
 public class DedicatedServiceExplainEditScene extends BaseScene {
@@ -22,7 +22,7 @@ public class DedicatedServiceExplainEditScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("content", content);
         return object;

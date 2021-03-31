@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/applet/grant/wechat-phone的接口
+ * 15.4. 授权微信绑定手机号（池辉）（2021-01-21）
  *
  * @author wangmin
- * @date 2021-03-12 17:53:04
+ * @date 2021-03-31 13:03:22
  */
 @Builder
 public class AppletWechatPhoneScene extends BaseScene {
@@ -43,7 +43,7 @@ public class AppletWechatPhoneScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("encrypted_data", encryptedData);
         object.put("iv", iv);

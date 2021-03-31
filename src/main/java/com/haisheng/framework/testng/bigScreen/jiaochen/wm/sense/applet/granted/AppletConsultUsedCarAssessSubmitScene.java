@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 6.4. 二手车评估提交 （池） （2021-03-12）的接口
+ * 6.4. 二手车评估提交 （池） （2021-03-12）
  *
  * @author wangmin
- * @date 2021-03-24 14:46:43
+ * @date 2021-03-31 13:03:22
  */
 @Builder
 public class AppletConsultUsedCarAssessSubmitScene extends BaseScene {
@@ -22,7 +22,7 @@ public class AppletConsultUsedCarAssessSubmitScene extends BaseScene {
 
     /**
      * 描述 咨询内容
-     * 是否必填 false
+     * 是否必填 true
      * 版本 v3.0
      */
     private final String content;
@@ -57,7 +57,7 @@ public class AppletConsultUsedCarAssessSubmitScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("shop_id", shopId);
         object.put("content", content);

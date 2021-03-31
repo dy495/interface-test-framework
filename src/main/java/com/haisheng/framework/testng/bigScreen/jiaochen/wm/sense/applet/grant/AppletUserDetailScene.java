@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/applet/grant/user-detail的接口
+ * 15.5. 授权用户信息（谢）
  *
  * @author wangmin
- * @date 2021-03-12 17:53:04
+ * @date 2021-03-31 13:03:22
  */
 @Builder
 public class AppletUserDetailScene extends BaseScene {
@@ -29,7 +29,7 @@ public class AppletUserDetailScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("encrypted_data", encryptedData);
         object.put("iv", iv);

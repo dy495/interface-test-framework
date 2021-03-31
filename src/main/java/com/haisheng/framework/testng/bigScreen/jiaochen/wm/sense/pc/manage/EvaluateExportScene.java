@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/manage/evaluate/export的接口
+ * 7.2. 评价记录导出 （华成裕）（2020-12-23）
  *
  * @author wangmin
- * @date 2021-03-15 10:12:39
+ * @date 2021-03-31 12:29:35
  */
 @Builder
 public class EvaluateExportScene extends BaseScene {
@@ -42,8 +42,8 @@ public class EvaluateExportScene extends BaseScene {
     private final String serviceSaleId;
 
     /**
-     * 描述 评价类型 通用枚举接口获取，key为EVALUATE_TYPE
-     * 是否必填 false
+     * 描述 评价类型 枚举见字典表《评价类型》,v3.0变更为必填
+     * 是否必填 true
      * 版本 v2.0
      */
     private final Integer evaluateType;
@@ -134,7 +134,7 @@ public class EvaluateExportScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);

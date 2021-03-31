@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/m-app/task/reception/receptor/change的接口
+ * 5.7. 变更售后接待（谢）（2020-12-15）
  *
  * @author wangmin
- * @date 2021-03-12 18:09:47
+ * @date 2021-03-31 13:03:23
  */
 @Builder
 public class AppReceptionReceptorChangeScene extends BaseScene {
@@ -36,7 +36,7 @@ public class AppReceptionReceptorChangeScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("id", id);
         object.put("shop_id", shopId);

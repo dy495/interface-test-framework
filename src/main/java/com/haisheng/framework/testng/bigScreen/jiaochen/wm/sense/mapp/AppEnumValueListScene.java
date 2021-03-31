@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/m-app/enum-value-list的接口
+ * 7.2. 获取指定枚举值列表（谢）（2021-02-19）
  *
  * @author wangmin
- * @date 2021-03-12 18:09:47
+ * @date 2021-03-31 13:03:23
  */
 @Builder
 public class AppEnumValueListScene extends BaseScene {
@@ -22,7 +22,7 @@ public class AppEnumValueListScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("enum_type", enumType);
         return object;

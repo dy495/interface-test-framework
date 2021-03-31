@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 25.6. 创建内容营销活动 （谢）v3.0（2021-03-16）的接口
+ * 22.6. 创建内容营销活动 （谢）v3.0（2021-03-16）
  *
  * @author wangmin
- * @date 2021-03-24 14:32:27
+ * @date 2021-03-31 12:50:51
  */
 @Builder
 public class ManageContentMarketingAddScene extends BaseScene {
@@ -120,7 +120,7 @@ public class ManageContentMarketingAddScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("type", type);
         object.put("participation_limit_type", participationLimitType);

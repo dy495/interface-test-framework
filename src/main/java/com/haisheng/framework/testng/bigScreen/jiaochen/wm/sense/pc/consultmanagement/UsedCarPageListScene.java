@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 8.6. 二手车咨询列表 （池）(2021-03-12)的接口
+ * 5.6. 二手车咨询列表 （池）(2021-03-12)
  *
  * @author wangmin
- * @date 2021-03-24 14:32:26
+ * @date 2021-03-31 12:36:16
  */
 @Builder
 public class UsedCarPageListScene extends BaseScene {
@@ -99,7 +99,7 @@ public class UsedCarPageListScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("shop_id", shopId);
         object.put("follow_date_start", followDateStart);

@@ -1,60 +1,91 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vipmarketing;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 洗车管理列表
+ * 20.8. 洗车管理 (池) v2.0
  *
  * @author wangmin
- * @date 2021/2/1 17:02
+ * @date 2021-03-31 12:47:27
  */
 @Builder
 public class WashCarManagerPageScene extends BaseScene {
-    @Builder.Default
-    private Integer page = 1;
-    @Builder.Default
-    private Integer size = 10;
-
     /**
-     * 客户姓名
+     * 描述 页码 大于0
+     * 是否必填 true
+     * 版本 v1.0
      */
-    private final Integer customerName;
+    private final Integer page;
 
     /**
-     * 电话
+     * 描述 页大小 范围为[1,100]
+     * 是否必填 true
+     * 版本 v1.0
+     */
+    private final Integer size;
+
+    /**
+     * 描述 客户名称
+     * 是否必填 false
+     * 版本 v2.0
+     */
+    private final String customerName;
+
+    /**
+     * 描述 客户类型 会员类型
+     * 是否必填 false
+     * 版本 v2.0
+     */
+    private final Integer customerType;
+
+    /**
+     * 描述 开始时间
+     * 是否必填 false
+     * 版本 v2.0
+     */
+    private final String washStartTime;
+
+    /**
+     * 描述 结束时间
+     * 是否必填 false
+     * 版本 v2.0
+     */
+    private final String washEndTime;
+
+    /**
+     * 描述 洗车门店
+     * 是否必填 false
+     * 版本 v2.0
+     */
+    private final String shopId;
+
+    /**
+     * 描述 联系方式
+     * 是否必填 false
+     * 版本 v2.0
      */
     private final String phone;
 
-    /**
-     * 客户类型
-     */
-    private final Integer customerType;
 
     @Override
     public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
-        object.put("customer_name", customerName);
-        object.put("phone", phone);
-        object.put("customer_type", customerType);
-        object.put("size", size);
         object.put("page", page);
+        object.put("size", size);
+        object.put("customerName", customerName);
+        object.put("customer_type", customerType);
+        object.put("wash_start_time", washStartTime);
+        object.put("wash_end_time", washEndTime);
+        object.put("shop_id", shopId);
+        object.put("phone", phone);
         return object;
     }
 
     @Override
     public String getPath() {
         return "/jiaochen/pc/vip-marketing/wash-car-manager/page";
-    }
-
-    @Override
-    public void setPage(Integer page) {
-        this.page = page;
-    }
-
-    @Override
-    public void setSize(Integer size) {
-        this.size = size;
     }
 }

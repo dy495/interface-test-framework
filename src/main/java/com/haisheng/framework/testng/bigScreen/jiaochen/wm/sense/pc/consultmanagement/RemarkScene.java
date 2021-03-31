@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 8.8. 备注（通用）（池）(2021-03-12)的接口
+ * 5.8. 备注（通用）（池）(2021-03-12)
  *
  * @author wangmin
- * @date 2021-03-24 14:32:26
+ * @date 2021-03-31 12:36:16
  */
 @Builder
 public class RemarkScene extends BaseScene {
@@ -29,7 +29,7 @@ public class RemarkScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("id", id);
         object.put("remark-content", remarkContent);

@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/integral-center/exchange-order/export的接口
+ * 30.19. 积分兑换订单导出 (华成裕) v2.0
  *
  * @author wangmin
- * @date 2021-03-12 17:23:18
+ * @date 2021-03-31 12:29:35
  */
 @Builder
 public class ExchangeOrderExportScene extends BaseScene {
@@ -70,6 +70,13 @@ public class ExchangeOrderExportScene extends BaseScene {
     private final String goodsName;
 
     /**
+     * 描述 手机号
+     * 是否必填 false
+     * 版本 v2.3
+     */
+    private final String phone;
+
+    /**
      * 描述 导出类型 ALL：导出全部，CURRENT_PAGE：导出当前页，SPECIFIED_DATA：导出特定数据
      * 是否必填 true
      * 版本 v2.0
@@ -85,7 +92,7 @@ public class ExchangeOrderExportScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);
@@ -95,6 +102,7 @@ public class ExchangeOrderExportScene extends BaseScene {
         object.put("order_status", orderStatus);
         object.put("member", member);
         object.put("goods_name", goodsName);
+        object.put("phone", phone);
         object.put("export_type", exportType);
         object.put("ids", ids);
         return object;

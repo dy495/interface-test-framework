@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 9.4. 试驾车系配置分页（谢）V3.0（2021-03-22）的接口
+ * 18.4. 试驾车系配置分页（谢）V3.0（2021-03-22）
  *
  * @author wangmin
- * @date 2021-03-25 16:20:00
+ * @date 2021-03-31 12:47:27
  */
 @Builder
 public class ManageStylePageScene extends BaseScene {
@@ -50,7 +50,7 @@ public class ManageStylePageScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);
@@ -62,6 +62,6 @@ public class ManageStylePageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/car-platform/pc/shop-style-model/manage/style/page";
+        return "/jiaochen/pc/shop-style-model/manage/style/page";
     }
 }

@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/vip-marketing/sign_in_config/start-or-close的接口
+ * 20.14. 签到开启或关闭
  *
  * @author wangmin
- * @date 2021-03-12 17:23:17
+ * @date 2021-03-31 12:47:27
  */
 @Builder
 public class SignInConfigStartOrCloseScene extends BaseScene {
@@ -29,7 +29,7 @@ public class SignInConfigStartOrCloseScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("status", status);
         object.put("id", id);

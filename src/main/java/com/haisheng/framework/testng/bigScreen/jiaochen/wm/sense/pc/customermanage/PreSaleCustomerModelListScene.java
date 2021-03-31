@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/customer-manage/pre-sale-customer/model-list的接口
+ * 6.6. 车辆model列表 (池)v2.0 （2021-3-15）
  *
  * @author wangmin
- * @date 2021-03-15 14:06:44
+ * @date 2021-03-31 12:32:56
  */
 @Builder
 public class PreSaleCustomerModelListScene extends BaseScene {
@@ -18,13 +18,13 @@ public class PreSaleCustomerModelListScene extends BaseScene {
      * 是否必填 true
      * 版本 v2.0
      */
-    private final Long shopId;
+    private final Long styleId;
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
-        object.put("shop_id", shopId);
+        object.put("style_id", styleId);
         return object;
     }
 

@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 10.8. 售前客户购车记录 (杨)v3.0的接口
+ * 6.8. 售前客户购车记录 (杨)v3.0
  *
  * @author wangmin
- * @date 2021-03-24 14:32:26
+ * @date 2021-03-31 12:32:56
  */
 @Builder
 public class PreSaleCustomerBuyCarPageScene extends BaseScene {
@@ -88,11 +88,18 @@ public class PreSaleCustomerBuyCarPageScene extends BaseScene {
      * 是否必填 false
      * 版本 v3.0
      */
-    private final String buyCarDay;
+    private final String buyCarTimeStart;
+
+    /**
+     * 描述 购车日期
+     * 是否必填 false
+     * 版本 v3.0
+     */
+    private final String buyCarTimeEnd;
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);
@@ -104,7 +111,8 @@ public class PreSaleCustomerBuyCarPageScene extends BaseScene {
         object.put("pre_sale_name", preSaleName);
         object.put("pre_sale_account", preSaleAccount);
         object.put("vehicle_chassis_code", vehicleChassisCode);
-        object.put("buyCarDay", buyCarDay);
+        object.put("buy_car_time_start", buyCarTimeStart);
+        object.put("buy_car_time_end", buyCarTimeEnd);
         return object;
     }
 

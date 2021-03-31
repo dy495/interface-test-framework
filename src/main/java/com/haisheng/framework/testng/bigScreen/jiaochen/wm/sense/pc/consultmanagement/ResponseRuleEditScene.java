@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 8.2. 设置响应规则（池）（2021-03-08）通用的接口
+ * 5.2. 设置响应规则（池）（2021-03-08）通用
  *
  * @author wangmin
- * @date 2021-03-24 14:32:26
+ * @date 2021-03-31 12:36:16
  */
 @Builder
 public class ResponseRuleEditScene extends BaseScene {
@@ -50,7 +50,7 @@ public class ResponseRuleEditScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("remind_time", remindTime);
         object.put("over_time", overTime);

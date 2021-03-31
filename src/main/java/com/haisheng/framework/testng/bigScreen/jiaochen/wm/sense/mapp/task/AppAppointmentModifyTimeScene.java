@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/m-app/task/appointment/modify-time的接口
+ * 3.3. app变更预约时间段（谢）
  *
  * @author wangmin
- * @date 2021-03-12 18:09:47
+ * @date 2021-03-31 13:03:23
  */
 @Builder
 public class AppAppointmentModifyTimeScene extends BaseScene {
@@ -34,13 +34,21 @@ public class AppAppointmentModifyTimeScene extends BaseScene {
      */
     private final Long timeId;
 
+    /**
+     * 描述 预约类型 见字典表《预约类型》
+     * 是否必填 true
+     * 版本 v3.0
+     */
+    private final String type;
+
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("id", id);
         object.put("shop_id", shopId);
         object.put("time_id", timeId);
+        object.put("type", type);
         return object;
     }
 

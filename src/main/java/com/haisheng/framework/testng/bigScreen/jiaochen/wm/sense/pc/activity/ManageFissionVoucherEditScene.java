@@ -6,15 +6,15 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/activity/manage/fission-voucher/edit的接口
+ * 22.10. 编辑裂变优惠券活动 （谢）（2021-01-13）
  *
  * @author wangmin
- * @date 2021-03-12 17:23:18
+ * @date 2021-03-31 12:50:51
  */
 @Builder
 public class ManageFissionVoucherEditScene extends BaseScene {
     /**
-     * 描述 活动类型 通过活动目标树获取 1：列表优惠券，2：活动招募
+     * 描述 活动类型 见字典表《活动类型》
      * 是否必填 true
      * 版本 v2.0
      */
@@ -42,7 +42,7 @@ public class ManageFissionVoucherEditScene extends BaseScene {
     private final String title;
 
     /**
-     * 描述 活动规则
+     * 描述 活动规则（v3.0）兼容活动介绍
      * 是否必填 true
      * 版本 v2.0
      */
@@ -91,6 +91,27 @@ public class ManageFissionVoucherEditScene extends BaseScene {
     private final JSONArray picList;
 
     /**
+     * 描述 是否自定义分享信息
+     * 是否必填 false
+     * 版本 v3.0
+     */
+    private final Boolean isCustomShareInfo;
+
+    /**
+     * 描述 自定义分享图片
+     * 是否必填 false
+     * 版本 v3.0
+     */
+    private final String sharePicPath;
+
+    /**
+     * 描述 自定义分享标题
+     * 是否必填 false
+     * 版本 v3.0
+     */
+    private final String shareTitle;
+
+    /**
      * 描述 领取限制类型，0：不限制，1：获取期间总次数，2：每天领取限制
      * 是否必填 true
      * 版本 v2.0
@@ -134,7 +155,7 @@ public class ManageFissionVoucherEditScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("type", type);
         object.put("participation_limit_type", participationLimitType);
@@ -147,6 +168,9 @@ public class ManageFissionVoucherEditScene extends BaseScene {
         object.put("subject_id", subjectId);
         object.put("label", label);
         object.put("pic_list", picList);
+        object.put("is_custom_share_info", isCustomShareInfo);
+        object.put("share_pic_path", sharePicPath);
+        object.put("share_title", shareTitle);
         object.put("receive_limit_type", receiveLimitType);
         object.put("receive_limit_times", receiveLimitTimes);
         object.put("share_num", shareNum);

@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/reception-manage/page的接口
+ * 16.1. 接待分页 （池）（2021-03-29）
  *
  * @author wangmin
- * @date 2021-03-15 10:02:41
+ * @date 2021-03-31 12:47:27
  */
 @Builder
 public class PageScene extends BaseScene {
@@ -104,9 +104,16 @@ public class PageScene extends BaseScene {
      */
     private final Long shopId;
 
+    /**
+     * 描述 接待来源类型
+     * 是否必填 false
+     * 版本 v3.0
+     */
+    private final String receptionSourceType;
+
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);
@@ -121,6 +128,7 @@ public class PageScene extends BaseScene {
         object.put("customer_phone", customerPhone);
         object.put("reception_type", receptionType);
         object.put("shop_id", shopId);
+        object.put("reception_source_type", receptionSourceType);
         return object;
     }
 

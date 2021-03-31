@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/customer-manage/after-sale-customer/page/export的接口
+ * 6.16. 售后客户列表-导出 (华成裕) v2.0
  *
  * @author wangmin
- * @date 2021-03-15 14:06:44
+ * @date 2021-03-31 12:32:56
  */
 @Builder
 public class AfterSaleCustomerPageExportScene extends BaseScene {
@@ -77,6 +77,27 @@ public class AfterSaleCustomerPageExportScene extends BaseScene {
     private final String vehicleChassisCode;
 
     /**
+     * 描述 门店id
+     * 是否必填 false
+     * 版本 v3.0
+     */
+    private final Long shopId;
+
+    /**
+     * 描述 是否注册 true 是 false
+     * 是否必填 false
+     * 版本 v3,0
+     */
+    private final Boolean registrationStatus;
+
+    /**
+     * 描述 品牌
+     * 是否必填 false
+     * 版本 v3.0
+     */
+    private final Long brandId;
+
+    /**
      * 描述 导出类型 ALL：导出全部，CURRENT_PAGE：导出当前页，SPECIFIED_DATA：导出特定数据
      * 是否必填 true
      * 版本 v2.0
@@ -92,7 +113,7 @@ public class AfterSaleCustomerPageExportScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);
@@ -103,6 +124,9 @@ public class AfterSaleCustomerPageExportScene extends BaseScene {
         object.put("order_start_time", orderStartTime);
         object.put("order_end_time", orderEndTime);
         object.put("vehicle_chassis_code", vehicleChassisCode);
+        object.put("shop_id", shopId);
+        object.put("registration_status", registrationStatus);
+        object.put("brand_id", brandId);
         object.put("export_type", exportType);
         object.put("ids", ids);
         return object;

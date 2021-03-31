@@ -6,15 +6,15 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/m-app/home-page/waiting-task/num的接口
+ * 2.3. 代办数量 (谢) v3.0 （2021-03-27）
  *
  * @author wangmin
- * @date 2021-03-12 18:09:47
+ * @date 2021-03-31 13:03:23
  */
 @Builder
 public class AppWaitingTaskNumScene extends BaseScene {
     /**
-     * 描述 代办类型类型APPOINTMENT(预约)、RECEPTION(接待)、FOLLOW_UP(跟进)
+     * 描述 代办类型 见字典表《代办类型》
      * 是否必填 true
      * 版本 1.0
      */
@@ -29,7 +29,7 @@ public class AppWaitingTaskNumScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("type", type);
         object.put("isAllDataAuth", isAllDataAuth);

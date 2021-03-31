@@ -1,14 +1,15 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.followup;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 1.5. app 跟进列表备注 v3 (池)(2020-03-11)的接口
+ * 1.5. app 跟进列表备注 v3 (池)(2020-03-11)
  *
  * @author wangmin
- * @date 2021-03-24 14:44:47
+ * @date 2021-03-31 13:03:23
  */
 @Builder
 public class AppRemarkV3Scene extends BaseScene {
@@ -28,7 +29,7 @@ public class AppRemarkV3Scene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("follow_id", followId);
         object.put("remark", remark);

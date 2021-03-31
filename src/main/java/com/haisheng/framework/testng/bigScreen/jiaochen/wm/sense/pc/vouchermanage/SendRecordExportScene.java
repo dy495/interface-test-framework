@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/voucher-manage/send-record/export的接口
+ * 21.16. 领取记录导出 （华成裕） （2020-12-23）
  *
  * @author wangmin
- * @date 2021-03-12 17:23:17
+ * @date 2021-03-31 12:47:27
  */
 @Builder
 public class SendRecordExportScene extends BaseScene {
@@ -98,6 +98,76 @@ public class SendRecordExportScene extends BaseScene {
     private final String customerLabel;
 
     /**
+     * 描述 发出渠道
+     * 是否必填 false
+     * 版本 v2.0
+     */
+    private final Integer sendChannel;
+
+    /**
+     * 描述 主体类型
+     * 是否必填 false
+     * 版本 -
+     */
+    private final String subjectType;
+
+    /**
+     * 描述 主体id
+     * 是否必填 false
+     * 版本 -
+     */
+    private final Long subjectId;
+
+    /**
+     * 描述 开始核销时间
+     * 是否必填 false
+     * 版本 -
+     */
+    private final String beginVerifyTime;
+
+    /**
+     * 描述 结束核销时间
+     * 是否必填 false
+     * 版本 -
+     */
+    private final String endVerifyTime;
+
+    /**
+     * 描述 核销账号
+     * 是否必填 false
+     * 版本 -
+     */
+    private final String verifyAccount;
+
+    /**
+     * 描述 开始核销时间
+     * 是否必填 false
+     * 版本 -
+     */
+    private final String beginInvalidTime;
+
+    /**
+     * 描述 结束核销时间
+     * 是否必填 false
+     * 版本 -
+     */
+    private final String endInvalidTime;
+
+    /**
+     * 描述 核销账号
+     * 是否必填 false
+     * 版本 -
+     */
+    private final String invalidAccount;
+
+    /**
+     * 描述 卡券名称
+     * 是否必填 false
+     * 版本 v1.0
+     */
+    private final String voucherName;
+
+    /**
      * 描述 导出类型 ALL：导出全部，CURRENT_PAGE：导出当前页，SPECIFIED_DATA：导出特定数据
      * 是否必填 true
      * 版本 v2.0
@@ -113,7 +183,7 @@ public class SendRecordExportScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);
@@ -127,6 +197,16 @@ public class SendRecordExportScene extends BaseScene {
         object.put("use_start_time", useStartTime);
         object.put("use_end_time", useEndTime);
         object.put("customer_label", customerLabel);
+        object.put("send_channel", sendChannel);
+        object.put("subject_type", subjectType);
+        object.put("subject_id", subjectId);
+        object.put("begin_verify_time", beginVerifyTime);
+        object.put("end_verify_time", endVerifyTime);
+        object.put("verify_account", verifyAccount);
+        object.put("begin_invalid_time", beginInvalidTime);
+        object.put("end_invalid_time", endInvalidTime);
+        object.put("invalid_account", invalidAccount);
+        object.put("voucher_name", voucherName);
         object.put("export_type", exportType);
         object.put("ids", ids);
         return object;

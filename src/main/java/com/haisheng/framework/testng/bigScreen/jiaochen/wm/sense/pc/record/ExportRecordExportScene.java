@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/record/export-record/export的接口
+ * 19.4. 导出记录导出 (华成裕) （2020-12-24）
  *
  * @author wangmin
- * @date 2021-03-12 17:23:17
+ * @date 2021-03-31 12:47:27
  */
 @Builder
 public class ExportRecordExportScene extends BaseScene {
@@ -56,6 +56,13 @@ public class ExportRecordExportScene extends BaseScene {
     private final String type;
 
     /**
+     * 描述 ignore
+     * 是否必填 false
+     * 版本 -
+     */
+    private final Boolean isAll;
+
+    /**
      * 描述 导出类型 ALL：导出全部，CURRENT_PAGE：导出当前页，SPECIFIED_DATA：导出特定数据
      * 是否必填 true
      * 版本 v2.0
@@ -71,7 +78,7 @@ public class ExportRecordExportScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);
@@ -79,6 +86,7 @@ public class ExportRecordExportScene extends BaseScene {
         object.put("end_time", endTime);
         object.put("user", user);
         object.put("type", type);
+        object.put("isAll", isAll);
         object.put("export_type", exportType);
         object.put("ids", ids);
         return object;

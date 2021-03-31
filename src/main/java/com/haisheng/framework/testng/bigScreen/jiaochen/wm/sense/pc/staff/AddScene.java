@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/staff/add的接口
+ * 34.3. 新建员工 （杨）（2021-03-23） v3.0
  *
  * @author wangmin
- * @date 2021-03-12 17:23:18
+ * @date 2021-03-31 12:47:27
  */
 @Builder
 public class AddScene extends BaseScene {
@@ -41,14 +41,22 @@ public class AddScene extends BaseScene {
      */
     private final JSONArray roleList;
 
+    /**
+     * 描述 员工图片oss路径
+     * 是否必填 false
+     * 版本 v3.0
+     */
+    private final String picturePath;
+
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("name", name);
         object.put("phone", phone);
         object.put("gender", gender);
         object.put("role_list", roleList);
+        object.put("picture_path", picturePath);
         return object;
     }
 

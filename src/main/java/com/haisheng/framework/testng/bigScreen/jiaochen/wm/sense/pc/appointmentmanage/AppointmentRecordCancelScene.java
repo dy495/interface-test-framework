@@ -1,14 +1,15 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.appointmentmanage;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/appointment-manage/appointment-record/cancel的接口
+ * 2.4. 取消预约（谢）
  *
  * @author wangmin
- * @date 2021-03-15 14:05:12
+ * @date 2021-03-31 12:47:26
  */
 @Builder
 public class AppointmentRecordCancelScene extends BaseScene {
@@ -26,12 +27,20 @@ public class AppointmentRecordCancelScene extends BaseScene {
      */
     private final Long shopId;
 
+    /**
+     * 描述 预约类型 见字典表《预约类型》
+     * 是否必填 true
+     * 版本 v3.0
+     */
+    private final String type;
+
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("id", id);
         object.put("shop_id", shopId);
+        object.put("type", type);
         return object;
     }
 
