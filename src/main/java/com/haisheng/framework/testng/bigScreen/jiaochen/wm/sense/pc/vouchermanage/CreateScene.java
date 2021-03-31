@@ -1,9 +1,10 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
+
+import java.util.List;
 
 /**
  * 21.9. 创建卡券 （张小龙） v2.0
@@ -13,6 +14,13 @@ import lombok.Builder;
  */
 @Builder
 public class CreateScene extends BaseScene {
+    /**
+     * 描述 成本
+     * 是否必填 false
+     * 版本 v2.0
+     */
+    private final Double cost;
+
     /**
      * 描述 卡券id
      * 是否必填 false
@@ -130,7 +138,7 @@ public class CreateScene extends BaseScene {
      * 是否必填 true
      * 版本 v2.0
      */
-    private final JSONArray shopIds;
+    private final List<Long> shopIds;
 
     /**
      * 描述 是否使用默认图片

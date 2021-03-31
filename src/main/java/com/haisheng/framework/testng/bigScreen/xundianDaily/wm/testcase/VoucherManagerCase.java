@@ -9,7 +9,6 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletVoucher;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.CustomerLabelTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.financial.ApplyTypeEnum;
@@ -19,12 +18,12 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletMessageListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletVoucherVerificationScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanage.BuyPackageRecordScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.ReceptionVoucherListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.record.PushMsgPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.vouchermanage.*;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -44,7 +43,7 @@ import java.util.stream.Collectors;
 
 public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce PRODUCE = EnumTestProduce.INS_DAILY;
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.ALL_AUTHORITY_DAILY;
+    private static final EnumAccount ALL_AUTHORITY = EnumAccount.YUE_XIU_DAILY;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.INS_ZT_DAILY;
     private static final EnumAppletToken APPLET_USER_TWO = EnumAppletToken.JC_XMF_DAILY;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
@@ -69,7 +68,6 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.product = PRODUCE.getAbbreviation();
         commonConfig.referer = PRODUCE.getReferer();
         commonConfig.shopId = PRODUCE.getShopId();
-        commonConfig.roleId = ALL_AUTHORITY.getRoleId();
         beforeClassInit(commonConfig);
     }
 
@@ -178,7 +176,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             String newVoucherName = util.createVoucherName();
             List<Long> shopIds = util.getShopIdList(2);
             //编辑
-            IScene scene = EditVoucherScene.builder().id(Math.toIntExact(voucherId)).voucherName(newVoucherName).voucherDescription(EnumDesc.DESC_BETWEEN_40_50.getDesc()).shopIds(shopIds).shopType(1).selfVerification(false).build();
+            IScene scene = EditVoucherScene.builder().id(voucherId).voucherName(newVoucherName).voucherDescription(EnumDesc.DESC_BETWEEN_40_50.getDesc()).shopIds(shopIds).shopType(1).selfVerification(false).build();
             visitor.invokeApi(scene);
             IScene voucherDetailScene = VoucherDetailScene.builder().id(voucherId).build();
             VoucherDetail voucherDetail = JSONObject.toJavaObject(visitor.invokeApi(voucherDetailScene), VoucherDetail.class);
@@ -316,7 +314,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             VoucherChangeRecord voucherChangeRecord = util.collectBean(scene, VoucherChangeRecord.class).get(0);
             CommonUtil.checkResult(voucherName + " 变更记录变更事项", ChangeItemEnum.INVALIDED.getName(), voucherChangeRecord.getChangeItem());
             CommonUtil.checkResult(voucherName + " 操作人", ALL_AUTHORITY.getName(), voucherChangeRecord.getOperateSaleName());
-            CommonUtil.checkResult(voucherName + " 操作人角色", ALL_AUTHORITY.getRole(), voucherChangeRecord.getOperateSaleRole());
+            CommonUtil.checkResult(voucherName + " 操作人角色", ALL_AUTHORITY.getRoleName(), voucherChangeRecord.getOperateSaleRole());
             CommonUtil.checkResult(voucherName + " 操作人账号", ALL_AUTHORITY.getPhone(), voucherChangeRecord.getOperateSaleAccount());
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -359,7 +357,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             VoucherChangeRecord voucherChangeRecord = util.collectBean(changeRecordScene, VoucherChangeRecord.class).get(0);
             CommonUtil.checkResult(voucherName + " 变更记录变更事项", ChangeItemEnum.ADD.getName() + 10 + "张", voucherChangeRecord.getChangeItem());
             CommonUtil.checkResult(voucherName + " 操作人", ALL_AUTHORITY.getName(), voucherChangeRecord.getOperateSaleName());
-            CommonUtil.checkResult(voucherName + " 操作人角色", ALL_AUTHORITY.getRole(), voucherChangeRecord.getOperateSaleRole());
+            CommonUtil.checkResult(voucherName + " 操作人角色", ALL_AUTHORITY.getRoleName(), voucherChangeRecord.getOperateSaleRole());
             CommonUtil.checkResult(voucherName + " 操作人账号", ALL_AUTHORITY.getPhone(), voucherChangeRecord.getOperateSaleAccount());
             //增发记录状态=已通过
             JSONObject newResponse = visitor.invokeApi(additionalRecordScene).getJSONArray("list").getJSONObject(0);
@@ -455,7 +453,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             VoucherChangeRecord voucherChangeRecord = util.collectBean(changeRecordScene, VoucherChangeRecord.class).get(0);
             CommonUtil.checkResult(voucherName + " 变更记录变更事项", ChangeItemEnum.INVALIDED.getName(), voucherChangeRecord.getChangeItem());
             CommonUtil.checkResult(voucherName + " 操作人", ALL_AUTHORITY.getName(), voucherChangeRecord.getOperateSaleName());
-            CommonUtil.checkResult(voucherName + " 操作人角色", ALL_AUTHORITY.getRole(), voucherChangeRecord.getOperateSaleRole());
+            CommonUtil.checkResult(voucherName + " 操作人角色", ALL_AUTHORITY.getRoleName(), voucherChangeRecord.getOperateSaleRole());
             CommonUtil.checkResult(voucherName + " 操作人账号", ALL_AUTHORITY.getPhone(), voucherChangeRecord.getOperateSaleAccount());
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -500,7 +498,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             VoucherChangeRecord voucherChangeRecord = util.collectBean(changeRecordScene, VoucherChangeRecord.class).get(0);
             CommonUtil.checkResult(voucherName + " 变更记录变更事项", ChangeItemEnum.ADD.getName() + "10张", voucherChangeRecord.getChangeItem());
             CommonUtil.checkResult(voucherName + " 操作人", ALL_AUTHORITY.getName(), voucherChangeRecord.getOperateSaleName());
-            CommonUtil.checkResult(voucherName + " 操作人角色", ALL_AUTHORITY.getRole(), voucherChangeRecord.getOperateSaleRole());
+            CommonUtil.checkResult(voucherName + " 操作人角色", ALL_AUTHORITY.getRoleName(), voucherChangeRecord.getOperateSaleRole());
             CommonUtil.checkResult(voucherName + " 操作人账号", ALL_AUTHORITY.getPhone(), voucherChangeRecord.getOperateSaleAccount());
             //增发记录状体=已通过
             JSONObject newResponse = visitor.invokeApi(additionalRecordScene);
@@ -556,7 +554,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             VoucherChangeRecord voucherChangeRecord = util.collectBean(changeRecordScene, VoucherChangeRecord.class).get(0);
             CommonUtil.checkResult(voucherName + " 变更记录变更事项", ChangeItemEnum.INVALIDED.getName(), voucherChangeRecord.getChangeItem());
             CommonUtil.checkResult(voucherName + " 操作人", ALL_AUTHORITY.getName(), voucherChangeRecord.getOperateSaleName());
-            CommonUtil.checkResult(voucherName + " 操作人角色", ALL_AUTHORITY.getRole(), voucherChangeRecord.getOperateSaleRole());
+            CommonUtil.checkResult(voucherName + " 操作人角色", ALL_AUTHORITY.getRoleName(), voucherChangeRecord.getOperateSaleRole());
             CommonUtil.checkResult(voucherName + " 操作人账号", ALL_AUTHORITY.getPhone(), voucherChangeRecord.getOperateSaleAccount());
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -603,7 +601,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             String changeItem = voucherChangeRecord.getChangeItem();
             CommonUtil.checkResult(voucherName + " 变更记录变更事项", ChangeItemEnum.ADD.getName() + "1张", changeItem);
             CommonUtil.checkResult(voucherName + " 操作人", ALL_AUTHORITY.getName(), voucherChangeRecord.getOperateSaleName());
-            CommonUtil.checkResult(voucherName + " 操作人角色", ALL_AUTHORITY.getRole(), voucherChangeRecord.getOperateSaleRole());
+            CommonUtil.checkResult(voucherName + " 操作人角色", ALL_AUTHORITY.getRoleName(), voucherChangeRecord.getOperateSaleRole());
             CommonUtil.checkResult(voucherName + " 操作人账号", ALL_AUTHORITY.getPhone(), voucherChangeRecord.getOperateSaleAccount());
             //增发记录状体=已通过
             JSONObject newResponse = visitor.invokeApi(additionalRecordScene);
@@ -678,48 +676,6 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
-    @Test(description = "卡券管理--购买一个临时套餐，套餐内卡券剩余库存-1&套餐购买记录+1")
-    public void voucherManage_data_19() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-            String voucherName = util.getVoucherName(voucherId);
-            //购买前数据
-            Long surplusInventory = util.getVoucherPage(voucherName).getSurplusInventory();
-            IScene buyPackageRecordScene = BuyPackageRecordScene.builder().build();
-            int buyPackageRecordTotal = visitor.invokeApi(buyPackageRecordScene).getInteger("total");
-            IScene voucherInfoScene = VoucherInfoScene.builder().id(voucherId).build();
-            int totalSend = visitor.invokeApi(voucherInfoScene).getInteger("total_send");
-            user.loginApplet(APPLET_USER_ONE);
-            int appletVoucherNum = util.getAppletVoucherNum();
-            int appletPackageNum = util.getAppletPackageNum();
-            //购买临时套餐
-            user.loginPc(ALL_AUTHORITY);
-            JSONArray voucherList = util.getVoucherArray(voucherId, 1);
-            util.buyTemporaryPackage(voucherList, 1);
-            util.makeSureBuyPackage("临时套餐");
-            //购买后数据
-            CommonUtil.checkResult("套餐购买记录", buyPackageRecordTotal + 1, visitor.invokeApi(buyPackageRecordScene).getInteger("total"));
-            VoucherSendRecord voucherSendRecord = util.getVoucherSendRecordList(voucherName).get(0);
-            CommonUtil.checkResult(voucherName + " 领取记录卡券使用状态", VoucherUseStatusEnum.NEAR_EXPIRE.name(), voucherSendRecord.getVoucherUseStatus());
-            CommonUtil.checkResult(voucherName + " 领取记录卡券使用状态", VoucherUseStatusEnum.NEAR_EXPIRE.getName(), voucherSendRecord.getVoucherUseStatusName());
-            CommonUtil.checkResult(voucherName + " 领取人电话", APPLET_USER_ONE.getPhone(), voucherSendRecord.getCustomerPhone());
-            CommonUtil.checkResult(voucherName + " 领取记录卡券发出渠道", VoucherSourceEnum.PURCHASE.getName(), voucherSendRecord.getSendChannelName());
-            Preconditions.checkArgument(voucherSendRecord.getCustomerLabelName().contains(CustomerLabelTypeEnum.VIP.getTypeName()), "领取人标签" + voucherSendRecord.getCustomerLabelName());
-            Preconditions.checkArgument(voucherSendRecord.getCustomerLabelName().contains(CustomerLabelTypeEnum.APPLET.getTypeName()), "领取人标签" + voucherSendRecord.getCustomerLabelName());
-            CommonUtil.checkResult(voucherName + " 剩余库存", surplusInventory - 1, util.getVoucherPage(voucherName).getSurplusInventory());
-            CommonUtil.checkResult(voucherName + " 共领取数", totalSend + 1, visitor.invokeApi(voucherInfoScene).getInteger("total_send"));
-            user.loginApplet(APPLET_USER_ONE);
-            CommonUtil.checkResult("小程序我的卡券数", appletVoucherNum + 1, util.getAppletVoucherNum());
-            CommonUtil.checkResult("小程序我的套餐数", appletPackageNum, util.getAppletPackageNum());
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("卡券管理--购买一个临时套餐，套餐内卡券剩余库存-1&套餐购买记录+1");
-        }
-    }
-
-    //ok
     @Test(description = "卡券管理--购买一个固定套餐，包含卡券剩余库存-1&套餐购买记录+1&套餐购买数量+1")
     public void voucherManage_data_20() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -736,7 +692,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             int soldNumber = util.getPackagePage(packageName).getSoldNumber();
             IScene voucherInfoScene = VoucherInfoScene.builder().id(voucherId).build();
             int totalSend = visitor.invokeApi(voucherInfoScene).getInteger("total_send");
-            user.loginApplet(APPLET_USER_ONE);
+            visitor.login(APPLET_USER_ONE.getToken());
             int appletVoucherNum = util.getAppletVoucherNum();
             int appletPackageNum = util.getAppletPackageNum();
             user.loginPc(ALL_AUTHORITY);
@@ -756,55 +712,13 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(voucherSendRecord.getCustomerLabelName().contains(CustomerLabelTypeEnum.APPLET.getTypeName()), "领取人标签" + voucherSendRecord.getCustomerLabelName());
             CommonUtil.checkResult(voucherName + " 购买后剩余库存", surplusInventory - 1, util.getVoucherPage(voucherName).getSurplusInventory());
             CommonUtil.checkResult(voucherName + " 共领取数", totalSend + 1, visitor.invokeApi(voucherInfoScene).getInteger("total_send"));
-            user.loginApplet(APPLET_USER_ONE);
+            visitor.login(APPLET_USER_ONE.getToken());
             CommonUtil.checkResult("小程序我的卡券数", appletVoucherNum, util.getAppletVoucherNum());
             CommonUtil.checkResult("小程序我的套餐数", appletPackageNum + 1, util.getAppletPackageNum());
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
             saveData("卡券管理--购买一个固定套餐，包含卡券剩余库存-1&套餐购买记录+1&套餐购买数量+1");
-        }
-    }
-
-    //ok
-    @Test(description = "卡券管理--赠送一个临时套餐，套餐内卡券剩余库存-1&套餐购买记录+1")
-    public void voucherManage_data_21() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-            String voucherName = util.getVoucherName(voucherId);
-            //购买前数据
-            Long surplusInventory = util.getVoucherPage(voucherName).getSurplusInventory();
-            IScene voucherInfoScene = VoucherInfoScene.builder().id(voucherId).build();
-            int totalSend = visitor.invokeApi(voucherInfoScene).getInteger("total_send");
-            IScene buyPackageRecordScene = BuyPackageRecordScene.builder().build();
-            int buyPackageRecordTotal = visitor.invokeApi(buyPackageRecordScene).getInteger("total");
-            user.loginApplet(APPLET_USER_ONE);
-            int appletVoucherNum = util.getAppletVoucherNum();
-            int appletPackageNum = util.getAppletPackageNum();
-            //临时套餐
-            user.loginPc(ALL_AUTHORITY);
-            JSONArray voucherList = util.getVoucherArray(voucherId, 1);
-            util.buyTemporaryPackage(voucherList, 0);
-            util.makeSureBuyPackage("临时套餐");
-            //赠送后数据
-            CommonUtil.checkResult("套餐购买列表数", buyPackageRecordTotal + 1, visitor.invokeApi(buyPackageRecordScene).getInteger("total"));
-            VoucherSendRecord voucherSendRecord = util.getVoucherSendRecordList(voucherName).get(0);
-            CommonUtil.checkResult(voucherName + " 领取记录卡券使用状态", VoucherUseStatusEnum.NEAR_EXPIRE.name(), voucherSendRecord.getVoucherUseStatus());
-            CommonUtil.checkResult(voucherName + " 领取记录卡券使用状态", VoucherUseStatusEnum.NEAR_EXPIRE.getName(), voucherSendRecord.getVoucherUseStatusName());
-            CommonUtil.checkResult(voucherName + " 领取人电话", APPLET_USER_ONE.getPhone(), voucherSendRecord.getCustomerPhone());
-            CommonUtil.checkResult(voucherName + " 领取记录卡券发出渠道", VoucherSourceEnum.PURCHASE.getName(), voucherSendRecord.getSendChannelName());
-            Preconditions.checkArgument(voucherSendRecord.getCustomerLabelName().contains(CustomerLabelTypeEnum.VIP.getTypeName()), "领取人标签" + voucherSendRecord.getCustomerLabelName());
-            Preconditions.checkArgument(voucherSendRecord.getCustomerLabelName().contains(CustomerLabelTypeEnum.APPLET.getTypeName()), "领取人标签" + voucherSendRecord.getCustomerLabelName());
-            CommonUtil.checkResult(voucherName + " 剩余库存", surplusInventory - 1, util.getVoucherPage(voucherName).getSurplusInventory());
-            CommonUtil.checkResult(voucherName + " 共领取数", totalSend + 1, visitor.invokeApi(voucherInfoScene).getInteger("total_send"));
-            user.loginApplet(APPLET_USER_ONE);
-            CommonUtil.checkResult("小程序我的卡券数", appletVoucherNum + 1, util.getAppletVoucherNum());
-            CommonUtil.checkResult("小程序我的套餐数", appletPackageNum, util.getAppletPackageNum());
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("卡券管理--赠送一个临时套餐，套餐内卡券剩余库存-1&套餐购买记录+1");
         }
     }
 
@@ -824,7 +738,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             int buyPackageRecordTotal = visitor.invokeApi(buyPackageRecordScene).getInteger("total");
             IScene voucherInfoScene = VoucherInfoScene.builder().id(voucherId).build();
             int totalSend = visitor.invokeApi(voucherInfoScene).getInteger("total_send");
-            user.loginApplet(APPLET_USER_ONE);
+            visitor.login(APPLET_USER_ONE.getToken());
             int appletVoucherNum = util.getAppletVoucherNum();
             int appletPackageNum = util.getAppletPackageNum();
             user.loginPc(ALL_AUTHORITY);
@@ -843,7 +757,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(voucherSendRecord.getCustomerLabelName().contains(CustomerLabelTypeEnum.APPLET.getTypeName()), "领取人标签：" + voucherSendRecord.getCustomerLabelName());
             CommonUtil.checkResult(voucherName + " 剩余库存", surplusInventory - 1, util.getVoucherPage(voucherName).getSurplusInventory());
             CommonUtil.checkResult(voucherName + " 共领取数", totalSend + 1, visitor.invokeApi(voucherInfoScene).getInteger("total_send"));
-            user.loginApplet(APPLET_USER_ONE);
+            visitor.login(APPLET_USER_ONE.getToken());
             CommonUtil.checkResult("小程序我的卡券数", appletVoucherNum, util.getAppletVoucherNum());
             CommonUtil.checkResult("小程序我的套餐数", appletPackageNum + 1, util.getAppletPackageNum());
         } catch (Exception | AssertionError e) {
@@ -862,7 +776,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             String voucherName = util.getVoucherName(voucherId);
             util.pushMessage(0, true, voucherId);
             //作废前数据
-            user.loginApplet(APPLET_USER_ONE);
+            visitor.login(APPLET_USER_ONE.getToken());
             int voucherCherNum = util.getAppletVoucherNum();
             user.loginPc(ALL_AUTHORITY);
             List<VoucherInvalidPage> voucherInvalidPages = util.getVoucherInvalidList(voucherId);
@@ -882,7 +796,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             CommonUtil.checkResult(voucherName + " 作废后作废人电话", ALL_AUTHORITY.getPhone(), newVoucherInvalidPages.get(0).getInvalidPhone());
             CommonUtil.checkResult(voucherName + " 作废后作废说明", EnumDesc.DESC_BETWEEN_10_15.getDesc(), newVoucherInvalidPages.get(0).getInvalidDescription());
             CommonUtil.checkResult(voucherCode + " 作废后共作废数", totalInvalid + 1, visitor.invokeApi(voucherInfoScene).getInteger("total_invalid"));
-            user.loginApplet(APPLET_USER_ONE);
+            visitor.login(APPLET_USER_ONE.getToken());
             CommonUtil.checkResult(voucherName + " 作废后小程序我的卡券数量", voucherCherNum, util.getAppletVoucherNum());
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -984,66 +898,25 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
-    @Test(description = "卡券管理--小程序自助核销一张，使用的核销码对应人员册核销数量+1&【核销记录】列表数+1&&核销渠道=主动核销")
-    public void voucherManage_data_29() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-            String voucherName = util.getVoucherName(voucherId);
-            //发出一张卡券
-            util.pushMessage(0, true, voucherId);
-            Thread.sleep(500);
-            //获取最新发出卡券的code
-            String voucherCode = util.getVoucherCode(voucherId);
-            CommonUtil.valueView(voucherCode);
-            //核销列表数
-            IScene verificationRecordScene = VerificationRecordScene.builder().voucherId(voucherId).build();
-            List<VerificationRecord> verificationRecords = util.collectBean(verificationRecordScene, VerificationRecord.class);
-            //获取核销码
-            String code = util.getVerificationCode("本司员工");
-            IScene verificationPeopleScene = VerificationPeopleScene.builder().verificationCode(code).build();
-            //核销人员核销数量
-            int verificationNumber = visitor.invokeApi(verificationPeopleScene).getJSONArray("list").getJSONObject(0).getInteger("verification_number");
-            //获取卡券核销id
-            user.loginApplet(APPLET_USER_ONE);
-            Long appletVoucherId = util.getAppletVoucherInfo(voucherCode).getId();
-            //核销
-            IScene voucherVerificationScene = AppletVoucherVerificationScene.builder().id(String.valueOf(appletVoucherId)).verificationCode(code).build();
-            visitor.invokeApi(voucherVerificationScene);
-            //核销之后数据
-            user.loginPc(ALL_AUTHORITY);
-            List<VerificationRecord> newVerificationRecords = util.collectBean(verificationRecordScene, VerificationRecord.class);
-            CommonUtil.checkResult(voucherName + " 核销记录列表数", verificationRecords.size() + 1, newVerificationRecords.size());
-            CommonUtil.checkResult(voucherCode + " 核销渠道", VerifyChannelEnum.ACTIVE.getName(), newVerificationRecords.get(0).getVerificationChannelName());
-            int newVerificationNumber = visitor.invokeApi(verificationPeopleScene).getJSONArray("list").getJSONObject(0).getInteger("verification_number");
-            CommonUtil.checkResult("核销码" + code + "核销数", verificationNumber + 1, newVerificationNumber);
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("卡券管理--小程序自助核销一张，使用的核销码对应人员册核销数量+1&【核销记录】列表数+1&&核销渠道=主动核销");
-        }
-    }
-
-    //ok
     @Test(description = "卡券管理--转移卡券，转移人小程序我的卡券数量-1，被转移人我的卡券数量+1")
     public void voucherManage_data_30() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取已使用的卡券列表
-            user.loginApplet(APPLET_USER_ONE);
+            visitor.login(APPLET_USER_ONE.getToken());
             int transferVoucherNum = util.getAppletVoucherNum();
             int transferMessageNum = util.getAppletMessageNum();
             AppletVoucher appletVoucher = util.getAppletVoucher(VoucherUseStatusEnum.NEAR_EXPIRE);
             Long id = appletVoucher.getId();
             String voucherName = appletVoucher.getTitle();
-            user.loginApplet(APPLET_USER_TWO);
+            visitor.login(APPLET_USER_TWO.getToken());
             int receiveVoucherNum = util.getAppletVoucherNum();
             //转移
             user.loginPc(ALL_AUTHORITY);
             int messageNum = visitor.invokeApi(PushMsgPageScene.builder().build()).getInteger("total");
             IScene transferScene = TransferScene.builder().transferPhone(APPLET_USER_ONE.getPhone()).receivePhone(APPLET_USER_TWO.getPhone()).voucherIds(getList(id)).build();
             visitor.invokeApi(transferScene);
-            user.loginApplet(APPLET_USER_ONE);
+            visitor.login(APPLET_USER_ONE.getToken());
             int newTransferVoucherNum = util.getAppletVoucherNum();
             int newTransferMessageNum = util.getAppletMessageNum();
             CommonUtil.checkResult("转移者我的卡券数", transferVoucherNum - 1, newTransferVoucherNum);
@@ -1056,7 +929,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             String content = response.getString("content");
             CommonUtil.checkResult("消息名称", "系统消息", title);
             CommonUtil.checkResult("消息内容", "您的卡券【" + voucherName + "】已被转移至" + APPLET_USER_TWO.getPhone() + "账号，如非本人授权，请联系轿辰会客服，对应卡券变更至对应转移的账号中；", content);
-            user.loginApplet(APPLET_USER_TWO);
+            visitor.login(APPLET_USER_TWO.getToken());
             int newReceiveVoucherNum = util.getAppletVoucherNum();
             CommonUtil.checkResult("接收者我的卡券数", receiveVoucherNum + 1, newReceiveVoucherNum);
             //pc消息记录+1
@@ -1115,8 +988,8 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
         try {
             String[] strings = {EnumDesc.DESC_BETWEEN_40_50.getDesc(), "1", null, ""};
             Arrays.stream(strings).forEach(name -> {
-                IScene scene = CreateVoucherScene.builder().voucherName(name)
-                        .subjectType(util.getSubjectType()).cardType(VoucherTypeEnum.CUSTOM.name()).cost(99.99).stock(1000)
+                IScene scene = com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.vouchermanage.CreateScene.builder().voucherName(name)
+                        .subjectType(util.getSubjectType()).cardType(VoucherTypeEnum.CUSTOM.name()).stock(1000)
                         .voucherDescription(util.getDesc()).subjectId(util.getSubjectDesc(util.getSubjectType()))
                         .shopType(0).shopIds(util.getShopIdList()).selfVerification(true).build();
                 String message = visitor.invokeApi(scene, false).getString("message");
@@ -1138,8 +1011,8 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
         try {
             String[] strings = {EnumDesc.DESC_BETWEEN_500_1000.getDesc()};
             Arrays.stream(strings).forEach(desc -> {
-                IScene scene = CreateVoucherScene.builder().voucherName(util.createVoucherName())
-                        .subjectType(util.getSubjectType()).cardType(VoucherTypeEnum.CUSTOM.name()).cost(99.99).parValue(99.99)
+                IScene scene = CreateScene.builder().voucherName(util.createVoucherName())
+                        .subjectType(util.getSubjectType()).cardType(VoucherTypeEnum.CUSTOM.name()).parValue(99.99)
                         .voucherDescription(desc).subjectId(util.getSubjectDesc(util.getSubjectType())).stock(1000)
                         .shopType(0).shopIds(util.getShopIdList(2)).selfVerification(true).build();
                 String message = visitor.invokeApi(scene, false).getString("message");
@@ -1161,8 +1034,8 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
         try {
             String[] strings = {"全部权限", null, ""};
             Arrays.stream(strings).forEach(subjectType -> {
-                IScene scene = CreateVoucherScene.builder().voucherName(util.createVoucherName())
-                        .subjectType(subjectType).cardType(VoucherTypeEnum.CUSTOM.name()).parValue(99.99).cost(99.99)
+                IScene scene = CreateScene.builder().voucherName(util.createVoucherName())
+                        .subjectType(subjectType).cardType(VoucherTypeEnum.CUSTOM.name()).parValue(99.99)
                         .voucherDescription(util.getDesc()).subjectId(util.getSubjectDesc(subjectType)).stock(1000)
                         .shopType(0).shopIds(util.getShopIdList()).selfVerification(true).build();
                 String message = visitor.invokeApi(scene, false).getString("message");
@@ -1182,9 +1055,9 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
     public void voucherManage_system_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene scene = CreateVoucherScene.builder().voucherName(util.createVoucherName())
+            IScene scene = CreateScene.builder().voucherName(util.createVoucherName())
                     .subjectType(UseRangeEnum.STORE.name()).cardType(VoucherTypeEnum.CUSTOM.name()).parValue(99.99)
-                    .voucherDescription(util.getDesc()).stock(1000).cost(99.99).shopType(0)
+                    .voucherDescription(util.getDesc()).stock(1000).shopType(0)
                     .shopIds(util.getShopIdList(2)).selfVerification(true).build();
             String message = visitor.invokeApi(scene, false).getString("message");
             String err = "主体详情不能为空";
@@ -1203,8 +1076,8 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
         try {
             Integer[] integers = {1000000000, null, -100, Integer.MAX_VALUE};
             Arrays.stream(integers).forEach(stock -> {
-                IScene scene = CreateVoucherScene.builder().voucherName(util.createVoucherName())
-                        .subjectType(util.getSubjectType()).cardType(VoucherTypeEnum.CUSTOM.name()).parValue(99.99).cost(99.99)
+                IScene scene = CreateScene.builder().voucherName(util.createVoucherName())
+                        .subjectType(util.getSubjectType()).cardType(VoucherTypeEnum.CUSTOM.name()).parValue(99.99)
                         .voucherDescription(util.getDesc()).subjectId(util.getSubjectDesc(util.getSubjectType())).stock(stock)
                         .shopType(0).shopIds(util.getShopIdList()).selfVerification(true).build();
                 String message = visitor.invokeApi(scene, false).getString("message");
@@ -1226,8 +1099,8 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
         try {
             Integer[] integers = {null, -1, 100};
             Arrays.stream(integers).forEach(shopType -> {
-                IScene scene = CreateVoucherScene.builder().voucherName(util.createVoucherName())
-                        .subjectType(util.getSubjectType()).cardType(VoucherTypeEnum.CUSTOM.name()).parValue(99.99).cost(99.99)
+                IScene scene = CreateScene.builder().voucherName(util.createVoucherName())
+                        .subjectType(util.getSubjectType()).cardType(VoucherTypeEnum.CUSTOM.name()).parValue(99.99)
                         .voucherDescription(util.getDesc()).subjectId(util.getSubjectDesc(util.getSubjectType())).stock(1000)
                         .shopType(shopType).shopIds(util.getShopIdList()).selfVerification(true).build();
                 String message = visitor.invokeApi(scene, false).getString("message");
@@ -1249,8 +1122,8 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
         try {
             Double[] doubles = {(double) -1, (double) 1000000000, 100000000.11};
             Arrays.stream(doubles).forEach(cost -> {
-                IScene scene = CreateVoucherScene.builder().voucherName(util.createVoucherName())
-                        .subjectType(util.getSubjectType()).cardType(VoucherTypeEnum.CUSTOM.name()).parValue(99.99).cost(cost)
+                IScene scene = CreateScene.builder().voucherName(util.createVoucherName())
+                        .subjectType(util.getSubjectType()).cardType(VoucherTypeEnum.CUSTOM.name()).parValue(99.99)
                         .voucherDescription(util.getDesc()).subjectId(util.getSubjectDesc(util.getSubjectType())).stock(1000)
                         .shopType(0).shopIds(util.getShopIdList()).selfVerification(true).build();
                 String message = visitor.invokeApi(scene, false).getString("message");
@@ -1270,8 +1143,8 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
     public void voucherManage_system_8() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene scene = CreateVoucherScene.builder().voucherName(util.createVoucherName())
-                    .subjectType(util.getSubjectType()).cardType(VoucherTypeEnum.CUSTOM.name()).parValue(99.99).cost(99.99)
+            IScene scene = CreateScene.builder().voucherName(util.createVoucherName())
+                    .subjectType(util.getSubjectType()).cardType(VoucherTypeEnum.CUSTOM.name()).parValue(99.99)
                     .voucherDescription(util.getDesc()).subjectId(util.getSubjectDesc(util.getSubjectType())).stock(1000)
                     .shopType(0).selfVerification(true).build();
             String message = visitor.invokeApi(scene, false).getString("message");
@@ -1290,7 +1163,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取已使用的卡券列表
-            user.loginApplet(APPLET_USER_ONE);
+            visitor.login(APPLET_USER_ONE.getToken());
             AppletVoucher appletVoucher = util.getAppletVoucher(VoucherUseStatusEnum.IS_USED);
             String voucherName = appletVoucher.getTitle();
             Long voucherId = appletVoucher.getId();
@@ -1313,7 +1186,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取已使用的卡券列表
-            user.loginApplet(APPLET_USER_ONE);
+            visitor.login(APPLET_USER_ONE.getToken());
             AppletVoucher appletVoucher = util.getAppletVoucher(VoucherUseStatusEnum.EXPIRED);
             String voucherName = appletVoucher.getTitle();
             Long voucherId = appletVoucher.getId();
@@ -1337,7 +1210,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
         try {
             String[] phones = {"13654973499"};
             //获取已过期的卡券列表
-            user.loginApplet(APPLET_USER_ONE);
+            visitor.login(APPLET_USER_ONE.getToken());
             AppletVoucher appletVoucher = util.getAppletVoucher(VoucherUseStatusEnum.NEAR_EXPIRE);
             String voucherName = appletVoucher.getTitle();
             Long voucherId = appletVoucher.getId();
@@ -1363,7 +1236,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
         try {
             String[] phones = {"13654973499", APPLET_USER_ONE.getPhone()};
             //获取已过期的卡券列表
-            user.loginApplet(APPLET_USER_ONE);
+            visitor.login(APPLET_USER_ONE.getToken());
             AppletVoucher appletVoucher = util.getAppletVoucher(VoucherUseStatusEnum.NEAR_EXPIRE);
             String voucherName = appletVoucher.getTitle();
             Long voucherId = appletVoucher.getId();
@@ -1387,9 +1260,9 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
     public void voucherManage_system_13() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene voucherListScene = VoucherListScene.builder().transferPhone(APPLET_USER_ONE.getPhone()).build();
+            IScene voucherListScene = com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.vouchermanage.VoucherListScene.builder().transferPhone(APPLET_USER_ONE.getPhone()).build();
             int voucherNum = visitor.invokeApi(voucherListScene).getJSONArray("list").size();
-            user.loginApplet(APPLET_USER_ONE);
+            visitor.login(APPLET_USER_ONE.getToken());
             int nearExpireNum = util.getAppletVoucherNum(VoucherUseStatusEnum.NEAR_EXPIRE);
             int normalNum = util.getAppletVoucherNum(VoucherUseStatusEnum.NORMAL);
             int a = (int) util.getAppletPackageContainVoucherList().stream().filter(e -> e.getStatusName().equals(VoucherUseStatusEnum.NEAR_EXPIRE.getName())).count();
@@ -1449,7 +1322,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             IScene voucherPageScene = VoucherFormVoucherPageScene.builder().voucherStatus(VoucherStatusEnum.INVALIDED.name()).build();
             List<VoucherPage> voucherPageList = util.collectBean(voucherPageScene, VoucherPage.class);
             List<Long> invalidedVoucherList = voucherPageList.stream().map(VoucherPage::getVoucherId).collect(Collectors.toList());
-            IScene receptionVoucherListScene = ReceptionVoucherListScene.builder().build();
+            IScene receptionVoucherListScene = VoucherListScene.builder().build();
             JSONArray array = visitor.invokeApi(receptionVoucherListScene).getJSONArray("list");
             List<Long> voucherList = array.stream().map(e -> (JSONObject) e).map(e -> e.getLong("voucher_id")).collect(Collectors.toList());
             invalidedVoucherList.forEach(voucherId -> {
@@ -1547,7 +1420,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             //查询列表数
             int total = verificationPeopleScene.invoke(visitor, true).getInteger("total");
             String phone = util.getDistinctPhone();
-            CreateVerificationPeopleScene.builder().verificationPersonName("异页打工人").verificationPersonPhone(phone).type(1).status(1).build().invoke(visitor, true);
+            CreateVerificationPeopleScene.builder().verificationPersonName("异页打工人").verificationPersonPhone(phone).type(1).status(true).build().invoke(visitor, true);
             int newTotal = verificationPeopleScene.invoke(visitor, true).getInteger("total");
             CommonUtil.checkResult("核销人员列表数", total + 1, newTotal);
         } catch (Exception | AssertionError e) {
@@ -1566,7 +1439,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             //查询列表数
             int total = verificationPeopleScene.invoke(visitor, true).getInteger("total");
             String phone = util.getDistinctPhone();
-            CreateVerificationPeopleScene.builder().verificationPersonName("本司打工人").verificationPersonPhone(phone).type(0).status(1).build().invoke(visitor, true);
+            CreateVerificationPeopleScene.builder().verificationPersonName("本司打工人").verificationPersonPhone(phone).type(0).status(true).build().invoke(visitor, true);
             int newTotal = verificationPeopleScene.invoke(visitor, true).getInteger("total");
             CommonUtil.checkResult("核销人员列表数", total + 1, newTotal);
         } catch (Exception | AssertionError e) {
@@ -1583,7 +1456,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
         String code = null;
         try {
             code = util.getVerificationCode(false, "本司员工");
-            user.loginApplet(APPLET_USER_ONE);
+            visitor.login(APPLET_USER_ONE.getToken());
             long id = util.getAppletVoucher(VoucherUseStatusEnum.NEAR_EXPIRE).getId();
             String message = AppletVoucherVerificationScene.builder().id(String.valueOf(id)).verificationCode(code).build().invoke(visitor, false).getString("message");
             String err = "当前核销码已失效";
@@ -1604,7 +1477,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
         try {
             String[] strings = {null, EnumDesc.DESC_BETWEEN_200_300.getDesc()};
             Arrays.stream(strings).forEach(name -> {
-                String message = CreateVerificationPeopleScene.builder().verificationPersonName(name).verificationPersonPhone("13663366788").status(1).type(1).build().invoke(visitor, false).getString("message");
+                String message = CreateVerificationPeopleScene.builder().verificationPersonName(name).verificationPersonPhone("13663366788").status(true).type(1).build().invoke(visitor, false).getString("message");
                 String err = StringUtils.isEmpty(name) ? "核销人员名字不能为空" : "核销人员名字必须为1～20个字";
                 CommonUtil.checkResult("核销人员名字为 " + name, err, message);
                 CommonUtil.logger(name);
@@ -1623,7 +1496,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
         try {
             String[] strings = {null, EnumDesc.DESC_BETWEEN_200_300.getDesc()};
             Arrays.stream(strings).forEach(name -> {
-                String message = CreateVerificationPeopleScene.builder().verificationPersonName(name).verificationPersonPhone("13663366788").status(1).type(1).build().invoke(visitor, false).getString("message");
+                String message = CreateVerificationPeopleScene.builder().verificationPersonName(name).verificationPersonPhone("13663366788").status(true).type(1).build().invoke(visitor, false).getString("message");
                 String err = StringUtils.isEmpty(name) ? "核销人员名字不能为空" : "核销人员名字必须为1～20个字";
                 CommonUtil.checkResult("核销人员名字为 " + name, err, message);
                 CommonUtil.logger(name);
@@ -1642,7 +1515,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
         try {
             String[] strings = {null, "", "11111111111", "1337316680", "133731668062"};
             Arrays.stream(strings).forEach(phone -> {
-                String message = CreateVerificationPeopleScene.builder().verificationPersonName("打工人").verificationPersonPhone(phone).status(1).type(0).build().invoke(visitor, false).getString("message");
+                String message = CreateVerificationPeopleScene.builder().verificationPersonName("打工人").verificationPersonPhone(phone).status(true).type(0).build().invoke(visitor, false).getString("message");
                 String err = "手机号格式不正确";
                 CommonUtil.checkResult("手机号格式为：" + phone, err, message);
                 CommonUtil.logger(phone);
@@ -1660,7 +1533,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String phone = util.getRepetitionVerificationPhone();
-            String message = CreateVerificationPeopleScene.builder().verificationPersonName("打工人").verificationPersonPhone(phone).status(1).type(0).build().invoke(visitor, false).getString("message");
+            String message = CreateVerificationPeopleScene.builder().verificationPersonName("打工人").verificationPersonPhone(phone).status(true).type(0).build().invoke(visitor, false).getString("message");
             String err = "手机号已存在";
             CommonUtil.checkResult("手机号格式为：" + phone, err, message);
         } catch (Exception | AssertionError e) {

@@ -19,7 +19,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletMessageListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletVoucherVerificationScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanage.BuyPackageRecordScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.ReceptionVoucherListScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.VoucherListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.record.PushMsgPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.*;
@@ -43,10 +43,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduce PRODUCE = EnumTestProduce.JC_DAILY;
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.ALL_AUTHORITY_DAILY;
-    private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_DAILY;
-    private static final EnumAppletToken APPLET_USER_TWO = EnumAppletToken.JC_XMF_DAILY;
+    private static final EnumTestProduce PRODUCE = EnumTestProduce.JC_ONLINE;
+    private static final EnumAccount ALL_AUTHORITY = EnumAccount.ALL_AUTHORITY_ONLINE;
+    private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_ONLINE;
+    private static final EnumAppletToken APPLET_USER_TWO = EnumAppletToken.JC_XMF_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public UserUtil user = new UserUtil(visitor);
     public SupporterUtil util = new SupporterUtil(visitor);
@@ -61,10 +61,10 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
         commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_DAILY_SERVICE.getId();
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
         //替换jenkins-job的相关信息
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_ONLINE_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
         //替换钉钉推送
-        commonConfig.dingHook = EnumDingTalkWebHook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
+        commonConfig.dingHook = EnumDingTalkWebHook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
         commonConfig.product = PRODUCE.getAbbreviation();
         commonConfig.referer = PRODUCE.getReferer();
@@ -178,8 +178,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
             String newVoucherName = util.createVoucherName();
             List<Long> shopIds = util.getShopIdList(2);
             //编辑
-            IScene scene = EditVoucherScene.builder().id(Math.toIntExact(voucherId)).voucherName(newVoucherName).voucherDescription(EnumDesc.DESC_BETWEEN_40_50.getDesc()).shopIds(shopIds).shopType(1).selfVerification(false).build();
-            visitor.invokeApi(scene);
+            EditVoucherScene.builder().id(Math.toIntExact(voucherId)).voucherName(newVoucherName).voucherDescription(EnumDesc.DESC_BETWEEN_40_50.getDesc()).shopIds(shopIds).shopType(1).selfVerification(false).build().invoke(visitor,true);
             IScene voucherDetailScene = VoucherDetailScene.builder().id(voucherId).build();
             VoucherDetail voucherDetail = JSONObject.toJavaObject(visitor.invokeApi(voucherDetailScene), VoucherDetail.class);
             //卡券变更记录+1
@@ -1115,7 +1114,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
         try {
             String[] strings = {EnumDesc.DESC_BETWEEN_40_50.getDesc(), "1", null, ""};
             Arrays.stream(strings).forEach(name -> {
-                IScene scene = CreateVoucherScene.builder().voucherName(name)
+                IScene scene = CreateScene.builder().voucherName(name)
                         .subjectType(util.getSubjectType()).cardType(VoucherTypeEnum.CUSTOM.name()).cost(99.99).stock(1000)
                         .voucherDescription(util.getDesc()).subjectId(util.getSubjectDesc(util.getSubjectType()))
                         .shopType(0).shopIds(util.getShopIdList()).selfVerification(true).build();
@@ -1138,7 +1137,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
         try {
             String[] strings = {EnumDesc.DESC_BETWEEN_500_1000.getDesc()};
             Arrays.stream(strings).forEach(desc -> {
-                IScene scene = CreateVoucherScene.builder().voucherName(util.createVoucherName())
+                IScene scene = CreateScene.builder().voucherName(util.createVoucherName())
                         .subjectType(util.getSubjectType()).cardType(VoucherTypeEnum.CUSTOM.name()).cost(99.99).parValue(99.99)
                         .voucherDescription(desc).subjectId(util.getSubjectDesc(util.getSubjectType())).stock(1000)
                         .shopType(0).shopIds(util.getShopIdList(2)).selfVerification(true).build();
@@ -1161,7 +1160,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
         try {
             String[] strings = {"全部权限", null, ""};
             Arrays.stream(strings).forEach(subjectType -> {
-                IScene scene = CreateVoucherScene.builder().voucherName(util.createVoucherName())
+                IScene scene = CreateScene.builder().voucherName(util.createVoucherName())
                         .subjectType(subjectType).cardType(VoucherTypeEnum.CUSTOM.name()).parValue(99.99).cost(99.99)
                         .voucherDescription(util.getDesc()).subjectId(util.getSubjectDesc(subjectType)).stock(1000)
                         .shopType(0).shopIds(util.getShopIdList()).selfVerification(true).build();
@@ -1182,7 +1181,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
     public void voucherManage_system_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene scene = CreateVoucherScene.builder().voucherName(util.createVoucherName())
+            IScene scene = CreateScene.builder().voucherName(util.createVoucherName())
                     .subjectType(UseRangeEnum.STORE.name()).cardType(VoucherTypeEnum.CUSTOM.name()).parValue(99.99)
                     .voucherDescription(util.getDesc()).stock(1000).cost(99.99).shopType(0)
                     .shopIds(util.getShopIdList(2)).selfVerification(true).build();
@@ -1203,7 +1202,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
         try {
             Integer[] integers = {1000000000, null, -100, Integer.MAX_VALUE};
             Arrays.stream(integers).forEach(stock -> {
-                IScene scene = CreateVoucherScene.builder().voucherName(util.createVoucherName())
+                IScene scene = CreateScene.builder().voucherName(util.createVoucherName())
                         .subjectType(util.getSubjectType()).cardType(VoucherTypeEnum.CUSTOM.name()).parValue(99.99).cost(99.99)
                         .voucherDescription(util.getDesc()).subjectId(util.getSubjectDesc(util.getSubjectType())).stock(stock)
                         .shopType(0).shopIds(util.getShopIdList()).selfVerification(true).build();
@@ -1226,7 +1225,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
         try {
             Integer[] integers = {null, -1, 100};
             Arrays.stream(integers).forEach(shopType -> {
-                IScene scene = CreateVoucherScene.builder().voucherName(util.createVoucherName())
+                IScene scene = CreateScene.builder().voucherName(util.createVoucherName())
                         .subjectType(util.getSubjectType()).cardType(VoucherTypeEnum.CUSTOM.name()).parValue(99.99).cost(99.99)
                         .voucherDescription(util.getDesc()).subjectId(util.getSubjectDesc(util.getSubjectType())).stock(1000)
                         .shopType(shopType).shopIds(util.getShopIdList()).selfVerification(true).build();
@@ -1249,7 +1248,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
         try {
             Double[] doubles = {(double) -1, (double) 1000000000, 100000000.11};
             Arrays.stream(doubles).forEach(cost -> {
-                IScene scene = CreateVoucherScene.builder().voucherName(util.createVoucherName())
+                IScene scene = CreateScene.builder().voucherName(util.createVoucherName())
                         .subjectType(util.getSubjectType()).cardType(VoucherTypeEnum.CUSTOM.name()).parValue(99.99).cost(cost)
                         .voucherDescription(util.getDesc()).subjectId(util.getSubjectDesc(util.getSubjectType())).stock(1000)
                         .shopType(0).shopIds(util.getShopIdList()).selfVerification(true).build();
@@ -1270,7 +1269,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
     public void voucherManage_system_8() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene scene = CreateVoucherScene.builder().voucherName(util.createVoucherName())
+            IScene scene = CreateScene.builder().voucherName(util.createVoucherName())
                     .subjectType(util.getSubjectType()).cardType(VoucherTypeEnum.CUSTOM.name()).parValue(99.99).cost(99.99)
                     .voucherDescription(util.getDesc()).subjectId(util.getSubjectDesc(util.getSubjectType())).stock(1000)
                     .shopType(0).selfVerification(true).build();
@@ -1387,7 +1386,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
     public void voucherManage_system_13() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene voucherListScene = VoucherListScene.builder().transferPhone(APPLET_USER_ONE.getPhone()).build();
+            IScene voucherListScene = com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherListScene.builder().transferPhone(APPLET_USER_ONE.getPhone()).build();
             int voucherNum = visitor.invokeApi(voucherListScene).getJSONArray("list").size();
             user.loginApplet(APPLET_USER_ONE);
             int nearExpireNum = util.getAppletVoucherNum(VoucherUseStatusEnum.NEAR_EXPIRE);
@@ -1449,7 +1448,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
             IScene voucherPageScene = VoucherFormVoucherPageScene.builder().voucherStatus(VoucherStatusEnum.INVALIDED.name()).build();
             List<VoucherPage> voucherPageList = util.collectBean(voucherPageScene, VoucherPage.class);
             List<Long> invalidedVoucherList = voucherPageList.stream().map(VoucherPage::getVoucherId).collect(Collectors.toList());
-            IScene receptionVoucherListScene = ReceptionVoucherListScene.builder().build();
+            IScene receptionVoucherListScene = VoucherListScene.builder().build();
             JSONArray array = visitor.invokeApi(receptionVoucherListScene).getJSONArray("list");
             List<Long> voucherList = array.stream().map(e -> (JSONObject) e).map(e -> e.getLong("voucher_id")).collect(Collectors.toList());
             invalidedVoucherList.forEach(voucherId -> {

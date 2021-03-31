@@ -1,6 +1,5 @@
 package com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.applet.granted.integralmall;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
@@ -32,7 +31,7 @@ public class AppletExchangeRecordScene extends BaseScene {
      * 是否必填 false
      * 版本 v1.0
      */
-    private final JSONObject lastValue;
+    private final Integer lastValue;
 
     /**
      * 描述 兑换状态（ TO_BE_DELIVERED("待发货"),TO_BE_RECEIVED("待收货"),FINISHED("已完成");）

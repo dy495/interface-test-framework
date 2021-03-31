@@ -45,8 +45,8 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionman
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.ReceptionPurchaseTemporaryPackageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.userange.DetailScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.userange.SubjectListScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyApprovalScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.*;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
@@ -145,8 +145,8 @@ public class SupporterUtil {
         return voucherName;
     }
 
-    public CreateVoucherScene.CreateVoucherSceneBuilder createVoucherBuilder(Integer stock, VoucherTypeEnum type) {
-        CreateVoucherScene.CreateVoucherSceneBuilder builder = createVoucherBuilder(true).stock(stock).cardType(type.name());
+    public CreateScene.CreateSceneBuilder createVoucherBuilder(Integer stock, VoucherTypeEnum type) {
+        CreateScene.CreateSceneBuilder builder = createVoucherBuilder(true).stock(stock).cost(0.01).cardType(type.name());
         switch (type.name()) {
             case "FULL_DISCOUNT":
                 builder.isThreshold(true).thresholdPrice(999.99).parValue(49.99);
@@ -170,8 +170,8 @@ public class SupporterUtil {
      * @param selfVerification 能否核销
      * @return CreateVoucher.CreateVoucherBuilder
      */
-    public CreateVoucherScene.CreateVoucherSceneBuilder createVoucherBuilder(Boolean selfVerification) {
-        return CreateVoucherScene.builder().subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType())).cost(0.01)
+    public CreateScene.CreateSceneBuilder createVoucherBuilder(Boolean selfVerification) {
+        return CreateScene.builder().subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType())).cost(0.01)
                 .voucherDescription(getDesc()).parValue(getParValue()).shopType(0).shopIds(getShopIdList(2)).selfVerification(selfVerification);
     }
 
@@ -467,7 +467,7 @@ public class SupporterUtil {
      * @return 卡券申请信息
      */
     public ApplyPage getAuditingApplyPage(String voucherName) {
-        IScene scene = ApplyPageScene.builder().name(voucherName).state(ApplyStatusEnum.AUDITING.getId()).build();
+        IScene scene = ApplyPageScene.builder().name(voucherName).status(ApplyStatusEnum.AUDITING.getId()).build();
         return collectBeanByField(scene, ApplyPage.class, "name", voucherName);
     }
 
@@ -502,7 +502,7 @@ public class SupporterUtil {
      * @param status      通过 1/拒绝2
      */
     public void applyVoucher(String voucherName, String status) {
-        IScene scene = ApplyPageScene.builder().name(voucherName).state(ApplyStatusEnum.AUDITING.getId()).build();
+        IScene scene = ApplyPageScene.builder().name(voucherName).status(ApplyStatusEnum.AUDITING.getId()).build();
         ApplyPage applyPage = collectBeanByField(scene, ApplyPage.class, "name", voucherName);
         ApplyApprovalScene.builder().id(applyPage.getId()).status(status).build().invoke(visitor, true);
     }

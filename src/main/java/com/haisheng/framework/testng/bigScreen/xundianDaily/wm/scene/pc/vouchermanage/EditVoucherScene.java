@@ -1,9 +1,10 @@
 package com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.vouchermanage;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
+
+import java.util.List;
 
 /**
  * 13.9. 编辑卡券 （张小龙） v2.0
@@ -123,7 +124,7 @@ public class EditVoucherScene extends BaseScene {
      * 是否必填 true
      * 版本 v2.0
      */
-    private final JSONArray shopIds;
+    private final List<Long> shopIds;
 
     /**
      * 描述 是否使用默认图片

@@ -5,45 +5,75 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 卡券申请分页
+ * 8.1. 卡券审批申请分页 （张小龙）
+ *
+ * @author wangmin
+ * @date 2021-03-31 16:13:56
  */
 @Builder
 public class ApplyPageScene extends BaseScene {
+    /**
+     * 描述 页码 大于0
+     * 是否必填 true
+     * 版本 v1.0
+     */
     @Builder.Default
     private Integer page = 1;
-    @Builder.Default
-    private Integer size = 10;
-    private final String name;
-    private final String sendTime;
-    private final String applyName;
-    private final String status;
-    private final String applyGroup;
-    private final String costCenter;
-    private final String applyTime;
-    private final String applyItem;
 
     /**
-     * 2.0
+     * 描述 页大小 范围为[1,100]
+     * 是否必填 true
+     * 版本 v1.0
      */
-    private final Integer state;
+    @Builder.Default
+    private Integer size = 10;
+
+    /**
+     * 描述 优惠券名称
+     * 是否必填 false
+     * 版本 v3.0
+     */
+    private final String name;
+
+    /**
+     * 描述 申请人姓名
+     * 是否必填 false
+     * 版本 v3.0
+     */
+    private final String applyName;
+
+    /**
+     * 描述 优惠券状态 通用枚举接口获取，key为 VOUCHER_AUDIT_STATUS_LIST
+     * 是否必填 false
+     * 版本 v3.0
+     */
+    private final Integer status;
+
+    /**
+     * 描述 所属主体
+     * 是否必填 false
+     * 版本 v3.0
+     */
+    private final String subjectType;
+
+    /**
+     * 描述 主体id
+     * 是否必填 false
+     * 版本 v3.0
+     */
+    private final Long subjectId;
+
 
     @Override
     public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
-        object.put("name", name);
-        object.put("send_time", sendTime);
-        object.put("apply_name", applyName);
-        object.put("apply_group", applyGroup);
-        object.put("cost_center", costCenter);
-        object.put("apply_time", applyTime);
-        object.put("applyItem", applyItem);
         object.put("size", size);
-        if (status != null) {
-            object.put("status", status);
-        } else {
-            object.put("status", state);
-        }
+        object.put("name", name);
+        object.put("apply_name", applyName);
+        object.put("status", status);
+        object.put("subject_type", subjectType);
+        object.put("subject_id", subjectId);
         return object;
     }
 

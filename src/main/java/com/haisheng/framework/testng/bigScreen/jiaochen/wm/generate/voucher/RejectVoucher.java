@@ -5,8 +5,8 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.ApplyPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.ApplyStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyApprovalScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPageScene;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -48,7 +48,7 @@ public class RejectVoucher extends AbstractVoucher {
      * @param status      通过 1/拒绝2
      */
     public void applyVoucher(String voucherName, String status) {
-        IScene scene = ApplyPageScene.builder().name(voucherName).state(ApplyStatusEnum.AUDITING.getId()).build();
+        IScene scene = ApplyPageScene.builder().name(voucherName).status(ApplyStatusEnum.AUDITING.getId()).build();
         ApplyPage applyPage = findBeanByField(scene, ApplyPage.class, "name", voucherName);
         Long id = applyPage.getId();
         ApplyApprovalScene.builder().id(id).status(status).build().invoke(visitor, true);

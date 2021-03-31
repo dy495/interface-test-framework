@@ -18,9 +18,9 @@ public class AfterSaleCustomerPageScene extends BaseScene {
     private final String createStartTime;
     private final String createEndTime;
     @Builder.Default
-    private final Integer page = 1;
+    private  Integer page = 1;
     @Builder.Default
-    private final Integer size = 10;
+    private  Integer size = 10;
 
     @Override
     public JSONObject getRequestBody() {
@@ -41,5 +41,16 @@ public class AfterSaleCustomerPageScene extends BaseScene {
     @Override
     public String getPath() {
         return "/jiaochen/pc/customer-manage/after-sale-customer/page";
+    }
+
+
+    @Override
+    public void setSize(Integer size) {
+        this.size = size;
+    }
+
+    @Override
+    public void setPage(Integer page) {
+        this.page = page;
     }
 }

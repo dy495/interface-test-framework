@@ -5,15 +5,15 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.ArticlePage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.om.ArticleStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.banner.AppletBannerScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.ActivityManageListScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.banner.BannerEdit;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.banner.EditScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpload;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.operation.ArticleList;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.operation.ArticlePageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
@@ -106,13 +106,12 @@ public class ContentOperationCase extends TestCaseCommon implements TestCaseStd 
     public void banner_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int num = util.getArticleIdList().size();
+            int num = ArticleList.builder().build().invoke(visitor, true).getJSONArray("list").size();
             IScene articlePageScene = ArticlePageScene.builder().build();
             int articlePageListSize = (int) util.collectBean(articlePageScene, ArticlePage.class).stream().filter(e -> e.getStatusName().equals(ArticleStatusEnum.SHOW.getTypeName())).count();
-            IScene activityManageListScene = ActivityManageListScene.builder().build();
-            int activityManageListSize = (int) util.collectBean(activityManageListScene, JSONObject.class).stream()
-                    .filter(e -> e.getString("status_name").equals(ActivityStatusEnum.PASSED.getStatusName()) || e.getString("status_name").equals(ActivityStatusEnum.FINISH.getStatusName())).count();
-            CommonUtil.checkResult("跳转活动/文章的条数", activityManageListSize + articlePageListSize, num);
+            int passedSTotal = ActivityManageListScene.builder().status(ActivityStatusEnum.PASSED.getId()).build().invoke(visitor, true).getInteger("total");
+            int finishTotal = ActivityManageListScene.builder().status(ActivityStatusEnum.FINISH.getId()).build().invoke(visitor, true).getInteger("total");
+            CommonUtil.checkResult("跳转活动/文章的条数", passedSTotal + finishTotal + articlePageListSize, num);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -132,16 +131,41 @@ public class ContentOperationCase extends TestCaseCommon implements TestCaseStd 
             assert files != null;
             List<String> base64s = Arrays.stream(files).filter(e -> e.toString().contains("banner")).map(e -> new ImageUtil().getImageBinary(e.getPath())).collect(Collectors.toList());
             List<String> picPaths = base64s.stream().map(e -> visitor.invokeApi(FileUpload.builder().pic(e).permanentPicType(0).isPermanent(false).ratio(1.5).ratioStr("3：2").build()).getString("pic_path")).collect(Collectors.toList());
-            IScene scene = BannerEdit.builder()
-                    .bannerImgUrl1(picPaths.get(0)).articleId1(articleIds.get(0))
-                    .bannerImgUrl2(picPaths.get(1)).articleId2(articleIds.get(1))
-                    .bannerImgUrl3(picPaths.get(2)).articleId3(articleIds.get(2))
-                    .bannerImgUrl4(picPaths.get(3)).articleId4(articleIds.get(3))
-                    .bannerImgUrl5(picPaths.get(4)).articleId5(articleIds.get(4)).build();
-            visitor.invokeApi(scene);
+            JSONArray array = new JSONArray();
+            JSONObject jsonObject1 = new JSONObject();
+            jsonObject1.put("article_id", articleIds.get(0));
+            jsonObject1.put("banner_img_url", picPaths.get(0));
+            jsonObject1.put("banner_id", 11);
+            jsonObject1.put("banner_select", "banner1");
+            JSONObject jsonObject2 = new JSONObject();
+            jsonObject2.put("article_id", articleIds.get(1));
+            jsonObject2.put("banner_img_url", picPaths.get(1));
+            jsonObject2.put("banner_id", 12);
+            jsonObject2.put("banner_select", "banner2");
+            JSONObject jsonObject3 = new JSONObject();
+            jsonObject3.put("article_id", articleIds.get(2));
+            jsonObject3.put("banner_img_url", picPaths.get(2));
+            jsonObject3.put("banner_id", 13);
+            jsonObject3.put("banner_select", "banner3");
+            JSONObject jsonObject4 = new JSONObject();
+            jsonObject4.put("article_id", articleIds.get(3));
+            jsonObject4.put("banner_img_url", picPaths.get(3));
+            jsonObject4.put("banner_id", 14);
+            jsonObject4.put("banner_select", "banner4");
+            JSONObject jsonObject5 = new JSONObject();
+            jsonObject5.put("article_id", articleIds.get(4));
+            jsonObject5.put("banner_img_url", picPaths.get(4));
+            jsonObject5.put("banner_id", 15);
+            jsonObject5.put("banner_select", "banner5");
+            array.add(jsonObject1);
+            array.add(jsonObject2);
+            array.add(jsonObject3);
+            array.add(jsonObject4);
+            array.add(jsonObject5);
+            EditScene.builder().list(array).build().invoke(visitor, true);
             user.loginApplet(APPLET_USER_ONE);
-            JSONArray array = visitor.invokeApi(AppletBannerScene.builder().build()).getJSONArray("list");
-            List<Long> appletArticleIds = array.stream().map(e -> (JSONObject) e).map(e -> e.getLong("article_id")).collect(Collectors.toList());
+            JSONArray list = AppletBannerScene.builder().build().invoke(visitor, true).getJSONArray("list");
+            List<Long> appletArticleIds = list.stream().map(e -> (JSONObject) e).map(e -> e.getLong("article_id")).collect(Collectors.toList());
             CommonUtil.checkResultPlus("pc端文章为：", appletArticleIds, "applet端文章为：", articleIds.subList(0, 5));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -149,6 +173,7 @@ public class ContentOperationCase extends TestCaseCommon implements TestCaseStd 
             saveData("内容运营--banner--填写banner1-banner5的内容");
         }
     }
+}
 //
 //    //bug
 //    @Test(description = "内容运营--报名管理--到达报名名额后不可再审批通过,提示：人数已达到报名上线", enabled = false)
@@ -459,4 +484,3 @@ public class ContentOperationCase extends TestCaseCommon implements TestCaseStd 
 //            saveData("内容运营--报名管理--多人报名，批量通过，待审批=原待审批数-批量数&&已通过=原已通过数+批量数");
 //        }
 //    }
-}

@@ -1,9 +1,10 @@
 package com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.vouchermanage;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
+
+import java.util.List;
 
 /**
  * 13.23. 
@@ -32,7 +33,7 @@ public class TransferScene extends BaseScene {
      * 是否必填 false
      * 版本 -
      */
-    private final JSONArray voucherIds;
+    private final List<Long> voucherIds;
 
 
     @Override
