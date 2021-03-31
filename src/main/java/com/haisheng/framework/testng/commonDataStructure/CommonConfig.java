@@ -31,6 +31,8 @@ public class CommonConfig {
             "18513118484", //杨航
             "15011479599", //谢志东
             "15898182672"}; //华成裕
+
+    public String[] pushQa = null;
     public String message = TEST_PRODUCT + " \n" +
             "case：" + CASE_NAME + "\n\n" +
             "验证：" + CASE_DESC +

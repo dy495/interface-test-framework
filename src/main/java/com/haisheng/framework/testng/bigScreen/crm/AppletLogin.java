@@ -74,7 +74,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
             commonConfig.shopId = produce.getShopId();
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, produce.getDesc());
             commonConfig.referer = produce.getReferer();
-            commonConfig.pushRd = new String[]{EnumAppletToken.getPhoneByToken(token)};
+            commonConfig.pushQa = new String[]{EnumAppletToken.getPhoneByToken(token)};
             new PorscheUser(visitor).loginApplet(EnumAppletToken.getEnumByToken(token));
             Response response = invokePorsche(visitor);
             Preconditions.checkArgument(response.getCode() == 1000, token + " " + response.getMsg());
@@ -94,7 +94,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
             commonConfig.shopId = produce.getShopId();
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, produce.getDesc());
             commonConfig.referer = produce.getReferer();
-            commonConfig.pushRd = new String[]{EnumAppletToken.getPhoneByToken(token)};
+            commonConfig.pushQa = new String[]{EnumAppletToken.getPhoneByToken(token)};
             new PorscheUser(visitor).loginApplet(EnumAppletToken.getEnumByToken(token));
             Response response = invokePorsche(visitor);
             Preconditions.checkArgument(response.getCode() == 1000, token + " " + response.getMsg());
@@ -114,7 +114,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
             commonConfig.shopId = produce.getShopId();
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, produce.getDesc());
             commonConfig.referer = produce.getReferer();
-            commonConfig.pushRd = new String[]{EnumAppletToken.getPhoneByToken(token)};
+            commonConfig.pushQa = new String[]{EnumAppletToken.getPhoneByToken(token)};
             new UserUtil(visitor).loginApplet(EnumAppletToken.getEnumByToken(token));
             Response response = invokeJC(visitor);
             Preconditions.checkArgument(response.getCode() == 1000, token + " " + response.getMessage());
@@ -134,7 +134,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
             commonConfig.shopId = produce.getShopId();
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, produce.getDesc());
             commonConfig.referer = produce.getReferer();
-            commonConfig.pushRd = new String[]{EnumAppletToken.getPhoneByToken(token)};
+            commonConfig.pushQa = new String[]{EnumAppletToken.getPhoneByToken(token)};
             new UserUtil(visitor).loginApplet(EnumAppletToken.getEnumByToken(token));
             Response response = invokeJC(visitor);
             Preconditions.checkArgument(response.getCode() == 1000, token + " " + response.getMessage());

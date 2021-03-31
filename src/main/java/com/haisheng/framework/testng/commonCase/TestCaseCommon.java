@@ -486,10 +486,6 @@ public class TestCaseCommon {
         return "4116";
     }
 
-    public String getXundianShop1() {
-        return "43072";
-    }
-
     public String getXunDianShop() {
         return "4116";
     }
@@ -520,6 +516,9 @@ public class TestCaseCommon {
             alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
         }
         alarmPush.dailyRgn(msg);
+        if (commonConfig.pushQa != null) {
+            alarmPush.alarmToRd(commonConfig.pushQa);
+        }
         this.FAIL = true;
         System.out.println(caseResult.getFailReason());
         Assert.assertNull(caseResult.getFailReason());

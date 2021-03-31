@@ -51,6 +51,5 @@ public class TestFreeMarker {
 //        SqlSessionFactory sqlSessionFactory = builder.build(inputStream);
 //        SqlSession sqlSession = sqlSessionFactory.openSession(true);
 //        sqlSession.insert()
-
     }
 }

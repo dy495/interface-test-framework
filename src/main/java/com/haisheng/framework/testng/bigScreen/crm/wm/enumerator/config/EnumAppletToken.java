@@ -37,9 +37,13 @@ public enum EnumAppletToken {
 
     JC_GLY_ONLINE(EnumTestProduce.JC_DAILY.getAbbreviation(), "iCMVUEzq+zOmzldZM2awEQ==", false, "13373166806"),
 
-    INS_ZT_DAILY(EnumTestProduce.INS_DAILY.getAbbreviation(), "", false, "13604609869"),
+    INS_WM_DAILY(EnumTestProduce.INS_DAILY.getAbbreviation(), "", true, "15321527989"),
 
-    INS_ZT_ONLINE(EnumTestProduce.INS_DAILY.getAbbreviation(), "", true, "13604609869"),
+    INS_WM_ONLINE(EnumTestProduce.INS_ONLINE.getAbbreviation(), "", false, "15321527989"),
+
+    INS_ZT_DAILY(EnumTestProduce.INS_DAILY.getAbbreviation(), "", true, "13604609869"),
+
+    INS_ZT_ONLINE(EnumTestProduce.INS_ONLINE.getAbbreviation(), "", false, "13604609869"),
     ;
 
     EnumAppletToken(String abbreviation, String token, boolean isDaily, String phone) {
