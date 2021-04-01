@@ -2,6 +2,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase;
 
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.scenemaker.SceneAttribute;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.scenemaker.SceneMarker;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.parse.BeanParser;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.parse.SceneParser;
 import org.jooq.DSLContext;
 import org.jooq.Record;
@@ -37,6 +38,41 @@ public class TestFreeMarker {
     }
 
     @Test
+    public void createBean() {
+        String[] htmlPaths = {
+                "http://192.168.50.3/api-doc/business-jiaochen/applet/index.html",
+                "http://192.168.50.3/api-doc/business-jiaochen/pc/index.html",
+                "http://192.168.50.3/api-doc/business-jiaochen/app/index.html",
+        };
+        Arrays.stream(htmlPaths).forEach(htmlPath -> {
+            SceneAttribute[] sceneAttributeList = new BeanParser.Builder().htmlUrl(htmlPath).build().getAttributes();
+            Arrays.stream(sceneAttributeList).forEach(sceneAttribute -> new SceneMarker.Builder()
+                    .templatePath("src\\main\\resources\\template")
+                    .templateName("beanTemplate.ftl")
+                    .parentPath("src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/b")
+                    .sceneAttribute(sceneAttribute)
+                    .buildMarker()
+                    .execute());
+        });
+    }
+
+
+    @Test
+    public void create() {
+        String[] htmlPaths = {"http://192.168.50.3/api-doc/business-risk-platform/index.html#_7_1_%E7%89%B9%E6%AE%8A%E4%BA%BA%E5%91%98%E5%88%86%E9%A1%B5"};
+        Arrays.stream(htmlPaths).forEach(htmlPath -> {
+            SceneAttribute[] sceneAttributeList = new SceneParser.Builder().htmlUrl(htmlPath).build().getAttributes();
+            Arrays.stream(sceneAttributeList).forEach(sceneAttribute -> new SceneMarker.Builder()
+                    .templatePath("src\\main\\resources\\template")
+                    .templateName("sceneTemplate.ftl")
+                    .parentPath("src/main/java/com/haisheng/framework/testng/bigScreen/fengkongdaily/scene")
+                    .sceneAttribute(sceneAttribute)
+                    .buildMarker()
+                    .execute());
+        });
+    }
+
+    @Test
     public void testJooq() {
         DSLContext create = DSL.using("jdbc:mysql://rm-2zeg4an1kr1437xu6no.mysql.rds.aliyuncs.com/onepiece", "qa_wr", "qa_wr1234");
         create.selectQuery().addConditions();
@@ -52,6 +88,7 @@ public class TestFreeMarker {
 //        SqlSession sqlSession = sqlSessionFactory.openSession(true);
 //        sqlSession.insert()
     }
+
     @Test
     public void createScene2() {
         String[] htmlPaths = {

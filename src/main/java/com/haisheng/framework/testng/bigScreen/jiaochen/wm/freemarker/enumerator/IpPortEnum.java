@@ -24,7 +24,9 @@ public enum IpPortEnum {
 
     MENDIAN_DAILY("http://http:/dev.inspect.store.winsenseos.cn"),
 
-    INS_DAIY("http://api.litemall.winsenseos.com"),
+    INS_DAILY("http://api.litemall.winsenseos.com"),
+
+    RISK_CONTROL_DAILY("http://127.0.0.1"),
     ;
 
     IpPortEnum(String ipPort) {
