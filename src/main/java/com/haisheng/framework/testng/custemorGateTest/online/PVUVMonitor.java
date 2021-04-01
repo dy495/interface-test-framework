@@ -143,7 +143,10 @@ public class PVUVMonitor {
 
     }
 
-    @Test
+    /*
+    * 315影响，设备全部掉线，暂停
+    * */
+    //@Test
     public void getHistoryDataFengkeOnline() {
         String shopId = "242";
         String appId  = "5f20ed10b9cb";
