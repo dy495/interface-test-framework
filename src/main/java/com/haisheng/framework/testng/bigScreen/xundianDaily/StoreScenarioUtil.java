@@ -3432,7 +3432,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject feedback_delete(String feedback_type,String feedback_message) throws Exception {
+    public JSONObject feedback_add(String feedback_type,String feedback_message) throws Exception {
         String path = "/patrol/feedback/feedback-type/add";
         JSONObject json = new JSONObject();
         json.put("feedbackType",feedback_type);
@@ -3445,7 +3445,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject feedback_delete(int feedback_type_id) throws Exception {
+    public JSONObject feedback_type_delete(int feedback_type_id) throws Exception {
         String path = "/patrol/feedback/feedback-type/delete";
         JSONObject json = new JSONObject();
         json.put("feedback_type_id",feedback_type_id);
@@ -3773,7 +3773,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      *@description: INS添加礼品
      *@time:
      */
-    public JSONObject addGift(Integer feedback_id,Integer feedback_gift) throws Exception {
+    public JSONObject addGift(Integer feedback_id,String feedback_gift) throws Exception {
         String url = "/patrol/feedback/add-gift";
         JSONObject json = new JSONObject();
         json.put("feedback_id",feedback_id);
@@ -3826,7 +3826,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      *@description: INS反馈类型列表查询
      *@time:
      */
-    public JSONObject feedbackList(int feedback_type,int page,int size) throws Exception {
+    public JSONObject feedbackList(Integer feedback_type,int page,int size) throws Exception {
         String url = "/patrol/feedback/feedback-type/list";
         JSONObject json = new JSONObject();
         json.put("feedback_type",feedback_type);
