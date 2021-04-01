@@ -105,7 +105,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
     }
 
     //ok
-    @Test(description = "预约保养->确认预约->点接待->变更接待->完成接待->评价->跟进")
+    @Test(description = "预约保养->确认预约->点接待->变更接待->完成接待->评价->跟进", enabled = false)
     public void appointmentManager_maintain() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -212,7 +212,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
     }
 
     //ok
-    @Test(description = "预约维修->确认预约->点接待->变更接待->完成接待->评价->跟进")
+    @Test(description = "预约维修->确认预约->点接待->变更接待->完成接待->评价->跟进", enabled = false)
     public void appointmentManager_repair() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

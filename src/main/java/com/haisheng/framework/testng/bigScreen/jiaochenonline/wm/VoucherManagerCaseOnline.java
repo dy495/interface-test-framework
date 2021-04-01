@@ -178,7 +178,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
             String newVoucherName = util.createVoucherName();
             List<Long> shopIds = util.getShopIdList(2);
             //编辑
-            EditVoucherScene.builder().id(Math.toIntExact(voucherId)).voucherName(newVoucherName).voucherDescription(EnumDesc.DESC_BETWEEN_40_50.getDesc()).shopIds(shopIds).shopType(1).selfVerification(false).build().invoke(visitor,true);
+            EditVoucherScene.builder().id(Math.toIntExact(voucherId)).voucherName(newVoucherName).voucherDescription(EnumDesc.DESC_BETWEEN_40_50.getDesc()).shopIds(shopIds).shopType(1).selfVerification(false).build().invoke(visitor, true);
             IScene voucherDetailScene = VoucherDetailScene.builder().id(voucherId).build();
             VoucherDetail voucherDetail = JSONObject.toJavaObject(visitor.invokeApi(voucherDetailScene), VoucherDetail.class);
             //卡券变更记录+1

@@ -31,7 +31,7 @@ public enum EnumAccount {
     /**
      * 保养顾问
      */
-    MAINTAIN("baoyang", getPassword("123456"), "uid_8e706fc6", true, "baoyang"),
+    MAINTAIN("weixiu", getPassword("123456"), "uid_a3301290", true, "weixiu"),
 
     /**
      * 保时捷线上销售顾问

@@ -704,7 +704,6 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
     public void contentOperation_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            deleteActivity();
             String type = "ACTIVITY_1";
             String content = "测试";
             String title = "售前售后都可见";
@@ -750,7 +749,6 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
     public void contentOperation_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            deleteActivity();
             String type = "ACTIVITY_1";
             String title = "售前可见";
             String content = "测试" + title;
@@ -785,7 +783,7 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
             }
             deleteActivity(id);
         } catch (Exception | AssertionError e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("内容运营--创建售前活动，小程序售前可见，售后不可见");
         }
@@ -795,7 +793,6 @@ public class PcSystem extends TestCaseCommon implements TestCaseStd {
     public void contentOperation_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            deleteActivity();
             String type = "ACTIVITY_1";
             String title = "售后可见";
             String content = "测试" + title;
