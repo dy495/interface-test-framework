@@ -894,23 +894,18 @@ public class AppSystem extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray list = crm.returnVisitTaskPage(1, size).getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                if (list.getJSONObject(i).getString("customer_type_name").equals(EnumCustomerType.APPOINTMENT.getName())) {
-                    String customerPhone;
-                    customerPhone = list.getJSONObject(i).getString("customer_phone");
-                    if (StringUtils.isEmpty(customerPhone)) {
-                        continue;
-                    }
-                    CommonUtil.valueView("电话号是:" + customerPhone);
-                    JSONObject result = crm.appointmentTestDriverList(customerPhone, "", "", 1, size);
-                    JSONArray list1 = result.getJSONArray("list");
-                    CommonUtil.valueView(list1);
-                    Preconditions.checkArgument(list1.size() >= 1, "回访类型:预约，预约记录中不存在此电话号" + "电话号是：" + customerPhone);
-                    CommonUtil.log("分割线");
-                }
-            }
+            List<String> phoneList = list.stream().map(e -> (JSONObject) e).filter(e -> e.getString("customer_type_name").equals(EnumCustomerType.APPOINTMENT.getName())
+                    && e.getString("customer_phone") != null && !e.getString("customer_phone").equals("13717737462")).map(e -> e.getString("customer_phone")).collect(Collectors.toList());
+            phoneList.forEach(e -> {
+                CommonUtil.valueView("电话号是:" + e);
+                JSONObject result = crm.appointmentTestDriverList(e, "", "", 1, size);
+                JSONArray list1 = result.getJSONArray("list");
+                CommonUtil.valueView(list1);
+                Preconditions.checkArgument(list1.size() >= 1, "回访类型:预约，预约记录中不存在此电话号" + "电话号是：" + e);
+                CommonUtil.log("分割线");
+            });
         } catch (Exception | AssertionError e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("销售--回访任务--预约记录中存在的客户回访类型为预约");
         }
