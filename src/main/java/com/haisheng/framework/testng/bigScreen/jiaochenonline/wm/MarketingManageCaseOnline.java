@@ -120,7 +120,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     public void packageManager_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             //创建套餐前列表数量
             IScene packageFormPageScene = PackageFormPageScene.builder().build();
             int total = packageFormPageScene.invoke(visitor, true).getInteger("total");
@@ -256,7 +256,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     public void packageManager_data_9() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             //创建套餐前列表数量
             IScene packageFormPageScene = PackageFormPageScene.builder().build();
             int total = packageFormPageScene.invoke(visitor, true).getInteger("total");
@@ -290,7 +290,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String[] strings = {EnumDesc.DESC_BETWEEN_20_30.getDesc(), "1", null, ""};
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             JSONArray voucherList = util.getVoucherArray(voucherId, 1);
             Arrays.stream(strings).forEach(name -> {
                 IScene scene = CreatePackageScene.builder().packageName(name).packageDescription(util.getDesc())
@@ -314,7 +314,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String[] strings = {null, "", EnumDesc.DESC_BETWEEN_200_300.getDesc()};
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             JSONArray voucherList = util.getVoucherArray(voucherId, 1);
             Arrays.stream(strings).forEach(desc -> {
                 IScene scene = CreatePackageScene.builder().packageName(util.createPackageName(UseRangeEnum.BRAND)).packageDescription(desc)
@@ -338,7 +338,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String[] strings = {"全部权限", null, ""};
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             JSONArray voucherList = util.getVoucherArray(voucherId, 1);
             Arrays.stream(strings).forEach(subjectType -> {
                 IScene scene = CreatePackageScene.builder().packageName(util.createPackageName(UseRangeEnum.BRAND)).packageDescription(util.getDesc())
@@ -361,7 +361,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     public void packageManager_system_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             JSONArray voucherList = util.getVoucherArray(voucherId, 1);
             IScene scene = CreatePackageScene.builder().packageName(util.createPackageName(UseRangeEnum.BRAND)).packageDescription(util.getDesc())
                     .subjectType(UseRangeEnum.STORE.name()).voucherList(voucherList).packagePrice("5000.00").expireType(2)
@@ -400,7 +400,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String[] doubles = {null, "100000000.01", "-3.55"};
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             JSONArray voucherList = util.getVoucherArray(voucherId, 1);
             Arrays.stream(doubles).forEach(packagePrice -> {
                 IScene scene = CreatePackageScene.builder().packageName(util.createPackageName(UseRangeEnum.BRAND))
@@ -423,7 +423,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     public void packageManager_system_8() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             JSONArray voucherList = util.getVoucherArray(voucherId, 1);
             IScene scene = CreatePackageScene.builder().packageName(util.createPackageName(UseRangeEnum.BRAND))
                     .packageDescription(util.getDesc()).subjectType(UseRangeEnum.STORE.name()).packagePrice("499.99")
@@ -443,7 +443,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     public void packageManager_system_29() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.INVALIDED).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.INVALIDED).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
             JSONArray voucherList = util.getVoucherArray(voucherId, 10);
             IScene scene = CreatePackageScene.builder().packageName(util.createPackageName(UseRangeEnum.BRAND))
@@ -465,7 +465,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     public void packageManager_system_30() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WAITING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WAITING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
             JSONArray voucherList = util.getVoucherArray(voucherId, 10);
             IScene scene = CreatePackageScene.builder().packageName(util.createPackageName(UseRangeEnum.BRAND))
@@ -487,7 +487,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     public void packageManager_system_31() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WAITING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WAITING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
             JSONArray voucherList = util.getVoucherArray(voucherId, 10);
             IScene scene = CreatePackageScene.builder().packageName(util.createPackageName(UseRangeEnum.BRAND))
@@ -510,7 +510,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String[] phones = {null, "", "1532152798", "13654973499", "010-8888888"};
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             JSONArray voucherList = util.getVoucherArray(voucherId, 10);
             Arrays.stream(phones).forEach(phone -> {
                 IScene purchaseTemporaryPackageScene = PurchaseTemporaryPackageScene.builder().customerPhone(phone)
@@ -536,7 +536,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String[] plateNumbers = {null, "", "京A444", "岗A88776"};
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             JSONArray voucherList = util.getVoucherArray(voucherId, 10);
             Arrays.stream(plateNumbers).forEach(plateNumber -> {
                 IScene purchaseTemporaryPackageScene = PurchaseTemporaryPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
@@ -561,7 +561,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     public void packageManager_system_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             JSONArray voucherList = util.getVoucherArray(voucherId, 101);
             IScene purchaseTemporaryPackageScene = PurchaseTemporaryPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
                     .carType(PackageUseTypeEnum.ALL_CAR.name()).voucherList(voucherList).expiryDate("1").remark(EnumDesc.DESC_BETWEEN_20_30.getDesc())
@@ -697,7 +697,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     @Test(description = "套餐表单--临时套餐购买已售罄的卡券，确认提示：卡券【XXXX】已售罄")
     public void packageManager_system_18() {
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.SELL_OUT).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.SELL_OUT).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
             JSONArray voucherList = util.getVoucherArray(voucherId, 2);
             //购买临时套餐
@@ -719,7 +719,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     @Test(description = "套餐表单--临时套餐购买已作废卡券，确认时会有提示：卡券【XXX】已被作废，请重新选择！")
     public void packageManager_system_19() {
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.INVALIDED).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.INVALIDED).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
             JSONArray voucherList = util.getVoucherArray(voucherId, 2);
             //购买临时套餐
@@ -742,7 +742,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     public void packageManager_system_20() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.SELL_OUT).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.SELL_OUT).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
             Long packageId = util.editPackage(voucherId, 1);
             //购买固定套餐
@@ -793,7 +793,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     public void packageManager_system_22() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             JSONArray voucherArray = util.getVoucherArray(voucherId, 1);
             Long packageId = util.getPackagePage(PackageStatusEnum.REFUSAL).getPackageId();
             String[] packageNames = {EnumDesc.DESC_BETWEEN_20_30.getDesc(), null, ""};
@@ -819,7 +819,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     public void packageManager_system_33() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             JSONArray voucherArray = util.getVoucherArray(voucherId, 1);
             long packageId = util.getPackagePage(PackageStatusEnum.REFUSAL).getPackageId();
             String packageName = util.getPackageName(packageId);
@@ -843,7 +843,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     public void packageManager_system_23() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             JSONArray voucherArray = util.getVoucherArray(voucherId, 1);
             long packageId = util.getPackagePage(PackageStatusEnum.REFUSAL).getPackageId();
             String packageName = util.getPackageName(packageId);
@@ -918,7 +918,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
         logger.logCaseStart(caseResult.getCaseName());
         try {
             List<JSONArray> list = new ArrayList<>();
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             JSONArray voucherArray = util.getVoucherArray(voucherId, 101);
             list.add(voucherArray);
             list.add(null);
@@ -1027,7 +1027,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     public void messageManager_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
             IScene messageFormPageScene = MessageFormPageScene.builder().build();
             int messageTotal = visitor.invokeApi(messageFormPageScene).getInteger("total");
@@ -1056,7 +1056,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     public void messageManager_data_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             IScene messageFormPageScene = MessageFormPageScene.builder().build();
             int messageTotal = visitor.invokeApi(messageFormPageScene).getInteger("total");
             String pushTime = DateTimeUtil.getFormat(DateTimeUtil.addSecond(new Date(), 80), "yyyy-MM-dd HH:mm");
@@ -1087,7 +1087,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             int appletMessageNum = util.getAppletMessageNum();
             int appletPackageNum = util.getAppletPackageNum();
             user.loginPc(ALL_AUTHORITY);
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             //发送消息
             String date = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm");
             util.pushMessage(0, true, voucherId);
@@ -1194,7 +1194,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //发消息
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             util.pushMessage(0, true, voucherId);
             //消息列表消息内容
             user.loginApplet(APPLET_USER_ONE);
@@ -1261,7 +1261,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //发消息
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.INVALIDED).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.INVALIDED).buildVoucher().getVoucherId();
             IScene pushMessageScene = PushMessageScene.builder().pushTarget(AppletPushTargetEnum.PERSONNEL_CUSTOMER.getId())
                     .telList(getList(APPLET_USER_ONE.getPhone())).messageName(EnumDesc.DESC_BETWEEN_5_10.getDesc())
                     .messageContent(EnumDesc.DESC_BETWEEN_20_30.getDesc()).type(0).voucherOrPackageList(getList(voucherId))
@@ -1282,7 +1282,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //发消息
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.SELL_OUT).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.SELL_OUT).buildVoucher().getVoucherId();
             IScene pushMessageScene = PushMessageScene.builder().pushTarget(AppletPushTargetEnum.PERSONNEL_CUSTOMER.getId())
                     .telList(getList(APPLET_USER_ONE.getPhone())).messageName(EnumDesc.DESC_BETWEEN_5_10.getDesc())
                     .messageContent(EnumDesc.DESC_BETWEEN_20_30.getDesc()).type(0).voucherOrPackageList(getList(voucherId))
@@ -1329,7 +1329,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     public void messageManager_system_14() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.SELL_OUT).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.SELL_OUT).buildVoucher().getVoucherId();
             Long packageId = util.editPackage(voucherId, 1);
             //发消息
             IScene pushMessageScene = PushMessageScene.builder().pushTarget(AppletPushTargetEnum.PERSONNEL_CUSTOMER.getId())
@@ -1485,7 +1485,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String[] strings = {EnumDesc.DESC_BETWEEN_15_20.getDesc(), EnumDesc.DESC_BETWEEN_5_10.getDesc(), EnumDesc.DESC_BETWEEN_10_15.getDesc()};
-            IVoucher voucher = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher();
+            IVoucher voucher = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher();
             Integer voucherId = Math.toIntExact(voucher.getVoucherId());
             IScene shareManagerPageScene = ShareManagerPageScene.builder().build();
             JSONArray list = visitor.invokeApi(shareManagerPageScene).getJSONArray("list");
@@ -1513,7 +1513,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     public void vipMarketing_system_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IVoucher voucher = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher();
+            IVoucher voucher = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher();
             Integer voucherId = Math.toIntExact(voucher.getVoucherId());
             IScene shareManagerPageScene = ShareManagerPageScene.builder().build();
             JSONArray list = visitor.invokeApi(shareManagerPageScene).getJSONArray("list");

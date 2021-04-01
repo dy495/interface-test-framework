@@ -23,7 +23,7 @@ public class StopVoucher extends AbstractVoucher {
     @Override
     public void execute(@NotNull VisitorProxy visitor, IScene scene) {
         logger("CREATE STOP START");
-        Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+        Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
         super.visitor = visitor;
         changeProvideStatus(voucherId);
         logger("CREATE STOP FINISH");
@@ -31,7 +31,7 @@ public class StopVoucher extends AbstractVoucher {
 
     @Setter
     @Accessors(chain = true, fluent = true)
-    public static class Builder extends BaseBuilder {
+    public static class Builder extends AbstractBuilder {
 
         @Override
         public IVoucher buildVoucher() {

@@ -415,7 +415,7 @@ public class SupporterUtil {
      * @return 卡券集合
      */
     public JSONArray getVoucherArray() {
-        Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+        Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
         return getVoucherArray(voucherId, 1);
     }
 
@@ -1574,7 +1574,7 @@ public class SupporterUtil {
      * 活动管理-创建裂变活动
      */
     public void createFissionActivity() {
-        Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+        Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
         visitor.invokeApi(createFissionActivityScene(voucherId));
     }
 
@@ -1616,7 +1616,7 @@ public class SupporterUtil {
      * @return 活动id
      */
     public Long createRecruitActivity() {
-        Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+        Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
         return createRecruitActivity(voucherId, true, 0, true);
     }
 

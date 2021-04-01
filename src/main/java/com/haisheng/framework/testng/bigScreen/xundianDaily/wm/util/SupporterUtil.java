@@ -283,7 +283,7 @@ public class SupporterUtil {
      * @return 卡券集合
      */
     public JSONArray getVoucherArray() {
-        Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+        Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
         return getVoucherArray(voucherId, 1);
     }
 

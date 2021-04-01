@@ -102,7 +102,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
             IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).build();
             ReceptionPage receptionPage = util.collectBean(receptionPageScene, ReceptionPage.class).get(0);
             String platNumber = receptionPage.getPlateNumber();
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
             //购买前数据
             Long surplusInventory = util.getVoucherPage(voucherId).getSurplusInventory();
@@ -152,7 +152,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
             IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).build();
             ReceptionPage receptionPage = util.collectBean(receptionPageScene, ReceptionPage.class).get(0);
             String platNumber = receptionPage.getPlateNumber();
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
             JSONArray voucherList = util.getVoucherArray(voucherId, 1);
             Long packageId = PackageListScene.builder().build().invoke(visitor, true).getJSONArray("list").getJSONObject(0).getLong("package_id");
@@ -209,7 +209,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
             IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).build();
             ReceptionPage receptionPage = util.collectBean(receptionPageScene, ReceptionPage.class).get(0);
             String platNumber = receptionPage.getPlateNumber();
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
             //购买前数据
             Long surplusInventory = util.getVoucherPage(voucherId).getSurplusInventory();
@@ -259,7 +259,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
             IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).build();
             ReceptionPage receptionPage = util.collectBean(receptionPageScene, ReceptionPage.class).get(0);
             String platNumber = receptionPage.getPlateNumber();
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
             JSONArray voucherList = util.getVoucherArray(voucherId, 1);
             Long packageId = PackageListScene.builder().build().invoke(visitor, true).getJSONArray("list").getJSONObject(0).getLong("package_id");
@@ -313,7 +313,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
     public void receptionManage_data_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
             JSONArray voucherList = util.getVoucherArray(voucherId, 1);
             Long packageId = PackageListScene.builder().build().invoke(visitor, true).getJSONArray("list").getJSONObject(0).getLong("package_id");
@@ -353,7 +353,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
     public void receptionManage_data_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
             //购买前数据
             Long surplusInventory = util.getVoucherPage(voucherId).getSurplusInventory();

@@ -277,7 +277,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int total = ExchangePageScene.builder().build().invoke(visitor, true).getInteger("total");
-            Long voucherId = new VoucherGenerator.Builder().voucherStatus(VoucherStatusEnum.WORKING).visitor(visitor).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().status(VoucherStatusEnum.WORKING).visitor(visitor).buildVoucher().getVoucherId();
             //创建实物兑换
             ExchangePage exchangePage = util.createExchangeFictitiousGoods(voucherId);
             int newTotal = ExchangePageScene.builder().build().invoke(visitor, true).getInteger("total");
@@ -344,7 +344,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     public void integralExchange_system_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             VoucherPage voucherPage = util.getVoucherPage(voucherId);
             String exchangeStartTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
             String exchangeEndTime = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 30), "yyyy-MM-dd HH:mm:ss");
@@ -380,7 +380,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     public void integralExchange_system_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             VoucherPage voucherPage = util.getVoucherPage(voucherId);
             String exchangeStartTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
             String exchangeEndTime = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 30), "yyyy-MM-dd HH:mm:ss");
@@ -403,7 +403,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     public void integralExchange_system_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             VoucherPage voucherPage = util.getVoucherPage(voucherId);
             String exchangeStartTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
             String exchangeEndTime = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 30), "yyyy-MM-dd HH:mm:ss");
@@ -431,7 +431,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
         try {
             String exchangeStartTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
             String exchangeEndTime = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 30), "yyyy-MM-dd HH:mm:ss");
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.SELL_OUT).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.SELL_OUT).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherPage(voucherId).getVoucherName();
             String message = CreateExchangeGoodsScene.builder().exchangeGoodsType(CommodityTypeEnum.FICTITIOUS.name()).goodsId(voucherId).exchangePrice("1")
                     .exchangeNum("1").isLimit(true).exchangePeopleNum("1").exchangeStartTime(exchangeStartTime)

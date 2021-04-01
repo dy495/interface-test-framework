@@ -1,6 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing;
 
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.Package.*;
 import lombok.Getter;
 
 import java.util.Arrays;
@@ -14,17 +15,20 @@ import java.util.Optional;
  */
 public enum PackageStatusEnum {
 
-    AUDITING(0, "审核中"),
-    AGREE(1, "已通过"),
-    REFUSAL(2, "已拒绝"),
-    CANCEL(3, "已取消"),
+    AUDITING(0, "审核中", new WaitingPackage.Builder()),
+    AGREE(1, "已通过", new WorkingPackage.Builder()),
+    REFUSAL(2, "已拒绝", new RejectPackage.Builder()),
+    CANCEL(3, "已取消", new RecallPackage.Builder()),
     ;
 
-    PackageStatusEnum(Integer id, String name) {
+    PackageStatusEnum(Integer id, String name, AbstractPackage.AbstractBuilder packageBuilder) {
         this.name = name;
         this.id = id;
+        this.packageBuilder = packageBuilder;
     }
 
+    @Getter
+    private final AbstractPackage.AbstractBuilder packageBuilder;
     @Getter
     private final String name;
     @Getter

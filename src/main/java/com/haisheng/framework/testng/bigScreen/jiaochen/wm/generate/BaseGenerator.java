@@ -26,8 +26,8 @@ public abstract class BaseGenerator implements IGenerator {
         HI();
     }
 
-    protected BaseGenerator(@NotNull AbstractBuilder<?> abstractBuilder) {
-        this.visitor = abstractBuilder.visitor;
+    protected BaseGenerator(@NotNull BaseBuilder<?, ?> baseBuilder) {
+        this.visitor = baseBuilder.visitor;
         this.errorMsg = new StringBuilder(16);
     }
 
@@ -39,7 +39,7 @@ public abstract class BaseGenerator implements IGenerator {
     @Override
     public abstract void execute(VisitorProxy visitor, IScene scene);
 
-    public static abstract class AbstractBuilder<T extends AbstractBuilder<?>> {
+    public static abstract class BaseBuilder<T extends BaseBuilder<?, ?>, R> {
         private VisitorProxy visitor;
 
         /**
@@ -60,7 +60,7 @@ public abstract class BaseGenerator implements IGenerator {
          * @param scene 构建初始产品的场景
          * @return T
          */
-        protected abstract T createScene(IScene scene);
+        protected abstract T scene(IScene scene);
 
         /**
          * 构建产品
@@ -68,9 +68,9 @@ public abstract class BaseGenerator implements IGenerator {
          *
          * @return IGenerator
          */
-        protected abstract IGenerator buildProduct();
+        protected abstract R buildProduct();
 
-        protected IGenerator build() {
+        protected R build() {
             return buildProduct();
         }
     }

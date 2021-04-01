@@ -244,7 +244,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
      */
     public void preCreateSomeActivity() {
         //获取一个卡券
-        Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+        Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
         //创建招募活动
         for (int i = 0; i < 3; i++) {
             Long activityId = businessUtil.createRecruitActivity(voucherId, true, 0, true);
@@ -885,7 +885,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
     public void appletActivityRegister() {
         try {
             //创建活动
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             Long activityId = businessUtil.createRecruitActivity(voucherId, true, 0, true);
             //审批活动
             businessUtil.getApprovalPassed(activityId);
@@ -1819,7 +1819,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             //获取已撤销活动的ID
             List<Long> ids =  businessUtil.getFissionActivityRevoke();
             System.err.println("----ids:"+ids.get(0));
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             SupporterUtil supporterUtil = new SupporterUtil(visitor);
             PublicParameter pp = new PublicParameter();
             List<String> picList = new ArrayList<>();
@@ -1961,7 +1961,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             //获取审核未通过活动的ID
             List<Long> ids = businessUtil.getFissionActivityReject();
             System.err.println("----ids:"+ids.get(0));
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             SupporterUtil supporterUtil = new SupporterUtil(visitor);
             PublicParameter pp = new PublicParameter();
             List<String> picList = new ArrayList<>();
@@ -2396,7 +2396,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             List<String> picList = new ArrayList<>();
             picList.add(supporterUtil.getPicPath());
             //获取优惠券ID
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             // 创建被邀请者和分享者的信息字段
             JSONObject invitedVoucher = businessUtil.getInvitedVoucher(voucherId, 1, "1", 2, "", "", 3);
             JSONObject shareVoucher = businessUtil.getShareVoucher(pp.packageId, 2, "1", 2, "", "", 3);
@@ -2443,7 +2443,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             List<String> picList = new ArrayList<>();
             picList.add(supporterUtil.getPicPath());
             //获取优惠券ID
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             // 创建被邀请者和分享者的信息字段
             JSONObject invitedVoucher = businessUtil.getInvitedVoucher(voucherId, 1, "1", 2, "", "", 3);
             JSONObject shareVoucher = businessUtil.getShareVoucher(pp.packageId, 2, "1", 2, "", "", 3);
@@ -2487,7 +2487,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             List<String> picList = new ArrayList<>();
             picList.add(supporterUtil.getPicPath());
             //获取优惠券ID
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             // 创建被邀请者和分享者的信息字段
             JSONObject invitedVoucher = businessUtil.getInvitedVoucher(voucherId, 1, "1", 2, "", "", 3);
             JSONObject shareVoucher = businessUtil.getShareVoucher(pp.packageId, 2, "1", 2, "", "", 3);
@@ -2531,7 +2531,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             List<String> picList = new ArrayList<>();
             picList.add(supporterUtil.getPicPath());
             //获取优惠券ID
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             // 创建被邀请者和分享者的信息字段
             JSONObject invitedVoucher = businessUtil.getInvitedVoucher(voucherId, 1, "1", 2, "", "", 3);
             JSONObject shareVoucher = businessUtil.getShareVoucher(pp.packageId, 2, "1", 2, "", "", 3);
@@ -2574,7 +2574,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             //添加活动图片
             List<String> picList = new ArrayList<>();
             //获取优惠券ID
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             // 创建被邀请者和分享者的信息字段
             JSONObject invitedVoucher = businessUtil.getInvitedVoucher(voucherId, 1, "1", 2, "", "", 3);
             JSONObject shareVoucher = businessUtil.getShareVoucher(voucherId, 1, "1", 2, "", "", 3);
@@ -2636,7 +2636,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             List<String> picList = new ArrayList<>();
             picList.add(businessUtil.getPicPath());
             //获取优惠券ID
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             //获取优惠券库存
             String surplus = businessUtil.getSurplusInventory(voucherId);
             int surpass = Integer.parseInt(surplus) + 1;
@@ -2683,7 +2683,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             List<String> picList = new ArrayList<>();
             picList.add(businessUtil.getPicPath());
             //获取优惠券ID
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             //获取优惠券库存
             String surplus = businessUtil.getSurplusInventory(voucherId);
             String[] num = {"", surplus + 1, "0"};
@@ -2725,7 +2725,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         try {
             //获取作废的优惠券
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor)
-                    .voucherStatus(VoucherStatusEnum.INVALIDED).buildVoucher().getVoucherId();
+                    .status(VoucherStatusEnum.INVALIDED).buildVoucher().getVoucherId();
             //创建招募活动
             List<String> picList = new ArrayList<>();
             SupporterUtil supporterUtil = new SupporterUtil(visitor);
@@ -2799,7 +2799,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             List<String> picList = new ArrayList<>();
             picList.add(businessUtil.getPicPath());
             //获取优惠券ID
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             //获取优惠券库存
             String surplus = businessUtil.getSurplusInventory(voucherId);
             JSONObject invitedVoucher = businessUtil.getInvitedVoucher(voucherId, 1, "1", 2, "", "", 3);
@@ -2843,7 +2843,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
     public void RecruitActivityTitleException9() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             List<Integer> labels = new ArrayList<>();
             labels.add(1000);
             labels.add(1);
@@ -2920,7 +2920,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
     public void RecruitActivityTitleException10() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             List<Integer> labels = new ArrayList<>();
             labels.add(1000);
             labels.add(1);
@@ -2998,7 +2998,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
     public void RecruitActivityTitleException11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             List<Integer> labels = new ArrayList<>();
             labels.add(1000);
             labels.add(1);
@@ -3073,7 +3073,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
     public void RecruitActivityTitleException12() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             List<Integer> labels = new ArrayList<>();
             labels.add(1000);
             labels.add(1);
@@ -3151,7 +3151,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
     public void RecruitActivityTitleException13() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             List<Integer> labels = new ArrayList<>();
             labels.add(1000);
             labels.add(1);
@@ -3231,7 +3231,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
     public void RecruitActivityTitleException14() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             List<Integer> labels = new ArrayList<>();
             labels.add(1000);
             labels.add(1);
@@ -3311,7 +3311,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         try {
             //获取已售罄的优惠券
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor)
-                    .voucherStatus(VoucherStatusEnum.SELL_OUT).buildVoucher().getVoucherId();
+                    .status(VoucherStatusEnum.SELL_OUT).buildVoucher().getVoucherId();
             //创建招募活动
             List<String> picList = new ArrayList<>();
             SupporterUtil supporterUtil = new SupporterUtil(visitor);
@@ -3382,7 +3382,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         try {
             //获取暂停发放的优惠券
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor)
-                    .voucherStatus(VoucherStatusEnum.STOP).buildVoucher().getVoucherId();
+                    .status(VoucherStatusEnum.STOP).buildVoucher().getVoucherId();
             //创建招募活动
             List<String> picList = new ArrayList<>();
             SupporterUtil supporterUtil = new SupporterUtil(visitor);
@@ -3452,7 +3452,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
     @Test(enabled = false)
     public void activityChooseLabelsSome() {
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             List<Integer> labels = new ArrayList<>();
             labels.add(1000);
             labels.add(1);
@@ -3501,7 +3501,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
     @Test(enabled = false)
     public void activityChooseLabels() {
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             List<Integer> labels = new ArrayList<>();
             labels.add(1000);
             labels.add(1);
@@ -3576,7 +3576,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
     @Test(enabled = false)
     public void activityLabels() {
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             List<Integer> chooseLabels = new ArrayList<>();
             chooseLabels.add(1000);
             chooseLabels.add(1);
@@ -3629,7 +3629,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
     @Test(enabled = false)
     public void activityRegistrationIssue() {
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             List<Integer> labels = new ArrayList<>();
             labels.add(1000);
             labels.add(1);
@@ -3707,7 +3707,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
     @Test(enabled = false)
     public void activityRegistrationNUll() {
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             List<Integer> labels = new ArrayList<>();
             labels.add(1000);
             List<String> picList = new ArrayList<>();
@@ -3787,7 +3787,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
     @Test(enabled = true)
     public void activityVoucherStatus1() {
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             List<Integer> labels = new ArrayList<>();
             labels.add(1000);
             labels.add(1);
@@ -3886,7 +3886,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
     @Test(enabled = true)
     public void activityVoucherStatus2() {
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             List<Integer> labels = new ArrayList<>();
             labels.add(1000);
             labels.add(1);
@@ -3993,7 +3993,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
     @Test(enabled = true)
     public void activityVoucherStatus3() {
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             List<Integer> labels = new ArrayList<>();
             labels.add(1000);
             labels.add(1);
@@ -4091,7 +4091,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
     @Test(enabled = true)
     public void activityVoucherStatus4(){
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             List<Integer> labels = new ArrayList<>();
             labels.add(1000);
             labels.add(1);

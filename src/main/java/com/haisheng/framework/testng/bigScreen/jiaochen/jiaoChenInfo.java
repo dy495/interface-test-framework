@@ -335,7 +335,7 @@ public class jiaoChenInfo {
         ex.chkcode=true;
         ex.id  = System.currentTimeMillis();
         ex.exchange_goods_type = "FICTITIOUS";
-        ex.goods_id = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.INVALIDED).buildVoucher().getVoucherId();
+        ex.goods_id = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.INVALIDED).buildVoucher().getVoucherId();
         ex.is_limit=true;
         ex.exchange_people_num = 1; // 每人只能兑换一次
         jc.exchangeGoodCreat(ex);

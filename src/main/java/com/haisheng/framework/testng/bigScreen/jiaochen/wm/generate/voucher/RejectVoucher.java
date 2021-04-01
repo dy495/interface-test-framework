@@ -24,7 +24,7 @@ public class RejectVoucher extends AbstractVoucher {
     @Override
     public void execute(VisitorProxy visitor, IScene scene) {
         logger("CREATE REJECT START");
-        Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WAITING).buildVoucher().getVoucherId();
+        Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WAITING).buildVoucher().getVoucherId();
         super.visitor = visitor;
         String voucherName = getVoucherName(voucherId);
         applyVoucher(voucherName, "2");
@@ -33,7 +33,7 @@ public class RejectVoucher extends AbstractVoucher {
 
     @Setter
     @Accessors(chain = true, fluent = true)
-    public static class Builder extends AbstractVoucher.BaseBuilder {
+    public static class Builder extends AbstractBuilder {
 
         @Override
         public IVoucher buildVoucher() {

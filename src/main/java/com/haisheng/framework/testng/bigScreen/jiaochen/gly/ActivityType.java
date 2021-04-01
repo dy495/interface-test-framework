@@ -91,7 +91,7 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try{
 //            获取优惠券ID
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
 //            Long voucherId=49L;
             List<String> picList = new ArrayList<>();
             picList.add(supporterUtil.getPicPath());
@@ -136,7 +136,7 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try{
             //获取优惠券ID
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
 //            Long voucherId=49L;
             List<String> picList = new ArrayList<>();
             picList.add(supporterUtil.getPicPath());
@@ -181,7 +181,7 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try{
             //获取优惠券ID
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
 //            Long voucherId=49L;
             List<String> picList = new ArrayList<>();
             picList.add(supporterUtil.getPicPath());
@@ -229,7 +229,7 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
             List<Integer> labels = new ArrayList<>();
             String[][] label = {{"1", "普通会员"}, {"100", "VIP会员"}, {"1000", "小程序客户"}, {"2000", "销售客户"}, {"3000", "售后客户"}};
             //获取优惠券ID
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
 //            Long voucherId=49L;
             List<String> picList = new ArrayList<>();
             picList.add(supporterUtil.getPicPath());
@@ -277,7 +277,7 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
     public void activityType5(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
 //            Long voucherId=49L;
             //客户限制
             List<Integer> labels = new ArrayList<>();
@@ -357,7 +357,7 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
     public void activityType6(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
 //            Long voucherId=49L;
             //客户限制
             List<Integer> labels = new ArrayList<>();
@@ -432,7 +432,7 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
     public void activityType7(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
 //            Long voucherId=49L;
             //客户限制
             List<Integer> labels = new ArrayList<>();
@@ -508,7 +508,7 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
     public void activityType8(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
 //            Long voucherId=49L;
             //客户限制
             List<Integer> labels = new ArrayList<>();
@@ -584,7 +584,7 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
     public void activityType9(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
 //            Long voucherId=49L;
             //客户限制
             List<Integer> labels = new ArrayList<>();
@@ -660,7 +660,7 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
     public void activityType10(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
 //            Long voucherId=49L;
             //客户限制
             List<Integer> labels = new ArrayList<>();
@@ -736,7 +736,7 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
     public void activityType11(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
 //            Long voucherId=49L;
             //客户限制
             List<Integer> labels = new ArrayList<>();
@@ -813,7 +813,7 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
     public void activityType12() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
 //            Long voucherId=49L;
             List<Integer> chooseLabels = new ArrayList<>();
             chooseLabels.add(1000);
@@ -869,7 +869,7 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
     public void activityType13() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
 //            Long voucherId=49L;
             List<Integer> labels = new ArrayList<>();
             labels.add(1000);
@@ -949,7 +949,7 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
     public void activityType14() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
 //            Long voucherId=49L;
             List<Integer> labels = new ArrayList<>();
             labels.add(1000);

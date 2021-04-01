@@ -40,7 +40,7 @@ public class SellOutVoucher extends AbstractVoucher {
         logger("CREATE SELL OUT FINISH");
     }
 
-    public static class Builder extends BaseBuilder {
+    public static class Builder extends AbstractBuilder {
 
         @Override
         public IVoucher buildVoucher() {

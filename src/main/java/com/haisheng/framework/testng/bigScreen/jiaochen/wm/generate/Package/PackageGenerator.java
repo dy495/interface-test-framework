@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher;
+package com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.Package;
 
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
@@ -11,9 +11,9 @@ import lombok.experimental.Accessors;
  * @author wangmin
  * @date 2021/1/20 14:54
  */
-public class VoucherGenerator extends AbstractVoucher {
+public class PackageGenerator extends AbstractPackage {
 
-    public VoucherGenerator(Builder builder) {
+    public PackageGenerator(Builder builder) {
         super(builder);
     }
 
@@ -27,8 +27,8 @@ public class VoucherGenerator extends AbstractVoucher {
     public static class Builder extends AbstractBuilder {
 
         @Override
-        public IVoucher buildVoucher() {
-            return new VoucherGenerator(this);
+        public IPackage buildPackage() {
+            return new PackageGenerator(this);
         }
     }
 }

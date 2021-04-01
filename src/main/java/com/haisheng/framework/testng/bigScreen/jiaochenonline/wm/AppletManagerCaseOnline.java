@@ -396,7 +396,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
             ExchangePage a = util.collectBean(exchangePageScene, ExchangePage.class).stream().filter(e -> Integer.parseInt(e.getExchangedAndSurplus().split("/")[1]) > 0 && util.getExchangeGoodsContainVoucher(e.getId()).getSurplusInventory() == 0).findFirst().orElse(null);
             ExchangePage exchangePage;
             if (a == null) {
-                Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.SELL_OUT).buildVoucher().getVoucherId();
+                Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.SELL_OUT).buildVoucher().getVoucherId();
                 AddVoucherScene.builder().id(voucherId).addNumber(1).build().invoke(visitor, true);
                 String voucherName = util.getVoucherName(voucherId);
                 util.applyVoucher(voucherName, "1");
@@ -428,7 +428,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
             ExchangePage a = util.collectBean(exchangePageScene, ExchangePage.class).stream().filter(e -> Integer.parseInt(e.getExchangedAndSurplus().split("/")[1]) == 0 && util.getExchangeGoodsContainVoucher(e.getId()).getSurplusInventory() > 0).findFirst().orElse(null);
             ExchangePage exchangePage;
             if (a == null) {
-                Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+                Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
                 exchangePage = util.createExchangeFictitiousGoods(voucherId);
                 EditExchangeStockScene.builder().id(exchangePage.getId()).changeStockType(ChangeStockTypeEnum.MINUS.name()).num("1").goodsName(exchangePage.getGoodsName()).type(exchangePage.getExchangeType()).build().invoke(visitor, true);
             } else {
@@ -462,7 +462,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
                 ExchangePage b = util.collectBean(exchangePageScene, ExchangePage.class).stream().filter(e -> Integer.parseInt(e.getExchangedAndSurplus().split("/")[1]) == 0 && util.getExchangeGoodsContainVoucher(e.getId()).getSurplusInventory() > 0 && util.getExchangeGoodsContainVoucher(e.getId()).getVoucherStatus().equals(VoucherStatusEnum.WORKING.name())).findFirst().orElse(null);
                 if (b == null) {
                     //如果没有创建一个库存为1并且包含卡券剩余库存>0的积分商品
-                    voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+                    voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
                     exchangePage = util.createExchangeFictitiousGoods(voucherId);
                 } else {
                     //如果有给此积分商品增加一个库存

@@ -172,7 +172,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取待审批的卡券id
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WAITING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WAITING).buildVoucher().getVoucherId();
             IScene changeRecordScene = ChangeRecordScene.builder().voucherId(voucherId).build();
             int changeRecordTotal = visitor.invokeApi(changeRecordScene).getInteger("total");
             String newVoucherName = util.createVoucherName();
@@ -208,7 +208,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
     @Test(description = "卡券管理--撤回卡券--卡券状态=已撤回&此卡券在审批列表状态=已取消")
     public void voucherManage_data_4() {
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WAITING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WAITING).buildVoucher().getVoucherId();
             //撤回
             IScene recallVoucherScene = RecallVoucherScene.builder().id(voucherId).build();
             visitor.invokeApi(recallVoucherScene);
@@ -231,7 +231,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
     @Test(description = "卡券管理--删除已撤回的卡券--此券记录消失")
     public void voucherManage_data_5() {
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.RECALL).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.RECALL).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
             //删除
             visitor.invokeApi(DeleteVoucherScene.builder().id(voucherId).build());
@@ -250,7 +250,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
     @Test(description = "卡券管理--删除审批未通过的卡券--此券记录消失")
     public void voucherManage_data_6() {
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.REJECT).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.REJECT).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
 //            IScene recordPageScene = RecordPageScene.builder().build();
 //            int total = visitor.invokeApi(recordPageScene).getInteger("total");
@@ -277,7 +277,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
     @Test(description = "卡券管理--进行中的卡券暂停发放--卡券状态=暂停发放")
     public void voucherManage_data_7() {
         try {
-            Long voucherId = new VoucherGenerator.Builder().voucherStatus(VoucherStatusEnum.WORKING).visitor(visitor).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().status(VoucherStatusEnum.WORKING).visitor(visitor).buildVoucher().getVoucherId();
             //暂停发放
             IScene changeProvideStatusScene = ChangeProvideStatusScene.builder().id(voucherId).isStart(false).build();
             visitor.invokeApi(changeProvideStatusScene);
@@ -297,7 +297,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
     @Test(description = "卡券管理--进行中的卡券作废--状态&变更记录校验")
     public void voucherManage_data_8() {
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             IScene scene = ChangeRecordScene.builder().voucherId(voucherId).build();
             int changeRecordTotal = visitor.invokeApi(scene).getInteger("total");
             //作废卡券
@@ -328,7 +328,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
     @Test(description = "卡券管理--进行中的卡券增发")
     public void voucherManage_data_9() {
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
             Long surplusInventory = util.getVoucherPage(voucherName).getSurplusInventory();
             IScene additionalRecordScene = AdditionalRecordScene.builder().voucherId(voucherId).build();
@@ -376,7 +376,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
     public void voucherManage_data_10() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
             //停止发放
             ChangeProvideStatusScene.builder().id(voucherId).isStart(false).build().invoke(visitor, true);
@@ -400,7 +400,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
     @Test(description = "卡券管理--进行中的卡券增发")
     public void voucherManage_data_23() {
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
             Long surplusInventory = util.getVoucherPage(voucherName).getSurplusInventory();
             IScene additionalRecordScene = AdditionalRecordScene.builder().voucherId(voucherId).build();
@@ -437,7 +437,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
     @Test(description = "卡券管理--停止发放的卡券作废--状态=已作废&变更记录+1变更事项=作废卡券")
     public void voucherManage_data_11() {
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.STOP).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.STOP).buildVoucher().getVoucherId();
             IScene changeRecordScene = ChangeRecordScene.builder().voucherId(voucherId).build();
             int changeRecordTotal = changeRecordScene.invoke(visitor, true).getInteger("total");
             String voucherName = util.getVoucherName(voucherId);
@@ -467,7 +467,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
     @Test(description = "卡券管理--停止发放的卡券增发")
     public void voucherManage_data_12() {
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.STOP).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.STOP).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
             Long surplusInventory = util.getVoucherPage(voucherName).getSurplusInventory();
             IScene additionalRecordScene = AdditionalRecordScene.builder().voucherId(voucherId).build();
@@ -517,7 +517,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
     public void voucherManage_data_13() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().voucherStatus(VoucherStatusEnum.SELL_OUT).visitor(visitor).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().status(VoucherStatusEnum.SELL_OUT).visitor(visitor).buildVoucher().getVoucherId();
             //暂停发放
             IScene changeProvideStatusScene = ChangeProvideStatusScene.builder().id(voucherId).isStart(false).build();
             visitor.invokeApi(changeProvideStatusScene);
@@ -537,7 +537,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
     @Test(description = "卡券管理--已售罄的卡券作废--状态=已作废&变更记录+1变更事项=作废卡券")
     public void voucherManage_data_14() {
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.SELL_OUT).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.SELL_OUT).buildVoucher().getVoucherId();
             IScene changeRecordScene = ChangeRecordScene.builder().voucherId(voucherId).build();
             int changeRecordTotal = visitor.invokeApi(changeRecordScene).getInteger("total");
             //作废卡券
@@ -568,7 +568,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
     @Test(description = "卡券管理--已售罄的卡券增发--审批通过状态")
     public void voucherManage_data_15() {
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.SELL_OUT).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.SELL_OUT).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
             Long surplusInventory = util.getVoucherPage(voucherName).getSurplusInventory();
             IScene additionalRecordScene = AdditionalRecordScene.builder().voucherId(voucherId).build();
@@ -620,7 +620,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
     public void voucherManage_data_16() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
             Long surplusInventory = util.getVoucherPage(voucherName).getSurplusInventory();
             //增发
@@ -640,7 +640,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
     public void voucherManage_data_17() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
             VoucherPage voucherPage = util.getVoucherPage(voucherName);
             Long surplusInventory = voucherPage.getSurplusInventory();
@@ -681,7 +681,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
     public void voucherManage_data_19() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
             //购买前数据
             Long surplusInventory = util.getVoucherPage(voucherName).getSurplusInventory();
@@ -723,7 +723,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
     public void voucherManage_data_20() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
             JSONArray voucherList = util.getVoucherArray(voucherId, 1);
             String packageName = util.editPackage(voucherList);
@@ -770,7 +770,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
     public void voucherManage_data_21() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
             //购买前数据
             Long surplusInventory = util.getVoucherPage(voucherName).getSurplusInventory();
@@ -812,7 +812,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
     public void voucherManage_data_22() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
             JSONArray voucherList = util.getVoucherArray(voucherId, 1);
             String packageName = util.editPackage(voucherList);
@@ -857,7 +857,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
     public void voucherManage_data_24() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
             util.pushMessage(0, true, voucherId);
             //作废前数据
@@ -987,7 +987,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
     public void voucherManage_data_29() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
             //发出一张卡券
             util.pushMessage(0, true, voucherId);
@@ -1076,7 +1076,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
     @Test(description = "卡券管理--进行中的卡券增发，再撤回增发卡券，审核列表状态变为已撤回", priority = 1)
     public void voucherManage_data_31() {
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
             IScene additionalRecordScene = AdditionalRecordScene.builder().voucherId(voucherId).build();
             int addTotal = additionalRecordScene.invoke(visitor, true).getInteger("total");
@@ -1408,7 +1408,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Integer[] integers = {null};
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             Arrays.stream(integers).forEach(count -> {
                 IScene addVoucherScene = AddVoucherScene.builder().addNumber(count).id(voucherId).build();
                 String message = visitor.invokeApi(addVoucherScene, false).getString("message");

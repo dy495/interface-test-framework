@@ -23,7 +23,7 @@ public class RecallVoucher extends AbstractVoucher {
     @Override
     public void execute(@NotNull VisitorProxy visitor, IScene scene) {
         logger("CREATE RECALL START");
-        Long voucherId = new VoucherGenerator.Builder().voucherStatus(VoucherStatusEnum.WAITING).visitor(visitor).buildVoucher().getVoucherId();
+        Long voucherId = new VoucherGenerator.Builder().status(VoucherStatusEnum.WAITING).visitor(visitor).buildVoucher().getVoucherId();
         super.visitor = visitor;
         recallVoucher(voucherId);
         logger("CREATE RECALL FINISH");
@@ -31,7 +31,7 @@ public class RecallVoucher extends AbstractVoucher {
 
     @Setter
     @Accessors(chain = true, fluent = true)
-    public static class Builder extends BaseBuilder {
+    public static class Builder extends AbstractBuilder {
 
         @Override
         public IVoucher buildVoucher() {

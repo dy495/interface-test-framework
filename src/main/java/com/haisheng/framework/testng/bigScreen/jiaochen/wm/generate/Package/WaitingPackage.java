@@ -1,8 +1,9 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher;
+package com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.Package;
 
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherTypeEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -13,9 +14,9 @@ import lombok.experimental.Accessors;
  * @author wangmin
  * @date 2021/1/20 15:35
  */
-public class WaitingVoucher extends AbstractVoucher {
+public class WaitingPackage extends AbstractPackage {
 
-    public WaitingVoucher(Builder builder) {
+    public WaitingPackage(Builder builder) {
         super(builder);
     }
 
@@ -24,7 +25,8 @@ public class WaitingVoucher extends AbstractVoucher {
         logger("CREATE WAITING START");
         super.visitor = visitor;
         if (scene == null) {
-            new SupporterUtil(visitor).createVoucher(10, VoucherTypeEnum.CUSTOM);
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            new SupporterUtil(visitor).getVoucherArray(voucherId, 1);
         } else {
             visitor.invokeApi(scene);
         }
@@ -36,8 +38,8 @@ public class WaitingVoucher extends AbstractVoucher {
     public static class Builder extends AbstractBuilder {
 
         @Override
-        public IVoucher buildVoucher() {
-            return new WaitingVoucher(this);
+        public IPackage buildPackage() {
+            return new WaitingPackage(this);
         }
     }
 }

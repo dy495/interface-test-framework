@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 场景接口类Maker
+ * 场景接口类Marker
  *
  * @author wangmin
  * @date 2021/3/8 19:57

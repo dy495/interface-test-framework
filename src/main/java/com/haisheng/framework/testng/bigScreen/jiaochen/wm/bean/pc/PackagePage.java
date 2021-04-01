@@ -23,6 +23,12 @@ public class PackagePage implements Serializable {
     private String auditStatusName;
 
     /**
+     * 审核状态
+     */
+    @JSONField(name = "audit_status")
+    private String auditStatus;
+
+    /**
      * 套餐名称
      */
     @JSONField(name = "package_name")

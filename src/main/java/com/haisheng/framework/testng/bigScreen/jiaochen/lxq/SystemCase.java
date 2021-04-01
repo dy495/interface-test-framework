@@ -3079,7 +3079,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         try {
             VisitorProxy visitor =new VisitorProxy(EnumTestProduce.JC_DAILY);
 
-            Long voucherId=new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.INVALIDED).buildVoucher().getVoucherId();
+            Long voucherId=new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.INVALIDED).buildVoucher().getVoucherId();
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());

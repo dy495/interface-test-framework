@@ -19,13 +19,13 @@ public class InvalidVoucher extends AbstractVoucher {
     @Override
     public void execute(VisitorProxy visitor, IScene scene) {
         logger("CREATE INVALID START");
-        Long voucherId = new VoucherGenerator.Builder().voucherStatus(VoucherStatusEnum.WORKING).visitor(visitor).buildVoucher().getVoucherId();
+        Long voucherId = new VoucherGenerator.Builder().status(VoucherStatusEnum.WORKING).visitor(visitor).buildVoucher().getVoucherId();
         super.visitor = visitor;
         invalidVoucher(voucherId);
         logger("CREATE INVALID FINISH");
     }
 
-    public static class Builder extends BaseBuilder {
+    public static class Builder extends AbstractBuilder {
         @Override
         public IVoucher buildVoucher() {
             return new InvalidVoucher(this);

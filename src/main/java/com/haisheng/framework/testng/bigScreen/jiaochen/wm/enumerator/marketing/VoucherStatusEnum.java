@@ -65,9 +65,9 @@ public enum VoucherStatusEnum {
     @Getter
     private final String name;
     @Getter
-    private final AbstractVoucher.BaseBuilder voucherBuilder;
+    private final AbstractVoucher.AbstractBuilder voucherBuilder;
 
-    VoucherStatusEnum(Integer id, String name, AbstractVoucher.BaseBuilder voucherBuilder) {
+    VoucherStatusEnum(Integer id, String name, AbstractVoucher.AbstractBuilder voucherBuilder) {
         this.id = id;
         this.name = name;
         this.voucherBuilder = voucherBuilder;

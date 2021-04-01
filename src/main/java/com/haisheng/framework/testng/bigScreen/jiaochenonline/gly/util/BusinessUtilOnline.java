@@ -209,7 +209,7 @@ public class BusinessUtilOnline {
      * 获取进行中的优惠券
      */
     public Long getVoucherId() {
-        return new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+        return new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
     }
 
     /**
@@ -305,7 +305,7 @@ public class BusinessUtilOnline {
      *编辑裂变活动
      */
     public IScene fissionActivityEditScene(Long activityId){
-        Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+        Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
         SupporterUtil supporterUtil = new SupporterUtil(visitor);
         PublicParameter pp = new PublicParameter();
         List<String> picList = new ArrayList<>();
@@ -340,7 +340,7 @@ public class BusinessUtilOnline {
      * @return 活动id
      */
     public Long createRecruitActivityApproval() {
-        Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+        Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
         return createRecruitActivity(voucherId, true, 0, true);
     }
 
@@ -350,7 +350,7 @@ public class BusinessUtilOnline {
      * @return 活动id
      */
     public Long createRecruitActivityNotApproval() {
-        Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+        Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
         return createRecruitActivity(voucherId, true, 0, false);
     }
 
@@ -372,7 +372,7 @@ public class BusinessUtilOnline {
      *2021-3-17
      */
     public Long createRecruitActivity() {
-        Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+        Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
         IScene scene = createRecruitActivityScene(voucherId, true, 0, true,getEndDate(),getEndDate());
         return visitor.invokeApi(scene).getLong("id");
     }
@@ -778,7 +778,7 @@ public class BusinessUtilOnline {
             }
         }
         if (ids.size() == 0) {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             Long id1=createFissionActivity(voucherId);
             ids.add(id1);
         }
@@ -847,7 +847,7 @@ public class BusinessUtilOnline {
         }
         //创建活动并审批
         if (ids.size() == 0) {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             Long id1=createFissionActivity(voucherId);
             ids.add(id1);
 
@@ -1009,7 +1009,7 @@ public class BusinessUtilOnline {
         }
         //创建活动并审批不通过
         if (ids.size() == 0) {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             Long id1 = createFissionActivity(voucherId);
             getApprovalReject(id1);
             ids.add(id1);
@@ -1040,7 +1040,7 @@ public class BusinessUtilOnline {
         }
 
         if(ids.size() == 0){
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             Long id1 = createFissionActivity(voucherId);
             ids.add(id1);
         }
@@ -1163,7 +1163,7 @@ public class BusinessUtilOnline {
         //创建活动-审批通过活动-取消活动
         if (ids.size() == 0) {
             //创建活动
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             Long id = createFissionActivity(voucherId);
             //审批通过
             getApprovalReject(id);
@@ -1256,7 +1256,7 @@ public class BusinessUtilOnline {
             }
         }
         if(ids.size() == 0){
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             Long id1 = createFissionActivity(voucherId);
             getRevokeActivity(id1);
             ids.add(id1);
@@ -1354,7 +1354,7 @@ public class BusinessUtilOnline {
         //创建活动并审批
         if (ids.size() == 0) {
             //创建活动
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).voucherStatus(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             Long id1 = createFissionActivity(voucherId);
             //审批活动
             getApprovalPassed(id1);
