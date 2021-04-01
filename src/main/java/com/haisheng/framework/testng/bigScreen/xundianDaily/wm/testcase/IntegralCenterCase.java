@@ -16,10 +16,9 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.C
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.IntegralExchangeStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.OrderStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.enumerator.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.applet.granted.integralmall.*;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.applet.granted.userinfo.AppletDetailScene;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.generator.voucher.VoucherGenerator;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.applet.granted.*;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.integralcenter.*;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.integralmall.GoodsManagePageScene;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.util.SupporterUtil;

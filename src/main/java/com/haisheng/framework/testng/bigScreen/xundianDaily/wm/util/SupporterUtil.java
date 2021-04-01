@@ -6,21 +6,20 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.CommodityTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.SortTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.commodity.CommodityStatusEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherTypeEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherUseStatusEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.applet.granted.AppletMessageListScene;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.applet.granted.AppletVoucherListScene;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.applet.granted.integralmall.AppletCommodityListScene;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.applet.granted.integralmall.AppletExchangeRecordScene;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.applet.granted.integralmall.AppletIntegralRecordScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.*;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.generator.voucher.VoucherGenerator;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.applet.granted.*;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.integralcenter.*;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.integralmall.GoodsManagePageScene;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.loginuser.ShopListScene;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.messagemanager.PushMessageScene;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.voucher.ApplyApprovalScene;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.voucher.ApplyPageScene;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.vouchermanage.*;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
@@ -29,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -175,6 +175,26 @@ public class SupporterUtil {
     }
 
     /**
+     * 获取门店id
+     *
+     * @param shopCount 数量
+     * @return 门店id
+     */
+    public List<Long> getShopIdList(Integer shopCount) {
+        return getShopIdList().subList(0, shopCount);
+    }
+
+    /**
+     * 获取门店id
+     *
+     * @return 门店id
+     */
+    public List<Long> getShopIdList() {
+        JSONArray array = ShopListScene.builder().build().invoke(visitor, true).getJSONArray("list");
+        return array.stream().map(e -> (JSONObject) e).map(e -> e.getLong("shop_id")).collect(Collectors.toList());
+    }
+
+    /**
      * 创建描述
      *
      * @return 描述
@@ -316,54 +336,75 @@ public class SupporterUtil {
         return visitor.invokeApi(scene).getJSONArray("list").getJSONObject(0).getString("voucher_code");
     }
 
-//    /**
-//     * 获取优惠券申请信息
-//     *
-//     * @param voucherName 卡券名称
-//     * @return 卡券申请信息
-//     */
-//    public ApplyPage getAuditingApplyPage(String voucherName) {
-//        IScene scene = ApplyPageScene.builder().name(voucherName).status(ApplyStatusEnum.AUDITING.getId()).build();
-//        return collectBeanByField(scene, ApplyPage.class, "name", voucherName);
-//    }
+    /**
+     * 获取优惠券申请信息
+     *
+     * @param voucherName 卡券名称
+     * @return 卡券申请信息
+     */
+    public ApplyPage getAuditingApplyPage(String voucherName) {
+        IScene scene = ApplyPageScene.builder().name(voucherName).status(ApplyStatusEnum.AUDITING.getId()).build();
+        return collectBeanByField(scene, ApplyPage.class, "name", voucherName);
+    }
 
-//    /**
-//     * 获取优惠券申请信息
-//     *
-//     * @param voucherName 卡券名称
-//     * @return 卡券申请信息
-//     */
-//    public ApplyPage getApplyPage(String voucherName) {
-//        IScene scene = ApplyPageScene.builder().name(voucherName).build();
-//        return collectBeanByField(scene, ApplyPage.class, "name", voucherName);
-//    }
+    /**
+     * 获取优惠券申请信息
+     *
+     * @param voucherName 卡券名称
+     * @return 卡券申请信息
+     */
+    public ApplyPage getApplyPage(String voucherName) {
+        IScene scene = ApplyPageScene.builder().name(voucherName).build();
+        return collectBeanByField(scene, ApplyPage.class, "name", voucherName);
+    }
 
-//    /**
-//     * 获取优惠券申请信息
-//     *
-//     * @param voucherName 卡券名称
-//     * @return 卡券申请信息
-//     */
-//    public ApplyPage getApplyPageByTime(String voucherName, String time) {
-//        logger.info("time is:{}", time);
-//        IScene scene = ApplyPageScene.builder().name(voucherName).build();
-//        List<ApplyPage> voucherApplies = collectBean(scene, ApplyPage.class);
-//        return voucherApplies.stream().filter(e -> e.getName().equals(voucherName) && e.getApplyTime().contains(time)).findFirst().orElse(null);
-//    }
+    /**
+     * 获取优惠券申请信息
+     *
+     * @param voucherName 卡券名称
+     * @return 卡券申请信息
+     */
+    public ApplyPage getApplyPageByTime(String voucherName, String time) {
+        logger.info("time is:{}", time);
+        IScene scene = ApplyPageScene.builder().name(voucherName).build();
+        List<ApplyPage> voucherApplies = collectBean(scene, ApplyPage.class);
+        return voucherApplies.stream().filter(e -> e.getName().equals(voucherName) && e.getApplyTime().contains(time)).findFirst().orElse(null);
+    }
 
-//    /**
-//     * 卡券审批
-//     *
-//     * @param voucherName 卡券名称
-//     * @param status      通过 1/拒绝2
-//     */
-//    public void applyVoucher(String voucherName, String status) {
-//        IScene scene = ApplyPageScene.builder().name(voucherName).status(ApplyStatusEnum.AUDITING.getId()).build();
-//        ApplyPage applyPage = collectBeanByField(scene, ApplyPage.class, "name", voucherName);
-//        ApplyApprovalScene.builder().id(applyPage.getId()).status(status).build().invoke(visitor, true);
-//    }
+    /**
+     * 卡券审批
+     *
+     * @param voucherName 卡券名称
+     * @param status      通过 1/拒绝2
+     */
+    public void applyVoucher(String voucherName, String status) {
+        IScene scene = ApplyPageScene.builder().name(voucherName).status(ApplyStatusEnum.AUDITING.getId()).build();
+        ApplyPage applyPage = collectBeanByField(scene, ApplyPage.class, "name", voucherName);
+        ApplyApprovalScene.builder().id(applyPage.getId()).status(status).build().invoke(visitor, true);
+    }
 
     //----------------------------------------------------核销人员-------------------------------------------------------
+
+    /**
+     * 消息推送
+     *
+     * @param type               推送优惠类型 0：卡券，1：套餐
+     * @param voucherOrPackageId 卡券id
+     * @param immediately        是否立即发送
+     * @return 发出去的卡券id
+     */
+    public void pushMessage(Integer type, boolean immediately, Long... voucherOrPackageId) {
+        List<Long> voucherOrPackageList = new ArrayList<>(Arrays.asList(voucherOrPackageId));
+        List<String> phoneList = new ArrayList<>();
+        phoneList.add(EnumAccount.MARKETING_DAILY.getPhone());
+        PushMessageScene.PushMessageSceneBuilder builder = PushMessageScene.builder().pushTarget(AppletPushTargetEnum.PERSONNEL_CUSTOMER.getId())
+                .telList(phoneList).messageName(EnumDesc.DESC_BETWEEN_5_10.getDesc()).messageContent(EnumDesc.DESC_BETWEEN_40_50.getDesc())
+                .type(type).voucherOrPackageList(voucherOrPackageList).useDays("10");
+        String d = DateTimeUtil.getFormat(DateTimeUtil.addSecond(new Date(), 80), "yyyy-MM-dd HH:mm:ss");
+        long sendTime = Long.parseLong(DateTimeUtil.dateToStamp(d));
+        builder = immediately ? builder.ifSendImmediately(true) : builder.ifSendImmediately(false).sendTime(sendTime);
+        visitor.invokeApi(builder.build());
+    }
 
     /**
      * 获取非重复电话号
