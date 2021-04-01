@@ -25,6 +25,11 @@ public enum EnumTestProduce {
     INS_DAILY("门店-ins 日常", "", "http://dev.inspect.store.winsenseos.cn", "", "INS", ""),
 
     INS_ONLINE("门店-ins 赢识线上", "", "", "", "INS", ""),
+
+    FK_DAILY("风控 赢识日常", "", "http://127.0.0.1", "", "FK", ""),
+
+    FK_ONLINE("风控 赢识线上", "", "", "", "FK", ""),
+
     ;
 
     EnumTestProduce(String desc, String referer, String address, String shopId, String abbreviation, String roleId) {
