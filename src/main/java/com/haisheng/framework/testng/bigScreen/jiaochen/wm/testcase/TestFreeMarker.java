@@ -4,12 +4,16 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.sce
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.scenemaker.SceneMarker;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.parse.BeanParser;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.parse.SceneParser;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
 import org.jooq.impl.DSL;
 import org.testng.annotations.Test;
 
+import java.io.InputStream;
 import java.util.Arrays;
 
 /**
@@ -21,9 +25,9 @@ public class TestFreeMarker {
     @Test
     public void createScene() {
         String[] htmlPaths = {
-//                "http://192.168.50.3/api-doc/business-jiaochen/applet/index.html",
+                "http://192.168.50.3/api-doc/business-jiaochen/applet/index.html",
                 "http://192.168.50.3/api-doc/business-jiaochen/pc/index.html",
-//                "http://192.168.50.3/api-doc/business-jiaochen/app/index.html",
+                "http://192.168.50.3/api-doc/business-jiaochen/app/index.html",
         };
         Arrays.stream(htmlPaths).forEach(htmlPath -> {
             SceneAttribute[] sceneAttributeList = new SceneParser.Builder().htmlUrl(htmlPath).build().getAttributes();
@@ -56,9 +60,8 @@ public class TestFreeMarker {
         });
     }
 
-
     @Test
-    public void create() {
+    public void createRisk() {
         String[] htmlPaths = {"http://192.168.50.3/api-doc/business-risk-platform/index.html#_7_1_%E7%89%B9%E6%AE%8A%E4%BA%BA%E5%91%98%E5%88%86%E9%A1%B5"};
         Arrays.stream(htmlPaths).forEach(htmlPath -> {
             SceneAttribute[] sceneAttributeList = new SceneParser.Builder().htmlUrl(htmlPath).build().getAttributes();
@@ -81,12 +84,11 @@ public class TestFreeMarker {
 
     @Test
     public void testMybatis() {
-//        SqlSessionFactoryBuilder builder = new SqlSessionFactoryBuilder();
-//        InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("src/main/resources/configuration.xml");
-//        //配置文件
-//        SqlSessionFactory sqlSessionFactory = builder.build(inputStream);
-//        SqlSession sqlSession = sqlSessionFactory.openSession(true);
-//        sqlSession.insert()
+        SqlSessionFactoryBuilder builder = new SqlSessionFactoryBuilder();
+        InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("src/main/resources/configuration.xml");
+        //配置文件
+        SqlSessionFactory sqlSessionFactory = builder.build(inputStream);
+        SqlSession sqlSession = sqlSessionFactory.openSession(true);
     }
 
     @Test

@@ -5,15 +5,19 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.appointmentmanage.AppointmentRecordAppointmentPageBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.manage.EvaluatePageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppReceptionReceptorList;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletCommodity;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletIntegralRecord;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletShippingAddress;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.ChangeStockTypeEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.CommodityTypeEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.IntegralExchangeStatusEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.SortTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.appointment.AppointmentConfirmStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.appointment.AppointmentTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.AppletCodeBusinessTypeEnum;
@@ -130,7 +134,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             CommonUtil.checkResult("pc预约看板分子数", appointmentNumber + 1, newAppointmentNumber);
             int newAppointmentPageTotal = appointmentPageScene.invoke(visitor, true).getInteger("total");
             CommonUtil.checkResult("pc预约记录列表数", appointmentPageTotal + 1, newAppointmentPageTotal);
-            AppointmentPage appointmentPage = util.getAppointmentPageById(appointmentId);
+            AppointmentRecordAppointmentPageBean appointmentPage = util.getAppointmentPageById(appointmentId);
             CommonUtil.checkResult("预约类型", AppointmentTypeEnum.MAINTAIN.getValue(), appointmentPage.getTypeName());
             CommonUtil.checkResult("预约状态", AppointmentConfirmStatusEnum.WAITING.getStatusName(), appointmentPage.getAppointmentStatusName());
             CommonUtil.checkResult("是否可确认", true, appointmentPage.getIsCanConfirm());
@@ -144,7 +148,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             Integer newMakeSureAppAppointmentNum = util.getAppointmentPageNum();
             CommonUtil.checkResult("app预约记录数", makeSureAppointmentNum, newMakeSureAppAppointmentNum);
             user.loginPc(ALL_AUTHORITY);
-            AppointmentPage newAppointmentPage = util.getAppointmentPageById(appointmentId);
+            AppointmentRecordAppointmentPageBean newAppointmentPage = util.getAppointmentPageById(appointmentId);
             CommonUtil.checkResult("预约状态", AppointmentConfirmStatusEnum.AGREE.getStatusName(), newAppointmentPage.getAppointmentStatusName());
             CommonUtil.checkResult("是否可确认", false, newAppointmentPage.getIsCanConfirm());
             CommonUtil.checkResult("是否可接待", true, newAppointmentPage.getIsCanReception());
@@ -188,11 +192,11 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             CommonUtil.checkResult("完成接待后pc接待列表接待状态", ReceptionStatusEnum.FINISH.getStatusName(), finishReceptionPage.getReceptionStatusName());
             //评价
             user.loginPc(ALL_AUTHORITY);
-            List<EvaluatePage> evaluatePageList = util.getEvaluatePageList();
+            List<EvaluatePageBean> evaluatePageList = util.getEvaluatePageList();
             user.loginApplet(APPLET_USER_ONE);
             AppletEvaluateSubmitScene.builder().id(appointmentId).shopId(shopId).type(1).score(4).isAnonymous(true).describe(EnumDesc.DESC_BETWEEN_40_50.getDesc()).suggestion(EnumDesc.DESC_BETWEEN_40_50.getDesc()).build().invoke(visitor, true);
             user.loginPc(ALL_AUTHORITY);
-            List<EvaluatePage> newEvaluatePageList = util.getEvaluatePageList();
+            List<EvaluatePageBean> newEvaluatePageList = util.getEvaluatePageList();
             CommonUtil.checkResult("评价列表数", evaluatePageList.size() + 1, newEvaluatePageList.size());
             CommonUtil.checkResult("评价描述", EnumDesc.DESC_BETWEEN_40_50.getDesc(), newEvaluatePageList.get(0).getDescribe());
             CommonUtil.checkResult("评价内容", EnumDesc.DESC_BETWEEN_40_50.getDesc(), newEvaluatePageList.get(0).getSuggestion());
@@ -202,7 +206,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             Integer followId = util.getFollowUpPageList().get(0).getId();
             AppFollowUpCompleteScene.builder().id(followId).shopId(shopId).remark(EnumDesc.DESC_BETWEEN_40_50.getDesc()).build().invoke(visitor, true);
             user.loginPc(ALL_AUTHORITY);
-            List<EvaluatePage> followEvaluatePage = util.getEvaluatePageList();
+            List<EvaluatePageBean> followEvaluatePage = util.getEvaluatePageList();
             CommonUtil.checkResult("跟进后跟进备注", EnumDesc.DESC_BETWEEN_40_50.getDesc(), followEvaluatePage.get(0).getFollowUpRemark());
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -237,7 +241,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             CommonUtil.checkResult("pc预约看板分子数", appointmentNumber + 1, newAppointmentNumber);
             int newAppointmentPageTotal = visitor.invokeApi(appointmentPageScene).getInteger("total");
             CommonUtil.checkResult("pc预约记录列表数", appointmentPageTotal + 1, newAppointmentPageTotal);
-            AppointmentPage appointmentPage = util.getAppointmentPageById(appointmentId);
+            AppointmentRecordAppointmentPageBean appointmentPage = util.getAppointmentPageById(appointmentId);
             CommonUtil.checkResult("预约类型", AppointmentTypeEnum.REPAIR.getValue(), appointmentPage.getTypeName());
             CommonUtil.checkResult("预约状态", AppointmentConfirmStatusEnum.WAITING.getStatusName(), appointmentPage.getAppointmentStatusName());
             CommonUtil.checkResult("是否可确认", true, appointmentPage.getIsCanConfirm());
@@ -252,7 +256,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             Integer newMakeSureAppAppointmentNum = util.getAppointmentPageNum();
             CommonUtil.checkResult("app预约记录数", makeSureAppointmentNum, newMakeSureAppAppointmentNum);
             user.loginPc(ALL_AUTHORITY);
-            AppointmentPage newAppointmentPage = util.getAppointmentPageById(appointmentId);
+            AppointmentRecordAppointmentPageBean newAppointmentPage = util.getAppointmentPageById(appointmentId);
             CommonUtil.checkResult("预约状态", AppointmentConfirmStatusEnum.AGREE.getStatusName(), newAppointmentPage.getAppointmentStatusName());
             CommonUtil.checkResult("是否可确认", false, newAppointmentPage.getIsCanConfirm());
             CommonUtil.checkResult("是否可接待", true, newAppointmentPage.getIsCanReception());
@@ -299,11 +303,11 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             CommonUtil.checkResult("完成接待后pc接待列表接待状态", ReceptionStatusEnum.FINISH.getStatusName(), finishReceptionPage.getReceptionStatusName());
             //评价
             user.loginPc(ALL_AUTHORITY);
-            List<EvaluatePage> evaluatePageList = util.getEvaluatePageList();
+            List<EvaluatePageBean> evaluatePageList = util.getEvaluatePageList();
             user.loginApplet(APPLET_USER_ONE);
             AppletEvaluateSubmitScene.builder().id(appointmentId).shopId(shopId).type(2).score(4).isAnonymous(true).describe(EnumDesc.DESC_BETWEEN_40_50.getDesc()).suggestion(EnumDesc.DESC_BETWEEN_40_50.getDesc()).build().invoke(visitor, true);
             user.loginPc(ALL_AUTHORITY);
-            List<EvaluatePage> newEvaluatePageList = util.getEvaluatePageList();
+            List<EvaluatePageBean> newEvaluatePageList = util.getEvaluatePageList();
             CommonUtil.checkResult("评价列表数", evaluatePageList.size() + 1, newEvaluatePageList.size());
             CommonUtil.checkResult("评价描述", EnumDesc.DESC_BETWEEN_40_50.getDesc(), newEvaluatePageList.get(0).getDescribe());
             CommonUtil.checkResult("评价内容", EnumDesc.DESC_BETWEEN_40_50.getDesc(), newEvaluatePageList.get(0).getSuggestion());
@@ -313,7 +317,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             Integer followId = util.getFollowUpPageList().get(0).getId();
             AppFollowUpCompleteScene.builder().id(followId).shopId(shopId).remark(EnumDesc.DESC_BETWEEN_40_50.getDesc()).build().invoke(visitor, true);
             user.loginPc(ALL_AUTHORITY);
-            List<EvaluatePage> followEvaluatePage = util.getEvaluatePageList();
+            List<EvaluatePageBean> followEvaluatePage = util.getEvaluatePageList();
             CommonUtil.checkResult("跟进后跟进备注", EnumDesc.DESC_BETWEEN_40_50.getDesc(), followEvaluatePage.get(0).getFollowUpRemark());
         } catch (Exception | AssertionError e) {
             collectMessage(e);

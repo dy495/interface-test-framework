@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.parse;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.scenemaker.ApiAttribute;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.scenemaker.SceneAttribute;
+import lombok.Setter;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -25,9 +26,10 @@ import java.util.List;
  * @author wangmin
  * @date 2021/3/15 12:32
  */
+@Setter
 public abstract class AbstractHtmlParser implements IParser<SceneAttribute> {
     protected static final Logger logger = LoggerFactory.getLogger(AbstractHtmlParser.class);
-    private final String htmlUrl;
+    private String htmlUrl;
 
     public AbstractHtmlParser(@NotNull AbstractBuilder<?, ?> builder) {
         this.htmlUrl = builder.htmlUrl;

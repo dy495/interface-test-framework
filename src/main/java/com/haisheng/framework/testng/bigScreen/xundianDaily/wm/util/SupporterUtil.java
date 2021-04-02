@@ -4,8 +4,13 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.ApplyPage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.ExchangePage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherPage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherSendRecord;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.integralcenter.ExchangeGoodsDetailBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherInvalidPageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.CommodityTypeEnum;
@@ -260,9 +265,9 @@ public class SupporterUtil {
      * @param voucherId 卡券id
      * @return 作废记录列表
      */
-    public List<VoucherInvalidPage> getVoucherInvalidList(Long voucherId) {
+    public List<VoucherInvalidPageBean> getVoucherInvalidList(Long voucherId) {
         IScene scene = VoucherInvalidPageScene.builder().id(voucherId).build();
-        return collectBean(scene, VoucherInvalidPage.class);
+        return collectBean(scene, VoucherInvalidPageBean.class);
     }
 
     /**
@@ -765,10 +770,10 @@ public class SupporterUtil {
 
     public void modifyExchangeGoodsLimit(Long exchangeGoodsId, String exchangeGoodsType, Boolean isLimit) {
         IScene scene = ExchangeGoodsDetailScene.builder().id(exchangeGoodsId).build();
-        ExchangeGoodsDetail exchangeGoodsDetail = JSONObject.toJavaObject(scene.invoke(visitor, true), ExchangeGoodsDetail.class);
+        ExchangeGoodsDetailBean exchangeGoodsDetail = JSONObject.toJavaObject(scene.invoke(visitor, true), ExchangeGoodsDetailBean.class);
         EditExchangeGoodsScene.EditExchangeGoodsSceneBuilder builder = EditExchangeGoodsScene.builder()
                 .exchangeGoodsType(exchangeGoodsDetail.getExchangeGoodsType()).goodsId(exchangeGoodsDetail.getGoodsId())
-                .exchangePrice((long) exchangeGoodsDetail.getExchangePrice()).exchangeNum((long) exchangeGoodsDetail.getExchangeNum())
+                .exchangePrice(exchangeGoodsDetail.getExchangePrice()).exchangeNum(exchangeGoodsDetail.getExchangeNum())
                 .exchangeStartTime(exchangeGoodsDetail.getExchangeStartTime()).exchangeEndTime(exchangeGoodsDetail.getExchangeEndTime())
                 .isLimit(isLimit).id(exchangeGoodsDetail.getId());
         builder = isLimit ? builder.exchangePeopleNum(1) : builder;

@@ -5,12 +5,17 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.appointmentmanage.AppointmentRecordAppointmentPageBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.integralcenter.ExchangeGoodsDetailBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.manage.EvaluatePageBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.packagemanage.PackageDetailBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherInvalidPageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppAppointmentPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppFollowUpPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppReceptionPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppReceptionReceptorList;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumVP;
@@ -27,13 +32,13 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.AppFollowU
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.task.AppAppointmentPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.task.AppReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.task.AppReceptionReceptorListScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralmall.GoodsManagePageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.FissionVoucherAddScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.ManageRecruitAddScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.appointmentmanage.AppointmentPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.appointmentmanage.TimeTableListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpload;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralmall.GoodsManagePageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.loginuser.ShopListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.manage.EvaluatePageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.GroupTotalScene;
@@ -108,16 +113,26 @@ public class SupporterUtil {
      *
      * @param scene 接口场景
      * @param bean  bean类
+     * @param <T>   T
+     * @return bean的集合
+     */
+    public <T> T collectBeanByScene(IScene scene, Class<T> bean) {
+        return JSONObject.toJavaObject(scene.invoke(visitor, true), bean);
+    }
+
+    /**
+     * 收集结果
+     * 结果为bean类型
+     *
+     * @param scene 接口场景
+     * @param bean  bean类
      * @param key   指定的key
      * @param value 指定key的指定value
      * @param <T>   T
      * @return bean
      */
     public <T> T collectBeanByField(@NotNull IScene scene, Class<T> bean, String key, Object value) {
-        int size = SIZE;
-        if (scene instanceof BuyPackageRecordScene) {
-            size = SIZE / 10;
-        }
+        int size = scene instanceof BuyPackageRecordScene ? SIZE / 10 : SIZE;
         int total = scene.invoke(visitor, true).getInteger("total");
         int s = CommonUtil.getTurningPage(total, size);
         for (int i = 1; i < s; i++) {
@@ -372,9 +387,9 @@ public class SupporterUtil {
      * @param voucherId 卡券id
      * @return 作废记录列表
      */
-    public List<VoucherInvalidPage> getVoucherInvalidList(Long voucherId) {
+    public List<VoucherInvalidPageBean> getVoucherInvalidList(Long voucherId) {
         IScene scene = VoucherInvalidPageScene.builder().id(voucherId).build();
-        return collectBean(scene, VoucherInvalidPage.class);
+        return collectBean(scene, VoucherInvalidPageBean.class);
     }
 
     /**
@@ -632,9 +647,9 @@ public class SupporterUtil {
         return voucherList.stream().map(e -> (JSONObject) e).map(e -> e.getLong("voucher_id")).collect(Collectors.toList());
     }
 
-    public PackageDetail getPackageDetail(Long packageId) {
+    public PackageDetailBean getPackageDetail(Long packageId) {
         IScene packageDetailScene = PackageDetailScene.builder().id(packageId).build();
-        return JSONObject.toJavaObject(packageDetailScene.invoke(visitor, true), PackageDetail.class);
+        return collectBeanByScene(packageDetailScene, PackageDetailBean.class);
     }
 
     /**
@@ -646,7 +661,7 @@ public class SupporterUtil {
      */
     public String editPackage(Long packageId, JSONArray voucherList) {
         IScene scene = PackageDetailScene.builder().id(packageId).build();
-        PackageDetail packageDetail = JSONObject.toJavaObject(scene.invoke(visitor, true), PackageDetail.class);
+        PackageDetailBean packageDetail = collectBeanByScene(scene, PackageDetailBean.class);
         Preconditions.checkArgument(packageDetail != null, packageId + " 套餐没找到相关信息");
         EditPackageScene.builder().packageName(packageDetail.getPackageName())
                 .packageDescription(packageDetail.getPackageDescription())
@@ -731,8 +746,8 @@ public class SupporterUtil {
      * @param type      0赠送/1购买
      */
     public void receptionBuyFixedPackage(Long packageId, int type) {
-        JSONObject data = PackageDetailScene.builder().id(packageId).build().invoke(visitor, true);
-        PackageDetail packageDetail = JSONObject.toJavaObject(data, PackageDetail.class);
+        IScene scene = PackageDetailScene.builder().id(packageId).build();
+        PackageDetailBean packageDetail = collectBeanByScene(scene, PackageDetailBean.class);
         Preconditions.checkArgument(packageDetail != null, "没找到 " + packageId + " 套餐相关信息");
         Integer expiryDate = packageDetail.getExpiryDate();
         Integer expireType = packageDetail.getExpireType();
@@ -799,9 +814,9 @@ public class SupporterUtil {
      * @param appointmentId 预约id
      * @return 预约信息
      */
-    public AppointmentPage getAppointmentPageById(Integer appointmentId) {
+    public AppointmentRecordAppointmentPageBean getAppointmentPageById(Integer appointmentId) {
         IScene scene = AppointmentPageScene.builder().build();
-        return collectBeanByField(scene, AppointmentPage.class, "id", appointmentId);
+        return collectBeanByField(scene, AppointmentRecordAppointmentPageBean.class, "id", appointmentId);
     }
 
     //----------------------------------------------------接待记录-------------------------------------------------------
@@ -897,9 +912,9 @@ public class SupporterUtil {
      *
      * @return 评价列表
      */
-    public List<EvaluatePage> getEvaluatePageList() {
+    public List<EvaluatePageBean> getEvaluatePageList() {
         IScene scene = EvaluatePageScene.builder().build();
-        return collectBean(scene, EvaluatePage.class);
+        return collectBean(scene, EvaluatePageBean.class);
     }
 
     //-------------------------------------------------小程序----------------------------------------------------------
@@ -1442,7 +1457,7 @@ public class SupporterUtil {
 
     public void modifyExchangeGoodsLimit(Long exchangeGoodsId, String exchangeGoodsType, Boolean isLimit) {
         IScene scene = ExchangeGoodsDetailScene.builder().id(exchangeGoodsId).build();
-        ExchangeGoodsDetail exchangeGoodsDetail = JSONObject.toJavaObject(scene.invoke(visitor, true), ExchangeGoodsDetail.class);
+        ExchangeGoodsDetailBean exchangeGoodsDetail = JSONObject.toJavaObject(scene.invoke(visitor, true), ExchangeGoodsDetailBean.class);
         EditExchangeGoodsScene.EditExchangeGoodsSceneBuilder builder = EditExchangeGoodsScene.builder()
                 .exchangeGoodsType(exchangeGoodsDetail.getExchangeGoodsType()).goodsId(exchangeGoodsDetail.getGoodsId())
                 .exchangePrice(exchangeGoodsDetail.getExchangePrice()).exchangeNum(exchangeGoodsDetail.getExchangeNum())

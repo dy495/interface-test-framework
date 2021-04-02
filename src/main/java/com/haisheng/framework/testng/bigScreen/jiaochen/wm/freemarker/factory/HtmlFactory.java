@@ -1,9 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.factory;
 
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.parse.BeanParser;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.scenemaker.SceneAttribute;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.parse.IParser;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.parse.SceneParser;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * @author wangmin
@@ -14,15 +12,13 @@ public class HtmlFactory {
     /**
      * 通过解析器获取属性
      *
-     * @param parser 解析器
-     * @param <T>    T
+     * @param htmlPath htmlPath
+     * @param clazz    解析器所在类
+     * @param <T>      T
      * @return 各自的属性
      */
-    public <T> T[] getAttribute(@NotNull IParser<?> parser) {
-        if (parser instanceof SceneParser || parser instanceof BeanParser) {
-            return (T[]) parser.getAttributes();
-        } else {
-            return null;
-        }
+    public <T> SceneAttribute[] getAttribute(String htmlPath, IParser<T> parser) {
+        parser.setHtmlUrl(htmlPath);
+        return (SceneAttribute[]) parser.getAttributes();
     }
 }

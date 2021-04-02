@@ -11,13 +11,13 @@ import lombok.Builder;
 public class EditExchangeGoodsScene extends BaseScene {
     private final String exchangeGoodsType;
     private final Long goodsId;
-    private final Integer exchangePrice;
+    private final Long exchangePrice;
     private final Boolean isLimit;
     private final Integer exchangePeopleNum;
     private final String exchangeStartTime;
     private final String exchangeEndTime;
     private final Long id;
-    private final Integer exchangeNum;
+    private final Long exchangeNum;
     private final Integer expireType;
     private final Integer useDays;
 

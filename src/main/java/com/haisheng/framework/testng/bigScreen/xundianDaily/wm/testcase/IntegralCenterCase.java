@@ -6,10 +6,15 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.integralcenter.CustomerIntegralChangeRecordPageBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.integralcenter.ExchangeOrderBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.integralcenter.ExchangeStockPageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletExchangeRecord;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletIntegralRecord;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletShippingAddress;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.ExchangeDetailed;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.ExchangePage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.ChangeStockTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.CommodityTypeEnum;
@@ -100,12 +105,12 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             user.loginPc(ALL_AUTHORITY);
             //变更记录
             IScene scene = CustomerIntegralChangeRecordPageScene.builder().build();
-            List<ChangeRecord> changeRecordList = util.collectBean(scene, ChangeRecord.class);
+            List<CustomerIntegralChangeRecordPageBean> changeRecordList = util.collectBean(scene, CustomerIntegralChangeRecordPageBean.class);
             JSONObject data = CustomerPageScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).build().invoke(visitor, true);
             Long id = data.getJSONArray("list").getJSONObject(0).getLong("id");
             CustomerIntegralChangeScene.builder().id(id).changeType(ChangeStockTypeEnum.ADD.name()).remark(EnumDesc.DESC_BETWEEN_5_10.getDesc()).integral(1L).build().invoke(visitor, true);
             //变更记录
-            List<ChangeRecord> newChangeRecordList = util.collectBean(scene, ChangeRecord.class);
+            List<CustomerIntegralChangeRecordPageBean> newChangeRecordList = util.collectBean(scene, CustomerIntegralChangeRecordPageBean.class);
             CommonUtil.checkResult("增加积分后，变更记录页列表条数", changeRecordList.size() + 1, newChangeRecordList.size());
             //变更内容
             CommonUtil.checkResult("联系方式", APPLET_USER_ONE.getPhone(), newChangeRecordList.get(0).getCustomerPhone());
@@ -142,12 +147,12 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             user.loginPc(ALL_AUTHORITY);
             //变更记录
             IScene scene = CustomerIntegralChangeRecordPageScene.builder().build();
-            List<ChangeRecord> changeRecordList = util.collectBean(scene, ChangeRecord.class);
+            List<CustomerIntegralChangeRecordPageBean> changeRecordList = util.collectBean(scene, CustomerIntegralChangeRecordPageBean.class);
             JSONObject data = CustomerPageScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).build().invoke(visitor, true);
             Long id = data.getJSONArray("list").getJSONObject(0).getLong("id");
             CustomerIntegralChangeScene.builder().id(id).changeType(ChangeStockTypeEnum.MINUS.name()).remark(EnumDesc.DESC_BETWEEN_5_10.getDesc()).integral(1L).build().invoke(visitor, true);
             //变更记录
-            List<ChangeRecord> newChangeRecordList = util.collectBean(scene, ChangeRecord.class);
+            List<CustomerIntegralChangeRecordPageBean> newChangeRecordList = util.collectBean(scene, CustomerIntegralChangeRecordPageBean.class);
             CommonUtil.checkResult("增加积分后，变更记录页列表条数", changeRecordList.size() + 1, newChangeRecordList.size());
             //变更内容
             CommonUtil.checkResult("联系方式", APPLET_USER_ONE.getPhone(), newChangeRecordList.get(0).getCustomerPhone());
@@ -452,7 +457,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             List<ExchangePage> exchangePageList = util.collectBean(exchangePageScene, ExchangePage.class);
             Long id = exchangePageList.stream().filter(e -> Integer.parseInt(e.getExchangedAndSurplus().split("/")[1]) < 10).map(ExchangePage::getId).findFirst().orElse(0L);
             IScene exchangeStockPageScene = ExchangeStockPageScene.builder().id(id).build();
-            int exchangeStockPageListSize = util.collectBean(exchangeStockPageScene, ExchangeStockPage.class).size();
+            int exchangeStockPageListSize = util.collectBean(exchangeStockPageScene, ExchangeStockPageBean.class).size();
             String goodsName = ExchangeGoodsStockScene.builder().id(id).build().invoke(visitor, true).getString("goods_name");
             JSONObject specificationDetail = ExchangeCommoditySpecificationsListScene.builder().id(id).build().invoke(visitor, true).getJSONArray("specification_detail_list").getJSONObject(0);
             String firstSpecificationsName = specificationDetail.getString("first_specifications_name");
@@ -463,11 +468,11 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             //规格详情剩余库存	+1
             CommonUtil.checkResult(firstSpecificationsName + "剩余库存", num + 1, numTow);
             //库存明细
-            List<ExchangeStockPage> exchangeStockPageList = util.collectBean(exchangeStockPageScene, ExchangeStockPage.class);
+            List<ExchangeStockPageBean> exchangeStockPageList = util.collectBean(exchangeStockPageScene, ExchangeStockPageBean.class);
             CommonUtil.checkResult("兑换品库存明细列表数", exchangeStockPageListSize + 1, exchangeStockPageList.size());
             CommonUtil.checkResult("兑换品库存明细手机号", ALL_AUTHORITY.getPhone(), exchangeStockPageList.get(0).getSalePhone());
             CommonUtil.checkResult("兑换品库存明细操作人", ALL_AUTHORITY.getName(), exchangeStockPageList.get(0).getSaleName());
-            CommonUtil.checkResult("兑换品库存明细库存明细", 1, exchangeStockPageList.get(0).getStockDetail());
+            CommonUtil.checkResult("兑换品库存明细库存明细", 1L, exchangeStockPageList.get(0).getStockDetail());
             CommonUtil.checkResult("兑换品库存明细变更类型", ChangeStockTypeEnum.ADD.name(), exchangeStockPageList.get(0).getExchangeType());
             CommonUtil.checkResult("兑换品库存明细变动原因", "管理员编辑库存", exchangeStockPageList.get(0).getChangeReason());
             //减少库存
@@ -475,11 +480,11 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             Integer numThree = ExchangeCommoditySpecificationsListScene.builder().id(id).build().invoke(visitor, true).getJSONArray("specification_detail_list").getJSONObject(0).getInteger("num");
             CommonUtil.checkResult(firstSpecificationsName + "剩余库存", numTow - 1, numThree);
             //库存明细
-            List<ExchangeStockPage> exchangeStockPageListTwo = util.collectBean(exchangeStockPageScene, ExchangeStockPage.class);
+            List<ExchangeStockPageBean> exchangeStockPageListTwo = util.collectBean(exchangeStockPageScene, ExchangeStockPageBean.class);
             CommonUtil.checkResult("兑换品库存明细列表数", exchangeStockPageList.size() + 1, exchangeStockPageListTwo.size());
             CommonUtil.checkResult("兑换品库存明细手机号", ALL_AUTHORITY.getPhone(), exchangeStockPageListTwo.get(0).getSalePhone());
             CommonUtil.checkResult("兑换品库存明细操作人", ALL_AUTHORITY.getName(), exchangeStockPageListTwo.get(0).getSaleName());
-            CommonUtil.checkResult("兑换品库存明细库存明细", 1, exchangeStockPageListTwo.get(0).getStockDetail());
+            CommonUtil.checkResult("兑换品库存明细库存明细", 1L, exchangeStockPageListTwo.get(0).getStockDetail());
             CommonUtil.checkResult("兑换品库存明细变更类型", ChangeStockTypeEnum.MINUS.name(), exchangeStockPageListTwo.get(0).getExchangeType());
             CommonUtil.checkResult("兑换品库存明细变动原因", "管理员编辑库存", exchangeStockPageListTwo.get(0).getChangeReason());
         } catch (Exception | AssertionError e) {
@@ -635,7 +640,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             //积分订单页
             user.loginPc(ALL_AUTHORITY);
             IScene exchangeOrderScene = ExchangeOrderScene.builder().build();
-            ExchangeOrder exchangeOrder = util.collectBean(exchangeOrderScene, ExchangeOrder.class).get(0);
+            ExchangeOrderBean exchangeOrder = util.collectBean(exchangeOrderScene, ExchangeOrderBean.class).get(0);
             CommonUtil.checkResult("pc积分订单页订单号", appletExchangeRecord.getOrderId(), exchangeOrder.getOrderId());
             CommonUtil.checkResult("pc积分订单页订单名称", appletExchangeRecord.getName(), exchangeOrder.getGoodsName());
             CommonUtil.checkResult("pc积分订单页订单分类", CommodityTypeEnum.REAL.getName(), exchangeOrder.getGoodsType());
@@ -644,7 +649,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             //发货
             ConfirmShipmentScene.builder().id(exchangeOrder.getId()).oddNumbers("1122").build().invoke(visitor, true);
             //pc状态2
-            ExchangeOrder exchangeOrderTwo = util.collectBean(exchangeOrderScene, ExchangeOrder.class).get(0);
+            ExchangeOrderBean exchangeOrderTwo = util.collectBean(exchangeOrderScene, ExchangeOrderBean.class).get(0);
             CommonUtil.checkResult("pc积分订单页订单状态", OrderStatusEnum.SEND.name(), exchangeOrderTwo.getOrderStatus());
             CommonUtil.checkResult("pc积分订单页订单状态", OrderStatusEnum.SEND.getName(), exchangeOrderTwo.getOrderStatusName());
             //小程序状态2
@@ -663,7 +668,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             CommonUtil.checkResult("小程序订单详情订单状态", OrderStatusEnum.FINISHED.getName(), response.getString("exchange_status_name"));
             //pc状态3
             user.loginPc(ALL_AUTHORITY);
-            ExchangeOrder exchangeOrderThree = util.collectBean(exchangeOrderScene, ExchangeOrder.class).get(0);
+            ExchangeOrderBean exchangeOrderThree = util.collectBean(exchangeOrderScene, ExchangeOrderBean.class).get(0);
             CommonUtil.checkResult("pc积分订单页订单状态", OrderStatusEnum.FINISHED.name(), exchangeOrderThree.getOrderStatus());
             CommonUtil.checkResult("pc积分订单页订单状态", OrderStatusEnum.FINISHED.getName(), exchangeOrderThree.getOrderStatusName());
             CommonUtil.checkResult("pc积分订单页订单确认发货", false, exchangeOrderThree.getIsConfirmShipment());
@@ -678,7 +683,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             //取消
             CancelOrderScene.builder().id(exchangeOrder.getId()).build().invoke(visitor, true);
             //pc状态4
-            ExchangeOrder exchangeOrderFour = util.collectBean(exchangeOrderScene, ExchangeOrder.class).get(0);
+            ExchangeOrderBean exchangeOrderFour = util.collectBean(exchangeOrderScene, ExchangeOrderBean.class).get(0);
             CommonUtil.checkResult("pc积分订单页订单状态", OrderStatusEnum.CANCELED.name(), exchangeOrderFour.getOrderStatus());
             CommonUtil.checkResult("pc积分订单页订单状态", OrderStatusEnum.CANCELED.getName(), exchangeOrderFour.getOrderStatusName());
             CommonUtil.checkResult("pc积分订单页订单确认发货", false, exchangeOrderFour.getIsConfirmShipment());

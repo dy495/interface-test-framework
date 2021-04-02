@@ -29,8 +29,8 @@ public enum VoucherApprovalStatusEnum {
      */
     RECALL(3, "已撤回");
 
-    private Integer id;
-    private String name;
+    private final Integer id;
+    private final String name;
 
     VoucherApprovalStatusEnum(Integer id, String name) {
         this.id = id;

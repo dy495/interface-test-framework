@@ -7,12 +7,14 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.PackageDetail;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.packagemanage.PackageDetailBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.PackagePage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherPage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherSendRecord;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.UseStatusEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.CustomerLabelTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.audit.AuditStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.customer.CustomMessageStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.*;
@@ -30,6 +32,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.record.PushM
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vipmarketing.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.SendRecordScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherFormVoucherPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherInfoScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -178,7 +181,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             IScene packageFormPageScene = PackageFormPageScene.builder().build();
             List<PackagePage> packagePageList = util.collectBean(packageFormPageScene, PackagePage.class);
             packagePageList.forEach(packagePage -> {
-                PackageDetail packageDetail = util.getPackageDetail(packagePage.getPackageId());
+                PackageDetailBean packageDetail = util.getPackageDetail(packagePage.getPackageId());
                 int voucherCountSum = packageDetail.getVoucherList().stream().map(e -> (JSONObject) e).mapToInt(e -> e.getInteger("voucher_count")).sum();
                 CommonUtil.checkResultPlus(packagePage.getPackageName() + " 列表价格", packagePage.getPrice().equals("0") ? "0.00" : packagePage.getPrice(), "详情价格", packageDetail.getPackagePrice());
                 CommonUtil.checkResultPlus(packagePage.getPackageName() + " 卡券数量", packagePage.getVoucherNumber(), "详情卡券数量", voucherCountSum);
@@ -282,6 +285,182 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             collectMessage(e);
         } finally {
             saveData("套餐管理--套餐管理--创建套餐，拒绝，套餐状态为已拒绝");
+        }
+    }
+
+    //ok
+    @Test(description = "套餐管理--购买一个临时套餐，套餐内卡券剩余库存-1&套餐购买记录+1")
+    public void packageManage_data_19() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            String voucherName = util.getVoucherName(voucherId);
+            //购买前数据
+            Long surplusInventory = util.getVoucherPage(voucherName).getSurplusInventory();
+            IScene buyPackageRecordScene = BuyPackageRecordScene.builder().build();
+            int buyPackageRecordTotal = visitor.invokeApi(buyPackageRecordScene).getInteger("total");
+            IScene voucherInfoScene = VoucherInfoScene.builder().id(voucherId).build();
+            int totalSend = visitor.invokeApi(voucherInfoScene).getInteger("total_send");
+            user.loginApplet(APPLET_USER_ONE);
+            int appletVoucherNum = util.getAppletVoucherNum();
+            int appletPackageNum = util.getAppletPackageNum();
+            //购买临时套餐
+            user.loginPc(ALL_AUTHORITY);
+            JSONArray voucherList = util.getVoucherArray(voucherId, 1);
+            util.buyTemporaryPackage(voucherList, 1);
+            util.makeSureBuyPackage("临时套餐");
+            //购买后数据
+            CommonUtil.checkResult("套餐购买记录", buyPackageRecordTotal + 1, visitor.invokeApi(buyPackageRecordScene).getInteger("total"));
+            VoucherSendRecord voucherSendRecord = util.getVoucherSendRecordList(voucherName).get(0);
+            CommonUtil.checkResult(voucherName + " 领取记录卡券使用状态", VoucherUseStatusEnum.NEAR_EXPIRE.name(), voucherSendRecord.getVoucherUseStatus());
+            CommonUtil.checkResult(voucherName + " 领取记录卡券使用状态", VoucherUseStatusEnum.NEAR_EXPIRE.getName(), voucherSendRecord.getVoucherUseStatusName());
+            CommonUtil.checkResult(voucherName + " 领取人电话", APPLET_USER_ONE.getPhone(), voucherSendRecord.getCustomerPhone());
+            CommonUtil.checkResult(voucherName + " 领取记录卡券发出渠道", VoucherSourceEnum.PURCHASE.getName(), voucherSendRecord.getSendChannelName());
+            Preconditions.checkArgument(voucherSendRecord.getCustomerLabelName().contains(CustomerLabelTypeEnum.VIP.getTypeName()), "领取人标签" + voucherSendRecord.getCustomerLabelName());
+            Preconditions.checkArgument(voucherSendRecord.getCustomerLabelName().contains(CustomerLabelTypeEnum.APPLET.getTypeName()), "领取人标签" + voucherSendRecord.getCustomerLabelName());
+            CommonUtil.checkResult(voucherName + " 剩余库存", surplusInventory - 1, util.getVoucherPage(voucherName).getSurplusInventory());
+            CommonUtil.checkResult(voucherName + " 共领取数", totalSend + 1, visitor.invokeApi(voucherInfoScene).getInteger("total_send"));
+            user.loginApplet(APPLET_USER_ONE);
+            CommonUtil.checkResult("小程序我的卡券数", appletVoucherNum + 1, util.getAppletVoucherNum());
+            CommonUtil.checkResult("小程序我的套餐数", appletPackageNum, util.getAppletPackageNum());
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐管理--购买一个临时套餐，套餐内卡券剩余库存-1&套餐购买记录+1");
+        }
+    }
+
+    //ok
+    @Test(description = "套餐管理--购买一个固定套餐，包含卡券剩余库存-1&套餐购买记录+1&套餐购买数量+1")
+    public void packageManage_data_20() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            String voucherName = util.getVoucherName(voucherId);
+            JSONArray voucherList = util.getVoucherArray(voucherId, 1);
+            String packageName = util.editPackage(voucherList);
+            Long packageId = util.getPackageId(packageName);
+            //购买前数据
+            Long surplusInventory = util.getVoucherPage(voucherName).getSurplusInventory();
+            IScene buyPackageRecordScene = BuyPackageRecordScene.builder().build();
+            int buyPackageRecordTotal = visitor.invokeApi(buyPackageRecordScene).getInteger("total");
+            int soldNumber = util.getPackagePage(packageName).getSoldNumber();
+            IScene voucherInfoScene = VoucherInfoScene.builder().id(voucherId).build();
+            int totalSend = visitor.invokeApi(voucherInfoScene).getInteger("total_send");
+            user.loginApplet(APPLET_USER_ONE);
+            int appletVoucherNum = util.getAppletVoucherNum();
+            int appletPackageNum = util.getAppletPackageNum();
+            user.loginPc(ALL_AUTHORITY);
+            //购买固定套餐
+            util.buyFixedPackage(packageId, 1);
+            //确认支付
+            util.makeSureBuyPackage(packageName);
+            //购买后数据
+            CommonUtil.checkResult("套餐购买列表数", buyPackageRecordTotal + 1, visitor.invokeApi(buyPackageRecordScene).getInteger("total"));
+            CommonUtil.checkResult(packageName + " 售出（套）", soldNumber + 1, util.getPackagePage(packageName).getSoldNumber());
+            VoucherSendRecord voucherSendRecord = util.getVoucherSendRecordList(voucherName).get(0);
+            CommonUtil.checkResult(voucherName + " 领取记录卡券使用状态", VoucherUseStatusEnum.NEAR_EXPIRE.name(), voucherSendRecord.getVoucherUseStatus());
+            CommonUtil.checkResult(voucherName + " 领取记录卡券使用状态", VoucherUseStatusEnum.NEAR_EXPIRE.getName(), voucherSendRecord.getVoucherUseStatusName());
+            CommonUtil.checkResult(voucherName + " 领取人电话", APPLET_USER_ONE.getPhone(), voucherSendRecord.getCustomerPhone());
+            CommonUtil.checkResult(voucherName + " 领取记录卡券发出渠道", VoucherSourceEnum.PURCHASE.getName(), voucherSendRecord.getSendChannelName());
+            Preconditions.checkArgument(voucherSendRecord.getCustomerLabelName().contains(CustomerLabelTypeEnum.VIP.getTypeName()), "领取人标签" + voucherSendRecord.getCustomerLabelName());
+            Preconditions.checkArgument(voucherSendRecord.getCustomerLabelName().contains(CustomerLabelTypeEnum.APPLET.getTypeName()), "领取人标签" + voucherSendRecord.getCustomerLabelName());
+            CommonUtil.checkResult(voucherName + " 购买后剩余库存", surplusInventory - 1, util.getVoucherPage(voucherName).getSurplusInventory());
+            CommonUtil.checkResult(voucherName + " 共领取数", totalSend + 1, visitor.invokeApi(voucherInfoScene).getInteger("total_send"));
+            user.loginApplet(APPLET_USER_ONE);
+            CommonUtil.checkResult("小程序我的卡券数", appletVoucherNum, util.getAppletVoucherNum());
+            CommonUtil.checkResult("小程序我的套餐数", appletPackageNum + 1, util.getAppletPackageNum());
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐管理--购买一个固定套餐，包含卡券剩余库存-1&套餐购买记录+1&套餐购买数量+1");
+        }
+    }
+
+    //ok
+    @Test(description = "套餐管理--赠送一个临时套餐，套餐内卡券剩余库存-1&套餐购买记录+1")
+    public void packageManage_data_21() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            String voucherName = util.getVoucherName(voucherId);
+            //购买前数据
+            Long surplusInventory = util.getVoucherPage(voucherName).getSurplusInventory();
+            IScene voucherInfoScene = VoucherInfoScene.builder().id(voucherId).build();
+            int totalSend = visitor.invokeApi(voucherInfoScene).getInteger("total_send");
+            IScene buyPackageRecordScene = BuyPackageRecordScene.builder().build();
+            int buyPackageRecordTotal = visitor.invokeApi(buyPackageRecordScene).getInteger("total");
+            user.loginApplet(APPLET_USER_ONE);
+            int appletVoucherNum = util.getAppletVoucherNum();
+            int appletPackageNum = util.getAppletPackageNum();
+            //临时套餐
+            user.loginPc(ALL_AUTHORITY);
+            JSONArray voucherList = util.getVoucherArray(voucherId, 1);
+            util.buyTemporaryPackage(voucherList, 0);
+            util.makeSureBuyPackage("临时套餐");
+            //赠送后数据
+            CommonUtil.checkResult("套餐购买列表数", buyPackageRecordTotal + 1, visitor.invokeApi(buyPackageRecordScene).getInteger("total"));
+            VoucherSendRecord voucherSendRecord = util.getVoucherSendRecordList(voucherName).get(0);
+            CommonUtil.checkResult(voucherName + " 领取记录卡券使用状态", VoucherUseStatusEnum.NEAR_EXPIRE.name(), voucherSendRecord.getVoucherUseStatus());
+            CommonUtil.checkResult(voucherName + " 领取记录卡券使用状态", VoucherUseStatusEnum.NEAR_EXPIRE.getName(), voucherSendRecord.getVoucherUseStatusName());
+            CommonUtil.checkResult(voucherName + " 领取人电话", APPLET_USER_ONE.getPhone(), voucherSendRecord.getCustomerPhone());
+            CommonUtil.checkResult(voucherName + " 领取记录卡券发出渠道", VoucherSourceEnum.PURCHASE.getName(), voucherSendRecord.getSendChannelName());
+            Preconditions.checkArgument(voucherSendRecord.getCustomerLabelName().contains(CustomerLabelTypeEnum.VIP.getTypeName()), "领取人标签" + voucherSendRecord.getCustomerLabelName());
+            Preconditions.checkArgument(voucherSendRecord.getCustomerLabelName().contains(CustomerLabelTypeEnum.APPLET.getTypeName()), "领取人标签" + voucherSendRecord.getCustomerLabelName());
+            CommonUtil.checkResult(voucherName + " 剩余库存", surplusInventory - 1, util.getVoucherPage(voucherName).getSurplusInventory());
+            CommonUtil.checkResult(voucherName + " 共领取数", totalSend + 1, visitor.invokeApi(voucherInfoScene).getInteger("total_send"));
+            user.loginApplet(APPLET_USER_ONE);
+            CommonUtil.checkResult("小程序我的卡券数", appletVoucherNum + 1, util.getAppletVoucherNum());
+            CommonUtil.checkResult("小程序我的套餐数", appletPackageNum, util.getAppletPackageNum());
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐管理--赠送一个临时套餐，套餐内卡券剩余库存-1&套餐购买记录+1");
+        }
+    }
+
+    //ok
+    @Test(description = "套餐管理--赠送一个固定套餐，包含卡券剩余库存-1&套餐购买记录+1&套餐购买数量+1")
+    public void packageManage_data_22() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            String voucherName = util.getVoucherName(voucherId);
+            JSONArray voucherList = util.getVoucherArray(voucherId, 1);
+            String packageName = util.editPackage(voucherList);
+            Long packageId = util.getPackageId(packageName);
+            //赠送前数据
+            Long surplusInventory = util.getVoucherPage(voucherName).getSurplusInventory();
+            IScene buyPackageRecordScene = BuyPackageRecordScene.builder().build();
+            int buyPackageRecordTotal = visitor.invokeApi(buyPackageRecordScene).getInteger("total");
+            IScene voucherInfoScene = VoucherInfoScene.builder().id(voucherId).build();
+            int totalSend = visitor.invokeApi(voucherInfoScene).getInteger("total_send");
+            user.loginApplet(APPLET_USER_ONE);
+            int appletVoucherNum = util.getAppletVoucherNum();
+            int appletPackageNum = util.getAppletPackageNum();
+            user.loginPc(ALL_AUTHORITY);
+            //赠送固定套餐
+            util.buyFixedPackage(packageId, 0);
+            //确认支付
+            util.makeSureBuyPackage(packageName);
+            //赠送后数据
+            CommonUtil.checkResult("套餐购买列表数", buyPackageRecordTotal + 1, visitor.invokeApi(buyPackageRecordScene).getInteger("total"));
+            VoucherSendRecord voucherSendRecord = util.getVoucherSendRecordList(voucherName).get(0);
+            CommonUtil.checkResult(voucherName + " 领取记录卡券使用状态", VoucherUseStatusEnum.NEAR_EXPIRE.name(), voucherSendRecord.getVoucherUseStatus());
+            CommonUtil.checkResult(voucherName + " 领取记录卡券使用状态", VoucherUseStatusEnum.NEAR_EXPIRE.getName(), voucherSendRecord.getVoucherUseStatusName());
+            CommonUtil.checkResult(voucherName + " 领取人电话", APPLET_USER_ONE.getPhone(), voucherSendRecord.getCustomerPhone());
+            CommonUtil.checkResult(voucherName + " 领取记录卡券发出渠道", VoucherSourceEnum.PURCHASE.getName(), voucherSendRecord.getSendChannelName());
+            Preconditions.checkArgument(voucherSendRecord.getCustomerLabelName().contains(CustomerLabelTypeEnum.VIP.getTypeName()), "领取人标签：" + voucherSendRecord.getCustomerLabelName());
+            Preconditions.checkArgument(voucherSendRecord.getCustomerLabelName().contains(CustomerLabelTypeEnum.APPLET.getTypeName()), "领取人标签：" + voucherSendRecord.getCustomerLabelName());
+            CommonUtil.checkResult(voucherName + " 剩余库存", surplusInventory - 1, util.getVoucherPage(voucherName).getSurplusInventory());
+            CommonUtil.checkResult(voucherName + " 共领取数", totalSend + 1, visitor.invokeApi(voucherInfoScene).getInteger("total_send"));
+            user.loginApplet(APPLET_USER_ONE);
+            CommonUtil.checkResult("小程序我的卡券数", appletVoucherNum, util.getAppletVoucherNum());
+            CommonUtil.checkResult("小程序我的套餐数", appletPackageNum + 1, util.getAppletPackageNum());
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐管理--赠送一个固定套餐，包含卡券剩余库存-1&套餐购买记录+1&套餐购买数量+1");
         }
     }
 

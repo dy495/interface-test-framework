@@ -11,4 +11,6 @@ public interface IParser<T> {
     String getSuffix();
 
     T[] getAttributes();
+
+    void setHtmlUrl(String htmlUrl);
 }

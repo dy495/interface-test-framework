@@ -23,9 +23,10 @@ public class BeanParser extends AbstractHtmlParser {
     protected List<ApiAttribute> getApiAttributeList(@NotNull Elements spreadElements) {
         Element spread = spreadElements.size() == 1 ? spreadElements.first() : spreadElements.size() == 2 ? spreadElements.get(1) : null;
         if (spread != null) {
-            return spread.select("tbody").select("tr").stream().map(tr -> tr.select("[class='tableblock']"))
+            List<ApiAttribute> list = spread.select("tbody").select("tr").stream().map(tr -> tr.select("[class='tableblock']"))
                     .filter(tableBlocks -> tableBlocks.text().contains("└─") && !tableBlocks.get(0).text().contains("any object"))
-                    .map(this::getApiAttribute).collect(Collectors.toList());
+                    .map(this::getApiAttribute).distinct().collect(Collectors.toList());
+            return distinct(list);
         }
         return null;
     }
@@ -41,6 +42,23 @@ public class BeanParser extends AbstractHtmlParser {
         public BeanParser buildParser() {
             return new BeanParser(this);
         }
+    }
+
+    /**
+     * 集合去重
+     *
+     * @param list List<ApiAttribute>
+     * @return List<ApiAttribute>
+     */
+    private List<ApiAttribute> distinct(List<ApiAttribute> list) {
+        for (int i = 0; i < list.size() - 1; i++) {
+            for (int j = list.size() - 1; j > i; j--) {
+                if (list.get(j).getBuildParam().equals(list.get(i).getBuildParam())) {
+                    list.remove(j);
+                }
+            }
+        }
+        return list;
     }
 
     /**

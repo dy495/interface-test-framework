@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.ArticlePage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.operation.ArticlePageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.om.ArticleStatusEnum;
@@ -108,7 +108,7 @@ public class ContentOperationCaseOnline extends TestCaseCommon implements TestCa
         try {
             int num = ArticleList.builder().build().invoke(visitor, true).getJSONArray("list").size();
             IScene articlePageScene = ArticlePageScene.builder().build();
-            int articlePageListSize = (int) util.collectBean(articlePageScene, ArticlePage.class).stream().filter(e -> e.getStatusName().equals(ArticleStatusEnum.SHOW.getTypeName())).count();
+            int articlePageListSize = (int) util.collectBean(articlePageScene, ArticlePageBean.class).stream().filter(e -> e.getStatusName().equals(ArticleStatusEnum.SHOW.getTypeName())).count();
             int passedSTotal = ActivityManageListScene.builder().status(ActivityStatusEnum.PASSED.getId()).build().invoke(visitor, true).getInteger("total");
             int finishTotal = ActivityManageListScene.builder().status(ActivityStatusEnum.FINISH.getId()).build().invoke(visitor, true).getInteger("total");
             CommonUtil.checkResult("跳转活动/文章的条数", passedSTotal + finishTotal + articlePageListSize, num);
