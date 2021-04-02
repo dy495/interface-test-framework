@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
+import java.util.List;
+
 /**
  * 8.3. 新增风控规则
  *
@@ -32,7 +34,7 @@ public class AddScene extends BaseScene {
      * 是否必填 true
      * 版本 -
      */
-    private final JSONArray shopIds;
+    private final List<String> shopIds;
 
     /**
      * 描述 业务类型

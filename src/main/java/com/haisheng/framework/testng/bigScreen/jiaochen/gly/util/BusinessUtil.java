@@ -1,5 +1,4 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.gly.util;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
@@ -23,24 +22,21 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
-
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class BusinessUtil {
-
    private final VisitorProxy visitor;
    private final UserUtil user;
-
-    public BusinessUtil(VisitorProxy visitor) {
+   public BusinessUtil(VisitorProxy visitor) {
         this.visitor = visitor;
         this.user=new UserUtil(visitor);
-    }
-     ScenarioUtil jc = new ScenarioUtil();
-      PublicParameter pp = new PublicParameter();
-      public String shopId="-1";
+   }
+   ScenarioUtil jc = new ScenarioUtil();
+   PublicParameter pp = new PublicParameter();
+   public String shopId="-1";
 
     /**
      * @description :创建裂变活动-分享者奖励

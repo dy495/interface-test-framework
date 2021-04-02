@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
+import java.util.List;
+
 /**
  * 6.5. 风控事件处理
  *
@@ -39,7 +41,7 @@ public class RiskEventHandleScene extends BaseScene {
      * 是否必填 false
      * 版本 -
      */
-    private final JSONArray customerIds;
+    private final List<Long> customerIds;
 
 
     @Override

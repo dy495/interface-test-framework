@@ -11,7 +11,7 @@ import lombok.Builder;
  * @date 2021-04-01 14:22:36
  */
 @Builder
-public class ModifypasswordScene extends BaseScene {
+public class ModifyPasswordScene extends BaseScene {
     /**
      * 描述 旧密码
      * 是否必填 false

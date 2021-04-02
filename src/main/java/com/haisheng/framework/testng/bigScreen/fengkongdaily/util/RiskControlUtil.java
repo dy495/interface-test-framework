@@ -3,7 +3,10 @@ package com.haisheng.framework.testng.bigScreen.fengkongdaily.util;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.exception.DataException;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.LoginPcScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import org.springframework.util.StringUtils;
@@ -12,7 +15,8 @@ public class RiskControlUtil extends TestCaseCommon {
     private static volatile ScenarioUtil instance = null;
     private static final String shopId = EnumTestProduce.FK_DAILY.getShopId();
     public static String IpPort=EnumTestProduce.FK_DAILY.getAddress();
-
+    private static final EnumTestProduce product = EnumTestProduce.FK_DAILY;
+    public VisitorProxy visitor = new VisitorProxy(product);
     /**
      * 单例
      *
@@ -65,12 +69,9 @@ public class RiskControlUtil extends TestCaseCommon {
      * @author:gly
      * @time:2021/4/1
      */
-    public void pcLogin(String phone, String verificationCode) {
-        String path = "/risk-control/login-pc";
-        JSONObject object = new JSONObject();
-        object.put("phone", phone);
-        object.put("verification_code", verificationCode);
-        httpPost(path, object, IpPort);
+    public void pcLogin(String phone, String password) {
+        IScene scene= LoginPcScene.builder().type(0).username(phone).password(password).build();
+        visitor.invokeApi(scene);
     }
 
 

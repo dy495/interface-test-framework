@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
+import java.util.List;
+
 /**
  * 4.4. 编辑风控告警规则
  *
@@ -32,14 +34,14 @@ public class EditScene extends BaseScene {
      * 是否必填 true
      * 版本 -
      */
-    private final JSONArray ruleIdList;
+    private final List<Long> ruleIdList;
 
     /**
      * 描述 接受者id
      * 是否必填 true
      * 版本 -
      */
-    private final JSONArray acceptRoleIdList;
+    private final List<Long> acceptRoleIdList;
 
     /**
      * 描述 开始时间

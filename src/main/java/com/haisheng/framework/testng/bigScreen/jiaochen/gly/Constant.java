@@ -147,7 +147,7 @@ public class Constant {
         return new String[][]{
                 {"voucher_name", "voucher_name"},
                 {"customer_name", "customer_name"},
-                {"verify_sale_phone", "customer_phone"},
+                {"customer_phone", "customer_phone"},
                 {"verify_code", "verification_code"},
                 {"verify_sale_phone", "verification_account"},
                 {"verify_channel", "verification_channel_name"},
