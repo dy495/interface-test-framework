@@ -25,6 +25,6 @@ public class FileUpload extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/shop/pc/file/upload";
+        return "/jiaochen/pc/file/upload";
     }
 }
