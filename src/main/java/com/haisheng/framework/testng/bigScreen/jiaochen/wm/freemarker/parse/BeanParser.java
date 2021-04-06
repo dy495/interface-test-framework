@@ -23,10 +23,9 @@ public class BeanParser extends AbstractHtmlParser {
     protected List<ApiAttribute> getApiAttributeList(@NotNull Elements spreadElements) {
         Element spread = spreadElements.size() == 1 ? spreadElements.first() : spreadElements.size() == 2 ? spreadElements.get(1) : null;
         if (spread != null) {
-            List<ApiAttribute> list = spread.select("tbody").select("tr").stream().map(tr -> tr.select("[class='tableblock']"))
+            return distinct(spread.select("tbody").select("tr").stream().map(tr -> tr.select("[class='tableblock']"))
                     .filter(tableBlocks -> tableBlocks.text().contains("└─") && !tableBlocks.get(0).text().contains("any object"))
-                    .map(this::getApiAttribute).distinct().collect(Collectors.toList());
-            return distinct(list);
+                    .map(this::getApiAttribute).distinct().collect(Collectors.toList()));
         }
         return null;
     }
