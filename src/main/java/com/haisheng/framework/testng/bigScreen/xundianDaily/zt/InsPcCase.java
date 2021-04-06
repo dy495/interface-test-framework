@@ -80,7 +80,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //搜索门店
-            String shopName = "门店";
+            String shopName = "虚拟购物中心";
             JSONArray shopList = md.searchShop(shopName,null,null,null,1,10).getJSONArray("list");
             if(shopList!=null)
                 for (int i=0; i<shopList.size() ;i++){
@@ -103,7 +103,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //搜索门店
-            String managerName = "张三丰";
+            String managerName = "yecan";
             JSONArray shopList = md.searchShop(null,managerName,null,null,1,10).getJSONArray("list");
             if(shopList!=null)
                 for (int i=0; i<shopList.size() ;i++) {
@@ -151,7 +151,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             JSONArray shopList = md.searchShop(null,null,null,status,1,10).getJSONArray("list");
             if(shopList!=null)
                 for (int i=0; i<shopList.size() ;i++) {
-                    boolean status1 = shopList.getJSONObject(i).getBoolean("status");
+                    boolean status1 = shopList.getJSONObject(i).getBoolean("is_show");
                     Preconditions.checkArgument(status1==status, "通过" + status + "搜索门店展示结果为" + status1);
                 }
         } catch (AssertionError e) {
@@ -294,6 +294,383 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             saveData("按照门店名称和门店联系人和城市和关闭状态搜索门店");
+        }
+    }
+
+    //编辑门店
+
+    //客户管理，根据用户名搜索
+    @Test()
+    public void memberSearch() throws Exception {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //搜索门店
+            String memberName = "门店";
+            JSONArray memList = md.member_list(null,1,10,null,memberName,null).getJSONArray("list");
+            if (memList != null)
+                for (int i = 0; i < memList.size(); i++) {
+                    String name = memList.getJSONObject(i).getString("name");
+                    Preconditions.checkArgument(name.equals(memberName),"通过" + memberName +  "搜索客户展示结果为" + name );
+                }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("客户管理，根据用户名称搜索");
+        }
+    }
+    //客户管理，根据电话号进行搜索
+    @Test()
+    public void memberSearch1() throws Exception {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //搜索门店
+            String memphone = "15677889566";
+            JSONArray memList = md.member_list(null,1,10,null,null,memphone).getJSONArray("list");
+            if (memList != null)
+                for (int i = 0; i < memList.size(); i++) {
+                    String phone = memList.getJSONObject(i).getString("phone");
+                    Preconditions.checkArgument(phone.equals(memphone),"通过" + memphone +  "搜索客户展示结果为" + phone );
+                }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("客户管理，根据电话号搜索");
+        }
+    }
+
+    //客户管理，根据注册日期进行搜索
+    @Test()
+    public void memberSearch2() throws Exception {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //搜索门店
+            String memdata = "2021-04-05";
+            JSONArray memList = md.member_list(null,1,10,memdata,null,null).getJSONArray("list");
+            if (memList != null)
+                for (int i = 0; i < memList.size(); i++) {
+                    String register_date = memList.getJSONObject(i).getString("register_date");
+                    Preconditions.checkArgument(register_date.equals(memdata),"通过" + memdata +  "搜索客户展示结果为" + register_date );
+                }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("客户管理，根据日期搜索");
+        }
+    }
+
+    //客户管理，根据注册日期，用户名称进行搜索
+    @Test()
+    public void memberSearch3() throws Exception {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //搜索门店
+            String memdata = "2021-04-05";
+            String memName = "李离";
+            JSONArray memList = md.member_list(null,1,10,memdata,memName,null).getJSONArray("list");
+            if (memList != null)
+                for (int i = 0; i < memList.size(); i++) {
+                    String register_date = memList.getJSONObject(i).getString("register_date");
+                    String name = memList.getJSONObject(i).getString("name");
+                    Preconditions.checkArgument(register_date.equals(memdata)&&name.equals(memName),"通过" + memdata +"和"+memName+  "搜索客户展示结果为" + register_date+"和"+name );
+                }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("客户管理，根据日期和用户名称搜索");
+        }
+    }
+
+    //客户管理，根据注册日期，用户名称、联系方式进行搜索
+    @Test()
+    public void memberSearch4() throws Exception {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //搜索门店
+            String memdata = "2021-04-05";
+            String memName = "李离";
+            String memphone = "15677889566";
+            JSONArray memList = md.member_list(null,1,10,memdata,memName,memphone).getJSONArray("list");
+            if (memList != null)
+                for (int i = 0; i < memList.size(); i++) {
+                    String register_date = memList.getJSONObject(i).getString("register_date");
+                    String name = memList.getJSONObject(i).getString("name");
+                    String phone = memList.getJSONObject(i).getString("phone");
+                    Preconditions.checkArgument(register_date.equals(memdata)&&name.equals(memName),"通过" + memdata +"和"+memName+ "和"+memphone+ "搜索客户展示结果为" + register_date+"和"+name+"和"+phone );
+                }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("客户管理，根据日期和用户名称搜索");
+        }
+    }
+
+    //会员等级通过等级名称搜索
+    @Test()
+    public void levelSearch() throws Exception {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //搜索门店
+            String name = "黑海会员";
+            JSONArray memList = md.member_level_page(name,1,10).getJSONArray("list");
+            if (memList != null)
+                for (int i = 0; i < memList.size(); i++) {
+                    String level_name = memList.getJSONObject(i).getString("level_name");
+                    Preconditions.checkArgument(level_name.equals(name),"通过" + name +  "搜索会员等级展示结果为" + level_name);
+                }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("会员等级管理，根据会员等级名称搜索");
+        }
+    }
+
+    //用户反馈通过等级名称搜索
+    @Test()
+    public void feedbackSearch() throws Exception {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //搜索门店
+            String name = "会员";
+            JSONArray memList = md.member_level_page(name,1,10).getJSONArray("list");
+            if (memList != null)
+                for (int i = 0; i < memList.size(); i++) {
+                    String level_name = memList.getJSONObject(i).getString("level_name");
+                    Preconditions.checkArgument(level_name.equals(name),"通过" + name +  "搜索会员等级展示结果为" + level_name);
+                }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("会员等级管理，根据会员等级名称搜索");
+        }
+    }
+    //用户反馈通过反馈类型搜索
+    @Test()
+    public void feedbackSearch1() throws Exception {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //搜索门店
+            JSONArray levelList = md.feedbackTypeAll().getJSONArray("list");
+            if (levelList != null)
+                for (int i = 0; i < levelList.size(); i++) {
+                    Integer feedback_type_id = levelList.getJSONObject(i).getInteger("feedback_type_id");
+                    JSONArray feedlist = md.feedbackList(null, feedback_type_id, 1, 10).getJSONArray("list");
+                    if (feedlist != null) {
+                        for (int j = 0; j < feedlist.size(); j++) {
+                            Integer feedback_type_id0 = feedlist.getJSONObject(j).getInteger("feedback_type_id");
+                            Preconditions.checkArgument(feedback_type_id==feedback_type_id0, "通过" + feedback_type_id + "搜索口味反馈展示结果为" + feedback_type_id0);
+                        }
+                    }
+                }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("用户反馈通过反馈类型搜索");
+        }
+    }
+
+    //用户反馈通过等级名称搜索
+    @Test()
+    public void feedbackSearch2() throws Exception {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //搜索门店
+            String name = "会员";
+            JSONArray memList = md.member_level_page(name,1,10).getJSONArray("list");
+            if (memList != null)
+                for (int i = 0; i < memList.size(); i++) {
+                    String level_name = memList.getJSONObject(i).getString("level_name");
+                    Preconditions.checkArgument(level_name.equals(name),"通过" + name +  "搜索会员等级展示结果为" + level_name);
+                }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("会员等级管理，根据会员等级名称搜索");
+        }
+    }
+
+    //反馈类型通过类型名称搜索
+    @Test()
+    public void feedbackSearch3() throws Exception {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //搜索门店
+            String name = "口味反馈1";
+            JSONArray memList = md.feedbackList(name,1,10).getJSONArray("list");
+            if (memList != null)
+                for (int i = 0; i < memList.size(); i++) {
+                    String feedback_type = memList.getJSONObject(i).getString("feedback_type");
+                    Preconditions.checkArgument(feedback_type.equals(name),"通过" + name +  "搜索反馈类型展示结果为" + feedback_type);
+                }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("反馈类型通过类型名称搜索");
+        }
+    }
+
+    //内容管理通过内容标题进行搜索
+    @Test()
+    public void articleSearch() throws Exception {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //搜索门店
+            String name = "活动活动";
+            JSONArray memList = md.article_page(name,null,null,null,null,1,10).getJSONArray("list");
+            if (memList != null)
+                for (int i = 0; i < memList.size(); i++) {
+                    String title = memList.getJSONObject(i).getString("title");
+                    Preconditions.checkArgument(title.equals(name),"通过" + name +  "搜索内容管理展示结果为" + title);
+                }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("内容管理通过内容标题进行搜索");
+        }
+    }
+
+    //内容管理通过内容标题进行搜索
+    @Test()
+    public void articleSearch1() throws Exception {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //搜索门店
+            String start = "2021-04-06";
+            String end = "2021-04-06";
+            JSONArray memList = md.article_page(null,start,end,null,null,1,10).getJSONArray("list");
+            if (memList != null)
+                for (int i = 0; i < memList.size(); i++) {
+                    String create_start = memList.getJSONObject(i).getString("create_start");
+                    String create_end = memList.getJSONObject(i).getString("create_end");
+                    Preconditions.checkArgument(start.equals(create_start)&&end.equals(create_end),"通过" + start +"和"+end+  "搜索内容管理展示结果为" + create_start+"和"+create_end);
+                }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("内容管理通过创建时间进行搜索");
+        }
+    }
+
+    //内容管理通过更新时间进行搜索
+    @Test()
+    public void articleSearch2() throws Exception {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //搜索门店
+            String start = "2021-04-06";
+            String end = "2021-04-06";
+            JSONArray memList = md.article_page(null,null,null,start,end,1,10).getJSONArray("list");
+            if (memList != null)
+                for (int i = 0; i < memList.size(); i++) {
+                    String modify_start = memList.getJSONObject(i).getString("modify_start");
+                    String modify_end = memList.getJSONObject(i).getString("modify_end");
+                    Preconditions.checkArgument(start.equals(modify_start)&&end.equals(modify_end),"通过" + start +"和"+end+  "搜索内容管理展示结果为" + modify_start+"和"+modify_end);
+                }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("内容管理通过更新时间进行搜索");
+        }
+    }
+
+    //内容管理通过更新时间和创建时间进行搜索
+    @Test()
+    public void articleSearch3() throws Exception {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //搜索门店
+            String start = "2021-04-06";
+            String end = "2021-04-06";
+            JSONArray memList = md.article_page(null,start,end,start,end,1,10).getJSONArray("list");
+            if (memList != null)
+                for (int i = 0; i < memList.size(); i++) {
+                    String create_start = memList.getJSONObject(i).getString("create_start");
+                    String create_end = memList.getJSONObject(i).getString("create_end");
+                    String modify_start = memList.getJSONObject(i).getString("modify_start");
+                    String modify_end = memList.getJSONObject(i).getString("modify_end");
+                    Preconditions.checkArgument(start.equals(modify_start)&&end.equals(modify_end)&&start.equals(create_start)&&end.equals(create_end),"通过" + start +"和"+end+  "搜索内容管理展示结果为" + modify_start+"和"+modify_end);
+                }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("内容管理通过更新时间和创建时间进行搜索");
+        }
+    }
+
+    //内容管理通过内容标题和更新时间和创建时间进行搜索
+    @Test()
+    public void articleSearch4() throws Exception {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //搜索门店
+            String name = "活动活动";
+            String start = "2021-04-06";
+            String end = "2021-04-06";
+            JSONArray memList = md.article_page(null,start,end,start,end,1,10).getJSONArray("list");
+            if (memList != null)
+                for (int i = 0; i < memList.size(); i++) {
+                    String title = memList.getJSONObject(i).getString("title");
+                    String create_start = memList.getJSONObject(i).getString("create_start");
+                    String create_end = memList.getJSONObject(i).getString("create_end");
+                    String modify_start = memList.getJSONObject(i).getString("modify_start");
+                    String modify_end = memList.getJSONObject(i).getString("modify_end");
+                    Preconditions.checkArgument(title.equals(name)&&start.equals(modify_start)&&end.equals(modify_end)&&start.equals(create_start)&&end.equals(create_end),"通过" + start +"和"+end+  "搜索内容管理展示结果为" + modify_start+"和"+modify_end);
+                }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("内容管理通过内容标题和更新时间和创建时间进行搜索");
+        }
+    }
+
+    //口味管理通过口味名称进行搜索
+    @Test()
+    public void tasteSearch() throws Exception {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //搜索门店
+            String name = "口味排行";
+            JSONArray memList = md.taste_search(name,1,10).getJSONArray("list");
+            if (memList != null)
+                for (int i = 0; i < memList.size(); i++) {
+                    String taste_name = memList.getJSONObject(i).getString("taste_name");
+                    Preconditions.checkArgument(taste_name.equals(name),"通过" + name +  "搜索口味管理展示结果为" + taste_name);
+                }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("口味管理通过口味名称进行搜索");
         }
     }
 }
