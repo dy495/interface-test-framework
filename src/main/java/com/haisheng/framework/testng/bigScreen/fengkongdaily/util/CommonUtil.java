@@ -1,6 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.fengkongdaily.util;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventHandleScene;
@@ -207,6 +208,59 @@ public class CommonUtil {
         JSONObject object=visitor.invokeApi(scene,false);
         return object;
     }
+
+
+    /**
+     * 员工状态的
+     * @param status 1:开启  0：关闭
+     */
+    public JSONObject getStaffStatusChange(String id,String status){
+        IScene scene= com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.StatusChangeScene.builder().id(id).status(status).build();
+        JSONObject object=visitor.invokeApi(scene,false);
+        return object;
+    }
+
+    /**
+     * 创建一个账号
+     */
+    public String createAccountNumber(String name,String phone){
+        //新建账号       todo
+        JSONArray roleList=new JSONArray();
+        JSONObject object=new JSONObject();
+        List<JSONObject> shopList=new ArrayList<>();
+        JSONObject shopObject=new JSONObject();
+        shopObject.put("shop_id","");
+        shopObject.put("shop_name","");
+        shopList.add(shopObject);
+        object.put("role_id","");
+        object.put("shop_list",shopList);
+        roleList.add(object);
+        IScene scene2=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.AddScene.builder().name(name).phone(phone).gender("女").roleList(roleList).build();
+        String id=visitor.invokeApi(scene2).getString("id");
+        return id;
+    }
+
+    /**
+     * 编辑账号的姓名和手机号
+     */
+    public String getEditAccountNumber(String id,String name,String phone){
+        // 角色及门店      todo
+        JSONArray roleList=new JSONArray();
+        JSONObject object=new JSONObject();
+        List<JSONObject> shopList=new ArrayList<>();
+        JSONObject shopObject=new JSONObject();
+        shopObject.put("shop_id","");
+        shopObject.put("shop_name","");
+        shopList.add(shopObject);
+        object.put("role_id","");
+        object.put("shop_list",shopList);
+        roleList.add(object);
+        //编辑账号
+        IScene scene=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.EditScene.builder().id(id).name(name).phone(phone).gender("女").roleList(roleList).build();
+        String message=visitor.invokeApi(scene,false).getString("message");
+        return message;
+    }
+
 
 
 

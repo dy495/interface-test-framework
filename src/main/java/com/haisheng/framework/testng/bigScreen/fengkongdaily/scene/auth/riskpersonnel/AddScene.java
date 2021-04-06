@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
+import java.util.List;
+
 /**
  * 7.3. 特殊人员新增
  *
@@ -25,7 +27,7 @@ public class AddScene extends BaseScene {
      * 是否必填 true
      * 版本 v1.0
      */
-    private final JSONArray customerIds;
+    private final List<String> customerIds;
 
     /**
      * 描述 门店id

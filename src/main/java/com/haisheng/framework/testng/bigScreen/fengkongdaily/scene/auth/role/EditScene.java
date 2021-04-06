@@ -46,7 +46,7 @@ public class EditScene extends BaseScene {
      * 是否必填 true
      * 版本 v1.0
      */
-    private final Integer id;
+    private final Long id;
 
 
     @Override

@@ -1298,7 +1298,6 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
             JSONObject res2 = md.riskRuleAdd("我只想当一个二十一字的规则名字如果不信你就数数.。", shop_type, rule);
             checkArgument(res2.getString("message").equals("规则名称不能超过20个字"), "规则名称为21个字，创建成功");
 
-
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {

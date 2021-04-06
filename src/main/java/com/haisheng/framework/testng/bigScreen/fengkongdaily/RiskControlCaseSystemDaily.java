@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import static com.google.common.base.Preconditions.checkArgument;
 
-public class RiskControlCaseDaily extends TestCaseCommon implements TestCaseStd {
+public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce product = EnumTestProduce.FK_DAILY;
     public VisitorProxy visitor = new VisitorProxy(product);
     StoreScenarioUtil md = StoreScenarioUtil.getInstance();
@@ -83,9 +83,9 @@ public class RiskControlCaseDaily extends TestCaseCommon implements TestCaseStd 
             IScene scene =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.PageScene.builder().page(1).size(10).build();
             JSONObject response=visitor.invokeApi(scene);
             int pages=response.getInteger("pages")>10?10:response.getInteger("pages");
-            for(int page=0;page<=pages;page++){
+            for(int page=1;page<=pages;page++){
                 JSONArray list=visitor.invokeApi(PageScene.builder().page(page).size(10).build()).getJSONArray("list");
-                for(int i=0;i<=list.size();i++){
+                for(int i=0;i<list.size();i++){
                     //校验列表的每一项
                     String shopName=list.getJSONObject(i).getString("shop_name");
                     String managerName=list.getJSONObject(i).getString("manager_name");
@@ -118,9 +118,9 @@ public class RiskControlCaseDaily extends TestCaseCommon implements TestCaseStd 
             IScene scene1= TraceBackScene.builder().shopId(shopId).page(1).size(10).build();
             JSONObject response1=visitor.invokeApi(scene1);
             int pages=response1.getInteger("pages")>10?10:response.getInteger("pages");
-            for(int page=0;page<=pages;page++){
+            for(int page=1;page<=pages;page++){
                 JSONArray list=visitor.invokeApi(TraceBackScene.builder().shopId(shopId).page(page).size(10).build()).getJSONArray("list");
-                for(int i=0;i<=list.size();i++){
+                for(int i=0;i<list.size();i++){
                     String orderId=list.getJSONObject(i).getString("order_id");
                     String orderTime=list.getJSONObject(i).getString("order_time");
                     Preconditions.checkArgument(orderId != null&&orderTime!=null,"第"+i+"行的列表项存在为空的值");
@@ -166,9 +166,9 @@ public class RiskControlCaseDaily extends TestCaseCommon implements TestCaseStd 
             IScene scene1= TraceBackScene.builder().shopId(shopId).page(1).size(10).build();
             JSONObject response1=visitor.invokeApi(scene1);
             int pages=response1.getInteger("pages")>10?10:response.getInteger("pages");
-            for(int page=0;page<=pages;page++){
+            for(int page=1;page<=pages;page++){
                 JSONArray list=visitor.invokeApi(TraceBackScene.builder().shopId(shopId).page(page).size(10).build()).getJSONArray("list");
-                for(int i=0;i<=list.size();i++){
+                for(int i=0;i<list.size();i++){
                     String orderId=list.getJSONObject(i).getString("order_id");
                     //小票详情页
                     IScene scene2= OrderDetailScene.builder().shopId(shopId).orderId(orderId).build();
@@ -254,9 +254,9 @@ public class RiskControlCaseDaily extends TestCaseCommon implements TestCaseStd 
             IScene scene1=RiskEventPageScene.builder().shopId(shopId).page(1).size(10).build();
             JSONObject response1=visitor.invokeApi(scene1);
             int pages=response1.getInteger("pages")>10?10:response1.getInteger("pages");
-            for(int page=0;page<=pages;page++){
+            for(int page=1;page<=pages;page++){
                 JSONArray list=visitor.invokeApi(RiskEventPageScene.builder().shopId(shopId).page(page).size(10).build()).getJSONArray("list");
-                for(int i=0;i<=list.size();i++){
+                for(int i=0;i<list.size();i++){
                     String eventName=list.getJSONObject(i).getString("event_name");
                     String orderId=list.getJSONObject(i).getString("order_id");
                     String responseTime=list.getJSONObject(i).getString("response_time");
@@ -289,9 +289,9 @@ public class RiskControlCaseDaily extends TestCaseCommon implements TestCaseStd 
             IScene scene1=RiskEventPageScene.builder().shopId(shopId).page(1).size(10).build();
             JSONObject response1=visitor.invokeApi(scene1);
             int pages=response1.getInteger("pages")>10?10:response1.getInteger("pages");
-            for(int page=0;page<=pages;page++){
+            for(int page=1;page<=pages;page++){
                 JSONArray list=visitor.invokeApi(RiskEventPageScene.builder().shopId(shopId).page(page).size(10).build()).getJSONArray("list");
-                for(int i=0;i<=list.size();i++){
+                for(int i=0;i<list.size();i++){
                     Long id=list.getJSONObject(i).getLong("id");
                     IScene scene2=RiskEventOverviewScene.builder().id(id).build();
                     JSONObject response2=visitor.invokeApi(scene2);
@@ -333,16 +333,15 @@ public class RiskControlCaseDaily extends TestCaseCommon implements TestCaseStd 
             IScene scene2=RiskEventOrdersInvolvedPageScene.builder().id(id).page(1).size(10).build();
             JSONObject response2=visitor.invokeApi(scene2);
             int pages=response1.getInteger("pages")>10?10:response1.getInteger("pages");
-            for(int page=0;page<=pages;page++){
+            for(int page=1;page<=pages;page++){
                 JSONArray list=visitor.invokeApi(RiskEventOrdersInvolvedPageScene.builder().id(id).page(page).size(10).build()).getJSONArray("list");
-                for(int i=0;i<=list.size();i++){
+                for(int i=0;i<list.size();i++){
                     String orderId=response2.getString("order_id");
                     String shopId1=response2.getString("shop_id");
                     String orderTime=response2.getString("order_time");
                     String orderAmount=response2.getString("order_amount");
 
                     Preconditions.checkArgument(orderId != null&&shopId1 != null&&orderTime != null&&orderAmount != null,"第"+i+"行的列表项存在为空的值");
-
                 }
             }
         }catch(Exception|AssertionError e){
@@ -372,9 +371,9 @@ public class RiskControlCaseDaily extends TestCaseCommon implements TestCaseStd 
             JSONArray list1=response2.getJSONArray("list");
             int pages=response1.getInteger("pages")>10?10:response1.getInteger("pages");
             if(list1.size()>0){
-                for(int page=0;page<=pages;page++){
+                for(int page=1;page<=pages;page++){
                     JSONArray list=visitor.invokeApi(RiskEventPageScene.builder().shopId(shopId).memberId(memberId).page(page).size(10).build()).getJSONArray("list");
-                    for(int i=0;i<=list.size();i++){
+                    for(int i=0;i<list.size();i++){
                         String orderId=response2.getString("order_id");
                         String shopId1=response2.getString("shop_id");
                         String orderTime=response2.getString("order_time");
@@ -401,9 +400,9 @@ public class RiskControlCaseDaily extends TestCaseCommon implements TestCaseStd 
             IScene scene =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.rule.PageScene.builder().page(1).size(10).build();
             JSONObject response=visitor.invokeApi(scene);
             int pages=response.getInteger("pages")>10?10:response.getInteger("pages");
-            for(int page=0;page<=pages;page++){
+            for(int page=1;page<=pages;page++){
                 JSONArray list=visitor.invokeApi(com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.rule.PageScene.builder().page(page).size(10).build()).getJSONArray("list");
-                for(int i=0;i<=list.size();i++){
+                for(int i=0;i<list.size();i++){
                     String name=list.getJSONObject(i).getString("name");
                     String type=list.getJSONObject(i).getString("type");
                     String detail=list.getJSONObject(i).getString("detail");
@@ -484,7 +483,7 @@ public class RiskControlCaseDaily extends TestCaseCommon implements TestCaseStd 
     public void authCashierPageSystem15(){
         try{
             //应用的门店     todo
-            List<String> shopIds=new ArrayList<String>();
+            List<String> shopIds= new ArrayList<>();
             shopIds.add("");
             shopIds.add("");
             //新建两个黑名单风控规则
@@ -514,9 +513,9 @@ public class RiskControlCaseDaily extends TestCaseCommon implements TestCaseStd 
             IScene scene =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.alarm.PageScene.builder().page(1).size(10).build();
             JSONObject response=visitor.invokeApi(scene);
             int pages=response.getInteger("pages")>10?10:response.getInteger("pages");
-            for(int page=0;page<=pages;page++){
+            for(int page=1;page<=pages;page++){
                 JSONArray list=visitor.invokeApi(com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.rule.PageScene.builder().page(page).size(10).build()).getJSONArray("list");
-                for(int i=0;i<=list.size();i++){
+                for(int i=0;i<list.size();i++){
                     String name=list.getJSONObject(i).getString("name");
                     String type=list.getJSONObject(i).getString("type");
                     String detail=list.getJSONObject(i).getString("detail");
@@ -544,9 +543,9 @@ public class RiskControlCaseDaily extends TestCaseCommon implements TestCaseStd 
             IScene scene =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.alarmrule.PageScene.builder().page(1).size(10).build();
             JSONObject response=visitor.invokeApi(scene);
             int pages=response.getInteger("pages")>10?10:response.getInteger("pages");
-            for(int page=0;page<=pages;page++){
+            for(int page=1;page<=pages;page++){
                 JSONArray list=visitor.invokeApi(com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.rule.PageScene.builder().page(page).size(10).build()).getJSONArray("list");
-                for(int i=0;i<=list.size();i++){
+                for(int i=0;i<list.size();i++){
                     String name=list.getJSONObject(i).getString("name");
                     String type=list.getJSONObject(i).getString("type");
                     String typeName=list.getJSONObject(i).getString("type_name");
@@ -826,10 +825,28 @@ public class RiskControlCaseDaily extends TestCaseCommon implements TestCaseStd 
     }
 
     /**
+     *特殊人员新增
+     */
+    @Test(description = "特殊人员新增",enabled = false)
+    public void authCashierPageSystem27(){
+        try{
+            //新增特殊人员--重点观察人员
+            List<String> customerIds=new ArrayList<>();
+            IScene scene=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.AddScene.builder().customerId("").customerIds(customerIds).type("FOCUS").build();
+            String message=visitor.invokeApi(scene,false).getString("meaasge");
+            Preconditions.checkArgument(message.equals("success"),"特殊人员新增失败");
+        }catch(Exception|AssertionError e){
+            collectMessage(e);
+        }finally{
+            saveData("特殊人员新增");
+        }
+    }
+
+    /**
      *下载中心-下载列表内容校验
      */
     @Test(description = "下载中心-下载列表内容校验")
-    public void authCashierPageSystem27(){
+    public void authCashierPageSystem28(){
         try{
             IScene scene= DownloadPageScene.builder().page(1).size(10).build();
             JSONObject response=visitor.invokeApi(scene);
@@ -859,7 +876,7 @@ public class RiskControlCaseDaily extends TestCaseCommon implements TestCaseStd 
      *下载中心-下载列表筛选栏校验
      */
     @Test(description = "下载中心-下载列表筛选栏校验")
-    public void authCashierPageSystem28(){
+    public void authCashierPageSystem29(){
         try{
             //下载列表第一行的任务名称
             String taskName1=DownloadPageScene.builder().page(1).size(10).build().invoke(visitor,true).getJSONArray("list").getJSONObject(0).getString("task_name");
@@ -935,8 +952,8 @@ public class RiskControlCaseDaily extends TestCaseCommon implements TestCaseStd 
     /**
      * 收银风控事件处理
      */
-    @Test(description = "收银风控事件-列表项校验")
-    public void authCashierPageSystem29(){
+    @Test(description = "收银风控事件处理为正常")
+    public void authCashierPageSystem30(){
         try{
             //收银风控列表第一条的shopId
             IScene scene = PageScene.builder().page(1).size(10).build();
@@ -945,17 +962,459 @@ public class RiskControlCaseDaily extends TestCaseCommon implements TestCaseStd 
             //收银风控事件页面-获取待处理第一条的ID
             IScene scene1=RiskEventPageScene.builder().shopId(shopId).page(1).size(10).currentState("待处理").build();
             JSONObject response1=visitor.invokeApi(scene1);
-            Long id=response1.getJSONArray("list").getJSONObject(0).getLong("id");
-            //处理收银风控事件为正常
-            String message=cu.getRiskEventHandle(id,1,pp.remarks,null).getString("message");
-            Preconditions.checkArgument(message.equals("success"),"收银风控事件处理正常结果，处理失败");
+            if(response1.getJSONArray("list").size()>0){
+                Long id=response1.getJSONArray("list").getJSONObject(0).getLong("id");
+                //处理收银风控事件为正常
+                String message=cu.getRiskEventHandle(id,1,pp.remarks,null).getString("message");
+                Preconditions.checkArgument(message.equals("success"),"收银风控事件处理正常结果，处理失败");
+            }
+        }catch(Exception|AssertionError e){
+            collectMessage(e);
+        }finally{
+            saveData("收银风控事件处理为正常");
+        }
+    }
+
+
+    /*
+     * ------------------------------------------------------------------组织架构-------------------------------------------------------
+     */
+
+    /**
+     * 角色管理列表项校验
+     */
+    @Test(description = "角色管理列表项校验")
+    public void organizationChartSystem1(){
+        try{
+            IScene scene= com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.PageScene.builder().page(1).size(10).build();
+            JSONObject response=visitor.invokeApi(scene);
+            int pages=response.getInteger("pages")>10?10:response.getInteger("pages");
+            for(int page=1;page<=pages;page++){
+                JSONArray list=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.PageScene.builder().page(page).size(10).build().invoke(visitor,true).getJSONArray("list");
+                if(list.size()>0){
+                    for(int i=0;i<list.size();i++){
+                        String name=list.getJSONObject(i).getString("name");
+                        String description=list.getJSONObject(i).getString("description");
+                        String num=list.getJSONObject(i).getString("num");
+                        String createTime=list.getJSONObject(i).getString("create_time");
+                        Preconditions.checkArgument(name!=null&&description!=null&&num!=null&&createTime!=null,"第"+page+"页"+"第"+i+"行的列表项存在为空的值");
+                    }
+                }
+            }
+        }catch(Exception|AssertionError e){
+            collectMessage(e);
+        }finally{
+            saveData("角色管理列表项校验");
+        }
+    }
+
+    /**
+     * 新增角色
+     */
+    @Test
+    public void organizationChartSystem2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //权限合集
+            JSONArray authIds = new JSONArray();
+            authIds.add(7);
+            authIds.add(9);
+            //新增一个角色---上级角色为【总管理员】
+            IScene scene=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.AddScene.builder().name(pp.roleName).parentRoleId(2).authList(authIds).description(pp.descriptionRole).build();
+            JSONObject response=visitor.invokeApi(scene);
+            String message=visitor.invokeApi(scene,false).getString("message");
+            Long roleId = response.getLong("role_id");
+            checkArgument(message .equals("success"), "新增角色失败了");
+
+            //编辑角色
+            IScene scene1=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.EditScene.builder().id(roleId).name(pp.roleEditName ).parentRoleId(2).authList(authIds).description(pp.descriptionRole).build();
+            String message1=visitor.invokeApi(scene1,false).getString("message");
+            checkArgument(message1.equals("success"), "编辑角色的信息失败了");
+
+            //列表中编辑过的角色是否已更新
+            IScene scene2= com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.PageScene.builder().page(1).size(10).build();
+            JSONObject response2=visitor.invokeApi(scene2);
+            int pages=response2.getInteger("pages");
+            JSONArray list=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.PageScene.builder().page(pages).size(10).build().invoke(visitor,true).getJSONArray("list");
+            JSONArray list1 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.PageScene.builder().page(pages).size(list.size()).build().invoke(visitor,true).getJSONArray("list");
+            String name = list1.getJSONObject(0).getString("name");
+            checkArgument(name.equals(pp.roleEditName), "编辑过的角色没有更新在列表");
+
+
+            //新建成功以后删除新建的账号
+            if (name.equals(pp.roleEditName)) {
+                IScene scene3=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.DeleteScene.builder().id(roleId).build();
+                String message13=visitor.invokeApi(scene3,false).getString("message");
+                checkArgument(message13.equals("success"), "删除角色:" + roleId + "失败了");
+            }
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("新增删改查角色");
+        }
+
+    }
+
+    /**
+     * 新增角色(名称校验)异常校验
+     */
+    @Test
+    public void organizationChartSystem3() {
+        logger.logCaseStart(caseResult.getCaseName());
+
+        try {
+            //权限合集
+            JSONArray authIds = new JSONArray();
+            authIds.add(7);
+            authIds.add(9);
+            //新增角色名称21个字角色
+            IScene scene=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.AddScene.builder().name(pp.rolNameException).parentRoleId(2).authList(authIds).description(pp.descriptionRole).build();
+            JSONObject response=visitor.invokeApi(scene,false);
+            checkArgument(response.getString("message").equals("角色名称需要在1-20个字内"), "角色名称为21个字，创建成功");
+
+            //新增重复角色名称的角色
+            IScene scene1=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.AddScene.builder().name(pp.rolNameException).parentRoleId(2).authList(authIds).description(pp.descriptionRole).build();
+            JSONObject response1=visitor.invokeApi(scene1,false);
+            checkArgument(response1.getString("message").equals("新增角色异常:当前角色名称已存在！请勿重复添加"), "重复的角色名称，创建成功:"+pp.rolNameException);
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("新增角色(名称校验)");
+        }
+
+    }
+
+    /**
+     * 新增角色(权限说明校验)--异常校验
+     */
+    @Test
+    public void organizationChartSystem4() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //权限合集
+            JSONArray authIds = new JSONArray();
+            authIds.add(7);
+            authIds.add(9);
+            //新增角色权限说明51个字的角色
+            IScene scene=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.AddScene.builder().name(pp.roleName).parentRoleId(2).authList(authIds).description(pp.descriptionRoleException).build();
+            JSONObject response=visitor.invokeApi(scene,false);
+            checkArgument(response.getString("message").equals("角色名称需要在1-50个字内"), "角色权限说明为51个字，创建成功:"+pp.descriptionRoleException);
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("新增角色(权限说明校验)");
+        }
+    }
+
+    /**
+     * 账号管理列表项校验
+     */
+    @Test(description = "账号管理列表项校验")
+    public void organizationChartSystem5(){
+        try{
+            IScene scene= com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().page(1).size(10).build();
+            JSONObject response=visitor.invokeApi(scene);
+            int pages=response.getInteger("pages")>10?10:response.getInteger("pages");
+            for(int page=1;page<=pages;page++){
+                JSONArray list=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().page(page).size(10).build().invoke(visitor,true).getJSONArray("list");
+                if(list.size()>0){
+                    for(int i=0;i<list.size();i++){
+                        String name=list.getJSONObject(i).getString("name");
+                        String description=list.getJSONObject(i).getString("description");
+                        String num=list.getJSONObject(i).getString("num");
+                        String createTime=list.getJSONObject(i).getString("create_time");
+                        Preconditions.checkArgument(name!=null&&description!=null&&num!=null&&createTime!=null,"第"+page+"页"+"第"+i+"行的列表项存在为空的值");
+                    }
+                }
+            }
+        }catch(Exception|AssertionError e){
+            collectMessage(e);
+        }finally{
+            saveData("账号管理列表项校验");
+        }
+    }
+
+    /**
+     * 账号管理的增删改
+     */
+    @Test
+    public void organizationChartSystem6() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //新建角色，获取角色Id
+            JSONArray authIds = new JSONArray();
+            authIds.add(7);
+            authIds.add(9);
+            //新增一个角色---上级角色为【总管理员】
+            IScene scene=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.AddScene.builder().name(pp.roleName).parentRoleId(2).authList(authIds).description(pp.descriptionRole).build();
+            JSONObject response=visitor.invokeApi(scene);
+            Long roleId = response.getLong("role_id");
+            Preconditions.checkArgument(roleId!=null, "新建角色失败");
+
+            //新建账号       todo
+            String id=cu.createAccountNumber(pp.roleName,pp.ownerPhone);
+            Preconditions.checkArgument(id!=null, "新建账号失败");
+
+            //编辑账号
+            String message1=cu.getEditAccountNumber(id,pp.roleEditName,pp.ownerPhone);
+            //获取账号管理页面的第一条的名字
+            String name=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().page(1).size(10).build().invoke(visitor,true).getJSONArray("list").getJSONObject(0).getString("name");
+            Preconditions.checkArgument(name.equals(pp.staffEditName)&&message1.equals("success"), "编辑账号失败");
+
+            //删除角色，删除失败
+            IScene scene3=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.DeleteScene.builder().id(roleId).build();
+            String message3=visitor.invokeApi(scene3,false).getString("message");
+            Preconditions.checkArgument(message3.equals("使用中的角色不可以删除"), "删除角色:" + roleId + "成功了");
+
+            //新建成功以后删除新建的账号
+            IScene scene4=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.DeleteScene.builder().id(id).build();
+            String message4=visitor.invokeApi(scene4,false).getString("message");
+            Preconditions.checkArgument(message4.equals("success"), "删除账号:" + id + "失败了");
+
+            //删除角色，删除成功
+            IScene scene5=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.DeleteScene.builder().id(roleId).build();
+            String message5=visitor.invokeApi(scene5,false).getString("message");
+            Preconditions.checkArgument(message5.equals("success"), "删除角色:" + roleId + "失败了");
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("账号管理的增删改");
+        }
+
+    }
+
+    /**
+     * 创建账号的异常情况--姓名51个字
+     */
+    @Test(description = "创建账号的异常情况--姓名51个字")
+    public void organizationChartSystem7(){
+        try{
+            //新建账号    todo
+            JSONArray roleList=new JSONArray();
+            JSONObject object=new JSONObject();
+            List<JSONObject> shopList=new ArrayList<>();
+            JSONObject shopObject=new JSONObject();
+            shopObject.put("shop_id","");
+            shopObject.put("shop_name","");
+            shopList.add(shopObject);
+            object.put("role_id","");
+            object.put("shop_list",shopList);
+            roleList.add(object);
+            IScene scene2=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.AddScene.builder().name(pp.staffNameException).phone("13373166806").gender("女").roleList(roleList).build();
+            String message =visitor.invokeApi(scene2).getString("message");
+            Preconditions.checkArgument(message.equals(""),"账号名称51个字创建成功");
 
         }catch(Exception|AssertionError e){
             collectMessage(e);
         }finally{
-            saveData("收银风控事件-列表项校验");
+            saveData("创建账号的异常情况--姓名51个字");
         }
     }
+
+    /**
+     * 创建账号的异常情况--手机号{10位。12位，中文。英文。标点符号，电话号码字段}
+     */
+    @Test(description = "创建账号的异常情况--手机号{10位。12位，中文。英文。标点符号，电话号码字段}")
+    public void organizationChartSystem8(){
+        try{
+            String[] phoneArray={"1337316680","133731668066","哈哈哈哈哈哈哈哈哈哈哈哈","aaaaaaaaaaaa","!@#$%^&*<>?>","0314-6499363"};
+            for(int i=0;i<phoneArray.length;i++){
+                //新建账号
+                JSONArray roleList=new JSONArray();
+                JSONObject object=new JSONObject();
+                List<JSONObject> shopList=new ArrayList<>();
+                JSONObject shopObject=new JSONObject();
+                shopObject.put("shop_id","");
+                shopObject.put("shop_name","");
+                shopList.add(shopObject);
+                object.put("role_id","");
+                object.put("shop_list",shopList);
+                roleList.add(object);
+                IScene scene2=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.AddScene.builder().name(pp.staffName).phone(phoneArray[i]).gender("女").roleList(roleList).build();
+                String message =visitor.invokeApi(scene2).getString("message");
+                Preconditions.checkArgument(message.equals(""),"手机号{10位。12位，中文。英文。标点符号，电话号码字段}创建成功");
+
+            }
+        }catch(Exception|AssertionError e){
+            collectMessage(e);
+        }finally{
+            saveData("创建账号的异常情况--手机号{10位。12位，中文。英文。标点符号，电话号码字段}");
+        }
+    }
+
+    /**
+     * 创建账号的异常情况--添加6个角色
+     */
+    @Test(description = "创建账号的异常情况--添加6个角色")
+    public void organizationChartSystem9(){
+        try{
+            //新建账号
+            JSONArray roleList=new JSONArray();
+            JSONObject object=new JSONObject();
+            List<JSONObject> shopList=new ArrayList<>();
+            JSONObject shopObject=new JSONObject();
+            shopObject.put("shop_id","");
+            shopObject.put("shop_name","");
+            shopList.add(shopObject);
+            object.put("role_id","");
+            object.put("shop_list",shopList);
+            roleList.add(object);
+            roleList.add(object);
+            roleList.add(object);
+            roleList.add(object);
+            roleList.add(object);
+            roleList.add(object);
+
+            IScene scene2=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.AddScene.builder().name(pp.staffName).phone("13373166806").gender("女").roleList(roleList).build();
+            String message =visitor.invokeApi(scene2).getString("message");
+            Preconditions.checkArgument(message.equals(""),"创建账号的异常情况--添加6个角色成功");
+
+        }catch(Exception|AssertionError e){
+            collectMessage(e);
+        }finally{
+            saveData("创建账号的异常情况--添加6个角色");
+        }
+    }
+
+    /**
+     * 禁用账号，登陆失败，开启账号，登陆成功
+     */
+    @Test(description = "禁用账号，登陆失败，开启账号，登陆成功")
+    public void organizationChartSystem10(){
+        try{
+            String id="";
+            //禁用固定密码的账号
+            String message=cu.getStaffStatusChange(id,"").getString("message");
+            Preconditions.checkArgument(message.equals("success"),"禁用失败");
+            //登录禁用的账号
+            String message1=ru.pcLogin("","");
+            Preconditions.checkArgument(message1.equals("登陆失败"),"禁用的账号登陆成功");
+            //开启账号
+            String message2=cu.getStaffStatusChange(id,"").getString("message");
+            Preconditions.checkArgument(message2.equals("success"),"开启失败");
+            //登录开启的账号
+            String message3=ru.pcLogin("","");
+            Preconditions.checkArgument(message3.equals("success"),"开启的账号登陆失败");
+
+        }catch(Exception|AssertionError e){
+            collectMessage(e);
+        }finally{
+            saveData("禁用账号，登陆失败，开启账号，登陆成功");
+        }
+    }
+
+
+
+
+    /*
+     * --------------------------------------------------导出操作---------------------------------------------------
+     */
+
+    /**
+     * 收银风控事件导出
+     */
+    @Test(description = "收银风控事件导出")
+    public void ExportChecking1(){
+        try{
+            //收银风控列表第一条的shopId
+            IScene scene = PageScene.builder().page(1).size(10).build();
+            JSONObject response=visitor.invokeApi(scene);
+            Long shopId=response.getJSONArray("list").getJSONObject(0).getLong("shop_id");
+            //收银风控事件页面
+            IScene scene1=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventPageScene.builder().shopId(shopId).page(1).size(10).isExport(true).build();
+            String message=visitor.invokeApi(scene1,false).getString("message");
+            Preconditions.checkArgument(message.equals("success"),"收银风控事件导出失败");
+
+        }catch(Exception|AssertionError e){
+            collectMessage(e);
+        }finally{
+            saveData("收银风控事件导出");
+        }
+    }
+
+    /**
+     * 风控告警页面导出
+     */
+    @Test(description = "风控告警页面导出")
+    public void ExportChecking2(){
+        try{
+            //风控规则页面
+            IScene scene =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.alarm.PageScene.builder().page(1).size(10).isExport(true).build();
+            String message=visitor.invokeApi(scene,false).getString("message");
+            Preconditions.checkArgument(message.equals("success"),"风控告警页面导出失败");
+        }catch(Exception|AssertionError e){
+            collectMessage(e);
+        }finally{
+            saveData("风控告警页面导出");
+        }
+    }
+
+    /**
+     * 特殊人员管理-风控白名单导出
+     */
+    @Test(description = "特殊人员管理-风控白名单导出")
+    public void ExportChecking3(){
+        try{
+            //风控规则页面
+            IScene scene =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type("WHITE").isExport(true).build();
+            String message=visitor.invokeApi(scene,false).getString("message");
+            Preconditions.checkArgument(message.equals("success"),"特殊人员管理-风控白名单导出失败");
+        }catch(Exception|AssertionError e){
+            collectMessage(e);
+        }finally{
+            saveData("特殊人员管理-风控白名单导出");
+        }
+    }
+
+    /**
+     * 特殊人员管理-风控黑名单导出
+     */
+    @Test(description = "特殊人员管理-风控黑名单导出")
+    public void ExportChecking4(){
+        try{
+            //风控规则页面
+            IScene scene =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type("BLACK").isExport(true).build();
+            String message=visitor.invokeApi(scene,false).getString("message");
+            Preconditions.checkArgument(message.equals("success"),"特殊人员管理-风控黑名单导出失败");
+        }catch(Exception|AssertionError e){
+            collectMessage(e);
+        }finally{
+            saveData("特殊人员管理-风控黑名单导出");
+        }
+    }
+
+    /**
+     * 特殊人员管理-风控重点观察人员导出
+     */
+    @Test(description = "特殊人员管理-风控黑名单导出")
+    public void ExportChecking5(){
+        try{
+            //风控规则页面
+            IScene scene =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type("FOCUS").isExport(true).build();
+            String message=visitor.invokeApi(scene,false).getString("message");
+            Preconditions.checkArgument(message.equals("success"),"特殊人员管理-风控重点观察人员导出");
+        }catch(Exception|AssertionError e){
+            collectMessage(e);
+        }finally{
+            saveData("特殊人员管理-风控重点观察人员导出");
+        }
+    }
+
+
+
+
+
+
+
 
 
 
@@ -993,24 +1452,16 @@ public class RiskControlCaseDaily extends TestCaseCommon implements TestCaseStd 
             //根据累计风险事件排序(传0为降序；从大-小)
             JSONArray list2 = md.cashier_page("", "", "", "RISK", 0, pp.page, pp.size).getJSONArray("list");
             for (int i = 0; i < list2.size() - 1; i++) {
-                if (list2.size() > 1) {
-                    int risk_total1 = list2.getJSONObject(i).getInteger("risk_total");
-                    int risk_total2 = list2.getJSONObject(i + 1).getInteger("risk_total");
-                    checkArgument(risk_total1 >= risk_total2, "选择累计风险事件从大到小进行排序出现了排序错误");
-                } else {
-                    System.err.println("该数组只有一个数据，无法进行排序");
-                }
+                int risk_total1 = list2.getJSONObject(i).getInteger("risk_total");
+                int risk_total2 = list2.getJSONObject(i + 1).getInteger("risk_total");
+                checkArgument(risk_total1 >= risk_total2, "选择累计风险事件从大到小进行排序出现了排序错误");
             }
             //根据累计风险事件排序(传1为升序；从小-大)
             JSONArray list3 = md.cashier_page("", "", "", "RISK", 1, pp.page, pp.size).getJSONArray("list");
             for (int i = 0; i < list3.size() - 1; i++) {
-                if (list3.size() > 1) {
-                    int risk_total1 = list3.getJSONObject(i).getInteger("risk_total");
-                    int risk_total2 = list3.getJSONObject(i + 1).getInteger("risk_total");
-                    checkArgument(risk_total1 <= risk_total2, "选择累计风险事件从小到大进行排序出现了排序错误");
-                } else {
-                    System.err.println("该数组只有一个数据，无法进行排序");
-                }
+                int risk_total1 = list3.getJSONObject(i).getInteger("risk_total");
+                int risk_total2 = list3.getJSONObject(i + 1).getInteger("risk_total");
+                checkArgument(risk_total1 <= risk_total2, "选择累计风险事件从小到大进行排序出现了排序错误");
 
             }
 
@@ -1253,9 +1704,7 @@ public class RiskControlCaseDaily extends TestCaseCommon implements TestCaseStd 
 //            checkArgument(list4.size() == 1, "根据列表第一个的信息作为条件进行筛选搜索,没有查询到应有的结果");
 
 
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
 
@@ -1265,7 +1714,7 @@ public class RiskControlCaseDaily extends TestCaseCommon implements TestCaseStd 
     }
 
     /**
-     *风控告警规则的筛选（单一查询
+     *风控告警规则的筛选（单一查询）
      */
     @Test
     public void alarm_ruleSearch() {
@@ -1310,13 +1759,89 @@ public class RiskControlCaseDaily extends TestCaseCommon implements TestCaseStd 
             checkArgument(list4.size() == 1, "根据列表第一个的信息作为条件进行筛选搜索,没有查询到应有的结果");
 
 
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("风控告警列表的筛选（单一条件筛选）");
+        }
+
+    }
+
+    /**
+     * 账户列表的筛选（单一查询）
+     */
+    //@Test
+    public void accountPage_search() {
+        logger.logCaseStart(caseResult.getCaseName());
+
+        try {
+            JSONArray list = md.organizationAccountPage("", "", "", "", "", "", pp.page,  pp.size).getJSONArray("list");
+            String name = list.getJSONObject(0).getString("name");
+            String email = list.getJSONObject(0).getString("email");
+            String phone = list.getJSONObject(1).getString("phone");
+
+            //根据账号名称筛选
+            JSONArray list1 = md.organizationAccountPage(name, "", "", "", "", "",  pp.page,  pp.size).getJSONArray("list");
+            checkArgument(name.equals(list1.getJSONObject(0).getString("name")), "根据列表第一个账号名称" + name + "进行筛选的结果和筛选条件不一致");
+
+            //根据email筛选
+            JSONArray list2 = md.organizationAccountPage("", "", email, "", "", "",  pp.page,  pp.size).getJSONArray("list");
+            checkArgument(email.equals(list2.getJSONObject(0).getString("email")), "根据email" + email + "进行筛选的结果和筛选条件不一致");
+
+            //根据phone筛选
+            JSONArray list3 = md.organizationAccountPage("", "", "", phone, "", "",  pp.page,  pp.size).getJSONArray("list");
+            checkArgument(phone.equals(list3.getJSONObject(0).getString("phone")), "根据email" + phone + "进行筛选的结果和筛选条件不一致");
+
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("账号列表的筛选（单一条件筛选）");
+        }
+
+    }
+
+
+    /**
+     * 账户列表的筛选（单一查询）
+     */
+    //@Test
+    public void accountPageSearch() {
+        logger.logCaseStart(caseResult.getCaseName());
+
+        try {
+
+            JSONArray list =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
+            String name = list.getJSONObject(0).getString("name");
+            Long shopId = list.getJSONObject(0).getLong("shop_id");
+            Integer roleId = list.getJSONObject(0).getInteger("role_id");
+            String phone = list.getJSONObject(1).getString("phone");
+
+            //根据账号名称筛选
+            JSONArray list1 =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().name(name).page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
+            checkArgument(name.equals(list1.getJSONObject(0).getString("name")), "根据列表第一个账号名称" + name + "进行筛选的结果和筛选条件不一致");
+
+            //根据phone筛选
+            JSONArray list2 =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().phone(phone).page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
+            checkArgument(phone.equals(list2.getJSONObject(0).getString("phone")), "根据phone" + phone + "进行筛选的结果和筛选条件不一致");
+
+            //根据门店筛选
+            JSONArray list3 =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().shopId(shopId).page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
+            checkArgument(phone.equals(list3.getJSONObject(0).getString("shop_id")), "根据shopId" + shopId + "进行筛选的结果和筛选条件不一致");
+
+            //根据门店筛选
+            JSONArray list4 =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().roleId(roleId).page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
+            checkArgument(phone.equals(list4.getJSONObject(0).getString("role_id")), "根据roleId" + roleId + "进行筛选的结果和筛选条件不一致");
+
+
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("风控告警列表的筛选（单一条件筛选）");
+            saveData("账号列表的筛选（单一条件筛选）");
         }
 
     }

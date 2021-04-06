@@ -26,7 +26,9 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ActivityType extends TestCaseCommon implements TestCaseStd {
     ScenarioUtil jc = new ScenarioUtil();
@@ -1018,7 +1020,6 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
             saveData("招募活动，报名信息为空");
         }
     }
-
 
 
 
