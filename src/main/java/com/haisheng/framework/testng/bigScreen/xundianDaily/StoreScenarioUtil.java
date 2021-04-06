@@ -3356,12 +3356,13 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject banner_edit(JSONArray list) throws Exception {
+    public JSONObject banner_edit(JSONArray list,String referer) throws Exception {
         String path = "/patrol/pc/banner/edit";
         JSONObject json = new JSONObject();
         json.put("list",list);
+        json.put("referer",referer);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
     }
     /**
      * @description:10.2.  banner列表（id=广告位id）
