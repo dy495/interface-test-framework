@@ -1,31 +1,32 @@
 package com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.integralcenter;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 42.27. 客户积分变更记录分页
+ * 34.27. 客户积分变更记录分页 (谢志东) v2.2 （2021-03-16）
  *
  * @author wangmin
- * @date 2021-03-30 14:00:03
+ * @date 2021-03-24 14:32:27
  */
 @Builder
 public class CustomerIntegralChangeRecordPageScene extends BaseScene {
     /**
-     * 描述 当前页
+     * 描述 页码 大于0
      * 是否必填 true
-     * 版本 -
+     * 版本 v1.0
      */
-    private final Integer page;
+    @Builder.Default
+    private Integer page = 1;
 
     /**
-     * 描述 当前页的数量
+     * 描述 页大小 范围为[1,100]
      * 是否必填 true
-     * 版本 -
+     * 版本 v1.0
      */
-    private final Integer size;
+    @Builder.Default
+    private Integer size = 10;
 
     /**
      * 描述 变更时间范围查询开始日期
@@ -50,7 +51,7 @@ public class CustomerIntegralChangeRecordPageScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);
@@ -63,5 +64,15 @@ public class CustomerIntegralChangeRecordPageScene extends BaseScene {
     @Override
     public String getPath() {
         return "/shop/pc/integral-center/customer-integral/change-record/page";
+    }
+
+    @Override
+    public void setSize(Integer size) {
+        this.size = size;
+    }
+
+    @Override
+    public void setPage(Integer page) {
+        this.page = page;
     }
 }

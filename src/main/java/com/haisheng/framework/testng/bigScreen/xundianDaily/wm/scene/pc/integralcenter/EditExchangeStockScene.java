@@ -1,62 +1,28 @@
 package com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.integralcenter;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 42.11. 编辑积分兑换库存
- *
- * @author wangmin
- * @date 2021-03-30 14:00:03
+ * 修改库存
  */
 @Builder
 public class EditExchangeStockScene extends BaseScene {
-    /**
-     * 描述 库存商品id
-     * 是否必填 false
-     * 版本 v2.0
-     */
+    private final String changeStockType;
+    private final Integer num;
     private final Long id;
-
-    /**
-     * 描述 商品类型( FICTITIOUS("虚拟商品"),REAL("实物");)
-     * 是否必填 false
-     * 版本 v2.0
-     */
+    private final String goodsName;
     private final String type;
 
-    /**
-     * 描述 库存商品名称
-     * 是否必填 false
-     * 版本 v2.0
-     */
-    private final String goodsName;
-
-    /**
-     * 描述 更改库存类型（ADD:增加 MINUS:减少）
-     * 是否必填 true
-     * 版本 v2.0
-     */
-    private final String changeStockType;
-
-    /**
-     * 描述 改变库存数量
-     * 是否必填 true
-     * 版本 v2.0
-     */
-    private final Integer num;
-
-
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
-        object.put("id", id);
-        object.put("type", type);
-        object.put("goods_name", goodsName);
         object.put("change_stock_type", changeStockType);
         object.put("num", num);
+        object.put("id", id);
+        object.put("goods_name", goodsName);
+        object.put("type", type);
         return object;
     }
 

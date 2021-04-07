@@ -1,15 +1,14 @@
 package com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.integralcenter;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 42.8. 积分兑换置顶
+ * /shop/pc/integral-center/make-top的接口
  *
  * @author wangmin
- * @date 2021-03-30 14:00:03
+ * @date 2021-03-12 17:23:18
  */
 @Builder
 public class MakeTopScene extends BaseScene {

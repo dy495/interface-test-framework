@@ -1,35 +1,21 @@
 package com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.integralcenter;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 42.24. 积分兑换规则设置
- *
- * @author wangmin
- * @date 2021-03-30 14:00:03
+ * 积分规则
  */
 @Builder
 public class IntegralExchangeRulesScene extends BaseScene {
-    /**
-     * 描述 当前页
-     * 是否必填 true
-     * 版本 -
-     */
-    private final Integer page;
-
-    /**
-     * 描述 当前页的数量
-     * 是否必填 true
-     * 版本 -
-     */
-    private final Integer size;
-
+    @Builder.Default
+    private Integer page = 1;
+    @Builder.Default
+    private Integer size = 10;
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);
@@ -40,4 +26,15 @@ public class IntegralExchangeRulesScene extends BaseScene {
     public String getPath() {
         return "/shop/pc/integral-center/integral-exchange-rules";
     }
+
+    @Override
+    public void setPage(Integer page) {
+        this.page = page;
+    }
+
+    @Override
+    public void setSize(Integer size) {
+        this.size = size;
+    }
+
 }

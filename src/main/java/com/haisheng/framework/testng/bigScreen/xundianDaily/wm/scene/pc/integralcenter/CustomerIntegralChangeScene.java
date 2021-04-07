@@ -1,15 +1,14 @@
 package com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.integralcenter;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 42.26. 客户积分变更
+ * 34.26. 客户积分变更 (谢志东) v2.2 （2021-03-15）
  *
  * @author wangmin
- * @date 2021-03-30 14:00:03
+ * @date 2021-03-24 14:32:27
  */
 @Builder
 public class CustomerIntegralChangeScene extends BaseScene {
@@ -43,7 +42,7 @@ public class CustomerIntegralChangeScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("id", id);
         object.put("change_type", changeType);

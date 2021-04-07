@@ -575,7 +575,8 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
+
+    @Test(enabled = false)
     public void goodsCategory_system_18() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -595,6 +596,7 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    //ok
     @Test
     public void goodsCategory_system_19() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -609,10 +611,11 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
             ChangeStatusScene.builder().id(id).status(true).build().invoke(visitor);
 
             //关闭23
+            ChangeStatusScene.builder().id(thirdId).status(false).build().invoke(visitor);
             ChangeStatusScene.builder().id(secondId).status(false).build().invoke(visitor);
-            ChangeStatusScene.builder().id(thirdId).status(true).build().invoke(visitor);
+
             //启用23
-            ChangeStatusScene.builder().id(secondId).status(false).build().invoke(visitor);
+            ChangeStatusScene.builder().id(secondId).status(true).build().invoke(visitor);
             ChangeStatusScene.builder().id(thirdId).status(true).build().invoke(visitor);
             //clean
             Long[] ids = {thirdId, secondId, id};

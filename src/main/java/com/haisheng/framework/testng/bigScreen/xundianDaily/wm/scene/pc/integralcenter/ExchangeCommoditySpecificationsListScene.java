@@ -1,28 +1,18 @@
 package com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.integralcenter;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 42.13. 兑换商品规格详情列表
- *
- * @author wangmin
- * @date 2021-03-30 14:00:03
+ * 商品规格详情
  */
 @Builder
 public class ExchangeCommoditySpecificationsListScene extends BaseScene {
-    /**
-     * 描述 唯一id
-     * 是否必填 true
-     * 版本 v2.0
-     */
     private final Long id;
 
-
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("id", id);
         return object;
@@ -32,4 +22,5 @@ public class ExchangeCommoditySpecificationsListScene extends BaseScene {
     public String getPath() {
         return "/shop/pc/integral-center/exchange-commodity-specifications-list";
     }
+
 }
