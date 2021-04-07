@@ -832,18 +832,19 @@ public class SupporterUtil {
      */
     public Long getCategoryByLevel(IntegralCategoryTypeEnum categoryLevel) {
         if (categoryLevel.equals(IntegralCategoryTypeEnum.SECOND_CATEGORY)) {
-            Long id = getCategoryId(IntegralCategoryTypeEnum.FIRST_CATEGORY) == null ? createFirstCategory(getCategoryPicPath()) : getCategoryId(IntegralCategoryTypeEnum.FIRST_CATEGORY);
-            CreateCategoryScene.builder().categoryName(IntegralCategoryTypeEnum.SECOND_CATEGORY.getDesc()).belongPic(getCategoryPicPath()).categoryLevel(categoryLevel.name())
-                    .belongCategory(id).build().invoke(visitor, true);
+            Long id = getCategoryId(IntegralCategoryTypeEnum.FIRST_CATEGORY);
+            id = id == null ? createFirstCategory(getCategoryPicPath()) : id;
+            CreateCategoryScene.builder().categoryName(IntegralCategoryTypeEnum.SECOND_CATEGORY.getDesc()).belongPic(getCategoryPicPath()).categoryLevel(categoryLevel.name()).belongCategory(id).build().invoke(visitor);
             return getCategoryId(IntegralCategoryTypeEnum.SECOND_CATEGORY.getDesc());
         }
         if (categoryLevel.equals(IntegralCategoryTypeEnum.THIRD_CATEGORY)) {
-            Long id = getCategoryId(IntegralCategoryTypeEnum.SECOND_CATEGORY) == null ? createSecondCategory() : getCategoryId(IntegralCategoryTypeEnum.SECOND_CATEGORY);
-            CreateCategoryScene.builder().categoryName(IntegralCategoryTypeEnum.THIRD_CATEGORY.getDesc()).belongPic(getCategoryPicPath()).categoryLevel(categoryLevel.name())
-                    .belongCategory(id).build().invoke(visitor, true);
+            Long id = getCategoryId(IntegralCategoryTypeEnum.SECOND_CATEGORY);
+            id = id == null ? createSecondCategory() : id;
+            CreateCategoryScene.builder().categoryName(IntegralCategoryTypeEnum.THIRD_CATEGORY.getDesc()).belongPic(getCategoryPicPath()).categoryLevel(categoryLevel.name()).belongCategory(id).build().invoke(visitor);
             return getCategoryId(IntegralCategoryTypeEnum.THIRD_CATEGORY.getDesc());
         } else {
-            return getCategoryId(categoryLevel) == null ? createFirstCategory(getCategoryPicPath()) : getCategoryId(categoryLevel);
+            Long id = getCategoryId(categoryLevel);
+            return id == null ? createFirstCategory(getCategoryPicPath()) : id;
         }
     }
 
@@ -854,7 +855,7 @@ public class SupporterUtil {
 
     private Long createFirstCategory(String picPath) {
         String name = IntegralCategoryTypeEnum.FIRST_CATEGORY.getDesc();
-        CreateCategoryScene.builder().categoryName(name).belongPic(picPath).categoryLevel(IntegralCategoryTypeEnum.FIRST_CATEGORY.name()).build().invoke(visitor, true);
+        CreateCategoryScene.builder().categoryName(name).belongPic(picPath).categoryLevel(IntegralCategoryTypeEnum.FIRST_CATEGORY.name()).build().invoke(visitor);
         return getCategoryId(name);
     }
 
@@ -864,12 +865,18 @@ public class SupporterUtil {
 
     public Long getCategoryId(String categoryName) {
         IScene scene = CategoryPageScene.builder().build();
-        return collectBeanByField(scene, CategoryPageBean.class, "category_name", categoryName).getId();
+        CategoryPageBean categoryPageBean = collectBeanByField(scene, CategoryPageBean.class, "category_name", categoryName);
+        logger.info("categoryName is：{}", categoryPageBean.getCategoryName());
+        logger.info("categoryId is：{}", categoryPageBean.getId());
+        return categoryPageBean.getId();
     }
 
     public Long getCategoryId(IntegralCategoryTypeEnum categoryLevel) {
         IScene scene = CategoryPageScene.builder().build();
-        return collectBeanByField(scene, CategoryPageBean.class, "category_level", categoryLevel.getDesc()).getId();
+        CategoryPageBean categoryPageBean = collectBeanByField(scene, CategoryPageBean.class, "category_level", categoryLevel.getDesc());
+        logger.info("categoryName is：{}", categoryPageBean.getCategoryName());
+        logger.info("categoryId is：{}", categoryPageBean.getId());
+        return categoryPageBean.getId();
     }
 
     public String getCategoryName(Long id) {

@@ -7,7 +7,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.bean.Response;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.applet.AppletPorscheAMessageListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletVoucherListScene;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.applet.article.AppletListScene;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.applet.granted.AppletMessageListScene;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -167,7 +167,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
     }
 
     private Response invokeIns(VisitorProxy visitor) {
-        JSONObject response = AppletListScene.builder().build().invoke(visitor, false);
+        JSONObject response = AppletMessageListScene.builder().lastValue(null).size(20).build().invoke(visitor, false);
         return getResponseInfo(response);
     }
 
@@ -214,7 +214,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
     @DataProvider(name = "INS_APPLET_TOKENS_DAILY")
     public static Object[] ins_appletTokens_daily() {
         return new String[]{
-//                EnumAppletToken.INS_WM_DAILY.getToken(),
+                EnumAppletToken.INS_WM_DAILY.getToken(),
                 EnumAppletToken.INS_ZT_DAILY.getToken(),
         };
     }

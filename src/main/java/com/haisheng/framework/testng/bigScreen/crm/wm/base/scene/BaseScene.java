@@ -52,4 +52,8 @@ public abstract class BaseScene implements IScene {
     public JSONObject invoke(@NotNull VisitorProxy visitor, boolean checkCode) {
         return visitor.invokeApi(getPath(), getRequestBody(), checkCode);
     }
+
+    public JSONObject invoke(@NotNull VisitorProxy visitor) {
+        return visitor.invokeApi(getPath(), getRequestBody(), true);
+    }
 }

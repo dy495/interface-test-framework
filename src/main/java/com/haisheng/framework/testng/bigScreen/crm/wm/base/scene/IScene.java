@@ -27,4 +27,6 @@ public interface IScene {
      */
     JSONObject invoke(VisitorProxy visitor, boolean checkCode);
 
+    JSONObject invoke(VisitorProxy visitor);
+
 }

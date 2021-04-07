@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author : lxq
@@ -51,8 +52,9 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
     public SupporterUtil util = new SupporterUtil(visitor);
     ScenarioUtil ins = ScenarioUtil.getInstance();
     InsInfo info = new InsInfo(visitor);
-    String FILEPATH = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
-    String FILEPATH_TWO = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/goods/联想.jpg";
+    private final static String FILEPATH = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
+    private final static String FILEPATH_TWO = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/goods/联想.jpg";
+    private final static Integer SIZE = 100;
 
     @BeforeClass
     @Override
@@ -98,7 +100,7 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
                 //删除品牌
                 IScene scene = BrandPageScene.builder().build();
                 BrandPageBean brandPageBean = util.collectBeanByField(scene, BrandPageBean.class, "brand_name", name);
-                DeleteBrandScene.builder().id(brandPageBean.getId()).build().invoke(visitor, true);
+                DeleteBrandScene.builder().id(brandPageBean.getId()).build().invoke(visitor);
             });
         } catch (AssertionError | Exception e) {
             collectMessage(e);
@@ -114,19 +116,19 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
         try {
             String picPath;
             picPath = util.getPicPath(FILEPATH, "1:1");
-            CreateBrandScene.builder().brandName("奔驰").brandDescription("梅赛德斯奔驰").brandPic(picPath).build().invoke(visitor, true);
+            CreateBrandScene.builder().brandName("奔驰").brandDescription("梅赛德斯奔驰").brandPic(picPath).build().invoke(visitor);
             IScene scene = BrandPageScene.builder().build();
             BrandPageBean brandPageBean = util.collectBeanByField(scene, BrandPageBean.class, "brand_name", "奔驰");
             Long id = brandPageBean.getId();
             //修改品牌
-            ChangeSwitchStatusScene.builder().id(id).status(false).build().invoke(visitor, true);
+            ChangeSwitchStatusScene.builder().id(id).status(false).build().invoke(visitor);
             picPath = util.getPicPath(FILEPATH_TWO, "1:1");
-            EditBrandScene.builder().id(id).brandName("联想").brandDescription("thinkPad").brandPic(picPath).build().invoke(visitor, true);
+            EditBrandScene.builder().id(id).brandName("联想").brandDescription("thinkPad").brandPic(picPath).build().invoke(visitor);
             BrandPageBean newBrandPageBean = util.collectBeanByField(scene, BrandPageBean.class, "id", id);
             CommonUtil.checkResult("修改后品牌名称", "联想", newBrandPageBean.getBrandName());
             CommonUtil.checkResult("修改后品牌描述", "thinkPad", newBrandPageBean.getBrandDescription());
             //删除品牌
-            DeleteBrandScene.builder().id(id).build().invoke(visitor, true);
+            DeleteBrandScene.builder().id(id).build().invoke(visitor);
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
@@ -155,6 +157,7 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
     /**
      * 商品运营
      */
+    //ok
     @Test
     public void goodsCategory_system_1() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -162,7 +165,7 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
             List<String> categoryNameList = new ArrayList<>();
             Long id = util.getCategoryByLevel(IntegralCategoryTypeEnum.FIRST_CATEGORY);
             String categoryName = util.getCategoryName(id);
-            IScene scene = CategoryPageScene.builder().categoryStatus(true).firstCategory(id).build();
+            IScene scene = CategoryPageScene.builder().firstCategory(id).build();
             List<CategoryPageBean> categoryPageBeanList = util.collectBean(scene, CategoryPageBean.class);
             categoryPageBeanList.forEach(e -> {
                 if (e.getCategoryLevel().equals(IntegralCategoryTypeEnum.SECOND_CATEGORY.getDesc())) {
@@ -172,9 +175,7 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
             });
             categoryPageBeanList.forEach(e -> {
                 if (e.getCategoryLevel().equals(IntegralCategoryTypeEnum.THIRD_CATEGORY.getDesc())) {
-                    Preconditions.checkArgument(categoryNameList.contains(e.getCategoryName()), e.getCategoryName() + "的父级品类在" + categoryNameList + "不存在");
-                    CommonUtil.checkResult(e.getCategoryName() + "的父级品类", categoryName, e.getParentCategory());
-                    categoryNameList.add(e.getCategoryName());
+                    Preconditions.checkArgument(categoryNameList.contains(e.getParentCategory()), e.getCategoryName() + "的父级品类在" + categoryNameList + "不存在");
                 }
             });
         } catch (AssertionError | Exception e) {
@@ -184,18 +185,27 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    //ok
     @Test
     public void goodsCategory_system_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray list = CategoryPageScene.builder().categoryStatus(true).firstCategory(info.first_category).secondCategory(info.second_category).build().invoke(visitor, true).getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                JSONObject obj = list.getJSONObject(i);
-                String parent = obj.getString("parent_category");
-                String level = obj.getString("category_level");
-                Preconditions.checkArgument(parent.equals(info.second_category_chin), "筛选" + info.second_category_chin + "结果包含上级品类为" + parent);
-                Preconditions.checkArgument(level.equals("三级品类"), "结果包含" + level);
-            }
+            List<Long> categoryIdList = new ArrayList<>();
+            Long id = util.getCategoryByLevel(IntegralCategoryTypeEnum.FIRST_CATEGORY);
+            IScene scene = CategoryPageScene.builder().firstCategory(id).build();
+            List<CategoryPageBean> categoryPageBeanList = util.collectBean(scene, CategoryPageBean.class);
+            categoryPageBeanList.forEach(e -> {
+                if (e.getCategoryLevel().equals(IntegralCategoryTypeEnum.SECOND_CATEGORY.getDesc())) {
+                    categoryIdList.add(e.getId());
+                }
+            });
+            IScene newScene = CategoryPageScene.builder().firstCategory(id).secondCategory(categoryIdList.get(0)).build();
+            List<CategoryPageBean> newCategoryPageBeanList = util.collectBean(newScene, CategoryPageBean.class);
+            newCategoryPageBeanList.forEach(e -> {
+                if (e.getCategoryLevel().equals(IntegralCategoryTypeEnum.THIRD_CATEGORY.getDesc())) {
+                    CommonUtil.checkResult(e.getCategoryName() + "的父级品类", util.getCategoryName(categoryIdList.get(0)), e.getParentCategory());
+                }
+            });
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
@@ -203,23 +213,24 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    //ok
     @Test
     public void goodsCategory_system_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray list = CategoryPageScene.builder().categoryStatus(true).build().invoke(visitor, true).getJSONArray("list");
+            JSONArray list = CategoryPageScene.builder().categoryStatus(true).build().invoke(visitor).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 JSONObject obj = list.getJSONObject(i);
                 Boolean status = obj.getBoolean("category_status");
                 String name = obj.getString("category_name");
-                Preconditions.checkArgument(status, "搜索状态为true，商品" + name + "的状态为false");
+                CommonUtil.checkResult("商品" + name + "的状态", true, status);
             }
-            JSONArray list2 = CategoryPageScene.builder().categoryStatus(false).build().invoke(visitor, true).getJSONArray("list");
+            JSONArray list2 = CategoryPageScene.builder().categoryStatus(false).build().invoke(visitor).getJSONArray("list");
             for (int i = 0; i < list2.size(); i++) {
                 JSONObject obj = list2.getJSONObject(i);
                 Boolean status = obj.getBoolean("category_status");
                 String name = obj.getString("category_name");
-                Preconditions.checkArgument(!status, "搜索状态为false，商品" + name + "的状态为true");
+                CommonUtil.checkResult("商品" + name + "的状态", false, status);
             }
         } catch (AssertionError | Exception e) {
             collectMessage(e);
@@ -228,11 +239,12 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    //ok
     @Test
     public void goodsCategory_system_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray list = CategoryPageScene.builder().categoryStatus(true).build().invoke(visitor, true).getJSONArray("list");
+            JSONArray list = CategoryPageScene.builder().categoryStatus(true).build().invoke(visitor).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 JSONObject obj = list.getJSONObject(i);
                 int id = obj.getInteger("id");
@@ -254,21 +266,25 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(dataProvider = "CATEGORY_NAME")
-    public void goodsCategory_system_5(String name) {
+    //ok
+    @Test()
+    public void goodsCategory_system_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String picPath = util.getCategoryPicPath();
-            Long id = util.createCategory(name, picPath, IntegralCategoryTypeEnum.FIRST_CATEGORY.name(), null);
-            //禁用品类
-            ChangeStatusScene.builder().id(id).status(false).build().invoke(visitor, true);
-            //编辑品类-更换图片
-            String picPath2 = util.getPicPath(FILEPATH_TWO, "1:1");
-            EditCategoryScene.builder().id(id).belongPic(picPath2).categoryName(name).categoryLevel(IntegralCategoryTypeEnum.FIRST_CATEGORY.name()).build().invoke(visitor, true);
-            //编辑品类-不更换图片
-            EditCategoryScene.builder().id(id).categoryName(name).categoryLevel(IntegralCategoryTypeEnum.FIRST_CATEGORY.name()).build().invoke(visitor, true);
-            //删除启用品类
-            DeleteCategoryScene.builder().id(id).build().invoke(visitor, true);
+            String[] names = {"啊", "12345", "1Aa啊！@#，嗷嗷",};
+            Arrays.stream(names).forEach(name -> {
+                String picPath = util.getCategoryPicPath();
+                Long id = util.createCategory(name, picPath, IntegralCategoryTypeEnum.FIRST_CATEGORY.name(), null);
+                //禁用品类
+                ChangeStatusScene.builder().id(id).status(false).build().invoke(visitor);
+                //编辑品类-更换图片
+                String picPath2 = util.getPicPath(FILEPATH_TWO, "1:1");
+                EditCategoryScene.builder().id(id).belongPic(picPath2).categoryName(name).categoryLevel(IntegralCategoryTypeEnum.FIRST_CATEGORY.name()).build().invoke(visitor);
+                //编辑品类-不更换图片
+                EditCategoryScene.builder().id(id).categoryName(name).categoryLevel(IntegralCategoryTypeEnum.FIRST_CATEGORY.name()).build().invoke(visitor);
+                //删除启用品类
+                DeleteCategoryScene.builder().id(id).build().invoke(visitor);
+            });
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
@@ -276,18 +292,30 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @DataProvider(name = "CATEGORY_NAME")
-    public Object[] name() {
-        return new String[]{
-                "啊啊啊2",
-                "12345",
-                "1Aa啊！@#，嗷嗷",
-        };
+    //ok
+    @Test()
+    public void goodsCategory_system_6() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String name = "12345";
+            String picPath = util.getCategoryPicPath();
+            //新建一级品类
+            Long firstId = util.createCategory(name, picPath, IntegralCategoryTypeEnum.FIRST_CATEGORY.name(), null);
+            //新建二级品类
+            Long secondId = util.createCategory(name, picPath, IntegralCategoryTypeEnum.SECOND_CATEGORY.name(), firstId);
+            //删除品类
+            Long[] ids = {secondId, firstId};
+            Arrays.stream(ids).forEach(id -> DeleteCategoryScene.builder().id(id).build().invoke(visitor));
+        } catch (AssertionError | Exception e) {
+            collectMessage(e);
+        } finally {
+            saveData("PC【商品品类】新建二级品类，与所属一级品类名称相同");
+        }
     }
 
     //ok
     @Test
-    public void goodsCategory_system_6() {
+    public void goodsCategory_system_7() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String picPath = util.getCategoryPicPath();
@@ -300,38 +328,23 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
-            saveData("PC【商品品类】新建一级品类，品类名称11个字");
+            saveData("PC【商品品类】新建一级品类，品类名称异常");
         }
     }
 
-    @Test(dataProvider = "CATEGORY_NAME")
-    public void goodsCategory_system_7(String name) {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            String picPath = util.getCategoryPicPath();
-            //新建一级品类
-            Long firstId = util.createCategory(name, picPath, IntegralCategoryTypeEnum.FIRST_CATEGORY.name(), null);
-            //新建二级品类
-            Long secondId = util.createCategory(name, picPath, IntegralCategoryTypeEnum.SECOND_CATEGORY.name(), firstId);
-            //删除品类
-            Long[] ids = {firstId, secondId};
-            Arrays.stream(ids).forEach(id -> DeleteCategoryScene.builder().id(id).build().invoke(visitor, true));
-        } catch (AssertionError | Exception e) {
-            collectMessage(e);
-        } finally {
-            saveData("PC【商品品类】新建二级品类，所属一级品类存在");
-        }
-    }
-
+    //ok
     @Test
     public void goodsCategory_system_8() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String picPath = util.getCategoryPicPath();
-            String message = CreateCategoryScene.builder().belongPic(picPath).categoryLevel(IntegralCategoryTypeEnum.SECOND_CATEGORY.name())
-                    .categoryName("奔驰").belongCategory(99999L).build().invoke(visitor, false).getString("message");
-            String err = "";
-            CommonUtil.checkResult("所属一级品类不存在时", err, message);
+            Long[] belongCategorys = {null, 99999L};
+            Arrays.stream(belongCategorys).forEach(belongCategory -> {
+                String picPath = util.getCategoryPicPath();
+                String message = CreateCategoryScene.builder().belongPic(picPath).categoryLevel(IntegralCategoryTypeEnum.SECOND_CATEGORY.name())
+                        .categoryName("奔驰").belongCategory(belongCategory).build().invoke(visitor, false).getString("message");
+                String err = belongCategory == null ? "所属品类不能为空" : "所属品类不存在或已关闭";
+                CommonUtil.checkResult("所属一级品类不存在时", err, message);
+            });
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
@@ -339,6 +352,8 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+
+    //ok
     @Test()
     public void goodsCategory_system_9() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -350,11 +365,11 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
             String message = CreateCategoryScene.builder().categoryName(name).belongPic(picPath).belongCategory(id)
                     .categoryLevel(IntegralCategoryTypeEnum.SECOND_CATEGORY.name())
                     .build().invoke(visitor, false).getString("message");
-            String err = "";
+            String err = "相同品类下，品类名称不能重复";
             CommonUtil.checkResult("一级品类下创建同名的二级品类", err, message);
             //删除品类
-            DeleteCategoryScene.builder().id(secondId).build().invoke(visitor, true);
-            DeleteCategoryScene.builder().id(id).build().invoke(visitor, true);
+            DeleteCategoryScene.builder().id(secondId).build().invoke(visitor);
+            DeleteCategoryScene.builder().id(id).build().invoke(visitor);
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
@@ -362,22 +377,22 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    //ok
     @Test()
     public void goodsCategory_system_10() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String name = "奔驰";
-            String picPath = util.getCategoryPicPath();
             Long id = util.getCategoryByLevel(IntegralCategoryTypeEnum.SECOND_CATEGORY);
-            Long thirdId = util.createCategory(name, picPath, IntegralCategoryTypeEnum.THIRD_CATEGORY.name(), id);
-            String message = CreateCategoryScene.builder().categoryName(name).belongPic(picPath).belongCategory(id)
+            Long thirdId = util.createCategory(name, util.getCategoryPicPath(), IntegralCategoryTypeEnum.THIRD_CATEGORY.name(), id);
+            String message = CreateCategoryScene.builder().categoryName(name).belongPic(util.getCategoryPicPath()).belongCategory(id)
                     .categoryLevel(IntegralCategoryTypeEnum.THIRD_CATEGORY.name())
                     .build().invoke(visitor, false).getString("message");
-            String err = "";
+            String err = "相同品类下，品类名称不能重复";
             CommonUtil.checkResult("二级品类下创建同名的三级品类", err, message);
             //删除品类
-            DeleteCategoryScene.builder().id(thirdId).build().invoke(visitor, true);
-            DeleteCategoryScene.builder().id(id).build().invoke(visitor, true);
+            DeleteCategoryScene.builder().id(thirdId).build().invoke(visitor);
+            DeleteCategoryScene.builder().id(id).build().invoke(visitor);
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
@@ -385,198 +400,223 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
-    public void categoryAddSecondErr2() {
+    //ok
+    @Test()
+    public void goodsCategory_system_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long id = util.getCategoryByLevel(IntegralCategoryTypeEnum.FIRST_CATEGORY);
-            IScene scene = CategoryPageScene.builder().build();
-            CategoryPageBean categoryPageBean = util.collectBeanByField(scene, CategoryPageBean.class, "id", id);
-            String message = CreateCategoryScene.builder().categoryName(categoryPageBean.getCategoryName()).categoryLevel(IntegralCategoryTypeEnum.SECOND_CATEGORY.name())
-                    .belongCategory(id).belongPic(util.getCategoryPicPath()).build().invoke(visitor, false).getString("message");
-            CommonUtil.checkResult("新建二级品类，品类名称与已存在的一级品类重复", "success", message);
-            Long secondId = util.getCategoryId(categoryPageBean.getCategoryName());
-            DeleteCategoryScene.builder().id(secondId).build().invoke(visitor, true);
-            DeleteCategoryScene.builder().id(id).build().invoke(visitor, true);
+            String name = "奔驰";
+            String message = CreateCategoryScene.builder().categoryName(name).belongPic(util.getCategoryPicPath())
+                    .categoryLevel(IntegralCategoryTypeEnum.SECOND_CATEGORY.name())
+                    .build().invoke(visitor, false).getString("message");
+            String err = "所属品类不能为空";
+            CommonUtil.checkResult("创建二级品类不填写所属品类", err, message);
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
-            saveData("PC【商品品类】新建二级品类，品类名称与已存在的一级品类重复");
+            saveData("PC【商品品类】创建二级品类不填写所属品类，失败");
         }
     }
 
-    @Test
-    public void categoryAddErr() {
+    //ok
+    @Test()
+    public void goodsCategory_system_12() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-
-            String logo = ins.pcFileUploadNew(new ImageUtil().getImageBinary(FILEPATH)).getString("pic_path");
-            //不填写品类名称
-            int code = ins.categoryCreate(false, null, "FIRST_CATEGORY", "", logo, null).getInteger("code");
-            Preconditions.checkArgument(code == 1001, "不填写品类名称,状态码期待1001，实际" + code);
-
-
-            //不填写所属分类
-
-            int code2 = ins.categoryCreate(false, "不填写所属品类", "SECOND_CATEGORY", "", logo, null).getInteger("code");
-            Preconditions.checkArgument(code2 == 1001, "不填写所属品类,状态码期待1001，实际" + code);
-
-            //不选择logo
-            int code3 = ins.categoryCreate(false, "不选择logo", "FIRST_CATEGORY", "", null, null).getInteger("code");
-            Preconditions.checkArgument(code3 == 1001, "不选择logo,状态码期待1001，实际" + code);
-
+            String name = "奔驰";
+            String message = CreateCategoryScene.builder().categoryName(name)
+                    .categoryLevel(IntegralCategoryTypeEnum.FIRST_CATEGORY.name())
+                    .build().invoke(visitor, false).getString("message");
+            String err = "品类图片不能为空";
+            CommonUtil.checkResult("创建一级品类不选择logo", err, message);
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
-            saveData("PC【商品品类】新建品类,不填写必填项");
+            saveData("PC【商品品类】创建一级品类不选择logo，失败");
         }
     }
 
+    //ok
     @Test
-    public void categoryStop1() {
+    public void goodsCategory_system_13() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            //新建一级品类
-            Long id = info.newFirstCategory("品类" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000))).getLong("id");
+            //创建一级品类
+            Long id = util.createCategory(IntegralCategoryTypeEnum.FIRST_CATEGORY.getDesc(), util.getCategoryPicPath(), IntegralCategoryTypeEnum.FIRST_CATEGORY.name(), null);
+            //创建二级品类
+            Long secondId = util.createCategory(IntegralCategoryTypeEnum.SECOND_CATEGORY.getDesc(), util.getCategoryPicPath(), IntegralCategoryTypeEnum.SECOND_CATEGORY.name(), id);
+            //创建三级品类
+            Long thirdId = util.createCategory(IntegralCategoryTypeEnum.THIRD_CATEGORY.getDesc(), util.getCategoryPicPath(), IntegralCategoryTypeEnum.THIRD_CATEGORY.name(), secondId);
             //停用
-            ins.categoryChgStatus(id, false);
-            //删除
-            int code = ins.categoryDel(id, false).getInteger("code");
-            Preconditions.checkArgument(code == 1000, "删除失败，状态码" + code);
-
-        } catch (AssertionError | Exception e) {
-            collectMessage(e);
-        } finally {
-            saveData("PC【商品品类】停用/删除无商品使用&无下级品类的品类,期待成功");
-        }
-    }
-
-    @Test
-    public void categoryStop2() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //新建一级品类
-            Long id = info.newFirstCategory("1品类" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000))).getLong("id");
-            //新建一个二级品类
-            Long secondid = info.newSecondCategory("2品类" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000)), Long.toString(id)).getLong("id");
+            String message = ChangeStatusScene.builder().id(id).status(false).build().invoke(visitor, false).getString("message");
+            String err = "品类有下级品类，无法修改";
+            CommonUtil.checkResult("停用下级未关闭的一级品类", err, message);
             //停用
-            ins.categoryChgStatus(secondid, false);
-            ins.categoryChgStatus(id, false);
+            String secondMessage = ChangeStatusScene.builder().id(secondId).status(false).build().invoke(visitor, false).getString("message");
+            String secondErr = "品类有下级品类，无法修改";
+            CommonUtil.checkResult("停用下级未关闭的二级品类", secondErr, secondMessage);
+            //clean
+            Long[] ids = {thirdId, secondId, id};
+            Arrays.stream(ids).forEach(e -> {
+                ChangeStatusScene.builder().id(e).status(false).build().invoke(visitor);
+                DeleteCategoryScene.builder().id(e).build().invoke(visitor);
+            });
+        } catch (AssertionError | Exception e) {
+            collectMessage(e);
+        } finally {
+            saveData("PC【商品品类】停用有下级品类的品类，失败");
+        }
+    }
 
+    //ok
+    @Test
+    public void goodsCategory_system_14() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //创建一级品类
+            Long id = util.createCategory(IntegralCategoryTypeEnum.FIRST_CATEGORY.getDesc(), util.getCategoryPicPath(), IntegralCategoryTypeEnum.FIRST_CATEGORY.name(), null);
+            //创建二级品类
+            Long secondId = util.createCategory(IntegralCategoryTypeEnum.SECOND_CATEGORY.getDesc(), util.getCategoryPicPath(), IntegralCategoryTypeEnum.SECOND_CATEGORY.name(), id);
+            //创建三级品类
+            Long thirdId = util.createCategory(IntegralCategoryTypeEnum.THIRD_CATEGORY.getDesc(), util.getCategoryPicPath(), IntegralCategoryTypeEnum.THIRD_CATEGORY.name(), secondId);
             //删除
-            int code = ins.categoryDel(id, false).getInteger("code");
-            Preconditions.checkArgument(code == 1000, "删除失败，状态码" + code);
+            String message = DeleteCategoryScene.builder().id(id).build().invoke(visitor, false).getString("message");
+            String err = "该品类有下级品类，不能删除";
+            CommonUtil.checkResult("删除含有二级品类的一级品类", err, message);
+            //删除
+            String secondMessage = DeleteCategoryScene.builder().id(secondId).build().invoke(visitor, false).getString("message");
+            String secondErr = "该品类有下级品类，不能删除";
+            CommonUtil.checkResult("删除含有三级品类的二级品类", secondErr, secondMessage);
+            //clean
+            Long[] ids = {thirdId, secondId, id};
+            Arrays.stream(ids).forEach(e -> {
+                ChangeStatusScene.builder().id(e).status(false).build().invoke(visitor);
+                DeleteCategoryScene.builder().id(e).build().invoke(visitor);
+            });
+        } catch (AssertionError | Exception e) {
+            collectMessage(e);
+        } finally {
+            saveData("PC【商品品类】删除有下级品类的品类，失败");
+        }
+    }
 
-            ins.categoryDel(secondid, true);
+    //ok
+    @Test
+    public void goodsCategory_system_15() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //创建一级品类
+            Long id = util.createCategory(IntegralCategoryTypeEnum.FIRST_CATEGORY.getDesc(), util.getCategoryPicPath(), IntegralCategoryTypeEnum.FIRST_CATEGORY.name(), null);
+            //创建二级品类
+            Long secondId = util.createCategory(IntegralCategoryTypeEnum.SECOND_CATEGORY.getDesc(), util.getCategoryPicPath(), IntegralCategoryTypeEnum.SECOND_CATEGORY.name(), id);
+            //创建三级品类
+            Long thirdId = util.createCategory(IntegralCategoryTypeEnum.THIRD_CATEGORY.getDesc(), util.getCategoryPicPath(), IntegralCategoryTypeEnum.THIRD_CATEGORY.name(), secondId);
 
+            ChangeStatusScene.builder().id(thirdId).status(false).build().invoke(visitor);
+            DeleteCategoryScene.builder().id(thirdId).build().invoke(visitor);
+
+            ChangeStatusScene.builder().id(secondId).status(false).build().invoke(visitor);
+            DeleteCategoryScene.builder().id(secondId).build().invoke(visitor);
+
+            ChangeStatusScene.builder().id(id).status(false).build().invoke(visitor);
+            DeleteCategoryScene.builder().id(id).build().invoke(visitor);
+        } catch (AssertionError | Exception e) {
+            collectMessage(e);
+        } finally {
+            saveData("PC【商品品类】停用、删除无下级的品类，成功");
+        }
+    }
+
+    //ok
+    @Test
+    public void goodsCategory_system_16() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //创建一级品类
+            Long id = util.createCategory(IntegralCategoryTypeEnum.FIRST_CATEGORY.getDesc(), util.getCategoryPicPath(), IntegralCategoryTypeEnum.FIRST_CATEGORY.name(), null);
+            //创建二级品类
+            Long secondId = util.createCategory(IntegralCategoryTypeEnum.SECOND_CATEGORY.getDesc(), util.getCategoryPicPath(), IntegralCategoryTypeEnum.SECOND_CATEGORY.name(), id);
+            //创建三级品类
+            Long thirdId = util.createCategory(IntegralCategoryTypeEnum.THIRD_CATEGORY.getDesc(), util.getCategoryPicPath(), IntegralCategoryTypeEnum.THIRD_CATEGORY.name(), secondId);
+
+            ChangeStatusScene.builder().id(thirdId).status(false).build().invoke(visitor);
+            ChangeStatusScene.builder().id(secondId).status(false).build().invoke(visitor);
+            ChangeStatusScene.builder().id(id).status(false).build().invoke(visitor);
+
+            DeleteCategoryScene.builder().id(secondId).build().invoke(visitor);
+            DeleteCategoryScene.builder().id(id).build().invoke(visitor);
+            DeleteCategoryScene.builder().id(thirdId).build().invoke(visitor);
 
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
-            saveData("PC【商品品类】停用/删除无商品使用&下级品类状态为停用的品类,期待成功");
+            saveData("PC【商品品类】停用、删除下级无占用&已关闭的品类，成功");
+        }
+    }
+
+    //ok
+    @Test
+    public void goodsCategory_system_17() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long id = util.createCategory(IntegralCategoryTypeEnum.FIRST_CATEGORY.getDesc(), util.getCategoryPicPath(), IntegralCategoryTypeEnum.FIRST_CATEGORY.name(), null);
+            Long speId = CreateSpecificationsScene.builder().id(id).specificationsName("规格1号").belongsCategory(id).build().invoke(visitor).getLong("id");
+            //删除
+            String message = DeleteCategoryScene.builder().id(id).build().invoke(visitor, false).getString("message");
+            String err = "该品类有规格绑定，不能删除";
+            CommonUtil.checkResult("删除有规格绑定的品类", err, message);
+            ChangeSpecificationsStatusScene.builder().id(speId).status(false).build().invoke(visitor);
+            DeleteSpecificationsScene.builder().id(speId).build().invoke(visitor);
+            DeleteCategoryScene.builder().id(id).build().invoke(visitor);
+        } catch (AssertionError | Exception e) {
+            collectMessage(e);
+        } finally {
+            saveData("PC【商品品类】删除有规格绑定的品类，失败");
         }
     }
 
     @Test
-    public void categoryStop3() {
+    public void goodsCategory_system_18() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            //新建一级品类
-            Long id = info.newFirstCategory("1品类" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000))).getLong("id");
-            //新建一个二级品类
-            Long secondid = info.newSecondCategory("2品类" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000)), Long.toString(id)).getLong("id");
-            //启用
-            ins.categoryChgStatus(secondid, true);
+            Long id = util.createCategory(IntegralCategoryTypeEnum.FIRST_CATEGORY.getDesc(), util.getCategoryPicPath(), IntegralCategoryTypeEnum.FIRST_CATEGORY.name(), null);
+            Long speId = CreateSpecificationsScene.builder().id(id).specificationsName("规格1号").belongsCategory(id).build().invoke(visitor).getLong("id");
             //停用
-            int code = ins.categoryChgStatus(id, false, false).getInteger("code");
-            Preconditions.checkArgument(code == 1001, "停用期待1001，实际" + code);
-
-            //删除
-            int code1 = ins.categoryDel(id, false).getInteger("code");
-            Preconditions.checkArgument(code1 == 1001, "删除期待1001，实际" + code1);
-
-            ins.categoryChgStatus(secondid, false);
-            ins.categoryDel(secondid, true);
-            ins.categoryDel(id, true);
-
-
+            String message = ChangeStatusScene.builder().id(id).status(false).build().invoke(visitor, false).getString("message");
+            String err = "该品类有规格绑定，无法修改";
+            CommonUtil.checkResult("停用有规格绑定的品类", err, message);
+            ChangeSpecificationsStatusScene.builder().id(speId).status(false).build().invoke(visitor);
+            DeleteSpecificationsScene.builder().id(speId).build().invoke(visitor);
+            DeleteCategoryScene.builder().id(id).build().invoke(visitor);
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
-            saveData("PC【商品品类】停用/删除无商品使用&下级品类状态为[启用]的品类,期待失败");
-        }
-    }
-
-
-    @Test
-    public void categoryDel1() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //新建一级品类
-            Long id = info.newFirstCategory("1品类" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000))).getLong("id");
-            //绑定规格
-            Long speId = ins.specificationsCreate("规格" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000)), id, null, null, true).getLong("id");
-
-            //删除
-            int code1 = ins.categoryDel(id, false).getInteger("code");
-            Preconditions.checkArgument(code1 == 1001, "删除期待1001，实际" + code1);
-
-
-            ins.specificationsChgStatus(speId, false);
-            ins.specificationsDel(speId);
-            ins.categoryDel(id, true);
-
-
-        } catch (AssertionError | Exception e) {
-            collectMessage(e);
-        } finally {
-            saveData("PC【商品品类】停用有规格绑定的品类,期待失败");
+            saveData("PC【商品品类】停用有规格绑定的品类，失败");
         }
     }
 
     @Test
-    public void categoryStart1() {
+    public void goodsCategory_system_19() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            //新建一级品类
-            Long id = info.newFirstCategory("1品类" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000))).getLong("id");
+            //创建一级品类
+            Long id = util.createCategory(IntegralCategoryTypeEnum.FIRST_CATEGORY.getDesc(), util.getCategoryPicPath(), IntegralCategoryTypeEnum.FIRST_CATEGORY.name(), null);
+            //创建二级品类
+            Long secondId = util.createCategory(IntegralCategoryTypeEnum.SECOND_CATEGORY.getDesc(), util.getCategoryPicPath(), IntegralCategoryTypeEnum.SECOND_CATEGORY.name(), id);
+            //创建三级品类
+            Long thirdId = util.createCategory(IntegralCategoryTypeEnum.THIRD_CATEGORY.getDesc(), util.getCategoryPicPath(), IntegralCategoryTypeEnum.THIRD_CATEGORY.name(), secondId);
+            //启用1
+            ChangeStatusScene.builder().id(id).status(true).build().invoke(visitor);
 
-            //启用
-            int code = ins.categoryChgStatus(id, true, false).getInteger("code");
-            Preconditions.checkArgument(code == 1000, "状态码" + code);
-
-            //删除
-            ins.categoryDel(id, true);
-
-
-        } catch (AssertionError | Exception e) {
-            collectMessage(e);
-        } finally {
-            saveData("PC【商品品类】启用无上级品类的品类（一级品类），期待成功");
-        }
-    }
-
-    @Test
-    public void categoryStart2() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //新建一级品类
-            Long id = info.newFirstCategory("1品类" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000))).getLong("id");
-            //启用
-            ins.categoryChgStatus(id, true);
-
-            //新建二级品类
-            Long secondid = info.newSecondCategory("2品类" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000)), Long.toString(id)).getLong("id");
-            //启用
-            int code1 = ins.categoryChgStatus(secondid, true, false).getInteger("code");
-            Preconditions.checkArgument(code1 == 1000, "状态码" + code1);
-
-
-            //删除
-            ins.categoryDel(secondid, true);
-            ins.categoryDel(id, true);
-
-
+            //关闭23
+            ChangeStatusScene.builder().id(secondId).status(false).build().invoke(visitor);
+            ChangeStatusScene.builder().id(thirdId).status(true).build().invoke(visitor);
+            //启用23
+            ChangeStatusScene.builder().id(secondId).status(false).build().invoke(visitor);
+            ChangeStatusScene.builder().id(thirdId).status(true).build().invoke(visitor);
+            //clean
+            Long[] ids = {thirdId, secondId, id};
+            Arrays.stream(ids).forEach(e -> DeleteCategoryScene.builder().id(e).build().invoke(visitor));
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
@@ -585,64 +625,47 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test
-    public void categoryStart3() {
+    public void goodsCategory_system_20() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            //新建一级品类
-            Long id = info.newFirstCategory("1品类" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000))).getLong("id");
-            //启用
-            ins.categoryChgStatus(id, true);
-
-            //新建二级品类
-            Long secondid = info.newSecondCategory("2品类" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000)), Long.toString(id)).getLong("id");
-            //停用一级品类
-            ins.categoryChgStatus(secondid, false);
-            ins.categoryChgStatus(id, false);
-
-            //启用二级
-            int code1 = ins.categoryChgStatus(secondid, true, false).getInteger("code");
-            Preconditions.checkArgument(code1 == 1000, "状态码" + code1);
-
-
-            //删除
-            ins.categoryDel(secondid, true);
-            ins.categoryDel(id, true);
-
-
-        } catch (AssertionError e) {
-            collectMessage(e);
-        } catch (Exception e) {
+            //创建一级品类
+            Long id = util.createCategory(IntegralCategoryTypeEnum.FIRST_CATEGORY.getDesc(), util.getCategoryPicPath(), IntegralCategoryTypeEnum.FIRST_CATEGORY.name(), null);
+            //创建二级品类
+            Long secondId = util.createCategory(IntegralCategoryTypeEnum.SECOND_CATEGORY.getDesc(), util.getCategoryPicPath(), IntegralCategoryTypeEnum.SECOND_CATEGORY.name(), id);
+            //创建三级品类
+            Long thirdId = util.createCategory(IntegralCategoryTypeEnum.THIRD_CATEGORY.getDesc(), util.getCategoryPicPath(), IntegralCategoryTypeEnum.THIRD_CATEGORY.name(), secondId);
+            //全部关闭
+            Long[] ids = {thirdId, secondId, id};
+            Arrays.stream(ids).forEach(e -> ChangeStatusScene.builder().id(e).status(false).build().invoke(visitor));
+            //全部开启
+            Arrays.stream(ids).forEach(e -> ChangeStatusScene.builder().id(e).status(true).build().invoke(visitor));
+            //clean
+            Arrays.stream(ids).forEach(e -> DeleteCategoryScene.builder().id(e).build().invoke(visitor));
+        } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
             saveData("PC【商品品类】启用 有上级品类&上级品类状态为停用的品类，期待成功");
         }
     }
 
-
-    //商品品牌
-    @Test(dataProvider = "BRANDNAME")
-    public void brandFilter1(String name) {
+    /**
+     * 商品品牌
+     */
+    @Test(dataProvider = "BRAND_NAME")
+    public void goodsBrand_system_1(String name) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-
-            JSONArray list = ins.BrandPage(1, 50, name, null).getJSONArray("list");
-
-            for (int i = 0; i < list.size(); i++) {
-                JSONObject obj = list.getJSONObject(i);
-                String searchname = obj.getString("brand_name");
-                Preconditions.checkArgument(searchname.contains(name), "搜索结果包含" + searchname);
-            }
-
-        } catch (AssertionError e) {
-            collectMessage(e);
-        } catch (Exception e) {
+            IScene scene = BrandPageScene.builder().brandName(name).build();
+            List<BrandPageBean> brandPageBeans = util.collectBean(scene, BrandPageBean.class);
+            brandPageBeans.forEach(e -> Preconditions.checkArgument(e.getBrandName().contains(name), "搜索结果" + e.getBrandName() + "不包含" + name));
+        } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
             saveData("PC【商品品牌】根据品牌名称搜索");
         }
     }
 
-    @DataProvider(name = "BRANDNAME")
+    @DataProvider(name = "BRAND_NAME")
     public Object[] brandName() {
         return new String[]{
                 "1",
@@ -652,26 +675,17 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
 //                "之家",
 //                "测试",
 //                "2021",
-
         };
     }
 
     @Test
-    public void brandFilter2() {
+    public void goodsBrand_system_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-
-            JSONArray list = ins.BrandPage(1, 50, null, true).getJSONArray("list");
-
-            for (int i = 0; i < list.size(); i++) {
-                JSONObject obj = list.getJSONObject(i);
-                Boolean searchstatus = obj.getBoolean("brand_status");
-                Preconditions.checkArgument(searchstatus == true, "搜索结果中" + obj.getString("brand_name") + "的状态为" + searchstatus);
-            }
-
-        } catch (AssertionError e) {
-            collectMessage(e);
-        } catch (Exception e) {
+            IScene scene = BrandPageScene.builder().brandStatus(true).build();
+            List<BrandPageBean> brandPageBeans = util.collectBean(scene, BrandPageBean.class);
+            brandPageBeans.forEach(e -> Preconditions.checkArgument(e.getBrandStatus(), "搜索结果中" + e.getBrandName() + "的状态为" + e.getBrandStatus()));
+        } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
             saveData("PC【商品品牌】搜索状态为启用的品牌");
@@ -679,21 +693,13 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test
-    public void brandFilter3() {
+    public void goodsBrand_system_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-
-            JSONArray list = ins.BrandPage(1, 50, null, false).getJSONArray("list");
-
-            for (int i = 0; i < list.size(); i++) {
-                JSONObject obj = list.getJSONObject(i);
-                Boolean searchstatus = obj.getBoolean("brand_status");
-                Preconditions.checkArgument(searchstatus == false, "搜索结果中" + obj.getString("brand_name") + "的状态为" + searchstatus);
-            }
-
-        } catch (AssertionError e) {
-            collectMessage(e);
-        } catch (Exception e) {
+            IScene scene = BrandPageScene.builder().brandStatus(false).build();
+            List<BrandPageBean> brandPageBeans = util.collectBean(scene, BrandPageBean.class);
+            brandPageBeans.forEach(e -> Preconditions.checkArgument(!e.getBrandStatus(), "搜索结果中" + e.getBrandName() + "的状态为" + e.getBrandStatus()));
+        } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
             saveData("PC【商品品牌】搜索状态为停用的品牌");
@@ -701,11 +707,10 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test
-    public void brandShow() {
+    public void goodsBrand_system_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-
-            JSONArray list = ins.BrandPage(1, 50, null, null).getJSONArray("list");
+            JSONArray list = BrandPageScene.builder().size(SIZE).build().invoke(visitor).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 JSONObject obj = list.getJSONObject(i);
                 int id = obj.getInteger("id");
@@ -717,101 +722,77 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(obj.containsKey("last_modify_time"), "品牌" + id + "无最新修改时间");
                 Preconditions.checkArgument(obj.containsKey("modify_sale_name"), "品牌" + id + "无修改人");
             }
-
-        } catch (AssertionError e) {
-            collectMessage(e);
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
             saveData("PC【商品品牌】列表中展示项校验");
         }
     }
 
-
-    @Test(dataProvider = "BRANDADD") //1005 带id
-    public void brandAdd(String name, String desc, String a) {
+    @Test(dataProvider = "BRAND_ADD")
+    public void goodsBrand_system_5(String name, String desc) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-
-            int bef = ins.BrandPage(1, 10, null, null).getInteger("total");
-            int code = ins.BrandCreat(false, null, name, desc, info.getLogo()).getInteger("code");
-            JSONObject obj = ins.BrandPage(1, 1, null, null).getJSONArray("list").getJSONObject(0);
-            Long id = obj.getLong("id");
+            IScene scene = BrandPageScene.builder().build();
+            int brandTotal = scene.invoke(visitor).getInteger("total");
+            CreateBrandScene.builder().brandPic(util.getCategoryPicPath()).brandName(name).brandDescription(desc).build().invoke(visitor);
+            int newBrandTotal = scene.invoke(visitor).getInteger("total");
+            CommonUtil.checkResult("商品品牌列表数量", brandTotal + 1, newBrandTotal);
             //判断品牌状态
-            Boolean status = obj.getBoolean("brand_status");
-            //判断列表数量
-            int after = ins.BrandPage(1, 10, null, null).getInteger("total");
-            int add = after - bef;
+            BrandPageBean brandPageBean = util.collectBeanByField(scene, BrandPageBean.class, "brand_name", name);
+            Long id = brandPageBean.getId();
+            Boolean status = brandPageBean.getBrandStatus();
+            CommonUtil.checkResult("品牌 " + name + " 的状态", true, status);
             //判断新建商品时品牌下拉列表
-            JSONArray brandlist = ins.BrandList().getJSONArray("list");
-            Long listid = brandlist.getJSONObject(brandlist.size() - 1).getLong("id");
-
-            Preconditions.checkArgument(code == 1000, a + "状态码期待1000，实际" + code);
-            Preconditions.checkArgument(add == 1, "新建后列表增加了" + add);
-            Preconditions.checkArgument(status == true, "新增品牌状态期待为开启，实际为" + status);
-            Preconditions.checkArgument(listid == id, "创建商品时的品牌下拉框未增加对应的品牌");
-            ins.BrandDel(id, true);
-
-        } catch (AssertionError e) {
-            collectMessage(e);
-        } catch (Exception e) {
+            JSONArray list = BrandListScene.builder().build().invoke(visitor).getJSONArray("list");
+            List<Long> idList = list.stream().map(e -> (JSONObject) e).map(e -> e.getLong("id")).collect(Collectors.toList());
+            Preconditions.checkArgument(idList.contains(id), "创建商品时的品牌下拉框不包含品牌id" + id);
+            DeleteBrandScene.builder().id(id).build().invoke(visitor);
+            sleep(100);
+        } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
             saveData("PC【商品品牌】新建品牌");
         }
     }
 
-    @DataProvider(name = "BRANDADD")
-    public Object[] brandAdd1() {
+    @DataProvider(name = "BRAND_ADD")
+    public Object[] brandAdd() {
         return new String[][]{
-                {"1", "1", "品牌名称1个字简介1个字"},
-                {info.stringsix, info.stringsix, "品牌名称6个字简介6个字"},
-                {"zh这是20位！@#的说的是发发简称11", info.stringfifty, "品牌名称20个字简介50个字"},
+                {EnumDesc.DESC_BETWEEN_1_5.getDesc(), EnumDesc.DESC_BETWEEN_1_5.getDesc()},
+                {EnumDesc.DESC_BETWEEN_5_10.getDesc(), EnumDesc.DESC_BETWEEN_5_10.getDesc()},
+                {EnumDesc.DESC_20.getDesc(), EnumDesc.DESC_BETWEEN_40_50.getDesc() + "1234"},
         };
     }
 
-    @Test(dataProvider = "BRANDADDERR")
-    public void brandAddErr(String name, String desc, String a) {
+    @Test()
+    public void goodsBrand_system_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-
-            int code = ins.BrandCreat(false, null, name, desc, info.getLogo()).getInteger("code");
-            Preconditions.checkArgument(code == 1001, a + "状态码期待1001，实际" + code);
-
-
-        } catch (AssertionError e) {
-            collectMessage(e);
-        } catch (Exception e) {
+            String[] names = {EnumDesc.DESC_20.getDesc() + "1", "", null};
+            Arrays.stream(names).forEach(name -> {
+                String message = CreateBrandScene.builder().brandPic(util.getCategoryPicPath()).brandName(name).brandDescription(EnumDesc.DESC_BETWEEN_5_10.getDesc()).build().invoke(visitor, false).getString("message");
+                String err = StringUtils.isEmpty(name) ? "" : "";
+                CommonUtil.checkResult("品牌名称为" + name, err, message);
+            });
+        } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
             saveData("PC【商品品牌】新建品牌");
         }
     }
-
-    @DataProvider(name = "BRANDADDERR")
-    public Object[] brandAdd1Err() {
-        return new String[][]{
-
-                {"123456789012345678901", info.stringsix, "品牌名称21个字简介6个字"},
-                {"A1！@啊", "12345678901234567890123456789012345678901234567890一", "品牌名称5个字简介51个字"},
-        };
-    }
-
 
     @Test
-    public void brandAddErr1() {
+    public void goodsBrand_system_7() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-
-            String name = System.currentTimeMillis() + "重复";
-            Long id = ins.BrandCreat(false, null, name, name, info.getLogo()).getJSONObject("data").getLong("id");
-
-            int code = ins.BrandCreat(false, null, name, name, info.getLogo()).getInteger("code");
-            Preconditions.checkArgument(code == 1001, "状态码期待1001，实际" + code);
-            ins.BrandDel(id, true);
-        } catch (AssertionError e) {
-            collectMessage(e);
-        } catch (Exception e) {
+            String name = EnumDesc.DESC_BETWEEN_5_10.getDesc() + "重复";
+            Long id = CreateBrandScene.builder().brandName(name).brandDescription(name).brandPic(util.getCategoryPicPath()).build().invoke(visitor).getLong("id");
+            String message = CreateBrandScene.builder().brandName(name).brandDescription(name).brandPic(util.getCategoryPicPath()).build().invoke(visitor, false).getString("message");
+            String err = "";
+            CommonUtil.checkResult("创建重复名称的品牌", err, message);
+            DeleteBrandScene.builder().id(id).build().invoke(visitor);
+        } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
             saveData("PC【商品品牌】新建品牌,品牌名称与已存在的重复");
@@ -819,124 +800,54 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test
-    public void brandAddErr2() {
+    public void goodsBrand_system_8() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-
-            //不填写名称
-            int code = ins.BrandCreat(false, null, null, "品牌描述", info.getLogo()).getInteger("code");
-            Preconditions.checkArgument(code == 1001, "不填写名称期待1001，实际" + code);
-
-//            //不填写描述 bug 7808
-//            int code1 = jc.BrandCreat(false,null,"null",null,info.getLogo()).getInteger("code");
-//            Preconditions.checkArgument(code1==1001,"不填写描述期待1001，实际"+code1);
-
-            //不上传图片bug 7808
-//            int code2 = jc.BrandCreat(false,null,"pp"+Integer.toString((int)((Math.random()*9+1)*100)),"品牌描述",null).getInteger("code");
-//            Preconditions.checkArgument(code2==1001,"不上传图片期待1001，实际"+code2);
-
-        } catch (AssertionError e) {
-            collectMessage(e);
-        } catch (Exception e) {
+            String name = EnumDesc.DESC_BETWEEN_5_10.getDesc();
+            Long id = CreateBrandScene.builder().brandName(name).brandDescription(name).brandPic(util.getCategoryPicPath()).build().invoke(visitor).getLong("id");
+            ChangeBrandStatusScene.builder().id(id).status(false).build().invoke(visitor);
+            DeleteBrandScene.builder().id(id).build().invoke(visitor);
+        } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
-            saveData("PC【商品品牌】新建品牌,不填写必填项");
+            saveData("PC【商品品牌】停用 无商品使用&状态=启用的品牌，成功");
         }
     }
 
     @Test
-    public void brandStop1() {
+    public void goodsBrand_system_9() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-
-
-            Long id = info.newGoodBrand().getLong("id");
-            int code = ins.BrandChgStatus(id, false, false).getInteger("code");
-            Preconditions.checkArgument(code == 1000, "状态码" + code);
-
-            ins.BrandDel(id, true);
-        } catch (AssertionError e) {
-            collectMessage(e);
-        } catch (Exception e) {
+            String name = EnumDesc.DESC_BETWEEN_5_10.getDesc();
+            Long id = CreateBrandScene.builder().brandName(name).brandDescription(name).brandPic(util.getCategoryPicPath()).build().invoke(visitor).getLong("id");
+            ChangeBrandStatusScene.builder().id(id).status(false).build().invoke(visitor);
+            ChangeBrandStatusScene.builder().id(id).status(true).build().invoke(visitor);
+            DeleteBrandScene.builder().id(id).build().invoke(visitor);
+        } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
-            saveData("PC【商品品牌】停用 无商品使用&状态=启用的品牌，期待成功");
+            saveData("PC【商品品牌】启用 无商品使用&状态=停用的品牌，成功");
         }
     }
 
+    /**
+     * 商品规格
+     */
     @Test
-    public void brandStart1() {
+    public void goodsSpecifications_system_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-
-
-            Long id = info.newGoodBrand().getLong("id");
-            ins.BrandChgStatus(id, false, true);
-
-            int code = ins.BrandChgStatus(id, true, false).getInteger("code");
-            Preconditions.checkArgument(code == 1000, "状态码" + code);
-
-            ins.BrandDel(id, true);
-        } catch (AssertionError e) {
-            collectMessage(e);
-        } catch (Exception e) {
+            //创建一级品类
+            Long id = util.createCategory(IntegralCategoryTypeEnum.FIRST_CATEGORY.getDesc(), util.getCategoryPicPath(), IntegralCategoryTypeEnum.FIRST_CATEGORY.name(), null);
+            String name = EnumDesc.DESC_BETWEEN_5_10.getDesc();
+            Long specificationsId = CreateSpecificationsScene.builder().specificationsName(name).belongsCategory(id).build().invoke(visitor).getLong("id");
+            ChangeSpecificationsStatusScene.builder().id(specificationsId).status(false).build().invoke(visitor);
+            DeleteSpecificationsScene.builder().id(specificationsId).build().invoke(visitor);
+            DeleteCategoryScene.builder().id(id).build().invoke(visitor);
+        } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
-            saveData("PC【商品品牌】启用 无商品使用&状态=停用的品牌，期待成功");
-        }
-    }
-
-    @Test(dataProvider = "BRANDSTATUS")
-    public void brandDel1(String status, String mess) {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-
-            Long id = info.newGoodBrand().getLong("id");
-            ins.BrandChgStatus(id, Boolean.valueOf(status), true);
-
-            int code = ins.BrandDel(id, false).getInteger("code");
-            Preconditions.checkArgument(code == 1000, "删除状态=" + mess + "失败，状态码" + code);
-
-        } catch (AssertionError e) {
-            collectMessage(e);
-        } catch (Exception e) {
-            collectMessage(e);
-        } finally {
-            saveData("PC【商品品牌】删除 无商品使用的品牌，期待成功");
-        }
-    }
-
-    @DataProvider(name = "BRANDSTATUS")
-    public Object[] brandstatus() {
-        return new String[][]{
-
-                {"true", "启用"},
-                {"false", "停用"},
-        };
-    }
-
-    //商品规格
-    @Test
-    public void specificationsStop1() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            Long id = info.newSpecificition();
-            int code = ins.specificationsChgStatus(id, false, false).getInteger("code");
-            Preconditions.checkArgument(code == 1000, "停用无商品使用的规格,状态码" + code);
-
-            int code1 = ins.specificationsChgStatus(id, true, false).getInteger("code");
-            Preconditions.checkArgument(code1 == 1000, "启用停用的规格，期待成功实际" + code1);
-
-            ins.specificationsChgStatus(id, false);
-            ins.specificationsDel(id);
-
-
-        } catch (AssertionError e) {
-            collectMessage(e);
-        } catch (Exception e) {
-            collectMessage(e);
-        } finally {
-            saveData("PC【商品规格】停用无商品使用的规格，期待成功");
+            saveData("PC【商品规格】停用无商品使用的规格，成功");
         }
     }
 
