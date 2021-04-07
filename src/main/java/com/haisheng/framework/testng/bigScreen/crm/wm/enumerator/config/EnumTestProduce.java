@@ -20,15 +20,15 @@ public enum EnumTestProduce {
 
     JC_ONLINE("汽车-轿辰 赢识线上 ", "https://servicewechat.com/wxbd41de85739a00c7/31/page-frame.html", "http://nb.jiaochenclub.com", "-1", "JC", "395"),
 
-    XD_DAILY("门店 日常", "", "", "4116", "XD", ""),
+    XD_DAILY("门店 日常 ", "", "", "4116", "XD", ""),
 
-    INS_DAILY("门店-ins 日常", "https://servicewechat.com/wx937d85ff683db555/0/page-frame.html", "http://dev.inspect.store.winsenseos.cn", "", "INS", ""),
+    INS_DAILY("门店-ins 日常 ", "https://servicewechat.com/wx937d85ff683db555/0/page-frame.html", "http://dev.inspect.store.winsenseos.cn", "", "INS", ""),
 
-    INS_ONLINE("门店-ins 赢识线上", "", "", "", "INS", ""),
+    INS_ONLINE("门店-INS 赢识线上 ", "", "", "", "INS", ""),
 
-    FK_DAILY("风控 赢识日常", "", "http://127.0.0.1", "", "FK", ""),
+    FK_DAILY("风控 赢识日常 ", "", "http://127.0.0.1", "", "FK", ""),
 
-    FK_ONLINE("风控 赢识线上", "", "", "", "FK", ""),
+    FK_ONLINE("风控 赢识线上 ", "", "", "", "FK", ""),
 
     ;
 

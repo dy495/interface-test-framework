@@ -7,6 +7,8 @@ public enum EnumDesc {
 
     DESC_BETWEEN_5_10("来自土星的消息"),
 
+    DESC_10("文件不存在请重新上传"),
+
     DESC_BETWEEN_10_15("不是价值客户，作废卡券"),
 
     DESC_BETWEEN_15_20("网线传输能力不足或网络不稳定!!!"),

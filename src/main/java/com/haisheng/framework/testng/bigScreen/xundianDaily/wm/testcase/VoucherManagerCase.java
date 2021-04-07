@@ -25,6 +25,7 @@ import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.util.SupporterUti
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
+import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
@@ -55,11 +56,11 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("before class initial");
         CommonConfig commonConfig = new CommonConfig();
         //替换checklist的相关信息
-        commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
-        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_DAILY_SERVICE.getId();
+        commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_XUNDIAN_DAILY_SERVICE;
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
         //替换jenkins-job的相关信息
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.XUNDIAN_DAILY_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = EnumDingTalkWebHook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
@@ -1320,7 +1321,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             //查询列表数
             int total = verificationPeopleScene.invoke(visitor, true).getInteger("total");
             String phone = util.getDistinctPhone();
-            CreateVerificationPeopleScene.builder().verificationPersonName("异页打工人").verificationPersonPhone(phone).type(1).status(true).build().invoke(visitor, true);
+            CreateVerificationPeopleScene.builder().verificationPersonName("异页打工人").verificationPersonPhone(phone).type(1).status(1).build().invoke(visitor, true);
             int newTotal = verificationPeopleScene.invoke(visitor, true).getInteger("total");
             CommonUtil.checkResult("核销人员列表数", total + 1, newTotal);
         } catch (Exception | AssertionError e) {
@@ -1339,7 +1340,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             //查询列表数
             int total = verificationPeopleScene.invoke(visitor, true).getInteger("total");
             String phone = util.getDistinctPhone();
-            CreateVerificationPeopleScene.builder().verificationPersonName("本司打工人").verificationPersonPhone(phone).type(0).status(true).build().invoke(visitor, true);
+            CreateVerificationPeopleScene.builder().verificationPersonName("本司打工人").verificationPersonPhone(phone).type(0).status(1).build().invoke(visitor, true);
             int newTotal = verificationPeopleScene.invoke(visitor, true).getInteger("total");
             CommonUtil.checkResult("核销人员列表数", total + 1, newTotal);
         } catch (Exception | AssertionError e) {
@@ -1377,7 +1378,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
         try {
             String[] strings = {null, EnumDesc.DESC_BETWEEN_200_300.getDesc()};
             Arrays.stream(strings).forEach(name -> {
-                String message = CreateVerificationPeopleScene.builder().verificationPersonName(name).verificationPersonPhone("13663366788").status(true).type(1).build().invoke(visitor, false).getString("message");
+                String message = CreateVerificationPeopleScene.builder().verificationPersonName(name).verificationPersonPhone("13663366788").status(1).type(1).build().invoke(visitor, false).getString("message");
                 String err = StringUtils.isEmpty(name) ? "核销人员名字不能为空" : "核销人员名字必须为1～20个字";
                 CommonUtil.checkResult("核销人员名字为 " + name, err, message);
                 CommonUtil.logger(name);
@@ -1396,7 +1397,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
         try {
             String[] strings = {null, EnumDesc.DESC_BETWEEN_200_300.getDesc()};
             Arrays.stream(strings).forEach(name -> {
-                String message = CreateVerificationPeopleScene.builder().verificationPersonName(name).verificationPersonPhone("13663366788").status(true).type(1).build().invoke(visitor, false).getString("message");
+                String message = CreateVerificationPeopleScene.builder().verificationPersonName(name).verificationPersonPhone("13663366788").status(1).type(1).build().invoke(visitor, false).getString("message");
                 String err = StringUtils.isEmpty(name) ? "核销人员名字不能为空" : "核销人员名字必须为1～20个字";
                 CommonUtil.checkResult("核销人员名字为 " + name, err, message);
                 CommonUtil.logger(name);
@@ -1415,7 +1416,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
         try {
             String[] strings = {null, "", "11111111111", "1337316680", "133731668062"};
             Arrays.stream(strings).forEach(phone -> {
-                String message = CreateVerificationPeopleScene.builder().verificationPersonName("打工人").verificationPersonPhone(phone).status(true).type(0).build().invoke(visitor, false).getString("message");
+                String message = CreateVerificationPeopleScene.builder().verificationPersonName("打工人").verificationPersonPhone(phone).status(1).type(0).build().invoke(visitor, false).getString("message");
                 String err = "手机号格式不正确";
                 CommonUtil.checkResult("手机号格式为：" + phone, err, message);
                 CommonUtil.logger(phone);
@@ -1433,7 +1434,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String phone = util.getRepetitionVerificationPhone();
-            String message = CreateVerificationPeopleScene.builder().verificationPersonName("打工人").verificationPersonPhone(phone).status(true).type(0).build().invoke(visitor, false).getString("message");
+            String message = CreateVerificationPeopleScene.builder().verificationPersonName("打工人").verificationPersonPhone(phone).status(1).type(0).build().invoke(visitor, false).getString("message");
             String err = "手机号已存在";
             CommonUtil.checkResult("手机号格式为：" + phone, err, message);
         } catch (Exception | AssertionError e) {

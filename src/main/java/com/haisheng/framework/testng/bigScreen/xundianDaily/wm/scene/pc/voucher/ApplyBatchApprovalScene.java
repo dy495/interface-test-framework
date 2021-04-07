@@ -46,6 +46,6 @@ public class ApplyBatchApprovalScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/shop/pc/voucher/apply/batch-approval";
+        return "/patrol/pc/voucher/apply/batch-approval";
     }
 }

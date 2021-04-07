@@ -22,7 +22,6 @@ import java.util.List;
  */
 public class ScenarioUtil extends TestCaseCommon {
     private static volatile ScenarioUtil instance = null;
-    //    private static final String IpPort = EnumTestProduce.shop_DAILY.getAddress();
     private static final String shopId = EnumTestProduce.INS_DAILY.getShopId();
 
     /**

@@ -4,22 +4,27 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.ApplyPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.ExchangePage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherSendRecord;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.integralcenter.ExchangeGoodsDetailBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.integralmall.CategoryPageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherInvalidPageBean;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.CommodityTypeEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.IntegralCategoryTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.SortTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.commodity.CommodityStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.*;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.generator.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.applet.granted.*;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.file.FileUpload;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.integralcenter.*;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.integralmall.CategoryPageScene;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.integralmall.CreateCategoryScene;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.integralmall.GoodsManagePageScene;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.loginuser.ShopListScene;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.messagemanager.PushMessageScene;
@@ -28,10 +33,12 @@ import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.voucher.
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.vouchermanage.*;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
+import com.haisheng.framework.util.ImageUtil;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -104,6 +111,27 @@ public class SupporterUtil {
             }
         }
         return null;
+    }
+
+    /**
+     * 获取图片地址
+     *
+     * @return 图片地址
+     */
+    public String getPicPath() {
+        String path = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/卡券图.jpg";
+        return getPicPath(path);
+    }
+
+    public String getPicPath(String picPath) {
+        return getPicPath(picPath, "3:2");
+    }
+
+    public String getPicPath(String picPath, String ratioStr) {
+        String picture = new ImageUtil().getImageBinary(picPath);
+        String[] strings = ratioStr.split(":");
+        double ratio = BigDecimal.valueOf(Double.parseDouble(strings[0]) / Double.parseDouble(strings[1])).divide(new BigDecimal(1), 4, BigDecimal.ROUND_HALF_UP).doubleValue();
+        return FileUpload.builder().isPermanent(false).permanentPicType(0).pic(picture).ratioStr(ratioStr).ratio(ratio).build().invoke(visitor, true).getString("pic_path");
     }
 
     /**
@@ -779,5 +807,73 @@ public class SupporterUtil {
         builder = isLimit ? builder.exchangePeopleNum(1) : builder;
         builder = exchangeGoodsType.equals(CommodityTypeEnum.REAL.name()) ? builder : builder.expireType(2).useDays(10);
         builder.build().invoke(visitor, true);
+    }
+
+    //-------------------------------------------------------商品管理---------------------------------------------------
+
+    /**
+     * 创建品类
+     *
+     * @param categoryName   品类名称
+     * @param picPath        图片地址
+     * @param categoryLevel  品类等级
+     * @param belongCategory 品类所属
+     */
+    public Long createCategory(String categoryName, String picPath, String categoryLevel, Long belongCategory) {
+        CreateCategoryScene.builder().categoryName(categoryName).belongPic(picPath).categoryLevel(categoryLevel)
+                .belongCategory(belongCategory).build().invoke(visitor, true);
+        return getCategoryId(categoryName);
+    }
+
+    /**
+     * 创建品类
+     *
+     * @param categoryLevel 品类等级
+     */
+    public Long getCategoryByLevel(IntegralCategoryTypeEnum categoryLevel) {
+        if (categoryLevel.equals(IntegralCategoryTypeEnum.SECOND_CATEGORY)) {
+            Long id = getCategoryId(IntegralCategoryTypeEnum.FIRST_CATEGORY) == null ? createFirstCategory(getCategoryPicPath()) : getCategoryId(IntegralCategoryTypeEnum.FIRST_CATEGORY);
+            CreateCategoryScene.builder().categoryName(IntegralCategoryTypeEnum.SECOND_CATEGORY.getDesc()).belongPic(getCategoryPicPath()).categoryLevel(categoryLevel.name())
+                    .belongCategory(id).build().invoke(visitor, true);
+            return getCategoryId(IntegralCategoryTypeEnum.SECOND_CATEGORY.getDesc());
+        }
+        if (categoryLevel.equals(IntegralCategoryTypeEnum.THIRD_CATEGORY)) {
+            Long id = getCategoryId(IntegralCategoryTypeEnum.SECOND_CATEGORY) == null ? createSecondCategory() : getCategoryId(IntegralCategoryTypeEnum.SECOND_CATEGORY);
+            CreateCategoryScene.builder().categoryName(IntegralCategoryTypeEnum.THIRD_CATEGORY.getDesc()).belongPic(getCategoryPicPath()).categoryLevel(categoryLevel.name())
+                    .belongCategory(id).build().invoke(visitor, true);
+            return getCategoryId(IntegralCategoryTypeEnum.THIRD_CATEGORY.getDesc());
+        } else {
+            return getCategoryId(categoryLevel) == null ? createFirstCategory(getCategoryPicPath()) : getCategoryId(categoryLevel);
+        }
+    }
+
+    public String getCategoryPicPath() {
+        String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
+        return getPicPath(pic, "1:1");
+    }
+
+    private Long createFirstCategory(String picPath) {
+        String name = IntegralCategoryTypeEnum.FIRST_CATEGORY.getDesc();
+        CreateCategoryScene.builder().categoryName(name).belongPic(picPath).categoryLevel(IntegralCategoryTypeEnum.FIRST_CATEGORY.name()).build().invoke(visitor, true);
+        return getCategoryId(name);
+    }
+
+    private Long createSecondCategory() {
+        return getCategoryByLevel(IntegralCategoryTypeEnum.SECOND_CATEGORY);
+    }
+
+    public Long getCategoryId(String categoryName) {
+        IScene scene = CategoryPageScene.builder().build();
+        return collectBeanByField(scene, CategoryPageBean.class, "category_name", categoryName).getId();
+    }
+
+    public Long getCategoryId(IntegralCategoryTypeEnum categoryLevel) {
+        IScene scene = CategoryPageScene.builder().build();
+        return collectBeanByField(scene, CategoryPageBean.class, "category_level", categoryLevel.getDesc()).getId();
+    }
+
+    public String getCategoryName(Long id) {
+        IScene scene = CategoryPageScene.builder().build();
+        return collectBeanByField(scene, CategoryPageBean.class, "id", id).getCategoryName();
     }
 }

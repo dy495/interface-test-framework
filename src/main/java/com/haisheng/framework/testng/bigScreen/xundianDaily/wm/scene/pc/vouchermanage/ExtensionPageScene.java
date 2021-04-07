@@ -1,15 +1,14 @@
 package com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.vouchermanage;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 13.2. 卡券推广 （张小龙） v2.0
+ * 21.2. 卡券推广 （张小龙） v2.0
  *
  * @author wangmin
- * @date 2021-03-30 14:00:03
+ * @date 2021-03-31 12:47:27
  */
 @Builder
 public class ExtensionPageScene extends BaseScene {
@@ -22,7 +21,7 @@ public class ExtensionPageScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("id", id);
         return object;
@@ -30,6 +29,6 @@ public class ExtensionPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/shop/pc/voucher-manage/extension-page";
+        return "/patrol/pc/voucher-manage/extension-page";
     }
 }

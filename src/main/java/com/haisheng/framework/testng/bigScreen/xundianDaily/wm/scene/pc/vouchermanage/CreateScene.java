@@ -7,13 +7,20 @@ import lombok.Builder;
 import java.util.List;
 
 /**
- * 13.7. 创建卡券 （张小龙） v2.0
+ * 21.9. 创建卡券 （张小龙） v2.0
  *
  * @author wangmin
- * @date 2021-03-30 14:00:03
+ * @date 2021-03-31 12:47:27
  */
 @Builder
 public class CreateScene extends BaseScene {
+    /**
+     * 描述 成本
+     * 是否必填 false
+     * 版本 v2.0
+     */
+    private final Double cost;
+
     /**
      * 描述 卡券id
      * 是否必填 false
@@ -57,7 +64,7 @@ public class CreateScene extends BaseScene {
     private final Integer stock;
 
     /**
-     * 描述 卡券类型 FULL_DISCOUNT("满减券"),COUPON("折扣券"),COMMODITY_EXCHANGE("商品兑换券"),CUSTOM("自定义券");
+     * 描述 卡券类型 FULL_DISCOUNT("满减券"),COUPON("折扣券"),COMMODITY_EXCHANGE("商品兑换券"),CUSTOM("自定义券"),CASH_COUPON("抵金券");
      * 是否必填 true
      * 版本 v2.0
      */
@@ -76,6 +83,13 @@ public class CreateScene extends BaseScene {
      * 版本 v2.0
      */
     private final Double thresholdPrice;
+
+    /**
+     * 描述 抵用价格
+     * 是否必填 false
+     * 版本 -
+     */
+    private final Double replacePrice;
 
     /**
      * 描述 面值
@@ -149,7 +163,7 @@ public class CreateScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("id", id);
         object.put("voucher_name", voucherName);
@@ -160,6 +174,7 @@ public class CreateScene extends BaseScene {
         object.put("card_type", cardType);
         object.put("is_threshold", isThreshold);
         object.put("threshold_price", thresholdPrice);
+        object.put("replace_price", replacePrice);
         object.put("par_value", parValue);
         object.put("discount", discount);
         object.put("most_discount", mostDiscount);
@@ -175,6 +190,6 @@ public class CreateScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/shop/pc/voucher-manage/create";
+        return "/patrol/pc/voucher-manage/create";
     }
 }

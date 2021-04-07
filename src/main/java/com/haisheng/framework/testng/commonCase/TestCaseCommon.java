@@ -53,12 +53,11 @@ public class TestCaseCommon {
     public static HttpConfig config;
     public static String response = "";
     public static String authorization;
-    public static String IpPort=EnumTestProduce.JC_DAILY.getAddress();
+    public static String IpPort = EnumTestProduce.JC_DAILY.getAddress();
     private static CommonConfig commonConfig = null;
     private boolean FAIL = false;
     private final String DEBUG = System.getProperty("DEBUG", "true");
     private final QADbProxy qaDbProxy = QADbProxy.getInstance();
-
 
 
     public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
@@ -304,7 +303,7 @@ public class TestCaseCommon {
         } else {
             int status = resJo.getInteger("status");
             String path = resJo.getString("path");
-            throw new Exception("接口调用失败，status：" + status + ",path:" + path);
+            throw new Exception("接口调用失败，status：" + status + "，path：" + path);
         }
     }
 
@@ -393,6 +392,7 @@ public class TestCaseCommon {
         caseResult.setResponse(response);
         return response;
     }
+
     public String httpGet(String path, Map<String, Object> paramMap, String IpPort) throws Exception {
         initHttpConfig();
         StringBuilder stringBuilder = new StringBuilder();
@@ -412,6 +412,7 @@ public class TestCaseCommon {
         caseResult.setResponse(response);
         return response;
     }
+
     public String httpGet(String path, String json, String IpPort) throws Exception {
         initHttpConfig();
         String queryUrl = IpPort + path;

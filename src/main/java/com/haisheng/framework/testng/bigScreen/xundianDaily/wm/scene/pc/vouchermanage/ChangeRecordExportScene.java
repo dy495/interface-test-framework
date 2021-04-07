@@ -6,24 +6,24 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 13.13. 卡券变更记录-导出 （华成裕） v2.0
+ * 21.8. 卡券变更记录-导出 （华成裕） v2.0
  *
  * @author wangmin
- * @date 2021-03-30 14:00:03
+ * @date 2021-03-31 12:47:27
  */
 @Builder
 public class ChangeRecordExportScene extends BaseScene {
     /**
-     * 描述 当前页
+     * 描述 页码 大于0
      * 是否必填 true
-     * 版本 -
+     * 版本 v1.0
      */
     private final Integer page;
 
     /**
-     * 描述 当前页的数量
+     * 描述 页大小 范围为[1,100]
      * 是否必填 true
-     * 版本 -
+     * 版本 v1.0
      */
     private final Integer size;
 
@@ -50,7 +50,7 @@ public class ChangeRecordExportScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);
@@ -62,6 +62,6 @@ public class ChangeRecordExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/shop/pc/voucher-manage/change-record/export";
+        return "/patrol/pc/voucher-manage/change-record/export";
     }
 }
