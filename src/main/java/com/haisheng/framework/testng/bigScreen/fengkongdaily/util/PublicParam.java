@@ -33,6 +33,8 @@ public class PublicParam {
     public String rolNameException="123456789012345678901";
     //角色中的描述
     public String descriptionRole = "新增角色的description";
+    //编辑角色中的描述
+    public String descriptionEditRole = "编辑角色的description";
     //角色中的描述51个字
     public String descriptionRoleException = "1234567890123456789012345678901234567890哈哈hh@#*自动化呀呀";
     //账号名称

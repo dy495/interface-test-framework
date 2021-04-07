@@ -59,7 +59,7 @@ public class PageScene extends BaseScene {
      * 是否必填 false
      * 版本 v1.0
      */
-    private final Integer roleId;
+    private final Long roleId;
 
 
     @Override

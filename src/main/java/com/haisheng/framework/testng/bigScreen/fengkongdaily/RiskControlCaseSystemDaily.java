@@ -830,10 +830,10 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     @Test(description = "特殊人员新增",enabled = false)
     public void authCashierPageSystem27(){
         try{
-            //新增特殊人员--重点观察人员
+            //新增特殊人员--重点观察人员   todo
             List<String> customerIds=new ArrayList<>();
             IScene scene=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.AddScene.builder().customerId("").customerIds(customerIds).type("FOCUS").build();
-            String message=visitor.invokeApi(scene,false).getString("meaasge");
+            String message=visitor.invokeApi(scene,false).getString("message");
             Preconditions.checkArgument(message.equals("success"),"特殊人员新增失败");
         }catch(Exception|AssertionError e){
             collectMessage(e);
@@ -975,6 +975,81 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
         }
     }
 
+    /**
+     * 员工信息查询列表项校验
+     */
+    @Test(description = "员工信息查询列表项校验")
+    public void authCashierPageSystem31(){
+        try{
+            IScene scene= com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.outstaff.PageScene.builder().page(1).size(10).build();
+            JSONObject response=visitor.invokeApi(scene);
+            int pages=response.getInteger("pages")>10?10:response.getInteger("pages");
+            for(int page=1;page<=pages;page++){
+                JSONArray list=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.outstaff.PageScene.builder().page(page).size(10).build().invoke(visitor,true).getJSONArray("list");
+                if(list.size()>0){
+                    for(int i=0;i<list.size();i++){
+                        String customerId=list.getJSONObject(i).getString("customer_id");
+                        String outStaffId=list.getJSONObject(i).getString("out_staff_id");
+                        String outStaffName=list.getJSONObject(i).getString("out_staff_name");
+                        String winsenseAccountId=list.getJSONObject(i).getString("winsense_account_id");
+                        String faceUrl=list.getJSONObject(i).getString("face_url");
+                        String statusName=list.getJSONObject(i).getString("status_name");
+                        Preconditions.checkArgument(customerId!=null&&outStaffId!=null&&outStaffName!=null&&winsenseAccountId!=null&&faceUrl!=null&&statusName!=null,"第"+page+"页"+"第"+i+"行的列表项存在为空的值");
+                    }
+                }
+            }
+        }catch(Exception|AssertionError e){
+            collectMessage(e);
+        }finally{
+            saveData("员工信息查询列表项校验");
+        }
+    }
+
+    /**
+     * 员工信息查询列表--筛选项检验
+     */
+    @Test(description = "员工信息查询列表--筛选项检验")
+    public void authCashierPageSystem32(){
+        try{
+            IScene scene= com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.outstaff.PageScene.builder().page(1).size(10).build();
+            JSONObject response=visitor.invokeApi(scene);
+            //获取第一列的姓名和员工ID
+            String name=response.getJSONArray("list").getJSONObject(0).getString("out_staff_name");
+            String id=response.getJSONArray("list").getJSONObject(0).getString("out_staff_id");
+
+            IScene scene1= com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.outstaff.PageScene.builder().page(1).size(10).outStaffName(name).build();
+            JSONObject response1=visitor.invokeApi(scene1);
+            int pages=response1.getInteger("pages")>10?10:response.getInteger("pages");
+            for(int page=1;page<=pages;page++){
+                JSONArray list=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.outstaff.PageScene.builder().page(page).size(10).outStaffName(name).build().invoke(visitor,true).getJSONArray("list");
+                if(list.size()>0){
+                    for(int i=0;i<list.size();i++){
+                        String outStaffName=list.getJSONObject(i).getString("out_staff_name");
+                        Preconditions.checkArgument(outStaffName.contains(name),"第"+page+"页"+"第"+i+"行的列表项和筛选项不一致，分别为："+outStaffName+"   "+name);
+                    }
+                }
+            }
+
+            IScene scene2= com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.outstaff.PageScene.builder().page(1).size(10).outStaffId(id).build();
+            JSONObject response2=visitor.invokeApi(scene2);
+            int pages2=response1.getInteger("pages")>10?10:response.getInteger("pages");
+            for(int page=1;page<=pages2;page++){
+                JSONArray list=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.outstaff.PageScene.builder().page(page).size(10).outStaffId(id).build().invoke(visitor,true).getJSONArray("list");
+                if(list.size()>0){
+                    for(int i=0;i<list.size();i++){
+                        String outStaffId=list.getJSONObject(i).getString("out_staff_id");
+
+                        Preconditions.checkArgument(outStaffId.contains(id),"第"+page+"页"+"第"+i+"行的列表项和筛选项不一致，分别为："+outStaffId+"   "+id);
+                    }
+                }
+            }
+        }catch(Exception|AssertionError e){
+            collectMessage(e);
+        }finally{
+            saveData("员工信息查询列表--筛选项检验");
+        }
+    }
+
 
     /*
      * ------------------------------------------------------------------组织架构-------------------------------------------------------
@@ -1015,20 +1090,12 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     public void organizationChartSystem2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            //权限合集
-            JSONArray authIds = new JSONArray();
-            authIds.add(7);
-            authIds.add(9);
             //新增一个角色---上级角色为【总管理员】
-            IScene scene=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.AddScene.builder().name(pp.roleName).parentRoleId(2).authList(authIds).description(pp.descriptionRole).build();
-            JSONObject response=visitor.invokeApi(scene);
-            String message=visitor.invokeApi(scene,false).getString("message");
-            Long roleId = response.getLong("role_id");
-            checkArgument(message .equals("success"), "新增角色失败了");
+            Long roleId = cu.getAddRole(pp.roleName,pp.descriptionRole);
+            checkArgument(roleId!=null, "新增角色失败了");
 
             //编辑角色
-            IScene scene1=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.EditScene.builder().id(roleId).name(pp.roleEditName ).parentRoleId(2).authList(authIds).description(pp.descriptionRole).build();
-            String message1=visitor.invokeApi(scene1,false).getString("message");
+            String message1=cu.getEditRole(roleId,pp.roleEditName,pp.descriptionEditRole);
             checkArgument(message1.equals("success"), "编辑角色的信息失败了");
 
             //列表中编辑过的角色是否已更新
@@ -1040,11 +1107,9 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             String name = list1.getJSONObject(0).getString("name");
             checkArgument(name.equals(pp.roleEditName), "编辑过的角色没有更新在列表");
 
-
             //新建成功以后删除新建的账号
             if (name.equals(pp.roleEditName)) {
-                IScene scene3=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.DeleteScene.builder().id(roleId).build();
-                String message13=visitor.invokeApi(scene3,false).getString("message");
+                String message13=cu.getDelRole(roleId);
                 checkArgument(message13.equals("success"), "删除角色:" + roleId + "失败了");
             }
 
@@ -1408,6 +1473,9 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             saveData("特殊人员管理-风控重点观察人员导出");
         }
     }
+
+
+
 
 
 
@@ -1815,7 +1883,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             JSONArray list =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
             String name = list.getJSONObject(0).getString("name");
             Long shopId = list.getJSONObject(0).getLong("shop_id");
-            Integer roleId = list.getJSONObject(0).getInteger("role_id");
+            Long roleId = list.getJSONObject(0).getLong("role_id");
             String phone = list.getJSONObject(1).getString("phone");
 
             //根据账号名称筛选

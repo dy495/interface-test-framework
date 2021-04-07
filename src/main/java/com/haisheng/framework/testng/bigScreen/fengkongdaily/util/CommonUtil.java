@@ -12,6 +12,8 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import java.util.*;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 public class CommonUtil {
     PublicParam pp=new PublicParam();
 
@@ -76,6 +78,9 @@ public class CommonUtil {
         return scene;
     }
 
+    /**
+     * 新增风控规则---黑名单风控
+     */
     public Long blackRuleAdd(){
         //应用的门店     todo
         List<String> shopIds=new ArrayList<>();
@@ -88,7 +93,7 @@ public class CommonUtil {
     }
 
     /**
-     * 新增风控规则---黑名单风控
+     * 删除风控规则
      */
     public String ruleDelete(Long ruleId){
         IScene scene= DeleteScene.builder().id(ruleId).build();
@@ -97,7 +102,7 @@ public class CommonUtil {
     }
 
     /**
-     * 风控规则开关---黑名单风控
+     * 风控规则开关
      * @param status 1:开启  0：关闭
      */
     public void ruleSwitch(Long ruleId,int status){
@@ -135,7 +140,7 @@ public class CommonUtil {
      */
     public Long getAlarmRuleAdd(Boolean realTime,Long silentTime,String type){
         //风控规则的ID
-        List<Long> ruleIdList=new ArrayList();
+        List<Long> ruleIdList=new ArrayList<>();
         //风控规则中的对风控规则类型进行筛选，取前三个
         IScene scene =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.rule.PageScene.builder().page(1).size(10).type(type).build();
         JSONArray list=visitor.invokeApi(scene).getJSONArray("list");
@@ -144,7 +149,7 @@ public class CommonUtil {
             ruleIdList.add(id);
         }
         //接收人ID  todo
-        List<Long> acceptRoleIdList=new ArrayList();
+        List<Long> acceptRoleIdList=new ArrayList<>();
         //新建风控告警规则
         Long alarmId=getAlarmRuleAdd( realTime, silentTime,type,ruleIdList,acceptRoleIdList).invoke(visitor,true).getLong("id");
         return alarmId;
@@ -198,7 +203,7 @@ public class CommonUtil {
      * @param remarks   备注
      * @param customerIds  注册人物列表
      */
-    public JSONObject getRiskEventHandle(Long id,int result,String remarks,List<Long> customerIds){
+    public JSONObject getRiskEventHandle(Long id,int result,String remarks,JSONArray customerIds){
         IScene scene= RiskEventHandleScene.builder()
                 .id(id)
                 .result(result)
@@ -257,6 +262,63 @@ public class CommonUtil {
         roleList.add(object);
         //编辑账号
         IScene scene=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.EditScene.builder().id(id).name(name).phone(phone).gender("女").roleList(roleList).build();
+        String message=visitor.invokeApi(scene,false).getString("message");
+        return message;
+    }
+
+    /**
+     * 新增角色
+     */
+    public Long getAddRole(String name,String descriptionRole){
+        //权限合集
+        JSONArray authIds = new JSONArray();
+        authIds.add(7);
+        authIds.add(9);
+        //新增一个角色---上级角色为【总管理员】
+        IScene scene=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.AddScene.builder()
+                .name(name)
+                .parentRoleId(2)
+                .authList(authIds)
+                .description(descriptionRole)
+                .build();
+        JSONObject response=visitor.invokeApi(scene);
+        String message=visitor.invokeApi(scene,false).getString("message");
+        Long roleId = response.getLong("role_id");
+        return  roleId;
+    }
+
+    /**
+     * 删除角色
+     */
+    public String getDelRole(Long roleId) {
+        IScene scene = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.DeleteScene.builder().id(roleId).build();
+        String message = visitor.invokeApi(scene, false).getString("message");
+        return message;
+    }
+
+    /**
+     * 编辑角色
+     */
+    public String getEditRole(Long roleId,String name,String descriptionRole) {
+        //权限合集
+        JSONArray authIds = new JSONArray();
+        authIds.add(7);
+        authIds.add(9);
+        //上级角色为【总管理员】
+        IScene scene=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.EditScene.builder()
+                .id(roleId).name(name )
+                .parentRoleId(2).authList(authIds)
+                .description(descriptionRole)
+                .build();
+        String message=visitor.invokeApi(scene,false).getString("message");
+        return message;
+    }
+
+    /**
+     * 删除特殊人员
+     */
+    public String getRiskPerson(String customerId) {
+        IScene scene=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.DeleteScene.builder().customerId(customerId).build();
         String message=visitor.invokeApi(scene,false).getString("message");
         return message;
     }

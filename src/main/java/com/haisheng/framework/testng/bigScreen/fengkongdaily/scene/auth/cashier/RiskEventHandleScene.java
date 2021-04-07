@@ -41,7 +41,7 @@ public class RiskEventHandleScene extends BaseScene {
      * 是否必填 false
      * 版本 -
      */
-    private final List<Long> customerIds;
+    private final JSONArray customerIds;
 
 
     @Override
