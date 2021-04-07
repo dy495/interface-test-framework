@@ -3722,7 +3722,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      *@author:
      *@time:
      */
-    public JSONObject createShop(String shop_image_path,String shop_name,String label,String opening_time,String closing_time,String manager_name,String manager_phone,String city,String address,double longitude,double latitude,List<String> pos_ids,Integer recommended) throws Exception {
+    public JSONObject createShop(String shop_image_path,String shop_name,String label,String opening_time,String closing_time,String manager_name,String manager_phone,String city,String address,double longitude,double latitude,String tripartite_shop_id,Integer recommended) throws Exception {
         String url = "/patrol/shop/create";
         JSONObject json = new JSONObject();
         json.put("shop_image_path",shop_image_path);
@@ -3736,7 +3736,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
         json.put("address",address);
         json.put("longitude",longitude);
         json.put("latitude",latitude);
-        json.put("pos_ids",pos_ids);
+        json.put("tripartite_shop_id",tripartite_shop_id);
         json.put("recommended",recommended);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");

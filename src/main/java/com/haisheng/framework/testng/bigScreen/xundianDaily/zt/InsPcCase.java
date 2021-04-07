@@ -297,7 +297,37 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //编辑门店
+    //新建门店
+    //按照门店名称和门店联系人和城市和开启状态搜索门店
+    @Test()
+    public void create_shop() throws Exception {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
+            String shopName ="创建测试门店";
+            String label = "明星店";
+            String openingTime = "00:00:00";
+            String closingTime = "23:59:59";
+            String managerName = "联系人1";
+            String managerPhone ="13666666666";
+            String city = "110000";
+            String address = "圆明园";
+            double longitude = 23.99;
+            double latitude = 17.22;
+            String tripartite_shop_id = "4321";
+            int recommended = 70;
+            String result = md.createShop(path,shopName,label,openingTime,closingTime,managerName,managerPhone,city,address,longitude,latitude,tripartite_shop_id,recommended).getString("result");
+            Preconditions.checkArgument(result.equals("true"), "新建门店失败" + result);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("按照门店名称和门店联系人和城市和开启状态搜索门店");
+        }
+    }
+
 
     //客户管理，根据用户名搜索
     @Test()
