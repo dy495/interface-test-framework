@@ -28,12 +28,14 @@ public abstract class AbstractMarker implements IMarker {
     private final String templatePath;
     private final String templateName;
     private final String templateFile;
+    private final String ExitFile;
     protected Structure structure;
 
     protected AbstractMarker(AbstractBuilder<?> abstractBuilder) {
         this.templatePath = abstractBuilder.templatePath;
         this.templateName = abstractBuilder.templateName;
         this.templateFile = abstractBuilder.templateFile;
+        this.ExitFile = abstractBuilder.ExitFile;
     }
 
     @Override
@@ -106,7 +108,10 @@ public abstract class AbstractMarker implements IMarker {
                         ArrayList a = (ArrayList) dataMap.get("attrs");
                         if (a.size() < 4) {
                             File docFile = new File(templateFile);
-                            if (!checkName(docFile, structure.getClassName())) {
+                            File docFile2 = new File(ExitFile);
+//                            if (!checkName(docFile, structure.getClassName())) {
+                            if (!checkName(docFile2, (String) dataMap.get("path"))) {
+                                System.err.println(dataMap.get("path"));
                                 out = new BufferedWriter(new FileWriter(docFile, true));
                                 template.process(dataMap, out);
                             }
@@ -151,9 +156,15 @@ public abstract class AbstractMarker implements IMarker {
         private String templatePath;
         private String templateName;
         private String templateFile;
+        private String ExitFile;
 
         public T templateFile(String templateFile) {
             this.templateFile = templateFile;
+            return (T) this;
+        }
+
+        public T ExitFile(String ExitFile) {
+            this.ExitFile = ExitFile;
             return (T) this;
         }
 

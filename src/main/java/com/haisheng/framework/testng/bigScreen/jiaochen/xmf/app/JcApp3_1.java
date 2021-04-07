@@ -299,5 +299,37 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
     }
 
 
+    @Test(description = "备注")
+    public void remark() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String []reception=new String[3];
+            String remark="";
+            jc.AppCustomerRemarkScene(Long.valueOf(reception[0]),Long.valueOf(pp.shopIdZ),remark);
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("备注 查看详情");
+        }
+    }
+
+    @Test(description = "在线专家回复")
+    public void follow_1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("在线专家回复");
+        }
+    }
+
+
+
+
+
+
 
 }

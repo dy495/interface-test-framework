@@ -91,17 +91,20 @@ public class TestFreeMarker {
         SqlSession sqlSession = sqlSessionFactory.openSession(true);
     }
 
-    @Test
+    @Test   //参数四个以内的接口
     public void createScene2() {
         String[] htmlPaths = {
-                "http://192.168.50.3/api-doc-v2.3/business-jiaochen/app/index.html"
+                "http://192.168.50.3/api-doc-v2.3/business-jiaochen/app/index.html",
+                "http://192.168.50.3/api-doc/business-jiaochen/applet/index.html",
+                "http://192.168.50.3/api-doc/business-jiaochen/pc/index.html",
         };
         Arrays.stream(htmlPaths).forEach(htmlPath -> {
             SceneAttribute[] sceneAttributeList = new SceneParser.Builder().htmlUrl(htmlPath).build().getAttributes();
             Arrays.stream(sceneAttributeList).forEach(sceneAttribute -> new SceneMarker.Builder()
                     .templatePath("src\\main\\resources\\template")
                     .templateName("sceneTemplate2.ftl")
-                    .templateFile("E:\\excel\\q.txt")
+                    .templateFile("src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\jiaochen\\xmf\\file\\JcMethod")
+                    .ExitFile("src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\jiaochen\\ScenarioUtil.java")
                     .parentPath("src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf")
                     .sceneAttribute(sceneAttribute)
                     .buildMarker()
