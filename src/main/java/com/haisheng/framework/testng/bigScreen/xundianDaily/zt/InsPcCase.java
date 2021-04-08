@@ -594,7 +594,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             String level_name = "等级";
             String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
             String path = md.pcFileUpload(pic).getString("pic_path");
-            md.member_level_add0(level_name,path,10,"嗷嗷","aa",1,10,10,false);
+            md.member_level_add0(level_name,path,10,"嗷嗷","aa",1,10,10,true);
 
             Integer total = md.member_level_page(null,1,10).getInteger("total");
             JSONArray list = md.member_level_page(null,1,10).getJSONArray("list");
@@ -602,7 +602,8 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             //获取刚创建等级的id
             int id = list.getJSONObject(a).getInteger("id");
             String levelname = "等级111";
-            JSONArray arr = md.member_level_update(id,levelname,path,"aa","嗷嗷","aa",1,10,10,false).getJSONArray("list");
+            md.member_level_update(id,levelname,path,"aa","嗷嗷","aa",1,10,10,true);
+            JSONArray arr = md.member_level_page(null,1,10).getJSONArray("list");
             for (int i = 0 ; i < arr.size(); i++){
                 JSONObject obj = arr.getJSONObject(i);
                 if (obj.getInteger("id")==id){
@@ -628,26 +629,27 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             //等级名称超过20个字
             String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
             String path = md.pcFileUpload(pic).getString("pic_path");
-            int code = md.member_level_add0(EnumDesc.DESC_BETWEEN_40_50.getDesc(),path,10,"嗷嗷","aa",1,10,10,false).getInteger("code");
+            int code = md.member_level_add0(EnumDesc.DESC_BETWEEN_20_30.getDesc(),path,10,"嗷嗷","aa",1,10,10,true).getInteger("code");
             Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
             //等级icon为空
-            int code0 = md.member_level_add0("等级",null,10,"嗷嗷","aa",1,10,10,false).getInteger("code");
-            Preconditions.checkArgument(code0==1001,"状态码期待1001，实际"+code0);
-            //levle——sort大于10
-            int code1 = md.member_level_add0("等级",path,10,"嗷嗷","aa",11,10,10,false).getInteger("code");
+            int code0 = md.member_level_add0("等级",null,10,"嗷嗷","aa",1,10,10,true).getInteger("code");
+            Preconditions.checkArgument(code0==1009,"状态码期待1009，实际"+code0);
+//            //levle——sort大于10
+
+            int code1 = md.member_level_add0("等级",path,15,"嗷嗷","aa",15,15,15,true).getInteger("code");
             Preconditions.checkArgument(code1==1001,"状态码期待1001，实际"+code1);
-            //晋级条件大于100字
-            int code2 = md.member_level_add0("等级",path,10,EnumDesc.DESC_BETWEEN_200_300.getDesc(),"aa",1,10,10,false).getInteger("code");
+//            //晋级条件大于100字
+            int code2 = md.member_level_add0("等级",path,10,EnumDesc.DESC_BETWEEN_200_300.getDesc(),"aa",1,10,10,true).getInteger("code");
             Preconditions.checkArgument(code2==1001,"状态码期待1001，实际"+code2);
-            //会员权益大于100字
-            int code3 = md.member_level_add0("等级",path,10,"aa",EnumDesc.DESC_BETWEEN_200_300.getDesc(),1,10,10,false).getInteger("code");
+//            //会员权益大于100字
+            int code3 = md.member_level_add0("等级",path,10,"aa",EnumDesc.DESC_BETWEEN_200_300.getDesc(),1,10,10,true).getInteger("code");
             Preconditions.checkArgument(code3==1001,"状态码期待1001，实际"+code3);
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("会员等级管理，根据会员等级名称搜索");
+            saveData("新建等级异常情况");
         }
     }
 
@@ -997,6 +999,39 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             saveData("新建内容左一图并删除");
         }
     }
+    //新建内容异常项
+    @Test()
+    public void create_message3() throws Exception {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
+            String path = md.pcFileUpload(pic).getString("pic_path");
+            JSONArray piclist = new JSONArray();
+            piclist.add(path);
+            //新建内容无图片
+            String message = md.article_export("活动活动","ONE_LEFT","1","RED_PAPER",null).getString("message");
+            Preconditions.checkArgument(message.equals("图片不能为空"),"期待图片不能为空，实际"+message);
+            //新建内容标题小于四个字
+            String message1 = md.article_export("活动","ONE_LEFT","1","RED_PAPER",piclist).getString("message");
+            Preconditions.checkArgument(message1.equals("文章标题长度范围为[4,20]"),"期待文章标题长度范围为[4,20]，实际"+message1);
+            //内容详情为空
+            String message2 = md.article_export("活动活动","ONE_LEFT",null,"RED_PAPER",piclist).getString("message");
+            Preconditions.checkArgument(message2.equals("内容详情不能为空"),"期待实际内容详情不能为空，实际"+message2);
+            //文章样式为空
+            String message3 = md.article_export("活动活动","ONE_LEFT","1",null,piclist).getString("message");
+            Preconditions.checkArgument(message3.equals("文章标签不能为空"),"期待文章标签不能为空，实际"+message3);
+            //文章标签
+            String message4 = md.article_export("活动活动","ONE_LEFT","1",null,piclist).getString("message");
+            Preconditions.checkArgument(message4.equals("文章标签不能为空"),"期待文章标签不能为空，实际"+message4);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("新建内容异常项");
+        }
+    }
 
     //口味管理通过口味名称进行搜索
     @Test()
@@ -1017,6 +1052,33 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             saveData("口味管理通过口味名称进行搜索");
+        }
+    }
+
+    //新建口味、删除口味
+    @Test()
+    public void create_taste() throws Exception {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
+            String path = md.pcFileUpload(pic).getString("pic_path");
+//            JSONArray piclist = new JSONArray();
+//            piclist.add(path);
+            JSONObject res = md.taste_add(path,path,path,"芒果","1",1,true);
+            Preconditions.checkArgument(res.getInteger("code")==1000,"状态码期待1000，实际"+res.getInteger("code"));
+            int total = md.taste_search(null,1,10).getInteger("total");
+            int a = total-1;
+            int id = md.taste_search(null,1,10).getJSONArray("list").getJSONObject(a).getInteger("id");
+//            JSONArray list = md.
+            int code = md.taste_delete(id).getInteger("code");
+            Preconditions.checkArgument(code==1000,"状态码期待1000，实际"+code);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("新建口味、删除口味");
         }
     }
 }

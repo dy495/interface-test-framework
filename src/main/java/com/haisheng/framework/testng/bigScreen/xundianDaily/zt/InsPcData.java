@@ -172,7 +172,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             //新增口味
             String path = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS1.jpg";
             String path1 = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/女人脸.jpg";
-            String result = md.taste_add(path,path1,"苹果味","苹果味粉好",10000,true).getString("result");
+            String result = md.taste_add(path,path1,path,"苹果味","苹果味粉好",10000,true).getString("result");
             Preconditions.checkArgument(result.equals("true"), "新增口味失败" + result);
 
             JSONArray list3 = md.taste_search(null,1,10).getJSONArray("list");
