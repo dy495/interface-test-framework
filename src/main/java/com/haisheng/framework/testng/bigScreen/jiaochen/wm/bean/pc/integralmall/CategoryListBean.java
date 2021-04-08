@@ -1,6 +1,5 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.integralmall;
 
-import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
@@ -27,7 +26,7 @@ public class CategoryListBean implements Serializable {
      * 版本 v2.0
      */
     @JSONField(name = "category_type")
-    private JSONObject categoryType;
+    private Long categoryType;
 
     /**
      * 描述 品类名称

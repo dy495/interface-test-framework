@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
+import java.util.List;
+
 /**
  * 31.27. 创建商品 (张小龙) v2.0
  *
@@ -67,7 +69,7 @@ public class CreateGoodsScene extends BaseScene {
      * 是否必填 false
      * 版本 v2.0
      */
-    private final JSONArray goodsPicList;
+    private final List<String> goodsPicList;
 
     /**
      * 描述 市场价

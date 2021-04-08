@@ -5,11 +5,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.ApplyPage;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.ExchangePage;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherPage;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherSendRecord;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.integralcenter.ExchangeGoodsDetailBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.integralcenter.ExchangePageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.integralmall.CategoryPageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherInvalidPageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
@@ -23,9 +21,7 @@ import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.generator.voucher
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.applet.granted.*;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.file.FileUpload;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.integralcenter.*;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.integralmall.CategoryPageScene;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.integralmall.CreateCategoryScene;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.integralmall.GoodsManagePageScene;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.integralmall.*;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.loginuser.ShopListScene;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.messagemanager.PushMessageScene;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.voucher.ApplyApprovalScene;
@@ -39,10 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -848,21 +841,43 @@ public class SupporterUtil {
         }
     }
 
+    /**
+     * 获取图片地址
+     *
+     * @return 品类地址
+     */
     public String getCategoryPicPath() {
         String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
         return getPicPath(pic, "1:1");
     }
 
+    /**
+     * 创建一级品类
+     *
+     * @param picPath 图片路径
+     * @return 品类id
+     */
     private Long createFirstCategory(String picPath) {
         String name = IntegralCategoryTypeEnum.FIRST_CATEGORY.getDesc();
         CreateCategoryScene.builder().categoryName(name).belongPic(picPath).categoryLevel(IntegralCategoryTypeEnum.FIRST_CATEGORY.name()).build().invoke(visitor);
         return getCategoryId(name);
     }
 
+    /**
+     * 创建二级品类
+     *
+     * @return 品类id
+     */
     private Long createSecondCategory() {
         return getCategoryByLevel(IntegralCategoryTypeEnum.SECOND_CATEGORY);
     }
 
+    /**
+     * 获取品类id
+     *
+     * @param categoryName 品类名称
+     * @return 品类id
+     */
     public Long getCategoryId(String categoryName) {
         IScene scene = CategoryPageScene.builder().build();
         CategoryPageBean categoryPageBean = collectBeanByField(scene, CategoryPageBean.class, "category_name", categoryName);
@@ -871,6 +886,12 @@ public class SupporterUtil {
         return categoryPageBean.getId();
     }
 
+    /**
+     * 获取品类id
+     *
+     * @param categoryLevel 品类等级
+     * @return 品类id
+     */
     public Long getCategoryId(IntegralCategoryTypeEnum categoryLevel) {
         IScene scene = CategoryPageScene.builder().build();
         CategoryPageBean categoryPageBean = collectBeanByField(scene, CategoryPageBean.class, "category_level", categoryLevel.getDesc());
@@ -879,8 +900,124 @@ public class SupporterUtil {
         return categoryPageBean.getId();
     }
 
+    /**
+     * 获取品类名称
+     *
+     * @param id 品类id
+     * @return 品类名称
+     */
     public String getCategoryName(Long id) {
         IScene scene = CategoryPageScene.builder().build();
         return collectBeanByField(scene, CategoryPageBean.class, "id", id).getCategoryName();
+    }
+
+    /**
+     * 判断商品是否被占用
+     *
+     * @param goodsName 商品名称
+     * @return 是否被占用
+     */
+    public Boolean goodsIsOccupation(String goodsName) {
+        IScene scene = ExchangePageScene.builder().exchangeGoods(goodsName).build();
+        ExchangePageBean exchangePageBean = collectBeanByField(scene, ExchangePageBean.class, "goods_name", goodsName);
+        return exchangePageBean != null;
+    }
+
+    public GoodsBean createGoods() {
+        GoodsParamBean goodsParamBean = getGoodsParam();
+        //创建商品
+        Long goodsId = CreateGoodsScene.builder()
+                .goodsName("自定义商品")
+                .goodsDescription("自定义商品，用完销毁")
+                .goodsBrand(goodsParamBean.getBrandId())
+                .goodsPicList(new ArrayList<>(Collections.singleton(getCategoryPicPath())))
+                .price(9.99)
+                .selectSpecifications(getSelectSpecifications(goodsParamBean))
+                .goodsSpecificationsList(getGoodsSpecificationsList(goodsParamBean))
+                .goodsDetail("<p>" + EnumDesc.DESC_BETWEEN_15_20.getDesc() + "</p>")
+                .firstCategory(goodsParamBean.getFirstCategory())
+                .secondCategory(goodsParamBean.getSecondCategory())
+                .thirdCategory(goodsParamBean.getThirdCategory())
+                .build().invoke(visitor).getLong("id");
+        GoodsBean goodsBean = new GoodsBean();
+        goodsBean.setGoodsId(goodsId);
+        goodsBean.setGoodsParamBean(goodsParamBean);
+        return goodsBean;
+    }
+
+    public JSONArray getSelectSpecifications(GoodsParamBean goodsParamBean) {
+        JSONObject data = SpecificationsDetailScene.builder().id(goodsParamBean.getSpecificationsId()).build().invoke(visitor);
+        String specificationsName = data.getString("specifications_name");
+        JSONObject specificationsDetail = data.getJSONArray("list").getJSONObject(0);
+        JSONArray selectSpecifications = new JSONArray();
+        JSONObject object = new JSONObject();
+        object.put("specifications_id", goodsParamBean.getSpecificationsId());
+        object.put("specifications_name", specificationsName);
+        JSONArray specificationsList = new JSONArray();
+        JSONObject object1 = new JSONObject();
+        object1.put("specifications_detail_id", specificationsDetail.getLong("specifications_id"));
+        object1.put("specifications_detail_name", specificationsDetail.getString("specifications_item"));
+        specificationsList.add(object1);
+        object.put("specifications_list", specificationsList);
+        selectSpecifications.add(object);
+        return selectSpecifications;
+    }
+
+    public JSONArray getGoodsSpecificationsList(GoodsParamBean goodsParamBean) {
+        JSONObject data = SpecificationsDetailScene.builder().id(goodsParamBean.getSpecificationsId()).build().invoke(visitor);
+        JSONObject specificationsDetail = data.getJSONArray("list").getJSONObject(0);
+        JSONArray goodsSpecificationsList = new JSONArray();
+        JSONObject object = new JSONObject();
+        object.put("first_specifications", specificationsDetail.getLong("specifications_id"));
+        object.put("first_specifications_name", specificationsDetail.getString("specifications_item"));
+        object.put("second_specifications", "");
+        object.put("second_specifications_name", "");
+        object.put("head_pic", getCategoryPicPath());
+        object.put("price", 9.99);
+        goodsSpecificationsList.add(object);
+        return goodsSpecificationsList;
+    }
+
+    public GoodsParamBean getGoodsParam() {
+        GoodsParamBean goodsParamBean = new GoodsParamBean();
+        //创建一级品类
+        Long id = createCategory("汽车", getCategoryPicPath(), IntegralCategoryTypeEnum.FIRST_CATEGORY.name(), null);
+        //创建二级品类
+        Long secondId = createCategory("豪华车", getCategoryPicPath(), IntegralCategoryTypeEnum.SECOND_CATEGORY.name(), id);
+        //创建三级品类
+        Long thirdId = createCategory("特斯拉ModelS", getCategoryPicPath(), IntegralCategoryTypeEnum.THIRD_CATEGORY.name(), secondId);
+        //创建品牌
+        Long brandId = CreateBrandScene.builder().brandPic(getCategoryPicPath()).brandName("特斯拉").brandDescription("商品使用，用完销毁").build().invoke(visitor).getLong("id");
+        //给一级品类创建规格
+        Long specificationsId = CreateSpecificationsScene.builder().belongsCategory(id).specificationsName("颜色").build().invoke(visitor).getLong("id");
+//        if (!isOneSpecifications) {
+        Long specificationsIdTwo = CreateSpecificationsScene.builder().belongsCategory(id).specificationsName("型号").build().invoke(visitor).getLong("id");
+        EditSpecificationsScene.builder().belongsCategory(id).id(specificationsIdTwo).specificationsList(getSpecificationsList()).specificationsName("型号").build().invoke(visitor);
+        goodsParamBean.setSpecificationsIdTwo(specificationsIdTwo);
+//        }
+        EditSpecificationsScene.builder().belongsCategory(id).id(specificationsId).specificationsList(getSpecificationsList()).specificationsName("颜色").build().invoke(visitor);
+        //给规格创建规格参数
+        goodsParamBean.setFirstCategory(id);
+        goodsParamBean.setSecondCategory(secondId);
+        goodsParamBean.setThirdCategory(thirdId);
+        goodsParamBean.setBrandId(brandId);
+        goodsParamBean.setSpecificationsId(specificationsId);
+        return goodsParamBean;
+    }
+
+    public JSONArray getSpecificationsList() {
+        JSONArray array = new JSONArray();
+        JSONObject object = new JSONObject();
+        object.put("specifications_item", "红色");
+        array.add(object);
+        return array;
+    }
+
+    public JSONArray getSpecificationsListListTwo() {
+        JSONArray array = new JSONArray();
+        JSONObject object = new JSONObject();
+        object.put("specifications_item", "长续航版");
+        array.add(object);
+        return array;
     }
 }

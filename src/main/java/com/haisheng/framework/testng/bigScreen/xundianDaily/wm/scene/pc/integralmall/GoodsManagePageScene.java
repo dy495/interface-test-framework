@@ -15,12 +15,20 @@ public class GoodsManagePageScene extends BaseScene {
     @Builder.Default
     private final Integer size = 10;
 
+    private final String goodsName;
+    private final Long goodsBrand;
+
+    private final Long firstCategory;
+
     @Override
     public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("goods_status", goodsStatus);
         object.put("page", page);
         object.put("size", size);
+        object.put("goods_name", goodsName);
+        object.put("goods_brand", goodsBrand);
+        object.put("first_category", firstCategory);
         return object;
     }
 

@@ -9,10 +9,12 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.integralmall.BrandPageBean;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.integralmall.CategoryPageBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.GoodsBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.GoodsParamBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.integralmall.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.IntegralCategoryTypeEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.commodity.CommodityStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.pcCreateGoods;
@@ -625,6 +627,7 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    //ok
     @Test
     public void goodsCategory_system_20() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -652,12 +655,16 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
     /**
      * 商品品牌
      */
-    @Test(dataProvider = "BRAND_NAME")
-    public void goodsBrand_system_1(String name) {
+    //ok
+    @Test()
+    public void goodsBrand_system_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene scene = BrandPageScene.builder().brandName(name).build();
-            List<BrandPageBean> brandPageBeans = util.collectBean(scene, BrandPageBean.class);
+            IScene scene = BrandPageScene.builder().build();
+            BrandPageBean brandPageBean = util.collectBean(scene, BrandPageBean.class).get(0);
+            String name = brandPageBean.getBrandName().substring(0, 1);
+            IScene newScene = BrandPageScene.builder().brandName(name).build();
+            List<BrandPageBean> brandPageBeans = util.collectBean(newScene, BrandPageBean.class);
             brandPageBeans.forEach(e -> Preconditions.checkArgument(e.getBrandName().contains(name), "搜索结果" + e.getBrandName() + "不包含" + name));
         } catch (AssertionError | Exception e) {
             collectMessage(e);
@@ -666,19 +673,7 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @DataProvider(name = "BRAND_NAME")
-    public Object[] brandName() {
-        return new String[]{
-                "1",
-//                "aA",
-//                "!@#$%^&*(-",
-//                "自动化",
-//                "之家",
-//                "测试",
-//                "2021",
-        };
-    }
-
+    //ok
     @Test
     public void goodsBrand_system_2() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -693,6 +688,7 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    //ok
     @Test
     public void goodsBrand_system_3() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -707,6 +703,7 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    //ok
     @Test
     public void goodsBrand_system_4() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -730,6 +727,7 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    //ok
     @Test(dataProvider = "BRAND_ADD")
     public void goodsBrand_system_5(String name, String desc) {
         logger.logCaseStart(caseResult.getCaseName());
@@ -766,6 +764,7 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
         };
     }
 
+    //ok
     @Test()
     public void goodsBrand_system_6() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -773,7 +772,7 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
             String[] names = {EnumDesc.DESC_20.getDesc() + "1", "", null};
             Arrays.stream(names).forEach(name -> {
                 String message = CreateBrandScene.builder().brandPic(util.getCategoryPicPath()).brandName(name).brandDescription(EnumDesc.DESC_BETWEEN_5_10.getDesc()).build().invoke(visitor, false).getString("message");
-                String err = StringUtils.isEmpty(name) ? "" : "";
+                String err = StringUtils.isEmpty(name) ? "品牌名称不能为空" : "品牌名称长度应该为1～20个字";
                 CommonUtil.checkResult("品牌名称为" + name, err, message);
             });
         } catch (AssertionError | Exception e) {
@@ -783,6 +782,7 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    //ok
     @Test
     public void goodsBrand_system_7() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -790,7 +790,7 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
             String name = EnumDesc.DESC_BETWEEN_5_10.getDesc() + "重复";
             Long id = CreateBrandScene.builder().brandName(name).brandDescription(name).brandPic(util.getCategoryPicPath()).build().invoke(visitor).getLong("id");
             String message = CreateBrandScene.builder().brandName(name).brandDescription(name).brandPic(util.getCategoryPicPath()).build().invoke(visitor, false).getString("message");
-            String err = "";
+            String err = "品牌名称已存在";
             CommonUtil.checkResult("创建重复名称的品牌", err, message);
             DeleteBrandScene.builder().id(id).build().invoke(visitor);
         } catch (AssertionError | Exception e) {
@@ -800,6 +800,7 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    //ok
     @Test
     public void goodsBrand_system_8() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -815,6 +816,7 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    //ok
     @Test
     public void goodsBrand_system_9() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -834,6 +836,7 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
     /**
      * 商品规格
      */
+    //ok
     @Test
     public void goodsSpecifications_system_1() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -852,187 +855,216 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    //ok
     @Test
-    public void specificationsDel1() {
+    public void goodsSpecifications_system_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long id = info.newSpecificition();
-
-
-            //删除启用的规格，应失败（ 前端限制，这里注释掉）
-//            jc.specificationsChgStatus(id,true,true);
-//            int code1 = jc.specificationsDel(id,false).getInteger("code");
-//            Preconditions.checkArgument(code1==1001,"删除启用的规格，期待失败实际"+code1);
-            //删除停用的规格，应成功
-            ins.specificationsChgStatus(id, false);
-            int code2 = ins.specificationsDel(id, false).getInteger("code");
-            Preconditions.checkArgument(code2 == 1000, "删除停用的规格，期待成功实际" + code2);
-
-        } catch (AssertionError e) {
-            collectMessage(e);
-        } catch (Exception e) {
+            //创建一级品类
+            Long id = util.createCategory(IntegralCategoryTypeEnum.FIRST_CATEGORY.getDesc(), util.getCategoryPicPath(), IntegralCategoryTypeEnum.FIRST_CATEGORY.name(), null);
+            String name = EnumDesc.DESC_BETWEEN_5_10.getDesc();
+            //创建规格
+            Long specificationsId = CreateSpecificationsScene.builder().specificationsName(name).belongsCategory(id).build().invoke(visitor).getLong("id");
+            //删除停用的规格
+            ChangeSpecificationsStatusScene.builder().id(specificationsId).status(false).build().invoke(visitor);
+            DeleteSpecificationsScene.builder().id(specificationsId).build().invoke(visitor);
+            Long newSpecificationsId = CreateSpecificationsScene.builder().specificationsName(name).belongsCategory(id).build().invoke(visitor).getLong("id");
+            //删除未停用的规格
+            DeleteSpecificationsScene.builder().id(newSpecificationsId).build().invoke(visitor);
+            DeleteCategoryScene.builder().id(id).build().invoke(visitor);
+        } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
             saveData("PC【商品规格】删除各种状态的&无商品使用的规格");
         }
     }
 
-
-    //商品管理
-    //2021-01-27
-    @Test(dataProvider = "BRANDNAME")
-    public void goodFilter1(String name) {
+    /**
+     * 商品管理
+     */
+    //ok
+    @Test()
+    public void goodsManager_system_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray list = ins.goodsManagePage(1, 50, name, null, null, null, null, null).getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                JSONObject obj = list.getJSONObject(i);
-                String searchname = obj.getString("goods_name");
-                Preconditions.checkArgument(searchname.contains(name), "搜索" + name + ", 结果中包含" + searchname);
-            }
-
-        } catch (AssertionError e) {
-            collectMessage(e);
-        } catch (Exception e) {
+            IScene goodsManagePageScene = GoodsManagePageScene.builder().build();
+            GoodsManagePageBean goodsManagePageBean = util.collectBean(goodsManagePageScene, GoodsManagePageBean.class).get(0);
+            String goodsName = goodsManagePageBean.getGoodsName();
+            IScene newScene = GoodsManagePageScene.builder().goodsName(goodsName).build();
+            List<GoodsManagePageBean> newGoodsManagePageBean = util.collectBean(newScene, GoodsManagePageBean.class);
+            newGoodsManagePageBean.forEach(e -> Preconditions.checkArgument(e.getGoodsName().contains(goodsName), "搜索" + goodsName + ", 结果中包含" + e.getGoodsName()));
+        } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
             saveData("PC【商品管理】根据筛选栏-商品名称搜索");
         }
     }
 
-
+    //ok
     @Test
-    public void goodFilter2() {
+    public void goodsManager_system_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-
-            //todo
-            JSONArray list = ins.BrandList().getJSONArray("list");
-            if (list.size() > 0) {
-                Long id = list.getJSONObject(0).getLong("id");
-                String brandname = list.getJSONObject(0).getString("brand_name");
-                JSONArray goodlist = ins.goodsManagePage(1, 10, null, id, null, null, null, null).getJSONArray("list");
-                for (int i = 0; i < goodlist.size(); i++) {
-                    JSONObject obj = goodlist.getJSONObject(i);
-                    String search = obj.getString("belongs_brand");
-                    Preconditions.checkArgument(search.equals(brandname), "搜索" + brandname + ", 结果包含" + search);
-                }
-            }
-            //要去下拉框的接口
-        } catch (AssertionError e) {
-            collectMessage(e);
-        } catch (Exception e) {
+            JSONArray list = BrandListScene.builder().build().invoke(visitor).getJSONArray("list");
+            List<BrandListBean> brandPageBeanList = list.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, BrandListBean.class)).collect(Collectors.toList());
+            brandPageBeanList.forEach(brandListBean -> {
+                IScene goodsManagePageScene = GoodsManagePageScene.builder().goodsBrand(brandListBean.getId()).build();
+                List<GoodsManagePageBean> goodsManagePageBeanList = util.collectBean(goodsManagePageScene, GoodsManagePageBean.class);
+                goodsManagePageBeanList.forEach(goodsManagePageBean -> CommonUtil.checkResult(goodsManagePageBean.getGoodsName() + "的所属品牌", brandListBean.getBrandName(), goodsManagePageBean.getBelongsBrand()));
+            });
+        } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
             saveData("PC【商品管理】根据筛选栏-商品品牌搜索");
         }
     }
 
-    @Test(dataProvider = "Status")
-    public void goodFilter3(String status, String name) {
+    //ok
+    @Test()
+    public void goodsManager_system_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-
-            JSONArray goodlist = ins.goodsManagePage(1, 10, null, null, status, null, null, null).getJSONArray("list");
-            for (int i = 0; i < goodlist.size(); i++) {
-                JSONObject obj = goodlist.getJSONObject(i);
-                String search = obj.getString("goods_status_name");
-                Preconditions.checkArgument(search.equals(name), "搜索" + name + ", 结果包含" + search);
-            }
-
-        } catch (AssertionError e) {
-            collectMessage(e);
-        } catch (Exception e) {
+            Arrays.stream(CommodityStatusEnum.values()).forEach(e -> {
+                IScene scene = GoodsManagePageScene.builder().goodsStatus(e.name()).build();
+                List<GoodsManagePageBean> goodsManagePageBeanList = util.collectBean(scene, GoodsManagePageBean.class);
+                goodsManagePageBeanList.forEach(goodsManagePageBean -> {
+                    CommonUtil.checkResult(goodsManagePageBean.getGoodsName() + "的商品状态", e.name(), goodsManagePageBean.getGoodsStatus());
+                    CommonUtil.checkResult(goodsManagePageBean.getGoodsName() + "的商品状态", e.getName(), goodsManagePageBean.getGoodsStatusName());
+                });
+            });
+        } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
             saveData("PC【商品管理】根据筛选栏-商品状态搜索");
         }
     }
 
-    @DataProvider(name = "Status")
-    public Object[] searchStatus() {
-        return new String[][]{
-                {"UP", "上架"},
-                {"DOWN", "下架"},
-        };
-    }
-
-    //@Test
-    public void goodFilter4() {
+    //ok
+    @Test
+    public void goodsManager_system_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-
-            JSONArray list = ins.categoryTree().getJSONArray("list");
-            if (list.size() > 0) {
-                int id = list.getJSONObject(0).getInteger("category_id");
-
-                //todo 没补充完
-            }
-        } catch (AssertionError e) {
-            collectMessage(e);
-        } catch (Exception e) {
+            IScene categoryListScene = CategoryListScene.builder().categoryLevel(IntegralCategoryTypeEnum.FIRST_CATEGORY.name()).build();
+            JSONArray list = categoryListScene.invoke(visitor).getJSONArray("list");
+            List<CategoryListBean> categoryListBeanList = list.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, CategoryListBean.class)).collect(Collectors.toList());
+            categoryListBeanList.forEach(categoryListBean -> {
+                IScene goodsManagePageScene = GoodsManagePageScene.builder().firstCategory(categoryListBean.getCategoryType()).build();
+                List<GoodsManagePageBean> goodsManagePageBeanList = util.collectBean(goodsManagePageScene, GoodsManagePageBean.class);
+                goodsManagePageBeanList.forEach(goodsManagePageBean -> CommonUtil.checkResult("按照一级品类搜索结果的商品分类", categoryListBean.getCategoryName(), goodsManagePageBean.getGoodsCategory()));
+            });
+        } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
             saveData("PC【商品管理】根据一级品类搜索");
         }
     }
 
-    //@Test
-    public void goodShow() {
+    //ok
+    @Test
+    public void goodsManager_system_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray list = ins.goodsManagePage(1, 50, null, null, null, null, null, null).getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                JSONObject obj = list.getJSONObject(i);
+            JSONArray list = GoodsManagePageScene.builder().size(SIZE).build().invoke(visitor).getJSONArray("list");
+            list.stream().map(obj -> (JSONObject) obj).forEach(obj -> {
                 Preconditions.checkArgument(obj.containsKey("goods_pic"), "未展示商品图片");
                 Preconditions.checkArgument(obj.containsKey("goods_name"), "未展示商品名称");
                 Preconditions.checkArgument(obj.containsKey("belongs_brand"), "未展示所属品牌");
                 Preconditions.checkArgument(obj.containsKey("goods_category"), "未展示商品分类");
                 Preconditions.checkArgument(obj.containsKey("price"), "未展示市场价");
                 Preconditions.checkArgument(obj.containsKey("goods_status"), "未展示商品状态");
-            }
-
-        } catch (AssertionError e) {
-            collectMessage(e);
-        } catch (Exception e) {
+            });
+        } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
             saveData("PC【商品管理】列表展示项校验");
         }
     }
 
-    // @Test
-    public void goodUp() {
+    //ok
+    @Test
+    public void goodsManager_system_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            ins.goodsChgStatus(info.goods_id, "true", true); //启用商品
-            //查看商品列表该商品状态
-            JSONArray list = ins.goodsManagePage(1, 10, info.goods_name, null, null, null, null, null).getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                JSONObject obj = list.getJSONObject(i);
-                if (obj.getLong("id") == info.goods_id) {
-                    Preconditions.checkArgument(obj.getString("goods_status_name").equals("启用"), "启用后列表商品状态不是启用");
-                }
-            }
-            //查看小程序是否有该商品
-
-            JSONArray appletlist = ins.appletMallCommidityList(100, null, null, null, true).getJSONArray("list");
-            Boolean isexist = false;
-//            for (int j = 0 ; j < appletlist.size();j++){
-//                JSONObject obj = list.getJSONObject(j);
-//                if (obj.getInteger("id")==info.goods_id){
-//                    isexist = true;
-//                    break;
-//                }
-//            }
-            Preconditions.checkArgument(isexist == true, "小程序未展示该商品");
-
-        } catch (AssertionError e) {
-            collectMessage(e);
-        } catch (Exception e) {
+            IScene goodsManagePageScene = GoodsManagePageScene.builder().build();
+            List<GoodsManagePageBean> goodsManagePageBeanListA = util.collectBean(goodsManagePageScene, GoodsManagePageBean.class);
+            GoodsManagePageBean goodsManagePageBean = goodsManagePageBeanListA.stream().filter(e -> !util.goodsIsOccupation(e.getGoodsName())).findFirst().orElse(goodsManagePageBeanListA.get(0));
+            Long id = goodsManagePageBean.getId();
+            //上架
+            Arrays.stream(CommodityStatusEnum.values()).forEach(anEnum -> {
+                ChangeGoodsStatusScene.builder().id(id).status(anEnum.name()).build().invoke(visitor);
+                List<GoodsManagePageBean> goodsManagePageBeanList = util.collectBean(goodsManagePageScene, GoodsManagePageBean.class);
+                goodsManagePageBeanList.stream().filter(e -> e.getId().equals(id)).forEach(e -> {
+                    CommonUtil.checkResult(e.getGoodsName() + "的商品状态", anEnum.getName(), e.getGoodsStatusName());
+                    CommonUtil.checkResult(e.getGoodsName() + "的商品状态", anEnum.name(), e.getGoodsStatus());
+                });
+            });
+            //clean
+            ChangeGoodsStatusScene.builder().id(id).status(CommodityStatusEnum.UP.name()).build().invoke(visitor);
+        } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
-            saveData("PC【商品管理】上架存在的商品");
+            saveData("PC【商品管理】上架&下架存不被积分兑换占用商品");
+        }
+    }
+
+    //ok
+    @Test
+    public void goodsManager_system_7() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene goodsManagePageScene = GoodsManagePageScene.builder().build();
+            List<GoodsManagePageBean> goodsManagePageBeanListA = util.collectBean(goodsManagePageScene, GoodsManagePageBean.class);
+            GoodsManagePageBean goodsManagePageBean = goodsManagePageBeanListA.stream().filter(e -> !util.goodsIsOccupation(e.getGoodsName())).findFirst().orElse(goodsManagePageBeanListA.get(0));
+            Long id = goodsManagePageBean.getId();
+            //下架商品
+            ChangeGoodsStatusScene.builder().id(id).status(CommodityStatusEnum.DOWN.name()).build().invoke(visitor);
+            //积分兑换看不见
+            IScene scene = GoodsManagePageScene.builder().goodsStatus(CommodityStatusEnum.UP.name()).build();
+            util.collectBean(scene, GoodsManagePageBean.class).forEach(e -> Preconditions.checkArgument(!e.getId().equals(id), "下架的商品" + e.getGoodsName() + "在创建积分兑换时可见"));
+            //clean
+            ChangeGoodsStatusScene.builder().id(id).status(CommodityStatusEnum.UP.name()).build().invoke(visitor);
+        } catch (AssertionError | Exception e) {
+            collectMessage(e);
+        } finally {
+            saveData("PC【商品管理】下架的商品在创建积分兑换时不可见");
+        }
+    }
+
+    //ok
+    @Test
+    public void goodsManager_system_8() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene goodsManagePageScene = GoodsManagePageScene.builder().build();
+            List<GoodsManagePageBean> goodsManagePageBeanListA = util.collectBean(goodsManagePageScene, GoodsManagePageBean.class);
+            GoodsManagePageBean goodsManagePageBean = goodsManagePageBeanListA.stream().filter(e -> util.goodsIsOccupation(e.getGoodsName())).findFirst().orElse(goodsManagePageBeanListA.get(0));
+            //下架商品
+            String message = ChangeGoodsStatusScene.builder().id(goodsManagePageBean.getId()).status(CommodityStatusEnum.DOWN.name()).build().invoke(visitor, false).getString("message");
+            String err = "商品正在使用中，不能下架";
+            CommonUtil.checkResult("下架被占用商品" + goodsManagePageBean.getGoodsName(), err, message);
+        } catch (AssertionError | Exception e) {
+            collectMessage(e);
+        } finally {
+            saveData("PC【商品管理】下架被积分兑换占用的商品，失败");
+        }
+    }
+
+    //ok
+    @Test
+    public void goodsManager_system_9() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene goodsManagePageScene = GoodsManagePageScene.builder().build();
+            List<GoodsManagePageBean> goodsManagePageBeanListA = util.collectBean(goodsManagePageScene, GoodsManagePageBean.class);
+            GoodsManagePageBean goodsManagePageBean = goodsManagePageBeanListA.stream().filter(e -> util.goodsIsOccupation(e.getGoodsName())).findFirst().orElse(goodsManagePageBeanListA.get(0));
+            //下架商品
+            String message = DeleteGoodsScene.builder().id(goodsManagePageBean.getId()).build().invoke(visitor, false).getString("message");
+            String err = "商品正在使用中，不能删除";
+            CommonUtil.checkResult("删除被占用商品" + goodsManagePageBean.getGoodsName(), err, message);
+        } catch (AssertionError | Exception e) {
+            collectMessage(e);
+        } finally {
+            saveData("PC【商品管理】删除被积分兑换占用的商品，失败");
         }
     }
 
@@ -1044,49 +1076,13 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
 
             Preconditions.checkArgument(code == 1001, "状态码期待1001，实际" + code);
 
-        } catch (AssertionError e) {
-            collectMessage(e);
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
             saveData("PC【商品管理】A删除商品，B不刷新页面启用商品");
         }
     }
 
-    //@Test
-    public void goodDown() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            ins.goodsChgStatus(info.goods_id, "false", true); //启用商品
-            //查看商品列表该商品状态
-            JSONArray list = ins.goodsManagePage(1, 10, info.goods_name, null, null, null, null, null).getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                JSONObject obj = list.getJSONObject(i);
-                if (obj.getLong("id") == info.goods_id) {
-                    Preconditions.checkArgument(obj.getString("goods_status_name").equals("下架"), "下架后列表商品状态不是停用");
-                }
-            }
-//            //查看小程序是否有该商品
-//
-//            JSONArray appletlist = jc.appletMallCommidityList(100,null,null,null,true).getJSONArray("list");
-//            Boolean isexist = false;
-//            for (int j = 0 ; j < appletlist.size();j++){
-//                JSONObject obj = list.getJSONObject(j);
-//                if (obj.getInteger("id")==info.goods_id){
-//                    isexist = true;
-//                    break;
-//                }
-//            }
-//            Preconditions.checkArgument(isexist==true,"小程序展示了该商品");
-
-        } catch (AssertionError e) {
-            collectMessage(e);
-        } catch (Exception e) {
-            collectMessage(e);
-        } finally {
-            saveData("PC【商品管理】下架商品");
-        }
-    }
 
     @Test
     public void goodEdit1() {
@@ -1099,9 +1095,7 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
             int code = ins.editGoodMethod(er).getInteger("code");
             Preconditions.checkArgument(code == 1001, "状态码期待1001，实际" + code);
 
-        } catch (AssertionError e) {
-            collectMessage(e);
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
             saveData("PC【商品管理】编辑中的商品被删除");
@@ -1109,106 +1103,30 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    @Test(dataProvider = "GOOD")
-    public void goodAdd(String goodname, String goodDesc, String gooddetail, String price, String spename, String mess) {
+    @Test()
+    public void goodAdd() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            //新建一个一二三级品类
-            String name = "品类";
-            JSONObject obj = info.newFirstCategory(name + Integer.toString((int) ((Math.random() * 9 + 1) * 10000)));
-            String idone = obj.getString("id");
-            JSONObject objtwo = info.newSecondCategory(name + Integer.toString((int) ((Math.random() * 9 + 1) * 10000)), idone);
-            String idtwo = objtwo.getString("id");
-            JSONObject objthree = info.newThirdCategory(name + Integer.toString((int) ((Math.random() * 9 + 1) * 10000)), idtwo);
-            String idthree = objthree.getString("id");
-
-            //新建规格
-
-            String speItemName = "规格参数" + Integer.toString((int) ((Math.random() * 9 + 1) * 10000));
-
-            //新建品牌
-            String brandid = info.newGoodBrand("pp" + System.currentTimeMillis(), "pp说明" + System.currentTimeMillis()).getString("id");
-
-            Long speId = ins.specificationsCreate(spename, Long.parseLong(idone), null, null, true).getLong("id");
-            //新建规格参数
-            JSONObject objItem = new JSONObject();
-            objItem.put("specifications_item", speItemName);
-            JSONArray spearray = new JSONArray();
-            spearray.add(objItem);
-            ins.specificationsEdit(spename, Long.parseLong(idone), spearray, speId, true);
-            Long speItemId = ins.specificationsDetail(speId, 1, 10).getJSONArray("specifications_list").getJSONObject(0).getLong("specifications_id");
-
-            //新建商品
-
-
-            pcCreateGoods good = new pcCreateGoods();
-            good.first_category = Long.parseLong(idone);
-            good.second_category = Long.parseLong(idtwo);
-            good.third_category = Long.parseLong(idthree);
-            good.goods_brand = Long.parseLong(brandid);
-
-            //新建商品
-            String select_specifications_str =
-                    "[" +
-                            "{" +
-                            "\"specifications_id\":" + speId + "," +
-                            "\"specifications_name\":\"" + spename + "\"," +
-                            "\"specifications_list\":[" +
-                            "{\"specifications_detail_id\":" + speItemId + "," +
-                            "\"specifications_detail_name\":\"" + speItemName + "\"" +
-                            "}]}]";
-            JSONArray select_specifications = JSONArray.parseArray(select_specifications_str); //所选规格
-            String goods_specifications_list_str = "[" +
-                    "{" +
-                    "\"first_specifications\":" + speItemId + "," +
-                    "\"first_specifications_name\":\"" + speItemName + "\"," +
-
-                    "\"head_pic\":\"" + info.getLogo() + "\"," +
-                    "\"price\":69.98" +
-                    "}]";
-            JSONArray goods_specifications_list = JSONArray.parseArray(goods_specifications_list_str);
-            good.select_specifications = select_specifications;
-            good.goods_specifications_list = goods_specifications_list;
-            good.checkcode = false;
-            good.goods_name = goodname;
-            good.goods_description = goodDesc;
-            good.price = price;
-            good.goods_detail = gooddetail;
-            good.goods_pic_list = good.getPicone();
-            JSONObject objnew = ins.createGoodMethod(good);
-            int code = objnew.getInteger("code");
-            Preconditions.checkArgument(code == 1000, mess + "状态码" + code);
-            Long goodid = objnew.getJSONObject("data").getLong("id");
-
-
+            GoodsBean goodsBean = util.createGoods();
+            GoodsParamBean goodsParamBean = goodsBean.getGoodsParamBean();
             //删除商品
-            ins.deleteGoodMethod(goodid);
-            //关闭->删除规格
-            ins.specificationsChgStatus(speId, false);
-            ins.specificationsDel(speId);
+            DeleteGoodsScene.builder().id(goodsBean.getGoodsId()).build().invoke(visitor);
+            //删除品牌
+            DeleteBrandScene.builder().id(goodsParamBean.getBrandId()).build().invoke(visitor);
+            //删除规格
+            ChangeSpecificationsStatusScene.builder().id(goodsParamBean.getSpecificationsId()).status(false).build().invoke(visitor);
+            DeleteSpecificationsScene.builder().id(goodsParamBean.getSpecificationsId()).build().invoke(visitor);
             //删除品类
-            ins.categoryDel(Long.parseLong(idthree), true);
-            ins.categoryDel(Long.parseLong(idtwo), true);
-            ins.categoryDel(Long.parseLong(idone), true);
-
-
-        } catch (AssertionError e) {
-            collectMessage(e);
-        } catch (Exception e) {
+            Long[] ids = {goodsParamBean.getFirstCategory(), goodsParamBean.getSecondCategory(), goodsParamBean.getThirdCategory()};
+            Arrays.stream(ids).forEach(id -> {
+                ChangeStatusScene.builder().id(id).status(false).build().invoke(visitor);
+                DeleteCategoryScene.builder().id(id).build().invoke(visitor);
+            });
+        } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
             saveData("PC【商品管理】创建商品,一个规格一个参数");
         }
-    }
-
-    @DataProvider(name = "GOOD")
-    public Object[] good() { //商品名称 商品描述  商品详情 市场价 规格名称 描述
-        return new String[][]{
-                {"a", "a", "123456789sdxfcghvjbknlm,@#$%^&*JHGFDs事事顺遂", "0.00", "a", "商品名称1个字 商品描述1个字 市场价0.00 规格名称1个字"},
-                {"12345Q~!a啊不嘈杂啊67890", "12345Q~!a啊不嘈杂啊6789012345Q~!a啊不嘈杂啊67890", "123456789sdxf123456789sdxfcghvjbknlm,@#$%^&*JHGFDs事事顺遂123456789sdxfcghvjbknlm,@#$%^&*JHGFDs事事顺遂123456789sdxfcghvjbknlm,@#$%^&*JHGFDs事事顺遂123456789sdxfcghvjbknlm,@#$%^&*JHGFDs事事顺遂123456789sdxfcghvjbknlm,@#$%^&*JHGFDs事事顺遂123456789sdxfcghvjbknlm,@#$%^&*JHGFDs事事顺遂cghvjbknlm,@#$%^&*JHGFDs事事顺遂", "100000000.00", "a啊123～！@90", "商品名称20个字 商品描述40个字 市场价100000000.00 规格名称10个字"},
-                {"12Q~!a啊不嘈", "12Q~!a啊不嘈", "1", "99.99", "a啊23～", "商品名称10个字 商品描述10个字 市场价99.99 规格名称5个字"},
-
-        };
     }
 
     @Test
