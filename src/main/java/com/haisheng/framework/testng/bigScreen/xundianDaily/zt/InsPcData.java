@@ -104,8 +104,6 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             JSONArray list0 = wx.nearShops(null,longitude,latitude).getJSONArray("list");
             int a0 = list0.size();
             //添加一个门店
-//            List<String> r_dList = new ArrayList<String>();
-//            r_dList.add("296");
             String result = md.createShop(path, shopName, label, "00:00", "23:00", "hh", phone, "北京", "中关村soho", longitude, latitude, "123", 20).getString("result");
             Preconditions.checkArgument(result.equals("true"), "新建门店不成功" + result);
             //创建后的门店列表
