@@ -5,10 +5,15 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.fengkongdaily.riskControlEnum.RiskBusinessTypeEnum;
+import com.haisheng.framework.testng.bigScreen.fengkongdaily.riskControlEnum.RiskPersonnelTypeEnum;
+import com.haisheng.framework.testng.bigScreen.fengkongdaily.riskControlEnum.RuleEnum;
+import com.haisheng.framework.testng.bigScreen.fengkongdaily.riskControlEnum.RuleTypeEnum;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.alarmrule.DetailScene;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.*;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.downloadcenter.DownloadPageScene;
-import com.haisheng.framework.testng.bigScreen.fengkongdaily.util.CommonUtil;
+import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.rule.AddScene;
+import com.haisheng.framework.testng.bigScreen.fengkongdaily.util.CommonUsedUtil;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.util.PublicParam;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.util.RiskControlUtil;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.StoreScenarioUtil;
@@ -29,11 +34,10 @@ import static com.google.common.base.Preconditions.checkArgument;
 public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce product = EnumTestProduce.FK_DAILY;
     public VisitorProxy visitor = new VisitorProxy(product);
-    StoreScenarioUtil md = StoreScenarioUtil.getInstance();
 //    StoreFuncPackage mds = StoreFuncPackage.getInstance();
     PublicParam pp=new PublicParam();
-    CommonUtil cu=new CommonUtil();
-    RiskControlUtil ru=new RiskControlUtil();
+    CommonUsedUtil cu=new CommonUsedUtil();
+    RiskControlUtil md=new RiskControlUtil();
 
 
 
@@ -53,7 +57,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
         commonConfig.shopId = getXundianShop(); //要改！！！
         beforeClassInit(commonConfig);
         logger.debug("store " + md);
-        ru.pcLogin(pp.userName,pp.password);
+        md.pcLogin(pp.userName,pp.password);
     }
 
     @AfterClass
@@ -425,14 +429,13 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     @Test(description = "风控规则-增加黑名单风控规则")
     public void authCashierPageSystem12(){
         try{
-           //应用的门店     todo
-            List<String> shopIds=new ArrayList<>();
-            shopIds.add("");
-            shopIds.add("");
             //新建风控规则
-            IScene scene=cu.blackRuleAdd(shopIds);
-            Long id=visitor.invokeApi(scene).getLong("id");
-            Preconditions.checkArgument(id>0,"创建黑名单风控失败");
+            Long id=cu.getRuleAdd(RuleEnum.BLACK_LIST.getType());
+            Preconditions.checkArgument(id!=null,"创建黑名单风控失败");
+
+            //删除风控规则
+            String message=cu.ruleDelete(id);
+            Preconditions.checkArgument(message.equals("success"),"删除黑名单风控失败");
         }catch(Exception|AssertionError e){
             collectMessage(e);
         }finally{
@@ -446,14 +449,14 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     @Test(description = "风控规则-增加重点观察人员规则")
     public void authCashierPageSystem13(){
         try{
-            //应用的门店     todo
-            List<String> shopIds=new ArrayList<>();
-            shopIds.add("");
-            shopIds.add("");
-            //新建风控规则   todo
-            IScene scene=cu.blackRuleAdd(shopIds);
-            Long id=visitor.invokeApi(scene).getLong("id");
+
+            //新建风控规则
+            Long id=cu.getRuleAdd(RuleEnum.FOCUS_LIST.getType());
             Preconditions.checkArgument(id>0,"创建重点观察人员风控失败");
+
+            //删除风控规则
+            String message=cu.ruleDelete(id);
+            Preconditions.checkArgument(message.equals("success"),"删除重点观察人员失败");
         }catch(Exception|AssertionError e){
             collectMessage(e);
         }finally{
@@ -467,8 +470,22 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     @Test(description = "风控规则-增加收银风控规则")
     public void authCashierPageSystem14(){
         try{
-            Long id=cu.blackRuleAdd();
-            Preconditions.checkArgument(id>0,"创建风控失收银风控失败");
+            //一人多单/连续天数（一人1天最多3单）
+            Long id1=cu.getCashierOrderRuleAdd("1","3").getJSONObject("data").getLong("id");
+
+            //无人风控
+            Long id2=cu.getCashierUnmannedRuleAdd().getJSONObject("data").getLong("id");
+
+            //员工支付订单监控(一人1天最多1单)
+            Long id3=cu.getCashierEmployeeRuleAdd("1","1").getJSONObject("data").getLong("id");
+
+            //一人多车
+            Long id4=cu.getCashierCarRuleAdd("10").getJSONObject("data").getLong("id");
+
+            //一车多人
+            Long id5=cu.getCashierMemberRuleAdd("10").getJSONObject("data").getLong("id");
+
+            Preconditions.checkArgument(id1>0&&id2>0&&id3>0&&id4>0&&id5>0,"创建风控失收银风控失败");
         }catch(Exception|AssertionError e){
             collectMessage(e);
         }finally{
@@ -482,15 +499,12 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     @Test(description = "风控规则-规则开启和关闭，对规则进行删除")
     public void authCashierPageSystem15(){
         try{
-            //应用的门店     todo
-            List<String> shopIds= new ArrayList<>();
-            shopIds.add("");
-            shopIds.add("");
             //新建两个黑名单风控规则
-            Long id1=cu.blackRuleAdd(shopIds).invoke(visitor,true).getLong("id");
-            Long id2=cu.blackRuleAdd(shopIds).invoke(visitor,true).getLong("id");
+            Long id1=cu.getRuleAdd(RuleEnum.BLACK_LIST.getType());
+            Long id2=cu.getRuleAdd(RuleEnum.BLACK_LIST.getType());
             //开启活动1，关闭id2
             cu.ruleSwitch(id2,0);
+            cu.ruleSwitch(id1,1);
             //对两个规则进行删除
             String message1=cu.ruleDelete(id1);
             String message2=cu.ruleDelete(id2);
@@ -595,17 +609,17 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             List<Long> acceptRoleIdList=new ArrayList();
             //风控规则的ID
             List<Long> ruleIdList=new ArrayList();
-            //风控规则中的对风控规则类型进行筛选，取前三个       todo type
-            IScene scene =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.rule.PageScene.builder().page(1).size(10).type("").build();
+            //风控规则中的对风控规则类型进行筛选，取前三个
+            IScene scene =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.rule.PageScene.builder().page(1).size(10).type(RuleEnum.CASHIER.getType()).build();
             Long id=visitor.invokeApi(scene).getJSONArray("list").getJSONObject(0).getLong("id");
             ruleIdList.add(id);
             //关闭风控告警规则的第一条
             cu.getAlarmRuleSwitch(alarmId,0);
-            //编辑风控告警规则      todo type
-            String message=cu.getAlarmRuleEdit(alarmId,true,1800000L,"",ruleIdList,acceptRoleIdList).invoke(visitor,false).getString("message");
+            //编辑风控告警规则
+            String message=cu.getAlarmRuleEdit(alarmId,true,1800000L,RuleEnum.CASHIER.getType(),ruleIdList,acceptRoleIdList).invoke(visitor,false).getString("message");
             //开启风控告警规则的第一条
             cu.getAlarmRuleSwitch(alarmId,1);
-            //查看风控告警规则的详情    todo type
+            //查看风控告警规则的详情
             JSONObject response= DetailScene.builder().id(alarmId).build().invoke(visitor,true);
             String name=response.getString("name");
             String type=response.getString("type");
@@ -613,7 +627,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             Long silentTime=response.getLong("silent_time");
             Long ruleId=response.getJSONArray("rule_id_list").getJSONObject(0).getLong("id");
             Long RoleId=response.getJSONArray("accept_role_id_list").getJSONObject(0).getLong("id");
-            Preconditions.checkArgument(message.equals("success")&&name.contains("已编辑风控告警规则")&&type.equals("")&&realTime.equals("true")&&silentTime==1800000L&&ruleId.equals(ruleIdList.get(0))&&RoleId.equals(ruleIdList.get(0)),"编辑风控告警规则，编辑后的各项分别为："+name+"---"+type+"---"+realTime+"---"+silentTime+"---"+ruleId+"----"+RoleId);
+            Preconditions.checkArgument(message.equals("success")&&name.contains("已编辑风控告警规则")&&type.equals(RuleEnum.CASHIER.getName())&&realTime.equals("true")&&silentTime==1800000L&&ruleId.equals(ruleIdList.get(0))&&RoleId.equals(ruleIdList.get(0)),"编辑风控告警规则，编辑后的各项分别为："+name+"---"+type+"---"+realTime+"---"+silentTime+"---"+ruleId+"----"+RoleId);
 
         }catch(Exception|AssertionError e){
             collectMessage(e);
@@ -628,8 +642,8 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     @Test(description = "新建风控告警规则.并且删除")
     public void authCashierPageSystem21(){
         try{
-            //新建收银风控告警规则     todo type
-            Long alarmId=cu.getAlarmRuleAdd(true,600000L,"");
+            //新建收银风控告警规则--重点观察人员
+            Long alarmId=cu.getAlarmRuleAdd(true,600000L,RuleEnum.FOCUS_LIST.getType());
             //删除新建风控告警规则
             String message=cu.getAlarmRuleDel(alarmId);
             Preconditions.checkArgument(alarmId>0&&message.equals("success"),"删除新建的风控告警规则失败");
@@ -641,16 +655,78 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     }
 
     /**
-     *特殊人员列表项校验
+     *特殊人员列表项校验--黑名单
      */
     @Test(description = "特殊人员列表项校验")
     public void authCashierPageSystem22(){
         try{
-            IScene scene=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).build();
+            IScene scene=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).type(RiskPersonnelTypeEnum.BLACK.getType()).size(10).build();
             JSONObject response=visitor.invokeApi(scene);
             int pages=response.getInteger("pages")>10?10:response.getInteger("pages");
             for(int page=1;page<=pages;page++){
-                JSONArray list=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(page).size(10).build().invoke(visitor,true).getJSONArray("list");
+                JSONArray list=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(page).size(10).type(RiskPersonnelTypeEnum.BLACK.getType()).build().invoke(visitor,true).getJSONArray("list");
+                if(list.size()>0){
+                    for(int i=0;i<list.size();i++){
+                        String name=list.getJSONObject(i).getString("name");
+                        String faceUrl=list.getJSONObject(i).getString("face_url");
+                        String memberId=list.getJSONObject(i).getString("member_id");
+                        String customerId=list.getJSONObject(i).getString("customer_id");
+                        String addTime=list.getJSONObject(i).getString("add_time");
+                        String addReason=list.getJSONObject(i).getString("add_reason");
+                        String addUser=list.getJSONObject(i).getString("add_user");
+                        Preconditions.checkArgument(name!=null&&faceUrl!=null&&memberId!=null&&customerId!=null&&addTime!=null&&addReason!=null&&addUser!=null,"第"+page+"页"+"第"+i+"行的列表项存在为空的值");
+                    }
+                }
+            }
+        }catch(Exception|AssertionError e){
+            collectMessage(e);
+        }finally{
+            saveData("特殊人员列表项校验--黑名单");
+        }
+    }
+
+    /**
+     *特殊人员列表项校验--白名单
+     */
+    @Test(description = "特殊人员列表项校验")
+    public void authCashierPageSystem23(){
+        try{
+            IScene scene=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type(RiskPersonnelTypeEnum.WHITE.getType()).build();
+            JSONObject response=visitor.invokeApi(scene);
+            int pages=response.getInteger("pages")>10?10:response.getInteger("pages");
+            for(int page=1;page<=pages;page++){
+                JSONArray list=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(page).size(10).type(RiskPersonnelTypeEnum.WHITE.getType()).build().invoke(visitor,true).getJSONArray("list");
+                if(list.size()>0){
+                    for(int i=0;i<list.size();i++){
+                        String name=list.getJSONObject(i).getString("name");
+                        String faceUrl=list.getJSONObject(i).getString("face_url");
+                        String memberId=list.getJSONObject(i).getString("member_id");
+                        String customerId=list.getJSONObject(i).getString("customer_id");
+                        String addTime=list.getJSONObject(i).getString("add_time");
+                        String addReason=list.getJSONObject(i).getString("add_reason");
+                        String addUser=list.getJSONObject(i).getString("add_user");
+                        Preconditions.checkArgument(name!=null&&faceUrl!=null&&memberId!=null&&customerId!=null&&addTime!=null&&addReason!=null&&addUser!=null,"第"+page+"页"+"第"+i+"行的列表项存在为空的值");
+                    }
+                }
+            }
+        }catch(Exception|AssertionError e){
+            collectMessage(e);
+        }finally{
+            saveData("特殊人员列表项校验");
+        }
+    }
+
+    /**
+     *特殊人员列表项校验--重点观察人员
+     */
+    @Test(description = "特殊人员列表项校验")
+    public void authCashierPageSystem24(){
+        try{
+            IScene scene=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build();
+            JSONObject response=visitor.invokeApi(scene);
+            int pages=response.getInteger("pages")>10?10:response.getInteger("pages");
+            for(int page=1;page<=pages;page++){
+                JSONArray list=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(page).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build().invoke(visitor,true).getJSONArray("list");
                 if(list.size()>0){
                     for(int i=0;i<list.size();i++){
                         String name=list.getJSONObject(i).getString("name");
@@ -675,7 +751,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
      *特殊人员筛选栏校验
      */
     @Test(description = "特殊人员筛选栏校验")
-    public void authCashierPageSystem23(){
+    public void authCashierPageSystem25(){
         try{
             //获取第一行的会员姓名
             String name=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).build().invoke(visitor,true).getJSONArray("list").getJSONObject(0).getString("name");
@@ -724,6 +800,8 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
                     }
                 }
             }
+
+
         }catch(Exception|AssertionError e){
             collectMessage(e);
         }finally{
@@ -735,7 +813,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
      *特殊人员详情页-操作日志
      */
     @Test(description = "特殊人员详情页-操作日志")
-    public void authCashierPageSystem24(){
+    public void authCashierPageSystem26(){
         try{
             //获取特殊人员列表第一行的人员ID
             JSONArray list1=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
@@ -770,7 +848,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
      *特殊人员详情页-风控事件
      */
     @Test(description = "特殊人员详情页-风控事件")
-    public void authCashierPageSystem25(){
+    public void authCashierPageSystem27(){
         try{
             //获取特殊人员列表第一行的人员ID
             JSONArray list1=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
@@ -802,45 +880,6 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
         }
     }
 
-    /**
-     *特殊人员删除
-     */
-    @Test(description = "特殊人员删除",enabled = false)
-    public void authCashierPageSystem26(){
-        try{
-            //获取特殊人员列表第一行的人员ID
-            JSONArray list1=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
-            if(list1.size()>0){
-                String customerId=list1.getJSONObject(0).getString("customer_id");
-               //删除列表的第一个
-                IScene scene=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.DeleteScene.builder().customerId(customerId).build();
-                String message=visitor.invokeApi(scene,false).getString("message");
-                Preconditions.checkArgument(message.equals("success"),"特殊人员删除失败");
-            }
-        }catch(Exception|AssertionError e){
-            collectMessage(e);
-        }finally{
-            saveData("特殊人员删除");
-        }
-    }
-
-    /**
-     *特殊人员新增
-     */
-    @Test(description = "特殊人员新增",enabled = false)
-    public void authCashierPageSystem27(){
-        try{
-            //新增特殊人员--重点观察人员   todo
-            List<String> customerIds=new ArrayList<>();
-            IScene scene=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.AddScene.builder().customerId("").customerIds(customerIds).type("FOCUS").build();
-            String message=visitor.invokeApi(scene,false).getString("message");
-            Preconditions.checkArgument(message.equals("success"),"特殊人员新增失败");
-        }catch(Exception|AssertionError e){
-            collectMessage(e);
-        }finally{
-            saveData("特殊人员新增");
-        }
-    }
 
     /**
      *下载中心-下载列表内容校验
@@ -1050,6 +1089,561 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
         }
     }
 
+    /**
+     * 新建风控规则异常情况-黑名单风控-姓名{21个字}
+     */
+    @Test(description = "新建风控规则异常情况-黑名单风控-姓名{21个字}")
+    public void authCashierPageSystem33(){
+        try{
+            //应用的门店     todo
+            List<String> shopIds=new ArrayList<>();
+            shopIds.add("");
+            shopIds.add("");
+            //规则中的type
+            JSONObject rule=new JSONObject();
+            rule.put("type",RuleEnum.BLACK_LIST.getType());
+            //新建风控规则   todo
+            IScene scene= AddScene.builder()
+                    .name(pp.blackNameException)
+                    .rule(rule)
+                    .shopIds(shopIds)
+                    .businessType(RiskBusinessTypeEnum.FIRST_INSPECTION.getName())  //首次检查类型
+                    .build();
+            String message=visitor.invokeApi(scene,false).getString("message");
+
+            Preconditions.checkArgument(message.equals(""),"风控规则21个字创建成功");
+        }catch(Exception|AssertionError e){
+            collectMessage(e);
+        }finally{
+            saveData("新建风控规则异常情况-黑名单风控-姓名{21个字}");
+        }
+    }
+
+    /**
+     * 新建风控规则异常情况-黑名单风控-姓名{为空}
+     */
+    @Test(description = "新建风控规则异常情况-黑名单风控-姓名{为空}")
+    public void authCashierPageSystem34(){
+        try{
+            //应用的门店     todo
+            List<String> shopIds=new ArrayList<>();
+            shopIds.add("");
+            shopIds.add("");
+            //规则中的type
+            JSONObject rule=new JSONObject();
+            rule.put("type",RuleEnum.BLACK_LIST.getType());
+            //新建风控规则   todo
+            IScene scene= AddScene.builder()
+                    .rule(rule)
+                    .shopIds(shopIds)
+                    .businessType(RiskBusinessTypeEnum.FIRST_INSPECTION.getName())  //首次检查类型
+                    .build();
+            String message=visitor.invokeApi(scene,false).getString("message");
+
+            Preconditions.checkArgument(message.equals(""),"风控规则姓名为空个字创建成功");
+        }catch(Exception|AssertionError e){
+            collectMessage(e);
+        }finally{
+            saveData("新建风控规则异常情况-黑名单风控-姓名{为空}");
+        }
+    }
+
+    /**
+     * 新建风控规则异常情况-黑名单风控-业务类型为空
+     */
+    @Test(description = "新建风控规则异常情况-黑名单风控-业务类型为空")
+    public void authCashierPageSystem35(){
+        try{
+            //应用的门店     todo
+            List<String> shopIds=new ArrayList<>();
+            shopIds.add("");
+            shopIds.add("");
+            //规则中的type
+            JSONObject rule=new JSONObject();
+            rule.put("type",RuleEnum.BLACK_LIST.getType());
+            //新建风控规则   todo
+            IScene scene= AddScene.builder()
+                    .name(pp.blackName)
+                    .rule(rule)
+                    .shopIds(shopIds)
+                    .build();
+            String message=visitor.invokeApi(scene,false).getString("message");
+
+            Preconditions.checkArgument(message.equals(""),"风控规则业务类型为空个字创建成功");
+        }catch(Exception|AssertionError e){
+            collectMessage(e);
+        }finally{
+            saveData("新建风控规则异常情况-黑名单风控-业务类型为空");
+        }
+    }
+
+    /**
+     * 新建风控规则异常情况-黑名单风控-规则为空
+     */
+    @Test(description = "新建风控规则异常情况-黑名单风控-规则为空")
+    public void authCashierPageSystem36(){
+        try{
+            //应用的门店     todo
+            List<String> shopIds=new ArrayList<>();
+            shopIds.add("");
+            shopIds.add("");
+            //规则中的type
+            JSONObject rule=new JSONObject();
+            rule.put("type",RuleEnum.BLACK_LIST.getType());
+            //新建风控规则   todo
+            IScene scene= AddScene.builder()
+                    .name(pp.blackName)
+                    .shopIds(shopIds)
+                    .businessType(RiskBusinessTypeEnum.FIRST_INSPECTION.getName())  //首次检查类型
+                    .build();
+            String message=visitor.invokeApi(scene,false).getString("message");
+
+            Preconditions.checkArgument(message.equals(""),"风控规则规则为空个字创建成功");
+        }catch(Exception|AssertionError e){
+            collectMessage(e);
+        }finally{
+            saveData("新建风控规则异常情况-黑名单风控-规则类型为空");
+        }
+    }
+
+    /**
+     * 新建风控规则异常情况-黑名单风控-适用门店为空
+     */
+    @Test(description = "新建风控规则异常情况-黑名单风控-适用门店为空")
+    public void authCashierPageSystem37(){
+        try{
+            //应用的门店     todo
+            List<String> shopIds=new ArrayList<>();
+            shopIds.add("");
+            shopIds.add("");
+            //规则中的type
+            JSONObject rule=new JSONObject();
+            rule.put("type",RuleEnum.BLACK_LIST.getType());
+            //新建风控规则   todo
+            IScene scene= AddScene.builder()
+                    .name(pp.blackName)
+                    .rule(rule)
+                    .businessType(RiskBusinessTypeEnum.FIRST_INSPECTION.getName())  //首次检查类型
+                    .build();
+            String message=visitor.invokeApi(scene,false).getString("message");
+
+            Preconditions.checkArgument(message.equals(""),"风控规则适用门店为空个字创建成功");
+        }catch(Exception|AssertionError e){
+            collectMessage(e);
+        }finally{
+            saveData("新建风控规则异常情况-黑名单风控-适用门店为空");
+        }
+    }
+
+    /**
+     * 新建风控规则异常情况-重点观察人员风控-姓名{21个字}
+     */
+    @Test(description = "新建风控规则异常情况-重点观察人员风控-姓名{21个字}")
+    public void authCashierPageSystem38(){
+        try{
+            //应用的门店     todo
+            List<String> shopIds=new ArrayList<>();
+            shopIds.add("");
+            shopIds.add("");
+            //规则中的type
+            JSONObject rule=new JSONObject();
+            rule.put("type",RuleEnum.FOCUS_LIST.getType());
+            //新建风控规则   todo
+            IScene scene= AddScene.builder()
+                    .name(pp.blackNameException)
+                    .rule(rule)
+                    .shopIds(shopIds)
+                    .businessType(RiskBusinessTypeEnum.FIRST_INSPECTION.getName())  //首次检查类型
+                    .build();
+            String message=visitor.invokeApi(scene,false).getString("message");
+
+            Preconditions.checkArgument(message.equals(""),"风控规则姓名21个字个字创建成功");
+        }catch(Exception|AssertionError e){
+            collectMessage(e);
+        }finally{
+            saveData("新建风控规则异常情况-重点观察人员风控-姓名{21个字}");
+        }
+    }
+
+    /**
+     * 新建风控规则异常情况-重点观察人员风控-姓名{为空}
+     */
+    @Test(description = "新建风控规则异常情况-重点观察人员风控-姓名{为空}")
+    public void authCashierPageSystem39(){
+        try{
+            //应用的门店     todo
+            List<String> shopIds=new ArrayList<>();
+            shopIds.add("");
+            shopIds.add("");
+            //规则中的type
+            JSONObject rule=new JSONObject();
+            rule.put("type",RuleEnum.FOCUS_LIST.getType());
+            //新建风控规则   todo
+            IScene scene= AddScene.builder()
+                    .rule(rule)
+                    .shopIds(shopIds)
+                    .businessType(RiskBusinessTypeEnum.FIRST_INSPECTION.getName())  //首次检查类型
+                    .build();
+            String message=visitor.invokeApi(scene,false).getString("message");
+
+            Preconditions.checkArgument(message.equals(""),"风控规则姓名为空个字个字创建成功");
+        }catch(Exception|AssertionError e){
+            collectMessage(e);
+        }finally{
+            saveData("新建风控规则异常情况-重点观察人员风控-姓名{为空}");
+        }
+    }
+
+    /**
+     * 新建风控规则异常情况-重点观察人员风控-规则为空
+     */
+    @Test(description = "新建风控规则异常情况-重点观察人员风控-规则为空")
+    public void authCashierPageSystem40(){
+        try{
+            //应用的门店     todo
+            List<String> shopIds=new ArrayList<>();
+            shopIds.add("");
+            shopIds.add("");
+            //规则中的type
+            JSONObject rule=new JSONObject();
+            rule.put("type",RuleEnum.FOCUS_LIST.getType());
+            //新建风控规则   todo
+            IScene scene= AddScene.builder()
+                    .name(pp.observeName)
+                    .shopIds(shopIds)
+                    .businessType(RiskBusinessTypeEnum.FIRST_INSPECTION.getName())  //首次检查类型
+                    .build();
+            String message=visitor.invokeApi(scene,false).getString("message");
+
+            Preconditions.checkArgument(message.equals(""),"风控规则-规则为空个字个字创建成功");
+        }catch(Exception|AssertionError e){
+            collectMessage(e);
+        }finally{
+            saveData("新建风控规则异常情况-重点观察人员风控-规则为空");
+        }
+    }
+
+    /**
+     * 新建风控规则异常情况-重点观察人员风控-适用门店为空
+     */
+    @Test(description = "新建风控规则异常情况-重点观察人员风控-适用门店为空")
+    public void authCashierPageSystem41(){
+        try{
+            //应用的门店     todo
+            List<String> shopIds=new ArrayList<>();
+            shopIds.add("");
+            shopIds.add("");
+            //规则中的type
+            JSONObject rule=new JSONObject();
+            rule.put("type",RuleEnum.FOCUS_LIST.getType());
+            //新建风控规则   todo
+            IScene scene= AddScene.builder()
+                    .name(pp.observeName)
+                    .rule(rule)
+                    .businessType(RiskBusinessTypeEnum.FIRST_INSPECTION.getName())  //首次检查类型
+                    .build();
+            String message=visitor.invokeApi(scene,false).getString("message");
+
+            Preconditions.checkArgument(message.equals(""),"风控规则-适用门店为空个字个字创建成功");
+        }catch(Exception|AssertionError e){
+            collectMessage(e);
+        }finally{
+            saveData("新建风控规则异常情况-重点观察人员风控-适用门店为空");
+        }
+    }
+
+    /**
+     * 新建风控规则异常情况-重点观察人员风控-业务类型为空
+     */
+    @Test(description = "新建风控规则异常情况-重点观察人员风控-业务类型为空")
+    public void authCashierPageSystem42(){
+        try{
+            //应用的门店     todo
+            List<String> shopIds=new ArrayList<>();
+            shopIds.add("");
+            shopIds.add("");
+            //规则中的type
+            JSONObject rule=new JSONObject();
+            rule.put("type",RuleEnum.FOCUS_LIST.getType());
+            //新建风控规则   todo
+            IScene scene= AddScene.builder()
+                    .name(pp.observeName)
+                    .rule(rule)
+                    .shopIds(shopIds)
+                    .build();
+            String message=visitor.invokeApi(scene,false).getString("message");
+
+            Preconditions.checkArgument(message.equals(""),"风控规则-业务类型为空个字个字创建成功");
+        }catch(Exception|AssertionError e){
+            collectMessage(e);
+        }finally{
+            saveData("新建风控规则异常情况-重点观察人员风控-业务类型为空");
+        }
+    }
+
+    /**
+     * 新建风控规则异常情况-收银风控-无人风控-姓名{21个字}
+     */
+    @Test(description = "新建风控规则异常情况-收银风控-无人风控-姓名{21个字}")
+    public void authCashierPageSystem43(){
+        try{
+            //应用的门店     todo
+            List<String> shopIds=new ArrayList<>();
+            shopIds.add("");
+            shopIds.add("");
+            //规则中的type
+            //规则中的type
+            JSONObject rule=new JSONObject();
+            rule.put("type", RuleEnum.CASHIER.getType());
+            rule.put("item", RuleTypeEnum.UNMANNED_ORDER.getType());
+            //新建风控规则
+            IScene scene= AddScene.builder()
+                    .name(pp.blackNameException)
+                    .rule(rule)
+                    .shopIds(shopIds)
+                    .businessType(RiskBusinessTypeEnum.FIRST_INSPECTION.getName())  //首次检查类型
+                    .build();
+            String message=visitor.invokeApi(scene,false).getString("message");
+
+            Preconditions.checkArgument(message.equals(""),"风控规则姓名21个字个字创建成功");
+        }catch(Exception|AssertionError e){
+            collectMessage(e);
+        }finally{
+            saveData("新建风控规则异常情况-收银风控-无人风控-姓名{21个字}");
+        }
+    }
+
+    /**
+     * 新建风控规则异常情况-收银风控-无人风控-姓名为空
+     */
+    @Test(description = "新建风控规则异常情况-收银风控-无人风控-姓名为空")
+    public void authCashierPageSystem44(){
+        try{
+            //应用的门店     todo
+            List<String> shopIds=new ArrayList<>();
+            shopIds.add("");
+            shopIds.add("");
+            //规则中的type
+            //规则中的type
+            JSONObject rule=new JSONObject();
+            rule.put("type", RuleEnum.CASHIER.getType());
+            rule.put("item", RuleTypeEnum.UNMANNED_ORDER.getType());
+            //新建风控规则
+            IScene scene= AddScene.builder()
+                    .rule(rule)
+                    .shopIds(shopIds)
+                    .businessType(RiskBusinessTypeEnum.FIRST_INSPECTION.getName())  //首次检查类型
+                    .build();
+            String message=visitor.invokeApi(scene,false).getString("message");
+
+            Preconditions.checkArgument(message.equals(""),"风控规则姓名为空创建成功");
+        }catch(Exception|AssertionError e){
+            collectMessage(e);
+        }finally{
+            saveData("新建风控规则异常情况-收银风控-无人风控-姓名为空");
+        }
+    }
+
+    /**
+     * 新建风控规则异常情况-收银风控-无人风控-规则为空
+     */
+    @Test(description = "新建风控规则异常情况-收银风控-无人风控-规则为空")
+    public void authCashierPageSystem45(){
+        try{
+            //应用的门店     todo
+            List<String> shopIds=new ArrayList<>();
+            shopIds.add("");
+            shopIds.add("");
+            //规则中的type
+            //规则中的type
+            JSONObject rule=new JSONObject();
+            rule.put("type", RuleEnum.CASHIER.getType());
+            rule.put("item", RuleTypeEnum.UNMANNED_ORDER.getType());
+            //新建风控规则
+            IScene scene= AddScene.builder()
+                    .name(pp.cashierName)
+                    .shopIds(shopIds)
+                    .businessType(RiskBusinessTypeEnum.FIRST_INSPECTION.getName())  //首次检查类型
+                    .build();
+            String message=visitor.invokeApi(scene,false).getString("message");
+
+            Preconditions.checkArgument(message.equals(""),"风控规则-规则为空创建成功");
+        }catch(Exception|AssertionError e){
+            collectMessage(e);
+        }finally{
+            saveData("新建风控规则异常情况-收银风控-无人风控-规则为空");
+        }
+    }
+
+    /**
+     * 新建风控规则异常情况-收银风控-无人风控-适用门店为空
+     */
+    @Test(description = "新建风控规则异常情况-收银风控-无人风控-适用门店为空")
+    public void authCashierPageSystem46(){
+        try{
+            //应用的门店     todo
+            List<String> shopIds=new ArrayList<>();
+            shopIds.add("");
+            shopIds.add("");
+            //规则中的type
+            //规则中的type
+            JSONObject rule=new JSONObject();
+            rule.put("type", RuleEnum.CASHIER.getType());
+            rule.put("item", RuleTypeEnum.UNMANNED_ORDER.getType());
+            //新建风控规则
+            IScene scene= AddScene.builder()
+                    .name(pp.cashierName)
+                    .rule(rule)
+                    .businessType(RiskBusinessTypeEnum.FIRST_INSPECTION.getName())  //首次检查类型
+                    .build();
+            String message=visitor.invokeApi(scene,false).getString("message");
+
+            Preconditions.checkArgument(message.equals(""),"风控规则适用门店为空创建成功");
+        }catch(Exception|AssertionError e){
+            collectMessage(e);
+        }finally{
+            saveData("新建风控规则异常情况-收银风控-无人风控-适用门店为空");
+        }
+    }
+
+    /**
+     * 新建风控规则异常情况-收银风控-无人风控-业务类型为空
+     */
+    @Test(description = "新建风控规则异常情况-收银风控-无人风控-业务类型为空")
+    public void authCashierPageSystem47(){
+        try{
+            //应用的门店     todo
+            List<String> shopIds=new ArrayList<>();
+            shopIds.add("");
+            shopIds.add("");
+            //规则中的type
+            //规则中的type
+            JSONObject rule=new JSONObject();
+            rule.put("type", RuleEnum.CASHIER.getType());
+            rule.put("item", RuleTypeEnum.UNMANNED_ORDER.getType());
+            //新建风控规则
+            IScene scene= AddScene.builder()
+                    .name(pp.cashierName)
+                    .rule(rule)
+                    .shopIds(shopIds)
+                    .build();
+            String message=visitor.invokeApi(scene,false).getString("message");
+
+            Preconditions.checkArgument(message.equals(""),"风控规则业务类型为空创建成功");
+        }catch(Exception|AssertionError e){
+            collectMessage(e);
+        }finally{
+            saveData("新建风控规则异常情况-收银风控-无人风控-业务类型为空");
+        }
+    }
+
+    /**
+     * 新建风控规则异常情况-收银风控-一人多单-连续天数367天
+     */
+    @Test(description = "新建风控规则异常情况-收银风控-一人多单-连续天数367天")
+    public void authCashierPageSystem48(){
+        try{
+            //一人多单/连续天数
+            String message=cu.getCashierOrderRuleAdd("367","3").getString("message");
+
+            Preconditions.checkArgument(message.equals(""),"一人多单-连续天数367天 创建成功");
+        }catch(Exception|AssertionError e){
+            collectMessage(e);
+        }finally{
+            saveData("新建风控规则异常情况-收银风控-一人多单-连续天数376天");
+        }
+    }
+
+    /**
+     * 新建风控规则异常情况-收银风控-一人多单-上限单数10001
+     */
+    @Test(description = "新建风控规则异常情况-收银风控-一人多单-上限单数10001")
+    public void authCashierPageSystem49(){
+        try{
+            //一人多单/连续天数
+            String message=cu.getCashierOrderRuleAdd("1","10001").getString("message");
+
+            Preconditions.checkArgument(message.equals(""),"一人多单-上限单数10001 创建成功");
+        }catch(Exception|AssertionError e){
+            collectMessage(e);
+        }finally{
+            saveData("新建风控规则异常情况-收银风控-一人多单-上限单数10001");
+        }
+    }
+
+    /**
+     * 新建风控规则异常情况-收银风控-一员工支付订单--连续天数367天
+     */
+    @Test(description = "新建风控规则异常情况-收银风控-员工支付订单--连续天数367天")
+    public void authCashierPageSystem50(){
+        try{
+            //一人多单/连续天数
+            String message=cu.getCashierEmployeeRuleAdd("367","3").getString("message");
+            Preconditions.checkArgument(message.equals(""),"员工支付订单--连续天数367天 创建成功");
+        }catch(Exception|AssertionError e){
+            collectMessage(e);
+        }finally{
+            saveData("新建风控规则异常情况-收银风控--员工支付订单--连续天数376天");
+        }
+    }
+
+    /**
+     * 新建风控规则异常情况-收银风控-员工支付订单-上限单数10001
+     */
+    @Test(description = "新建风控规则异常情况-收银风控-员工支付订单--上限单数10001")
+    public void authCashierPageSystem51(){
+        try{
+            //一人多单/连续天数
+            String message=cu.getCashierEmployeeRuleAdd("1","10001").getString("message");
+
+            Preconditions.checkArgument(message.equals(""),"员工支付订单--上限单数10001 创建成功");
+        }catch(Exception|AssertionError e){
+            collectMessage(e);
+        }finally{
+            saveData("新建风控规则异常情况-收银风控-员工支付订单--上限单数10001");
+        }
+    }
+
+    /**
+     * 新建风控规则异常情况-收银风控-一人多车-上限单数1000
+     */
+    @Test(description = "新建风控规则异常情况-收银风控-一人多车--上限单数1000")
+    public void authCashierPageSystem52(){
+        try{
+            //一人多单/连续天数
+            String message=cu.getCashierCarRuleAdd("1000").getString("message");
+
+            Preconditions.checkArgument(message.equals(""),"一人多车--上限单数1000 创建成功");
+        }catch(Exception|AssertionError e){
+            collectMessage(e);
+        }finally{
+            saveData("新建风控规则异常情况-收银风控-一人多车--上限单数1000");
+        }
+    }
+
+    /**
+     * 新建风控规则异常情况-收银风控-一车多人-上限单数1000
+     */
+    @Test(description = "新建风控规则异常情况-收银风控-一车多人--上限单数1000")
+    public void authCashierPageSystem53(){
+        try{
+            //一人多单/连续天数
+            String message=cu.getCashierMemberRuleAdd("1000").getString("message");
+
+            Preconditions.checkArgument(message.equals(""),"一车多人--上限单数1000 创建成功");
+        }catch(Exception|AssertionError e){
+            collectMessage(e);
+        }finally{
+            saveData("新建风控规则异常情况-收银风控-一车多人--上限单数1000");
+        }
+    }
+
+
+
+
+
+
+
 
     /*
      * ------------------------------------------------------------------组织架构-------------------------------------------------------
@@ -1108,7 +1702,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             checkArgument(name.equals(pp.roleEditName), "编辑过的角色没有更新在列表");
 
             //新建成功以后删除新建的账号
-            if (name.equals(pp.roleEditName)) {
+            if (roleId>0) {
                 String message13=cu.getDelRole(roleId);
                 checkArgument(message13.equals("success"), "删除角色:" + roleId + "失败了");
             }
@@ -1144,9 +1738,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             checkArgument(response1.getString("message").equals("新增角色异常:当前角色名称已存在！请勿重复添加"), "重复的角色名称，创建成功:"+pp.rolNameException);
 
 
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("新增角色(名称校验)");
@@ -1361,13 +1953,13 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             String message=cu.getStaffStatusChange(id,"").getString("message");
             Preconditions.checkArgument(message.equals("success"),"禁用失败");
             //登录禁用的账号
-            String message1=ru.pcLogin("","");
+            String message1=md.pcLogin("","");
             Preconditions.checkArgument(message1.equals("登陆失败"),"禁用的账号登陆成功");
             //开启账号
             String message2=cu.getStaffStatusChange(id,"").getString("message");
             Preconditions.checkArgument(message2.equals("success"),"开启失败");
             //登录开启的账号
-            String message3=ru.pcLogin("","");
+            String message3=md.pcLogin("","");
             Preconditions.checkArgument(message3.equals("success"),"开启的账号登陆失败");
 
         }catch(Exception|AssertionError e){
@@ -1375,6 +1967,69 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
         }finally{
             saveData("禁用账号，登陆失败，开启账号，登陆成功");
         }
+    }
+
+    /**
+     * 账户列表的筛选（单一查询）
+     */
+    @Test
+    public void organizationChartSystem11() {
+        logger.logCaseStart(caseResult.getCaseName());
+
+        try {
+
+            JSONArray list =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
+            String name = list.getJSONObject(0).getString("name");
+            Long shopId = list.getJSONObject(0).getLong("shop_id");
+            Long roleId = list.getJSONObject(0).getLong("role_id");
+            String phone = list.getJSONObject(1).getString("phone");
+
+            //根据账号名称筛选
+            JSONObject response1 =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().name(name).page(1).size(10).build().invoke(visitor,true);
+            int pages=response1.getInteger("pages")>3?3:response1.getInteger("pages");
+            for(int page=1;page<=pages;page++) {
+                JSONArray list1 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().name(name).page(page).size(10).build().invoke(visitor, true).getJSONArray("list");
+                for (int i = 0; i < list1.size(); i++) {
+                    Preconditions.checkArgument(name.equals(list1.getJSONObject(i).getString("name")), "根据列表第一个账号名称" + name + "进行筛选的结果和筛选条件不一致");
+                }
+            }
+            //根据phone筛选
+            JSONObject response2 =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().phone(phone).page(1).size(10).build().invoke(visitor,true);
+            int pages2=response2.getInteger("pages")>3?3:response2.getInteger("pages");
+            for(int page=1;page<=pages2;page++) {
+                JSONArray list2 =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().phone(phone).page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
+                for (int i = 0; i < list2.size(); i++) {
+                    Preconditions.checkArgument(phone.equals(list2.getJSONObject(0).getString("phone")), "根据phone" + phone + "进行筛选的结果和筛选条件不一致");
+                }
+            }
+
+            //根据门店筛选
+            JSONObject response3 =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().shopId(shopId).page(1).size(10).build().invoke(visitor,true);
+            int pages3=response3.getInteger("pages")>3?3:response3.getInteger("pages");
+            for(int page=1;page<=pages3;page++) {
+                JSONArray list3 =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().shopId(shopId).page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
+                for (int i = 0; i < list3.size(); i++) {
+                    Preconditions.checkArgument(phone.equals(list3.getJSONObject(0).getString("shop_id")), "根据shopId" + shopId + "进行筛选的结果和筛选条件不一致");
+                }
+            }
+
+            //根据门店筛选
+            JSONObject response4 =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().shopId(shopId).page(1).size(10).build().invoke(visitor,true);
+            int pages4=response4.getInteger("pages")>3?3:response4.getInteger("pages");
+            for(int page=1;page<=pages4;page++) {
+                JSONArray list4 =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().roleId(roleId).page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
+                for (int i = 0; i < list4.size(); i++) {
+                    Preconditions.checkArgument(phone.equals(list4.getJSONObject(0).getString("role_id")), "根据roleId" + roleId + "进行筛选的结果和筛选条件不一致");
+                }
+            }
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+
+            saveData("账号列表的筛选（单一条件筛选）");
+        }
+
     }
 
 
@@ -1473,19 +2128,6 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             saveData("特殊人员管理-风控重点观察人员导出");
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1836,83 +2478,8 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
 
     }
 
-    /**
-     * 账户列表的筛选（单一查询）
-     */
-    //@Test
-    public void accountPage_search() {
-        logger.logCaseStart(caseResult.getCaseName());
-
-        try {
-            JSONArray list = md.organizationAccountPage("", "", "", "", "", "", pp.page,  pp.size).getJSONArray("list");
-            String name = list.getJSONObject(0).getString("name");
-            String email = list.getJSONObject(0).getString("email");
-            String phone = list.getJSONObject(1).getString("phone");
-
-            //根据账号名称筛选
-            JSONArray list1 = md.organizationAccountPage(name, "", "", "", "", "",  pp.page,  pp.size).getJSONArray("list");
-            checkArgument(name.equals(list1.getJSONObject(0).getString("name")), "根据列表第一个账号名称" + name + "进行筛选的结果和筛选条件不一致");
-
-            //根据email筛选
-            JSONArray list2 = md.organizationAccountPage("", "", email, "", "", "",  pp.page,  pp.size).getJSONArray("list");
-            checkArgument(email.equals(list2.getJSONObject(0).getString("email")), "根据email" + email + "进行筛选的结果和筛选条件不一致");
-
-            //根据phone筛选
-            JSONArray list3 = md.organizationAccountPage("", "", "", phone, "", "",  pp.page,  pp.size).getJSONArray("list");
-            checkArgument(phone.equals(list3.getJSONObject(0).getString("phone")), "根据email" + phone + "进行筛选的结果和筛选条件不一致");
 
 
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("账号列表的筛选（单一条件筛选）");
-        }
-
-    }
-
-
-    /**
-     * 账户列表的筛选（单一查询）
-     */
-    //@Test
-    public void accountPageSearch() {
-        logger.logCaseStart(caseResult.getCaseName());
-
-        try {
-
-            JSONArray list =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
-            String name = list.getJSONObject(0).getString("name");
-            Long shopId = list.getJSONObject(0).getLong("shop_id");
-            Long roleId = list.getJSONObject(0).getLong("role_id");
-            String phone = list.getJSONObject(1).getString("phone");
-
-            //根据账号名称筛选
-            JSONArray list1 =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().name(name).page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
-            checkArgument(name.equals(list1.getJSONObject(0).getString("name")), "根据列表第一个账号名称" + name + "进行筛选的结果和筛选条件不一致");
-
-            //根据phone筛选
-            JSONArray list2 =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().phone(phone).page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
-            checkArgument(phone.equals(list2.getJSONObject(0).getString("phone")), "根据phone" + phone + "进行筛选的结果和筛选条件不一致");
-
-            //根据门店筛选
-            JSONArray list3 =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().shopId(shopId).page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
-            checkArgument(phone.equals(list3.getJSONObject(0).getString("shop_id")), "根据shopId" + shopId + "进行筛选的结果和筛选条件不一致");
-
-            //根据门店筛选
-            JSONArray list4 =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().roleId(roleId).page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
-            checkArgument(phone.equals(list4.getJSONObject(0).getString("role_id")), "根据roleId" + roleId + "进行筛选的结果和筛选条件不一致");
-
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-
-            saveData("账号列表的筛选（单一条件筛选）");
-        }
-
-    }
 
 
 

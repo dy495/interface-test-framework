@@ -2,8 +2,12 @@ package com.haisheng.framework.testng.bigScreen.fengkongdaily.util;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.google.inject.internal.asm.$Type;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.fengkongdaily.riskControlEnum.RiskBusinessTypeEnum;
+import com.haisheng.framework.testng.bigScreen.fengkongdaily.riskControlEnum.RuleEnum;
+import com.haisheng.framework.testng.bigScreen.fengkongdaily.riskControlEnum.RuleTypeEnum;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventHandleScene;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.rule.AddScene;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.rule.DeleteScene;
@@ -14,17 +18,17 @@ import java.util.*;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-public class CommonUtil {
+public class CommonUsedUtil {
     PublicParam pp=new PublicParam();
 
     private VisitorProxy visitor;
     private UserUtil user;
-    public CommonUtil(VisitorProxy visitor) {
+    public CommonUsedUtil(VisitorProxy visitor) {
         this.visitor = visitor;
         this.user=new UserUtil(visitor);
     }
 
-    public CommonUtil() {
+    public CommonUsedUtil() {
     }
 
     /**
@@ -55,7 +59,7 @@ public class CommonUtil {
      */
     public JSONObject getRuleObject(String type,String item,String dayRange,String orderQuantityUpperLimit){
         JSONObject object=new JSONObject();
-        Map<String,String> parameters=new HashMap<String,String>();
+        Map<String,String> parameters=new HashMap<>();
         parameters.put("DAY_RANGE",dayRange);
         parameters.put("ORDER_QUANTITY_UPPER_LIMIT",orderQuantityUpperLimit);
         object.put("type",type);
@@ -64,33 +68,163 @@ public class CommonUtil {
         return object;
     }
 
-    /**
-     * 新增风控规则---黑名单风控
-     */
-    public IScene blackRuleAdd(List<String> shopIds){
-        //规则详细
-        JSONObject rule=getRuleObject("BLACK_LIST","","","");
-        IScene scene= AddScene.builder()
-                .name(pp.blackName)
-                .rule(rule)
-                .shopIds(shopIds)
-                .build();
-        return scene;
-    }
 
     /**
-     * 新增风控规则---黑名单风控
+     * 新增风控规则----黑名单和重点观察人员风控规则
+     * @param type 风控规则类型
      */
-    public Long blackRuleAdd(){
+    public Long getRuleAdd(String type){
         //应用的门店     todo
         List<String> shopIds=new ArrayList<>();
         shopIds.add("");
         shopIds.add("");
+        //规则中的type
+        JSONObject rule=new JSONObject();
+        rule.put("type",type);
         //新建风控规则   todo
-        IScene scene=blackRuleAdd(shopIds);
+        IScene scene= AddScene.builder()
+                .name(pp.blackName)
+                .rule(rule)
+                .shopIds(shopIds)
+                .businessType(RiskBusinessTypeEnum.FIRST_INSPECTION.getName())  //首次检查类型
+                .build();
         Long id=visitor.invokeApi(scene).getLong("id");
         return id;
     }
+
+    /**
+     * 新增风控规则---收银风控---一人多单
+     * @param dayRange 天数限制
+     * @param upperLimit 数量限制
+     */
+    public JSONObject getCashierOrderRuleAdd(String dayRange,String upperLimit){
+        //应用的门店     todo
+        List<String> shopIds=new ArrayList<>();
+        shopIds.add("");
+        shopIds.add("");
+        //规则中的详情
+        JSONObject object=new JSONObject();
+        Map<String,String> parameters=new HashMap<>();
+        parameters.put("DAY_RANGE",dayRange);
+        parameters.put("ORDER_QUANTITY_UPPER_LIMIT",upperLimit);
+        object.put("type", RuleEnum.CASHIER.getType());
+        object.put("item", RuleTypeEnum.RISK_SINGLE_MEMBER_ORDER_QUANTITY.getType());
+        object.put("parameters",parameters);
+        //新建风控规则
+        IScene scene= AddScene.builder()
+                .name(pp.blackName)
+                .rule(object)
+                .shopIds(shopIds)
+                .businessType(RiskBusinessTypeEnum.FIRST_INSPECTION.getName())  //首次检查类型
+                .build();
+        JSONObject response=visitor.invokeApi(scene,false);
+        return response;
+    }
+
+    /**
+     * 新增风控规则---收银风控---无人风控
+     */
+    public JSONObject getCashierUnmannedRuleAdd(){
+        //应用的门店     todo
+        List<String> shopIds=new ArrayList<>();
+        shopIds.add("");
+        shopIds.add("");
+        //规则中的type
+        //规则中的type
+        JSONObject rule=new JSONObject();
+        rule.put("type", RuleEnum.CASHIER.getType());
+        rule.put("item",RuleTypeEnum.UNMANNED_ORDER.getType());
+        //新建风控规则
+        IScene scene= AddScene.builder()
+                .name(pp.blackName)
+                .rule(rule)
+                .shopIds(shopIds)
+                .businessType(RiskBusinessTypeEnum.FIRST_INSPECTION.getName())  //首次检查类型
+                .build();
+        JSONObject response=visitor.invokeApi(scene,false);
+        return response;
+    }
+
+    /**
+     * 新增风控规则---收银风控---员工支付订单监控
+     */
+    public JSONObject getCashierEmployeeRuleAdd(String timeRange,String upperLimit){
+        //应用的门店     todo
+        List<String> shopIds=new ArrayList<>();
+        shopIds.add("");
+        shopIds.add("");
+        //规则中的详情
+        JSONObject object=new JSONObject();
+        Map<String,String> parameters=new HashMap<>();
+        parameters.put("TIME_RANGE",timeRange);
+        parameters.put("EMPLOYEE_ORDER_UPPER_LIMIT",upperLimit);
+        object.put("type", RuleEnum.CASHIER.getType());
+        object.put("item", RuleTypeEnum.EMPLOYEE_ORDER.getType());
+        object.put("parameters",parameters);
+        //新建风控规则
+        IScene scene= AddScene.builder()
+                .name(pp.blackName)
+                .rule(object)
+                .shopIds(shopIds)
+                .businessType(RiskBusinessTypeEnum.FIRST_INSPECTION.getName())  //首次检查类型
+                .build();
+        JSONObject response=visitor.invokeApi(scene,false);
+        return response;
+    }
+
+    /**
+     * 新增风控规则---收银风控---同一客户为多台车支付的上限,既一人多车
+     */
+    public JSONObject getCashierCarRuleAdd(String upperLimit){
+        //应用的门店     todo
+        List<String> shopIds=new ArrayList<>();
+        shopIds.add("");
+        shopIds.add("");
+        //规则中的详情
+        JSONObject object=new JSONObject();
+        Map<String,String> parameters=new HashMap<>();
+        parameters.put("TIME_RANGE",upperLimit);
+        object.put("type", RuleEnum.CASHIER.getType());
+        object.put("item", RuleTypeEnum.RISK_SINGLE_MEMBER_CAR_QUANTITY.getType());
+        object.put("parameters",parameters);
+        //新建风控规则
+        IScene scene= AddScene.builder()
+                .name(pp.blackName)
+                .rule(object)
+                .shopIds(shopIds)
+                .businessType(RiskBusinessTypeEnum.FIRST_INSPECTION.getName())  //首次检查类型
+                .build();
+        JSONObject response=visitor.invokeApi(scene,false);
+        return response;
+    }
+
+    /**
+     * 新增风控规则---收银风控---同一车辆被多人支付的上限,既一车多人
+     */
+    public JSONObject getCashierMemberRuleAdd(String upperLimit){
+        //应用的门店     todo
+        List<String> shopIds=new ArrayList<>();
+        shopIds.add("");
+        shopIds.add("");
+        //规则中的详情
+        JSONObject object=new JSONObject();
+        Map<String,String> parameters=new HashMap<>();
+        parameters.put("TIME_RANGE",upperLimit);
+        object.put("type", RuleEnum.CASHIER.getType());
+        object.put("item", RuleTypeEnum.RISK_SINGLE_CAR_TRANSACTION_QUANTITY.getType());
+        object.put("parameters",parameters);
+        //新建风控规则
+        IScene scene= AddScene.builder()
+                .name(pp.blackName)
+                .rule(object)
+                .shopIds(shopIds)
+                .businessType(RiskBusinessTypeEnum.FIRST_INSPECTION.getName())  //首次检查类型
+                .build();
+        JSONObject response=visitor.invokeApi(scene,false);
+        return response;
+    }
+
+
 
     /**
      * 删除风控规则
@@ -317,8 +451,18 @@ public class CommonUtil {
     /**
      * 删除特殊人员
      */
-    public String getRiskPerson(String customerId) {
+    public String getRiskPersonDel(String customerId) {
         IScene scene=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.DeleteScene.builder().customerId(customerId).build();
+        String message=visitor.invokeApi(scene,false).getString("message");
+        return message;
+    }
+
+    /**
+     * 新增特殊人员
+     */
+    public String getRiskPersonAdd(String customerId, List<String> customerIds,String type) {
+        //新增特殊人员--重点观察人员
+        IScene scene=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.AddScene.builder().customerId(customerId).customerIds(customerIds).type(type).build();
         String message=visitor.invokeApi(scene,false).getString("message");
         return message;
     }

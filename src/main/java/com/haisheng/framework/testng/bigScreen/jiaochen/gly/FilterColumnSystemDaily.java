@@ -225,8 +225,6 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 Preconditions.checkArgument(result.getString(ss[2][1].toString()).contains(sr.customer_name), "参数全部输入的查询的" + sr.customer_name + "与列表信息的第一行的" + result.getString(ss[2][1].toString() + "不一致"));
                 Preconditions.checkArgument(result.getString(String.valueOf(ss[3][1])).contains(sr.reception_status), "参数全部输入的查询的" + sr.reception_status + "与列表信息的第一行的" + result.getString(ss[3][1].toString() + "不一致"));
                 Preconditions.checkArgument(result.getString(ss[4][1].toString()).contains(sr.customer_phone), "参数全部输入的查询的" + sr.customer_phone + "与列表信息的第一行的" + result.getString(ss[4][1].toString() + "不一致"));
-            } else {
-                Preconditions.checkArgument(res == null, "接待列表系统错误,请联系开发人员");
             }
 
         } catch (AssertionError | Exception e) {
@@ -265,8 +263,8 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
             JSONObject respond = jc.preSleCustomerManage(shopId, "1", "10", "", "");
             if (respond.getJSONArray("list").size() > 0) {
                 String result = respond.getJSONArray("list").getJSONObject(0).getString(output);
-                JSONObject respon1 = jc.preSleCustomerManage(shopId, "1", "10", pram, result);
-                int pages = respon1.getInteger("pages");
+                JSONObject respond1 = jc.preSleCustomerManage(shopId, "1", "10", pram, result);
+                int pages = respond1.getInteger("pages");
                 for (int page = 1; page <= pages; page++) {
                     JSONArray list = jc.preSleCustomerManage("", String.valueOf(page), "10", pram, result).getJSONArray("list");
                     for (int i = 0; i < list.size(); i++) {
