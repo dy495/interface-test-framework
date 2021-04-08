@@ -9,6 +9,8 @@ public class PublicParam {
     public long shop_id_01 = 43072l;
     //黑名单风控名字
     public String blackName="黑名单风控规则"+(int) (Math.random() * 10000);
+    //黑名单风控名字异常21个字
+    public String blackNameException="12345678901234567901";
     //收银风控名字
     public String cashierName="收银风控规则"+(int) (Math.random() * 10000);
     //重点观察人员风控名字  观察

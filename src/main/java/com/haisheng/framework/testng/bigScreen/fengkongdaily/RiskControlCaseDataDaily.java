@@ -6,9 +6,9 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.PageScene;
+import com.haisheng.framework.testng.bigScreen.fengkongdaily.riskControlEnum.RuleEnum;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventPageScene;
-import com.haisheng.framework.testng.bigScreen.fengkongdaily.util.CommonUtil;
+import com.haisheng.framework.testng.bigScreen.fengkongdaily.util.CommonUsedUtil;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.util.PublicParam;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.util.RiskControlUtil;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.StoreScenarioUtil;
@@ -18,12 +18,10 @@ import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.DateTimeUtil;
-import lombok.var;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,7 +33,7 @@ public class RiskControlCaseDataDaily extends TestCaseCommon implements TestCase
     StoreScenarioUtil md = StoreScenarioUtil.getInstance();
     //    StoreFuncPackage mds = StoreFuncPackage.getInstance();
     PublicParam pp=new PublicParam();
-    CommonUtil cu=new CommonUtil();
+    CommonUsedUtil cu=new CommonUsedUtil();
     RiskControlUtil ru=new RiskControlUtil();
 
 
@@ -456,7 +454,7 @@ public class RiskControlCaseDataDaily extends TestCaseCommon implements TestCase
             //新建前风控规则前列表数量
             int totalBefore = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.rule.PageScene.builder().page(1).size(10).build().invoke(visitor,true).getInteger("total");
             //新增一个风控规则
-            Long id=cu.blackRuleAdd();
+            Long id=cu.getRuleAdd(RuleEnum.BLACK_LIST.getType());
             //获取当前时间
             String time= DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
             //新建前风控规则后列表数
@@ -647,7 +645,7 @@ public class RiskControlCaseDataDaily extends TestCaseCommon implements TestCase
             object.put("face_url","");
             object.put("customer_id","");
             object.put("trans_id","");
-            object.put("type","");
+            object.put("type",RuleEnum.BLACK_LIST.getType());
             customerIds.add(object);
             JSONObject response=cu.getRiskEventHandle(pendId,2,"订单异常，请关注",customerIds);
             //获取黑名单列表的条数
@@ -655,7 +653,7 @@ public class RiskControlCaseDataDaily extends TestCaseCommon implements TestCase
             Preconditions.checkArgument(totalAfter==totalBefore+1,"加入黑名单前黑名单的数据为："+totalBefore+"   加入黑名单后黑名单的数据为："+totalAfter);
 
             //删除黑名单中   todo customerId
-            String message=cu.getRiskPerson("");
+            String message=cu.getRiskPersonDel("");
             //删除后黑名单的条数
             int totalDel = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type("BLACK").build().invoke(visitor,true).getInteger("total");
             Preconditions.checkArgument(totalDel==totalAfter-1,"加入黑名单后黑名单的数据为："+totalAfter+"   删除后黑名单的条数："+totalDel);
@@ -696,7 +694,7 @@ public class RiskControlCaseDataDaily extends TestCaseCommon implements TestCase
             Preconditions.checkArgument(totalAfter==totalBefore+1,"加入白名单前黑名单的数据为："+totalBefore+"   加入白名单后黑名单的数据为："+totalAfter);
 
             //删除白名单中   todo customerId
-            String message=cu.getRiskPerson("");
+            String message=cu.getRiskPersonDel("");
             //删除后白名单的条数
             int totalDel = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type("BLACK").build().invoke(visitor,true).getInteger("total");
             Preconditions.checkArgument(totalDel==totalAfter-1,"加入黑名单后白名单的数据为："+totalAfter+"   删除后白名单的条数："+totalDel);
@@ -737,7 +735,7 @@ public class RiskControlCaseDataDaily extends TestCaseCommon implements TestCase
             Preconditions.checkArgument(totalAfter==totalBefore+1,"加入重点观察人员前重点观察人员的数据为："+totalBefore+"   加入重点观察人员后重点观察人员的数据为："+totalAfter);
 
             //删除重点观察人员中   todo customerId
-            String message=cu.getRiskPerson("");
+            String message=cu.getRiskPersonDel("");
             //删除后重点观察人员的条数
             int totalDel = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type("BLACK").build().invoke(visitor,true).getInteger("total");
             Preconditions.checkArgument(totalDel==totalAfter-1,"加入黑名单后重点观察人员的数据为："+totalAfter+"   删除后重点观察人员的条数："+totalDel);
