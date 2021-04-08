@@ -38,7 +38,7 @@ public class VerificationRecordExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/patrol/pc/voucher-manage/verification-record/export";
+        return "/shop/pc/voucher-manage/verification-record/export";
     }
 
     @Override

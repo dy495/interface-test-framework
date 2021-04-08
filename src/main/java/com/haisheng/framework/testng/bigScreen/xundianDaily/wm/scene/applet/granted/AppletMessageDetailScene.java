@@ -24,6 +24,6 @@ public class AppletMessageDetailScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/shop/applet/granted/message/detail";
+        return "/patrol-applet/granted/message/detail";
     }
 }

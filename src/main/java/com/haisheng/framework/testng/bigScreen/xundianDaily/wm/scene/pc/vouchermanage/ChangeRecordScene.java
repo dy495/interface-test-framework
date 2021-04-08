@@ -29,7 +29,7 @@ public class ChangeRecordScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/patrol/pc/voucher-manage/change-record";
+        return "/shop/pc/voucher-manage/change-record";
     }
 
     @Override

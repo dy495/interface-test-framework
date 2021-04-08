@@ -99,12 +99,12 @@ public class SupporterUtil {
      * @return bean
      */
     public <T> T collectBeanByField(@NotNull IScene scene, Class<T> bean, String key, Object value) {
-        int total = scene.invoke(visitor, true).getInteger("total");
+        int total = scene.invoke(visitor).getInteger("total");
         int s = CommonUtil.getTurningPage(total, SIZE);
         for (int i = 1; i < s; i++) {
             scene.setPage(i);
             scene.setSize(SIZE);
-            JSONArray array = scene.invoke(visitor, true).getJSONArray("list");
+            JSONArray array = scene.invoke(visitor).getJSONArray("list");
             T clazz = array.stream().map(e -> (JSONObject) e).filter(e -> e.getObject(key, value.getClass()).equals(value)).findFirst().map(e -> JSONObject.toJavaObject(e, bean)).orElse(null);
             if (clazz != null) {
                 return clazz;
@@ -131,7 +131,7 @@ public class SupporterUtil {
         String picture = new ImageUtil().getImageBinary(picPath);
         String[] strings = ratioStr.split(":");
         double ratio = BigDecimal.valueOf(Double.parseDouble(strings[0]) / Double.parseDouble(strings[1])).divide(new BigDecimal(1), 4, BigDecimal.ROUND_HALF_UP).doubleValue();
-        return FileUpload.builder().isPermanent(false).permanentPicType(0).pic(picture).ratioStr(ratioStr).ratio(ratio).build().invoke(visitor, true).getString("pic_path");
+        return FileUpload.builder().isPermanent(false).permanentPicType(0).pic(picture).ratioStr(ratioStr).ratio(ratio).build().invoke(visitor).getString("pic_path");
     }
 
     /**
@@ -143,7 +143,7 @@ public class SupporterUtil {
      */
     public String createVoucher(Integer stock, VoucherTypeEnum type) {
         String voucherName = createVoucherName(type);
-        createVoucherBuilder(stock, type).voucherName(voucherName).build().invoke(visitor, true);
+        createVoucherBuilder(stock, type).voucherName(voucherName).build().invoke(visitor);
         return voucherName;
     }
 
@@ -223,7 +223,7 @@ public class SupporterUtil {
      * @return 门店id
      */
     public List<Long> getShopIdList() {
-        JSONArray array = ShopListScene.builder().build().invoke(visitor, true).getJSONArray("list");
+        JSONArray array = ShopListScene.builder().build().invoke(visitor).getJSONArray("list");
         return array.stream().map(e -> (JSONObject) e).map(e -> e.getLong("shop_id")).collect(Collectors.toList());
     }
 
@@ -304,7 +304,7 @@ public class SupporterUtil {
      * @return 电话号
      */
     public String getRepetitionVerificationPhone() {
-        JSONArray array = VerificationPeopleScene.builder().build().invoke(visitor, true).getJSONArray("list");
+        JSONArray array = VerificationPeopleScene.builder().build().invoke(visitor).getJSONArray("list");
         return array.stream().map(e -> (JSONObject) e).map(e -> e.getString("verification_phone")).findFirst().orElse(null);
     }
 
@@ -413,7 +413,7 @@ public class SupporterUtil {
     public void applyVoucher(String voucherName, String status) {
         IScene scene = ApplyPageScene.builder().name(voucherName).status(ApplyStatusEnum.AUDITING.getId()).build();
         ApplyPage applyPage = collectBeanByField(scene, ApplyPage.class, "name", voucherName);
-        ApplyApprovalScene.builder().id(applyPage.getId()).status(status).build().invoke(visitor, true);
+        ApplyApprovalScene.builder().id(applyPage.getId()).status(status).build().invoke(visitor);
     }
 
     //----------------------------------------------------核销人员-------------------------------------------------------
@@ -498,7 +498,7 @@ public class SupporterUtil {
     public void switchVerificationStatus(String code, boolean status) {
         IScene verificationPeopleScene = VerificationPeopleScene.builder().verificationCode(code).build();
         long id = visitor.invokeApi(verificationPeopleScene).getJSONArray("list").getJSONObject(0).getLong("id");
-        SwitchVerificationStatusScene.builder().id(id).status(status).build().invoke(visitor, true);
+        SwitchVerificationStatusScene.builder().id(id).status(status).build().invoke(visitor);
     }
 
     /**
@@ -658,7 +658,7 @@ public class SupporterUtil {
         Integer lastValue = null;
         JSONArray array;
         do {
-            JSONObject response = AppletExchangeRecordScene.builder().lastValue(lastValue).size(20).status(null).build().invoke(visitor, true);
+            JSONObject response = AppletExchangeRecordScene.builder().lastValue(lastValue).size(20).status(null).build().invoke(visitor);
             lastValue = response.getInteger("last_value");
             array = response.getJSONArray("list");
             listSize += array.size();
@@ -676,7 +676,7 @@ public class SupporterUtil {
         Integer lastValue = null;
         JSONArray array;
         do {
-            JSONObject response = AppletExchangeRecordScene.builder().lastValue(lastValue).size(20).status(null).build().invoke(visitor, true);
+            JSONObject response = AppletExchangeRecordScene.builder().lastValue(lastValue).size(20).status(null).build().invoke(visitor);
             lastValue = response.getInteger("last_value");
             array = response.getJSONArray("list");
             appletExchangeRecordList.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppletExchangeRecord.class)).collect(Collectors.toList()));
@@ -696,7 +696,7 @@ public class SupporterUtil {
         JSONObject lastValue = null;
         JSONArray array;
         do {
-            JSONObject data = AppletCommodityListScene.builder().lastValue(lastValue).size(10).integralSort(integralSort).status(status).build().invoke(visitor, true);
+            JSONObject data = AppletCommodityListScene.builder().lastValue(lastValue).size(10).integralSort(integralSort).status(status).build().invoke(visitor);
             lastValue = data.getJSONObject("last_value");
             array = data.getJSONArray("list");
             appletCommodityListList.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppletCommodity.class)).collect(Collectors.toList()));
@@ -715,7 +715,7 @@ public class SupporterUtil {
         JSONObject lastValue = null;
         JSONArray array;
         do {
-            JSONObject data = AppletCommodityListScene.builder().lastValue(lastValue).size(10).integralSort(SortTypeEnum.DOWN.name()).status(false).build().invoke(visitor, true);
+            JSONObject data = AppletCommodityListScene.builder().lastValue(lastValue).size(10).integralSort(SortTypeEnum.DOWN.name()).status(false).build().invoke(visitor);
             lastValue = data.getJSONObject("last_value");
             array = data.getJSONArray("list");
             listSie += array.size();
@@ -749,9 +749,9 @@ public class SupporterUtil {
         String exchangeStartTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
         String exchangeEndTime = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 30), "yyyy-MM-dd HH:mm:ss");
         JSONArray specificationList = new JSONArray();
-        JSONObject response = GoodsManagePageScene.builder().goodsStatus(CommodityStatusEnum.UP.name()).build().invoke(visitor, true).getJSONArray("list").getJSONObject(0);
-        long goodsId = response.getLong("id");
-        JSONArray specificationDetailList = CommoditySpecificationsListScene.builder().id(goodsId).build().invoke(visitor, true).getJSONArray("specification_detail_list");
+        JSONObject response = GoodsManagePageScene.builder().goodsStatus(CommodityStatusEnum.UP.name()).build().invoke(visitor).getJSONArray("list").getJSONObject(0);
+        Long goodsId = response.getLong("id");
+        JSONArray specificationDetailList = CommoditySpecificationsListScene.builder().id(goodsId).build().invoke(visitor).getJSONArray("specification_detail_list");
         specificationDetailList.forEach(e -> {
             JSONObject specificationDetail = (JSONObject) e;
             JSONObject jsonObject = new JSONObject();
@@ -765,7 +765,7 @@ public class SupporterUtil {
                 .specificationList(specificationList).expireType(2).useDays(10)
                 .exchangeStartTime(exchangeStartTime)
                 .exchangeEndTime(exchangeEndTime)
-                .build().invoke(visitor, true);
+                .build().invoke(visitor);
         return collectBean(ExchangePageScene.builder().build(), ExchangePage.class).get(0);
     }
 
@@ -781,7 +781,7 @@ public class SupporterUtil {
         //创建积分兑换
         CreateExchangeGoodsScene.builder().exchangeGoodsType(CommodityTypeEnum.FICTITIOUS.name()).goodsId(voucherId)
                 .exchangePrice(1L).isLimit(true).exchangePeopleNum(10).exchangeStartTime(exchangeStartTime)
-                .exchangeEndTime(exchangeEndTime).expireType(2).useDays(10).exchangeNum(1L).build().invoke(visitor, true);
+                .exchangeEndTime(exchangeEndTime).expireType(2).useDays(10).exchangeNum(1L).build().invoke(visitor);
         return collectBean(ExchangePageScene.builder().build(), ExchangePage.class).get(0);
     }
 
@@ -792,13 +792,13 @@ public class SupporterUtil {
      * @return 卡券信息
      */
     public VoucherPage getExchangeGoodsContainVoucher(Long id) {
-        String voucherName = ExchangeGoodsStockScene.builder().id(id).build().invoke(visitor, true).getString("goods_name");
+        String voucherName = ExchangeGoodsStockScene.builder().id(id).build().invoke(visitor).getString("goods_name");
         return getVoucherPage(voucherName);
     }
 
     public void modifyExchangeGoodsLimit(Long exchangeGoodsId, String exchangeGoodsType, Boolean isLimit) {
         IScene scene = ExchangeGoodsDetailScene.builder().id(exchangeGoodsId).build();
-        ExchangeGoodsDetailBean exchangeGoodsDetail = JSONObject.toJavaObject(scene.invoke(visitor, true), ExchangeGoodsDetailBean.class);
+        ExchangeGoodsDetailBean exchangeGoodsDetail = JSONObject.toJavaObject(scene.invoke(visitor), ExchangeGoodsDetailBean.class);
         EditExchangeGoodsScene.EditExchangeGoodsSceneBuilder builder = EditExchangeGoodsScene.builder()
                 .exchangeGoodsType(exchangeGoodsDetail.getExchangeGoodsType()).goodsId(exchangeGoodsDetail.getGoodsId())
                 .exchangePrice(exchangeGoodsDetail.getExchangePrice()).exchangeNum(exchangeGoodsDetail.getExchangeNum())
@@ -806,7 +806,7 @@ public class SupporterUtil {
                 .isLimit(isLimit).id(exchangeGoodsDetail.getId());
         builder = isLimit ? builder.exchangePeopleNum(1) : builder;
         builder = exchangeGoodsType.equals(CommodityTypeEnum.REAL.name()) ? builder : builder.expireType(2).useDays(10);
-        builder.build().invoke(visitor, true);
+        builder.build().invoke(visitor);
     }
 
     //-------------------------------------------------------商品管理---------------------------------------------------
@@ -821,7 +821,7 @@ public class SupporterUtil {
      */
     public Long createCategory(String categoryName, String picPath, String categoryLevel, Long belongCategory) {
         CreateCategoryScene.builder().categoryName(categoryName).belongPic(picPath).categoryLevel(categoryLevel)
-                .belongCategory(belongCategory).build().invoke(visitor, true);
+                .belongCategory(belongCategory).build().invoke(visitor);
         return getCategoryId(categoryName);
     }
 

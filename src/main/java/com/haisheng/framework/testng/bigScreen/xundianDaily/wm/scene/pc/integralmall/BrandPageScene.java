@@ -5,28 +5,26 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 41.9. 商品品牌分页
+ * 31.9. 商品品牌分页 (张小龙) v2.0
  *
  * @author wangmin
- * @date 2021-03-30 14:00:03
+ * @date 2021-03-31 12:29:35
  */
 @Builder
 public class BrandPageScene extends BaseScene {
     /**
-     * 描述 当前页
+     * 描述 页码 大于0
      * 是否必填 true
-     * 版本 -
+     * 版本 v1.0
      */
-    @Builder.Default
-    private Integer page = 1;
+    private final Integer page;
 
     /**
-     * 描述 当前页的数量
+     * 描述 页大小 范围为[1,100]
      * 是否必填 true
-     * 版本 -
+     * 版本 v1.0
      */
-    @Builder.Default
-    private Integer size = 10;
+    private final Integer size;
 
     /**
      * 描述 品牌名称
@@ -56,16 +54,5 @@ public class BrandPageScene extends BaseScene {
     @Override
     public String getPath() {
         return "/shop/pc/integral-mall/brand-page";
-    }
-
-
-    @Override
-    public void setSize(Integer size) {
-        this.size = size;
-    }
-
-    @Override
-    public void setPage(Integer page) {
-        this.page = page;
     }
 }

@@ -1,29 +1,28 @@
 package com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.integralmall;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 41.16. 商品规格列表
+ * 31.16. 商品规格列表 (张小龙) v2.0
  *
  * @author wangmin
- * @date 2021-03-30 14:00:03
+ * @date 2021-03-31 12:29:35
  */
 @Builder
 public class SpecificationsPageScene extends BaseScene {
     /**
-     * 描述 当前页
+     * 描述 页码 大于0
      * 是否必填 true
-     * 版本 -
+     * 版本 v1.0
      */
     private final Integer page;
 
     /**
-     * 描述 当前页的数量
+     * 描述 页大小 范围为[1,100]
      * 是否必填 true
-     * 版本 -
+     * 版本 v1.0
      */
     private final Integer size;
 
@@ -50,7 +49,7 @@ public class SpecificationsPageScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);

@@ -190,6 +190,6 @@ public class CreateScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/patrol/pc/voucher-manage/create";
+        return "/shop/pc/voucher-manage/create";
     }
 }

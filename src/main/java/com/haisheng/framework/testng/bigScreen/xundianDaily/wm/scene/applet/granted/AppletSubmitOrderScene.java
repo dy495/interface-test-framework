@@ -36,7 +36,7 @@ public class AppletSubmitOrderScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/shop/applet/granted/integral-mall/submit-order";
+        return "/patrol-applet/granted/integral-mall/submit-order";
     }
 
 }

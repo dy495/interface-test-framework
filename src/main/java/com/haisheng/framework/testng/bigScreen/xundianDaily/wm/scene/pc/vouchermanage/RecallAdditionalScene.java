@@ -23,7 +23,7 @@ public class RecallAdditionalScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/patrol/pc/voucher-manage/recall-additional";
+        return "/shop/pc/voucher-manage/recall-additional";
     }
 
 }

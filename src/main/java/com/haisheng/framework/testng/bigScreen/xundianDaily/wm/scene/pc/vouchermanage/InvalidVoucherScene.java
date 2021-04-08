@@ -17,6 +17,6 @@ public class InvalidVoucherScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/patrol/pc/voucher-manage/invalid-voucher";
+        return "/shop/pc/voucher-manage/invalid-voucher";
     }
 }

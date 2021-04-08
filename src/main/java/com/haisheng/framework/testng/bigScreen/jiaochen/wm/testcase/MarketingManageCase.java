@@ -108,9 +108,9 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
     public void packageManager_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int voucherListSize = VoucherListScene.builder().build().invoke(visitor, true).getJSONArray("list").size();
+            int voucherListSize = VoucherListScene.builder().build().invoke(visitor).getJSONArray("list").size();
             IScene voucherPageScene = VoucherFormVoucherPageScene.builder().voucherStatus(VoucherStatusEnum.WORKING.name()).build();
-            int voucherTotal = voucherPageScene.invoke(visitor, true).getInteger("total");
+            int voucherTotal = voucherPageScene.invoke(visitor).getInteger("total");
             CommonUtil.checkResultPlus("套餐包含卡券列表数", voucherListSize, "进行中的卡券数", voucherTotal);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -127,13 +127,13 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             //创建套餐前列表数量
             IScene packageFormPageScene = PackageFormPageScene.builder().build();
-            int total = packageFormPageScene.invoke(visitor, true).getInteger("total");
+            int total = packageFormPageScene.invoke(visitor).getInteger("total");
             //创建套餐
             JSONArray voucherArray = util.getVoucherArray(voucherId, 10);
             String packageName = util.createPackage(voucherArray, com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.UseRangeEnum.CURRENT);
             Long packageId = util.getPackageId(packageName);
             //创建套餐后列表数量
-            int newTotal = packageFormPageScene.invoke(visitor, true).getInteger("total");
+            int newTotal = packageFormPageScene.invoke(visitor).getInteger("total");
             CommonUtil.checkResult("创建套餐后套餐列表数", total + 1, newTotal);
             //列表内容校验
             PackagePage packagePage = util.collectBean(PackageFormPageScene.builder().packageName(packageName).build(), PackagePage.class).get(0);
@@ -142,7 +142,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             CommonUtil.checkResult(packageName + " 客户有效期", "10天", packagePage.getCustomerUseValidity());
             CommonUtil.checkResult(packageName + " 审核状态", AuditStatusEnum.AUDITING.getName(), packagePage.getAuditStatusName());
             //审核通过
-            AuditPackageStatusScene.builder().id(packageId).status(AuditStatusEnum.AGREE.name()).build().invoke(visitor, true);
+            AuditPackageStatusScene.builder().id(packageId).status(AuditStatusEnum.AGREE.name()).build().invoke(visitor);
             PackagePage newPackagePage = util.collectBean(PackageFormPageScene.builder().packageName(packageName).build(), PackagePage.class).get(0);
             CommonUtil.checkResult(packageName + " 审核状态", AuditStatusEnum.AGREE.getName(), newPackagePage.getAuditStatusName());
         } catch (Exception | AssertionError e) {
@@ -162,7 +162,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             jsonObjects.forEach(e -> {
                 String customerPhone = e.getString("customer_phone");
                 String customerName = e.getString("customer_name");
-                String findCustomerName = SearchCustomerScene.builder().customerPhone(customerPhone).build().invoke(visitor, true).getString("customer_name");
+                String findCustomerName = SearchCustomerScene.builder().customerPhone(customerPhone).build().invoke(visitor).getString("customer_name");
                 CommonUtil.checkResultPlus(customerPhone + " 小程序客户名称", customerName, "购买套餐查询到的名称", findCustomerName);
                 CommonUtil.logger(customerPhone);
             });
@@ -200,7 +200,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene packageListScene = PackageListScene.builder().build();
-            int packageListSize = packageListScene.invoke(visitor, true).getJSONArray("list").size();
+            int packageListSize = packageListScene.invoke(visitor).getJSONArray("list").size();
             IScene packageFormPageScene = PackageFormPageScene.builder().packageStatus(true).build();
             List<PackagePage> packagePageList = util.collectBean(packageFormPageScene, PackagePage.class);
             int packagePageListSize = (int) packagePageList.stream().filter(e -> e.getAuditStatusName().equals(PackageStatusEnum.AGREE.getName())).count();
@@ -263,13 +263,13 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             //创建套餐前列表数量
             IScene packageFormPageScene = PackageFormPageScene.builder().build();
-            int total = packageFormPageScene.invoke(visitor, true).getInteger("total");
+            int total = packageFormPageScene.invoke(visitor).getInteger("total");
             //创建套餐
             JSONArray voucherArray = util.getVoucherArray(voucherId, 10);
             String packageName = util.createPackage(voucherArray, com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.UseRangeEnum.CURRENT);
             Long packageId = util.getPackageId(packageName);
             //创建套餐后列表数量
-            int newTotal = packageFormPageScene.invoke(visitor, true).getInteger("total");
+            int newTotal = packageFormPageScene.invoke(visitor).getInteger("total");
             CommonUtil.checkResult("创建套餐后套餐列表数", total + 1, newTotal);
             //列表内容校验
             PackagePage packagePage = util.collectBean(PackageFormPageScene.builder().packageName(packageName).build(), PackagePage.class).get(0);
@@ -278,7 +278,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             CommonUtil.checkResult(packageName + " 客户有效期", "10天", packagePage.getCustomerUseValidity());
             CommonUtil.checkResult(packageName + " 审核状态", AuditStatusEnum.AUDITING.getName(), packagePage.getAuditStatusName());
             //审核不通过
-            AuditPackageStatusScene.builder().id(packageId).status(AuditStatusEnum.REFUSAL.name()).build().invoke(visitor, true);
+            AuditPackageStatusScene.builder().id(packageId).status(AuditStatusEnum.REFUSAL.name()).build().invoke(visitor);
             PackagePage newPackagePage = util.collectBean(PackageFormPageScene.builder().packageName(packageName).build(), PackagePage.class).get(0);
             CommonUtil.checkResult(packageName + " 审核状态", AuditStatusEnum.REFUSAL.getName(), newPackagePage.getAuditStatusName());
         } catch (Exception | AssertionError e) {
@@ -1207,7 +1207,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Long packageId = new PackageGenerator.Builder().status(PackageStatusEnum.AUDITING).visitor(visitor).buildPackage().getPackageId();
-            CancelPackageScene.builder().id(packageId).build().invoke(visitor, true);
+            CancelPackageScene.builder().id(packageId).build().invoke(visitor);
             PackagePage packagePage = util.getPackagePage(packageId);
             CommonUtil.checkResult(packagePage.getPackageName() + "撤销后审核状态", PackageStatusEnum.CANCEL.name(), packagePage.getAuditStatus());
         } catch (Exception | AssertionError e) {
@@ -1288,7 +1288,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             String date = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm");
             util.pushMessage(0, true, voucherId);
             IScene messageFormPageScene = MessageFormPageScene.builder().size(100).build();
-            JSONArray list = messageFormPageScene.invoke(visitor, true).getJSONArray("list");
+            JSONArray list = messageFormPageScene.invoke(visitor).getJSONArray("list");
             JSONObject jsonObject = list.stream().map(e -> (JSONObject) e).filter(e -> e.getString("push_time").contains(date)).findFirst().orElse(null);
             Preconditions.checkArgument(jsonObject != null, "不存在 " + date + " 发送的消息");
             String customerPhone = jsonObject.getString("customer_phone");
@@ -1554,12 +1554,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             JSONObject equityPageScene = getResponseByEquityPageScene(scene);
             Integer equityId = equityPageScene.getInteger("equity_id");
             String description = Arrays.stream(desc).filter(e -> !e.equals(equityPageScene.getString("description"))).findFirst().orElse(equityPageScene.getString("description"));
-            EquityEditScene.builder().awardCount(4).equityId(equityId).description(description).build().invoke(visitor, true);
+            EquityEditScene.builder().awardCount(4).equityId(equityId).description(description).build().invoke(visitor);
             JSONObject newEquityPageScene = getResponseByEquityPageScene(scene);
             String newDescription = newEquityPageScene.getString("description");
             CommonUtil.checkResult("pc修改过权益说明后", description, newDescription);
             user.loginApplet(APPLET_USER_ONE);
-            JSONObject response = AppletMemberCenterHomePageScene.builder().build().invoke(visitor, true);
+            JSONObject response = AppletMemberCenterHomePageScene.builder().build().invoke(visitor);
             int vipType = response.getInteger("vip_type");
             JSONObject equity = response.getJSONArray("equity_list").getJSONObject(0);
             String equityName = equity.getString("equity_name");
@@ -1585,7 +1585,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
                 CommonUtil.warning("已经是禁用状态");
             } else {
                 //关闭权益
-                EquityStartOrCloseScene.builder().equityId(equityId).equityStatus(UseStatusEnum.DISABLE.name()).build().invoke(visitor, true);
+                EquityStartOrCloseScene.builder().equityId(equityId).equityStatus(UseStatusEnum.DISABLE.name()).build().invoke(visitor);
             }
             user.loginApplet(APPLET_USER_ONE);
             IScene memberCenterEquityListScene = AppletMemberCenterHomePageScene.builder().build();
@@ -1611,7 +1611,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
                 CommonUtil.warning("已经是开启状态");
             } else {
                 //开启权益
-                EquityStartOrCloseScene.builder().equityId(equityId).equityStatus(UseStatusEnum.ENABLE.name()).build().invoke(visitor, true);
+                EquityStartOrCloseScene.builder().equityId(equityId).equityStatus(UseStatusEnum.ENABLE.name()).build().invoke(visitor);
             }
             user.loginApplet(APPLET_USER_ONE);
             IScene memberCenterEquityListScene = AppletMemberCenterHomePageScene.builder().build();
@@ -1669,7 +1669,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
     }
 
     private JSONObject getResponseByEquityPageScene(IScene equityPageScene) {
-        JSONArray list = equityPageScene.invoke(visitor, true).getJSONArray("list");
+        JSONArray list = equityPageScene.invoke(visitor).getJSONArray("list");
         JSONObject equityPageResponse = list.stream().map(e -> (JSONObject) e).filter(e -> e.getString("service_type_name").equals("vip会员") && e.getString("equity_name").equals("免费洗车")).findFirst().orElse(null);
         Preconditions.checkArgument(equityPageResponse != null, "未找到vip会员免费洗车权益");
         return equityPageResponse;
@@ -1691,10 +1691,10 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
                 int id = jsonObject.getInteger("id");
                 String businessType = jsonObject.getString("business_type");
                 description = Arrays.stream(strings).filter(string -> !jsonObject.getString("description").equals(string)).findFirst().orElse(jsonObject.getString("description"));
-                ShareManagerEditScene.builder().id(id).awardCustomerRule("ONCE").taskExplain(description).awardScore(1000).awardCardVolumeId(voucherId).takeEffectType("DAY").dayNumber("2000").businessType(businessType).build().invoke(visitor, true);
+                ShareManagerEditScene.builder().id(id).awardCustomerRule("ONCE").taskExplain(description).awardScore(1000).awardCardVolumeId(voucherId).takeEffectType("DAY").dayNumber("2000").businessType(businessType).build().invoke(visitor);
             }
             user.loginApplet(APPLET_USER_ONE);
-            JSONArray taskList = AppletShareTaskListScene.builder().build().invoke(visitor, true).getJSONArray("task_list");
+            JSONArray taskList = AppletShareTaskListScene.builder().build().invoke(visitor).getJSONArray("task_list");
             String finalDescription = description;
             taskList.stream().map(e -> (JSONObject) e).forEach(e -> CommonUtil.checkResult(e.getString("task_name") + "的内容", finalDescription, e.getString("award_description")));
         } catch (Exception | AssertionError e) {
@@ -1758,17 +1758,17 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
     public void vipMarketing_system_13() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject response = SignInConfigPageScene.builder().build().invoke(visitor, true).getJSONArray("list").getJSONObject(0);
+            JSONObject response = SignInConfigPageScene.builder().build().invoke(visitor).getJSONArray("list").getJSONObject(0);
             int signInConfigId = response.getInteger("id");
             int awardScore = response.getInteger("award_score") >= 1999 ? 1 : response.getInteger("award_score");
-            int recordTotal = SignInConfigChangeRecordScene.builder().signInConfigId(signInConfigId).build().invoke(visitor, true).getInteger("total");
+            int recordTotal = SignInConfigChangeRecordScene.builder().signInConfigId(signInConfigId).build().invoke(visitor).getInteger("total");
             //变更积分&说明
-            SignInConfigEditScene.builder().signInConfigId(signInConfigId).awardScore(awardScore + 1).explain(EnumDesc.DESC_BETWEEN_15_20.getDesc()).build().invoke(visitor, true);
+            SignInConfigEditScene.builder().signInConfigId(signInConfigId).awardScore(awardScore + 1).explain(EnumDesc.DESC_BETWEEN_15_20.getDesc()).build().invoke(visitor);
             //变更后列表数
-            int newRecordTotal = SignInConfigChangeRecordScene.builder().signInConfigId(signInConfigId).build().invoke(visitor, true).getInteger("total");
+            int newRecordTotal = SignInConfigChangeRecordScene.builder().signInConfigId(signInConfigId).build().invoke(visitor).getInteger("total");
             CommonUtil.checkResult("签到任务变更记录总数", recordTotal + 1, newRecordTotal);
             //变更内容
-            JSONObject newResponse = SignInConfigChangeRecordScene.builder().build().invoke(visitor, true).getJSONArray("list").getJSONObject(0);
+            JSONObject newResponse = SignInConfigChangeRecordScene.builder().build().invoke(visitor).getJSONArray("list").getJSONObject(0);
             CommonUtil.checkResult("操作员手机号", ALL_AUTHORITY.getPhone(), newResponse.getString("operate_phone"));
             CommonUtil.checkResult("变更积分", awardScore + 1, newResponse.getInteger("change_score"));
             CommonUtil.checkResult("变更备注", EnumDesc.DESC_BETWEEN_15_20.getDesc(), newResponse.getString("change_remark"));
@@ -1808,7 +1808,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             IScene adjustNumberRecordScene = WashCarManagerAdjustNumberRecordScene.builder().build();
             int washRecordTotal = visitor.invokeApi(adjustNumberRecordScene).getInteger("total");
             //增加洗车次数
-            WashCarManagerAdjustNumberScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).adjustNumber("1").remark(EnumDesc.DESC_BETWEEN_5_10.getDesc()).build().invoke(visitor, true);
+            WashCarManagerAdjustNumberScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).adjustNumber("1").remark(EnumDesc.DESC_BETWEEN_5_10.getDesc()).build().invoke(visitor);
             //调整记录次数
             int newWashRecordTotal = visitor.invokeApi(adjustNumberRecordScene).getInteger("total");
             IScene newAdjustNumberRecordScene = WashCarManagerAdjustNumberRecordScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).build();
@@ -1832,11 +1832,11 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String[] strings = {EnumDesc.DESC_BETWEEN_200_300.getDesc(), EnumDesc.DESC_BETWEEN_400_500.getDesc(), EnumDesc.DESC_BETWEEN_10_15.getDesc()};
-            String ruleDetail = WashCarManagerRuleDetailScene.builder().build().invoke(visitor, true).getString("rule_detail");
+            String ruleDetail = WashCarManagerRuleDetailScene.builder().build().invoke(visitor).getString("rule_detail");
             String detail = Arrays.stream(strings).filter(e -> !e.equals(ruleDetail)).findFirst().orElse(ruleDetail);
-            WashCarManagerEditRuleScene.builder().ruleDetail(detail).build().invoke(visitor, true);
+            WashCarManagerEditRuleScene.builder().ruleDetail(detail).build().invoke(visitor);
             user.loginApplet(APPLET_USER_ONE);
-            JSONObject jsonObject = AppletCommonRuleExplainDetailScene.builder().businessType(AppletCodeBusinessTypeEnum.WASH_CAR.getKey()).build().invoke(visitor, true);
+            JSONObject jsonObject = AppletCommonRuleExplainDetailScene.builder().businessType(AppletCodeBusinessTypeEnum.WASH_CAR.getKey()).build().invoke(visitor);
             CommonUtil.checkResultPlus("pc端洗车规则说明为", detail, "applet端洗车规则说明为", jsonObject.getString("rule_explain"));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -1869,11 +1869,11 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String[] strings = {EnumDesc.DESC_BETWEEN_200_300.getDesc(), EnumDesc.DESC_BETWEEN_400_500.getDesc(), EnumDesc.DESC_BETWEEN_10_15.getDesc()};
-            String equityDetail = WashCarManagerEquityDetailScene.builder().build().invoke(visitor, true).getString("equity_detail");
+            String equityDetail = WashCarManagerEquityDetailScene.builder().build().invoke(visitor).getString("equity_detail");
             String detail = Arrays.stream(strings).filter(e -> !e.equals(equityDetail)).findFirst().orElse(equityDetail);
-            WashCarManagerEditEquityScene.builder().equityDetail(detail).build().invoke(visitor, true);
+            WashCarManagerEditEquityScene.builder().equityDetail(detail).build().invoke(visitor);
             user.loginApplet(APPLET_USER_ONE);
-            JSONObject jsonObject = AppletCommonRuleExplainDetailScene.builder().businessType(AppletCodeBusinessTypeEnum.WASH_CAR.getKey()).build().invoke(visitor, true);
+            JSONObject jsonObject = AppletCommonRuleExplainDetailScene.builder().businessType(AppletCodeBusinessTypeEnum.WASH_CAR.getKey()).build().invoke(visitor);
             CommonUtil.checkResultPlus("pc端洗车权益为", detail, "applet端洗车权益为", jsonObject.getString("equity_explain"));
         } catch (Exception | AssertionError e) {
             collectMessage(e);

@@ -23,6 +23,6 @@ public class AppointmentStaffListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/shop/applet/granted/appointment/staff/list";
+        return "/patrol-applet/granted/appointment/staff/list";
     }
 }

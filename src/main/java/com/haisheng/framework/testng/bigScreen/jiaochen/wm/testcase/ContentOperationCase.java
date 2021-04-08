@@ -106,11 +106,11 @@ public class ContentOperationCase extends TestCaseCommon implements TestCaseStd 
     public void banner_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int num = ArticleList.builder().build().invoke(visitor, true).getJSONArray("list").size();
+            int num = ArticleList.builder().build().invoke(visitor).getJSONArray("list").size();
             IScene articlePageScene = ArticlePageScene.builder().build();
             int articlePageListSize = (int) util.collectBean(articlePageScene, ArticlePageBean.class).stream().filter(e -> e.getStatusName().equals(ArticleStatusEnum.SHOW.getTypeName())).count();
-            int passedSTotal = ActivityManageListScene.builder().status(ActivityStatusEnum.PASSED.getId()).build().invoke(visitor, true).getInteger("total");
-            int finishTotal = ActivityManageListScene.builder().status(ActivityStatusEnum.FINISH.getId()).build().invoke(visitor, true).getInteger("total");
+            int passedSTotal = ActivityManageListScene.builder().status(ActivityStatusEnum.PASSED.getId()).build().invoke(visitor).getInteger("total");
+            int finishTotal = ActivityManageListScene.builder().status(ActivityStatusEnum.FINISH.getId()).build().invoke(visitor).getInteger("total");
             CommonUtil.checkResult("跳转活动/文章的条数", passedSTotal + finishTotal + articlePageListSize, num);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -162,9 +162,9 @@ public class ContentOperationCase extends TestCaseCommon implements TestCaseStd 
             array.add(jsonObject3);
             array.add(jsonObject4);
             array.add(jsonObject5);
-            EditScene.builder().list(array).build().invoke(visitor, true);
+            EditScene.builder().list(array).build().invoke(visitor);
             user.loginApplet(APPLET_USER_ONE);
-            JSONArray list = AppletBannerScene.builder().build().invoke(visitor, true).getJSONArray("list");
+            JSONArray list = AppletBannerScene.builder().build().invoke(visitor).getJSONArray("list");
             List<Long> appletArticleIds = list.stream().map(e -> (JSONObject) e).map(e -> e.getLong("article_id")).collect(Collectors.toList());
             CommonUtil.checkResultPlus("pc端文章为：", appletArticleIds, "applet端文章为：", articleIds.subList(0, 5));
         } catch (Exception | AssertionError e) {

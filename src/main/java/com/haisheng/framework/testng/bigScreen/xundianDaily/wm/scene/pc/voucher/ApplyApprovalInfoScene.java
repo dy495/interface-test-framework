@@ -20,6 +20,6 @@ public class ApplyApprovalInfoScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/patrol/pc/voucher/apply/approval-info";
+        return "/shop/pc/voucher/apply/approval-info";
     }
 }

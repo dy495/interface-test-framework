@@ -24,7 +24,7 @@ public class ApplyApprovalScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/patrol/pc/voucher/apply/approval";
+        return "/shop/pc/voucher/apply/approval";
     }
 
     @Override

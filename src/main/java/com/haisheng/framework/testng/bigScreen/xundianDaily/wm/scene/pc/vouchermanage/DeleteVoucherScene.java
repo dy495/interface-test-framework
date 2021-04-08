@@ -20,7 +20,7 @@ public class DeleteVoucherScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/patrol/pc/voucher-manage/delete-voucher";
+        return "/shop/pc/voucher-manage/delete-voucher";
     }
 
 }

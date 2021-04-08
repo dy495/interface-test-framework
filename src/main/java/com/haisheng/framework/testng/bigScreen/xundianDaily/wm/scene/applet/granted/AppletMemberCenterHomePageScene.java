@@ -20,6 +20,6 @@ public class AppletMemberCenterHomePageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/shop/applet/granted/member-center/home-page";
+        return "/patrol-applet/granted/member-center/home-page";
     }
 }

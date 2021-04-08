@@ -50,7 +50,7 @@ public class SendRecordScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/patrol/pc/voucher-manage/send-record";
+        return "/shop/pc/voucher-manage/send-record";
     }
 
     @Override

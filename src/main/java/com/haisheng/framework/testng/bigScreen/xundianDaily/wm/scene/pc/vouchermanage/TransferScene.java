@@ -26,6 +26,6 @@ public class TransferScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/patrol/pc/voucher-manage/transfer";
+        return "/shop/pc/voucher-manage/transfer";
     }
 }

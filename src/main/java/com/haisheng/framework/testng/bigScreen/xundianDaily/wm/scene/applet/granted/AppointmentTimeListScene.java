@@ -27,6 +27,6 @@ public class AppointmentTimeListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/shop/applet/granted/appointment/time/list";
+        return "/patrol-applet/granted/appointment/time/list";
     }
 }

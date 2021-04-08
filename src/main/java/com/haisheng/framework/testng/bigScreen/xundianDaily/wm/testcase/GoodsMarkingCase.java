@@ -352,7 +352,6 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-
     //ok
     @Test()
     public void goodsCategory_system_9() {
@@ -575,7 +574,6 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-
     @Test(enabled = false)
     public void goodsCategory_system_18() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -647,7 +645,7 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
-            saveData("PC【商品品类】启用 有上级品类&上级品类状态为停用的品类，期待成功");
+            saveData("PC【商品品类】启用 有上级品类&上级品类状态为停用的品类，成功");
         }
     }
 
@@ -751,7 +749,7 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
             List<Long> idList = list.stream().map(e -> (JSONObject) e).map(e -> e.getLong("id")).collect(Collectors.toList());
             Preconditions.checkArgument(idList.contains(id), "创建商品时的品牌下拉框不包含品牌id" + id);
             DeleteBrandScene.builder().id(id).build().invoke(visitor);
-            sleep(100);
+            sleep(1);
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {

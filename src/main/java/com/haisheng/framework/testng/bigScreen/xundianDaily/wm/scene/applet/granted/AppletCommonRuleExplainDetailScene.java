@@ -5,7 +5,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /shop/applet/granted/common/rule-explain-detail的接口
+ * /patrol-applet/granted/common/rule-explain-detail的接口
  *
  * @author wangmin
  * @date 2021-03-12 17:53:03
@@ -29,6 +29,6 @@ public class AppletCommonRuleExplainDetailScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/shop/applet/granted/common/rule-explain-detail";
+        return "/patrol-applet/granted/common/rule-explain-detail";
     }
 }

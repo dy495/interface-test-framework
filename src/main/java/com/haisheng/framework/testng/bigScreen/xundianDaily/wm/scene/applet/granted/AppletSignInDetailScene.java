@@ -20,6 +20,6 @@ public class AppletSignInDetailScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/shop/applet/granted/member-center/sign-in-detail";
+        return "/patrol-applet/granted/member-center/sign-in-detail";
     }
 }

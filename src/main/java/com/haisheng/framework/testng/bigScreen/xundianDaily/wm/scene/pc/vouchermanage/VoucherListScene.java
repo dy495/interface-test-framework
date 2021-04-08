@@ -20,6 +20,6 @@ public class VoucherListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/patrol/pc/voucher-manage/voucher-list";
+        return "/shop/pc/voucher-manage/voucher-list";
     }
 }

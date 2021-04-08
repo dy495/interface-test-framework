@@ -19,6 +19,6 @@ public class SwitchVerificationStatusScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/patrol/pc/voucher-manage/switch-verification-status";
+        return "/shop/pc/voucher-manage/switch-verification-status";
     }
 }

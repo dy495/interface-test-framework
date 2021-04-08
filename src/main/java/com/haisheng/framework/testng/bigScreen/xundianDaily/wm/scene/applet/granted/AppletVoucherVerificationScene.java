@@ -30,6 +30,6 @@ public class AppletVoucherVerificationScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/shop/applet/granted/voucher/verification";
+        return "/patrol-applet/granted/voucher/verification";
     }
 }

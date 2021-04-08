@@ -126,6 +126,6 @@ public class VerificationPeopleExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/patrol/pc/voucher-manage/verification-people/export";
+        return "/shop/pc/voucher-manage/verification-people/export";
     }
 }

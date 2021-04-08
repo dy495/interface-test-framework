@@ -29,6 +29,6 @@ public class AppletIntegralRecordScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/shop/applet/granted/integral-mall/integral-record";
+        return "/patrol-applet/granted/integral-mall/integral-record";
     }
 }

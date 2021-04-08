@@ -102,6 +102,6 @@ public class AdditionalRecordExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/patrol/pc/voucher-manage/additional-record/export";
+        return "/shop/pc/voucher-manage/additional-record/export";
     }
 }

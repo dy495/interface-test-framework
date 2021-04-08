@@ -53,6 +53,6 @@ public class AppletUserInfoEditScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/shop/applet/granted/user-info/edit";
+        return "/patrol-applet/granted/user-info/edit";
     }
 }

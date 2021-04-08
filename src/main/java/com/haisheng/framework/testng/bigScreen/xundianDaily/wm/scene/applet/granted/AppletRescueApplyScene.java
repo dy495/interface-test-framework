@@ -38,6 +38,6 @@ public class AppletRescueApplyScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/shop/applet/granted/rescue/apply";
+        return "/patrol-applet/granted/rescue/apply";
     }
 }

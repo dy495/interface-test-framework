@@ -45,6 +45,6 @@ public class AppletEvaluatePageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/shop/applet/granted/evaluate/page";
+        return "/patrol-applet/granted/evaluate/page";
     }
 }

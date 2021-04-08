@@ -77,6 +77,6 @@ public class AppletConsultAfterServiceSubmitScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/shop/applet/granted/consult/after-service-submit";
+        return "/patrol-applet/granted/consult/after-service-submit";
     }
 }

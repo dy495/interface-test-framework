@@ -155,7 +155,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
             JSONArray voucherList = util.getVoucherArray(voucherId, 1);
-            Long packageId = PackageListScene.builder().build().invoke(visitor, true).getJSONArray("list").getJSONObject(0).getLong("package_id");
+            Long packageId = PackageListScene.builder().build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("package_id");
             String packageName = util.editPackage(packageId, voucherList);
             //购买前数据
             Long surplusInventory = util.getVoucherPage(voucherId).getSurplusInventory();
@@ -262,7 +262,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
             JSONArray voucherList = util.getVoucherArray(voucherId, 1);
-            Long packageId = PackageListScene.builder().build().invoke(visitor, true).getJSONArray("list").getJSONObject(0).getLong("package_id");
+            Long packageId = PackageListScene.builder().build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("package_id");
             String packageName = util.editPackage(packageId, voucherList);
             //购买前数据
             Long surplusInventory = util.getVoucherPage(voucherId).getSurplusInventory();
@@ -316,8 +316,8 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
             JSONArray voucherList = util.getVoucherArray(voucherId, 1);
-            Long packageId = PackageListScene.builder().build().invoke(visitor, true).getJSONArray("list").getJSONObject(0).getLong("package_id");
-            String packageName = util.editPackage(packageId,voucherList);
+            Long packageId = PackageListScene.builder().build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("package_id");
+            String packageName = util.editPackage(packageId, voucherList);
             //购买前数据
             Long surplusInventory = util.getVoucherPage(voucherId).getSurplusInventory();
             IScene buyPackageRecordScene = BuyPackageRecordScene.builder().build();
@@ -453,11 +453,11 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
         try {
             commonConfig.shopId = ALL_AUTHORITY.getReceptionShopId();
             Double[] doubles = {1.00, 2.99, 3.66, 50.1};
-            JSONObject jsonObject = CarModelPageScene.builder().build().invoke(visitor, true).getJSONArray("list").getJSONObject(0);
+            JSONObject jsonObject = CarModelPageScene.builder().build().invoke(visitor).getJSONArray("list").getJSONObject(0);
             Integer id = jsonObject.getInteger("id");
             Double price = Arrays.stream(doubles).filter(e -> !e.equals(jsonObject.getDouble("price"))).findFirst().orElse(jsonObject.getDouble("price"));
-            CarModelEditScene.builder().id(id).price(price).status(EnableStatusEnum.DISABLE.name()).build().invoke(visitor, true);
-            JSONObject newJSONObject = CarModelPageScene.builder().build().invoke(visitor, true).getJSONArray("list").stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("id").equals(id)).findFirst().orElse(null);
+            CarModelEditScene.builder().id(id).price(price).status(EnableStatusEnum.DISABLE.name()).build().invoke(visitor);
+            JSONObject newJSONObject = CarModelPageScene.builder().build().invoke(visitor).getJSONArray("list").stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("id").equals(id)).findFirst().orElse(null);
             CommonUtil.checkResult(id + "保养价格", price, Objects.requireNonNull(newJSONObject).getDouble("price"));
             CommonUtil.checkResult(id + "预约状态", EnableStatusEnum.DISABLE.name(), Objects.requireNonNull(newJSONObject).getString("status"));
         } catch (Exception | AssertionError e) {

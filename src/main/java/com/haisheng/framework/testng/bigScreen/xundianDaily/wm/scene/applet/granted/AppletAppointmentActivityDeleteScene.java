@@ -29,6 +29,6 @@ public class AppletAppointmentActivityDeleteScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/shop/applet/granted/appointment/activity/delete";
+        return "/patrol-applet/granted/appointment/activity/delete";
     }
 }

@@ -5,25 +5,25 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 41.1. 商品品类列表
+ * 31.1. 商品品类列表 (张小龙) v2.0
  *
  * @author wangmin
- * @date 2021-03-30 14:00:03
+ * @date 2021-03-31 12:29:35
  */
 @Builder
 public class CategoryPageScene extends BaseScene {
     /**
-     * 描述 当前页
+     * 描述 页码 大于0
      * 是否必填 true
-     * 版本 -
+     * 版本 v1.0
      */
     @Builder.Default
     private Integer page = 1;
 
     /**
-     * 描述 当前页的数量
+     * 描述 页大小 范围为[1,100]
      * 是否必填 true
-     * 版本 -
+     * 版本 v1.0
      */
     @Builder.Default
     private Integer size = 10;

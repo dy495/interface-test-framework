@@ -29,6 +29,6 @@ public class AppletCommonEnumValueListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/shop/applet/granted/common/enum-value-list";
+        return "/patrol-applet/granted/common/enum-value-list";
     }
 }

@@ -26,6 +26,6 @@ public class ChangeProvideStatusScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/patrol/pc/voucher-manage/change-provide-status";
+        return "/shop/pc/voucher-manage/change-provide-status";
     }
 }

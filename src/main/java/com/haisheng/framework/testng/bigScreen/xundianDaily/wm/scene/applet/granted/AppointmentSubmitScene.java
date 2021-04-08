@@ -37,6 +37,6 @@ public class AppointmentSubmitScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/shop/applet/granted/appointment/submit";
+        return "/patrol-applet/granted/appointment/submit";
     }
 }

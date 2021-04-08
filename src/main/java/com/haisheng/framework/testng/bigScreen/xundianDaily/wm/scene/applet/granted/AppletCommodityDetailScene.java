@@ -20,7 +20,7 @@ public class AppletCommodityDetailScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/shop/applet/granted/integral-mall/commodity-detail";
+        return "/patrol-applet/granted/integral-mall/commodity-detail";
     }
 
 }

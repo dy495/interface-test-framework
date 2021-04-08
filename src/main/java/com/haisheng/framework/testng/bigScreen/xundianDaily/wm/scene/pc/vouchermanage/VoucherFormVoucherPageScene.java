@@ -33,7 +33,7 @@ public class VoucherFormVoucherPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/patrol/pc/voucher-manage/voucher-form/voucher-page";
+        return "/shop/pc/voucher-manage/voucher-form/voucher-page";
     }
 
     @Override

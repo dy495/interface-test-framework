@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 41.20. 修改商品规格
+ * 31.20. 修改商品规格 (张小龙) v2.0
  *
  * @author wangmin
- * @date 2021-03-30 14:00:03
+ * @date 2021-03-31 12:29:35
  */
 @Builder
 public class EditSpecificationsScene extends BaseScene {
@@ -43,7 +43,7 @@ public class EditSpecificationsScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("id", id);
         object.put("specifications_name", specificationsName);

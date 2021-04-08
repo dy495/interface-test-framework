@@ -61,6 +61,6 @@ public class AppletIntegralMallCreateAddressScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/shop/applet/granted/integral-mall/create-address";
+        return "/patrol-applet/granted/integral-mall/create-address";
     }
 }

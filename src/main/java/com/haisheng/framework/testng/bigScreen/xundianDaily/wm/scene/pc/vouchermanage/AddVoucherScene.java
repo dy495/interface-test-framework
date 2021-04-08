@@ -109,7 +109,7 @@ public class AddVoucherScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/patrol/pc/voucher-manage/add-voucher";
+        return "/shop/pc/voucher-manage/add-voucher";
     }
 
     @Override

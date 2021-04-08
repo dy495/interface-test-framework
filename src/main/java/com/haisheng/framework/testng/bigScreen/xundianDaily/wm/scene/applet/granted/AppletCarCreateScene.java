@@ -37,6 +37,6 @@ public class AppletCarCreateScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/shop/applet/granted/car/create";
+        return "/patrol-applet/granted/car/create";
     }
 }

@@ -45,6 +45,6 @@ public class AppletIntegralMallExchangeRecordScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/shop/applet/granted/integral-mall/exchange-record";
+        return "/patrol-applet/granted/integral-mall/exchange-record";
     }
 }

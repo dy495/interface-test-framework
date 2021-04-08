@@ -79,7 +79,7 @@ public class ApplyPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/patrol/pc/voucher/apply/page";
+        return "/shop/pc/voucher/apply/page";
     }
 
     @Override

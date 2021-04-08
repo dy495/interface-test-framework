@@ -37,6 +37,6 @@ public class AppletMemberCenterShareTaskGeneratePosterScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/shop/applet/granted/member-center/share-task/generate-Poster";
+        return "/patrol-applet/granted/member-center/share-task/generate-Poster";
     }
 }

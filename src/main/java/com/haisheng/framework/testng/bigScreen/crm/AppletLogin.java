@@ -55,6 +55,8 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         for (EnumTestProduce item : EnumTestProduce.values()) {
             commonConfig.message = commonConfig.message.replace(item.getDesc(), commonConfig.TEST_PRODUCT);
         }
+        commonConfig.pushQa = null;
+        commonConfig.pushRd = null;
     }
 
     @Test(dataProvider = "BSJ_APPLET_TOKENS_DAILY", dataProviderClass = AppletLogin.class)

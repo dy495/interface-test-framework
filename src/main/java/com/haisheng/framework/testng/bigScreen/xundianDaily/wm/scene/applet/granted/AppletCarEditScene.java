@@ -45,6 +45,6 @@ public class AppletCarEditScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/shop/applet/granted/car/edit";
+        return "/patrol-applet/granted/car/edit";
     }
 }

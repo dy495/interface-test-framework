@@ -20,7 +20,7 @@ public class AppletConfirmReceiveScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/shop/applet/granted/integral-mall/confirm-receive";
+        return "/patrol-applet/granted/integral-mall/confirm-receive";
     }
 
 }
