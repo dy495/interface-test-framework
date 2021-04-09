@@ -19,9 +19,9 @@ public enum EnumAccount {
     ZJL_DAILY("zjl", getPassword("123456"), "uid_e5d21cbc", true, "zjl"),
 
     /**
-     * 销售顾问xia
+     * 销售顾问
      */
-    SALE_XIA("销售顾问xia", getPassword("123456"), "uid_6628907b", true, "销售顾问xia"),
+    SALE("xsgw", getPassword("123456"), "xsgw", true, "xsgw"),
 
     /**
      * 销售顾问wang

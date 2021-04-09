@@ -2,7 +2,7 @@ package com.haisheng.framework.testng.bigScreen.xundianDaily.wm.generator.vouche
 
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.enumerator.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.vouchermanage.ChangeProvideStatusScene;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -34,7 +34,7 @@ public class StopVoucher extends AbstractVoucher {
     public static class Builder extends AbstractBuilder {
 
         @Override
-        public IVoucher buildVoucher() {
+        public StopVoucher buildVoucher() {
             return new StopVoucher(this);
         }
     }

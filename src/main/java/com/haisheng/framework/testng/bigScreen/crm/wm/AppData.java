@@ -33,8 +33,8 @@ public class AppData extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     PublicMethod method = new PublicMethod();
     private static final EnumAccount zjl = EnumAccount.ZJL_DAILY;
-    private static final EnumAccount xs = EnumAccount.SALE_XIA;
-    private static final EnumAccount newXs = EnumAccount.SALE_XIA;
+    private static final EnumAccount xs = EnumAccount.SALE;
+    private static final EnumAccount newXs = EnumAccount.SALE_WANG;
     private static final EnumCarModel car = EnumCarModel.PANAMERA_TURBO_S_E_HYBRID_SPORT_TURISMO;
     private static final int size = 100;
 

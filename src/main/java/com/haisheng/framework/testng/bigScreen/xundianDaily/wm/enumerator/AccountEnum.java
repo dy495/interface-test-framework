@@ -2,11 +2,11 @@ package com.haisheng.framework.testng.bigScreen.xundianDaily.wm.enumerator;
 
 import lombok.Getter;
 
-public enum EnumAccount {
+public enum AccountEnum {
 
     YUE_XIU_DAILY("yuexiu@test.com", "yuexiu", true, "13874653765", "越秀测试账号", 2, "总管理员");
 
-    EnumAccount(String username, String password, boolean isDaily, String phone, String name, Integer roleId, String roleName) {
+    AccountEnum(String username, String password, boolean isDaily, String phone, String name, Integer roleId, String roleName) {
         this.username = username;
         this.password = password;
         this.isDaily = isDaily;

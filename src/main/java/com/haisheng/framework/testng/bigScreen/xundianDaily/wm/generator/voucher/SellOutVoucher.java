@@ -27,7 +27,7 @@ public class SellOutVoucher extends AbstractVoucher {
         logger("CREATE SELL OUT START");
         super.visitor = visitor;
         SupporterUtil supporterUtil = new SupporterUtil(visitor);
-        String voucherName = supporterUtil.createVoucher(1, VoucherTypeEnum.CUSTOM);
+        String voucherName = supporterUtil.createVoucher(1, VoucherTypeEnum.COMMODITY_EXCHANGE);
         applyVoucher(voucherName);
         IScene voucherPageScene = VoucherFormVoucherPageScene.builder().voucherName(voucherName).build();
         VoucherPage voucherPage = findBeanByField(voucherPageScene, VoucherPage.class, "voucher_name", voucherName);
@@ -38,7 +38,7 @@ public class SellOutVoucher extends AbstractVoucher {
     public static class Builder extends AbstractBuilder {
 
         @Override
-        public IVoucher buildVoucher() {
+        public SellOutVoucher buildVoucher() {
             return new SellOutVoucher(this);
         }
     }

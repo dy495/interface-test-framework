@@ -506,7 +506,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
         try {
             IScene exchangePageScene = ExchangePageScene.builder().exchangeType(CommodityTypeEnum.REAL.name()).build();
             List<ExchangePage> exchangePageList = util.collectBean(exchangePageScene, ExchangePage.class);
-            Long id = exchangePageList.stream().filter(e -> Integer.parseInt(e.getExchangedAndSurplus().split("/")[1]) < 10).map(ExchangePage::getId).findFirst().orElse(0L);
+            Long id = exchangePageList.stream().filter(e -> Integer.parseInt(e.getExchangedAndSurplus().split("/")[1]) < 10).map(ExchangePage::getId).findFirst().orElse(util.createExchangeRealGoods().getId());
             String goodsName = ExchangeGoodsStockScene.builder().id(String.valueOf(id)).build().invoke(visitor).getString("goods_name");
             JSONObject specificationDetail = ExchangeCommoditySpecificationsListScene.builder().id(id).build().invoke(visitor).getJSONArray("specification_detail_list").getJSONObject(0);
             String[] strings = {"99.99", null, "", "-11", "0"};
@@ -717,6 +717,68 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             collectMessage(e);
         } finally {
             saveData("积分兑换--创建实体积分兑换->小程序兑换实体商品->发货->确认收货->取消");
+        }
+    }
+
+    //ok
+    @Test(description = "积分兑换--创建实体积分兑换->小程序兑换虚拟商品")
+    public void integralExchange_system_18() {
+        logger.logCaseStart(caseResult.getCaseName());
+        Long exchangeGoodsId = null;
+        try {
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            ExchangePage exchangePage = util.createExchangeFictitiousGoods(voucherId);
+            exchangeGoodsId = exchangePage.getId();
+            //不限兑换次数
+            util.modifyExchangeGoodsLimit(exchangeGoodsId, exchangePage.getExchangeType(), false);
+            List<Integer> exchangedAndSurplusList = Arrays.stream(exchangePage.getExchangedAndSurplus().split("/")).map(Integer::valueOf).collect(Collectors.toList());
+            visitor.login(APPLET_USER_ONE.getToken());
+            int score = AppletDetailScene.builder().build().invoke(visitor).getInteger("score");
+            int integralRecordNum = util.getAppletIntegralRecordNum();
+            int exchangeRecordNum = util.getAppletExchangeRecordNum();
+            //兑换积分
+            AppletIntegralExchangeScene.builder().id(exchangeGoodsId).build().invoke(visitor);
+            user.loginPc(ALL_AUTHORITY);
+            ExchangePage newExchangePage = util.getExchangePage(exchangeGoodsId);
+            List<Integer> newExchangedAndSurplusList = Arrays.stream(newExchangePage.getExchangedAndSurplus().split("/")).map(Integer::valueOf).collect(Collectors.toList());
+            CommonUtil.checkResult(newExchangePage.getGoodsName() + "已兑换数量", exchangedAndSurplusList.get(0) + 1, newExchangedAndSurplusList.get(0));
+            CommonUtil.checkResult(newExchangePage.getGoodsName() + "剩余数量", exchangedAndSurplusList.get(1) - 1, newExchangedAndSurplusList.get(1));
+            //小程序积分明细列表数量
+            visitor.login(APPLET_USER_ONE.getToken());
+            int newIntegralRecordNum = util.getAppletIntegralRecordNum();
+            int newExchangeRecordNum = util.getAppletExchangeRecordNum();
+            CommonUtil.checkResult("小程序积分明细页数量", integralRecordNum + 1, newIntegralRecordNum);
+            CommonUtil.checkResult("小程序积分订单页兑换商品数量", exchangeRecordNum + 1, newExchangeRecordNum);
+            //小程序积分明细
+            AppletIntegralRecord appletIntegralRecord = util.getAppletIntegralRecordList().get(0);
+            CommonUtil.checkResult("小程序积分明细页积分数", exchangePage.getExchangePrice(), Integer.valueOf(appletIntegralRecord.getIntegral()));
+            CommonUtil.checkResult("小程序积分明细详情", "使用" + exchangePage.getExchangePrice() + "积分兑换了【" + exchangePage.getGoodsName() + "】", appletIntegralRecord.getName());
+            CommonUtil.checkResult("小程序积分明细兑换类型", ChangeStockTypeEnum.MINUS.name(), appletIntegralRecord.getChangeType());
+            //小程序订单状态
+            AppletExchangeRecord appletExchangeRecord = util.getAppletExchangeRecordList().get(0);
+            CommonUtil.checkResult("小程序订单状态", OrderStatusEnum.FINISHED.getName(), appletExchangeRecord.getExchangeStatusName());
+            CommonUtil.checkResult("小程序订单状态", OrderStatusEnum.FINISHED.name(), appletExchangeRecord.getExchangeStatus());
+            CommonUtil.checkResult("小程序商品id", exchangePage.getId(), appletExchangeRecord.getCommodityId());
+            CommonUtil.checkResult("小程序商品数量", 1, appletExchangeRecord.getNum());
+            CommonUtil.checkResult("小程序商品积分", exchangePage.getExchangePrice(), appletExchangeRecord.getIntegral());
+            //小程序我的页
+            int scoreTwo = AppletDetailScene.builder().build().invoke(visitor).getInteger("score");
+            CommonUtil.checkResult("小程序积分总数", score - appletExchangeRecord.getIntegral(), scoreTwo);
+            //积分订单页
+            user.loginPc(ALL_AUTHORITY);
+            IScene exchangeOrderScene = ExchangeOrderScene.builder().build();
+            ExchangeOrderBean exchangeOrder = util.collectBean(exchangeOrderScene, ExchangeOrderBean.class).get(0);
+            CommonUtil.checkResult("pc积分订单页订单号", appletExchangeRecord.getOrderId(), exchangeOrder.getOrderId());
+            CommonUtil.checkResult("pc积分订单页订单名称", appletExchangeRecord.getName(), exchangeOrder.getGoodsName());
+            CommonUtil.checkResult("pc积分订单页订单分类", CommodityTypeEnum.FICTITIOUS.getName(), exchangeOrder.getGoodsType());
+            CommonUtil.checkResult("pc积分订单页订单状态", appletExchangeRecord.getExchangeStatus(), exchangeOrder.getOrderStatus());
+            CommonUtil.checkResult("pc积分订单页订单状态", appletExchangeRecord.getExchangeStatusName(), exchangeOrder.getOrderStatusName());
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            ChangeSwitchStatusScene.builder().id(exchangeGoodsId).status(false).build().invoke(visitor);
+            DeleteExchangeGoodsScene.builder().id(exchangeGoodsId).build().invoke(visitor);
+            saveData("积分兑换--创建实体积分兑换->小程序兑换虚拟商品");
         }
     }
 

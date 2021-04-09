@@ -39,7 +39,7 @@ public abstract class AbstractVoucher extends BaseGenerator implements IVoucher 
             VoucherPage voucherPage = getPage();
             if (voucherPage != null) {
                 logger("FIND " + status.name() + " FINISH");
-                logger("voucherId is" + voucherPage.getVoucherId());
+                logger("voucherId is：" + voucherPage.getVoucherId());
                 logger("voucherName is：" + voucherPage.getVoucherName());
                 return voucherPage.getVoucherId();
             }

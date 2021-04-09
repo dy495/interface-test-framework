@@ -4,7 +4,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.ApplyPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.ApplyStatusEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.enumerator.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.voucher.ApplyApprovalScene;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.voucher.ApplyPageScene;
 import lombok.Setter;
@@ -36,7 +36,7 @@ public class RejectVoucher extends AbstractVoucher {
     public static class Builder extends AbstractBuilder {
 
         @Override
-        public IVoucher buildVoucher() {
+        public RejectVoucher buildVoucher() {
             return new RejectVoucher(this);
         }
     }

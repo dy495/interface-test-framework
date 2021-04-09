@@ -17,6 +17,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.I
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.SortTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.commodity.CommodityStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.*;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.enumerator.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.generator.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.applet.granted.*;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.file.FileUpload;
@@ -37,6 +38,8 @@ import org.slf4j.LoggerFactory;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
+
+//import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.*;
 
 /**
  * 业务场景工具
@@ -141,22 +144,22 @@ public class SupporterUtil {
     }
 
     public CreateScene.CreateSceneBuilder createVoucherBuilder(Integer stock, VoucherTypeEnum type) {
-        CreateScene.CreateSceneBuilder builder = createVoucherBuilder(true).stock(stock).cardType(type.name());
+        CreateScene.CreateSceneBuilder builder = createVoucherBuilder(true);
         switch (type.name()) {
             case "FULL_DISCOUNT":
-                builder.isThreshold(true).thresholdPrice(999.99).parValue(49.99);
+                builder.isThreshold(true).thresholdPrice(999.99).parValue(49.99).cost(49.99);
                 break;
             case "COUPON":
-                builder.isThreshold(true).thresholdPrice(999.99).discount(2.5).mostDiscount(99.99);
+                builder.isThreshold(true).thresholdPrice(999.99).discount(2.5).mostDiscount(99.99).cost(99.99);
                 break;
             case "COMMODITY_EXCHANGE":
-                builder.exchangeCommodityName("兑换布加迪威龙一辆").parValue(null);
+                builder.exchangeCommodityName("兑换布加迪威龙一辆").cost(49.99);
                 break;
             default:
                 builder.isThreshold(false);
                 break;
         }
-        return builder;
+        return builder.stock(stock).cardType(type.name());
     }
 
     /**
@@ -166,7 +169,7 @@ public class SupporterUtil {
      * @return CreateVoucher.CreateVoucherBuilder
      */
     public CreateScene.CreateSceneBuilder createVoucherBuilder(Boolean selfVerification) {
-        return CreateScene.builder().voucherDescription(getDesc()).parValue(getParValue()).shopType(0).selfVerification(selfVerification);
+        return CreateScene.builder().voucherDescription(getDesc()).shopType(0).selfVerification(selfVerification).shopIds(getShopIdList());
     }
 
 

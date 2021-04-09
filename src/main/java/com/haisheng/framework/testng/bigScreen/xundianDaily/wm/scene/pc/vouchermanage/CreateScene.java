@@ -36,20 +36,6 @@ public class CreateScene extends BaseScene {
     private final String voucherName;
 
     /**
-     * 描述 主体类型
-     * 是否必填 true
-     * 版本 v2.0
-     */
-    private final String subjectType;
-
-    /**
-     * 描述 主体类型id
-     * 是否必填 true
-     * 版本 v2.0
-     */
-    private final Long subjectId;
-
-    /**
      * 描述 主体类型名称
      * 是否必填 true
      * 版本 v2.0
@@ -167,8 +153,6 @@ public class CreateScene extends BaseScene {
         JSONObject object = new JSONObject();
         object.put("id", id);
         object.put("voucher_name", voucherName);
-        object.put("subject_type", subjectType);
-        object.put("subject_id", subjectId);
         object.put("subject_name", subjectName);
         object.put("stock", stock);
         object.put("card_type", cardType);
@@ -185,6 +169,7 @@ public class CreateScene extends BaseScene {
         object.put("is_default_pic", isDefaultPic);
         object.put("voucher_pic", voucherPic);
         object.put("self_verification", selfVerification);
+        object.put("cost", cost);
         return object;
     }
 

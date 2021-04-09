@@ -14,6 +14,11 @@ public class ExchangeOrderScene extends BaseScene {
     private Integer page = 1;
     @Builder.Default
     private Integer size = 10;
+    private final String orderId;
+    private final String member;
+    private final String goodsName;
+    private final String startTime;
+    private final String endTime;
 
     @Override
     public JSONObject getRequestBody() {
@@ -21,6 +26,11 @@ public class ExchangeOrderScene extends BaseScene {
         object.put("order_status", orderStatus);
         object.put("page", page);
         object.put("size", size);
+        object.put("order_id", orderId);
+        object.put("member", member);
+        object.put("goods_name", goodsName);
+        object.put("start_time", startTime);
+        object.put("end_time", endTime);
         return object;
     }
 

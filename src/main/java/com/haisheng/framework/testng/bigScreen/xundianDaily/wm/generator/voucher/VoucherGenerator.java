@@ -27,7 +27,7 @@ public class VoucherGenerator extends AbstractVoucher {
     public static class Builder extends AbstractBuilder {
 
         @Override
-        public IVoucher buildVoucher() {
+        public VoucherGenerator buildVoucher() {
             return new VoucherGenerator(this);
         }
     }

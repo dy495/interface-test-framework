@@ -5,8 +5,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherPage;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.BaseGenerator;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.IVoucher;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.enumerator.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.vouchermanage.VoucherFormVoucherPageScene;
 import com.haisheng.framework.util.CommonUtil;
 
