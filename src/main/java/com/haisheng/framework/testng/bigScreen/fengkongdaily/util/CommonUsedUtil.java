@@ -17,9 +17,12 @@ import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.rule.Add
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.rule.DeleteScene;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.rule.SwitchScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
+import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import org.apache.http.Header;
 import org.apache.http.client.HttpClient;
+import org.testng.annotations.Test;
+
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
@@ -487,7 +490,7 @@ public class CommonUsedUtil {
      * @param posId       pos机ID
      * @param commodityId 商品ID
      */
-     public String getCreateOrder(String shopId,String transId,String realPrice,String userId,String openId,String posId,String commodityId) throws HttpProcessException, NoSuchAlgorithmException, InvalidKeyException {
+     public String getCreateOrder(String shopId,String transId,String realPrice,String userId,String openId,String posId,String commodityId) throws Exception {
          String post="";
          for (int i = 0; i < 1; i++) {
              final String NUMBER = ".";
@@ -574,6 +577,110 @@ public class CommonUsedUtil {
          }
          return  post;
      }
+
+    /**
+     *生成交易订单
+     **/
+    @Test
+    public void getOrder() throws Exception {
+        for (int i = 0; i < 1; i++) {
+            final String NUMBER = ".";
+            final String ALGORITHM = "HmacSHA256";
+            HttpClient client = null;
+            try {
+                client = HCB.custom()
+                        .pool(50, 10)
+                        .retry(3).build();
+            } catch (HttpProcessException e) {
+                e.printStackTrace();
+            }
+            String timestamp = "" + System.currentTimeMillis();
+            String uid = "uid_ef6d2de5";
+            String appId = "49998b971ea0";
+            String ak = "3fdce1db0e843ee0";
+            String router = "/business/precipitation/TRANS_INFO_RECEIVE/v1.0";
+            String nonce = UUID.randomUUID().toString();
+            String sk = "5036807b1c25b9312116fd4b22c351ac";
+            // java代码示例
+            String requestUrl = "http://dev.api.winsenseos.com/retail/api/data/biz";
+
+            // 1. 将以下参数(uid、app_id、ak、router、timestamp、nonce)的值之间使用顿号(.)拼接成一个整体字符串
+            String signStr = uid + NUMBER + appId + NUMBER + ak + NUMBER + router + NUMBER + timestamp + NUMBER + nonce;
+            // 2. 使用HmacSHA256加密算法, 使用平台分配的sk作为算法的密钥. 对上面拼接后的字符串进行加密操作,得到byte数组
+            Mac sha256Hmac = Mac.getInstance(ALGORITHM);
+            SecretKeySpec encodeSecretKey = new SecretKeySpec(sk.getBytes(StandardCharsets.UTF_8), ALGORITHM);
+            sha256Hmac.init(encodeSecretKey);
+            byte[] hash = sha256Hmac.doFinal(signStr.getBytes(StandardCharsets.UTF_8));
+            // 3. 对2.中的加密结果,再进行一次base64操作, 得到一个字符串
+            String auth = Base64.getEncoder().encodeToString(hash);
+
+            Header[] headers = HttpHeader.custom()
+                    .other("Accept", "application/json")
+                    .other("Content-Type", "application/json;charset=utf-8")
+                    .other("timestamp", timestamp)
+                    .other("nonce", nonce)
+                    .other("ExpiredTime", "50 * 1000")
+                    .other("Authorization", auth)
+                    .build();
+            String time = dt.getHistoryDate(0);
+            String time1 = dt.getHHmm(0);
+            String userId = "tester" + CommonUtil.getRandom(6);
+            String transId = "QAtest_" + CommonUtil.getRandom(3) + time + time1;
+            String transTime = "" + System.currentTimeMillis();
+            String str = "{\n" +
+                    "  \"uid\": \"uid_ef6d2de5\",\n" +
+                    "  \"app_id\": \"49998b971ea0\",\n" +
+                    "  \"request_id\": \"5d45a085-8774-4jd0-943e-ded373ca6a919987\",\n" +
+                    "  \"version\": \"v1.0\",\n" +
+                    "  \"router\": \"/business/precipitation/TRANS_INFO_RECEIVE/v1.0\",\n" +
+                    "  \"data\": {\n" +
+                    "    \"biz_data\":  {\n" +
+                    "        \"shop_id\": \"43072\",\n" +
+                    "        \"trans_id\": " + "\"" + transId + "\"" + " ,\n" +
+                    "        \"trans_time\": " + "\"" + transTime + "\"" + " ,\n" +
+                    "        \"trans_type\": [\n" +
+                    "            \"W\"\n" +
+                    "        ],\n" +
+                    "        \"user_id\":  " + "\"" + userId + "\"" + " ,\n" +
+                    "        \"total_price\": 1800,\n" +
+                    "        \"real_price\": 1500,\n" +
+//                        "        \"openid\": \"823849023iidijdiwiodede3330\",\n" +
+                    "        \"shopType\": \"SHOP_TYPE\",\n" +
+                    "        \"orderNumber\": \"13444894484\",\n" +
+                    "        \"memberName\":\"自动化在回归\",\n" +
+                    "        \"receipt_type\":\"小票类型\",\n" +
+                    "        \"posId\": \"pos-1234586789\",\n" +
+                    "        \"commodityList\": [\n" +
+                    "            {\n" +
+                    "                \"commodityId\": \"iPhone12A42234\",\n" +
+                    "                \"commodity_name\":\"苹果12s\",\n" +
+                    "                \"unit_price\": 200,\n" +
+                    "                \"num\": 4\n" +
+                    "            },\n" +
+                    "            {\n" +
+                    "                \"commodityId\": \"banan3424724E\",\n" +
+                    "                \"commodity_name\":\"香蕉20根啊\",\n" +
+                    "                \"unit_price\": 2,\n" +
+                    "                \"num\": 4\n" +
+                    "            },\n" +
+                    "            {\n" +
+                    "                \"commodityId\": \"Apple3424323234\",\n" +
+                    "                \"commodity_name\":\"苹果20ge\",\n" +
+                    "                \"unit_price\": 3,\n" +
+                    "                \"num\": 4\n" +
+                    "            }\n" +
+                    "        ]\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}";
+
+            JSONObject jsonObject = JSON.parseObject(str);
+            HttpConfig config = HttpConfig.custom().headers(headers).url(requestUrl).json(JSON.toJSONString(jsonObject)).client(client);
+            String post = HttpClientUtil.post(config);
+            System.out.println(post);
+
+        }
+    }
 
 
 

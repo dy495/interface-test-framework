@@ -1,5 +1,4 @@
 package com.haisheng.framework.testng.bigScreen.fengkongdaily.util;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -11,7 +10,6 @@ import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.LoginPcScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import org.springframework.util.StringUtils;
-
 import java.util.List;
 
 public class RiskControlUtil extends TestCaseCommon {
@@ -68,15 +66,16 @@ public class RiskControlUtil extends TestCaseCommon {
     }
 
     /**
-     * @description:风控登录
+     * @description:风控登录--手机号验证码登录（0：账号密码，1：验证码 ,2:用户名密码）
      * @author:gly
      * @time:2021/4/1
      */
     public String pcLogin(String phone, String password) {
-        IScene scene= LoginPcScene.builder().type(0).username(phone).password(password).build();
+        IScene scene= LoginPcScene.builder().type(1).phone(phone).verificationCode(password).build();
         String message=visitor.invokeApi(scene,false).getString("message");
         return message;
     }
+    
 
     //--------------------------------收银风控-------------
 
