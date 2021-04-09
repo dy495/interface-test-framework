@@ -92,13 +92,15 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             double longitude = 54.2315123451324134;
             double latitude = 11.3214213532452345;
             String phone = "13666666666";
-            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
+            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
+            String base64 = info.getImgStr(pic);
+            String path = md.pcFileUpload(base64).getString("pic_path");
             String shopName = "INS门店1";
             String label = "这是一家门店";
             //登录小程序
             wx.loginApplet(EnumAppletToken.INS_ZT_DAILY.getToken());
             //获取初始pc门店数量
-            JSONArray shop_list = md.getAuthI_shopId().getJSONArray("shop_list");
+            JSONArray shop_list = md.searchShop(null,null,null,null,1,10).getJSONArray("shop_list");
             int a = shop_list.size();
             //获取初始小程序门店数量
             JSONArray list0 = wx.nearShops(null,longitude,latitude).getJSONArray("list");

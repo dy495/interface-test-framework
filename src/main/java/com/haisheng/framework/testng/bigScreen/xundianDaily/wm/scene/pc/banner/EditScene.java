@@ -20,11 +20,16 @@ public class EditScene extends BaseScene {
      */
     private final JSONArray list;
 
+    private final String adName;
+    private final String adType;
+
 
     @Override
-    public JSONObject getRequestBody(){
+    public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("list", list);
+        object.put("ad_name",adName);
+        object.put("ad_type",adType);
         return object;
     }
 

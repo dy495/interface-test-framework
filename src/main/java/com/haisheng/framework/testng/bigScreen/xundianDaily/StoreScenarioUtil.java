@@ -3241,7 +3241,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject member_level_update(int id,String level_name,String level_icon_path,String level_condition_desc,String level_benefits_desc,String level_experience,int level_sort,int experience_exchange,int integral_exchange,boolean is_hide) throws Exception {
+    public JSONObject member_level_update(int id,String level_name,String level_icon_path,String level_condition_desc,String level_benefits_desc,int level_experience,int level_sort,int experience_exchange,int integral_exchange,Boolean is_hide) throws Exception {
         String path = "/patrol/member/level/update";
         JSONObject json = new JSONObject();
         json.put("id",id);
@@ -3255,7 +3255,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
         json.put("integral_exchange",integral_exchange);
         json.put("is_hide",is_hide);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
     }
 
     /**
@@ -3586,6 +3586,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
         json.put("users",users);
         json.put("recommend",recommend);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
+//        return JSON.parseObject(res).getJSONObject("data");
         return invokeApi(path, JSONObject.parseObject(json.toJSONString()), false);
     }
     /**
@@ -3637,19 +3638,20 @@ public class StoreScenarioUtil extends TestCaseCommon {
      *@author:
      *@time:
      */
-    public JSONObject updateTaste(Integer id,String taste_image_path,String head_image_path,String taste_name,String taste_explain,Integer users,Boolean recommend) throws Exception {
+    public JSONObject updateTaste(Integer id,String taste_image_path,String head_image_path,String show_image_path,String taste_name,String taste_explain,Integer users,Boolean recommend) throws Exception {
         String url = "/patrol/taste/update";
         JSONObject json = new JSONObject();
 //        json.put("referer",referer);
         json.put("id",id);
         json.put("taste_image_path",taste_image_path);
         json.put("head_image_path",head_image_path);
+        json.put("show_image_path",show_image_path);
         json.put("taste_name",taste_name);
         json.put("taste_explain",taste_explain);
         json.put("users",users);
         json.put("recommend",recommend);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
     }
 
     /**
@@ -3764,7 +3766,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      *@author:
      *@time:
      */
-    public JSONObject createShop(String shop_image_path,String shop_name,String label,String opening_time,String closing_time,String manager_name,String manager_phone,String city,String address,double longitude,double latitude,String tripartite_shop_id,Integer recommended) throws Exception {
+    public JSONObject createShop(String shop_image_path,String shop_name,String label,String opening_time,String closing_time,String manager_name,String manager_phone,String district_code,String address,double longitude,double latitude,String tripartite_shop_id,Integer recommended) throws Exception {
         String url = "/patrol/shop/create";
         JSONObject json = new JSONObject();
         json.put("shop_image_path",shop_image_path);
@@ -3774,7 +3776,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
         json.put("closing_time",closing_time);
         json.put("manager_name",manager_name);
         json.put("manager_phone",manager_phone);
-        json.put("city",city);
+        json.put("district_code",district_code);
         json.put("address",address);
         json.put("longitude",longitude);
         json.put("latitude",latitude);

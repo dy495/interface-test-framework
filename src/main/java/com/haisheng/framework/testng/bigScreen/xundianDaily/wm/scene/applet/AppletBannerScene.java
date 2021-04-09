@@ -17,18 +17,18 @@ public class AppletBannerScene extends BaseScene {
      * 是否必填 false
      * 版本 -
      */
-    private final String referer;
+    private final String adType;
 
 
     @Override
     public JSONObject getRequestBody(){
         JSONObject object = new JSONObject();
-        object.put("referer", referer);
+        object.put("ad_type", adType);
         return object;
     }
 
     @Override
     public String getPath() {
-        return "/patrol-applet/banner";
+        return "/patrol-applet/granted/banner";
     }
 }

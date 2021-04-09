@@ -25,6 +25,7 @@ import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.integral
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.integralmall.*;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.loginuser.ShopListScene;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.messagemanager.PushMessageScene;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.operation.ArticleList;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.voucher.ApplyApprovalScene;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.voucher.ApplyPageScene;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.vouchermanage.*;
@@ -1022,5 +1023,18 @@ public class SupporterUtil {
         object.put("specifications_item", "长续航版");
         array.add(object);
         return array;
+    }
+
+
+    //--------------------------------------------------banner----------------------------------------------------
+
+    /**
+     * 获取文章id
+     *
+     * @return 文章id集合
+     */
+    public List<Long> getArticleIdList() {
+        JSONArray array = visitor.invokeApi(ArticleList.builder().build()).getJSONArray("list");
+        return array.stream().map(e -> (JSONObject) e).map(e -> e.getLong("id")).collect(Collectors.toList());
     }
 }
