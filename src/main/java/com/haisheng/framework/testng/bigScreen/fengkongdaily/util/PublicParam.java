@@ -1,6 +1,11 @@
 package com.haisheng.framework.testng.bigScreen.fengkongdaily.util;
 
+import com.haisheng.framework.util.CommonUtil;
+import com.haisheng.framework.util.DateTimeUtil;
+
 public class PublicParam {
+    DateTimeUtil dt =new DateTimeUtil();
+
     public int page = 1;
     public int size = 50;
     public String userName="";
@@ -45,5 +50,11 @@ public class PublicParam {
     public String staffNameException="1234567890123456789012345678901234567890哈哈hh@#*自动化呀呀";
     //编辑账号名称
     public String staffEditName="已编辑自动化账号"+(int) (Math.random() * 10000);
+    //客户ID
+    public String userId = "tester" + CommonUtil.getRandom(6);
+    //交易ID
+    String time = dt.getHistoryDate(0);
+    String time1 = dt.getHHmm(0);
+    public String transId = "QATest_" + CommonUtil.getRandom(3) + time + time1;
 
 }
