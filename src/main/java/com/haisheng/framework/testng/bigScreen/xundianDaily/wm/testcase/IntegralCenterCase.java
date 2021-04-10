@@ -1057,7 +1057,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
         try {
             IScene scene = ExchangeOrderScene.builder().build();
             ExchangeOrderBean exchangeOrderBean = util.collectBean(scene, ExchangeOrderBean.class).get(0);
-            String customerName = exchangeOrderBean.getMemberName().substring(0, 3);
+            String customerName = exchangeOrderBean.getMemberName();
             IScene exchangeOrderScene = ExchangeOrderScene.builder().member(customerName).build();
             List<ExchangeOrderBean> exchangeOrderBeanList = util.collectBean(exchangeOrderScene, ExchangeOrderBean.class);
             exchangeOrderBeanList.forEach(e -> Preconditions.checkArgument(e.getMemberName().contains(customerName), "按照" + customerName + "搜索出异常结果：" + e.getMemberName()));

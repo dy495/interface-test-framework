@@ -847,7 +847,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
-    @Test(description = "卡券管理--进行中的卡券增发，再撤回增发卡券，审核列表状态变为已撤回", dependsOnMethods = "voucherManage_system_1")
+    @Test(description = "卡券管理--进行中的卡券增发，再撤回增发卡券，审核列表状态变为已撤回")
     public void voucherManage_data_31() {
         try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
@@ -914,7 +914,8 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             String[] strings = {EnumDesc.DESC_BETWEEN_500_1000.getDesc()};
             Arrays.stream(strings).forEach(desc -> {
                 IScene scene = CreateScene.builder().voucherName(util.createVoucherName())
-                        .cardType(VoucherTypeEnum.COMMODITY_EXCHANGE.name()).parValue(99.99).voucherDescription(desc).stock(1000)
+                        .cardType(VoucherTypeEnum.FULL_DISCOUNT.name()).isThreshold(false)
+                        .parValue(99.99).voucherDescription(desc).stock(1000)
                         .shopType(0).shopIds(util.getShopIdList(2)).selfVerification(true).build();
                 String message = visitor.invokeApi(scene, false).getString("message");
                 String err = StringUtils.isEmpty(desc) ? "卡券说明不能为空" : "卡券描述不能超过500个字";
@@ -948,29 +949,6 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             collectMessage(e);
         } finally {
             saveData("卡券管理--新建卡券--库存数量异常情况");
-        }
-    }
-
-    //ok
-    @Test(description = "卡券管理--新建卡券--业务类型异常情况")
-    public void voucherManage_system_6() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            Integer[] integers = {null, -1, 100};
-            Arrays.stream(integers).forEach(shopType -> {
-                IScene scene = CreateScene.builder().voucherName(util.createVoucherName())
-                        .cardType(VoucherTypeEnum.COMMODITY_EXCHANGE.name()).parValue(99.99)
-                        .voucherDescription(util.getDesc()).stock(1000)
-                        .shopType(shopType).shopIds(util.getShopIdList()).selfVerification(true).build();
-                String message = visitor.invokeApi(scene, false).getString("message");
-                String err = shopType == null ? "业务类型不能为空" : "业务类型不存在";
-                CommonUtil.checkResult("业务类型为：" + shopType, err, message);
-                CommonUtil.logger(shopType);
-            });
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("卡券管理--新建卡券--业务类型异常情况");
         }
     }
 

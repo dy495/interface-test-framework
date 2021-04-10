@@ -15,7 +15,6 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.IntegralCategoryTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.commodity.CommodityStatusEnum;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.enumerator.AccountEnum;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.integralcenter.ChangeSwitchStatusScene;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.integralmall.*;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.util.UserUtil;
@@ -104,20 +103,17 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    //ok
     @Test(description = "商品品牌-创建品牌，修改品牌")
     public void integralMall_system_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String picPath;
-            picPath = util.getPicPath(FILEPATH, "1:1");
-            CreateBrandScene.builder().brandName("奔驰").brandDescription("梅赛德斯奔驰").brandPic(picPath).build().invoke(visitor);
+            CreateBrandScene.builder().brandName("奔驰").brandDescription("梅赛德斯奔驰").brandPic(util.getCategoryPicPath()).build().invoke(visitor);
             IScene scene = BrandPageScene.builder().build();
-            BrandPageBean brandPageBean = util.collectBeanByField(scene, BrandPageBean.class, "brand_name", "奔驰");
-            Long id = brandPageBean.getId();
+            Long id = util.collectBeanByField(scene, BrandPageBean.class, "brand_name", "奔驰").getId();
             //修改品牌
-            ChangeSwitchStatusScene.builder().id(id).status(false).build().invoke(visitor);
-            picPath = util.getPicPath(FILEPATH_TWO, "1:1");
-            EditBrandScene.builder().id(id).brandName("联想").brandDescription("thinkPad").brandPic(picPath).build().invoke(visitor);
+            ChangeBrandStatusScene.builder().id(id).status(false).build().invoke(visitor);
+            EditBrandScene.builder().id(id).brandName("联想").brandDescription("thinkPad").brandPic(util.getCategoryPicPath()).build().invoke(visitor);
             BrandPageBean newBrandPageBean = util.collectBeanByField(scene, BrandPageBean.class, "id", id);
             CommonUtil.checkResult("修改后品牌名称", "联想", newBrandPageBean.getBrandName());
             CommonUtil.checkResult("修改后品牌描述", "thinkPad", newBrandPageBean.getBrandDescription());
@@ -134,11 +130,11 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
     public void integralMall_system_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String[] names = {EnumDesc.DESC_10.getDesc() + "1", null, ""};
+            String[] names = {EnumDesc.DESC_20.getDesc() + "1", null, ""};
             Arrays.stream(names).forEach(name -> {
                 String picPath = util.getPicPath(FILEPATH, "1:1");
                 String message = CreateBrandScene.builder().brandName(name).brandDescription("梅赛德斯奔驰").brandPic(picPath).build().invoke(visitor, false).getString("message");
-                String err = StringUtils.isEmpty(message) ? "" : "";
+                String err = name == null ? "品牌名称不能为空" : "品牌名称长度应该为1～20个字";
                 CommonUtil.checkResult("商品名称为" + name, err, message);
             });
         } catch (AssertionError | Exception e) {
@@ -316,7 +312,7 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
             String[] names = {"", null, EnumDesc.DESC_10.getDesc() + "1"};
             Arrays.stream(names).forEach(name -> {
                 String message = CreateCategoryScene.builder().categoryName(name).belongPic(picPath).categoryLevel(IntegralCategoryTypeEnum.FIRST_CATEGORY.name()).build().invoke(visitor, false).getString("message");
-                String err = StringUtils.isEmpty(name) ? "品类名称不能为空" : "品类名称需要在1-10个字内";
+                String err = name == null ? "品类名称不能为空" : "品类名称需要在1-10个字内";
                 CommonUtil.checkResult("品类名称为" + name, err, message);
             });
         } catch (AssertionError | Exception e) {
