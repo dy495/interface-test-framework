@@ -54,10 +54,10 @@ import java.util.stream.Collectors;
  * @author wangmin
  * @date 2021/1/29 11:17
  */
-public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
+public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce PRODUCE = EnumTestProduce.INS_ONLINE;
-    private static final AccountEnum ALL_AUTHORITY = AccountEnum.YUE_XIU_DAILY;
-    private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.INS_WM_DAILY;
+    private static final AccountEnum ALL_AUTHORITY = AccountEnum.YUE_XIU_ONLINE;
+    private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.INS_WM_ONLINE;
     private static final Integer SIZE = 100;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public UserUtil user = new UserUtil(visitor);
@@ -69,11 +69,11 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("before class initial");
         CommonConfig commonConfig = new CommonConfig();
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_XUNDIAN_DAILY_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_MENDIAN_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.XUNDIAN_DAILY_TEST.getJobName());
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.XUNDIAN_ONLINE_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
-        commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
+        commonConfig.dingHook = DingWebhook.ONLINE_STORE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.product = PRODUCE.getAbbreviation();
         commonConfig.referer = PRODUCE.getReferer();
         beforeClassInit(commonConfig);
@@ -509,16 +509,17 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             Long id = exchangePageList.stream().filter(e -> Integer.parseInt(e.getExchangedAndSurplus().split("/")[1]) < 10).map(ExchangePage::getId).findFirst().orElse(util.createExchangeRealGoods().getId());
             String goodsName = ExchangeGoodsStockScene.builder().id(id).build().invoke(visitor).getString("goods_name");
             JSONObject specificationDetail = ExchangeCommoditySpecificationsListScene.builder().id(id).build().invoke(visitor).getJSONArray("specification_detail_list").getJSONObject(0);
-            Integer[] integers = {null, -1, 0};
+            Integer[] integers = {1000000000, null, -1, 0};
             Arrays.stream(integers).forEach(num -> {
                 String addMessage = EditExchangeStockScene.builder().changeStockType(ChangeStockTypeEnum.ADD.name()).num(num).id(specificationDetail.getLong("id"))
                         .goodsName(goodsName).type(CommodityTypeEnum.REAL.name()).build().invoke(visitor, false).getString("message");
-                String err = num == null ? "改变库存数量不能为空" : "库存变动数量需大于等于1";
+                String err = num == null ? "改变库存数量不能为空" : num == 1000000000 ? "超出最大库存限额，请重新输入！" : "库存变动数量需大于等于1";
                 CommonUtil.checkResult(goodsName + "修改库存" + num, err, addMessage);
                 CommonUtil.logger(num);
                 String minusMessage = EditExchangeStockScene.builder().changeStockType(ChangeStockTypeEnum.MINUS.name()).num(num).id(specificationDetail.getLong("id"))
                         .goodsName(goodsName).type(CommodityTypeEnum.REAL.name()).build().invoke(visitor, false).getString("message");
-                CommonUtil.checkResult(goodsName + "修改库存" + num, err, minusMessage);
+                String errTwo = num == null ? "改变库存数量不能为空" : num == 1000000000 ? "减少库存量需小于等于当前库存量" : "库存变动数量需大于等于1";
+                CommonUtil.checkResult(goodsName + "修改库存" + num, errTwo, minusMessage);
                 CommonUtil.logger(num);
             });
         } catch (Exception | AssertionError e) {
@@ -1060,7 +1061,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
         try {
             IScene scene = ExchangeOrderScene.builder().build();
             ExchangeOrderBean exchangeOrderBean = util.collectBean(scene, ExchangeOrderBean.class).get(0);
-            String customerName = exchangeOrderBean.getMemberName().substring(0, 3);
+            String customerName = exchangeOrderBean.getMemberName();
             IScene exchangeOrderScene = ExchangeOrderScene.builder().member(customerName).build();
             List<ExchangeOrderBean> exchangeOrderBeanList = util.collectBean(exchangeOrderScene, ExchangeOrderBean.class);
             exchangeOrderBeanList.forEach(e -> Preconditions.checkArgument(e.getMemberName().contains(customerName), "按照" + customerName + "搜索出异常结果：" + e.getMemberName()));
@@ -1149,6 +1150,4 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             saveData("积分明细--各个积分规则所得积分相加=此规则的已发放积分");
         }
     }
-
-
 }

@@ -23,6 +23,8 @@ public enum EnumJobName {
     JIAOCHEN_ONLINE_TEST("jiaochen-online-test"),
 
     XUNDIAN_DAILY_TEST("xundian-daily-test"),
+
+    XUNDIAN_ONLINE_TEST("xundian-online-test"),
     ;
 
     EnumJobName(String jobName) {

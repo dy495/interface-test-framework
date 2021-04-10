@@ -4,7 +4,10 @@ import lombok.Getter;
 
 public enum AccountEnum {
 
-    YUE_XIU_DAILY("yuexiu@test.com", "yuexiu", true, "13874653765", "越秀测试账号", 2, "总管理员");
+    YUE_XIU_DAILY("yuexiu@test.com", "yuexiu", true, "13874653765", "越秀测试账号", 2, "总管理员"),
+
+    YUE_XIU_ONLINE("storedemo@winsense.ai", "storedemo", false, "12313123132", "管理员", 2, "总管理员"),
+    ;
 
     AccountEnum(String username, String password, boolean isDaily, String phone, String name, Integer roleId, String roleName) {
         this.username = username;

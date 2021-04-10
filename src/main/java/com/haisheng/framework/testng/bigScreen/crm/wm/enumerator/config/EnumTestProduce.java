@@ -24,7 +24,7 @@ public enum EnumTestProduce {
 
     INS_DAILY("门店-INS 日常 ", "https://servicewechat.com/wx937d85ff683db555/0/page-frame.html", "http://dev.inspect.store.winsenseos.cn", "", "INS", ""),
 
-    INS_ONLINE("门店-INS 赢识线上 ", "", "", "", "INS", ""),
+    INS_ONLINE("门店-INS 赢识线上 ", "", "http://inspect.store.winsenseos.com", "", "INS", ""),
 
     FK_DAILY("风控 赢识日常 ", "", "http://127.0.0.1", "", "FK", ""),
 
