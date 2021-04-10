@@ -952,7 +952,7 @@ public class SupporterUtil {
     public JSONArray getSelectSpecifications(GoodsParamBean goodsParamBean) {
         JSONObject data = SpecificationsDetailScene.builder().id(goodsParamBean.getSpecificationsId()).build().invoke(visitor);
         String specificationsName = data.getString("specifications_name");
-        JSONObject specificationsDetail = data.getJSONArray("list").getJSONObject(0);
+        JSONObject specificationsDetail = data.getJSONArray("specifications_list").getJSONObject(0);
         JSONArray selectSpecifications = new JSONArray();
         JSONObject object = new JSONObject();
         object.put("specifications_id", goodsParamBean.getSpecificationsId());
@@ -969,13 +969,11 @@ public class SupporterUtil {
 
     public JSONArray getGoodsSpecificationsList(GoodsParamBean goodsParamBean) {
         JSONObject data = SpecificationsDetailScene.builder().id(goodsParamBean.getSpecificationsId()).build().invoke(visitor);
-        JSONObject specificationsDetail = data.getJSONArray("list").getJSONObject(0);
+        JSONObject specificationsDetail = data.getJSONArray("specifications_list").getJSONObject(0);
         JSONArray goodsSpecificationsList = new JSONArray();
         JSONObject object = new JSONObject();
         object.put("first_specifications", specificationsDetail.getLong("specifications_id"));
         object.put("first_specifications_name", specificationsDetail.getString("specifications_item"));
-        object.put("second_specifications", "");
-        object.put("second_specifications_name", "");
         object.put("head_pic", getCategoryPicPath());
         object.put("price", 9.99);
         goodsSpecificationsList.add(object);
@@ -994,11 +992,6 @@ public class SupporterUtil {
         Long brandId = CreateBrandScene.builder().brandPic(getCategoryPicPath()).brandName("特斯拉").brandDescription("商品使用，用完销毁").build().invoke(visitor).getLong("id");
         //给一级品类创建规格
         Long specificationsId = CreateSpecificationsScene.builder().belongsCategory(id).specificationsName("颜色").build().invoke(visitor).getLong("id");
-//        if (!isOneSpecifications) {
-        Long specificationsIdTwo = CreateSpecificationsScene.builder().belongsCategory(id).specificationsName("型号").build().invoke(visitor).getLong("id");
-        EditSpecificationsScene.builder().belongsCategory(id).id(specificationsIdTwo).specificationsList(getSpecificationsList()).specificationsName("型号").build().invoke(visitor);
-        goodsParamBean.setSpecificationsIdTwo(specificationsIdTwo);
-//        }
         EditSpecificationsScene.builder().belongsCategory(id).id(specificationsId).specificationsList(getSpecificationsList()).specificationsName("颜色").build().invoke(visitor);
         //给规格创建规格参数
         goodsParamBean.setFirstCategory(id);
@@ -1013,14 +1006,6 @@ public class SupporterUtil {
         JSONArray array = new JSONArray();
         JSONObject object = new JSONObject();
         object.put("specifications_item", "红色");
-        array.add(object);
-        return array;
-    }
-
-    public JSONArray getSpecificationsListListTwo() {
-        JSONArray array = new JSONArray();
-        JSONObject object = new JSONObject();
-        object.put("specifications_item", "长续航版");
         array.add(object);
         return array;
     }

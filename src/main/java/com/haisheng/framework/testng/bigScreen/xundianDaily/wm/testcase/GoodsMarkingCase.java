@@ -130,7 +130,7 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
     public void integralMall_system_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String[] names = {EnumDesc.DESC_20.getDesc() + "1", null, ""};
+            String[] names = {EnumDesc.DESC_20.getDesc() + "1", null};
             Arrays.stream(names).forEach(name -> {
                 String picPath = util.getPicPath(FILEPATH, "1:1");
                 String message = CreateBrandScene.builder().brandName(name).brandDescription("梅赛德斯奔驰").brandPic(picPath).build().invoke(visitor, false).getString("message");
@@ -1056,6 +1056,7 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    //ok
     @Test()
     public void goodsManager_system_10() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -1070,7 +1071,7 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
             ChangeSpecificationsStatusScene.builder().id(goodsParamBean.getSpecificationsId()).status(false).build().invoke(visitor);
             DeleteSpecificationsScene.builder().id(goodsParamBean.getSpecificationsId()).build().invoke(visitor);
             //删除品类
-            Long[] ids = {goodsParamBean.getFirstCategory(), goodsParamBean.getSecondCategory(), goodsParamBean.getThirdCategory()};
+            Long[] ids = {goodsParamBean.getThirdCategory(), goodsParamBean.getSecondCategory(), goodsParamBean.getFirstCategory()};
             Arrays.stream(ids).forEach(id -> {
                 ChangeStatusScene.builder().id(id).status(false).build().invoke(visitor);
                 DeleteCategoryScene.builder().id(id).build().invoke(visitor);
