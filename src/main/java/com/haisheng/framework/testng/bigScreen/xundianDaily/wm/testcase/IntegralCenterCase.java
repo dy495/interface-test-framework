@@ -506,16 +506,17 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             Long id = exchangePageList.stream().filter(e -> Integer.parseInt(e.getExchangedAndSurplus().split("/")[1]) < 10).map(ExchangePage::getId).findFirst().orElse(util.createExchangeRealGoods().getId());
             String goodsName = ExchangeGoodsStockScene.builder().id(id).build().invoke(visitor).getString("goods_name");
             JSONObject specificationDetail = ExchangeCommoditySpecificationsListScene.builder().id(id).build().invoke(visitor).getJSONArray("specification_detail_list").getJSONObject(0);
-            Integer[] integers = {null, -1, 0};
+            Integer[] integers = {1000000000, null, -1, 0};
             Arrays.stream(integers).forEach(num -> {
                 String addMessage = EditExchangeStockScene.builder().changeStockType(ChangeStockTypeEnum.ADD.name()).num(num).id(specificationDetail.getLong("id"))
                         .goodsName(goodsName).type(CommodityTypeEnum.REAL.name()).build().invoke(visitor, false).getString("message");
-                String err = num == null ? "改变库存数量不能为空" : "库存变动数量需大于等于1";
+                String err = num == null ? "改变库存数量不能为空" : num == 1000000000 ? "超出最大库存限额，请重新输入！" : "库存变动数量需大于等于1";
                 CommonUtil.checkResult(goodsName + "修改库存" + num, err, addMessage);
                 CommonUtil.logger(num);
                 String minusMessage = EditExchangeStockScene.builder().changeStockType(ChangeStockTypeEnum.MINUS.name()).num(num).id(specificationDetail.getLong("id"))
                         .goodsName(goodsName).type(CommodityTypeEnum.REAL.name()).build().invoke(visitor, false).getString("message");
-                CommonUtil.checkResult(goodsName + "修改库存" + num, err, minusMessage);
+                String errTwo = num == null ? "改变库存数量不能为空" : num == 1000000000 ? "减少库存量需小于等于当前库存量" : "库存变动数量需大于等于1";
+                CommonUtil.checkResult(goodsName + "修改库存" + num, errTwo, minusMessage);
                 CommonUtil.logger(num);
             });
         } catch (Exception | AssertionError e) {

@@ -6,7 +6,10 @@ import com.aliyun.openservices.shade.org.apache.commons.lang3.StringUtils;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumChecklistUser;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletVoucher;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherFormVoucherPageBean;
@@ -19,7 +22,6 @@ import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.enumerator.Vouche
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.generator.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.applet.granted.AppletMessageDetailScene;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.applet.granted.AppletMessageListScene;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.record.PushMsgPageScene;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.voucher.ApplyPageScene;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.vouchermanage.*;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.util.SupporterUtil;
@@ -52,8 +54,8 @@ import java.util.stream.Collectors;
 public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce PRODUCE = EnumTestProduce.INS_DAILY;
     private static final AccountEnum ALL_AUTHORITY = AccountEnum.YUE_XIU_DAILY;
-    private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.INS_ZT_DAILY;
-    private static final EnumAppletToken APPLET_USER_TWO = EnumAppletToken.JC_XMF_DAILY;
+    private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.INS_WM_DAILY;
+    private static final EnumAppletToken APPLET_USER_TWO = EnumAppletToken.INS_ZT_DAILY;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public UserUtil user = new UserUtil(visitor);
     public SupporterUtil util = new SupporterUtil(visitor);
@@ -72,6 +74,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.product = PRODUCE.getAbbreviation();
         commonConfig.referer = PRODUCE.getReferer();
         beforeClassInit(commonConfig);
+        user.loginPc(ALL_AUTHORITY);
     }
 
     @AfterClass
@@ -155,10 +158,12 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             IScene scene = VoucherFormVoucherPageScene.builder().voucherName(anEnum.getDesc()).voucherStatus(VoucherStatusEnum.WAITING.name()).build();
             List<VoucherFormVoucherPageBean> voucherFormVoucherPageBeanList = util.collectBean(scene, VoucherFormVoucherPageBean.class);
             List<Long> voucherIdList = voucherFormVoucherPageBeanList.stream().map(VoucherFormVoucherPageBean::getVoucherId).collect(Collectors.toList());
-            voucherIdList.forEach(voucherId -> {
-                RecallVoucherScene.builder().id(voucherId).build().invoke(visitor);
-                DeleteVoucherScene.builder().id(voucherId).build().invoke(visitor);
-            });
+            if (voucherIdList.size() != 0) {
+                voucherIdList.forEach(voucherId -> {
+                    RecallVoucherScene.builder().id(voucherId).build().invoke(visitor);
+                    DeleteVoucherScene.builder().id(voucherId).build().invoke(visitor);
+                });
+            }
         });
     }
 
@@ -801,30 +806,28 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
     @Test(description = "卡券管理--转移卡券，转移人小程序我的卡券数量-1，被转移人我的卡券数量+1")
     public void voucherManage_data_30() {
         logger.logCaseStart(caseResult.getCaseName());
+        Long id = null;
         try {
             //获取已使用的卡券列表
             visitor.login(APPLET_USER_ONE.getToken());
             int transferVoucherNum = util.getAppletVoucherNum();
             int transferMessageNum = util.getAppletMessageNum();
             AppletVoucher appletVoucher = util.getAppletVoucher(VoucherUseStatusEnum.NEAR_EXPIRE);
-            Long id = appletVoucher.getId();
+            id = appletVoucher.getId();
             String voucherName = appletVoucher.getTitle();
             visitor.login(APPLET_USER_TWO.getToken());
             int receiveVoucherNum = util.getAppletVoucherNum();
             //转移
             user.loginPc(ALL_AUTHORITY);
-            int messageNum = visitor.invokeApi(PushMsgPageScene.builder().build()).getInteger("total");
-            IScene transferScene = TransferScene.builder().transferPhone(APPLET_USER_ONE.getPhone()).receivePhone(APPLET_USER_TWO.getPhone()).voucherIds(getList(id)).build();
-            visitor.invokeApi(transferScene);
+            TransferScene.builder().transferPhone(APPLET_USER_ONE.getPhone()).receivePhone(APPLET_USER_TWO.getPhone()).voucherIds(getList(id)).build().invoke(visitor);
             visitor.login(APPLET_USER_ONE.getToken());
             int newTransferVoucherNum = util.getAppletVoucherNum();
-            int newTransferMessageNum = util.getAppletMessageNum();
             CommonUtil.checkResult("转移者我的卡券数", transferVoucherNum - 1, newTransferVoucherNum);
-            //我的消息数量
+            int newTransferMessageNum = util.getAppletMessageNum();
             CommonUtil.checkResult("转移者我的消息数", transferMessageNum + 1, newTransferMessageNum);
             //我的消息内容
-            Long messageId = visitor.invokeApi(AppletMessageListScene.builder().size(20).build()).getJSONArray("list").getJSONObject(0).getLong("id");
-            JSONObject response = visitor.invokeApi(AppletMessageDetailScene.builder().id(messageId).build());
+            Long messageId = AppletMessageListScene.builder().size(20).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            JSONObject response = AppletMessageDetailScene.builder().id(messageId).build().invoke(visitor);
             String title = response.getString("title");
             String content = response.getString("content");
             CommonUtil.checkResult("消息名称", "系统消息", title);
@@ -832,16 +835,12 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             visitor.login(APPLET_USER_TWO.getToken());
             int newReceiveVoucherNum = util.getAppletVoucherNum();
             CommonUtil.checkResult("接收者我的卡券数", receiveVoucherNum + 1, newReceiveVoucherNum);
-            //pc消息记录+1
-            user.loginPc(ALL_AUTHORITY);
-            JSONObject messageResponse = visitor.invokeApi(PushMsgPageScene.builder().build());
-            int newMessageNum = messageResponse.getInteger("total");
-            CommonUtil.checkResult("消息记录数", messageNum + 1, newMessageNum);
-            String messageContent = messageResponse.getJSONArray("list").getJSONObject(0).getString("content");
-            CommonUtil.checkResult("消息内容", "您的卡券【" + voucherName + "】已被转移至" + APPLET_USER_TWO.getPhone() + "账号，如非本人授权，请联系轿辰会客服，对应卡券变更至对应转移的账号中；", messageContent);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
+            //转回去
+            user.loginPc(ALL_AUTHORITY);
+            TransferScene.builder().transferPhone(APPLET_USER_TWO.getPhone()).receivePhone(APPLET_USER_ONE.getPhone()).voucherIds(getList(id)).build().invoke(visitor);
             saveData("卡券管理--转移卡券，转移人小程序我的卡券数量-1，被转移人我的卡券数量+1");
         }
     }

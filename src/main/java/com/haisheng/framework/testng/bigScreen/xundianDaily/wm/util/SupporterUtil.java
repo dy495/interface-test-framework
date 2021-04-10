@@ -73,7 +73,7 @@ public class SupporterUtil {
      */
     public <T> List<T> collectBean(IScene scene, Class<T> bean) {
         List<T> list = new ArrayList<>();
-        int total = visitor.invokeApi(scene).getInteger("total");
+        int total = scene.invoke(visitor).getInteger("total");
         int s = CommonUtil.getTurningPage(total, SIZE);
         for (int i = 1; i < s; i++) {
             scene.setPage(i);
