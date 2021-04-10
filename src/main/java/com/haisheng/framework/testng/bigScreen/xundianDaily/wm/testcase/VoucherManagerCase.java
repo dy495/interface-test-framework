@@ -1017,7 +1017,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
-    @Test(description = "卡券管理--卡券转移，转移账号异常", enabled = false)
+    @Test(description = "卡券管理--卡券转移，转移账号异常")
     public void voucherManage_system_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1030,8 +1030,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             //转移
             user.loginPc(ALL_AUTHORITY);
             Arrays.stream(phones).forEach(phone -> {
-                IScene scene = TransferScene.builder().transferPhone(phone).receivePhone(APPLET_USER_ONE.getPhone()).voucherIds(getList(voucherId)).build();
-                String message = visitor.invokeApi(scene, false).getString("message");
+                String message = TransferScene.builder().transferPhone(phone).receivePhone(APPLET_USER_ONE.getPhone()).voucherIds(getList(voucherId)).build().invoke(visitor, false).getString("message");
                 String err = "推送用户id不能为空";
                 CommonUtil.checkResult("转移卡券" + voucherName, err, message);
             });
@@ -1043,7 +1042,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
-    @Test(description = "卡券管理--卡券转移，接收账号异常", enabled = false)
+    @Test(description = "卡券管理--卡券转移，接收账号异常")
     public void voucherManage_system_12() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
