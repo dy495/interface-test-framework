@@ -166,6 +166,7 @@ public class CreateScene extends BaseScene {
     public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("id", id);
+        object.put("cost", cost);
         object.put("voucher_name", voucherName);
         object.put("subject_type", subjectType);
         object.put("subject_id", subjectId);

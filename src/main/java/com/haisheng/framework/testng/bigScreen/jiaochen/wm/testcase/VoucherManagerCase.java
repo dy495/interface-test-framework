@@ -88,9 +88,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
     }
-
-
-    //ok
+        //ok
     @Test(description = "卡券管理--创建卡券--列表数+1&卡券状态=待审批；【卡券审批】列表数+1&审批状态=审批中&申请类型=首发")
     public void voucherManage_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -1365,7 +1363,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //todo
-    @Test(description = "卡券申请--卡券申请页个状态数量=审批数据统计中各状态数量", enabled = false)
+    @Test(description = "卡券申请--卡券申请页各状态数量=审批数据统计中各状态数量", enabled = false)
     public void voucherApply_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

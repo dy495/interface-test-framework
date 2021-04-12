@@ -26,7 +26,7 @@ public class WorkingPackage extends AbstractPackage {
         logger("CREATE WORKING START");
         Long packageId = new PackageGenerator.Builder().visitor(visitor).status(PackageStatusEnum.AUDITING).buildPackage().getPackageId();
         super.visitor = visitor;
-        AuditPackageStatusScene.builder().id(packageId).status(AuditStatusEnum.AGREE.name()).build().invoke(visitor, true);
+        AuditPackageStatusScene.builder().id(packageId).status(AuditStatusEnum.AGREE.name()).build().invoke(visitor);
         logger("CREATE WORKING FINISH");
     }
 

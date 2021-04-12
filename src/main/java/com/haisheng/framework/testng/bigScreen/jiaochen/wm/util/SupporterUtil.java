@@ -161,7 +161,7 @@ public class SupporterUtil {
     }
 
     public CreateScene.CreateSceneBuilder createVoucherBuilder(Integer stock, VoucherTypeEnum type) {
-        CreateScene.CreateSceneBuilder builder = createVoucherBuilder(true).stock(stock).cost(0.01).cardType(type.name());
+        CreateScene.CreateSceneBuilder builder = createVoucherBuilder(true).stock(stock).cardType(type.name());
         switch (type.name()) {
             case "FULL_DISCOUNT":
                 builder.isThreshold(true).thresholdPrice(999.99).parValue(49.99);
@@ -187,7 +187,7 @@ public class SupporterUtil {
      */
     public CreateScene.CreateSceneBuilder createVoucherBuilder(Boolean selfVerification) {
         return CreateScene.builder().subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType())).cost(0.01)
-                .voucherDescription(getDesc()).parValue(getParValue()).shopType(0).shopIds(getShopIdList(2)).selfVerification(selfVerification);
+                .voucherDescription(getDesc()).shopType(0).shopIds(getShopIdList(2)).selfVerification(selfVerification);
     }
 
 

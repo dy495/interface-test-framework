@@ -23,9 +23,9 @@ public class RecallPackage extends AbstractPackage {
     @Override
     public void execute(@NotNull VisitorProxy visitor, IScene scene) {
         logger("CREATE RECALL START");
-        Long packageId = new PackageGenerator.Builder().visitor(visitor).status(PackageStatusEnum.AUDITING).buildPackage().getPackageId();
         super.visitor = visitor;
-        CancelPackageScene.builder().id(packageId).build().invoke(visitor, true);
+        Long packageId = new PackageGenerator.Builder().visitor(visitor).status(PackageStatusEnum.AUDITING).buildPackage().getPackageId();
+        CancelPackageScene.builder().id(packageId).build().invoke(visitor);
         logger("CREATE RECALL FINISH");
     }
 

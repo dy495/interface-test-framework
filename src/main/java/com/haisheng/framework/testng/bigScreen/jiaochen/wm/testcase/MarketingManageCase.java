@@ -247,7 +247,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             IScene voucherListScene = VoucherListScene.builder().build();
             JSONArray array = visitor.invokeApi(voucherListScene).getJSONArray("list");
             List<Long> voucherLit = array.stream().map(e -> (JSONObject) e).map(e -> e.getLong("voucher_id")).collect(Collectors.toList());
-            voucherIdList.forEach(e -> Preconditions.checkArgument(!voucherLit.contains(e), voucherListScene.getPath() + " 接口包含已作废卡券 " + util.getVoucherName(e)));
+            voucherIdList.forEach(e -> Preconditions.checkArgument(!voucherLit.contains(e), voucherListScene.getPath() + " 接口包含已作废卡券 " + e));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -1217,6 +1217,22 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @Test(description = "套餐表单--取消套餐后重新提交，套餐变为待审核", enabled = false)
+    public void packageManager_system_36() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long packageId = new PackageGenerator.Builder().status(PackageStatusEnum.CANCEL).visitor(visitor).buildPackage().getPackageId();
+            JSONArray voucherArray = util.getVoucherArray(voucherId, 1);
+            util.editPackage(packageId, voucherArray);
+            PackagePage packagePage = util.getPackagePage(packageId);
+            CommonUtil.checkResult(packagePage.getPackageName() + "套餐状态", PackageStatusEnum.AUDITING.name(), packagePage.getAuditStatus());
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--取消套餐后重新提交，套餐变为待审核");
+        }
+    }
 
     //ok
     @Test(description = "消息管理--推送消息含有一张卡券的消息，消息记录+1，卡券库存-1，发卡记录+1")
@@ -1739,7 +1755,10 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             IScene signInConfigPageScene = SignInConfigPageScene.builder().build();
             JSONArray list = visitor.invokeApi(signInConfigPageScene).getJSONArray("list");
             int id = list.getJSONObject(0).getInteger("id");
-            IScene signInConfigEditScene = SignInConfigEditScene.builder().signInConfigId(id).awardScore(999).explain(EnumDesc.DESC_BETWEEN_20_30.getDesc()).build();
+            String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/9：16.jpg";
+            String picPath = util.getPicPath(filePath, "9:16");
+            IScene signInConfigEditScene = SignInConfigEditScene.builder().signInConfigId(id).awardScore(999)
+                    .pictureUrl(picPath).explain(EnumDesc.DESC_BETWEEN_20_30.getDesc()).build();
             visitor.invokeApi(signInConfigEditScene);
             user.loginApplet(APPLET_USER_ONE);
             IScene messageFormPageScene = AppletSignInDetailScene.builder().build();
