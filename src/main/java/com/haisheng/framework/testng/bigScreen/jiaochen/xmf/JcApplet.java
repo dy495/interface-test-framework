@@ -12,8 +12,8 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.registerLis
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.SendRecordScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.LoginUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appletActivityRegister;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appletInfoEdit;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -38,7 +38,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
     private static final EnumAccount administrator = EnumAccount.ALL_AUTHORITY_DAILY;
     ScenarioUtil jc = new ScenarioUtil();
     SupporterUtil util = new SupporterUtil(visitor);
-    LoginUtil user = new LoginUtil();
+    UserUtil user = new UserUtil(visitor);
     DateTimeUtil dt = new DateTimeUtil();
     PublicParm pp = new PublicParm();
     JcFunction pf = new JcFunction();
@@ -527,7 +527,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
             jc.appletvoucherReceive(id.toString(), pp.voucherId.toString());   //领卡券
             Integer voucherTotalB = pf.getVoucherTotal();      //查卡券数
             Preconditions.checkArgument(voucherTotalB - voucherTotal == 1, "活动领取卡券后，卡券数量未加1");
-            user.login(administrator);
+            user.loginPc(administrator);
             //查询新数据
             commonConfig.shopId = "-1";
             //累计发出数
