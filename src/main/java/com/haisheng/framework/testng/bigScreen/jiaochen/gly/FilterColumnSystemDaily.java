@@ -4015,7 +4015,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                         for (int i = 0; i < list.size(); i++) {
                             String Flag = list.getJSONObject(i).getString(output);
                             System.out.println("评价列表按" + result + "查询，结果错误" + Flag);
-                            Preconditions.checkArgument(Flag.contains(result), "评价列表按" + result + "查询，结果错误" + Flag);
+                            Preconditions.checkArgument(Flag.contains(result), "评价列表按" + result + "查询，结果错误：" + Flag);
                         }
                     }
                 }

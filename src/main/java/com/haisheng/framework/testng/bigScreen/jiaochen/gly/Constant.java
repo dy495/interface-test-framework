@@ -488,7 +488,7 @@ public class Constant {
                 {"score", "score"},
                 {"is_follow_up", "follow_up_remark"},
                 {"customer_phone", "customer_phone"},
-                {"is_have_msg", "suggestion"},
+                {"is_have_msg", "evaluate_time"},
 //                {"source_create_start", "source_create_start"},
 //                {"source_create_end", "source_create_end"},
 //                {"evaluate_start", "evaluate_start"},

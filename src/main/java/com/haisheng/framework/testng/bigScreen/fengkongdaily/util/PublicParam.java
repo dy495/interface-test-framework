@@ -8,8 +8,8 @@ public class PublicParam {
 
     public int page = 1;
     public int size = 50;
-    public String userName="";
-    public String password="";
+    public String userName="yuexiu@test.com";
+    public String password="f5b3e737510f31b88eb2d4b5d0cd2fb4";
     public String ownerPhone="13373166806";
     public long shop_id_01 = 43072l;
     //黑名单风控名字

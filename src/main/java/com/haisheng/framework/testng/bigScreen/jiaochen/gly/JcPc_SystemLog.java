@@ -348,8 +348,7 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
             int total = respon.getInteger("total");
             //推送个人消息-13373166806
             jc.pushMessage(true, messageContent, messageName, "2", phone);
-            int sendCount = jc.messageFormFilterManage("", "1", "10", "customer_name", "Max").getJSONArray("list").getJSONObject(0).getInteger("send_count");
-            int receiveCount = jc.messageFormFilterManage("", "1", "10", "customer_name", "Max").getJSONArray("list").getJSONObject(0).getInteger("receive_count");
+            int sendCount = jc.messageFormFilterManage("", "1", "10", "customer_name", "Giant哈哈").getJSONArray("list").getJSONObject(0).getInteger("send_count");
             //推送消息以后再次查看消息记录的总条数
             JSONObject respon1 = jc.pushMsgListFilterManage("", "1", "10", "", "");
             int total1 = respon1.getInteger("total");

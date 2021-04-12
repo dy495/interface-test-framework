@@ -22,12 +22,9 @@ import com.haisheng.framework.util.DateTimeUtil;
 import org.apache.http.Header;
 import org.apache.http.client.HttpClient;
 import org.testng.annotations.Test;
-
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 public class CommonUsedUtil {
@@ -38,9 +35,6 @@ public class CommonUsedUtil {
     public CommonUsedUtil(VisitorProxy visitor) {
         this.visitor = visitor;
         this.user=new UserUtil(visitor);
-    }
-
-    public CommonUsedUtil() {
     }
 
     /**
@@ -86,14 +80,15 @@ public class CommonUsedUtil {
      * @param type 风控规则类型
      */
     public Long getRuleAdd(String type){
-        //应用的门店     todo
+        //应用的门店
         List<String> shopIds=new ArrayList<>();
-        shopIds.add("");
-        shopIds.add("");
+        shopIds.add("43072");
+        shopIds.add("28764");
+        shopIds.add("28762");
         //规则中的type
         JSONObject rule=new JSONObject();
         rule.put("type",type);
-        //新建风控规则   todo
+        //新建风控规则
         IScene scene= AddScene.builder()
                 .name(pp.blackName)
                 .rule(rule)
@@ -110,10 +105,11 @@ public class CommonUsedUtil {
      * @param upperLimit 数量限制
      */
     public JSONObject getCashierOrderRuleAdd(String dayRange,String upperLimit){
-        //应用的门店     todo
+        //应用的门店
         List<String> shopIds=new ArrayList<>();
-        shopIds.add("");
-        shopIds.add("");
+        shopIds.add("43072");
+        shopIds.add("28764");
+        shopIds.add("28762");
         //规则中的详情
         JSONObject object=new JSONObject();
         Map<String,String> parameters=new HashMap<>();
@@ -124,7 +120,7 @@ public class CommonUsedUtil {
         object.put("parameters",parameters);
         //新建风控规则
         IScene scene= AddScene.builder()
-                .name(pp.blackName)
+                .name("一人多单"+(int) (Math.random() * 10000))
                 .rule(object)
                 .shopIds(shopIds)
                 .businessType(RiskBusinessTypeEnum.FIRST_INSPECTION.getName())  //首次检查类型
@@ -137,10 +133,11 @@ public class CommonUsedUtil {
      * 新增风控规则---收银风控---无人风控
      */
     public JSONObject getCashierUnmannedRuleAdd(){
-        //应用的门店     todo
+        //应用的门店
         List<String> shopIds=new ArrayList<>();
-        shopIds.add("");
-        shopIds.add("");
+        shopIds.add("43072");
+        shopIds.add("28764");
+        shopIds.add("28762");
         //规则中的type
         //规则中的type
         JSONObject rule=new JSONObject();
@@ -148,7 +145,7 @@ public class CommonUsedUtil {
         rule.put("item",RuleTypeEnum.UNMANNED_ORDER.getType());
         //新建风控规则
         IScene scene= AddScene.builder()
-                .name(pp.blackName)
+                .name("无人风控"+(int) (Math.random() * 10000))
                 .rule(rule)
                 .shopIds(shopIds)
                 .businessType(RiskBusinessTypeEnum.FIRST_INSPECTION.getName())  //首次检查类型
@@ -161,10 +158,11 @@ public class CommonUsedUtil {
      * 新增风控规则---收银风控---员工支付订单监控
      */
     public JSONObject getCashierEmployeeRuleAdd(String timeRange,String upperLimit){
-        //应用的门店     todo
+        //应用的门店
         List<String> shopIds=new ArrayList<>();
-        shopIds.add("");
-        shopIds.add("");
+        shopIds.add("43072");
+        shopIds.add("28764");
+        shopIds.add("28762");
         //规则中的详情
         JSONObject object=new JSONObject();
         Map<String,String> parameters=new HashMap<>();
@@ -175,7 +173,7 @@ public class CommonUsedUtil {
         object.put("parameters",parameters);
         //新建风控规则
         IScene scene= AddScene.builder()
-                .name(pp.blackName)
+                .name("员工支付"+(int) (Math.random() * 10000))
                 .rule(object)
                 .shopIds(shopIds)
                 .businessType(RiskBusinessTypeEnum.FIRST_INSPECTION.getName())  //首次检查类型
@@ -188,10 +186,11 @@ public class CommonUsedUtil {
      * 新增风控规则---收银风控---同一客户为多台车支付的上限,既一人多车
      */
     public JSONObject getCashierCarRuleAdd(String upperLimit){
-        //应用的门店     todo
+        //应用的门店
         List<String> shopIds=new ArrayList<>();
-        shopIds.add("");
-        shopIds.add("");
+        shopIds.add("43072");
+        shopIds.add("28764");
+        shopIds.add("28762");
         //规则中的详情
         JSONObject object=new JSONObject();
         Map<String,String> parameters=new HashMap<>();
@@ -201,7 +200,7 @@ public class CommonUsedUtil {
         object.put("parameters",parameters);
         //新建风控规则
         IScene scene= AddScene.builder()
-                .name(pp.blackName)
+                .name("一人多车"+(int) (Math.random() * 10000))
                 .rule(object)
                 .shopIds(shopIds)
                 .businessType(RiskBusinessTypeEnum.FIRST_INSPECTION.getName())  //首次检查类型
@@ -214,10 +213,11 @@ public class CommonUsedUtil {
      * 新增风控规则---收银风控---同一车辆被多人支付的上限,既一车多人
      */
     public JSONObject getCashierMemberRuleAdd(String upperLimit){
-        //应用的门店     todo
+        //应用的门店
         List<String> shopIds=new ArrayList<>();
-        shopIds.add("");
-        shopIds.add("");
+        shopIds.add("43072");
+        shopIds.add("28764");
+        shopIds.add("28762");
         //规则中的详情
         JSONObject object=new JSONObject();
         Map<String,String> parameters=new HashMap<>();
@@ -227,7 +227,7 @@ public class CommonUsedUtil {
         object.put("parameters",parameters);
         //新建风控规则
         IScene scene= AddScene.builder()
-                .name(pp.blackName)
+                .name("一车多人"+(int) (Math.random() * 10000))
                 .rule(object)
                 .shopIds(shopIds)
                 .businessType(RiskBusinessTypeEnum.FIRST_INSPECTION.getName())  //首次检查类型
@@ -243,7 +243,7 @@ public class CommonUsedUtil {
      */
     public String ruleDelete(Long ruleId){
         IScene scene= DeleteScene.builder().id(ruleId).build();
-        String message=visitor.invokeApi(scene).getString("message");
+        String message=visitor.invokeApi(scene,false).getString("message");
         return message;
     }
 
@@ -582,7 +582,8 @@ public class CommonUsedUtil {
      *生成交易订单
      **/
     @Test
-    public void getOrder() throws Exception {
+    public String getOrder() throws Exception {
+        String post="";
         for (int i = 0; i < 1; i++) {
             final String NUMBER = ".";
             final String ALGORITHM = "HmacSHA256";
@@ -676,10 +677,9 @@ public class CommonUsedUtil {
 
             JSONObject jsonObject = JSON.parseObject(str);
             HttpConfig config = HttpConfig.custom().headers(headers).url(requestUrl).json(JSON.toJSONString(jsonObject)).client(client);
-            String post = HttpClientUtil.post(config);
-            System.out.println(post);
-
+            post = HttpClientUtil.post(config);
         }
+        return post;
     }
 
 

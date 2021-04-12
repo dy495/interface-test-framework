@@ -70,10 +70,9 @@ public class RiskControlUtil extends TestCaseCommon {
      * @author:gly
      * @time:2021/4/1
      */
-    public String pcLogin(String phone, String password) {
-        IScene scene= LoginPcScene.builder().type(1).phone(phone).verificationCode(password).build();
-        String message=visitor.invokeApi(scene,false).getString("message");
-        return message;
+    public void pcLogin(String username, String password) {
+       IScene scene= LoginPcScene.builder().type(0).username(username).password(password).build();
+        visitor.login(scene);
     }
 
 

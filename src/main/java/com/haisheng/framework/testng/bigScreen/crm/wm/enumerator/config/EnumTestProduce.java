@@ -26,7 +26,7 @@ public enum EnumTestProduce {
 
     INS_ONLINE("门店-INS 赢识线上 ", "", "http://inspect.store.winsenseos.com", "", "INS", ""),
 
-    FK_DAILY("风控 赢识日常 ", "", "http://127.0.0.1", "", "FK", ""),
+    FK_DAILY("风控 赢识日常 ", "http://39.105.17.58/page/shoprisk/cashriskcontrol/", "http://39.105.17.58", "-1", "FK", "4944"),
 
     FK_ONLINE("风控 赢识线上 ", "", "", "", "FK", ""),
 

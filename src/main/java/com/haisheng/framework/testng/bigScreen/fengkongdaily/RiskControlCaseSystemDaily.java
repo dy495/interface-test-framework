@@ -1,12 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.fengkongdaily;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.arronlong.httpclientutil.HttpClientUtil;
-import com.arronlong.httpclientutil.builder.HCB;
-import com.arronlong.httpclientutil.common.HttpConfig;
-import com.arronlong.httpclientutil.common.HttpHeader;
-import com.arronlong.httpclientutil.exception.HttpProcessException;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
@@ -27,22 +21,13 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import com.haisheng.framework.util.CommonUtil;
-import org.apache.http.Header;
-import org.apache.http.client.HttpClient;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 import java.lang.reflect.Method;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
-import java.util.UUID;
-
 import static com.google.common.base.Preconditions.checkArgument;
 
 public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCaseStd {
@@ -50,7 +35,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     public VisitorProxy visitor = new VisitorProxy(product);
 //    StoreFuncPackage mds = StoreFuncPackage.getInstance();
     PublicParam pp=new PublicParam();
-    CommonUsedUtil cu=new CommonUsedUtil();
+    CommonUsedUtil cu=new CommonUsedUtil(visitor);
     RiskControlUtil md=new RiskControlUtil();
 
 
@@ -59,16 +44,21 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     public void initial() {
         logger.debug("before classs initial");
         CommonConfig commonConfig = new CommonConfig();
+        //替换checklist的相关信息
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_MENDIAN_DAILY_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_JIAOCHEN_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "郭丽雅";
+        commonConfig.product = product.getAbbreviation();
+        //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "FengKong-daily-test");
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "风控 日常");
-        commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.pushRd = new String[]{"15898182672","18513118484", "18810332354", "15084928847"};
-        commonConfig.shopId = getXundianShop(); //要改！！！
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "风控 日常");        //替换钉钉推送
+        commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
+        //放入shopId
+        commonConfig.referer = product.getReferer();
+        commonConfig.shopId = product.getShopId();
+        commonConfig.roleId = product.getRoleId();
         beforeClassInit(commonConfig);
-        logger.debug("store " + md);
+        logger.debug("FK: " + cu);
         md.pcLogin(pp.userName,pp.password);
     }
 
@@ -87,6 +77,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
+        md.pcLogin(pp.userName,pp.password);
     }
 
 
@@ -265,6 +256,38 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             saveData("生成交易订单--触发员工下单风控");
         }
     }
+
+
+   @Test
+   public void justTry(){
+        logger.logCaseStart(caseResult.getCaseName());
+       try{
+           //一人多单/连续天数（一人1天最多3单）
+           Long id1=cu.getCashierOrderRuleAdd("1","3").getJSONObject("data").getLong("id");
+           System.out.println("--------------"+id1);
+
+           //无人风控
+           Long id2=cu.getCashierUnmannedRuleAdd().getJSONObject("data").getLong("id");
+           System.out.println("--------------"+id2);
+
+//         //员工支付订单监控(一人1天最多1单)
+           Long id3=cu.getCashierEmployeeRuleAdd("1","1").getJSONObject("data").getLong("id");
+           System.out.println("--------------"+id3);
+//
+           //一人多车
+           Long id4=cu.getCashierCarRuleAdd("10").getJSONObject("data").getLong("id");
+           System.out.println("--------------"+id4);
+
+           //一车多人
+           Long id5=cu.getCashierMemberRuleAdd("10").getJSONObject("data").getLong("id");
+           System.out.println("--------------"+id5);
+
+       }catch(Exception|AssertionError e){
+           collectMessage(e);
+       }finally{
+           saveData("测试呀");
+       }
+   }
 
 
     /**
@@ -614,18 +637,19 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     }
 
     /**
-     *风控规则-增加黑名单风控规则
+     *风控规则-增加黑名单风控规则           ok
      */
     @Test(description = "风控规则-增加黑名单风控规则")
     public void authCashierPageSystem12(){
         try{
             //新建风控规则
             Long id=cu.getRuleAdd(RuleEnum.BLACK_LIST.getType());
-            Preconditions.checkArgument(id!=null,"创建黑名单风控失败");
+            Preconditions.checkArgument(id>0,"创建黑名单风控失败");
 
             //删除风控规则
             String message=cu.ruleDelete(id);
             Preconditions.checkArgument(message.equals("success"),"删除黑名单风控失败");
+
         }catch(Exception|AssertionError e){
             collectMessage(e);
         }finally{
@@ -634,7 +658,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     }
 
     /**
-     *风控规则-增加重点观察人员风控规则
+     *风控规则-增加重点观察人员风控规则        ok
      */
     @Test(description = "风控规则-增加重点观察人员规则")
     public void authCashierPageSystem13(){
@@ -2143,14 +2167,12 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             String message=cu.getStaffStatusChange(id,"").getString("message");
             Preconditions.checkArgument(message.equals("success"),"禁用失败");
             //登录禁用的账号
-            String message1=md.pcLogin("","");
-            Preconditions.checkArgument(message1.equals("登陆失败"),"禁用的账号登陆成功");
+            md.pcLogin("","");
             //开启账号
             String message2=cu.getStaffStatusChange(id,"").getString("message");
             Preconditions.checkArgument(message2.equals("success"),"开启失败");
             //登录开启的账号
-            String message3=md.pcLogin("","");
-            Preconditions.checkArgument(message3.equals("success"),"开启的账号登陆失败");
+            md.pcLogin("","");
 
         }catch(Exception|AssertionError e){
             collectMessage(e);

@@ -1,5 +1,4 @@
 package com.haisheng.framework.testng.bigScreen.fengkongdaily;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
@@ -33,7 +32,7 @@ public class RiskControlCaseDataDaily extends TestCaseCommon implements TestCase
     StoreScenarioUtil md = StoreScenarioUtil.getInstance();
     //    StoreFuncPackage mds = StoreFuncPackage.getInstance();
     PublicParam pp=new PublicParam();
-    CommonUsedUtil cu=new CommonUsedUtil();
+    CommonUsedUtil cu=new CommonUsedUtil(visitor);
     RiskControlUtil ru=new RiskControlUtil();
 
 
