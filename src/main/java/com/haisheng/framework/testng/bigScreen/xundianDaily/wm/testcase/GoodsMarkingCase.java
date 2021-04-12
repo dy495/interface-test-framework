@@ -757,7 +757,7 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
     public void goodsBrand_system_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String[] names = {EnumDesc.DESC_20.getDesc() + "1", "", null};
+            String[] names = {EnumDesc.DESC_20.getDesc() + "1", null};
             Arrays.stream(names).forEach(name -> {
                 String message = CreateBrandScene.builder().brandPic(util.getCategoryPicPath()).brandName(name).brandDescription(EnumDesc.DESC_BETWEEN_5_10.getDesc()).build().invoke(visitor, false).getString("message");
                 String err = StringUtils.isEmpty(name) ? "品牌名称不能为空" : "品牌名称长度应该为1～20个字";

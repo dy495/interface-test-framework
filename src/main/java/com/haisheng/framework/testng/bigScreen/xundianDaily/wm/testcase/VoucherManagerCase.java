@@ -509,7 +509,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
-    @Test(description = "卡券管理--已售罄的卡券暂停发放--卡券状态=暂停发放")
+    @Test(description = "卡券管理--已售罄的卡券暂停发放--卡券状态=暂停发放", enabled = false)
     public void voucherManage_data_13() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -831,7 +831,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             String title = response.getString("title");
             String content = response.getString("content");
             CommonUtil.checkResult("消息名称", "系统消息", title);
-            CommonUtil.checkResult("消息内容", "您的卡券【" + voucherName + "】已被转移至" + APPLET_USER_TWO.getPhone() + "账号，如非本人授权，请联系轿辰会客服，对应卡券变更至对应转移的账号中；", content);
+            CommonUtil.checkResult("消息内容", "您的卡券【" + voucherName + "】已被转移至" + APPLET_USER_TWO.getPhone() + "账号，如非本人授权，请联系INS客服，对应卡券变更至对应转移的账号中；", content);
             visitor.login(APPLET_USER_TWO.getToken());
             int newReceiveVoucherNum = util.getAppletVoucherNum();
             CommonUtil.checkResult("接收者我的卡券数", receiveVoucherNum + 1, newReceiveVoucherNum);

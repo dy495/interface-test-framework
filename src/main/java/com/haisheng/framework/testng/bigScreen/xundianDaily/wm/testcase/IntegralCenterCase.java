@@ -430,7 +430,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
-    @Test(description = "积分兑换--创建虚拟积分兑换，包含无库存的卡券")
+    @Test(description = "积分兑换--创建虚拟积分兑换，包含无库存的卡券", enabled = false)
     public void integralExchange_system_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
