@@ -75,7 +75,7 @@ public class RiskControlUtil extends TestCaseCommon {
         String message=visitor.invokeApi(scene,false).getString("message");
         return message;
     }
-    
+
 
     //--------------------------------收银风控-------------
 
