@@ -37,6 +37,8 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
 //    public static final Logger log = LoggerFactory.getLogger(StorePcAndAppData.class);
     public static final int page = 1;
     public static final int size = 100;
+    private static final EnumTestProduce PRODUCE = EnumTestProduce.INS_DAILY;
+    public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     XundianScenarioUtil xd = XundianScenarioUtil.getInstance();
     StoreScenarioUtil md = StoreScenarioUtil.getInstance();
     WechatScenarioUtil wx = WechatScenarioUtil.getInstance();
@@ -57,7 +59,8 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.INS_DAILY.getDesc());
         commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.pushRd = new String[]{"15898182672", "18513118484", "18810332354", "15084928847"};
-        commonConfig.shopId = EnumTestProduce. INS_DAILY.getShopId();
+//        commonConfig.shopId = EnumTestProduce. INS_DAILY.getShopId();
+        commonConfig.referer = PRODUCE.getReferer();
         beforeClassInit(commonConfig);
         logger.debug("xundian " + xd);
         xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
@@ -89,67 +92,85 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
     public void shopAdd() throws Exception {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            double longitude = 54.2315123451324134;
-            double latitude = 11.3214213532452345;
-            String phone = "13666666666";
+            visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
+            //小程序初始门店数量
+            JSONArray applet = wx.nearshop(null,null,116.29845,39.95933).getJSONArray("list");
+            int appsize = applet.size();
+            xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
+            String shopName = "两杆大烟枪";
+            String label = "明星店";
+            String openingTime = "00:00:00";
+            String closingTime = "23:59:59";
+            String managerName = "联系人1";
+            String managerPhone = "13666666666";
+            String city = "110000";
+            String address = "圆明园";
+            double longitude = 23.99;
+            double latitude = 17.22;
+            String tripartite_shop_id = "4321";
+            int recommended = 70;
             String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
             String base64 = info.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
-            String shopName = "INS门店1";
-            String label = "这是一家门店";
-            //登录小程序
-            wx.loginApplet(EnumAppletToken.INS_ZT_DAILY.getToken());
-            //获取初始pc门店数量
-            JSONArray shop_list = md.searchShop(null,null,null,null,1,10).getJSONArray("shop_list");
-            int a = shop_list.size();
-            //获取初始小程序门店数量
-            JSONArray list0 = wx.nearShops(null,longitude,latitude).getJSONArray("list");
-            int a0 = list0.size();
-            //添加一个门店
-            String result = md.createShop(path, shopName, label, "00:00", "23:00", "hh", phone, "北京", "中关村soho", longitude, latitude, "123", 20).getString("result");
-            Preconditions.checkArgument(result.equals("true"), "新建门店不成功" + result);
-            //创建后的门店列表
-            JSONArray shop_list0 = md.getAuthI_shopId().getJSONArray("shop_list");
-            int b = shop_list0.size();
-            int s = b - a;
-            Preconditions.checkArgument(s == 1, "新建门店成功后列表实际添加了" + s);
-            //创建后的小程序门店列表
-            JSONArray list1 = wx.nearShops(null,longitude,latitude).getJSONArray("list");
-            int a1 = list1.size();
-            int x = a1-a0;
-            Preconditions.checkArgument(x == 1, "新建门店成功后小程序实际添加了" + x);
-            //搜索门店
-            JSONArray list2 = md.searchShop(null,null,null,null,1,10).getJSONArray("list");
-            int id = list2.getJSONObject(0).getInteger("id");
-            //删除一门店
-            String result1 = md.deleteShop(id).getString("result");
-            Preconditions.checkArgument(result1.equals("true"), "删除门店不成功" + result1);
+            //获得初始的门店数量
+            int mdsum0 = md.searchShop(null, null, null, null, 1, 100).getInteger("total");
+            md.createShop(path, shopName, label, openingTime, closingTime, managerName, managerPhone, city, address, longitude, latitude, tripartite_shop_id, recommended);
+            //获得创建后门店的数量
+            int mdsum1 = md.searchShop(null, null, null, null, 1, 100).getInteger("total");
+            int add = mdsum1-mdsum0;
+            Preconditions.checkArgument(add==1,"期望数量+1实际增加了" + add);
 
-            //pc端
-            JSONArray shop_list1 = md.getAuthI_shopId().getJSONArray("shop_list");
-            int a2 = shop_list1.size();
-            int c1 = b-a2;
-            Preconditions.checkArgument(c1 == 1, "删除门店成功pc实际减少了" + c1);
-            //小程序端
-            JSONArray list3 = wx.nearShops(null,longitude,latitude).getJSONArray("list");
-            int a3 = list3.size();
-            int c2 = a1-a3;
-            Preconditions.checkArgument(c2 == 1, "删除门店成功后小程序实际减少了" + c1);
+            //小程序
+            visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
+            JSONArray applet1 = wx.nearshop(null,null,116.29845,39.95933).getJSONArray("list");
+            int appletsize2 = applet1.size();
+            int appletsize3 = appletsize2-appsize;
+            Preconditions.checkArgument(appletsize3==1,"期望数量+1实际增加了" + add);
 
-            //pc编辑将开启的门店关闭，小程序附近门店-1
-            String result3 = md.updateStatus(id,false).getString("result");
-            Preconditions.checkArgument(result3.equals("true"), "门店状态关闭失败" + result3);
-            JSONArray list4 = wx.nearShops(null,longitude,latitude).getJSONArray("list");
-            int a4 = list4.size();
-            int c3 = a0-a4;
-            Preconditions.checkArgument(c3 == 1, "关闭门店成功后小程序实际减少了" + c3);
+            //改变门店状态
+            xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
+            int t = md.searchShop(null, null, null, null, 1, 100).getInteger("total");
+            int t1 = t-1;
+            int id = md.searchShop(null, null, null, null, 1, 100).getJSONArray("list").getJSONObject(t1).getInteger("id");
+            md.updateStatus(id,false);
 
-            String result4 = md.updateStatus(id,true).getString("result");
-            Preconditions.checkArgument(result4.equals("true"), "门店状态开启失败" + result4);
-            JSONArray list5 = wx.nearShops(null,longitude,latitude).getJSONArray("list");
-            int a5 = list5.size();
-            int c4 = a5-a0;
-            Preconditions.checkArgument(c4 == 1, "关闭门店成功后小程序实际减少了" + c4);
+            visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
+            JSONArray appstatus = wx.nearshop(null,null,116.29845,39.95933).getJSONArray("list");
+            int statusnum1 = appstatus.size();
+            int statusnum2 = appletsize2-statusnum1;
+            Preconditions.checkArgument(statusnum2==1,"期望数量-1实际减少了" + statusnum2);
+
+
+
+            //改变门店状态
+            xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
+            int t2 = md.searchShop(null, null, null, null, 1, 100).getInteger("total");
+            int t3 = t2-1;
+            int id0 = md.searchShop(null, null, null, null, 1, 100).getJSONArray("list").getJSONObject(t3).getInteger("id");
+            md.updateStatus(id0,true);
+
+            visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
+            JSONArray appstatus0 = wx.nearshop(null,null,116.29845,39.95933).getJSONArray("list");
+            int statusnum3 = appstatus0.size();
+            int statusnum4 = statusnum3-statusnum1;
+            Preconditions.checkArgument(statusnum4==1,"期望数量+1实际增加了" + statusnum4);
+
+            xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
+            int total = md.searchShop(null, null, null, null, 1, 100).getInteger("total");
+            int a = total-1;
+            int id1 = md.searchShop(null, null, null, null, 1, 100).getJSONArray("list").getJSONObject(a).getInteger("id");
+            md.deleteShop(id1);
+            int mdsum3 = md.searchShop(null, null, null, null, 1, 100).getInteger("total");
+            int delete = mdsum1-mdsum3;
+            Preconditions.checkArgument(delete==1,"期望数量-1实际减少了" + delete);
+            //小程序
+            visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
+            JSONArray appnum = wx.nearshop(null,null,116.29845,39.95933).getJSONArray("list");
+            int appnum1 = appnum.size();
+            int appnum3 = appletsize2-appnum1;
+            CommonUtil.valueView(appnum1,appnum3,appletsize2);
+            Preconditions.checkArgument(appnum3==1,"期望数量-1实际减少了" + appnum3);
+
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -158,6 +179,92 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             saveData("添加门店，删除门店列表+-1");
         }
     }
+
+
+    //新建会员等级列表+-1
+    @Test()
+    public void create_level() throws Exception {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
+            JSONArray wechatlist = wx.wechatlevel(null).getJSONArray("list");
+            int wechatsize = wechatlist.size();
+
+            xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
+            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
+            String base64 = info.getImgStr(pic);
+            String path = md.pcFileUpload(base64).getString("pic_path");
+            int pctotal = md.member_level_page(null,1,100).getInteger("total");
+            md.member_level_add0("等级", path, 10, "嗷嗷", "aa", 10, 10, 10, true);
+
+            int pctotaladd = md.member_level_page(null,1,100).getInteger("total");
+            int pcadd = pctotaladd-pctotal;
+            Preconditions.checkArgument(pcadd==1, "期待增加1，实际" + pcadd);
+            visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
+            JSONArray wechatlist0 = wx.wechatlevel(null).getJSONArray("list");
+            int wechatsize0 = wechatlist0.size();
+            int wechatnum1 = wechatsize0-wechatsize;
+            Preconditions.checkArgument(wechatnum1==1, "期待增加1，实际" + wechatnum1);
+
+
+            //状态false
+            xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
+            Integer t1 = md.member_level_page(null, 1, 10).getInteger("total");
+            JSONArray list0 = md.member_level_page(null, 1, 10).getJSONArray("list");
+            int a0 = t1 - 1;
+            //获取刚创建等级的id
+            int id0 = list0.getJSONObject(a0).getInteger("id");
+            md.hide_update(null,id0,false);
+
+            visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
+            JSONArray wechatlist1 = wx.wechatlevel(null).getJSONArray("list");
+            int wechatsize1 = wechatlist1.size();
+            int wechatnum2 = wechatsize0-wechatsize1;
+            Preconditions.checkArgument(wechatnum2==1, "期待减少1，实际" + wechatnum2);
+
+            //状态true
+            xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
+            Integer t2 = md.member_level_page(null, 1, 10).getInteger("total");
+            JSONArray list1 = md.member_level_page(null, 1, 10).getJSONArray("list");
+            int a1 = t2 - 1;
+            //获取刚创建等级的id
+            int id1 = list1.getJSONObject(a1).getInteger("id");
+            md.hide_update(null,id1,true);
+
+            visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
+            JSONArray wechatlist2 = wx.wechatlevel(null).getJSONArray("list");
+            int wechatsize2 = wechatlist2.size();
+            int wechatnum3 = wechatsize2-wechatsize1;
+            Preconditions.checkArgument(wechatnum3==1, "期待增加1，实际" + wechatnum3);
+
+
+            xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
+            Integer total = md.member_level_page(null, 1, 10).getInteger("total");
+            JSONArray list = md.member_level_page(null, 1, 10).getJSONArray("list");
+            int a = total - 1;
+            //获取刚创建等级的id
+            int id = list.getJSONObject(a).getInteger("id");
+            //删除等级
+            md.member_level_delete0(id);
+
+            Integer t3 = md.member_level_page(null, 1, 10).getInteger("total");
+            int pcdelete = pctotaladd-t3;
+            Preconditions.checkArgument(pcdelete==1, "期待减少1，实际" + pcdelete);
+            //获取刚创建等级的id
+            visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
+            JSONArray wechatdelete = wx.wechatlevel(null).getJSONArray("list");
+            int deletenum =  wechatsize0-wechatdelete.size();
+            Preconditions.checkArgument(deletenum== 1, "期待减少1，实际" + deletenum);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("新建会员等级列表+-1");
+        }
+    }
+
 
     //添加口味，删除口味
     @Test()
@@ -363,7 +470,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(pc1==1, "新增反馈类型,pc下拉框实际添加" + pc1);
 
             //获取反馈类型id
-            JSONArray typeList = md.feedbackList(null,1,10).getJSONArray("list");
+            JSONArray typeList = md.feedList(null,1,10).getJSONArray("list");
             int typeID = typeList.getJSONObject(0).getInteger("id");
             //删除反馈类型
             String deleteResult = md.feedback_delete(typeID).getString("result");

@@ -315,7 +315,7 @@ public class WechatScenarioUtil extends TestCaseCommon {
         json.put("feedback_score", feedback_score);
         json.put("feedback_message", feedback_message);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
     }
 
     /**
@@ -534,6 +534,19 @@ public class WechatScenarioUtil extends TestCaseCommon {
         json.put("referer", referer);
         json.put("id",id);
         json.put("share_id",share_id);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    /**
+     * @description: 文章列表
+     * @author:
+     * @time:
+     */
+    public JSONObject wechatlevel(String referer) throws Exception {
+        String url = "/patrol-applet/granted/wechat/member/level/list";
+        JSONObject json = new JSONObject();
+        json.put("referer", referer);
+
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }

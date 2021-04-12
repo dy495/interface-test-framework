@@ -3258,6 +3258,22 @@ public class StoreScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res);
     }
 
+
+    /**
+     * @description:6.4.会员等级隐藏状态更新
+     * @author:
+     * @time:
+     */
+    public JSONObject hide_update(String referer,int id,boolean is_hide) throws Exception {
+        String path = "/patrol/member/level/hide_update";
+        JSONObject json = new JSONObject();
+        json.put("referer",referer);
+        json.put("id",id);
+        json.put("is_hide",is_hide);
+        String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
     /**
      * @description:6.4. 会员等级删除
      * @author:
@@ -3534,7 +3550,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
         JSONObject json = new JSONObject();
         json.put("feedback_id",feedback_id);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
     }
     /**
      * @description:12.4. 新增反馈类型
@@ -3791,7 +3807,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      *@author:
      *@time:
      */
-    public JSONObject createShop0(String shop_image_path,String shop_name,String label,String opening_time,String closing_time,String manager_name,String manager_phone,String city,String address,double longitude,double latitude,String tripartite_shop_id,Integer recommended) throws Exception {
+    public JSONObject createShop0(String shop_image_path,String shop_name,String label,String opening_time,String closing_time,String manager_name,String manager_phone,String district_code,String address,double longitude,double latitude,String tripartite_shop_id,Integer recommended) throws Exception {
         String url = "/patrol/shop/create";
         JSONObject json = new JSONObject();
         json.put("shop_image_path",shop_image_path);
@@ -3801,7 +3817,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
         json.put("closing_time",closing_time);
         json.put("manager_name",manager_name);
         json.put("manager_phone",manager_phone);
-        json.put("city",city);
+        json.put("district_code",district_code);
         json.put("address",address);
         json.put("longitude",longitude);
         json.put("latitude",latitude);
@@ -3855,7 +3871,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      *@author:
      *@time:
      */
-    public JSONObject updateShop(Integer id,String shop_image_path,String shop_name,String label,String opening_time,String closing_time,String manager_name,String manager_phone,String city,String address,double longitude,double latitude,String tripartite_shop_id,Integer recommended) throws Exception {
+    public JSONObject updateShop(Integer id,String shop_image_path,String shop_name,String label,String opening_time,String closing_time,String manager_name,String manager_phone,String district_code,String address,double longitude,double latitude,String tripartite_shop_id,Integer recommended) throws Exception {
         String url = "/patrol/shop/update";
         JSONObject json = new JSONObject();
         json.put("id",id);
@@ -3866,7 +3882,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
         json.put("closing_time",closing_time);
         json.put("manager_name",manager_name);
         json.put("manager_phone",manager_phone);
-        json.put("city",city);
+        json.put("district_code",district_code);
         json.put("address",address);
         json.put("longitude",longitude);
         json.put("latitude",latitude);
@@ -3912,6 +3928,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
     public JSONObject feedbackList(String user_name,Integer feedback_type_id,int page,int size) throws Exception {
         String url = "/patrol/feedback/list";
         JSONObject json = new JSONObject();
+
         json.put("user_name",user_name);
         json.put("feedback_type_id",feedback_type_id);
         json.put("page",page);
@@ -3978,7 +3995,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      *@description: INS反馈类型列表查询
      *@time:
      */
-    public JSONObject feedbackList(String feedback_type,int page,int size) throws Exception {
+    public JSONObject feedList(String feedback_type,int page,int size) throws Exception {
         String url = "/patrol/feedback/feedback-type/list";
         JSONObject json = new JSONObject();
         json.put("feedback_type",feedback_type);
