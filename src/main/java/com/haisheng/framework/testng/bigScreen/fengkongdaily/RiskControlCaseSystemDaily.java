@@ -1,6 +1,12 @@
 package com.haisheng.framework.testng.bigScreen.fengkongdaily;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.arronlong.httpclientutil.HttpClientUtil;
+import com.arronlong.httpclientutil.builder.HCB;
+import com.arronlong.httpclientutil.common.HttpConfig;
+import com.arronlong.httpclientutil.common.HttpHeader;
+import com.arronlong.httpclientutil.exception.HttpProcessException;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
@@ -22,13 +28,22 @@ import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.CommonUtil;
+import org.apache.http.Header;
+import org.apache.http.client.HttpClient;
+import org.apache.xmlbeans.impl.xb.xsdschema.Public;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
+import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -39,6 +54,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     PublicParam pp=new PublicParam();
     CommonUsedUtil cu=new CommonUsedUtil(visitor);
     RiskControlUtil md=new RiskControlUtil();
+    public String shopId="43072";
 
 
     @BeforeClass
@@ -139,6 +155,251 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             saveData("测试呀");
         }
     }
+    //一人多车 user_id  相同; 多个car_vehicle_number车架号 触发；
+    //一车多人，多个openid,一个car_vehicle_number 触发;
+    //一人多单 ，userId相同，openid相同;  ---userId 相同，或者transId; 单一客户数量监控
+    @Test
+    public void getA() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            for (int i=0;i<1;i++) {
+                final String NUMBER = ".";
+                final String ALGORITHM = "HmacSHA256";
+                HttpClient client = null;
+                try {
+                    client = HCB.custom()
+                            .pool(50, 10)
+                            .retry(3).build();
+                } catch (HttpProcessException e) {
+                    e.printStackTrace();
+                }
+                String timestamp = "" + System.currentTimeMillis();
+                String uid = "uid_ef6d2de5";
+                String appId = "49998b971ea0";
+                String ak = "3fdce1db0e843ee0";
+                String router = "/business/precipitation/TRANS_INFO_RECEIVE/v1.0";
+                String nonce = UUID.randomUUID().toString();
+                String sk = "5036807b1c25b9312116fd4b22c351ac";
+                // java代码示例
+                // java代码示例
+                String requestUrl = "http://dev.api.winsenseos.com/retail/api/data/biz";
+
+                // 1. 将以下参数(uid、app_id、ak、router、timestamp、nonce)的值之间使用顿号(.)拼接成一个整体字符串
+                String signStr = uid + NUMBER + appId + NUMBER + ak + NUMBER + router + NUMBER + timestamp + NUMBER + nonce;
+                // 2. 使用HmacSHA256加密算法, 使用平台分配的sk作为算法的密钥. 对上面拼接后的字符串进行加密操作,得到byte数组
+                Mac sha256Hmac = Mac.getInstance(ALGORITHM);
+                SecretKeySpec encodeSecretKey = new SecretKeySpec(sk.getBytes(StandardCharsets.UTF_8), ALGORITHM);
+                sha256Hmac.init(encodeSecretKey);
+                byte[] hash = sha256Hmac.doFinal(signStr.getBytes(StandardCharsets.UTF_8));
+                // 3. 对2.中的加密结果,再进行一次base64操作, 得到一个字符串
+                String auth = Base64.getEncoder().encodeToString(hash);
+
+                Header[] headers = HttpHeader.custom()
+                        .other("Accept", "application/json")
+                        .other("Content-Type", "application/json;charset=utf-8")
+                        .other("timestamp", timestamp)
+                        .other("nonce", nonce)
+                        .other("ExpiredTime", "50 * 1000")
+                        .other("Authorization", auth)
+                        .build();
+                String time= dt.getHistoryDate(0);
+                String time1= dt.getHHmm(0);
+                String userId = "tester"+ CommonUtil.getRandom(6);
+                String transId = "QAtest_" + CommonUtil.getRandom(3)+time+time1;
+                String transTime = "" + System.currentTimeMillis();
+                String str = "{\n" +
+                        "  \"uid\": \"uid_ef6d2de5\",\n" +
+                        "  \"app_id\": \"49998b971ea0\",\n" +
+                        "  \"request_id\": \"5d45a085-8774-4jd0-943e-ded373ca6a919987\",\n" +
+                        "  \"version\": \"v1.0\",\n" +
+                        "  \"router\": \"/business/precipitation/TRANS_INFO_RECEIVE/v1.0\",\n" +
+                        "  \"data\": {\n" +
+                        "    \"biz_data\":  {\n" +
+                        "        \"shop_id\": \"43072\",\n" +
+                        "        \"trans_id\": " + "\"" + transId + "\"" + " ,\n" +
+                        "        \"trans_time\": " + "\"" + transTime + "\"" + " ,\n" +
+                        "        \"trans_type\": [\n" +
+                        "            \"W\"\n" +
+                        "        ],\n" +
+                        "        \"user_id\":  " + "\""+userId+"\"" + " ,\n" +
+                        "        \"total_price\": 1800,\n" +
+                        "        \"real_price\": 1500,\n" +
+//                        "        \"openid\": \"823849023iidijdiwiodede3330\",\n" +
+                        "        \"shopType\": \"SHOP_TYPE\",\n" +
+                        "        \"orderNumber\": \"13444894484\",\n" +
+                        "        \"memberName\":\"自动化在回归\",\n" +
+                        "        \"receipt_type\":\"小票类型\",\n" +
+                        "        \"posId\": \"pos-1234586789\",\n" +
+                        "        \"commodityList\": [\n" +
+                        "            {\n" +
+                        "                \"commodityId\": \"iPhone12A42234\",\n" +
+                        "                \"commodity_name\":\"苹果12s\",\n" +
+                        "                \"unit_price\": 200,\n" +
+                        "                \"num\": 4\n" +
+                        "            },\n" +
+                        "            {\n" +
+                        "                \"commodityId\": \"banan3424724E\",\n" +
+                        "                \"commodity_name\":\"香蕉20根啊\",\n" +
+                        "                \"unit_price\": 2,\n" +
+                        "                \"num\": 4\n" +
+                        "            },\n" +
+                        "            {\n" +
+                        "                \"commodityId\": \"Apple3424323234\",\n" +
+                        "                \"commodity_name\":\"苹果20ge\",\n" +
+                        "                \"unit_price\": 3,\n" +
+                        "                \"num\": 4\n" +
+                        "            }\n" +
+                        "        ]\n" +
+                        "    }\n" +
+                        "  }\n" +
+                        "}";
+
+                JSONObject jsonObject = JSON.parseObject(str);
+                HttpConfig config = HttpConfig.custom().headers(headers).url(requestUrl).json(JSON.toJSONString(jsonObject)).client(client);
+
+                String post = HttpClientUtil.post(config);
+                // checkArgument(, "添加事项不成功");
+                System.out.println(post);
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("发送交易事件");
+        }
+
+    }
+
+    @Test(description = "同步员工离职在职信息")
+    public void get1A() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            for (int i=0;i<1;i++) {
+                final String NUMBER = ".";
+                final String ALGORITHM = "HmacSHA256";
+                HttpClient client = null;
+                try {
+                    client = HCB.custom()
+                            .pool(50, 10)
+                            .retry(3).build();
+                } catch (HttpProcessException e) {
+                    e.printStackTrace();
+                }
+                String timestamp = "" + System.currentTimeMillis();
+                String uid = "uid_ef6d2de5";
+                String appId = "49998b971ea0";
+                String ak = "3fdce1db0e843ee0";
+                String router = "/business/precipitation/TRANS_INFO_RECEIVE/v1.0";
+                String nonce = UUID.randomUUID().toString();
+                String sk = "5036807b1c25b9312116fd4b22c351ac";
+                // java代码示例
+                // java代码示例
+                String requestUrl = "http://dev.api.winsenseos.com/retail/api/data/biz";
+
+                // 1. 将以下参数(uid、app_id、ak、router、timestamp、nonce)的值之间使用顿号(.)拼接成一个整体字符串
+                String signStr = uid + NUMBER + appId + NUMBER + ak + NUMBER + router + NUMBER + timestamp + NUMBER + nonce;
+                // 2. 使用HmacSHA256加密算法, 使用平台分配的sk作为算法的密钥. 对上面拼接后的字符串进行加密操作,得到byte数组
+                Mac sha256Hmac = Mac.getInstance(ALGORITHM);
+                SecretKeySpec encodeSecretKey = new SecretKeySpec(sk.getBytes(StandardCharsets.UTF_8), ALGORITHM);
+                sha256Hmac.init(encodeSecretKey);
+                byte[] hash = sha256Hmac.doFinal(signStr.getBytes(StandardCharsets.UTF_8));
+                // 3. 对2.中的加密结果,再进行一次base64操作, 得到一个字符串
+                String auth = Base64.getEncoder().encodeToString(hash);
+
+                Header[] headers = HttpHeader.custom()
+                        .other("Accept", "application/json")
+                        .other("Content-Type", "application/json;charset=utf-8")
+                        .other("timestamp", timestamp)
+                        .other("nonce", nonce)
+                        .other("ExpiredTime", "50 * 1000")
+                        .other("Authorization", auth)
+                        .build();
+                String time= dt.getHistoryDate(0);
+                String time1= dt.getHHmm(0);
+                String userId = "tester"+ CommonUtil.getRandom(6);
+                String transId = "QAtest_" + CommonUtil.getRandom(3)+time+time1;
+                System.out.println("transId:"+transId);
+                String transTime = "" + System.currentTimeMillis();
+                String str = "{\n" +
+                        "  \"uid\": \"uid_ef6d2de5\",\n" +
+                        "  \"app_id\": \"49998b971ea0\",\n" +
+                        "  \"request_id\": \"5d45a085-8774-4jd0-943e-ded373ca6a919987\",\n" +
+                        "  \"version\": \"v1.0\",\n" +
+                        "  \"router\": \"/business/precipitation/TRANS_INFO_RECEIVE/v1.0\",\n" +
+                        "  \"data\": {\n" +
+                        "    \"biz_data\":  {\n" +
+                        "        \"shop_id\": \"43072\",\n" +
+                        "        \"trans_id\": " + "\"" + transId + "\"" + " ,\n" +
+                        "        \"trans_time\": " + "\"" + transTime + "\"" + " ,\n" +
+                        "        \"trans_type\": [\n" +
+                        "            \"W\"\n" +
+                        "        ],\n" +
+                        "        \"user_id\":  " + "\""+userId+"\"" + " ,\n" +
+                        "        \"total_price\": 1800,\n" +
+                        "        \"real_price\": 1500,\n" +
+//                        "        \"openid\": \"823849023iidijdiwiodede3330\",\n" +
+                        "        \"shopType\": \"SHOP_TYPE\",\n" +
+                        "        \"orderNumber\": \"13444894484\",\n" +
+                        "        \"memberName\":\"自动化在回归\",\n" +
+                        "        \"receipt_type\":\"小票类型\",\n" +
+                        "        \"posId\": \"pos-1234586789\",\n" +
+                        "        \"commodityList\": [\n" +
+                        "            {\n" +
+                        "                \"commodityId\": \"iPhone12A42234\",\n" +
+                        "                \"commodity_name\":\"苹果12s\",\n" +
+                        "                \"unit_price\": 200,\n" +
+                        "                \"num\": 4\n" +
+                        "            },\n" +
+                        "            {\n" +
+                        "                \"commodityId\": \"banan3424724E\",\n" +
+                        "                \"commodity_name\":\"香蕉20根啊\",\n" +
+                        "                \"unit_price\": 2,\n" +
+                        "                \"num\": 4\n" +
+                        "            },\n" +
+                        "            {\n" +
+                        "                \"commodityId\": \"Apple3424323234\",\n" +
+                        "                \"commodity_name\":\"苹果20ge\",\n" +
+                        "                \"unit_price\": 3,\n" +
+                        "                \"num\": 4\n" +
+                        "            }\n" +
+                        "        ],\n" +
+                        "        \"trans_business_params\":{\n" +
+                        "               \"car_plate\":\"京A11111\",\n" +
+                        "               \"car_vehicle_number\":\"ASDASDSDFS1829387\",\n" +
+                        "                \"business_type\":\"FIRST_INSPECTION\",\n" +
+                        "                \"business_order_id\":\"27389182\"\n" +
+                        "    }"+
+                        "    }\n" +
+                        "  }\n" +
+                        "}";
+
+//                JSONObject jsonObject = JSON.parseObject(str);
+                JSONObject jsonObject=staffObject("uid_27f11a9d","店员1","uid_27f11a9d",1);
+                logger.info("request:"+jsonObject.toJSONString());
+                logger.info("requestUrl:"+requestUrl);
+
+                HttpConfig config = HttpConfig.custom().headers(headers).url(requestUrl).json(JSON.toJSONString(jsonObject)).client(client);
+
+
+
+                String post = HttpClientUtil.post(config);
+                // checkArgument(, "添加事项不成功");
+                System.out.println(post);
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("发送交易事件");
+        }
+
+    }
+    public JSONObject staffObject(String id,String name,String account_uid, Integer status){
+        JSONObject body=new JSONObject();
+        body.put("id",id);
+        body.put("name",name);
+        body.put("account_uid",account_uid);
+        body.put("status",status);
+        return body;
+    }
 
 
     /**
@@ -149,8 +410,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
         try{
             //创建无人风控
 //            Long ruleId=cu.getCashierUnmannedRuleAdd().getJSONObject("data").getLong("id");
-            //指定门店
-            String shopId="2606";
+
             //交易ID
             String transId=pp.transId;
             //客户ID
@@ -183,8 +443,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
 //            Long ruleId=cu.getCashierOrderRuleAdd("1","2").getJSONObject("data").getLong("id");
             String time = dt.getHistoryDate(0);
             String time1 = dt.getHHmm(0);
-            //指定门店
-            String shopId="2606";
+
             //交易ID(不同的3个)
             String transId1= "QATest1_" + CommonUtil.getRandom(3) + time + time1;
             String transId2= "QATest2_" + CommonUtil.getRandom(3) + time + time1;
@@ -221,14 +480,13 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
         try{
             //创建一人多车风控规则(1个人最多2个车)
 //            Long ruleId=cu.getCashierCarRuleAdd("2").getJSONObject("data").getLong("id");
-            //指定门店
-            String shopId="2606";
+
             //交易ID
             String transId=pp.transId;
             //客户ID
-            String userId=pp.openId;
+            String userId=pp.userId;
             //支付ID
-            String openId="111111211111111";
+            String openId=pp.openId;
             //车架号1
             String carVehicleNumber1="AAAAAAAAAA1234322";
             //车架号2
@@ -262,7 +520,6 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             //创建一人多单风控规则(1个人最多2个车)
 //            Long ruleId=cu.getCashierMemberRuleAdd("2").getJSONObject("data").getLong("id");
             //指定门店
-            String shopId="2606";
             //交易ID
             String transId=pp.transId;
             //客户ID1
@@ -292,6 +549,8 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
         }
     }
 
+
+
     /**
      *生成交易订单--触发员工下单风控(下单时保证摄像头下只有员工，没有顾客)
      **/
@@ -301,7 +560,6 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             //创建员工支付风控规则(一个员工一天最多2单)
 //            Long ruleId=cu.getCashierEmployeeRuleAdd("1","2").getJSONObject("data").getLong("id");
             //指定门店
-            String shopId="2606";
             //交易ID
             String transId=pp.transId;
             //实际金额

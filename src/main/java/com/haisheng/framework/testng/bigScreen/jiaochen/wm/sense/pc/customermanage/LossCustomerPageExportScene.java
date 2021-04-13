@@ -70,7 +70,7 @@ public class LossCustomerPageExportScene extends BaseScene {
     private final String orderEndTime;
 
     /**
-     * 描述 底盘号
+     * 描述 
      * 是否必填 false
      * 版本 v3.0
      */

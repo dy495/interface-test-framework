@@ -540,9 +540,9 @@ public class CommonUsedUtil {
                      "    \"biz_data\":  {\n" +
                      "        \"shop_id\": \""+shopId+"\",\n" +
                      "        \"trans_id\": \""+transId+"\" ,\n" +
-                     "        \"trans_time\": \"1618301575338\" ,\n" +
+                     "        \"trans_time\": \""+transTime+"\" ,\n" +
                      "        \"trans_type\": [\n" +
-                     "            \"W\"\n" +
+                     "            \"SCAN\"\n" +
                      "        ],\n" +
                      "        \"user_id\": \""+userId+"\" ,\n" +
                      "        \"total_price\": 1800,\n" +
@@ -577,11 +577,13 @@ public class CommonUsedUtil {
                      "}";
 
              JSONObject jsonObject = JSON.parseObject(str);
+             System.out.println("transId:"+transId);
              HttpConfig config = HttpConfig.custom().headers(headers).url(requestUrl).json(JSON.toJSONString(jsonObject)).client(client);
              post = HttpClientUtil.post(config);
          }
          return  post;
      }
+
 
     /**
      *生成交易订单
