@@ -4,10 +4,15 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.lxq.create.pcCreateExchangeGoods;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletConsultAfterServiceSubmitScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletConsultOnlineExpertsSubmitScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletConsultPreServiceSubmitScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.pcCreateGoods;
 import com.haisheng.framework.util.DateTimeUtil;
@@ -29,12 +34,16 @@ public class jiaoChenInfo {
     public final String stringfifty = "自动化创建--ZDHZDH"+Integer.toString((int)(Math.random()*10))+"1234567890ABCDeFGHIJ啊啊啊～！@#¥%，：67890";//随机字符串长度50
     public final String stringfifty1 = "ZDHZDH"+Integer.toString((int)((Math.random()*9+1)*100000))+"1234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：678901";//随机字符串长度51
     public final String string20 = "ZdH啊！_*"+System.currentTimeMillis(); //20位字符串
+    public final String string200 = "自动化自动化自动化自动化自动化自动化自动化AAAAAAA12345AAAAAA次sssssss!@#$%^&*自动化自动化自动化自动化自动化自动化自动化AAAAAAA12345AAAAAA次sssssss!@#$%^&*自动化自动化自动化自动化自动化自动化自动化AAAAAAA12345AAAAAA次sssssss!@#$%^&*自动化自动化自动化自动化自动化自动化自动化AAAAAAA12345AA";
     public final String stringlong = "自动化"+System.currentTimeMillis()+"a2～！啊A"+Integer.toString((int)(Math.random()*1000000))+"1234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：67891234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：67890101"+System.currentTimeMillis();
     public final String  district_code= "222402";
     public final String phone = "1380110"+Integer.toString((int)((Math.random()*9+1)*1000));//手机号
     public final String donephone = "15843317232";//成交客户手机号
     public final Long oneshopid = 46439L;
-
+    private static final EnumTestProduce PRODUCE = EnumTestProduce.JC_DAILY;
+    public VisitorProxy visitor = new VisitorProxy(PRODUCE);
+    private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_LXQ_DAILY;
+    public UserUtil user = new UserUtil(visitor);
     //日常
     public final long BrandID = 61L;//自动化用的品牌id
     public final long CarStyleID = 48L;//自动化用的品牌车系id
@@ -494,6 +503,70 @@ public class jiaoChenInfo {
         obj1.put("id",id);
         return obj1;
     }
+
+
+
+    //--------V3.0------------
+
+    //专属销售顾问提交
+    public JSONObject submitPreService() throws Exception {
+        user.loginApplet(APPLET_USER_ONE);
+        Long modelId = 1L;
+        Long shopId  = 1L;
+        String salesId  = "";
+        String customerName="奶糖";
+        String customerPhone="13811110000";
+        String content="12345678901234567890";
+        AppletConsultPreServiceSubmitScene.builder().customerName(customerName).customerPhone(customerPhone).content(content)
+                .salesId(salesId).modelId(modelId).shopId(shopId).build().invoke(visitor);
+        JSONObject obj1 = new JSONObject();
+        obj1.put("customerName",customerName);
+        obj1.put("customerPhone",customerPhone);
+        obj1.put("content",content);
+        return obj1;
+    }
+
+    //专属售后顾问提交
+    public JSONObject submitAfterService() throws Exception {
+        user.loginApplet(APPLET_USER_ONE);
+        Long modelId = 1L;
+        Long shopId  = 1L;
+        String salesId  = "";
+        String customerName="奶糖";
+        String customerPhone="13811110000";
+        String content="12345678901234567890";
+        AppletConsultAfterServiceSubmitScene.builder().customerName(customerName).customerPhone(customerPhone).content(content)
+                .salesId(salesId).modelId(modelId).shopId(shopId).build().invoke(visitor);
+        JSONObject obj1 = new JSONObject();
+        obj1.put("customerName",customerName);
+        obj1.put("customerPhone",customerPhone);
+        obj1.put("content",content);
+        return obj1;
+    }
+
+    //在线专家咨询提交
+    public JSONObject submitonlineExpert() throws Exception {
+        user.loginApplet(APPLET_USER_ONE);
+        Long modelId = 1L;
+        Long shopId  = 1L;
+        Long brandId  = 1L;
+        String customerName="奶糖";
+        String customerPhone="13811110000";
+        String content="12345678901234567890";
+        AppletConsultOnlineExpertsSubmitScene.builder().customerPhone(customerPhone).content(content)
+                .brandId(brandId).modelId(modelId).shopId(shopId).build().invoke(visitor);
+        JSONObject obj1 = new JSONObject();
+        obj1.put("customerName",customerName);
+        obj1.put("customerPhone",customerPhone);
+        obj1.put("content",content);
+        obj1.put("brandId",brandId);
+        obj1.put("modelId",modelId);
+        obj1.put("shopId",shopId);
+        return obj1;
+    }
+
+
+
 
 
 
