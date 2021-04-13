@@ -3591,7 +3591,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject taste_add(String taste_image_path,String head_image_path,String show_image_path,String taste_name,String taste_explain,int users,boolean recommend) throws Exception {
+    public JSONObject taste_add(String taste_image_path,String head_image_path,String show_image_path,String taste_name,String taste_explain,Integer users,Boolean recommend) throws Exception {
         String path = "/patrol/taste/add";
         JSONObject json = new JSONObject();
         json.put("taste_image_path",taste_image_path);
@@ -3601,9 +3601,11 @@ public class StoreScenarioUtil extends TestCaseCommon {
         json.put("taste_explain",taste_explain);
         json.put("users",users);
         json.put("recommend",recommend);
-        String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
+//        String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
 //        return JSON.parseObject(res).getJSONObject("data");
         return invokeApi(path, JSONObject.parseObject(json.toJSONString()), false);
+//        String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
+//        return JSON.parseObject(res);
     }
     /**
      * @description:21.2. 口味查询

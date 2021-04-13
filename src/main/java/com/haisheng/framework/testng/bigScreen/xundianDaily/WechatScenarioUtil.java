@@ -323,7 +323,7 @@ public class WechatScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject awardFeedback(int size) throws Exception {
+    public JSONObject awardFeedback(Integer size) throws Exception {
         String url = "/patrol-applet/granted/feedback/award-feedback";
         JSONObject json = new JSONObject();
         json.put("size", size);

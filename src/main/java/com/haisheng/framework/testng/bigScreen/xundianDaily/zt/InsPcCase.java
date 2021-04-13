@@ -74,7 +74,6 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.referer = PRODUCE.getReferer();
         beforeClassInit(commonConfig);
         logger.debug("xundian " + xd);
-        xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
 
     }
 
@@ -88,6 +87,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
     @Override
     public void createFreshCase(Method method) {
         logger.debug("beforeMethod");
+        xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
     }
@@ -334,7 +334,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             String closingTime = "23:59:59";
             String managerName = "联系人1";
             String managerPhone = "13666666666";
-            String city = "110000";
+            String city = "110105";
             String address = "圆明园";
             double longitude = 23.99;
             double latitude = 17.22;
@@ -370,7 +370,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             String openingTime = "00:00:00";
             String closingTime = "23:59:59";
             String managerName = "联系人1";
-            String city = "110000";
+            String city = "110105";
             String phone = "13666666666";
             String address = "圆明园";
             double longitude = 23.99;
@@ -413,7 +413,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             String openingTime = "00:00:00";
             String closingTime = "23:59:59";
             String managerName = "联系人1";
-            String city = "110000";
+            String city = "110105";
             String address = "圆明园";
             double longitude = 23.99;
             double latitude = 17.22;
@@ -430,14 +430,14 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             int code0 = md.createShop0(path, EnumDesc.DESC_BETWEEN_15_20.getDesc(), label, openingTime, closingTime, managerName, phone, city, address, longitude, latitude, tripartite_shop_id, recommended).getInteger("code");
             Preconditions.checkArgument(code0 == 1001, "状态码期待1001，实际" + code0);
 //            //门店标签大于5个字
-//            int code1 = md.createShop0(path, shopName, "123455555555", openingTime, closingTime, managerName, phone, city, address, longitude, latitude, tripartite_shop_id, recommended).getInteger("code");
-//            Preconditions.checkArgument(code1 == 1001, "状态码期待1001，实际" + code1);
+            int code1 = md.createShop0(path, shopName, "123455555555", openingTime, closingTime, managerName, phone, city, address, longitude, latitude, tripartite_shop_id, recommended).getInteger("code");
+            Preconditions.checkArgument(code1 == 1001, "状态码期待1001，实际" + code1);
 //            //门店联系人大于10个字
             int code2 = md.createShop0(path, shopName, label, openingTime, closingTime, EnumDesc.DESC_BETWEEN_20_30.getDesc(), phone, city, address, longitude, latitude, tripartite_shop_id, recommended).getInteger("code");
             Preconditions.checkArgument(code2 == 1001, "状态码期待1001，实际" + code2);
 ////            //联系电话大于11位
-//            int code3 = md.createShop0(path, shopName, label, openingTime, closingTime, managerName, "136046098690", city, address, longitude, latitude, tripartite_shop_id, recommended).getInteger("code");
-//            Preconditions.checkArgument(code3 == 1001, "状态码期待1001，实际" + code3);
+            int code3 = md.createShop0(path, shopName, label, openingTime, closingTime, managerName, "136046098690", city, address, longitude, latitude, tripartite_shop_id, recommended).getInteger("code");
+            Preconditions.checkArgument(code3 == 1001, "状态码期待1001，实际" + code3);
 ////            //详情地址大于50字
             int code4 = md.createShop0(path, shopName, label, openingTime, closingTime, managerName, phone, city, EnumDesc.DESC_BETWEEN_200_300.getDesc(), longitude, latitude, tripartite_shop_id, recommended).getInteger("code");
             Preconditions.checkArgument(code4 == 1001, "状态码期待1001，实际" + code4);
@@ -481,7 +481,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //搜索门店
-            String memphone = "15677889566";
+            String memphone = "15810940698";
             JSONArray memList = md.member_list(null, 1, 10, null, null, memphone).getJSONArray("list");
             if (memList != null)
                 for (int i = 0; i < memList.size(); i++) {
@@ -503,7 +503,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //搜索门店
-            String memdata = "2021-04-05";
+            String memdata = "2021-04-10";
             JSONArray memList = md.member_list(null, 1, 10, memdata, null, null).getJSONArray("list");
             if (memList != null)
                 for (int i = 0; i < memList.size(); i++) {
@@ -525,8 +525,8 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //搜索门店
-            String memdata = "2021-04-05";
-            String memName = "李离";
+            String memdata = "2021-04-10";
+            String memName = "杨立新";
             JSONArray memList = md.member_list(null, 1, 10, memdata, memName, null).getJSONArray("list");
             if (memList != null)
                 for (int i = 0; i < memList.size(); i++) {
@@ -549,9 +549,9 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //搜索门店
-            String memdata = "2021-04-05";
-            String memName = "李离";
-            String memphone = "15677889566";
+            String memdata = "2021-04-10";
+            String memName = "杨立新";
+            String memphone = "15810940698";
             JSONArray memList = md.member_list(null, 1, 10, memdata, memName, memphone).getJSONArray("list");
             if (memList != null)
                 for (int i = 0; i < memList.size(); i++) {
@@ -1150,9 +1150,18 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             String path = md.pcFileUpload(base64).getString("pic_path");
             String name = "芒果";
             //不传taste——imagepath
-//            String message = md.taste_add(null,path,path,name,"1",1,true).getString("message");
-//            Preconditions.checkArgument(message.equals("系统异常"),"期待系统异常，实际"+message);
-            String message = md.taste_add(path, path, path, name, "1", 1, true).getString("message");
+            JSONObject res = md.taste_add(null,path,path,name,"1",1,true);
+            Preconditions.checkArgument(res.getString("message").equals("口味图片不能为空"),"期待口味图片不能为空，实际"+res.getString("message"));
+            JSONObject res0 = md.taste_add(path,null,path,name,"1",1,true);
+            Preconditions.checkArgument(res0.getString("message").equals("头部图片不能为空"),"期待头部图片不能为空，实际"+res0.getString("message"));
+            JSONObject res1 = md.taste_add(path,path,null,name,"1",1,true);
+            Preconditions.checkArgument(res1.getString("message").equals("展示图片不能为空"),"期待展示图片不能为空，实际"+res1.getString("message"));
+            JSONObject res2 = md.taste_add(path,path,path,EnumDesc.DESC_BETWEEN_20_30.getDesc(),"1",1,true);
+            Preconditions.checkArgument(res2.getString("message").equals("口味名称不能超过10个字"),"期待口味名称不能超过10个字，实际"+res2.getString("message"));
+            JSONObject res3 = md.taste_add(path,path,path,EnumDesc.DESC_BETWEEN_5_10.getDesc(),EnumDesc.DESC_BETWEEN_400_500.getDesc(),1,true);
+            Preconditions.checkArgument(res3.getString("message").equals("口味描述不能超过200个字"),"期待口味描述不能超过200个字，实际"+res3.getString("message"));
+//            JSONObject res4 = md.taste_add(path,path,path,EnumDesc.DESC_BETWEEN_5_10.getDesc(),EnumDesc.DESC_BETWEEN_15_20.getDesc(),null,null);
+//            Preconditions.checkArgument(res4.getString("message").equals("口味描述不能超过200个字"),"期待口味描述不能超过200个字，实际"+res4.getString("message"));
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -1163,77 +1172,77 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
     //新建广告位
 
     //bug
-    @Test(description = "banner--跳转活动/文章的条数=展示中的文章+进行中或者已结束活动条数之和")
-    public void banner_data_1() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            int num = ArticleList.builder().build().invoke(visitor).getJSONArray("list").size();
-            IScene articlePageScene = ArticlePageScene.builder().build();
-            int articlePageListSize = (int) util.collectBean(articlePageScene, ArticlePageBean.class).stream().filter(e -> e.getStatusName().equals(ArticleStatusEnum.SHOW.getTypeName())).count();
-            CommonUtil.checkResult("跳转活动/文章的条数", articlePageListSize, num);
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("banner--跳转活动/文章的条数=展示中的文章+进行中活动条数之和");
-        }
-    }
-
-    //ok
-    @Test(description = "内容运营--banner--填写banner1-banner5的内容")
-    public void banner_data_2() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            List<Long> articleIds = util.getArticleIdList();
-            String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture";
-            File file = new File(filePath);
-            File[] files = file.listFiles();
-            assert files != null;
-            List<String> base64s = Arrays.stream(files).filter(e -> e.toString().contains("banner")).map(e -> new ImageUtil().getImageBinary(e.getPath())).collect(Collectors.toList());
-            List<String> picPaths = base64s.stream().map(e -> visitor.invokeApi(FileUpload.builder().pic(e).permanentPicType(0).isPermanent(false).ratio(1.5).ratioStr("3：2").build()).getString("pic_path")).collect(Collectors.toList());
-            JSONArray array = new JSONArray();
-            JSONObject jsonObject1 = new JSONObject();
-            jsonObject1.put("article_id", articleIds.get(0));
-            jsonObject1.put("banner_img_url", picPaths.get(0));
-            jsonObject1.put("banner_id", 31);
-            jsonObject1.put("banner_select", "banner1");
-            JSONObject jsonObject2 = new JSONObject();
-            jsonObject2.put("article_id", articleIds.get(1));
-            jsonObject2.put("banner_img_url", picPaths.get(1));
-            jsonObject2.put("banner_id", 87);
-            jsonObject2.put("banner_select", "banner2");
-            JSONObject jsonObject3 = new JSONObject();
-            jsonObject3.put("article_id", articleIds.get(2));
-            jsonObject3.put("banner_img_url", picPaths.get(2));
-            jsonObject3.put("banner_id", 88);
-            jsonObject3.put("banner_select", "banner3");
-            JSONObject jsonObject4 = new JSONObject();
-            jsonObject4.put("article_id", articleIds.get(3));
-            jsonObject4.put("banner_img_url", picPaths.get(3));
-            jsonObject4.put("banner_id", 89);
-            jsonObject4.put("banner_select", "banner4");
-            JSONObject jsonObject5 = new JSONObject();
-            jsonObject5.put("article_id", articleIds.get(4));
-            jsonObject5.put("banner_img_url", picPaths.get(4));
-            jsonObject5.put("banner_id", 90);
-            jsonObject5.put("banner_select", "banner5");
-            array.add(jsonObject1);
-            array.add(jsonObject2);
-            array.add(jsonObject3);
-            array.add(jsonObject4);
-            array.add(jsonObject5);
-//            articleIds.add(articleIds.get(2));
-//            articleIds.add(articleIds.get(2));
-            EditScene.builder().list(array).adName("首页banner").adType("BANNER").build().invoke(visitor);
-            visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
-            JSONArray list = AppletBannerScene.builder().adType("BANNER").build().invoke(visitor).getJSONArray("list");
-            List<Long> appletArticleIds = list.stream().map(e -> (JSONObject) e).map(e -> e.getLong("article_id")).collect(Collectors.toList());
-            CommonUtil.checkResultPlus("pc端文章为：", appletArticleIds, "applet端文章为：", articleIds.subList(0, 5));
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("内容运营--banner--填写banner1-banner5的内容");
-        }
-    }
+//    @Test(description = "banner--跳转活动/文章的条数=展示中的文章+进行中或者已结束活动条数之和")
+//    public void banner_data_1() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            int num = ArticleList.builder().build().invoke(visitor).getJSONArray("list").size();
+//            IScene articlePageScene = ArticlePageScene.builder().build();
+//            int articlePageListSize = (int) util.collectBean(articlePageScene, ArticlePageBean.class).stream().filter(e -> e.getStatusName().equals(ArticleStatusEnum.SHOW.getTypeName())).count();
+//            CommonUtil.checkResult("跳转活动/文章的条数", articlePageListSize, num);
+//        } catch (Exception | AssertionError e) {
+//            collectMessage(e);
+//        } finally {
+//            saveData("banner--跳转活动/文章的条数=展示中的文章+进行中活动条数之和");
+//        }
+//    }
+//
+//    //ok
+//    @Test(description = "内容运营--banner--填写banner1-banner5的内容")
+//    public void banner_data_2() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            List<Long> articleIds = util.getArticleIdList();
+//            String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture";
+//            File file = new File(filePath);
+//            File[] files = file.listFiles();
+//            assert files != null;
+//            List<String> base64s = Arrays.stream(files).filter(e -> e.toString().contains("banner")).map(e -> new ImageUtil().getImageBinary(e.getPath())).collect(Collectors.toList());
+//            List<String> picPaths = base64s.stream().map(e -> visitor.invokeApi(FileUpload.builder().pic(e).permanentPicType(0).isPermanent(false).ratio(1.5).ratioStr("3：2").build()).getString("pic_path")).collect(Collectors.toList());
+//            JSONArray array = new JSONArray();
+//            JSONObject jsonObject1 = new JSONObject();
+//            jsonObject1.put("article_id", articleIds.get(0));
+//            jsonObject1.put("banner_img_url", picPaths.get(0));
+//            jsonObject1.put("banner_id", 31);
+//            jsonObject1.put("banner_select", "banner1");
+//            JSONObject jsonObject2 = new JSONObject();
+//            jsonObject2.put("article_id", articleIds.get(1));
+//            jsonObject2.put("banner_img_url", picPaths.get(1));
+//            jsonObject2.put("banner_id", 87);
+//            jsonObject2.put("banner_select", "banner2");
+//            JSONObject jsonObject3 = new JSONObject();
+//            jsonObject3.put("article_id", articleIds.get(2));
+//            jsonObject3.put("banner_img_url", picPaths.get(2));
+//            jsonObject3.put("banner_id", 88);
+//            jsonObject3.put("banner_select", "banner3");
+//            JSONObject jsonObject4 = new JSONObject();
+//            jsonObject4.put("article_id", articleIds.get(3));
+//            jsonObject4.put("banner_img_url", picPaths.get(3));
+//            jsonObject4.put("banner_id", 89);
+//            jsonObject4.put("banner_select", "banner4");
+//            JSONObject jsonObject5 = new JSONObject();
+//            jsonObject5.put("article_id", articleIds.get(4));
+//            jsonObject5.put("banner_img_url", picPaths.get(4));
+//            jsonObject5.put("banner_id", 90);
+//            jsonObject5.put("banner_select", "banner5");
+//            array.add(jsonObject1);
+//            array.add(jsonObject2);
+//            array.add(jsonObject3);
+//            array.add(jsonObject4);
+//            array.add(jsonObject5);
+////            articleIds.add(articleIds.get(2));
+////            articleIds.add(articleIds.get(2));
+//            EditScene.builder().list(array).adName("首页banner").adType("BANNER").build().invoke(visitor);
+//            visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
+//            JSONArray list = AppletBannerScene.builder().adType("BANNER").build().invoke(visitor).getJSONArray("list");
+//            List<Long> appletArticleIds = list.stream().map(e -> (JSONObject) e).map(e -> e.getLong("article_id")).collect(Collectors.toList());
+//            CommonUtil.checkResultPlus("pc端文章为：", appletArticleIds, "applet端文章为：", articleIds.subList(0, 5));
+//        } catch (Exception | AssertionError e) {
+//            collectMessage(e);
+//        } finally {
+//            saveData("内容运营--banner--填写banner1-banner5的内容");
+//        }
+//    }
 
 //    ------------------------------------------------------Ins小程序-----------------------------------------------------------------------------------------------------------------
     //小程序附近门店
