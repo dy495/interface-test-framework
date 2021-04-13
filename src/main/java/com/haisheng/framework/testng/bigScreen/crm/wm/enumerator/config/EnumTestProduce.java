@@ -39,6 +39,7 @@ public enum EnumTestProduce {
         this.shopId = shopId;
         this.abbreviation = abbreviation;
         this.roleId = roleId;
+        this.isDaily = isDaily;
     }
 
     @Getter
@@ -53,4 +54,6 @@ public enum EnumTestProduce {
     private final String abbreviation;
     @Getter
     private final String roleId;
+    @Getter
+    private final Boolean isDaily;
 }
