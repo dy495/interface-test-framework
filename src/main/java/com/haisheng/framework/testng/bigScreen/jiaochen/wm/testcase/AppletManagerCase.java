@@ -372,7 +372,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene exchangePageScene = ExchangePageScene.builder().status(IntegralExchangeStatusEnum.WORKING.name()).exchangeType(CommodityTypeEnum.REAL.name()).build();
-            ExchangePage a = util.collectBean(exchangePageScene, ExchangePage.class).stream().filter(e -> e.getExchangedAndSurplus().split("/")[1].equals("0")).findFirst().orElse(null);
+            ExchangePage a = util.collectBeanList(exchangePageScene, ExchangePage.class).stream().filter(e -> e.getExchangedAndSurplus().split("/")[1].equals("0")).findFirst().orElse(null);
             ExchangePage exchangePage = a == null ? util.createExchangeRealGoods(0) : a;
             //修改为可兑换多次
             util.modifyExchangeGoodsLimit(exchangePage.getId(), exchangePage.getExchangeType(), false);
@@ -397,7 +397,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
         try {
             //找一个库存为大于0并且包含卡券剩余库存等于0的积分商品
             IScene exchangePageScene = ExchangePageScene.builder().status(IntegralExchangeStatusEnum.WORKING.name()).exchangeType(CommodityTypeEnum.FICTITIOUS.name()).build();
-            ExchangePage a = util.collectBean(exchangePageScene, ExchangePage.class).stream().filter(e -> Integer.parseInt(e.getExchangedAndSurplus().split("/")[1]) > 0 && util.getExchangeGoodsContainVoucher(e.getId()).getSurplusInventory() == 0).findFirst().orElse(null);
+            ExchangePage a = util.collectBeanList(exchangePageScene, ExchangePage.class).stream().filter(e -> Integer.parseInt(e.getExchangedAndSurplus().split("/")[1]) > 0 && util.getExchangeGoodsContainVoucher(e.getId()).getSurplusInventory() == 0).findFirst().orElse(null);
             ExchangePage exchangePage;
             if (a == null) {
                 Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.SELL_OUT).buildVoucher().getVoucherId();
@@ -429,7 +429,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
         try {
             //找一个库存为大于0并且包含卡券剩余库存等于0的积分商品
             IScene exchangePageScene = ExchangePageScene.builder().status(IntegralExchangeStatusEnum.WORKING.name()).exchangeType(CommodityTypeEnum.FICTITIOUS.name()).build();
-            ExchangePage a = util.collectBean(exchangePageScene, ExchangePage.class).stream().filter(e -> Integer.parseInt(e.getExchangedAndSurplus().split("/")[1]) == 0 && util.getExchangeGoodsContainVoucher(e.getId()).getSurplusInventory() > 0).findFirst().orElse(null);
+            ExchangePage a = util.collectBeanList(exchangePageScene, ExchangePage.class).stream().filter(e -> Integer.parseInt(e.getExchangedAndSurplus().split("/")[1]) == 0 && util.getExchangeGoodsContainVoucher(e.getId()).getSurplusInventory() > 0).findFirst().orElse(null);
             ExchangePage exchangePage;
             if (a == null) {
                 Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
@@ -460,10 +460,10 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             ExchangePage exchangePage;
             IScene exchangePageScene = ExchangePageScene.builder().status(IntegralExchangeStatusEnum.WORKING.name()).exchangeType(CommodityTypeEnum.FICTITIOUS.name()).build();
             //找一个库存为大于0并且包含卡券剩余库存大于0的积分商品
-            ExchangePage a = util.collectBean(exchangePageScene, ExchangePage.class).stream().filter(e -> Integer.parseInt(e.getExchangedAndSurplus().split("/")[1]) > 0 && util.getExchangeGoodsContainVoucher(e.getId()).getSurplusInventory() > 0 && util.getExchangeGoodsContainVoucher(e.getId()).getVoucherStatus().equals(VoucherStatusEnum.WORKING.name())).findFirst().orElse(null);
+            ExchangePage a = util.collectBeanList(exchangePageScene, ExchangePage.class).stream().filter(e -> Integer.parseInt(e.getExchangedAndSurplus().split("/")[1]) > 0 && util.getExchangeGoodsContainVoucher(e.getId()).getSurplusInventory() > 0 && util.getExchangeGoodsContainVoucher(e.getId()).getVoucherStatus().equals(VoucherStatusEnum.WORKING.name())).findFirst().orElse(null);
             if (a == null) {
                 //如果没有找一个库存为0并且包含卡券剩余库存大于0的积分商品
-                ExchangePage b = util.collectBean(exchangePageScene, ExchangePage.class).stream().filter(e -> Integer.parseInt(e.getExchangedAndSurplus().split("/")[1]) == 0 && util.getExchangeGoodsContainVoucher(e.getId()).getSurplusInventory() > 0 && util.getExchangeGoodsContainVoucher(e.getId()).getVoucherStatus().equals(VoucherStatusEnum.WORKING.name())).findFirst().orElse(null);
+                ExchangePage b = util.collectBeanList(exchangePageScene, ExchangePage.class).stream().filter(e -> Integer.parseInt(e.getExchangedAndSurplus().split("/")[1]) == 0 && util.getExchangeGoodsContainVoucher(e.getId()).getSurplusInventory() > 0 && util.getExchangeGoodsContainVoucher(e.getId()).getVoucherStatus().equals(VoucherStatusEnum.WORKING.name())).findFirst().orElse(null);
                 if (b == null) {
                     //如果没有创建一个库存为1并且包含卡券剩余库存>0的积分商品
                     voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
@@ -550,7 +550,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene integralExchangeRulesScene = IntegralExchangeRulesScene.builder().build();
-            int allSend = util.collectBean(integralExchangeRulesScene, JSONObject.class).stream().filter(e -> e.getString("rule_name").equals(AppletCodeBusinessTypeEnum.SIGN_IN.getTypeName())).map(e -> e.getInteger("all_send")).findFirst().orElse(0);
+            int allSend = util.collectBeanList(integralExchangeRulesScene, JSONObject.class).stream().filter(e -> e.getString("rule_name").equals(AppletCodeBusinessTypeEnum.SIGN_IN.getTypeName())).map(e -> e.getInteger("all_send")).findFirst().orElse(0);
             user.loginApplet(APPLET_USER_ONE);
             JSONObject response = AppletSignInDetailScene.builder().build().invoke(visitor);
             int signInScore = response.getInteger("sign_in_score");
@@ -576,13 +576,13 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             CommonUtil.checkResult("小程序签到完成积分明细积分数", signInScore, Integer.parseInt(integralRecord.getIntegral()));
             user.loginPc(ALL_AUTHORITY);
             IScene exchangeDetailedScene = ExchangeDetailedScene.builder().build();
-            ExchangeDetailed exchangeDetailed = util.collectBean(exchangeDetailedScene, ExchangeDetailed.class).get(0);
+            ExchangeDetailed exchangeDetailed = util.collectBeanList(exchangeDetailedScene, ExchangeDetailed.class).get(0);
             CommonUtil.checkResult("pc积分明细获取时间", gainTime, exchangeDetailed.getOperateTime());
             CommonUtil.checkResult("pc积分明细内容", "签到获得" + signInScore + "积分", exchangeDetailed.getChangeReason());
             CommonUtil.checkResult("pc积分明细类型", ChangeStockTypeEnum.ADD.name(), exchangeDetailed.getExchangeType());
             CommonUtil.checkResult("pc积分明细类型", ChangeStockTypeEnum.ADD.getDescription(), exchangeDetailed.getExchangeTypeName());
             CommonUtil.checkResult("pc积分明细积分数", signInScore, exchangeDetailed.getStockDetail());
-            int newAllSend = util.collectBean(integralExchangeRulesScene, JSONObject.class).stream().filter(e -> e.getString("rule_name").equals(AppletCodeBusinessTypeEnum.SIGN_IN.getTypeName())).map(e -> e.getInteger("all_send")).findFirst().orElse(0);
+            int newAllSend = util.collectBeanList(integralExchangeRulesScene, JSONObject.class).stream().filter(e -> e.getString("rule_name").equals(AppletCodeBusinessTypeEnum.SIGN_IN.getTypeName())).map(e -> e.getInteger("all_send")).findFirst().orElse(0);
             CommonUtil.checkResult("pc积分规则中签到已发放积分", allSend + signInScore, newAllSend);
         } catch (Exception | AssertionError e) {
             collectMessage(e);

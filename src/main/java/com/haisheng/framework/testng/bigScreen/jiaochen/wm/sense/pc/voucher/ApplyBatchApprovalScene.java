@@ -1,9 +1,10 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
+
+import java.util.List;
 
 /**
  * 8.4. 卡券批量审批 （张小龙） v3.0
@@ -18,7 +19,7 @@ public class ApplyBatchApprovalScene extends BaseScene {
      * 是否必填 true
      * 版本 v3.0
      */
-    private final JSONArray ids;
+    private final List<Long> ids;
 
     /**
      * 描述 状态 1 通过，2 拒绝

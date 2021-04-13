@@ -9,6 +9,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.integralcenter.ExchangeGoodsDetailBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.integralcenter.ExchangePageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.integralmall.CategoryPageBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.voucher.ApplyPageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherInvalidPageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
@@ -372,9 +373,9 @@ public class SupporterUtil {
      * @param voucherName 卡券名称
      * @return 卡券申请信息
      */
-    public ApplyPage getAuditingApplyPage(String voucherName) {
+    public ApplyPageBean getAuditingApplyPage(String voucherName) {
         IScene scene = ApplyPageScene.builder().name(voucherName).status(ApplyStatusEnum.AUDITING.getId()).build();
-        return collectBeanByField(scene, ApplyPage.class, "name", voucherName);
+        return collectBeanByField(scene, ApplyPageBean.class, "name", voucherName);
     }
 
     /**
@@ -383,9 +384,9 @@ public class SupporterUtil {
      * @param voucherName 卡券名称
      * @return 卡券申请信息
      */
-    public ApplyPage getApplyPage(String voucherName) {
+    public ApplyPageBean getApplyPage(String voucherName) {
         IScene scene = ApplyPageScene.builder().name(voucherName).build();
-        return collectBeanByField(scene, ApplyPage.class, "name", voucherName);
+        return collectBeanByField(scene, ApplyPageBean.class, "name", voucherName);
     }
 
     /**
@@ -394,10 +395,10 @@ public class SupporterUtil {
      * @param voucherName 卡券名称
      * @return 卡券申请信息
      */
-    public ApplyPage getApplyPageByTime(String voucherName, String time) {
+    public ApplyPageBean getApplyPageByTime(String voucherName, String time) {
         logger.info("time is:{}", time);
         IScene scene = ApplyPageScene.builder().name(voucherName).build();
-        List<ApplyPage> voucherApplies = collectBean(scene, ApplyPage.class);
+        List<ApplyPageBean> voucherApplies = collectBean(scene, ApplyPageBean.class);
         return voucherApplies.stream().filter(e -> e.getName().equals(voucherName) && e.getApplyTime().contains(time)).findFirst().orElse(null);
     }
 
@@ -409,7 +410,7 @@ public class SupporterUtil {
      */
     public void applyVoucher(String voucherName, String status) {
         IScene scene = ApplyPageScene.builder().name(voucherName).status(ApplyStatusEnum.AUDITING.getId()).build();
-        ApplyPage applyPage = collectBeanByField(scene, ApplyPage.class, "name", voucherName);
+        ApplyPageBean applyPage = collectBeanByField(scene, ApplyPageBean.class, "name", voucherName);
         ApplyApprovalScene.builder().id(applyPage.getId()).status(status).build().invoke(visitor);
     }
 

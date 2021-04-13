@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 /**
  * @author wangmin
  * @date 2020/12/23 10:57 AM
- * @desc
  */
 public enum VoucherApprovalStatusEnum {
     /**

@@ -14,6 +14,14 @@ import java.io.Serializable;
  */
 @Data
 public class PullBean implements Serializable {
+
+    /**
+     * 描述 请求来源
+     * 版本 v1.0
+     */
+    @JSONField(name = "source")
+    private String source;
+
     /**
      * 描述 数据列表
      * 版本 v1.0

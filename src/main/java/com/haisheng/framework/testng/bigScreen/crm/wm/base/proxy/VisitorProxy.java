@@ -116,13 +116,12 @@ public class VisitorProxy extends TestCaseCommon {
         return product == null;
     }
 
-
     /**
      * 判断是否是线上地址
      *
      * @return boolean
      */
-    public Boolean isOnline() {
-        return product.name().contains("ONLINE");
+    public Boolean isDaily() {
+        return product.getIsDaily();
     }
 }

@@ -7,13 +7,14 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 6.1. 卡券审批申请分页 （张小龙）
+ * 卡券申请信息
  *
  * @author wangmin
- * @date 2021-04-02 14:47:46
+ * @date 2021/1/21 10:44
  */
 @Data
 public class ApplyPageBean implements Serializable {
+
     /**
      * 描述 当前页
      * 版本 v1.0
@@ -33,7 +34,7 @@ public class ApplyPageBean implements Serializable {
      * 版本 v1.0
      */
     @JSONField(name = " page_size")
-    private Integer  pageSize;
+    private Integer pageSize;
 
     /**
      * 描述 总数
@@ -188,5 +189,4 @@ public class ApplyPageBean implements Serializable {
      */
     @JSONField(name = "send_time")
     private String sendTime;
-
 }

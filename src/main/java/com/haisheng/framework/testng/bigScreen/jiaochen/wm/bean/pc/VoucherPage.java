@@ -30,7 +30,7 @@ public class VoucherPage implements Serializable {
      * 可用库存
      */
     @JSONField(name = "allow_use_inventory")
-    private Integer allowUseInventory;
+    private Long allowUseInventory;
 
     /**
      * 累计发出

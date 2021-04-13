@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.ApplyPage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.voucher.ApplyPageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.ApplyStatusEnum;
@@ -55,7 +55,7 @@ public class SellOutVoucher extends AbstractVoucher {
      */
     private void applyVoucher(String voucherName) {
         IScene scene = ApplyPageScene.builder().name(voucherName).status(ApplyStatusEnum.AUDITING.getId()).build();
-        ApplyPage applyPage = findBeanByField(scene, ApplyPage.class, "name", voucherName);
+        ApplyPageBean applyPage = findBeanByField(scene, ApplyPageBean.class, "name", voucherName);
         Long id = applyPage.getId();
         ApplyApprovalScene.builder().id(id).status("1").build().invoke(visitor, true);
     }

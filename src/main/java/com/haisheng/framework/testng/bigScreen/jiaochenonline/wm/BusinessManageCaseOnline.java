@@ -104,7 +104,7 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).build();
-            ReceptionPage receptionPage = util.collectBean(receptionPageScene, ReceptionPage.class).get(0);
+            ReceptionPage receptionPage = util.collectBeanList(receptionPageScene, ReceptionPage.class).get(0);
             String platNumber = receptionPage.getPlateNumber();
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
@@ -154,7 +154,7 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).build();
-            ReceptionPage receptionPage = util.collectBean(receptionPageScene, ReceptionPage.class).get(0);
+            ReceptionPage receptionPage = util.collectBeanList(receptionPageScene, ReceptionPage.class).get(0);
             String platNumber = receptionPage.getPlateNumber();
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
@@ -211,7 +211,7 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).build();
-            ReceptionPage receptionPage = util.collectBean(receptionPageScene, ReceptionPage.class).get(0);
+            ReceptionPage receptionPage = util.collectBeanList(receptionPageScene, ReceptionPage.class).get(0);
             String platNumber = receptionPage.getPlateNumber();
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
@@ -261,7 +261,7 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).build();
-            ReceptionPage receptionPage = util.collectBean(receptionPageScene, ReceptionPage.class).get(0);
+            ReceptionPage receptionPage = util.collectBeanList(receptionPageScene, ReceptionPage.class).get(0);
             String platNumber = receptionPage.getPlateNumber();
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
@@ -405,12 +405,12 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene afterSaleCustomerPageScene = AfterSaleCustomerPageScene.builder().build();
-            List<AfterSaleCustomerPage> afterSaleCustomerPageList = util.collectBean(afterSaleCustomerPageScene, AfterSaleCustomerPage.class);
+            List<AfterSaleCustomerPage> afterSaleCustomerPageList = util.collectBeanList(afterSaleCustomerPageScene, AfterSaleCustomerPage.class);
             afterSaleCustomerPageList.forEach(afterSaleCustomerPage -> {
                 String vehicleChassisCode = afterSaleCustomerPage.getVehicleChassisCode();
                 if (vehicleChassisCode != null) {
                     IScene afterSaleCustomerPageScene1 = AfterSaleCustomerPageScene.builder().vehicleChassisCode(vehicleChassisCode).build();
-                    List<AfterSaleCustomerPage> afterSaleCustomerPageList1 = util.collectBean(afterSaleCustomerPageScene1, AfterSaleCustomerPage.class);
+                    List<AfterSaleCustomerPage> afterSaleCustomerPageList1 = util.collectBeanList(afterSaleCustomerPageScene1, AfterSaleCustomerPage.class);
                     List<Integer> miles = afterSaleCustomerPageList1.stream().map(AfterSaleCustomerPage::getNewestMiles).collect(Collectors.toList());
                     for (int i = 0; i < miles.size() - 1; i++) {
                         CommonUtil.checkResult(vehicleChassisCode + " 最新里程数", miles.get(i), miles.get(i + 1));
@@ -431,7 +431,7 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene afterSaleCustomerPageScene = AfterSaleCustomerPageScene.builder().build();
-            List<AfterSaleCustomerPage> afterSaleCustomerPageList = util.collectBean(afterSaleCustomerPageScene, AfterSaleCustomerPage.class);
+            List<AfterSaleCustomerPage> afterSaleCustomerPageList = util.collectBeanList(afterSaleCustomerPageScene, AfterSaleCustomerPage.class);
             afterSaleCustomerPageList.forEach(afterSaleCustomerPage -> {
                 IScene repairPageScene = RepairPageScene.builder().carId(String.valueOf(afterSaleCustomerPage.getCarId())).shopId(String.valueOf(afterSaleCustomerPage.getShopId())).build();
                 JSONArray list = visitor.invokeApi(repairPageScene).getJSONArray("list");
@@ -477,7 +477,7 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
     public void cleanVoucher() {
         Arrays.stream(VoucherTypeEnum.values()).forEach(anEnum -> {
             IScene scene = VoucherFormVoucherPageScene.builder().voucherName(anEnum.getDesc()).voucherStatus(VoucherStatusEnum.WAITING.name()).build();
-            List<VoucherFormVoucherPageBean> voucherFormVoucherPageBeanList = util.collectBean(scene, VoucherFormVoucherPageBean.class);
+            List<VoucherFormVoucherPageBean> voucherFormVoucherPageBeanList = util.collectBeanList(scene, VoucherFormVoucherPageBean.class);
             List<Long> voucherIdList = voucherFormVoucherPageBeanList.stream().map(VoucherFormVoucherPageBean::getVoucherId).collect(Collectors.toList());
             if (voucherIdList.size() != 0) {
                 voucherIdList.forEach(voucherId -> {

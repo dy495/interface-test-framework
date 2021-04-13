@@ -31,7 +31,7 @@ public enum VoucherStatusEnum {
     /**
      * 审核未通过
      */
-    REJECT(2, "已拒绝", new RejectVoucher.Builder()),
+    REJECT(2, "审核未通过", new RejectVoucher.Builder()),
 
     /**
      * 进行中

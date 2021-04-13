@@ -36,7 +36,7 @@ public abstract class AbstractVoucher extends BaseGenerator implements IVoucher 
             Preconditions.checkArgument(!isEmpty(), "visitor is null");
             logger("FIND " + status.name() + " START");
             Preconditions.checkArgument(counter(status) < 4, status.getName() + " 状态执行次数大于3次，强行停止，请检查此状态生成");
-            VoucherPage voucherPage = getPage();
+            VoucherPage voucherPage = visitor.isDaily() ? getPageDaily() : getPageOnline();
             if (voucherPage != null) {
                 logger("FIND " + status.name() + " FINISH");
                 logger("voucherId is：" + voucherPage.getVoucherId());
@@ -93,13 +93,37 @@ public abstract class AbstractVoucher extends BaseGenerator implements IVoucher 
      *
      * @return 卡券表单
      */
-    private VoucherPage getPage() {
+    private VoucherPage getPageDaily() {
         VoucherPage voucherPage = null;
-        JSONObject response = VoucherFormVoucherPageScene.builder().build().invoke(visitor, true);
+        JSONObject response = VoucherFormVoucherPageScene.builder().build().invoke(visitor);
         int total = response.getInteger("total");
         int s = CommonUtil.getTurningPage(total, SIZE);
         for (int i = 1; i < s; i++) {
-            JSONArray array = VoucherFormVoucherPageScene.builder().page(i).size(SIZE).build().invoke(visitor, true).getJSONArray("list");
+            JSONArray array = VoucherFormVoucherPageScene.builder().page(i).size(SIZE).build().invoke(visitor).getJSONArray("list");
+            List<VoucherPage> voucherPageList = array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, VoucherPage.class)).collect(Collectors.toList());
+            voucherPage = status.name().equals(VoucherStatusEnum.WORKING.name())
+                    ? voucherPageList.stream().filter(e -> e.getVoucherStatus().equals(status.name()) && e.getAllowUseInventory() > 0 && !e.getVoucherName().contains("专用")).findFirst().orElse(null)
+                    : voucherPageList.stream().filter(e -> e.getVoucherStatus().equals(status.name()) && !e.getVoucherName().contains("专用")).findFirst().orElse(null);
+            if (voucherPage != null) {
+                break;
+            }
+        }
+        return voucherPage;
+    }
+
+
+    /**
+     * 获取卡券表单
+     *
+     * @return 卡券表单
+     */
+    private VoucherPage getPageOnline() {
+        VoucherPage voucherPage = null;
+        JSONObject response = VoucherFormVoucherPageScene.builder().build().invoke(visitor);
+        int total = response.getInteger("total");
+        int s = CommonUtil.getTurningPage(total, SIZE);
+        for (int i = 1; i < s; i++) {
+            JSONArray array = VoucherFormVoucherPageScene.builder().page(i).size(SIZE).build().invoke(visitor).getJSONArray("list");
             List<VoucherPage> voucherPageList = array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, VoucherPage.class)).collect(Collectors.toList());
             voucherPage = status.name().equals(VoucherStatusEnum.WORKING.name())
                     ? voucherPageList.stream().filter(e -> e.getVoucherStatus().equals(status.name()) && e.getSurplusInventory() > 0 && !e.getVoucherName().contains("专用")).findFirst().orElse(null)
