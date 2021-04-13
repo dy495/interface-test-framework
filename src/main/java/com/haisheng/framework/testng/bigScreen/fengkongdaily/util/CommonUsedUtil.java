@@ -264,14 +264,14 @@ public class CommonUsedUtil {
      * @param ruleIdList：风控规则ID集合
      * @param acceptRoleIdList：接收者Id结合
      */
-    public IScene getAlarmRuleAdd(Boolean realTime,Long silentTime,String type,List<Long> ruleIdList,List<Long> acceptRoleIdList){
+    public IScene getAlarmRuleAdd(Boolean realTime,Long silentTime,String type,List<Long> ruleIdList,List<Long> acceptRoleIdList,String name){
         IScene scene= com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.alarmrule.AddScene.builder()
-                .name(pp.AlarmName)
+                .name(name)
                 .type(type)
                 .ruleIdList(ruleIdList)
                 .acceptRoleIdList(acceptRoleIdList)
-                .startTime(getDateTime(0))
-                .endTime(getDateTime(2))
+                .startTime("09:00")
+                .endTime("18:00")
                 .realTime(realTime)
                 .silentTime(silentTime)
                 .build();
@@ -284,7 +284,7 @@ public class CommonUsedUtil {
      * @param silentTime：沉默时间
      * @param type：风控告警类型
      */
-    public Long getAlarmRuleAdd(Boolean realTime,Long silentTime,String type){
+    public String getAlarmRuleAdd(Boolean realTime,Long silentTime,String type,String name){
         //风控规则的ID
         List<Long> ruleIdList=new ArrayList<>();
         //风控规则中的对风控规则类型进行筛选，取前三个
@@ -294,10 +294,12 @@ public class CommonUsedUtil {
             Long id=list.getJSONObject(i).getLong("id");
             ruleIdList.add(id);
         }
-        //接收人ID  todo
+        //接收人ID
         List<Long> acceptRoleIdList=new ArrayList<>();
+        acceptRoleIdList.add(4945L);
+        acceptRoleIdList.add(5030L);
         //新建风控告警规则
-        Long alarmId=getAlarmRuleAdd( realTime, silentTime,type,ruleIdList,acceptRoleIdList).invoke(visitor,true).getLong("id");
+        String alarmId=getAlarmRuleAdd( realTime, silentTime,type,ruleIdList,acceptRoleIdList,name).invoke(visitor,false).getString("message");
         return alarmId;
     }
 

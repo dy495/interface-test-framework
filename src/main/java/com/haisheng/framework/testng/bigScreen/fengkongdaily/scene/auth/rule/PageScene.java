@@ -68,7 +68,6 @@ public class PageScene extends BaseScene {
      */
     private final String businessType;
 
-
     @Override
     public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
