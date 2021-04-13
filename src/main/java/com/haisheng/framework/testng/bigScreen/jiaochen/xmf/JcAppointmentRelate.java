@@ -43,6 +43,8 @@ public class JcAppointmentRelate extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
         commonConfig.referer = EnumTestProduce.JC_DAILY.getReferer();
+        commonConfig.product=EnumTestProduce.JC_DAILY.getAbbreviation();
+
 //        commonConfig.referer=getJcReferdaily();
 
 

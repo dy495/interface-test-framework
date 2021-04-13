@@ -40,6 +40,7 @@ public class CrmQtOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
+        commonConfig.product=EnumTestProduce.PORSCHE_ONLINE.getAbbreviation();
 
 
         //replace backend gateway url

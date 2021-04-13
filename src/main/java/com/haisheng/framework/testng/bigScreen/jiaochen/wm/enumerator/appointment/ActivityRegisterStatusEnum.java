@@ -27,6 +27,9 @@ public enum ActivityRegisterStatusEnum {
 
     private Boolean isShow;
 
+
+
+
     ActivityRegisterStatusEnum(Integer id, String statusName, String appletStatusName, Boolean isShow) {
         this.id = id;
         this.statusName = statusName;

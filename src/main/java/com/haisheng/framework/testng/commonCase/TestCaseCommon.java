@@ -53,7 +53,7 @@ public class TestCaseCommon {
     public static HttpConfig config;
     public static String response = "";
     public static String authorization;
-    public static String IpPort = EnumTestProduce.JC_DAILY.getAddress();
+    public static String IpPort =EnumTestProduce.JC_DAILY.getAddress() ;
     private static CommonConfig commonConfig = null;
     private boolean FAIL = false;
     private final String DEBUG = System.getProperty("DEBUG", "true");

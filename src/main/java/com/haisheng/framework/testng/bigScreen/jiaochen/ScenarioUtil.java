@@ -9,6 +9,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTest
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.lxq.create.pcCreateExchangeGoods;
 import com.haisheng.framework.testng.bigScreen.jiaochen.lxq.create.submitOrder;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.followType;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.*;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import org.springframework.util.StringUtils;
@@ -541,7 +542,7 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     //小程序我的套餐
-    public JSONObject appletpackageList(JSONObject lastValue, String type, Integer size) {
+    public JSONObject appletpackageList(String lastValue, String type, Integer size) {
         String url = "/jiaochen/applet/granted/package/list";
         JSONObject object = new JSONObject();
         object.put("last_value", lastValue);
@@ -6245,7 +6246,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * String type : 跟进类型  是否必填 false  版本 v3.0
      */
 
-    public JSONObject AppPageV3Scene( Integer size, JSONObject lastValue, String type) {
+    public JSONObject AppPageV3Scene(Integer size, JSONObject lastValue, String type) {
         String url = "/jiaochen/m-app/follow-up/page-v3";
         JSONObject json = new JSONObject();
         json.put("size", size);
@@ -8011,6 +8012,13 @@ public class ScenarioUtil extends TestCaseCommon {
         String url = "/jiaochen/pc/integral-center/exchange-commodity-specifications-list";
         JSONObject json = new JSONObject();
         json.put("id", id);
+
+        return invokeApi(url, json);
+    }
+
+    public JSONObject roleTree() {
+        String url = "/jiaochen/pc/auth/tree";
+        JSONObject json = new JSONObject();
 
         return invokeApi(url, json);
     }

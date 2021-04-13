@@ -46,7 +46,8 @@ public class JcPcAffirmReceptionOnLine extends TestCaseCommon implements TestCas
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "xmf";
         commonConfig.referer = EnumTestProduce.JC_ONLINE.getReferer();
-        commonConfig.product = EnumTestProduce.JC_ONLINE.name();
+        commonConfig.product = EnumTestProduce.JC_ONLINE.getAbbreviation();
+
 
         //replace backend gateway url
         //commonConfig.gateway = "";

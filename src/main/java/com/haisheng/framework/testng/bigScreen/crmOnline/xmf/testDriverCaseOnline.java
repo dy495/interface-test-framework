@@ -44,6 +44,8 @@ public class testDriverCaseOnline extends TestCaseCommon implements TestCaseStd 
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
         commonConfig.referer = EnumTestProduce.PORSCHE_ONLINE.getReferer();
+        commonConfig.product=EnumTestProduce.PORSCHE_ONLINE.getAbbreviation();
+
 
         //replace backend gateway url
         //commonConfig.gateway = "";

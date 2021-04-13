@@ -18,6 +18,8 @@ public class PackFunction {
     FileUtil file = new FileUtil();
     Random random = new Random();
 
+
+
     public String genPhoneNum() {
         String num = "177" + (random.nextInt(89999999) + 10000000);
 

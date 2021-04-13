@@ -81,6 +81,7 @@ public class CrmPcTwoSystemCaseOnline extends TestCaseCommon implements TestCase
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
         commonConfig.referer = ChecklistDbInfo.APPLET_ONLINE_REFER;
+        commonConfig.product=EnumTestProduce.PORSCHE_ONLINE.getAbbreviation();
 
 
         //replace backend gateway url

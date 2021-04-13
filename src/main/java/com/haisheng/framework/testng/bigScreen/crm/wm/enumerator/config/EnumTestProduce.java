@@ -18,7 +18,7 @@ public enum EnumTestProduce {
 
     JC_DAILY("汽车-轿辰 日常 ", "https://servicewechat.com/wxbd41de85739a00c7/0/page-frame.html", "http://dev.dealer-jc.winsenseos.cn", "-1", "JC", "603"),
 
-    JC_ONLINE("汽车-轿辰 赢识线上 ", "https://servicewechat.com/wxbd41de85739a00c7/31/page-frame.html", "http://nb.jiaochenclub.com", "-1", "JC", "395"),
+    JC_ONLINE("汽车-轿辰 赢识线上 ", "https://servicewechat.com/wxbd41de85739a00c7/32/page-frame.html", "http://nb.jiaochenclub.com", "-1", "JC", "395"),
 
     XD_DAILY("门店 日常 ", "", "", "4116", "XD", ""),
 

@@ -9,8 +9,12 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appletAppoin
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.pccreateActile;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.FileUtil;
+import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.ReadContext;
 import org.apache.commons.lang.ArrayUtils;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 public class JcFunction {
@@ -25,6 +29,46 @@ public class JcFunction {
 
         return num;
     }
+    //通过权限描述，返回权限id
+    public Long getAccessId(String label){
+        JSONArray child=jc.roleTree().getJSONArray("children");
+        Long id=0L;
+        for(Object aa:child){
+            JSONObject  tmp = (JSONObject) JSONObject.toJSON(aa);
+            JSONArray temp =tmp.getJSONArray("children");
+            for(Object bb: temp){
+                JSONObject temp2= (JSONObject) JSONObject.toJSON(bb);
+                String labelTemp=temp2.getString("label");
+                id=temp2.getLong("value");
+                if(label.equals(label)){
+                    System.err.println("all:"+id);
+                }
+            }
+        }
+        return id;
+    }
+    public Long getAccessId2(String labelParm){
+
+        JSONObject child=jc.roleTree();
+        ReadContext readContext= JsonPath.parse(child);
+
+        ArrayList label=readContext.read("$.children[*].children[*].label");
+        ArrayList value=readContext.read("$.children[*].children[*].value");
+
+        HashMap<String,String> access=new HashMap<>();
+        for(int i=0;i<label.size();i++){
+            label.get(i);
+//            System.out.println("DateAccess"+i+"(\""+label.get(i)+"\","+value.get(i)+"),");
+            access.put(String.valueOf(label.get(i)),String.valueOf(value.get(i)));
+        }
+//        access.forEach((k,v)-> System.err.println(k+"-"+v));
+        Long id=Long.valueOf(access.get(labelParm));
+        return id;
+    }
+
+
+
+
 
     public JSONArray getroleLlist(){
         //shopList
@@ -409,14 +453,14 @@ public class JcFunction {
     //获取套餐个数
     public Integer getpackgeTotal() {
         JSONObject data = jc.appletpackageList(null, "GENERAL", 20);
-        JSONObject lastValue = data.getJSONObject("last_value");
+        String lastValue = data.getString("last_value");
         JSONArray list = data.getJSONArray("list");
         int size = list.size();
         Integer count = size;   //计数器
         int i = 0;
         while (size != 0) {
-            JSONObject temp = jc.appletVoucherList(lastValue, "GENERAL", 20);
-            lastValue = temp.getJSONObject("last_value");
+            JSONObject temp = jc.appletpackageList(lastValue, "GENERAL", 20);
+            lastValue = temp.getString("last_value");
             list = temp.getJSONArray("list");
             size = list.size();
             count = count + size;

@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.google.inject.internal.util.$Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appletActivityRegister;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -24,10 +25,11 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
 
-    ScenarioUtilOnline jc = new ScenarioUtilOnline();
+    ScenarioUtil jc = new ScenarioUtil();
 
     PublicParmOnline pp = new PublicParmOnline();
     JcFunctionOnline pf = new JcFunctionOnline();
+    CommonConfig commonConfig = new CommonConfig();
 
 
     /**
@@ -37,14 +39,15 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
     @Override
     public void initial() {
         logger.debug("before classs initial");
-        CommonConfig commonConfig = new CommonConfig();
 
 
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.product = EnumTestProduce.JC_ONLINE.getDesc();
+        commonConfig.product = EnumTestProduce.JC_ONLINE.getAbbreviation();
+        jc.changeIpPort(EnumTestProduce.JC_ONLINE.getAddress());
+
 
 
         //replace backend gateway url
@@ -406,6 +409,24 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
         } finally {
             jc.appletLoginToken(pp.appletTocken);
             saveData("活动报名，applet已报名人数++，剩余人数--，pc 总数--，已报名人数++");
+        }
+    }
+
+    @Test(description = "卡券 套餐数量")
+    public void number() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            System.out.println(commonConfig.referer);
+            jc.appletLoginToken(pp.appletTocken);
+            System.out.println(IpPort);
+            System.out.println("卡券数量"+pf.getVoucherTotal());
+//            System.out.println("套餐数量"+pf.getpackgeTotal());
+
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+//            saveData("number");
         }
     }
 

@@ -54,6 +54,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
         commonConfig.referer = ChecklistDbInfo.APPLET_ONLINE_REFER;
+        commonConfig.product=EnumTestProduce.PORSCHE_ONLINE.getAbbreviation();
 
 
 

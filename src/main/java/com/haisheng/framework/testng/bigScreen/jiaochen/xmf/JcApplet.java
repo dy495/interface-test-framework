@@ -111,6 +111,21 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
     }
 
+    @Test(description = "卡券 套餐数量")
+    public void number() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            jc.appletLoginToken(pp.appletTocken);
+//            System.out.println("卡券数量"+pf.getVoucherTotal());
+            System.out.println("套餐数量"+pf.getpackgeTotal());
+
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("number");
+        }
+    }
     /**
      * @description :添加车辆，车牌8位，数量+1 ok
      * @date :2020/7/10 18:03

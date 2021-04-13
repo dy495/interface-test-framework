@@ -9,10 +9,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletConsultAfterServiceSubmitScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletConsultOnlineExpertsSubmitScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.DataAbnormal;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.*;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -24,7 +24,7 @@ import org.testng.annotations.*;
 
 import java.awt.peer.LabelPeer;
 import java.lang.reflect.Method;
-import java.util.Random;
+import java.util.*;
 
 public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
 
@@ -50,8 +50,7 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
         commonConfig.referer = EnumTestProduce.JC_DAILY.getReferer();
-//        commonConfig.referer=getJcReferdaily();
-
+        commonConfig.product=EnumTestProduce.JC_DAILY.getAbbreviation();
 
         //replace backend gateway url
         //commonConfig.gateway = "";
@@ -114,13 +113,6 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
-    }
-
-    public void salereceptionNotCheck() {
-        //新建手机号
-        //搜索手机号
-        //新客开始接待
-        //
     }
 
     public String[] salereception(String phone) {
@@ -318,6 +310,49 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
     public void follow_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            JSONObject followListBefore=jc.AppPageV3Scene(10,null, followType.ONLINE_EXPERTS.getName());
+            int totalBefore=followListBefore.getInteger("total");
+            IScene onlineExpert = AppletConsultOnlineExpertsSubmitScene.builder()
+                    .shopId(Long.valueOf(pp.shopIdZ))
+                    .content("咨询轮胎保养")
+                    .customerName("小明")
+                    .customerPhone("15037286013")
+                    .modelId(Long.valueOf(pp.carModelId))
+                    .brandId(pp.brandId)
+                    .build();
+            JSONObject data=jc.invokeApi(onlineExpert);
+
+            //跟进列表 获取id
+            JSONObject followList=jc.AppPageV3Scene(10,null, followType.ONLINE_EXPERTS.getName());
+            int total=followList.getInteger("total");
+            Long id=followList.getJSONArray("list").getJSONObject(0).getLong("id");
+
+            Preconditions.checkArgument(total-totalBefore==1,"在线咨询，跟进列表+1");
+
+            //回复
+            jc.AppReplyV3Scene(id,"轮胎保养参考用户手册");
+
+            //备注
+            jc.AppRemarkV3Scene(id,"我是备注");
+
+            JSONObject lastvalue=null;
+            int size=10;
+            while(size<10){
+                JSONObject followPageAfter=jc.AppPageV3Scene(10,lastvalue, followType.ONLINE_EXPERTS.getName());
+                JSONArray followListAfter=followPageAfter.getJSONArray("list");
+                size=followListAfter.size();
+                lastvalue=followPageAfter.getJSONObject("last_value");
+
+                for(int i=0;i<followListAfter.size();i++){
+                    Long idAfter = followListAfter.getJSONObject(i).getLong("id");
+                    if(idAfter.equals(id)){
+                        //返回跟进和 备注的内容
+                        break;
+                    }
+
+                }
+
+            }
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -325,6 +360,107 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
             saveData("在线专家回复");
         }
     }
+
+
+    @Test(description = "专属售后咨询")   //TODO: 销售顾问咨询 copy 即可
+    public void follow_2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject followListBefore=jc.AppPageV3Scene(10,null, followType.ONLINE_EXPERTS.getName());
+            int totalBefore=followListBefore.getInteger("total");
+            IScene onlineExpert = AppletConsultAfterServiceSubmitScene.builder()
+                    .shopId(Long.valueOf(pp.shopIdZ))
+                    .content("专属售后咨询")
+                    .customerName("小明")
+                    .customerPhone("15037286013")
+                    .modelId(Long.valueOf(pp.carModelId))
+                    .salesId(pp.userid)
+                    .build();
+            JSONObject data=jc.invokeApi(onlineExpert);
+
+            //跟进列表 获取id
+            JSONObject followList=jc.AppPageV3Scene(10,null, followType.ONLINE_EXPERTS.getName());
+            int total=followList.getInteger("total");
+            Long id=followList.getJSONArray("list").getJSONObject(0).getLong("id");
+
+            Preconditions.checkArgument(total-totalBefore==1,"在线咨询，跟进列表+1");
+
+            //回复
+            jc.AppReplyV3Scene(id,"轮胎保养参考用户手册");
+
+            //备注
+            jc.AppRemarkV3Scene(id,"我是备注");
+
+            //循环查找 列表中需要的跟进任务
+            JSONObject lastvalue=null;
+            int size=10;
+            while(size<10){
+                JSONObject followPageAfter=jc.AppPageV3Scene(10,lastvalue, followType.ONLINE_EXPERTS.getName());
+                JSONArray followListAfter=followPageAfter.getJSONArray("list");
+                size=followListAfter.size();
+                lastvalue=followPageAfter.getJSONObject("last_value");
+
+                for(int i=0;i<followListAfter.size();i++){
+                    Long idAfter = followListAfter.getJSONObject(i).getLong("id");
+                    if(idAfter.equals(id)){
+                        //返回跟进和 备注的内容
+                        break;
+                    }
+                }
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("在线专家回复");
+        }
+    }
+
+    //权限相关
+
+    @Test(description = "权限相关")  //修改预约应答人权限，小程序接待人列表对应变更 ok
+    public void permissions() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            pcLogin(pp.gwphone,pp.gwpassword,pp.roleId);
+//            Long i=pf.getAccessId2("个人");
+
+            //账户登录  修改角色的权限
+            JSONArray roleList1 = new JSONArray();
+            roleList1.add( roleList.findByLable("个人").getValue());
+            roleList1.add(roleList.findByLable("门店").getValue());
+            //预约保养分配
+            jc.organizationRoleEdit(Long.parseLong(pp.userroleId),"临时用户","随时修改用户权限",roleList1);
+            jc.appletLoginToken(pp.appletTocken);
+            int staffTotalBefore =  jc.AppletAppointmentStaffListScene("MAINTAIN",Long.valueOf(pp.shopIdZ)).getJSONArray("list").size();
+
+            roleList1.add(roleList.findByLable("预约保养分配").getValue());
+            //            appLogin(pp.user,pp.userpassword,pp.userroleId);
+            pcLogin(pp.gwphone,pp.gwpassword,pp.roleId);
+            jc.organizationRoleEdit(Long.parseLong(pp.userroleId),"临时用户","随时修改用户权限",roleList1);
+
+            //小程序 门店下接待人员总数
+            jc.appletLoginToken(pp.appletTocken);
+            int staffTotal=  jc.AppletAppointmentStaffListScene("MAINTAIN",Long.valueOf(pp.shopIdZ)).getJSONArray("list").size();
+
+            roleList1.remove(2);
+            pcLogin(pp.gwphone,pp.gwpassword,pp.roleId);
+            jc.organizationRoleEdit(Long.parseLong(pp.userroleId),"临时用户","随时修改用户权限",roleList1);
+
+            jc.appletLoginToken(pp.appletTocken);
+            int staffTotalAfter=  jc.AppletAppointmentStaffListScene("MAINTAIN",Long.valueOf(pp.shopIdZ)).getJSONArray("list").size();
+            Preconditions.checkArgument(staffTotalAfter-staffTotal==-1,"去掉权限后："+staffTotalAfter+"去掉权限前:"+staffTotal);
+            Preconditions.checkArgument(staffTotalBefore-staffTotal==-1,"增加权限前："+staffTotalBefore+"增加之后:"+staffTotal);
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("预约应答人权限");
+        }
+    }
+
+
+
+
 
 
 

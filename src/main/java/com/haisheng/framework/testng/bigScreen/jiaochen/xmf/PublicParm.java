@@ -6,6 +6,14 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppl
 
 
 public class PublicParm {
+    //3.0
+    public Long brandId=1L;  //TODO:
+    public String user;
+    public String userpassword;
+    public String userroleId="4965";
+
+    //3.0
+
     public int num = 4;
     public String roleId = "603";
     public String gwphone = "13114785236"; //超级管理员
@@ -107,6 +115,7 @@ public class PublicParm {
        dd.add(116.29845);
         return dd;
     }
+    //3.0
 
 
 }

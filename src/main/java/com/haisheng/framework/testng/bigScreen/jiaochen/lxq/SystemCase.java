@@ -131,7 +131,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("PC【品牌管理】，创建品牌，名称1个字");
+//            saveData("PC【品牌管理】，创建品牌，名称1个字");
         }
 
     }

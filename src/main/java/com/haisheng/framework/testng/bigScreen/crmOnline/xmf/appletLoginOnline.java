@@ -36,6 +36,7 @@ public class appletLoginOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.referer = "https://servicewechat.com/wx0cf070e8eed63e90/";
 
 
+
         //replace backend gateway url
         //commonConfig.gateway = "";
 

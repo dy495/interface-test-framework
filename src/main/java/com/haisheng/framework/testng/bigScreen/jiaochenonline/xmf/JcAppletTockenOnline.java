@@ -48,7 +48,6 @@ public class JcAppletTockenOnline extends TestCaseCommon implements TestCaseStd 
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         commonConfig.referer = EnumTestProduce.JC_ONLINE.getReferer();
 
-//        commonConfig.referer=getJcReferOnline();
 
 
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
