@@ -54,6 +54,10 @@ public class PublicParam {
     public String staffNameException="1234567890123456789012345678901234567890哈哈hh@#*自动化呀呀";
     //编辑账号名称
     public String staffEditName="已编辑自动化账号"+(int) (Math.random() * 10000);
+    //交易ID
+    public String openId = "deal" + CommonUtil.getRandom(8);
+    //商品ID
+    public String commodityId = "commodity" + CommonUtil.getRandom(8);
     //客户ID
     public String userId = "tester" + CommonUtil.getRandom(6);
     //交易ID

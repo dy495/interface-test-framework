@@ -486,13 +486,11 @@ public class CommonUsedUtil {
      * 生成订单
      * @param shopId      门店ID
      * @param transId     交易ID
-     * @param realPrice   实际金额
+     * @param carVehicleNumber   车架号
      * @param userId      客户ID
      * @param openId      支付ID
-     * @param posId       pos机ID
-     * @param commodityId 商品ID
      */
-     public String getCreateOrder(String shopId,String transId,String realPrice,String userId,String openId,String posId,String commodityId) throws Exception {
+     public String getCreateOrder(String shopId,String transId,String userId,String openId,String carVehicleNumber) throws Exception {
          String post="";
          for (int i = 0; i < 1; i++) {
              final String NUMBER = ".";
@@ -535,41 +533,46 @@ public class CommonUsedUtil {
              String str = "{\n" +
                      "  \"uid\": \"uid_ef6d2de5\",\n" +
                      "  \"app_id\": \"49998b971ea0\",\n" +
-                     "  \"request_id\": \"5d45a085-8774-4jd0-943e-ded373ca6a74uuyy0\",\n" +
+                     "  \"request_id\": \"5d45a085-8774-4jd0-943e-ded373ca6a919987\",\n" +
                      "  \"version\": \"v1.0\",\n" +
                      "  \"router\": \"/business/precipitation/TRANS_INFO_RECEIVE/v1.0\",\n" +
                      "  \"data\": {\n" +
                      "    \"biz_data\":  {\n" +
-                     "        \"shop_id\": \"" + shopId + "\",\n" +
-                     "        \"trans_id\": " + "\"" + transId + "\"" + " ,\n" +
-                     "        \"trans_time\": " + "\"" + transTime + "\"" + " ,\n" +
+                     "        \"shop_id\": \""+shopId+"\",\n" +
+                     "        \"trans_id\": \""+transId+"\" ,\n" +
+                     "        \"trans_time\": \"1618301575338\" ,\n" +
                      "        \"trans_type\": [\n" +
                      "            \"W\"\n" +
                      "        ],\n" +
-                     "        \"user_id\":  " + "\"" + userId + "\"" + " ,\n" +
-                     "        \"openid\": "+openId+",\n" +
+                     "        \"user_id\": \""+userId+"\" ,\n" +
                      "        \"total_price\": 1800,\n" +
-                     "        \"real_price\":"+realPrice+",\n" +
+                     "        \"real_price\": 1500,\n" +
                      "        \"shopType\": \"SHOP_TYPE\",\n" +
                      "        \"orderNumber\": \"13444894484\",\n" +
-                     "        \"memberName\":\"无人风控\",\n" +
+                     "        \"memberName\":\"自动化在回归\",\n" +
                      "        \"receipt_type\":\"小票类型\",\n" +
-                     "        \"posId\": "+posId+",\n" +
+                     "        \"open_id\":\""+openId+"\","+
+                     "        \"posId\": \"pos-1234586789\",\n" +
                      "        \"commodityList\": [\n" +
                      "            {\n" +
-                     "                \"commodityId\": "+commodityId+",\n" +
+                     "                \"commodityId\": \"ff1234567890\",\n" +
                      "                \"commodity_name\":\"法拉第未来\",\n" +
                      "                \"unit_price\": 500000,\n" +
-                     "                \"num\": 1\n" +
+                     "                \"num\": 4\n" +
                      "            },\n" +
-                     "        ]\n" +
+                     "            {\n" +
+                     "                \"commodityId\": \"model991221313\",\n" +
+                     "                \"commodity_name\":\"特斯拉model3\",\n" +
+                     "                \"unit_price\": 300000,\n" +
+                     "                \"num\": 4\n" +
+                     "            },\n" +
+                     "        ],\n" +
                      "        \"trans_business_params\":{\n" +
                      "               \"car_plate\":\"京A11111\",\n" +
-                     "               \"car_vehicle_number\":\"AAAAAAAAAAQQQQQQ1\",\n" +
-                     "                \"business_type\":\"REGULAR_MAINTENANCE\",\n" +
-                     "                \"business_order_id\":\"xxxxxxx\"\n" +
-                     "    }"+
-                     "    }\n" +
+                     "               \"car_vehicle_number\":\""+carVehicleNumber+"\",\n" +
+                     "                \"business_type\":\"FIRST_INSPECTION\",\n" +
+                     "                \"business_order_id\":\"27389182\"\n" +
+                     "    }    }\n" +
                      "  }\n" +
                      "}";
 
@@ -606,7 +609,6 @@ public class CommonUsedUtil {
             String sk = "5036807b1c25b9312116fd4b22c351ac";
             // java代码示例
             String requestUrl = "http://dev.api.winsenseos.com/retail/api/data/biz";
-
             // 1. 将以下参数(uid、app_id、ak、router、timestamp、nonce)的值之间使用顿号(.)拼接成一个整体字符串
             String signStr = uid + NUMBER + appId + NUMBER + ak + NUMBER + router + NUMBER + timestamp + NUMBER + nonce;
             // 2. 使用HmacSHA256加密算法, 使用平台分配的sk作为算法的密钥. 对上面拼接后的字符串进行加密操作,得到byte数组
@@ -652,7 +654,7 @@ public class CommonUsedUtil {
                     "        \"orderNumber\": \"13444894484\",\n" +
                     "        \"memberName\":\"自动化在回归\",\n" +
                     "        \"receipt_type\":\"小票类型\",\n" +
-                    "        \"posId\": \"pos-1234586789\",\n" +
+                    "        \"posId\": \"8112549059036160\",\n" +
                     "        \"commodityList\": [\n" +
                     "            {\n" +
                     "                \"commodityId\": \"iPhone12A42234\",\n" +
@@ -672,17 +674,25 @@ public class CommonUsedUtil {
                     "                \"unit_price\": 3,\n" +
                     "                \"num\": 4\n" +
                     "            }\n" +
-                    "        ]\n" +
+                    "        ],\n" +
+                    "       \"trans_business_params\":{\n" +
+                    "        \"car_plate\":\"京B12345\",\n" +
+                    "        \"car_vehicle_number\":\"AAAAAAAAAAQQQQQQ1\",\n" +
+                    "        \"business_type\":\"REWORK_MAINTENANCE\",\n" +
+                    "        \"business_order_id\":\"1212121212212\"\n" +
+                    "    }\n"+
                     "    }\n" +
                     "  }\n" +
                     "}";
-
             JSONObject jsonObject = JSON.parseObject(str);
             HttpConfig config = HttpConfig.custom().headers(headers).url(requestUrl).json(JSON.toJSONString(jsonObject)).client(client);
             post = HttpClientUtil.post(config);
         }
         return post;
     }
+
+
+
 
 
 

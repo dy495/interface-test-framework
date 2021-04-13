@@ -21,6 +21,7 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
+import com.haisheng.framework.util.CommonUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -28,6 +29,7 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+
 import static com.google.common.base.Preconditions.checkArgument;
 
 public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCaseStd {
@@ -142,65 +144,66 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     /**
      *生成交易订单--触发无人风控(保证摄像头面前没有人)
      **/
-    @Test(enabled = false)
+    @Test(enabled =true )
     public void getTriggerUnmannedRisk(){
         try{
             //创建无人风控
-            Long ruleId=cu.getCashierUnmannedRuleAdd().getJSONObject("data").getLong("id");
+//            Long ruleId=cu.getCashierUnmannedRuleAdd().getJSONObject("data").getLong("id");
             //指定门店
-            String shopId="";
+            String shopId="2606";
             //交易ID
             String transId=pp.transId;
-            //实际金额
-            String realPrice="200";
             //客户ID
             String userId=pp.userId;
             //支付ID
-            String openId="";
-            //pos机ID
-            String posId="";
-            //商品ID
-            String commodityId="";
+            String openId=pp.openId;
+            //车架号
+            String carVehicleNumber="AAAAAAAAAA2223345";
 
             //生成交易订单
-            String post=cu.getCreateOrder(shopId,transId,realPrice,userId,openId,posId,commodityId);
-            Preconditions.checkArgument(post.equals("")&&ruleId!=null,"生成订单失败");
+            String post=cu.getCreateOrder(shopId,transId,userId,openId,carVehicleNumber);
+            System.out.println("---------"+post);
+//            Preconditions.checkArgument(post.equals("")&&ruleId!=null,"生成订单失败");
 
         }catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("生成交易订单--触发无人风控(保证摄像头面前没有人");
+            saveData("生成交易订单--触发无人风控(保证摄像头面前没有人)");
         }
     }
 
     /**
      *生成交易订单--触发一人多单风控
+     * 一人多单 ，userId/openid相同，多个transId交易订单触发
      **/
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void getTriggerMoreOrderRisk(){
         try{
             //创建一人多单风控规则(1个人1天内最多2单)
-            Long ruleId=cu.getCashierOrderRuleAdd("1","2").getJSONObject("data").getLong("id");
+//            Long ruleId=cu.getCashierOrderRuleAdd("1","2").getJSONObject("data").getLong("id");
+            String time = dt.getHistoryDate(0);
+            String time1 = dt.getHHmm(0);
             //指定门店
-            String shopId="";
-            //交易ID
-            String transId=pp.transId;
-            //实际金额
-            String realPrice="200";
+            String shopId="2606";
+            //交易ID(不同的3个)
+            String transId1= "QATest1_" + CommonUtil.getRandom(3) + time + time1;
+            String transId2= "QATest2_" + CommonUtil.getRandom(3) + time + time1;
+            String transId3= "QATest3_" + CommonUtil.getRandom(3) + time + time1;
             //客户ID
             String userId=pp.userId;
             //支付ID
-            String openId="";
-            //pos机ID
-            String posId="";
-            //商品ID
-            String commodityId="";
+            String openId=pp.openId;
+            //车架号
+            String carVehicleNumber="AAAAAAAAAA9998887";
 
             //生成交易订单
-            String post1=cu.getCreateOrder(shopId,transId,realPrice,userId,openId,posId,commodityId);
-            String post2=cu.getCreateOrder(shopId,transId,realPrice,userId,openId,posId,commodityId);
-            String post3=cu.getCreateOrder(shopId,transId,realPrice,userId,openId,posId,commodityId);
-            Preconditions.checkArgument(post1.equals("")&&post2.equals("")&&post3.equals("")&&ruleId!=null,"生成订单失败");
+            String post=cu.getCreateOrder(shopId,transId1,userId,openId,carVehicleNumber);
+            String post2=cu.getCreateOrder(shopId,transId2,userId,openId,carVehicleNumber);
+            String post3=cu.getCreateOrder(shopId,transId3,userId,openId,carVehicleNumber);
+            System.out.println("---------"+post);
+            System.out.println("---------"+post2);
+            System.out.println("---------"+post3);
+//            Preconditions.checkArgument(post1.equals("")&&post2.equals("")&&post3.equals("")&&ruleId!=null,"生成订单失败");
 
         }catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -211,32 +214,36 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
 
     /**
      *生成交易订单--触发一人多车风控
+     * 一人多车 user_id  相同; 多个car_vehicle_number车架号 触发；
      **/
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void getTriggerMoreCarRisk(){
         try{
-            //创建一人多车风控规则(1个人最多3个车)
-            Long ruleId=cu.getCashierCarRuleAdd("3").getJSONObject("data").getLong("id");
+            //创建一人多车风控规则(1个人最多2个车)
+//            Long ruleId=cu.getCashierCarRuleAdd("2").getJSONObject("data").getLong("id");
             //指定门店
-            String shopId="";
+            String shopId="2606";
             //交易ID
             String transId=pp.transId;
-            //实际金额
-            String realPrice="200";
             //客户ID
-            String userId=pp.userId;
+            String userId=pp.openId;
             //支付ID
-            String openId="";
-            //pos机ID
-            String posId="";
-            //商品ID
-            String commodityId="";
+            String openId="111111211111111";
+            //车架号1
+            String carVehicleNumber1="AAAAAAAAAA1234322";
+            //车架号2
+            String carVehicleNumber2="AAAAAAAAAA1234323";
+            //车架号3
+            String carVehicleNumber3="AAAAAAAAAA1234324";
 
             //生成交易订单
-            String post1=cu.getCreateOrder(shopId,transId,realPrice,userId,openId,posId,commodityId);
-            String post2=cu.getCreateOrder(shopId,transId,realPrice,userId,openId,posId,commodityId);
-            String post3=cu.getCreateOrder(shopId,transId,realPrice,userId,openId,posId,commodityId);
-            Preconditions.checkArgument(post1.equals("")&&post2.equals("")&&post3.equals("")&&ruleId!=null,"生成订单失败");
+            String post1=cu.getCreateOrder(shopId,transId,userId,openId,carVehicleNumber1);
+            String post2=cu.getCreateOrder(shopId,transId,userId,openId,carVehicleNumber2);
+            String post3=cu.getCreateOrder(shopId,transId,userId,openId,carVehicleNumber3);
+            System.out.println("-----------"+post1);
+            System.out.println("-----------"+post2);
+            System.out.println("-----------"+post3);
+//            Preconditions.checkArgument(post1.equals("")&&post2.equals("")&&post3.equals("")&&ruleId!=null,"生成订单失败");
 
         }catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -246,32 +253,37 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     }
 
     /**
-     *生成交易订单--触发一人车多人风控
+     *生成交易订单--触发一车多人风控
+     * 一车多人，多个openid/userId,一个car_vehicle_number 触发;
      **/
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void getTriggerMorePersonRisk(){
         try{
-            //创建一人多单风控规则(1个人最多5个车)
-            Long ruleId=cu.getCashierMemberRuleAdd("2").getJSONObject("data").getLong("id");
+            //创建一人多单风控规则(1个人最多2个车)
+//            Long ruleId=cu.getCashierMemberRuleAdd("2").getJSONObject("data").getLong("id");
             //指定门店
-            String shopId="";
+            String shopId="2606";
             //交易ID
             String transId=pp.transId;
-            //实际金额
-            String realPrice="200";
-            //客户ID
-            String userId=pp.userId;
+            //客户ID1
+            String userId1="tester1" + CommonUtil.getRandom(6);
+            //客户ID2
+            String userId2="tester2" + CommonUtil.getRandom(6);
+            //客户ID3
+            String userId3="tester3" + CommonUtil.getRandom(6);
             //支付ID
-            String openId="";
-            //pos机ID
-            String posId="";
-            //商品ID
-            String commodityId="";
+            String openId=pp.openId;
+            //车架号
+            String carVehicleNumber="AAAAAAAAAA1234888";
 
             //生成交易订单
-            String post1=cu.getCreateOrder(shopId,transId,realPrice,userId,openId,posId,commodityId);
-            String post2=cu.getCreateOrder(shopId,transId,realPrice,userId,openId,posId,commodityId);
-            Preconditions.checkArgument(post1.equals("")&&post2.equals("")&&ruleId!=null,"生成订单失败");
+            String post1=cu.getCreateOrder(shopId,transId,userId1,openId,carVehicleNumber);
+            String post2=cu.getCreateOrder(shopId,transId,userId2,openId,carVehicleNumber);
+            String post3=cu.getCreateOrder(shopId,transId,userId3,openId,carVehicleNumber);
+            System.out.println("-----------"+post1);
+            System.out.println("-----------"+post2);
+            System.out.println("-----------"+post3);
+//            Preconditions.checkArgument(post1.equals("")&&post2.equals("")&&ruleId!=null,"生成订单失败");
 
         }catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -283,30 +295,29 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     /**
      *生成交易订单--触发员工下单风控(下单时保证摄像头下只有员工，没有顾客)
      **/
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void getTriggerEmployeeOrderRisk() {
         try{
             //创建员工支付风控规则(一个员工一天最多2单)
-            Long ruleId=cu.getCashierEmployeeRuleAdd("1","2").getJSONObject("data").getLong("id");
+//            Long ruleId=cu.getCashierEmployeeRuleAdd("1","2").getJSONObject("data").getLong("id");
             //指定门店
-            String shopId="";
+            String shopId="2606";
             //交易ID
             String transId=pp.transId;
             //实际金额
-            String realPrice="200";
+            String realPrice="2200";
             //客户ID
             String userId=pp.userId;
             //支付ID
-            String openId="";
-            //pos机ID
-            String posId="";
-            //商品ID
-            String commodityId="";
+            String openId=pp.openId;
+            //车架号
+            String carVehicleNumber="AAAAAAAAAA1237878";
+
             //生成交易订单
-            String post1=cu.getCreateOrder(shopId,transId,realPrice,userId,openId,posId,commodityId);
-            String post2=cu.getCreateOrder(shopId,transId,realPrice,userId,openId,posId,commodityId);
-            String post3=cu.getCreateOrder(shopId,transId,realPrice,userId,openId,posId,commodityId);
-            Preconditions.checkArgument(post1.equals("")&&post2.equals("")&&post3.equals("")&&ruleId!=null,"生成订单失败");
+            String post1=cu.getCreateOrder(shopId,transId,userId,openId,carVehicleNumber);
+            System.out.println("-----------"+post1);
+
+//            Preconditions.checkArgument(post1.equals("")&&post2.equals("")&&post3.equals("")&&ruleId!=null,"生成订单失败");
 
         }catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
