@@ -3702,7 +3702,8 @@ public class StoreScenarioUtil extends TestCaseCommon {
         json.put("visible",visible);
         json.put("comment_images_path",comment_images_path);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
+//        return JSON.parseObject(res).getJSONObject("data");
+        return invokeApi(path, JSONObject.parseObject(json.toJSONString()), false);
     }
     /**
      * @description:21.5. 搜索评论

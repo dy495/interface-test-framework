@@ -1185,8 +1185,8 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             int total = md.taste_search(null, 1, 10).getInteger("total");
             int a = total - 1;
             int id = md.taste_search(null, 1, 10).getJSONArray("list").getJSONObject(a).getInteger("id");
-            String result = md.taste_add_comment(id,path,"1234","1234",4,true,piclist).getString("result");
-            Preconditions.checkArgument(result.equals("true"), "期待展示true，实际" + result);
+            JSONObject res = md.taste_add_comment(id,path,"1234","1234",4,true,piclist);
+            Preconditions.checkArgument(res.getInteger("code")==1000, "期待展示1000，实际" +res.getInteger("code"));
             int t = md.taste_search_comment(id,1,100,null).getInteger("total");
             int t2 = t-1;
             int tid = md.taste_search_comment(id,1,100,null).getJSONArray("list").getJSONObject(t2).getInteger("id");
