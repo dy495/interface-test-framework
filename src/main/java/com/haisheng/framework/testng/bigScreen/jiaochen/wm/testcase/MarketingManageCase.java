@@ -1165,7 +1165,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
 
     //ok
     @Test(description = "套餐表单--修改套餐，套餐名称重复")
-    public void packageManager_system_33() {
+    public void packageManager_system_32() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
@@ -1186,6 +1186,22 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             saveData("套餐表单--修改套餐，套餐名称异常");
         }
     }
+
+//    //ok
+//    @Test(description = "套餐表单--使用可用库存不足的卡券，提示失败")
+//    public void packageManager_system_33() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//
+//
+//            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+//            System.err.println(voucherId);
+//        } catch (Exception | AssertionError e) {
+//            collectMessage(e);
+//        } finally {
+//            saveData("套餐表单--使用可用库存不足的卡券，提示失败");
+//        }
+//    }
 
     //ok
     @Test(description = "套餐表单--购买套餐，确认购买前，套餐状态改为关闭，再确认购买小程序会收到套餐/卡券")
@@ -2000,7 +2016,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         return list;
     }
 
-    @AfterClass
+//    @AfterClass
     @Test(description = "清理卡券")
     public void cleanVoucher() {
         Arrays.stream(VoucherTypeEnum.values()).forEach(anEnum -> {

@@ -309,7 +309,7 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String picPath = util.getCategoryPicPath();
-            String[] names = {"", null, EnumDesc.DESC_10.getDesc() + "1"};
+            String[] names = {null, EnumDesc.DESC_10.getDesc() + "1"};
             Arrays.stream(names).forEach(name -> {
                 String message = CreateCategoryScene.builder().categoryName(name).belongPic(picPath).categoryLevel(IntegralCategoryTypeEnum.FIRST_CATEGORY.name()).build().invoke(visitor, false).getString("message");
                 String err = name == null ? "品类名称不能为空" : "品类名称需要在1-10个字内";

@@ -123,13 +123,16 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
                 CommonUtil.checkResult(voucherName + " 成本价格", "0.01", voucherDetail.getCost());
                 if (anEnum.getDesc().equals(VoucherTypeEnum.COMMODITY_EXCHANGE.getDesc())) {
                     CommonUtil.checkResult(voucherName + " 可兑换商品", "兑换布加迪威龙一辆", voucherDetail.getExchangeCommodityName());
+                    CommonUtil.checkResult(voucherName + " 成本价格", "49.99", voucherDetail.getCost());
                 } else if (anEnum.getDesc().equals(VoucherTypeEnum.COUPON.getDesc())) {
-                    CommonUtil.checkResult(voucherName + " 门槛价格", 999.99, voucherDetail.getThresholdPrice());
-                    CommonUtil.checkResult(voucherName + " 折扣", 2.50, voucherDetail.getDiscount());
-                    CommonUtil.checkResult(voucherName + " 最多优惠", 99.99, voucherDetail.getMostDiscount());
+                    CommonUtil.checkResult(voucherName + " 门槛价格", "999.99", voucherDetail.getThresholdPrice());
+                    CommonUtil.checkResult(voucherName + " 折扣", "2.50", voucherDetail.getDiscount());
+                    CommonUtil.checkResult(voucherName + " 最多优惠", "99.99", voucherDetail.getMostDiscount());
+                    CommonUtil.checkResult(voucherName + " 成本价格", "99.99", voucherDetail.getCost());
                 } else if (anEnum.getDesc().equals(VoucherTypeEnum.FULL_DISCOUNT.getDesc())) {
-                    CommonUtil.checkResult(voucherName + " 面值", 49.99, voucherDetail.getParValue());
-                    CommonUtil.checkResult(voucherName + " 门槛价格", 999.99, voucherDetail.getThresholdPrice());
+                    CommonUtil.checkResult(voucherName + " 面值", "49.99", voucherDetail.getParValue());
+                    CommonUtil.checkResult(voucherName + " 门槛价格", "999.99", voucherDetail.getThresholdPrice());
+                    CommonUtil.checkResult(voucherName + " 成本价格", "49.99", voucherDetail.getCost());
                 }
                 //卡券列表+1
                 int newVoucherTotal = voucherPageScene.invoke(visitor).getInteger("total");
