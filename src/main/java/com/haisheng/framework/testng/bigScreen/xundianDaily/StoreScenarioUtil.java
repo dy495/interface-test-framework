@@ -3709,7 +3709,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject taste_search_comment(int taste_id,int page,int size,String taste_name) throws Exception {
+    public JSONObject taste_search_comment(Integer taste_id,int page,int size,String taste_name) throws Exception {
         String path = "/patrol/taste/search-comment";
         JSONObject json = new JSONObject();
         json.put("taste_id",taste_id);

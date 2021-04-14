@@ -463,7 +463,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             JSONArray memList = md.member_list(null, 1, 10, null, memberName, null).getJSONArray("list");
             if (memList != null)
                 for (int i = 0; i < memList.size(); i++) {
-                    String name = memList.getJSONObject(i).getString("name");
+                    String name = memList.getJSONObject(i).getString("nickname");
                     Preconditions.checkArgument(name.equals(memberName), "通过" + memberName + "搜索客户展示结果为" + name);
                 }
         } catch (AssertionError e) {
@@ -531,7 +531,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             if (memList != null)
                 for (int i = 0; i < memList.size(); i++) {
                     String register_date = memList.getJSONObject(i).getString("register_date");
-                    String name = memList.getJSONObject(i).getString("name");
+                    String name = memList.getJSONObject(i).getString("nickname");
                     Preconditions.checkArgument(register_date.equals(memdata) && name.equals(memName), "通过" + memdata + "和" + memName + "搜索客户展示结果为" + register_date + "和" + name);
                 }
         } catch (AssertionError e) {
@@ -556,7 +556,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             if (memList != null)
                 for (int i = 0; i < memList.size(); i++) {
                     String register_date = memList.getJSONObject(i).getString("register_date");
-                    String name = memList.getJSONObject(i).getString("name");
+                    String name = memList.getJSONObject(i).getString("nickname");
                     String phone = memList.getJSONObject(i).getString("phone");
                     Preconditions.checkArgument(register_date.equals(memdata) && name.equals(memName), "通过" + memdata + "和" + memName + "和" + memphone + "搜索客户展示结果为" + register_date + "和" + name + "和" + phone);
                 }
@@ -1168,6 +1168,41 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             saveData("创建口味的异常情况");
         }
     }
+
+    //创建评论删除评论
+    @Test()
+    public void create_comment() throws Exception {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
+            String base64 = info.getImgStr(pic);
+            String path = md.pcFileUpload(base64).getString("pic_path");
+            JSONArray piclist = new JSONArray();
+            piclist.add(path);
+            md.taste_add(path, path, path, "芒果", "1", 1, true);
+
+            int total = md.taste_search(null, 1, 10).getInteger("total");
+            int a = total - 1;
+            int id = md.taste_search(null, 1, 10).getJSONArray("list").getJSONObject(a).getInteger("id");
+            String result = md.taste_add_comment(id,path,"1234","1234",4,true,piclist).getString("result");
+            Preconditions.checkArgument(result.equals("true"), "期待展示true，实际" + result);
+            int t = md.taste_search_comment(id,1,100,null).getInteger("total");
+            int t2 = t-1;
+            int tid = md.taste_search_comment(id,1,100,null).getJSONArray("list").getJSONObject(t2).getInteger("id");
+            md.deleteComment(tid);
+//            JSONArray list = md.
+            int code = md.taste_delete(id).getInteger("code");
+            Preconditions.checkArgument(code == 1000, "状态码期待1000，实际" + code);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("创建评论删除评论");
+        }
+    }
+
 
     //新建广告位
 

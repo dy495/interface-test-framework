@@ -17,6 +17,7 @@ import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.CommonUtil;
+import com.haisheng.framework.util.DateTimeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.*;
@@ -24,6 +25,7 @@ import org.testng.annotations.*;
 import java.awt.*;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -128,8 +130,8 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
     public void picScheduled2() throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String start_time = "2021-01-19";
-            String end_time = "2021-01-22";
+            String start_time =DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), -5), "yyyy-MM-dd");
+            String end_time = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd");
             int pictotal = md.picturePage("SCHEDULED",start_time,end_time,"",null,1,8).getInteger("total");
             int pages = md.picturePage("SCHEDULED",start_time,end_time,"",null,1,8).getInteger("pages");
             for(int i=1;i<=pages;i++){
@@ -161,8 +163,8 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
     public void picScheduled3() throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String start_time = "2021-01-19";
-            String end_time = "2021-01-22";
+            String start_time =DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), -5), "yyyy-MM-dd");
+            String end_time = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd");
             int pictotal = md.picturePage("SCHEDULED",start_time,end_time,"",1,1,8).getInteger("total");
             int pages = md.picturePage("SCHEDULED",start_time,end_time,info.shop_id_01_chin,1,1,8).getInteger("pages");
             for(int i=1;i<=pages;i++){
@@ -199,8 +201,8 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
     public void picScheduled4() throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String start_time = "2021-01-19";
-            String end_time = "2021-01-22";
+            String start_time =DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), -5), "yyyy-MM-dd");
+            String end_time = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd");
             int pictotal = md.picturePage("SCHEDULED",start_time,end_time,"",1,1,8).getInteger("total");
             int pages = md.picturePage("SCHEDULED",start_time,end_time,info.shop_id_01_chin,0,1,8).getInteger("pages");
             for(int i=1;i<=pages;i++){
@@ -286,8 +288,8 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
     public void picSpot4() throws Exception{
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String start_time = "2021-01-19";
-            String end_time = "2021-01-22";
+            String start_time =DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), -5), "yyyy-MM-dd");
+            String end_time = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd");
             int pages = md.picturePage("SPOT",start_time,end_time,info.shop_id_01_chin,0,1,8).getInteger("pages");
             for(int i=1;i<=pages;i++){
                 JSONArray list = md.picturePage("SPOT",start_time,end_time,info.shop_id_01_chin,0,i,8).getJSONArray("list");
