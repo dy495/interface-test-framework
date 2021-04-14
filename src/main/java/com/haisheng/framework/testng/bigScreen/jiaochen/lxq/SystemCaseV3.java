@@ -7,10 +7,8 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.jiaoChenInfo;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletConsultAfterServiceSubmitScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletConsultOnlineExpertsSubmitScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletConsultPreServiceSubmitScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletMessageListScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.model.AppletListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.followup.AppPageV3Scene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.consultmanagement.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.loginuser.ShopListScene;
@@ -88,9 +86,10 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             user.loginApplet(APPLET_USER_ONE);
-            Long brandId = 1L;
-            Long modelId = 1L;
-            Long shopId  = 1L;
+            Long brandId = info.BrandID;
+            Long modelId = AppletListScene.builder().brandId(brandId).styleId(info.CarStyleID).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            Long shopId  = AppletCommonShopListScene.builder().carModelId(modelId).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
+
             JSONObject obj = AppletConsultOnlineExpertsSubmitScene.builder().customerName(customerName).customerPhone(customerPhone).content(content)
                     .brandId(brandId).modelId(modelId).shopId(shopId).build().invoke(visitor, false);
             int code = obj.getInteger("code");
@@ -115,9 +114,10 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             user.loginApplet(APPLET_USER_ONE);
-            Long brandId = 1L;
-            Long modelId = 1L;
-            Long shopId  = 1L;
+            Long brandId = info.BrandID;
+            Long modelId = AppletListScene.builder().brandId(brandId).styleId(info.CarStyleID).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            Long shopId  = AppletCommonShopListScene.builder().carModelId(modelId).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
+
             String customerName="奶糖";
             String customerPhone="13811110000";
             String content="12345678901234567890";
@@ -287,6 +287,22 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test
+    public void onlineExpertPC3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            // todo
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC在线专家咨询列表咨询内容与小程序填写的一致");
+        }
+    }
+
+    @Test
     public void onlineExpertPCsearch1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -415,12 +431,12 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         try {
             user.loginPc(ALL_AUTHORITY);
 
-            String content = "<p style=\\\"text-align:center;\\\" size=\\\"0\\\" _root=\\\"undefined\\\" __ownerID=\\\"undefined\\\" __hash=\\\"undefined\\\" __altered=" +
-                    "\\\"false\\\">居中</p><p><span style=\\\"font-size:24px\\\">放大</span></p><p><span style=\\\"font-size:12px\\\">缩小</span></p><p><strong>加粗</strong>" +
-                    "</p><p><em>斜体</em></p><p><u>下划线</u></p><p><span style=\\\"color:#f32784\\\">颜色</span></p><p></p><div class=\\\"media-wrap image-wrap\\\">" +
-                    "<img src=\\\""+info.getLogoUrl()+"\\\"/>" +
-                    "</div><p></p>";
-            JSONObject obj= OnlineExpertsExplainEditScene.builder().content(content).build().invoke(visitor,false);
+            String content1 = "<p style=\"text-align:center;\" size=\"5\" _root=\"[object Object]\" __ownerID=\"undefined\" __hash=\"" +
+                    "undefined\" __altered=\"false\">居中</p><p><span style=\"font-size:32px\">放大</span></p><p><span style=\"font-si" +
+                    "ze:12px\">缩小</span></p><p><strong>加粗</strong></p><p><em>斜体</em></p><p><u>下划线</u></p><p><span style=\"color:#f3" +
+                    "2784\">颜色</span></p><p></p><p></p><div class=\"media-wrap image-wrap\"><img src=\""+info.getLogoUrl()+"\"/></div><p></p><p></p>";
+
+            JSONObject obj= OnlineExpertsExplainEditScene.builder().content(content1).build().invoke(visitor,false);
             int code = obj.getInteger("code");
 
             Preconditions.checkArgument(code==1000,"提示"+obj.getString("message"));
@@ -473,6 +489,136 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @Test
+    public void onlineExpertPCBanner() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+           // todo 我觉得可以复用首页banner
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC在线专家页面配置");
+        }
+    }
+
+    @Test(dataProvider = "ONLINEEXPERTREPLY")
+    public void onlineExpertPCReply(String content,String mess) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //小程序消息列表数量
+            user.loginApplet(APPLET_USER_ONE);
+            int befApplet = AppletMessageListScene.builder().size(10).build().invoke(visitor).getInteger("total");
+
+            //小程序在线专家咨询
+            info.submitonlineExpert();
+            //PC在线专家回复
+            Long id1 = OnlineExpertsPageListScene.builder().page(1).size(5).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            JSONObject obj1 = ReplyScene.builder().id(id1).content(content).build().invoke(visitor,false);
+            int code1 = obj1.getInteger("code");
+
+            //小程序专属销售服务咨询
+            info.submitPreService();
+            //PC回复
+            Long id2 = DedicatedServicePageListScene.builder().page(1).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            JSONObject obj2 = ReplyScene.builder().id(id2).content(content).build().invoke(visitor,false);
+            int code2 = obj2.getInteger("code");
+
+            //小程序专属售后服务咨询
+            info.submitAfterService();
+            //PC回复
+            Long id3 = DedicatedServicePageListScene.builder().page(1).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            JSONObject obj3 = ReplyScene.builder().id(id3).content(content).build().invoke(visitor,false);
+            int code3 = obj3.getInteger("code");
+
+            //小程序消息列表数量
+            user.loginApplet(APPLET_USER_ONE);
+            int afterApplet = AppletMessageListScene.builder().size(10).build().invoke(visitor).getInteger("total");
+            int sum = afterApplet - befApplet;
+
+            if (mess.contains("正常")){
+                Preconditions.checkArgument(code1==1000,mess+"提示"+obj1.getString("message"));
+                Preconditions.checkArgument(code2==1000,mess+"提示"+obj2.getString("message"));
+                Preconditions.checkArgument(code3==1000,mess+"提示"+obj3.getString("message"));
+                Preconditions.checkArgument(sum==6,"小程序咨询&PC回复后，小程序消息数量不正确");
+            }
+            if (mess.contains("异常")){
+                Preconditions.checkArgument(code1==1001,mess+"状态码"+code1);
+                Preconditions.checkArgument(code2==1001,mess+"状态码"+code2);
+                Preconditions.checkArgument(code3==1001,mess+"状态码"+code3);
+                Preconditions.checkArgument(sum==3,"小程序咨询后，消息数量不正确");
+            }
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC在线专家/专属服务 回复");
+        }
+    }
+
+    @Test(dataProvider = "ONLINEEXPERTREMARK")
+    public void onlineExpertPCRemark(String content,String mess) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //小程序消息列表数量
+            user.loginApplet(APPLET_USER_ONE);
+            int befApplet = AppletMessageListScene.builder().size(10).build().invoke(visitor).getInteger("total");
+
+            //小程序在线专家咨询
+            info.submitonlineExpert();
+            //PC在线专家备注
+            Long id1 = OnlineExpertsPageListScene.builder().page(1).size(5).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            JSONObject obj1 = RemarkScene.builder().id(id1).remarkContent(content).build().invoke(visitor,false);
+            int code1 = obj1.getInteger("code");
+
+            //小程序专属销售服务咨询
+            info.submitPreService();
+            //PC备注
+            Long id2 = DedicatedServicePageListScene.builder().page(1).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            JSONObject obj2 = RemarkScene.builder().id(id2).remarkContent(content).build().invoke(visitor,false);
+            int code2 = obj2.getInteger("code");
+
+            //小程序专属售后服务咨询
+            info.submitAfterService();
+            //PC备注
+            Long id3 = DedicatedServicePageListScene.builder().page(1).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            JSONObject obj3 = RemarkScene.builder().id(id3).remarkContent(content).build().invoke(visitor,false);
+            int code3 = obj3.getInteger("code");
+
+            //小程序消息列表数量
+            user.loginApplet(APPLET_USER_ONE);
+            int afterApplet = AppletMessageListScene.builder().size(10).build().invoke(visitor).getInteger("total");
+            int sum = afterApplet - befApplet;
+
+            if (mess.contains("正常")){
+                Preconditions.checkArgument(code1==1000,mess+"提示"+obj1.getString("message"));
+                Preconditions.checkArgument(code2==1000,mess+"提示"+obj2.getString("message"));
+                Preconditions.checkArgument(code3==1000,mess+"提示"+obj3.getString("message"));
+                Preconditions.checkArgument(sum==3,"小程序咨询&PC备注后，小程序消息数量不正确");
+            }
+            if (mess.contains("异常")){
+                Preconditions.checkArgument(code1==1001,mess+"状态码"+code1);
+                Preconditions.checkArgument(code2==1001,mess+"状态码"+code2);
+                Preconditions.checkArgument(code3==1001,mess+"状态码"+code3);
+                Preconditions.checkArgument(sum==3,"小程序咨询后，消息数量不正确");
+            }
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC在线专家/专属服务 备注");
+        }
+    }
+
+
 
 
 
@@ -485,9 +631,12 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            Long modelId = 1L;
-            Long shopId  = 1L;
-            String salesId  = "";
+            Long brandId = info.BrandID;
+            Long modelId = AppletListScene.builder().brandId(brandId).styleId(info.CarStyleID).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            Long shopId  = AppletCommonShopListScene.builder().carModelId(modelId).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
+            String salesId  = AppletConsultDedicatedServiceSalesListScene.builder().build().invoke(visitor).getJSONArray("sales_list").getJSONObject(0).getString("sales_id");//销售
+            String aftersalesId  = AppletConsultDedicatedServiceSalesListScene.builder().build().invoke(visitor).getJSONArray("after_sales_list").getJSONObject(0).getString("sales_id");//售后
+
             JSONObject obj = AppletConsultPreServiceSubmitScene.builder().customerName(customerName).customerPhone(customerPhone).content(content)
                     .salesId(salesId).modelId(modelId).shopId(shopId).build().invoke(visitor, false);
             int code = obj.getInteger("code");
@@ -507,13 +656,44 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @Test(dataProvider = "ONLINEEXPERTINFO")
+    public void preServiceSubmit11(String customerName,String customerPhone,String content,String mess,String status) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            Long brandId = info.BrandID;
+            Long modelId = AppletListScene.builder().brandId(brandId).styleId(info.CarStyleID).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            Long shopId  = AppletCommonShopListScene.builder().carModelId(modelId).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
+            String aftersalesId  = AppletConsultDedicatedServiceSalesListScene.builder().build().invoke(visitor).getJSONArray("after_sales_list").getJSONObject(0).getString("sales_id");//售后
+
+            JSONObject obj = AppletConsultPreServiceSubmitScene.builder().customerName(customerName).customerPhone(customerPhone).content(content)
+                    .salesId(aftersalesId).modelId(modelId).shopId(shopId).build().invoke(visitor, false);
+            int code = obj.getInteger("code");
+            if (status.equals("false")){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(code==1001,mess+", 状态码为:"+code+", 提示语为:"+message);
+            }
+            if (status.equals("true")){
+                Preconditions.checkArgument(code==100,mess+", 状态码为:"+code);
+            }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("小程序提交专属售后顾问咨询，校验必填项内容");
+        }
+    }
+
     @Test
     public void preServiceSubmit2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String salesId  = "";
-            Long modelId = 1L;
-            Long shopId  = 1L;
+            Long brandId = info.BrandID;
+            Long modelId = AppletListScene.builder().brandId(brandId).styleId(info.CarStyleID).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            Long shopId  = AppletCommonShopListScene.builder().carModelId(modelId).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
+            String salesId  = AppletConsultDedicatedServiceSalesListScene.builder().build().invoke(visitor).getJSONArray("after_sales_list").getJSONObject(0).getString("sales_id");//售后
+
             String customerName="奶糖";
             String customerPhone="13811110000";
             String content="12345678901234567890";
@@ -559,7 +739,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("小程序提交专属销售顾问咨询，不填写必填项");
+            saveData("小程序提交专属售后顾问咨询，不填写必填项");
         }
     }
 
@@ -631,9 +811,12 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            Long modelId = 1L;
-            Long shopId  = 1L;
-            String salesId  = "";
+            Long brandId = info.BrandID;
+            Long modelId = AppletListScene.builder().brandId(brandId).styleId(info.CarStyleID).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            Long shopId  = AppletCommonShopListScene.builder().carModelId(modelId).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
+
+            String salesId  = AppletConsultDedicatedServiceSalesListScene.builder().build().invoke(visitor).getJSONArray("after_sales_list").getJSONObject(0).getString("sales_id");
+
             JSONObject obj = AppletConsultAfterServiceSubmitScene.builder().customerName(customerName).customerPhone(customerPhone).content(content)
                     .salesId(salesId).modelId(modelId).shopId(shopId).build().invoke(visitor, false);
             int code = obj.getInteger("code");
@@ -657,9 +840,12 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
     public void afterServiceSubmit2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String salesId  = "";
-            Long modelId = 1L;
-            Long shopId  = 1L;
+            Long brandId = info.BrandID;
+            Long modelId = AppletListScene.builder().brandId(brandId).styleId(info.CarStyleID).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            Long shopId  = AppletCommonShopListScene.builder().carModelId(modelId).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
+
+            String salesId  = AppletConsultDedicatedServiceSalesListScene.builder().build().invoke(visitor).getJSONArray("after_sales_list").getJSONObject(0).getString("sales_id");
+
             String customerName="奶糖";
             String customerPhone="13811110000";
             String content="12345678901234567890";
@@ -744,12 +930,12 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         return new String[][]{ // 姓名 手机号 咨询内容(10-200)  提示语 正常/异常
 
                 {"吕","1382172"+Integer.toString((int)((Math.random()*9+1)*1000)),"这是10geZI！@","姓名1个字&咨询内容10个字(期待成功)","true"},
-                {info.stringfifty,"1381172"+Integer.toString((int)((Math.random()*9+1)*1000)),info.string200,"姓名50个字&咨询内容200个字(期待成功)","true"},
-                {info.stringsix,"1381172"+Integer.toString((int)((Math.random()*9+1)*100)),info.stringfifty,"手机号10位(期待失败)","false"},
-                {info.stringsix,"1381172"+Integer.toString((int)((Math.random()*9+1)*10000)),info.stringfifty,"手机号12位(期待失败)","false"},
-                {info.stringfifty+"1","1381172"+Integer.toString((int)((Math.random()*9+1)*1000)),info.stringfifty,"姓名51位(期待失败)","false"},
-                {info.stringsix,"1381172"+Integer.toString((int)((Math.random()*9+1)*1000)),"这是9geZI！@","咨询内容9个字(期待失败)","false"},
-                {info.stringsix,"1381172"+Integer.toString((int)((Math.random()*9+1)*1000)),info.string200+"1","咨询内容201个字(期待失败)","false"},
+//                {info.stringfifty,"1381172"+Integer.toString((int)((Math.random()*9+1)*1000)),info.string200,"姓名50个字&咨询内容200个字(期待成功)","true"},
+//                {info.stringsix,"1381172"+Integer.toString((int)((Math.random()*9+1)*100)),info.stringfifty,"手机号10位(期待失败)","false"},
+//                {info.stringsix,"1381172"+Integer.toString((int)((Math.random()*9+1)*10000)),info.stringfifty,"手机号12位(期待失败)","false"},
+//                {info.stringfifty+"1","1381172"+Integer.toString((int)((Math.random()*9+1)*1000)),info.stringfifty,"姓名51位(期待失败)","false"},
+//                {info.stringsix,"1381172"+Integer.toString((int)((Math.random()*9+1)*1000)),"这是9geZI！@","咨询内容9个字(期待失败)","false"},
+//                {info.stringsix,"1381172"+Integer.toString((int)((Math.random()*9+1)*1000)),info.string200+"1","咨询内容201个字(期待失败)","false"},
 
         };
     }
@@ -802,6 +988,31 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
                 {"SALES","60","60","08:00","09:00","13:00","15:00","08:00","07:00","13:00","15:00","专属服务异常：休息日上午开始时间>结束时间"},
                 {"SALES","60","60","08:00","09:00","13:00","15:00","01:00","02:00","15:00","13:00","专属服务异常：休息日下午开始时间>结束时间"},
 
+
+        };
+    }
+
+    @DataProvider(name = "ONLINEEXPERTREPLY")
+    public Object[] onlineExpertrReply(){
+        return new String[][]{
+
+                {"1啊A！5","正常回复5个字"},
+                {info.getString(1000),"正常回复1000个字"},
+                {info.string200,"正常回复200个字"},
+                {"1234","异常回复4个字"},
+                {info.getString(1001),"异常回复1001个字"},
+
+        };
+    }
+
+    @DataProvider(name = "ONLINEEXPERTREMARK")
+    public Object[] onlineExpertrRemark(){
+        return new String[][]{
+
+                {"啊","正常备注1个字"},
+                {info.string20,"正常备注20个字"},
+                {info.string200,"正常备注200个字"},
+                {info.getString(201),"异常备注201个字"},
 
         };
     }
