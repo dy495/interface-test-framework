@@ -2,19 +2,14 @@ package com.haisheng.framework.testng.bigScreen.jiaochen;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.jiaochen.lxq.create.pcCreateExchangeGoods;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletConsultAfterServiceSubmitScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletConsultOnlineExpertsSubmitScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletConsultPreServiceSubmitScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.pcCreateGoods;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
 
@@ -40,6 +35,7 @@ public class jiaoChenInfo {
     public final String phone = "1380110"+Integer.toString((int)((Math.random()*9+1)*1000));//手机号
     public final String donephone = "15843317232";//成交客户手机号
     public final Long oneshopid = 46439L;
+
     private static final EnumTestProduce PRODUCE = EnumTestProduce.JC_DAILY;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_LXQ_DAILY;
@@ -54,6 +50,7 @@ public class jiaoChenInfo {
         Long id = jc.addBrand(name,getLogo()).getLong("id");
         return id;
     }
+
 
     //创建某品牌下的车系，返回车系id
     public final long getCarStyleID(long id, int n){
@@ -300,103 +297,6 @@ public class jiaoChenInfo {
     public final String specifications_detail_name = "";//规格参数详情名称
 
 
-    public int getStatusGoodId(String status){ //PC【积分兑换】-获取各状态的商品id
-        JSONArray list = jc.exchangePage(1,50,null,null,status).getJSONArray("list");
-        if (list.size()>0){
-            return list.getJSONObject(0).getInteger("id");
-        }
-        else {
-            return -1;
-        }
-    }
-
-    public Boolean showInApplet(int id, Boolean atFirst){
-        //登陆小程序
-        jc.appletLoginToken(pp.appletTocken);
-        JSONArray list = jc.appletHomePage().getJSONArray("recommend_list");
-
-        if (atFirst==true){
-            int listID = list.getJSONObject(0).getInteger("id");
-            if (listID==id){
-                return true;
-            }
-            else {
-                return false;
-            }
-        }
-        else {
-            Boolean exist = false;
-            for (int i = 0 ; i < list.size(); i++){
-                int listID = list.getJSONObject(i).getInteger("id");
-                if (listID==id){
-                    exist = true;
-                }
-            }
-            return exist;
-        }
-    }
-
-    //新建虚拟积分商品
-    public Long newFictitious(){
-        VisitorProxy visitor =new VisitorProxy(EnumTestProduce.JC_DAILY);
-
-        pcCreateExchangeGoods ex = new pcCreateExchangeGoods();
-        ex.chkcode=true;
-        ex.id  = System.currentTimeMillis();
-        ex.exchange_goods_type = "FICTITIOUS";
-        ex.goods_id = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.INVALIDED).buildVoucher().getVoucherId();
-        ex.is_limit=true;
-        ex.exchange_people_num = 1; // 每人只能兑换一次
-        jc.exchangeGoodCreat(ex);
-        return ex.id;
-    }
-
-    //小程序购买虚拟商品
-    public void appletBuyFictitious(Long fictitiousId){
-        int exRecordPre = jc.appletExchangeRecord(1,null,null).getInteger("total"); //小程序兑换记录
-        Long minePre = jc.appletHomePage().getLong("integral");
-        int detailPre = jc.appletIntegralRecord(1,null,null,null,null).getInteger("code");
-
-        //小程序先登录再兑换 应成功
-        jc.appletSubmitExchange(fictitiousId,true);
-
-        //兑换成功结果校验
-        int exRecordAft = jc.appletExchangeRecord(1,null,null).getInteger("total"); //小程序兑换记录
-        Long mineAft = jc.appletHomePage().getLong("integral");
-        int detailAft = jc.appletIntegralRecord(1,null,null,null,null).getInteger("code");
-        Preconditions.checkArgument(exRecordAft - exRecordPre ==1,"小程序兑换记录未+1");
-        Preconditions.checkArgument(mineAft - minePre <0 ,"小程序我的积分未减少");
-        Preconditions.checkArgument(detailAft - detailPre ==1,"小程序个人积分详情记录未+1");
-    }
-
-    public void newgood(){
-
-        String select_specifications_str =
-                "[" +
-                "{" +
-                "\"specifications_id\":"+ specifications_id+","+
-                "\"specifications_name\":\""+specifications_name +"\","+
-                "\"specifications_list\":[" +
-                    "\"specifications_detail_id\":"+specifications_detail_id +"\","+
-                    "\"specifications_detail_name\":\""+specifications_detail_name+"\""+
-                "}]}]";
-        JSONArray select_specifications = JSONArray.parseArray(select_specifications_str); //所选规格
-        String goods_specifications_list_str = "[" +
-                "{" +
-                "\"first_specifications\":"+specifications_detail_id+"," +
-                //"\"second_specifications\":"+null+",\n" +
-                "\"head_pic\":\""+logo+"\"," +
-                "\"price\":69.98" +
-                "}]";
-        JSONArray goods_specifications_list = JSONArray.parseArray(goods_specifications_list_str);
-        pcCreateGoods goods = new pcCreateGoods();
-        goods.id = System.currentTimeMillis();
-        goods.price = "99.99";
-        goods.select_specifications = select_specifications;
-        goods.goods_specifications_list = goods_specifications_list;
-        jc.createGoodMethod(goods);
-    }
-
 
     //新建一级品类
     public JSONObject newFirstCategory(String name){
@@ -485,6 +385,13 @@ public class jiaoChenInfo {
         return logo;
     }
 
+    public String getLogoUrl(){
+        String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
+        String base64 = new ImageUtil().getImageBinary(filePath);
+        String logo = jc.pcFileUploadNew(new ImageUtil().getImageBinary(filePath)).getString("pic_url");
+        return logo;
+    }
+
     public JSONObject newArtical() throws Exception {
 
         JSONArray pic_list1 =new JSONArray();
@@ -563,6 +470,14 @@ public class jiaoChenInfo {
         obj1.put("modelId",modelId);
         obj1.put("shopId",shopId);
         return obj1;
+    }
+
+    public final String getString(int n){
+        String a = "";
+        for (int i = 0 ; i < n; i++){
+            a = a + "q" ;
+        }
+        return a;
     }
 
 
