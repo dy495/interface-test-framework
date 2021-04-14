@@ -9,7 +9,7 @@ import java.util.Optional;
 /**
  * @author wangmin
  * @date 2021/1/4 10:53 AM
- * @desc
+
  */
 public enum CommodityStatusEnum {
     /**

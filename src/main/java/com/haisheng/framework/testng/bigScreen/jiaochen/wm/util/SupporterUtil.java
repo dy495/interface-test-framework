@@ -11,6 +11,8 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.integralcente
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.manage.EvaluatePageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.packagemanage.PackageDetailBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.voucher.ApplyPageBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherDetailBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherFormVoucherPageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherInvalidPageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppAppointmentPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppFollowUpPage;
@@ -172,6 +174,44 @@ public class SupporterUtil {
             }
         }
         return null;
+    }
+
+    /**
+     * 创建一个卡券id
+     *
+     * @param stock 库存
+     * @param type  类型
+     * @return 卡券id
+     */
+    public Long createVoucherId(Integer stock, VoucherTypeEnum type) {
+        String voucherName = createVoucher(stock, type);
+        return getVoucherId(voucherName);
+    }
+
+    /**
+     * 获取占用的卡券
+     *
+     * @return 卡券id
+     */
+    public Long getOccupyVoucherId() {
+        IScene scene = VoucherFormVoucherPageScene.builder().voucherStatus(VoucherStatusEnum.WORKING.name()).build();
+        List<VoucherFormVoucherPageBean> voucherPageBeanList = collectBeanList(scene, VoucherFormVoucherPageBean.class);
+        VoucherFormVoucherPageBean voucherPageBean = voucherPageBeanList.stream().filter(e -> e.getSurplusInventory() > e.getAllowUseInventory() && e.getAllowUseInventory() != 0).findFirst().orElse(null);
+        return voucherPageBean == null ? useVoucher() : voucherPageBean.getVoucherId();
+    }
+
+    /**
+     * 使用一个卡券
+     *
+     * @return 卡券id
+     */
+    private Long useVoucher() {
+        String voucherName = createVoucher(2, VoucherTypeEnum.CUSTOM);
+        applyVoucher(voucherName, "1");
+        Long voucherId = getVoucherId(voucherName);
+        JSONArray voucherList = getVoucherArray(voucherId, 1);
+        buyTemporaryPackage(voucherList, 1);
+        return voucherId;
     }
 
     /**
@@ -449,6 +489,17 @@ public class SupporterUtil {
     public VoucherPage getVoucherPage(Long voucherId) {
         IScene scene = VoucherFormVoucherPageScene.builder().build();
         return collectBean(scene, VoucherPage.class, "voucher_id", voucherId);
+    }
+
+    /**
+     * 获取卡券详情
+     *
+     * @param voucherId 卡券id
+     * @return 卡券详情
+     */
+    public VoucherDetailBean getVoucherDetail(Long voucherId) {
+        IScene scene = VoucherDetailScene.builder().id(voucherId).build();
+        return collectBean(scene, VoucherDetailBean.class);
     }
 
     /**
@@ -758,12 +809,11 @@ public class SupporterUtil {
      * @param type      0赠送/1购买
      */
     public void buyFixedPackage(Long packageId, int type) {
-        IScene purchaseFixedPackageScene = PurchaseFixedPackageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone())
+        PurchaseFixedPackageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone())
                 .carType(PackageUseTypeEnum.ALL_CAR.name()).packageId(packageId).packagePrice("1.00").expiryDate("1")
                 .remark(EnumDesc.DESC_BETWEEN_20_30.getDesc())
                 .subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType()))
-                .extendedInsuranceYear(10).extendedInsuranceCopies(10).type(type).build();
-        visitor.invokeApi(purchaseFixedPackageScene);
+                .extendedInsuranceYear(10).extendedInsuranceCopies(10).type(type).build().invoke(visitor);
     }
 
     /**
@@ -1462,12 +1512,23 @@ public class SupporterUtil {
      * @return 积分兑换商品
      */
     public ExchangePage createExchangeFictitiousGoods(Long voucherId) {
+        return createExchangeFictitiousGoods(voucherId, 1L);
+    }
+
+    /**
+     * 创建虚拟兑换商品
+     *
+     * @param voucherId   卡券id
+     * @param exchangeNum 可兑换数量
+     * @return 积分兑换商品
+     */
+    public ExchangePage createExchangeFictitiousGoods(Long voucherId, Long exchangeNum) {
         String exchangeStartTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
         String exchangeEndTime = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 30), "yyyy-MM-dd HH:mm:ss");
         //创建积分兑换
         CreateExchangeGoodsScene.builder().exchangeGoodsType(CommodityTypeEnum.FICTITIOUS.name()).goodsId(voucherId)
                 .exchangePrice("1").isLimit(true).exchangePeopleNum("10").exchangeStartTime(exchangeStartTime)
-                .exchangeEndTime(exchangeEndTime).expireType(2).useDays("10").exchangeNum("1").build().invoke(visitor);
+                .exchangeEndTime(exchangeEndTime).expireType(2).useDays("10").exchangeNum(String.valueOf(exchangeNum)).build().invoke(visitor);
         return collectBeanList(ExchangePageScene.builder().build(), ExchangePage.class).get(0);
     }
 

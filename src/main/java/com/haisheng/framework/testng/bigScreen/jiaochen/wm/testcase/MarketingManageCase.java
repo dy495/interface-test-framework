@@ -7,10 +7,12 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.packagemanage.PackageDetailBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.PackagePage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherSendRecord;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.customermanage.AfterSaleCustomerPageBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.customermanage.PreSaleCustomerPageBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.packagemanage.PackageDetailBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherFormVoucherPageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
@@ -18,14 +20,23 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.U
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.CustomerLabelTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.audit.AuditStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.customer.CustomMessageStatusEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.customer.CustomerTypeEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.export.ExportPageTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.message.ConsumeTypeEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.message.MessageCustomerTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.Package.PackageGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.IVoucher;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.brand.AllScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanage.AfterSaleCustomerPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanage.PreSaleCustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanage.WechatCustomerPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.loginuser.ShopListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.MessageFormPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.PushMessageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.SearchCustomerPhoneScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanage.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.PackageListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.VoucherListScene;
@@ -1187,21 +1198,34 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-//    //ok
-//    @Test(description = "套餐表单--使用可用库存不足的卡券，提示失败")
-//    public void packageManager_system_33() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//
-//
-//            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-//            System.err.println(voucherId);
-//        } catch (Exception | AssertionError e) {
-//            collectMessage(e);
-//        } finally {
-//            saveData("套餐表单--使用可用库存不足的卡券，提示失败");
-//        }
-//    }
+    //ok
+    @Test(description = "套餐表单--使用可用库存不足的卡券，提示失败")
+    public void packageManager_system_33() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene scene = VoucherFormVoucherPageScene.builder().voucherStatus(VoucherStatusEnum.WORKING.name()).build();
+            List<VoucherFormVoucherPageBean> voucherPageBeanList = util.collectBeanList(scene, VoucherFormVoucherPageBean.class);
+            Long voucherId = voucherPageBeanList.stream().filter(e -> e.getAllowUseInventory() < 10).map(VoucherFormVoucherPageBean::getVoucherId).findFirst().orElse(null);
+            voucherId = voucherId == null ? util.createVoucherId(1, VoucherTypeEnum.CUSTOM) : voucherId;
+            int allowUseInventory = Math.toIntExact(util.getVoucherPage(voucherId).getAllowUseInventory());
+            String voucherName = util.getVoucherName(voucherId);
+            Long packageId = util.editPackage(voucherId, allowUseInventory + 1);
+            String packageName = util.getPackageName(packageId);
+            String subjectType = util.getSubjectType();
+            Long subjectId = util.getSubjectDesc(subjectType);
+            //购买套餐
+            String message = PurchaseFixedPackageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone())
+                    .carType(PackageUseTypeEnum.ALL_CAR.name()).packageId(packageId).packagePrice("1.00").expiryDate("1")
+                    .remark(EnumDesc.DESC_BETWEEN_20_30.getDesc()).subjectType(subjectType).subjectId(subjectId)
+                    .extendedInsuranceYear(10).extendedInsuranceCopies(10).type(1).build().invoke(visitor, false).getString("message");
+            String err = "卡券【" + voucherName + "】可用库存不足";
+            CommonUtil.checkResult("购买卡券可用库存不足的套餐 " + packageName, err, message);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("套餐表单--使用可用库存不足的卡券，提示失败");
+        }
+    }
 
     //ok
     @Test(description = "套餐表单--购买套餐，确认购买前，套餐状态改为关闭，再确认购买小程序会收到套餐/卡券")
@@ -2016,7 +2040,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         return list;
     }
 
-//    @AfterClass
+    //    @AfterClass
     @Test(description = "清理卡券")
     public void cleanVoucher() {
         Arrays.stream(VoucherTypeEnum.values()).forEach(anEnum -> {
@@ -2031,6 +2055,103 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             }
         });
     }
+
+    //------------------------------------------------------消息推送人员数据一致-------------------------------------------
+
+    @Test(description = "消息管理--推送消息小程序客户数量=服务管理-小程序客户数量", enabled = false)
+    public void messageManagerPeople_data_1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Integer sendMessageTotal = SearchCustomerPhoneScene.builder().customerType(ExportPageTypeEnum.WECHAT_CUSTOMER.name()).build().invoke(visitor).getInteger("total");
+            Integer wechatCustomerTotal = WechatCustomerPageScene.builder().build().invoke(visitor).getInteger("total");
+            CommonUtil.checkResultPlus("推送消息小程序客户数量：", sendMessageTotal, "服务管理-小程序客户数量：", wechatCustomerTotal);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("消息管理--推送消息小程序客户数量=服务管理-小程序客户数量");
+        }
+    }
+
+    @Test(description = "消息管理--推送消息销售潜在客客数量=销售客户列表门店&品牌不为空的潜在客户数量", enabled = false)
+    public void messageManagerPeople_data_2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene scene = PreSaleCustomerPageScene.builder().build();
+            List<PreSaleCustomerPageBean> pageBeanList = util.collectBeanList(scene, PreSaleCustomerPageBean.class);
+            Long count = pageBeanList.stream().filter(e -> e.getBrandName() != null && e.getShopName() != null && e.getCustomerTypeName().equals(CustomerTypeEnum.POTENTIAL_CUSTOMER.getName())).count();
+            JSONArray shopList = ShopListScene.builder().build().invoke(visitor).getJSONArray("list");
+            JSONArray brandList = AllScene.builder().build().invoke(visitor).getJSONArray("list");
+            List<String> preCustomerType = new ArrayList<>();
+            preCustomerType.add(CustomerTypeEnum.POTENTIAL_CUSTOMER.name());
+            Long total = SearchCustomerPhoneScene.builder().customerType(MessageCustomerTypeEnum.PRE_CUSTOMER.name()).shopIds(shopList).brandIds(brandList).preCustomerType(preCustomerType).build().invoke(visitor).getLong("total");
+            CommonUtil.checkResultPlus("推送消息销售潜在客户数量：", total, "销售客户列表门店&品牌不为空的潜在客户数量：", count);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("消息管理--推送消息销售潜在客客数量=销售客户列表门店&品牌不为空的潜在客户数量");
+        }
+    }
+
+    @Test(description = "消息管理--推送消息销售成交客户数量=销售客户列表门店&品牌不为空的成交客户数量", enabled = false)
+    public void messageManagerPeople_data_3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene scene = PreSaleCustomerPageScene.builder().build();
+            List<PreSaleCustomerPageBean> pageBeanList = util.collectBeanList(scene, PreSaleCustomerPageBean.class);
+            Long count = pageBeanList.stream().filter(e -> e.getBrandName() != null && e.getShopName() != null && e.getCustomerTypeName().equals(CustomerTypeEnum.SUCCESS_CUSTOMER.getName())).count();
+            JSONArray shopList = ShopListScene.builder().build().invoke(visitor).getJSONArray("list");
+            JSONArray brandList = AllScene.builder().build().invoke(visitor).getJSONArray("list");
+            List<String> preCustomerType = new ArrayList<>();
+            preCustomerType.add(CustomerTypeEnum.SUCCESS_CUSTOMER.name());
+            Long total = SearchCustomerPhoneScene.builder().customerType(MessageCustomerTypeEnum.PRE_CUSTOMER.name())
+                    .shopIds(shopList).brandIds(brandList).preCustomerType(preCustomerType).build().invoke(visitor).getLong("total");
+            CommonUtil.checkResultPlus("推送消息销售成交客户数量：", total, "销售客户列表门店&品牌不为空的成交客户数量：", count);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("消息管理--推送消息销售成交客户数量=销售客户列表门店&品牌不为空的潜在客户数量");
+        }
+    }
+
+    @Test(description = "消息管理--推送消息销售成交客户数量=销售客户列表门店&品牌不为空的潜在客户数量", enabled = false)
+    public void messageManagerPeople_data_4() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray shopList = ShopListScene.builder().build().invoke(visitor).getJSONArray("list");
+            shopList.stream().map(shop -> (JSONObject) shop).forEach(shop -> {
+                JSONArray shopArray = new JSONArray();
+                shopArray.add(shop);
+                Long shopId = shop.getLong("shop_id");
+                String shopName = shop.getString("shop_name");
+                JSONArray brandList = AllScene.builder().build().invoke(visitor).getJSONArray("list");
+                brandList.stream().map(brand -> (JSONObject) brand).forEach(brand -> {
+                    JSONArray brandArray = new JSONArray();
+                    brandArray.add(brand);
+                    Long brandId = brand.getLong("id");
+                    String brandName = brand.getString("name");
+                    Arrays.stream(ConsumeTypeEnum.values()).forEach(anEnum -> {
+                        List<String> consumeType = new ArrayList<>();
+                        consumeType.add(anEnum.name());
+                        String consumeTypeName = anEnum.getDesc();
+                        Long total = SearchCustomerPhoneScene.builder().customerType(MessageCustomerTypeEnum.AFTER_CUSTOMER.name()).consumeType(consumeType).shopIds(shopArray).brandIds(brandArray).build().invoke(visitor).getLong("total");
+                        IScene scene = AfterSaleCustomerPageScene.builder().shopId(shopId).brandId(brandId).build();
+                        List<AfterSaleCustomerPageBean> customerPageBeanList = util.collectBeanList(scene, AfterSaleCustomerPageBean.class);
+                        long count = customerPageBeanList.stream().filter(e -> e.getShopName() != null && e.getBrandName() != null && e.getTotalPrice() != null && e.getTotalPrice() >= anEnum.getMin() && e.getTotalPrice() <= anEnum.getMax()).count();
+                        CommonUtil.valueView("门店：" + shopName, "品牌：" + brandName, "消费价格区间：" + consumeTypeName);
+                        CommonUtil.valueView("消息推送人数：" + total);
+                        CommonUtil.valueView("售后客户人数：" + count);
+                        CommonUtil.logger("门店：" + shopName + " 品牌：" + brandName + " 消费价格区间：" + consumeTypeName);
+//                    CommonUtil.checkResultPlus("推送消息销售成交客户数量：", total, "销售客户列表门店&品牌不为空的成交客户数量：", count);
+                    });
+                });
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("消息管理--推送消息销售成交客户数量=销售客户列表门店&品牌不为空的潜在客户数量");
+        }
+    }
+
 }
 
 

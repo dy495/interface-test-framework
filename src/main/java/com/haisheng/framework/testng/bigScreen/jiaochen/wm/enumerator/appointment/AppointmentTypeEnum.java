@@ -21,11 +21,11 @@ public enum AppointmentTypeEnum {
     /**
      * 维修
      */
-    REPAIR("维修", EvaluateTypeEnum.APPOINTMENT, "预约维修", true),
+    REPAIR("维修", EvaluateTypeEnum.REPAIR, "预约维修", true),
     /**
      * 保养
      */
-    MAINTAIN("保养", EvaluateTypeEnum.APPOINTMENT, "预约保养", true),
+    MAINTAIN("保养", EvaluateTypeEnum.MAINTAIN, "预约保养", true),
     /**
      * 活动
      */

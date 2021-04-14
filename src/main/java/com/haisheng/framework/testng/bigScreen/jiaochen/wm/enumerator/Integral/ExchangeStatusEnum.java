@@ -9,7 +9,7 @@ import java.util.Optional;
 /**
  * @author wangmin
  * @date 2020/12/15 5:47 PM
- * @desc 兑换状态
+ 兑换状态
  */
 public enum ExchangeStatusEnum {
     /**
