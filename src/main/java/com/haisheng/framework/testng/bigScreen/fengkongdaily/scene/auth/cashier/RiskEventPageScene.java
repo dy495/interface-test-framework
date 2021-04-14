@@ -95,6 +95,7 @@ public class RiskEventPageScene extends BaseScene {
      * 版本 v1.0
      */
     private final String currentState;
+    private final String evenId;
 
 
     @Override
@@ -112,6 +113,7 @@ public class RiskEventPageScene extends BaseScene {
         object.put("role_id", roleId);
         object.put("handle_result", handleResult);
         object.put("current_state", currentState);
+        object.put("even_id",evenId);
         return object;
     }
 

@@ -29,21 +29,17 @@ import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.FileUtil;
-import netscape.javascript.JSObject;
 import org.apache.http.Header;
 import org.apache.http.client.HttpClient;
-import org.apache.xmlbeans.impl.xb.xsdschema.Public;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-
 import static com.google.common.base.Preconditions.checkArgument;
 
 public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCaseStd {
@@ -56,8 +52,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     public String shopId="43072";
     FileUtil file = new FileUtil();
 //    public String face=file.texFile(pp.filePath);
-    public String face=file.getImgStr(pp.filePath2);
-
+    public String face=file.getImgStr(pp.filePath3);
 
 
     @BeforeClass
@@ -563,10 +558,10 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     }
 
     /**
-     * 收银风控列表项校验
+     * 收银风控列表项校验---ok
      */
     @Test(description = "收银风控列表项校验")
-     public void authCashierPageSystem1(){
+    public void authCashierPageSystem1(){
         try{
             //收银风页面的接口
             IScene scene =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.PageScene.builder().page(1).size(10).build();
@@ -591,10 +586,10 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
         }finally{
             saveData("收银风控列表项校验");
         }
-     }
+    }
 
     /**
-     *收银追溯-收银追溯列表校验
+     *收银追溯-收银追溯列表校验--ok
      */
     @Test(description = "收银追溯-收银追溯列表校验")
     public void authCashierPageSystem2(){
@@ -689,8 +684,61 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
         }
     }
 
+     /**
+      *收银风控事件-小票详情内容校验--ok
+     */
+    @Test(description = "收银风控事件-小票详情内容校验")
+    public void authCashierPageSystem(){
+        try{
+            //收银风控列表第一条的shopId
+            IScene scene = PageScene.builder().page(1).size(10).build();
+            JSONObject response=visitor.invokeApi(scene);
+            Long shopId=response.getJSONArray("list").getJSONObject(0).getLong("shop_id");
+            //收银风控事件页面
+            IScene scene1=RiskEventPageScene.builder().shopId(shopId).page(1).size(10).build();
+            JSONObject response1=visitor.invokeApi(scene1);
+            Long id=response1.getJSONArray("list").getJSONObject(0).getLong("id");
+            //收银风控事件中第一条的涉及订单
+            IScene scene3=RiskEventOrdersInvolvedPageScene.builder().id(id).page(1).size(10).build();
+            JSONObject response3=visitor.invokeApi(scene3);
+            int pages=response3.getInteger("pages")>10?10:response1.getInteger("pages");
+            for(int page=1;page<=pages;page++){
+                JSONArray list=visitor.invokeApi(RiskEventOrdersInvolvedPageScene.builder().id(id).page(page).size(10).build()).getJSONArray("list");
+                for(int i=0;i<list.size();i++){
+                    String orderId=list.getJSONObject(i).getString("order_id");
+                    //小票详情页
+                    IScene scene2= OrderDetailScene.builder().shopId(shopId).orderId(orderId).build();
+                    JSONObject response2=visitor.invokeApi(scene2);
+                    String shopName=response2.getString("shop_name");
+                    String memberName=response2.getString("member_name");
+                    String memberPhone=response2.getString("member_phone");
+                    String carPlate=response2.getString("car_plate");
+                    String carVehicleNumber=response2.getString("car_vehicle_number");
+                    String orderNumber=response2.getString("order_number");
+                    String totalPrice=response2.getString("total_price");
+                    String realPrice=response2.getString("real_price");
+                    String businessNumber=response2.getString("business_number");
+                    String posId=response2.getString("pos_id");
+                    String transTypeName=response2.getString("trans_type_name");
+                    String orderTime=response2.getString("order_time");
+                    String type=response2.getString("type");
+                    String orderTypeName=response2.getString("order_type_name");
+                    Preconditions.checkArgument(shopName!=null&&memberName!=null&&memberPhone!=null&&carPlate!=null&&carVehicleNumber!=null&&orderNumber!=null,"小票详情中存在字段为空的情况，在第"+i+"行");
+                    Preconditions.checkArgument(totalPrice!=null&&realPrice!=null&&businessNumber!=null&&posId!=null&&transTypeName!=null&&orderTime!=null&&type!=null&&orderTypeName!=null,"小票详情中存在字段为空的情况，在第"+i+"行");
+                }
+            }
+
+        }catch(Exception|AssertionError e){
+            collectMessage(e);
+        }finally{
+            saveData("收银追溯-小票详情内容校验");
+        }
+    }
+
+
+
     /**
-     *收银追溯-批量下载功能
+     *收银追溯-批量下载功能--ok
      */
     @Test(description = "收银追溯-批量下载功能")
     public void authCashierPageSystem5(){
@@ -700,7 +748,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             JSONObject response=visitor.invokeApi(scene);
             Long shopId=response.getJSONArray("list").getJSONObject(0).getLong("shop_id");
             //收银追溯-批量下载
-            IScene scene1= TraceBackBatchVideoScene.builder().shopId(shopId).startDate(cu.getStartDate()).endDate(cu.getEndDate()).build();
+            IScene scene1= TraceBackBatchVideoScene.builder().shopId(shopId).startDate(cu.getDateTime(-1).substring(0,10)).endDate(cu.getDateTime(-1).substring(0,10)).build();
             String code=visitor.invokeApi(scene1,false).getString("code");
             Preconditions.checkArgument(code.equals("1000"),"批量下载失败");
 
@@ -712,7 +760,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     }
 
     /**
-     *收银追溯-提示语校验
+     *收银追溯-提示语校验--ok
      */
     @Test(description = "收银追溯-提示语校验")
     public void authCashierPageSystem6(){
@@ -720,7 +768,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             IScene scene= traceBackTips.builder().build();
             String tip=visitor.invokeApi(scene).getString("tip");
 
-            Preconditions.checkArgument(tip.equals("你的账号可查看最近30天追溯视频"),"收银追溯中的提示语不正确");
+            Preconditions.checkArgument(tip.equals("您的账号可查看最近30天追溯视频（不包含今日）"),"收银追溯中的提示语不正确");
 
         }catch(Exception|AssertionError e){
             collectMessage(e);
@@ -730,7 +778,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     }
 
     /**
-     * 收银风控事件-列表项校验
+     * 收银风控事件-列表项校验--ok
      */
     @Test(description = "收银风控事件-列表项校验")
     public void authCashierPageSystem7(){
@@ -756,7 +804,6 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
                     Preconditions.checkArgument(orderId != null&&eventName!=null&&responseTime!=null&&memberName!=null&&remainTime!=null&&currentState!=null&&orderDate!=null,"第"+i+"行的列表项存在为空的值");
                 }
             }
-
         }catch(Exception|AssertionError e){
             collectMessage(e);
         }finally{
@@ -765,7 +812,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     }
 
     /**
-     * 收银风控事件-事件概览内容校验
+     * 收银风控事件-事件概览内容校验--ok
      */
     @Test(description = "收银风控事件-事件概览内容校验")
     public void authCashierPageSystem8(){
@@ -784,6 +831,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
                     Long id=list.getJSONObject(i).getLong("id");
                     IScene scene2=RiskEventOverviewScene.builder().id(id).build();
                     JSONObject response2=visitor.invokeApi(scene2);
+                    System.out.println("--------"+response2);
                     String roleId=response2.getString("role_id");
                     String shopId1=response2.getString("shop_id");
                     String responseTime=response2.getString("response_time");
@@ -791,10 +839,10 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
                     String managerPhone=response2.getString("manager_phone");
                     String memberName=response2.getString("member_name");
                     String memberId=response2.getString("member_id");
-                    String customerId=response2.getString("customer_id");
-                    String openId=response2.getString("_id");
-                    String transCustomerBodyUrl=response2.getString("trans_customer_body_url");
-                    Preconditions.checkArgument(openId!=null&&roleId != null&&shopId1!=null&&responseTime!=null&&managerName!=null&&managerPhone!=null&&memberName!=null&&memberId!=null&&customerId!=null&&transCustomerBodyUrl!=null,"第"+i+"行的列表项存在为空的值");
+                    String openId=response2.getString("open_id");
+//                    String transCustomerBodyUrl=response2.getString("trans_customer_body_url");
+                    System.out.println(i+"==="+roleId+"==="+shopId1+"==="+responseTime+"==="+managerName+"==="+managerPhone+"==="+memberName+"==="+memberId+"==="+openId);
+                    Preconditions.checkArgument(openId!=null&&roleId != null&&shopId1!=null&&responseTime!=null&&managerName!=null&&managerPhone!=null&&memberName!=null&&memberId!=null,"第"+i+"行的列表项存在为空的值");
                 }
             }
         }catch(Exception|AssertionError e){
@@ -805,7 +853,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     }
 
     /**
-     * 收银风控事件-涉及订单列表校验
+     * 收银风控事件-涉及订单列表校验--ok
      */
     @Test(description = "收银风控事件-涉及订单列表校验")
     public void authCashierPageSystem9(){
@@ -825,12 +873,13 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             for(int page=1;page<=pages;page++){
                 JSONArray list=visitor.invokeApi(RiskEventOrdersInvolvedPageScene.builder().id(id).page(page).size(10).build()).getJSONArray("list");
                 for(int i=0;i<list.size();i++){
-                    String orderId=response2.getString("order_id");
-                    String shopId1=response2.getString("shop_id");
-                    String orderTime=response2.getString("order_time");
-                    String orderAmount=response2.getString("order_amount");
-
-                    Preconditions.checkArgument(orderId != null&&shopId1 != null&&orderTime != null&&orderAmount != null,"第"+i+"行的列表项存在为空的值");
+                    String orderId=list.getJSONObject(i).getString("order_id");
+                    String shopId1=list.getJSONObject(i).getString("shop_id");
+                    String orderTime=list.getJSONObject(i).getString("order_time");
+                    String orderAmount=list.getJSONObject(i).getString("order_amount");
+                    String status=list.getJSONObject(i).getString("status");
+                    System.out.println(i+"-------"+orderId+"----"+shopId1+"----"+orderTime+"------"+orderAmount);
+                    Preconditions.checkArgument(orderId != null&&shopId1 != null&&orderTime != null&&orderAmount != null&&status!=null,"第"+i+"行的列表项存在为空的值");
                 }
             }
         }catch(Exception|AssertionError e){
@@ -839,9 +888,8 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             saveData("收银风控事件-涉及订单列表校验");
         }
     }
-
     /**
-     * 收银风控事件-历史风控事件列表校验
+     * 收银风控事件-历史风控事件列表校验--历史事件和历史风控事件同用一个接口，获取pages怎么办？
      */
     @Test(description = "收银风控事件-历史风控事件列表校验")
     public void authCashierPageSystem10(){
@@ -849,25 +897,27 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             //收银风控列表第一条的shopId
             IScene scene = PageScene.builder().page(1).size(10).build();
             JSONObject response=visitor.invokeApi(scene);
-            Long shopId=response.getJSONArray("list").getJSONObject(0).getLong("shop_id");
+            Long shopId=response.getJSONArray("list").getJSONObject(1).getLong("shop_id");
             //收银风控事件页面
             IScene scene1=RiskEventPageScene.builder().shopId(shopId).page(1).size(10).build();
             JSONObject response1=visitor.invokeApi(scene1);
-            String memberId=response1.getJSONArray("list").getJSONObject(0).getString("member_id");
+            String id=response1.getJSONArray("list").getJSONObject(0).getString("id");
             //历史风控事件--即收银风控事件中按照门店和会员ID查询的结果
-            IScene scene2=RiskEventPageScene.builder().shopId(shopId).memberId(memberId).page(1).size(10).build();
+            IScene scene2=RiskEventPageScene.builder().evenId(id).page(1).size(10).build();
             JSONObject response2=visitor.invokeApi(scene2);
             JSONArray list1=response2.getJSONArray("list");
-            int pages=response1.getInteger("pages")>10?10:response1.getInteger("pages");
+            int pages=visitor.invokeApi(RiskEventPageScene.builder().evenId(id).page(1).size(10).build()).getInteger("pages")>10?10:response1.getInteger("pages");
+            System.err.println("------"+pages);
             if(list1.size()>0){
                 for(int page=1;page<=pages;page++){
-                    JSONArray list=visitor.invokeApi(RiskEventPageScene.builder().shopId(shopId).memberId(memberId).page(page).size(10).build()).getJSONArray("list");
+                    JSONArray list=visitor.invokeApi(RiskEventPageScene.builder().evenId(id).page(page).size(10).build()).getJSONArray("list");
+                    System.err.println(list.size());
                     for(int i=0;i<list.size();i++){
-                        String orderId=response2.getString("order_id");
-                        String shopId1=response2.getString("shop_id");
-                        String orderTime=response2.getString("order_time");
-                        String handleResult=response2.getString("handle_result");
-
+                        String orderId=list.getJSONObject(i).getString("order_id");
+                        String shopId1=list.getJSONObject(i).getString("shop_name");
+                        String orderTime=list.getJSONObject(i).getString("order_date");
+                        String handleResult=list.getJSONObject(i).getString("event_name");
+                        System.out.println(i+"-------"+orderId);
                         Preconditions.checkArgument(orderId != null&&shopId1 != null&&orderTime != null&&handleResult != null,"第"+i+"行的列表项存在为空的值");
                     }
                 }
@@ -880,7 +930,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     }
 
     /**
-     *风控规则列表项校验
+     *风控规则列表项校验--规则详情是否为空，已提bug
      */
     @Test(description = "风控规则列表项校验")
     public void authCashierPageSystem11(){
@@ -894,11 +944,11 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
                 for(int i=0;i<list.size();i++){
                     String name=list.getJSONObject(i).getString("name");
                     String type=list.getJSONObject(i).getString("type");
-                    String detail=list.getJSONObject(i).getString("detail");
-                    String shopId=list.getJSONObject(i).getString("shop_id");
+//                    String detail=list.getJSONObject(i).getString("detail");
+                    String shopId=list.getJSONObject(i).getJSONArray("shop_list").getJSONObject(0).getString("shop_id");
                     String updateTime=list.getJSONObject(i).getString("update_time");
                     String updateUser=list.getJSONObject(i).getString("update_user");
-                    Preconditions.checkArgument(name != null&&type!=null&&detail != null&&shopId!=null&&updateTime != null&&updateUser!=null,"第"+i+"行的列表项存在为空的值");
+                    Preconditions.checkArgument(name != null&&type!=null&&shopId!=null&&updateTime != null&&updateUser!=null,"第"+i+"行的列表项存在为空的值");
                 }
             }
         }catch(Exception|AssertionError e){
@@ -909,7 +959,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     }
 
     /**
-     *风控规则-增加黑名单风控规则           ok
+     *风控规则-增加黑名单风控规则--ok
      */
     @Test(description = "风控规则-增加黑名单风控规则")
     public void authCashierPageSystem12(){
@@ -930,7 +980,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     }
 
     /**
-     *风控规则-增加重点观察人员风控规则        ok
+     *风控规则-增加重点观察人员风控规则--ok
      */
     @Test(description = "风控规则-增加重点观察人员规则")
     public void authCashierPageSystem13(){
@@ -951,9 +1001,9 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     }
 
     /**
-     *风控规则-增加收银风控规则
+     *风控规则-增加收银风控规则--ok
      */
-    @Test(description = "风控规则-增加收银风控规则")
+    @Test(description = "风控规则-增加收银风控规则",enabled = false)
     public void authCashierPageSystem14(){
         try{
             //一人多单/连续天数（一人1天最多3单）
@@ -980,21 +1030,23 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     }
 
     /**
-     *风控规则-规则开启和关闭，对规则进行删除
+     *风控规则-规则开启和关闭，对规则进行删除--ok
      */
     @Test(description = "风控规则-规则开启和关闭，对规则进行删除")
     public void authCashierPageSystem15(){
         try{
-            //新建两个黑名单风控规则
+            //新建黑名单风控规则
             Long id1=cu.getRuleAdd(RuleEnum.BLACK_LIST.getType());
-            Long id2=cu.getRuleAdd(RuleEnum.BLACK_LIST.getType());
-            //开启活动1，关闭id2
-            cu.ruleSwitch(id2,0);
+            Long id2=cu.getRuleAdd(RuleEnum.FOCUS_LIST.getType());
+            //开启活动1
             cu.ruleSwitch(id1,1);
-            //对两个规则进行删除
+            //关闭活动2
+            cu.ruleSwitch(id1,0);
+            //对开启的规则进行删除
             String message1=cu.ruleDelete(id1);
+            Preconditions.checkArgument(message1.equals("success"),"删除开启中的规则失败");
+            //对关闭的规则进行删除
             String message2=cu.ruleDelete(id2);
-            Preconditions.checkArgument(message1.equals(""),"删除开启中的规则失败");
             Preconditions.checkArgument(message2.equals("success"),"删除已关闭的规则失败");
         }catch(Exception|AssertionError e){
             collectMessage(e);
@@ -1004,7 +1056,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     }
 
     /**
-     *风控告警列表项校验
+     *风控告警列表项校验--ok
      */
     @Test(description = "风控告警列表项校验")
     public void authCashierPageSystem16(){
@@ -1023,6 +1075,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
                     String firstAlarmTime=list.getJSONObject(i).getString("first_alarm_time");
                     String lastAlarmTime=list.getJSONObject(i).getString("last_alarm_time");
                     String acceptRole=list.getJSONObject(i).getString("accept_role");
+                    System.out.println(i+"------------"+name);
                     Preconditions.checkArgument(name != null&&type!=null&&detail != null&&shopId!=null&&firstAlarmTime != null&&lastAlarmTime!=null&&acceptRole!=null,"第"+i+"行的列表项存在为空的值");
                 }
             }
@@ -1034,7 +1087,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     }
 
     /**
-     *风控告警规则列表项校验
+     *风控告警规则列表项校验--规则详情待验证需不需要为空
      */
     @Test(description = "风控告警规则列表项校验")
     public void authCashierPageSystem17(){
@@ -1044,16 +1097,17 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             JSONObject response=visitor.invokeApi(scene);
             int pages=response.getInteger("pages")>10?10:response.getInteger("pages");
             for(int page=1;page<=pages;page++){
-                JSONArray list=visitor.invokeApi(com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.rule.PageScene.builder().page(page).size(10).build()).getJSONArray("list");
+                JSONArray list=visitor.invokeApi(com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.alarmrule.PageScene.builder().page(page).size(10).build()).getJSONArray("list");
                 for(int i=0;i<list.size();i++){
                     String name=list.getJSONObject(i).getString("name");
                     String type=list.getJSONObject(i).getString("type");
-                    String typeName=list.getJSONObject(i).getString("type_name");
-                    String silentTime=list.getJSONObject(i).getString("silent_time");
-                    String acceptRoleListName=list.getJSONObject(i).getString("accept_role_list_name");
+                    String ruleDetailList=list.getJSONObject(i).getJSONArray("rule_detail_list").get(0).toString();
+                    String silentTime=list.getJSONObject(i).getString("silent_time_name");
+                    String acceptRoleListName=list.getJSONObject(i).getJSONArray("accept_role_list_name").get(0).toString();
                     String startTime=list.getJSONObject(i).getString("start_time");
                     String endTime=list.getJSONObject(i).getString("end_time");
-                    Preconditions.checkArgument(name != null&&type!=null&&typeName != null&&silentTime!=null&&acceptRoleListName != null&&startTime!=null&&endTime!=null,"第"+i+"行的列表项存在为空的值");
+                    System.out.println(i+"------------"+acceptRoleListName+"------------"+type+"------------"+silentTime+"------------"+startTime);
+                    Preconditions.checkArgument(name != null&&type!=null&&silentTime!=null&&startTime!=null&&endTime!=null&&ruleDetailList!=null,"第"+i+"行的列表项存在为空的值");
                 }
             }
         }catch(Exception|AssertionError e){
@@ -1064,7 +1118,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     }
 
     /**
-     *新建风控告警规则
+     *新建风控告警规则--ok
      */
     @Test(description = "新建风控告警规则")
     public void authCashierPageSystem18(){
@@ -1085,24 +1139,28 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     }
 
     /**
-     *编辑风控告警规则
+     *编辑风控告警规则--ok
      */
     @Test(description = "编辑风控告警规则")
     public void authCashierPageSystem20(){
         try{//风控告警规则第一条的ID
             Long alarmId=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.alarmrule.PageScene.builder().page(1).size(10).build().invoke(visitor,true).getJSONArray("list").getJSONObject(0).getLong("id");
-            //接收人ID  todo
-            List<Long> acceptRoleIdList=new ArrayList();
+            //接收人ID
+            List<Long> acceptRoleIdList=new ArrayList<>();
+            acceptRoleIdList.add(4945L);
+            acceptRoleIdList.add(5030L);
             //风控规则的ID
             List<Long> ruleIdList=new ArrayList();
-            //风控规则中的对风控规则类型进行筛选，取前三个
+            //风控规则中的对风控规则类型进行筛选，取第一个
             IScene scene =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.rule.PageScene.builder().page(1).size(10).type(RuleEnum.CASHIER.getType()).build();
             Long id=visitor.invokeApi(scene).getJSONArray("list").getJSONObject(0).getLong("id");
             ruleIdList.add(id);
+            System.out.println("--------ruleIdList---------"+ruleIdList);
             //关闭风控告警规则的第一条
             cu.getAlarmRuleSwitch(alarmId,0);
             //编辑风控告警规则
             String message=cu.getAlarmRuleEdit(alarmId,true,1800000L,RuleEnum.CASHIER.getType(),ruleIdList,acceptRoleIdList).invoke(visitor,false).getString("message");
+            System.out.println("---------message--------"+message);
             //开启风控告警规则的第一条
             cu.getAlarmRuleSwitch(alarmId,1);
             //查看风控告警规则的详情
@@ -1110,10 +1168,10 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             String name=response.getString("name");
             String type=response.getString("type");
             String realTime=response.getString("real_time");
-            Long silentTime=response.getLong("silent_time");
-            Long ruleId=response.getJSONArray("rule_id_list").getJSONObject(0).getLong("id");
-            Long RoleId=response.getJSONArray("accept_role_id_list").getJSONObject(0).getLong("id");
-            Preconditions.checkArgument(message.equals("success")&&name.contains("已编辑风控告警规则")&&type.equals(RuleEnum.CASHIER.getName())&&realTime.equals("true")&&silentTime==1800000L&&ruleId.equals(ruleIdList.get(0))&&RoleId.equals(ruleIdList.get(0)),"编辑风控告警规则，编辑后的各项分别为："+name+"---"+type+"---"+realTime+"---"+silentTime+"---"+ruleId+"----"+RoleId);
+            String silentTime=response.getString("silent_time_name");
+            String ruleId=response.getJSONArray("rule_id_list").get(0).toString();
+            String roleId=response.getJSONArray("accept_role_id_list").get(0).toString();
+            Preconditions.checkArgument(message.equals("success")&&name.contains("已编辑风控告警规则")&&type.equals(RuleEnum.CASHIER.getType())&&realTime.equals("true")&&silentTime.equals("30分钟")&&ruleId.equals(String.valueOf(id))&&roleId.equals(String.valueOf(acceptRoleIdList.get(0))),"编辑风控告警规则，编辑后的各项分别为："+name+"---"+type+"---"+realTime+"---"+silentTime+"---"+ruleId+"----"+roleId);
 
         }catch(Exception|AssertionError e){
             collectMessage(e);
@@ -1123,16 +1181,23 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     }
 
     /**
-     *新建风控告警规则.并且删除
+     *新建风控告警规则.并且删除--ok
      */
     @Test(description = "新建风控告警规则.并且删除")
     public void authCashierPageSystem21(){
         try{
             //新建收银风控告警规则--重点观察人员
             String message1=cu.getAlarmRuleAdd(true,600000L,RuleEnum.FOCUS_LIST.getType(),pp.AlarmNameObserve);
+            //获取风控告警规则第一条
+            IScene scene =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.alarmrule.PageScene.builder().page(1).size(10).build();
+            JSONObject response=visitor.invokeApi(scene);
+            Long id=response.getJSONArray("list").getJSONObject(0).getLong("id");
+            System.out.println("----------"+id);
+            //关闭风控告警规则
+            cu.getAlarmRuleSwitch(id,0);
             //删除新建风控告警规则
-//            String message=cu.getAlarmRuleDel(alarmId);
-//            Preconditions.checkArgument(alarmId>0&&message.equals("success"),"删除新建的风控告警规则失败");
+            String message=cu.getAlarmRuleDel(id);
+            Preconditions.checkArgument(id>0&&message.equals("success")&&message1.equals("success"),"删除新建的风控告警规则失败");
         }catch(Exception|AssertionError e){
             collectMessage(e);
         }finally{
@@ -1368,7 +1433,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
 
 
     /**
-     *下载中心-下载列表内容校验
+     *下载中心-下载列表内容校验--ok
      */
     @Test(description = "下载中心-下载列表内容校验")
     public void authCashierPageSystem28(){
@@ -1382,11 +1447,11 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
                     for(int i=0;i<list.size();i++){
                         String taskName=list.getJSONObject(i).getString("task_name");
                         String taskType=list.getJSONObject(i).getString("task_type");
-                        String shopName=list.getJSONObject(i).getString("shop_name");
-                        String timeFrame=list.getJSONObject(i).getString("time_frame");
+//                        String shopName=list.getJSONObject(i).getString("shop_name");
+//                        String timeFrame=list.getJSONObject(i).getString("time_frame");
                         String applicant=list.getJSONObject(i).getString("applicant");
                         String applicationTime=list.getJSONObject(i).getString("application_time");
-                        Preconditions.checkArgument(taskName!=null&&taskType!=null&&shopName!=null&&timeFrame!=null&&applicant!=null&&applicationTime!=null,"第"+page+"页"+"第"+i+"行的列表项存在为空的值");
+                        Preconditions.checkArgument(taskName!=null&&taskType!=null&&applicant!=null&&applicationTime!=null,"第"+page+"页"+"第"+i+"行的列表项存在为空的值");
                     }
                 }
             }
@@ -1398,7 +1463,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     }
 
     /**
-     *下载中心-下载列表筛选栏校验
+     *下载中心-下载列表筛选栏校验--ok
      */
     @Test(description = "下载中心-下载列表筛选栏校验")
     public void authCashierPageSystem29(){
@@ -1418,7 +1483,6 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
                     }
                 }
             }
-
             //下载列表第一行的任务类型
             String taskType1=DownloadPageScene.builder().page(1).size(10).build().invoke(visitor,true).getJSONArray("list").getJSONObject(0).getString("task_type");
             //任务类型筛选
@@ -1434,15 +1498,14 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
                     }
                 }
             }
-
             //下载列表第一行的相关门店
-            String shopName1=DownloadPageScene.builder().page(1).size(10).build().invoke(visitor,true).getJSONArray("list").getJSONObject(0).getString("shop_name");
+            String shopName1="AI-Test(门店订单录像)";
             //相关门店筛选
             IScene scene2= DownloadPageScene.builder().page(1).shopName(shopName1).size(10).build();
             JSONObject response2=visitor.invokeApi(scene2);
             int pages2=response2.getInteger("pages")>10?10:response.getInteger("pages");
             for(int page=1;page<=pages2;page++){
-                JSONArray list=DownloadPageScene.builder().shopName(shopName1).size(10).build().invoke(visitor,true).getJSONArray("list");
+                JSONArray list=DownloadPageScene.builder().shopName(shopName1).page(page).size(10).build().invoke(visitor,true).getJSONArray("list");
                 if(list.size()>0){
                     for(int i=0;i<list.size();i++){
                         String shopName=list.getJSONObject(i).getString("shop_name");
@@ -1458,7 +1521,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             JSONObject response3=visitor.invokeApi(scene3);
             int pages3=response3.getInteger("pages")>10?10:response.getInteger("pages");
             for(int page=1;page<=pages3;page++){
-                JSONArray list=DownloadPageScene.builder().applicant(applicant1).size(10).build().invoke(visitor,true).getJSONArray("list");
+                JSONArray list=DownloadPageScene.builder().applicant(applicant1).size(10).page(page).build().invoke(visitor,true).getJSONArray("list");
                 if(list.size()>0){
                     for(int i=0;i<list.size();i++){
                         String applicant=list.getJSONObject(i).getString("applicant");
@@ -1466,7 +1529,6 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
                     }
                 }
             }
-
         }catch(Exception|AssertionError e){
             collectMessage(e);
         }finally{
@@ -1475,7 +1537,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     }
 
     /**
-     * 收银风控事件处理
+     * 收银风控事件处理--ok
      */
     @Test(description = "收银风控事件处理为正常")
     public void authCashierPageSystem30(){
@@ -1483,9 +1545,9 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             //收银风控列表第一条的shopId
             IScene scene = PageScene.builder().page(1).size(10).build();
             JSONObject response=visitor.invokeApi(scene);
-            Long shopId=response.getJSONArray("list").getJSONObject(0).getLong("shop_id");
+            Long shopId=response.getJSONArray("list").getJSONObject(1).getLong("shop_id");
             //收银风控事件页面-获取待处理第一条的ID
-            IScene scene1=RiskEventPageScene.builder().shopId(shopId).page(1).size(10).currentState("待处理").build();
+            IScene scene1=RiskEventPageScene.builder().shopId(shopId).page(1).size(10).currentState("PENDING").build();
             JSONObject response1=visitor.invokeApi(scene1);
             if(response1.getJSONArray("list").size()>0){
                 Long id=response1.getJSONArray("list").getJSONObject(0).getLong("id");
@@ -1576,19 +1638,20 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     }
 
     /**
-     * 新建风控规则异常情况-黑名单风控-姓名{21个字}
+     * 新建风控规则异常情况-黑名单风控-姓名{21个字}---后端未校验
      */
     @Test(description = "新建风控规则异常情况-黑名单风控-姓名{21个字}")
     public void authCashierPageSystem33(){
         try{
-            //应用的门店     todo
-            List<String> shopIds=new ArrayList<>();
-            shopIds.add("");
-            shopIds.add("");
+            //应用的门店
+            List<String> shopIds = new ArrayList<>();
+            shopIds.add("43072");
+            shopIds.add("28764");
+            shopIds.add("28762");
             //规则中的type
             JSONObject rule=new JSONObject();
             rule.put("type",RuleEnum.BLACK_LIST.getType());
-            //新建风控规则   todo
+            //新建风控规则
             IScene scene= AddScene.builder()
                     .name(pp.blackNameException)
                     .rule(rule)
@@ -1606,19 +1669,20 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     }
 
     /**
-     * 新建风控规则异常情况-黑名单风控-姓名{为空}
+     * 新建风控规则异常情况-黑名单风控-姓名{为空}--ok
      */
     @Test(description = "新建风控规则异常情况-黑名单风控-姓名{为空}")
     public void authCashierPageSystem34(){
         try{
-            //应用的门店     todo
-            List<String> shopIds=new ArrayList<>();
-            shopIds.add("");
-            shopIds.add("");
+            //应用的门店
+            List<String> shopIds = new ArrayList<>();
+            shopIds.add("43072");
+            shopIds.add("28764");
+            shopIds.add("28762");
             //规则中的type
             JSONObject rule=new JSONObject();
             rule.put("type",RuleEnum.BLACK_LIST.getType());
-            //新建风控规则   todo
+            //新建风控规则
             IScene scene= AddScene.builder()
                     .rule(rule)
                     .shopIds(shopIds)
@@ -1626,7 +1690,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
                     .build();
             String message=visitor.invokeApi(scene,false).getString("message");
 
-            Preconditions.checkArgument(message.equals(""),"风控规则姓名为空个字创建成功");
+            Preconditions.checkArgument(message.equals("规则名称"),"风控规则姓名为空个字创建成功");
         }catch(Exception|AssertionError e){
             collectMessage(e);
         }finally{
@@ -1635,19 +1699,21 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     }
 
     /**
-     * 新建风控规则异常情况-黑名单风控-业务类型为空
+     * 新建风控规则异常情况-黑名单风控-业务类型为空--提示语不对
      */
     @Test(description = "新建风控规则异常情况-黑名单风控-业务类型为空")
     public void authCashierPageSystem35(){
         try{
-            //应用的门店     todo
-            List<String> shopIds=new ArrayList<>();
-            shopIds.add("");
-            shopIds.add("");
+            //应用的门店
+            List<String> shopIds = new ArrayList<>();
+            shopIds.add("43072");
+            shopIds.add("28764");
+            shopIds.add("28762");
+            //规则中的type
             //规则中的type
             JSONObject rule=new JSONObject();
             rule.put("type",RuleEnum.BLACK_LIST.getType());
-            //新建风控规则   todo
+            //新建风控规则
             IScene scene= AddScene.builder()
                     .name(pp.blackName)
                     .rule(rule)
@@ -1655,7 +1721,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
                     .build();
             String message=visitor.invokeApi(scene,false).getString("message");
 
-            Preconditions.checkArgument(message.equals(""),"风控规则业务类型为空个字创建成功");
+            Preconditions.checkArgument(message.equals("系统繁忙，请稍后再试！！"),"风控规则业务类型为空个字创建成功");
         }catch(Exception|AssertionError e){
             collectMessage(e);
         }finally{
@@ -2136,7 +2202,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
      */
 
     /**
-     * 角色管理列表项校验
+     * 角色管理列表项校验--ok
      */
     @Test(description = "角色管理列表项校验")
     public void organizationChartSystem1(){

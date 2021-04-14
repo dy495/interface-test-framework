@@ -15,11 +15,11 @@ public class PublicParam {
     //黑名单风控名字
     public String blackName="黑名单风控规则"+(int) (Math.random() * 10000);
     //黑名单风控名字异常21个字
-    public String blackNameException="12345678901234567901";
+    public String blackNameException="1234567890123456790111";
     //收银风控名字
     public String cashierName="收银风控规则"+(int) (Math.random() * 10000);
     //重点观察人员风控名字  观察
-    public String observeName="收银风控规则"+(int) (Math.random() * 10000);
+    public String observeName="重点观察人员风控规则"+(int) (Math.random() * 10000);
     //黑名单风控名字
     public String blackAlarmName="黑名单告警风控规则"+(int) (Math.random() * 10000);
     //收银风控名字
@@ -66,4 +66,9 @@ public class PublicParam {
     public String transId = "QATest_" + CommonUtil.getRandom(3) + time + time1;
     public String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/facebaes64.txt";
     public String filePath2 = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/";
+    public String filePath3 = "src/main/java/com/haisheng/framework/testng/bigScreen/fengkongdaily/util/pic/yaqx.png";
+    //创建账号的名字
+    public String name = "自动化账号" + CommonUtil.getRandom(4);
+    //创建账号的名字
+    public String phone = "133" + CommonUtil.getRandom(8);
 }
