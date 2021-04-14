@@ -28,6 +28,8 @@ import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.CommonUtil;
+import com.haisheng.framework.util.FileUtil;
+import netscape.javascript.JSObject;
 import org.apache.http.Header;
 import org.apache.http.client.HttpClient;
 import org.apache.xmlbeans.impl.xb.xsdschema.Public;
@@ -40,10 +42,7 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -55,6 +54,10 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     CommonUsedUtil cu=new CommonUsedUtil(visitor);
     RiskControlUtil md=new RiskControlUtil();
     public String shopId="43072";
+    FileUtil file = new FileUtil();
+//    public String face=file.texFile(pp.filePath);
+    public String face=file.getImgStr(pp.filePath2);
+
 
 
     @BeforeClass
@@ -288,7 +291,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
                 String uid = "uid_ef6d2de5";
                 String appId = "49998b971ea0";
                 String ak = "3fdce1db0e843ee0";
-                String router = "/business/precipitation/TRANS_INFO_RECEIVE/v1.0";
+                String router = "/business/patrol/STAFF_FACE_REGISTER/v1.0";
                 String nonce = UUID.randomUUID().toString();
                 String sk = "5036807b1c25b9312116fd4b22c351ac";
                 // java代码示例
@@ -313,76 +316,31 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
                         .other("ExpiredTime", "50 * 1000")
                         .other("Authorization", auth)
                         .build();
-                String time= dt.getHistoryDate(0);
-                String time1= dt.getHHmm(0);
-                String userId = "tester"+ CommonUtil.getRandom(6);
-                String transId = "QAtest_" + CommonUtil.getRandom(3)+time+time1;
-                System.out.println("transId:"+transId);
-                String transTime = "" + System.currentTimeMillis();
                 String str = "{\n" +
                         "  \"uid\": \"uid_ef6d2de5\",\n" +
                         "  \"app_id\": \"49998b971ea0\",\n" +
                         "  \"request_id\": \"5d45a085-8774-4jd0-943e-ded373ca6a919987\",\n" +
                         "  \"version\": \"v1.0\",\n" +
-                        "  \"router\": \"/business/precipitation/TRANS_INFO_RECEIVE/v1.0\",\n" +
+                        "  \"router\": \"/business/patrol/STAFF_FACE_REGISTER/v1.0\",\n" +
                         "  \"data\": {\n" +
                         "    \"biz_data\":  {\n" +
-                        "        \"shop_id\": \"43072\",\n" +
-                        "        \"trans_id\": " + "\"" + transId + "\"" + " ,\n" +
-                        "        \"trans_time\": " + "\"" + transTime + "\"" + " ,\n" +
-                        "        \"trans_type\": [\n" +
-                        "            \"W\"\n" +
-                        "        ],\n" +
-                        "        \"user_id\":  " + "\""+userId+"\"" + " ,\n" +
-                        "        \"total_price\": 1800,\n" +
-                        "        \"real_price\": 1500,\n" +
-//                        "        \"openid\": \"823849023iidijdiwiodede3330\",\n" +
-                        "        \"shopType\": \"SHOP_TYPE\",\n" +
-                        "        \"orderNumber\": \"13444894484\",\n" +
-                        "        \"memberName\":\"自动化在回归\",\n" +
-                        "        \"receipt_type\":\"小票类型\",\n" +
-                        "        \"posId\": \"pos-1234586789\",\n" +
-                        "        \"commodityList\": [\n" +
-                        "            {\n" +
-                        "                \"commodityId\": \"iPhone12A42234\",\n" +
-                        "                \"commodity_name\":\"苹果12s\",\n" +
-                        "                \"unit_price\": 200,\n" +
-                        "                \"num\": 4\n" +
-                        "            },\n" +
-                        "            {\n" +
-                        "                \"commodityId\": \"banan3424724E\",\n" +
-                        "                \"commodity_name\":\"香蕉20根啊\",\n" +
-                        "                \"unit_price\": 2,\n" +
-                        "                \"num\": 4\n" +
-                        "            },\n" +
-                        "            {\n" +
-                        "                \"commodityId\": \"Apple3424323234\",\n" +
-                        "                \"commodity_name\":\"苹果20ge\",\n" +
-                        "                \"unit_price\": 3,\n" +
-                        "                \"num\": 4\n" +
-                        "            }\n" +
-                        "        ],\n" +
-                        "        \"trans_business_params\":{\n" +
-                        "               \"car_plate\":\"京A11111\",\n" +
-                        "               \"car_vehicle_number\":\"ASDASDSDFS1829387\",\n" +
-                        "                \"business_type\":\"FIRST_INSPECTION\",\n" +
-                        "                \"business_order_id\":\"27389182\"\n" +
-                        "    }"+
+                        "            \"name\":\"店员1\",\n" +
+                        "            \"id\":\"uid_ef6d2de5\",\n" +
+                        "            \"account_uid\":\"uid_ef6d2de5\",\n" +
+                        "        \"face_base64\": " + "\"" + face + "\"" + " ,\n" +
+                        "            \"status\":1\n" +
+
                         "    }\n" +
                         "  }\n" +
                         "}";
 
-//                JSONObject jsonObject = JSON.parseObject(str);
-                JSONObject jsonObject=staffObject("uid_27f11a9d","店员1","uid_27f11a9d",1);
+                JSONObject jsonObject = JSON.parseObject(str);
+//                JSONObject jsonObject=staffObject("uid_27f11a9d","店员1","uid_27f11a9d",0);
                 logger.info("request:"+jsonObject.toJSONString());
                 logger.info("requestUrl:"+requestUrl);
 
                 HttpConfig config = HttpConfig.custom().headers(headers).url(requestUrl).json(JSON.toJSONString(jsonObject)).client(client);
-
-
-
                 String post = HttpClientUtil.post(config);
-                // checkArgument(, "添加事项不成功");
                 System.out.println(post);
             }
         } catch (AssertionError | Exception e) {
@@ -392,13 +350,33 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
         }
 
     }
+
     public JSONObject staffObject(String id,String name,String account_uid, Integer status){
+
+        Random random=new Random();
+
+        JSONObject str=new JSONObject();
+        str.put("uid","uid_ef6d2de5");
+        str.put("app_id","49998b971ea0");
+        str.put("request_id","5d45a085-8774-4jd0-943e-ded373ca6a91998"+random.nextInt(10));
+        str.put("version","v1.0");
+        str.put("router","/business/patrol/STAFF_FACE_REGISTER/v1.0");
+
+        JSONObject data = new JSONObject();
+        data.put("resource",new JSONArray());
+
         JSONObject body=new JSONObject();
         body.put("id",id);
         body.put("name",name);
         body.put("account_uid",account_uid);
         body.put("status",status);
-        return body;
+        body.put("face_base64",face);
+//        body.put("status",status);
+        data.put("biz_data",body);
+
+        str.put("data",data);
+
+        return str;
     }
 
 
