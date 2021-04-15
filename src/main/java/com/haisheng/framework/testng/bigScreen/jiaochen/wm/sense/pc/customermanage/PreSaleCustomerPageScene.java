@@ -77,9 +77,8 @@ public class PreSaleCustomerPageScene extends BaseScene {
      */
     private final String endTime;
 
-
     @Override
-    public JSONObject getRequestBody() {
+    protected JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("page", page);
         object.put("size", size);

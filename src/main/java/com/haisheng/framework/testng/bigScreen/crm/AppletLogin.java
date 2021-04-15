@@ -59,7 +59,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         commonConfig.pushRd = null;
     }
 
-//    @Test(dataProvider = "BSJ_APPLET_TOKENS_DAILY", dataProviderClass = AppletLogin.class)
+    @Test(dataProvider = "BSJ_APPLET_TOKENS_DAILY", dataProviderClass = AppletLogin.class)
     public void BSJ_applet_daily(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -99,7 +99,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-//    @Test(dataProvider = "JC_APPLET_TOKENS_DAILY", dataProviderClass = AppletLogin.class)
+    @Test(dataProvider = "JC_APPLET_TOKENS_DAILY", dataProviderClass = AppletLogin.class)
     public void JC_applet_daily(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -181,8 +181,8 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
     public static Object[] bsj_appletTokens_daily() {
         return new String[]{
                 EnumAppletToken.BSJ_WM_DAILY.getToken(),
-                EnumAppletToken.BSJ_XMF_DAILY.getToken(),
-                EnumAppletToken.BSJ_GLY_DAILY.getToken(),
+//                EnumAppletToken.BSJ_XMF_DAILY.getToken(),
+//                EnumAppletToken.BSJ_GLY_DAILY.getToken(),
         };
     }
 
@@ -199,8 +199,8 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
     public static Object[] jc_appletTokens_daily() {
         return new String[]{
                 EnumAppletToken.JC_WM_DAILY.getToken(),
-                EnumAppletToken.JC_XMF_DAILY.getToken(),
-                EnumAppletToken.JC_GLY_DAILY.getToken(),
+//                EnumAppletToken.JC_XMF_DAILY.getToken(),
+//                EnumAppletToken.JC_GLY_DAILY.getToken(),
         };
     }
 

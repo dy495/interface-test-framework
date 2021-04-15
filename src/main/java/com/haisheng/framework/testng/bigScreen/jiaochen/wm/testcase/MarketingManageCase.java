@@ -114,7 +114,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
-    @Test(description = "套餐管理--创建套餐包含卡券列表数=卡券状态为进行中的列表数")
+    @Test(description = "套餐管理--套餐表单--创建套餐包含卡券列表数=卡券状态为进行中的列表数")
     public void packageManager_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -125,12 +125,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐管理--创建套餐包含卡券列表数=卡券状态为进行中的列表数");
+            saveData("套餐管理--套餐表单--创建套餐包含卡券列表数=卡券状态为进行中的列表数");
         }
     }
 
     //ok
-    @Test(description = "套餐管理--创建套餐，套餐列表每次均+1")
+    @Test(description = "套餐管理--套餐表单--创建套餐，套餐列表每次均+1")
     public void packageManager_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -158,12 +158,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐管理--创建套餐，套餐列表每次均+1");
+            saveData("套餐管理--套餐表单--创建套餐，套餐列表每次均+1");
         }
     }
 
     //ok
-    @Test(description = "套餐管理--购买套餐--【小程序客户】列表的手机号，均可查询到姓名")
+    @Test(description = "套餐管理--套餐表单--购买套餐【小程序客户】列表的手机号，均可查询到姓名")
     public void packageManager_data_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -179,12 +179,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐管理--购买套餐--【小程序客户】列表的手机号，均可查询到姓名");
+            saveData("套餐管理--套餐表单--购买套餐【小程序客户】列表的手机号，均可查询到姓名");
         }
     }
 
     //ok
-    @Test(description = "套餐管理--套餐列表展示内容与套餐详情一致")
+    @Test(description = "套餐管理--套餐表单--套餐列表展示内容与套餐详情一致")
     public void packageManager_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -200,12 +200,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐管理--套餐列表展示内容与套餐详情一致");
+            saveData("套餐管理--套餐表单--套餐列表展示内容与套餐详情一致");
         }
     }
 
     //ok
-    @Test(description = "套餐管理--购买套餐--下拉可选择的套餐数量=审核通过并且开启的套餐数")
+    @Test(description = "套餐管理--套餐表单--购买套餐下拉可选择的套餐数量=审核通过并且开启的套餐数")
     public void packageManager_data_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -218,12 +218,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐管理--购买套餐--下拉可选择的套餐数量=未取消&未过期的套餐数");
+            saveData("套餐管理--套餐表单--购买套餐下拉可选择的套餐数量=未取消&未过期的套餐数");
         }
     }
 
     //ok
-    @Test(description = "套餐购买记录--套餐累计出售数量=套餐购买记录中该套餐的出售数量")
+    @Test(description = "套餐管理--套餐购买记录--套餐累计出售数量=套餐管理--套餐购买记录中该套餐的出售数量")
     public void packageManager_data_7() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -242,12 +242,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐购买记录--套餐累计出售数量=套餐购买记录中该套餐的出售数量");
+            saveData("套餐管理--套餐购买记录--套餐累计出售数量=套餐管理--套餐购买记录中该套餐的出售数量");
         }
     }
 
     //ok
-    @Test(description = "购买套餐--选择卡券接口看不见已作废的卡券")
+    @Test(description = "购买套餐--套餐表单--选择卡券接口看不见已作废的卡券")
     public void packageManager_data_8() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -261,12 +261,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("购买套餐--选择卡券接口看不见已作废的卡券");
+            saveData("购买套餐--套餐表单--选择卡券接口看不见已作废的卡券");
         }
     }
 
     //ok
-    @Test(description = "套餐管理--创建套餐，拒绝，套餐状态为已拒绝")
+    @Test(description = "套餐管理--套餐表单--创建套餐，拒绝，套餐状态为已拒绝")
     public void packageManager_data_9() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -294,12 +294,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐管理--套餐管理--创建套餐，拒绝，套餐状态为已拒绝");
+            saveData("套餐管理--套餐表单--创建套餐，拒绝，套餐状态为已拒绝");
         }
     }
 
     //ok
-    @Test(description = "套餐管理--购买一个临时套餐，套餐内卡券剩余库存-1&套餐购买记录+1")
+    @Test(description = "套餐管理--套餐表单--购买一个临时套餐，套餐内卡券剩余库存-1&套餐管理--套餐购买记录+1")
     public void packageManage_data_19() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -324,7 +324,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             //确认支付
             util.makeSureBuyPackage("临时套餐");
             //确认支付后数据
-            CommonUtil.checkResult("套餐购买记录", buyPackageRecordTotal + 1, buyPackageRecordScene.invoke(visitor).getInteger("total"));
+            CommonUtil.checkResult("套餐管理--套餐购买记录", buyPackageRecordTotal + 1, buyPackageRecordScene.invoke(visitor).getInteger("total"));
             VoucherSendRecord voucherSendRecord = util.getVoucherSendRecordList(voucherName).get(0);
             CommonUtil.checkResult(voucherName + " 领取记录卡券使用状态", VoucherUseStatusEnum.NEAR_EXPIRE.name(), voucherSendRecord.getVoucherUseStatus());
             CommonUtil.checkResult(voucherName + " 领取记录卡券使用状态", VoucherUseStatusEnum.NEAR_EXPIRE.getName(), voucherSendRecord.getVoucherUseStatusName());
@@ -342,12 +342,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐管理--购买一个临时套餐，套餐内卡券剩余库存-1&套餐购买记录+1");
+            saveData("套餐管理--套餐表单--购买一个临时套餐，套餐内卡券剩余库存-1&套餐管理--套餐购买记录+1");
         }
     }
 
     //ok
-    @Test(description = "套餐管理--购买一个固定套餐，包含卡券剩余库存-1&套餐购买记录+1&套餐购买数量+1")
+    @Test(description = "套餐管理--套餐表单--购买一个固定套餐，包含卡券剩余库存-1&套餐管理--套餐购买记录+1&套餐购买数量+1")
     public void packageManage_data_20() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -394,12 +394,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐管理--购买一个固定套餐，包含卡券剩余库存-1&套餐购买记录+1&套餐购买数量+1");
+            saveData("套餐管理--套餐表单--购买一个固定套餐，包含卡券剩余库存-1&套餐管理--套餐购买记录+1&套餐购买数量+1");
         }
     }
 
     //ok
-    @Test(description = "套餐管理--赠送一个临时套餐，套餐内卡券剩余库存-1&套餐购买记录+1")
+    @Test(description = "套餐管理--套餐表单--赠送一个临时套餐，套餐内卡券剩余库存-1&套餐管理--套餐购买记录+1")
     public void packageManage_data_21() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -442,12 +442,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐管理--赠送一个临时套餐，套餐内卡券剩余库存-1&套餐购买记录+1");
+            saveData("套餐管理--套餐表单--赠送一个临时套餐，套餐内卡券剩余库存-1&套餐管理--套餐购买记录+1");
         }
     }
 
     //ok
-    @Test(description = "套餐管理--赠送一个固定套餐，包含卡券剩余库存-1&套餐购买记录+1&套餐购买数量+1")
+    @Test(description = "套餐管理--套餐表单--赠送一个固定套餐，包含卡券剩余库存-1&套餐管理--套餐购买记录+1&套餐购买数量+1")
     public void packageManage_data_22() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -492,12 +492,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐管理--赠送一个固定套餐，包含卡券剩余库存-1&套餐购买记录+1&套餐购买数量+1");
+            saveData("套餐管理--套餐表单--赠送一个固定套餐，包含卡券剩余库存-1&套餐管理--套餐购买记录+1&套餐购买数量+1");
         }
     }
 
     //ok
-    @Test(description = "套餐表单--创建套餐，套餐名称异常")
+    @Test(description = "套餐管理--套餐表单--创建套餐，套餐名称异常")
     public void packageManager_system_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -516,12 +516,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐表单--创建套餐，套餐名称异常");
+            saveData("套餐管理--套餐表单--创建套餐，套餐名称异常");
         }
     }
 
     //ok
-    @Test(description = "套餐表单--创建套餐，套餐说明异常")
+    @Test(description = "套餐管理--创建套餐，套餐说明异常")
     public void packageManager_system_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -540,12 +540,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐表单--创建套餐，套餐说明异常");
+            saveData("套餐管理--创建套餐，套餐说明异常");
         }
     }
 
     //ok
-    @Test(description = "套餐表单--创建套餐，主体类型异常")
+    @Test(description = "套餐管理--创建套餐，主体类型异常")
     public void packageManager_system_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -564,12 +564,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐表单--创建套餐，主体类型异常");
+            saveData("套餐管理--创建套餐，主体类型异常");
         }
     }
 
     //ok
-    @Test(description = "套餐表单--创建套餐，主体详情异常")
+    @Test(description = "套餐管理--创建套餐，主体详情异常")
     public void packageManager_system_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -584,12 +584,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐表单--创建套餐，主体详情异常");
+            saveData("套餐管理--创建套餐，主体详情异常");
         }
     }
 
     //ok
-    @Test(description = "套餐表单--创建套餐，包含卡券为空")
+    @Test(description = "套餐管理--创建套餐，包含卡券为空")
     public void packageManager_system_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -602,12 +602,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐表单--创建套餐，包含卡券为空");
+            saveData("套餐管理--创建套餐，包含卡券为空");
         }
     }
 
     //ok
-    @Test(description = "套餐表单--创建套餐，套餐价格异常")
+    @Test(description = "套餐管理--创建套餐，套餐价格异常")
     public void packageManager_system_7() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -626,12 +626,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐表单--创建套餐，套餐价格异常");
+            saveData("套餐管理--创建套餐，套餐价格异常");
         }
     }
 
     //ok
-    @Test(description = "套餐表单--创建套餐，选择门店为空")
+    @Test(description = "套餐管理--创建套餐，选择门店为空")
     public void packageManager_system_8() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -646,12 +646,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐表单--创建套餐，选择门店为空");
+            saveData("套餐管理--创建套餐，选择门店为空");
         }
     }
 
     //ok
-    @Test(description = "套餐表单--购买套餐，联系方式异常")
+    @Test(description = "套餐管理--购买套餐，联系方式异常")
     public void packageManager_system_9() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -672,12 +672,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐表单--购买套餐，联系方式异常");
+            saveData("套餐管理--购买套餐，联系方式异常");
         }
     }
 
     //ok
-    @Test(description = "套餐表单--购买套餐，车牌号异常")
+    @Test(description = "套餐管理--购买套餐，车牌号异常")
     public void packageManager_system_10() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -698,12 +698,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐表单--购买套餐，车牌号异常");
+            saveData("套餐管理--购买套餐，车牌号异常");
         }
     }
 
     //ok
-    @Test(description = "套餐表单--购买套餐，超过10张卡券")
+    @Test(description = "套餐管理--购买套餐，超过10张卡券")
     public void packageManager_system_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -719,12 +719,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐表单--购买套餐，超过10张卡券");
+            saveData("套餐管理--购买套餐，超过10张卡券");
         }
     }
 
     //ok
-    @Test(description = "套餐表单--购买套餐，套餐价格异常")
+    @Test(description = "套餐管理--购买套餐，套餐价格异常")
     public void packageManager_system_12() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -742,12 +742,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐表单--购买套餐，套餐价格异常");
+            saveData("套餐管理--购买套餐，套餐价格异常");
         }
     }
 
     //ok
-    @Test(description = "套餐表单--购买套餐，套餐说明异常")
+    @Test(description = "套餐管理--购买套餐，套餐说明异常")
     public void packageManager_system_14() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -766,12 +766,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐表单--购买套餐，套餐说明异常");
+            saveData("套餐管理--购买套餐，套餐说明异常");
         }
     }
 
     //ok
-    @Test(description = "套餐表单--购买套餐，主体类型异常")
+    @Test(description = "套餐管理--购买套餐，主体类型异常")
     public void packageManager_system_15() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -791,12 +791,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐表单--购买套餐，主体类型异常");
+            saveData("套餐管理--购买套餐，主体类型异常");
         }
     }
 
     //ok
-    @Test(description = "套餐表单--购买套餐，主体详情异常")
+    @Test(description = "套餐管理--购买套餐，主体详情异常")
     public void packageManager_system_16() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -812,12 +812,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐表单--购买套餐，主体详情异常");
+            saveData("套餐管理--购买套餐，主体详情异常");
         }
     }
 
     //ok
-    @Test(description = "套餐表单--购买套餐，选择套餐异常")
+    @Test(description = "套餐管理--购买套餐，选择套餐异常")
     public void packageManager_system_17() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -835,12 +835,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐表单--购买套餐，选择套餐异常");
+            saveData("套餐管理--购买套餐，选择套餐异常");
         }
     }
 
     //ok
-    @Test(description = "套餐表单--临时套餐购买已售罄的卡券，确认提示：卡券【XXXX】已售罄")
+    @Test(description = "套餐管理--临时套餐购买已售罄的卡券，确认提示：卡券【XXXX】已售罄")
     public void packageManager_system_18() {
         try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.SELL_OUT).buildVoucher().getVoucherId();
@@ -857,12 +857,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐表单--临时套餐购买已售罄的卡券，确认提示：卡券【XXXX】已售罄");
+            saveData("套餐管理--临时套餐购买已售罄的卡券，确认提示：卡券【XXXX】已售罄");
         }
     }
 
     //ok
-    @Test(description = "套餐表单--临时套餐购买已作废卡券，确认时会有提示：卡券【XXX】已被作废，请重新选择！")
+    @Test(description = "套餐管理--临时套餐购买已作废卡券，确认时会有提示：卡券【XXX】已被作废，请重新选择！")
     public void packageManager_system_19() {
         try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.INVALIDED).buildVoucher().getVoucherId();
@@ -879,12 +879,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐表单--临时套餐购买已作废卡券，确认时会有提示：卡券【XXX】已被作废，请重新选择！");
+            saveData("套餐管理--临时套餐购买已作废卡券，确认时会有提示：卡券【XXX】已被作废，请重新选择！");
         }
     }
 
     //ok
-    @Test(description = "套餐表单--购买包含已售罄卡券的套餐，确认时会有提示：卡券【XXX】已被作废，请重新选择！")
+    @Test(description = "套餐管理--购买包含已售罄卡券的套餐，确认时会有提示：卡券【XXX】已被作废，请重新选择！")
     public void packageManager_system_20() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -902,12 +902,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐表单--购买包含已售罄卡券的套餐，确认时会有提示：卡券【XXX】已被作废，请重新选择！");
+            saveData("套餐管理--购买包含已售罄卡券的套餐，确认时会有提示：卡券【XXX】已被作废，请重新选择！");
         }
     }
 
     //ok
-    @Test(description = "套餐表单--购买/赠送固定套餐时，将套餐关闭，确认时会有提示：此套餐已关闭")
+    @Test(description = "套餐管理--购买/赠送固定套餐时，将套餐关闭，确认时会有提示：此套餐已关闭")
     public void packageManager_system_21() {
         logger.logCaseStart(caseResult.getCaseName());
         long packageId = 0;
@@ -930,12 +930,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } finally {
             IScene switchPackageStatusScene = PackageFormSwitchPackageStatusScene.builder().id(packageId).status(true).build();
             visitor.invokeApi(switchPackageStatusScene);
-            saveData("套餐表单--购买/赠送固定套餐时，将套餐关闭，确认时会有提示：此套餐已关闭");
+            saveData("套餐管理--购买/赠送固定套餐时，将套餐关闭，确认时会有提示：此套餐已关闭");
         }
     }
 
     //ok
-    @Test(description = "套餐表单--修改套餐，套餐名称异常")
+    @Test(description = "套餐管理--修改套餐，套餐名称异常")
     public void packageManager_system_22() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -956,12 +956,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐表单--修改套餐，套餐名称异常");
+            saveData("套餐管理--修改套餐，套餐名称异常");
         }
     }
 
     //ok
-    @Test(description = "套餐表单--修改套餐，套餐说明异常")
+    @Test(description = "套餐管理--修改套餐，套餐说明异常")
     public void packageManager_system_23() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -983,12 +983,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐表单--修改套餐，套餐说明异常");
+            saveData("套餐管理--修改套餐，套餐说明异常");
         }
     }
 
     //ok
-    @Test(description = "套餐表单--修改套餐，主体类型异常")
+    @Test(description = "套餐管理--修改套餐，主体类型异常")
     public void packageManager_system_24() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1009,12 +1009,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐表单--修改套餐，主体类型异常");
+            saveData("套餐管理--修改套餐，主体类型异常");
         }
     }
 
     //ok
-    @Test(description = "套餐表单--修改套餐，主体详情异常")
+    @Test(description = "套餐管理--修改套餐，主体详情异常")
     public void packageManager_system_25() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1030,12 +1030,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐表单--修改套餐，主体类型异常");
+            saveData("套餐管理--修改套餐，主体类型异常");
         }
     }
 
     //ok
-    @Test(description = "套餐表单--修改套餐，包含卡券异常")
+    @Test(description = "套餐管理--修改套餐，包含卡券异常")
     public void packageManager_system_26() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1058,12 +1058,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐表单--修改套餐，包含卡券异常");
+            saveData("套餐管理--修改套餐，包含卡券异常");
         }
     }
 
     //ok
-    @Test(description = "套餐表单--修改套餐，套餐价格异常")
+    @Test(description = "套餐管理--修改套餐，套餐价格异常")
     public void packageManager_system_27() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1083,12 +1083,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐表单--修改套餐，套餐价格异常");
+            saveData("套餐管理--修改套餐，套餐价格异常");
         }
     }
 
     //ok
-    @Test(description = "套餐表单--修改套餐，所选门店为空")
+    @Test(description = "套餐管理--修改套餐，所选门店为空")
     public void packageManager_system_28() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1104,12 +1104,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐表单--修改套餐，所选门店为空");
+            saveData("套餐管理--修改套餐，所选门店为空");
         }
     }
 
     //ok
-    @Test(description = "套餐表单--选择作废的卡券创建套餐，提示：卡券【xxxx】已被作废，请重新选择！")
+    @Test(description = "套餐管理--选择作废的卡券创建套餐，提示：卡券【xxxx】已被作废，请重新选择！")
     public void packageManager_system_29() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1126,12 +1126,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐表单--选择作废的卡券创建套餐，提示：卡券【xxxx】已被作废，请重新选择！");
+            saveData("套餐管理--选择作废的卡券创建套餐，提示：卡券【xxxx】已被作废，请重新选择！");
         }
     }
 
     //ok
-    @Test(description = "套餐表单--选择待审核的卡券创建套餐，提示：卡券已被拒绝或者已取消，请重新选择！")
+    @Test(description = "套餐管理--选择待审核的卡券创建套餐，提示：卡券已被拒绝或者已取消，请重新选择！")
     public void packageManager_system_30() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1148,12 +1148,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐表单--选择待审核的卡券创建套餐，提示：卡券已被拒绝或者已取消，请重新选择！");
+            saveData("套餐管理--选择待审核的卡券创建套餐，提示：卡券已被拒绝或者已取消，请重新选择！");
         }
     }
 
     //ok
-    @Test(description = "套餐表单--选择审核未通过的卡券创建套餐，提示：卡券已被拒绝或者已取消，请重新选择！")
+    @Test(description = "套餐管理--选择审核未通过的卡券创建套餐，提示：卡券已被拒绝或者已取消，请重新选择！")
     public void packageManager_system_31() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1170,12 +1170,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐表单--选择审核未通过的卡券创建套餐，提示：卡券已被拒绝或者已取消，请重新选择！");
+            saveData("套餐管理--选择审核未通过的卡券创建套餐，提示：卡券已被拒绝或者已取消，请重新选择！");
         }
     }
 
     //ok
-    @Test(description = "套餐表单--修改套餐，套餐名称重复")
+    @Test(description = "套餐管理--修改套餐，套餐名称重复")
     public void packageManager_system_32() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1194,12 +1194,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐表单--修改套餐，套餐名称异常");
+            saveData("套餐管理--修改套餐，套餐名称异常");
         }
     }
 
     //ok
-    @Test(description = "套餐表单--使用可用库存不足的卡券，提示失败")
+    @Test(description = "套餐管理--使用可用库存不足的卡券，提示失败")
     public void packageManager_system_33() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1223,12 +1223,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐表单--使用可用库存不足的卡券，提示失败");
+            saveData("套餐管理--使用可用库存不足的卡券，提示失败");
         }
     }
 
     //ok
-    @Test(description = "套餐表单--购买套餐，确认购买前，套餐状态改为关闭，再确认购买小程序会收到套餐/卡券")
+    @Test(description = "套餐管理--购买套餐，确认购买前，套餐状态改为关闭，再确认购买小程序会收到套餐/卡券")
     public void packageManager_system_34() {
         logger.logCaseStart(caseResult.getCaseName());
         Long packageId = null;
@@ -1259,11 +1259,11 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             user.loginPc(ALL_AUTHORITY);
             IScene switchPackageStatusScene = PackageFormSwitchPackageStatusScene.builder().id(packageId).status(true).build();
             visitor.invokeApi(switchPackageStatusScene);
-            saveData("套餐表单--购买套餐，确认购买前，套餐状态改为关闭，再确认购买小程序会收到套餐/卡券");
+            saveData("套餐管理--购买套餐，确认购买前，套餐状态改为关闭，再确认购买小程序会收到套餐/卡券");
         }
     }
 
-    @Test(description = "套餐表单--取消套餐，套餐状态为已撤销", enabled = false)
+    @Test(description = "套餐管理--取消套餐，套餐状态为已撤销", enabled = false)
     public void packageManager_system_35() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1274,11 +1274,11 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐表单--取消套餐，套餐状态为已撤销");
+            saveData("套餐管理--取消套餐，套餐状态为已撤销");
         }
     }
 
-    @Test(description = "套餐表单--取消套餐后重新提交，套餐变为待审核", enabled = false)
+    @Test(description = "套餐管理--取消套餐后重新提交，套餐变为待审核", enabled = false)
     public void packageManager_system_36() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1291,7 +1291,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐表单--取消套餐后重新提交，套餐变为待审核");
+            saveData("套餐管理--取消套餐后重新提交，套餐变为待审核");
         }
     }
 
@@ -1622,7 +1622,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
     //------------------------------------------------------------------------------------------------------------------
 
     //ok
-    @Test(description = "权益列表--修改权益，applet与pc所见内容一致")
+    @Test(description = "会员营销--权益列表--修改权益，applet与pc所见内容一致")
     public void vipMarketing_system_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1645,12 +1645,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("权益列表--修改权益，applet与pc所见内容一致");
+            saveData("会员营销--权益列表--修改权益，applet与pc所见内容一致");
         }
     }
 
     //ok
-    @Test(description = "权益列表--关闭权益，applet与pc所见内容一致")
+    @Test(description = "会员营销--权益列表--关闭权益，applet与pc所见内容一致")
     public void vipMarketing_system_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1671,12 +1671,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("权益列表--关闭权益，applet与pc所见内容一致");
+            saveData("会员营销--权益列表--关闭权益，applet与pc所见内容一致");
         }
     }
 
     //ok
-    @Test(description = "权益列表--开启权益，applet与pc所见内容一致")
+    @Test(description = "会员营销--权益列表--开启权益，applet与pc所见内容一致")
     public void vipMarketing_system_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1697,12 +1697,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("权益列表--开启权益，applet与pc所见内容一致");
+            saveData("会员营销--权益列表--开启权益，applet与pc所见内容一致");
         }
     }
 
     //ok
-    @Test(description = "权益列表--修改生日积分，描述异常")
+    @Test(description = "会员营销--权益列表--修改生日积分，描述异常")
     public void vipMarketing_system_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1719,12 +1719,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("权益列表--修改生日积分，描述异常");
+            saveData("会员营销--权益列表--修改生日积分，描述异常");
         }
     }
 
     //ok
-    @Test(description = "权益列表--修改免费洗车，积分异常")
+    @Test(description = "会员营销--权益列表--修改免费洗车，积分异常")
     public void vipMarketing_system_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1741,7 +1741,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("权益列表--修改免费洗车，积分异常");
+            saveData("会员营销--权益列表--修改免费洗车，积分异常");
         }
     }
 
@@ -1753,7 +1753,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
-    @Test(description = "任务管理--修改分享内容，applet与pc所见内容一致")
+    @Test(description = "会员营销--任务管理--修改分享内容，applet与pc所见内容一致")
     public void vipMarketing_system_10() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1777,12 +1777,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("任务管理--修改分享内容，applet与pc所见内容一致");
+            saveData("会员营销--任务管理--修改分享内容，applet与pc所见内容一致");
         }
     }
 
     //ok
-    @Test(description = "任务管理--修改分享内容，说明异常")
+    @Test(description = "会员营销--任务管理--修改分享内容，说明异常")
     public void vipMarketing_system_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1804,7 +1804,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("任务管理--修改分享内容，说明异常");
+            saveData("会员营销--任务管理--修改分享内容，说明异常");
         }
     }
 
@@ -1860,7 +1860,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
-    @Test(description = "权益列表--修改生日积分，积分异常")
+    @Test(description = "会员营销--权益列表--修改生日积分，积分异常")
     public void vipMarketing_system_14() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1876,12 +1876,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("权益列表--修改生日积分，积分异常");
+            saveData("会员营销--权益列表--修改生日积分，积分异常");
         }
     }
 
     //ok
-    @Test(description = "洗车管理--增加洗车次数，洗车记录列表+1，小程序客户洗车次数更新")
+    @Test(description = "会员营销--洗车管理--增加洗车次数，洗车记录列表+1，小程序客户洗车次数更新")
     public void vipMarketing_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1902,12 +1902,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("洗车管理--增加洗车次数，洗车记录列表+1，小程序客户洗车次数更新");
+            saveData("会员营销--洗车管理--增加洗车次数，洗车记录列表+1，小程序客户洗车次数更新");
         }
     }
 
     //ok
-    @Test(description = "洗车管理--修改洗车规则，applet与pc所见内容一致")
+    @Test(description = "会员营销--洗车管理--修改洗车规则，applet与pc所见内容一致")
     public void vipMarketing_system_16() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1921,12 +1921,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("洗车管理--修改洗车规则，applet与pc所见内容一致");
+            saveData("会员营销--洗车管理--修改洗车规则，applet与pc所见内容一致");
         }
     }
 
     //ok
-    @Test(description = "洗车管理--修改洗车规则，内容异常")
+    @Test(description = "会员营销--洗车管理--修改洗车规则，内容异常")
     public void vipMarketing_system_17() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1939,12 +1939,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("洗车管理--修改洗车规则，内容异常");
+            saveData("会员营销--洗车管理--修改洗车规则，内容异常");
         }
     }
 
     //ok
-    @Test(description = "洗车管理--修改洗车权益，applet与pc所见内容一致")
+    @Test(description = "会员营销--洗车管理--修改洗车权益，applet与pc所见内容一致")
     public void vipMarketing_system_18() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1958,12 +1958,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("洗车管理--修改洗车权益，applet与pc所见内容一致");
+            saveData("会员营销--洗车管理--修改洗车权益，applet与pc所见内容一致");
         }
     }
 
     //ok
-    @Test(description = "洗车管理--修改洗车权益，内容异常")
+    @Test(description = "会员营销--洗车管理--修改洗车权益，内容异常")
     public void vipMarketing_system_19() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1976,11 +1976,11 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("洗车管理--修改洗车权益，applet与pc所见内容一致");
+            saveData("会员营销--洗车管理--修改洗车权益，applet与pc所见内容一致");
         }
     }
 
-    @Test(description = "洗车管理--增加洗车次数，手机号异常")
+    @Test(description = "会员营销--洗车管理--增加洗车次数，手机号异常")
     public void vipMarketing_system_20() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1994,11 +1994,11 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("洗车管理--增加洗车次数，手机号异常");
+            saveData("会员营销--洗车管理--增加洗车次数，手机号异常");
         }
     }
 
-    @Test(description = "洗车管理--增加洗车次数，次数异常")
+    @Test(description = "会员营销--洗车管理--增加洗车次数，次数异常")
     public void vipMarketing_system_21() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2012,11 +2012,11 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("洗车管理--增加洗车次数，次数异常");
+            saveData("会员营销--洗车管理--增加洗车次数，次数异常");
         }
     }
 
-    @Test(description = "洗车管理--增加洗车次数，备注异常")
+    @Test(description = "会员营销--洗车管理--增加洗车次数，备注异常")
     public void vipMarketing_system_22() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2030,7 +2030,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("洗车管理--增加洗车次数，备注异常");
+            saveData("会员营销--洗车管理--增加洗车次数，备注异常");
         }
     }
 
@@ -2136,7 +2136,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
                         Long total = SearchCustomerPhoneScene.builder().customerType(MessageCustomerTypeEnum.AFTER_CUSTOMER.name()).consumeType(consumeType).shopIds(shopArray).brandIds(brandArray).build().invoke(visitor).getLong("total");
                         IScene scene = AfterSaleCustomerPageScene.builder().shopId(shopId).brandId(brandId).build();
                         List<AfterSaleCustomerPageBean> customerPageBeanList = util.collectBeanList(scene, AfterSaleCustomerPageBean.class);
-                        long count = customerPageBeanList.stream().filter(e -> e.getShopName() != null && e.getBrandName() != null && e.getTotalPrice() != null && e.getTotalPrice() >= anEnum.getMin() && e.getTotalPrice() <= anEnum.getMax()).count();
+                        long count = customerPageBeanList.stream().filter(e -> e.getShopName() != null && e.getBrandName() != null && e.getTotalPrice() != null && e.getTotalPrice() >= anEnum.getMin() && e.getTotalPrice() <= anEnum.getMax()).map(AfterSaleCustomerPageBean::getCustomerId).distinct().count();
                         CommonUtil.valueView("门店：" + shopName, "品牌：" + brandName, "消费价格区间：" + consumeTypeName);
                         CommonUtil.valueView("消息推送人数：" + total);
                         CommonUtil.valueView("售后客户人数：" + count);

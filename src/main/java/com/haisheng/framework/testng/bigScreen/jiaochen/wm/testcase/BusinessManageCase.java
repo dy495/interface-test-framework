@@ -8,6 +8,8 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletVoucherInfo;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.customermanage.PreSaleCustomerInfoBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.customermanage.PreSaleCustomerPageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.CustomerLabelTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.common.EnableStatusEnum;
@@ -15,8 +17,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherUseStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanage.AfterSaleCustomerPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanage.RepairPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanage.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.manage.CarModelEditScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.manage.CarModelPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanage.BuyPackageRecordScene;
@@ -92,7 +93,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
-    @Test(description = "接待管理--购买一个临时套餐，套餐内卡券剩余库存-1&套餐购买记录+1")
+    @Test(description = "售后接待管理--购买一个临时套餐，套餐内卡券剩余库存-1&套餐购买记录+1")
     public void receptionManage_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -143,12 +144,12 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("接待管理--购买一个临时套餐，套餐内卡券剩余库存-1&套餐购买记录+1");
+            saveData("售后接待管理--购买一个临时套餐，套餐内卡券剩余库存-1&套餐购买记录+1");
         }
     }
 
     //ok
-    @Test(description = "接待管理--购买一个固定套餐，包含卡券剩余库存-1&套餐购买记录+1&套餐购买数量+1")
+    @Test(description = "售后接待管理--购买一个固定套餐，包含卡券剩余库存-1&套餐购买记录+1&套餐购买数量+1")
     public void receptionManage_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -205,12 +206,12 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("接待管理--购买一个固定套餐，包含卡券剩余库存-1&套餐购买记录+1&套餐购买数量+1");
+            saveData("售后接待管理--购买一个固定套餐，包含卡券剩余库存-1&套餐购买记录+1&套餐购买数量+1");
         }
     }
 
     //ok
-    @Test(description = "接待管理--赠送一个临时套餐，套餐内卡券剩余库存-1&套餐购买记录+1")
+    @Test(description = "售后接待管理--赠送一个临时套餐，套餐内卡券剩余库存-1&套餐购买记录+1")
     public void receptionManage_data_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -261,12 +262,12 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("接待管理--赠送一个临时套餐，套餐内卡券剩余库存-1&套餐购买记录+1");
+            saveData("售后接待管理--赠送一个临时套餐，套餐内卡券剩余库存-1&套餐购买记录+1");
         }
     }
 
     //ok
-    @Test(description = "接待管理--赠送一个固定套餐，包含卡券剩余库存-1&套餐购买记录+1&套餐购买数量+1")
+    @Test(description = "售后接待管理--赠送一个固定套餐，包含卡券剩余库存-1&套餐购买记录+1&套餐购买数量+1")
     public void receptionManage_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -323,12 +324,12 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("接待管理--赠送一个固定套餐，包含卡券剩余库存-1&套餐购买记录+1&套餐购买数量+1");
+            saveData("售后接待管理--赠送一个固定套餐，包含卡券剩余库存-1&套餐购买记录+1&套餐购买数量+1");
         }
     }
 
     //ok
-    @Test(description = "接待管理--赠送一个固定套餐，取消后卡券&套餐数量不变")
+    @Test(description = "售后接待管理--赠送一个固定套餐，取消后卡券&套餐数量不变")
     public void receptionManage_data_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -369,12 +370,12 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("接待管理--赠送一个固定套餐，取消后卡券&套餐数量不变");
+            saveData("售后接待管理--赠送一个固定套餐，取消后卡券&套餐数量不变");
         }
     }
 
     //ok
-    @Test(description = "接待管理--赠送一个临时套餐，取消后卡券&套餐数量不变")
+    @Test(description = "售后接待管理--赠送一个临时套餐，取消后卡券&套餐数量不变")
     public void receptionManage_data_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -410,11 +411,11 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("接待管理--赠送一个临时套餐，取消后卡券&套餐数量不变");
+            saveData("售后接待管理--赠送一个临时套餐，取消后卡券&套餐数量不变");
         }
     }
 
-    @Test(description = "套餐购买并发测试", threadPoolSize = 4, invocationCount = 4, enabled = false)
+    @Test(description = "售后接待管理--套餐购买并发测试", threadPoolSize = 4, invocationCount = 4, enabled = false)
     public void receptionManage_data_7() {
         try {
             long packageId = 146;
@@ -422,13 +423,13 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("套餐购买并发测试");
+            saveData("售后接待管理--套餐购买并发测试");
         }
     }
 
     //ok
-    @Test(description = "客户管理--相同底盘号的客户最新里程数相等")
-    public void customerManager_data_4() {
+    @Test(description = "售后客户管理--相同底盘号的客户最新里程数相等")
+    public void afterSaleCustomerManager_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene afterSaleCustomerPageScene = AfterSaleCustomerPageScene.builder().build();
@@ -448,13 +449,13 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("客户管理--相同底盘号的客户最新里程数相等");
+            saveData("售后客户管理--相同底盘号的客户最新里程数相等");
         }
     }
 
     //逻辑有问题
-    @Test(description = "客户管理--有维修记录的售后客户，列表最新里程数=维修记录中最新的里程数&总消费/元=维修记录产值/mb之和", enabled = false)
-    public void customerManager_data_5() {
+    @Test(description = "售后客户管理--有维修记录的售后客户，列表最新里程数=维修记录中最新的里程数&总消费/元=维修记录产值/mb之和", enabled = false)
+    public void afterSaleCustomerManager_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene afterSaleCustomerPageScene = AfterSaleCustomerPageScene.builder().build();
@@ -473,7 +474,36 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("客户管理--有维修记录的售后客户，列表最新里程数=维修记录中最新的里程数&总消费/元=维修记录产值/mb之和");
+            saveData("售后客户管理--有维修记录的售后客户，列表最新里程数=维修记录中最新的里程数&总消费/元=维修记录产值/mb之和");
+        }
+    }
+
+    //3.1
+    @Test(description = "售后售后客户管理--编辑售后客户各项信息，必填项不填，全部失败", enabled = false)
+    public void afterSaleCustomerManager_data_3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene scene = PreSaleCustomerPageScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).build();
+            PreSaleCustomerPageBean customerPage = util.collectBeanList(scene, PreSaleCustomerPageBean.class).get(0);
+            IScene scene1 = PreSaleCustomerInfoScene.builder().customerId(customerPage.getCustomerId()).shopId(customerPage.getShopId()).build();
+            PreSaleCustomerInfoBean customerInfo = util.collectBean(scene1, PreSaleCustomerInfoBean.class);
+            IScene scene2 = PreSaleCustomerEditScene.builder()
+                    .shopId(customerInfo.getShopId())
+                    .customerId(customerInfo.getCustomerId())
+                    .subjectType(customerInfo.getSubjectType())
+                    .customerPhone(customerInfo.getCustomerPhone())
+                    .customerName(customerInfo.getCustomerName())
+                    .sex(customerInfo.getSex())
+                    .carModelId(customerInfo.getIntentionCarModelId())
+                    .carStyleId(customerInfo.getIntentionCarStyleId())
+                    .build();
+            String[] messageList = util.getMessageList(scene2);
+            System.err.println(Arrays.toString(messageList));
+            String[] errList = {"客户姓名不能为空", "客户性别不能为空"};
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("售后售后客户管理--编辑售后客户各项信息，必填项不填，全部失败");
         }
     }
 

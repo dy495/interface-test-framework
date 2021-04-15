@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.bean.Response;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.appointmentmanage.AppointmentRecordAppointmentPageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.integralcenter.ExchangeGoodsDetailBean;
@@ -86,6 +87,21 @@ public class SupporterUtil {
      */
     public SupporterUtil(VisitorProxy visitor) {
         this.visitor = visitor;
+    }
+
+    /**
+     * 获取message信息集合
+     *
+     * @param scene 接口
+     * @return 信息集合
+     */
+    public String[] getMessageList(IScene scene) {
+        List<String> list = scene.getKeyList();
+        logger.info("---------------------");
+        logger.info("keyList is：{}", list);
+        logger.info("---------------------");
+        return list.stream().map(e -> JSONObject.toJavaObject(scene.remove(e).invoke(visitor, false), Response.class))
+                .map(Response::getMessage).collect(Collectors.toList()).toArray(new String[list.size()]);
     }
 
     /**

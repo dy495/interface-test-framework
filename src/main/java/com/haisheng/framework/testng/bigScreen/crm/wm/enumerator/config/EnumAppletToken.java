@@ -11,7 +11,7 @@ import java.util.Arrays;
  * 若失效统一修改此类，统一管理
  */
 public enum EnumAppletToken {
-    BSJ_WM_DAILY(EnumTestProduce.PORSCHE_DAILY.getAbbreviation(), "D6Ns8hkbn8YMg0bAkuT1Lg==", true, "15321527989"),
+    BSJ_WM_DAILY(EnumTestProduce.PORSCHE_DAILY.getAbbreviation(), "Zg0LsqAeP25MGL0ulmDtDg==", true, "15321527989"),
 
     BSJ_XMF_DAILY(EnumTestProduce.PORSCHE_DAILY.getAbbreviation(), "X1vn9SlgXS1ohNyW9qRCjg==", true, "15037286013"),
 
@@ -23,7 +23,7 @@ public enum EnumAppletToken {
 
     BSJ_WM_SMALL_ONLINE(EnumTestProduce.PORSCHE_DAILY.getAbbreviation(), "UhqugJ3HUDI7BRKnIvxxKg==", false, "15321527989"),
 
-    JC_WM_DAILY(EnumTestProduce.JC_DAILY.getAbbreviation(), "eVvKxoI0LSCdMQJoN3Qg7g==", true, "15321527989"),
+    JC_WM_DAILY(EnumTestProduce.JC_DAILY.getAbbreviation(), "uhFcIKEc05Q50D9kEfLkBg==", true, "15321527989"),
 
     JC_WM_ONLINE(EnumTestProduce.JC_DAILY.getAbbreviation(), "aTcP39Q3mJAUauGwmq2VMg==", false, "15321527989"),
 
