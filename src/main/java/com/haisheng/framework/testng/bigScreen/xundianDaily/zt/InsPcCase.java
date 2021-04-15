@@ -345,9 +345,9 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             String path = md.pcFileUpload(base64).getString("pic_path");
             String result = md.createShop(path, shopName, label, openingTime, closingTime, managerName, managerPhone, city, address, longitude, latitude, tripartite_shop_id, recommended).getString("result");
             Preconditions.checkArgument(result.equals("true"), "新建门店失败" + result);
-            int total = md.searchShop(null, null, null, null, 1, 100).getInteger("total");
+            int total = md.searchShop("两杆大烟枪", null, null, null, 1, 100).getInteger("total");
             int a = total-1;
-            int id = md.searchShop(null, null, null, null, 1, 100).getJSONArray("list").getJSONObject(a).getInteger("id");
+            int id = md.searchShop("两杆大烟枪", null, null, null, 1, 100).getJSONArray("list").getJSONObject(a).getInteger("id");
             md.deleteShop(id);
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -1320,6 +1320,40 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             saveData("小程序用户反馈");
+        }
+    }
+    //小程序用户反馈异常情况
+    @Test()
+    public void userfeedbackerror() throws Exception {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
+            JSONArray querylist = wx.queryAll().getJSONArray("list");
+            int feedback_type_id = querylist.getJSONObject(0).getInteger("feedback_type_id");
+
+            //不添加反馈类型
+//            JSONObject res = wx.submitFeedback(null,5,"自动化提交用户反馈");
+//            Preconditions.checkArgument(mes.equals("反馈类型ID不能为空"),"期待反馈类型ID不能为空，实际"+mes);
+//            int code =  wx.submitFeedback(null,5,"自动化提交用户反馈").getInteger("code");
+//            Preconditions.checkArgument(code==1001,"期待状态码1000，实际"+code);
+//            Preconditions.checkArgument(res.getInteger("code")==1001,"期待状态码1000，实际"+res.getInteger("code"));
+
+
+
+
+
+//            xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
+//            int total = md.feedbackList(null,null,1,10).getInteger("total");
+//            int a = total-1;
+//            int id = md.feedbackList(null,null,1,10).getJSONArray("list").getJSONObject(a).getInteger("id");
+//            int code1 = md.feedback_delete(id).getInteger("code");
+//            Preconditions.checkArgument(code1==1000,"期待状态码1000，实际"+code1);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+//            saveData("小程序用户反馈");
         }
     }
 }

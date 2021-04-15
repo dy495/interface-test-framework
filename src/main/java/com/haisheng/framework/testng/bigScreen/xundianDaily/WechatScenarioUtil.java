@@ -76,6 +76,34 @@ public class WechatScenarioUtil extends TestCaseCommon {
     /**
      * -------------------------------------INS小程序首页相关接口-----------------------------------------------------------------------------------------
      */
+
+    /**
+     * http请求方法调用
+     *
+     * @param url         url
+     * @param requestBody 请求体
+     * @param checkCode   是否校验code
+     * @return JSONObject response.data
+     */
+    public JSONObject invokeApi(String url, JSONObject requestBody, boolean checkCode) {
+        if (StringUtils.isEmpty(url)) {
+            throw new RuntimeException("url不可为空");
+        }
+        String request = JSON.toJSONString(requestBody);
+        String result = null;
+        if (checkCode) {
+            result = httpPostWithCheckCode(url, request, IpPort);
+            return JSON.parseObject(result).getJSONObject("data");
+        } else {
+            try {
+                result = httpPost(url, request, IpPort);
+            } catch (Exception e) {
+                appendFailReason(e.toString());
+            }
+            return JSON.parseObject(result);
+        }
+    }
+
     /**
      * @description: 1.1小程序端banner显示
      * @author:
@@ -316,6 +344,7 @@ public class WechatScenarioUtil extends TestCaseCommon {
         json.put("feedback_message", feedback_message);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res);
+//        return invokeApi(url, JSONObject.parseObject(json.toJSONString()), false);
     }
 
     /**
