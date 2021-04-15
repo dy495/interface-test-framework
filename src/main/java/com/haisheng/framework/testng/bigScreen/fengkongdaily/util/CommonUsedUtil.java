@@ -241,7 +241,7 @@ public class CommonUsedUtil {
         //规则中的详情
         JSONObject object = new JSONObject();
         Map<String, String> parameters = new HashMap<>();
-        parameters.put("TIME_RANGE", upperLimit);
+        parameters.put("MEMBER_LIMIT", upperLimit);
         object.put("type", RuleEnum.CASHIER.getType());
         object.put("item", RuleTypeEnum.RISK_SINGLE_CAR_TRANSACTION_QUANTITY.getType());
         object.put("parameters", parameters);
@@ -780,6 +780,22 @@ public class CommonUsedUtil {
             }
         }
         return name;
+    }
+
+    /**
+     * 判断车架号是否17位
+     */
+    public String carVehicleNumberCheck(){
+        //随机生成17位车架号
+        String carVehicleNumber="AAAAAAAAAA"+CommonUtil.getRandom(7);
+        System.out.println("carVehicleNumber2222:"+carVehicleNumber);
+        if(carVehicleNumber.length()!=17){
+            carVehicleNumber="AAAAAAAAAA"+CommonUtil.getRandom(7);
+            System.out.println("carVehicleNumber111:"+carVehicleNumber);
+        }
+        String carNumber= carVehicleNumber.length()!=17?carVehicleNumberCheck():carVehicleNumber;
+        System.out.println("----carNumber-----"+carNumber);
+        return carNumber;
     }
 
 

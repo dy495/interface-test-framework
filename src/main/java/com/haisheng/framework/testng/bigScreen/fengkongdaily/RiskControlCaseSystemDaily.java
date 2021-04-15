@@ -391,7 +391,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             //支付ID
             String openId=pp.openId;
             //车架号
-            String carVehicleNumber="AAAAAAAAAA2223345";
+            String carVehicleNumber=cu.carVehicleNumberCheck();
 
             //生成交易订单
             String post=cu.getCreateOrder(shopId,transId,userId,openId,carVehicleNumber);
@@ -402,6 +402,22 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             appendFailReason(e.toString());
         } finally {
             saveData("生成交易订单--触发无人风控(保证摄像头面前没有人)");
+        }
+    }
+
+
+    @Test(enabled = true)
+    public void hhhhhhh(){
+        try{
+
+            //车架号
+            String carVehicleNumber=cu.carVehicleNumberCheck();
+            System.out.println("----carVehicleNumber--"+carVehicleNumber);
+
+        }catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("cececce");
         }
     }
 
@@ -426,7 +442,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             //支付ID
             String openId=pp.openId;
             //车架号
-            String carVehicleNumber="AAAAAAAAAA9998887";
+            String carVehicleNumber=cu.carVehicleNumberCheck();
 
             //生成交易订单
             String post=cu.getCreateOrder(shopId,transId1,userId,openId,carVehicleNumber);
@@ -461,9 +477,9 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             //支付ID
             String openId=pp.openId;
             //车架号1
-            String carVehicleNumber1="AAAAAAAAAA1234322";
+            String carVehicleNumber1="AAAAAAAAAA1214322";
             //车架号2
-            String carVehicleNumber2="AAAAAAAAAA1234323";
+            String carVehicleNumber2="AAAAAAAAAA1224323";
             //车架号3
             String carVehicleNumber3="AAAAAAAAAA1234324";
 
@@ -491,7 +507,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     public void getTriggerMorePersonRisk(){
         try{
             //创建一人多单风控规则(1个人最多2个车)
-//            Long ruleId=cu.getCashierMemberRuleAdd("2").getJSONObject("data").getLong("id");
+            Long ruleId=cu.getCashierMemberRuleAdd("2").getJSONObject("data").getLong("id");
             //指定门店
             //交易ID
             String transId=pp.transId;
@@ -504,7 +520,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             //支付ID
             String openId=pp.openId;
             //车架号
-            String carVehicleNumber="AAAAAAAAAA1234888";
+            String carVehicleNumber=cu.carVehicleNumberCheck();
 
             //生成交易订单
             String post1=cu.getCreateOrder(shopId,transId,userId1,openId,carVehicleNumber);
@@ -542,7 +558,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             //支付ID
             String openId=pp.openId;
             //车架号
-            String carVehicleNumber="AAAAAAAAAA1237878";
+            String carVehicleNumber=cu.carVehicleNumberCheck();
 
             //生成交易订单
             String post1=cu.getCreateOrder(shopId,transId,userId,openId,carVehicleNumber);

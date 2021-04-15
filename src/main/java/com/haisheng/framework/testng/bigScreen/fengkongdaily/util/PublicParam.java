@@ -71,4 +71,5 @@ public class PublicParam {
     public String name = "自动化账号" + CommonUtil.getRandom(4);
     //创建账号的名字
     public String phone = "133" + CommonUtil.getRandom(8);
+
 }
