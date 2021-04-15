@@ -30,7 +30,7 @@ import java.lang.reflect.Method;
  */
 public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce PRODUCE = EnumTestProduce.JC_DAILY;
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.ALL_AUTHORITY_DAILY;
+    private static final EnumAccount ALL_AUTHORITY = EnumAccount.ALL_AUTHORITY_DAILY_LXQ;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_LXQ_DAILY;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public UserUtil user = new UserUtil(visitor);
@@ -98,7 +98,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(code==1001,mess+", 状态码为:"+code+", 提示语为:"+message);
             }
             if (status.equals("true")){
-                Preconditions.checkArgument(code==100,mess+", 状态码为:"+code);
+                Preconditions.checkArgument(code==1000,mess+", 状态码为:"+code);
             }
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -172,8 +172,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取小程序消息列表数量
-            user.loginApplet(APPLET_USER_ONE);
-            int befApplet = AppletMessageListScene.builder().size(10).build().invoke(visitor).getInteger("total");
+            int befApplet = info.getAppletmessNum();
             //获取app跟进列表数量
             user.loginApp(ALL_AUTHORITY);
             int befApp = AppPageV3Scene.builder().size(10).build().invoke(visitor).getInteger("total");
@@ -190,7 +189,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             String shopId = submitobj.getString("shopId");
 
             //获取小程序消息列表数量
-            int afterApplet = AppletMessageListScene.builder().size(10).build().invoke(visitor).getInteger("total");
+            int afterApplet = info.getAppletmessNum();
             //获取app跟进列表数量
             user.loginApp(ALL_AUTHORITY);
             int afterApp = AppPageV3Scene.builder().size(10).build().invoke(visitor).getInteger("total");
@@ -509,12 +508,12 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //小程序消息列表数量
-            user.loginApplet(APPLET_USER_ONE);
-            int befApplet = AppletMessageListScene.builder().size(10).build().invoke(visitor).getInteger("total");
+            int befApplet = info.getAppletmessNum();
 
             //小程序在线专家咨询
             info.submitonlineExpert();
             //PC在线专家回复
+            user.loginPc(ALL_AUTHORITY);
             Long id1 = OnlineExpertsPageListScene.builder().page(1).size(5).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
             JSONObject obj1 = ReplyScene.builder().id(id1).content(content).build().invoke(visitor,false);
             int code1 = obj1.getInteger("code");
@@ -522,6 +521,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             //小程序专属销售服务咨询
             info.submitPreService();
             //PC回复
+            user.loginPc(ALL_AUTHORITY);
             Long id2 = DedicatedServicePageListScene.builder().page(1).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
             JSONObject obj2 = ReplyScene.builder().id(id2).content(content).build().invoke(visitor,false);
             int code2 = obj2.getInteger("code");
@@ -529,13 +529,13 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             //小程序专属售后服务咨询
             info.submitAfterService();
             //PC回复
+            user.loginPc(ALL_AUTHORITY);
             Long id3 = DedicatedServicePageListScene.builder().page(1).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
             JSONObject obj3 = ReplyScene.builder().id(id3).content(content).build().invoke(visitor,false);
             int code3 = obj3.getInteger("code");
 
             //小程序消息列表数量
-            user.loginApplet(APPLET_USER_ONE);
-            int afterApplet = AppletMessageListScene.builder().size(10).build().invoke(visitor).getInteger("total");
+            int afterApplet = info.getAppletmessNum();
             int sum = afterApplet - befApplet;
 
             if (mess.contains("正常")){
@@ -566,12 +566,12 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //小程序消息列表数量
-            user.loginApplet(APPLET_USER_ONE);
-            int befApplet = AppletMessageListScene.builder().size(10).build().invoke(visitor).getInteger("total");
+            int befApplet = info.getAppletmessNum();
 
             //小程序在线专家咨询
             info.submitonlineExpert();
             //PC在线专家备注
+            user.loginPc(ALL_AUTHORITY);
             Long id1 = OnlineExpertsPageListScene.builder().page(1).size(5).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
             JSONObject obj1 = RemarkScene.builder().id(id1).remarkContent(content).build().invoke(visitor,false);
             int code1 = obj1.getInteger("code");
@@ -579,6 +579,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             //小程序专属销售服务咨询
             info.submitPreService();
             //PC备注
+            user.loginPc(ALL_AUTHORITY);
             Long id2 = DedicatedServicePageListScene.builder().page(1).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
             JSONObject obj2 = RemarkScene.builder().id(id2).remarkContent(content).build().invoke(visitor,false);
             int code2 = obj2.getInteger("code");
@@ -586,13 +587,13 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             //小程序专属售后服务咨询
             info.submitAfterService();
             //PC备注
+            user.loginPc(ALL_AUTHORITY);
             Long id3 = DedicatedServicePageListScene.builder().page(1).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
             JSONObject obj3 = RemarkScene.builder().id(id3).remarkContent(content).build().invoke(visitor,false);
             int code3 = obj3.getInteger("code");
 
             //小程序消息列表数量
-            user.loginApplet(APPLET_USER_ONE);
-            int afterApplet = AppletMessageListScene.builder().size(10).build().invoke(visitor).getInteger("total");
+            int afterApplet = info.getAppletmessNum();
             int sum = afterApplet - befApplet;
 
             if (mess.contains("正常")){
@@ -674,7 +675,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(code==1001,mess+", 状态码为:"+code+", 提示语为:"+message);
             }
             if (status.equals("true")){
-                Preconditions.checkArgument(code==100,mess+", 状态码为:"+code);
+                Preconditions.checkArgument(code==1000,mess+", 状态码为:"+code);
             }
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -748,8 +749,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取小程序消息列表数量
-            user.loginApplet(APPLET_USER_ONE);
-            int befApplet = AppletMessageListScene.builder().size(10).build().invoke(visitor).getInteger("total");
+            int befApplet = info.getAppletmessNum();
             //获取app跟进列表数量
             user.loginApp(ALL_AUTHORITY);
             int befApp = AppPageV3Scene.builder().size(10).build().invoke(visitor).getInteger("total");
@@ -766,7 +766,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             String shopId = submitobj.getString("shopId");
 
             //获取小程序消息列表数量
-            int afterApplet = AppletMessageListScene.builder().size(10).build().invoke(visitor).getInteger("total");
+            int afterApplet = info.getAppletmessNum();
             //获取app跟进列表数量
             user.loginApp(ALL_AUTHORITY);
             int afterApp = AppPageV3Scene.builder().size(10).build().invoke(visitor).getInteger("total");
@@ -930,12 +930,12 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         return new String[][]{ // 姓名 手机号 咨询内容(10-200)  提示语 正常/异常
 
                 {"吕","1382172"+Integer.toString((int)((Math.random()*9+1)*1000)),"这是10geZI！@","姓名1个字&咨询内容10个字(期待成功)","true"},
-//                {info.stringfifty,"1381172"+Integer.toString((int)((Math.random()*9+1)*1000)),info.string200,"姓名50个字&咨询内容200个字(期待成功)","true"},
-//                {info.stringsix,"1381172"+Integer.toString((int)((Math.random()*9+1)*100)),info.stringfifty,"手机号10位(期待失败)","false"},
-//                {info.stringsix,"1381172"+Integer.toString((int)((Math.random()*9+1)*10000)),info.stringfifty,"手机号12位(期待失败)","false"},
-//                {info.stringfifty+"1","1381172"+Integer.toString((int)((Math.random()*9+1)*1000)),info.stringfifty,"姓名51位(期待失败)","false"},
-//                {info.stringsix,"1381172"+Integer.toString((int)((Math.random()*9+1)*1000)),"这是9geZI！@","咨询内容9个字(期待失败)","false"},
-//                {info.stringsix,"1381172"+Integer.toString((int)((Math.random()*9+1)*1000)),info.string200+"1","咨询内容201个字(期待失败)","false"},
+                {info.stringfifty,"1381172"+Integer.toString((int)((Math.random()*9+1)*1000)),info.string200,"姓名50个字&咨询内容200个字(期待成功)","true"},
+                {info.stringsix,"1381172"+Integer.toString((int)((Math.random()*9+1)*100)),info.stringfifty,"手机号10位(期待失败)","false"},
+                {info.stringsix,"1381172"+Integer.toString((int)((Math.random()*9+1)*10000)),info.stringfifty,"手机号12位(期待失败)","false"},
+                {info.stringfifty+"1","1381172"+Integer.toString((int)((Math.random()*9+1)*1000)),info.stringfifty,"姓名51位(期待失败)","false"},
+                {info.stringsix,"1381172"+Integer.toString((int)((Math.random()*9+1)*1000)),"这是9geZI！@","咨询内容9个字(期待失败)","false"},
+                {info.stringsix,"1381172"+Integer.toString((int)((Math.random()*9+1)*1000)),info.string200+"1","咨询内容201个字(期待失败)","false"},
 
         };
     }

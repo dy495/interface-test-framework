@@ -467,7 +467,7 @@ public class jiaoChenInfo {
         String customerName="奶糖";
         String customerPhone="13811110000";
         String content="12345678901234567890";
-        AppletConsultOnlineExpertsSubmitScene.builder().customerPhone(customerPhone).content(content)
+        AppletConsultOnlineExpertsSubmitScene.builder().customerName(customerName).customerPhone(customerPhone).content(content)
                 .brandId(brandId).modelId(modelId).shopId(shopId).build().invoke(visitor);
         JSONObject obj1 = new JSONObject();
         obj1.put("customerName",customerName);
@@ -485,6 +485,13 @@ public class jiaoChenInfo {
             a = a + "q" ;
         }
         return a;
+    }
+
+    //获取小程序消息列表数量
+    public int getAppletmessNum(){
+        user.loginApplet(APPLET_USER_ONE);
+        int num = AppletMessageListScene.builder().size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getInteger("id");
+        return num;
     }
 
 
