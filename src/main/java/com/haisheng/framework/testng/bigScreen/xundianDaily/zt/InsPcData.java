@@ -199,7 +199,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             String base64 = info.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
             int pctotal = md.member_level_page(null,1,100).getInteger("total");
-            md.member_level_add0("等级", path, 10, "嗷嗷", "aa", 10, 10, 10, false);
+            md.member_level_add0("等级", path, 10, "嗷嗷", "aa", 9, 10, 10, false);
 
             int pctotaladd = md.member_level_page(null,1,100).getInteger("total");
             int pcadd = pctotaladd-pctotal;

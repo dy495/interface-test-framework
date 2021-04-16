@@ -605,7 +605,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
             String base64 = info.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
-            int code = md.member_level_add0("等级", path, 10, "嗷嗷", "aa", 10, 10, 10, false).getInteger("code");
+            int code = md.member_level_add0("等级", path, 10, "嗷嗷", "aa", 9, 10, 10, false).getInteger("code");
             Preconditions.checkArgument(code == 1000, "状态码期待1000，实际" + code);
             Integer total = md.member_level_page(null, 1, 10).getInteger("total");
             JSONArray list = md.member_level_page(null, 1, 10).getJSONArray("list");
@@ -633,7 +633,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
             String base64 = info.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
-            md.member_level_add0(level_name, path, 10, "嗷嗷", "aa", 4, 10, 10, true);
+            md.member_level_add0(level_name, path, 10, "嗷嗷", "aa", 5, 10, 10, false);
 
             Integer total = md.member_level_page(null, 1, 10).getInteger("total");
             JSONArray list = md.member_level_page(null, 1, 10).getJSONArray("list");
@@ -641,7 +641,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             //获取刚创建等级的id
             int id = list.getJSONObject(a).getInteger("id");
             String levelname = "等级111";
-            int code = md.member_level_update(id, levelname, path, "aa", "嗷嗷", 10, 1, 10, 10, true).getInteger("code");
+            md.member_level_update(id, levelname, path, "aa", "嗷嗷", 10, 5, 10, 10, false);
             JSONArray arr = md.member_level_page(null, 1, 10).getJSONArray("list");
             for (int i = 0; i < arr.size(); i++) {
                 JSONObject obj = arr.getJSONObject(i);
@@ -771,7 +771,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             if (memList != null)
                 for (int i = 0; i < memList.size(); i++) {
                     String feedback_type = memList.getJSONObject(i).getString("feedback_type");
-                    Preconditions.checkArgument(feedback_type.equals(name), "通过" + name + "搜索反馈类型展示结果为" + feedback_type);
+                    Preconditions.checkArgument(feedback_type.contains(name), "通过" + name + "搜索反馈类型展示结果为" + feedback_type);
                 }
         } catch (AssertionError e) {
             appendFailReason(e.toString());
