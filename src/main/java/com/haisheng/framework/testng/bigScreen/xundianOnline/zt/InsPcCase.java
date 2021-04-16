@@ -1,58 +1,43 @@
-package com.haisheng.framework.testng.bigScreen.xundianDaily.zt;
+package com.haisheng.framework.testng.bigScreen.xundianOnline.zt;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.operation.ArticlePageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityStatusEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.om.ArticleStatusEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.ActivityManageListScene;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.MendianInfo;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.StoreScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.WechatScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.XundianScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.applet.AppletBannerScene;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.banner.EditScene;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.file.FileUpload;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.operation.ArticleList;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.operation.ArticlePageScene;
+//import com.haisheng.framework.testng.bigScreen.xundianDaily.MendianInfo;
+import com.haisheng.framework.testng.bigScreen.xundianOnline.MendianInfoOnline;
+import com.haisheng.framework.testng.bigScreen.xundianOnline.StoreScenarioUtilOnline;
+import com.haisheng.framework.testng.bigScreen.xundianOnline.XundianScenarioUtilOnline;
+
+import com.haisheng.framework.testng.bigScreen.xundianOnline.WechatScenarioUtilOnline;
+
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import com.haisheng.framework.util.CommonUtil;
-import com.haisheng.framework.util.ImageUtil;
-import com.jayway.jsonpath.JsonPath;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.io.File;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class InsPcCase extends TestCaseCommon implements TestCaseStd {
     //    public static final Logger log = LoggerFactory.getLogger(StorePcAndAppData.class);
     public static final int page = 1;
     public static final int size = 100;
-    private static final EnumTestProduce PRODUCE = EnumTestProduce.INS_DAILY;
+    private static final EnumTestProduce PRODUCE = EnumTestProduce.INS_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
-    XundianScenarioUtil xd = XundianScenarioUtil.getInstance();
-    StoreScenarioUtil md = StoreScenarioUtil.getInstance();
-    WechatScenarioUtil wx = WechatScenarioUtil.getInstance();
-    MendianInfo info = new MendianInfo();
+    XundianScenarioUtilOnline xd = XundianScenarioUtilOnline.getInstance();
+    StoreScenarioUtilOnline md = StoreScenarioUtilOnline.getInstance();
+    WechatScenarioUtilOnline wx = WechatScenarioUtilOnline.getInstance();
+    MendianInfoOnline info = new MendianInfoOnline();
     SupporterUtil util = new SupporterUtil(visitor);
 //    InsInfo info = new  InsInfo();
 //    InsDesc info= new EnumDesc();
@@ -66,11 +51,12 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_MENDIAN_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "周涛";
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.XUNDIAN_DAILY_TEST.getJobName());
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.XUNDIAN_ONLINE_TEST.getJobName());
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.INS_DAILY.getDesc());
-        commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.pushRd = new String[]{"15898182672", "18513118484", "18810332354", "15084928847"};
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce. INS_ONLINE.getDesc());
+        commonConfig.dingHook = DingWebhook.ONLINE_STORE_MANAGEMENT_PLATFORM_GRP;
+        commonConfig.pushRd = new String[]{"13604609869", "15084928847"};
+//        commonConfig.shopId = EnumTestProduce. INS_DAILY.getShopId();
         commonConfig.referer = PRODUCE.getReferer();
         beforeClassInit(commonConfig);
         logger.debug("xundian " + xd);
@@ -429,12 +415,6 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 //            //门店名称大于10
             int code0 = md.createShop0(path, EnumDesc.DESC_BETWEEN_15_20.getDesc(), label, openingTime, closingTime, managerName, phone, city, address, longitude, latitude, tripartite_shop_id, recommended).getInteger("code");
             Preconditions.checkArgument(code0 == 1001, "状态码期待1001，实际" + code0);
-            //不传门店名称
-            int code00 = md.createShop0(path, "", label, openingTime, closingTime, managerName, phone, city, address, longitude, latitude, tripartite_shop_id, recommended).getInteger("code");
-            Preconditions.checkArgument(code00 == 1001, "状态码期待1001，实际" + code00);
-            //不传门店名称
-            int code01 = md.createShop0(path, null, label, openingTime, closingTime, managerName, phone, city, address, longitude, latitude, tripartite_shop_id, recommended).getInteger("code");
-            Preconditions.checkArgument(code01 == 1001, "状态码期待1001，实际" + code01);
 //            //门店标签大于5个字
             int code1 = md.createShop0(path, shopName, "123455555555", openingTime, closingTime, managerName, phone, city, address, longitude, latitude, tripartite_shop_id, recommended).getInteger("code");
             Preconditions.checkArgument(code1 == 1001, "状态码期待1001，实际" + code1);
@@ -450,6 +430,12 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 //            //经纬度是3位小数
 //            int code5 = md.createShop0(path, shopName, label, openingTime, closingTime, managerName, phone, city, address, 17.222, 23.999, tripartite_shop_id, recommended).getInteger("code");
 //            Preconditions.checkArgument(code5 == 1001, "状态码期待1001，实际" + code5);
+            //不传门店名称
+            int code00 = md.createShop0(path, "", label, openingTime, closingTime, managerName, phone, city, address, longitude, latitude, tripartite_shop_id, recommended).getInteger("code");
+            Preconditions.checkArgument(code00 == 1001, "状态码期待1001，实际" + code00);
+            //不传门店名称
+            int code01 = md.createShop0(path, null, label, openingTime, closingTime, managerName, phone, city, address, longitude, latitude, tripartite_shop_id, recommended).getInteger("code");
+            Preconditions.checkArgument(code01 == 1001, "状态码期待1001，实际" + code01);
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -711,6 +697,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+
     //用户反馈通过反馈类型搜索
     @Test()
     public void feedbackSearch1() throws Exception {
@@ -803,29 +790,6 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             saveData("新建反馈类型、删除反馈类型");
         }
     }
-
-//    //新建反馈类型异常项
-//    @Test()
-//    public void addfeedbackerror() throws Exception {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            //反馈类型大于20个字符
-//            int code = md.feedback_add0(EnumDesc.DESC_BETWEEN_20_30.getDesc(), EnumDesc.DESC_BETWEEN_5_10.getDesc()).getInteger("code");
-//            Preconditions.checkArgument(code == 1001, "状态码期待1001，实际" + code);
-//            //反馈描述大于50个字符
-//            int code1 = md.feedback_add0(EnumDesc.DESC_BETWEEN_10_15.getDesc(), EnumDesc.DESC_BETWEEN_200_300.getDesc()).getInteger("code");
-//            Preconditions.checkArgument(code1 == 1009, "状态码期待1001，实际" + code1);
-//            //反馈类型大于20个字符
-//            int code2 = md.feedback_add0(null, EnumDesc.DESC_BETWEEN_5_10.getDesc()).getInteger("code");
-//            Preconditions.checkArgument(code2 == 1009, "状态码期待1001，实际" + code2);
-//        } catch (AssertionError e) {
-//            appendFailReason(e.toString());
-//        } catch (Exception e) {
-//            appendFailReason(e.toString());
-//        } finally {
-//            saveData("新建反馈类型异常项");
-//        }
-//    }
 
     //编辑反馈类型
     @Test()
@@ -1206,10 +1170,6 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(res2.getString("message").equals("口味名称不能超过10个字"),"期待口味名称不能超过10个字，实际"+res2.getString("message"));
             JSONObject res3 = md.taste_add(path,path,path,EnumDesc.DESC_BETWEEN_5_10.getDesc(),EnumDesc.DESC_BETWEEN_400_500.getDesc(),1,true);
             Preconditions.checkArgument(res3.getString("message").equals("口味描述不能超过200个字"),"期待口味描述不能超过200个字，实际"+res3.getString("message"));
-//            JSONObject res4 = md.taste_add(path,path,path,null,"1",1,true);
-//            Preconditions.checkArgument(res4.getString("message").equals("口味名称不能为空"),"期待口味名称不能为空，实际"+res4.getString("message"));
-//            JSONObject res5 = md.taste_add(path,path,path,EnumDesc.DESC_BETWEEN_5_10.getDesc(),null,1,true);
-//            Preconditions.checkArgument(res5.getString("message").equals("口味描述不能为空"),"期待口味描述不能为空，实际"+res5.getString("message"));
 //            JSONObject res4 = md.taste_add(path,path,path,EnumDesc.DESC_BETWEEN_5_10.getDesc(),EnumDesc.DESC_BETWEEN_15_20.getDesc(),null,null);
 //            Preconditions.checkArgument(res4.getString("message").equals("口味描述不能超过200个字"),"期待口味描述不能超过200个字，实际"+res4.getString("message"));
         } catch (AssertionError | Exception e) {

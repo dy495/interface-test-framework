@@ -1,49 +1,40 @@
-package com.haisheng.framework.testng.bigScreen.xundianDaily.zt;
+package com.haisheng.framework.testng.bigScreen.xundianOnline.zt;
 
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.MendianInfo;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.StoreScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.WechatScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.XundianScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.StorePcAndAppData;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.fucPackage.StoreFuncPackage;
+import com.haisheng.framework.testng.bigScreen.xundianOnline.MendianInfoOnline;
+import com.haisheng.framework.testng.bigScreen.xundianOnline.StoreScenarioUtilOnline;
+import com.haisheng.framework.testng.bigScreen.xundianOnline.XundianScenarioUtilOnline;
+
+import com.haisheng.framework.testng.bigScreen.xundianOnline.WechatScenarioUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.CommonUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
-import java.awt.*;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import static com.google.common.base.Preconditions.checkArgument;
 
 public class InsPcData extends TestCaseCommon implements TestCaseStd {
 //    public static final Logger log = LoggerFactory.getLogger(StorePcAndAppData.class);
     public static final int page = 1;
     public static final int size = 100;
-    private static final EnumTestProduce PRODUCE = EnumTestProduce.INS_DAILY;
+    private static final EnumTestProduce PRODUCE = EnumTestProduce.INS_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
-    XundianScenarioUtil xd = XundianScenarioUtil.getInstance();
-    StoreScenarioUtil md = StoreScenarioUtil.getInstance();
-    WechatScenarioUtil wx = WechatScenarioUtil.getInstance();
-    MendianInfo info = new MendianInfo();
+    XundianScenarioUtilOnline xd = XundianScenarioUtilOnline.getInstance();
+    StoreScenarioUtilOnline md = StoreScenarioUtilOnline.getInstance();
+    WechatScenarioUtilOnline wx = WechatScenarioUtilOnline.getInstance();
+    MendianInfoOnline info = new MendianInfoOnline();
 
 
     @BeforeClass
@@ -55,11 +46,11 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_MENDIAN_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "周涛";
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.XUNDIAN_DAILY_TEST.getJobName());
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.XUNDIAN_ONLINE_TEST.getJobName());
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.INS_DAILY.getDesc());
-        commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.pushRd = new String[]{"15898182672", "18513118484", "18810332354", "15084928847"};
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce. INS_ONLINE.getDesc());
+        commonConfig.dingHook = DingWebhook.ONLINE_STORE_MANAGEMENT_PLATFORM_GRP;
+        commonConfig.pushRd = new String[]{"13604609869", "15084928847"};
 //        commonConfig.shopId = EnumTestProduce. INS_DAILY.getShopId();
         commonConfig.referer = PRODUCE.getReferer();
         beforeClassInit(commonConfig);

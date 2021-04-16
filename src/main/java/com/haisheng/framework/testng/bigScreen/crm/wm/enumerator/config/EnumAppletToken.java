@@ -41,7 +41,7 @@ public enum EnumAppletToken {
 
     INS_WM_ONLINE(EnumTestProduce.INS_ONLINE.getAbbreviation(), "", false, "15321527989"),
 
-    INS_ZT_DAILY(EnumTestProduce.INS_DAILY.getAbbreviation(), "DR5xZkyFawbAh4RSNPsWrg==", true, "13604609869"),
+    INS_ZT_DAILY(EnumTestProduce.INS_DAILY.getAbbreviation(), "BNJzfPd+DS1pmUSQlBR6tQ==", true, "13604609869"),
 
     INS_ZT_ONLINE(EnumTestProduce.INS_ONLINE.getAbbreviation(), "", false, "13604609869"),
     ;

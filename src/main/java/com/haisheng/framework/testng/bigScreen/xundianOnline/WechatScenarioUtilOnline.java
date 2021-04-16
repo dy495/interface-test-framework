@@ -1,39 +1,34 @@
-package com.haisheng.framework.testng.bigScreen.xundianDaily;
+package com.haisheng.framework.testng.bigScreen.xundianOnline;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.arronlong.httpclientutil.HttpClientUtil;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.fucPackage.StoreFuncPackage;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import org.springframework.util.StringUtils;
-import org.testng.annotations.DataProvider;
 
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.util.List;
 import java.util.Map;
 
-public class WechatScenarioUtil extends TestCaseCommon {
+public class WechatScenarioUtilOnline extends TestCaseCommon {
 
     /**
      * 单利，确保多个类共用一份类
      * 此部分不变，后面的方法自行更改
      */
 
-    private static volatile WechatScenarioUtil instance = null;
+    private static volatile WechatScenarioUtilOnline instance = null;
 
-    private WechatScenarioUtil() {
+    private WechatScenarioUtilOnline() {
     }
 
-    public static WechatScenarioUtil getInstance() {
+    public static WechatScenarioUtilOnline getInstance() {
 
         if (null == instance) {
             synchronized (StoreFuncPackage.class) {
                 if (null == instance) {
                     //这里
-                    instance = new WechatScenarioUtil();
+                    instance = new WechatScenarioUtilOnline();
                 }
             }
         }
