@@ -12,9 +12,11 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.model.Ap
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.followup.AppPageV3Scene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.appointmentmanage.RecordExportScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.consultmanagement.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanage.PreSaleCustomerStyleListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.loginuser.ShopListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.manage.EvaluateExportScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.record.ExportPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shop.AddScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -339,9 +341,6 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
                 }
             }
 
-            // todo 根据跟进时间搜索
-            // todo 根据咨询时间搜索
-
         }catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -402,6 +401,75 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             saveData("PC在线专家咨询列表单项搜索");
         }
     }
+
+    @Test
+    public void onlineExpertPCsearch3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            user.loginPc(ALL_AUTHORITY);
+            // 根据跟进时间搜索
+            String followdate = "";
+            JSONArray alllist = OnlineExpertsPageListScene.builder().page(1).size(50).build().invoke(visitor).getJSONArray("list");
+            if (alllist.size()>0){
+                for (int i = 0 ; i < alllist.size();i++){
+                    JSONObject obj = alllist.getJSONObject(i);
+                    if (obj.containsKey("follow_date")){
+                        followdate = obj.getString("follow_date").substring(0,10);
+                        break;
+                    }
+                }
+                JSONArray searchlist1 = OnlineExpertsPageListScene.builder().page(1).size(50).followDateStart(followdate).followDateEnd(followdate).build().invoke(visitor).getJSONArray("list");
+                Preconditions.checkArgument(searchlist1.size()>=1,"搜索跟进时间为"+followdate+", 结果不正确");
+                for (int j = 0 ; j < searchlist1.size(); j++){
+                    JSONObject obj1 = searchlist1.getJSONObject(j);
+                    Preconditions.checkArgument(obj1.getString("follow_date").substring(0,10).equals(followdate),"搜索"+followdate+" , 结果包含"+obj1.getString("follow_date").substring(0,9));
+                }
+            }
+
+        }catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC在线专家咨询列表单项搜索");
+        }
+    }
+
+    @Test
+    public void onlineExpertPCsearch4() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            user.loginPc(ALL_AUTHORITY);
+            // 根据咨询时间搜索
+            String consult_date = "";
+            JSONArray alllist = OnlineExpertsPageListScene.builder().page(1).size(50).build().invoke(visitor).getJSONArray("list");
+
+            if (alllist.size()>0){
+                for (int i = 0 ; i < alllist.size();i++){
+                    JSONObject obj = alllist.getJSONObject(i);
+                    if (obj.containsKey("consult_date")){
+                        consult_date = obj.getString("consult_date").substring(0,10);
+                        break;
+                    }
+                }
+                JSONArray searchlist1 = OnlineExpertsPageListScene.builder().page(1).size(50).consultDateStart(consult_date).consultDateEnd(consult_date).build().invoke(visitor).getJSONArray("list");
+                Preconditions.checkArgument(searchlist1.size()>=1,"搜索咨询时间为"+consult_date+", 结果不正确");
+                for (int j = 0 ; j < searchlist1.size(); j++){
+                    JSONObject obj1 = searchlist1.getJSONObject(j);
+                    Preconditions.checkArgument(obj1.getString("consult_date").substring(0,10).equals(consult_date),"搜索"+consult_date+" , 结果包含"+obj1.getString("consult_date").substring(0,9));
+                }
+            }
+
+
+        }catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC在线专家咨询列表单项搜索");
+        }
+    }
+
 
     @Test(dataProvider = "ONLINEEXPERTEXPLAIN")
     public void onlineExpertPCExplain1(String content,String mess) {
@@ -898,7 +966,68 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //todo 提交的结果验证
+    @Test
+    public void afterServiceSubmit3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //获取小程序消息列表数量
+            int befApplet = info.getAppletmessNum();
+            //获取app跟进列表数量
+            user.loginApp(ALL_AUTHORITY);
+            int befApp = AppPageV3Scene.builder().size(10).build().invoke(visitor).getInteger("total");
+            //PC【专属服务列表】
+            user.loginPc(ALL_AUTHORITY);
+            int befPC = DedicatedServicePageListScene.builder().page(1).size(10).build().invoke(visitor).getInteger("total");
+
+            //小程序提交销售咨询
+            JSONObject submitobj = info.submitAfterService();
+            String name = submitobj.getString("customerName");
+            String phone = submitobj.getString("customerPhone");
+            String brandId = submitobj.getString("brandId");
+            String modelId = submitobj.getString("modelId");
+            String shopId = submitobj.getString("shopId");
+
+
+            Thread.sleep(1000);
+            //获取app跟进列表数量
+            user.loginApp(ALL_AUTHORITY);
+            int afterApp = AppPageV3Scene.builder().size(10).build().invoke(visitor).getInteger("total");
+            //获取小程序消息列表数量
+            int afterApplet = info.getAppletmessNum();
+            //PC【专属服务列表】
+            user.loginPc(ALL_AUTHORITY);
+
+            JSONObject obj = DedicatedServicePageListScene.builder().page(1).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0);
+            int afterPC = DedicatedServicePageListScene.builder().page(1).size(10).build().invoke(visitor).getInteger("total");
+
+            int applet = afterApplet - befApplet;
+            int app = afterApp - befApp;
+            int pc = afterPC - befPC;
+            Preconditions.checkArgument(applet==1,"小程序消息列表未+1");
+            Preconditions.checkArgument(app==1,"app跟进列表未+1");
+            Preconditions.checkArgument(pc==1,"PC【专属服务】列表未+1");
+            if(pc==1){
+                String customer_name = obj.getString("customer_name");
+                String customer_phone = obj.getString("customer_phone");
+                String shop_name = obj.getString("shop_name");
+                String brand_name = obj.getString("brand_name");
+                String model_name = obj.getString("model_name");
+                Preconditions.checkArgument(customer_name.equals(name),"提交时姓名"+name+", PC展示"+customer_name);
+                Preconditions.checkArgument(customer_phone.equals(phone),"提交时手机号"+phone+", PC展示"+customer_phone);
+                Preconditions.checkArgument(shop_name.equals(shopId),"提交时选择的门店"+shopId+", PC展示"+shop_name);
+                Preconditions.checkArgument(brand_name.equals(brandId),"提交时选择的品牌"+brandId+", PC展示"+brand_name);
+                Preconditions.checkArgument(model_name.equals(modelId),"提交时选择的品牌"+modelId+", PC展示"+model_name);
+
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("小程序提交专属售后咨询，结果校验：app产生跟进&小程序收到自动回复消息&PC【专属销售】列表展示");
+        }
+    }
 
     @Test(dataProvider = "ONLINEEXPERTEXPLAIN")
     public void dedicatedServicePCExplain1(String content,String mess) {
@@ -951,8 +1080,181 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
     }
 
 
+    @Test
+    public void dedicatedServicePCsearch1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            user.loginPc(ALL_AUTHORITY);
+            //根据归属门店搜索
+            JSONObject shopobj = ShopListScene.builder().build().invoke(visitor).getJSONArray("list").getJSONObject(0);
+            Long shopId = shopobj.getLong("shop_id");
+            String shopName = shopobj.getString("shop_name");
+            JSONArray alllist = DedicatedServicePageListScene.builder().page(1).size(20).shopId(shopId).build().invoke(visitor).getJSONArray("list");
+            if (alllist.size()>0){
+                for (int i = 0 ; i < alllist.size();i++){
+                    JSONObject obj = alllist.getJSONObject(i);
+                    Preconditions.checkArgument(obj.getString("shop_name").equals(shopName),"搜索归属门店="+shopName+"，结果中包含"+obj.getString("shop_name"));
+                }
+            }
+
+            //根据车系搜索
+            JSONObject styleobj = PreSaleCustomerStyleListScene.builder().shopId(-1L).build().invoke(visitor).getJSONArray("list").getJSONObject(0);
+            Long styleId = styleobj.getLong("style_id");
+            String styleName = styleobj.getString("style_name");
+            JSONArray alllist3 = DedicatedServicePageListScene.builder().page(1).size(20).carStyleId(styleId).build().invoke(visitor).getJSONArray("list");
+            if (alllist3.size()>0){
+                for (int i = 0 ; i < alllist3.size();i++){
+                    JSONObject obj = alllist3.getJSONObject(i);
+                    Preconditions.checkArgument(obj.getString("style_name").equals(styleName),"搜索车系="+styleName+"，结果中包含"+obj.getString("style_name"));
+                }
+            }
+
+            //根据是否超时=是搜索
+            JSONArray alllist2 = DedicatedServicePageListScene.builder().page(1).size(20).isOverTime(true).build().invoke(visitor).getJSONArray("list");
+            if (alllist2.size()>0){
+                for (int i = 0 ; i < alllist2.size();i++){
+                    JSONObject obj = alllist2.getJSONObject(i);
+                    Preconditions.checkArgument(obj.getString("is_over_time").equals("是"),"搜索是否超时=是，结果中包含"+obj.getString("is_over_time"));
+                }
+            }
+
+            //根据是否超时=否搜索
+            JSONArray alllist4 = DedicatedServicePageListScene.builder().page(1).size(20).isOverTime(false).build().invoke(visitor).getJSONArray("list");
+            if (alllist4.size()>0){
+                for (int i = 0 ; i < alllist4.size();i++){
+                    JSONObject obj = alllist4.getJSONObject(i);
+                    Preconditions.checkArgument(obj.getString("is_over_time").equals("否"),"搜索是否超时=否，结果中包含"+obj.getString("is_over_time"));
+                }
+            }
+
+        }catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC专属服务列表单项搜索");
+        }
+    }
+
+    @Test(dataProvider = "ONLINEEXPERTSEARCH")
+    public void dedicatedServicePCsearch2(String conditions) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            user.loginPc(ALL_AUTHORITY);
+
+            //根据跟进账号搜索
+            JSONArray alllist = DedicatedServicePageListScene.builder().page(1).size(20).followLoginName(conditions).build().invoke(visitor).getJSONArray("list");
+            if (alllist.size()>0){
+                for (int i = 0 ; i < alllist.size();i++){
+                    JSONObject obj = alllist.getJSONObject(i);
+                    Preconditions.checkArgument(obj.getString("follow_login_name").contains(conditions),"搜索跟进账号="+conditions+"，结果中包含"+obj.getString("follow_login_name"));
+                }
+            }
+
+            //根据跟进人员搜索
+            JSONArray alllist2 = DedicatedServicePageListScene.builder().page(1).size(20).followSalesName(conditions).build().invoke(visitor).getJSONArray("list");
+            if (alllist2.size()>0){
+                for (int i = 0 ; i < alllist2.size();i++){
+                    JSONObject obj = alllist2.getJSONObject(i);
+                    Preconditions.checkArgument(obj.getString("follow_sales_name").contains(conditions),"搜索跟进人员="+conditions+"，结果中包含"+obj.getString("follow_sales_name"));
+                }
+            }
+
+            //根据联系人搜索
+            JSONArray alllist3 = DedicatedServicePageListScene.builder().page(1).size(20).customerName(conditions).build().invoke(visitor).getJSONArray("list");
+            if (alllist3.size()>0){
+                for (int i = 0 ; i < alllist3.size();i++){
+                    JSONObject obj = alllist3.getJSONObject(i);
+                    Preconditions.checkArgument(obj.getString("customer_name").contains(conditions),"搜索联系人="+conditions+"，结果中包含"+obj.getString("customer_name"));
+                }
+            }
+
+            //根据联系电话搜索
+            JSONArray alllist4 = DedicatedServicePageListScene.builder().page(1).size(20).customerPhone(conditions).build().invoke(visitor).getJSONArray("list");
+            if (alllist4.size()>0){
+                for (int i = 0 ; i < alllist4.size();i++){
+                    JSONObject obj = alllist4.getJSONObject(i);
+                    Preconditions.checkArgument(obj.getString("customer_phone").contains(conditions),"搜索联系电话="+conditions+"，结果中包含"+obj.getString("customer_phone"));
+                }
+            }
 
 
+        }catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC专属服务列表单项搜索");
+        }
+    }
+
+    @Test
+    public void dedicatedServicePCsearch3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            user.loginPc(ALL_AUTHORITY);
+            // 根据跟进时间搜索
+            String followdate = "";
+            JSONArray alllist = DedicatedServicePageListScene.builder().page(1).size(50).build().invoke(visitor).getJSONArray("list");
+            if (alllist.size()>0){
+                for (int i = 0 ; i < alllist.size();i++){
+                    JSONObject obj = alllist.getJSONObject(i);
+                    if (obj.containsKey("follow_date")){
+                        followdate = obj.getString("follow_date").substring(0,10);
+                        break;
+                    }
+                }
+                JSONArray searchlist1 = DedicatedServicePageListScene.builder().page(1).size(50).followDateStart(followdate).followDateEnd(followdate).build().invoke(visitor).getJSONArray("list");
+                Preconditions.checkArgument(searchlist1.size()>=1,"搜索跟进时间为"+followdate+", 结果不正确");
+                for (int j = 0 ; j < searchlist1.size(); j++){
+                    JSONObject obj1 = searchlist1.getJSONObject(j);
+                    Preconditions.checkArgument(obj1.getString("follow_date").substring(0,10).equals(followdate),"搜索"+followdate+" , 结果包含"+obj1.getString("follow_date").substring(0,9));
+                }
+            }
+
+        }catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC专属服务列表单项搜索");
+        }
+    }
+
+    @Test
+    public void dedicatedServicePCsearch4() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            user.loginPc(ALL_AUTHORITY);
+            // 根据咨询时间搜索
+            String consult_date = "";
+            JSONArray alllist = DedicatedServicePageListScene.builder().page(1).size(50).build().invoke(visitor).getJSONArray("list");
+
+            if (alllist.size()>0){
+                for (int i = 0 ; i < alllist.size();i++){
+                    JSONObject obj = alllist.getJSONObject(i);
+                    if (obj.containsKey("consult_date")){
+                        consult_date = obj.getString("consult_date").substring(0,10);
+                        break;
+                    }
+                }
+                JSONArray searchlist1 = DedicatedServicePageListScene.builder().page(1).size(50).consultDateStart(consult_date).consultDateEnd(consult_date).build().invoke(visitor).getJSONArray("list");
+                Preconditions.checkArgument(searchlist1.size()>=1,"搜索咨询时间为"+consult_date+", 结果不正确");
+                for (int j = 0 ; j < searchlist1.size(); j++){
+                    JSONObject obj1 = searchlist1.getJSONObject(j);
+                    Preconditions.checkArgument(obj1.getString("consult_date").substring(0,10).equals(consult_date),"搜索"+consult_date+" , 结果包含"+obj1.getString("consult_date").substring(0,9));
+                }
+            }
+
+
+        }catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC专属服务列表单项搜索");
+        }
+    }
 
 
     /* -----------------------------------V3.1导出---------------------------------------------------*/
@@ -962,6 +1264,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            user.loginPc(ALL_AUTHORITY);
             int code = RecordExportScene.builder().type(type).page(1).size(10).exportType("CURRENT_PAGE").build().invoke(visitor,false).getInteger("code");
             Preconditions.checkArgument(code==1000,mess+"导出状态码为"+code);
             Thread.sleep(800);
@@ -981,6 +1284,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            user.loginPc(ALL_AUTHORITY);
             int code = EvaluateExportScene.builder().evaluateType(Integer.parseInt(type)).page(1).size(10).exportType("CURRENT_PAGE").build().invoke(visitor,false).getInteger("code");
             Preconditions.checkArgument(code==1000,mess+"导出状态码为"+code);
             Thread.sleep(800);
@@ -992,6 +1296,60 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             saveData("导出");
+        }
+    }
+
+
+    /* -----------------------------------V3.1门店---------------------------------------------------*/
+
+
+//    @Test(dataProvider = "SHOP")
+//    public void addshop(String simple_name, String name, String district_code, String adddress, String sale_tel, String service_tel,
+//                        String longitude, String latitude, String appointment_status,String washing_status) {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            user.loginPc(ALL_AUTHORITY);
+//            JSONArray arr = new JSONArray();
+//            arr.add(info.BrandID);
+//
+//            int code = AddScene.builder().name(name).simpleName(simple_name).districtCode(district_code).address(adddress).brandList(arr)
+//                    .saleTel(sale_tel).serviceTel(service_tel).longitude(Double.valueOf(longitude)).latitude(Double.valueOf(latitude)).avatarPath(info.getLogo()).customerServiceTel(sale_tel).rescueTel(sale_tel)
+//                    .build().invoke(visitor,false).getInteger("code");
+//            Preconditions.checkArgument(code==1000,"期待状态码1000，实际"+ code);
+//
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("PC【门店管理】，新建门店");
+//        }
+//    }
+
+
+    @Test
+    public void addshoperr1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            user.loginPc(ALL_AUTHORITY);
+            String sale_tel = info.sitphone1;
+            String service_tel = info.phone;
+
+            JSONArray arr = new JSONArray();
+            arr.add(System.currentTimeMillis());
+
+            int code = AddScene.builder().name(info.stringsix).simpleName(info.stringsix).districtCode(info.district_code).address(info.stringsix).brandList(arr)
+                    .saleTel(sale_tel).serviceTel(service_tel).longitude(129.8439).latitude(42.96805).avatarPath(info.getLogo()).customerServiceTel(sale_tel).rescueTel(sale_tel)
+                    .build().invoke(visitor,false).getInteger("code");
+            Preconditions.checkArgument(code==1001,"期待状态码1001，实际"+ code);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【门店管理】，新建门店时品牌不存在");
         }
     }
 
@@ -1133,4 +1491,16 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         };
     }
 
+    @DataProvider(name = "SHOP")
+    public  Object[] shop() {
+
+        return new String[][]{
+//                {info.stringone, info.stringone,info.district_code,info.stringone, info.sitphone1,info.sitphone2,"129.8439","42.96805","ENABLE","ENABLE"}, //一个字符太少了 注视掉 每次需要更改
+//                {info.stringone, info.stringten,info.district_code,info.stringfifty, info.phone,info.phone,"129.8439","42.96805","ENABLE","DISABLE"},
+//                {info.stringten, info.stringone,info.district_code,info.stringten, info.phone,info.phone,"129.8439","42.96805","DISABLE","ENABLE"},
+                {info.stringten, info.stringfifty,info.district_code,info.stringone, info.sitphone1,info.phone,"129.8439","42.96805","DISABLE","DISABLE"},
+//                {info.stringone, info.stringfifty,info.district_code,info.stringten, info.phone,info.sitphone2,"129.8439","42.96805","DISABLE","DISABLE"},
+
+        };
+    }
 }
