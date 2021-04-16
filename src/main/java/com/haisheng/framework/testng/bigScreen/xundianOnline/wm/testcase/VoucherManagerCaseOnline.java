@@ -816,7 +816,6 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
             //获取已使用的卡券列表
             visitor.login(APPLET_USER_ONE.getToken());
             int transferVoucherNum = util.getAppletVoucherNum();
-            int transferMessageNum = util.getAppletMessageNum();
             AppletVoucher appletVoucher = util.getAppletVoucher(VoucherUseStatusEnum.NEAR_EXPIRE);
             id = appletVoucher.getId();
             String voucherName = appletVoucher.getTitle();
@@ -828,8 +827,6 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
             visitor.login(APPLET_USER_ONE.getToken());
             int newTransferVoucherNum = util.getAppletVoucherNum();
             CommonUtil.checkResult("转移者我的卡券数", transferVoucherNum - 1, newTransferVoucherNum);
-            int newTransferMessageNum = util.getAppletMessageNum();
-            CommonUtil.checkResult("转移者我的消息数", transferMessageNum + 1, newTransferMessageNum);
             //我的消息内容
             Long messageId = AppletMessageListScene.builder().size(20).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
             JSONObject response = AppletMessageDetailScene.builder().id(messageId).build().invoke(visitor);
