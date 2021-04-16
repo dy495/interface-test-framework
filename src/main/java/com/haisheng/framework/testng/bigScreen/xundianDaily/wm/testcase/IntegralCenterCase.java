@@ -629,7 +629,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             //小程序积分明细
             AppletIntegralRecord appletIntegralRecord = util.getAppletIntegralRecordList().get(0);
             CommonUtil.checkResult("小程序积分明细页积分数", exchangePage.getExchangePrice(), Integer.valueOf(appletIntegralRecord.getIntegral()));
-            CommonUtil.checkResult("小程序积分明细详情", "使用" + exchangePage.getExchangePrice() + "积分兑换了【" + exchangePage.getGoodsName() + "】", appletIntegralRecord.getName());
+            CommonUtil.checkResult("小程序积分明细详情", "使用" + exchangePage.getExchangePrice() + "银元兑换了【" + exchangePage.getGoodsName() + "】", appletIntegralRecord.getName());
             CommonUtil.checkResult("小程序积分明细兑换类型", ChangeStockTypeEnum.MINUS.name(), appletIntegralRecord.getChangeType());
             //小程序订单状态
             AppletExchangeRecord appletExchangeRecord = util.getAppletExchangeRecordList().get(0);
@@ -751,7 +751,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             //小程序积分明细
             AppletIntegralRecord appletIntegralRecord = util.getAppletIntegralRecordList().get(0);
             CommonUtil.checkResult("小程序积分明细页积分数", exchangePage.getExchangePrice(), Integer.valueOf(appletIntegralRecord.getIntegral()));
-            CommonUtil.checkResult("小程序积分明细详情", "使用" + exchangePage.getExchangePrice() + "积分兑换了【" + exchangePage.getGoodsName() + "】", appletIntegralRecord.getName());
+            CommonUtil.checkResult("小程序积分明细详情", "使用" + exchangePage.getExchangePrice() + "银元兑换了【" + exchangePage.getGoodsName() + "】", appletIntegralRecord.getName());
             CommonUtil.checkResult("小程序积分明细兑换类型", ChangeStockTypeEnum.MINUS.name(), appletIntegralRecord.getChangeType());
             //小程序订单状态
             AppletExchangeRecord appletExchangeRecord = util.getAppletExchangeRecordList().get(0);
