@@ -10,8 +10,11 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccoun
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.model.AppletListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.followup.AppPageV3Scene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.appointmentmanage.RecordExportScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.consultmanagement.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.loginuser.ShopListScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.manage.EvaluateExportScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.record.ExportPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -897,8 +900,100 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
 
     //todo 提交的结果验证
 
+    @Test(dataProvider = "ONLINEEXPERTEXPLAIN")
+    public void dedicatedServicePCExplain1(String content,String mess) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            user.loginPc(ALL_AUTHORITY);
+
+            JSONObject obj2= DedicatedServiceExplainEditScene.builder().content(content).build().invoke(visitor,false);
+            int code2 = obj2.getInteger("code");
+            if (!mess.contains("20001")){
+                Preconditions.checkArgument(code2==1000,mess+"提示"+obj2.getString("message"));
+            }
+            if (mess.contains("20001")){
+                Preconditions.checkArgument(code2==1001,mess+"提示"+obj2.getString("message"));
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC专属服务说明配置,校验字数");
+        }
+    }
+
+    @Test
+    public void dedicatedServicePCExplain2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            user.loginPc(ALL_AUTHORITY);
+
+            String content1 = "<p style=\"text-align:center;\" size=\"5\" _root=\"[object Object]\" __ownerID=\"undefined\" __hash=\"" +
+                    "undefined\" __altered=\"false\">专属服务居中</p><p><span style=\"font-size:32px\">专属服务放大</span></p><p><span style=\"font-si" +
+                    "ze:12px\">缩小</span></p><p><strong>专属服务加粗</strong></p><p><em>专属服务斜体</em></p><p><u>专属服务下划线</u></p><p><span style=\"color:#f3" +
+                    "2784\">专属服务颜色</span></p><p></p><p></p><div class=\"media-wrap image-wrap\"><img src=\""+info.getLogoUrl()+"\"/></div><p></p><p></p>";
+
+            JSONObject obj= DedicatedServiceExplainEditScene.builder().content(content1).build().invoke(visitor,false);
+            int code = obj.getInteger("code");
+
+            Preconditions.checkArgument(code==1000,"提示"+obj.getString("message"));
 
 
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC专属服务说明配置,传图片");
+        }
+    }
+
+
+
+
+
+
+    /* -----------------------------------V3.1导出---------------------------------------------------*/
+
+    @Test(dataProvider = "EXPORT1")
+    public void Export1(String type,String mess) {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int code = RecordExportScene.builder().type(type).page(1).size(10).exportType("CURRENT_PAGE").build().invoke(visitor,false).getInteger("code");
+            Preconditions.checkArgument(code==1000,mess+"导出状态码为"+code);
+            Thread.sleep(800);
+            String status = ExportPageScene.builder().page(1).size(1).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getString("status_name");
+            Preconditions.checkArgument(status.equals("导出完成"),mess+" "+status);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("导出");
+        }
+    }
+
+    @Test(dataProvider = "EXPORT2")
+    public void Export2(String type,String mess) {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int code = EvaluateExportScene.builder().evaluateType(Integer.parseInt(type)).page(1).size(10).exportType("CURRENT_PAGE").build().invoke(visitor,false).getInteger("code");
+            Preconditions.checkArgument(code==1000,mess+"导出状态码为"+code);
+            Thread.sleep(800);
+            String status = ExportPageScene.builder().page(1).size(1).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getString("status_name");
+            Preconditions.checkArgument(status.equals("导出完成"),mess+" "+status);
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("导出");
+        }
+    }
 
 
 
@@ -1017,5 +1112,25 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         };
     }
 
+    @DataProvider(name = "EXPORT1")
+    public Object[] export1(){
+        return new String[][]{
+                {"REPAIR","预约维修记录"},
+                {"MAINTAIN","预约保养记录"},
+                {"TEST_DRIVE","预约试驾记录"},
+
+        };
+    }
+
+    @DataProvider(name = "EXPORT2")
+    public Object[] export2(){
+        return new String[][]{
+                {"3","销售购车评价"},
+                {"1","预约保养评价"},
+                {"2","预约维修评价"},
+                {"4","销售接待评价"},
+
+        };
+    }
 
 }

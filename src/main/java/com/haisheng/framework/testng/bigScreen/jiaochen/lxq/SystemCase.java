@@ -2895,13 +2895,11 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     }
     @DataProvider(name = "export")
     public Object[] export(){
-        return new String[][]{ // 单弄 、优惠券变更记录、作废记录、增发记录、领取记录、核销记录、活动报名记录、车系列表、车型列表
-                {"/jiaochen/pc/reception-manage/record/export","接待管理"},
+        return new String[][]{
+
                 {"/jiaochen/pc/customer-manage/pre-sale-customer/page/export","销售客户"},
                 {"/jiaochen/pc/customer-manage/after-sale-customer/page/export","售后客户"},
                 {"/jiaochen/pc/customer-manage/wechat-customer/page/export","小程序客户"},
-                {"/jiaochen/pc/appointment-manage/record/export","预约记录"},
-                {"/jiaochen/pc/manage/evaluate/export","评价列表"},
                 {"/jiaochen/pc/voucher-manage/voucher-form/export","优惠券管理"},
                 {"/jiaochen/pc/voucher-manage/verification-people/export","核销人员"},
                 {"/jiaochen/pc/package-manage/buy-package-record/export","套餐购买记录"},
@@ -2915,7 +2913,8 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
                 {"/jiaochen/pc/record/import-record/export","导入记录"},
                 {"/jiaochen/pc/record/export-record/export","导出记录"},
                 {"/jiaochen/pc/record/push-msg/export","消息记录"},
-                {"/jiaochen/pc/manage/rescue/export","在线救援"},
+                {"/jiaochen/pc/record/login-record/export","登陆记录"},
+                {"/jiaochen/pc/manage/rescue/export","道路救援"},
                 {"/jiaochen/pc/vip-marketing/wash-car-manager/export","洗车管理"},
                 {"/jiaochen/pc/vip-marketing/wash-car-manager/adjust-number/export","调整次数"},
                 {"/jiaochen/pc/vip-marketing/sign_in_config/change-record/export","签到积分变更记录"},
@@ -2924,6 +2923,14 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
                 {"/jiaochen/pc/integral-center/exchange-order/export","积分订单"},
                 {"/jiaochen/pc/integral-mall/goods-manage/export","商品管理"},
                 {"/jiaochen/pc/manage/maintain/car-model/export","保养配置"},
+                {"/jiaochen/pc/customer-manage/pre-sale-customer/buy-car/page/export","成交记录"},
+                {"/jiaochen/pc/pre-sales-reception/export","销售接待记录"},
+                {"/jiaochen/pc/reception-manage/record/export","售后接待管理"},
+                {"/jiaochen/pc/customer-manage/loss-customer/page/export","流失客户管理"},
+                {"/jiaochen/pc/voucher/apply/export","优惠券审批"},
+                {"XXXXXXXX","保养车系配置"},
+                {"/jiaochen/pc/consult-management/online-experts-page-list-export","在线专家列表"},
+                {"/jiaochen/pc/consult-management/dedicated-service-page-list-export","专属服务列表"},
 
         };
     }
