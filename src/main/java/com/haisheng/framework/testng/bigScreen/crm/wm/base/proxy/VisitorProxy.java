@@ -76,14 +76,16 @@ public class VisitorProxy extends TestCaseCommon {
         }
     }
 
+
     /**
      * 上传
      *
-     * @param scene 场景接口
+     * @param filePath 文件路径
+     * @param path     接口地址
      * @return 返回值
      */
-    public JSONObject uploadFile(IScene scene) {
-        String response = uploadFile(scene.getBody().getString("filePath"), scene.getPath(), product.getAddress());
+    public JSONObject upload(String path, String filePath) {
+        String response = uploadFile(filePath, path, product.getAddress());
         return JSON.parseObject(response);
     }
 

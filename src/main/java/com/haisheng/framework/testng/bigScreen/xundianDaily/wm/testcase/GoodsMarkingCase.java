@@ -10,11 +10,14 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobN
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.GoodsBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.GoodsParamBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.integralcenter.ExchangePageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.integralmall.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.IntegralCategoryTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.commodity.CommodityStatusEnum;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.enumerator.AccountEnum;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.integralcenter.ChangeSwitchStatusScene;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.integralcenter.ExchangePageScene;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.integralmall.*;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.util.UserUtil;
@@ -973,48 +976,44 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
     public void goodsManager_system_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            Long changeId = null;
+            Long goodsId;
             IScene goodsManagePageScene = GoodsManagePageScene.builder().build();
             List<GoodsManagePageBean> goodsManagePageBeanListA = util.collectBean(goodsManagePageScene, GoodsManagePageBean.class);
-            GoodsManagePageBean goodsManagePageBean = goodsManagePageBeanListA.stream().filter(e -> !util.goodsIsOccupation(e.getGoodsName())).findFirst().orElse(goodsManagePageBeanListA.get(0));
-            Long id = goodsManagePageBean.getId();
+            GoodsManagePageBean goodsManagePageBean = goodsManagePageBeanListA.stream().filter(e -> !util.goodsIsOccupation(e.getGoodsName())).findFirst().orElse(null);
+            if (goodsManagePageBean == null) {
+                GoodsManagePageBean managePageBean = goodsManagePageBeanListA.get(0);
+                String goodsName = managePageBean.getGoodsName();
+                goodsId = managePageBean.getId();
+                IScene scene = ExchangePageScene.builder().exchangeGoods(goodsName).build();
+                ExchangePageBean exchangePageBean = util.collectBeanByField(scene, ExchangePageBean.class, "goods_name", goodsName);
+                changeId = exchangePageBean.getId();
+                ChangeSwitchStatusScene.builder().id(changeId).status(false).build().invoke(visitor);
+            } else {
+                goodsId = goodsManagePageBean.getId();
+            }
             //上架
             Arrays.stream(CommodityStatusEnum.values()).forEach(anEnum -> {
-                ChangeGoodsStatusScene.builder().id(id).status(anEnum.name()).build().invoke(visitor);
+                ChangeGoodsStatusScene.builder().id(goodsId).status(anEnum.name()).build().invoke(visitor);
                 List<GoodsManagePageBean> goodsManagePageBeanList = util.collectBean(goodsManagePageScene, GoodsManagePageBean.class);
-                goodsManagePageBeanList.stream().filter(e -> e.getId().equals(id)).forEach(e -> {
+                goodsManagePageBeanList.stream().filter(e -> e.getId().equals(goodsId)).forEach(e -> {
                     CommonUtil.checkResult(e.getGoodsName() + "的商品状态", anEnum.getName(), e.getGoodsStatusName());
                     CommonUtil.checkResult(e.getGoodsName() + "的商品状态", anEnum.name(), e.getGoodsStatus());
                 });
+                if (anEnum.equals(CommodityStatusEnum.DOWN)) {
+                    IScene scene = GoodsManagePageScene.builder().goodsStatus(CommodityStatusEnum.UP.name()).build();
+                    util.collectBean(scene, GoodsManagePageBean.class).forEach(e -> Preconditions.checkArgument(!e.getId().equals(goodsId), "下架的商品" + e.getGoodsName() + "在创建积分兑换时可见"));
+                }
             });
             //clean
-            ChangeGoodsStatusScene.builder().id(id).status(CommodityStatusEnum.UP.name()).build().invoke(visitor);
+            ChangeGoodsStatusScene.builder().id(goodsId).status(CommodityStatusEnum.UP.name()).build().invoke(visitor);
+            if (changeId != null) {
+                ChangeSwitchStatusScene.builder().id(changeId).status(true).build().invoke(visitor);
+            }
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
-            saveData("PC【商品管理】上架&下架存不被积分兑换占用商品");
-        }
-    }
-
-    //ok
-    @Test
-    public void goodsManager_system_7() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            IScene goodsManagePageScene = GoodsManagePageScene.builder().build();
-            List<GoodsManagePageBean> goodsManagePageBeanListA = util.collectBean(goodsManagePageScene, GoodsManagePageBean.class);
-            GoodsManagePageBean goodsManagePageBean = goodsManagePageBeanListA.stream().filter(e -> !util.goodsIsOccupation(e.getGoodsName())).findFirst().orElse(goodsManagePageBeanListA.get(0));
-            Long id = goodsManagePageBean.getId();
-            //下架商品
-            ChangeGoodsStatusScene.builder().id(id).status(CommodityStatusEnum.DOWN.name()).build().invoke(visitor);
-            //积分兑换看不见
-            IScene scene = GoodsManagePageScene.builder().goodsStatus(CommodityStatusEnum.UP.name()).build();
-            util.collectBean(scene, GoodsManagePageBean.class).forEach(e -> Preconditions.checkArgument(!e.getId().equals(id), "下架的商品" + e.getGoodsName() + "在创建积分兑换时可见"));
-            //clean
-            ChangeGoodsStatusScene.builder().id(id).status(CommodityStatusEnum.UP.name()).build().invoke(visitor);
-        } catch (AssertionError | Exception e) {
-            collectMessage(e);
-        } finally {
-            saveData("PC【商品管理】下架的商品在创建积分兑换时不可见");
+            saveData("PC【商品管理】上架&下架不被积分兑换占用的商品");
         }
     }
 

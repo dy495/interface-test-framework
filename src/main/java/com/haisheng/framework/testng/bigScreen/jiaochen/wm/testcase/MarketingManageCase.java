@@ -1303,15 +1303,15 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
             IScene messageFormPageScene = MessageFormPageScene.builder().build();
-            int messageTotal = visitor.invokeApi(messageFormPageScene).getInteger("total");
+            int messageTotal = messageFormPageScene.invoke(visitor).getInteger("total");
             IScene sendRecordScene = SendRecordScene.builder().voucherId(voucherId).build();
-            int sendRecordTotal = visitor.invokeApi(sendRecordScene).getInteger("total");
+            int sendRecordTotal = sendRecordScene.invoke(visitor).getInteger("total");
             IScene pushMsgPageScene = PushMsgPageScene.builder().build();
-            int pushMsgPageTotal = visitor.invokeApi(pushMsgPageScene).getInteger("total");
+            int pushMsgPageTotal = pushMsgPageScene.invoke(visitor).getInteger("total");
             Long surplusInventory = util.getVoucherPage(voucherId).getSurplusInventory();
             //消息发送一张卡券
-            util.pushMessage(0, true, voucherId);
-            String sendStatusName = visitor.invokeApi(messageFormPageScene).getJSONArray("list").getJSONObject(0).getString("send_status_name");
+            util.pushCustomMessage(0, true, voucherId);
+            String sendStatusName = messageFormPageScene.invoke(visitor).getJSONArray("list").getJSONObject(0).getString("send_status_name");
             CommonUtil.checkResult("发送状态", CustomMessageStatusEnum.SUCCESS.getStatusName(), sendStatusName);
             CommonUtil.checkResult("消息管理列表", messageTotal + 1, visitor.invokeApi(messageFormPageScene).getInteger("total"));
             CommonUtil.checkResult("消息记录", pushMsgPageTotal + 1, visitor.invokeApi(pushMsgPageScene).getInteger("total"));

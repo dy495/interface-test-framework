@@ -35,9 +35,7 @@ import org.testng.Assert;
 import java.io.File;
 import java.io.FileInputStream;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 
 /**
@@ -53,7 +51,6 @@ public class TestCaseCommon {
     public static HttpConfig config;
     public static String response = "";
     public static String authorization;
-    public static String IpPort =EnumTestProduce.JC_DAILY.getAddress() ;
     private static CommonConfig commonConfig = null;
     private boolean FAIL = false;
     private final String DEBUG = System.getProperty("DEBUG", "true");
@@ -375,22 +372,33 @@ public class TestCaseCommon {
         return response;
     }
 
-    public String httpPostFile(String path, String[] filepath, String type, String IpPort) throws Exception {
-        initHttpConfig();
-        String queryUrl = IpPort + path;
-        Map<String, Object> map = new HashMap<>();
-        map.put("type", type);
-        config.url(queryUrl).files(filepath, "file", true).map(map);
-        logger.info("{} json param: {}", path, filepath, type);
-        long start = System.currentTimeMillis();
-
-        response = HttpClientUtil.post(config);
-
-        logger.info("response: {}", response);
-
-        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
-        caseResult.setResponse(response);
-        return response;
+    public String uploadFile(String filePath, String path, String IpPort) {
+        String url = IpPort + path;
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost(url);
+        httpPost.addHeader("authorization", authorization);
+        httpPost.addHeader("shop_id", commonConfig.shopId);
+        httpPost.addHeader("role_id", commonConfig.roleId);
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        File file = new File(filePath);
+        String res = "";
+        try {
+            builder.addBinaryBody(
+                    "file",
+                    new FileInputStream(file),
+                    ContentType.IMAGE_JPEG,
+                    file.getName()
+            );
+            HttpEntity multipart = builder.build();
+            httpPost.setEntity(multipart);
+            CloseableHttpResponse response = httpClient.execute(httpPost);
+            HttpEntity responseEntity = response.getEntity();
+            res = EntityUtils.toString(responseEntity, "UTF-8");
+            logger.info("response: " + res);
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        }
+        return res;
     }
 
     public String httpGet(String path, Map<String, Object> paramMap, String IpPort) throws Exception {
@@ -452,35 +460,6 @@ public class TestCaseCommon {
         config = HttpConfig.custom()
                 .headers(headers)
                 .client(client);
-    }
-
-    public String uploadFile(String filePath, String path, String IpPort) {
-        String url = IpPort + path;
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpPost httpPost = new HttpPost(url);
-        httpPost.addHeader("authorization", authorization);
-        httpPost.addHeader("shop_id", commonConfig.shopId);
-        httpPost.addHeader("role_id", commonConfig.roleId);
-        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-        File file = new File(filePath);
-        String res = "";
-        try {
-            builder.addBinaryBody(
-                    "file",
-                    new FileInputStream(file),
-                    ContentType.IMAGE_JPEG,
-                    file.getName()
-            );
-            HttpEntity multipart = builder.build();
-            httpPost.setEntity(multipart);
-            CloseableHttpResponse response = httpClient.execute(httpPost);
-            HttpEntity responseEntity = response.getEntity();
-            res = EntityUtils.toString(responseEntity, "UTF-8");
-            logger.info("response: " + res);
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        }
-        return res;
     }
 
     public String getXundianShop() {

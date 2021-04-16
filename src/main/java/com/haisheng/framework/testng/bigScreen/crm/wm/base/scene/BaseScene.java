@@ -1,6 +1,8 @@
 package com.haisheng.framework.testng.bigScreen.crm.wm.base.scene;
 
 import com.alibaba.fastjson.JSONObject;
+import com.aliyun.openservices.shade.org.apache.commons.lang3.StringUtils;
+import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
@@ -15,6 +17,7 @@ import java.util.stream.Collectors;
  * 场景抽象类
  *
  * @author wangmin
+ * @date 2020/9/27
  */
 public abstract class BaseScene implements IScene {
     @Setter
@@ -23,28 +26,33 @@ public abstract class BaseScene implements IScene {
     protected Integer page;
     private JSONObject body;
 
+    /**
+     * 处理后的请求体
+     *
+     * @return 请求体
+     */
     @Override
     public JSONObject getBody() {
         return body == null ? getRequestBody() : body;
     }
 
     /**
-     * 子类实现提供请求体
+     * 获取请求体
      *
-     * @return 请求提
+     * @return 请求体
      */
     protected abstract JSONObject getRequestBody();
 
     /**
-     * 子类实现提供地址
+     * 获取接口路径
      *
-     * @return 地址
+     * @return 路径
      */
     @Override
     public abstract String getPath();
 
     /**
-     * 子类实现提供域名
+     * 获取接口域名
      *
      * @return 域名
      */
@@ -54,7 +62,7 @@ public abstract class BaseScene implements IScene {
     }
 
     /**
-     * 提供调用接口的能力
+     * 提供访问接口的能力
      *
      * @param visitor   要执行的产品
      * @param checkCode 是否校验code
@@ -73,6 +81,19 @@ public abstract class BaseScene implements IScene {
      */
     public JSONObject invoke(@NotNull VisitorProxy visitor) {
         return invoke(visitor, true);
+    }
+
+    /**
+     * 提供上传文件的能力
+     *
+     * @param visitor 要执行的产品
+     * @return 接口返回值
+     */
+    @Override
+    public JSONObject upload(@NotNull VisitorProxy visitor) {
+        Preconditions.checkArgument(!StringUtils.isEmpty(getBody().getString("filePath")), "文件路径为空");
+        String filePath = getBody().getString("filePath");
+        return visitor.upload(getPath(), filePath);
     }
 
     /**
