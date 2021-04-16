@@ -54,10 +54,10 @@ import java.util.stream.Collectors;
  * @author wangmin
  * @date 2021/1/29 11:17
  */
-public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCaseStd {
+public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce PRODUCE = EnumTestProduce.INS_ONLINE;
     private static final AccountEnum ALL_AUTHORITY = AccountEnum.YUE_XIU_ONLINE;
-    private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.INS_WM_ONLINE;
+    private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.INS_WM_DAILY;
     private static final Integer SIZE = 100;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public UserUtil user = new UserUtil(visitor);
@@ -66,7 +66,7 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
     @BeforeClass
     @Override
     public void initial() {
-        logger.debug("before class initial");
+        logger.debug("before classs initial");
         CommonConfig commonConfig = new CommonConfig();
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_MENDIAN_ONLINE_SERVICE;
@@ -75,7 +75,7 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
         commonConfig.dingHook = DingWebhook.ONLINE_STORE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.product = PRODUCE.getAbbreviation();
-        commonConfig.referer = PRODUCE.getReferer();
+        commonConfig.pushRd = new String[]{"15898182672", "18513118484", "18810332354", "15084928847"};
         beforeClassInit(commonConfig);
     }
 
@@ -433,7 +433,7 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
     }
 
     //ok
-    @Test(description = "积分兑换--创建虚拟积分兑换，包含无库存的卡券")
+    @Test(description = "积分兑换--创建虚拟积分兑换，包含无库存的卡券", enabled = false)
     public void integralExchange_system_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
