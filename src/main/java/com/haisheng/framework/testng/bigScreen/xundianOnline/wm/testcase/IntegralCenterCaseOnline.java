@@ -54,7 +54,7 @@ import java.util.stream.Collectors;
  * @author wangmin
  * @date 2021/1/29 11:17
  */
-public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
+public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce PRODUCE = EnumTestProduce.INS_ONLINE;
     private static final AccountEnum ALL_AUTHORITY = AccountEnum.YUE_XIU_ONLINE;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.INS_WM_DAILY;

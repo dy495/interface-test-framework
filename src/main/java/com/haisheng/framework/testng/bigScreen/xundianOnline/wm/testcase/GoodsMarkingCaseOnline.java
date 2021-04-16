@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
  * @author wangmin
  * @date 2020/11/24
  */
-public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
+public class GoodsMarkingCaseOnline extends TestCaseCommon implements TestCaseStd {
     private final static EnumTestProduce PRODUCE = EnumTestProduce.INS_ONLINE;
     private static final AccountEnum ALL_AUTHORITY = AccountEnum.YUE_XIU_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
