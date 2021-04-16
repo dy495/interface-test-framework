@@ -683,7 +683,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             CommonUtil.checkResult("pc积分明细页明细", appletExchangeRecord.getIntegral(), exchangeDetailed.getStockDetail());
             CommonUtil.checkResult("pc积分明细页明细", ChangeStockTypeEnum.MINUS.name(), exchangeDetailed.getExchangeType());
             CommonUtil.checkResult("pc积分明细页兑换类型", ChangeStockTypeEnum.MINUS.getDescription(), exchangeDetailed.getExchangeTypeName());
-            CommonUtil.checkResult("pc积分明细页详情", "使用" + appletExchangeRecord.getIntegral() + "积分兑换了【" + appletExchangeRecord.getName() + "】", exchangeDetailed.getChangeReason());
+            CommonUtil.checkResult("pc积分明细页详情", "使用" + appletExchangeRecord.getIntegral() + "银元兑换了【" + appletExchangeRecord.getName() + "】", exchangeDetailed.getChangeReason());
             //取消
             CancelOrderScene.builder().id(exchangeOrder.getId()).build().invoke(visitor);
             //pc状态4
