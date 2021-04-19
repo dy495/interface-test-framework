@@ -167,11 +167,11 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
         try {
             //搜索门店
             boolean status = true;
-            JSONArray shopList = md.searchShop(null, null, null, status, 1, 10).getJSONArray("list");
+            JSONArray shopList = md.searchShop(null, null, null, true, 1, 10).getJSONArray("list");
             if (shopList != null)
                 for (int i = 0; i < shopList.size(); i++) {
                     boolean status1 = shopList.getJSONObject(i).getBoolean("is_show");
-                    Preconditions.checkArgument(status1 == status, "通过" + status + "搜索门店展示结果为" + status1);
+                    Preconditions.checkArgument(status1, "通过" + status + "搜索门店展示结果为" + status1);
                 }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -187,11 +187,11 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
         try {
             //搜索门店
             boolean status = false;
-            JSONArray shopList = md.searchShop(null, null, null, status, 1, 10).getJSONArray("list");
+            JSONArray shopList = md.searchShop(null, null, null, false, 1, 10).getJSONArray("list");
             if (shopList != null)
                 for (int i = 0; i < shopList.size(); i++) {
                     boolean status1 = shopList.getJSONObject(i).getBooleanValue("status");
-                    Preconditions.checkArgument(status1 == status, "通过" + status + "搜索门店展示结果为" + status1);
+                    Preconditions.checkArgument(!status1, "通过" + status + "搜索门店展示结果为" + status1);
                 }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -258,15 +258,14 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             String managerName = "华";
             String cityName = "北京";
             boolean status = true;
-            JSONArray shopList = md.searchShop(shopName, managerName, cityName, status, 1, 10).getJSONArray("list");
+            JSONArray shopList = md.searchShop(shopName, managerName, cityName, true, 1, 10).getJSONArray("list");
             if (shopList != null)
                 for (int i = 0; i < shopList.size(); i++) {
                     String shop_name = shopList.getJSONObject(i).getString("shop_name");
                     String manager_name = shopList.getJSONObject(i).getString("manager_name");
                     String city = shopList.getJSONObject(i).getString("city");
                     boolean status1 = shopList.getJSONObject(i).getBooleanValue("city");
-                    Preconditions.checkArgument(shop_name.equals(shopName) && manager_name.equals(managerName)
-                                    && city.equals(cityName) && status1 == status,
+                    Preconditions.checkArgument(shop_name.equals(shopName) && manager_name.equals(managerName) && city.equals(cityName) && status1,
                             "通过" + shopName + "和" + managerName + "和" + cityName + "和" + status + "搜索门店展示结果为" + shop_name + "和" + manager_name + "和" + city + "和" + status1);
                 }
         } catch (AssertionError | Exception e) {
@@ -286,15 +285,14 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             String managerName = "华";
             String cityName = "北京";
             boolean status = false;
-            JSONArray shopList = md.searchShop(shopName, managerName, cityName, status, 1, 10).getJSONArray("list");
+            JSONArray shopList = md.searchShop(shopName, managerName, cityName, false, 1, 10).getJSONArray("list");
             if (shopList != null)
                 for (int i = 0; i < shopList.size(); i++) {
                     String shop_name = shopList.getJSONObject(i).getString("shop_name");
                     String manager_name = shopList.getJSONObject(i).getString("manager_name");
                     String city = shopList.getJSONObject(i).getString("city");
                     boolean status1 = shopList.getJSONObject(i).getBooleanValue("city");
-                    Preconditions.checkArgument(shop_name.equals(shopName) && manager_name.equals(managerName)
-                                    && city.equals(cityName) && status1 == status,
+                    Preconditions.checkArgument(shop_name.equals(shopName) && manager_name.equals(managerName) && city.equals(cityName) && !status1,
                             "通过" + shopName + "和" + managerName + "和" + cityName + "和" + status + "搜索门店展示结果为" + shop_name + "和" + manager_name + "和" + city + "和" + status1);
                 }
         } catch (AssertionError | Exception e) {
