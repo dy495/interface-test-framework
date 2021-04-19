@@ -146,7 +146,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
             EnumTestProduce produce = EnumTestProduce.INS_DAILY;
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, produce.getDesc());
             commonConfig.referer = produce.getReferer();
-            commonConfig.pushRd = new String[]{EnumAppletToken.getPhoneByToken(token)};
+            commonConfig.pushQa = new String[]{EnumAppletToken.getPhoneByToken(token)};
             VisitorProxy visitor = new VisitorProxy(produce);
             visitor.login(token);
             Response response = invokeIns(visitor);
@@ -165,7 +165,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
             EnumTestProduce produce = EnumTestProduce.INS_ONLINE;
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, produce.getDesc());
             commonConfig.referer = produce.getReferer();
-            commonConfig.pushRd = new String[]{EnumAppletToken.getPhoneByToken(token)};
+            commonConfig.pushQa = new String[]{EnumAppletToken.getPhoneByToken(token)};
             VisitorProxy visitor = new VisitorProxy(produce);
             visitor.login(token);
             Response response = invokeIns(visitor);
