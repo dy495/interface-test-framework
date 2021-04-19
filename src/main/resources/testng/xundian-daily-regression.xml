@@ -23,6 +23,8 @@
             <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.zt.StorePcCase"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.zt.StorePcData"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.zt.XundianPcCase"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.zt.InsPcCase"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.zt.InsPcData"></class>
 
             <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.wm.testcase.GoodsMarkingCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.wm.testcase.IntegralCenterCase"/>
