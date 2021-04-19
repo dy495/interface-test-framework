@@ -270,7 +270,6 @@ public class SupporterUtil {
                 .voucherDescription(getDesc()).shopType(0).shopIds(getShopIdList(2)).selfVerification(selfVerification);
     }
 
-
     /**
      * 创建一个不重复的卡券名
      *
@@ -564,7 +563,6 @@ public class SupporterUtil {
         JSONArray plateList = SearchCustomerScene.builder().customerPhone(phone).build().invoke(visitor).getJSONArray("plate_list");
         return plateList.stream().map(e -> (JSONObject) e).map(e -> e.getString("plate_number")).findFirst().orElse(null);
     }
-
 
     /**
      * 获取优惠券申请信息
@@ -869,7 +867,6 @@ public class SupporterUtil {
                 .subjectId(getSubjectDesc(getSubjectType())).subjectType(getSubjectType()).type(type).voucherList(voucherList).build().invoke(visitor);
     }
 
-
     //-------------------------------------------------消息----------------------------------------------------------
 
     /**
@@ -915,7 +912,6 @@ public class SupporterUtil {
         builder.build().invoke(visitor);
     }
 
-
     //----------------------------------------------------预约记录-------------------------------------------------------
 
     /**
@@ -951,7 +947,6 @@ public class SupporterUtil {
         JSONObject receptionPage = ReceptionPageScene.builder().build().invoke(visitor).getJSONArray("list").getJSONObject(0);
         return JSONObject.toJavaObject(receptionPage, ReceptionPage.class);
     }
-
 
     //----------------------------------------------------核销人员-------------------------------------------------------
 
@@ -1491,7 +1486,6 @@ public class SupporterUtil {
         JSONArray jsonArray = receptorListScene.invoke(visitor).getJSONArray("list");
         return jsonArray.stream().map(e -> (JSONObject) e).filter(e -> e.getString("name").equals(account.getName())).map(e -> JSONObject.toJavaObject(e, AppReceptionReceptorList.class)).findFirst().orElse(null);
     }
-
 
     //-------------------------------------------------------积分中心---------------------------------------------------
 
