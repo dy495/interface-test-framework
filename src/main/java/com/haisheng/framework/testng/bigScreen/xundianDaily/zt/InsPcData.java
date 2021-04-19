@@ -16,8 +16,6 @@ import com.haisheng.framework.testng.bigScreen.xundianDaily.MendianInfo;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.StoreScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.WechatScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.XundianScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.StorePcAndAppData;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.fucPackage.StoreFuncPackage;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -92,7 +90,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
 
 //添加门店、删除门店列表+1、-1ok
     @Test()
-    public void shopAdd() throws Exception {
+    public void shopAdd() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
@@ -113,7 +111,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             String tripartite_shop_id = "4321";
             int recommended = 70;
             String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
-            String base64 = info.getImgStr(pic);
+            String base64 = MendianInfo.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
             //获得初始的门店数量
             int mdsum0 = md.searchShop(null, null, null, null, 1, 100).getInteger("total");
@@ -174,9 +172,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(appnum1,appnum3,appletsize2);
             Preconditions.checkArgument(appnum3==1,"期望数量-1实际减少了" + appnum3);
 
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("添加门店，删除门店列表+-1");
@@ -186,7 +182,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
 
     //新建会员等级列表+-1ok
     @Test()
-    public void create_level() throws Exception {
+    public void create_level(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
@@ -196,7 +192,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
 
             xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
             String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
-            String base64 = info.getImgStr(pic);
+            String base64 = MendianInfo.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
             int pctotal = md.member_level_page(null,1,100).getInteger("total");
             md.member_level_add0("等级", path, 10, "嗷嗷", "aa", 9, 10, 10, false);
@@ -259,9 +255,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             JSONArray wechatdelete = wx.wechatlevel(null).getJSONArray("list");
             int deletenum =  wechatsize0-wechatdelete.size();
             Preconditions.checkArgument(deletenum== 1, "期待减少1，实际" + deletenum);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("新建会员等级列表+-1");
@@ -271,7 +265,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
 
     //新增反馈类型ok
     @Test()
-    public void addFeedType() throws Exception {
+    public void addFeedType(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
             visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
@@ -318,9 +312,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             int deletelistnum0 = deleteletlist0.size();
             int deletenum0 = applistnum0-deletelistnum0;
             Preconditions.checkArgument(deletenum0==1, "删除了一个反馈类型期望-1,实际减少" + deletenum0);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("新增、删除反馈类型，数量+-1");
@@ -330,7 +322,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
 
     //会员提交反馈，pc反馈列表数量+1
     @Test()
-    public void submitFeedback() throws Exception {
+    public void submitFeedback(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int total = md.feedbackList(null,null,1,100).getInteger("total");
@@ -384,9 +376,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
                 int gif1 = gifnum0 - gifnum1;
                 Preconditions.checkArgument(gif1 == 1, "pc删除一个反馈，小程序期望-1，实际减少" + gif1);
             }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("小程序提交一条反馈，pc用户反馈列表+1");
@@ -395,7 +385,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
 
 //    添加口味，删除口味
     @Test()
-    public void tasteAdd() throws Exception {
+    public void tasteAdd(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
             visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
@@ -404,7 +394,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             int sortnum = sortlist.size();
             xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
             String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
-            String base64 = info.getImgStr(pic);
+            String base64 = MendianInfo.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
             //创建前pc口味数量
             int pctotal = md.taste_search(null,1,100).getInteger("total");
@@ -508,9 +498,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             int num0 = dlist0.size();
             int appsd = sortnum0-num0;
             Preconditions.checkArgument(appsd == 1, "删除一个口味，小程序减少1个实际减少" + appsort);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("添加口味，删除口味，列表+-1");
