@@ -28,7 +28,7 @@ public enum EnumTestProduce {
 
     FK_DAILY("风控 赢识日常 ", "http://39.105.17.58/page/shoprisk/cashriskcontrol/", "http://39.105.17.58", "-1", "FK", "4944", true),
 
-    FK_ONLINE("风控 赢识线上 ", "", "", "", "FK", "", false),
+    FK_ONLINE("风控 赢识线上 ", "http://39.105.77.122/page/shoprisk/stafflist", "http://39.105.77.122", "13260", "FK", "3515", false),
 
     ;
 

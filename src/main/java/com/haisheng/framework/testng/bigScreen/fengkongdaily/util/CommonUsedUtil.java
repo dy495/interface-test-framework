@@ -214,7 +214,7 @@ public class CommonUsedUtil {
         //规则中的详情
         JSONObject object = new JSONObject();
         Map<String, String> parameters = new HashMap<>();
-        parameters.put("TIME_RANGE", upperLimit);
+        parameters.put("CAR_LIMIT", upperLimit);
         object.put("type", RuleEnum.CASHIER.getType());
         object.put("item", RuleTypeEnum.RISK_SINGLE_MEMBER_CAR_QUANTITY.getType());
         object.put("parameters", parameters);
@@ -583,6 +583,7 @@ public class CommonUsedUtil {
                     "        \"shopType\": \"SHOP_TYPE\",\n" +
                     "        \"orderNumber\": \"13444894484\",\n" +
                     "        \"memberName\":\"自动化在回归\",\n" +
+                    "        \"member_phone\":\"13373166806\","+
                     "        \"receipt_type\":\"小票类型\",\n" +
                     "        \"open_id\":\"" + openId + "\"," +
                     "        \"posId\": \"pos-1234586789\",\n" +
@@ -687,6 +688,7 @@ public class CommonUsedUtil {
 //                        "        \"openid\": \"823849023iidijdiwiodede3330\",\n" +
                     "        \"shopType\": \"SHOP_TYPE\",\n" +
                     "        \"orderNumber\": \"13444894484\",\n" +
+                    "        \"member_phone\":\"13373166806\","+
                     "        \"memberName\":\"自动化在回归\",\n" +
                     "        \"receipt_type\":\"小票类型\",\n" +
                     "        \"posId\": \"8112549059036160\",\n" +
