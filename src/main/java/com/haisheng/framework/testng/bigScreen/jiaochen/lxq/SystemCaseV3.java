@@ -10,11 +10,14 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccoun
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.model.AppletListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.followup.AppPageV3Scene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.followup.AppRemarkV3Scene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.followup.AppReplyV3Scene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.appointmentmanage.RecordExportScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.consultmanagement.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanage.PreSaleCustomerStyleListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.loginuser.ShopListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.manage.EvaluateExportScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.presalesreception.CustomerRemarkScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.record.ExportPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shop.AddScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
@@ -361,7 +364,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             if (alllist.size()>0){
                 for (int i = 0 ; i < alllist.size();i++){
                     JSONObject obj = alllist.getJSONObject(i);
-                    Preconditions.checkArgument(obj.getString("follow_login_name").contains(conditions),"搜索跟进账号="+conditions+"，结果中包含"+obj.getString("follow_login_name"));
+                    Preconditions.checkArgument(obj.getString("follow_login_name").contains(conditions),"搜索回复账号="+conditions+"，结果中包含"+obj.getString("follow_login_name"));
                 }
             }
 
@@ -370,7 +373,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             if (alllist2.size()>0){
                 for (int i = 0 ; i < alllist2.size();i++){
                     JSONObject obj = alllist2.getJSONObject(i);
-                    Preconditions.checkArgument(obj.getString("follow_sales_name").contains(conditions),"搜索跟进人员="+conditions+"，结果中包含"+obj.getString("follow_sales_name"));
+                    Preconditions.checkArgument(obj.getString("follow_sales_name").contains(conditions),"搜索回复人员="+conditions+"，结果中包含"+obj.getString("follow_sales_name"));
                 }
             }
 
@@ -687,6 +690,122 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             saveData("PC在线专家/专属服务 备注");
+        }
+    }
+
+    @Test(dataProvider = "ONLINEEXPERTREPLY")
+    public void onlineExpertAPPReply(String content,String mess) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //小程序消息列表数量
+            int befApplet = info.getAppletmessNum();
+
+            //小程序在线专家咨询
+            info.submitonlineExpert();
+            //PC在线专家回复
+            user.loginApp(ALL_AUTHORITY);
+            Long id1 = AppPageV3Scene.builder().type(info.ONLINE_EXPERTS).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            JSONObject obj1 = AppReplyV3Scene.builder().followId(id1).content(content).build().invoke(visitor,false);
+            int code1 = obj1.getInteger("code");
+
+            //小程序专属销售服务咨询
+            info.submitPreService();
+            //PC回复
+            user.loginApp(ALL_AUTHORITY);
+            Long id2 = AppPageV3Scene.builder().type(info.SALES).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            JSONObject obj2 = AppReplyV3Scene.builder().followId(id2).content(content).build().invoke(visitor,false);
+            int code2 = obj2.getInteger("code");
+
+            //小程序专属售后服务咨询
+            info.submitAfterService();
+            //PC回复
+            user.loginApp(ALL_AUTHORITY);
+            Long id3 = AppPageV3Scene.builder().type(info.AFTER_SALES).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            JSONObject obj3 = AppReplyV3Scene.builder().followId(id3).content(content).build().invoke(visitor,false);
+            int code3 = obj3.getInteger("code");
+
+            //小程序消息列表数量
+            int afterApplet = info.getAppletmessNum();
+            int sum = afterApplet - befApplet;
+
+            if (mess.contains("正常")){
+                Preconditions.checkArgument(code1==1000,mess+"提示"+obj1.getString("message"));
+                Preconditions.checkArgument(code2==1000,mess+"提示"+obj2.getString("message"));
+                Preconditions.checkArgument(code3==1000,mess+"提示"+obj3.getString("message"));
+                Preconditions.checkArgument(sum==6,"小程序咨询&app回复后，小程序消息数量不正确");
+            }
+            if (mess.contains("异常")){
+                Preconditions.checkArgument(code1==1001,mess+"状态码"+code1);
+                Preconditions.checkArgument(code2==1001,mess+"状态码"+code2);
+                Preconditions.checkArgument(code3==1001,mess+"状态码"+code3);
+                Preconditions.checkArgument(sum==3,"小程序咨询后，消息数量不正确");
+            }
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("app在线专家/专属服务 回复");
+        }
+    }
+
+    @Test(dataProvider = "ONLINEEXPERTREMARK")
+    public void onlineExpertAPPRemark(String content,String mess) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //小程序消息列表数量
+            int befApplet = info.getAppletmessNum();
+
+            //小程序在线专家咨询
+            info.submitonlineExpert();
+            //PC在线专家备注
+            user.loginApp(ALL_AUTHORITY);
+            Long id1 = AppPageV3Scene.builder().type(info.ONLINE_EXPERTS).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            JSONObject obj1 = AppRemarkV3Scene.builder().followId(id1).remark(content).build().invoke(visitor,false);
+            int code1 = obj1.getInteger("code");
+
+            //小程序专属销售服务咨询
+            info.submitPreService();
+            //PC备注
+            user.loginApp(ALL_AUTHORITY);
+            Long id2 = AppPageV3Scene.builder().type(info.SALES).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            JSONObject obj2 = AppRemarkV3Scene.builder().followId(id2).remark(content).build().invoke(visitor,false);
+            int code2 = obj2.getInteger("code");
+
+            //小程序专属售后服务咨询
+            info.submitAfterService();
+            //PC备注
+            user.loginApp(ALL_AUTHORITY);
+            Long id3 = AppPageV3Scene.builder().type(info.AFTER_SALES).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            JSONObject obj3 = AppRemarkV3Scene.builder().followId(id3).remark(content).build().invoke(visitor,false);
+            int code3 = obj3.getInteger("code");
+
+            //小程序消息列表数量
+            int afterApplet = info.getAppletmessNum();
+            int sum = afterApplet - befApplet;
+
+            if (mess.contains("正常")){
+                Preconditions.checkArgument(code1==1000,mess+"提示"+obj1.getString("message"));
+                Preconditions.checkArgument(code2==1000,mess+"提示"+obj2.getString("message"));
+                Preconditions.checkArgument(code3==1000,mess+"提示"+obj3.getString("message"));
+                Preconditions.checkArgument(sum==3,"小程序咨询&app备注后，小程序消息数量不正确");
+            }
+            if (mess.contains("异常")){
+                Preconditions.checkArgument(code1==1001,mess+"状态码"+code1);
+                Preconditions.checkArgument(code2==1001,mess+"状态码"+code2);
+                Preconditions.checkArgument(code3==1001,mess+"状态码"+code3);
+                Preconditions.checkArgument(sum==3,"小程序咨询后，消息数量不正确");
+            }
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("app在线专家/专属服务 备注");
         }
     }
 
@@ -1377,6 +1496,31 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
     }
 
 
+
+    //@Test
+    public void remark() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            user.loginPc(ALL_AUTHORITY);
+
+
+                CustomerRemarkScene.builder().remark(info.string200).id(161L).shopId(46522L).build().invoke(visitor);
+
+
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC临时备注");
+        }
+    }
+
+
+
     /**
      * -----------------------------------dataProvider来这里排排站---------------------------------------------------
      */
@@ -1464,11 +1608,12 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
     public Object[] onlineExpertrRemark(){
         return new String[][]{
 
-                {"啊","正常备注1个字"},
+                {"啊1234","正常备注5个字"},
                 {info.string20,"正常备注20个字"},
                 {info.string200,"正常备注200个字"},
                 {info.getString(1000),"正常备注1000个字"},
                 {info.getString(1001),"异常备注1001个字"},
+                {info.getString(4),"异常备注4个字"},
 
         };
     }
