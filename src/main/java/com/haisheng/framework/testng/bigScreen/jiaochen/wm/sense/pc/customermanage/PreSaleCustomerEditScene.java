@@ -1,6 +1,5 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanage;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
@@ -71,7 +70,7 @@ public class PreSaleCustomerEditScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody() {
+    protected JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("shopId", shopId);
         object.put("customerId", customerId);

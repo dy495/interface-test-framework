@@ -9,21 +9,22 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTest
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.lxq.create.pcCreateExchangeGoods;
 import com.haisheng.framework.testng.bigScreen.jiaochen.lxq.create.submitOrder;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.followType;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.*;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import org.springframework.util.StringUtils;
 import org.testng.annotations.DataProvider;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 轿辰接口类
  */
 public class ScenarioUtil extends TestCaseCommon {
     private static volatile ScenarioUtil instance = null;
-    //    private static final String IpPort = EnumTestProduce.JIAOCHEN_DAILY.getAddress();
+    private static String IpPort = EnumTestProduce.JC_DAILY.getAddress();
     private static final String shopId = EnumTestProduce.JC_DAILY.getShopId();
 
     /**
@@ -92,6 +93,15 @@ public class ScenarioUtil extends TestCaseCommon {
     public void appletLoginToken(String token) {
         authorization = token;
         logger.info("applet authorization is:{}", authorization);
+    }
+
+    public void aa() throws Exception {
+        String path = "/business-car-platform/dev/export_file/BUY_PACKAGE_RECORD/";
+        Map<String, Object> map = new HashMap<>();
+        map.put("Expires", "1618630251");
+        map.put("OSSAccessKeyId", "LTAI4G4xNBGMWuAV9dBwkZya");
+        map.put("Signature", "qv2bUL3jz2Q+O8RfWPmxTsfVWMA=");
+        httpGet(path, map, "http://retail-huabei2.oss-cn-beijing.aliyuncs.com/");
     }
 
     //pc门店列表
@@ -597,7 +607,7 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     public JSONObject invokeApi(IScene scene, boolean checkCode) {
-        return invokeApi(scene.getPath(), scene.getRequestBody(), checkCode);
+        return invokeApi(scene.getPath(), scene.getBody(), checkCode);
     }
 
     private JSONObject invokeApi(String path, JSONObject requestBody) {
@@ -6222,13 +6232,14 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 1.2. app完成评价跟进（谢）（2020-12-15） (不用)的接口
+     *
      * @date 2021-04-07 17:50:29
      * Long id : 跟进任务id  是否必填 true  版本 v2.0
      * Long shopId : 跟进任务所属门店id  是否必填 true  版本 v2.0
      * String remark : 跟进备注  是否必填 true  版本 v2.0
      */
 
-    public JSONObject AppCompleteScene( Long id, Long shopId, String remark) {
+    public JSONObject AppCompleteScene(Long id, Long shopId, String remark) {
         String url = "/jiaochen/m-app/follow-up/complete";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -6240,6 +6251,7 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 1.3. app跟进列表（池）V3（2020-03-09）的接口
+     *
      * @date 2021-04-07 17:50:29
      * Integer size : 页大小 范围为[1,100]  是否必填 true  版本 v1.0
      * JSONObject lastValue : 上次请求最后值  是否必填 false  版本 v1.0
@@ -6258,12 +6270,13 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 1.4. app 跟进列表回复 v3 (池)(2020-03-09)的接口
+     *
      * @date 2021-04-07 17:50:30
      * Long followId : 跟进id  是否必填 true  版本 v3.0
      * String content : 回复内容  是否必填 true  版本 v3.0
      */
 
-    public JSONObject AppReplyV3Scene( Long followId, String content) {
+    public JSONObject AppReplyV3Scene(Long followId, String content) {
         String url = "/jiaochen/m-app/follow-up/reply-v3";
         JSONObject json = new JSONObject();
         json.put("follow_id", followId);
@@ -6274,12 +6287,13 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 1.5. app 跟进列表备注 v3 (池)(2020-03-11)的接口
+     *
      * @date 2021-04-07 17:50:30
      * Long followId : 跟进id  是否必填 true  版本 v3.0
      * String remark : 备注内容  是否必填 true  版本 v3.0
      */
 
-    public JSONObject AppRemarkV3Scene( Long followId, String remark) {
+    public JSONObject AppRemarkV3Scene(Long followId, String remark) {
         String url = "/jiaochen/m-app/follow-up/remark-v3";
         JSONObject json = new JSONObject();
         json.put("follow_id", followId);
@@ -6290,12 +6304,13 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 3.4. 读取代办 (谢) （2021-01-22）的接口
+     *
      * @date 2021-04-07 17:50:30
      * String type : 代办类型类型APPOINTMENT(预约)、RECEPTION(接待)、FOLLOW_UP(跟进)  是否必填 true  版本 1.0
      * Boolean isAllDataAuth : No comments found.  是否必填 false  版本 -
      */
 
-    public JSONObject AppWaitingTaskReadScene( String type, Boolean isAllDataAuth) {
+    public JSONObject AppWaitingTaskReadScene(String type, Boolean isAllDataAuth) {
         String url = "/jiaochen/m-app/home-page/waiting-task/read";
         JSONObject json = new JSONObject();
         json.put("type", type);
@@ -6306,11 +6321,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 5.1. 查询手机号客户信息（谢）v3.0 （2021-03-16）的接口
+     *
      * @date 2021-04-07 17:50:30
      * String phone : 手机号  是否必填 true  版本 v1.0
      */
 
-    public JSONObject AppAdmitScene( String phone) {
+    public JSONObject AppAdmitScene(String phone) {
         String url = "/jiaochen/m-app/pre-sales-reception/admit";
         JSONObject json = new JSONObject();
         json.put("phone", phone);
@@ -6320,12 +6336,13 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 5.3. 完成接待（谢）v3.0 （2021-03-16）的接口
+     *
      * @date 2021-04-07 17:50:30
      * Long id : 接待id  是否必填 true  版本 v1.0
      * Long shopId : 接待门店id  是否必填 true  版本 v1.0
      */
 
-    public JSONObject AppFinishReceptionScene( Long id, Long shopId) {
+    public JSONObject AppFinishReceptionScene(Long id, Long shopId) {
         String url = "/jiaochen/m-app/pre-sales-reception/finish-reception";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -6336,12 +6353,13 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 5.4. 取消接待（谢）v3.0 （2021-03-16）的接口
+     *
      * @date 2021-04-07 17:50:30
      * Long id : 接待id  是否必填 true  版本 v1.0
      * Long shopId : 接待门店id  是否必填 true  版本 v1.0
      */
 
-    public JSONObject AppCancelReceptionScene( Long id, Long shopId) {
+    public JSONObject AppCancelReceptionScene(Long id, Long shopId) {
         String url = "/jiaochen/m-app/pre-sales-reception/cancel-reception";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -6352,12 +6370,13 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 5.5. app接待分页（谢）v3.0 （2021-03-16）的接口
+     *
      * @date 2021-04-07 17:50:30
      * Integer size : 页大小 范围为[1,100]  是否必填 true  版本 v1.0
      * JSONObject lastValue : 上次请求最后值  是否必填 false  版本 v1.0
      */
 
-    public JSONObject AppPageScene( Integer size, JSONObject lastValue) {
+    public JSONObject AppPageScene(Integer size, JSONObject lastValue) {
         String url = "/jiaochen/m-app/pre-sales-reception/page";
         JSONObject json = new JSONObject();
         json.put("size", size);
@@ -6368,11 +6387,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 5.6. 销售接待员工列表（谢）v3.0 （2021-03-16）的接口
+     *
      * @date 2021-04-07 17:50:30
      * Long shopId : 门店id  是否必填 true  版本 v2.0
      */
 
-    public JSONObject AppReceptorListScene( Long shopId) {
+    public JSONObject AppReceptorListScene(Long shopId) {
         String url = "/jiaochen/m-app/pre-sales-reception/receptor/list";
         JSONObject json = new JSONObject();
         json.put("shop_id", shopId);
@@ -6382,13 +6402,14 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 5.7. 变更销售接待（谢）v3.0 （2021-03-16）的接口
+     *
      * @date 2021-04-07 17:50:31
      * Long id : 接待id  是否必填 true  版本 v2.0
      * Long shopId : 门店id  是否必填 true  版本 v2.0
      * String receptorId : 售后接待员工id  是否必填 true  版本 v2.0
      */
 
-    public JSONObject AppReceptorChangeScene( Long id, Long shopId, String receptorId) {
+    public JSONObject AppReceptorChangeScene(Long id, Long shopId, String receptorId) {
         String url = "/jiaochen/m-app/pre-sales-reception/receptor/change";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -6400,13 +6421,14 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 5.9. 客户备注（谢）v3.0 （2021-03-16）的接口
+     *
      * @date 2021-04-07 17:50:31
      * Long id : 接待id  是否必填 true  版本 v3.0
      * Long shopId : 门店id  是否必填 true  版本 v3.0
      * String remark : 客户备注信息  是否必填 true  版本 v3.0
      */
 
-    public JSONObject AppCustomerRemarkScene( Long id, Long shopId, String remark) {
+    public JSONObject AppCustomerRemarkScene(Long id, Long shopId, String remark) {
         String url = "/jiaochen/m-app/pre-sales-reception/customer/remark";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -6418,11 +6440,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 5.10. 客户备注（谢）v3.0 （2021-03-16）的接口
+     *
      * @date 2021-04-07 17:50:31
      * Long id : 接待id  是否必填 true  版本 v3.0
      */
 
-    public JSONObject AppCustomerDetailScene( Long id) {
+    public JSONObject AppCustomerDetailScene(Long id) {
         String url = "/jiaochen/m-app/pre-sales-reception/customer/detail";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -6432,13 +6455,14 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 5.12. 客户备注（谢）v3.0 （2021-03-16）的接口
+     *
      * @date 2021-04-07 17:50:31
      * Long id : 购车记录id  是否必填 true  版本 v3.0
      * Long carModel : 购买车辆车型  是否必填 true  版本 v3.0
      * String vin : 车辆底盘号  是否必填 false  版本 v3.0
      */
 
-    public JSONObject AppVehicleEditScene( Long id, Long carModel, String vin) {
+    public JSONObject AppVehicleEditScene(Long id, Long carModel, String vin) {
         String url = "/jiaochen/m-app/pre-sales-reception/vehicle/edit";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -6450,13 +6474,14 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 6.3. app变更预约时间段（谢）的接口
+     *
      * @date 2021-04-07 17:50:31
      * Long id : 预约记录id  是否必填 true  版本 v1.0
      * Long shopId : 预约门店id  是否必填 true  版本 v1.0
      * Long timeId : 预约时间段id  是否必填 true  版本 v1.0
      */
 
-    public JSONObject AppAppointmentModifyTimeScene( Long id, Long shopId, Long timeId) {
+    public JSONObject AppAppointmentModifyTimeScene(Long id, Long shopId, Long timeId) {
         String url = "/jiaochen/m-app/task/appointment/modify-time";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -6468,12 +6493,13 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 6.4. app获取可变更预约日期时间段列表（谢）v3.0（2021-03-16）的接口
+     *
      * @date 2021-04-07 17:50:31
      * String type : 预约类型 取值见字典表《预约类型》v3.0  是否必填 true  版本 v2.0
      * Long shopId : 预约门店id  是否必填 true  版本 v1.0
      */
 
-    public JSONObject AppAppointmentMaintainTimeListScene( String type, Long shopId) {
+    public JSONObject AppAppointmentMaintainTimeListScene(String type, Long shopId) {
         String url = "/jiaochen/m-app/task/appointment/maintain/time/list";
         JSONObject json = new JSONObject();
         json.put("type", type);
@@ -6484,11 +6510,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 6.5. app接待预约（谢）（2020-12-15）的接口
+     *
      * @date 2021-04-07 17:50:31
      * Long id : 预约id  是否必填 true  版本 v2.0
      */
 
-    public JSONObject AppAppointmentReceptionScene( Long id) {
+    public JSONObject AppAppointmentReceptionScene(Long id) {
         String url = "/jiaochen/m-app/task/appointment/reception";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -6498,11 +6525,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 7.2. 获取指定枚举值列表（谢）（2021-02-19）的接口
+     *
      * @date 2021-04-07 17:50:31
      * String enumType : 枚举类型  是否必填 true  版本 v2.0
      */
 
-    public JSONObject AppEnumValueListScene( String enumType) {
+    public JSONObject AppEnumValueListScene(String enumType) {
         String url = "/jiaochen/m-app/enum-value-list";
         JSONObject json = new JSONObject();
         json.put("enum_type", enumType);
@@ -6512,11 +6540,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 2.3. 我的卡券详情 (张小龙) v1.0的接口
+     *
      * @date 2021-04-07 17:50:32
      * Long id : 卡券id  是否必填 true  版本 v2.0
      */
 
-    public JSONObject AppletVoucherDetailScene( Long id) {
+    public JSONObject AppletVoucherDetailScene(Long id) {
         String url = "/jiaochen/applet/granted/voucher/detail";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -6526,12 +6555,13 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 4.3. 小程序-首页-文章列表更多-分页（谢）(2021-03-08)的接口
+     *
      * @date 2021-04-07 17:50:32
      * Integer size : 页大小 范围为[1,100]  是否必填 true  版本 v1.0
      * JSONObject lastValue : 上次请求最后值  是否必填 false  版本 v1.0
      */
 
-    public JSONObject AppletPageScene( Integer size, JSONObject lastValue) {
+    public JSONObject AppletPageScene(Integer size, JSONObject lastValue) {
         String url = "/jiaochen/applet/article/page";
         JSONObject json = new JSONObject();
         json.put("size", size);
@@ -6542,12 +6572,13 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 4.5. 小程序门店列表（谢）(2021-01-04)的接口
+     *
      * @date 2021-04-07 17:50:32
      * JSONArray coordinate : 客户当前位置经纬度 [纬度,经度]  是否必填 false  版本 v2.0
      * String washingStatus : No comments found.  是否必填 false  版本 -
      */
 
-    public JSONObject AppletShopListScene( JSONArray coordinate, String washingStatus) {
+    public JSONObject AppletShopListScene(JSONArray coordinate, String washingStatus) {
         String url = "/jiaochen/applet/shop-list";
         JSONObject json = new JSONObject();
         json.put("coordinate", coordinate);
@@ -6558,11 +6589,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 5.2. 获取指定通用规则说明的接口
+     *
      * @date 2021-04-07 17:50:32
      * String businessType : 业务类型  是否必填 true  版本 v2.0
      */
 
-    public JSONObject AppletCommonRuleExplainDetailScene( String businessType) {
+    public JSONObject AppletCommonRuleExplainDetailScene(String businessType) {
         String url = "/jiaochen/applet/granted/common/rule-explain-detail";
         JSONObject json = new JSONObject();
         json.put("business_type", businessType);
@@ -6572,11 +6604,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 5.4. 获取指定枚举值列表（谢）（2021-02-19）的接口
+     *
      * @date 2021-04-07 17:50:32
      * String enumType : 枚举类型  是否必填 true  版本 v2.0
      */
 
-    public JSONObject AppletCommonEnumValueListScene( String enumType) {
+    public JSONObject AppletCommonEnumValueListScene(String enumType) {
         String url = "/jiaochen/applet/granted/common/enum-value-list";
         JSONObject json = new JSONObject();
         json.put("enum_type", enumType);
@@ -6586,11 +6619,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 5.5. 获取门店id（池）(下拉)（2021-03-23）的接口
+     *
      * @date 2021-04-07 17:50:32
      * Long carModelId : 车型id  是否必填 false  版本 v3.0
      */
 
-    public JSONObject AppletCommonShopListScene( Long carModelId) {
+    public JSONObject AppletCommonShopListScene(Long carModelId) {
         String url = "/jiaochen/applet/granted/common/shop-list";
         JSONObject json = new JSONObject();
         json.put("car_model_id", carModelId);
@@ -6600,11 +6634,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 6.1. 获取banner通用（池）（2021-03-15）的接口
+     *
      * @date 2021-04-07 17:50:33
      * String type : type banner类型 ONLINE_EXPERTS 在线专家 RENEW_CONSULT 续保咨询 USED_CAR 二手车 USED_CAR_ASSESS 二手车评估  是否必填 false  版本 v3.0
      */
 
-    public JSONObject AppletConsultBannerScene( String type) {
+    public JSONObject AppletConsultBannerScene(String type) {
         String url = "/jiaochen/applet/granted/consult/banner";
         JSONObject json = new JSONObject();
         json.put("type", type);
@@ -6614,12 +6649,13 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 6.8. 服务顾问分享海报 （池） （2021-03-12）的接口
+     *
      * @date 2021-04-07 17:50:33
      * String salesId : 服务顾问id  是否必填 true  版本 v3.0
      * Long shopId : 门店id  是否必填 true  版本 v3.0
      */
 
-    public JSONObject AppletConsultSalesPosterScene( String salesId, Long shopId) {
+    public JSONObject AppletConsultSalesPosterScene(String salesId, Long shopId) {
         String url = "/jiaochen/applet/granted/consult/sales-poster";
         JSONObject json = new JSONObject();
         json.put("sales_id", salesId);
@@ -6630,12 +6666,13 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 7.2. 预约员工列表 （谢）v3.0（2021-03-12）的接口
+     *
      * @date 2021-04-07 17:50:33
      * String type : 预约类型 详见字典表《预约类型》v3.0（2021-03-12）  是否必填 true  版本 v2.0
      * Long shopId : 预约门店id  是否必填 true  版本 v1.0
      */
 
-    public JSONObject AppletAppointmentStaffListScene( String type, Long shopId) {
+    public JSONObject AppletAppointmentStaffListScene(String type, Long shopId) {
         String url = "/jiaochen/applet/granted/appointment/staff/list";
         JSONObject json = new JSONObject();
         json.put("type", type);
@@ -6646,12 +6683,13 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 7.7. 删除预约 （谢）v3.0（2021-03-12）的接口
+     *
      * @date 2021-04-07 17:50:33
      * String type : 预约类型 详见字典表《预约类型》v3.0（2021-03-12）  是否必填 true  版本 v2.0
      * Long id : 预约记录id  是否必填 true  版本 v1.0
      */
 
-    public JSONObject AppletAppointmentDeleteScene( String type, Long id) {
+    public JSONObject AppletAppointmentDeleteScene(String type, Long id) {
         String url = "/jiaochen/applet/granted/appointment/delete";
         JSONObject json = new JSONObject();
         json.put("type", type);
@@ -6662,12 +6700,13 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 10.1. 获取评价配置 （谢）v3.0 （2021-03-12）的接口
+     *
      * @date 2021-04-07 17:50:33
      * Integer type : 评价类型 详见字典表《评价类型》 2021-03-12  是否必填 true  版本 v2.0
      * Long shopId : 评价所属门店  是否必填 true  版本 v2.0
      */
 
-    public JSONObject AppletEvaluateConfigScene( Integer type, Long shopId) {
+    public JSONObject AppletEvaluateConfigScene(Integer type, Long shopId) {
         String url = "/jiaochen/applet/granted/evaluate/config";
         JSONObject json = new JSONObject();
         json.put("type", type);
@@ -6678,13 +6717,14 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 10.3. 我的评价分页 （谢）v3.0 （2021-04-06）的接口
+     *
      * @date 2021-04-07 17:50:33
      * Integer size : 页大小 范围为[1,100]  是否必填 true  版本 v1.0
      * JSONObject lastValue : 上次请求最后值  是否必填 false  版本 v1.0
      * Integer type : 评价类型 详见字典表《评价类型》 2021-03-12  是否必填 true  版本 v2.0
      */
 
-    public JSONObject AppletEvaluatePageScene( Integer size, JSONObject lastValue, Integer type) {
+    public JSONObject AppletEvaluatePageScene(Integer size, JSONObject lastValue, Integer type) {
         String url = "/jiaochen/applet/granted/evaluate/page";
         JSONObject json = new JSONObject();
         json.put("size", size);
@@ -6696,11 +6736,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 13.2. 二手车商品详情（华成裕）的接口
+     *
      * @date 2021-04-07 17:50:33
      * Long id : 商品ID  是否必填 false  版本 v5.3
      */
 
-    public JSONObject usedDetailScene( Long id) {
+    public JSONObject usedDetailScene(Long id) {
         String url = "/jiaochen/used-car/detail";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -6710,12 +6751,13 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 14.10. 生成分享二维码 (池) v2.0的接口
+     *
      * @date 2021-04-07 17:50:34
      * String businessType : 业务类型 ("0A", "售后维修"), ("04", "签到分享"), ("05", "活动分享"), ("06", "二维码分享"),  是否必填 false  版本 -
      * Long taskId : No comments found.  是否必填 true  版本 -
      */
 
-    public JSONObject AppletMemberCenterShareTaskGeneratePosterScene( String businessType, Long taskId) {
+    public JSONObject AppletMemberCenterShareTaskGeneratePosterScene(String businessType, Long taskId) {
         String url = "/jiaochen/applet/granted/member-center/share-task/generate-Poster";
         JSONObject json = new JSONObject();
         json.put("business_type", businessType);
@@ -6726,11 +6768,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 15.1. 微信小程序登录（谢）的接口
+     *
      * @date 2021-04-07 17:50:34
      * String code : 小程序登录授权code  是否必填 true  版本 v1.0
      */
 
-    public JSONObject AppletAppletLoginScene( String code) {
+    public JSONObject AppletAppletLoginScene(String code) {
         String url = "/jiaochen/applet-login";
         JSONObject json = new JSONObject();
         json.put("code", code);
@@ -6740,12 +6783,13 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 15.2. 获取小程序验证码（谢）的接口
+     *
      * @date 2021-04-07 17:50:34
      * String phone : 手机号  是否必填 true  版本 v1.0
      * String type : 验证码类型 默认为LOGIN  是否必填 true  版本 v1.0
      */
 
-    public JSONObject AppletVerificationCodeScene( String phone, String type) {
+    public JSONObject AppletVerificationCodeScene(String phone, String type) {
         String url = "/jiaochen/applet/verification-code";
         JSONObject json = new JSONObject();
         json.put("phone", phone);
@@ -6756,12 +6800,13 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 15.5. 授权用户信息（谢）的接口
+     *
      * @date 2021-04-07 17:50:34
      * String encryptedData : 授权的加密数据  是否必填 true  版本 v1.0
      * String iv : 加密向量  是否必填 true  版本 v1.0
      */
 
-    public JSONObject AppletUserDetailScene( String encryptedData, String iv) {
+    public JSONObject AppletUserDetailScene(String encryptedData, String iv) {
         String url = "/jiaochen/applet/grant/user-detail";
         JSONObject json = new JSONObject();
         json.put("encrypted_data", encryptedData);
@@ -6772,13 +6817,14 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 2.2. 权益修改 (池) v2.0的接口
+     *
      * @date 2021-04-07 17:50:35
      * Long equityId : 权益id  是否必填 true  版本 v2.0
      * Integer awardCount : 奖励数  是否必填 true  版本 v2.0
      * String description : 权益说明  是否必填 true  版本 v2.0
      */
 
-    public JSONObject EquityEditScene( Long equityId, Integer awardCount, String description) {
+    public JSONObject EquityEditScene(Long equityId, Integer awardCount, String description) {
         String url = "/jiaochen/pc/vip-marketing/equity/edit";
         JSONObject json = new JSONObject();
         json.put("equity_id", equityId);
@@ -6790,12 +6836,13 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 2.3. 权益开启或关闭 (池) v2.0的接口
+     *
      * @date 2021-04-07 17:50:35
      * Long equityId : 权益id  是否必填 true  版本 v2.0
      * String equityStatus : 权益状态 ENABLE "开启" DISABLE "关闭"  是否必填 true  版本 v2.0
      */
 
-    public JSONObject EquityStartOrCloseScene( Long equityId, String equityStatus) {
+    public JSONObject EquityStartOrCloseScene(Long equityId, String equityStatus) {
         String url = "/jiaochen/pc/vip-marketing/equity/start-or-close";
         JSONObject json = new JSONObject();
         json.put("equity_id", equityId);
@@ -6806,11 +6853,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 2.4. 编辑洗车规则说明 (池) v2.0的接口
+     *
      * @date 2021-04-07 17:50:35
      * String ruleDetail : 规则  是否必填 true  版本 1.2
      */
 
-    public JSONObject WashCarManagerEditRuleScene( String ruleDetail) {
+    public JSONObject WashCarManagerEditRuleScene(String ruleDetail) {
         String url = "/jiaochen/pc/vip-marketing/wash-car-manager/edit-rule";
         JSONObject json = new JSONObject();
         json.put("rule_detail", ruleDetail);
@@ -6820,11 +6868,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 2.5. 编辑洗车权益说明 (池) v2.0的接口
+     *
      * @date 2021-04-07 17:50:35
      * String equityDetail : 洗车权益说明  是否必填 true  版本 v2.0
      */
 
-    public JSONObject WashCarManagerEditEquityScene( String equityDetail) {
+    public JSONObject WashCarManagerEditEquityScene(String equityDetail) {
         String url = "/jiaochen/pc/vip-marketing/wash-car-manager/edit-equity";
         JSONObject json = new JSONObject();
         json.put("equity_detail", equityDetail);
@@ -6834,12 +6883,13 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 2.13. 签到配置列表 (池) v2.0的接口
+     *
      * @date 2021-04-07 17:50:35
      * Integer page : 页码 大于0  是否必填 true  版本 v1.0
      * Integer size : 页大小 范围为[1,100]  是否必填 true  版本 v1.0
      */
 
-    public JSONObject SignInConfigPageScene( Integer page, Integer size) {
+    public JSONObject SignInConfigPageScene(Integer page, Integer size) {
         String url = "/jiaochen/pc/vip-marketing/sign_in_config/page";
         JSONObject json = new JSONObject();
         json.put("page", page);
@@ -6850,12 +6900,13 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 2.14. 签到开启或关闭的接口
+     *
      * @date 2021-04-07 17:50:35
      * String status : 状态  是否必填 true  版本 v2.0
      * Long id : id  是否必填 true  版本 v2.0
      */
 
-    public JSONObject SignInConfigStartOrCloseScene( String status, Long id) {
+    public JSONObject SignInConfigStartOrCloseScene(String status, Long id) {
         String url = "/jiaochen/pc/vip-marketing/sign_in_config/start-or-close";
         JSONObject json = new JSONObject();
         json.put("status", status);
@@ -6866,13 +6917,14 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 2.16. 签到积分变更记录 (池) v2.0的接口
+     *
      * @date 2021-04-07 17:50:35
      * Integer page : 页码 大于0  是否必填 true  版本 v1.0
      * Integer size : 页大小 范围为[1,100]  是否必填 true  版本 v1.0
      * Long signInConfigId : 签到id  是否必填 false  版本 v2.0
      */
 
-    public JSONObject SignInConfigChangeRecordScene( Integer page, Integer size, Long signInConfigId) {
+    public JSONObject SignInConfigChangeRecordScene(Integer page, Integer size, Long signInConfigId) {
         String url = "/jiaochen/pc/vip-marketing/sign_in_config/change-record";
         JSONObject json = new JSONObject();
         json.put("page", page);
@@ -6884,11 +6936,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 2.20. 分享管理(修改前获取根据任务id查询) (池) v2.0的接口
+     *
      * @date 2021-04-07 17:50:35
      * Long taskId : No comments found.  是否必填 false  版本 -
      */
 
-    public JSONObject ShareManagerEditPreScene( Long taskId) {
+    public JSONObject ShareManagerEditPreScene(Long taskId) {
         String url = "/jiaochen/pc/vip-marketing/share-manager/edit-pre";
         JSONObject json = new JSONObject();
         json.put("task_id", taskId);
@@ -6898,12 +6951,13 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 2.21. 分享管理任务开启或关闭(池) v2.0的接口
+     *
      * @date 2021-04-07 17:50:35
      * Long id : 任务id  是否必填 true  版本 v2.0
      * String status : 状态  是否必填 true  版本 v2.0
      */
 
-    public JSONObject ShareManagerStartOrCloseScene( Long id, String status) {
+    public JSONObject ShareManagerStartOrCloseScene(Long id, String status) {
         String url = "/jiaochen/pc/vip-marketing/share-manager/start-or-close";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -6914,11 +6968,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 2.22. 分享说明(池) v2.0的接口
+     *
      * @date 2021-04-07 17:50:36
      * String content : 内容  是否必填 false  版本 v2.0
      */
 
-    public JSONObject ShareManagerExplainEditScene( String content) {
+    public JSONObject ShareManagerExplainEditScene(String content) {
         String url = "/jiaochen/pc/vip-marketing/share-manager/explain_edit";
         JSONObject json = new JSONObject();
         json.put("content", content);
@@ -6928,11 +6983,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 3.2. 预约配置详情（谢）v3.0（2021-03-22）的接口
+     *
      * @date 2021-04-07 17:50:36
      * String type : 预约类型 取值见字典表《预约类型》 v3.0增加试驾  是否必填 true  版本 v2.0
      */
 
-    public JSONObject AppointmentMaintainConfigDetailScene( String type) {
+    public JSONObject AppointmentMaintainConfigDetailScene(String type) {
         String url = "/jiaochen/pc/manage/appointment/maintain-config/detail";
         JSONObject json = new JSONObject();
         json.put("type", type);
@@ -6942,12 +6998,13 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 4.7. 添加登陆日志（后端接口，前端无需处理）的接口
+     *
      * @date 2021-04-07 17:50:36
      * String saleId : No comments found.  是否必填 true  版本 -
      * Long loginTime : No comments found.  是否必填 true  版本 -
      */
 
-    public JSONObject LoginRecordAddScene( String saleId, Long loginTime) {
+    public JSONObject LoginRecordAddScene(String saleId, Long loginTime) {
         String url = "/jiaochen/pc/record/login-record/add";
         JSONObject json = new JSONObject();
         json.put("sale_id", saleId);
@@ -6958,11 +7015,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 5.2. 卡券推广 （张小龙） v2.0的接口
+     *
      * @date 2021-04-07 17:50:36
      * Long id : 卡券id  是否必填 true  版本 v2.0
      */
 
-    public JSONObject ExtensionPageScene( Long id) {
+    public JSONObject ExtensionPageScene(Long id) {
         String url = "/jiaochen/pc/voucher-manage/extension-page";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -6972,11 +7030,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 5.3. 卡券撤回 （张小龙） v2.0的接口
+     *
      * @date 2021-04-07 17:50:36
      * Long id : 唯一id  是否必填 true  版本 v2.0
      */
 
-    public JSONObject RecallVoucherScene( Long id) {
+    public JSONObject RecallVoucherScene(Long id) {
         String url = "/jiaochen/pc/voucher-manage/recall-voucher";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -6986,11 +7045,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 5.5. 增发撤回 （张小龙） v2.0的接口
+     *
      * @date 2021-04-07 17:50:36
      * Long id : 卡券id  是否必填 true  版本 v2.0
      */
 
-    public JSONObject RecallAdditionalScene( Long id) {
+    public JSONObject RecallAdditionalScene(Long id) {
         String url = "/jiaochen/pc/voucher-manage/recall-additional";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -7000,13 +7060,14 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 5.7. 变更记录 （张小龙） v2.0的接口
+     *
      * @date 2021-04-07 17:50:36
      * Integer page : 页码 大于0  是否必填 true  版本 v1.0
      * Integer size : 页大小 范围为[1,100]  是否必填 true  版本 v1.0
      * Long voucherId : 卡券id  是否必填 true  版本 v2.0
      */
 
-    public JSONObject ChangeRecordScene( Integer page, Integer size, Long voucherId) {
+    public JSONObject ChangeRecordScene(Integer page, Integer size, Long voucherId) {
         String url = "/jiaochen/pc/voucher-manage/change-record";
         JSONObject json = new JSONObject();
         json.put("page", page);
@@ -7018,11 +7079,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 5.10. 卡券详情 （张小龙） v2.0的接口
+     *
      * @date 2021-04-07 17:50:36
      * Long id : 卡券id  是否必填 true  版本 v2.0
      */
 
-    public JSONObject VoucherDetailScene( Long id) {
+    public JSONObject VoucherDetailScene(Long id) {
         String url = "/jiaochen/pc/voucher-manage/voucher-detail";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -7032,11 +7094,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 5.12. 删除卡券 （张小龙） v2.0的接口
+     *
      * @date 2021-04-07 17:50:36
      * Long id : 卡券id  是否必填 true  版本 v2.0
      */
 
-    public JSONObject DeleteVoucherScene( Long id) {
+    public JSONObject DeleteVoucherScene(Long id) {
         String url = "/jiaochen/pc/voucher-manage/delete-voucher";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -7046,12 +7109,13 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 5.14. 开始/结束发放 （张小龙） v2.0的接口
+     *
      * @date 2021-04-07 17:50:36
      * Long id : 卡券id  是否必填 true  版本 v2.0
      * Boolean isStart : 是否开始发放  是否必填 true  版本 v2.0
      */
 
-    public JSONObject ChangeProvideStatusScene( Long id, Boolean isStart) {
+    public JSONObject ChangeProvideStatusScene(Long id, Boolean isStart) {
         String url = "/jiaochen/pc/voucher-manage/change-provide-status";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -7062,12 +7126,13 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 5.17. 作废客户卡券 （张小龙） v2.0的接口
+     *
      * @date 2021-04-07 17:50:36
      * Long id : 领取记录id  是否必填 false  版本 v2.0
      * String invalidReason : 做给原因  是否必填 false  版本 v2.0
      */
 
-    public JSONObject InvalidCustomerVoucherScene( Long id, String invalidReason) {
+    public JSONObject InvalidCustomerVoucherScene(Long id, String invalidReason) {
         String url = "/jiaochen/pc/voucher-manage/invalid-customer-voucher";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -7078,11 +7143,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 5.20. 卡券表头展示信息查询 （张小龙） v2.0的接口
+     *
      * @date 2021-04-07 17:50:36
      * Long id : 卡券id  是否必填 true  版本 v2.0
      */
 
-    public JSONObject VoucherInfoScene( Long id) {
+    public JSONObject VoucherInfoScene(Long id) {
         String url = "/jiaochen/pc/voucher-manage/voucher-info";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -7092,13 +7158,14 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 6.4. 卡券批量审批 （张小龙） v3.0的接口
+     *
      * @date 2021-04-07 17:50:36
      * JSONArray ids : 批量审批记录id  是否必填 true  版本 v3.0
      * Integer status : 状态 1 通过，2 拒绝  是否必填 true  版本 v1.0
      * String reason : 审批未通过原因  是否必填 false  版本 v3.0
      */
 
-    public JSONObject ApplyBatchApprovalScene( JSONArray ids, Integer status, String reason) {
+    public JSONObject ApplyBatchApprovalScene(JSONArray ids, Integer status, String reason) {
         String url = "/jiaochen/pc/voucher/apply/batch-approval";
         JSONObject json = new JSONObject();
         json.put("ids", ids);
@@ -7110,11 +7177,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 7.2. 导入模板下载的接口
+     *
      * @date 2021-04-07 17:50:36
      * String type : 模板类型 AFTER_CUSTOMER 售后工单 v1.0 POTENTIAL 潜客模板 v2.0 BUY_CAR 购车模板v3.0  是否必填 true  版本 v1.0
      */
 
-    public JSONObject TemplateScene( String type) {
+    public JSONObject TemplateScene(String type) {
         String url = "/jiaochen/pc/import/template";
         JSONObject json = new JSONObject();
         json.put("type", type);
@@ -7124,11 +7192,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 8.3. 响应规则详情（池）（2021-03-15）通用的接口
+     *
      * @date 2021-04-07 17:50:37
      * String businessType : 咨询业务类型  是否必填 true  版本 v3.0
      */
 
-    public JSONObject ResponseRuleDetailScene( String businessType) {
+    public JSONObject ResponseRuleDetailScene(String businessType) {
         String url = "/jiaochen/pc/consult-management/response-rule-detail";
         JSONObject json = new JSONObject();
         json.put("business_type", businessType);
@@ -7138,12 +7207,13 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 8.9. 回复（通用）（池）(2021-03-12)的接口
+     *
      * @date 2021-04-07 17:50:37
      * Long id : id  是否必填 true  版本 -
      * String content : 回复内容  是否必填 true  版本 v3.0
      */
 
-    public JSONObject ReplyScene( Long id, String content) {
+    public JSONObject ReplyScene(Long id, String content) {
         String url = "/jiaochen/pc/consult-management/reply";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -7154,12 +7224,13 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 8.10. 备注（通用）（池）(2021-03-12)的接口
+     *
      * @date 2021-04-07 17:50:37
      * Long id : 唯一id  是否必填 true  版本 v3.0
      * String remarkContent : 备注内容  是否必填 true  版本 v3.0
      */
 
-    public JSONObject RemarkScene( Long id, String remarkContent) {
+    public JSONObject RemarkScene(Long id, String remarkContent) {
         String url = "/jiaochen/pc/consult-management/remark";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -7170,11 +7241,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 8.11. 专属服务说明配置（池）（2021-03-08）的接口
+     *
      * @date 2021-04-07 17:50:37
      * String content : No comments found.  是否必填 true  版本 -
      */
 
-    public JSONObject DedicatedServiceExplainEditScene( String content) {
+    public JSONObject DedicatedServiceExplainEditScene(String content) {
         String url = "/jiaochen/pc/consult-management/dedicated-service/explain-edit";
         JSONObject json = new JSONObject();
         json.put("content", content);
@@ -7184,11 +7256,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 8.14. 专属服务说明配置（池）（2021-03-08）的接口
+     *
      * @date 2021-04-07 17:50:37
      * String content : No comments found.  是否必填 true  版本 -
      */
 
-    public JSONObject OnlineExpertsExplainEditScene( String content) {
+    public JSONObject OnlineExpertsExplainEditScene(String content) {
         String url = "/jiaochen/pc/consult-management/online-experts/explain-edit";
         JSONObject json = new JSONObject();
         json.put("content", content);
@@ -7198,12 +7271,13 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 9.6. 试驾车系配置更新（谢）V3.0（2020-12-18）的接口
+     *
      * @date 2021-04-07 17:50:37
      * Long id : 车系id  是否必填 true  版本 v3.0
      * String status : 预约状态 ENABLE：开启，DISABLE：关闭  是否必填 true  版本 v3.0
      */
 
-    public JSONObject ManageStyleEditScene( Long id, String status) {
+    public JSONObject ManageStyleEditScene(Long id, String status) {
         String url = "/jiaochen/pc/shop-style-model/manage/style/edit";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -7214,12 +7288,13 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 11.10. 售前客户详情(杨)v3.0的接口
+     *
      * @date 2021-04-07 17:50:37
      * Long shopId : 门店Id  是否必填 true  版本 v3.0
      * Long customerId : 客户Id  是否必填 true  版本 v3.0
      */
 
-    public JSONObject PreSaleCustomerInfoScene( Long shopId, Long customerId) {
+    public JSONObject PreSaleCustomerInfoScene(Long shopId, Long customerId) {
         String url = "/jiaochen/pc/customer-manage/pre-sale-customer/info";
         JSONObject json = new JSONObject();
         json.put("shopId", shopId);
@@ -7230,13 +7305,14 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 11.12. 售前变更所属销售 (杨)v3.0的接口
+     *
      * @date 2021-04-07 17:50:37
      * Long shopId : 门店Id  是否必填 true  版本 v3.0
      * Long customerId : 客户Id  是否必填 true  版本 v3.0
      * String saleId : 客户Id  是否必填 true  版本 v3.0
      */
 
-    public JSONObject PreSaleCustomerChangeBelongSaleScene( Long shopId, Long customerId, String saleId) {
+    public JSONObject PreSaleCustomerChangeBelongSaleScene(Long shopId, Long customerId, String saleId) {
         String url = "/jiaochen/pc/customer-manage/pre-sale-customer/change-belong-sale";
         JSONObject json = new JSONObject();
         json.put("shop_id", shopId);
@@ -7248,13 +7324,14 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 11.17. 售后客户详情(杨)v3.0的接口
+     *
      * @date 2021-04-07 17:50:37
      * Long carId : 车辆Id  是否必填 true  版本 v3.0
      * Long shopId : 门店Id  是否必填 true  版本 v3.0
      * Long customerId : 客户Id  是否必填 true  版本 v3.0
      */
 
-    public JSONObject AfterSaleCustomerInfoScene( Long carId, Long shopId, Long customerId) {
+    public JSONObject AfterSaleCustomerInfoScene(Long carId, Long shopId, Long customerId) {
         String url = "/jiaochen/pc/customer-manage/after-sale-customer/info";
         JSONObject json = new JSONObject();
         json.put("car_id", carId);
@@ -7266,13 +7343,14 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 12.3. 消息发送客户总数 （谢） （2020-12-18）的接口
+     *
      * @date 2021-04-07 17:50:37
      * Integer pushTarget : 推送目标 0：全部客户，1：门店客户，2：个人客户  是否必填 true  版本 v2.0
      * JSONArray shopList : 门店列表 推送目标为门店客户时必填  是否必填 false  版本 v1.0
      * JSONArray telList : 客户手机号列表 推送目标个人客户时时必填  是否必填 false  版本 v1.0
      */
 
-    public JSONObject GroupTotalScene( Integer pushTarget, JSONArray shopList, JSONArray telList) {
+    public JSONObject GroupTotalScene(Integer pushTarget, JSONArray shopList, JSONArray telList) {
         String url = "/jiaochen/pc/message-manage/group-total";
         JSONObject json = new JSONObject();
         json.put("push_target", pushTarget);
@@ -7284,12 +7362,13 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 14.5. 接待预约（谢）（2020-12-15）的接口
+     *
      * @date 2021-04-07 17:50:38
      * Long id : 预约id  是否必填 true  版本 v2.0
      * String type : 预约类型 见字典表《预约类型》  是否必填 true  版本 v3.0
      */
 
-    public JSONObject ReceptionScene( Long id, String type) {
+    public JSONObject ReceptionScene(Long id, String type) {
         String url = "/jiaochen/pc/appointment-manage/reception";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -7300,13 +7379,14 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 15.4. 套餐审核 v2.0 （张小龙） 2020-01-28的接口
+     *
      * @date 2021-04-07 17:50:38
      * Long id : 套餐id  是否必填 false  版本 v2.0
      * String status : 套餐审核状态 AUDITING(0, "审核中"), AGREE(1,"已通过"),REFUSAL(2,"已拒绝"),  是否必填 false  版本 v2.0
      * String auditStatus : 确认购买状态 AGREE(1,"已通过")  是否必填 false  版本 -
      */
 
-    public JSONObject AuditPackageStatusScene( Long id, String status, String auditStatus) {
+    public JSONObject AuditPackageStatusScene(Long id, String status, String auditStatus) {
         String url = "/jiaochen/pc/package-manage/audit-package-status";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -7318,11 +7398,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 15.5. 套餐取消 v2.3（张小龙） 2021-03-17的接口
+     *
      * @date 2021-04-07 17:50:38
      * Long id : 唯一id  是否必填 false  版本 -
      */
 
-    public JSONObject CancelPackageScene( Long id) {
+    public JSONObject CancelPackageScene(Long id) {
         String url = "/jiaochen/pc/package-manage/cancel-package";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -7332,11 +7413,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 15.12. 套餐购买记录取消 （张小龙）（2020-12-25）的接口
+     *
      * @date 2021-04-07 17:50:38
      * Long id : 套餐购买记录id  是否必填 true  版本 v2.0
      */
 
-    public JSONObject CancelSoldPackageScene( Long id) {
+    public JSONObject CancelSoldPackageScene(Long id) {
         String url = "/jiaochen/pc/package-manage/cancel-sold-package";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -7346,12 +7428,13 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 15.13. 作废客户购买套餐 （张小龙）（2021-03-15）的接口
+     *
      * @date 2021-04-07 17:50:38
      * Long id : 唯一id  是否必填 false  版本 v2.2
      * String reason : 作废原因  是否必填 true  版本 v2.2
      */
 
-    public JSONObject InvalidCustomerPackageScene( Long id, String reason) {
+    public JSONObject InvalidCustomerPackageScene(Long id, String reason) {
         String url = "/jiaochen/pc/package-manage/invalid-customer-package";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -7362,13 +7445,14 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 17.4. 车辆投保记录 （池）（2021-03-05）的接口
+     *
      * @date 2021-04-07 17:50:38
      * Integer page : 页码 大于0  是否必填 true  版本 v1.0
      * Integer size : 页大小 范围为[1,100]  是否必填 true  版本 v1.0
      * Long id : 列表id  是否必填 false  版本 v3.0
      */
 
-    public JSONObject CarInsuranceRecordScene( Integer page, Integer size, Long id) {
+    public JSONObject CarInsuranceRecordScene(Integer page, Integer size, Long id) {
         String url = "/jiaochen/pc/insurance-management/car-insurance-record";
         JSONObject json = new JSONObject();
         json.put("page", page);
@@ -7380,13 +7464,14 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 17.5. 购买 （池）（2021-03-05）的接口
+     *
      * @date 2021-04-07 17:50:38
      * Long id : id  是否必填 false  版本 v3.0
      * Long insuranceCompanyId : 投保公司  是否必填 false  版本 v3.0
      * Double insuranceMoney : 投保金额  是否必填 false  版本 v3.0
      */
 
-    public JSONObject BuyInsuranceScene( Long id, Long insuranceCompanyId, Double insuranceMoney) {
+    public JSONObject BuyInsuranceScene(Long id, Long insuranceCompanyId, Double insuranceMoney) {
         String url = "/jiaochen/pc/insurance-management/buy-insurance";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -7398,12 +7483,13 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 17.7. 投保公司列表（池）（分页）（2021-03-05）的接口
+     *
      * @date 2021-04-07 17:50:38
      * Integer page : 页码 大于0  是否必填 true  版本 v1.0
      * Integer size : 页大小 范围为[1,100]  是否必填 true  版本 v1.0
      */
 
-    public JSONObject InsuranceCompanyPageListScene( Integer page, Integer size) {
+    public JSONObject InsuranceCompanyPageListScene(Integer page, Integer size) {
         String url = "/jiaochen/pc/insurance-management/insurance-company-page-list";
         JSONObject json = new JSONObject();
         json.put("page", page);
@@ -7414,11 +7500,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 17.8. 投保公司删除（池）（2021-03-05）的接口
+     *
      * @date 2021-04-07 17:50:38
      * Long insuranceCompanyId : 投保公司id  是否必填 false  版本 v3.0
      */
 
-    public JSONObject InsuranceCompanyDeleteScene( Long insuranceCompanyId) {
+    public JSONObject InsuranceCompanyDeleteScene(Long insuranceCompanyId) {
         String url = "/jiaochen/pc/insurance-management/insurance-company-delete";
         JSONObject json = new JSONObject();
         json.put("insurance_company_id", insuranceCompanyId);
@@ -7428,12 +7515,13 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 17.9. 保险公司维护（池）（2021-03-05）的接口
+     *
      * @date 2021-04-07 17:50:38
      * Long insuranceCompanyId : 投保公司id  是否必填 false  版本 v3.0
      * String insuranceCompanyName : 投保公司名称  是否必填 false  版本 v3.0
      */
 
-    public JSONObject InsuranceCompanyEditScene( Long insuranceCompanyId, String insuranceCompanyName) {
+    public JSONObject InsuranceCompanyEditScene(Long insuranceCompanyId, String insuranceCompanyName) {
         String url = "/jiaochen/pc/insurance-management/insurance-company-edit";
         JSONObject json = new JSONObject();
         json.put("insurance_company_id", insuranceCompanyId);
@@ -7444,11 +7532,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 17.10. 保险公司新增（池）（2021-03-12）的接口
+     *
      * @date 2021-04-07 17:50:38
      * String name : No comments found.  是否必填 true  版本 -
      */
 
-    public JSONObject InsuranceCompanyAddScene( String name) {
+    public JSONObject InsuranceCompanyAddScene(String name) {
         String url = "/jiaochen/pc/insurance-management/insurance-company-add";
         JSONObject json = new JSONObject();
         json.put("name", name);
@@ -7458,11 +7547,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 18.7. 特惠商品删除 v2.0(池)的接口
+     *
      * @date 2021-04-07 17:50:38
      * Long id : id  是否必填 false  版本 -
      */
 
-    public JSONObject CommodityDeleteScene( Long id) {
+    public JSONObject CommodityDeleteScene(Long id) {
         String url = "/jiaochen/pc/store/commodity/delete";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -7472,12 +7562,13 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 19.3. 接待详情（谢）v3.0 （2021-03-16）的接口
+     *
      * @date 2021-04-07 17:50:39
      * Long id : 接待id  是否必填 true  版本 v3.0
      * Long shopId : 门店id  是否必填 true  版本 v3.0
      */
 
-    public JSONObject DetailScene( Long id, Long shopId) {
+    public JSONObject DetailScene(Long id, Long shopId) {
         String url = "/jiaochen/pc/pre-sales-reception/detail";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -7488,11 +7579,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 19.4. 查询手机号客户信息（谢）v3.0 （2021-03-16）的接口
+     *
      * @date 2021-04-07 17:50:39
      * String phone : 手机号  是否必填 true  版本 v1.0
      */
 
-    public JSONObject AdmitScene( String phone) {
+    public JSONObject AdmitScene(String phone) {
         String url = "/jiaochen/pc/pre-sales-reception/admit";
         JSONObject json = new JSONObject();
         json.put("phone", phone);
@@ -7502,12 +7594,13 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 19.6. 完成接待（谢）v3.0 （2021-03-16）的接口
+     *
      * @date 2021-04-07 17:50:39
      * Long id : 接待id  是否必填 true  版本 v1.0
      * Long shopId : 接待门店id  是否必填 true  版本 v1.0
      */
 
-    public JSONObject FinishReceptionScene( Long id, Long shopId) {
+    public JSONObject FinishReceptionScene(Long id, Long shopId) {
         String url = "/jiaochen/pc/pre-sales-reception/finish-reception";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -7518,12 +7611,13 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 19.7. 取消接待（谢）v3.0 （2021-03-16）的接口
+     *
      * @date 2021-04-07 17:50:39
      * Long id : 接待id  是否必填 true  版本 v1.0
      * Long shopId : 接待门店id  是否必填 true  版本 v1.0
      */
 
-    public JSONObject CancelReceptionScene( Long id, Long shopId) {
+    public JSONObject CancelReceptionScene(Long id, Long shopId) {
         String url = "/jiaochen/pc/pre-sales-reception/cancel-reception";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -7534,11 +7628,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 19.8. 销售接待员工列表（谢）v3.0 （2021-03-16）的接口
+     *
      * @date 2021-04-07 17:50:39
      * Long shopId : 门店id  是否必填 true  版本 v2.0
      */
 
-    public JSONObject saleReceptorListScene( Long shopId) {
+    public JSONObject saleReceptorListScene(Long shopId) {
         String url = "/jiaochen/pc/pre-sales-reception/receptor/list";
         JSONObject json = new JSONObject();
         json.put("shop_id", shopId);
@@ -7548,13 +7643,14 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 19.9. 变更销售接待（谢）v3.0 （2021-03-16）的接口
+     *
      * @date 2021-04-07 17:50:39
      * Long id : 接待id  是否必填 true  版本 v2.0
      * Long shopId : 门店id  是否必填 true  版本 v2.0
      * String receptorId : 售后接待员工id  是否必填 true  版本 v2.0
      */
 
-    public JSONObject saleReceptorChangeScene( Long id, Long shopId, String receptorId) {
+    public JSONObject saleReceptorChangeScene(Long id, Long shopId, String receptorId) {
         String url = "/jiaochen/pc/pre-sales-reception/receptor/change";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -7566,13 +7662,14 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 19.11. 客户备注（谢）v3.0 （2021-03-16）的接口
+     *
      * @date 2021-04-07 17:50:39
      * Long id : 接待id  是否必填 true  版本 v3.0
      * Long shopId : 门店id  是否必填 true  版本 v3.0
      * String remark : 客户备注信息  是否必填 true  版本 v3.0
      */
 
-    public JSONObject CustomerRemarkScene( Long id, Long shopId, String remark) {
+    public JSONObject CustomerRemarkScene(Long id, Long shopId, String remark) {
         String url = "/jiaochen/pc/pre-sales-reception/customer/remark";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -7584,13 +7681,14 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 19.13. 客户车辆编辑（谢）v3.0 （2021-03-16）的接口
+     *
      * @date 2021-04-07 17:50:39
      * Long id : 车辆id  是否必填 true  版本 v3.0
      * Long carModel : 购买车辆车型  是否必填 true  版本 v3.0
      * String vin : 车辆底盘号  是否必填 false  版本 v3.0
      */
 
-    public JSONObject VehicleEditScene( Long id, Long carModel, String vin) {
+    public JSONObject VehicleEditScene(Long id, Long carModel, String vin) {
         String url = "/jiaochen/pc/pre-sales-reception/vehicle/edit";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -7602,11 +7700,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 20.3. 售后接待员工列表（谢）（2020-12-15）的接口
+     *
      * @date 2021-04-07 17:50:39
      * Long shopId : 门店id  是否必填 true  版本 v2.0
      */
 
-    public JSONObject ReceptorListScene( Long shopId) {
+    public JSONObject ReceptorListScene(Long shopId) {
         String url = "/jiaochen/pc/reception-manage/receptor/list";
         JSONObject json = new JSONObject();
         json.put("shop_id", shopId);
@@ -7616,13 +7715,14 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 20.4. 变更售后接待（谢）（2020-12-15）的接口
+     *
      * @date 2021-04-07 17:50:39
      * Long id : 接待id  是否必填 true  版本 v2.0
      * Long shopId : 门店id  是否必填 true  版本 v2.0
      * String receptorId : 售后接待员工id  是否必填 true  版本 v2.0
      */
 
-    public JSONObject ReceptorChangeScene( Long id, Long shopId, String receptorId) {
+    public JSONObject ReceptorChangeScene(Long id, Long shopId, String receptorId) {
         String url = "/jiaochen/pc/reception-manage/receptor/change";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -7634,11 +7734,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 22.8. 员工详情 （杨）（2021-03-23） v3.0的接口
+     *
      * @date 2021-04-07 17:50:40
      * String id : 账号id  是否必填 true  版本 v2.0
      */
 
-    public JSONObject DetailScene( String id) {
+    public JSONObject DetailScene(String id) {
         String url = "/jiaochen/pc/staff/detail";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -7648,11 +7749,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 23.28. 商品详情 (张小龙) v2.0的接口
+     *
      * @date 2021-04-07 17:50:40
      * Long id : 唯一id  是否必填 true  版本 v2.0
      */
 
-    public JSONObject GoodsDetailScene( Long id) {
+    public JSONObject GoodsDetailScene(Long id) {
         String url = "/jiaochen/pc/integral-mall/goods-detail";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -7662,11 +7764,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 25.7. 查看门店洗车二维码(池)的接口
+     *
      * @date 2021-04-07 17:50:41
      * Long shopId : 门店id  是否必填 false  版本 v2.0
      */
 
-    public JSONObject ShowShopExtensionScene( Long shopId) {
+    public JSONObject ShowShopExtensionScene(Long shopId) {
         String url = "/jiaochen/pc/shop/show-shop-extension";
         JSONObject json = new JSONObject();
         json.put("shop_id", shopId);
@@ -7676,11 +7779,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 26.2. 内容运营 : 活动置顶 （谢）（2020-03-02）的接口
+     *
      * @date 2021-04-07 17:50:41
      * Long id : 活动id  是否必填 true  版本 v2.0
      */
 
-    public JSONObject ManageTopScene( Long id) {
+    public JSONObject ManageTopScene(Long id) {
         String url = "/jiaochen/pc/activity/manage/top";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -7690,11 +7794,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 26.12. 活动详情 （谢）v3.0（2021-04-02）的接口
+     *
      * @date 2021-04-07 17:50:41
      * Long id : 活动id  是否必填 true  版本 v2.0
      */
 
-    public JSONObject ManageDetailScene( Long id) {
+    public JSONObject ManageDetailScene(Long id) {
         String url = "/jiaochen/pc/activity/manage/detail";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -7704,11 +7809,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 26.13. 删除活动 （谢）（2020-12-23）的接口
+     *
      * @date 2021-04-07 17:50:41
      * Long id : 活动id  是否必填 true  版本 v2.0
      */
 
-    public JSONObject ManageDeleteScene( Long id) {
+    public JSONObject ManageDeleteScene(Long id) {
         String url = "/jiaochen/pc/activity/manage/delete";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -7718,11 +7824,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 26.14. 撤销活动申请 （谢）（2020-12-23）的接口
+     *
      * @date 2021-04-07 17:50:41
      * Long id : 活动id  是否必填 true  版本 v2.0
      */
 
-    public JSONObject ManageRevokeScene( Long id) {
+    public JSONObject ManageRevokeScene(Long id) {
         String url = "/jiaochen/pc/activity/manage/revoke";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -7732,11 +7839,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 26.15. 取消活动 （谢）（2020-12-23）的接口
+     *
      * @date 2021-04-07 17:50:41
      * Long id : 活动id  是否必填 true  版本 v2.0
      */
 
-    public JSONObject ManageCancelScene( Long id) {
+    public JSONObject ManageCancelScene(Long id) {
         String url = "/jiaochen/pc/activity/manage/cancel";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -7746,11 +7854,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 26.16. 恢复活动 （谢）v3.0（2021-04-02）的接口
+     *
      * @date 2021-04-07 17:50:41
      * Long id : 活动id  是否必填 true  版本 v2.0
      */
 
-    public JSONObject ManageRecoveryScene( Long id) {
+    public JSONObject ManageRecoveryScene(Long id) {
         String url = "/jiaochen/pc/activity/manage/recovery";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -7760,11 +7869,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 26.17. 下架活动 （谢）v3.0（2021-04-02）的接口
+     *
      * @date 2021-04-07 17:50:41
      * Long id : 活动id  是否必填 true  版本 v2.0
      */
 
-    public JSONObject ManageOfflineScene( Long id) {
+    public JSONObject ManageOfflineScene(Long id) {
         String url = "/jiaochen/pc/activity/manage/offline";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -7774,11 +7884,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 26.18. 上架活动 （谢）v3.0（2021-04-02）的接口
+     *
      * @date 2021-04-07 17:50:41
      * Long id : 活动id  是否必填 true  版本 v2.0
      */
 
-    public JSONObject ManageOnlineScene( Long id) {
+    public JSONObject ManageOnlineScene(Long id) {
         String url = "/jiaochen/pc/activity/manage/online";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -7788,11 +7899,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 26.19. 活动推广 （谢）（2020-12-23）的接口
+     *
      * @date 2021-04-07 17:50:41
      * Long id : 活动id  是否必填 true  版本 v2.0
      */
 
-    public JSONObject ManagePromotionScene( Long id) {
+    public JSONObject ManagePromotionScene(Long id) {
         String url = "/jiaochen/pc/activity/manage/promotion";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -7802,12 +7914,13 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 26.20. 活动审批（2020-12-23）的接口
+     *
      * @date 2021-04-07 17:50:41
      * Integer status : 审批状态 枚举见字典表《活动审批状态》  是否必填 true  版本 v2.0
      * JSONArray ids : 活动id列表  是否必填 true  版本 v2.0
      */
 
-    public JSONObject ManageApprovalScene( Integer status, JSONArray ids) {
+    public JSONObject ManageApprovalScene(Integer status, JSONArray ids) {
         String url = "/jiaochen/pc/activity/manage/approval";
         JSONObject json = new JSONObject();
         json.put("status", status);
@@ -7818,11 +7931,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 26.23. 活动报名数据 （谢）（2020-12-23）的接口
+     *
      * @date 2021-04-07 17:50:42
      * Long activityId : 活动id  是否必填 true  版本 v2.0
      */
 
-    public JSONObject ManageRegisterDataScene( Long activityId) {
+    public JSONObject ManageRegisterDataScene(Long activityId) {
         String url = "/jiaochen/pc/activity/manage/register/data";
         JSONObject json = new JSONObject();
         json.put("activity_id", activityId);
@@ -7832,13 +7946,14 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 26.25. 活动报名审批（2020-12-23）的接口
+     *
      * @date 2021-04-07 17:50:42
      * Long activityId : 活动id  是否必填 true  版本 v2.0
      * Integer status : 审批状态 101：通过，201：拒绝  是否必填 true  版本 v2.0
      * JSONArray ids : 报名id列表  是否必填 true  版本 v2.0
      */
 
-    public JSONObject ManageRegisterApprovalScene( Long activityId, Integer status, JSONArray ids) {
+    public JSONObject ManageRegisterApprovalScene(Long activityId, Integer status, JSONArray ids) {
         String url = "/jiaochen/pc/activity/manage/register/approval";
         JSONObject json = new JSONObject();
         json.put("activity_id", activityId);
@@ -7850,13 +7965,14 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 26.26. 活动变更记录分页 （谢）（2020-12-23）的接口
+     *
      * @date 2021-04-07 17:50:42
      * Integer page : 页码 大于0  是否必填 true  版本 v1.0
      * Integer size : 页大小 范围为[1,100]  是否必填 true  版本 v1.0
      * Long id : 活动id  是否必填 true  版本 v2.0
      */
 
-    public JSONObject ManageChangeRecordPageScene( Integer page, Integer size, Long id) {
+    public JSONObject ManageChangeRecordPageScene(Integer page, Integer size, Long id) {
         String url = "/jiaochen/pc/activity/manage/change/record/page";
         JSONObject json = new JSONObject();
         json.put("page", page);
@@ -7868,11 +7984,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 28.4. 品牌详情（谢）的接口
+     *
      * @date 2021-04-07 17:50:42
      * Long id : 品牌id  是否必填 true  版本 v1.0
      */
 
-    public JSONObject brandDetailScene( Long id) {
+    public JSONObject brandDetailScene(Long id) {
         String url = "/jiaochen/pc/brand/detail";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -7882,13 +7999,14 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 28.11. 品牌车系详情（谢）的接口
+     *
      * @date 2021-04-07 17:50:42
      * Integer page : 页码 大于0  是否必填 true  版本 v1.0
      * Integer size : 页大小 范围为[1,100]  是否必填 true  版本 v1.0
      * Long id : 车系id  是否必填 true  版本 v1.0
      */
 
-    public JSONObject CarStyleDetailScene( Integer page, Integer size, Long id) {
+    public JSONObject CarStyleDetailScene(Integer page, Integer size, Long id) {
         String url = "/jiaochen/pc/brand/car-style/detail";
         JSONObject json = new JSONObject();
         json.put("page", page);
@@ -7900,11 +8018,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 28.18. 品牌车系车型详情（谢）的接口
+     *
      * @date 2021-04-07 17:50:42
      * Long id : 车型id  是否必填 true  版本 v1.0
      */
 
-    public JSONObject CarStyleCarModelDetailScene( Long id) {
+    public JSONObject CarStyleCarModelDetailScene(Long id) {
         String url = "/jiaochen/pc/brand/car-style/car-model/detail";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -7914,12 +8033,13 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 29.1. 修改banner详情的接口
+     *
      * @date 2021-04-07 17:50:42
      * JSONArray list : No comments found.  是否必填 false  版本 -
      * String bannerType : banner类型 HOME_PAGE 首页 ONLINE_EXPERTS 在线专家 RENEW_CONSULT 续保咨询 USED_CAR 二手车 USED_CAR_ASSESS 二手车评估  是否必填 true  版本 -
      */
 
-    public JSONObject EditScene( JSONArray list, String bannerType) {
+    public JSONObject EditScene(JSONArray list, String bannerType) {
         String url = "/jiaochen/pc/banner/edit";
         JSONObject json = new JSONObject();
         json.put("list", list);
@@ -7930,12 +8050,13 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 29.2. banner列表详情的接口
+     *
      * @date 2021-04-07 17:50:42
      * JSONArray list : No comments found.  是否必填 false  版本 -
      * String bannerType : banner类型 HOME_PAGE 首页 ONLINE_EXPERTS 在线专家 RENEW_CONSULT 续保咨询 USED_CAR 二手车 USED_CAR_ASSESS 二手车评估  是否必填 true  版本 -
      */
 
-    public JSONObject ListScene( JSONArray list, String bannerType) {
+    public JSONObject ListScene(JSONArray list, String bannerType) {
         String url = "/jiaochen/pc/banner/list";
         JSONObject json = new JSONObject();
         json.put("list", list);
@@ -7946,12 +8067,13 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 29.3. 返回banner类型列表 （池）（2021-03-11）的接口
+     *
      * @date 2021-04-07 17:50:42
      * JSONArray list : No comments found.  是否必填 false  版本 -
      * String bannerType : banner类型 HOME_PAGE 首页 ONLINE_EXPERTS 在线专家 RENEW_CONSULT 续保咨询 USED_CAR 二手车 USED_CAR_ASSESS 二手车评估  是否必填 true  版本 -
      */
 
-    public JSONObject TypeListScene( JSONArray list, String bannerType) {
+    public JSONObject TypeListScene(JSONArray list, String bannerType) {
         String url = "/jiaochen/pc/banner/type-list";
         JSONObject json = new JSONObject();
         json.put("list", list);
@@ -7962,11 +8084,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 31.6. 角色详情 （杨航）的接口
+     *
      * @date 2021-04-07 17:50:42
      * Integer id : 角色id  是否必填 true  版本 v1.0
      */
 
-    public JSONObject roleDetailScene( Integer id) {
+    public JSONObject roleDetailScene(Integer id) {
         String url = "/jiaochen/pc/role/detail";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -7976,11 +8099,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 32.2. 获取指定枚举值列表（谢）（2021-02-19）的接口
+     *
      * @date 2021-04-07 17:50:42
      * String enumType : 枚举类型  是否必填 true  版本 v2.0
      */
 
-    public JSONObject EnumValueListScene( String enumType) {
+    public JSONObject EnumValueListScene(String enumType) {
         String url = "/jiaochen/pc/enum-value-list";
         JSONObject json = new JSONObject();
         json.put("enum_type", enumType);
@@ -7990,11 +8114,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 35.7. 积分兑换排序 (张小龙) v2.0的接口
+     *
      * @date 2021-04-07 17:50:43
      * Long id : 唯一id  是否必填 true  版本 v2.0
      */
 
-    public JSONObject ChangeOrderScene( Long id) {
+    public JSONObject ChangeOrderScene(Long id) {
         String url = "/jiaochen/pc/integral-center/change-order";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -8004,11 +8129,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     /**
      * 35.13. 兑换商品规格详情列表 (张小龙) v2.0 （2021-01-11）的接口
+     *
      * @date 2021-04-07 17:50:43
      * Long id : 唯一id  是否必填 true  版本 v2.0
      */
 
-    public JSONObject ExchangeCommoditySpecificationsListScene( Long id) {
+    public JSONObject ExchangeCommoditySpecificationsListScene(Long id) {
         String url = "/jiaochen/pc/integral-center/exchange-commodity-specifications-list";
         JSONObject json = new JSONObject();
         json.put("id", id);
@@ -8022,7 +8148,6 @@ public class ScenarioUtil extends TestCaseCommon {
 
         return invokeApi(url, json);
     }
-
 
 
 }

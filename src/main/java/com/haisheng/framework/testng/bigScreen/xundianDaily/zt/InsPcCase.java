@@ -100,7 +100,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 
 //按照门店名称搜索门店
     @Test()
-    public void shopSearch() throws Exception {
+    public void shopSearch() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
@@ -113,9 +113,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
                     Preconditions.checkArgument(shop_name.equals(shopName), "通过" + shopName + "搜索门店展示结果为" + shop_name);
                 }
 
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("按照门店名称搜索门店");
@@ -124,7 +122,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 
     //按照联系人搜索门店
     @Test()
-    public void shopSearch0() throws Exception {
+    public void shopSearch0()  {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //搜索门店
@@ -135,9 +133,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
                     String manager_name = shopList.getJSONObject(i).getString("manager_name");
                     Preconditions.checkArgument(manager_name.contains(managerName), "通过" + managerName + "搜索门店展示结果为" + manager_name);
                 }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("按照联系人搜索门店");
@@ -146,7 +142,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 
     //按照城市搜索门店
     @Test()
-    public void shopSearch1() throws Exception {
+    public void shopSearch1(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //搜索门店
@@ -157,9 +153,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
                     String city_name = shopList.getJSONObject(i).getString("city");
                     Preconditions.checkArgument(city_name.equals(cityName), "通过" + cityName + "搜索门店展示结果为" + city_name);
                 }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("按照城市搜索门店");
@@ -168,20 +162,18 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 
     //按照开启状态搜索门店
     @Test()
-    public void shopSearch2() throws Exception {
+    public void shopSearch2()  {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //搜索门店
             boolean status = true;
-            JSONArray shopList = md.searchShop(null, null, null, status, 1, 10).getJSONArray("list");
+            JSONArray shopList = md.searchShop(null, null, null, true, 1, 10).getJSONArray("list");
             if (shopList != null)
                 for (int i = 0; i < shopList.size(); i++) {
                     boolean status1 = shopList.getJSONObject(i).getBoolean("is_show");
-                    Preconditions.checkArgument(status1 == status, "通过" + status + "搜索门店展示结果为" + status1);
+                    Preconditions.checkArgument(status1, "通过" + status + "搜索门店展示结果为" + status1);
                 }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("按照开启状态搜索门店");
@@ -190,20 +182,18 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 
     //按照关闭状态搜索门店
     @Test()
-    public void shopSearch3() throws Exception {
+    public void shopSearch3(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //搜索门店
             boolean status = false;
-            JSONArray shopList = md.searchShop(null, null, null, status, 1, 10).getJSONArray("list");
+            JSONArray shopList = md.searchShop(null, null, null, false, 1, 10).getJSONArray("list");
             if (shopList != null)
                 for (int i = 0; i < shopList.size(); i++) {
                     boolean status1 = shopList.getJSONObject(i).getBooleanValue("status");
-                    Preconditions.checkArgument(status1 == status, "通过" + status + "搜索门店展示结果为" + status1);
+                    Preconditions.checkArgument(!status1, "通过" + status + "搜索门店展示结果为" + status1);
                 }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("按照关闭状态搜索门店");
@@ -212,7 +202,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 
     //按照门店名称和门店联系人搜索门店
     @Test()
-    public void shopSearch4() throws Exception {
+    public void shopSearch4(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //搜索门店
@@ -225,9 +215,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
                     String manager_name = shopList.getJSONObject(i).getString("manager_name");
                     Preconditions.checkArgument(shop_name.equals(shopName) && manager_name.equals(managerName), "通过" + shopName + "和" + managerName + "搜索门店展示结果为" + shop_name + "和" + manager_name);
                 }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("按照门店名称和门店联系人搜索门店");
@@ -236,7 +224,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 
     //按照门店名称和门店联系人和城市搜索门店
     @Test()
-    public void shopSearch5() throws Exception {
+    public void shopSearch5(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //搜索门店
@@ -253,9 +241,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
                                     && city.equals(cityName),
                             "通过" + shopName + "和" + managerName + "和" + cityName + "搜索门店展示结果为" + shop_name + "和" + manager_name + "和" + city);
                 }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("按照门店名称和门店联系人和城市搜索门店");
@@ -264,7 +250,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 
     //按照门店名称和门店联系人和城市和开启状态搜索门店
     @Test()
-    public void shopSearch6() throws Exception {
+    public void shopSearch6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //搜索门店
@@ -272,20 +258,17 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             String managerName = "华";
             String cityName = "北京";
             boolean status = true;
-            JSONArray shopList = md.searchShop(shopName, managerName, cityName, status, 1, 10).getJSONArray("list");
+            JSONArray shopList = md.searchShop(shopName, managerName, cityName, true, 1, 10).getJSONArray("list");
             if (shopList != null)
                 for (int i = 0; i < shopList.size(); i++) {
                     String shop_name = shopList.getJSONObject(i).getString("shop_name");
                     String manager_name = shopList.getJSONObject(i).getString("manager_name");
                     String city = shopList.getJSONObject(i).getString("city");
                     boolean status1 = shopList.getJSONObject(i).getBooleanValue("city");
-                    Preconditions.checkArgument(shop_name.equals(shopName) && manager_name.equals(managerName)
-                                    && city.equals(cityName) && status1 == status,
+                    Preconditions.checkArgument(shop_name.equals(shopName) && manager_name.equals(managerName) && city.equals(cityName) && status1,
                             "通过" + shopName + "和" + managerName + "和" + cityName + "和" + status + "搜索门店展示结果为" + shop_name + "和" + manager_name + "和" + city + "和" + status1);
                 }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("按照门店名称和门店联系人和城市和开启状态搜索门店");
@@ -294,7 +277,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 
     //按照门店名称和门店联系人和城市和关闭状态搜索门店
     @Test()
-    public void shopSearch7() throws Exception {
+    public void shopSearch7(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //搜索门店
@@ -302,20 +285,17 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             String managerName = "华";
             String cityName = "北京";
             boolean status = false;
-            JSONArray shopList = md.searchShop(shopName, managerName, cityName, status, 1, 10).getJSONArray("list");
+            JSONArray shopList = md.searchShop(shopName, managerName, cityName, false, 1, 10).getJSONArray("list");
             if (shopList != null)
                 for (int i = 0; i < shopList.size(); i++) {
                     String shop_name = shopList.getJSONObject(i).getString("shop_name");
                     String manager_name = shopList.getJSONObject(i).getString("manager_name");
                     String city = shopList.getJSONObject(i).getString("city");
                     boolean status1 = shopList.getJSONObject(i).getBooleanValue("city");
-                    Preconditions.checkArgument(shop_name.equals(shopName) && manager_name.equals(managerName)
-                                    && city.equals(cityName) && status1 == status,
+                    Preconditions.checkArgument(shop_name.equals(shopName) && manager_name.equals(managerName) && city.equals(cityName) && !status1,
                             "通过" + shopName + "和" + managerName + "和" + cityName + "和" + status + "搜索门店展示结果为" + shop_name + "和" + manager_name + "和" + city + "和" + status1);
                 }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("按照门店名称和门店联系人和城市和关闭状态搜索门店");
@@ -324,7 +304,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 
     //新建门店、删除门店
     @Test()
-    public void create_shop() throws Exception {
+    public void create_shop(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
@@ -341,17 +321,15 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             String tripartite_shop_id = "4321";
             int recommended = 70;
             String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
-            String base64 = info.getImgStr(pic);
+            String base64 = MendianInfo.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
             String result = md.createShop(path, shopName, label, openingTime, closingTime, managerName, managerPhone, city, address, longitude, latitude, tripartite_shop_id, recommended).getString("result");
             Preconditions.checkArgument(result.equals("true"), "新建门店失败" + result);
-            int total = md.searchShop(null, null, null, null, 1, 100).getInteger("total");
+            int total = md.searchShop("两杆大烟枪", null, null, null, 1, 100).getInteger("total");
             int a = total-1;
-            int id = md.searchShop(null, null, null, null, 1, 100).getJSONArray("list").getJSONObject(a).getInteger("id");
+            int id = md.searchShop("两杆大烟枪", null, null, null, 1, 100).getJSONArray("list").getJSONObject(a).getInteger("id");
             md.deleteShop(id);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("新建门店、删除门店");
@@ -361,7 +339,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 
     //编辑门店
     @Test()
-    public void update_shop() throws Exception {
+    public void update_shop() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String shopName = "创建测试门店333";
@@ -378,7 +356,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             String tripartite_shop_id = "4321";
             int recommended = 70;
             String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
-            String base64 = info.getImgStr(pic);
+            String base64 = MendianInfo.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
             md.createShop(path, shopName, label, openingTime, closingTime, managerName, phone, city, address, longitude, latitude, tripartite_shop_id, recommended);
             int total = md.searchShop(null, null, null, null, 1, 100).getInteger("total");
@@ -393,9 +371,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
                 }
             }
             md.deleteShop(id);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("编辑门店");
@@ -404,11 +380,11 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 
     //新建门店不合格项校验
     @Test()
-    public void create_shop1() throws Exception {
+    public void create_shop1(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String shopName = "创建测试门店11";
-            String shopName0 = "创建测试门店22";
+
             String label = "明星店";
             String openingTime = "00:00:00";
             String closingTime = "23:59:59";
@@ -421,7 +397,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             int recommended = 70;
             String phone = "13666666666";
             String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
-            String base64 = info.getImgStr(pic);
+            String base64 = MendianInfo.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
             //不传图片
             int code = md.createShop0(null, shopName, label, openingTime, closingTime, managerName, phone, city, address, longitude, latitude, tripartite_shop_id, recommended).getInteger("code");
@@ -429,6 +405,12 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 //            //门店名称大于10
             int code0 = md.createShop0(path, EnumDesc.DESC_BETWEEN_15_20.getDesc(), label, openingTime, closingTime, managerName, phone, city, address, longitude, latitude, tripartite_shop_id, recommended).getInteger("code");
             Preconditions.checkArgument(code0 == 1001, "状态码期待1001，实际" + code0);
+            //不传门店名称
+            int code00 = md.createShop0(path, "", label, openingTime, closingTime, managerName, phone, city, address, longitude, latitude, tripartite_shop_id, recommended).getInteger("code");
+            Preconditions.checkArgument(code00 == 1001, "状态码期待1001，实际" + code00);
+            //不传门店名称
+            int code01 = md.createShop0(path, null, label, openingTime, closingTime, managerName, phone, city, address, longitude, latitude, tripartite_shop_id, recommended).getInteger("code");
+            Preconditions.checkArgument(code01 == 1001, "状态码期待1001，实际" + code01);
 //            //门店标签大于5个字
             int code1 = md.createShop0(path, shopName, "123455555555", openingTime, closingTime, managerName, phone, city, address, longitude, latitude, tripartite_shop_id, recommended).getInteger("code");
             Preconditions.checkArgument(code1 == 1001, "状态码期待1001，实际" + code1);
@@ -444,9 +426,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 //            //经纬度是3位小数
 //            int code5 = md.createShop0(path, shopName, label, openingTime, closingTime, managerName, phone, city, address, 17.222, 23.999, tripartite_shop_id, recommended).getInteger("code");
 //            Preconditions.checkArgument(code5 == 1001, "状态码期待1001，实际" + code5);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("编辑门店");
@@ -455,7 +435,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 
     //客户管理，根据用户名搜索
     @Test()
-    public void memberSearch() throws Exception {
+    public void memberSearch(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //搜索门店
@@ -463,12 +443,10 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             JSONArray memList = md.member_list(null, 1, 10, null, memberName, null).getJSONArray("list");
             if (memList != null)
                 for (int i = 0; i < memList.size(); i++) {
-                    String name = memList.getJSONObject(i).getString("name");
+                    String name = memList.getJSONObject(i).getString("nickname");
                     Preconditions.checkArgument(name.equals(memberName), "通过" + memberName + "搜索客户展示结果为" + name);
                 }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("客户管理，根据用户名称搜索");
@@ -477,7 +455,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 
     //客户管理，根据电话号进行搜索
     @Test()
-    public void memberSearch1() throws Exception {
+    public void memberSearch1(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //搜索门店
@@ -488,9 +466,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
                     String phone = memList.getJSONObject(i).getString("phone");
                     Preconditions.checkArgument(phone.equals(memphone), "通过" + memphone + "搜索客户展示结果为" + phone);
                 }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("客户管理，根据电话号搜索");
@@ -499,7 +475,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 
     //客户管理，根据注册日期进行搜索
     @Test()
-    public void memberSearch2() throws Exception {
+    public void memberSearch2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //搜索门店
@@ -510,9 +486,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
                     String register_date = memList.getJSONObject(i).getString("register_date");
                     Preconditions.checkArgument(register_date.equals(memdata), "通过" + memdata + "搜索客户展示结果为" + register_date);
                 }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("客户管理，根据日期搜索");
@@ -521,7 +495,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 
     //客户管理，根据注册日期，用户名称进行搜索
     @Test()
-    public void memberSearch3() throws Exception {
+    public void memberSearch3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //搜索门店
@@ -531,12 +505,10 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             if (memList != null)
                 for (int i = 0; i < memList.size(); i++) {
                     String register_date = memList.getJSONObject(i).getString("register_date");
-                    String name = memList.getJSONObject(i).getString("name");
+                    String name = memList.getJSONObject(i).getString("nickname");
                     Preconditions.checkArgument(register_date.equals(memdata) && name.equals(memName), "通过" + memdata + "和" + memName + "搜索客户展示结果为" + register_date + "和" + name);
                 }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("客户管理，根据日期和用户名称搜索");
@@ -545,7 +517,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 
     //客户管理，根据注册日期，用户名称、联系方式进行搜索
     @Test()
-    public void memberSearch4() throws Exception {
+    public void memberSearch4(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //搜索门店
@@ -556,13 +528,11 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             if (memList != null)
                 for (int i = 0; i < memList.size(); i++) {
                     String register_date = memList.getJSONObject(i).getString("register_date");
-                    String name = memList.getJSONObject(i).getString("name");
+                    String name = memList.getJSONObject(i).getString("nickname");
                     String phone = memList.getJSONObject(i).getString("phone");
                     Preconditions.checkArgument(register_date.equals(memdata) && name.equals(memName), "通过" + memdata + "和" + memName + "和" + memphone + "搜索客户展示结果为" + register_date + "和" + name + "和" + phone);
                 }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("客户管理，根据日期和用户名称搜索");
@@ -571,7 +541,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 
     //会员等级通过等级名称搜索
     @Test()
-    public void levelSearch() throws Exception {
+    public void levelSearch(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //搜索门店
@@ -582,9 +552,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
                     String level_name = memList.getJSONObject(i).getString("level_name");
                     Preconditions.checkArgument(level_name.equals(name), "通过" + name + "搜索会员等级展示结果为" + level_name);
                 }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("会员等级管理，根据会员等级名称搜索");
@@ -593,13 +561,13 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 
     //新建会员等级
     @Test()
-    public void create_level() throws Exception {
+    public void create_level(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
-            String base64 = info.getImgStr(pic);
+            String base64 = MendianInfo.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
-            int code = md.member_level_add0("等级", path, 10, "嗷嗷", "aa", 10, 10, 10, false).getInteger("code");
+            int code = md.member_level_add0("等级", path, 10, "嗷嗷", "aa", 9, 10, 10, false).getInteger("code");
             Preconditions.checkArgument(code == 1000, "状态码期待1000，实际" + code);
             Integer total = md.member_level_page(null, 1, 10).getInteger("total");
             JSONArray list = md.member_level_page(null, 1, 10).getJSONArray("list");
@@ -609,9 +577,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             //删除等级
             int code1 = md.member_level_delete0(id).getInteger("code");
             Preconditions.checkArgument(code1 == 1000, "状态码期待1000，实际" + code1);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("新建会员等级");
@@ -620,14 +586,14 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 
     //编辑会员等级
     @Test()
-    public void update_level() throws Exception {
+    public void update_level() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String level_name = "等级";
             String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
-            String base64 = info.getImgStr(pic);
+            String base64 = MendianInfo.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
-            md.member_level_add0(level_name, path, 10, "嗷嗷", "aa", 4, 10, 10, true);
+            md.member_level_add0(level_name, path, 10, "嗷嗷", "aa", 5, 10, 10, false);
 
             Integer total = md.member_level_page(null, 1, 10).getInteger("total");
             JSONArray list = md.member_level_page(null, 1, 10).getJSONArray("list");
@@ -635,7 +601,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             //获取刚创建等级的id
             int id = list.getJSONObject(a).getInteger("id");
             String levelname = "等级111";
-            int code = md.member_level_update(id, levelname, path, "aa", "嗷嗷", 10, 1, 10, 10, true).getInteger("code");
+            md.member_level_update(id, levelname, path, "aa", "嗷嗷", 10, 5, 10, 10, false);
             JSONArray arr = md.member_level_page(null, 1, 10).getJSONArray("list");
             for (int i = 0; i < arr.size(); i++) {
                 JSONObject obj = arr.getJSONObject(i);
@@ -644,9 +610,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
                 }
             }
             md.member_level_delete(id);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("编辑会员等级");
@@ -656,13 +620,16 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
     //新建等级异常情况
 
     @Test()
-    public void create_level0() throws Exception {
+    public void create_level0(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //等级名称超过20个字,后台没有校验
             String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
-            String base64 = info.getImgStr(pic);
+            String base64 = MendianInfo.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
+
+            int code01 = md.member_level_add0(null, path, 10, "嗷嗷", "aa", 1, 10, 10, true).getInteger("code");
+            Preconditions.checkArgument(code01 == 1001, "状态码期待1001，实际" + code01);
 
             int code = md.member_level_add0(EnumDesc.DESC_BETWEEN_30_40.getDesc(), path, 10, "嗷嗷", "aa", 1, 10, 10, true).getInteger("code");
             Preconditions.checkArgument(code == 1001, "状态码期待1001，实际" + code);
@@ -676,12 +643,24 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 //            //晋级条件大于100字
             int code2 = md.member_level_add0("等级", path, 10, EnumDesc.DESC_BETWEEN_200_300.getDesc(), "aa", 1, 10, 10, true).getInteger("code");
             Preconditions.checkArgument(code2 == 1001, "状态码期待1001，实际" + code2);
+
+            int code20 = md.member_level_add0("等级", path, 10,null, "aa", 1, 10, 10, true).getInteger("code");
+            Preconditions.checkArgument(code20 == 1001, "状态码期待1001，实际" + code20);
 //            //会员权益大于100字
             int code3 = md.member_level_add0("等级", path, 10, "aa", EnumDesc.DESC_BETWEEN_200_300.getDesc(), 1, 10, 10, true).getInteger("code");
             Preconditions.checkArgument(code3 == 1001, "状态码期待1001，实际" + code3);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+
+            int code30 = md.member_level_add0("等级", path, 10, "aa", null, 1, 10, 10, true).getInteger("code");
+            Preconditions.checkArgument(code30 == 1001, "状态码期待1001，实际" + code30);
+            int code4 = md.member_level_add0("等级", path, 10, "aa",  EnumDesc.DESC_BETWEEN_200_300.getDesc(), null, 10, 10, true).getInteger("code");
+            Preconditions.checkArgument(code4 == 1001, "状态码期待1001，实际" + code4);
+
+            int code5 = md.member_level_add0("等级", path, 10, "aa",  EnumDesc.DESC_BETWEEN_200_300.getDesc(), 1, null, 10, true).getInteger("code");
+            Preconditions.checkArgument(code5 == 1001, "状态码期待1001，实际" + code5);
+
+            int code6 = md.member_level_add0("等级", path, 10, "aa",  EnumDesc.DESC_BETWEEN_200_300.getDesc(), 1, 10, null, true).getInteger("code");
+            Preconditions.checkArgument(code6 == 1001, "状态码期待1001，实际" + code6);
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("新建等级异常情况");
@@ -690,7 +669,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 
     //用户反馈通过反馈类型搜索
     @Test()
-    public void feedbackSearch1() throws Exception {
+    public void feedbackSearch1(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //搜索门店
@@ -702,13 +681,11 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
                     if (feedlist != null) {
                         for (int j = 0; j < feedlist.size(); j++) {
                             Integer feedback_type_id0 = feedlist.getJSONObject(j).getInteger("feedback_type_id");
-                            Preconditions.checkArgument(feedback_type_id == feedback_type_id0, "通过" + feedback_type_id + "搜索口味反馈展示结果为" + feedback_type_id0);
+                            Preconditions.checkArgument(feedback_type_id.equals(feedback_type_id0), "通过" + feedback_type_id + "搜索口味反馈展示结果为" + feedback_type_id0);
                         }
                     }
                 }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("用户反馈通过反馈类型搜索");
@@ -717,7 +694,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 
     //用户反馈通过等级名称搜索
     @Test()
-    public void feedbackSearch2() throws Exception {
+    public void feedbackSearch2(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
@@ -728,9 +705,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
                     String level_name = memList.getJSONObject(i).getString("level_name");
                     Preconditions.checkArgument(level_name.equals(name), "通过" + name + "搜索会员等级展示结果为" + level_name);
                 }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("会员等级管理，根据会员等级名称搜索");
@@ -739,7 +714,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 
     //反馈类型通过类型名称搜索
     @Test()
-    public void feedbackSearch3() throws Exception {
+    public void feedbackSearch3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //搜索门店
@@ -748,11 +723,9 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             if (memList != null)
                 for (int i = 0; i < memList.size(); i++) {
                     String feedback_type = memList.getJSONObject(i).getString("feedback_type");
-                    Preconditions.checkArgument(feedback_type.equals(name), "通过" + name + "搜索反馈类型展示结果为" + feedback_type);
+                    Preconditions.checkArgument(feedback_type.contains(name), "通过" + name + "搜索反馈类型展示结果为" + feedback_type);
                 }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("反馈类型通过类型名称搜索");
@@ -761,7 +734,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 
     //新建反馈类型、删除反馈类型
     @Test()
-    public void addfeedback() throws Exception {
+    public void addfeedback(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int code = md.feedback_add0(EnumDesc.DESC_BETWEEN_5_10.getDesc(), EnumDesc.DESC_BETWEEN_5_10.getDesc()).getInteger("code");
@@ -772,18 +745,37 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             String result = md.feedback_type_delete(id).getString("result");
             Preconditions.checkArgument(result.equals("true"), "状态码期待true，实际" + result);
 
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("新建反馈类型、删除反馈类型");
         }
     }
 
+//    //新建反馈类型异常项
+    @Test()
+    public void addfeedbackerror(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //反馈类型大于20个字符
+            int code = md.feedback_add0(EnumDesc.DESC_BETWEEN_20_30.getDesc(), EnumDesc.DESC_BETWEEN_5_10.getDesc()).getInteger("code");
+            Preconditions.checkArgument(code == 1001, "状态码期待1001，实际" + code);
+            //反馈描述大于50个字符
+            int code1 = md.feedback_add0(EnumDesc.DESC_BETWEEN_10_15.getDesc(), EnumDesc.DESC_BETWEEN_200_300.getDesc()).getInteger("code");
+            Preconditions.checkArgument(code1 == 1009, "状态码期待1001，实际" + code1);
+            //反馈类型大于20个字符
+            int code2 = md.feedback_add0(null, EnumDesc.DESC_BETWEEN_5_10.getDesc()).getInteger("code");
+            Preconditions.checkArgument(code2 == 1009, "状态码期待1001，实际" + code2);
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("新建反馈类型异常项");
+        }
+    }
+
     //编辑反馈类型
     @Test()
-    public void updatefeedback() throws Exception {
+    public void updatefeedback(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String feedbackType = "反馈类型111";
@@ -802,9 +794,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             }
             int id1 = Integer.parseInt(id);
             md.feedback_type_delete(id1);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("编辑反馈类型");
@@ -813,7 +803,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 
     //内容管理通过内容标题进行搜索
     @Test()
-    public void articleSearch() throws Exception {
+    public void articleSearch(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //搜索门店
@@ -824,9 +814,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
                     String title = memList.getJSONObject(i).getString("title");
                     Preconditions.checkArgument(title.equals(name), "通过" + name + "搜索内容管理展示结果为" + title);
                 }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("内容管理通过内容标题进行搜索");
@@ -835,7 +823,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 
     //内容管理通过内容标题进行搜索
     @Test()
-    public void articleSearch1() throws Exception {
+    public void articleSearch1(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //搜索门店
@@ -847,9 +835,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
                     String create_start = memList.getJSONObject(i).getString("create_time");
                     Preconditions.checkArgument(create_start.contains(start), "通过" + start + "和" + end + "搜索内容管理展示结果为" + create_start);
                 }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("内容管理通过创建时间进行搜索");
@@ -858,7 +844,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 
     //内容管理通过更新时间进行搜索
     @Test()
-    public void articleSearch2() throws Exception {
+    public void articleSearch2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //搜索门店
@@ -870,9 +856,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
                     String modify_start = memList.getJSONObject(i).getString("modify_time");
                     Preconditions.checkArgument(modify_start.contains(start), "通过" + start + "和" + end + "搜索内容管理展示结果为" + modify_start);
                 }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("内容管理通过更新时间进行搜索");
@@ -881,7 +865,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 
     //内容管理通过更新时间和创建时间进行搜索
     @Test()
-    public void articleSearch3() throws Exception {
+    public void articleSearch3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //搜索门店
@@ -890,16 +874,14 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             JSONArray memList = md.article_page(null, start, end, start, end, 1, 10).getJSONArray("list");
             if (memList != null)
                 for (int i = 0; i < memList.size(); i++) {
-                    String title = memList.getJSONObject(i).getString("title");
+//                    String title = memList.getJSONObject(i).getString("title");
                     String create_start = memList.getJSONObject(i).getString("create_time");
 //                    String create_end = memList.getJSONObject(i).getString("create_end");
                     String modify_start = memList.getJSONObject(i).getString("modify_time");
 //                    String modify_end = memList.getJSONObject(i).getString("modify_end");
                     Preconditions.checkArgument(modify_start.contains(start) && create_start.contains(start), "通过" + start + "和" + end + "搜索内容管理展示结果为" + create_start + "和" + modify_start);
                 }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("内容管理通过更新时间和创建时间进行搜索");
@@ -908,7 +890,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 
     //内容管理通过内容标题和更新时间和创建时间进行搜索
     @Test()
-    public void articleSearch4() throws Exception {
+    public void articleSearch4(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //搜索门店
@@ -925,9 +907,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 //                    String modify_end = memList.getJSONObject(i).getString("modify_end");
                     Preconditions.checkArgument(title.contains(name) && modify_start.contains(start) && create_start.contains(start), "通过" + start + "和" + end + "搜索内容管理展示结果为" + create_start + "和" + modify_start);
                 }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("内容管理通过内容标题和更新时间和创建时间进行搜索");
@@ -936,12 +916,12 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 
     //新建内容一张大图
     @Test()
-    public void create_message() throws Exception {
+    public void create_message() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
             String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
-            String base64 = info.getImgStr(pic);
+            String base64 = MendianInfo.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
             JSONArray piclist = new JSONArray();
             piclist.add(path);
@@ -952,9 +932,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(res1.getInteger("code") == 1000, "状态码期待1000，实际" + res1.getInteger("code"));
             JSONObject res2 = md.article_delete(id);
             Preconditions.checkArgument(res2.getInteger("code") == 1000, "状态码期待1000，实际" + res2.getInteger("code"));
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("新建内容一张大图并删除");
@@ -963,12 +941,12 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 
     //新建内容三张小图
     @Test()
-    public void create_message1() throws Exception {
+    public void create_message1(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
             String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
-            String base64 = info.getImgStr(pic);
+            String base64 = MendianInfo.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
             JSONArray piclist = new JSONArray();
             piclist.add(path);
@@ -981,9 +959,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(res1.getInteger("code") == 1000, "状态码期待1000，实际" + res1.getInteger("code"));
             JSONObject res2 = md.article_delete(id);
             Preconditions.checkArgument(res2.getInteger("code") == 1000, "状态码期待1000，实际" + res2.getInteger("code"));
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("新建内容三张小图并删除");
@@ -992,12 +968,12 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 
     //新建内容左一图
     @Test()
-    public void create_message2() throws Exception {
+    public void create_message2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
             String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
-            String base64 = info.getImgStr(pic);
+            String base64 = MendianInfo.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
             JSONArray piclist = new JSONArray();
             piclist.add(path);
@@ -1008,9 +984,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(res1.getInteger("code") == 1000, "状态码期待1000，实际" + res1.getInteger("code"));
             JSONObject res2 = md.article_delete(id);
             Preconditions.checkArgument(res2.getInteger("code") == 1000, "状态码期待1000，实际" + res2.getInteger("code"));
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("新建内容左一图并删除");
@@ -1019,12 +993,12 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 
     //新建内容异常项
     @Test()
-    public void create_message3() throws Exception {
+    public void create_message3(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
             String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
-            String base64 = info.getImgStr(pic);
+            String base64 = MendianInfo.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
             JSONArray piclist = new JSONArray();
             piclist.add(path);
@@ -1043,9 +1017,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             //文章标签
             String message4 = md.article_export("活动活动", "ONE_LEFT", "1", null, piclist).getString("message");
             Preconditions.checkArgument(message4.equals("文章标签不能为空"), "期待文章标签不能为空，实际" + message4);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("新建内容异常项");
@@ -1054,7 +1026,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 
     //口味管理通过口味名称进行搜索
     @Test()
-    public void tasteSearch() throws Exception {
+    public void tasteSearch() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //搜索门店
@@ -1065,9 +1037,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
                     String taste_name = memList.getJSONObject(i).getString("taste_name");
                     Preconditions.checkArgument(taste_name.equals(name), "通过" + name + "搜索口味管理展示结果为" + taste_name);
                 }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("口味管理通过口味名称进行搜索");
@@ -1076,12 +1046,12 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 
     //新建口味、删除口味
     @Test()
-    public void create_taste() throws Exception {
+    public void create_taste() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
             String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
-            String base64 = info.getImgStr(pic);
+            String base64 = MendianInfo.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
 //            JSONArray piclist = new JSONArray();
 //            piclist.add(path);
@@ -1093,9 +1063,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 //            JSONArray list = md.
             int code = md.taste_delete(id).getInteger("code");
             Preconditions.checkArgument(code == 1000, "状态码期待1000，实际" + code);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("新建口味、删除口味");
@@ -1104,12 +1072,12 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 
     //编辑口味
     @Test()
-    public void update_taste() throws Exception {
+    public void update_taste() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
             String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
-            String base64 = info.getImgStr(pic);
+            String base64 = MendianInfo.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
 //            JSONArray piclist = new JSONArray();
 //            piclist.add(path);
@@ -1130,9 +1098,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             }
             int code = md.taste_delete(id).getInteger("code");
             Preconditions.checkArgument(code == 1000, "状态码期待1000，实际" + code);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("编辑口味");
@@ -1141,12 +1107,12 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 
     //创建口味的异常情况
     @Test()
-    public void add_taste1() throws Exception {
+    public void add_taste1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
             String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
-            String base64 = info.getImgStr(pic);
+            String base64 = MendianInfo.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
             String name = "芒果";
             //不传taste——imagepath
@@ -1160,6 +1126,10 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(res2.getString("message").equals("口味名称不能超过10个字"),"期待口味名称不能超过10个字，实际"+res2.getString("message"));
             JSONObject res3 = md.taste_add(path,path,path,EnumDesc.DESC_BETWEEN_5_10.getDesc(),EnumDesc.DESC_BETWEEN_400_500.getDesc(),1,true);
             Preconditions.checkArgument(res3.getString("message").equals("口味描述不能超过200个字"),"期待口味描述不能超过200个字，实际"+res3.getString("message"));
+//            JSONObject res4 = md.taste_add(path,path,path,null,"1",1,true);
+//            Preconditions.checkArgument(res4.getString("message").equals("口味名称不能为空"),"期待口味名称不能为空，实际"+res4.getString("message"));
+//            JSONObject res5 = md.taste_add(path,path,path,EnumDesc.DESC_BETWEEN_5_10.getDesc(),null,1,true);
+//            Preconditions.checkArgument(res5.getString("message").equals("口味描述不能为空"),"期待口味描述不能为空，实际"+res5.getString("message"));
 //            JSONObject res4 = md.taste_add(path,path,path,EnumDesc.DESC_BETWEEN_5_10.getDesc(),EnumDesc.DESC_BETWEEN_15_20.getDesc(),null,null);
 //            Preconditions.checkArgument(res4.getString("message").equals("口味描述不能超过200个字"),"期待口味描述不能超过200个字，实际"+res4.getString("message"));
         } catch (AssertionError | Exception e) {
@@ -1168,6 +1138,39 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             saveData("创建口味的异常情况");
         }
     }
+
+    //创建评论删除评论
+    @Test()
+    public void create_comment() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
+            String base64 = MendianInfo.getImgStr(pic);
+            String path = md.pcFileUpload(base64).getString("pic_path");
+            JSONArray piclist = new JSONArray();
+            piclist.add(path);
+            md.taste_add(path, path, path, "芒果", "1", 1, true);
+
+            int total = md.taste_search(null, 1, 10).getInteger("total");
+            int a = total - 1;
+            int id = md.taste_search(null, 1, 10).getJSONArray("list").getJSONObject(a).getInteger("id");
+            JSONObject res = md.taste_add_comment(id,path,"1234","1234",4,true,piclist);
+            Preconditions.checkArgument(res.getInteger("code")==1000, "期待展示1000，实际" +res.getInteger("code"));
+            int t = md.taste_search_comment(id,1,100,null).getInteger("total");
+            int t2 = t-1;
+            int tid = md.taste_search_comment(id,1,100,null).getJSONArray("list").getJSONObject(t2).getInteger("id");
+            md.deleteComment(tid);
+//            JSONArray list = md.
+            int code = md.taste_delete(id).getInteger("code");
+            Preconditions.checkArgument(code == 1000, "状态码期待1000，实际" + code);
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("创建评论删除评论");
+        }
+    }
+
 
     //新建广告位
 
@@ -1247,7 +1250,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 //    ------------------------------------------------------Ins小程序-----------------------------------------------------------------------------------------------------------------
     //小程序附近门店
     @Test()
-    public void nearshop() throws Exception {
+    public void nearshop() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
@@ -1265,7 +1268,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
 
     //小程序用户反馈
     @Test()
-    public void userfeedback() throws Exception {
+    public void userfeedback() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
@@ -1276,12 +1279,44 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
             int total = md.feedbackList(null,null,1,10).getInteger("total");
             int a = total-1;
-            int id = md.feedbackList(null,null,1,10).getJSONArray("list").getJSONObject(a).getInteger("id");
+            int id = md.feedbackList(null,null,1,100).getJSONArray("list").getJSONObject(a).getInteger("id");
+            md.addGift(id,"阿斯顿马丁");
+            String name = md.feedbackList(null,null,1,100).getJSONArray("list").getJSONObject(a).getString("user_name");
+            String feedback_gift = md.feedbackList(null,null,1,100).getJSONArray("list").getJSONObject(a).getString("feedback_gift");
+
+            visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
+            JSONArray feedlist = wx.awardFeedback(null).getJSONArray("list");
+            String appletname = feedlist.getJSONObject(0).getString("user_name");
+            String appletgift = feedlist.getJSONObject(0).getString("feedback_gift");
+            Preconditions.checkArgument(name.equals(appletname)&&feedback_gift.equals(appletgift),"pc的用户昵称是"+name+"添加的礼物是"+feedback_gift+"小程序接受到用户昵称是"+appletname+"接受的礼物是"+appletgift);
+            xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
             int code1 = md.feedback_delete(id).getInteger("code");
             Preconditions.checkArgument(code1==1000,"期待状态码1000，实际"+code1);
-        } catch (AssertionError e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
-        } catch (Exception e) {
+        } finally {
+            saveData("小程序用户反馈");
+        }
+    }
+    //小程序用户反馈异常情况
+    @Test()
+    public void userfeedbackerror() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
+            JSONArray querylist = wx.queryAll().getJSONArray("list");
+            int feedback_type_id = querylist.getJSONObject(0).getInteger("feedback_type_id");
+            //不添加反馈类型
+            JSONObject res = wx.submitFeedback(null,5,"自动化提交用户反馈");
+            Preconditions.checkArgument(res.getString("message").equals("反馈类型ID不能为空"),"期待反馈类型ID不能为空，实际"+res.getString("message"));
+            //不添加星级
+//            JSONObject res0 = wx.submitFeedback(feedback_type_id,null,"自动化提交用户反馈");
+//            Preconditions.checkArgument(res0.getString("message").equals("星级不能为空"),"期待反馈类型ID不能为空，实际"+res.getString("message"));
+            //不添加反馈描述
+//            JSONObject res1 = wx.submitFeedback(feedback_type_id,5,null);
+//            Preconditions.checkArgument(res1.getString("message").equals("反馈类型ID不能为空"),"期待反馈类型ID不能为空，实际"+res.getString("message"));
+
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("小程序用户反馈");

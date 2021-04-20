@@ -25,8 +25,6 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.enumerator.AccountEnum;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.enumerator.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.generator.voucher.VoucherGenerator;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.applet.granted.AppletMessageDetailScene;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.applet.granted.AppletMessageListScene;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.voucher.ApplyPageScene;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.vouchermanage.*;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.util.SupporterUtil;
@@ -816,10 +814,8 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             //获取已使用的卡券列表
             visitor.login(APPLET_USER_ONE.getToken());
             int transferVoucherNum = util.getAppletVoucherNum();
-            int transferMessageNum = util.getAppletMessageNum();
             AppletVoucher appletVoucher = util.getAppletVoucher(VoucherUseStatusEnum.NEAR_EXPIRE);
             id = appletVoucher.getId();
-            String voucherName = appletVoucher.getTitle();
             visitor.login(APPLET_USER_TWO.getToken());
             int receiveVoucherNum = util.getAppletVoucherNum();
             //转移
@@ -828,15 +824,6 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             visitor.login(APPLET_USER_ONE.getToken());
             int newTransferVoucherNum = util.getAppletVoucherNum();
             CommonUtil.checkResult("转移者我的卡券数", transferVoucherNum - 1, newTransferVoucherNum);
-            int newTransferMessageNum = util.getAppletMessageNum();
-            CommonUtil.checkResult("转移者我的消息数", transferMessageNum + 1, newTransferMessageNum);
-            //我的消息内容
-            Long messageId = AppletMessageListScene.builder().size(20).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
-            JSONObject response = AppletMessageDetailScene.builder().id(messageId).build().invoke(visitor);
-            String title = response.getString("title");
-            String content = response.getString("content");
-            CommonUtil.checkResult("消息名称", "系统消息", title);
-            CommonUtil.checkResult("消息内容", "您的卡券【" + voucherName + "】已被转移至" + APPLET_USER_TWO.getPhone() + "账号，如非本人授权，请联系INS客服，对应卡券变更至对应转移的账号中；", content);
             visitor.login(APPLET_USER_TWO.getToken());
             int newReceiveVoucherNum = util.getAppletVoucherNum();
             CommonUtil.checkResult("接收者我的卡券数", receiveVoucherNum + 1, newReceiveVoucherNum);

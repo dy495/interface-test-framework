@@ -19,12 +19,13 @@ public class AppletCommonShopListScene extends BaseScene {
      * 版本 v3.0
      */
     private final Long carModelId;
-
+    private final JSONArray coordinate;
 
     @Override
     public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("car_model_id", carModelId);
+        object.put("coordinate", coordinate);
         return object;
     }
 

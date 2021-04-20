@@ -9,6 +9,8 @@ import lombok.Builder;
  */
 @Builder
 public class AfterSaleCustomerPageScene extends BaseScene {
+    private final Long shopId;
+    private final Long brandId;
     private final String orderStartTime;
     private final String orderEndTime;
     private final String customerName;
@@ -18,13 +20,15 @@ public class AfterSaleCustomerPageScene extends BaseScene {
     private final String createStartTime;
     private final String createEndTime;
     @Builder.Default
-    private  Integer page = 1;
+    private Integer page = 1;
     @Builder.Default
-    private  Integer size = 10;
+    private Integer size = 10;
 
     @Override
     public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
+        object.put("shop_id", shopId);
+        object.put("brand_id", brandId);
         object.put("customer_name", customerName);
         object.put("customer_phone", customerPhone);
         object.put("create_date", createDate);

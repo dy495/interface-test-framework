@@ -3115,7 +3115,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
     }
 
     public JSONObject invokeApi(IScene scene, boolean checkCode) {
-        return invokeApi(scene.getPath(), scene.getRequestBody(), checkCode);
+        return invokeApi(scene.getPath(), scene.getBody(), checkCode);
     }
 
     private JSONObject invokeApi(String path, JSONObject requestBody) {
@@ -3316,7 +3316,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    public JSONObject member_level_add0(String level_name,String level_icon_path,int level_experience,String level_condition_desc,String level_benefits_desc,int level_sort,int experience_exchange,int integral_exchange,boolean is_hide) throws Exception {
+    public JSONObject member_level_add0(String level_name,String level_icon_path,int level_experience,String level_condition_desc,String level_benefits_desc,Integer level_sort,Integer experience_exchange,Integer integral_exchange,boolean is_hide) throws Exception {
         String path = "/patrol/member/level/add";
         JSONObject json = new JSONObject();
         json.put("level_name",level_name);
@@ -3701,15 +3701,16 @@ public class StoreScenarioUtil extends TestCaseCommon {
         json.put("comment_stars",comment_stars);
         json.put("visible",visible);
         json.put("comment_images_path",comment_images_path);
-        String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
+//        String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
+//        return JSON.parseObject(res).getJSONObject("data");
+        return invokeApi(path, JSONObject.parseObject(json.toJSONString()), false);
     }
     /**
      * @description:21.5. 搜索评论
      * @author:
      * @time:
      */
-    public JSONObject taste_search_comment(int taste_id,int page,int size,String taste_name) throws Exception {
+    public JSONObject taste_search_comment(Integer taste_id,int page,int size,String taste_name) throws Exception {
         String path = "/patrol/taste/search-comment";
         JSONObject json = new JSONObject();
         json.put("taste_id",taste_id);

@@ -45,7 +45,7 @@ public class VisitorProxy extends TestCaseCommon {
      * @return 返回值
      */
     public JSONObject invokeApi(@NotNull IScene scene, boolean checkCode) {
-        return invokeApi(scene.getPath(), scene.getRequestBody(), checkCode);
+        return invokeApi(scene.getPath(), scene.getBody(), checkCode);
     }
 
     /**
@@ -76,14 +76,16 @@ public class VisitorProxy extends TestCaseCommon {
         }
     }
 
+
     /**
      * 上传
      *
-     * @param scene 场景接口
+     * @param filePath 文件路径
+     * @param path     接口地址
      * @return 返回值
      */
-    public JSONObject uploadFile(IScene scene) {
-        String response = uploadFile(scene.getRequestBody().getString("filePath"), scene.getPath(), product.getAddress());
+    public JSONObject upload(String path, String filePath) {
+        String response = uploadFile(filePath, path, product.getAddress());
         return JSON.parseObject(response);
     }
 
@@ -94,7 +96,7 @@ public class VisitorProxy extends TestCaseCommon {
      * @return 返回值
      */
     public void login(@NotNull IScene scene) {
-        httpPost(scene.getPath(), scene.getRequestBody(), product.getAddress());
+        httpPost(scene.getPath(), scene.getBody(), product.getAddress());
     }
 
     /**

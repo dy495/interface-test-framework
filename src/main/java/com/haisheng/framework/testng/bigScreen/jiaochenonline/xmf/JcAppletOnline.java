@@ -49,7 +49,6 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
         jc.changeIpPort(EnumTestProduce.JC_ONLINE.getAddress());
 
 
-
         //replace backend gateway url
         //commonConfig.gateway = "";
 
@@ -418,8 +417,8 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
         try {
             System.out.println(commonConfig.referer);
             jc.appletLoginToken(pp.appletTocken);
-            System.out.println(IpPort);
-            System.out.println("卡券数量"+pf.getVoucherTotal());
+            System.out.println(EnumTestProduce.JC_DAILY.getAddress());
+            System.out.println("卡券数量" + pf.getVoucherTotal());
 //            System.out.println("套餐数量"+pf.getpackgeTotal());
 
 

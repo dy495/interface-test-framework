@@ -16,8 +16,6 @@ import com.haisheng.framework.testng.bigScreen.xundianDaily.MendianInfo;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.StoreScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.WechatScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.XundianScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.StorePcAndAppData;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.fucPackage.StoreFuncPackage;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -92,7 +90,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
 
 //添加门店、删除门店列表+1、-1ok
     @Test()
-    public void shopAdd() throws Exception {
+    public void shopAdd() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
@@ -113,7 +111,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             String tripartite_shop_id = "4321";
             int recommended = 70;
             String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
-            String base64 = info.getImgStr(pic);
+            String base64 = MendianInfo.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
             //获得初始的门店数量
             int mdsum0 = md.searchShop(null, null, null, null, 1, 100).getInteger("total");
@@ -159,9 +157,9 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(statusnum4==1,"期望数量+1实际增加了" + statusnum4);
 
             xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
-            int total = md.searchShop(null, null, null, null, 1, 100).getInteger("total");
+            int total = md.searchShop("两杆大烟枪", null, null, null, 1, 100).getInteger("total");
             int a = total-1;
-            int id1 = md.searchShop(null, null, null, null, 1, 100).getJSONArray("list").getJSONObject(a).getInteger("id");
+            int id1 = md.searchShop("两杆大烟枪", null, null, null, 1, 100).getJSONArray("list").getJSONObject(a).getInteger("id");
             md.deleteShop(id1);
             int mdsum3 = md.searchShop(null, null, null, null, 1, 100).getInteger("total");
             int delete = mdsum1-mdsum3;
@@ -174,9 +172,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(appnum1,appnum3,appletsize2);
             Preconditions.checkArgument(appnum3==1,"期望数量-1实际减少了" + appnum3);
 
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("添加门店，删除门店列表+-1");
@@ -186,7 +182,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
 
     //新建会员等级列表+-1ok
     @Test()
-    public void create_level() throws Exception {
+    public void create_level(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
@@ -196,10 +192,10 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
 
             xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
             String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
-            String base64 = info.getImgStr(pic);
+            String base64 = MendianInfo.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
             int pctotal = md.member_level_page(null,1,100).getInteger("total");
-            md.member_level_add0("等级", path, 10, "嗷嗷", "aa", 10, 10, 10, false);
+            md.member_level_add0("等级", path, 10, "嗷嗷", "aa", 9, 10, 10, false);
 
             int pctotaladd = md.member_level_page(null,1,100).getInteger("total");
             int pcadd = pctotaladd-pctotal;
@@ -259,9 +255,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             JSONArray wechatdelete = wx.wechatlevel(null).getJSONArray("list");
             int deletenum =  wechatsize0-wechatdelete.size();
             Preconditions.checkArgument(deletenum== 1, "期待减少1，实际" + deletenum);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("新建会员等级列表+-1");
@@ -271,7 +265,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
 
     //新增反馈类型ok
     @Test()
-    public void addFeedType() throws Exception {
+    public void addFeedType(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
             visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
@@ -318,9 +312,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             int deletelistnum0 = deleteletlist0.size();
             int deletenum0 = applistnum0-deletelistnum0;
             Preconditions.checkArgument(deletenum0==1, "删除了一个反馈类型期望-1,实际减少" + deletenum0);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("新增、删除反馈类型，数量+-1");
@@ -330,17 +322,18 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
 
     //会员提交反馈，pc反馈列表数量+1
     @Test()
-    public void submitFeedback() throws Exception {
+    public void submitFeedback(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int total = md.feedbackList(null,null,1,100).getInteger("total");
             visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
             JSONArray querylist = wx.queryAll().getJSONArray("list");
-            int feedback_type_id = querylist.getJSONObject(0).getInteger("feedback_type_id");
+            int feedback_type_id = querylist.getJSONObject(1).getInteger("feedback_type_id");
             wx.submitFeedback(feedback_type_id,5,"12321312");
             xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
             int total0 = md.feedbackList(null,null,1,100).getInteger("total");
             int a = total0-total;
+            CommonUtil.valueView(total,total0);
             Preconditions.checkArgument(a==1, "小程序提交了一个用户反馈，pc反馈类型数量期望+1，实际添加" + a);
 
             //添加礼品
@@ -352,86 +345,165 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             int aa0 = t0-1;
             int id0 = md.feedbackList(null,null,1,100).getJSONArray("list").getJSONObject(aa0).getInteger("id");
             md.addGift(id0,"阿斯顿马丁");
+            String name = md.feedbackList(null,null,1,100).getJSONArray("list").getJSONObject(aa0).getString("user_name");
+            String feedback_gift = md.feedbackList(null,null,1,100).getJSONArray("list").getJSONObject(aa0).getString("feedback_gift");
             visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
             JSONArray giflist0 = wx.awardFeedback(null).getJSONArray("list");
             int gifnum0 = giflist0.size();
-            int gif = gifnum0-gifnum;
-            Preconditions.checkArgument(gif==1, "pc添加一个礼品期望+1，实际添加" + gif);
-
+            //如果小程序反馈奖励已经有20条，判断最新一条是不是刚刚pc端添加的人和礼物
+            if(gifnum0<20){
+                int gif = gifnum0-gifnum;
+                Preconditions.checkArgument(gif==1, "pc添加一个礼品期望+1，实际添加" + gif);
+            }else {
+                JSONArray feedlist = wx.awardFeedback(null).getJSONArray("list");
+                String appletname = feedlist.getJSONObject(0).getString("user_name");
+                String appletgift = feedlist.getJSONObject(0).getString("feedback_gift");
+                Preconditions.checkArgument(name.equals(appletname)&&feedback_gift.equals(appletgift),"pc的用户昵称是"+name+"添加的礼物是"+feedback_gift+"小程序接受到用户昵称是"+appletname+"接受的礼物是"+appletgift);
+            }
 
             xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
             int t = md.feedbackList(null,null,1,100).getInteger("total");
             int aa = t-1;
             int id = md.feedbackList(null,null,1,100).getJSONArray("list").getJSONObject(aa).getInteger("id");
             md.feedback_delete(id);
-
-            visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
-            JSONArray giflist1 = wx.awardFeedback(null).getJSONArray("list");
-            int gifnum1 = giflist1.size();
-            int gif1 = gifnum0-gifnum1;
-            Preconditions.checkArgument(gif1==1, "pc删除一个反馈，期望-1，实际减少" + gif1);
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+            int s = md.feedbackList(null,null,1,100).getInteger("total");
+            int s1 = total0-s;
+            Preconditions.checkArgument(s1 == 1, "pc删除一个反馈，pc列表期望-1，实际减少" + s1);
+            if(gifnum0<20) {
+                visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
+                JSONArray giflist1 = wx.awardFeedback(null).getJSONArray("list");
+                int gifnum1 = giflist1.size();
+                int gif1 = gifnum0 - gifnum1;
+                Preconditions.checkArgument(gif1 == 1, "pc删除一个反馈，小程序期望-1，实际减少" + gif1);
+            }
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("小程序提交一条反馈，pc用户反馈列表+1");
         }
     }
 
-    //添加口味，删除口味
-//    @Test()
-//    public void tasteAdd() throws Exception {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            wx.loginApplet(EnumAppletToken.INS_ZT_DAILY.getToken());
-//            //pc口味列表
-//            JSONArray list0 = md.taste_search(null,1,10).getJSONArray("list");
-//            int a0 = list0.size();
-//            //小程序口味列表
-//            JSONArray list1 = wx.tasteSort(20).getJSONArray("list");
-//            int a1 = list1.size();
-//            //新增口味
-//            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS1.jpg";
-//            String path1 = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/女人脸.jpg";
-//            String result = md.taste_add(path,path1,path,"苹果味","苹果味粉好",10000,true).getString("result");
-//            Preconditions.checkArgument(result.equals("true"), "新增口味失败" + result);
-//
-//            JSONArray list3 = md.taste_search(null,1,10).getJSONArray("list");
-//            int b0 = list3.size();
-//            int c0 = b0-a0;
-//            Preconditions.checkArgument(c0==1, "新增口味后列表实际添加了" + c0);
-//
-//            JSONArray list4 = wx.tasteSort(20).getJSONArray("list");
-//            int b1 = list4.size();
-//            int c1 = b1-a1;
-//            Preconditions.checkArgument(c1==1, "新增口味后小程序实际添加了" + c1);
-//
-//            //获取口味id
-//            JSONArray idList = md.taste_search("苹果味",1,10).getJSONArray("list");
-//            int tast_id = idList.getJSONObject(0).getInteger("id");
-//            //删除口味
-//            String result0 = md.taste_delete(tast_id).getString("result");
-//            Preconditions.checkArgument(result0.equals("true"), "删除失败" +result0);
-//
-//            JSONArray list5 = md.taste_search(null,1,10).getJSONArray("list");
-//            int b2 = list5.size();
-//            int c2 = b2-b0;
-//            Preconditions.checkArgument(c2==1, "删除口味后小程序实际减少了" + c2);
-//
-//            JSONArray list6 = wx.tasteSort(20).getJSONArray("list");
-//            int b3 = list6.size();
-//            int c3 = b3-b1;
-//            Preconditions.checkArgument(c3==1, "删除口味后小程序实际减少了" + c3);
-//        } catch (AssertionError e) {
-//            appendFailReason(e.toString());
-//        } catch (Exception e) {
-//            appendFailReason(e.toString());
-//        } finally {
-//            saveData("添加口味，删除口味，列表+-1");
-//        }
-//    }
+//    添加口味，删除口味
+    @Test()
+    public void tasteAdd(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
+            //获取初始口味数量
+            JSONArray sortlist = wx.tasteSort(null).getJSONArray("list");
+            int sortnum = sortlist.size();
+            xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
+            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
+            String base64 = MendianInfo.getImgStr(pic);
+            String path = md.pcFileUpload(base64).getString("pic_path");
+            //创建前pc口味数量
+            int pctotal = md.taste_search(null,1,100).getInteger("total");
+            //创建一个口味
+            md.taste_add(path, path, path, "芒果", "1", 1, true);
+            //创建后pc口味数量
+            int pctotal0 = md.taste_search(null,1,100).getInteger("total");
+
+            int pcsort = pctotal0-pctotal;
+            Preconditions.checkArgument(pcsort == 1, "添加一个口味，列表应该增加1，实际增加" + pcsort);
+            visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
+            //创建后小程序数量
+            JSONArray sortlist0 = wx.tasteSort(null).getJSONArray("list");
+            int sortnum0 = sortlist0.size();
+            int appsort = sortnum0-sortnum;
+            Preconditions.checkArgument(appsort == 1, "添加一个口味，小程序增加1，实际增加" + appsort);
+
+
+            //关闭口味
+            xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
+            int update = md.taste_search(null, 1, 100).getInteger("total");
+            int u = update - 1;
+            int id = md.taste_search(null, 1, 10).getJSONArray("list").getJSONObject(u).getInteger("id");
+            md.updateRecommend(id,false);
+            visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
+            JSONArray sortlist1 = wx.tasteSort(null).getJSONArray("list");
+            int sortnum1 = sortlist1.size();
+            int appsort0 = sortnum0-sortnum1;
+            Preconditions.checkArgument(appsort0 == 1, "关闭一个口味，小程序减少1，实际减少" + appsort0);
+            //开启口味
+            xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
+            md.updateRecommend(id,true);
+            visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
+            JSONArray sortlist2 = wx.tasteSort(null).getJSONArray("list");
+            int sortnum2 = sortlist2.size();
+            int appsort2 = sortnum2-sortnum1;
+            Preconditions.checkArgument(appsort2 == 1, "开启一个口味，小程序增加1，实际增加" + appsort2);
+
+
+            //给此口味添加评价
+            JSONArray apptaste = wx.newProduct(id).getJSONArray("list");
+            int tastesize = apptaste.size();
+            xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
+            //获取初始评论列表数量
+            int comtotal = md.taste_search_comment(id,1,100,null).getInteger("total");
+            //添加评论
+            JSONArray piclist = new JSONArray();
+            piclist.add(path);
+            md.taste_add_comment(id,path,"1234","1234",4,true,piclist);
+            int comtotal0 = md.taste_search_comment(id,1,100,null).getInteger("total");
+            int comnum = comtotal0-comtotal;
+            Preconditions.checkArgument(comnum == 1, "添加一个评论，pc增加1，实际增加" + comnum);
+            visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
+            JSONArray apptaste0 = wx.newProduct(id).getJSONArray("list");
+            int tastesize0 = apptaste0.size();
+            int tastenum = tastesize0-tastesize;
+            Preconditions.checkArgument(tastenum == 1, "添加一个评论，小程序增加1，实际增加" + tastenum);
+//            JSONArray list = md.
+
+            //关闭一个评论
+            xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
+            int t1 = md.taste_search_comment(id,1,100,null).getInteger("total");
+            int t2 = t1-1;
+            int tasteid = md.taste_search_comment(id,1,100,null).getJSONArray("list").getJSONObject(t2).getInteger("id");
+            md.seachCommentVisible(tasteid,false);
+            visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
+            JSONArray apptaste1 = wx.newProduct(id).getJSONArray("list");
+            int tastesize1 = apptaste1.size();
+            int tastenum1 = tastesize0-tastesize1;
+            Preconditions.checkArgument(tastenum1 == 1, "关闭一个评论，小程序减少1，实际减少" + tastenum1);
+
+            //开启一个评论
+            xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
+            md.seachCommentVisible(tasteid,true);
+            visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
+            JSONArray apptaste2 = wx.newProduct(id).getJSONArray("list");
+            int tastesize2 = apptaste2.size();
+            int tastenum2 = tastesize2-tastesize1;
+            Preconditions.checkArgument(tastenum2 == 1, "开启一个评论，小程序增加1，实际增加" + tastenum2);
+
+            //删除一个评论
+            xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
+            md.deleteComment(tasteid);
+            int comtotal2 = md.taste_search_comment(id,1,100,null).getInteger("total");
+            int comtotal3 = comtotal0-comtotal2;
+            Preconditions.checkArgument(comtotal3 == 1, "删除一个评论，pc减少1，实际减少" + tastenum2);
+            visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
+            JSONArray deletetaste = wx.newProduct(id).getJSONArray("list");
+            int  deletetaste1 =  deletetaste.size();
+            int  deletetaste2 = tastesize2-deletetaste1;
+            Preconditions.checkArgument(deletetaste2 == 1, "删除一个评论，小程序减少1，实际减少" + deletetaste2);
+
+
+            xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
+            md.taste_delete(id).getInteger("code");
+            int delete = md.taste_search(null, 1, 100).getInteger("total");
+            int dd = pctotal0-delete;
+            Preconditions.checkArgument(dd==1, "删除一个口味，pc减少1个实际减少" + dd);
+            visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
+            JSONArray dlist0 = wx.tasteSort(null).getJSONArray("list");
+            int num0 = dlist0.size();
+            int appsd = sortnum0-num0;
+            Preconditions.checkArgument(appsd == 1, "删除一个口味，小程序减少1个实际减少" + appsort);
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("添加口味，删除口味，列表+-1");
+        }
+    }
 //
 //    //将开启的口味关闭，再见关闭的口味开启，小程序列表+-1
 //    @Test()

@@ -25,6 +25,8 @@ public class PushMessageScene extends BaseScene {
     @Builder.Default
     private final Boolean ifSendImmediately = true;
     private final Long activityId;
+    private final List<Long> customerIdList;
+    private final Integer useTimeType;
 
     @Override
     public JSONObject getRequestBody() {
@@ -42,6 +44,8 @@ public class PushMessageScene extends BaseScene {
         object.put("send_time", sendTime);
         object.put("if_send_immediately", ifSendImmediately);
         object.put("activity_id", activityId);
+        object.put("customer_id_list", customerIdList);
+        object.put("use_time_type", useTimeType);
         return object;
     }
 

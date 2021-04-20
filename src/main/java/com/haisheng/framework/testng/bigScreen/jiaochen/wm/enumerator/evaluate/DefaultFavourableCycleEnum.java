@@ -7,13 +7,14 @@ import java.util.Optional;
 
 /**
  * @author wangmin
- * @date  2021/1/8  15:56
+ * @date 2021/1/8  15:56
  */
 public enum DefaultFavourableCycleEnum {
+
     /**
      * 3天
      */
-    ONE(1, "3天"),
+    THREE(3, "3天"),
     /**
      * 5天
      */

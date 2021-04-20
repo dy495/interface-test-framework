@@ -9,7 +9,7 @@ import java.util.Optional;
 /**
  * @author wangmin
  * @date 2021/1/8 2:27 PM
- * @desc
+
  */
 public enum ExchangeRuleTypeEnum {
     /**

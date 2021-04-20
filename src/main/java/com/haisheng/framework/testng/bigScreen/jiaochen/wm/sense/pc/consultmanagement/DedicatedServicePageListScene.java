@@ -1,6 +1,5 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.consultmanagement;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
@@ -104,6 +103,13 @@ public class DedicatedServicePageListScene extends BaseScene {
      */
     private final Long carModelId;
 
+    /**
+     * 描述 车系
+     * 是否必填 false
+     * 版本 v3.0
+     */
+    private final Long carStyleId;
+
 
     @Override
     public JSONObject getRequestBody() {
@@ -121,6 +127,7 @@ public class DedicatedServicePageListScene extends BaseScene {
         object.put("customer_phone", customerPhone);
         object.put("is_over_time", isOverTime);
         object.put("car_model_id", carModelId);
+        object.put("car_style_id", carStyleId);
         return object;
     }
 

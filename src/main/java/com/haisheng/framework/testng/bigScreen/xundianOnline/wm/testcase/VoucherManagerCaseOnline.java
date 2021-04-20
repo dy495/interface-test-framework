@@ -25,8 +25,6 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.enumerator.AccountEnum;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.enumerator.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.generator.voucher.VoucherGenerator;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.applet.granted.AppletMessageDetailScene;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.applet.granted.AppletMessageListScene;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.voucher.ApplyPageScene;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.vouchermanage.*;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.util.SupporterUtil;
@@ -59,8 +57,8 @@ import java.util.stream.Collectors;
 public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce PRODUCE = EnumTestProduce.INS_ONLINE;
     private static final AccountEnum ALL_AUTHORITY = AccountEnum.YUE_XIU_ONLINE;
-    private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.INS_WM_ONLINE;
-    private static final EnumAppletToken APPLET_USER_TWO = EnumAppletToken.INS_ZT_ONLINE;
+    private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.INS_WM_DAILY;
+    private static final EnumAppletToken APPLET_USER_TWO = EnumAppletToken.INS_ZT_DAILY;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public UserUtil user = new UserUtil(visitor);
     public SupporterUtil util = new SupporterUtil(visitor);
@@ -71,13 +69,14 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
         logger.debug("before class initial");
         CommonConfig commonConfig = new CommonConfig();
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_MENDIAN_ONLINE_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_XUNDIAN_DAILY_SERVICE;
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.XUNDIAN_ONLINE_TEST.getJobName());
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.XUNDIAN_DAILY_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
-        commonConfig.dingHook = DingWebhook.ONLINE_STORE_MANAGEMENT_PLATFORM_GRP;
+        commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.product = PRODUCE.getAbbreviation();
         commonConfig.referer = PRODUCE.getReferer();
+        commonConfig.pushRd = new String[]{"15898182672", "18513118484", "18810332354", "15084928847"};
         beforeClassInit(commonConfig);
     }
 
@@ -117,13 +116,13 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
                         CommonUtil.checkResult(voucherName + " 可兑换商品", "兑换布加迪威龙一辆", voucherDetail.getExchangeCommodityName());
                         CommonUtil.checkResult(voucherName + " 成本价格", "49.99", voucherDetail.getCost());
                     } else if (anEnum.getDesc().equals(VoucherTypeEnum.COUPON.getDesc())) {
-                        CommonUtil.checkResult(voucherName + " 门槛价格", 999.99, voucherDetail.getThresholdPrice());
-                        CommonUtil.checkResult(voucherName + " 折扣", 2.50, voucherDetail.getDiscount());
-                        CommonUtil.checkResult(voucherName + " 最多优惠", 99.99, voucherDetail.getMostDiscount());
+                        CommonUtil.checkResult(voucherName + " 门槛价格", "999.99", voucherDetail.getThresholdPrice());
+                        CommonUtil.checkResult(voucherName + " 折扣", "2.50", voucherDetail.getDiscount());
+                        CommonUtil.checkResult(voucherName + " 最多优惠", "99.99", voucherDetail.getMostDiscount());
                         CommonUtil.checkResult(voucherName + " 成本价格", "99.99", voucherDetail.getCost());
                     } else if (anEnum.getDesc().equals(VoucherTypeEnum.FULL_DISCOUNT.getDesc())) {
-                        CommonUtil.checkResult(voucherName + " 面值", 49.99, voucherDetail.getParValue());
-                        CommonUtil.checkResult(voucherName + " 门槛价格", 999.99, voucherDetail.getThresholdPrice());
+                        CommonUtil.checkResult(voucherName + " 面值", "49.99", voucherDetail.getParValue());
+                        CommonUtil.checkResult(voucherName + " 门槛价格", "999.99", voucherDetail.getThresholdPrice());
                         CommonUtil.checkResult(voucherName + " 成本价格", "49.99", voucherDetail.getCost());
                     }
                     //卡券列表+1
@@ -513,7 +512,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
     }
 
     //ok
-    @Test(description = "卡券管理--已售罄的卡券暂停发放--卡券状态=暂停发放")
+    @Test(description = "卡券管理--已售罄的卡券暂停发放--卡券状态=暂停发放", enabled = false)
     public void voucherManage_data_13() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -815,10 +814,8 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
             //获取已使用的卡券列表
             visitor.login(APPLET_USER_ONE.getToken());
             int transferVoucherNum = util.getAppletVoucherNum();
-            int transferMessageNum = util.getAppletMessageNum();
             AppletVoucher appletVoucher = util.getAppletVoucher(VoucherUseStatusEnum.NEAR_EXPIRE);
             id = appletVoucher.getId();
-            String voucherName = appletVoucher.getTitle();
             visitor.login(APPLET_USER_TWO.getToken());
             int receiveVoucherNum = util.getAppletVoucherNum();
             //转移
@@ -827,15 +824,6 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
             visitor.login(APPLET_USER_ONE.getToken());
             int newTransferVoucherNum = util.getAppletVoucherNum();
             CommonUtil.checkResult("转移者我的卡券数", transferVoucherNum - 1, newTransferVoucherNum);
-            int newTransferMessageNum = util.getAppletMessageNum();
-            CommonUtil.checkResult("转移者我的消息数", transferMessageNum + 1, newTransferMessageNum);
-            //我的消息内容
-            Long messageId = AppletMessageListScene.builder().size(20).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
-            JSONObject response = AppletMessageDetailScene.builder().id(messageId).build().invoke(visitor);
-            String title = response.getString("title");
-            String content = response.getString("content");
-            CommonUtil.checkResult("消息名称", "系统消息", title);
-            CommonUtil.checkResult("消息内容", "您的卡券【" + voucherName + "】已被转移至" + APPLET_USER_TWO.getPhone() + "账号，如非本人授权，请联系轿辰会客服，对应卡券变更至对应转移的账号中；", content);
             visitor.login(APPLET_USER_TWO.getToken());
             int newReceiveVoucherNum = util.getAppletVoucherNum();
             CommonUtil.checkResult("接收者我的卡券数", receiveVoucherNum + 1, newReceiveVoucherNum);
@@ -850,7 +838,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
     }
 
     //ok
-    @Test(description = "卡券管理--进行中的卡券增发，再撤回增发卡券，审核列表状态变为已撤回", dependsOnMethods = "voucherManage_system_1")
+    @Test(description = "卡券管理--进行中的卡券增发，再撤回增发卡券，审核列表状态变为已撤回")
     public void voucherManage_data_31() {
         try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
@@ -1021,7 +1009,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
     }
 
     //ok
-    @Test(description = "卡券管理--卡券转移，转移账号异常", enabled = false)
+    @Test(description = "卡券管理--卡券转移，转移账号异常")
     public void voucherManage_system_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1034,8 +1022,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
             //转移
             user.loginPc(ALL_AUTHORITY);
             Arrays.stream(phones).forEach(phone -> {
-                IScene scene = TransferScene.builder().transferPhone(phone).receivePhone(APPLET_USER_ONE.getPhone()).voucherIds(getList(voucherId)).build();
-                String message = visitor.invokeApi(scene, false).getString("message");
+                String message = TransferScene.builder().transferPhone(phone).receivePhone(APPLET_USER_ONE.getPhone()).voucherIds(getList(voucherId)).build().invoke(visitor, false).getString("message");
                 String err = "推送用户id不能为空";
                 CommonUtil.checkResult("转移卡券" + voucherName, err, message);
             });
@@ -1047,7 +1034,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
     }
 
     //ok
-    @Test(description = "卡券管理--卡券转移，接收账号异常", enabled = false)
+    @Test(description = "卡券管理--卡券转移，接收账号异常")
     public void voucherManage_system_12() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

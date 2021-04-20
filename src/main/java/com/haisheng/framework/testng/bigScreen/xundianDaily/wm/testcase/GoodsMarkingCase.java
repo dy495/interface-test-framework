@@ -970,56 +970,6 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
 
     //ok
     @Test
-    public void goodsManager_system_6() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            IScene goodsManagePageScene = GoodsManagePageScene.builder().build();
-            List<GoodsManagePageBean> goodsManagePageBeanListA = util.collectBean(goodsManagePageScene, GoodsManagePageBean.class);
-            GoodsManagePageBean goodsManagePageBean = goodsManagePageBeanListA.stream().filter(e -> !util.goodsIsOccupation(e.getGoodsName())).findFirst().orElse(goodsManagePageBeanListA.get(0));
-            Long id = goodsManagePageBean.getId();
-            //上架
-            Arrays.stream(CommodityStatusEnum.values()).forEach(anEnum -> {
-                ChangeGoodsStatusScene.builder().id(id).status(anEnum.name()).build().invoke(visitor);
-                List<GoodsManagePageBean> goodsManagePageBeanList = util.collectBean(goodsManagePageScene, GoodsManagePageBean.class);
-                goodsManagePageBeanList.stream().filter(e -> e.getId().equals(id)).forEach(e -> {
-                    CommonUtil.checkResult(e.getGoodsName() + "的商品状态", anEnum.getName(), e.getGoodsStatusName());
-                    CommonUtil.checkResult(e.getGoodsName() + "的商品状态", anEnum.name(), e.getGoodsStatus());
-                });
-            });
-            //clean
-            ChangeGoodsStatusScene.builder().id(id).status(CommodityStatusEnum.UP.name()).build().invoke(visitor);
-        } catch (AssertionError | Exception e) {
-            collectMessage(e);
-        } finally {
-            saveData("PC【商品管理】上架&下架存不被积分兑换占用商品");
-        }
-    }
-
-    //ok
-    @Test
-    public void goodsManager_system_7() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            IScene goodsManagePageScene = GoodsManagePageScene.builder().build();
-            List<GoodsManagePageBean> goodsManagePageBeanListA = util.collectBean(goodsManagePageScene, GoodsManagePageBean.class);
-            GoodsManagePageBean goodsManagePageBean = goodsManagePageBeanListA.stream().filter(e -> !util.goodsIsOccupation(e.getGoodsName())).findFirst().orElse(goodsManagePageBeanListA.get(0));
-            Long id = goodsManagePageBean.getId();
-            //下架商品
-            ChangeGoodsStatusScene.builder().id(id).status(CommodityStatusEnum.DOWN.name()).build().invoke(visitor);
-            //积分兑换看不见
-            IScene scene = GoodsManagePageScene.builder().goodsStatus(CommodityStatusEnum.UP.name()).build();
-            util.collectBean(scene, GoodsManagePageBean.class).forEach(e -> Preconditions.checkArgument(!e.getId().equals(id), "下架的商品" + e.getGoodsName() + "在创建积分兑换时可见"));
-            //clean
-            ChangeGoodsStatusScene.builder().id(id).status(CommodityStatusEnum.UP.name()).build().invoke(visitor);
-        } catch (AssertionError | Exception e) {
-            collectMessage(e);
-        } finally {
-            saveData("PC【商品管理】下架的商品在创建积分兑换时不可见");
-        }
-    }
-
-    //ok
-    @Test
     public void goodsManager_system_8() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1062,6 +1012,21 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             GoodsBean goodsBean = util.createGoods();
+            Long goodsId = goodsBean.getGoodsId();
+            //上架&下架
+            IScene goodsManagePageScene = GoodsManagePageScene.builder().build();
+            Arrays.stream(CommodityStatusEnum.values()).forEach(anEnum -> {
+                ChangeGoodsStatusScene.builder().id(goodsId).status(anEnum.name()).build().invoke(visitor);
+                List<GoodsManagePageBean> goodsManagePageBeanList = util.collectBean(goodsManagePageScene, GoodsManagePageBean.class);
+                goodsManagePageBeanList.stream().filter(e -> e.getId().equals(goodsId)).forEach(e -> {
+                    CommonUtil.checkResult(e.getGoodsName() + "的商品状态", anEnum.getName(), e.getGoodsStatusName());
+                    CommonUtil.checkResult(e.getGoodsName() + "的商品状态", anEnum.name(), e.getGoodsStatus());
+                });
+                if (anEnum.equals(CommodityStatusEnum.DOWN)) {
+                    IScene scene = GoodsManagePageScene.builder().goodsStatus(CommodityStatusEnum.UP.name()).build();
+                    util.collectBean(scene, GoodsManagePageBean.class).forEach(e -> Preconditions.checkArgument(!e.getId().equals(goodsId), "下架的商品" + e.getGoodsName() + "在创建积分兑换时可见"));
+                }
+            });
             GoodsParamBean goodsParamBean = goodsBean.getGoodsParamBean();
             //删除商品
             DeleteGoodsScene.builder().id(goodsBean.getGoodsId()).build().invoke(visitor);

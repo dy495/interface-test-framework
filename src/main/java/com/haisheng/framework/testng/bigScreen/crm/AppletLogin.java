@@ -7,7 +7,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.bean.Response;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.applet.AppletPorscheAMessageListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletVoucherListScene;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.applet.granted.AppletMessageListScene;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.applet.granted.AppletIntegralRecordScene;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -59,7 +59,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         commonConfig.pushRd = null;
     }
 
-//    @Test(dataProvider = "BSJ_APPLET_TOKENS_DAILY", dataProviderClass = AppletLogin.class)
+    @Test(dataProvider = "BSJ_APPLET_TOKENS_DAILY", dataProviderClass = AppletLogin.class)
     public void BSJ_applet_daily(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -99,7 +99,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-//    @Test(dataProvider = "JC_APPLET_TOKENS_DAILY", dataProviderClass = AppletLogin.class)
+    @Test(dataProvider = "JC_APPLET_TOKENS_DAILY", dataProviderClass = AppletLogin.class)
     public void JC_applet_daily(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -146,7 +146,26 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
             EnumTestProduce produce = EnumTestProduce.INS_DAILY;
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, produce.getDesc());
             commonConfig.referer = produce.getReferer();
-            commonConfig.pushRd = new String[]{EnumAppletToken.getPhoneByToken(token)};
+            commonConfig.pushQa = new String[]{EnumAppletToken.getPhoneByToken(token)};
+            VisitorProxy visitor = new VisitorProxy(produce);
+            visitor.login(token);
+            Response response = invokeIns(visitor);
+            Preconditions.checkArgument(response.getCode() == 1000, token + " " + response.getMsg());
+        } catch (AssertionError | Exception e) {
+            collectMessage(e);
+        } finally {
+            saveData("INS小程序每小时登陆一次，防止失效");
+        }
+    }
+
+    @Test(dataProvider = "INS_APPLET_TOKENS_ONLINE", dataProviderClass = AppletLogin.class)
+    public void INS_applet_online(String token) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            EnumTestProduce produce = EnumTestProduce.INS_ONLINE;
+            commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, produce.getDesc());
+            commonConfig.referer = produce.getReferer();
+            commonConfig.pushQa = new String[]{EnumAppletToken.getPhoneByToken(token)};
             VisitorProxy visitor = new VisitorProxy(produce);
             visitor.login(token);
             Response response = invokeIns(visitor);
@@ -169,7 +188,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
     }
 
     private Response invokeIns(VisitorProxy visitor) {
-        JSONObject response = AppletMessageListScene.builder().lastValue(null).size(20).build().invoke(visitor, false);
+        JSONObject response = AppletIntegralRecordScene.builder().lastValue(null).size(20).build().invoke(visitor, false);
         return getResponseInfo(response);
     }
 
@@ -218,6 +237,14 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         return new String[]{
                 EnumAppletToken.INS_WM_DAILY.getToken(),
                 EnumAppletToken.INS_ZT_DAILY.getToken(),
+        };
+    }
+
+    @DataProvider(name = "INS_APPLET_TOKENS_ONLINE")
+    public static Object[] ins_appletTokens_online() {
+        return new String[]{
+                EnumAppletToken.INS_WM_ONLINE.getToken(),
+                EnumAppletToken.INS_ZT_ONLINE.getToken(),
         };
     }
 }

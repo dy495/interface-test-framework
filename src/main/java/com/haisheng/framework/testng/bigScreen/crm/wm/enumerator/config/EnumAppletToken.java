@@ -11,7 +11,7 @@ import java.util.Arrays;
  * 若失效统一修改此类，统一管理
  */
 public enum EnumAppletToken {
-    BSJ_WM_DAILY(EnumTestProduce.PORSCHE_DAILY.getAbbreviation(), "D6Ns8hkbn8YMg0bAkuT1Lg==", true, "15321527989"),
+    BSJ_WM_DAILY(EnumTestProduce.PORSCHE_DAILY.getAbbreviation(), "Zg0LsqAeP25MGL0ulmDtDg==", true, "15321527989"),
 
     BSJ_XMF_DAILY(EnumTestProduce.PORSCHE_DAILY.getAbbreviation(), "X1vn9SlgXS1ohNyW9qRCjg==", true, "15037286013"),
 
@@ -23,7 +23,7 @@ public enum EnumAppletToken {
 
     BSJ_WM_SMALL_ONLINE(EnumTestProduce.PORSCHE_DAILY.getAbbreviation(), "UhqugJ3HUDI7BRKnIvxxKg==", false, "15321527989"),
 
-    JC_WM_DAILY(EnumTestProduce.JC_DAILY.getAbbreviation(), "eVvKxoI0LSCdMQJoN3Qg7g==", true, "15321527989"),
+    JC_WM_DAILY(EnumTestProduce.JC_DAILY.getAbbreviation(), "uhFcIKEc05Q50D9kEfLkBg==", true, "15321527989"),
 
     JC_WM_ONLINE(EnumTestProduce.JC_DAILY.getAbbreviation(), "aTcP39Q3mJAUauGwmq2VMg==", false, "15321527989"),
 
@@ -31,19 +31,19 @@ public enum EnumAppletToken {
 
     JC_XMF_ONLINE(EnumTestProduce.JC_DAILY.getAbbreviation(), "EDCYsAK+NKACPGAEN8ToJQ==", false, "15037286013"),
 
-    JC_LXQ_DAILY(EnumTestProduce.JC_DAILY.getAbbreviation(), "31Z9jgBlSsTIqRTYxOWaKw==", false, "13436941018"),
+    JC_LXQ_DAILY(EnumTestProduce.JC_DAILY.getAbbreviation(), "n684KiTJb7uex2SdCthJpA==", false, "13436941018"),
 
     JC_GLY_DAILY(EnumTestProduce.JC_DAILY.getAbbreviation(), "1nxb35B/gDlj6Q88uD5yEA==", true, "13373166806"),
 
     JC_GLY_ONLINE(EnumTestProduce.JC_DAILY.getAbbreviation(), "iCMVUEzq+zOmzldZM2awEQ==", false, "13373166806"),
 
-    INS_WM_DAILY(EnumTestProduce.INS_DAILY.getAbbreviation(), "NXyiR1B/4x7UNde+CMqOMw==", true, "15321527989"),
+    INS_WM_DAILY(EnumTestProduce.INS_DAILY.getAbbreviation(), "KmN5WYK4ptRf5ZFL/y3cOQ==", true, "15321527989"),
 
-    INS_WM_ONLINE(EnumTestProduce.INS_ONLINE.getAbbreviation(), "", false, "15321527989"),
+    INS_WM_ONLINE(EnumTestProduce.INS_ONLINE.getAbbreviation(), "3/xeCPoURoHfylTkD/d54Q==", false, "15321527989"),
 
-    INS_ZT_DAILY(EnumTestProduce.INS_DAILY.getAbbreviation(), "51Fy8/buDB/k0p5a2huc0A==", true, "13604609869"),
+    INS_ZT_DAILY(EnumTestProduce.INS_DAILY.getAbbreviation(), "KILnG7Wx7U0WJrBoyXrDoQ==", true, "13604609869"),
 
-    INS_ZT_ONLINE(EnumTestProduce.INS_ONLINE.getAbbreviation(), "", false, "13604609869"),
+    INS_ZT_ONLINE(EnumTestProduce.INS_ONLINE.getAbbreviation(), "B77c97rNQTsQbRtzq6MC9g==", false, "13604609869"),
     ;
 
     EnumAppletToken(String abbreviation, String token, boolean isDaily, String phone) {

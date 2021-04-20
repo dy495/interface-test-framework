@@ -24,11 +24,11 @@ public enum EnumTestProduce {
 
     INS_DAILY("门店-INS 日常 ", "https://servicewechat.com/wx937d85ff683db555/0/page-frame.html", "http://dev.inspect.store.winsenseos.cn", "", "INS", "", true),
 
-    INS_ONLINE("门店-INS 赢识线上 ", "", "http://inspect.store.winsenseos.com", "", "INS", "", false),
+    INS_ONLINE("门店-INS 预发 ", "https://servicewechat.com/wx03bb8777c5f04172/0/page-frame.html", "http://pre.inspect.store.winsenseos.com", "", "INS", "", false),
 
     FK_DAILY("风控 赢识日常 ", "http://39.105.17.58/page/shoprisk/cashriskcontrol/", "http://39.105.17.58", "-1", "FK", "4944", true),
 
-    FK_ONLINE("风控 赢识线上 ", "", "", "", "FK", "", false),
+    FK_ONLINE("风控 赢识线上 ", "http://39.105.77.122/page/shoprisk/stafflist", "http://39.105.77.122", "13260", "FK", "3515", false),
 
     ;
 

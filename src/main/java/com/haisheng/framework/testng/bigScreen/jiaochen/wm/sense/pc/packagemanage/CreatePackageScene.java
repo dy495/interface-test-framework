@@ -16,7 +16,6 @@ import java.util.List;
 @Builder
 public class CreatePackageScene extends BaseScene {
     private final String packageName;
-    private final String validity;
     private final String packageDescription;
     private final JSONArray voucherList;
     private final String packagePrice;
@@ -31,7 +30,6 @@ public class CreatePackageScene extends BaseScene {
     public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("package_name", packageName);
-        object.put("validity", validity);
         object.put("package_description", packageDescription);
         object.put("voucher_list", voucherList);
         object.put("package_price", packagePrice);
