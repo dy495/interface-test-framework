@@ -99,9 +99,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             int listNum = Unwanted_TypeNum + deal_TypeNum + pending_TypeNum;//三项之和
             Preconditions.checkArgument(checks_list == listNum, "巡店记录列表数量" + checks_list + "不等于待处理+已处理+无需处理的数量=" + listNum);
 
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("巡店记录列表报告数量 == 待处理+已处理+无需处理的数量");
@@ -125,9 +123,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             int result_Type = qualified_Num + unqualified_Num;
             Preconditions.checkArgument(checks_list == result_Type, "巡店记录列表数量" + checks_list + "不等于合格+不合格的数量=" + result_Type);
 
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("app不合格报告+合格报告 == 列表下全部报告");
@@ -164,15 +160,13 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             String inspector_name1 = shopCheck.getString("inspector_name");
             String check_type1 = shopCheck.getString("check_type");
 
-            checkArgument(inappropriate_num == inappropriate_num1, "【巡店详情】中报告不适用项数!=【app巡店信息】中报告不适用项数" + inappropriate_num + "!=" + inappropriate_num1);
-            checkArgument(qualified_num == qualified_num1, "【巡店详情】中报告合格项数!=【app巡店信息】中报告合格项数" + qualified_num + "!=" + qualified_num1);
-            checkArgument(unqualified_num == unqualified_num1, "【巡店详情】中报告不合格项数!=【app巡店信息】中报告不合格项数" + unqualified_num + "!=" + unqualified_num1);
+            checkArgument(inappropriate_num.equals(inappropriate_num1), "【巡店详情】中报告不适用项数!=【app巡店信息】中报告不适用项数" + inappropriate_num + "!=" + inappropriate_num1);
+            checkArgument(qualified_num.equals(qualified_num1), "【巡店详情】中报告合格项数!=【app巡店信息】中报告合格项数" + qualified_num + "!=" + qualified_num1);
+            checkArgument(unqualified_num.equals(unqualified_num1), "【巡店详情】中报告不合格项数!=【app巡店信息】中报告不合格项数" + unqualified_num + "!=" + unqualified_num1);
             checkArgument(submit_comment_list.equals(submit_comment1), "【巡店详情】中报告提交说明!=【app巡店信息】中提交说明" + submit_comment_list + "!=" + submit_comment1);
             checkArgument(inspector_names.equals(inspector_name1), "【巡店详情】中报告巡店者!=【app巡店信息】中报告巡店者" + inspector_names + "!=" + inspector_name1);
             checkArgument(check_type0.equals(check_type1), "【巡店详情】中巡店方式!=【app巡店信息】中巡店方式" + check_type0 + "!=" + check_type1);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("巡店记录详情内容==PC【巡店报告详情】中的巡店记录详情内容");
@@ -199,9 +193,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             int totalnum = xd.task_list(1,10,0,null).getInteger("total");
             CommonUtil.valueView(count,totalnum);
             checkArgument(totalnum == count, "未完成列表数量" + totalnum + "!=未完成的待办事项的展示项" + count);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("app[未完成]列表的数量==未完成的待办事项的的展示项");
@@ -217,10 +209,8 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
         try {
             Integer appMdNum = md.app_shopNum().getInteger("shop_count");
             Integer pcMdNum = md.patrolShopPageV3("", 1, 10).getInteger("total");
-            checkArgument(appMdNum == pcMdNum, "app账号下当前门店数量" + appMdNum + "pc该账号下巡店中心列表的数量" + pcMdNum);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+            checkArgument(appMdNum.equals(pcMdNum), "app账号下当前门店数量" + appMdNum + "pc该账号下巡店中心列表的数量" + pcMdNum);
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
                     saveData("app账号下当前门店数量==pc该账号下巡店中心列表的数量");
@@ -235,10 +225,8 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
         try {
             Integer appMdNum = md.app_shopNum().getInteger("shop_count");
             Integer pcCustomerNum = md.customerFlowList("","","","","",null,1,10,"").getInteger("total");
-            checkArgument(appMdNum == pcCustomerNum, "app账号下当前门店数量" + appMdNum + "pc该账号下客流分析列表的数量" + pcCustomerNum);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+            checkArgument(appMdNum.equals(pcCustomerNum), "app账号下当前门店数量" + appMdNum + "pc该账号下客流分析列表的数量" + pcCustomerNum);
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("app账号下当前门店数量==pc该账号下客流分析列表的数量");
@@ -269,9 +257,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             }
             CommonUtil.valueView(todayUv, todayUvCount);
             checkArgument(todayUv <= todayUvCount, "app首页实时客流分析中今日到访人数" + todayUv + "app趋势图中各时间段人数" + todayUvCount);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("app首页实时客流分钟中今日到访人数 <= app趋势图中今天各时段人数之和");
@@ -282,7 +268,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
     //app[首页实时客流分析] 今日到访人次== [趋势图]今天各时段人次之和
     @Test
-    public void todayNumPv() throws Exception{
+    public void todayNumPv(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray homeList = md.cardList("HOME_BELOW", null, 10).getJSONArray("list");
@@ -301,9 +287,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             }
             CommonUtil.valueView(todayPv, todayPvCount);
             checkArgument(todayPv == todayPvCount, "app首页实时客流分析中今日到访人数" + todayPv + "app趋势图中各时间段人数" + todayPvCount);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("app首页实时客流分钟中今日到访人数 <= app趋势图中今天各时段人数之和");
@@ -314,7 +298,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
     //APP巡店记录详情，打开展示报告信息
     @Test(dataProvider = "is_read",dataProviderClass = DataProviderMethod.class)
-    public void ReportList(Boolean is_read) throws Exception{
+    public void ReportList(Boolean is_read) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 //            获取消息列表
@@ -333,9 +317,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
                     checkArgument(check_items != null, "app巡店记录详情");
                 }
             }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("巡店记录详情默认展示为空");
@@ -346,7 +328,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
     // 今日进店客流==今日进店客流详情中今日进店客流
     @Test
-    public void customerFlow() throws Exception{
+    public void customerFlow() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取卡片list
@@ -391,9 +373,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             int before_week1 = items.getJSONObject(1).getInteger("before_week");
             checkArgument(last_week_new_customer_qoq==before_week1, "今日进店新客同比！=今日进店新客中今日新客同比");
             checkArgument(yesterday_new_customer_qoq==before_day1, "今日进店新客环比比==今日进店新客中今日新客环比");
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("今日进店客流数据==今日进店客流中的各分数据");
@@ -404,7 +384,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
     //交易数据方面
     @Test
-    public void  tradeCustomer() throws Exception{
+    public void  tradeCustomer() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取卡片list
@@ -450,9 +430,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             int before_week1 = items.getJSONObject(2).getInteger("before_week");
             checkArgument(last_week_new_customer_qoq==before_day1, "今日进店客流同比==今日进店客流详情中今日新客同比");
             checkArgument(yesterday_new_customer_qoq==before_week1, "今日进店客流环比比==今日进店客流详情中今日新客环比");
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("累计交易数据==累计交详情中得数据");
@@ -461,7 +439,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test
-    public void  orderForm() throws Exception{
+    public void  orderForm() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取卡片list
@@ -488,9 +466,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             int before_week =  items.getJSONObject(1).getInteger("before_day");
             checkArgument(last_week_order_qoq==before_week, "今日订单的环比==订单详情中的今日订单数环比");
             checkArgument(yesterday_order_qoq==before_day, "今日订单数的同比==订单详情中的今日订单数同比");
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("今日进店客流==今日进店客流详情中今日进店客流");
@@ -545,9 +521,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             checkArgument(yesterday_turnover_qoq==before_day1, "今日客单价的同比==订单详情中的今日客单价同比");
 
 
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("累计营业额==营业额详情中的每个数据");
@@ -557,7 +531,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
     //app实时客流趋势图中的uv==客流概览趋势图中的uv
     @Test
-    public void allShoptodayNum() throws Exception{
+    public void allShoptodayNum() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //app趋势图中uv
@@ -583,9 +557,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             }
             CommonUtil.valueView( pcTodayUvCount,appTodayUvCount);
             checkArgument(appTodayUvCount==pcTodayUvCount, "app实时客流趋势图uv" + appTodayUvCount + "pc实时趋势图中uv" + pcTodayUvCount);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("app实时客流趋势图uv == pc实时趋势图中uv");
@@ -596,7 +568,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
     //app实时客流趋势图中的pv==客流概览趋势图中的pv
     @Test
-    public void allShoptodayNum1() throws Exception{
+    public void allShoptodayNum1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //app趋势图中Pv
@@ -622,9 +594,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             }
             CommonUtil.valueView( pcTodayPvCount,appTodayPvCount);
             checkArgument(appTodayPvCount==pcTodayPvCount, "app实时客流趋势图Pv" + appTodayPvCount + "pc实时趋势图中Pv" + pcTodayPvCount);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("app实时客流趋势图Pv == pc实时趋势图中Pv");
@@ -635,7 +605,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
     //app实时客流趋势图中的yesterdayuv==客流概览趋势图中的yesterdayuv
     @Test
-    public void allShoptodayNum2() throws Exception{
+    public void allShoptodayNum2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //app趋势图中uv
@@ -661,9 +631,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             }
             CommonUtil.valueView( pcYesterdayUvCount,appYesterdayUvCount);
             checkArgument(appYesterdayUvCount==pcYesterdayUvCount, "app实时客流趋势图昨日uv" + appYesterdayUvCount + "pc实时趋势图中昨日uv" + pcYesterdayUvCount);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("app实时客流趋势图昨日uv == pc实时趋势图中昨日uv");
@@ -674,7 +642,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
     //app实时客流趋势图中昨日pv==客流概览趋势图中昨日的pv
     @Test
-    public void allShoptodayNum3() throws Exception{
+    public void allShoptodayNum3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //app趋势图中Pv
@@ -700,9 +668,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             }
             CommonUtil.valueView( pcYesterdayPvCount,appYesterdayPvCount);
             checkArgument(appYesterdayPvCount==pcYesterdayPvCount, "app实时客流趋势图昨日Pv" + appYesterdayPvCount + "pc实时趋势图中昨日Pv" + pcYesterdayPvCount);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("app实时客流趋势图昨日Pv == pc实时趋势图中昨日Pv");

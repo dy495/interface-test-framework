@@ -1306,26 +1306,20 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
             JSONArray querylist = wx.queryAll().getJSONArray("list");
             int feedback_type_id = querylist.getJSONObject(0).getInteger("feedback_type_id");
-
             //不添加反馈类型
             JSONObject res = wx.submitFeedback(null,5,"自动化提交用户反馈");
             Preconditions.checkArgument(res.getString("message").equals("反馈类型ID不能为空"),"期待反馈类型ID不能为空，实际"+res.getString("message"));
-//            int code =  wx.submitFeedback(null,5,"自动化提交用户反馈").getInteger("code");
-//            Preconditions.checkArgument(code==1001,"期待状态码1000，实际"+code);
-//            Preconditions.checkArgument(res.getInteger("code")==1001,"期待状态码1000，实际"+res.getInteger("code"));
+            //不添加星级
+//            JSONObject res0 = wx.submitFeedback(feedback_type_id,null,"自动化提交用户反馈");
+//            Preconditions.checkArgument(res0.getString("message").equals("星级不能为空"),"期待反馈类型ID不能为空，实际"+res.getString("message"));
+            //不添加反馈描述
+//            JSONObject res1 = wx.submitFeedback(feedback_type_id,5,null);
+//            Preconditions.checkArgument(res1.getString("message").equals("反馈类型ID不能为空"),"期待反馈类型ID不能为空，实际"+res.getString("message"));
 
-
-
-//            xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
-//            int total = md.feedbackList(null,null,1,10).getInteger("total");
-//            int a = total-1;
-//            int id = md.feedbackList(null,null,1,10).getJSONArray("list").getJSONObject(a).getInteger("id");
-//            int code1 = md.feedback_delete(id).getInteger("code");
-//            Preconditions.checkArgument(code1==1000,"期待状态码1000，实际"+code1);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-//            saveData("小程序用户反馈");
+            saveData("小程序用户反馈");
         }
     }
 }
