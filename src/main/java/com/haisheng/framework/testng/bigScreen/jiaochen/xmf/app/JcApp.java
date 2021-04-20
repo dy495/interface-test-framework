@@ -659,7 +659,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
 
 
 
-    //    @Test(description = "app接待,接待任务列表+1,完成接待列表数-1")
+//        @Test(description = "app接待,接待任务列表+1,完成接待列表数-1")
     public void Jc_reception() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

@@ -20,10 +20,7 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import com.haisheng.framework.util.DateTimeUtil;
-import com.haisheng.framework.util.FileUtil;
-import com.haisheng.framework.util.QADbProxy;
-import com.haisheng.framework.util.QADbUtil;
+import com.haisheng.framework.util.*;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.ReadContext;
 import org.testng.annotations.AfterClass;
@@ -676,6 +673,36 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
 
             saveData("新建/删除积分商品,商品列表+-1");
         }
+
+    }
+
+
+    @Test  //导入流失客户
+    public void losscustomer() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            pcLogin(pp.jdgw,pp.jdgwpassword,pp.roleidJdgw);
+
+            System.out.println(dt.getHistoryDate(-366));
+            System.out.println(dt.getHHmm(0,"HH:mm:ss"));
+            dt.getHHmm(0);
+            String maile="2001";
+            String vin="ASDAAAAAAA12"+ CommonUtil.getRandom(5);
+            String plate="京AS"+CommonUtil.getRandom(4);
+
+            //新建一个excel,里程数=智能提醒公里数
+            PoiUtils.importlossCustomer(maile,vin,-365,plate);
+            //导入工单
+            jc.pcWorkOrder(pp.importFilepath2);      //导入工单文件的路径=新建excel 路径
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("pc-新建智能提醒（公里）结果验证");
+        }
+
+
 
     }
 

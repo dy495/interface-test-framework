@@ -66,6 +66,48 @@ public class PoiUtils {
 
     }
 
+    public static void importlossCustomer(String mile,String vin,int dataNum,String plate ) throws IOException {
+        Random random = new Random();
+        String serverNumber = "A" + random.nextInt(100000);
+        DateTimeUtil dt = new DateTimeUtil();
+        String begin = dt.getHistoryDate1(dataNum)+" "+dt.getHHmm(0,"HH:mm:ss");
+        String end = dt.getHistoryDate1(dataNum)+" "+dt.getHHmm(0,"HH:mm:ss");
+        String importFilepath="src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/importfile2.xlsx";
+//        importFilepath= importFilepath.replace("/", File.separator);
+        String[] roeName = {"*服务单号",
+                "*开单时间",
+                "*工单类型",
+                "*维修类型",
+                "*车牌号",
+                "*VIN码",
+                "*送修人姓名",
+                "*性别",
+                "*送修人手机",
+                "*服务顾问",
+                "*里程数/km",
+                "*费用/rmb",
+                "*交车时间"};
+        String[] parm = {serverNumber,
+                begin,
+                "2",
+                "保养",
+                plate,
+                vin,
+                "夏流失客户",
+                "女",
+                "15137286013",
+                "自动化专用账号",
+                mile,
+                "2000",
+                end};
+
+        XSSFWorkbook workbook = export2(roeName, parm);
+        FileOutputStream output = new FileOutputStream(importFilepath);
+        workbook.write(output);
+        output.flush();
+
+    }
+
     public static XSSFWorkbook export2(String[] rowName, String[] parm) {
         XSSFWorkbook workbook = new XSSFWorkbook(); // 创建工作簿对象
         XSSFSheet sheet = workbook.createSheet(); // 创建工作表对象
