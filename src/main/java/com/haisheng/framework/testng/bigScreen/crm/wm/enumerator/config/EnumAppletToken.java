@@ -13,7 +13,7 @@ import java.util.Arrays;
 public enum EnumAppletToken {
     BSJ_WM_DAILY(EnumTestProduce.PORSCHE_DAILY.getAbbreviation(), "Zg0LsqAeP25MGL0ulmDtDg==", true, "15321527989"),
 
-    BSJ_XMF_DAILY(EnumTestProduce.PORSCHE_DAILY.getAbbreviation(), "X1vn9SlgXS1ohNyW9qRCjg==", true, "15037286013"),
+    BSJ_XMF_DAILY(EnumTestProduce.PORSCHE_DAILY.getAbbreviation(), "HMV6S0IoBmUCgWrBAK2hEQ==", true, "15037286013"),
 
     BSJ_GLY_DAILY(EnumTestProduce.PORSCHE_DAILY.getAbbreviation(), "MLlSMAp5oXR7cGuCfY6+NA==", true, "13373166806"),
 

@@ -30,14 +30,14 @@ public class PublicParm {
     public String shichang = "";
     public String shichangPassword = "";
     public String verification_code = "3MR9C7";   //夏夏的核销码
-    public String carModelId = "14";
+    public String carModelId = "212";
     public String car_id = "24";    //小程序车id
     public String carplate = "浙QWER123";      //编辑小程序车牌号
     public String carplate7 = "津DAASSE";      //编辑小程序车牌号
 
     //预约使用车辆
     public Long car_idA =48L;  //plate_number=津DAASSE
-    public String modolIdAppointment = "14";
+    public String modolIdAppointment = "212";
     public String carModel="特斯拉model3";
     public String carStyleId = "";
     public String carStyleName = "";
