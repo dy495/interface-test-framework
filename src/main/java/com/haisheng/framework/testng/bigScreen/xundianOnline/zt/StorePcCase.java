@@ -79,7 +79,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd{
 
     //客流分析门店搜索
     @Test(dataProvider = "type",dataProviderClass = DataProviderMethod.class)
-    public void ShopperTrak(String type_1) throws Exception{
+    public void ShopperTrak(String type_1) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray type = new JSONArray();
@@ -99,9 +99,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd{
                 checkArgument(manager_name.equals("张三丰"), "输入的门店负责人" + "张三丰" + "!=搜索出来门店的负责人" + manager_name);
             }
 
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("客流分析通过搜索框输入==客流分析搜索出来门店的内容");
@@ -112,7 +110,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd{
 
     //    //门店客户列表通过搜索框搜索门店
     @Test(dataProvider = "type",dataProviderClass = DataProviderMethod.class)
-    public void StoreTrak(String type_1) throws Exception{
+    public void StoreTrak(String type_1) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray type = new JSONArray();
@@ -133,9 +131,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd{
                     checkArgument(manager_name.equals("张三丰"), "输入的门店负责人" + "张三丰" + "!=搜索出来门店的负责人" + manager_name);
                 }
             }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("门店客户通过搜索框输入==门店客户搜索出来门店的内容");
@@ -147,7 +143,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd{
 
     //    //门店客户列表通过搜索框搜索门店
     @Test(dataProvider = "type",dataProviderClass = DataProviderMethod.class)
-    public void NewStoreUser(String type_1) throws Exception{
+    public void NewStoreUser(String type_1) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray type = new JSONArray();
@@ -168,9 +164,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd{
                     checkArgument(manager_name.equals("张三丰"), "输入的门店负责人" + "张三丰" + "!=搜索出来门店的负责人" + manager_name);
                 }
             }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("新增客户通过搜索框输入==新增客户搜索出来门店的内容");
@@ -179,7 +173,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd{
 
     //会员信息通过会员id筛选
     @Test(dataProvider = "memberId",dataProviderClass = DataProviderMethod.class)
-    public void searchMember(String memberId) throws Exception{
+    public void searchMember(String memberId) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray list = md.MemberList(page,size,memberId,null,null,null,null).getJSONArray("list");
@@ -187,9 +181,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd{
                 String memId = list.getJSONObject(j).getString("member_id");
                 Preconditions.checkArgument(memId.equals(memberId),"根据"+memberId+"查询，结果包含"+memId);
             }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("会员信息列表通过会员Id搜索");
@@ -198,7 +190,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd{
 
     //会员信息通过姓名筛选（包阔模糊搜索和精确搜索）
     @Test(dataProvider = "memberName",dataProviderClass = DataProviderMethod.class)
-    public void searchMember1(String memberName) throws Exception{
+    public void searchMember1(String memberName) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray list = md.MemberList(page,size,null,memberName,null,null,null).getJSONArray("list");
@@ -206,9 +198,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd{
                 String memName = list.getJSONObject(j).getString("member_name");
                 Preconditions.checkArgument(memName.contains(memberName),"根据"+memberName+"查询，结果包含"+memName);
             }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("会员信息列表通过会员姓名搜索");
@@ -218,7 +208,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd{
 
     //会员信息列表通过电话筛选
     @Test(dataProvider = "memberPhone",dataProviderClass = DataProviderMethod.class)
-    public void searchMember2(String memberPhone) throws Exception{
+    public void searchMember2(String memberPhone) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray list = md.MemberList(page,size,null,null,memberPhone,null,null).getJSONArray("list");
@@ -226,9 +216,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd{
                 String memPhone = list.getJSONObject(j).getString("phone");
                 Preconditions.checkArgument(memPhone.contains(memberPhone), "根据" + memberPhone + "查询，结果包含" + memPhone);
             }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("会员信息列表通过会员电话搜索");
@@ -237,7 +225,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd{
 
     //会员信息列表通过人物id筛选
     @Test(dataProvider = "userId",dataProviderClass = DataProviderMethod.class)
-    public void searchMember3(String userId) throws Exception{
+    public void searchMember3(String userId) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray list = md.MemberList(page,size,null,null,null,userId,null).getJSONArray("list");
@@ -245,9 +233,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd{
                 String memUserId = list.getJSONObject(j).getString("user_id");
                 Preconditions.checkArgument(memUserId.contains(userId), "根据" + userId + "查询，结果包含" + memUserId);
             }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("会员信息列表通过人物id搜索");
@@ -282,7 +268,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd{
 
     //会员信息列表通过会员id和会员姓名筛选
     @Test(dataProvider = "userIdName",dataProviderClass = DataProviderMethod.class)
-    public void searchMember5(String userId,String userName ) throws Exception{
+    public void searchMember5(String userId,String userName ) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray list0 = md.MemberList(page,size,userId,userName,null,null,null).getJSONArray("list");
@@ -293,12 +279,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd{
                 Preconditions.checkArgument(userName.equals(memberName1),"根据"+userName+"查询，返回结果"+memberName1);
             }
 
-//                }
-//            }
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("会员信息列表通过会员id和会员姓名搜索");
@@ -307,7 +288,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd{
 
     //会员信息列表通过会员id和会员姓名+联系电话筛选
     @Test(dataProvider = "userList1",dataProviderClass = DataProviderMethod.class)
-    public void searchMember6(String userId,String userName,String phone) throws Exception{
+    public void searchMember6(String userId,String userName,String phone) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray list0 = md.MemberList(page,size,userId,userName,phone,null,null).getJSONArray("list");
@@ -320,9 +301,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd{
                 Preconditions.checkArgument(phone.equals(memberPhone),"根据"+phone+"查询，返回结果"+memberPhone);
             }
 
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("会员信息列表通过会员id+会员姓名+会员电话搜索");
@@ -332,7 +311,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd{
 
     //会员信息列表通过会员id和会员姓名+联系电话+人物id筛选
     @Test(dataProvider = "userList2",dataProviderClass = DataProviderMethod.class)
-    public void searchMember7(String userId,String userName,String phone,String memberUserId) throws Exception{
+    public void searchMember7(String userId,String userName,String phone,String memberUserId) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray list0 = md.MemberList(page,size,userId,userName,phone,memberUserId,null).getJSONArray("list");
@@ -347,9 +326,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd{
                 Preconditions.checkArgument(memberUId.equals(memberUserId),"根据"+memberUserId+"查询，返回结果"+memberUId);
             }
 
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("会员信息列表通过会员id+会员姓名+会员电话+人物id搜索");

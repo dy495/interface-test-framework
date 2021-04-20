@@ -20,6 +20,7 @@ import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.CommonUtil;
+import com.haisheng.framework.util.DateTimeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterClass;
@@ -28,6 +29,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.util.Date;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -80,7 +82,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
     //图片中心总数==展示的数量
     @Test
-    public void picNum()throws Exception {
+    public void picNum() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int pictotal = md.picturePage("","","","",null,1,8).getInteger("total");
@@ -90,9 +92,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
             CommonUtil.valueView(pictotal, pagesize+pages_size);
             checkArgument(pictotal == pagesize+pages_size, "图片中心总数" + pictotal + "!=搜索出图片的数量" + pagesize+pages_size);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("图片中心总数==展示的数量");
@@ -102,7 +102,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
     //定检巡查展示图片个数==返回的数量
     @Test
-    public void picScheduled() throws Exception{
+    public void picScheduled() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int pictotal = md.picturePage("SCHEDULED","","","",null,1,8).getInteger("total");
@@ -112,9 +112,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
             CommonUtil.valueView(pictotal, pagesize+pages_size);
             checkArgument(pictotal == pagesize+pages_size, "图片中心总数" + pictotal + "!=搜索出图片的数量" + pagesize+pages_size);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("定检巡查展示图片个数==返回的数量");
@@ -126,12 +124,11 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
     //定检巡查展示图片类型+日期==返回的图片类型+日期
     @Test
-    public void picScheduled2() throws Exception{
+    public void picScheduled2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String start_time = "2021-01-19";
-            String end_time = "2021-01-22";
-            int pictotal = md.picturePage("SCHEDULED",start_time,end_time,"",null,1,8).getInteger("total");
+            String start_time = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), -5), "yyyy-MM-dd");
+            String end_time = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd");
             int pages = md.picturePage("SCHEDULED",start_time,end_time,"",null,1,8).getInteger("pages");
             for(int i=1;i<=pages;i++){
                 JSONArray list = md.picturePage("SCHEDULED",start_time,end_time,"",null,i,8).getJSONArray("list");
@@ -147,9 +144,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
             }
 
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("定检巡查展示图片类型+日期==返回的图片类型+日期");
@@ -159,12 +154,11 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
     //定检巡查展示图片类型+日期+门店名称+异常==返回的图片类型+日期+门店名称+异常
     @Test
-    public void picScheduled3() throws Exception{
+    public void picScheduled3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String start_time = "2021-01-19";
-            String end_time = "2021-01-22";
-            int pictotal = md.picturePage("SCHEDULED",start_time,end_time,"",1,1,8).getInteger("total");
+            String start_time =DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), -5), "yyyy-MM-dd");
+            String end_time = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd");
             int pages = md.picturePage("SCHEDULED",start_time,end_time,info.shop_id_01_chin,1,1,8).getInteger("pages");
             for(int i=1;i<=pages;i++){
                 JSONArray list = md.picturePage("SCHEDULED",start_time,end_time,info.shop_id_01_chin,1,i,8).getJSONArray("list");
@@ -184,9 +178,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
             }
 
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("定检巡查展示图片类型+日期+门店名称+异常==返回的图片类型+日期+门店名称+异常");
@@ -197,12 +189,11 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
     //定检巡查展示图片类型+日期+门店名称+非异常==返回的图片类型+日期+门店名称+非异常
     @Test
-    public void picScheduled4() throws Exception{
+    public void picScheduled4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String start_time = "2021-01-19";
-            String end_time = "2021-01-22";
-            int pictotal = md.picturePage("SCHEDULED",start_time,end_time,"",1,1,8).getInteger("total");
+            String start_time =DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), -5), "yyyy-MM-dd");
+            String end_time = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd");
             int pages = md.picturePage("SCHEDULED",start_time,end_time,info.shop_id_01_chin,0,1,8).getInteger("pages");
             for(int i=1;i<=pages;i++){
                 JSONArray list = md.picturePage("SCHEDULED",start_time,end_time,info.shop_id_01_chin,0,i,8).getJSONArray("list");
@@ -222,9 +213,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
             }
 
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("定检巡查展示图片类型+日期+门店名称+异常==返回的图片类型+日期+门店名称+异常");
@@ -234,7 +223,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
     //手动留痕展示图片个数==返回的数量
     @Test
-    public void picSpot() throws Exception{
+    public void picSpot() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int pictotal = md.picturePage("SPOT","","","",null,1,8).getInteger("total");
@@ -244,9 +233,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
             CommonUtil.valueView(pictotal, pagesize+pages_size);
             checkArgument(pictotal == pagesize+pages_size, "图片中心总数" + pictotal + "!=搜索出图片的数量" + pagesize+pages_size);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("手动留痕展示图片个数==返回的数量");
@@ -256,10 +243,9 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
     //手动留痕展示图片类型==返回的图片类型
     @Test
-    public void picSpot1() throws Exception{
+    public void picSpot1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int pictotal = md.picturePage("SPOT","","","",null,1,8).getInteger("total");
             int pages = md.picturePage("SPOT","2021-03-01","2021-03-13","",null,1,8).getInteger("pages");
             for(int i=1;i<=pages;i++){
                 JSONArray list = md.picturePage("SPOT","","","",null,i,8).getJSONArray("list");
@@ -271,9 +257,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
             }
 
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("手动留痕展示图片类型==返回的图片类型");
@@ -284,11 +268,11 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
     //手动展示图片类型+日期+门店名称+非异常==返回的图片类型+日期+门店名称+非异常
     @Test
-    public void picSpot4() throws Exception{
+    public void picSpot4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String start_time = "2021-01-19";
-            String end_time = "2021-01-22";
+            String start_time =DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), -5), "yyyy-MM-dd");
+            String end_time = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd");
             int pages = md.picturePage("SPOT",start_time,end_time,info.shop_id_01_chin,0,1,8).getInteger("pages");
             for(int i=1;i<=pages;i++){
                 JSONArray list = md.picturePage("SPOT",start_time,end_time,info.shop_id_01_chin,0,i,8).getJSONArray("list");
@@ -307,9 +291,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
                 }
 
             }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("手动展示图片类型+日期+门店名称+异常==返回的图片类型+日期+门店名称+异常");
@@ -319,7 +301,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
     //非自定义导出报表
     @Test
-    public void ReportExport() throws Exception{
+    public void ReportExport() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray list = xd.reportList(1,100,null,null,"MONTH",null).getJSONArray("list");
@@ -329,9 +311,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 //                Preconditions.checkArgument(code==1000,"非自定义导出报表 id="+id+", 状态码"+code);
             }
 
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("PC非自定义导出报表");
@@ -360,7 +340,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
     //会员身份添加、删除
     @Test
-    public void AddMember() throws Exception{
+    public void AddMember() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Integer total = md.Member(page,size).getInteger("total");
@@ -381,9 +361,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
             int b = total1-total2;
             Preconditions.checkArgument(b==1, "删除会员身份后，身份列表-1，实际减少了"+b);
 
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("会员身份添加，删除，");
@@ -393,7 +371,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
     //注册会员，会员管理列表+1，通过搜索框进行搜索
     @Test(dataProvider = "FACE_URL",dataProviderClass = DataProviderMethod.class)
-    public void MemberList(String face_url) throws Exception{
+    public void MemberList(String face_url) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //通过搜索框搜索会员
@@ -401,12 +379,12 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
             String member_ID = "11223344";
             String member_name = "测试会员11@@aaa";
             String birthday = "1998-10-01";
-            String base64 = info.getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/女人脸.jpg");
+            String base64 = MendianInfoOnline.getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/女人脸.jpg");
             String path = md.checkPic(base64).getString("pic_path");
             md.RegisterMember(null,path,member_ID,member_name,phone,birthday,null,130);
 
             JSONArray list0 = md.MemberList(page,size,null,null,null,null,null).getJSONArray("list");
-            Integer a = list0.size()-list.size();
+            int a = list0.size()-list.size();
             Preconditions.checkArgument(a==1, "新注册一个会员，会员列表实际添加了"+a);
 
 //            //编辑会员
@@ -418,23 +396,18 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
             int id1 = list1.getJSONObject(a1).getInteger("id");
             md.MemberUpdate(id1,null,"321321323",MemberName,phone,null,null,130);
 
-//
-//
             //删除会员
             JSONArray list3 = md.MemberList(page,size,null,null,null,null,null).getJSONArray("list");
-            Integer total0 = md.MemberList(page,size,null,null,null,null,null).getInteger("total");
+
             int a2 = total-1;
 
             int id2 = list1.getJSONObject(a2).getInteger("id");
             md.MemberDelete(id2);
             JSONArray list4 = md.MemberList(page,size,null,null,null,null,null).getJSONArray("list");
-            Integer a3 = list3.size()-list4.size();
+            int a3 = list3.size()-list4.size();
             Preconditions.checkArgument(a3==1, "删除一个会员，会员列表实际减少了"+a3);
-////            Preconditions.checkArgument(res3.getInteger("code") == 1000, "删除会员失败时状态码"+res3.getInteger("code"));
 
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("注册会员，删除会员");
@@ -443,11 +416,11 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
     //注册会员的异常情况
     @Test(dataProvider = "FACE_URL",dataProviderClass = DataProviderMethod.class)
-    public void regMemError(String face_url) throws Exception{
+    public void regMemError(String face_url) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //注册会员时会员id重复也成功
-            String base64 = info.getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/女人脸.jpg");
+            String base64 = MendianInfoOnline.getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/女人脸.jpg");
             String path = md.checkPic(base64).getString("pic_path");
             JSONObject res0 = md.RegisterMember1(null,path,"uid_2cd5f8b4","qq11啊","13656788899","1998-10-01",null,130);
             Preconditions.checkArgument(res0.getString("message").equals("当前会员ID已经存在！"), "注册会员重复会员id也成功了message"+res0.getString("message"));
@@ -479,9 +452,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
             //注册会员时全都为空
             JSONObject res7 = md.RegisterMember1(null,null,null,null,null,null,null,0);
             Preconditions.checkArgument(res7.getInteger("code") != 1000, "注册会员时全都为空"+res7.getString("message"));
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("注册会员的异常情况");
@@ -491,7 +462,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
     //添加会员身份的异常情况
     @Test()
-    public void identity() throws Exception{
+    public void identity() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //身份名称为空
@@ -505,9 +476,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
             //身份名称重复
             JSONObject res2 = md.AddMember1("VIP");
             Preconditions.checkArgument(res2.getInteger("code")==1001, "身份名称重复也添加成功"+res.getInteger("code"));
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("添加会员身份特殊情况");

@@ -73,7 +73,7 @@ public class XundianPcCase extends TestCaseCommon implements TestCaseStd {
 
     //pc特殊截屏（四张图片截取成功）+事件时间
     @Test
-    public void problemMark() throws Exception{
+    public void problemMark() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //JSONObject list = xd.checkStart("\"REMOTE\"", 1); //进入远程巡店
@@ -88,11 +88,9 @@ public class XundianPcCase extends TestCaseCommon implements TestCaseStd {
             //获取整改处理人
             String responsorId = xd.problemesponsors().getJSONArray("list").getJSONObject(0).getString("id");
             String audit_comment = "pc 截屏留痕推送给门店负责人";
-            xd.problemMarkTime("uid_91df0ddd", listId, itemId, pic_list,14630, audit_comment,20);
+            xd.problemMarkTime( responsorId, listId, itemId, pic_list,14630, audit_comment,20);
 //            checkArgument(res.getInteger("code") == 1000, "截图四张失败message+"+res.getString("message"));
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("pc特有截屏留痕");
