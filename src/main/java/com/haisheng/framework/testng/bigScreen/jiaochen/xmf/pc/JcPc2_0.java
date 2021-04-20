@@ -480,7 +480,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test  //新建智能提醒（公里数）,由于智能提醒隔天生效，故此case一天运行一次  明天调试
+    @Test(description = "",enabled = false)  //新建智能提醒（公里数）,由于智能提醒隔天生效，故此case一天运行一次  明天调试
     public void CreateRemindCheck() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -515,8 +515,9 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
 //            er.days="1";            //提醒天数
             er.mileage=maile;        //提醒公里数
             Integer RemindId =jc.createRemindMethod(er).getInteger("id");
+            sleep(30);
 //            公里数同一任务只触发一次智能提醒，小程序收不到卡券
-            Preconditions.checkArgument(totalAfter-totalAfter2==0,"第一次导入工单后卡券数:"+totalAfter+";第二次导入工单数："+totalAfter2);
+            Preconditions.checkArgument(totalAfter-totalAfter2==0,"第一次导入工单后卡券数:"+totalAfter+";第二次导入工单数："+totalAfter2+",导入工单前："+total);
             Preconditions.checkArgument(totalAfter-total==1,"第一次导入工单后卡券数："+totalAfter+"；导入工单前卡券数："+total);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -677,7 +678,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    @Test  //导入流失客户
+    @Test(enabled = false,description = "生成文件导入 最新接待时间为未来日期的客户")  //导入流失客户
     public void losscustomer() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -690,16 +691,16 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             String maile="2001";
             String vin="ASDAAAAAAA12"+ CommonUtil.getRandom(5);
             String plate="京AS"+CommonUtil.getRandom(4);
-
+            String phone=177+CommonUtil.getRandom(8);
             //新建一个excel,里程数=智能提醒公里数
-            PoiUtils.importlossCustomer(maile,vin,-365,plate);
+            PoiUtils.importlossCustomer(maile,vin,-365,plate,phone);
             //导入工单
             jc.pcWorkOrder(pp.importFilepath2);      //导入工单文件的路径=新建excel 路径
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("pc-新建智能提醒（公里）结果验证");
+            saveData("导入流失客户");
         }
 
 

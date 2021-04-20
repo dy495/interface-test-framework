@@ -66,7 +66,7 @@ public class PoiUtils {
 
     }
 
-    public static void importlossCustomer(String mile,String vin,int dataNum,String plate ) throws IOException {
+    public static void importlossCustomer(String mile,String vin,int dataNum,String plate,String phone ) throws IOException {
         Random random = new Random();
         String serverNumber = "A" + random.nextInt(100000);
         DateTimeUtil dt = new DateTimeUtil();
@@ -95,7 +95,7 @@ public class PoiUtils {
                 vin,
                 "夏流失客户",
                 "女",
-                "15137286013",
+                phone,
                 "自动化专用账号",
                 mile,
                 "2000",
