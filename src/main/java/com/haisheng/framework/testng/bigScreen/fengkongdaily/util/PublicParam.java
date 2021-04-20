@@ -10,6 +10,8 @@ public class PublicParam {
     public int size = 50;
     public String userName="yuexiu@test.com";
     public String password="f5b3e737510f31b88eb2d4b5d0cd2fb4";
+    public String userNameOnline="salesdemo@winsense.ai";
+    public String passwordOnline="c216d5045fbeb18bcca830c235e7f3c8";
     public String ownerPhone="13373166806";
     public long shop_id_01 = 43072l;
     //黑名单风控名字
@@ -67,6 +69,7 @@ public class PublicParam {
     public String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/facebaes64.txt";
     public String filePath2 = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/";
     public String filePath3 = "src/main/java/com/haisheng/framework/testng/bigScreen/fengkongdaily/util/pic/yaqx.png";
+    public String filePath4 = "src/main/java/com/haisheng/framework/testng/bigScreen/fengkongdaily/util/pic/gly.jpg";
     //创建账号的名字
     public String name = "自动化账号" + CommonUtil.getRandom(4);
     //创建账号的名字

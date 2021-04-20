@@ -1,4 +1,5 @@
-package com.haisheng.framework.testng.bigScreen.fengkongdaily;
+package com.haisheng.framework.testng.bigScreen.fengkongonline;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -35,15 +36,17 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+
 import static com.google.common.base.Preconditions.checkArgument;
 
-public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduce product = EnumTestProduce.FK_DAILY;
+public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestCaseStd {
+    private static final EnumTestProduce product = EnumTestProduce.PORSCHE_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(product);
 //    StoreFuncPackage mds = StoreFuncPackage.getInstance();
     PublicParam pp=new PublicParam();
@@ -66,8 +69,8 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
         commonConfig.checklistQaOwner = "郭丽雅";
         commonConfig.product = product.getAbbreviation();
         //替换jenkins-job的相关信息
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "FengKong-daily-test");
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "风控 日常");        //替换钉钉推送
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "FengKong-online-test");
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "风控 线上");        //替换钉钉推送
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //放入shopId
         commonConfig.referer = product.getReferer();
@@ -92,7 +95,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
-        md.pcLogin(pp.userName,pp.password);
+        md.pcLogin(pp.userNameOnline,pp.passwordOnline);
     }
 
 
@@ -392,8 +395,8 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
                         "  \"data\": {\n" +
                         "    \"biz_data\":  {\n" +
                         "            \"name\":\"啦啦啦\",\n" +
-                        "            \"id\":\"16\",\n" +
-                        "            \"account_uid\":\"uid_d1ead848\",\n" +
+                        "            \"id\":\"1\",\n" +
+                        "            \"account_uid\":\"uid_6b41fd04\",\n" +
                         "        \"face_base64\": " + "\"" + face + "\"" + " ,\n" +
                         "            \"status\":1\n" +
                         "    }\n" +
@@ -681,7 +684,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     public void authCashierPageSystem1(){
         try{
             //收银风页面的接口
-            IScene scene =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.PageScene.builder().page(1).size(10).build();
+            IScene scene = PageScene.builder().page(1).size(10).build();
             JSONObject response=visitor.invokeApi(scene);
             int pages=response.getInteger("pages")>10?10:response.getInteger("pages");
             for(int page=1;page<=pages;page++){
@@ -2724,7 +2727,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             JSONObject response=visitor.invokeApi(scene);
             Long shopId=response.getJSONArray("list").getJSONObject(0).getLong("shop_id");
             //收银风控事件页面
-            IScene scene1=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventPageScene.builder().shopId(shopId).page(1).size(10).isExport(true).build();
+            IScene scene1= RiskEventPageScene.builder().shopId(shopId).page(1).size(10).isExport(true).build();
             String message=visitor.invokeApi(scene1,false).getString("message");
             Preconditions.checkArgument(message.equals("success"),"收银风控事件导出失败");
 
