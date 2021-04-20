@@ -717,7 +717,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(code==1001,mess+", 状态码为:"+code+", 提示语为:"+message);
             }
             if (status.equals("true")){
-                Preconditions.checkArgument(code==100,mess+", 状态码为:"+code);
+                Preconditions.checkArgument(code==1000,mess+", 状态码为:"+code);
             }
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -864,6 +864,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(shop_name.equals(shopId),"提交时选择的门店"+shopId+", PC展示"+shop_name);
                 Preconditions.checkArgument(brand_name.equals(brandId),"提交时选择的品牌"+brandId+", PC展示"+brand_name);
                 Preconditions.checkArgument(model_name.equals(modelId),"提交时选择的品牌"+modelId+", PC展示"+model_name);
+                Preconditions.checkArgument(obj.getString("sale_type").contains("销售"),"提交时销售, PC展示"+obj.getString("sale_type"));
 
             }
 
@@ -896,7 +897,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(code==1001,mess+", 状态码为:"+code+", 提示语为:"+message);
             }
             if (status.equals("true")){
-                Preconditions.checkArgument(code==100,mess+", 状态码为:"+code);
+                Preconditions.checkArgument(code==1000,mess+", 状态码为:"+code);
             }
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -979,7 +980,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             user.loginPc(ALL_AUTHORITY);
             int befPC = DedicatedServicePageListScene.builder().page(1).size(10).build().invoke(visitor).getInteger("total");
 
-            //小程序提交销售咨询
+            //小程序提交售后咨询
             JSONObject submitobj = info.submitAfterService();
             String name = submitobj.getString("customerName");
             String phone = submitobj.getString("customerPhone");
@@ -1017,6 +1018,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(shop_name.equals(shopId),"提交时选择的门店"+shopId+", PC展示"+shop_name);
                 Preconditions.checkArgument(brand_name.equals(brandId),"提交时选择的品牌"+brandId+", PC展示"+brand_name);
                 Preconditions.checkArgument(model_name.equals(modelId),"提交时选择的品牌"+modelId+", PC展示"+model_name);
+                Preconditions.checkArgument(obj.getString("sale_type").contains("售后"),"提交时售后, PC展示"+obj.getString("sale_type"));
 
             }
 
