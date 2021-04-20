@@ -1467,7 +1467,8 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
                 {"啊","正常备注1个字"},
                 {info.string20,"正常备注20个字"},
                 {info.string200,"正常备注200个字"},
-                {info.getString(201),"异常备注201个字"},
+                {info.getString(1000),"正常备注1000个字"},
+                {info.getString(1001),"异常备注1001个字"},
 
         };
     }
