@@ -6,6 +6,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.riskControlEnum.RuleEnum;
+import com.haisheng.framework.testng.bigScreen.fengkongdaily.riskControlEnum.routerEnum;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventPageScene;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.util.CommonUsedUtil;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.util.PublicParam;
@@ -30,9 +31,11 @@ public class RiskControlCaseDataDaily extends TestCaseCommon implements TestCase
     private static final EnumTestProduce product = EnumTestProduce.FK_DAILY;
     public VisitorProxy visitor = new VisitorProxy(product);
     StoreScenarioUtil md = StoreScenarioUtil.getInstance();
+    private static final routerEnum router = routerEnum.SHOPDAILY;
+
     //    StoreFuncPackage mds = StoreFuncPackage.getInstance();
     PublicParam pp=new PublicParam();
-    CommonUsedUtil cu=new CommonUsedUtil(visitor);
+    CommonUsedUtil cu=new CommonUsedUtil(visitor, router);
     RiskControlUtil ru=new RiskControlUtil();
 
 

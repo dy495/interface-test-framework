@@ -67,6 +67,20 @@ public class QADbUtil {
         }
     }
 
+    public void openConnectionRdDailyEnvironment() {
+        logger.debug("open rd daily db connection");
+//        SqlSessionFactory sessionFactory = null;
+        String resource = "configuration-rd-daily.xml";
+        try {
+            rdSessionFactory = new SqlSessionFactoryBuilder().build(Resources.getResourceAsReader(
+                    resource),"readonly");
+            rdDailySqlSession = rdSessionFactory.openSession();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void getNewRdSqlSession() {
         rdDailySqlSession.close();
         rdDailySqlSession = rdSessionFactory.openSession();
@@ -390,4 +404,12 @@ public class QADbUtil {
 
     }
 
+    public String selectTransIdBynumber(String trans_number){
+        getNewRdSqlSession();
+        return rdDailySqlSession.getMapper(transIdDao.class).SelectIdByNumber(trans_number);
+    }
+    public String SelectFaceUrlByTransId(String trans_id){
+        getNewRdSqlSession();
+        return rdDailySqlSession.getMapper(transIdDao.class).SelectFaceUrlByTransId(trans_id);
+    }
 }

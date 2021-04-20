@@ -65,5 +65,7 @@ public class PublicParam {
     String time1 = dt.getHHmm(0);
     public String transId = "QATest_" + CommonUtil.getRandom(3) + time + time1;
     public String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/facebaes64.txt";
-    public String filePath2 = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/";
+    public String filePath2 = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/xia.png";
+//    public String filePath2 = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/lv.jpg";
+//    public String filePath2 = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/guoliya.jpg";
 }

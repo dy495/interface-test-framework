@@ -11,10 +11,7 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.fengkongdaily.riskControlEnum.RiskBusinessTypeEnum;
-import com.haisheng.framework.testng.bigScreen.fengkongdaily.riskControlEnum.RiskPersonnelTypeEnum;
-import com.haisheng.framework.testng.bigScreen.fengkongdaily.riskControlEnum.RuleEnum;
-import com.haisheng.framework.testng.bigScreen.fengkongdaily.riskControlEnum.RuleTypeEnum;
+import com.haisheng.framework.testng.bigScreen.fengkongdaily.riskControlEnum.*;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.alarmrule.DetailScene;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.*;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.downloadcenter.DownloadPageScene;
@@ -29,10 +26,8 @@ import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.FileUtil;
-import netscape.javascript.JSObject;
 import org.apache.http.Header;
 import org.apache.http.client.HttpClient;
-import org.apache.xmlbeans.impl.xb.xsdschema.Public;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -49,9 +44,11 @@ import static com.google.common.base.Preconditions.checkArgument;
 public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce product = EnumTestProduce.FK_DAILY;
     public VisitorProxy visitor = new VisitorProxy(product);
-//    StoreFuncPackage mds = StoreFuncPackage.getInstance();
+    private static final routerEnum router = routerEnum.SHOPDAILY;
+
+    //    StoreFuncPackage mds = StoreFuncPackage.getInstance();
     PublicParam pp=new PublicParam();
-    CommonUsedUtil cu=new CommonUsedUtil(visitor);
+    CommonUsedUtil cu=new CommonUsedUtil(visitor, router);
     RiskControlUtil md=new RiskControlUtil();
     public String shopId="43072";
     FileUtil file = new FileUtil();
@@ -100,64 +97,6 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
         md.pcLogin(pp.userName,pp.password);
     }
 
-
-
-    @Test
-    public void justTry(){
-        logger.logCaseStart(caseResult.getCaseName());
-        try{
-            //一人多单/连续天数（一人1天最多3单）
-            Long id1=cu.getCashierOrderRuleAdd("1","3").getJSONObject("data").getLong("id");
-            System.out.println("--------------"+id1);
-
-            //无人风控
-            Long id2=cu.getCashierUnmannedRuleAdd().getJSONObject("data").getLong("id");
-            System.out.println("--------------"+id2);
-
-            //员工支付订单监控(一人1天最多1单)
-            Long id3=cu.getCashierEmployeeRuleAdd("1","1").getJSONObject("data").getLong("id");
-            System.out.println("--------------"+id3);
-
-            //一人多车
-            Long id4=cu.getCashierCarRuleAdd("10").getJSONObject("data").getLong("id");
-            System.out.println("--------------"+id4);
-
-            //一车多人
-            Long id5=cu.getCashierMemberRuleAdd("10").getJSONObject("data").getLong("id");
-            System.out.println("--------------"+id5);
-
-            //黑名单风控
-            Long id6=cu.getRuleAdd(RuleEnum.BLACK_LIST.getType());
-            System.out.println("--------------"+id6);
-
-            //重点观察人员风控
-            Long id7=cu.getRuleAdd(RuleEnum.FOCUS_LIST.getType());
-            System.out.println("--------------"+id7);
-
-
-            //收银风控告警规则
-            String message1=cu.getAlarmRuleAdd(true,600000L,RuleEnum.CASHIER.getType(),pp.AlarmNameCashier);
-            System.out.println("--------------"+message1);
-
-            //黑名单风控告警规则
-            String message2=cu.getAlarmRuleAdd(false,null,RuleEnum.BLACK_LIST.getType(),pp.AlarmNameBlack);
-            System.out.println("--------------"+message2);
-
-            //重点观察人员风控告警规则
-            String message3=cu.getAlarmRuleAdd(true,null,RuleEnum.FOCUS_LIST.getType(),pp.AlarmNameObserve);
-            System.out.println("--------------"+message3);
-
-            //生成订单，里面信息可能不正确,想要自己定义，适用下边的
-            String port=cu.getOrder();
-            System.out.println("--------------"+port);
-
-
-        }catch(Exception|AssertionError e){
-            collectMessage(e);
-        }finally{
-            saveData("测试呀");
-        }
-    }
     //一人多车 user_id  相同; 多个car_vehicle_number车架号 触发；
     //一车多人，多个openid,一个car_vehicle_number 触发;
     //一人多单 ，userId相同，openid相同;  ---userId 相同，或者transId; 单一客户数量监控

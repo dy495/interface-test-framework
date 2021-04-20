@@ -17,6 +17,21 @@
                 <property name="password" value="qa_wr1234"/>
             </dataSource>
         </environment>
+
+        <environment id="readonly">
+            <transactionManager type="jdbc"/>
+            <dataSource type="POOLED">
+                <!--<property name="driver" value="com.mysql.jdbc.Driver" />-->
+                <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
+                <!--<property name="url" value="jdbc:mysql://localhost:3306/onepiece?characterEncoding=utf8&amp;zeroDateTimeBehavior=convertToNull&amp;allowMultiQueries=true" />-->
+                <!--<property name="username" value="yuhaisheng" />-->
+                <!--<property name="password" value="yuhaisheng" />-->
+                <property name="url"
+                          value="jdbc:mysql://rm-2zeg4an1kr1437xu6no.mysql.rds.aliyuncs.com:3306?characterEncoding=utf8&amp;autoReconnect=true&amp;useUnicode=true"/>
+                <property name="username" value="read_only"/>
+                <property name="password" value="read_only"/>
+            </dataSource>
+        </environment>
     </environments>
     <mappers>
         <!--mapper.xml装载进来 -->
@@ -24,5 +39,6 @@
         <mapper resource="mapper/protectTime.xml"/>
         <mapper resource="mapper/returnVisitTime.xml"/>
         <mapper resource="mapper/AppletCustomerReturn.xml"/>
+        <mapper resource="mapper/Trans.xml"/>
     </mappers>
 </configuration>

@@ -9,9 +9,12 @@ import com.arronlong.httpclientutil.common.HttpHeader;
 import com.arronlong.httpclientutil.exception.HttpProcessException;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.fengkongdaily.orderParm;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.riskControlEnum.RiskBusinessTypeEnum;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.riskControlEnum.RuleEnum;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.riskControlEnum.RuleTypeEnum;
+import com.haisheng.framework.testng.bigScreen.fengkongdaily.riskControlEnum.routerEnum;
+import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.PageScene;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventHandleScene;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.rule.AddScene;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.rule.DeleteScene;
@@ -27,14 +30,18 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+
 public class CommonUsedUtil {
     PublicParam pp=new PublicParam();
     DateTimeUtil dt =new DateTimeUtil();
     private VisitorProxy visitor;
     private UserUtil user;
-    public CommonUsedUtil(VisitorProxy visitor) {
+    private final routerEnum router;
+
+    public CommonUsedUtil(VisitorProxy visitor, routerEnum router) {
         this.visitor = visitor;
         this.user=new UserUtil(visitor);
+        this.router = router;
     }
 
     /**
@@ -486,7 +493,7 @@ public class CommonUsedUtil {
      * 生成订单
      * @param shopId      门店ID
      * @param transId     交易ID
-     * @param carVehicleNumber   车架号
+     * @param carVehicleNumber   车架号 haode
      * @param userId      客户ID
      * @param openId      支付ID
      */
@@ -530,6 +537,7 @@ public class CommonUsedUtil {
                      .other("Authorization", auth)
                      .build();
              String transTime = "" + System.currentTimeMillis();
+             //ONLINE   SCAN
              String str = "{\n" +
                      "  \"uid\": \"uid_ef6d2de5\",\n" +
                      "  \"app_id\": \"49998b971ea0\",\n" +
@@ -549,7 +557,8 @@ public class CommonUsedUtil {
                      "        \"real_price\": 1500,\n" +
                      "        \"shopType\": \"SHOP_TYPE\",\n" +
                      "        \"orderNumber\": \"13444894484\",\n" +
-                     "        \"memberName\":\"自动化在回归\",\n" +
+                     "        \"memberName\":\"自动化员工\",\n" +
+                     "        \"memberPhone\":\"15789033456\",\n" +
                      "        \"receipt_type\":\"小票类型\",\n" +
                      "        \"open_id\":\""+openId+"\","+
                      "        \"posId\": \"pos-1234586789\",\n" +
@@ -565,12 +574,12 @@ public class CommonUsedUtil {
                      "                \"commodity_name\":\"特斯拉model3\",\n" +
                      "                \"unit_price\": 300000,\n" +
                      "                \"num\": 4\n" +
-                     "            },\n" +
+                     "            }\n" +
                      "        ],\n" +
                      "        \"trans_business_params\":{\n" +
                      "               \"car_plate\":\"京A11111\",\n" +
                      "               \"car_vehicle_number\":\""+carVehicleNumber+"\",\n" +
-                     "                \"business_type\":\"FIRST_INSPECTION\",\n" +
+//                     "                \"business_type\":\"FIRST_INSPECTION\",\n" +
                      "                \"business_order_id\":\"27389182\"\n" +
                      "    }    }\n" +
                      "  }\n" +
@@ -578,6 +587,7 @@ public class CommonUsedUtil {
 
              JSONObject jsonObject = JSON.parseObject(str);
              System.out.println("transId:"+transId);
+             System.out.println(str);
              HttpConfig config = HttpConfig.custom().headers(headers).url(requestUrl).json(JSON.toJSONString(jsonObject)).client(client);
              post = HttpClientUtil.post(config);
          }
@@ -585,11 +595,8 @@ public class CommonUsedUtil {
      }
 
 
-    /**
-     *生成交易订单
-     **/
-    @Test
-    public String getOrder() throws Exception {
+
+    public String getCreateOrder3(orderParm orderParm) throws Exception {
         String post="";
         for (int i = 0; i < 1; i++) {
             final String NUMBER = ".";
@@ -603,12 +610,14 @@ public class CommonUsedUtil {
                 e.printStackTrace();
             }
             String timestamp = "" + System.currentTimeMillis();
-            String uid = "uid_ef6d2de5";
-            String appId = "49998b971ea0";
-            String ak = "3fdce1db0e843ee0";
+
+            String uid = router.getUid();
+            String appId = router.getAppid();
+            String ak = router.getAk();
+            String sk = router.getSk();
+
             String router = "/business/precipitation/TRANS_INFO_RECEIVE/v1.0";
             String nonce = UUID.randomUUID().toString();
-            String sk = "5036807b1c25b9312116fd4b22c351ac";
             // java代码示例
             String requestUrl = "http://dev.api.winsenseos.com/retail/api/data/biz";
             // 1. 将以下参数(uid、app_id、ak、router、timestamp、nonce)的值之间使用顿号(.)拼接成一个整体字符串
@@ -620,7 +629,6 @@ public class CommonUsedUtil {
             byte[] hash = sha256Hmac.doFinal(signStr.getBytes(StandardCharsets.UTF_8));
             // 3. 对2.中的加密结果,再进行一次base64操作, 得到一个字符串
             String auth = Base64.getEncoder().encodeToString(hash);
-
             Header[] headers = HttpHeader.custom()
                     .other("Accept", "application/json")
                     .other("Content-Type", "application/json;charset=utf-8")
@@ -629,68 +637,69 @@ public class CommonUsedUtil {
                     .other("ExpiredTime", "50 * 1000")
                     .other("Authorization", auth)
                     .build();
-            String time = dt.getHistoryDate(0);
-            String time1 = dt.getHHmm(0);
-            String userId = "tester" + CommonUtil.getRandom(6);
-            String transId = "QAtest_" + CommonUtil.getRandom(3) + time + time1;
             String transTime = "" + System.currentTimeMillis();
+            //ONLINE   SCAN
             String str = "{\n" +
-                    "  \"uid\": \"uid_ef6d2de5\",\n" +
-                    "  \"app_id\": \"49998b971ea0\",\n" +
+                    "   \"uid\": \""+uid+"\",\n" +
+                    "   \"app_id\": \""+appId+"\",\n" +
                     "  \"request_id\": \"5d45a085-8774-4jd0-943e-ded373ca6a919987\",\n" +
                     "  \"version\": \"v1.0\",\n" +
                     "  \"router\": \"/business/precipitation/TRANS_INFO_RECEIVE/v1.0\",\n" +
                     "  \"data\": {\n" +
                     "    \"biz_data\":  {\n" +
-                    "        \"shop_id\": \"43072\",\n" +
-                    "        \"trans_id\": " + "\"" + transId + "\"" + " ,\n" +
-                    "        \"trans_time\": " + "\"" + transTime + "\"" + " ,\n" +
+                    "        \"shop_id\": \""+orderParm.shopId+"\",\n" +
+                    "        \"trans_id\": \""+orderParm.transId+"\" ,\n" +
+                    "        \"trans_time\": \""+transTime+"\" ,\n" +
                     "        \"trans_type\": [\n" +
-                    "            \"W\"\n" +
+                    "            \""+orderParm.type+"\"\n" +
                     "        ],\n" +
-                    "        \"user_id\":  " + "\"" + userId + "\"" + " ,\n" +
+                    "        \"user_id\": \""+orderParm.userId+"\" ,\n" +
                     "        \"total_price\": 1800,\n" +
                     "        \"real_price\": 1500,\n" +
-//                        "        \"openid\": \"823849023iidijdiwiodede3330\",\n" +
                     "        \"shopType\": \"SHOP_TYPE\",\n" +
                     "        \"orderNumber\": \"13444894484\",\n" +
-                    "        \"memberName\":\"自动化在回归\",\n" +
+                    "        \"memberName\":\"自动化员工\",\n" +
+                    "        \"memberPhone\":\"15789033456\",\n" +
                     "        \"receipt_type\":\"小票类型\",\n" +
-                    "        \"posId\": \"8112549059036160\",\n" +
+                    "        \"open_id\":\""+orderParm.openId+"\","+
+                    "        \"posId\": \"pos-1234586789\",\n" +
                     "        \"commodityList\": [\n" +
                     "            {\n" +
-                    "                \"commodityId\": \"iPhone12A42234\",\n" +
-                    "                \"commodity_name\":\"苹果12s\",\n" +
-                    "                \"unit_price\": 200,\n" +
+                    "                \"commodityId\": \"ff1234567890\",\n" +
+                    "                \"commodity_name\":\"法拉第未来\",\n" +
+                    "                \"unit_price\": 500000,\n" +
                     "                \"num\": 4\n" +
                     "            },\n" +
                     "            {\n" +
-                    "                \"commodityId\": \"banan3424724E\",\n" +
-                    "                \"commodity_name\":\"香蕉20根啊\",\n" +
-                    "                \"unit_price\": 2,\n" +
-                    "                \"num\": 4\n" +
-                    "            },\n" +
-                    "            {\n" +
-                    "                \"commodityId\": \"Apple3424323234\",\n" +
-                    "                \"commodity_name\":\"苹果20ge\",\n" +
-                    "                \"unit_price\": 3,\n" +
+                    "                \"commodityId\": \"model991221313\",\n" +
+                    "                \"commodity_name\":\"特斯拉model3\",\n" +
+                    "                \"unit_price\": 300000,\n" +
                     "                \"num\": 4\n" +
                     "            }\n" +
                     "        ],\n" +
-                    "       \"trans_business_params\":{\n" +
-                    "        \"car_plate\":\"京B12345\",\n" +
-                    "        \"car_vehicle_number\":\"AAAAAAAAAAQQQQQQ1\",\n" +
-                    "        \"business_type\":\"REWORK_MAINTENANCE\",\n" +
-                    "        \"business_order_id\":\"1212121212212\"\n" +
-                    "    }\n"+
-                    "    }\n" +
+                    "        \"trans_business_params\":{\n" +
+                    "               \"car_plate\":\"京A11111\",\n" +
+                    "               \"car_vehicle_number\":\""+orderParm.carVehicleNumber+"\",\n" +
+                    "               \"business_type\":\""+orderParm.business_type+"\",\n" +
+                    "                \"business_order_id\":\"27389182\"\n" +
+                    "    }    }\n" +
                     "  }\n" +
                     "}";
+
             JSONObject jsonObject = JSON.parseObject(str);
+            System.out.println("transId:"+orderParm.transId);
+            System.out.println("str:"+str);
             HttpConfig config = HttpConfig.custom().headers(headers).url(requestUrl).json(JSON.toJSONString(jsonObject)).client(client);
             post = HttpClientUtil.post(config);
         }
-        return post;
+        return  post;
+    }
+
+    public Integer riskTotal(){
+        IScene pageScene= PageScene.builder().page(1).size(10).shopName(router.getShopName()).build();
+        JSONArray data=visitor.invokeApi(pageScene).getJSONArray("list");
+        Integer cashierTolta=data.getJSONObject(0).getInteger("risk_total");  //事件数
+        return  cashierTolta;
     }
 
 
