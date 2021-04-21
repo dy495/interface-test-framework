@@ -1263,7 +1263,8 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "套餐管理--取消套餐，套餐状态为已撤销", enabled = false)
+    //ok
+    @Test(description = "套餐管理--取消套餐，套餐状态为已撤销")
     public void packageManager_system_35() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1271,6 +1272,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             CancelPackageScene.builder().id(packageId).build().invoke(visitor);
             PackagePage packagePage = util.getPackagePage(packageId);
             CommonUtil.checkResult(packagePage.getPackageName() + "撤销后审核状态", PackageStatusEnum.CANCEL.name(), packagePage.getAuditStatus());
+            CommonUtil.checkResult(packagePage.getPackageName() + "撤销后审核状态", PackageStatusEnum.CANCEL.getName(), packagePage.getAuditStatusName());
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -1333,7 +1335,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             IScene messageFormPageScene = MessageFormPageScene.builder().build();
             int messageTotal = visitor.invokeApi(messageFormPageScene).getInteger("total");
             String pushTime = DateTimeUtil.getFormat(DateTimeUtil.addSecond(new Date(), 80), "yyyy-MM-dd HH:mm");
-            util.pushMessage(0, false, voucherId);
+            util.pushCustomMessage(0, false, voucherId);
             String sendStatusName = visitor.invokeApi(messageFormPageScene).getJSONArray("list").getJSONObject(0).getString("send_status_name");
             CommonUtil.checkResult("消息管理列表", messageTotal + 1, visitor.invokeApi(messageFormPageScene).getInteger("total"));
             CommonUtil.checkResult("发送状态", CustomMessageStatusEnum.SCHEDULING.getStatusName(), sendStatusName);
@@ -1363,7 +1365,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             //发送消息
             String date = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm");
-            util.pushMessage(0, true, voucherId);
+            util.pushCustomMessage(0, true, voucherId);
             IScene messageFormPageScene = MessageFormPageScene.builder().size(100).build();
             JSONArray list = messageFormPageScene.invoke(visitor).getJSONArray("list");
             JSONObject jsonObject = list.stream().map(e -> (JSONObject) e).filter(e -> e.getString("push_time").contains(date)).findFirst().orElse(null);
@@ -1468,7 +1470,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         try {
             //发消息
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-            util.pushMessage(0, true, voucherId);
+            util.pushCustomMessage(0, true, voucherId);
             //消息列表消息内容
             user.loginApplet(APPLET_USER_ONE);
             IScene appletMessageListScene = AppletMessageListScene.builder().size(20).build();
@@ -1980,6 +1982,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    //ok
     @Test(description = "会员营销--洗车管理--增加洗车次数，手机号异常")
     public void vipMarketing_system_20() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -1998,6 +2001,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    //ok
     @Test(description = "会员营销--洗车管理--增加洗车次数，次数异常")
     public void vipMarketing_system_21() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -2016,6 +2020,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    //ok
     @Test(description = "会员营销--洗车管理--增加洗车次数，备注异常")
     public void vipMarketing_system_22() {
         logger.logCaseStart(caseResult.getCaseName());

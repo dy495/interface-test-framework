@@ -668,7 +668,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
         try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
-            util.pushMessage(0, true, voucherId);
+            util.pushCustomMessage(0, true, voucherId);
             //作废前数据
             user.loginApplet(APPLET_USER_ONE);
             int voucherCherNum = util.getAppletVoucherNum();
@@ -799,7 +799,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
             //发出一张卡券
-            util.pushMessage(0, true, voucherId);
+            util.pushCustomMessage(0, true, voucherId);
             Thread.sleep(500);
             //获取最新发出卡券的code
             String voucherCode = util.getVoucherCode(voucherId);
