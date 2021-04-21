@@ -104,51 +104,53 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
                 int voucherTotal = visitor.invokeApi(VoucherFormVoucherPageScene.builder().build()).getInteger("total");
                 int applyTotal = visitor.invokeApi(ApplyPageScene.builder().build()).getInteger("total");
                 //创建卡券
-                String voucherName = util.createVoucher(1, anEnum);
-                IScene voucherPageScene = VoucherFormVoucherPageScene.builder().voucherName(voucherName).build();
-                visitor.invokeApi(voucherPageScene);
-                IScene voucherDetailScene = VoucherDetailScene.builder().id(util.getVoucherId(voucherName)).build();
-                VoucherDetailBean voucherDetail = JSONObject.toJavaObject(visitor.invokeApi(voucherDetailScene), VoucherDetailBean.class);
-                CommonUtil.checkResult(voucherName + "描述", util.getDesc(), voucherDetail.getVoucherDescription());
-                CommonUtil.checkResult(voucherName + " 主体类型", util.getSubjectType(), voucherDetail.getSubjectType());
-                CommonUtil.checkResult(voucherName + " 主体类型id", util.getSubjectDesc(util.getSubjectType()), voucherDetail.getSubjectId());
-                CommonUtil.checkResult(voucherName + " 类型", anEnum.name(), voucherDetail.getCardType());
-                CommonUtil.checkResult(voucherName + " 类型名称", anEnum.getDesc(), voucherDetail.getCardTypeName());
-                CommonUtil.checkResult(voucherName + " 成本价格", "0.01", voucherDetail.getCost());
-                if (anEnum.getDesc().equals(VoucherTypeEnum.COMMODITY_EXCHANGE.getDesc())) {
-                    CommonUtil.checkResult(voucherName + " 可兑换商品", "兑换布加迪威龙一辆", voucherDetail.getExchangeCommodityName());
-                    CommonUtil.checkResult(voucherName + " 成本价格", "49.99", voucherDetail.getCost());
-                } else if (anEnum.getDesc().equals(VoucherTypeEnum.COUPON.getDesc())) {
-                    CommonUtil.checkResult(voucherName + " 门槛价格", "999.99", voucherDetail.getThresholdPrice());
-                    CommonUtil.checkResult(voucherName + " 折扣", "2.50", voucherDetail.getDiscount());
-                    CommonUtil.checkResult(voucherName + " 最多优惠", "99.99", voucherDetail.getMostDiscount());
-                    CommonUtil.checkResult(voucherName + " 成本价格", "99.99", voucherDetail.getCost());
-                } else if (anEnum.getDesc().equals(VoucherTypeEnum.FULL_DISCOUNT.getDesc())) {
-                    CommonUtil.checkResult(voucherName + " 面值", "49.99", voucherDetail.getParValue());
-                    CommonUtil.checkResult(voucherName + " 门槛价格", "999.99", voucherDetail.getThresholdPrice());
-                    CommonUtil.checkResult(voucherName + " 成本价格", "49.99", voucherDetail.getCost());
+                if (!anEnum.equals(VoucherTypeEnum.CASH_COUPON)) {
+                    String voucherName = util.createVoucher(1, anEnum);
+                    IScene voucherPageScene = VoucherFormVoucherPageScene.builder().voucherName(voucherName).build();
+                    visitor.invokeApi(voucherPageScene);
+                    IScene voucherDetailScene = VoucherDetailScene.builder().id(util.getVoucherId(voucherName)).build();
+                    VoucherDetailBean voucherDetail = JSONObject.toJavaObject(visitor.invokeApi(voucherDetailScene), VoucherDetailBean.class);
+                    CommonUtil.checkResult(voucherName + "描述", util.getDesc(), voucherDetail.getVoucherDescription());
+                    CommonUtil.checkResult(voucherName + " 主体类型", util.getSubjectType(), voucherDetail.getSubjectType());
+                    CommonUtil.checkResult(voucherName + " 主体类型id", util.getSubjectDesc(util.getSubjectType()), voucherDetail.getSubjectId());
+                    CommonUtil.checkResult(voucherName + " 类型", anEnum.name(), voucherDetail.getCardType());
+                    CommonUtil.checkResult(voucherName + " 类型名称", anEnum.getDesc(), voucherDetail.getCardTypeName());
+                    CommonUtil.checkResult(voucherName + " 成本价格", "0.01", voucherDetail.getCost());
+                    if (anEnum.getDesc().equals(VoucherTypeEnum.COMMODITY_EXCHANGE.getDesc())) {
+                        CommonUtil.checkResult(voucherName + " 可兑换商品", "兑换布加迪威龙一辆", voucherDetail.getExchangeCommodityName());
+                        CommonUtil.checkResult(voucherName + " 成本价格", "49.99", voucherDetail.getCost());
+                    } else if (anEnum.getDesc().equals(VoucherTypeEnum.COUPON.getDesc())) {
+                        CommonUtil.checkResult(voucherName + " 门槛价格", "999.99", voucherDetail.getThresholdPrice());
+                        CommonUtil.checkResult(voucherName + " 折扣", "2.50", voucherDetail.getDiscount());
+                        CommonUtil.checkResult(voucherName + " 最多优惠", "99.99", voucherDetail.getMostDiscount());
+                        CommonUtil.checkResult(voucherName + " 成本价格", "99.99", voucherDetail.getCost());
+                    } else if (anEnum.getDesc().equals(VoucherTypeEnum.FULL_DISCOUNT.getDesc())) {
+                        CommonUtil.checkResult(voucherName + " 面值", "49.99", voucherDetail.getParValue());
+                        CommonUtil.checkResult(voucherName + " 门槛价格", "999.99", voucherDetail.getThresholdPrice());
+                        CommonUtil.checkResult(voucherName + " 成本价格", "49.99", voucherDetail.getCost());
+                    }
+                    //卡券列表+1
+                    int newVoucherTotal = visitor.invokeApi(VoucherFormVoucherPageScene.builder().build()).getInteger("total");
+                    CommonUtil.checkResult("卡券列表数", voucherTotal + 1, newVoucherTotal);
+                    //卡券状态=待审批
+                    VoucherPage voucherPage = util.getVoucherPage(voucherName);
+                    CommonUtil.checkResult(voucherName + " 状态", VoucherStatusEnum.WAITING.getName(), voucherPage.getVoucherStatusName());
+                    CommonUtil.checkResult(voucherName + " 状态", VoucherStatusEnum.WAITING.name(), voucherPage.getVoucherStatus());
+                    //卡券变更记录不+1
+                    Long voucherId = util.getVoucherId(voucherName);
+                    IScene changeRecordScene = ChangeRecordScene.builder().voucherId(voucherId).build();
+                    CommonUtil.checkResult(voucherName + " 变更记录数", 0, visitor.invokeApi(changeRecordScene).getInteger("total"));
+                    //审批列表+1
+                    int newApplyTotal = visitor.invokeApi(ApplyPageScene.builder().build()).getInteger("total");
+                    CommonUtil.checkResult(voucherName + " 审批列表数", applyTotal + 1, newApplyTotal);
+                    //审批状态=审批中
+                    ApplyPageBean applyPage = util.getAuditingApplyPage(voucherName);
+                    CommonUtil.checkResult(voucherName + " 审批列表状态", ApplyStatusEnum.AUDITING.getName(), applyPage.getStatusName());
+                    CommonUtil.checkResult(voucherName + " 审批申请类型", ApplyTypeEnum.VOUCHER.getName(), applyPage.getApplyTypeName());
+                    CommonUtil.checkResult(voucherName + " 审批成本单价/元", "0.01", applyPage.getPrice());
+                    CommonUtil.checkResult(voucherName + " 审批发出数量", 1, applyPage.getNum());
+                    CommonUtil.logger(voucherName);
                 }
-                //卡券列表+1
-                int newVoucherTotal = visitor.invokeApi(VoucherFormVoucherPageScene.builder().build()).getInteger("total");
-                CommonUtil.checkResult("卡券列表数", voucherTotal + 1, newVoucherTotal);
-                //卡券状态=待审批
-                VoucherPage voucherPage = util.getVoucherPage(voucherName);
-                CommonUtil.checkResult(voucherName + " 状态", VoucherStatusEnum.WAITING.getName(), voucherPage.getVoucherStatusName());
-                CommonUtil.checkResult(voucherName + " 状态", VoucherStatusEnum.WAITING.name(), voucherPage.getVoucherStatus());
-                //卡券变更记录不+1
-                Long voucherId = util.getVoucherId(voucherName);
-                IScene changeRecordScene = ChangeRecordScene.builder().voucherId(voucherId).build();
-                CommonUtil.checkResult(voucherName + " 变更记录数", 0, visitor.invokeApi(changeRecordScene).getInteger("total"));
-                //审批列表+1
-                int newApplyTotal = visitor.invokeApi(ApplyPageScene.builder().build()).getInteger("total");
-                CommonUtil.checkResult(voucherName + " 审批列表数", applyTotal + 1, newApplyTotal);
-                //审批状态=审批中
-                ApplyPageBean applyPage = util.getAuditingApplyPage(voucherName);
-                CommonUtil.checkResult(voucherName + " 审批列表状态", ApplyStatusEnum.AUDITING.getName(), applyPage.getStatusName());
-                CommonUtil.checkResult(voucherName + " 审批申请类型", ApplyTypeEnum.VOUCHER.getName(), applyPage.getApplyTypeName());
-                CommonUtil.checkResult(voucherName + " 审批成本单价/元", "0.01", applyPage.getPrice());
-                CommonUtil.checkResult(voucherName + " 审批发出数量", 1, applyPage.getNum());
-                CommonUtil.logger(voucherName);
             });
         } catch (Exception | AssertionError e) {
             collectMessage(e);

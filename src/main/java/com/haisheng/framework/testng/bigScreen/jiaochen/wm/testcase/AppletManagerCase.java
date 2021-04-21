@@ -12,6 +12,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppReception
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletCommodity;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletIntegralRecord;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletShippingAddress;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VerificationRecordBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.ChangeStockTypeEnum;
@@ -21,6 +22,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.S
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.appointment.AppointmentConfirmStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.appointment.AppointmentTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.AppletCodeBusinessTypeEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VerifyChannelEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherSourceEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.reception.after.ReceptionStatusEnum;
@@ -39,6 +41,8 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcent
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.ReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.ReceptorChangeScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.AddVoucherScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VerificationPeopleScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VerificationRecordScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -106,6 +110,47 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
+    }
+
+    //ok
+    @Test(description = "优惠券管理--小程序自助核销一张，使用的核销码对应人员册核销数量+1&【核销记录】列表数+1&&核销渠道=主动核销")
+    public void voucherManage_system_35() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            String voucherName = util.getVoucherName(voucherId);
+            //发出一张卡券
+            util.pushCustomMessage(0, true, voucherId);
+            Thread.sleep(500);
+            //获取最新发出卡券的code
+            String voucherCode = util.getVoucherCode(voucherId);
+            CommonUtil.valueView(voucherCode);
+            //核销列表数
+            IScene verificationRecordScene = VerificationRecordScene.builder().voucherId(voucherId).build();
+            List<VerificationRecordBean> verificationRecords = util.collectBeanList(verificationRecordScene, VerificationRecordBean.class);
+            //获取核销码
+            String code = util.getVerificationCode("本司员工");
+            IScene verificationPeopleScene = VerificationPeopleScene.builder().verificationCode(code).build();
+            //核销人员核销数量
+            int verificationNumber = visitor.invokeApi(verificationPeopleScene).getJSONArray("list").getJSONObject(0).getInteger("verification_number");
+            //获取卡券核销id
+            user.loginApplet(APPLET_USER_ONE);
+            Long appletVoucherId = util.getAppletVoucherInfo(voucherCode).getId();
+            //核销
+            IScene voucherVerificationScene = AppletVoucherVerificationScene.builder().id(String.valueOf(appletVoucherId)).verificationCode(code).build();
+            visitor.invokeApi(voucherVerificationScene);
+            //核销之后数据
+            user.loginPc(ALL_AUTHORITY);
+            List<VerificationRecordBean> newVerificationRecords = util.collectBeanList(verificationRecordScene, VerificationRecordBean.class);
+            CommonUtil.checkResult(voucherName + " 核销记录列表数", verificationRecords.size() + 1, newVerificationRecords.size());
+            CommonUtil.checkResult(voucherCode + " 核销渠道", VerifyChannelEnum.ACTIVE.getName(), newVerificationRecords.get(0).getVerificationChannelName());
+            int newVerificationNumber = visitor.invokeApi(verificationPeopleScene).getJSONArray("list").getJSONObject(0).getInteger("verification_number");
+            CommonUtil.checkResult("核销码" + code + "核销数", verificationNumber + 1, newVerificationNumber);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("优惠券管理--小程序自助核销一张，使用的核销码对应人员册核销数量+1&【核销记录】列表数+1&&核销渠道=主动核销");
+        }
     }
 
     //ok
