@@ -691,9 +691,15 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             String maile="2001";
             String vin="ASDAAAAAAA12"+ CommonUtil.getRandom(5);
             String plate="京AS"+CommonUtil.getRandom(4);
-            String phone=177+CommonUtil.getRandom(8);
+//            String phone="177"+CommonUtil.getRandom(8);
+            String phone="15037286013";
+
+            System.out.println("vin"+vin);
+            System.out.println("plate"+plate);
+            System.out.println("phone"+phone);
+
             //新建一个excel,里程数=智能提醒公里数
-            PoiUtils.importlossCustomer(maile,vin,-365,plate,phone);
+            PoiUtils.importlossCustomer(maile,vin,-181,plate,phone);
             //导入工单
             jc.pcWorkOrder(pp.importFilepath2);      //导入工单文件的路径=新建excel 路径
 
@@ -701,6 +707,25 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             saveData("导入流失客户");
+        }
+
+
+
+    }
+
+    @Test(enabled = false,description = "导入潜客")
+    public void importPotentialCustomer() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            PoiUtils.importPotentialCustomer();
+            //导入工单
+            jc.pcPotentialCustomer(pp.importFilepath3);      //导入工单文件的路径=新建excel 路径
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("导入潜客");
         }
 
 

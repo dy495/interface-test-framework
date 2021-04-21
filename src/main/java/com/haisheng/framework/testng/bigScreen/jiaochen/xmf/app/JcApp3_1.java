@@ -123,7 +123,7 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
         //开始接待
         IScene appstartReception = AppStartReceptionScene.builder()
                 .customerId(customerId)
-                .carModel(pp.car_idA)    //车型
+                .customerPhone(phone)
                 .build();
         String[] receptionId = new String[2];
         receptionId[0] = jc.invokeApi(appstartReception).getString("id");  //接待ID
@@ -131,7 +131,7 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
     }
 
     //销售接待
-    @Test(dataProvider = "ERR_PHONE", dataProviderClass = DataAbnormal.class)
+//    @Test(dataProvider = "ERR_PHONE", dataProviderClass = DataAbnormal.class)
     public void saleReception(String phone) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -148,10 +148,12 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test(description = "编辑用户名称51个字异常")
-    public void editCustomer1(String phone) {
+    public void editCustomer1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            String phone="15037286013";
             String[] reception = salereception(phone);
+            System.out.println(reception[0]+":"+reception[1]);
             //编辑客户--名称超过50字
             IScene appcustomerEdit = AppCustomerEditScene.builder()
                     .id(Long.valueOf(reception[0]))

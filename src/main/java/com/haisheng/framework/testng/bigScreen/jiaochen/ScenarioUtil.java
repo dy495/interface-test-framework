@@ -294,10 +294,11 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     //预约管理 -> 预约看板
-    public JSONObject pcTimeTableList(String appointmentMonth) {
+    public JSONObject pcTimeTableList(String appointmentMonth,String type) {
         String url = "/jiaochen/pc/appointment-manage/time-table/list";
         JSONObject object = new JSONObject();
         object.put("appointment_month", appointmentMonth);
+        object.put("type", type);
         return invokeApi(url, object);
     }
 
@@ -354,6 +355,12 @@ public class ScenarioUtil extends TestCaseCommon {
 
     public JSONObject pcWorkOrder(String filePath) {
         String path = "/jiaochen/pc/import/work_order";
+        String response = uploadFile(filePath, path, IpPort);
+        return JSON.parseObject(response);
+    }
+
+    public JSONObject pcPotentialCustomer(String filePath) {
+        String path = "/jiaochen/pc/import/potential_customer";
         String response = uploadFile(filePath, path, IpPort);
         return JSON.parseObject(response);
     }

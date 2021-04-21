@@ -88,7 +88,7 @@ public class JcFunctionOnline {
         String month = dt.getMounth(num);
         int day = dt.getDay(num);
         Integer total = 0;
-        JSONArray list = jc.pcTimeTableList(month).getJSONArray("list");
+        JSONArray list = jc.pcTimeTableList(month,"MAINTAIN").getJSONArray("list");
         for (int i = 0; i < list.size(); i++) {
             int list_day = list.getJSONObject(i).getInteger("day");
             if (list_day == day) {

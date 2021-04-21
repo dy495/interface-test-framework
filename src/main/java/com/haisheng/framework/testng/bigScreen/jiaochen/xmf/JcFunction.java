@@ -110,7 +110,7 @@ public class JcFunction {
     //pc预约记录总数
     public int pcAppointmentRecodePage() {
         jc.pcLogin(pp.jdgw, pp.jdgwpassword);
-        int num = jc.appointmentRecordManage("", "1", "10", null, null).getInteger("total");
+        int num = jc.appointmentRecordManage("", "1", "10", "type", "MAINTAIN").getInteger("total");
         System.out.println("预约记录数："+num);
         return num;
     }
@@ -133,7 +133,7 @@ public class JcFunction {
         String month = dt.getMounth(num);
         int day = dt.getDay(num);
         Integer total = 0;
-        JSONArray list = jc.pcTimeTableList(month).getJSONArray("list");
+        JSONArray list = jc.pcTimeTableList(month,"MAINTAIN").getJSONArray("list");
         for (int i = 0; i < list.size(); i++) {
             int list_day = list.getJSONObject(i).getInteger("day");
             if (list_day == day) {
@@ -227,8 +227,8 @@ public class JcFunction {
         sum[0] = data.getInteger("surplus_appointment");   //分子
         sum[1] = data.getInteger("all_appointment");     //分母
         //接待
-        sum[2] = data.getInteger("surplus_reception");  //分子
-        sum[3] = data.getInteger("all_reception");      //分母
+        sum[2] = data.getInteger("after_surplus_reception");  //分子
+        sum[3] = data.getInteger("after_all_reception");      //分母
 
         sum[4] = data.getInteger("surplus_follow");  //分子
         sum[5] = data.getInteger("all_follow");      //分母

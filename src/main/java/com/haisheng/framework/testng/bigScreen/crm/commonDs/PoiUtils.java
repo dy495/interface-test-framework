@@ -1,5 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.crm.commonDs;
 
+import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import org.apache.poi.hssf.usermodel.*;
 
@@ -100,6 +101,39 @@ public class PoiUtils {
                 mile,
                 "2000",
                 end};
+
+        XSSFWorkbook workbook = export2(roeName, parm);
+        FileOutputStream output = new FileOutputStream(importFilepath);
+        workbook.write(output);
+        output.flush();
+
+    }
+
+    public static void importPotentialCustomer( ) throws IOException {
+        DateTimeUtil dt = new DateTimeUtil();
+        String importFilepath="src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/importPotentialCustomerfile.xlsx";
+//        importFilepath= importFilepath.replace("/", File.separator);
+        String[] roeName = {"*归属门店",
+                "*车主类型",
+                "*客户名称",
+                "*联系方式",
+                "*性别",
+                "意向车系",
+                "意向车型",
+                "*创建日期",
+                "*销售顾问",
+                "*销售账号"};
+        String[] parm = {
+                "中关村店(全称)",
+                "个人",
+                "潜客"+CommonUtil.getRandom(2),
+                "157"+ CommonUtil.getRandom(8),
+                "女",
+                "Model",
+                "Model 3",
+                dt.getHistoryDate(0)+" "+dt.getHHmm(0),
+                "自动化专用账号",
+                "13402050050"};
 
         XSSFWorkbook workbook = export2(roeName, parm);
         FileOutputStream output = new FileOutputStream(importFilepath);

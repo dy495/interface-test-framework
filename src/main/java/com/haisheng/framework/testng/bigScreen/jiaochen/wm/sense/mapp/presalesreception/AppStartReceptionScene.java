@@ -18,6 +18,7 @@ public class AppStartReceptionScene extends BaseScene {
      * 版本 v3.0
      */
     private final Long customerId;
+    private final String customerPhone;
 
     /**
      * 描述 意向车系
@@ -48,6 +49,7 @@ public class AppStartReceptionScene extends BaseScene {
         object.put("car_style", carStyle);
         object.put("car_model", carModel);
         object.put("estimated_buy_time", estimatedBuyTime);
+        object.put("customer_phone", customerPhone);
         return object;
     }
 
