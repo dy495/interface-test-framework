@@ -584,8 +584,8 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //bug
-    @Test(description = "积分兑换--修改实体积分兑换库存，减少大于当前库存的数", enabled = false)
+    //ok
+    @Test(description = "积分兑换--修改实体积分兑换库存，减少大于当前库存的数")
     public void integralExchange_system_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -894,8 +894,8 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //bug
-    @Test(description = "积分兑换--关闭积分兑换，优惠券可用库存释放", enabled = false)
+    //ok
+    @Test(description = "积分兑换--关闭积分兑换，优惠券可用库存释放")
     public void integralExchange_system_18() {
         logger.logCaseStart(caseResult.getCaseName());
         Long id = null;
@@ -906,26 +906,30 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             ExchangePage exchangePage = util.createExchangeFictitiousGoods(voucherId);
             id = exchangePage.getId();
             //开启
-            ChangeSwitchStatusScene.builder().id(id).status(true).build().invoke(visitor);
+            String message = util.getResponse(ChangeSwitchStatusScene.builder().id(exchangePage.getId()).status(true).build()).getMessage();
+            String err = "积分兑换商品已开启，请勿重复操作";
+            CommonUtil.checkResult("再次开启已开启的积分兑换商品", err, message);
             VoucherPage secondVoucherPage = util.getVoucherPage(voucherId);
             CommonUtil.checkResult(voucherPage.getVoucherName() + "的可用库存", voucherPage.getAllowUseInventory() - 1, secondVoucherPage.getAllowUseInventory());
             CommonUtil.checkResult(voucherPage.getVoucherName() + "的剩余库存", voucherPage.getSurplusInventory(), secondVoucherPage.getSurplusInventory());
             //关闭
             ChangeSwitchStatusScene.builder().id(exchangePage.getId()).status(false).build().invoke(visitor);
             VoucherPage thirdVoucherPage = util.getVoucherPage(voucherId);
-            CommonUtil.checkResult(voucherPage.getVoucherName() + "的可用库存", voucherPage, thirdVoucherPage.getAllowUseInventory());
+            CommonUtil.checkResult(voucherPage.getVoucherName() + "的可用库存", voucherPage.getAllowUseInventory(), thirdVoucherPage.getAllowUseInventory());
             CommonUtil.checkResult(voucherPage.getVoucherName() + "的剩余库存", voucherPage.getSurplusInventory(), thirdVoucherPage.getSurplusInventory());
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            ChangeSwitchStatusScene.builder().id(id).status(false).build().invoke(visitor);
+            String message = util.getResponse(ChangeSwitchStatusScene.builder().id(id).status(false).build()).getMessage();
+            String err = "积分兑换商品已关闭，请勿重复操作";
+            CommonUtil.checkResult("再次关闭已关闭的积分兑换商品", err, message);
             DeleteExchangeGoodsScene.builder().id(id).build().invoke(visitor);
             saveData("积分兑换--关闭积分兑换，优惠券可用库存释放");
         }
     }
 
-    //3.1
-    @Test(description = "积分兑换--兑换商品过期，释放可用库存", enabled = false)
+    //ok
+    @Test(description = "积分兑换--兑换商品过期，不释放可用库存")
     public void integralExchange_system_19() {
         logger.logCaseStart(caseResult.getCaseName());
         Long id = null;
@@ -946,7 +950,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
                     .useDays(bean.getUseDays()).exchangeStartTime(exchangeStartTime).exchangeEndTime(exchangeEndTime)
                     .id(id).build().invoke(visitor);
             VoucherPage newVoucherPage = util.getVoucherPage(voucherId);
-            CommonUtil.checkResult(voucherPage.getVoucherName() + "的可用库存", voucherPage.getAllowUseInventory(), newVoucherPage.getAllowUseInventory());
+            CommonUtil.checkResult(voucherPage.getVoucherName() + "的可用库存", voucherPage.getAllowUseInventory() - 1, newVoucherPage.getAllowUseInventory());
             CommonUtil.checkResult(voucherPage.getVoucherName() + "的剩余库存", voucherPage.getSurplusInventory(), newVoucherPage.getSurplusInventory());
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -957,7 +961,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //3.1
+    //ok
     @Test(description = "积分兑换--创建虚拟兑换商品时，可兑换库存大于卡券可用库存，创建失败")
     public void integralExchange_system_20() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -980,7 +984,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //3.1
+    //bug
     @Test(description = "积分兑换--先关闭虚拟兑换商品，商品内卡券库存不足再开启兑换商品，失败", enabled = false)
     public void integralExchange_system_21() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -998,22 +1002,23 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             ChangeSwitchStatusScene.builder().id(id).status(false).build().invoke(visitor);
             VoucherPage thirdVoucherPage = util.getVoucherPage(voucherId);
             CommonUtil.checkResult("关闭积分兑换后 " + voucherPage.getVoucherName() + " 的可用库存", voucherPage.getAllowUseInventory(), thirdVoucherPage.getAllowUseInventory());
-            //占用一个卡券
-            JSONArray voucherArray = util.getVoucherArray(voucherId, 1);
-            util.buyTemporaryPackage(voucherArray, 2);
+            //占用两个卡券
+            JSONArray voucherArray = util.getVoucherArray(voucherId, 2);
+            util.buyTemporaryPackage(voucherArray, 1);
             VoucherPage fourVoucherPage = util.getVoucherPage(voucherId);
             CommonUtil.checkResult("占用卡券后 " + voucherPage.getVoucherName() + " 的可用库存", voucherPage.getAllowUseInventory() - 2, fourVoucherPage.getAllowUseInventory());
-            //在开启积分兑换
+            //再开启积分兑换
             String message = ChangeSwitchStatusScene.builder().id(id).status(true).build().invoke(visitor, false).getString("message");
             String err = "卡券【" + voucherPage.getVoucherName() + "】库存不足，请重新选择！";
             CommonUtil.checkResult("创建虚拟兑换商品时，可兑换库存大于卡券剩余库存", err, message);
-            //拒绝卡券的购买
-            util.applyVoucher(voucherPage.getVoucherName(), "2");
+            //取消卡券的购买
+            util.cancelSoldPackage(voucherPage.getVoucherName());
             VoucherPage fiveVoucherPage = util.getVoucherPage(voucherId);
             CommonUtil.checkResult("拒绝支付后 " + voucherPage.getVoucherName() + " 的可用库存", voucherPage.getAllowUseInventory(), fiveVoucherPage.getAllowUseInventory());
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
+            ChangeSwitchStatusScene.builder().id(id).status(false).build().invoke(visitor);
             DeleteExchangeGoodsScene.builder().id(id).build().invoke(visitor);
             saveData("积分兑换--先关闭虚拟兑换商品，商品内卡券库存不足再开启兑换商品，失败");
         }

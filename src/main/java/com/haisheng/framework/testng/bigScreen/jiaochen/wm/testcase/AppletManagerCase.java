@@ -405,7 +405,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
                 String voucherName = util.getVoucherName(voucherId);
                 util.applyVoucher(voucherName, "1");
                 exchangePage = util.createExchangeFictitiousGoods(voucherId);
-                util.pushMessage(0, true, voucherId);
+                util.pushCustomMessage(0, true, voucherId);
             } else {
                 exchangePage = a;
             }

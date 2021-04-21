@@ -166,37 +166,22 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //搜索门店
-            boolean status = true;
-            JSONArray shopList = md.searchShop(null, null, null, true, 1, 10).getJSONArray("list");
-            if (shopList != null)
-                for (int i = 0; i < shopList.size(); i++) {
-                    boolean status1 = shopList.getJSONObject(i).getBoolean("is_show");
-                    Preconditions.checkArgument(status1, "通过" + status + "搜索门店展示结果为" + status1);
-                }
+            JSONArray shopList = md.searchShop(null, null, null, true, 1, 100).getJSONArray("list");
+            for (int i = 0; i < shopList.size(); i++) {
+                boolean status1 = shopList.getJSONObject(i).getBoolean("is_show");
+                String name =shopList.getJSONObject(i).getString("shop_name");
+                CommonUtil.checkResult("门店" + name + "的状态", true, status1);
+            }
+            JSONArray shopList1 = md.searchShop(null, null, null, false, 1, 100).getJSONArray("list");
+            for (int i = 0; i < shopList1.size(); i++) {
+                boolean status1 = shopList1.getJSONObject(i).getBoolean("is_show");
+                String name =shopList1.getJSONObject(i).getString("shop_name");
+                CommonUtil.checkResult("门店" + name + "的状态", false, status1);
+            }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("按照开启状态搜索门店");
-        }
-    }
-
-    //按照关闭状态搜索门店
-    @Test()
-    public void shopSearch3(){
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //搜索门店
-            boolean status = false;
-            JSONArray shopList = md.searchShop(null, null, null, false, 1, 10).getJSONArray("list");
-            if (shopList != null)
-                for (int i = 0; i < shopList.size(); i++) {
-                    boolean status1 = shopList.getJSONObject(i).getBooleanValue("status");
-                    Preconditions.checkArgument(!status1, "通过" + status + "搜索门店展示结果为" + status1);
-                }
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("按照关闭状态搜索门店");
+            saveData("按照状态搜索门店");
         }
     }
 

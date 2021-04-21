@@ -102,6 +102,16 @@ public class SupporterUtil {
     }
 
     /**
+     * 获取接口返回值
+     *
+     * @param scene 接口
+     * @return 返回值内容
+     */
+    public Response getResponse(IScene scene) {
+        return JSONObject.toJavaObject(scene.invoke(visitor, false), Response.class);
+    }
+
+    /**
      * 收集结果
      * 结果为bean类型
      *
@@ -1558,6 +1568,7 @@ public class SupporterUtil {
                 .exchangeEndTime(exchangeEndTime).expireType(2).useDays("10").exchangeNum(String.valueOf(exchangeNum)).build().invoke(visitor);
         return collectBeanList(ExchangePageScene.builder().build(), ExchangePage.class).get(0);
     }
+
 
     /**
      * 获取积分兑换包含的卡券信息

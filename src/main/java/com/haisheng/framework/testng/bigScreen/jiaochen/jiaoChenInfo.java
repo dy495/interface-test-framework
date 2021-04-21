@@ -37,6 +37,10 @@ public class jiaoChenInfo {
     public final String donephone = "15843317232";//成交客户手机号
     public final Long oneshopid = 46439L;
 
+    public final String ONLINE_EXPERTS = "ONLINE_EXPERTS"; //在线专家
+    public final String SALES = "SALES"; //专属销售
+    public final String AFTER_SALES = "AFTER_SALES"; //专属售后
+
     private static final EnumTestProduce PRODUCE = EnumTestProduce.JC_DAILY;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_LXQ_DAILY;

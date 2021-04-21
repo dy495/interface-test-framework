@@ -18,7 +18,7 @@ public enum PackageStatusEnum {
     AUDITING(0, "审核中", new WaitingPackage.Builder()),
     AGREE(1, "已通过", new WorkingPackage.Builder()),
     REFUSAL(2, "已拒绝", new RejectPackage.Builder()),
-    CANCEL(3, "已取消", new RecallPackage.Builder()),
+    CANCEL(3, "已撤回", new RecallPackage.Builder()),
     ;
 
     PackageStatusEnum(Integer id, String name, AbstractPackage.AbstractBuilder packageBuilder) {

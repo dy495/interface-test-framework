@@ -91,7 +91,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
         try {
 
             //搜索门店
-            String shopName = "赢识办公室(测试越秀/飞单)";
+            String shopName = "中关村1号店";
             JSONArray shopList = md.searchShop(shopName, null, null, null, 1, 10).getJSONArray("list");
             if (shopList != null)
                 for (int i = 0; i < shopList.size(); i++) {
@@ -112,7 +112,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //搜索门店
-            String managerName = "华";
+            String managerName = "张三丰";
             JSONArray shopList = md.searchShop(null, managerName, null, null, 1, 10).getJSONArray("list");
             if (shopList != null)
                 for (int i = 0; i < shopList.size(); i++) {
@@ -192,8 +192,8 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //搜索门店
-            String shopName = "赢识办公室(测试越秀/飞单)";
-            String managerName = "华";
+            String shopName = "中关村1号店";
+            String managerName = "张三丰";
             JSONArray shopList = md.searchShop(shopName, managerName, null, null, 1, 10).getJSONArray("list");
             if (shopList != null)
                 for (int i = 0; i < shopList.size(); i++) {
@@ -214,8 +214,8 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //搜索门店
-            String shopName = "赢识办公室(测试越秀/飞单)";
-            String managerName = "华";
+            String shopName = "中关村1号店";
+            String managerName = "张三丰";
             String cityName = "北京";
             JSONArray shopList = md.searchShop(shopName, managerName, cityName, null, 1, 10).getJSONArray("list");
             if (shopList != null)
@@ -240,8 +240,8 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //搜索门店
-            String shopName = "赢识办公室(测试越秀/飞单)";
-            String managerName = "华";
+            String shopName = "中关村1号店";
+            String managerName = "张三丰";
             String cityName = "北京";
             boolean status = true;
             JSONArray shopList = md.searchShop(shopName, managerName, cityName, status, 1, 10).getJSONArray("list");
@@ -268,8 +268,8 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //搜索门店
-            String shopName = "赢识办公室(测试越秀/飞单)";
-            String managerName = "华";
+            String shopName = "中关村1号店";
+            String managerName = "张三丰";
             String cityName = "北京";
             boolean status = false;
             JSONArray shopList = md.searchShop(shopName, managerName, cityName, status, 1, 10).getJSONArray("list");
