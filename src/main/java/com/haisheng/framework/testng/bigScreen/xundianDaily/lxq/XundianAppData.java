@@ -209,7 +209,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            JSONArray chklist = xd.checkStartapp(info.shop_id_01,type,0,true).getJSONArray("check_lists");
+            JSONArray chklist = xd.checkStartapp(info.shop_id_01,type,0,false).getJSONArray("check_lists");
             for (int i=0; i < chklist.size(); i++){
                 int itemsum = 0;
                 JSONObject eachlist = chklist.getJSONObject(i);
@@ -217,7 +217,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
                 JSONArray itemarr = eachlist.getJSONArray("check_items");
                 for (int j = 0; j < itemarr.size();j++){
-                    JSONObject obj = itemarr.getJSONObject(i);
+                    JSONObject obj = itemarr.getJSONObject(j);
                     if (obj.getInteger("check_result") != 0){
                         itemsum = itemsum + 1;
                     }
