@@ -1587,14 +1587,16 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             int after = jc.BrandPage(1,10,null,null).getInteger("total");
             int add = after- bef;
             //判断新建商品时品牌下拉列表
+            Thread.sleep(500);
             JSONArray brandlist = jc.BrandList().getJSONArray("list");
             Long listid = brandlist.getJSONObject(brandlist.size()-1).getLong("id");
+            jc.BrandDel(id,true);
 
             Preconditions.checkArgument(code==1000,a+"状态码期待1000，实际"+code);
             Preconditions.checkArgument(add==1,"新建后列表增加了"+add);
             Preconditions.checkArgument(status==true,"新增品牌状态期待为开启，实际为"+status);
-            Preconditions.checkArgument(listid==id,"创建商品时的品牌下拉框未增加对应的品牌");
-            jc.BrandDel(id,true);
+            Preconditions.checkArgument(listid.longValue()==id.longValue(),"创建商品时的品牌下拉框未增加对应的品牌");
+
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -1608,9 +1610,9 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     @DataProvider(name = "BRANDADD")
     public Object[] brandAdd1(){
         return new String[][] {
-                {"1","1","品牌名称1个字简介1个字"},
-                {info.stringsix,info.stringsix,"品牌名称6个字简介6个字"},
-                {"zh这是20位！@#的说的是发发简称11",info.stringfifty,"品牌名称20个字简介50个字"},
+                {"a","a","品牌名称1个字简介1个字"},
+                {info.getString(6),info.getString(6),"品牌名称6个字简介6个字"},
+                {info.getString(20),info.getString(50),"品牌名称20个字简介50个字"},
         };
     }
 
@@ -2626,7 +2628,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
 
 
-    @Test(dataProvider = "export")
+    //@Test(dataProvider = "export")
     public void ExportAll(String url,String mess) {
 
         logger.logCaseStart(caseResult.getCaseName());
@@ -2942,7 +2944,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             Long shop_id = info.oneshopid;
             Long car_style_id = jc.styleList(shop_id).getJSONArray("list").getJSONObject(0).getLong("style_id");
             Long car_model_id = jc.modelList(car_style_id).getJSONArray("list").getJSONObject(0).getLong("model_id");
-            String salesId = jc.saleList(shop_id).getJSONArray("list").getJSONObject(0).getString("sales_id");
+            String salesId = jc.saleList(shop_id,"PRE").getJSONArray("list").getJSONObject(0).getString("sales_id");
             int code = jc.createPotentialCstm(name,phone,type,sex,car_style_id,car_model_id,shop_id,salesId,false).getInteger("code");
             int after = jc.preSleCustomerManage(null,"1","1",null,null).getInteger("total");
             if (chk.equals("false")){
@@ -2987,7 +2989,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             Long shop_id = info.oneshopid;
             Long car_style_id = jc.styleList(shop_id).getJSONArray("list").getJSONObject(0).getLong("style_id");
             Long car_model_id = jc.modelList(car_style_id).getJSONArray("list").getJSONObject(0).getLong("model_id");
-            String salesId = jc.saleList(shop_id).getJSONArray("list").getJSONObject(0).getString("sales_id");
+            String salesId = jc.saleList(shop_id,"PRE").getJSONArray("list").getJSONObject(0).getString("sales_id");
             String name="name"+System.currentTimeMillis();
             String phone="1391172"+Integer.toString((int)((Math.random()*9+1)*1000));
             String type="PERSON";
@@ -3041,7 +3043,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             Long shop_id = info.oneshopid;
             Long car_style_id = jc.styleList(shop_id).getJSONArray("list").getJSONObject(0).getLong("style_id");
             Long car_model_id = jc.modelList(car_style_id).getJSONArray("list").getJSONObject(0).getLong("model_id");
-            String salesId = jc.saleList(shop_id).getJSONArray("list").getJSONObject(0).getString("sales_id");
+            String salesId = jc.saleList(shop_id,"PRE").getJSONArray("list").getJSONObject(0).getString("sales_id");
 
 
             if (chk.equals("false")){
@@ -3073,7 +3075,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             Long shop_id = info.oneshopid;
             Long car_style_id = jc.styleList(shop_id).getJSONArray("list").getJSONObject(0).getLong("style_id");
             Long car_model_id = jc.modelList(car_style_id).getJSONArray("list").getJSONObject(0).getLong("model_id");
-            String salesId = jc.saleList(shop_id).getJSONArray("list").getJSONObject(0).getString("sales_id");
+            String salesId = jc.saleList(shop_id,"PRE").getJSONArray("list").getJSONObject(0).getString("sales_id");
             String name="name"+System.currentTimeMillis();
             String phone=info.donephone;
             String type="PERSON";

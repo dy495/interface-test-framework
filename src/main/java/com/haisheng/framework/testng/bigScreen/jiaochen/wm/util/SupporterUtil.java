@@ -178,6 +178,19 @@ public class SupporterUtil {
      *
      * @param scene 接口场景
      * @param bean  bean类
+     * @param <T>   T
+     * @return T
+     */
+    public <T> T collectBean(JSONObject object, Class<T> bean) {
+        return JSONObject.toJavaObject(object, bean);
+    }
+
+    /**
+     * 收集结果
+     * 结果为bean类型
+     *
+     * @param scene 接口场景
+     * @param bean  bean类
      * @param key   指定的key
      * @param value 指定key的指定value
      * @param <T>   T
@@ -250,7 +263,14 @@ public class SupporterUtil {
         return voucherName;
     }
 
-    public CreateScene.CreateSceneBuilder createVoucherBuilder(Integer stock, VoucherTypeEnum type) {
+    /**
+     * 创建卡券
+     *
+     * @param stock 库存
+     * @param type  卡券类型
+     * @return 构建卡券的builder
+     */
+    public CreateScene.CreateSceneBuilder createVoucherBuilder(Integer stock, @NotNull VoucherTypeEnum type) {
         CreateScene.CreateSceneBuilder builder = createVoucherBuilder(true).stock(stock).cardType(type.name());
         switch (type.name()) {
             case "FULL_DISCOUNT":
@@ -262,6 +282,8 @@ public class SupporterUtil {
             case "COMMODITY_EXCHANGE":
                 builder.exchangeCommodityName("兑换布加迪威龙一辆").parValue(null);
                 break;
+            case "CASH_COUPON":
+                builder.isThreshold(true).thresholdPrice(999.99).parValue(49.99).replacePrice(99.99);
             default:
                 builder.isThreshold(false);
                 break;
@@ -277,7 +299,8 @@ public class SupporterUtil {
      */
     public CreateScene.CreateSceneBuilder createVoucherBuilder(Boolean selfVerification) {
         return CreateScene.builder().subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType())).cost(0.01)
-                .voucherDescription(getDesc()).shopType(0).shopIds(getShopIdList(2)).selfVerification(selfVerification);
+                .voucherDescription("<p>" + getDesc() + "</p>").shopType(0).shopIds(getShopIdList(2))
+                .selfVerification(selfVerification).isDefaultPic(true);
     }
 
     /**

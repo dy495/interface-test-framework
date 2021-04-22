@@ -95,8 +95,8 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
             List<String> picList = new ArrayList<>();
             picList.add(supporterUtil.getPicPath());
             // 创建被邀请者和分享者的信息字段
-            JSONObject invitedVoucher = businessUtil.getInvitedVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherSurplusInventory(voucherId)), 2, "", "", 3);
-            JSONObject shareVoucher = businessUtil.getShareVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherSurplusInventory(voucherId)), 2, "", "", 3);
+            JSONObject invitedVoucher = businessUtil.getInvitedVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherAllowUseInventory(voucherId)), 2, "", "", 3);
+            JSONObject shareVoucher = businessUtil.getShareVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherAllowUseInventory(voucherId)), 2, "", "", 3);
             IScene scene =FissionVoucherAddScene.builder()
                     .type(1)
                     .participationLimitType(0)
@@ -140,8 +140,8 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
             List<String> picList = new ArrayList<>();
             picList.add(supporterUtil.getPicPath());
             // 创建被邀请者和分享者的信息字段
-            JSONObject invitedVoucher = businessUtil.getInvitedVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherSurplusInventory(voucherId)), 2, "", "", 3);
-            JSONObject shareVoucher = businessUtil.getShareVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherSurplusInventory(voucherId)), 2, "", "", 3);
+            JSONObject invitedVoucher = businessUtil.getInvitedVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherAllowUseInventory(voucherId)), 2, "", "", 3);
+            JSONObject shareVoucher = businessUtil.getShareVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherAllowUseInventory(voucherId)), 2, "", "", 3);
             IScene scene =FissionVoucherAddScene.builder()
                     .type(1)
                     .participationLimitType(0)
@@ -185,8 +185,8 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
             List<String> picList = new ArrayList<>();
             picList.add(supporterUtil.getPicPath());
             // 创建被邀请者和分享者的信息字段
-            JSONObject invitedVoucher = businessUtil.getInvitedVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherSurplusInventory(voucherId)), 2, "", "", 3);
-            JSONObject shareVoucher = businessUtil.getShareVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherSurplusInventory(voucherId)), 2, "", "", 3);
+            JSONObject invitedVoucher = businessUtil.getInvitedVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherAllowUseInventory(voucherId)), 2, "", "", 3);
+            JSONObject shareVoucher = businessUtil.getShareVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherAllowUseInventory(voucherId)), 2, "", "", 3);
             IScene scene =FissionVoucherAddScene.builder()
                     .type(1)
                     .participationLimitType(0)
@@ -233,8 +233,8 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
             List<String> picList = new ArrayList<>();
             picList.add(supporterUtil.getPicPath());
             // 创建被邀请者和分享者的信息字段
-            JSONObject invitedVoucher = businessUtil.getInvitedVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherSurplusInventory(voucherId)), 2, "", "", 3);
-            JSONObject shareVoucher = businessUtil.getShareVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherSurplusInventory(voucherId)), 2, "", "", 3);
+            JSONObject invitedVoucher = businessUtil.getInvitedVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherAllowUseInventory(voucherId)), 2, "", "", 3);
+            JSONObject shareVoucher = businessUtil.getShareVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherAllowUseInventory(voucherId)), 2, "", "", 3);
             for(int i=0;i<label.length;i++){
                 labels.add(Integer.valueOf(label[i][0]));
                 IScene scene =FissionVoucherAddScene.builder()
@@ -304,7 +304,7 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
             isRequired.add(false);
             JSONArray registerInformationList = this.businessUtil.getRegisterInformationList(isShow, isRequired);
             //报名成功奖励
-            JSONArray registerObject = businessUtil.getRewardVouchers(voucherId, 1, businessUtil.getVoucherSurplusInventory(voucherId));
+            JSONArray registerObject = businessUtil.getRewardVouchers(voucherId, 1, businessUtil.getVoucherAllowUseInventory(voucherId));
             //卡券有效期
             JSONObject voucherValid = businessUtil.getVoucherValid(2, null, null, 10);
             //创建招募活动-共有的--基础信息
@@ -382,7 +382,7 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
             isRequired.add(true);
             JSONArray registerInformationList = this.businessUtil.getRegisterInformationList(isShow, isRequired);
             //报名成功奖励
-            JSONArray registerObject = businessUtil.getRewardVouchers(voucherId, 1, businessUtil.getVoucherSurplusInventory(voucherId));
+            JSONArray registerObject = businessUtil.getRewardVouchers(voucherId, 1, businessUtil.getVoucherAllowUseInventory(voucherId));
             //卡券有效期
             JSONObject voucherValid = businessUtil.getVoucherValid(2, null, null, 10);
             //创建招募活动-共有的--基础信息
@@ -458,7 +458,7 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
             isRequired.add(true);
             JSONArray registerInformationList = this.businessUtil.getRegisterInformationList(isShow, isRequired);
             //报名成功奖励
-            JSONArray registerObject = businessUtil.getRewardVouchers(voucherId, 1, businessUtil.getVoucherSurplusInventory(voucherId));
+            JSONArray registerObject = businessUtil.getRewardVouchers(voucherId, 1, businessUtil.getVoucherAllowUseInventory(voucherId));
             //卡券有效期
             JSONObject voucherValid = businessUtil.getVoucherValid(2, null, null, 10);
             //创建招募活动-共有的--基础信息
@@ -534,7 +534,7 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
             isRequired.add(true);
             JSONArray registerInformationList = this.businessUtil.getRegisterInformationList(isShow, isRequired);
             //报名成功奖励
-            JSONArray registerObject = businessUtil.getRewardVouchers(voucherId, 1, businessUtil.getVoucherSurplusInventory(voucherId));
+            JSONArray registerObject = businessUtil.getRewardVouchers(voucherId, 1, businessUtil.getVoucherAllowUseInventory(voucherId));
             //卡券有效期
             JSONObject voucherValid = businessUtil.getVoucherValid(2, null, null, 10);
             //创建招募活动-共有的--基础信息
@@ -610,7 +610,7 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
             isRequired.add(true);
             JSONArray registerInformationList = this.businessUtil.getRegisterInformationList(isShow, isRequired);
             //报名成功奖励
-            JSONArray registerObject = businessUtil.getRewardVouchers(voucherId, 1, businessUtil.getVoucherSurplusInventory(voucherId));
+            JSONArray registerObject = businessUtil.getRewardVouchers(voucherId, 1, businessUtil.getVoucherAllowUseInventory(voucherId));
             //卡券有效期
             JSONObject voucherValid = businessUtil.getVoucherValid(2, null, null, 10);
             //创建招募活动-共有的--基础信息
@@ -686,7 +686,7 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
             isRequired.add(true);
             JSONArray registerInformationList = this.businessUtil.getRegisterInformationList(isShow, isRequired);
             //报名成功奖励
-            JSONArray registerObject = businessUtil.getRewardVouchers(voucherId, 1, businessUtil.getVoucherSurplusInventory(voucherId));
+            JSONArray registerObject = businessUtil.getRewardVouchers(voucherId, 1, businessUtil.getVoucherAllowUseInventory(voucherId));
             //卡券有效期
             JSONObject voucherValid = businessUtil.getVoucherValid(2, null, null, 10);
             //创建招募活动-共有的--基础信息
@@ -762,7 +762,7 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
             isRequired.add(true);
             JSONArray registerInformationList = this.businessUtil.getRegisterInformationList(isShow, isRequired);
             //报名成功奖励
-            JSONArray registerObject = businessUtil.getRewardVouchers(voucherId, 1, businessUtil.getVoucherSurplusInventory(voucherId));
+            JSONArray registerObject = businessUtil.getRewardVouchers(voucherId, 1, businessUtil.getVoucherAllowUseInventory(voucherId));
             //卡券有效期
             JSONObject voucherValid = businessUtil.getVoucherValid(2, null, null, 10);
             //创建招募活动-共有的--基础信息
@@ -828,8 +828,8 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
                 List<String> picList = new ArrayList<>();
                 picList.add(supporterUtil.getPicPath());
                 // 创建被邀请者和分享者的信息字段
-                JSONObject invitedVoucher = businessUtil.getInvitedVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherSurplusInventory(voucherId)), 2, "", "", 3);
-                JSONObject shareVoucher = businessUtil.getShareVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherSurplusInventory(voucherId)), 2, "", "", 3);
+                JSONObject invitedVoucher = businessUtil.getInvitedVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherAllowUseInventory(voucherId)), 2, "", "", 3);
+                JSONObject shareVoucher = businessUtil.getShareVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherAllowUseInventory(voucherId)), 2, "", "", 3);
                 IScene scene = FissionVoucherAddScene.builder()
                         .type(1)
                         .participationLimitType(1)
@@ -899,7 +899,7 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
             isRequired.add(false);
             JSONArray registerInformationList = this.businessUtil.getRegisterInformationList(isShow, isRequired);
             //报名成功奖励
-            JSONArray registerObject = businessUtil.getRewardVouchers(voucherId, 1, businessUtil.getVoucherSurplusInventory(voucherId));
+            JSONArray registerObject = businessUtil.getRewardVouchers(voucherId, 1, businessUtil.getVoucherAllowUseInventory(voucherId));
             //卡券有效期
             JSONObject voucherValid = businessUtil.getVoucherValid(2, null, null, 10);
             //创建招募活动-共有的--基础信息
@@ -976,7 +976,7 @@ public class ActivityType extends TestCaseCommon implements TestCaseStd {
 
             JSONArray registerInformationList = this.businessUtil.getRegisterInformationNullList(isShow, isRequired);
             //报名成功奖励
-            JSONArray registerObject = businessUtil.getRewardVouchers(voucherId, 1, businessUtil.getVoucherSurplusInventory(voucherId));
+            JSONArray registerObject = businessUtil.getRewardVouchers(voucherId, 1, businessUtil.getVoucherAllowUseInventory(voucherId));
             //卡券有效期
             JSONObject voucherValid = businessUtil.getVoucherValid(2, null, null, 10);
             //创建招募活动-共有的--基础信息

@@ -1453,7 +1453,7 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(code==1000,a+"状态码期待1000，实际"+code);
             Preconditions.checkArgument(add==1,"新建后列表增加了"+add);
             Preconditions.checkArgument(status==true,"新增品牌状态期待为开启，实际为"+status);
-            Preconditions.checkArgument(listid==id,"创建商品时的品牌下拉框未增加对应的品牌");
+            Preconditions.checkArgument(listid.longValue()==id.longValue(),"创建商品时的品牌下拉框未增加对应的品牌");
             jc.BrandDel(id,true);
 
         } catch (AssertionError e) {
