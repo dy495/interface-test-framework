@@ -2,8 +2,10 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.xmf;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.registerListVariable;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.record.ImportPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appStartReception;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appletAppointment;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.pccreateActile;
@@ -28,6 +30,13 @@ public class JcFunction {
         String num = "177" + (random.nextInt(89999999) + 10000000);
 
         return num;
+    }
+
+    public  Integer importCheck(String name){
+        IScene importPageScene= ImportPageScene.builder().page(1).size(10).user(name).build();
+        JSONObject importReault=jc.invokeApi(importPageScene).getJSONArray("list").getJSONObject(0);
+        int sueecssNum=importReault.getInteger("success_num");
+        return sueecssNum;
     }
     //通过权限描述，返回权限id
     public Long getAccessId(String label){

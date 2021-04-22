@@ -5,9 +5,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.JsonPathUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PoiUtils;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.record.ImportPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.DataAbnormal;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
@@ -480,7 +482,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test(description = "",enabled = false)  //新建智能提醒（公里数）,由于智能提醒隔天生效，故此case一天运行一次  明天调试
+    @Test(description = "",enabled = true)  //新建智能提醒（公里数）,由于智能提醒隔天生效，故此case一天运行一次  明天调试
     public void CreateRemindCheck() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -497,12 +499,14 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             //导入工单
             pcLogin(pp.jdgw,pp.jdgwpassword,pp.roleidJdgw);
             jc.pcWorkOrder(pp.importFilepath);      //导入工单文件的路径=新建excel 路径
+            sleep(20);
             //查询小程序卡券数量
             jc.appletLoginToken(pp.appletTocken);
             int totalAfter=pf.getVoucherTotal();
             PoiUtils.importCustomer(maile);
             pcLogin(pp.jdgw,pp.jdgwpassword,pp.roleidJdgw);
             jc.pcWorkOrder(pp.importFilepath);      //导入工单文件的路径=新建excel 路径
+            sleep(30);
             jc.appletLoginToken(pp.appletTocken);
             int totalAfter2=pf.getVoucherTotal();
             //新建下一个智能提醒
@@ -515,7 +519,6 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
 //            er.days="1";            //提醒天数
             er.mileage=maile;        //提醒公里数
             Integer RemindId =jc.createRemindMethod(er).getInteger("id");
-            sleep(30);
 //            公里数同一任务只触发一次智能提醒，小程序收不到卡券
             Preconditions.checkArgument(totalAfter-totalAfter2==0,"第一次导入工单后卡券数:"+totalAfter+";第二次导入工单数："+totalAfter2+",导入工单前："+total);
             Preconditions.checkArgument(totalAfter-total==1,"第一次导入工单后卡券数："+totalAfter+"；导入工单前卡券数："+total);
@@ -713,19 +716,138 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test(enabled = false,description = "导入潜客")
+    @Test(enabled = true,description = "导入潜客,参数全填正常")
     public void importPotentialCustomer() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            String[] parm = {
+                    "中关村店(全称)",
+                    "个人",
+                    "潜客"+CommonUtil.getRandom(2),
+                    "157"+ CommonUtil.getRandom(8),
+                    "女",
+                    "Model",
+                    "Model 3",
+                    dt.getHistoryDate(0)+" "+dt.getHHmm(0),
+                    "自动化专用账号",
+                    "13402050050"};
 
-            PoiUtils.importPotentialCustomer();
+            PoiUtils.importPotentialCustomer(parm);
             //导入工单
             jc.pcPotentialCustomer(pp.importFilepath3);      //导入工单文件的路径=新建excel 路径
+            sleep(10);
+            int sueecssNum=pf.importCheck(pp.jdgwName);
+            Preconditions.checkArgument(sueecssNum==1,"导入潜客失败");
+
+
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("参数全填 导入潜客成功");
+        }
+
+
+
+    }
+
+    @Test(enabled = true,description = "导入潜客，车系填，车型不填，成功")
+    public void importPotentialCustomer2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String[] parm = {
+                    "中关村店(全称)",
+                    "个人",
+                    "潜客"+CommonUtil.getRandom(2),
+                    "157"+ CommonUtil.getRandom(8),
+                    "女",
+                    "Model",
+                    "",
+                    dt.getHistoryDate(0)+" "+dt.getHHmm(0),
+                    "自动化专用账号",
+                    "13402050050"};
+
+            PoiUtils.importPotentialCustomer(parm);
+            //导入工单
+            jc.pcPotentialCustomer(pp.importFilepath3);      //导入工单文件的路径=新建excel 路径
+            sleep(10);
+            int sueecssNum=pf.importCheck(pp.jdgwName);
+            Preconditions.checkArgument(sueecssNum==1,"导入潜客失败");
+
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("车系正确，车型不填，导入潜客期待成功");
+        }
+
+
+
+    }
+
+    @Test(enabled = true,description = "导入潜客，车系不填，车型不填，失败")
+    public void importPotentialCustomer3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String[] parm = {
+                    "中关村店(全称)",
+                    "个人",
+                    "潜客"+CommonUtil.getRandom(2),
+                    "157"+ CommonUtil.getRandom(8),
+                    "女",
+                    "",
+                    "",
+                    dt.getHistoryDate(0)+" "+dt.getHHmm(0),
+                    "自动化专用账号",
+                    "13402050050"};
+
+            PoiUtils.importPotentialCustomer(parm);
+            //导入工单
+            jc.pcPotentialCustomer(pp.importFilepath3);      //导入工单文件的路径=新建excel 路径
+            sleep(10);
+            int sueecssNum=pf.importCheck(pp.jdgwName);
+            Preconditions.checkArgument(sueecssNum==0,"车系不填导入成功");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("导入潜客");
+        }
+
+
+
+    }
+
+    @Test(enabled = true,description = "导入潜客,参数全填正常")
+    public void importPotentialCustomer5000() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String[] parm = {
+                    "中关村店(全称)",
+                    "个人",
+                    "潜客"+CommonUtil.getRandom(2),
+                    "157"+ CommonUtil.getRandom(8),
+                    "女",
+                    "Model",
+                    "Model 3",
+                    dt.getHistoryDate(0)+" "+dt.getHHmm(0),
+                    "自动化专用账号",
+                    "13402050050"};
+            System.out.println(parm.length);
+
+            PoiUtils.importPotentialCustomer(parm);
+            //导入工单
+//            jc.pcPotentialCustomer(pp.importFilepath3);      //导入工单文件的路径=新建excel 路径
+            sleep(10);
+//            int sueecssNum=pf.importCheck(pp.jdgwName);
+//            Preconditions.checkArgument(sueecssNum==1,"导入潜客失败");
+
+
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("参数全填 导入潜客成功");
         }
 
 

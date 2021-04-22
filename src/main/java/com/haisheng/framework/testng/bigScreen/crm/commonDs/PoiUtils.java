@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -22,7 +23,9 @@ import java.util.Random;
  */
 public class PoiUtils {
     public static void main(String[] args) throws Exception {
-        importCustomer("2000");
+        importPotential5000();
+
+//        importCustomer("2000");
     }
     //导入工单，公里数=固定值
     public static void importCustomer(String mile) throws IOException {
@@ -109,7 +112,7 @@ public class PoiUtils {
 
     }
 
-    public static void importPotentialCustomer( ) throws IOException {
+    public static void importPotentialCustomer(String []parm ) throws IOException {
         DateTimeUtil dt = new DateTimeUtil();
         String importFilepath="src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/importPotentialCustomerfile.xlsx";
 //        importFilepath= importFilepath.replace("/", File.separator);
@@ -123,19 +126,46 @@ public class PoiUtils {
                 "*创建日期",
                 "*销售顾问",
                 "*销售账号"};
-        String[] parm = {
-                "中关村店(全称)",
-                "个人",
-                "潜客"+CommonUtil.getRandom(2),
-                "157"+ CommonUtil.getRandom(8),
-                "女",
-                "Model",
-                "Model 3",
-                dt.getHistoryDate(0)+" "+dt.getHHmm(0),
-                "自动化专用账号",
-                "13402050050"};
-
         XSSFWorkbook workbook = export2(roeName, parm);
+        FileOutputStream output = new FileOutputStream(importFilepath);
+        workbook.write(output);
+        output.flush();
+
+    }
+
+    public static void importPotential5000() throws IOException {
+        DateTimeUtil dt = new DateTimeUtil();
+        String importFilepath="src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/importPotentialCustomerfile.xlsx";
+//        importFilepath= importFilepath.replace("/", File.separator);
+        String[] roeName = {"*归属门店",
+                "*车主类型",
+                "*客户名称",
+                "*联系方式",
+                "*性别",
+                "意向车系",
+                "意向车型",
+                "*创建日期",
+                "*销售顾问",
+                "*销售账号"};
+
+        List<Object[]> dataList=new ArrayList<>();
+        for(int i=0;i<5000;i++){
+            String[] aa={
+                    "中关村店(全称)",
+                    "个人",
+                    "潜客"+CommonUtil.getRandom(2),
+                    "157"+ CommonUtil.getRandom(8),
+                    "女",
+                    "Model",
+                    "Model 3",
+                    dt.getHistoryDate(0)+" "+dt.getHHmm(0),
+                    "自动化专用账号",
+                    "13402050050"};
+            dataList.add(aa);
+        }
+
+
+        XSSFWorkbook workbook = exportMore(roeName, dataList);
         FileOutputStream output = new FileOutputStream(importFilepath);
         workbook.write(output);
         output.flush();
@@ -167,6 +197,55 @@ public class PoiUtils {
             cellRowName.setCellValue(text); // 设置列头单元格的值
         }
         return workbook;
+    }
+
+    public static XSSFWorkbook exportMore(String[] rowName,List<Object[]> dataList) {
+        XSSFWorkbook workbook = new XSSFWorkbook(); // 创建工作簿对象
+        XSSFSheet sheet = workbook.createSheet(); // 创建工作表对象
+
+        // 定义所需列数
+        int columnNum = rowName.length;
+        XSSFRow rowRowName = sheet.createRow(0); // 在索引2的位置创建行(最顶端的行开始的第二行)
+        // 将列头设置到sheet的单元格中
+        for (int n = 0; n < columnNum; n++) {
+            XSSFCell cellRowName = rowRowName.createCell(n); // 创建列头对应个数的单元格
+            cellRowName.setCellType(XSSFCell.CELL_TYPE_STRING); // 设置列头单元格的数据类型
+            XSSFRichTextString text = new XSSFRichTextString(rowName[n]);
+            cellRowName.setCellValue(text); // 设置列头单元格的值
+        }
+        //多次建行
+        for (int i = 0; i < dataList.size(); i++) {
+            Object[] obj = dataList.get(i);// 遍历每个对象
+            XSSFRow row = sheet.createRow(i + 1);// 创建所需的行数
+            for (int j = 0; j < obj.length; j++) {
+                XSSFCell cell = null; // 设置单元格的数据类型
+                cell = row.createCell(j, XSSFCell.CELL_TYPE_STRING);
+                if (!"".equals(obj[j]) && obj[j] != null) {
+                    cell.setCellValue(obj[j].toString()); // 设置单元格的值
+                }
+//                if (j == 0) {
+//                    cell = row.createCell(j, XSSFCell.CELL_TYPE_STRING);
+//                    cell.setCellValue(i + 1);
+//                } else {
+//                    cell = row.createCell(j, XSSFCell.CELL_TYPE_STRING);
+//                    if (!"".equals(obj[j]) && obj[j] != null) {
+//                        cell.setCellValue(obj[j].toString()); // 设置单元格的值
+//                    }
+//                }
+            }
+        }
+        return workbook;
+
+//        //？
+//        XSSFRow rowRowName2 = sheet.createRow(1); // 在索引2的位置创建行(最顶端的行开始的第二行)
+//        // 将列头设置到sheet的单元格中
+//        for (int n = 0; n < columnNum2; n++) {
+//            XSSFCell cellRowName = rowRowName2.createCell(n); // 创建列头对应个数的单元格
+//            cellRowName.setCellType(XSSFCell.CELL_TYPE_STRING); // 设置列头单元格的数据类型
+//            XSSFRichTextString text = new XSSFRichTextString(parm[n]);
+//            cellRowName.setCellValue(text); // 设置列头单元格的值
+//        }
+//        return workbook;
     }
     /**
      * excel导出数据

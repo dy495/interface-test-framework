@@ -153,7 +153,7 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
             or.openId=pp.openId;
             or.type="ONLINE";
             or.carVehicleNumber="AAAAAAAAAA22"+CommonUtil.getRandom(5);
-            or.business_type=null;
+            or.business_type="INSURANCE_CONTRACT_CUSTOMERS";
             System.out.println(or.carVehicleNumber);
             //生成交易订单
             String post=cu.getCreateOrder3(or);
@@ -173,7 +173,7 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "同步员工离职在职信息",enabled = false)
+    @Test(description = "同步员工离职在职信息",enabled = true)
     public void updateStaffStatus() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -238,8 +238,8 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
 //                        "}";
 
 //                JSONObject jsonObject = JSON.parseObject(str);
-                String face=file.getImgStr( "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/谢志东.jpg");
-                //夏明凤的脸  是否在职 0是  1否
+                String face=file.getImgStr( "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/xia.png");
+                //夏明凤的脸  是否在职 0否  1是
                 JSONObject jsonObject=staffObject("uid_663ad653","店员1","uid_663ad653",0,face);
                 logger.info("request:"+jsonObject.toJSONString());
                 System.out.println("over");
@@ -300,12 +300,13 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
             or.shopId=router.getShopid();
             or.openId=pp.openId;
             or.carVehicleNumber="AAAAAAAAAA22"+CommonUtil.getRandom(5);
+//            or.business_type="\"ROUTINE_MAINTENANCE\"";
             or.business_type=null;
             System.out.println(or.carVehicleNumber);
             //生成交易订单
             String post=cu.getCreateOrder3(or);
             Preconditions.checkArgument(JSONObject.parseObject(post).getString("code").equals("1000"),"创单失败"+post);
-            sleep(30);
+//            sleep(30);
             checkOrderSuccess(or.transId);
 
             Integer total=cu.riskTotal();
@@ -641,6 +642,24 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
             saveData("生成交易订单--触发员工下单风控");
         }
     }
+
+
+    @Test()
+    public void handle() {
+        try{
+            JSONArray list=md.cashier_riskPage(Long.parseLong(product.getShopId()),"","","","","","PENDING",1,10).getJSONArray("list");
+            for(int i=0;i<list.size();i++){
+                Long id=list.getJSONObject(i).getLong("id");
+                IScene handle=RiskEventHandleScene.builder().result(1).remarks("自动正常处理").id(id).build();
+                visitor.invokeApi(handle);
+            }
+        }catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("处理风控");
+        }
+    }
+
 
 
 
