@@ -3145,10 +3145,11 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject member_detail(String referer) throws Exception {
+    public JSONObject member_detail(String referer,String id) throws Exception {
         String path = "/shop/member/detail";
         JSONObject json = new JSONObject();
         json.put("referer",referer);
+        json.put("id",id);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -3180,6 +3181,30 @@ public class StoreScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
+    /**
+     * @description: 积分明细
+     * @author:
+     * @time:
+     */
+    public JSONObject exchange_detailed(String referer,int page,int size,Integer id,String exchange_customer_name,String exchange_type,String exchange_start_time,String exchange_end_time,String phone,String customer_id) throws Exception {
+        String path = "/shop/pc/integral-center/exchange-detailed";
+        JSONObject json = new JSONObject();
+        json.put("referer",referer);
+        json.put("page",page);
+        json.put("size",size);
+        json.put("id",id);
+        json.put("exchange_customer_name",exchange_customer_name);
+        json.put("exchange_type",exchange_type);
+        json.put("exchange_start_time",exchange_start_time);
+        json.put("exchange_end_time",exchange_end_time);
+        json.put("phone",phone);
+        json.put("customer_id",customer_id);
+
+        String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
 
     /**
      * @description:5.1. 门店消费记录列表
