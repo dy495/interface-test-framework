@@ -223,7 +223,7 @@ public class StorePcCaseOnline extends TestCaseCommon implements TestCaseStd {
                     "    }\n" +
                     "  }\n" +
                     "}";
-//        System.err.println(str);
+        System.err.println(str);
 
             JSONObject jsonObject = JSON.parseObject(str);
             HttpConfig config = HttpConfig.custom().headers(headers).url(requestUrl).json(JSON.toJSONString(jsonObject)).client(client);

@@ -80,6 +80,8 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
         beforeClassInit(commonConfig);
         logger.debug("FK: " + cu);
         qaDbUtil.openConnectionRdDailyEnvironment();
+        md.pcLogin(pp.userName,pp.password);
+
     }
 
     @AfterClass
@@ -98,7 +100,6 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
-        md.pcLogin(pp.userName,pp.password);
     }
 
     public void nopeople() throws Exception {

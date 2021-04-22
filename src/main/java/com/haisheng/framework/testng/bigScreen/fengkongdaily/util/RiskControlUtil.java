@@ -6,14 +6,20 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.exception.DataExcepti
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.fengkongdaily.riskControlEnum.routerEnum;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.LoginPcScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
+import com.haisheng.framework.util.DateTimeUtil;
 import org.springframework.util.StringUtils;
 import java.util.List;
 
 public class RiskControlUtil extends TestCaseCommon {
+
     private static volatile ScenarioUtil instance = null;
+
+
     private static final String shopId = EnumTestProduce.FK_DAILY.getShopId();
     public static String IpPort=EnumTestProduce.FK_DAILY.getAddress();
     private static final EnumTestProduce product = EnumTestProduce.FK_DAILY;

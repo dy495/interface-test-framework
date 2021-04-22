@@ -1,6 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.fengkongdaily;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.aliyun.openservices.shade.org.apache.commons.lang3.StringUtils;
 import com.arronlong.httpclientutil.HttpClientUtil;
@@ -10,8 +11,10 @@ import com.arronlong.httpclientutil.common.HttpHeader;
 import com.arronlong.httpclientutil.exception.HttpProcessException;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.riskControlEnum.routerEnum;
+import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventHandleScene;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.util.CommonUsedUtil;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.util.PublicParam;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.util.RiskControlUtil;
@@ -78,14 +81,17 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
         commonConfig.roleId = product.getRoleId();
         beforeClassInit(commonConfig);
         logger.debug("FK: " + cu);
-        qaDbUtil.openConnectionRdDailyEnvironment();
+        System.out.println(product.getAddress());
+        md.pcLogin("salesdemo@winsense.ai","c216d5045fbeb18bcca830c235e7f3c8");
+
+//        qaDbUtil.openConnectionRdDailyEnvironment();
     }
 
     @AfterClass
     @Override
     public void clean() {
         afterClassClean();
-        qaDbUtil.closeConnectionRdDaily();
+//        qaDbUtil.closeConnectionRdDaily();
     }
 
     /**
@@ -97,7 +103,6 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
-        md.pcLogin(pp.userName,pp.password);
     }
 
     public void nopeople() throws Exception {
@@ -143,7 +148,7 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
     @Test(description = "无人风控，交易类型线上，不触发风控")
     public void transTypeOnline(){
         try{
-            Integer totalBefore=cu.riskTotal();
+//            Integer totalBefore=cu.riskTotal();
             //创建无人风控
             orderParm or=new orderParm();
             or.transId=pp.transId;
@@ -157,11 +162,11 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
             //生成交易订单
             String post=cu.getCreateOrder3(or);
             Preconditions.checkArgument(JSONObject.parseObject(post).getString("code").equals("1000"),"创单失败"+post);
-            sleep(10);
+//            sleep(10);
 //            checkOrderSuccess(or.transId);
 
-            Integer total=cu.riskTotal();
-            Preconditions.checkArgument(total.equals(totalBefore),"线上交易 仍产生风控,创单后："+total+"创单前："+totalBefore);
+//            Integer total=cu.riskTotal();
+//            Preconditions.checkArgument(total.equals(totalBefore),"线上交易 仍产生风控,创单后："+total+"创单前："+totalBefore);
 
 
 
@@ -173,7 +178,7 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
         }
     }
 
-    @Test(description = "同步员工离职在职信息",enabled = false)
+    @Test(description = "同步员工离职在职信息",enabled = true)
     public void updateStaffStatus() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -194,12 +199,17 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
                 String appId = router.getAppid();
                 String ak = router.getAk();
                 String sk = router.getSk();
+                String requestUrl = router.getRequestUrl();
+
+//                String uid = "uid_0ba743d8";//13260: uid_0ba743d8,14630:uid_580f244a
+//                String appId = "672170545f50";//13260: 672170545f50,14630:c30dcafc59c8
+//                String ak = "691ff41137d954f3";//13260: 691ff41137d954f3,14630:0d17651c55595b9b
+//                String sk = "d76f2d8a7846382f633c1334139767fe";//13260:d76f2d8a7846382f633c1334139767fe,14630:0ebe6128aedb44e0a7bd3f7a5378a7fc
 
                 String router = "/business/patrol/STAFF_FACE_REGISTER/v1.0";
                 String nonce = UUID.randomUUID().toString();
                 // java代码示例
                 // java代码示例
-                String requestUrl = "http://dev.api.winsenseos.com/retail/api/data/biz";
 
                 // 1. 将以下参数(uid、app_id、ak、router、timestamp、nonce)的值之间使用顿号(.)拼接成一个整体字符串
                 String signStr = uid + NUMBER + appId + NUMBER + ak + NUMBER + router + NUMBER + timestamp + NUMBER + nonce;
@@ -238,9 +248,9 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
 //                        "}";
 
 //                JSONObject jsonObject = JSON.parseObject(str);
-                String face=file.getImgStr( "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/谢志东.jpg");
+                String face=file.getImgStr( "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/xia.png");
                 //夏明凤的脸  是否在职 0是  1否
-                JSONObject jsonObject=staffObject("uid_663ad653","店员1","uid_663ad653",0,face);
+                JSONObject jsonObject=staffObject("uid_edfe23f0","夏明凤","uid_edfe23f0",0,face);
                 logger.info("request:"+jsonObject.toJSONString());
                 System.out.println("over");
 
@@ -292,7 +302,7 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
     public void getTriggerUnmannedRisk(){
         try{
 
-            Integer totalBefore=cu.riskTotal();
+//            Integer totalBefore=cu.riskTotal();
             //创建无人风控
             orderParm or=new orderParm();
             or.transId=pp.transId;
@@ -300,6 +310,7 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
             or.userId=pp.userId;
             or.openId=pp.openId;
             or.carVehicleNumber="AAAAAAAAAA22"+CommonUtil.getRandom(5);
+//            or.business_type="\"GOODS_PAY\"";
             or.business_type=null;
             System.out.println(or.carVehicleNumber);
             //生成交易订单
@@ -308,7 +319,7 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
             sleep(10);
 //            checkOrderSuccess(or.transId);
 
-            Integer total=cu.riskTotal();
+//            Integer total=cu.riskTotal();
 //            Preconditions.checkArgument(total-totalBefore==1,"无人风控未产生事件，创单前："+totalBefore+",创单后："+total);
 
         }catch (AssertionError | Exception e) {
@@ -346,9 +357,9 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
 //            String carVehicleNumber3="AAAAAAAAAA22"+CommonUtil.getRandom(5);
 
             //生成交易订单
-            String post=cu.getCreateOrder(shopId,transId1,userId,openId,carVehicleNumber);
-            String post2=cu.getCreateOrder(shopId,transId2,userId,openId,carVehicleNumber);
-            String post3=cu.getCreateOrder(shopId,transId3,userId,openId,carVehicleNumber);
+            String post=cu.getCreateOrderOnline(shopId,transId1,userId,openId,carVehicleNumber);
+            String post2=cu.getCreateOrderOnline(shopId,transId2,userId,openId,carVehicleNumber);
+            String post3=cu.getCreateOrderOnline(shopId,transId3,userId,openId,carVehicleNumber);
 
             Preconditions.checkArgument(JSONObject.parseObject(post).getString("code").equals("1000"),"创单失败"+post);
             Preconditions.checkArgument(JSONObject.parseObject(post2).getString("code").equals("1000"),"创单失败"+post2);
@@ -387,9 +398,9 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
             String carVehicleNumber3="AAAAAAAAAA22"+CommonUtil.getRandom(5);
 
             //生成交易订单
-            String post=cu.getCreateOrder(shopId,transId,userId,openId,carVehicleNumber1);
-            String post2=cu.getCreateOrder(shopId,transId2,userId,openId,carVehicleNumber2);
-            String post3=cu.getCreateOrder(shopId,transId3,userId,openId,carVehicleNumber3);
+            String post=cu.getCreateOrderOnline(shopId,transId,userId,openId,carVehicleNumber1);
+            String post2=cu.getCreateOrderOnline(shopId,transId2,userId,openId,carVehicleNumber2);
+            String post3=cu.getCreateOrderOnline(shopId,transId3,userId,openId,carVehicleNumber3);
 
             Preconditions.checkArgument(JSONObject.parseObject(post).getString("code").equals("1000"),"创单失败"+post);
             Preconditions.checkArgument(JSONObject.parseObject(post2).getString("code").equals("1000"),"创单失败"+post2);
@@ -433,9 +444,9 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
 //            String carVehicleNumber="AAAAAAAAAA158271127";
 
             //生成交易订单
-            String post1=cu.getCreateOrder(shopId,transId,userId1,openId,carVehicleNumber);
+            String post1=cu.getCreateOrderOnline(shopId,transId,userId1,openId,carVehicleNumber);
             sleep(10);
-            String post2=cu.getCreateOrder(shopId,transId2,userId2,openId2,carVehicleNumber);
+            String post2=cu.getCreateOrderOnline(shopId,transId2,userId2,openId2,carVehicleNumber);
 //            String post3=cu.getCreateOrder(shopId,transId3,userId3,openId,carVehicleNumber);
             Preconditions.checkArgument(JSONObject.parseObject(post1).getString("code").equals("1000"),"创单失败"+post1);
             Preconditions.checkArgument(JSONObject.parseObject(post2).getString("code").equals("1000"),"创单失败"+post2);
@@ -471,10 +482,10 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
             String carVehicleNumber="AAAAAAAAAA1202337";
 
             //生成交易订单
-            String post1=cu.getCreateOrder(shopId,transId,userId1,openId,carVehicleNumber);
+            String post1=cu.getCreateOrderOnline(shopId,transId,userId1,openId,carVehicleNumber);
 //            sleep(10);
-//            String post2=cu.getCreateOrder(shopId,transId2,userId2,openId2,carVehicleNumber);
-//            String post3=cu.getCreateOrder(shopId,transId3,userId3,openId,carVehicleNumber);
+//            String post2=cu.getCreateOrderOnline(shopId,transId2,userId2,openId2,carVehicleNumber);
+//            String post3=cu.getCreateOrderOnline(shopId,transId3,userId3,openId,carVehicleNumber);
             Preconditions.checkArgument(JSONObject.parseObject(post1).getString("code").equals("1000"),"创单失败"+post1);
 
 
@@ -506,10 +517,10 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
             String carVehicleNumber="AAAAAAAAAA15"+CommonUtil.getRandom(5);
 
             //生成交易订单
-            String post1=cu.getCreateOrder(shopId,transId,userId1,openId,carVehicleNumber);
+            String post1=cu.getCreateOrderOnline(shopId,transId,userId1,openId,carVehicleNumber);
             sleep(10);
-            String post2=cu.getCreateOrder(shopId,transId2,userId1,openId2,carVehicleNumber);
-//            String post3=cu.getCreateOrder(shopId,transId3,userId3,openId,carVehicleNumber);
+            String post2=cu.getCreateOrderOnline(shopId,transId2,userId1,openId2,carVehicleNumber);
+//            String post3=cu.getCreateOrderOnline(shopId,transId3,userId3,openId,carVehicleNumber);
 //            System.out.println("-----------"+post1);
             System.out.println("-----------"+post2);
 //            System.out.println("-----------"+post3);
@@ -542,10 +553,10 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
             String carVehicleNumber="AAAAAAAAAA15"+CommonUtil.getRandom(5);
 
             //生成交易订单
-            String post1=cu.getCreateOrder(shopId,transId,userId1,openId,carVehicleNumber);
+            String post1=cu.getCreateOrderOnline(shopId,transId,userId1,openId,carVehicleNumber);
             sleep(10);
-            String post2=cu.getCreateOrder(shopId,transId2,userId1,openId,carVehicleNumber);
-//            String post3=cu.getCreateOrder(shopId,transId3,userId3,openId,carVehicleNumber);
+            String post2=cu.getCreateOrderOnline(shopId,transId2,userId1,openId,carVehicleNumber);
+//            String post3=cu.getCreateOrderOnline(shopId,transId3,userId3,openId,carVehicleNumber);
 //            System.out.println("-----------"+post1);
             System.out.println("-----------"+post2);
 //            System.out.println("-----------"+post3);
@@ -576,7 +587,7 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
             String carVehicleNumber="AAAAAAAAAA1523513";
 
             //生成交易订单
-            String post1=cu.getCreateOrder(shopId,transId,userId1,openId,carVehicleNumber);
+            String post1=cu.getCreateOrderOnline(shopId,transId,userId1,openId,carVehicleNumber);
 
 
         }catch (AssertionError | Exception e) {
@@ -606,9 +617,9 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
             String carVehicleNumber3="AAAAAAAAAA1237881";
 
             //生成交易订单
-            String post1=cu.getCreateOrder(shopId,transId,userId1,openId,carVehicleNumber);
-            String post2=cu.getCreateOrder(shopId,transId2,userId2,openId,carVehicleNumber2);
-            String post3=cu.getCreateOrder(shopId,transId3,userId3,openId,carVehicleNumber3);
+            String post1=cu.getCreateOrderOnline(shopId,transId,userId1,openId,carVehicleNumber);
+            String post2=cu.getCreateOrderOnline(shopId,transId2,userId2,openId,carVehicleNumber2);
+            String post3=cu.getCreateOrderOnline(shopId,transId3,userId3,openId,carVehicleNumber3);
             Preconditions.checkArgument(JSONObject.parseObject(post1).getString("code").equals("1000"),"创单失败"+post1);
             Preconditions.checkArgument(JSONObject.parseObject(post2).getString("code").equals("1000"),"创单失败"+post2);
             Preconditions.checkArgument(JSONObject.parseObject(post3).getString("code").equals("1000"),"创单失败"+post3);
@@ -640,6 +651,23 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
             saveData("生成交易订单--触发员工下单风控");
         }
     }
+
+//    @Test()
+    public void handle() {
+        try{
+            JSONArray list=md.cashier_riskPage(Long.parseLong(product.getShopId()),"","","","","","PENDING",1,10).getJSONArray("list");
+            for(int i=0;i<list.size();i++){
+                Long id=list.getJSONObject(i).getLong("id");
+                IScene handle= RiskEventHandleScene.builder().result(1).remarks("自动正常处理").id(id).build();
+                visitor.invokeApi(handle);
+            }
+        }catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("处理风控");
+        }
+    }
+
 
 
 

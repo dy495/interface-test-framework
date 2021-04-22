@@ -596,6 +596,103 @@ public class CommonUsedUtil {
      }
 
 
+    public String getCreateOrderOnline(String shopId,String transId,String userId,String openId,String carVehicleNumber) throws Exception {
+        String post="";
+        for (int i = 0; i < 1; i++) {
+            final String NUMBER = ".";
+            final String ALGORITHM = "HmacSHA256";
+            HttpClient client = null;
+            try {
+                client = HCB.custom()
+                        .pool(50, 10)
+                        .retry(3).build();
+            } catch (HttpProcessException e) {
+                e.printStackTrace();
+            }
+            String timestamp = "" + System.currentTimeMillis();
+
+            String uid = router.getUid();
+            String appId = router.getAppid();
+            String ak = router.getAk();
+            String sk = router.getSk();
+            String requestUrl = router.getRequestUrl();
+
+            String router = "/business/precipitation/TRANS_INFO_RECEIVE/v1.0";
+            String nonce = UUID.randomUUID().toString();
+            // java代码示例
+            // 1. 将以下参数(uid、app_id、ak、router、timestamp、nonce)的值之间使用顿号(.)拼接成一个整体字符串
+            String signStr = uid + NUMBER + appId + NUMBER + ak + NUMBER + router + NUMBER + timestamp + NUMBER + nonce;
+            // 2. 使用HmacSHA256加密算法, 使用平台分配的sk作为算法的密钥. 对上面拼接后的字符串进行加密操作,得到byte数组
+            Mac sha256Hmac = Mac.getInstance(ALGORITHM);
+            SecretKeySpec encodeSecretKey = new SecretKeySpec(sk.getBytes(StandardCharsets.UTF_8), ALGORITHM);
+            sha256Hmac.init(encodeSecretKey);
+            byte[] hash = sha256Hmac.doFinal(signStr.getBytes(StandardCharsets.UTF_8));
+            // 3. 对2.中的加密结果,再进行一次base64操作, 得到一个字符串
+            String auth = Base64.getEncoder().encodeToString(hash);
+            Header[] headers = HttpHeader.custom()
+                    .other("Accept", "application/json")
+                    .other("Content-Type", "application/json;charset=utf-8")
+                    .other("timestamp", timestamp)
+                    .other("nonce", nonce)
+                    .other("ExpiredTime", "50 * 1000")
+                    .other("Authorization", auth)
+                    .build();
+            String transTime = "" + System.currentTimeMillis();
+            //ONLINE   SCAN
+            String str = "{\n" +
+                    "   \"uid\": \""+uid+"\",\n" +
+                    "   \"app_id\": \""+appId+"\",\n" +
+                    "  \"request_id\": \"5d45a085-8774-4jd0-943e-ded373ca6a919987\",\n" +
+                    "  \"version\": \"v1.0\",\n" +
+                    "  \"router\": \"/business/precipitation/TRANS_INFO_RECEIVE/v1.0\",\n" +
+                    "  \"data\": {\n" +
+                    "    \"biz_data\":  {\n" +
+                    "        \"shop_id\": \""+shopId+"\",\n" +
+                    "        \"trans_id\": \""+transId+"\" ,\n" +
+                    "        \"trans_time\": \""+transTime+"\" ,\n" +
+                    "        \"trans_type\": [\n" +
+                    "            \"SCAN\"\n" +
+                    "        ],\n" +
+                    "        \"user_id\": \""+userId+"\" ,\n" +
+                    "        \"total_price\": 1800,\n" +
+                    "        \"real_price\": 1500,\n" +
+                    "        \"shopType\": \"SHOP_TYPE\",\n" +
+                    "        \"orderNumber\": \"13444894484\",\n" +
+                    "        \"memberName\":\"自动化员工\",\n" +
+                    "        \"memberPhone\":\"15789033456\",\n" +
+                    "        \"receipt_type\":\"小票类型\",\n" +
+                    "        \"open_id\":\""+openId+"\","+
+                    "        \"posId\": \"pos-1234586789\",\n" +
+                    "        \"commodityList\": [\n" +
+                    "            {\n" +
+                    "                \"commodityId\": \"ff1234567890\",\n" +
+                    "                \"commodity_name\":\"法拉第未来\",\n" +
+                    "                \"unit_price\": 500000,\n" +
+                    "                \"num\": 4\n" +
+                    "            },\n" +
+                    "            {\n" +
+                    "                \"commodityId\": \"model991221313\",\n" +
+                    "                \"commodity_name\":\"特斯拉model3\",\n" +
+                    "                \"unit_price\": 300000,\n" +
+                    "                \"num\": 4\n" +
+                    "            }\n" +
+                    "        ],\n" +
+                    "        \"trans_business_params\":{\n" +
+                    "               \"car_plate\":\"京A11111\",\n" +
+                    "               \"car_vehicle_number\":\""+carVehicleNumber+"\",\n" +
+//                    "               \"business_type\":"+business_type+",\n" +
+                    "                \"business_type\":\"GOODS_PAY\",\n" +
+                    "                \"business_order_id\":\"27389182\"\n" +
+                    "    }    }\n" +
+                    "  }\n" +
+                    "}";
+            JSONObject jsonObject = JSON.parseObject(str);
+            System.out.println("str:"+str);
+            HttpConfig config = HttpConfig.custom().headers(headers).url(requestUrl).json(JSON.toJSONString(jsonObject)).client(client);
+            post = HttpClientUtil.post(config);
+        }
+        return  post;
+    }
 
     public String getCreateOrder3(orderParm orderParm) throws Exception {
         String post="";
@@ -616,11 +713,11 @@ public class CommonUsedUtil {
             String appId = router.getAppid();
             String ak = router.getAk();
             String sk = router.getSk();
+            String requestUrl = router.getRequestUrl();
 
             String router = "/business/precipitation/TRANS_INFO_RECEIVE/v1.0";
             String nonce = UUID.randomUUID().toString();
             // java代码示例
-            String requestUrl = "http://dev.api.winsenseos.com/retail/api/data/biz";
             // 1. 将以下参数(uid、app_id、ak、router、timestamp、nonce)的值之间使用顿号(.)拼接成一个整体字符串
             String signStr = uid + NUMBER + appId + NUMBER + ak + NUMBER + router + NUMBER + timestamp + NUMBER + nonce;
             // 2. 使用HmacSHA256加密算法, 使用平台分配的sk作为算法的密钥. 对上面拼接后的字符串进行加密操作,得到byte数组
