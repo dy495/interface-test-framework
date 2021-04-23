@@ -27,6 +27,7 @@ public class FissionVoucherAddScene extends BaseScene {
     private final String shareNum;
     private final JSONObject shareVoucher;
     private final JSONObject invitedVoucher;
+    private final Boolean isCustomShareInfo;
 
     @Override
     public JSONObject getRequestBody() {
@@ -47,6 +48,7 @@ public class FissionVoucherAddScene extends BaseScene {
         object.put("share_num", shareNum);
         object.put("share_voucher", shareVoucher);
         object.put("invited_voucher", invitedVoucher);
+        object.put("is_custom_share_info", isCustomShareInfo);
         return object;
     }
 

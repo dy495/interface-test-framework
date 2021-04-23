@@ -92,6 +92,15 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
         jc.pcLogin("13114785236", pp.password);
     }
 
+    @Test
+    public void just(){
+        Long id=businessUtil.appointmentActivityId(1619L);
+        System.err.println(id);
+
+
+
+    }
+
     /**
      * ----------------------活动主流程2个case--------------------------------
      */
@@ -122,21 +131,25 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             businessUtil.getApprovalPassed(activityId2);
             //获取活动的状态
             int statusPassed = businessUtil.getActivityStatus(activityId2);
+            //获取此活动的名称
+            String title=businessUtil.getRecruitActivityDetailDate1(activityId).getString("title");
+            System.err.println("----------title:"+title);
             //登录小程序
             user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             //获取小程序推荐列表  判断裂变活动是否创建成功
-            do{
+            do {
                 IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
-                JSONObject response1 = visitor.invokeApi(scene);
-                lastValue = response1.getJSONObject("last_value");
-                list = response1.getJSONArray("list");
+                JSONObject response = visitor.invokeApi(scene);
+                lastValue = response.getJSONObject("last_value");
+                list = response.getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
-                    int itemId = list.getJSONObject(i).getInteger("itemId");
-                    if (activityId2 == itemId) {
-                        flag = true;
+                    String title1 = list.getJSONObject(i).getString("title");
+                    System.out.println("----------title1:"+title1);
+                    if (title.equals(title1)) {
+                        flag=true;
                     }
                 }
-            }while(list.size()==10);
+            } while (list.size() == 10);
             Preconditions.checkArgument(status == ActivityStatusEnum.PENDING.getId(), "待审核的活动状态为：" + status);
             Preconditions.checkArgument(statusRevoke == ActivityStatusEnum.REVOKE.getId(), "已撤销的活动状态为：" + statusRevoke);
             Preconditions.checkArgument(statusPassed == ActivityStatusEnum.PASSED.getId(), "审批通过的活动状态为：" + statusPassed);
@@ -1349,29 +1362,6 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    /**
-     * 活动管理-【已取消】的活动-置顶
-     * 2021-3-17
-     */
-    @Test(description = "活动管理-【已取消】的活动-置顶")
-    public void canceledActivityTop() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //获取已取消活动的ID
-            List<Long> ids = businessUtil.getRecruitActivityCancel();
-            //获取已取消的活动名称
-            String title=businessUtil.getActivityTitle(ids.get(0));
-            //置顶【已取消的活动】
-            IScene scene=ActivityManageTopScene.builder().id(ids.get(0)).build();
-            String message=visitor.invokeApi(scene,false).getString("message");
-            System.out.println(title+"-------"+message);
-            Preconditions.checkArgument(message.equals("success"), "置顶已取消的活动的相关提示:" + message);
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("活动管理-【已取消】的活动-置顶");
-        }
-    }
 
     /**
      * 活动管理-【进行中】的活动-查看
@@ -1642,37 +1632,6 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             saveData("活动管理-【已过期】的活动-查看");
-        }
-    }
-
-    /**
-     * 活动管理-【已过期】的活动-置顶
-     * 2021-3-17
-     */
-    @Test(description = "活动管理-【已过期】的活动-置顶")
-    public void FinishActivityTop() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //获取已过期活动的ID
-            List<Long> ids = businessUtil.getRecruitActivityFinish();
-            //获取已过期的活动名称
-            String title=businessUtil.getActivityTitle(ids.get(0));
-            //置顶【已过期的活动】
-            IScene scene=ActivityManageTopScene.builder().id(ids.get(0)).build();
-            String message=visitor.invokeApi(scene,false).getString("message");
-            System.out.println(title+"-------"+message);
-            //小程序中第一个为此活动
-            user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
-            JSONObject response=businessUtil.appointmentActivityTitleNew();
-            Long itemId=response.getJSONArray("list").getJSONObject(0).getLong("itemId");
-            jc.pcLogin("13114785236", pp.password);
-            System.out.println("PC已过期活动的ID为：" + ids.get(0)+"小程序中的更多中的活动ID为："+itemId);
-            Preconditions.checkArgument(ids.get(0).equals(itemId), "PC已过期活动的ID为：" + ids.get(0)+"小程序中的更多中的活动ID为："+itemId);
-            Preconditions.checkArgument(message.equals("success"), "置顶已过期的活动的相关提示:" + message);
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("活动管理-【已过期】的活动-置顶");
         }
     }
 
@@ -3911,7 +3870,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * 小程序报名审批并通过，卡券为手动领取，卡券状态为未领取，再次领取卡券，卡券的状态为，已领取
+     * 小程序报名审批并通过，卡券为手动领取，卡券状态为未领取，再次领取卡券，卡券的状态为，已领取----success
      */
     @Test(enabled = true)
     public void activityVoucherStatus2() {
@@ -3977,14 +3936,19 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             Long activityId = visitor.invokeApi(scene).getLong("id");
             //审批通过招募活动
             businessUtil.getApprovalPassed(activityId);
+            //获取此活动的名称
+            String title=businessUtil.getRecruitActivityDetailDate1(activityId).getString("title");
+            System.err.println("-------"+title);
             //小程序报名活动(报名信息不填写)
-            businessUtil.activityRegisterApplet(activityId,"","",1,"","","","");
+            businessUtil.activityRegisterApplet(activityId,"","",1,"","","","",title);
             jc.pcLogin(pp.phone1,pp.password);
             //获取报名管理中的信息
             IScene scene3=ManageRegisterPageScene.builder().page(1).size(10).activityId(activityId).build();
             Long registerId=visitor.invokeApi(scene3).getJSONArray("list").getJSONObject(0).getLong("id");
             //报名审批通过
             businessUtil.getRegisterApprovalPassed(activityId,registerId);
+            //转化PC中的活动我ID为小策划共内需中的活动ID
+            Long transId=businessUtil.appointmentActivityId(activityId);
             //登录小程序
             user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             //查看小程序中此活动对应的小喇叭中的卡券的状态
