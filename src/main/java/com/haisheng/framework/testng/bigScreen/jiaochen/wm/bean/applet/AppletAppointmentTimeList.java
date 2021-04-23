@@ -16,7 +16,7 @@ public class AppletAppointmentTimeList implements Serializable {
     @JSONField(name = "price")
     private String price;
     @JSONField(name = "id")
-    private Integer id;
+    private Long id;
     @JSONField(name = "time")
     private String time;
 }

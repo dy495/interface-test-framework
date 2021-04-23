@@ -524,33 +524,36 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    //查看客户详情
     @Test()
     public void memberSearch5(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            //搜索门店
+            JSONArray list = md.member_list(null, 1, 100, null,null,null).getJSONArray("list");
+            for (int i=0;i<list.size();i++){
+                String uid= md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(i).getString("uid");
+                String nickname = md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(i).getString("nickname");
+                String name = md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(i).getString("name");
+                int score = md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(i).getInteger("score");
+                String phone = md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(i).getString("phone");
+                int consume = md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(i).getInteger("consume");
 
-            String uid= md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(0).getString("uid");
-            String nickname = md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(0).getString("nickname");
-            String name = md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(0).getString("name");
-            int score = md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(0).getInteger("score");
-            String phone = md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(0).getString("phone");
-            int consume = md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(0).getInteger("consume");
 
+                String id = md.member_detail(null,uid).getString("id");
+                String nickname1 = md.member_detail(null,uid).getString("nickname");
+//                String name1 = md.member_detail(null,uid).getString("name");
+                int score1 = md.member_detail(null,uid).getInteger("score");
+                String phone1 = md.member_detail(null,uid).getString("phone");
+                int consume1= md.member_detail(null,uid).getInteger("consume");
 
-            String id = md.member_detail(null,uid).getString("id");
-            String nickname1 = md.member_detail(null,uid).getString("nickname");
-            String name1 = md.member_detail(null,uid).getString("name");
-            int score1 = md.member_detail(null,uid).getInteger("score");
-            String phone1 = md.member_detail(null,uid).getString("phone");
-            int consume1= md.member_detail(null,uid).getInteger("consume");
+                Preconditions.checkArgument(id.equals(uid), "通过" + uid+ "客户详情展示结果为" + id);
+                Preconditions.checkArgument(nickname.equals(nickname1), "通过" + nickname+ "客户详情展示结果为" + nickname1);
+//                Preconditions.checkArgument(name.equals(name1), "通过" + name+ "客户详情展示结果为" + name1);
+                Preconditions.checkArgument(phone.equals(phone1), "通过" + phone+ "客户详情展示结果为" + phone1);
+                Preconditions.checkArgument(score==score1, "通过" + score+ "客户详情展示结果为" + score1);
+                Preconditions.checkArgument(consume==consume1, "通过" + consume+ "客户详情展示结果为" + consume1);
+            }
 
-            Preconditions.checkArgument(id.equals(uid), "通过" + uid+ "客户详情展示结果为" + id);
-            Preconditions.checkArgument(nickname.equals(nickname1), "通过" + nickname+ "客户详情展示结果为" + nickname1);
-            Preconditions.checkArgument(name.equals(name1), "通过" + name+ "客户详情展示结果为" + name1);
-            Preconditions.checkArgument(phone.equals(phone1), "通过" + phone+ "客户详情展示结果为" + phone1);
-            Preconditions.checkArgument(score==score1, "通过" + score+ "客户详情展示结果为" + score1);
-            Preconditions.checkArgument(consume==consume1, "通过" + consume+ "客户详情展示结果为" + consume1);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -579,6 +582,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             saveData("查看会员积分详情");
         }
     }
+
     //会员等级通过等级名称搜索
     @Test()
     public void levelSearch(){

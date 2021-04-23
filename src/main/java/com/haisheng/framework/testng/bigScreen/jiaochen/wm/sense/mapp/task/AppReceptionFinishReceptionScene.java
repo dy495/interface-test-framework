@@ -13,7 +13,7 @@ import lombok.Builder;
 @Builder
 public class AppReceptionFinishReceptionScene extends BaseScene {
     private final Integer id;
-    private final Integer shopId;
+    private final Long shopId;
 
     @Override
     public JSONObject getRequestBody() {

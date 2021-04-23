@@ -13,7 +13,7 @@ import lombok.Builder;
 @Builder
 public class AppReceptionReceptorChangePageScene extends BaseScene {
     private final Integer id;
-    private final Integer shopId;
+    private final Long shopId;
     private final String receptorId;
 
     @Override

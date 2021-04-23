@@ -1,20 +1,21 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase;
 
+import com.haisheng.framework.dao.IAppointmentDataDao;
+import com.haisheng.framework.model.bean.AppointmentData;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.sql.SqlFactory;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.scenemaker.SceneAttribute;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.scenemaker.SceneMarker;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.parse.BeanParser;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.parse.SceneParser;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import com.haisheng.framework.util.DateTimeUtil;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
 import org.jooq.impl.DSL;
 import org.testng.annotations.Test;
 
-import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Date;
 
 /**
  * @author wangmin
@@ -84,11 +85,15 @@ public class TestFreeMarker {
 
     @Test
     public void testMybatis() {
-        SqlSessionFactoryBuilder builder = new SqlSessionFactoryBuilder();
-        InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("src/main/resources/configuration.xml");
-        //配置文件
-        SqlSessionFactory sqlSessionFactory = builder.build(inputStream);
-        SqlSession sqlSession = sqlSessionFactory.openSession(true);
+        AppointmentData data = new AppointmentData();
+        Date date = DateTimeUtil.strToDate("2021-04-21", "yyyy-MM-dd");
+        data.setAppointmentDate(date);
+        data.setAppointmentId(1L);
+        data.setAppointmentType("保养");
+        data.setProduct("轿辰");
+        data.setShopId(2222L);
+        data.setAppointmentStatus(1);
+        new SqlFactory.Builder().build().execute(IAppointmentDataDao.class).insert(data);
     }
 
     @Test   //参数四个以内的接口

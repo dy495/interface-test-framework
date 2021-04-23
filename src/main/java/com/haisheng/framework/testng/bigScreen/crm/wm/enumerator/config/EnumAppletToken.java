@@ -23,7 +23,7 @@ public enum EnumAppletToken {
 
     BSJ_WM_SMALL_ONLINE(EnumTestProduce.PORSCHE_DAILY.getAbbreviation(), "UhqugJ3HUDI7BRKnIvxxKg==", false, "15321527989"),
 
-    JC_WM_DAILY(EnumTestProduce.JC_DAILY.getAbbreviation(), "uhFcIKEc05Q50D9kEfLkBg==", true, "15321527989"),
+    JC_WM_DAILY(EnumTestProduce.JC_DAILY.getAbbreviation(), "jVXDdP1MPHXpNPrzl5LRLg==", true, "15321527989"),
 
     JC_WM_ONLINE(EnumTestProduce.JC_DAILY.getAbbreviation(), "aTcP39Q3mJAUauGwmq2VMg==", false, "15321527989"),
 

@@ -32,6 +32,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralmall
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vipmarketing.EquityPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vipmarketing.ShareManagerPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vipmarketing.SignInConfigPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.AddVoucherScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -102,8 +103,48 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
+    @Test(description = "积分客户管理--增加某人积分异常")
+    public void integralCustomerPage_system_1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject data = CustomerPageScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).build().invoke(visitor);
+            Long id = data.getJSONArray("list").getJSONObject(0).getLong("id");
+            Long[] integrals = {0L, null, 100001L};
+            Arrays.stream(integrals).forEach(integral -> {
+                String message = CustomerIntegralChangeScene.builder().id(id).changeType(ChangeStockTypeEnum.ADD.name()).remark(EnumDesc.DESC_BETWEEN_5_10.getDesc()).integral(integral).build().invoke(visitor, false).getString("message");
+                String err = integral == null ? "积分变更类型不能为空" : "变更积分取值范围[1,100000]";
+                CommonUtil.checkResult("增加积分" + integral, err, message);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("积分客户管理--增加某人积分异常");
+        }
+    }
+
+    //ok
+    @Test(description = "积分客户管理--扣减某人减积分大于剩余积分")
+    public void integralCustomerPage_system_2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray list = CustomerPageScene.builder().build().invoke(visitor).getJSONArray("list");
+            JSONObject data = list.stream().map(e -> (JSONObject) e).filter(e -> Long.parseLong(e.getString("integral")) < 100000L).findFirst().orElse(null);
+            Preconditions.checkArgument(data != null, "没找到剩余积分<100000的客户");
+            Long integral = data.getLong("integral");
+            Long id = data.getLong("id");
+            String message = CustomerIntegralChangeScene.builder().id(id).changeType(ChangeStockTypeEnum.MINUS.name()).remark(EnumDesc.DESC_BETWEEN_5_10.getDesc()).integral(integral + 1).build().invoke(visitor, false).getString("message");
+            String err = "积分不足";
+            CommonUtil.checkResult("增加积分" + integral, err, message);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("积分客户管理--扣减某人减积分大于剩余积分");
+        }
+    }
+
+    //ok
     @Test(description = "积分客户管理--增加某人积分")
-    public void integralCustomerPage_data_1() {
+    public void integralCustomerPage_system_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             user.loginApplet(APPLET_USER_ONE);
@@ -145,7 +186,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
 
     //ok
     @Test(description = "积分客户管理--减少某人积分")
-    public void integralCustomerPage_data_2() {
+    public void integralCustomerPage_system_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             user.loginApplet(APPLET_USER_ONE);
@@ -182,46 +223,6 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             collectMessage(e);
         } finally {
             saveData("积分客户管理--减少某人积分");
-        }
-    }
-
-    //ok
-    @Test(description = "积分客户管理--增加某人积分异常")
-    public void integralCustomerPage_system_1() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONObject data = CustomerPageScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).build().invoke(visitor);
-            Long id = data.getJSONArray("list").getJSONObject(0).getLong("id");
-            Long[] integrals = {0L, null, 100001L};
-            Arrays.stream(integrals).forEach(integral -> {
-                String message = CustomerIntegralChangeScene.builder().id(id).changeType(ChangeStockTypeEnum.ADD.name()).remark(EnumDesc.DESC_BETWEEN_5_10.getDesc()).integral(integral).build().invoke(visitor, false).getString("message");
-                String err = integral == null ? "积分变更类型不能为空" : "变更积分取值范围[1,100000]";
-                CommonUtil.checkResult("增加积分" + integral, err, message);
-            });
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("积分客户管理--增加某人积分异常");
-        }
-    }
-
-    //ok
-    @Test(description = "积分客户管理--扣减某人减积分大于剩余积分")
-    public void integralCustomerPage_system_2() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONArray list = CustomerPageScene.builder().build().invoke(visitor).getJSONArray("list");
-            JSONObject data = list.stream().map(e -> (JSONObject) e).filter(e -> Long.parseLong(e.getString("integral")) < 100000L).findFirst().orElse(null);
-            Preconditions.checkArgument(data != null, "没找到剩余积分<100000的客户");
-            Long integral = data.getLong("integral");
-            Long id = data.getLong("id");
-            String message = CustomerIntegralChangeScene.builder().id(id).changeType(ChangeStockTypeEnum.MINUS.name()).remark(EnumDesc.DESC_BETWEEN_5_10.getDesc()).integral(integral + 1).build().invoke(visitor, false).getString("message");
-            String err = "积分不足";
-            CommonUtil.checkResult("增加积分" + integral, err, message);
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("积分客户管理--扣减某人减积分大于剩余积分");
         }
     }
 
@@ -620,7 +621,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             //增加库存
             String message = EditExchangeStockScene.builder().changeStockType(ChangeStockTypeEnum.ADD.name()).num(String.valueOf(num)).id(id)
                     .goodsName(goodsName).type(CommodityTypeEnum.FICTITIOUS.name()).build().invoke(visitor, false).getString("message");
-            String err = "积分商品库存不能超过商品库存";
+            String err = "积分商品库存不能超过商品可用库存";
             CommonUtil.checkResult(goodsName + "增加库存 " + num, err, message);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -654,7 +655,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
 
     //ok
     @Test(description = "积分兑换--创建实体积分兑换->小程序兑换实体商品->发货->确认收货->取消")
-    public void integralExchange_system_15() {
+    public void integralExchange_system_14() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene exchangePageScene = ExchangePageScene.builder().status(IntegralExchangeStatusEnum.WORKING.name()).exchangeType(CommodityTypeEnum.REAL.name()).build();
@@ -777,8 +778,8 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
-    @Test(description = "积分兑换--创建实体积分兑换->小程序兑换虚拟商品")
-    public void integralExchange_system_14() {
+    @Test(description = "积分兑换--创建虚拟积分兑换->小程序兑换虚拟商品")
+    public void integralExchange_system_15() {
         logger.logCaseStart(caseResult.getCaseName());
         Long exchangeGoodsId = null;
         try {
@@ -834,7 +835,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
         } finally {
             ChangeSwitchStatusScene.builder().id(exchangeGoodsId).status(false).build().invoke(visitor);
             DeleteExchangeGoodsScene.builder().id(exchangeGoodsId).build().invoke(visitor);
-            saveData("积分兑换--创建实体积分兑换->小程序兑换虚拟商品");
+            saveData("积分兑换--创建虚拟积分兑换->小程序兑换虚拟商品");
         }
     }
 
@@ -975,7 +976,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
                     .exchangePrice("1").isLimit(true).exchangePeopleNum("10").exchangeStartTime(exchangeStartTime)
                     .exchangeEndTime(exchangeEndTime).expireType(2).useDays("10").exchangeNum(String.valueOf(voucherPage.getAllowUseInventory() + 1))
                     .build().invoke(visitor, false).getString("message");
-            String err = "卡券【" + voucherPage.getVoucherName() + "】库存不足，请重新选择！";
+            String err = "卡券【" + voucherPage.getVoucherName() + "】可用库存不足！";
             CommonUtil.checkResult("创建虚拟兑换商品时，可兑换库存大于卡券剩余库存", err, message);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -984,8 +985,8 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //bug
-    @Test(description = "积分兑换--先关闭虚拟兑换商品，商品内卡券库存不足再开启兑换商品，失败", enabled = false)
+    //ok
+    @Test(description = "积分兑换--先关闭虚拟兑换商品，商品内卡券库存不足再开启兑换商品，失败")
     public void integralExchange_system_21() {
         logger.logCaseStart(caseResult.getCaseName());
         Long id = null;
@@ -1009,18 +1010,55 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             CommonUtil.checkResult("占用卡券后 " + voucherPage.getVoucherName() + " 的可用库存", voucherPage.getAllowUseInventory() - 2, fourVoucherPage.getAllowUseInventory());
             //再开启积分兑换
             String message = ChangeSwitchStatusScene.builder().id(id).status(true).build().invoke(visitor, false).getString("message");
-            String err = "卡券【" + voucherPage.getVoucherName() + "】库存不足，请重新选择！";
+            String err = "卡券【" + voucherPage.getVoucherName() + "】可用库存不足！";
             CommonUtil.checkResult("创建虚拟兑换商品时，可兑换库存大于卡券剩余库存", err, message);
             //取消卡券的购买
-            util.cancelSoldPackage(voucherPage.getVoucherName());
+            util.cancelSoldPackage("临时套餐");
             VoucherPage fiveVoucherPage = util.getVoucherPage(voucherId);
             CommonUtil.checkResult("拒绝支付后 " + voucherPage.getVoucherName() + " 的可用库存", voucherPage.getAllowUseInventory(), fiveVoucherPage.getAllowUseInventory());
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            ChangeSwitchStatusScene.builder().id(id).status(false).build().invoke(visitor);
+            ChangeSwitchStatusScene.builder().id(id).status(false).build().invoke(visitor, false);
             DeleteExchangeGoodsScene.builder().id(id).build().invoke(visitor);
             saveData("积分兑换--先关闭虚拟兑换商品，商品内卡券库存不足再开启兑换商品，失败");
+        }
+    }
+
+    //ok
+    @Test(description = "积分兑换--创建积分兑换，兑换一个，再关闭积分兑换")
+    public void integralExchange_system_22() {
+        logger.logCaseStart(caseResult.getCaseName());
+        Long exchangeGoodsId = null;
+        try {
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            //为确保可用库存够用，先增加两个
+            AddVoucherScene.builder().addNumber(2).id(voucherId).build().invoke(visitor);
+            util.applyVoucher(util.getVoucherName(voucherId), "1");
+            VoucherPage voucherPage = util.getVoucherPage(voucherId);
+            ExchangePage exchangePage = util.createExchangeFictitiousGoods(voucherId, 2L);
+            exchangeGoodsId = exchangePage.getId();
+            //不限兑换次数
+            util.modifyExchangeGoodsLimit(exchangeGoodsId, exchangePage.getExchangeType(), false);
+            visitor.login(APPLET_USER_ONE.getToken());
+            //兑换积分
+            AppletIntegralExchangeScene.builder().id(exchangeGoodsId).build().invoke(visitor);
+            user.loginPc(ALL_AUTHORITY);
+            VoucherPage secondExchangePage = util.getVoucherPage(voucherId);
+            CommonUtil.checkResult("兑换一张卡券后 " + voucherPage.getVoucherName() + " 的可用库存", voucherPage.getAllowUseInventory() - 2, secondExchangePage.getAllowUseInventory());
+            CommonUtil.checkResult("兑换一张卡券后 " + voucherPage.getVoucherName() + " 的剩余库存", voucherPage.getSurplusInventory() - 1, secondExchangePage.getSurplusInventory());
+            //关闭积分兑换
+            ChangeSwitchStatusScene.builder().id(exchangeGoodsId).status(false).build().invoke(visitor);
+            //卡券的可用库存还回去了
+            VoucherPage thirdExchangePage = util.getVoucherPage(voucherId);
+            CommonUtil.checkResult("关闭积分兑换后 " + voucherPage.getVoucherName() + " 的可用库存", secondExchangePage.getAllowUseInventory() + 1, thirdExchangePage.getAllowUseInventory());
+            CommonUtil.checkResult("关闭积分兑换后 " + voucherPage.getVoucherName() + " 的剩余库存", secondExchangePage.getSurplusInventory(), thirdExchangePage.getSurplusInventory());
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            ChangeSwitchStatusScene.builder().id(exchangeGoodsId).status(false).build().invoke(visitor, false);
+            DeleteExchangeGoodsScene.builder().id(exchangeGoodsId).build().invoke(visitor);
+            saveData("积分兑换--积分兑换--创建积分兑换，兑换一个，再关闭积分兑换");
         }
     }
 

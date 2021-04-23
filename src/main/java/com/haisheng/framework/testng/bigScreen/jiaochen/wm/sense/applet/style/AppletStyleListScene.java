@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.brand;
+package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.style;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -6,30 +6,30 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 8.1. 品牌列表
+ * 8.2. 车系列表
  *
  * @author wangmin
  * @date 2021-03-31 13:03:22
  */
 @Builder
-public class AppletListScene extends BaseScene {
+public class AppletStyleListScene extends BaseScene {
     /**
-     * 描述 门店id
-     * 是否必填 false
-     * 版本 v3.0
+     * 描述 No comments found.
+     * 是否必填 true
+     * 版本 -
      */
-    private final Long shopId;
+    private final Long brandId;
 
 
     @Override
     public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
-        object.put("shop_id", shopId);
+        object.put("brandId", brandId);
         return object;
     }
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/brand/list";
+        return "/jiaochen/applet/style/list";
     }
 }

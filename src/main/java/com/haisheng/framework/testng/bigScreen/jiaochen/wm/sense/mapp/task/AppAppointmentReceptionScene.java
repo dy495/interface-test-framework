@@ -12,7 +12,7 @@ import lombok.Builder;
  */
 @Builder
 public class AppAppointmentReceptionScene extends BaseScene {
-    private final Integer id;
+    private final Long id;
 
     @Override
     public JSONObject getRequestBody() {

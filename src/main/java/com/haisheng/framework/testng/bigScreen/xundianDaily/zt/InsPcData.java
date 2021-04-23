@@ -195,11 +195,15 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             String base64 = MendianInfo.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
             int pctotal = md.member_level_page(null,1,100).getInteger("total");
+            int levelenum = md.level_enum(null,null,1,10).getInteger("total");
             md.member_level_add0("等级", path, 10, "嗷嗷", "aa", 9, 10, 10, false);
 
             int pctotaladd = md.member_level_page(null,1,100).getInteger("total");
             int pcadd = pctotaladd-pctotal;
             Preconditions.checkArgument(pcadd==1, "期待增加1，实际" + pcadd);
+            int levelnum1 = md.level_enum(null,null,1,10).getInteger("total");
+            int lnum = levelnum1-levelenum;
+            Preconditions.checkArgument(lnum==1, "期待增加1，实际" + lnum);
             visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
             JSONArray wechatlist0 = wx.wechatlevel(null).getJSONArray("list");
             int wechatsize0 = wechatlist0.size();
@@ -215,6 +219,9 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             //获取刚创建等级的id
             int id0 = list0.getJSONObject(a0).getInteger("id");
             md.hide_update(null,id0,true);
+            int levelnum3 = md.level_enum(null,null,1,10).getInteger("total");
+            int lnum2 = levelnum1-levelnum3;
+            Preconditions.checkArgument(lnum2==1, "期待减少1，实际" + lnum);
 
             visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
             JSONArray wechatlist1 = wx.wechatlevel(null).getJSONArray("list");
@@ -230,6 +237,9 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             //获取刚创建等级的id
             int id1 = list1.getJSONObject(a1).getInteger("id");
             md.hide_update(null,id1,false);
+            int levelnum4 = md.level_enum(null,null,1,10).getInteger("total");
+            int lnum3 = levelnum4-levelnum3;
+            Preconditions.checkArgument(lnum3==1, "期待减少1，实际" + lnum3);
 
             visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
             JSONArray wechatlist2 = wx.wechatlevel(null).getJSONArray("list");
@@ -250,6 +260,9 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             Integer t3 = md.member_level_page(null, 1, 10).getInteger("total");
             int pcdelete = pctotaladd-t3;
             Preconditions.checkArgument(pcdelete==1, "期待减少1，实际" + pcdelete);
+            int levelnum5 = md.level_enum(null,null,1,10).getInteger("total");
+            int lnum4 = levelnum1-levelnum5;
+            Preconditions.checkArgument(lnum4==1, "期待减少1，实际" + lnum4);
             //获取刚创建等级的id
             visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
             JSONArray wechatdelete = wx.wechatlevel(null).getJSONArray("list");

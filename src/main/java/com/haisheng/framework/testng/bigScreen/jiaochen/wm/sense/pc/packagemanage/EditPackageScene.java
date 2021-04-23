@@ -12,6 +12,7 @@ import java.util.List;
  */
 @Builder
 public class EditPackageScene extends BaseScene {
+    private final Long packageId;
     private final String packageName;
     private final String packageDescription;
     private final JSONArray voucherList;

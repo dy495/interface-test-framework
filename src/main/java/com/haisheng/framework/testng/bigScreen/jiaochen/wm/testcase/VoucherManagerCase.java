@@ -262,8 +262,8 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             List<VoucherPage> voucherPages = util.collectBeanList(scene, VoucherPage.class);
             voucherPages.forEach(e -> {
                 String voucherName = e.getVoucherName();
-                Long totalInvalid = visitor.invokeApi(VoucherInfoScene.builder().id(e.getVoucherId()).build()).getLong("total_invalid");
-                Long total = visitor.invokeApi(VoucherInvalidPageScene.builder().id(e.getVoucherId()).build()).getLong("total");
+                long totalInvalid = visitor.invokeApi(VoucherInfoScene.builder().id(e.getVoucherId()).build()).getLong("total_invalid");
+                long total = visitor.invokeApi(VoucherInvalidPageScene.builder().id(e.getVoucherId()).build()).getLong("total");
                 CommonUtil.checkResultPlus(voucherName + " 共作废数", totalInvalid, "作废记录列表数", total);
                 CommonUtil.valueView(voucherName);
             });
@@ -416,12 +416,12 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
         try {
             Integer[] integers = {1000000000, null, -100, Integer.MAX_VALUE};
             Arrays.stream(integers).forEach(stock -> {
-                IScene scene = CreateScene.builder().voucherName(util.createVoucherName())
+                IScene scene = CreateScene.builder().voucherName(util.createVoucherName()).isDefaultPic(true)
                         .subjectType(util.getSubjectType()).cardType(VoucherTypeEnum.CUSTOM.name()).parValue(99.99).cost(99.99)
                         .voucherDescription(util.getDesc()).subjectId(util.getSubjectDesc(util.getSubjectType())).stock(stock)
                         .shopType(0).shopIds(util.getShopIdList()).selfVerification(true).build();
                 String message = visitor.invokeApi(scene, false).getString("message");
-                String err = stock == null ? "库存不能为空" : "卡券库存范围应在0 ～ 100000000张";
+                String err = stock == null ? "库存不能为空" : "优惠券发行总量范围应在0 ～ 100000000张";
                 CommonUtil.checkResult("卡券库存为：" + stock, err, message);
                 CommonUtil.logger(stock);
             });
@@ -439,7 +439,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
         try {
             Integer[] integers = {null, -1, 100};
             Arrays.stream(integers).forEach(shopType -> {
-                IScene scene = CreateScene.builder().voucherName(util.createVoucherName())
+                IScene scene = CreateScene.builder().voucherName(util.createVoucherName()).isDefaultPic(true)
                         .subjectType(util.getSubjectType()).cardType(VoucherTypeEnum.CUSTOM.name()).parValue(99.99).cost(99.99)
                         .voucherDescription(util.getDesc()).subjectId(util.getSubjectDesc(util.getSubjectType())).stock(1000)
                         .shopType(shopType).shopIds(util.getShopIdList()).selfVerification(true).build();
@@ -462,7 +462,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
         try {
             Double[] doubles = {(double) -1, (double) 1000000000, 100000000.11};
             Arrays.stream(doubles).forEach(cost -> {
-                IScene scene = CreateScene.builder().voucherName(util.createVoucherName())
+                IScene scene = CreateScene.builder().voucherName(util.createVoucherName()).isDefaultPic(true)
                         .subjectType(util.getSubjectType()).cardType(VoucherTypeEnum.CUSTOM.name()).parValue(99.99).cost(cost)
                         .voucherDescription(util.getDesc()).subjectId(util.getSubjectDesc(util.getSubjectType())).stock(1000)
                         .shopType(0).shopIds(util.getShopIdList()).selfVerification(true).build();
@@ -483,7 +483,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
     public void voucherManage_system_8() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene scene = CreateScene.builder().voucherName(util.createVoucherName())
+            IScene scene = CreateScene.builder().voucherName(util.createVoucherName()).isDefaultPic(true)
                     .subjectType(util.getSubjectType()).cardType(VoucherTypeEnum.CUSTOM.name()).parValue(99.99).cost(99.99)
                     .voucherDescription(util.getDesc()).subjectId(util.getSubjectDesc(util.getSubjectType())).stock(1000)
                     .shopType(0).selfVerification(true).build();

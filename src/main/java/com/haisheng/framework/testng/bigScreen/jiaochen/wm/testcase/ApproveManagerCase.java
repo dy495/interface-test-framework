@@ -243,7 +243,7 @@ public class ApproveManagerCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //3.1
+    //ok
     @Test(description = "优惠券审批--待审批的活动数量=全局提醒活动审批的数量")
     public void voucherApply_data_7() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -342,8 +342,8 @@ public class ApproveManagerCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //3.1
-    @Test(description = "优惠券审批--卡券批量审批不通过", enabled = false)
+    //ok
+    @Test(description = "优惠券审批--卡券批量审批不通过")
     public void voucherApply_system_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -383,27 +383,6 @@ public class ApproveManagerCase extends TestCaseCommon implements TestCaseStd {
             collectMessage(e);
         } finally {
             saveData("优惠券审批--卡券批量审批不通过");
-        }
-    }
-
-    //bug
-    @Test(description = "优惠券审批--卡券批量审批已通过的卡券", enabled = false)
-    public void voucherApply_system_4() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            IScene applyPageScene = ApplyPageScene.builder().size(SIZE).status(ApplyStatusEnum.AGREE.getId()).build();
-            List<Long> applyIdList = applyPageScene.invoke(visitor).getJSONArray("list").stream()
-                    .map(e -> (JSONObject) e).map(e -> util.collectBean(e, ApplyPageBean.class))
-                    .collect(Collectors.toList()).subList(0, 2).stream().map(ApplyPageBean::getId).collect(Collectors.toList());
-            //批量审批通过
-            IScene scene = ApplyBatchApprovalScene.builder().ids(applyIdList).status(ApplyStatusEnum.AGREE.getId()).build();
-            String message = util.getResponse(scene).getMessage();
-            String err = "";
-            CommonUtil.checkResult("批量审批已通过的卡券", err, message);
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("优惠券审批--卡券批量审批已通过的卡券");
         }
     }
 

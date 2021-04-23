@@ -7,6 +7,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppl
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.MendianInfo;
 import com.haisheng.framework.testng.bigScreen.xundianOnline.MendianInfoOnline;
 import com.haisheng.framework.testng.bigScreen.xundianOnline.StoreScenarioUtilOnline;
 import com.haisheng.framework.testng.bigScreen.xundianOnline.XundianScenarioUtilOnline;
@@ -179,21 +180,25 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            visitor.login(EnumAppletToken.INS_ZT_ONLINE.getToken());
+            visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
             JSONArray wechatlist = wx.wechatlevel(null).getJSONArray("list");
             int wechatsize = wechatlist.size();
 
-            xd.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+            xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
             String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
-            String base64 = MendianInfoOnline.getImgStr(pic);
+            String base64 = MendianInfo.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
             int pctotal = md.member_level_page(null,1,100).getInteger("total");
-            md.member_level_add0("等级", path, 10, "嗷嗷", "aa", 10, 10, 10, false);
+            int levelenum = md.level_enum(null,null,1,10).getInteger("total");
+            md.member_level_add0("等级", path, 10, "嗷嗷", "aa", 9, 10, 10, false);
 
             int pctotaladd = md.member_level_page(null,1,100).getInteger("total");
             int pcadd = pctotaladd-pctotal;
             Preconditions.checkArgument(pcadd==1, "期待增加1，实际" + pcadd);
-            visitor.login(EnumAppletToken.INS_ZT_ONLINE.getToken());
+            int levelnum1 = md.level_enum(null,null,1,10).getInteger("total");
+            int lnum = levelnum1-levelenum;
+            Preconditions.checkArgument(lnum==1, "期待增加1，实际" + lnum);
+            visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
             JSONArray wechatlist0 = wx.wechatlevel(null).getJSONArray("list");
             int wechatsize0 = wechatlist0.size();
             int wechatnum1 = wechatsize0-wechatsize;
@@ -201,37 +206,43 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
 
 
             //状态false
-            xd.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+            xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
             Integer t1 = md.member_level_page(null, 1, 10).getInteger("total");
             JSONArray list0 = md.member_level_page(null, 1, 10).getJSONArray("list");
             int a0 = t1 - 1;
             //获取刚创建等级的id
             int id0 = list0.getJSONObject(a0).getInteger("id");
             md.hide_update(null,id0,true);
+            int levelnum3 = md.level_enum(null,null,1,10).getInteger("total");
+            int lnum2 = levelnum1-levelnum3;
+            Preconditions.checkArgument(lnum2==1, "期待减少1，实际" + lnum);
 
-            visitor.login(EnumAppletToken.INS_ZT_ONLINE.getToken());
+            visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
             JSONArray wechatlist1 = wx.wechatlevel(null).getJSONArray("list");
             int wechatsize1 = wechatlist1.size();
             int wechatnum2 = wechatsize0-wechatsize1;
             Preconditions.checkArgument(wechatnum2==1, "期待减少1，实际" + wechatnum2);
 
             //状态true
-            xd.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+            xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
             Integer t2 = md.member_level_page(null, 1, 10).getInteger("total");
             JSONArray list1 = md.member_level_page(null, 1, 10).getJSONArray("list");
             int a1 = t2 - 1;
             //获取刚创建等级的id
             int id1 = list1.getJSONObject(a1).getInteger("id");
             md.hide_update(null,id1,false);
+            int levelnum4 = md.level_enum(null,null,1,10).getInteger("total");
+            int lnum3 = levelnum4-levelnum3;
+            Preconditions.checkArgument(lnum3==1, "期待减少1，实际" + lnum3);
 
-            visitor.login(EnumAppletToken.INS_ZT_ONLINE.getToken());
+            visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
             JSONArray wechatlist2 = wx.wechatlevel(null).getJSONArray("list");
             int wechatsize2 = wechatlist2.size();
             int wechatnum3 = wechatsize2-wechatsize1;
             Preconditions.checkArgument(wechatnum3==1, "期待增加1，实际" + wechatnum3);
 
 
-            xd.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
+            xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
             Integer total = md.member_level_page(null, 1, 10).getInteger("total");
             JSONArray list = md.member_level_page(null, 1, 10).getJSONArray("list");
             int a = total - 1;
@@ -243,8 +254,11 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             Integer t3 = md.member_level_page(null, 1, 10).getInteger("total");
             int pcdelete = pctotaladd-t3;
             Preconditions.checkArgument(pcdelete==1, "期待减少1，实际" + pcdelete);
+            int levelnum5 = md.level_enum(null,null,1,10).getInteger("total");
+            int lnum4 = levelnum1-levelnum5;
+            Preconditions.checkArgument(lnum4==1, "期待减少1，实际" + lnum4);
             //获取刚创建等级的id
-            visitor.login(EnumAppletToken.INS_ZT_ONLINE.getToken());
+            visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
             JSONArray wechatdelete = wx.wechatlevel(null).getJSONArray("list");
             int deletenum =  wechatsize0-wechatdelete.size();
             Preconditions.checkArgument(deletenum== 1, "期待减少1，实际" + deletenum);
