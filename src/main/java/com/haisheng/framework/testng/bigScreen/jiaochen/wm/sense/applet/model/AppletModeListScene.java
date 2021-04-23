@@ -1,6 +1,5 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.model;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
@@ -12,7 +11,7 @@ import lombok.Builder;
  * @date 2021-03-31 13:03:22
  */
 @Builder
-public class AppletListScene extends BaseScene {
+public class AppletModeListScene extends BaseScene {
     /**
      * 描述 No comments found.
      * 是否必填 true

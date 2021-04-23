@@ -141,6 +141,7 @@ public class DateTimeUtil {
     public String dateToTimestamp(String date) throws Exception {
         return String.valueOf(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss:SSS").parse(date).getTime());
     }
+
     public String dateToTimestamp1(String date) throws Exception {
         return String.valueOf(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").parse(date).getTime());
     }
@@ -504,7 +505,8 @@ public class DateTimeUtil {
         String before = new SimpleDateFormat("HH:mm").format(beforeD);
         return before;
     }
-    public String getHHmm(int n,String pattern) {
+
+    public String getHHmm(int n, String pattern) {
         Calendar beforeTime = Calendar.getInstance();
         beforeTime.add(Calendar.MINUTE, n);// n分钟之前/之后的时间
         Date beforeD = beforeTime.getTime();
@@ -716,6 +718,16 @@ public class DateTimeUtil {
         Date date = new Date(lt);
         res = simpleDateFormat.format(date);
         return res;
+    }
+
+    public static Date strToDate(String stamp, String format) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+        try {
+            return simpleDateFormat.parse(stamp);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**

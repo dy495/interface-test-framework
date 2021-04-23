@@ -114,7 +114,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int i = 0;
-            Integer shopId = util.getShopId();
+            Long shopId = util.getShopId();
             IScene appointmentPageScene = AppointmentPageScene.builder().build();
             int appointmentPageTotal = appointmentPageScene.invoke(visitor).getInteger("total");
             int appointmentNumber = util.appointmentNumber(DateTimeUtil.addDay(new Date(), i));
@@ -123,7 +123,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
             //预约保养
             user.loginApplet(APPLET_USER_ONE);
             int appointmentNum = util.getAppletAppointmentNum();
-            int appointmentId = util.appointment(AppointmentTypeEnum.MAINTAIN, DateTimeUtil.addDayFormat(new Date(), i));
+            Long appointmentId = util.appointment(AppointmentTypeEnum.MAINTAIN, DateTimeUtil.addDayFormat(new Date(), i));
             int newAppointmentNum = util.getAppletAppointmentNum();
             CommonUtil.checkResult("applet我的预约列表数", appointmentNum + 1, newAppointmentNum);
             user.loginApp(ALL_AUTHORITY);
@@ -221,7 +221,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int i = 0;
-            Integer shopId = util.getShopId();
+            Long shopId = util.getShopId();
             IScene appointmentPageScene = AppointmentPageScene.builder().build();
             int appointmentPageTotal = visitor.invokeApi(appointmentPageScene).getInteger("total");
             int appointmentNumber = util.appointmentNumber(DateTimeUtil.addDay(new Date(), i));
@@ -230,7 +230,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
             //预约维修
             user.loginApplet(APPLET_USER_ONE);
             int appointmentNum = util.getAppletAppointmentNum();
-            int appointmentId = util.appointment(AppointmentTypeEnum.REPAIR, DateTimeUtil.addDayFormat(new Date(), i));
+            long appointmentId = util.appointment(AppointmentTypeEnum.REPAIR, DateTimeUtil.addDayFormat(new Date(), i));
             int newAppointmentNum = util.getAppletAppointmentNum();
             CommonUtil.checkResult("applet我的预约列表数", appointmentNum + 1, newAppointmentNum);
             user.loginApp(ALL_AUTHORITY);

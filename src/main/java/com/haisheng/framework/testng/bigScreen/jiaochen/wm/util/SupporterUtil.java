@@ -29,7 +29,9 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.appointmen
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.commodity.CommodityStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.brand.AppletBrandListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.style.AppletStyleListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.AppFollowUpPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.task.AppAppointmentPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.task.AppReceptionPageScene;
@@ -176,9 +178,9 @@ public class SupporterUtil {
      * 收集结果
      * 结果为bean类型
      *
-     * @param scene 接口场景
-     * @param bean  bean类
-     * @param <T>   T
+     * @param object 接口场景
+     * @param bean   bean类
+     * @param <T>    T
      * @return T
      */
     public <T> T collectBean(JSONObject object, Class<T> bean) {
@@ -953,7 +955,7 @@ public class SupporterUtil {
      * @param appointmentId 预约id
      * @return 预约信息
      */
-    public AppointmentRecordAppointmentPageBean getAppointmentPageById(Integer appointmentId) {
+    public AppointmentRecordAppointmentPageBean getAppointmentPageById(Long appointmentId) {
         IScene scene = AppointmentPageScene.builder().build();
         return collectBean(scene, AppointmentRecordAppointmentPageBean.class, "id", appointmentId);
     }
@@ -1064,20 +1066,30 @@ public class SupporterUtil {
      * @param type 预约类型 MAINTAIN：保养，REPAIR：维修
      * @return id 预约id
      */
-    public Integer appointment(AppointmentTypeEnum type, String date) {
-        AppointmentSubmitScene.AppointmentSubmitSceneBuilder builder = AppointmentSubmitScene.builder().type(type.name()).carId(getCarId())
+    public Long appointment(AppointmentTypeEnum type, String date) {
+        AppletAppointmentSubmitScene.AppletAppointmentSubmitSceneBuilder builder = AppletAppointmentSubmitScene.builder().type(type.name()).carId(getCarId())
                 .shopId(getShopId()).staffId(getStaffId()).timeId(getTimeId(date)).appointmentName("隔壁小王").appointmentPhone("15321527989");
-        if (type.name().equals(AppointmentTypeEnum.REPAIR.name())) {
+        if (type.equals(AppointmentTypeEnum.REPAIR)) {
             builder.faultDescription(EnumDesc.DESC_BETWEEN_15_20.getDesc());
         }
-        return builder.build().invoke(visitor).getInteger("id");
+        if (type.equals(AppointmentTypeEnum.TEST_DRIVE)) {
+            builder.carStyleId(getCarStyleId()).build().remove("car_id");
+        }
+        return builder.build().invoke(visitor).getLong("id");
+    }
+
+    public Long getCarStyleId() {
+        JSONArray list = AppletBrandListScene.builder().build().invoke(visitor).getJSONArray("list");
+        Long brandId = list.stream().map(e -> (JSONObject) e).filter(e -> e.getString("name").equals("特斯拉")).map(e -> e.getLong("id")).findFirst().orElse(null);
+        JSONObject response = AppletStyleListScene.builder().brandId(brandId).build().invoke(visitor).getJSONArray("list").getJSONObject(0);
+        return response.getLong("id");
     }
 
     /**
      * 获取预约时间id
      */
-    public Integer getTimeId(String date) {
-        IScene appointmentTimeListScene = AppointmentTimeListScene.builder().type(AppointmentTypeEnum.MAINTAIN.name()).carId(getCarId()).shopId(getShopId()).day(date).build();
+    public Long getTimeId(String date) {
+        IScene appointmentTimeListScene = AppletAppointmentTimeListScene.builder().type(AppointmentTypeEnum.MAINTAIN.name()).carId(getCarId()).shopId(getShopId()).day(date).build();
         JSONArray array = appointmentTimeListScene.invoke(visitor).getJSONArray("list");
         List<AppletAppointmentTimeList> timeList = array.stream().map(object -> (JSONObject) object).map(object -> JSONObject.toJavaObject(object, AppletAppointmentTimeList.class)).collect(Collectors.toList());
         return timeList.stream().filter(e -> !e.getIsFull()).map(AppletAppointmentTimeList::getId).findFirst().orElse(null);
@@ -1088,8 +1100,8 @@ public class SupporterUtil {
      *
      * @return 门店id
      */
-    public Integer getShopId() {
-        return visitor.isDaily() ? 46522 : 20034;
+    public Long getShopId() {
+        return visitor.isDaily() ? 46522L : 20034L;
     }
 
     /**
@@ -1098,7 +1110,7 @@ public class SupporterUtil {
      * @return 员工id
      */
     public String getStaffId() {
-        IScene maintainStaffListScene = AppointmentStaffListScene.builder().shopId(getShopId()).type(AppointmentTypeEnum.MAINTAIN.name()).build();
+        IScene maintainStaffListScene = AppletAppointmentStaffListScene.builder().shopId(getShopId()).type(AppointmentTypeEnum.MAINTAIN.name()).build();
         JSONArray jsonArray = maintainStaffListScene.invoke(visitor).getJSONArray("list");
         return Objects.requireNonNull(jsonArray.stream().map(e -> (JSONObject) e).findFirst().orElse(null)).getString("uid");
     }
@@ -1106,11 +1118,11 @@ public class SupporterUtil {
     /**
      * 获取小程序carId
      */
-    public Integer getCarId() {
+    public Long getCarId() {
         IScene appletCarListScene = AppletCarListScene.builder().build();
         JSONObject jsonObject = appletCarListScene.invoke(visitor).getJSONArray("list").getJSONObject(0);
         Preconditions.checkArgument(jsonObject != null, "小程序我的爱车为空");
-        return jsonObject.getInteger("id");
+        return jsonObject.getLong("id");
     }
 
     /**

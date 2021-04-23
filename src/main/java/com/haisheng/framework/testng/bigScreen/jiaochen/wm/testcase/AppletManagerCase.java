@@ -2,16 +2,17 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.model.bean.AppointmentData;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.appointmentmanage.AppointmentRecordAppointmentPageBean;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.manage.EvaluatePageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppReceptionReceptorList;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletCommodity;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletIntegralRecord;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletShippingAddress;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.appointmentmanage.AppointmentRecordAppointmentPageBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.manage.EvaluatePageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VerificationRecordBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
@@ -159,7 +160,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int i = 0;
-            Integer shopId = util.getShopId();
+            Long shopId = util.getShopId();
             IScene appointmentPageScene = AppointmentPageScene.builder().build();
             int appointmentPageTotal = appointmentPageScene.invoke(visitor).getInteger("total");
             int appointmentNumber = util.appointmentNumber(DateTimeUtil.addDay(new Date(), i));
@@ -168,7 +169,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             //预约保养
             user.loginApplet(APPLET_USER_ONE);
             int appointmentNum = util.getAppletAppointmentNum();
-            int appointmentId = util.appointment(AppointmentTypeEnum.MAINTAIN, DateTimeUtil.addDayFormat(new Date(), i));
+            Long appointmentId = util.appointment(AppointmentTypeEnum.MAINTAIN, DateTimeUtil.addDayFormat(new Date(), i));
             int newAppointmentNum = util.getAppletAppointmentNum();
             CommonUtil.checkResult("applet我的预约列表数", appointmentNum + 1, newAppointmentNum);
             user.loginApp(ALL_AUTHORITY);
@@ -266,7 +267,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int i = 0;
-            Integer shopId = util.getShopId();
+            Long shopId = util.getShopId();
             IScene appointmentPageScene = AppointmentPageScene.builder().build();
             int appointmentPageTotal = visitor.invokeApi(appointmentPageScene).getInteger("total");
             int appointmentNumber = util.appointmentNumber(DateTimeUtil.addDay(new Date(), i));
@@ -275,7 +276,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             //预约维修
             user.loginApplet(APPLET_USER_ONE);
             int appointmentNum = util.getAppletAppointmentNum();
-            int appointmentId = util.appointment(AppointmentTypeEnum.REPAIR, DateTimeUtil.addDayFormat(new Date(), i));
+            Long appointmentId = util.appointment(AppointmentTypeEnum.REPAIR, DateTimeUtil.addDayFormat(new Date(), i));
             int newAppointmentNum = util.getAppletAppointmentNum();
             CommonUtil.checkResult("applet我的预约列表数", appointmentNum + 1, newAppointmentNum);
             user.loginApp(ALL_AUTHORITY);
@@ -368,6 +369,26 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             collectMessage(e);
         } finally {
             saveData("预约维修->确认预约->点接待->变更接待->完成接待->评价->跟进");
+        }
+    }
+
+    @Test(description = "预试驾->确认预约->点接待->变更接待->完成接待->评价->跟进")
+    public void appointmentManager_testDriver() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            visitor.login(APPLET_USER_ONE.getToken());
+            Long appointmentId = util.appointment(AppointmentTypeEnum.TEST_DRIVE, "2021-04-23");
+            AppointmentData data = new AppointmentData();
+            data.setShopId(Long.parseLong(PRODUCE.getShopId()));
+            data.setProduct(PRODUCE.getAbbreviation());
+            data.setAppointmentType(AppointmentTypeEnum.TEST_DRIVE.name());
+            data.setAppointmentId(appointmentId);
+//            data.setAppointmentDate();
+
+
+            System.err.println(appointmentId);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
         }
     }
 

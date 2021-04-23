@@ -12,8 +12,8 @@ import lombok.Builder;
  */
 @Builder
 public class AppAppointmentHandleScene extends BaseScene {
-    private final Integer id;
-    private final Integer shopId;
+    private final Long id;
+    private final Long shopId;
     private final Integer type;
 
     @Override
