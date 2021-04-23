@@ -12,5 +12,6 @@ public class AppointmentData implements Serializable {
     public Long appointmentId;
     public String appointmentType;
     public Date appointmentDate;
+    public Integer appointmentStatus;
     public String product;
 }

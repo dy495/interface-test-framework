@@ -2,9 +2,11 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.dao.IAppointmentDataDao;
 import com.haisheng.framework.model.bean.AppointmentData;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.sql.SqlFactory;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppReceptionReceptorList;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletCommodity;
@@ -372,24 +374,30 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "预试驾->确认预约->点接待->变更接待->完成接待->评价->跟进")
-    public void appointmentManager_testDriver() {
-        logger.logCaseStart(caseResult.getCaseName());
+    @Test(description = "保存预约记录")
+    public void saveAppointmentRecord() {
         try {
             visitor.login(APPLET_USER_ONE.getToken());
-            Long appointmentId = util.appointment(AppointmentTypeEnum.TEST_DRIVE, "2021-04-23");
+            String date = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 1), "yyyy-MM-dd");
+            Long appointmentId = util.appointment(AppointmentTypeEnum.TEST_DRIVE, date);
             AppointmentData data = new AppointmentData();
+            data.setAppointmentDate(new Date());
             data.setShopId(Long.parseLong(PRODUCE.getShopId()));
             data.setProduct(PRODUCE.getAbbreviation());
             data.setAppointmentType(AppointmentTypeEnum.TEST_DRIVE.name());
             data.setAppointmentId(appointmentId);
-//            data.setAppointmentDate();
-
-
-            System.err.println(appointmentId);
+            data.setAppointmentStatus(0);
+            new SqlFactory.Builder().build().execute(IAppointmentDataDao.class).insert(data);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
+        } finally {
+            saveData("保存预约记录");
         }
+    }
+
+    @Test(description = "预试驾->确认预约->点接待->变更接待->完成接待->评价->跟进", enabled = false)
+    public void appointmentManager_testDriver() {
+
     }
 
     //ok

@@ -11,7 +11,7 @@ import lombok.Getter;
 public enum ApplyStatusEnum {
     AUDITING(0, "审核中"),
     AGREE(1, "已通过"),
-    REFUSAL(2, "已拒绝"),
+    REFUSAL(2, "审核未通过"),
     CANCEL(3, "已撤回"),
     ;
 

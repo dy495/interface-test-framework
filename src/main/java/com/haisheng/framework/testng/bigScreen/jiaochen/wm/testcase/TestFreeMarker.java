@@ -14,7 +14,8 @@ import org.jooq.Result;
 import org.jooq.impl.DSL;
 import org.testng.annotations.Test;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
 
 /**
  * @author wangmin
@@ -91,19 +92,8 @@ public class TestFreeMarker {
         data.setAppointmentType("保养");
         data.setProduct("轿辰");
         data.setShopId(2222L);
+        data.setAppointmentStatus(1);
         new SqlFactory.Builder().build().execute(IAppointmentDataDao.class).insert(data);
-    }
-
-    @Test
-    public void test() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("product", "轿辰");
-        List<AppointmentData> appointmentData = new SqlFactory.Builder().build().execute(IAppointmentDataDao.class).select(map);
-        System.err.println(appointmentData);
-        Map<String, Object> newMap = new HashMap<>();
-        newMap.put("shopId", 111);
-        List<AppointmentData> newAppointmentData = new SqlFactory.Builder().build().execute(IAppointmentDataDao.class).select(newMap);
-        System.err.println(newAppointmentData);
     }
 
     @Test   //参数四个以内的接口

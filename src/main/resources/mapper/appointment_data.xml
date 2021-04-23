@@ -9,21 +9,56 @@
                                         appointment_id,
                                         appointment_type,
                                         product,
-                                        appointment_date
+                                        appointment_date,
+                                        appointment_status
                                     ) value (
                                         #{shopId},
                                         #{appointmentId},
                                         #{appointmentType},
                                         #{product},
-                                        #{appointmentDate}
+                                        #{appointmentDate},
+                                        #{appointmentStatus}
                                     )
     </insert>
 
-    <select id="select" parameterType="map" resultType="com.haisheng.framework.model.bean.AppointmentData">
+    <select id="select" parameterType="com.haisheng.framework.model.bean.AppointmentData"
+            resultType="com.haisheng.framework.model.bean.AppointmentData">
         select * from onepiece.t_appointment_data
         <where>
             <if test="id !=null">
-                and id = #{id}
+                id = #{id}
+            </if>
+            <if test="shopId !=null">
+                and shop_id=#{shopId}
+            </if>
+            <if test="appointmentId !=null">
+                and appointment_id=#{appointmentId}
+            </if>
+            <if test="appointmentType !=null">
+                and appointment_type=#{appointmentType}
+            </if>
+            <if test="product !=null">
+                and product = #{product}
+            </if>
+            <if test="appointmentDate !=null">
+                and appointment_date=#{appointmentDate}
+            </if>
+            <if test="appointmentStatus !=null">
+                and appointment_status=#{appointmentStatus}
+            </if>
+        </where>
+    </select>
+
+    <update id="update" parameterType="com.haisheng.framework.model.bean.AppointmentData">
+        update onepiece.t_appointment_data
+        <set>
+            <if test="appointmentStatus !=null">
+                appointment_status = #{appointmentStatus}
+            </if>
+        </set>
+        <where>
+            <if test="id !=null">
+                id = #{id}
             </if>
             <if test="shopId !=null">
                 and shop_id=#{shopId}
@@ -41,7 +76,5 @@
                 and appointment_date=#{appointmentDate}
             </if>
         </where>
-
-    </select>
-
+    </update>
 </mapper>

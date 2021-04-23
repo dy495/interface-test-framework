@@ -621,7 +621,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             //增加库存
             String message = EditExchangeStockScene.builder().changeStockType(ChangeStockTypeEnum.ADD.name()).num(String.valueOf(num)).id(id)
                     .goodsName(goodsName).type(CommodityTypeEnum.FICTITIOUS.name()).build().invoke(visitor, false).getString("message");
-            String err = "积分商品库存不能超过商品库存";
+            String err = "积分商品库存不能超过商品可用库存";
             CommonUtil.checkResult(goodsName + "增加库存 " + num, err, message);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -976,7 +976,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
                     .exchangePrice("1").isLimit(true).exchangePeopleNum("10").exchangeStartTime(exchangeStartTime)
                     .exchangeEndTime(exchangeEndTime).expireType(2).useDays("10").exchangeNum(String.valueOf(voucherPage.getAllowUseInventory() + 1))
                     .build().invoke(visitor, false).getString("message");
-            String err = "卡券【" + voucherPage.getVoucherName() + "】库存不足，请重新选择！";
+            String err = "卡券【" + voucherPage.getVoucherName() + "】可用库存不足！";
             CommonUtil.checkResult("创建虚拟兑换商品时，可兑换库存大于卡券剩余库存", err, message);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -985,7 +985,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //bug
+    //ok
     @Test(description = "积分兑换--先关闭虚拟兑换商品，商品内卡券库存不足再开启兑换商品，失败")
     public void integralExchange_system_21() {
         logger.logCaseStart(caseResult.getCaseName());

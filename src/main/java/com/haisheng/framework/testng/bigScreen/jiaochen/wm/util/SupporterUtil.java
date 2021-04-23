@@ -755,7 +755,7 @@ public class SupporterUtil {
         String packageName = createPackageName(anEnum);
         CreatePackageScene.builder().packageName(packageName).packageDescription(getDesc()).subjectType(getSubjectType())
                 .subjectId(getSubjectDesc(getSubjectType())).voucherList(voucherList).packagePrice("49.99").status(true)
-                .shopIds(getShopIdList(3)).expireType(2).expiryDate("10").build().invoke(visitor);
+                .shopIds(getShopIdList(3)).expireType(2).expiryDate(10).build().invoke(visitor);
         return packageName;
     }
 
