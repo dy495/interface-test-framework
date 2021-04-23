@@ -2502,6 +2502,23 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+
+    /**
+     * @description:会员等级枚举
+     * @author
+     * @time:
+     */
+    public JSONObject level_enum(String referer,String level_name,int page,int size) throws Exception {
+        String path = "/patrol/member/level/enum";
+        JSONObject json = new JSONObject();
+        json.put("referer",referer);
+        json.put("level_name",level_name);
+        json.put("page",page);
+        json.put("size",size);
+        String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
     /**
      * @description:6.1. 会员等级列表
      * @author
