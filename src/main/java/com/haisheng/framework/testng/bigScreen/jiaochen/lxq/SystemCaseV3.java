@@ -1380,7 +1380,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
 
     /* -----------------------------------V3.1导出---------------------------------------------------*/
 
-    @Test(dataProvider = "EXPORT1")
+    //@Test(dataProvider = "EXPORT1")
     public void Export1(String type,String mess) {
 
         logger.logCaseStart(caseResult.getCaseName());
@@ -1400,7 +1400,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(dataProvider = "EXPORT2")
+    //@Test(dataProvider = "EXPORT2")
     public void Export2(String type,String mess) {
 
         logger.logCaseStart(caseResult.getCaseName());
