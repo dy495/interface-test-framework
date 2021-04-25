@@ -98,7 +98,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
      */
 
     /**
-     * 创建裂变活动-撤回裂变活动-再次创建裂变活动-审批通过裂变活动-小程序查看裂变活动 ok
+     * 创建裂变活动-撤回裂变活动-再次创建裂变活动-审批通过裂变活动-小程序查看裂变活动 √
      */
     @Test
     public void fissionVoucherMainProcess() {
@@ -154,7 +154,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * 创建招募活动-活动审批通过-报名活动-点击审批提醒进入报名审批页面-审批通过活动报名-取消活动  ok
+     * 创建招募活动-活动审批通过-报名活动-点击审批提醒进入报名审批页面-审批通过活动报名-取消活动  √
      */
     @Test
     public void recruitMainProcess() {
@@ -174,10 +174,13 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             //获取活动的状态
             int statusPassed = businessUtil.getActivityStatus(activityId);
             System.err.println(activityId+"--------"+statusPassed);
+            //获取此活动的名称
+            String title=businessUtil.getRecruitActivityDetailDate1(activityId).getString("title");
+            System.err.println("----------title:"+title);
             //登录小程序
             user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             //小程序报名此活动
-            businessUtil.activityRegisterApplet(activityId, "13373166806", "郭丽雅", 2, "1513814362@qq.com", "22", "女","其他");
+            businessUtil.activityRegisterApplet(activityId, "13373166806", "郭丽雅", 2, "1513814362@qq.com", "22", "女","其他",title);
             //登录PC
             jc.pcLogin(pp.phone1, pp.password);
             //审批通过小程序活动报名
@@ -187,9 +190,6 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             List<VoucherSendRecord> vList = supporterUtil.getVoucherSendRecordList(voucherId);
             String voucherCode = vList.get(0).getVoucherCode();
             System.err.println("-----获取卡券码-----" + voucherCode);
-            //获取此活动的名称
-            String title=businessUtil.getRecruitActivityDetailDate1(activityId).getString("title");
-            System.err.println("----------title:"+title);
             //登录小程序
             user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             System.err.println("AD:"+activityId+"      title:"+title);
@@ -247,11 +247,12 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
 @Test
 public void justTry(){
     try{
-        //创建活动之前的列表数量
-        IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
-        int totalBefore = visitor.invokeApi(scene).getInteger("total");
+        //小程序中第一个为此活动
+        user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+        IScene scene = AppletArticleListScene.builder().lastValue(null).size(100).build();
+        JSONObject response = visitor.invokeApi(scene);
 
-        System.out.println("---------totalBefore:"+totalBefore);
+        System.out.println("---------totalBefore:"+response);
     }catch (AssertionError | Exception e) {
         collectMessage(e);
     } finally {
@@ -379,7 +380,7 @@ public void justTry(){
 
 
     /**
-     * 活动管理-取消【进行中】的招募活动，①【调整记录】+1&调整类型=取消  ②活动状态=已取消      ok
+     * 活动管理-取消【进行中】的招募活动，①【调整记录】+1&调整类型=取消  ②活动状态=已取消      √
      */
     @Test(description = "活动管理-取消【进行中】的活动，①【调整记录】+1&调整类型=取消  ②活动状态=已取消")
     public void cancelWorkingActivityDate5() {
@@ -409,7 +410,7 @@ public void justTry(){
     }
 
     /**
-     * 活动管理-招募活动详情-①成本合计=发放数量*成本   ②总数量=剩余库存+发放数量&总数量>=剩余库存    ok
+     * 活动管理-招募活动详情-①成本合计=发放数量*成本   ②总数量=剩余库存+发放数量&总数量>=剩余库存    √
      */
     @Test(description = "活动管理-活动详情-①成本合计=发放数量*成本   ②总数量=剩余库存+发放数量&总数量>=剩余库存")
     public void activityDetailDate6() {
@@ -442,7 +443,7 @@ public void justTry(){
     }
 
     /**
-     * 活动报名列---①活动名额>=报名成功人数和   ②报名成功数=【全部列表】状态为审核通过人数和 ③已报名数>=报名成功数       ok
+     * 活动报名列---①活动名额>=报名成功人数和   ②报名成功数=【全部列表】状态为审核通过人数和 ③已报名数>=报名成功数    √
      */
     @Test
     public void activityRegisterDate7() {
@@ -1200,10 +1201,10 @@ public void justTry(){
         }
     }
     /**
-     * 活动管理-【审核未通过】的活动-置顶
+     * 活动管理-【审核未通过】的活动-置顶----已取消
      * 2021-3-17
      */
-    @Test(description = "活动管理-【审核未通过】的活动-置顶")
+    @Test(description = "活动管理-【审核未通过】的活动-置顶",enabled = false)
     public void rejectActivityTop() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1412,9 +1413,8 @@ public void justTry(){
             //小程序中第一个为此活动
             user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             JSONObject response=businessUtil.appointmentActivityTitleNew();
-            Long itemId=response.getJSONArray("list").getJSONObject(0).getLong("itemId");
-            jc.pcLogin(pp.phone1, pp.password);
-            Preconditions.checkArgument(ids.get(0).equals(itemId), "PC进行中活动的ID为：" + ids.get(0)+"小程序中的更多中的活动ID为："+itemId);
+            String title1=response.getJSONArray("list").getJSONObject(0).getString("title");            jc.pcLogin(pp.phone1, pp.password);
+            Preconditions.checkArgument(title1.equals(title), "PC进行中活动的ID为：" + title+"小程序中的更多中的活动ID为："+title1);
             Preconditions.checkArgument(message.equals("success"), "置顶进行中的活动的相关提示:" + message);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -1535,9 +1535,9 @@ public void justTry(){
             //小程序中第一个为此活动
             user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             JSONObject response=businessUtil.appointmentActivityTitleNew();
-            Long itemId=response.getJSONArray("list").getJSONObject(0).getLong("itemId");
-            jc.pcLogin("13114785236", pp.password);
-            Preconditions.checkArgument(ids.get(0).equals(itemId), "PC未开始活动的ID为：" + ids.get(0)+"小程序中的更多中的活动ID为："+itemId);
+            String title1=response.getJSONArray("list").getJSONObject(0).getString("title");
+            jc.pcLogin(pp.phone1, pp.password);
+            Preconditions.checkArgument(title1.equals(title), "PC未开始活动的ID为：" + title+"小程序中的更多中的活动ID为："+title);
             Preconditions.checkArgument(message.equals("success"), "置顶未开始的活动的相关提示:" + message);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -2026,29 +2026,6 @@ public void justTry(){
         }
     }
 
-    /**
-     * 活动管理-【已取消】的活动-置顶
-     * 2021-3-17
-     */
-    @Test(description = "活动管理-【已取消】的活动-置顶")
-    public void canceledFissionActivityTop() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //获取已取消活动的ID
-            List<Long> ids = businessUtil.getFissionActivityCancel();
-            //获取已取消的活动名称
-            String title=businessUtil.getActivityTitle(ids.get(0));
-            //置顶【已取消的活动】
-            IScene scene=ActivityManageTopScene.builder().id(ids.get(0)).build();
-            String message=visitor.invokeApi(scene,false).getString("message");
-            System.out.println(title+"-------"+message);
-            Preconditions.checkArgument(message.equals("success"), "置顶已取消的活动的相关提示:" + message);
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("活动管理-【已取消】的活动-置顶");
-        }
-    }
 
     /**
      * 活动管理-【进行中】的活动-查看
@@ -2259,7 +2236,7 @@ public void justTry(){
             //推广未开始的活动
             String appletCodeUrl = businessUtil.getPromotionActivity(ids.get(0));
             System.err.println(appletCodeUrl+"--------"+ids);
-            Preconditions.checkArgument(!appletCodeUrl.equals(""), "推广【未开始】的活动的小程序二维码的返回值为空");
+            Preconditions.checkArgument(!appletCodeUrl.equals("当前状态为【待审核】不可推广"), "推广【未开始】的活动的小程序二维码的返回值为空");
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -2317,36 +2294,6 @@ public void justTry(){
         }
     }
 
-    /**
-     * 活动管理-【已过期】的活动-置顶
-     * 2021-3-17
-     */
-    @Test(description = "活动管理-【已过期】的活动-置顶")
-    public void FinishFissionActivityTop() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //获取已过期活动的ID
-            List<Long> ids = businessUtil.getFissionActivityFinish();
-            //获取已过期的活动名称
-            String title=businessUtil.getActivityTitle(ids.get(0));
-            //置顶【已过期的活动】
-            IScene scene=ActivityManageTopScene.builder().id(ids.get(0)).build();
-            String message=visitor.invokeApi(scene,false).getString("message");
-            System.out.println(title+"-------"+message);
-            //小程序中第一个为此活动
-            user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
-            JSONObject response=businessUtil.appointmentActivityTitleNew();
-            Long itemId=response.getJSONArray("list").getJSONObject(0).getLong("itemId");
-            jc.pcLogin("13114785236", pp.password);
-            System.out.println("PC已过期活动的ID为：" + ids.get(0)+"小程序中的更多中的活动ID为："+itemId);
-            Preconditions.checkArgument(ids.get(0).equals(itemId), "PC已过期活动的ID为：" + ids.get(0)+"小程序中的更多中的活动ID为："+itemId);
-            Preconditions.checkArgument(message.equals("success"), "置顶已过期的活动的相关提示:" + message);
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("活动管理-【已过期】的活动-置顶");
-        }
-    }
 
 
 
@@ -2499,9 +2446,9 @@ public void justTry(){
     }
 
     /**
-     * 创建活动-活动规则异常{不填写，2001位}
+     * 创建活动-活动规则异常{不填写，2001位}---不限制
      */
-    @Test(description = "创建活动-活动规则异常{2001位}")
+    @Test(description = "创建活动-活动规则异常{2001位}",enabled = false)
     public void fissionVoucherTitleException4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2822,9 +2769,9 @@ public void justTry(){
     }
 
     /**
-     *创建招募活动--活动时间的异常情况{今天之前，一年以后}
+     *创建招募活动--活动时间的异常情况{今天之前，一年以后}-----没有此规则
      */
-    @Test(description = "创建招募活动--活动时间的异常情况{今天之前，一年以后}")
+    @Test(description = "创建招募活动--活动时间的异常情况{今天之前，一年以后}",enabled = false)
     public void RecruitActivityTitleException10() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2975,9 +2922,9 @@ public void justTry(){
     }
 
     /**
-     *创建招募活动--活动规则的异常情况{"",2001}
+     *创建招募活动--活动规则的异常情况{"",2001}-------没有限制
      */
-    @Test(description = "创建招募活动--活动规则的异常情况{空,2001} ")
+    @Test(description = "创建招募活动--活动规则的异常情况{空,2001} ",enabled = false)
     public void RecruitActivityTitleException12() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -3346,7 +3293,7 @@ public void justTry(){
             IScene scene = builder.build();
             String message = visitor.invokeApi(scene, false).getString("message");
             System.out.println(message);
-            Preconditions.checkArgument(message.contains("库存不足，请重新选择") || message.contains("已售罄"), "已售罄优惠券的校验，message返回结果为：" + message);
+            Preconditions.checkArgument(message.contains("可用库存不足") || message.contains("已售罄"), "已售罄优惠券的校验，message返回结果为：" + message);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
