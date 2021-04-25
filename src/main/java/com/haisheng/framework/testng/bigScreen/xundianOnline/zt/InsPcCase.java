@@ -568,16 +568,15 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //搜索门店
-
-            String id= md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(0).getString("id");
-            String name= md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(0).getString("nickname");
-            JSONArray list = md.exchange_detailed(null,1,100,null,null,null,null,null,null,id).getJSONArray("list");
-            if (list.size()!=0){
+            JSONArray listnum = md.member_list(null, 1, 10, null,null,null).getJSONArray("list");
+            if(listnum.size()!=0){
+                String id= md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(0).getString("id");
+                String name= md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(0).getString("nickname");
+                JSONArray list = md.exchange_detailed(null,1,100,null,null,null,null,null,null,id).getJSONArray("list");
                 for(int i=0;i<list.size();i++){
                     String name0 = list.getJSONObject(i).getString("exchange_customer_name");
                     Preconditions.checkArgument(name.equals(name0), "通过" + name+ "客户详情展示结果为" + name0);
                 }
-
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());

@@ -292,37 +292,37 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
     }
 
     //非自定义导出报表
-    @Test
-    public void ReportExport(){
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONArray list = xd.reportList(1,100,null,null,"MONTH",null).getJSONArray("list");
-            int id = list.getJSONObject(0).getInteger("id");
-            xd.customizeReportExport(id,null,null,null,null,null,null);
-//                Preconditions.checkArgument(code==1000,"非自定义导出报表 id="+id+", 状态码"+code);
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("PC非自定义导出报表");
-        }
-    }
-
-    //自定义导出报表
-    @Test
-    public void ReportExport1(){
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONArray list = xd.reportList(1,100,null,null,"CUSTOM",null).getJSONArray("list");
-            int id = list.getJSONObject(0).getInteger("id");
-            xd.customizeReportExport(id,null,null,null,"2021-03-23","2021-03-23",null);
-//                Preconditions.checkArgument(code==1000,"非自定义导出报表 id="+id+", 状态码"+code);
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("PC自定义导出报表");
-        }
-    }
+//    @Test
+//    public void ReportExport(){
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            JSONArray list = xd.reportList(1,100,null,null,"MONTH",null).getJSONArray("list");
+//            int id = list.getJSONObject(0).getInteger("id");
+//            xd.customizeReportExport(id,null,null,null,null,null,null);
+////                Preconditions.checkArgument(code==1000,"非自定义导出报表 id="+id+", 状态码"+code);
+//        } catch (AssertionError | Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("PC非自定义导出报表");
+//        }
+//    }
+//
+//    //自定义导出报表
+//    @Test
+//    public void ReportExport1(){
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            JSONArray list = xd.reportList(1,100,null,null,"CUSTOM",null).getJSONArray("list");
+//            int id = list.getJSONObject(0).getInteger("id");
+//            xd.customizeReportExport(id,null,null,null,"2021-03-23","2021-03-23",null);
+////                Preconditions.checkArgument(code==1000,"非自定义导出报表 id="+id+", 状态码"+code);
+//
+//        } catch (AssertionError | Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("PC自定义导出报表");
+//        }
+//    }
 
 //
 //
