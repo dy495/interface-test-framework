@@ -92,14 +92,6 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
         jc.pcLogin("13114785236", pp.password);
     }
 
-    @Test
-    public void just(){
-        Long id=businessUtil.appointmentActivityId(1619L);
-        System.err.println(id);
-
-
-
-    }
 
     /**
      * ----------------------活动主流程2个case--------------------------------
@@ -132,7 +124,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             //获取活动的状态
             int statusPassed = businessUtil.getActivityStatus(activityId2);
             //获取此活动的名称
-            String title=businessUtil.getRecruitActivityDetailDate1(activityId).getString("title");
+            String title=businessUtil.getRecruitActivityDetailDate1(activityId2).getString("title");
             System.err.println("----------title:"+title);
             //登录小程序
             user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
@@ -195,10 +187,11 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             List<VoucherSendRecord> vList = supporterUtil.getVoucherSendRecordList(voucherId);
             String voucherCode = vList.get(0).getVoucherCode();
             System.err.println("-----获取卡券码-----" + voucherCode);
+            //获取此活动的名称
+            String title=businessUtil.getRecruitActivityDetailDate1(activityId).getString("title");
+            System.err.println("----------title:"+title);
             //登录小程序
             user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
-            //获取小程序活动对应的title  PC的活动ID=小程序的itemId
-            String title = businessUtil.appointmentActivityTitleNew(activityId);
             System.err.println("AD:"+activityId+"      title:"+title);
             //获取【我的卡券】列表条数
 //            int numBefore=jc.appletVoucherList(null,"GENERAL",100).getJSONArray("list").size();
@@ -250,8 +243,23 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
 /**
  * ===================================活动管理的数据一致性==================================
  */
+
+@Test
+public void justTry(){
+    try{
+        //创建活动之前的列表数量
+        IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
+        int totalBefore = visitor.invokeApi(scene).getInteger("total");
+
+        System.out.println("---------totalBefore:"+totalBefore);
+    }catch (AssertionError | Exception e) {
+        collectMessage(e);
+    } finally {
+        saveData("ceshish");
+    }
+}
     /**
-     * 创建招募活动-数据一致性校验{列表+1&状态=待审核,【活动审批】列表+1&状态=待审核}    ok
+     * 创建招募活动-数据一致性校验{列表+1&状态=待审核,【活动审批】列表+1&状态=待审核}    √
      */
     @Test(description = "创建招募活动-数据一致性校验{列表+1&状态=待审核}")
     public void createActivityDate1() {
@@ -264,8 +272,6 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             Long voucherId = businessUtil.getVoucherId();
             //创建招募活动
             Long activityId = businessUtil.createRecruitActivity(voucherId, true, 0, true);
-            //创建招募活动
-//            Long id=businessUtil.createRecruitActivityApproval();
             //创建招募活动之后的列表数量
             int totalAfter = visitor.invokeApi(scene).getInteger("total");
             //创建活动后-状态=待审核
@@ -280,7 +286,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * 创建招募活动-数据一致性校验{【活动详情】发放数量=创建时的填写数量,【活动详情】面值=优惠券的面值（不是每一个优惠券都有面值）,【活动详情】剩余库存=创建时填写数量}   ok
+     * 创建招募活动-数据一致性校验{【活动详情】发放数量=创建时的填写数量,【活动详情】面值=优惠券的面值（不是每一个优惠券都有面值）,【活动详情】剩余库存=创建时填写数量}   √
      */
     @Test(description = "创建招募活动-{【活动详情】发放数量=创建时的填写数量,【活动详情】剩余库存=创建时填写数量}")
     public void createActivityDate2() {
@@ -312,7 +318,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * 创建招募活动-数据一致性校验{【调整记录】+1&调整类型=新建活动}     ok
+     * 创建招募活动-数据一致性校验{【调整记录】+1&调整类型=新建活动}     √
      */
     @Test(description = "创建招募活动-数据一致性校验{【调整记录】+1&调整类型=新建活动}")
     public void createActivityDate3() {
@@ -337,7 +343,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * 活动管理-编辑招募活动的规则和标题，①内容更新，②【调整记录】+1&调整类型=修改活动
+     * 活动管理-编辑招募活动的规则和标题，①内容更新，②【调整记录】+1&调整类型=修改活动  √
      */
     @Test
     public void editWorkingActivityDate4() {
@@ -3679,20 +3685,6 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
-    public void justTry(){
-        try{
-            //获取报名管理中的信息
-            IScene scene3=ManageRegisterPageScene.builder().page(1).size(10).activityId(1028L).build();
-            Long registerId=visitor.invokeApi(scene3).getJSONArray("list").getJSONObject(0).getLong("id");
-            System.out.println("---------registerId:"+registerId);
-        }catch (AssertionError | Exception e) {
-            collectMessage(e);
-        } finally {
-            saveData("ceshishsis ");
-        }
-    }
-
     /**
      * 招募活动，报名信息为空
      */
@@ -3759,7 +3751,6 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             businessUtil.getApprovalPassed(activityId);
             //小程序报名
             businessUtil.activityRegisterApplet(activityId);
-
             Preconditions.checkArgument(activityId > 0, "招募活动，报名信息为空");
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
