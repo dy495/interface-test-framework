@@ -3159,10 +3159,11 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject member_level(String referer) throws Exception {
+    public JSONObject member_level(String referer,String id) throws Exception {
         String path = "/shop/member/level";
         JSONObject json = new JSONObject();
         json.put("referer",referer);
+        json.put("id",id);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -3187,7 +3188,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject exchange_detailed(String referer,int page,int size,Integer id,String exchange_customer_name,String exchange_type,String exchange_start_time,String exchange_end_time,String phone,String customer_id) throws Exception {
+    public JSONObject exchange_detailed(String referer,int page,int size,String id,String exchange_customer_name,String exchange_type,String exchange_start_time,String exchange_end_time,String phone,String customer_id) throws Exception {
         String path = "/shop/pc/integral-center/exchange-detailed";
         JSONObject json = new JSONObject();
         json.put("referer",referer);
