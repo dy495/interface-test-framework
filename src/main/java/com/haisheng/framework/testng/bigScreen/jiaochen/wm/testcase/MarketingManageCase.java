@@ -34,10 +34,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.brand.AllSce
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanage.PreSaleCustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanage.WechatCustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.loginuser.ShopListScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.CustomerImportScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.MessageFormPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.PushMessageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.SearchCustomerPhoneScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanage.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.PackageListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.VoucherListScene;
@@ -278,7 +275,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             int total = packageFormPageScene.invoke(visitor).getInteger("total");
             //创建套餐
             JSONArray voucherArray = util.getVoucherArray(voucherId, 10);
-            String packageName = util.createPackage(voucherArray, com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.UseRangeEnum.CURRENT);
+            String packageName = util.createPackage(voucherArray, UseRangeEnum.CURRENT);
             Long packageId = util.getPackageId(packageName);
             //创建套餐后列表数量
             int newTotal = packageFormPageScene.invoke(visitor).getInteger("total");
@@ -806,7 +803,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             //购买固定套餐
             IScene purchaseFixedPackageScene = PurchaseFixedPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
                     .carType(PackageUseTypeEnum.ALL_CAR.name()).packageId(packageId).packagePrice("49.99").expiryDate("1").expiryDate("10")
-                    .remark(EnumDesc.DESC_BETWEEN_20_30.getDesc()).subjectType(com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.UseRangeEnum.STORE.getName())
+                    .remark(EnumDesc.DESC_BETWEEN_20_30.getDesc()).subjectType(UseRangeEnum.STORE.getName())
                     .extendedInsuranceYear(10).extendedInsuranceCopies(10).type(1).build();
             String message = visitor.invokeApi(purchaseFixedPackageScene, false).getString("message");
             String err = "主体类型不存在";
@@ -1542,7 +1539,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             //发消息
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.SELL_OUT).buildVoucher().getVoucherId();
             String message = util.pushCustomMessage(0, true, false, voucherId).getString("message");
-            String err = "卡券【" + util.getVoucherName(voucherId) + "】库存不足，请重新选择！";
+            String err = "卡券【" + util.getVoucherName(voucherId) + "】可用库存不足！";
             CommonUtil.checkResult("发送已售罄卡券", err, message);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -2162,7 +2159,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            commonConfig.shopId = String.valueOf(util.getShopId());
+            commonConfig.shopId = PRODUCE.getShopId();
             saveData("消息管理--推送消息销售成交客户数量=销售客户列表门店&品牌不为空的潜在客户数量");
         }
     }
