@@ -5,7 +5,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumChecklistUser;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletVoucherInfo;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.customermanage.PreSaleCustomerInfoBean;
@@ -18,11 +21,11 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherUseStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanage.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.manage.CarModelEditScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.manage.CarModelPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanage.BuyPackageRecordScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.PackageListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.ReceptionPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shopstylemodel.ManageModelEditScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shopstylemodel.ManageModelPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherInfoScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
@@ -516,11 +519,11 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
         try {
             commonConfig.shopId = ALL_AUTHORITY.getReceptionShopId();
             Double[] doubles = {1.00, 2.99, 3.66, 50.1};
-            JSONObject jsonObject = CarModelPageScene.builder().build().invoke(visitor).getJSONArray("list").getJSONObject(0);
-            Integer id = jsonObject.getInteger("id");
+            JSONObject jsonObject = ManageModelPageScene.builder().type("MAINTAIN").build().invoke(visitor).getJSONArray("list").getJSONObject(0);
+            Long id = jsonObject.getLong("id");
             Double price = Arrays.stream(doubles).filter(e -> !e.equals(jsonObject.getDouble("price"))).findFirst().orElse(jsonObject.getDouble("price"));
-            CarModelEditScene.builder().id(id).price(price).status(EnableStatusEnum.DISABLE.name()).build().invoke(visitor);
-            JSONObject newJSONObject = CarModelPageScene.builder().build().invoke(visitor).getJSONArray("list").stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("id").equals(id)).findFirst().orElse(null);
+            ManageModelEditScene.builder().id(id).price(price).status(EnableStatusEnum.DISABLE.name()).type("MAINTAIN").build().invoke(visitor);
+            JSONObject newJSONObject = ManageModelPageScene.builder().type("MAINTAIN").build().invoke(visitor).getJSONArray("list").stream().map(e -> (JSONObject) e).filter(e -> e.getLong("id").equals(id)).findFirst().orElse(null);
             CommonUtil.checkResult(id + "保养价格", price, Objects.requireNonNull(newJSONObject).getDouble("price"));
             CommonUtil.checkResult(id + "预约状态", EnableStatusEnum.DISABLE.name(), Objects.requireNonNull(newJSONObject).getString("status"));
         } catch (Exception | AssertionError e) {

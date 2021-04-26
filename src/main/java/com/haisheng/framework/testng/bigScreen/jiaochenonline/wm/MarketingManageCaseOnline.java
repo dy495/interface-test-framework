@@ -2069,7 +2069,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             IScene scene = WechatCustomerPageScene.builder().build();
             List<WechatCustomerPageBean> wechatCustomerPageBeanList = util.collectBeanList(scene, WechatCustomerPageBean.class);
             int count = (int) wechatCustomerPageBeanList.stream().filter(e -> !e.getCreateDate().contains(DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd"))).count();
-            CommonUtil.checkResultPlus("推送消息小程序客户数量：", sendMessageTotal, "服务管理-小程序客户数量：", count);
+            CommonUtil.checkResultPlus("推送消息小程序客户数量", sendMessageTotal, "服务管理-小程序客户数量：", count);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -2158,7 +2158,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
                                     && !e.getCreateDate().contains(DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd")))
                             .count();
                     CommonUtil.valueView("门店：" + shopName, "品牌：" + brandName, "客户类型：" + CustomerTypeEnum.POTENTIAL_CUSTOMER.getName());
-                    CommonUtil.checkResultPlus("推送消息销售潜在客户数量：", total, "销售客户列表门店&品牌不为空的潜在客户数量：", count);
+                    CommonUtil.checkResultPlus("推送消息销售潜在客户数量", total, "销售客户列表门店&品牌不为空的潜在客户数量", count);
                 });
             });
         } catch (Exception | AssertionError e) {
