@@ -2,11 +2,23 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline.lxq;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.model.AppletModeListScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
 
 public class jiaoChenInfoOnline {
+
+    private static final EnumTestProduce PRODUCE = EnumTestProduce.JC_ONLINE;
+    public VisitorProxy visitor = new VisitorProxy(PRODUCE);
+    private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_LXQ_ONLINE;
+    public UserUtil user = new UserUtil(visitor);
+
     DateTimeUtil dt = new DateTimeUtil();
     ScenarioUtilOnline jc = ScenarioUtilOnline.getInstance();
     public final String logo = "general_temp/fd19d80a-bbff-45dc-8d02-36548ad2c43e";//120*120 品牌logo
@@ -20,7 +32,7 @@ public class jiaoChenInfoOnline {
     public final String stringlong = "自动化"+System.currentTimeMillis()+"a2～！啊A"+Integer.toString((int)(Math.random()*1000000))+"1234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：67891234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：67890101"+System.currentTimeMillis();
     public final String  district_code= "222402";
     public final String phone = "1380110"+Integer.toString((int)(Math.random()*10000));//手机号
-    public final String donephone = "17611474518";//成交客户手机号
+    public final String donephone = "13436941018";//成交客户手机号
     public final Long oneshopid = 20032L;
 
     //线上
@@ -181,6 +193,101 @@ public class jiaoChenInfoOnline {
     }
 
 
+    //--------V3.0------------
+
+    public final String ONLINE_EXPERTS = "ONLINE_EXPERTS"; //在线专家
+    public final String SALES = "SALES"; //专属销售
+    public final String AFTER_SALES = "AFTER_SALES"; //专属售后
+    public final String sitphone1 = "010-8159"+Integer.toString((int)((Math.random()*9+1)*1000)); ;//座机号
+    public final String string200 = "自动化自动化自动化自动化自动化自动化自动化AAAAAAA12345AAAAAA次sssssss!@#$%^&*自动化自动化自动化自动化自动化自动化自动化AAAAAAA12345AAAAAA次sssssss!@#$%^&*自动化自动化自动化自动化自动化自动化自动化AAAAAAA12345AAAAAA次sssssss!@#$%^&*自动化自动化自动化自动化自动化自动化自动化AAAAAAA12345AA";
+
+
+    //专属销售顾问提交
+    public JSONObject submitPreService() throws Exception {
+        user.loginApplet(APPLET_USER_ONE);
+        Long brandId = BrandIDOnline;
+        Long modelId = AppletModeListScene.builder().brandId(brandId).styleId(CarStyleIDOnline).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+        Long shopId  = AppletCommonShopListScene.builder().carModelId(modelId).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
+        String salesId  = AppletConsultDedicatedServiceSalesListScene.builder().build().invoke(visitor).getJSONArray("sales_list").getJSONObject(0).getString("sales_id");
+        String customerName="奶糖";
+        String customerPhone="13811110000";
+        String content="12345678901234567890";
+        AppletConsultPreServiceSubmitScene.builder().customerName(customerName).customerPhone(customerPhone).content(content)
+                .salesId(salesId).modelId(modelId).shopId(shopId).build().invoke(visitor);
+        JSONObject obj1 = new JSONObject();
+        obj1.put("customerName",customerName);
+        obj1.put("customerPhone",customerPhone);
+        obj1.put("content",content);
+        return obj1;
+    }
+
+    //专属售后顾问提交
+    public JSONObject submitAfterService() throws Exception {
+        user.loginApplet(APPLET_USER_ONE);
+        Long brandId = BrandIDOnline;
+        Long modelId = AppletModeListScene.builder().brandId(brandId).styleId(CarStyleIDOnline).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+        Long shopId  = AppletCommonShopListScene.builder().carModelId(modelId).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
+
+        String salesId  = AppletConsultDedicatedServiceSalesListScene.builder().build().invoke(visitor).getJSONArray("after_sales_list").getJSONObject(0).getString("sales_id");
+
+        String customerName="奶糖";
+        String customerPhone="13811110000";
+        String content="12345678901234567890";
+        AppletConsultAfterServiceSubmitScene.builder().customerName(customerName).customerPhone(customerPhone).content(content)
+                .salesId(salesId).modelId(modelId).shopId(shopId).build().invoke(visitor);
+        JSONObject obj1 = new JSONObject();
+        obj1.put("customerName",customerName);
+        obj1.put("customerPhone",customerPhone);
+        obj1.put("content",content);
+        return obj1;
+    }
+
+    //在线专家咨询提交
+    public JSONObject submitonlineExpert() throws Exception {
+        user.loginApplet(APPLET_USER_ONE);
+        Long brandId = BrandIDOnline;
+        Long modelId = AppletModeListScene.builder().brandId(brandId).styleId(CarStyleIDOnline).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+//        String str = "[39.981536865234375,116.30351257324219]";
+//        Long shopId  = AppletCommonShopListScene.builder().carModelId(modelId).coordinate(JSONArray.parseArray(str)).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
+
+        Long shopId  = AppletCommonShopListScene.builder().carModelId(modelId).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
+
+        String customerName="奶糖";
+        String customerPhone="13811110000";
+        String content="12345678901234567890";
+        AppletConsultOnlineExpertsSubmitScene.builder().customerName(customerName).customerPhone(customerPhone).content(content)
+                .brandId(brandId).modelId(modelId).shopId(shopId).build().invoke(visitor);
+        JSONObject obj1 = new JSONObject();
+        obj1.put("customerName",customerName);
+        obj1.put("customerPhone",customerPhone);
+        obj1.put("content",content);
+        obj1.put("brandId",brandId);
+        obj1.put("modelId",modelId);
+        obj1.put("shopId",shopId);
+        return obj1;
+    }
+
+    public final String getString(int n){
+        String a = "";
+        for (int i = 0 ; i < n; i++){
+            a = a + "q" ;
+        }
+        return a;
+    }
+
+    //获取小程序消息列表数量
+    public int getAppletmessNum(){
+        user.loginApplet(APPLET_USER_ONE);
+        int num = AppletMessageListScene.builder().size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getInteger("id");
+        return num;
+    }
+
+    public String getLogoUrl(){
+        String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
+        String base64 = new ImageUtil().getImageBinary(filePath);
+        String logo = jc.pcFileUploadNew(new ImageUtil().getImageBinary(filePath)).getString("pic_url");
+        return logo;
+    }
 
 
 

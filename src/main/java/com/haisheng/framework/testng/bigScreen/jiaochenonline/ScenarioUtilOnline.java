@@ -5132,10 +5132,11 @@ public class ScenarioUtilOnline extends TestCaseCommon {
      *
      * @return
      */
-    public JSONObject saleList(Long shop_id) {
+    public JSONObject saleList(Long shop_id,String type) {
         JSONObject json = new JSONObject();
         String url = "/jiaochen/pc/customer-manage/pre-sale-customer/sales-list";
         json.put("shop_id", shop_id);
+        json.put("type", type);
         return invokeApi(url, json);
     }
 
