@@ -243,9 +243,11 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
     public void picSpot1(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int pages = md.picturePage("SPOT","","","",null,1,8).getInteger("pages");
+            String start_time =DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), -5), "yyyy-MM-dd");
+            String end_time = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd");
+            int pages = md.picturePage("SPOT",start_time,end_time,"",null,1,8).getInteger("pages");
             for(int i=1;i<=pages;i++){
-                JSONArray list = md.picturePage("SPOT","","","",null,i,8).getJSONArray("list");
+                JSONArray list = md.picturePage("SPOT",start_time,end_time,"",null,i,8).getJSONArray("list");
                 for(int j=0;j<list.size();j++){
                     String tips = list.getJSONObject(j).getString("tips");
                     checkArgument(tips.contains("现场巡店")||tips.contains("远程巡店"), "手动巡查" + "!=图片返回的类型" + tips);
@@ -435,7 +437,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
     //注册会员，会员管理列表+1，通过搜索框进行搜索
     @Test(dataProvider = "FACE_URL",dataProviderClass = DataProviderMethod.class)
-    public void MemberList(){
+    public void MemberList(String face_url){
         logger.logCaseStart(caseResult.getCaseName());
         try {
            //通过搜索框搜索会员
