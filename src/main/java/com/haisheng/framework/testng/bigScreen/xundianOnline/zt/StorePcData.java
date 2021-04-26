@@ -299,16 +299,17 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    //非自定义导出报表
+    //    非自定义导出报表
     @Test
-    public void ReportExport() {
+    public void ReportExport(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray list = xd.reportList(1,100,null,null,"MONTH",null).getJSONArray("list");
-            if (list.size()>0){
-                int id = list.getJSONObject(0).getInteger("id");
-                xd.customizeReportExport(id,null,null,null,null,null,null);
-//                Preconditions.checkArgument(code==1000,"非自定义导出报表 id="+id+", 状态码"+code);
+            JSONArray list = xd.reportList(1,100,"巡店月报",null,"MONTH",null).getJSONArray("list");
+            for(int i=0;i<list.size();i++){
+                int id = list.getJSONObject(i).getInteger("id");
+                int code = xd.customizeReportExport(id,null,null,null,null,null,null).getInteger("code");
+//                int code = xd. reportExport(id).getInteger("code");
+                Preconditions.checkArgument(code==1000,"非自定义导出报表 id="+id+", 状态码"+code);
             }
 
         } catch (AssertionError | Exception e) {
@@ -318,25 +319,25 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-
     //自定义导出报表
-//    @Test
-//    public void ReportExport1() throws Exception{
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            JSONArray list = xd.reportList(1,100,null,null,"CUSTOM",null).getJSONArray("list");
-//            int id = list.getJSONObject(0).getInteger("id");
-//            xd.customizeReportExport(id,null,null,null,"2021-03-23","2021-03-23",null);
-////                Preconditions.checkArgument(code==1000,"非自定义导出报表 id="+id+", 状态码"+code);
-//
-//        } catch (AssertionError e) {
-//            appendFailReason(e.toString());
-//        } catch (Exception e) {
-//            appendFailReason(e.toString());
-//        } finally {
-//            saveData("PC自定义导出报表");
-//        }
-//    }
+    @Test
+    public void ReportExport1(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String start_time =DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), -5), "yyyy-MM-dd");
+            String end_time = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd");
+            JSONArray list = xd.reportList(1,100,null,null,"CUSTOM",null).getJSONArray("list");
+            for (int i=0;i<list.size();i++){
+                int id = list.getJSONObject(i).getInteger("id");
+                int code = xd.customizeReportExport(id,null,null,null,start_time,end_time,null).getInteger("code");
+                Preconditions.checkArgument(code==1000,"非自定义导出报表 id="+id+", 状态码"+code);
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC自定义导出报表");
+        }
+    }
 
     //会员身份添加、删除
     @Test
