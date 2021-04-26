@@ -169,7 +169,7 @@ public class ScenarioUtil extends TestCaseCommon {
     public JSONObject pcFileUploadNew(String pic) {
         String path = "/jiaochen/pc/file/upload";
         JSONObject object = new JSONObject();
-        object.put("permanent_pic_type", 0);
+        object.put("permanent_pic_type", 7);
         object.put("pic", pic);
 
 

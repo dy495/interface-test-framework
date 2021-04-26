@@ -1674,12 +1674,12 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(code==1001,"不填写名称期待1001，实际"+code);
 
 //            //不填写描述 bug 7808
-//            int code1 = jc.BrandCreat(false,null,"null",null,info.getLogo()).getInteger("code");
-//            Preconditions.checkArgument(code1==1001,"不填写描述期待1001，实际"+code1);
+            int code1 = jc.BrandCreat(false,null,"null",null,info.getLogo()).getInteger("code");
+            Preconditions.checkArgument(code1==1001,"不填写描述期待1001，实际"+code1);
 
             //不上传图片bug 7808
-//            int code2 = jc.BrandCreat(false,null,"pp"+Integer.toString((int)((Math.random()*9+1)*100)),"品牌描述",null).getInteger("code");
-//            Preconditions.checkArgument(code2==1001,"不上传图片期待1001，实际"+code2);
+            int code2 = jc.BrandCreat(false,null,"pp"+Integer.toString((int)((Math.random()*9+1)*100)),"品牌描述",null).getInteger("code");
+            Preconditions.checkArgument(code2==1001,"不上传图片期待1001，实际"+code2);
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -3011,16 +3011,16 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(code3==1001,"不填写性别期待失败，实际"+code);
 
             //不填写意向车型 bug 7866
-//            int code4 = jc.createPotentialCstm(name,phone,type,sex,null,shop_id,salesId,false).getInteger("code");
-//            Preconditions.checkArgument(code4==1001,"不填写意向车型期待失败，实际"+code);
+            int code4 = jc.createPotentialCstm(name,phone,type,sex,null,null,shop_id,salesId,false).getInteger("code");
+            Preconditions.checkArgument(code4==1001,"不填写意向车型期待失败，实际"+code);
 
             //不填写所属门店
-            int code5 = jc.createPotentialCstm(name,phone,type,sex,car_style_id,car_model_id,null,salesId,false).getInteger("code");
-            Preconditions.checkArgument(code5==1001,"不填写所属门店期待失败，实际"+code);
+//            int code5 = jc.createPotentialCstm(name,phone,type,sex,car_style_id,car_model_id,null,salesId,false).getInteger("code");
+//            Preconditions.checkArgument(code5==1001,"不填写所属门店期待失败，实际"+code);
 
-//            //不填写所属销售 bug 7866
-//            int code6 = jc.createPotentialCstm(name,phone,type,sex,car_model_id,shop_id,null,false).getInteger("code");
-//            Preconditions.checkArgument(code6==1001,"不填写所属销售期待失败，实际"+code);
+            //不填写所属销售 bug 7866
+//            int code6 = jc.createPotentialCstm(name,phone,type,sex,car_style_id,car_model_id,shop_id,null,false).getInteger("code");
+//            Preconditions.checkArgument(code6==1001,"不填写所属销售期待失败，实际"+code6);
 
 
 
