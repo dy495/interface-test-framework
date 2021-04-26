@@ -155,7 +155,8 @@ public class SupporterUtil {
             scene.setPage(i);
             scene.setSize(size);
             JSONArray array = scene.invoke(visitor).getJSONArray("list");
-            T clazz = array.stream().map(e -> (JSONObject) e).filter(e -> e.getObject(key, value.getClass()).equals(value)).findFirst().map(e -> JSONObject.toJavaObject(e, bean)).orElse(null);
+            T clazz = array.stream().map(e -> (JSONObject) e).filter(e -> e.getObject(key, value.getClass()).equals(value))
+                    .findFirst().map(e -> JSONObject.toJavaObject(e, bean)).orElse(null);
             list.add(clazz);
         }
         return list;
@@ -206,7 +207,8 @@ public class SupporterUtil {
             scene.setPage(i);
             scene.setSize(size);
             JSONArray array = scene.invoke(visitor).getJSONArray("list");
-            T clazz = array.stream().map(e -> (JSONObject) e).filter(e -> e.getObject(key, value.getClass()).equals(value)).findFirst().map(e -> JSONObject.toJavaObject(e, bean)).orElse(null);
+            T clazz = array.stream().map(e -> (JSONObject) e).filter(e -> e.getObject(key, value.getClass())
+                    .equals(value)).findFirst().map(e -> JSONObject.toJavaObject(e, bean)).orElse(null);
             if (clazz != null) {
                 return clazz;
             }
@@ -234,7 +236,8 @@ public class SupporterUtil {
     public Long getOccupyVoucherId() {
         IScene scene = VoucherFormVoucherPageScene.builder().voucherStatus(VoucherStatusEnum.WORKING.name()).build();
         List<VoucherFormVoucherPageBean> voucherPageBeanList = collectBeanList(scene, VoucherFormVoucherPageBean.class);
-        VoucherFormVoucherPageBean voucherPageBean = voucherPageBeanList.stream().filter(e -> e.getSurplusInventory() > e.getAllowUseInventory() && e.getAllowUseInventory() != 0).findFirst().orElse(null);
+        VoucherFormVoucherPageBean voucherPageBean = voucherPageBeanList.stream().filter(e -> e.getSurplusInventory() >
+                e.getAllowUseInventory() && e.getAllowUseInventory() != 0).findFirst().orElse(null);
         return voucherPageBean == null ? useVoucher() : voucherPageBean.getVoucherId();
     }
 
@@ -370,8 +373,10 @@ public class SupporterUtil {
     public String getPicPath(String picPath, String ratioStr) {
         String picture = new ImageUtil().getImageBinary(picPath);
         String[] strings = ratioStr.split(":");
-        double ratio = BigDecimal.valueOf(Double.parseDouble(strings[0]) / Double.parseDouble(strings[1])).divide(new BigDecimal(1), 4, BigDecimal.ROUND_HALF_UP).doubleValue();
-        return FileUpload.builder().isPermanent(false).permanentPicType(0).pic(picture).ratioStr(ratioStr).ratio(ratio).build().invoke(visitor).getString("pic_path");
+        double ratio = BigDecimal.valueOf(Double.parseDouble(strings[0]) / Double.parseDouble(strings[1]))
+                .divide(new BigDecimal(1), 4, BigDecimal.ROUND_HALF_UP).doubleValue();
+        return FileUpload.builder().isPermanent(false).permanentPicType(0).pic(picture).ratioStr(ratioStr)
+                .ratio(ratio).build().invoke(visitor).getString("pic_path");
     }
 
     /**
@@ -445,7 +450,8 @@ public class SupporterUtil {
         for (Long shopId : shopIdList) {
             List<Long> shopList = new ArrayList<>();
             shopList.add(shopId);
-            int total = GroupTotalScene.builder().pushTarget(AppletPushTargetEnum.SHOP_CUSTOMER.getId()).shopList(shopList).build().invoke(visitor).getInteger("total");
+            int total = GroupTotalScene.builder().pushTarget(AppletPushTargetEnum.SHOP_CUSTOMER.getId())
+                    .shopList(shopList).build().invoke(visitor).getInteger("total");
             if (total > 1) {
                 return shopId;
             }
@@ -471,6 +477,14 @@ public class SupporterUtil {
      */
     public Long getVoucherId(String voucherName) {
         return getVoucherPage(voucherName).getVoucherId();
+    }
+
+    public void deleteVoucher(Long voucherId) {
+        DeleteVoucherScene.builder().id(voucherId).build().invoke(visitor);
+    }
+
+    public void recallVoucher(Long voucherId) {
+        RecallVoucherScene.builder().id(voucherId).build().invoke(visitor);
     }
 
     /**
@@ -945,6 +959,29 @@ public class SupporterUtil {
         long sendTime = Long.parseLong(DateTimeUtil.dateToStamp(d));
         builder = immediately ? builder.ifSendImmediately(true) : builder.ifSendImmediately(false).sendTime(sendTime);
         builder.build().invoke(visitor);
+    }
+
+
+    /**
+     * 给指定人发消息，如需修改接收人，请在文件中添加手机号
+     *
+     * @param type               推送优惠类型 0：卡券，1：套餐
+     * @param voucherOrPackageId 卡券id
+     * @param immediately        是否立即发送
+     */
+    public JSONObject pushCustomMessage(Integer type, boolean immediately, boolean checkCode, Long... voucherOrPackageId) {
+        String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/excel/发消息手机号.xlsx";
+        List<Long> voucherOrPackageList = new ArrayList<>(Arrays.asList(voucherOrPackageId));
+        JSONObject response = CustomerImportScene.builder().filePath(filePath).build().upload(visitor);
+        Preconditions.checkArgument(response.getInteger("code") == 1000);
+        List<Long> customerIdList = response.getJSONObject("data").getJSONArray("customer_id_list").toJavaList(Long.class);
+        PushMessageScene.PushMessageSceneBuilder builder = PushMessageScene.builder().customerIdList(customerIdList)
+                .messageName(EnumDesc.DESC_BETWEEN_5_10.getDesc()).messageContent(EnumDesc.DESC_BETWEEN_40_50.getDesc())
+                .type(type).useTimeType(2).useDays("10").voucherOrPackageList(voucherOrPackageList);
+        String d = DateTimeUtil.getFormat(DateTimeUtil.addSecond(new Date(), 80), "yyyy-MM-dd HH:mm:ss");
+        long sendTime = Long.parseLong(DateTimeUtil.dateToStamp(d));
+        builder = immediately ? builder.ifSendImmediately(true) : builder.ifSendImmediately(false).sendTime(sendTime);
+        return builder.build().invoke(visitor, checkCode);
     }
 
     //----------------------------------------------------预约记录-------------------------------------------------------
@@ -1482,8 +1519,7 @@ public class SupporterUtil {
     public Integer appointmentNumber(Date date) {
         String nowDate = DateTimeUtil.getFormat(new Date(), "yyyy-MM");
         IScene scene = TimeTableListScene.builder().appointmentMonth(nowDate).build();
-        JSONArray list = scene.invoke(visitor).getJSONArray("list");
-        return list.stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("day").equals(DateTimeUtil.getDayOnMonth(date)))
+        return scene.invoke(visitor).getJSONArray("list").stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("day").equals(DateTimeUtil.getDayOnMonth(date)))
                 .map(e -> e.getInteger("appointment_number") == null ? 0 : e.getInteger("appointment_number")).findFirst().orElse(0);
     }
 
@@ -1522,14 +1558,18 @@ public class SupporterUtil {
      */
     public AppReceptionReceptorList getReceptorList() {
         IScene receptorListScene = AppReceptionReceptorListScene.builder().shopId(getShopId()).build();
-        JSONArray jsonArray = receptorListScene.invoke(visitor).getJSONArray("list");
-        return jsonArray.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppReceptionReceptorList.class)).findFirst().orElse(null);
+        return receptorListScene.invoke(visitor).getJSONArray("list").stream().map(e -> (JSONObject) e).map(e -> collectBean(e, AppReceptionReceptorList.class)).findFirst().orElse(null);
     }
 
+    /**
+     * 获取售后员工列表
+     *
+     * @param account 员工账号
+     * @return 售后员工
+     */
     public AppReceptionReceptorList getReceptorList(EnumAccount account) {
         IScene receptorListScene = AppReceptionReceptorListScene.builder().shopId(getShopId()).build();
-        JSONArray jsonArray = receptorListScene.invoke(visitor).getJSONArray("list");
-        return jsonArray.stream().map(e -> (JSONObject) e).filter(e -> e.getString("name").equals(account.getName())).map(e -> JSONObject.toJavaObject(e, AppReceptionReceptorList.class)).findFirst().orElse(null);
+        return receptorListScene.invoke(visitor).getJSONArray("list").stream().map(e -> (JSONObject) e).filter(e -> e.getString("name").equals(account.getName())).map(e -> collectBean(e, AppReceptionReceptorList.class)).findFirst().orElse(null);
     }
 
     //-------------------------------------------------------积分中心---------------------------------------------------
@@ -1556,17 +1596,9 @@ public class SupporterUtil {
     public ExchangePage createExchangeRealGoods(int stock) {
         String exchangeStartTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
         String exchangeEndTime = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 30), "yyyy-MM-dd HH:mm:ss");
-        JSONArray specificationList = new JSONArray();
-        JSONObject response = GoodsManagePageScene.builder().goodsStatus(CommodityStatusEnum.UP.name()).build().invoke(visitor).getJSONArray("list").getJSONObject(0);
-        long goodsId = response.getLong("id");
+        long goodsId = GoodsManagePageScene.builder().goodsStatus(CommodityStatusEnum.UP.name()).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
         JSONArray specificationDetailList = CommoditySpecificationsListScene.builder().id(goodsId).build().invoke(visitor).getJSONArray("specification_detail_list");
-        specificationDetailList.forEach(e -> {
-            JSONObject specificationDetail = (JSONObject) e;
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id", specificationDetail.getInteger("id"));
-            jsonObject.put("stock", stock);
-            specificationList.add(jsonObject);
-        });
+        JSONArray specificationList = new JSONArray(specificationDetailList.stream().map(e -> (JSONObject) e).map(e -> put(e.getInteger("id"), stock)).collect(Collectors.toList()));
         //创建积分兑换
         CreateExchangeGoodsScene.builder().exchangeGoodsType(CommodityTypeEnum.REAL.name()).goodsId(goodsId)
                 .exchangePrice("1").isLimit(true).exchangePeopleNum("10")
@@ -1575,6 +1607,13 @@ public class SupporterUtil {
                 .exchangeEndTime(exchangeEndTime)
                 .build().invoke(visitor);
         return collectBeanList(ExchangePageScene.builder().build(), ExchangePage.class).get(0);
+    }
+
+    private JSONObject put(Integer id, Integer stock) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", id);
+        jsonObject.put("stock", stock);
+        return jsonObject;
     }
 
     /**

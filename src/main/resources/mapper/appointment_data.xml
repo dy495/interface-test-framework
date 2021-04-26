@@ -41,7 +41,7 @@
                 and product = #{product}
             </if>
             <if test="appointmentDate !=null">
-                and appointment_date=#{appointmentDate}
+                and appointment_date like concat ('%',#{appointmentDate},'%')
             </if>
             <if test="appointmentStatus !=null">
                 and appointment_status=#{appointmentStatus}

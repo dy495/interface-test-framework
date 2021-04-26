@@ -7,7 +7,6 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.sce
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.scenemaker.SceneMarker;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.parse.BeanParser;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.parse.SceneParser;
-import com.haisheng.framework.util.DateTimeUtil;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
@@ -15,7 +14,6 @@ import org.jooq.impl.DSL;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
-import java.util.Date;
 
 /**
  * @author wangmin
@@ -86,8 +84,7 @@ public class TestFreeMarker {
     @Test
     public void testMybatis() {
         AppointmentData data = new AppointmentData();
-        Date date = DateTimeUtil.strToDate("2021-04-21", "yyyy-MM-dd");
-        data.setAppointmentDate(date);
+        data.setAppointmentDate("2021-04-21");
         data.setAppointmentId(1L);
         data.setAppointmentType("保养");
         data.setProduct("轿辰");

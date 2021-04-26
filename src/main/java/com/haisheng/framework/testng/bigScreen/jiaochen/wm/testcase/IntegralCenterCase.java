@@ -412,7 +412,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             VoucherPage voucherPage = util.getVoucherPage(voucherId);
             String exchangeStartTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
             String exchangeEndTime = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 30), "yyyy-MM-dd HH:mm:ss");
-            long exchangeNum = voucherPage.getSurplusInventory() == 1 ? 1 : voucherPage.getSurplusInventory() - 1;
+            long exchangeNum = voucherPage.getAllowUseInventory() == 1 ? 1 : voucherPage.getAllowUseInventory() - 1;
             //创建积分兑换
             CreateExchangeGoodsScene.builder().exchangeGoodsType(CommodityTypeEnum.FICTITIOUS.name()).goodsId(voucherId).exchangePrice("1")
                     .exchangeNum(String.valueOf(exchangeNum)).isLimit(true).exchangePeopleNum("1").exchangeStartTime(exchangeStartTime)
