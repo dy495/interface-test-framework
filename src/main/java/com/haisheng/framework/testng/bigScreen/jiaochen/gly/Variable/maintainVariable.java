@@ -8,4 +8,5 @@ public class maintainVariable {
     public String car_model;
     public String year;
     public String shop_id;
+    public String type;
 }

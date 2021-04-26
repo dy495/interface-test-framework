@@ -723,13 +723,14 @@ public class BusinessUtil {
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
+
                 if (status == ActivityStatusEnum.PENDING.getId()) {
                     Long id = list.getJSONObject(i).getLong("id");
                     ids.add(id);
                 }
             }
         }
-        if (ids.size() == 0) {
+        if (ids.size() == 0){
             Long id1 = createRecruitActivityApproval();
             ids.add(id1);
         }
@@ -1640,12 +1641,12 @@ public class BusinessUtil {
             IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
             JSONObject response = visitor.invokeApi(scene);
             lastValue = response.getJSONObject("last_value");
-            System.err.println(lastValue);
             list = response.getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 Long itemId = list.getJSONObject(i).getLong("itemId");
                 if (activityId.equals(itemId)) {
                     title = list.getJSONObject(i).getString("title");
+                    System.err.println("-----title----"+title);
                 }
             }
         } while (list.size() == 10);
@@ -2007,10 +2008,11 @@ public class BusinessUtil {
      */
     public void activityRegisterApplet(Long id) {
         JSONObject lastValue = null;
-        Boolean falg=false;
         JSONArray list = null;
         JSONArray registerItems = new JSONArray();
         Long activityId = 0L;
+        //登录PC
+        jc.pcLogin(pp.phone1, pp.password);
         //获取此活动的名称
         String title=getRecruitActivityDetailDate1(id).getString("title");
         System.err.println("----------title:"+title);

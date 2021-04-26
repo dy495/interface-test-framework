@@ -247,12 +247,16 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
 @Test
 public void justTry(){
     try{
+        //置顶【未开始的活动】
+        IScene scene=ActivityManageTopScene.builder().id(772L).build();
+        String message=visitor.invokeApi(scene,false).getString("message");
         //小程序中第一个为此活动
         user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
-        IScene scene = AppletArticleListScene.builder().lastValue(null).size(100).build();
-        JSONObject response = visitor.invokeApi(scene);
+        JSONObject response=businessUtil.appointmentActivityTitleNew();
+        System.err.println(response);
+        String title1=response.getJSONArray("list").getJSONObject(0).getString("title");
 
-        System.out.println("---------totalBefore:"+response);
+        System.out.println(message+"---------:"+title1);
     }catch (AssertionError | Exception e) {
         collectMessage(e);
     } finally {
@@ -899,6 +903,7 @@ public void justTry(){
             List<Long> ids = businessUtil.getActivityWaitingApproval();
             //通过待审批的活动
             String message = businessUtil.getApprovalPassed(ids.get(0));
+            System.err.println(ids.get(0)+"--------"+message);
             //获取刚才通过的活动的状态
             int status = businessUtil.getActivityApprovalStatus(ids.get(0));
             Preconditions.checkArgument(status == ActivityStatusEnum.PASSED.getId(), "审批通过后活动的状态为：" + status);
@@ -2188,13 +2193,13 @@ public void justTry(){
             //置顶【未开始的活动】
             IScene scene=ActivityManageTopScene.builder().id(ids.get(0)).build();
             String message=visitor.invokeApi(scene,false).getString("message");
-            System.out.println(title+"-------"+message);
             //小程序中第一个为此活动
             user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             JSONObject response=businessUtil.appointmentActivityTitleNew();
-            Long itemId=response.getJSONArray("list").getJSONObject(0).getLong("itemId");
-            jc.pcLogin("13114785236", pp.password);
-            Preconditions.checkArgument(ids.get(0).equals(itemId), "PC未开始活动的ID为：" + ids.get(0)+"小程序中的更多中的活动ID为："+itemId);
+            System.err.println(response);
+            String title1=response.getJSONArray("list").getJSONObject(0).getString("title");
+            jc.pcLogin(pp.phone1, pp.password);
+            Preconditions.checkArgument(title1.equals(title), "PC未开始活动的ID为：" + title+"小程序中的更多中的活动标题为："+title1);
             Preconditions.checkArgument(message.equals("success"), "置顶未开始的活动的相关提示:" + message);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -2587,7 +2592,7 @@ public void justTry(){
                         .invitedVoucher(invitedVoucher)
                         .build();
                 String message = visitor.invokeApi(scene, false).getString("message");
-                Preconditions.checkArgument(message.equals("卡券数量不能为空") || message.equals("奖励数量不能为空") || message.contains("库存不足，请重新选择！") || message.equals("奖励数量至少一张"), "分享者优惠券配置异常情况为：" + num[i]);
+                Preconditions.checkArgument(message.equals("卡券数量不能为空") || message.equals("奖励数量不能为空") || message.contains("可用库存不足") || message.equals("奖励数量至少一张"), "分享者优惠券配置异常情况为：" + num[i]);
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -2633,7 +2638,7 @@ public void justTry(){
                         .invitedVoucher(invitedVoucher)
                         .build();
                 String message = visitor.invokeApi(scene, false).getString("message");
-                Preconditions.checkArgument(message.equals("卡券数量不能为空") || message.equals("奖励数量不能为空") || message.contains("库存不足，请重新选择") || message.equals("奖励数量至少一张"), "被邀请者优惠券配置异常情况为：" + num[i]);
+                Preconditions.checkArgument(message.equals("卡券数量不能为空") || message.equals("奖励数量不能为空") || message.contains("可用库存不足") || message.equals("奖励数量至少一张"), "被邀请者优惠券配置异常情况为：" + num[i]);
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -3069,7 +3074,7 @@ public void justTry(){
                 }
                 IScene scene = builder.build();
                 String message = visitor.invokeApi(scene, false).getString("message");
-                Preconditions.checkArgument(message.equals("卡券数量不能为空") || message.equals("奖励数量不能为空") || message.contains("库存不足，请重新选择") || message.equals("奖励数量至少一张"), "被邀请者优惠券配置异常情况为：" + num[i]);
+                Preconditions.checkArgument(message.equals("奖励数量不能为空") || message.equals("奖励数量不能为空") || message.contains("可用库存不足") || message.equals("奖励数量至少一张"), "被邀请者优惠券配置异常情况为：" + num[i]);
             }
 
         } catch (AssertionError | Exception e) {
@@ -3364,7 +3369,7 @@ public void justTry(){
             IScene scene = builder.build();
             String message = visitor.invokeApi(scene, false).getString("message");
             System.out.println(message);
-            Preconditions.checkArgument(message.contains("库存不足，请重新选择") || message.contains("暂停发放"), "暂停发放优惠券的校验，message返回结果为：" + message);
+            Preconditions.checkArgument(message.contains("可用库存不足") || message.contains("暂停发放"), "暂停发放优惠券的校验，message返回结果为：" + message);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {

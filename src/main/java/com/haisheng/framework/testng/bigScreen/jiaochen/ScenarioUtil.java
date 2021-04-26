@@ -2175,6 +2175,42 @@ public class ScenarioUtil extends TestCaseCommon {
     /**
      * @description:预约记录列表
      * @author: gly
+     * @time: 2020-11-24
+     */
+    public JSONObject appointmentRecordManage1(String shopId, String page, String size,String type, String pram, String result) {
+        String url = "/jiaochen/pc/appointment-manage/appointment-record/appointment-page";
+        JSONObject json = new JSONObject();
+        json.put("shopId", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        json.put("type", type);
+        if (pram != null) {
+            json.put(pram, result);
+        }
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description:预约记录列表
+     * @author: gly
+     * @time: 2020-11-24
+     */
+    public JSONObject appointmentRecordManage(String shopId, String page, String size,String type, String pram, String result) {
+        String url = "/jiaochen/pc/appointment-manage/appointment-record/appointment-page";
+        JSONObject json = new JSONObject();
+        json.put("shopId", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        json.put("type", type);
+        if (pram != null) {
+            json.put(pram, result);
+        }
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description:预约记录列表
+     * @author: gly
      * @time: 2020-12-16
      */
     public JSONObject appointmentRecordTimeManage(String shopId, String page, String size, String appointment_start, String appointment_end, String confirm_start, String confirm_end, String create_start, String create_end) {
@@ -2183,6 +2219,27 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("shopId", shopId);
         json.put("page", page);
         json.put("size", size);
+//        json.put("appointment_end", appointment_end);
+//        json.put("appointment_start", appointment_start);
+        json.put("confirm_end", confirm_end);
+        json.put("confirm_start", confirm_start);
+        json.put("create_end", create_end);
+        json.put("create_start", create_start);
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description:预约记录列表
+     * @author: gly
+     * @time: 2020-12-16
+     */
+    public JSONObject appointmentRecordTimeManage(String shopId, String page, String size,String type, String appointment_start, String appointment_end, String confirm_start, String confirm_end, String create_start, String create_end) {
+        String url = "/jiaochen/pc/appointment-manage/appointment-record/appointment-page";
+        JSONObject json = new JSONObject();
+        json.put("shopId", shopId);
+        json.put("page", page);
+        json.put("size", size);
+        json.put("type", type);
 //        json.put("appointment_end", appointment_end);
 //        json.put("appointment_start", appointment_start);
         json.put("confirm_end", confirm_end);
@@ -2210,6 +2267,7 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("confirm_status", variable.confirm_status);
         json.put("customer_phone", variable.customer_phone);
         json.put("is_overtime", variable.is_overtime);
+        json.put("type", variable.type);
         json.put("appointment_date", variable.appointment_date);
 
         return invokeApi(url, json);
@@ -2237,8 +2295,26 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
+    public JSONObject maintainFilterManage(String shopId, String page, String size, String type,String pram, String result) {
+        String url = "/jiaochen/pc/shop-style-model/manage/model/page";
+        JSONObject json = new JSONObject();
+        json.put("shop_id", shopId);
+        json.put("type", type);
+        json.put("page", page);
+        json.put("size", size);
+        if (pram != null) {
+            json.put(pram, result);
+        }
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description:保养配置
+     * @author: gly
+     * @time: 2020-11-24
+     */
     public JSONObject maintainFilterManage(maintainVariable variable) {
-        String url = "/jiaochen/pc/manage/maintain/car-model/page";
+        String url = "/jiaochen/pc/shop-style-model/manage/model/page";
         JSONObject json = new JSONObject();
         json.put("shopId", variable.shop_id);
         json.put("page", variable.page);
@@ -2247,6 +2323,7 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("manufacturer", variable.manufacturer);
         json.put("car_model", variable.car_model);
         json.put("year", variable.year);
+        json.put("type", variable.type);
 
         return invokeApi(url, json);
     }
@@ -5556,11 +5633,12 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :PC评价列表
      * @date :2021/2/2
      **/
-    public JSONObject evaluatePage(String shopId, String page, String size, String pram, String result) {
+    public JSONObject evaluatePage(String shopId, String page, String size,String evaluateType, String pram, String result) {
         String url = "/jiaochen/pc/manage/evaluate/page";
         JSONObject json = new JSONObject();
         json.put("page", page);
         json.put("size", size);
+        json.put("evaluate_type", evaluateType);
         json.put("shop_id", shopId);
         if (pram != null) {
             json.put(pram, result);
@@ -5572,7 +5650,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :PC评价列表
      * @date :2021/2/2
      **/
-    public JSONObject evaluatePage(String shopId, String page, String size, String evaluateStart, String evaluateEnd, String sourceCreateStart, String sourceCreateEnd) {
+    public JSONObject evaluatePage(String shopId, String page, String size,String evaluateType, String evaluateStart, String evaluateEnd, String sourceCreateStart, String sourceCreateEnd) {
         String url = "/jiaochen/pc/manage/evaluate/page";
         JSONObject json = new JSONObject();
         json.put("page", page);
@@ -5580,6 +5658,7 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("evaluate_end", evaluateEnd);
         json.put("evaluate_start", evaluateStart);
         json.put("source_create_end", sourceCreateEnd);
+        json.put("evaluate_type", evaluateType);
         json.put("source_create_start", sourceCreateStart);
 
         return invokeApi(url, json);
@@ -5592,20 +5671,20 @@ public class ScenarioUtil extends TestCaseCommon {
     public JSONObject evaluatePage(EvaluatePageVariable variable) {
         String url = "/jiaochen/pc/manage/evaluate/page";
         JSONObject json = new JSONObject();
-        json.put("page", variable.customerName);
-        json.put("size", variable.customerName);
-        json.put("plate_number", variable.customerName);
-        json.put("service_sale_id", variable.customerName);
-        json.put("evaluate_type", variable.customerName);
-        json.put("shop_id", variable.customerName);
+        json.put("page", variable.page);
+        json.put("size", variable.size);
+        json.put("plate_number", variable.plateNumber);
+        json.put("service_sale_id", variable.serviceSaleId);
+        json.put("evaluate_type", variable.evaluateType);
+        json.put("shop_id", variable.shopId);
         json.put("customer_name", variable.customerName);
-        json.put("score", variable.customerName);
-        json.put("evaluate_start", variable.customerName);
-        json.put("evaluate_end", variable.customerName);
-        json.put("is_follow_up", variable.customerName);
-        json.put("customer_phone", variable.customerName);
-        json.put("source_create_start", variable.customerName);
-        json.put("source_create_end", variable.customerName);
+        json.put("score", variable.score);
+        json.put("evaluate_start", variable.evaluateStart);
+        json.put("evaluate_end", variable.evaluateEnd);
+        json.put("is_follow_up", variable.isFollowUp);
+        json.put("customer_phone", variable.customerPhone);
+        json.put("source_create_start", variable.sourceCreateStart);
+        json.put("source_create_end", variable.sourceCreateEnd);
         return invokeApi(url, json);
     }
 
