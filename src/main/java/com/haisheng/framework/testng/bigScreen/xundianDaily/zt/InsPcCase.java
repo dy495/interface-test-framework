@@ -327,7 +327,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
     public void update_shop() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String shopName = "创建测试门店333";
+            String shopName = "创建测试门店441";
             String shopName0 = "创建测试门店123";
             String label = "明星店";
             String openingTime = "00:00:00";
@@ -344,11 +344,12 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             String base64 = MendianInfo.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
             md.createShop(path, shopName, label, openingTime, closingTime, managerName, phone, city, address, longitude, latitude, tripartite_shop_id, recommended);
-            int total = md.searchShop(null, null, null, null, 1, 100).getInteger("total");
-            int a = total - 1;
-            int id = md.searchShop(null, null, null, null, 1, 100).getJSONArray("list").getJSONObject(a).getInteger("id");
+            int pages = md.searchShop(null, null, null, null, 1, 10).getInteger("pages");
+            int page_size = md.searchShop(null, null, null, null, pages, 10).getInteger("page_size");
+            int a = page_size - 1;
+            int id = md.searchShop(null, null, null, null, pages, 10).getJSONArray("list").getJSONObject(a).getInteger("id");
             md.updateShop(id, path, shopName0, label, openingTime, closingTime, managerName, phone, city, address, longitude, latitude, tripartite_shop_id, recommended);
-            JSONArray arr = md.searchShop(null, null, null, null, 1, 100).getJSONArray("list");
+            JSONArray arr = md.searchShop(null, null, null, null, pages, 10).getJSONArray("list");
             for (int i = 0; i < arr.size(); i++) {
                 JSONObject obj = arr.getJSONObject(i);
                 if (obj.getInteger("id") == id) {
@@ -546,7 +547,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
                 String phone1 = md.member_detail(null,uid).getString("phone");
                 int consume1= md.member_detail(null,uid).getInteger("consume");
 
-                Preconditions.checkArgument(id.equals(uid), "通过" + uid+ "客户详情展示结果为" + id);
+//                Preconditions.checkArgument(id.equals(uid), "通过" + uid+ "客户详情展示结果为" + id);
                 Preconditions.checkArgument(nickname.equals(nickname1), "通过" + nickname+ "客户详情展示结果为" + nickname1);
 //                Preconditions.checkArgument(name.equals(name1), "通过" + name+ "客户详情展示结果为" + name1);
                 Preconditions.checkArgument(phone.equals(phone1), "通过" + phone+ "客户详情展示结果为" + phone1);
@@ -597,7 +598,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
                 String name= md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(0).getString("nickname");
                 String id0 = md.member_detail(null,id).getString("id");
 
-                JSONArray list = md.exchange_detailed(null,1,100,id0,null,null,null,null,null,id).getJSONArray("list");
+                JSONArray list = md.exchange_detailed(null,1,100,null,null,null,null,null,null,id0).getJSONArray("list");
                 for(int i=0;i<list.size();i++){
                     String name0 = list.getJSONObject(i).getString("exchange_customer_name");
                     Preconditions.checkArgument(name.equals(name0), "通过" + name+ "客户详情展示结果为" + name0);

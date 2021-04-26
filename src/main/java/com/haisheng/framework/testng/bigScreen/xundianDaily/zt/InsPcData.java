@@ -130,8 +130,10 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
 
             //改变门店状态
             xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
-            int t = md.searchShop(null, null, null, null, 1, 100).getInteger("total");
-            int t1 = t-1;
+            int pages = md.searchShop(null, null, null, null, 1, 10).getInteger("pages");
+            int page_size = md.searchShop(null, null, null, null, pages, 10).getInteger("page_size");
+//            int t = md.searchShop(null, null, null, null, 1, 100).getInteger("total");
+            int t1 = page_size-1;
             int id = md.searchShop(null, null, null, null, 1, 100).getJSONArray("list").getJSONObject(t1).getInteger("id");
             md.updateStatus(id,false);
 
@@ -145,8 +147,10 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
 
             //改变门店状态
             xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
-            int t2 = md.searchShop(null, null, null, null, 1, 100).getInteger("total");
-            int t3 = t2-1;
+            int pages0 = md.searchShop(null, null, null, null, 1, 10).getInteger("pages");
+            int page_size0 = md.searchShop(null, null, null, null, pages0, 10).getInteger("page_size");
+//            int t2 = md.searchShop(null, null, null, null, 1, 100).getInteger("total");
+            int t3 = page_size0-1;
             int id0 = md.searchShop(null, null, null, null, 1, 100).getJSONArray("list").getJSONObject(t3).getInteger("id");
             md.updateStatus(id0,true);
 
