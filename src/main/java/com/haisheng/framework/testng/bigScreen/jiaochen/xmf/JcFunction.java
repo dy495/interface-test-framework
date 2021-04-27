@@ -192,6 +192,7 @@ public class JcFunction {
         sr.plate_number = carPlate;
         sr.customer_name = data.getString("customer_name");
         sr.customer_phone = data.getString("customer_phone");
+        sr.after_sales_type="MAINTAIN";
         //开始接待
         jc.StartReception(sr);
         //取接待列表id
@@ -215,6 +216,9 @@ public class JcFunction {
         sr.plate_number = carPlate;
         sr.customer_name = data.getString("customer_name");
         sr.customer_phone = data.getString("customer_phone");
+        sr.after_sales_type="REPAIR";
+//        sr.after_sales_type="MAINTAIN";
+
         //开始接待
         jc.pcStartReception(sr);
         //取接待列表id

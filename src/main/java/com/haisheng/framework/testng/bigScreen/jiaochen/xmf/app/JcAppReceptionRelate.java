@@ -120,6 +120,7 @@ public class JcAppReceptionRelate extends TestCaseCommon implements TestCaseStd 
             dataTemp.setApp_all_appointment(appTodayTask[1]);
             dataTemp.setApp_surplus_reception(appTodayTask[2]);
             dataTemp.setApp_all_reception(appTodayTask[3]);
+            System.out.println(" reception:");
             //接待
             dataTemp.setAppointmentId(pf.startReception("京QWER123")[0]);
 

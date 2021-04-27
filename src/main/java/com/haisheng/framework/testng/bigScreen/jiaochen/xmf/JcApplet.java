@@ -116,8 +116,8 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             jc.appletLoginToken(pp.appletTocken);
-//            System.out.println("卡券数量"+pf.getVoucherTotal());
-            System.out.println("套餐数量"+pf.getpackgeTotal());
+            System.out.println("卡券数量"+pf.getVoucherTotal());
+//            System.out.println("套餐数量"+pf.getpackgeTotal());
 
 
         } catch (AssertionError | Exception e) {
@@ -450,7 +450,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
             appletInfoEdit er = new appletInfoEdit();
             er.birthday = "1996-02-19";
             er.gender = "FEMALE";
-            er.name = "@@@";
+            er.name = "夏明凤";
             er.contact = "15037286013";
 //            er.shipping_address = "中关村soho" + dt.getHHmm(0);
             jc.appletUserInfoEdit(er);
@@ -701,7 +701,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         return count;
     }
 
-    @Test(description = "道路救援门店数=门店管理开启的门店")
+//    @Test(description = "道路救援门店数=门店管理开启的门店")
     public void recuseShopList() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -710,7 +710,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
             int openShoptotal = getshopNumber("status");
             jc.appletLoginToken(pp.appletTocken);
             int total = jc.rescueShopList(pp.coordinate, "null").getJSONArray("list").size();  //TODO：接口没有返回门店列表总数，暂取list的size
-            Preconditions.checkArgument(openShoptotal == total, "道路救援门店数!=门店管理开启的门店");
+            Preconditions.checkArgument(openShoptotal == total, "道路救援门店数"+total+"!=门店管理开启的门店"+openShoptotal);
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
@@ -720,7 +720,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    @Test(description = "免费洗车门店数=门店管理开启的门店")
+//    @Test(description = "免费洗车门店数=门店管理开启的门店")
     public void washShopList() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -738,7 +738,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "洗车，剩余次数-1，pc洗车管理+1")
+//    @Test(description = "洗车，剩余次数-1，pc洗车管理+1")
     public void washCar() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

@@ -2,15 +2,21 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.registerListVariable;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.record.ImportPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appStartReception;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appletAppointment;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.pccreateActile;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.FileUtil;
+import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.ReadContext;
 import org.apache.commons.lang.ArrayUtils;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 public class JcFunctionOnline {
@@ -23,6 +29,49 @@ public class JcFunctionOnline {
         String num = "177" + (random.nextInt(89999999) + 10000000);
 
         return num;
+    }
+
+    public  Integer importCheck(String name){
+        IScene importPageScene= ImportPageScene.builder().page(1).size(10).user(name).build();
+        JSONObject importReault=jc.invokeApi(importPageScene).getJSONArray("list").getJSONObject(0);
+        int sueecssNum=importReault.getInteger("success_num");
+        return sueecssNum;
+    }
+    //通过权限描述，返回权限id
+    public Long getAccessId(String label){
+        JSONArray child=jc.roleTree().getJSONArray("children");
+        Long id=0L;
+        for(Object aa:child){
+            JSONObject  tmp = (JSONObject) JSONObject.toJSON(aa);
+            JSONArray temp =tmp.getJSONArray("children");
+            for(Object bb: temp){
+                JSONObject temp2= (JSONObject) JSONObject.toJSON(bb);
+                String labelTemp=temp2.getString("label");
+                id=temp2.getLong("value");
+                if(label.equals(label)){
+                    System.err.println("all:"+id);
+                }
+            }
+        }
+        return id;
+    }
+    public Long getAccessId2(String labelParm){
+
+        JSONObject child=jc.roleTree();
+        ReadContext readContext= JsonPath.parse(child);
+
+        ArrayList label=readContext.read("$.children[*].children[*].label");
+        ArrayList value=readContext.read("$.children[*].children[*].value");
+
+        HashMap<String,String> access=new HashMap<>();
+        for(int i=0;i<label.size();i++){
+            label.get(i);
+//            System.out.println("DateAccess"+i+"(\""+label.get(i)+"\","+value.get(i)+"),");
+            access.put(String.valueOf(label.get(i)),String.valueOf(value.get(i)));
+        }
+//        access.forEach((k,v)-> System.err.println(k+"-"+v));
+        Long id=Long.valueOf(access.get(labelParm));
+        return id;
     }
 
     public JSONArray getroleLlist(){
@@ -60,12 +109,10 @@ public class JcFunctionOnline {
     }
 
 
-
-
     //pc预约记录总数
     public int pcAppointmentRecodePage() {
         jc.pcLogin(pp.jdgw, pp.jdgwpassword);
-        int num = jc.appointmentRecordManage("", "1", "10", null, null).getInteger("total");
+        int num = jc.appointmentRecordManage("", "1", "10", "type", "MAINTAIN").getInteger("total");
         System.out.println("预约记录数："+num);
         return num;
     }
@@ -130,6 +177,7 @@ public class JcFunctionOnline {
 
     //app开始接待，并返回接待id
     public Long[] startReception(String carPlate) throws Exception {
+
         appStartReception sr = new appStartReception();
         JSONObject data = jc.appReceptionAdmit(carPlate).getJSONArray("customers").getJSONObject(0);
         Long result[] = new Long[2];
@@ -137,6 +185,7 @@ public class JcFunctionOnline {
         sr.plate_number = carPlate;
         sr.customer_name = data.getString("customer_name");
         sr.customer_phone = data.getString("customer_phone");
+        sr.after_sales_type="MAINTAIN";
         //开始接待
         jc.StartReception(sr);
         //取接待列表id
@@ -160,6 +209,9 @@ public class JcFunctionOnline {
         sr.plate_number = carPlate;
         sr.customer_name = data.getString("customer_name");
         sr.customer_phone = data.getString("customer_phone");
+        sr.after_sales_type="REPAIR";
+//        sr.after_sales_type="MAINTAIN";
+
         //开始接待
         jc.pcStartReception(sr);
         //取接待列表id
@@ -181,8 +233,9 @@ public class JcFunctionOnline {
         sum[0] = data.getInteger("surplus_appointment");   //分子
         sum[1] = data.getInteger("all_appointment");     //分母
         //接待
-        sum[2] = data.getInteger("surplus_reception");  //分子
-        sum[3] = data.getInteger("all_reception");      //分母
+        sum[2] = data.getInteger("after_surplus_reception");  //分子
+        sum[3] = data.getInteger("after_all_reception");      //分母
+
         sum[4] = data.getInteger("surplus_follow");  //分子
         sum[5] = data.getInteger("all_follow");      //分母
         return sum;
@@ -243,7 +296,7 @@ public class JcFunctionOnline {
 
     //获取pc活动报名人数
     public int[] jsonActivityNUm(String id) {   //活动id
-        com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.registerListVariable sv = new registerListVariable();
+        registerListVariable sv = new registerListVariable();
         int num[] = new int[4];
 
         JSONObject ll = jc.registerListFilterManage(sv);
@@ -406,14 +459,14 @@ public class JcFunctionOnline {
     //获取套餐个数
     public Integer getpackgeTotal() {
         JSONObject data = jc.appletpackageList(null, "GENERAL", 20);
-        JSONObject lastValue = data.getJSONObject("last_value");
+        String lastValue = data.getString("last_value");
         JSONArray list = data.getJSONArray("list");
         int size = list.size();
         Integer count = size;   //计数器
         int i = 0;
         while (size != 0) {
-            JSONObject temp = jc.appletVoucherList(lastValue, "GENERAL", 20);
-            lastValue = temp.getJSONObject("last_value");
+            JSONObject temp = jc.appletpackageList(lastValue, "GENERAL", 20);
+            lastValue = temp.getString("last_value");
             list = temp.getJSONArray("list");
             size = list.size();
             count = count + size;

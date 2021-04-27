@@ -6,4 +6,6 @@ public class appStartReception {
     public String plate_number;
     public String customer_name;
     public String customer_phone;
+    public String after_sales_type;
+
 }

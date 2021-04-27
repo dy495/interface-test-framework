@@ -1,9 +1,17 @@
 package com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
 
 public class PublicParmOnline {
+
+    //3.0
+    public Long brandId=1L;  //TODO:
+    public String user;
+    public String userpassword;
+    public String userroleId="4965";
+
     public int num=5;
     public String roleId="395";
     public String shopId="-1";   //门店Id
@@ -48,8 +56,10 @@ public class PublicParmOnline {
     //---------2.0---------
     public String String_20="一二三四五六七八九十一二三四五六七八九十";
     public String String_200="一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十";
-    public String StoreCommodity="1902";  //TODO:编辑需要的商品套餐的名字
+    public String StoreCommodityId="1902";  //TODO:编辑需要的商品套餐的名字
     public String importFilepath="src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/importfile.xlsx";   //导入工单文件路径
+    public String importFilepath2="src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/importfile2.xlsx";   //导入工单文件路径
+    public String importFilepath3="src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/importPotentialCustomerfile.xlsx";   //导入工单文件路径
     //其他小程序用户tocken和车牌号信息
     public String getAppletTockenOther="R4M7UpQ2+Q3L0QbxGA32iA==";
     public  String CarplateOther="浙ZXCV123";
@@ -64,6 +74,24 @@ public class PublicParmOnline {
     public Long voucherId = 81L;  //经纬度
 
     public JSONArray roleList=getRoleList();
+    public JSONArray vouchers = getvouchersList();
+    public JSONArray vouchers2 =voucherSingle() ;
+
+    public JSONArray getvouchersList() {   //创建精品套餐时创建的卡券数组
+        JSONObject vouletList=new JSONObject();
+        vouletList.put("effective_day",1);
+        vouletList.put("voucher_count",1);
+        vouletList.put("voucher_id",69);
+        vouletList.put("voucher_name","测试专用优惠券");
+        JSONArray moduleId2 = new JSONArray();
+        moduleId2.add(vouletList);
+        return moduleId2;
+    }
+    public JSONArray voucherSingle(){
+        JSONArray moduleId2 = new JSONArray();
+        moduleId2.add(69);
+        return moduleId2;
+    }
 
     public JSONArray getRoleList(){
         JSONArray moduleId2 = new JSONArray();

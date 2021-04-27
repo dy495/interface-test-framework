@@ -32,7 +32,7 @@ public class PublicParm {
     public String verification_code = "3MR9C7";   //夏夏的核销码
     public String carModelId = "212";
     public String car_id = "24";    //小程序车id
-    public String carplate = "浙QWER123";      //编辑小程序车牌号
+    public String carplate = "津DAASSE";      //编辑小程序车牌号
     public String carplate7 = "津DAASSE";      //编辑小程序车牌号
 
     //预约使用车辆

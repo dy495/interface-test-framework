@@ -508,7 +508,7 @@ public class DateTimeUtil {
         Calendar beforeTime = Calendar.getInstance();
         beforeTime.add(Calendar.MINUTE, n);// n分钟之前/之后的时间
         Date beforeD = beforeTime.getTime();
-        String before = new SimpleDateFormat("HH:mm:ss").format(beforeD);
+        String before = new SimpleDateFormat(pattern).format(beforeD);
         return before;
     }
 

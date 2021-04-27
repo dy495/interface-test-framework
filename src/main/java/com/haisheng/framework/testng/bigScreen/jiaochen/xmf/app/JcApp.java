@@ -462,7 +462,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
      * @description :核销----需要小程序有源源不断的卡券;  核销，核销记录+1
      * @date :2020/12/17 14:58
      **/
-    @Test()
+    @Test(description = "核销")
     public void write() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -830,6 +830,31 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
 
             Preconditions.checkArgument(tasknumA[2] - tasknumB[2] == 1, "完成接待后分子-1 ");
             Preconditions.checkArgument(tasknumA[3] - tasknumB[3] == 0, "完成接待后分母-0");
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("轿辰-app接待,今日数据待处理接待+1,完成接待，待处理接待-1");
+        }
+    }
+
+    //跟进列表数
+        @Test(description = "跟进数")   //三次
+    public void followNumber() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            appLogin(pp.jdgw, pp.jdgwpassword,pp.roleidJdgw);
+            JSONObject lastValue=null;
+            JSONArray list;
+            int count=0;
+            do{
+                JSONObject data=jc.AppPageV3Scene(10,lastValue,null);
+                 lastValue=data.getJSONObject("last_value");
+                 list=data.getJSONArray("list");
+                 count=count+list.size();
+                System.out.println("listsize:"+list.size());
+            }while (list.size()==10);
+            System.out.println("count:"+count);
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());

@@ -8,6 +8,8 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobN
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Constant;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.manage.AppointmentMaintainConfigDetailBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.DataAbnormal;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
@@ -29,7 +31,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 public class JcPc extends TestCaseCommon implements TestCaseStd {
     CommonConfig commonConfig = new CommonConfig();
-
     ScenarioUtil jc = ScenarioUtil.getInstance();
     DateTimeUtil dt = new DateTimeUtil();
     JsonPathUtil jpu = new JsonPathUtil();
@@ -701,8 +702,16 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
 
     //***************pc保养配置相关********************
 
-    @Test  //pc修改车预约价格，小程序对应变更
-    public void Jc_pcmaintainPriceEdit() {
+    @DataProvider(name = "TYPE")
+    public static Object[] type() {
+        return new String[]{
+                "MAINTAIN",
+                "REPAIR"
+        };
+    }
+
+    @Test(dataProvider = "APPOINTMENTTYPE") //pc修改车预约价格，小程序对应变更
+    public void Jc_pcmaintainPriceEdit(String type) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int num = 0;
@@ -717,10 +726,10 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             }
             Double price = 300.0;
             //修改预约价格
-            jc.pcCarModelPriceEdit(pp.modolIdAppointment, price, "ENABLE");
+            jc.pcCarModelPriceEdit(pp.modolIdAppointment, price, "ENABLE",type);
 
             //工位配置里的折扣
-            JSONObject timeRangeDetail = jc.timeRangeDetail("MAINTAIN", dataType);
+            JSONObject timeRangeDetail = jc.timeRangeDetail(type, dataType);
 
             JSONArray morning = timeRangeDetail.getJSONObject("morning").getJSONArray("list");
             JSONArray afternoon = timeRangeDetail.getJSONObject("afternoon").getJSONArray("list");
@@ -735,7 +744,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
 
             //小程序这个车预约的价格
             jc.appletLoginToken(pp.appletTocken);
-            JSONArray appletTime = jc.appletmaintainTimeList(Long.parseLong(pp.shopIdZ), pp.car_idA, dt.getHistoryDate(num),"MAINTAIN").getJSONArray("list");
+            JSONArray appletTime = jc.appletmaintainTimeList(Long.parseLong(pp.shopIdZ), pp.car_idA, dt.getHistoryDate(num),type).getJSONArray("list");
             Preconditions.checkArgument(discount.length == appletTime.size(), "pc配置的预约时间段与小程序展示不一致");
             for (int z = 0; z < appletTime.size(); z++) {
                 String priceApplet = appletTime.getJSONObject(z).getString("price");
@@ -751,7 +760,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             saveData("JC_pc修改预约配置验证");
         }
     }
-    @Test  //pc修改车预约价格，价格格式异常判断
+    @Test(dataProvider = "APPOINTMENTTYPE")  //pc修改车预约价格，价格格式异常判断
     public void Jc_pcmaintainPriceEditAb() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -770,8 +779,8 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test  //pc修改车预约价格，列表价格变更，其他不变更
-    public void Jc_pcmaintainPriceEdit2() {
+    @Test(dataProvider = "APPOINTMENTTYPE")  //pc修改车预约价格，列表价格变更，其他不变更
+    public void Jc_pcmaintainPriceEdit2(String type) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             pcLogin(pp.jdgw,pp.jdgwpassword,pp.roleidJdgw);
@@ -792,8 +801,8 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test  //pc开关【保养配置】-预约按钮，小程序对应变更
-    public void Jc_pcappointmentButton() {
+    @Test(dataProvider = "APPOINTMENTTYPE")  //pc开关【保养配置】-预约按钮，小程序对应变更
+    public void Jc_pcappointmentButton(String type) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject data=jc.maintainFilterManage("","1","10","car_model",pp.carModel).getJSONArray("list").getJSONObject(0);
@@ -801,7 +810,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             if(!status.equals("ENABLE")){
                 throw new Exception("车型-赢识-xia,预约配置被关闭");
             }
-            jc.pcCarModelPriceEdit(pp.modolIdAppointment,null,"DISABLE");
+            jc.pcCarModelPriceEdit(pp.modolIdAppointment,null,"DISABLE",type);
 
             jc.appletLoginToken(pp.appletTocken);
             JSONObject isAble=jc.appletmaintainTimeList(Long.parseLong(pp.shopIdZ),pp.car_idA,dt.getHistoryDate(1),"MAINTAIN",false);
@@ -809,7 +818,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             String message= isAble.getString("message");
 
             jc.pcLogin(pp.gwphone,pp.gwpassword);
-            jc.pcCarModelPriceEdit(pp.modolIdAppointment,null,"ENABLE");
+            jc.pcCarModelPriceEdit(pp.modolIdAppointment,null,"ENABLE",type);
 
 
             Preconditions.checkArgument(code!=1000,"预约配置关闭小程序预约保养页返回"+message);
@@ -821,8 +830,8 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test  //pc开关【保养配置】-预约按钮，保养配置列表数量无变化
-    public void Jc_pcappointmentButton2() {
+    @Test(dataProvider = "APPOINTMENTTYPE") //pc开关【保养配置】-预约按钮，保养配置列表数量无变化
+    public void Jc_pcappointmentButton2(String type) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject data=jc.maintainFilterManage("","1","10","car_model",pp.carModel).getJSONArray("list").getJSONObject(0);
@@ -831,9 +840,9 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
                 throw new Exception("车型-赢识-xia,预约配置被关闭");
             }
             int total=jc.maintainFilterManage("","1","10",null,null).getInteger("total");
-            jc.pcCarModelPriceEdit(pp.modolIdAppointment,null,"DISABLE");
+            jc.pcCarModelPriceEdit(pp.modolIdAppointment,null,"DISABLE",type);
             int totalAfter=jc.maintainFilterManage("","1","10",null,null).getInteger("total");
-            jc.pcCarModelPriceEdit(pp.modolIdAppointment,null,"ENABLE");
+            jc.pcCarModelPriceEdit(pp.modolIdAppointment,null,"ENABLE",type);
             int totalAfter2=jc.maintainFilterManage("","1","10",null,null).getInteger("total");
             Preconditions.checkArgument(total==totalAfter,"关闭后列表数量变化");
             Preconditions.checkArgument(totalAfter==totalAfter2,"开启预约配置后列表数量变化");
@@ -939,6 +948,13 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             er.replay_time_limit="30";
             er.appointment_interval="1";
             jc.pcappointmentConfig(er);
+            JSONObject config=jc.AppointmentMaintainConfigDetailScene(type);
+
+            AppointmentMaintainConfigDetailBean as=JSONObject.toJavaObject(config, AppointmentMaintainConfigDetailBean.class);
+
+            Preconditions.checkArgument(as.getAppointmentInterval()==1,"间隔时间配置失败");
+            Preconditions.checkArgument(as.getReplayTimeLimit()==30,"超时时间配置失败");
+            Preconditions.checkArgument(as.getRemindTime()==20,"提醒时间配置失败");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());

@@ -14,6 +14,7 @@ import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.QADbProxy;
 import com.haisheng.framework.util.QADbUtil;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -118,7 +119,9 @@ public class JcPcReceptionRelate extends TestCaseCommon implements TestCaseStd {
             dataTemp.setApp_surplus_reception(appTodayTask[2]);
             dataTemp.setApp_all_reception(appTodayTask[3]);
             //pc 接待
-            dataTemp.setAppointmentId(pf.pcstartReception(pp.carplate));
+            dataTemp.setAppointmentId(pf.pcstartReception(pp.carplate7));
+            System.out.println("开始接待：");
+//            dataTemp.setAppointmentId(pf.pcstartReception("浙B237765"));
 
             qaDbUtil.updateDataAll(dataTemp);
         } catch (AssertionError | Exception e) {

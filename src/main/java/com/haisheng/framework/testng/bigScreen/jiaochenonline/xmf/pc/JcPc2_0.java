@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.xmf.pc;
+package com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.pc;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -11,7 +11,6 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTest
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanage.LossCustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanage.PreSaleCustomerPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.record.ImportPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.DataAbnormal;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
@@ -19,6 +18,8 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.pcCreateGood
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.pcCreateStoreCommodity;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.pccreateRemind;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.pccreateStoreSales;
+import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.JcFunctionOnline;
+import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.PublicParmOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -43,14 +44,13 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
     ScenarioUtil jc = ScenarioUtil.getInstance();
     DateTimeUtil dt = new DateTimeUtil();
     JsonPathUtil jpu = new JsonPathUtil();
-    PublicParm pp = new PublicParm();
-    JcFunction pf = new JcFunction();
-    FileUtil file = new FileUtil();
+    PublicParmOnline pp = new PublicParmOnline();
+    JcFunctionOnline pf = new JcFunctionOnline();
     Random random = new Random();
     private QADbProxy qaDbProxy = QADbProxy.getInstance();
     public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
     CommonConfig commonConfig = new CommonConfig();
-    public String IpPort = EnumTestProduce.JC_DAILY.getAddress();
+    String IpPort=EnumTestProduce.JC_ONLINE.getAddress();
 
 
 
@@ -70,6 +70,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistQaOwner = "xmf";
         commonConfig.referer = EnumTestProduce.JC_DAILY.getReferer();
         commonConfig.product = EnumTestProduce.JC_DAILY.name();
+        jc.changeIpPort(EnumTestProduce.JC_ONLINE.getAddress());
 
         //replace backend gateway url
         //commonConfig.gateway = "";
@@ -574,10 +575,6 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
     public void accountInfoData_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            commonConfig.shopId="-1";
-            pcLogin(pp.gwphone, pp.gwpassword,pp.roleId);
-            System.out.println(commonConfig.shopId);
-
             JSONArray list = jc.staffListFilterManage("", "1", "10","","").getJSONArray("list");
 
             for (int i = 1; i < list.size(); i++) {
@@ -593,8 +590,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            commonConfig.shopId=pp.shopIdZ;
-            pcLogin(pp.gwname, pp.gwpassword,pp.roleidJdgw);
+
             saveData("角色的使用账号数量==账号列表中该角色的数量");
         }
 
@@ -702,8 +698,8 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             String maile="2001";
             String vin="ASDAAAAAAA12"+ CommonUtil.getRandom(5);
             String plate="京AS"+CommonUtil.getRandom(4);
-//            String phone="177"+CommonUtil.getRandom(8);
-            String phone="15037286013";
+            String phone="177"+CommonUtil.getRandom(8);
+//            String phone="15037286013";
 
             System.out.println("vin"+vin);
             System.out.println("plate"+plate);

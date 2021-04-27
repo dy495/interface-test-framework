@@ -70,7 +70,7 @@ public class PoiUtils {
 
     }
 
-    public static void importlossCustomer(String mile,String vin,int dataNum,String plate,String phone ) throws IOException {
+    public static void importlossCustomer(String mile,String vin,int dataNum,String plate,String phone,String staff ) throws IOException {
         Random random = new Random();
         String serverNumber = "A" + random.nextInt(100000);
         DateTimeUtil dt = new DateTimeUtil();
@@ -97,10 +97,10 @@ public class PoiUtils {
                 "保养",
                 plate,
                 vin,
-                "夏流失客户",
+                "夏明凤",
                 "女",
                 phone,
-                "自动化专用账号",
+                staff,
                 mile,
                 "2000",
                 end};

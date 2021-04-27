@@ -194,6 +194,7 @@ public class ScenarioUtil extends TestCaseCommon {
         object.put("plate_number", ar.plate_number);
         object.put("customer_name", ar.customer_name);
         object.put("customer_phone", ar.customer_phone);
+        object.put("after_sales_type", ar.after_sales_type);
         return invokeApi(path, object);
     }
 
@@ -475,7 +476,7 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     //保养配置修改
-    public JSONObject pcCarModelPriceEdit(String id, Double price, String status) {
+    public JSONObject pcCarModelPriceEdit(String id, Double price, String status,String type) {
         String url = "/jiaochen/pc/manage/maintain/car-model/edit";
         JSONObject object = new JSONObject();
         object.put("id", id);
@@ -491,6 +492,17 @@ public class ScenarioUtil extends TestCaseCommon {
         object.put("id", id);
         object.put("price", price);
         object.put("status", status);
+        return invokeApi(url, object, checkcode);
+    }
+
+    //保养配置修改
+    public JSONObject pcCarModelPriceEdit(String id, String price, String status, Boolean checkcode,String  type) {
+        String url = "/jiaochen/pc/manage/maintain/car-model/edit";
+        JSONObject object = new JSONObject();
+        object.put("id", id);
+        object.put("price", price);
+        object.put("status", status);
+        object.put("type", type);
         return invokeApi(url, object, checkcode);
     }
 
@@ -1224,6 +1236,7 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("customer_name", sr.customer_name);
         json.put("customer_phone", sr.customer_phone);
         json.put("plate_number", sr.plate_number);
+        json.put("after_sales_type", sr.after_sales_type);
 
         return invokeApi(url, json);
     }
