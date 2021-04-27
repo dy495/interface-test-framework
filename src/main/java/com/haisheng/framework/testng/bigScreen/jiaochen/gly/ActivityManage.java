@@ -788,17 +788,17 @@ public void justTry(){
     public void activityApproval14() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            //创建一个活动招募活动
+            Long id=businessUtil.createRecruitActivityApproval();
             //获取活动审批的数据
             JSONObject response = businessUtil.getActivityApprovalDate();
             //待审批活动
             int waitBefore = response.getInteger("wait");
             //通过的活动
             int passedBefore = response.getInteger("passed");
-            //获取进行中的活动存在待审批ID合集
-            List<Long> ids = businessUtil.getActivityWait();
-            if (ids.size() > 0) {
+            if (id > 0) {
                 //审批通过其中一条
-                businessUtil.getApprovalPassed(ids.get(0));
+                businessUtil.getApprovalPassed(id);
                 //获取审批后活动审批的数据
                 JSONObject response1 = businessUtil.getActivityApprovalDate();
                 //待审批活动
@@ -806,7 +806,7 @@ public void justTry(){
                 //通过的活动
                 int passedAfter = response1.getInteger("passed");
                 //获取活动审批后的状态
-                int status = businessUtil.getActivityStatus(ids.get(0));
+                int status = businessUtil.getActivityStatus(id);
                 Preconditions.checkArgument(waitAfter == (waitBefore - 1), "活动审批数后的待审批数量：" + waitAfter + "活动审批数前的待审批数量：" + waitBefore);
                 Preconditions.checkArgument(passedAfter == (passedBefore + 1), "活动审批数后的审批通过数量：" + passedAfter + "活动审批数前的审批通过数量：" + passedBefore);
                 Preconditions.checkArgument(status == ActivityStatusEnum.PASSED.getId(), "活动审批数后活动的状态应为【进行中】，此时为为：" + status);
@@ -899,13 +899,13 @@ public void justTry(){
     public void activityApproval() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            //获取列表中状态为【待审批】的活动ID
-            List<Long> ids = businessUtil.getActivityWaitingApproval();
+            //创建一个活动招募活动
+            Long id=businessUtil.createRecruitActivityApproval();
             //通过待审批的活动
-            String message = businessUtil.getApprovalPassed(ids.get(0));
-            System.err.println(ids.get(0)+"--------"+message);
+            String message = businessUtil.getApprovalPassed(id);
+            System.err.println(id+"--------"+message);
             //获取刚才通过的活动的状态
-            int status = businessUtil.getActivityApprovalStatus(ids.get(0));
+            int status = businessUtil.getActivityApprovalStatus(id);
             Preconditions.checkArgument(status == ActivityStatusEnum.PASSED.getId(), "审批通过后活动的状态为：" + status);
 
         } catch (AssertionError | Exception e) {
@@ -1419,7 +1419,7 @@ public void justTry(){
             user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             JSONObject response=businessUtil.appointmentActivityTitleNew();
             String title1=response.getJSONArray("list").getJSONObject(0).getString("title");            jc.pcLogin(pp.phone1, pp.password);
-            Preconditions.checkArgument(title1.equals(title), "PC进行中活动的ID为：" + title+"小程序中的更多中的活动ID为："+title1);
+            Preconditions.checkArgument(title1.equals(title), "PC进行中活动的标题为：" + title+"小程序中的更多中的活动标题为："+title1);
             Preconditions.checkArgument(message.equals("success"), "置顶进行中的活动的相关提示:" + message);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -2075,9 +2075,8 @@ public void justTry(){
             //小程序中第一个为此活动
             user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             JSONObject response=businessUtil.appointmentActivityTitleNew();
-            Long itemId=response.getJSONArray("list").getJSONObject(0).getLong("itemId");
-            jc.pcLogin(pp.phone1, pp.password);
-            Preconditions.checkArgument(ids.get(0).equals(itemId), "PC进行中活动的ID为：" + ids.get(0)+"小程序中的更多中的活动ID为："+itemId);
+            String title1=response.getJSONArray("list").getJSONObject(0).getString("title");
+            Preconditions.checkArgument(title1.equals(title), "PC进行中活动的名称为：" + title+"小程序中的更多中的活动名称为："+title1);
             Preconditions.checkArgument(message.equals("success"), "置顶进行中的活动的相关提示:" + message);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -2240,8 +2239,7 @@ public void justTry(){
             List<Long> ids = businessUtil.getFissionActivityWaitingStar();
             //推广未开始的活动
             String appletCodeUrl = businessUtil.getPromotionActivity(ids.get(0));
-            System.err.println(appletCodeUrl+"--------"+ids);
-            Preconditions.checkArgument(!appletCodeUrl.equals("当前状态为【待审核】不可推广"), "推广【未开始】的活动的小程序二维码的返回值为空");
+            Preconditions.checkArgument(!appletCodeUrl.equals(""), "推广【未开始】的活动的小程序二维码的返回值为空");
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -3227,7 +3225,7 @@ public void justTry(){
             IScene scene = builder.build();
             String message = visitor.invokeApi(scene, false).getString("message");
             System.out.println(message);
-            Preconditions.checkArgument(message.contains("库存不足，请重新选择") || message.contains("已作废"), "作废优惠券的校验，message返回结果为：" + message);
+            Preconditions.checkArgument(message.contains("可用库存不足") || message.contains("已作废"), "作废优惠券的校验，message返回结果为：" + message);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -4124,19 +4122,7 @@ public void justTry(){
 
 
 
-    public void testTry () {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-            //推送消息，把卡券耗尽
-            businessUtil.pushMessage(0,true,voucherId);
 
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("ceshiyaya");
-        }
-    }
 
 
 

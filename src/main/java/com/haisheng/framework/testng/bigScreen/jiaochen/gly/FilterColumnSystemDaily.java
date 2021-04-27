@@ -739,7 +739,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
     }
 
     /**
-     * @description :V2.0预约记录-筛选栏单项查询
+     * @description :V2.0预约保养记录-筛选栏单项查询
      * @date :2020/11/24
      **/
     @Test(dataProvider = "SELECT_appointmentRecordFilter", dataProviderClass = Constant.class)
@@ -794,7 +794,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("预约记录单项查询，结果校验");
+            saveData("预约保养记录单项查询，结果校验");
         }
     }
 
@@ -1080,7 +1080,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 String result = respond.getJSONArray("list").getJSONObject(0).getString(output);
                if(pram.equals("subject_name")){
                    System.out.println("-----------"+result.substring(0,2));
-                   String result1=businessUtil.getSubjectList(result.substring(0,2));
+                   String result1=result.contains("店")?"门店":businessUtil.getSubjectList(result.substring(0,2));
                    JSONObject respond1 = jc.voucherPageFilterManage("1", "10", pram, result1);
                    int pages = respond1.getInteger("pages")>10?10:respond1.getInteger("pages");
                    for (int page = 1; page <= pages; page++) {
@@ -2638,6 +2638,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 if(pram.equals("shop_id")){
                     String result = respond.getJSONArray("list").getJSONObject(0).getJSONArray("shop_list").getJSONObject(0).getString(output);
                     JSONObject respond1 = jc.staffListFilterManage(null, "1", "10", pram, result);
+                    System.out.println("----------"+respond1);
                     int pages = respond1.getInteger("pages");
                     for (int page = 1; page <= pages; page++) {
                         JSONArray list = jc.staffListFilterManage("", String.valueOf(page), "10", pram, result).getJSONArray("list");
@@ -2646,10 +2647,13 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                             JSONArray list1 = list.getJSONObject(i).getJSONArray("shop_list");
                             for(int j=0;j<list1.size();j++){
                                 String Flag = list1.getJSONObject(j).getString("shop_id");
-                                string=Flag+string;
+                                System.out.println(page +" ------"+i+"--------"+list1.size());
+//                                string.append(Flag);
+                                string=string+Flag;
+                                System.out.println("--Flag------"+Flag);
+                                System.out.println("--string------"+string);
                             }
-                            Preconditions.checkArgument(string.contains(result), "员工列表按" + string + "查询，结果错误" + result);
-
+                            Preconditions.checkArgument(string.toString().contains(result), "员工列表按" + string + "查询，结果错误" + result);
                         }
                     }
                 }else if(pram.equals("role_id")){
@@ -2685,50 +2689,6 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
             } else {
                 Preconditions.checkArgument(respond.getJSONArray("list") == null, "员工列表错误,请自行检查");
             }
-
-//            if (respond.getJSONArray("list").size() > 0) {
-//                System.out.println("-------"+pram);
-//                if(pram.equals("role_id")) {
-//                    if (respond.getJSONArray("list").size() > 0) {
-//                        String result = respond.getJSONArray("list").getJSONObject(0).getJSONArray("role_list").getJSONObject(0).getString(pram);
-//                        JSONObject respond1 = jc.staffListFilterManage(null, "1", "10", pram, result);
-//                        int pages = respond1.getInteger("pages");
-//                        for (int page = 1; page <= pages; page++) {
-//                            JSONArray list = jc.staffListFilterManage("", String.valueOf(page), "10", pram, result).getJSONArray("list");
-//                            for (int i = 0; i < list.size(); i++) {
-//                                String Flag = list.getJSONObject(i).getJSONArray("role_list").getJSONObject(0).getString("role_id");
-//                                System.out.println("-------"+Flag);
-//                                Preconditions.checkArgument(Flag.contains(result), "员工列表按" + result + "查询，结果错误" + Flag);
-//                            }
-//                        }
-//                    }
-//                }if(pram.equals("shop_id")) {
-//                    if (respond.getJSONArray("list").size() > 0) {
-//                        String result = respond.getJSONArray("list").getJSONObject(0).getJSONArray("shop_list").getJSONObject(0).getString(pram);
-//                        JSONObject respond1 = jc.staffListFilterManage(null, "1", "10", pram, result);
-//                        int pages = respond1.getInteger("pages");
-//                        for (int page = 1; page <= pages; page++) {
-//                            JSONArray list = jc.staffListFilterManage("", String.valueOf(page), "10", pram, result).getJSONArray("list");
-//                            for (int i = 0; i < list.size(); i++) {
-//                                String Flag = list.getJSONObject(i).getJSONArray("shop_list").getJSONObject(0).getString("shop_id");
-//                                System.out.println("-------"+Flag);
-//                                Preconditions.checkArgument(Flag.contains(result), "员工列表按" + result + "查询，结果错误" + Flag);
-//                            }
-//                        }
-//                    }
-//                } else{
-//                    String result = respond.getJSONArray("list").getJSONObject(0).getString(pram);
-//                    JSONObject respond1 = jc.staffListFilterManage(null, "1", "10", pram, result);
-//                    int pages = respond1.getInteger("pages");
-//                    for (int page = 1; page <= pages; page++) {
-//                        JSONArray list = jc.staffListFilterManage("", String.valueOf(page),"10", pram, result).getJSONArray("list");
-//                        for (int i = 0; i < list.size(); i++) {
-//                            String Flag = list.getJSONObject(i).getString(output);
-//                            Preconditions.checkArgument(Flag.contains(result), "员工列表按" + result + "查询，结果错误" + Flag);
-//                        }
-//                    }
-//                    }
-//                }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {

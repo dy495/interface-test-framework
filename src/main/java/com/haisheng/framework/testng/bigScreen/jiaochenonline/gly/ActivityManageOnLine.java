@@ -125,21 +125,25 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             businessUtil.getApprovalPassed(activityId2);
             //获取活动的状态
             int statusPassed = businessUtil.getActivityStatus(activityId2);
+            //获取此活动的名称
+            String title=businessUtil.getRecruitActivityDetailDate1(activityId2).getString("title");
+            System.err.println("----------title:"+title);
             //登录小程序
             user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
             //获取小程序推荐列表  判断裂变活动是否创建成功
-            do{
+            do {
                 IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
-                JSONObject response1 = visitor.invokeApi(scene);
-                lastValue = response1.getJSONObject("last_value");
-                list = response1.getJSONArray("list");
+                JSONObject response = visitor.invokeApi(scene);
+                lastValue = response.getJSONObject("last_value");
+                list = response.getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
-                    int itemId = list.getJSONObject(i).getInteger("itemId");
-                    if (activityId2 == itemId) {
-                        flag = true;
+                    String title1 = list.getJSONObject(i).getString("title");
+                    System.out.println("----------title1:"+title1);
+                    if (title.equals(title1)) {
+                        flag=true;
                     }
                 }
-            }while(list.size()==10);
+            } while (list.size() == 10);
             Preconditions.checkArgument(status == ActivityStatusEnum.PENDING.getId(), "待审核的活动状态为：" + status);
             Preconditions.checkArgument(statusRevoke == ActivityStatusEnum.REVOKE.getId(), "已撤销的活动状态为：" + statusRevoke);
             Preconditions.checkArgument(statusPassed == ActivityStatusEnum.PASSED.getId(), "审批通过的活动状态为：" + statusPassed);
@@ -190,8 +194,6 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             //获取小程序活动对应的title  PC的活动ID=小程序的itemId
             String title = businessUtil.appointmentActivityTitleNew(activityId);
             System.err.println("AD:"+activityId+"      title:"+title);
-            //获取【我的卡券】列表条数
-//            int numBefore=jc.appletVoucherList(null,"GENERAL",100).getJSONArray("list").size();
             //查询是否获得此卡券(通过卡券码查询，看看能否有此卡券的返回值)
             AppletVoucherInfo voucher = supporterUtil.getAppletVoucherInfo(voucherCode);
             //小程序我的报名列表
@@ -213,8 +215,6 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(statusPassed == ActivityStatusEnum.PASSED.getId(), "审核通过的活动状态为：" + statusPassed);
             Preconditions.checkArgument(voucher != null, "小程序报名通过没有获得此卡券");
             Preconditions.checkArgument(activityStatus.equals(ActivityStatusEnum.CANCELED.getStatusName()), "小程序报名通过取消以后此卡券的状态为：" + activityStatus);
-//            Preconditions.checkArgument(numBefore==numAfter+1,"取消活动以后此卡券的数量没有-1");
-
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
@@ -1654,10 +1654,10 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             //小程序中第一个为此活动
             user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
             JSONObject response=businessUtil.appointmentActivityTitleNew();
-            Long itemId=response.getJSONArray("list").getJSONObject(0).getLong("itemId");
+            String title1=response.getJSONArray("list").getJSONObject(0).getString("title");
             jc.pcLogin(pp.phone, pp.password);
-            System.out.println("PC已过期活动的ID为：" + ids.get(0)+"小程序中的更多中的活动ID为："+itemId);
-            Preconditions.checkArgument(ids.get(0).equals(itemId), "PC已过期活动的ID为：" + ids.get(0)+"小程序中的更多中的活动ID为："+itemId);
+            System.out.println("PC已过期活动的ID为：" + ids.get(0)+"小程序中的更多中的活动名称为："+title1);
+            Preconditions.checkArgument(title1.equals(title), "PC已过期活动的名称为：" + title+"小程序中的更多中的活动名称为："+title1);
             Preconditions.checkArgument(message.equals("success"), "置顶已过期的活动的相关提示:" + message);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -2118,9 +2118,8 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             //小程序中第一个为此活动
             user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
             JSONObject response=businessUtil.appointmentActivityTitleNew();
-            Long itemId=response.getJSONArray("list").getJSONObject(0).getLong("itemId");
-            jc.pcLogin(pp.phone, pp.password);
-            Preconditions.checkArgument(ids.get(0).equals(itemId), "PC进行中活动的ID为：" + ids.get(0)+"小程序中的更多中的活动ID为："+itemId);
+            String title1=response.getJSONArray("list").getJSONObject(0).getString("title");
+            Preconditions.checkArgument(title1.equals(title), "PC进行中活动的名称为：" + title+"小程序中的更多中的活动名称为："+title1);
             Preconditions.checkArgument(message.equals("success"), "置顶进行中的活动的相关提示:" + message);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -2360,10 +2359,10 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             //小程序中第一个为此活动
             user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
             JSONObject response=businessUtil.appointmentActivityTitleNew();
-            Long itemId=response.getJSONArray("list").getJSONObject(0).getLong("itemId");
+            String title1=response.getJSONArray("list").getJSONObject(0).getString("title");
             jc.pcLogin(pp.phone, pp.password);
-            System.out.println("PC已过期活动的ID为：" + ids.get(0)+"小程序中的更多中的活动ID为："+itemId);
-            Preconditions.checkArgument(ids.get(0).equals(itemId), "PC已过期活动的ID为：" + ids.get(0)+"小程序中的更多中的活动ID为："+itemId);
+            System.out.println("PC已过期活动的ID为：" + ids.get(0)+"小程序中的更多中的活动名称为："+title1);
+            Preconditions.checkArgument(title1.equals(title), "PC已过期活动的名称为：" + title+"小程序中的更多中的活动名称为："+title1);
             Preconditions.checkArgument(message.equals("success"), "置顶已过期的活动的相关提示:" + message);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -2662,7 +2661,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                         .invitedVoucher(invitedVoucher)
                         .build();
                 String message = visitor.invokeApi(scene, false).getString("message");
-                Preconditions.checkArgument(message.equals("卡券数量不能为空") || message.equals("奖励数量不能为空") || message.contains("库存不足，请重新选择！") || message.equals("奖励数量至少一张"), "分享者优惠券配置异常情况为：" + num[i]);
+                Preconditions.checkArgument(message.equals("可用库存不足") || message.equals("奖励数量不能为空") || message.contains("库存不足，请重新选择！") || message.equals("奖励数量至少一张"), "分享者优惠券配置异常情况为：" + num[i]);
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -2708,7 +2707,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                         .invitedVoucher(invitedVoucher)
                         .build();
                 String message = visitor.invokeApi(scene, false).getString("message");
-                Preconditions.checkArgument(message.equals("卡券数量不能为空") || message.equals("奖励数量不能为空") || message.contains("库存不足，请重新选择") || message.equals("奖励数量至少一张"), "被邀请者优惠券配置异常情况为：" + num[i]);
+                Preconditions.checkArgument(message.equals("可用库存不足") || message.equals("奖励数量不能为空") || message.contains("库存不足，请重新选择") || message.equals("奖励数量至少一张"), "被邀请者优惠券配置异常情况为：" + num[i]);
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -2914,9 +2913,9 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
     }
 
     /**
-     *创建招募活动--活动时间的异常情况{今天之前，一年以后}      存在问题：已提bug（7981）
+     *创建招募活动--活动时间的异常情况{今天之前，一年以后}      ----没有此功能
      */
-    @Test(description = "创建招募活动--活动时间的异常情况{今天之前，一年以后}")
+    @Test(description = "创建招募活动--活动时间的异常情况{今天之前，一年以后}",enabled = false)
     public void RecruitActivityTitleException10() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -3073,7 +3072,6 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
     public void RecruitActivityTitleException12() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             List<Integer> labels = new ArrayList<>();
             labels.add(1000);
             labels.add(1);
@@ -3102,13 +3100,14 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             isRequired.add(false);
             isRequired.add(false);
             JSONArray registerInformationList = this.businessUtil.getRegisterInformationList(isShow, isRequired);
+            String[] rule = pp.ruleException;
+            for (int i = 0; i < rule.length; i++) {
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             //报名成功奖励
             JSONArray registerObject = businessUtil.getRewardVouchers(voucherId, 1, businessUtil.getVoucherSurplusInventory(voucherId));
             //卡券有效期
             JSONObject voucherValid = businessUtil.getVoucherValid(2, null, null, 10);
             //创建招募活动-共有的--基础信息
-            String[] rule = pp.ruleException;
-            for (int i = 0; i < rule.length; i++) {
                 ManageRecruitAddScene.ManageRecruitAddSceneBuilder builder = ManageRecruitAddScene.builder()
                         .type(2)
                         .participationLimitType(0)
@@ -3214,7 +3213,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                 }
                 IScene scene = builder.build();
                 String message = visitor.invokeApi(scene, false).getString("message");
-                Preconditions.checkArgument(message.equals("卡券数量不能为空") || message.equals("奖励数量不能为空") || message.contains("库存不足，请重新选择") || message.equals("奖励数量至少一张"), "被邀请者优惠券配置异常情况为：" + num[i]);
+                Preconditions.checkArgument(message.equals("可用库存不足") || message.equals("奖励数量不能为空") || message.contains("库存不足，请重新选择") || message.equals("奖励数量至少一张"), "被邀请者优惠券配置异常情况为：" + num[i]);
             }
 
         } catch (AssertionError | Exception e) {

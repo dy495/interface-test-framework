@@ -3,10 +3,14 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline.gly;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.util.PublicParameter;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -27,10 +31,12 @@ import static com.aliyun.openservices.shade.com.alibaba.rocketmq.common.UtilAll.
 public class JcPc_SystemLogOnline extends TestCaseCommon implements TestCaseStd {
     ScenarioUtil jc = new ScenarioUtil();
     public String shopId = "-1";
-    public String appletTocken = EnumAppletToken.JC_GLY_ONLINE.getToken();
+    public String appletToken = EnumAppletToken.JC_GLY_ONLINE.getToken();
     CommonConfig commonConfig = new CommonConfig();
-    private static final EnumTestProduce product = EnumTestProduce.JC_DAILY;
+    private static final EnumTestProduce product = EnumTestProduce.JC_ONLINE;
     PublicParameter pp = new PublicParameter();
+    public VisitorProxy visitor = new VisitorProxy(product);
+    SupporterUtil su=new SupporterUtil(visitor);
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
      */
@@ -268,28 +274,24 @@ public class JcPc_SystemLogOnline extends TestCaseCommon implements TestCaseStd 
      **/
     @Test
     public void SystemLog_Date6() {
-        logger.logCaseStart(caseResult.getCaseName());
-        Date date = new Date();
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        String messageContent = "这个一个自动化发送的消息呀,早上好呀";
-        String messageName = "早上好呀-自动化 " + df.format(date);
-        ArrayList<String> phone = new ArrayList();
-        phone.add("13373166806");
         try {
-            //推送个人消息-13373166806
-            jc.pushMessage(true, messageContent, messageName, "2", phone);
+            //获取卡券
+            Long voucherId= new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            //推送推送消息
+            su.pushCustomMessage(0,true,voucherId);
             //查看消息记录中的第一条消息
-            JSONObject respon = jc.pushMsgListFilterManage("", "1", "10", "", "");
-            String isReadBefore = respon.getJSONArray("list").getJSONObject(0).getString("is_read");
+            JSONObject respond = jc.pushMsgListFilterManage("", "1", "10", "", "");
+            String isReadBefore = respond.getJSONArray("list").getJSONObject(0).getString("is_read");
             //登录小程序
-            jc.appletLoginToken(appletTocken);
+            jc.appletLoginToken(appletToken);
             //查看消息
             JSONArray list = jc.appletmessageList("", "10").getJSONArray("list");
             String id = list.getJSONObject(0).getString("id");
             jc.messageDetail(id);
             //查看现在的-客户查看
             jc.pcLogin("15711200001", "000000");
-            String isReadAfter = jc.pushMsgListFilterManage("", "1", "10", "", "").getJSONArray("list").getJSONObject(0).getString("is_read");
+            JSONArray list1= jc.pushMsgListFilterManage("", "1", "10", "", "").getJSONArray("list");
+            String isReadAfter =list1.getJSONObject(0).getString("phone").equals("13373166806")?list1.getJSONObject(0).getString("is_read"):list1.getJSONObject(1).getString("is_read");
             System.out.println("客户查看之前的状态为:" + isReadBefore + "现在客户查看的状态为:" + isReadAfter);
             Preconditions.checkArgument(isReadAfter.equals("true"), "客户查看之前的状态为:" + isReadBefore + "现在客户查看的状态为:" + isReadAfter);
         } catch (AssertionError | Exception e) {
@@ -299,33 +301,31 @@ public class JcPc_SystemLogOnline extends TestCaseCommon implements TestCaseStd 
         }
     }
 
+
     /**
-     * @description :系统日志-数据一致性7:【营销管理】里面消息推送给个人,消息记录中消息+1
+     * @description :系统日志-数据一致性7:【营销管理】里面消息推送给两个人,消息记录中消息+2
      * @date :2020/12/21
      **/
     @Test
     public void SystemLog_Date7() {
         logger.logCaseStart(caseResult.getCaseName());
-        Date date = new Date();
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        String messageContent = "这个一个自动化发送的消息呀-撒浪嘿哟";
-        String messageName = "撒浪嘿哟-自动化 " + df.format(date);
-        ArrayList<String> phone = new ArrayList();
-        phone.add("13373166806");
         try {
+            //获取卡券
+            Long voucherId= new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             //查看消息记录的总条数
-            JSONObject respon = jc.pushMsgListFilterManage("", "1", "10", "", "");
-            int total = respon.getInteger("total");
-            //推送个人消息-13373166806
-            jc.pushMessage(true, messageContent, messageName, "2", phone);
+            JSONObject respond = jc.pushMsgListFilterManage("", "1", "10", "", "");
+            int total = respond.getInteger("total");
+            //推送推送消息
+            su.pushCustomMessage(0,true,voucherId);
+            sleep(3);
             //推送消息以后再次查看消息记录的总条数
-            JSONObject respon1 = jc.pushMsgListFilterManage("", "1", "10", "", "");
-            int total1 = respon1.getInteger("total");
-            Preconditions.checkArgument(total1 == total + 1, "推送消息之前的消息记录总条数为:" + total + "推送消息之后的的消息记录总条数为:" + total1);
+            JSONObject respond1 = jc.pushMsgListFilterManage("", "1", "10", "", "");
+            int total1 = respond1.getInteger("total");
+            Preconditions.checkArgument(total1 == total + 2, "推送消息之前的消息记录总条数为:" + total + "推送消息之后的的消息记录总条数为:" + total1);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("系统日志-数据一致性7:【营销管理】里面消息推送给个人,消息记录中消息+1");
+            saveData("系统日志-数据一致性7:【营销管理】里面消息推送给个人,消息记录中消息+2");
         }
     }
 
@@ -336,26 +336,22 @@ public class JcPc_SystemLogOnline extends TestCaseCommon implements TestCaseStd 
     @Test
     public void SystemLog_Date8() {
         logger.logCaseStart(caseResult.getCaseName());
-        Date date = new Date();
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        String messageContent = "啦啦啦啦啦啦啦啦啦-自动化";
-        String messageName = "嘿嘿哈嘿-自动化" + df.format(date);
-        ArrayList<String> phone = new ArrayList();
-        phone.add("13373166806");
         try {
+            //获取卡券
+            Long voucherId= new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             //查看消息记录的总条数
             JSONObject respond = jc.pushMsgListFilterManage("", "1", "10", "", "");
             int total = respond.getInteger("total");
-            //推送个人消息-13373166806
-            jc.pushMessage(true, messageContent, messageName, "2", phone);
-            int sendCount = jc.messageFormFilterManage("", "1", "10", "customer_name", "Giant").getJSONArray("list").getJSONObject(0).getInteger("send_count");
-            int receiveCount = jc.messageFormFilterManage("", "1", "10", "customer_name", "Giant").getJSONArray("list").getJSONObject(0).getInteger("receive_count");
+            //推送推送消息
+            su.pushCustomMessage(0,true,voucherId);
+            int sendCount = jc.messageFormFilterManage("", "1", "10", "", "").getJSONArray("list").getJSONObject(0).getInteger("send_count");
             //推送消息以后再次查看消息记录的总条数
-            JSONObject respon1 = jc.pushMsgListFilterManage("", "1", "10", "", "");
-            int total1 = respon1.getInteger("total");
+            JSONObject respond1 = jc.pushMsgListFilterManage("", "1", "10", "", "");
+            int total1 = respond1.getInteger("total");
             //消息记录新增的数量
             int num = total1 - total;
-            Preconditions.checkArgument(num == 1 && sendCount == 1, "推送消息之后消息新增的数量:" + (total1 - total) + "消息记录中发出的消息为:" + sendCount + " 原本消息推送的人数为1人");
+
+            Preconditions.checkArgument(num == sendCount , "推送消息之后消息新增的数量:" + (total1 - total) + "消息记录中发出的消息为:" + sendCount );
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -367,36 +363,33 @@ public class JcPc_SystemLogOnline extends TestCaseCommon implements TestCaseStd 
      * @description :系统日志-数据一致性9:【营销管理】中同一批次 消息管理里面收到条数>=消息记录中客户查看为【是】的客户---选择中关村门店
      * @date :2020/12/21
      **/
-    @Test
+    @Test()
     public void SystemLog_Date9() {
         logger.logCaseStart(caseResult.getCaseName());
-        Date date = new Date();
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        String messageContent = "推送中关村门店-自动化";
-        String messageName = "推送中关村门店" + df.format(date);
-        ArrayList<String> shop = new ArrayList();
-        shop.add("20032");
-        int isReadNum = 0;
         try {
+            int isReadNum = 0;
+            //获取卡券
+            Long voucherId= new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             //查看消息记录的总条数
-            JSONObject respon = jc.pushMsgListFilterManage("", "1", "10", "", "");
-            int total = respon.getInteger("total");
-            //推送中关村门店消息
-            jc.pushMessageShop(true, messageContent, messageName, "1", shop);
-            int receiveCount = jc.messageFormFilterManage("", "1", "10", "shop_list", "20032").getJSONArray("list").getJSONObject(0).getInteger("receive_count");
+            JSONObject respond = jc.pushMsgListFilterManage("", "1", "10", "", "");
+            int total = respond.getInteger("total");
+            //推送推送消息
+            su.pushCustomMessage(0,true,voucherId);
+            int sendCount = jc.messageFormFilterManage("", "1", "10","","").getJSONArray("list").getJSONObject(0).getInteger("send_count");
             //推送消息以后再次查看消息记录的总条数
-            JSONObject respon1 = jc.pushMsgListFilterManage("", "1", "100", "", "");
-            int total1 = respon1.getInteger("total");
+            JSONObject respond1 = jc.pushMsgListFilterManage("", "1", "100", "", "");
+            int total1 = respond1.getInteger("total");
             //消息记录新增的数量
             int num = total1 - total;
             //消息记录查看为是的个数
             for (int i = 0; i < num; i++) {
-                String isRead = respon1.getJSONArray("list").getJSONObject(i).getString("is_read");
+                String isRead = respond1.getJSONArray("list").getJSONObject(i).getString("is_read");
                 if (isRead.equals("true")) {
                     isReadNum++;
                 }
             }
-            Preconditions.checkArgument(receiveCount > isReadNum || receiveCount == isReadNum, "同一批次消息记录中查看为是的消息为:" + isReadNum + "消息表单中收到的消息为:" + receiveCount);
+            System.out.println("同一批次消息记录中查看为是的消息为:" + isReadNum + "消息表单中收到的消息为:" + sendCount);
+            Preconditions.checkArgument(sendCount > isReadNum || sendCount == isReadNum, "同一批次消息记录中查看为是的消息为:" + isReadNum + "消息表单中收到的消息为:" + sendCount);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {

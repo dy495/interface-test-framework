@@ -1893,19 +1893,20 @@ public class BusinessUtilOnline {
         String title="";
         JSONObject lastValue=null;
         JSONArray list=null;
-        do{
+        do {
             IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
             JSONObject response1 = visitor.invokeApi(scene);
             lastValue = response1.getJSONObject("last_value");
-            System.err.println(lastValue);
             list = response1.getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
-                int itemId=list.getJSONObject(i).getInteger("itemId");
-                if(id==itemId){
-                    activityId=list.getJSONObject(i).getLong("id");
+                String title1=list.getJSONObject(i).getString("title");
+                System.out.println("------------"+title1);
+                if (title.equals(title1)) {
+                    activityId = list.getJSONObject(i).getLong("id");
+                    System.err.println(title+"----------"+activityId);
                 }
             }
-        }while(list.size()==10);
+        } while (list.size() == 10);
         IScene scene = ArticleActivityRegisterScene.builder().id(activityId).registerItems(registerItems).build();
         visitor.invokeApi(scene);
     }
