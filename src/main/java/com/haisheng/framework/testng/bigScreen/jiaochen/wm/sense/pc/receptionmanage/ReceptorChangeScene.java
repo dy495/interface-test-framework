@@ -11,7 +11,7 @@ import lombok.Builder;
 public class ReceptorChangeScene extends BaseScene {
     private final String receptorId;
     private final Integer id;
-    private final Integer shopId;
+    private final Long shopId;
 
     @Override
     public JSONObject getRequestBody() {

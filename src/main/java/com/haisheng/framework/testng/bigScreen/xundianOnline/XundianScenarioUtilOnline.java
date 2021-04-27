@@ -1641,9 +1641,9 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
         json.put("start_time",start_time);
         json.put("end_time",end_time);
         json.put("data_dimension",data_dimension);
-        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
-
-        return JSON.parseObject(res).getJSONObject("data");
+//        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+//        return JSON.parseObject(res).getJSONObject("data");
+        return invokeApi(url, JSONObject.parseObject(json.toJSONString()), false);
     }
 
     //下载任务-任务类型枚举
@@ -1651,7 +1651,6 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
         String url = "/patrol/download-center/download-task-type-list";
         JSONObject json = new JSONObject();
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
-
         return JSON.parseObject(res).getJSONObject("data");
     }
 
@@ -1666,7 +1665,6 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
         json.put("shop_name",shop_name);
         json.put("applicant",applicant);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
-
         return JSON.parseObject(res).getJSONObject("data");
     }
 }

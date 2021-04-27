@@ -12,4 +12,5 @@ public class appointmentRecordVariable {
     public String type;
     public String page;
     public String size;
+
 }

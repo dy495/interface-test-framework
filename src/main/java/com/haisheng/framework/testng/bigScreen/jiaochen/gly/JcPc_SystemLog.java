@@ -363,10 +363,10 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :系统日志-数据一致性9:【营销管理】中同一批次 消息管理里面收到条数>=消息记录中客户查看为【是】的客户---选择ALL-1-1门店
+     * @description :系统日志-数据一致性9:【营销管理】中同一批次 消息管理里面收到条数>=消息记录中客户查看为【是】的客户---选择中关村门店
      * @date :2020/12/21
      **/
-    @Test
+    @Test()
     public void SystemLog_Date9() {
         logger.logCaseStart(caseResult.getCaseName());
         Date date = new Date();
@@ -378,9 +378,9 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
         int isReadNum = 0;
         try {
             //查看消息记录的总条数
-            JSONObject respon = jc.pushMsgListFilterManage("", "1", "10", "", "");
-            int total = respon.getInteger("total");
-            //推送推送ALL-1-1门店消息
+            JSONObject respond = jc.pushMsgListFilterManage("", "1", "10", "", "");
+            int total = respond.getInteger("total");
+            //推送推送中关村门店门店消息
             jc.pushMessageShop(true, messageContent, messageName, "1", shop);
             int receiveCount = jc.messageFormFilterManage("", "1", "10", "shop_list", shop.get(0)).getJSONArray("list").getJSONObject(0).getInteger("receive_count");
             //推送消息以后再次查看消息记录的总条数

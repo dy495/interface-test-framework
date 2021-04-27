@@ -347,11 +347,12 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             String base64 = MendianInfoOnline.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
             md.createShop(path, shopName, label, openingTime, closingTime, managerName, phone, city, address, longitude, latitude, tripartite_shop_id, recommended);
-            int total = md.searchShop(null, null, null, null, 1, 100).getInteger("total");
-            int a = total - 1;
-            int id = md.searchShop(null, null, null, null, 1, 100).getJSONArray("list").getJSONObject(a).getInteger("id");
+            int pages = md.searchShop(null, null, null, null, 1, 10).getInteger("pages");
+            int page_size = md.searchShop(null, null, null, null, pages, 10).getInteger("page_size");
+            int a = page_size - 1;
+            int id = md.searchShop(null, null, null, null, pages, 10).getJSONArray("list").getJSONObject(a).getInteger("id");
             md.updateShop(id, path, shopName0, label, openingTime, closingTime, managerName, phone, city, address, longitude, latitude, tripartite_shop_id, recommended);
-            JSONArray arr = md.searchShop(null, null, null, null, 1, 100).getJSONArray("list");
+            JSONArray arr = md.searchShop(null, null, null, null, pages, 10).getJSONArray("list");
             for (int i = 0; i < arr.size(); i++) {
                 JSONObject obj = arr.getJSONObject(i);
                 if (obj.getInteger("id") == id) {
@@ -568,16 +569,15 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //搜索门店
-
-            String id= md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(0).getString("id");
-            String name= md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(0).getString("nickname");
-            JSONArray list = md.exchange_detailed(null,1,100,null,null,null,null,null,null,id).getJSONArray("list");
-            if (list.size()!=0){
+            JSONArray listnum = md.member_list(null, 1, 10, null,null,null).getJSONArray("list");
+            if(listnum.size()!=0){
+                String id= md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(0).getString("id");
+                String name= md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(0).getString("nickname");
+                JSONArray list = md.exchange_detailed(null,1,100,null,null,null,null,null,null,id).getJSONArray("list");
                 for(int i=0;i<list.size();i++){
                     String name0 = list.getJSONObject(i).getString("exchange_customer_name");
                     Preconditions.checkArgument(name.equals(name0), "通过" + name+ "客户详情展示结果为" + name0);
                 }
-
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -585,6 +585,63 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             saveData("查看会员积分详情");
         }
     }
+
+    //客户详情-积分明细
+    @Test()
+    public void memberSearch7(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray listnum = md.member_list(null, 1, 10, null,null,null).getJSONArray("list");
+            if(listnum.size()!=0){
+                String id= md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(0).getString("uid");
+                String name= md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(0).getString("nickname");
+                String id0 = md.member_detail(null,id).getString("id");
+                JSONArray list = md.exchange_detailed(null,1,100,null,null,null,null,null,null,id0).getJSONArray("list");
+                for(int i=0;i<list.size();i++){
+                    String name0 = list.getJSONObject(i).getString("exchange_customer_name");
+                    Preconditions.checkArgument(name.equals(name0), "通过" + name+ "客户详情展示结果为" + name0);
+                }
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("客户详情-积分明细");
+        }
+    }
+
+
+
+
+    //客户详情-分配等级
+    @Test()
+    public void memberSearch8(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray list = md.member_list(null,1,100,null,null,null).getJSONArray("list");
+            if (list.size()!=0){
+                for(int i=0;i<list.size();i++){
+                    String uid = list.getJSONObject(i).getString("uid");
+                    String levelname = md.member_detail(null,uid).getString("level");
+                    int level_id = md.member_level(null,uid).getInteger("level_id");
+                    JSONArray list_0= md.level_enum(null,null,1,10).getJSONArray("list");
+                    for(int j=0;j<list_0.size();j++){
+                        int id = list_0.getJSONObject(j).getInteger("id");
+                        if (level_id==id){
+                            String name = list_0.getJSONObject(j).getString("level_name");
+                            Preconditions.checkArgument(name.equals(levelname), "会员等级是" + levelname+ "分配等级展示为" + name);
+                        }
+                    }
+                }
+
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("客户详情-分配等级");
+        }
+    }
+
+
 
     //会员等级通过等级名称搜索
     @Test()

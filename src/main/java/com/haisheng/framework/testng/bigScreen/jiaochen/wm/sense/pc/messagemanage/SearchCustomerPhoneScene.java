@@ -27,14 +27,14 @@ public class SearchCustomerPhoneScene extends BaseScene {
      * 是否必填 false
      * 版本 v3.0
      */
-    private final JSONArray shopIds;
+    private final List<Long> shopIds;
 
     /**
      * 描述 品牌列表
      * 是否必填 false
      * 版本 v3.0
      */
-    private final JSONArray brandIds;
+    private final List<Long> brandIds;
 
     /**
      * 描述 售前客户类型(PRE_CUSTOMER_TYPE_LIST 枚举名称)

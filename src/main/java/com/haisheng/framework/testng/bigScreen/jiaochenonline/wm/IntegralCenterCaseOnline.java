@@ -7,16 +7,17 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletExchangeRecord;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletIntegralRecord;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletShippingAddress;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.ExchangeDetailed;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.ExchangePage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.IntegralRule;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.integralcenter.CustomerIntegralChangeRecordPageBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.integralcenter.ExchangeGoodsDetailBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.integralcenter.ExchangeOrderBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.integralcenter.ExchangeStockPageBean;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletExchangeRecord;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletIntegralRecord;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletShippingAddress;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.ChangeStockTypeEnum;
@@ -31,11 +32,14 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralmall
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vipmarketing.EquityPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vipmarketing.ShareManagerPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vipmarketing.SignInConfigPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.AddVoucherScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
+import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
+import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import org.jetbrains.annotations.Contract;
@@ -69,14 +73,14 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
         logger.debug("before class initial");
         CommonConfig commonConfig = new CommonConfig();
         //替换checklist的相关信息
-        commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
-        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
+        commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_ONLINE_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
         //替换钉钉推送
-        commonConfig.dingHook = EnumDingTalkWebHook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
+        commonConfig.dingHook = DingWebhook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //放入shopId
         commonConfig.product = PRODUCE.getAbbreviation();
         commonConfig.referer = PRODUCE.getReferer();
@@ -98,90 +102,6 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
-    }
-
-    //ok
-    @Test(description = "积分客户管理--增加某人积分")
-    public void integralCustomerPage_data_1() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            user.loginApplet(APPLET_USER_ONE);
-            Integer score = AppletUserInfoDetailScene.builder().build().invoke(visitor).getInteger("score");
-            user.loginPc(ALL_AUTHORITY);
-            //变更记录
-            IScene scene = CustomerIntegralChangeRecordPageScene.builder().build();
-            List<CustomerIntegralChangeRecordPageBean> changeRecordList = util.collectBeanList(scene, CustomerIntegralChangeRecordPageBean.class);
-            JSONObject data = CustomerPageScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).build().invoke(visitor);
-            Long id = data.getJSONArray("list").getJSONObject(0).getLong("id");
-            CustomerIntegralChangeScene.builder().id(id).changeType(ChangeStockTypeEnum.ADD.name()).remark(EnumDesc.DESC_BETWEEN_5_10.getDesc()).integral(1L).build().invoke(visitor);
-            //变更记录
-            List<CustomerIntegralChangeRecordPageBean> newChangeRecordList = util.collectBeanList(scene, CustomerIntegralChangeRecordPageBean.class);
-            CommonUtil.checkResult("增加积分后，变更记录页列表条数", changeRecordList.size() + 1, newChangeRecordList.size());
-            //变更内容
-            CommonUtil.checkResult("联系方式", APPLET_USER_ONE.getPhone(), newChangeRecordList.get(0).getCustomerPhone());
-            CommonUtil.checkResult("操作人", ALL_AUTHORITY.getName(), newChangeRecordList.get(0).getOperatorName());
-            CommonUtil.checkResult("操作账号", ALL_AUTHORITY.getPhone(), newChangeRecordList.get(0).getOperatorAccount());
-            CommonUtil.checkResult("积分变动", "+1", newChangeRecordList.get(0).getIntegral());
-            CommonUtil.checkResult("剩余积分", String.valueOf(score + 1), newChangeRecordList.get(0).getLeft());
-            CommonUtil.checkResult("备注", EnumDesc.DESC_BETWEEN_5_10.getDesc(), newChangeRecordList.get(0).getRemark());
-            ExchangeDetailed exchangeDetailed = util.collectBeanList(ExchangeDetailedScene.builder().phone(APPLET_USER_ONE.getPhone()).build(), ExchangeDetailed.class).get(0);
-            CommonUtil.checkResult("pc积分明细变更内容", 1, exchangeDetailed.getStockDetail());
-            CommonUtil.checkResult("pc积分明细兑换类型", ChangeStockTypeEnum.ADD.getDescription(), exchangeDetailed.getExchangeTypeName());
-            CommonUtil.checkResult("pc积分明细变更类型", ChangeStockTypeEnum.ADD.name(), exchangeDetailed.getExchangeType());
-            user.loginApplet(APPLET_USER_ONE);
-            Integer newScore = AppletUserInfoDetailScene.builder().build().invoke(visitor).getInteger("score");
-            CommonUtil.checkResult("变更积分后" + APPLET_USER_ONE.getPhone() + "的积分为", score + 1, newScore);
-            AppletIntegralRecord appletIntegralRecord = util.getAppletIntegralRecordList().get(0);
-            CommonUtil.checkResult("applet积分明细变更内容", EnumDesc.DESC_BETWEEN_5_10.getDesc(), appletIntegralRecord.getName());
-            CommonUtil.checkResult("applet积分明细变更积分", "1", appletIntegralRecord.getIntegral());
-            CommonUtil.checkResult("applet积分明细变更类型", ChangeStockTypeEnum.ADD.name(), appletIntegralRecord.getChangeType());
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("积分客户管理--增加某人积分");
-        }
-    }
-
-    //ok
-    @Test(description = "积分客户管理--减少某人积分")
-    public void integralCustomerPage_data_2() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            user.loginApplet(APPLET_USER_ONE);
-            Integer score = AppletUserInfoDetailScene.builder().build().invoke(visitor).getInteger("score");
-            user.loginPc(ALL_AUTHORITY);
-            //变更记录
-            IScene scene = CustomerIntegralChangeRecordPageScene.builder().build();
-            List<CustomerIntegralChangeRecordPageBean> changeRecordList = util.collectBeanList(scene, CustomerIntegralChangeRecordPageBean.class);
-            JSONObject data = CustomerPageScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).build().invoke(visitor);
-            Long id = data.getJSONArray("list").getJSONObject(0).getLong("id");
-            CustomerIntegralChangeScene.builder().id(id).changeType(ChangeStockTypeEnum.MINUS.name()).remark(EnumDesc.DESC_BETWEEN_5_10.getDesc()).integral(1L).build().invoke(visitor);
-            //变更记录
-            List<CustomerIntegralChangeRecordPageBean> newChangeRecordList = util.collectBeanList(scene, CustomerIntegralChangeRecordPageBean.class);
-            CommonUtil.checkResult("增加积分后，变更记录页列表条数", changeRecordList.size() + 1, newChangeRecordList.size());
-            //变更内容
-            CommonUtil.checkResult("联系方式", APPLET_USER_ONE.getPhone(), newChangeRecordList.get(0).getCustomerPhone());
-            CommonUtil.checkResult("操作人", ALL_AUTHORITY.getName(), newChangeRecordList.get(0).getOperatorName());
-            CommonUtil.checkResult("操作账号", ALL_AUTHORITY.getPhone(), newChangeRecordList.get(0).getOperatorAccount());
-            CommonUtil.checkResult("积分变动", "-1", newChangeRecordList.get(0).getIntegral());
-            CommonUtil.checkResult("剩余积分", String.valueOf(score - 1), newChangeRecordList.get(0).getLeft());
-            CommonUtil.checkResult("备注", EnumDesc.DESC_BETWEEN_5_10.getDesc(), newChangeRecordList.get(0).getRemark());
-            ExchangeDetailed exchangeDetailed = util.collectBeanList(ExchangeDetailedScene.builder().phone(APPLET_USER_ONE.getPhone()).build(), ExchangeDetailed.class).get(0);
-            CommonUtil.checkResult("pc积分明细变更内容", 1, exchangeDetailed.getStockDetail());
-            CommonUtil.checkResult("pc积分明细兑换类型", ChangeStockTypeEnum.MINUS.getDescription(), exchangeDetailed.getExchangeTypeName());
-            CommonUtil.checkResult("pc积分明细变更类型", ChangeStockTypeEnum.MINUS.name(), exchangeDetailed.getExchangeType());
-            user.loginApplet(APPLET_USER_ONE);
-            Integer newScore = AppletUserInfoDetailScene.builder().build().invoke(visitor).getInteger("score");
-            CommonUtil.checkResult("变更积分后" + APPLET_USER_ONE.getPhone() + "的积分为", score - 1, newScore);
-            AppletIntegralRecord appletIntegralRecord = util.getAppletIntegralRecordList().get(0);
-            CommonUtil.checkResult("applet积分明细变更内容", EnumDesc.DESC_BETWEEN_5_10.getDesc(), appletIntegralRecord.getName());
-            CommonUtil.checkResult("applet积分明细变更积分", "1", appletIntegralRecord.getIntegral());
-            CommonUtil.checkResult("applet积分明细变更类型", ChangeStockTypeEnum.MINUS.name(), appletIntegralRecord.getChangeType());
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("积分客户管理--减少某人积分");
-        }
     }
 
     //ok
@@ -225,6 +145,90 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
     }
 
     //ok
+    @Test(description = "积分客户管理--增加某人积分")
+    public void integralCustomerPage_system_3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            user.loginApplet(APPLET_USER_ONE);
+            Integer score = AppletUserInfoDetailScene.builder().build().invoke(visitor).getInteger("score");
+            user.loginPc(ALL_AUTHORITY);
+            //变更记录
+            IScene scene = CustomerIntegralChangeRecordPageScene.builder().build();
+            List<CustomerIntegralChangeRecordPageBean> changeRecordList = util.collectBeanList(scene, CustomerIntegralChangeRecordPageBean.class);
+            JSONObject data = CustomerPageScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).build().invoke(visitor);
+            Long id = data.getJSONArray("list").getJSONObject(0).getLong("id");
+            CustomerIntegralChangeScene.builder().id(id).changeType(ChangeStockTypeEnum.ADD.name()).remark(EnumDesc.DESC_BETWEEN_5_10.getDesc()).integral(1L).build().invoke(visitor);
+            //变更记录
+            List<CustomerIntegralChangeRecordPageBean> newChangeRecordList = util.collectBeanList(scene, CustomerIntegralChangeRecordPageBean.class);
+            CommonUtil.checkResult("增加积分后，变更记录页列表条数", changeRecordList.size() + 1, newChangeRecordList.size());
+            //变更内容
+            CommonUtil.checkResult("联系方式", APPLET_USER_ONE.getPhone(), newChangeRecordList.get(0).getCustomerPhone());
+            CommonUtil.checkResult("操作人", ALL_AUTHORITY.getName(), newChangeRecordList.get(0).getOperatorName());
+            CommonUtil.checkResult("操作账号", ALL_AUTHORITY.getPhone(), newChangeRecordList.get(0).getOperatorAccount());
+            CommonUtil.checkResult("积分变动", "+1", newChangeRecordList.get(0).getIntegral());
+            CommonUtil.checkResult("剩余积分", String.valueOf(score + 1), newChangeRecordList.get(0).getLeft());
+            CommonUtil.checkResult("备注", EnumDesc.DESC_BETWEEN_5_10.getDesc(), newChangeRecordList.get(0).getRemark());
+            ExchangeDetailed exchangeDetailed = util.collectBeanList(ExchangeDetailedScene.builder().phone(APPLET_USER_ONE.getPhone()).build(), ExchangeDetailed.class).get(0);
+            CommonUtil.checkResult("pc积分明细变更内容", 1, exchangeDetailed.getStockDetail());
+            CommonUtil.checkResult("pc积分明细兑换类型", ChangeStockTypeEnum.ADD.getDescription(), exchangeDetailed.getExchangeTypeName());
+            CommonUtil.checkResult("pc积分明细变更类型", ChangeStockTypeEnum.ADD.name(), exchangeDetailed.getExchangeType());
+            user.loginApplet(APPLET_USER_ONE);
+            Integer newScore = AppletUserInfoDetailScene.builder().build().invoke(visitor).getInteger("score");
+            CommonUtil.checkResult("变更积分后" + APPLET_USER_ONE.getPhone() + "的积分为", score + 1, newScore);
+            AppletIntegralRecord appletIntegralRecord = util.getAppletIntegralRecordList().get(0);
+            CommonUtil.checkResult("applet积分明细变更内容", EnumDesc.DESC_BETWEEN_5_10.getDesc(), appletIntegralRecord.getName());
+            CommonUtil.checkResult("applet积分明细变更积分", "1", appletIntegralRecord.getIntegral());
+            CommonUtil.checkResult("applet积分明细变更类型", ChangeStockTypeEnum.ADD.name(), appletIntegralRecord.getChangeType());
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("积分客户管理--增加某人积分");
+        }
+    }
+
+    //ok
+    @Test(description = "积分客户管理--减少某人积分")
+    public void integralCustomerPage_system_4() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            user.loginApplet(APPLET_USER_ONE);
+            Integer score = AppletUserInfoDetailScene.builder().build().invoke(visitor).getInteger("score");
+            user.loginPc(ALL_AUTHORITY);
+            //变更记录
+            IScene scene = CustomerIntegralChangeRecordPageScene.builder().build();
+            List<CustomerIntegralChangeRecordPageBean> changeRecordList = util.collectBeanList(scene, CustomerIntegralChangeRecordPageBean.class);
+            JSONObject data = CustomerPageScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).build().invoke(visitor);
+            Long id = data.getJSONArray("list").getJSONObject(0).getLong("id");
+            CustomerIntegralChangeScene.builder().id(id).changeType(ChangeStockTypeEnum.MINUS.name()).remark(EnumDesc.DESC_BETWEEN_5_10.getDesc()).integral(1L).build().invoke(visitor);
+            //变更记录
+            List<CustomerIntegralChangeRecordPageBean> newChangeRecordList = util.collectBeanList(scene, CustomerIntegralChangeRecordPageBean.class);
+            CommonUtil.checkResult("增加积分后，变更记录页列表条数", changeRecordList.size() + 1, newChangeRecordList.size());
+            //变更内容
+            CommonUtil.checkResult("联系方式", APPLET_USER_ONE.getPhone(), newChangeRecordList.get(0).getCustomerPhone());
+            CommonUtil.checkResult("操作人", ALL_AUTHORITY.getName(), newChangeRecordList.get(0).getOperatorName());
+            CommonUtil.checkResult("操作账号", ALL_AUTHORITY.getPhone(), newChangeRecordList.get(0).getOperatorAccount());
+            CommonUtil.checkResult("积分变动", "-1", newChangeRecordList.get(0).getIntegral());
+            CommonUtil.checkResult("剩余积分", String.valueOf(score - 1), newChangeRecordList.get(0).getLeft());
+            CommonUtil.checkResult("备注", EnumDesc.DESC_BETWEEN_5_10.getDesc(), newChangeRecordList.get(0).getRemark());
+            ExchangeDetailed exchangeDetailed = util.collectBeanList(ExchangeDetailedScene.builder().phone(APPLET_USER_ONE.getPhone()).build(), ExchangeDetailed.class).get(0);
+            CommonUtil.checkResult("pc积分明细变更内容", 1, exchangeDetailed.getStockDetail());
+            CommonUtil.checkResult("pc积分明细兑换类型", ChangeStockTypeEnum.MINUS.getDescription(), exchangeDetailed.getExchangeTypeName());
+            CommonUtil.checkResult("pc积分明细变更类型", ChangeStockTypeEnum.MINUS.name(), exchangeDetailed.getExchangeType());
+            user.loginApplet(APPLET_USER_ONE);
+            Integer newScore = AppletUserInfoDetailScene.builder().build().invoke(visitor).getInteger("score");
+            CommonUtil.checkResult("变更积分后" + APPLET_USER_ONE.getPhone() + "的积分为", score - 1, newScore);
+            AppletIntegralRecord appletIntegralRecord = util.getAppletIntegralRecordList().get(0);
+            CommonUtil.checkResult("applet积分明细变更内容", EnumDesc.DESC_BETWEEN_5_10.getDesc(), appletIntegralRecord.getName());
+            CommonUtil.checkResult("applet积分明细变更积分", "1", appletIntegralRecord.getIntegral());
+            CommonUtil.checkResult("applet积分明细变更类型", ChangeStockTypeEnum.MINUS.name(), appletIntegralRecord.getChangeType());
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("积分客户管理--减少某人积分");
+        }
+    }
+
+    //ok
     @Test(description = "积分兑换--库存详情--当前库存=兑换品库存明细加和")
     public void integralExchange_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -258,7 +262,7 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
     }
 
     //ok
-    @Test(description = "积分明细--创建实物积分兑换，积分兑换列表+1")
+    @Test(description = "积分兑换--创建实物积分兑换，积分兑换列表+1")
     public void integralExchange_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -275,12 +279,12 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("积分明细--创建实物积分兑换，积分兑换列表+1");
+            saveData("积分兑换--创建实物积分兑换，积分兑换列表+1");
         }
     }
 
     //ok
-    @Test(description = "积分明细--创建虚拟积分兑换，积分兑换列表+1")
+    @Test(description = "积分兑换--创建虚拟积分兑换，积分兑换列表+1")
     public void integralExchange_data_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -298,7 +302,61 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("积分明细--创建虚拟积分兑换，积分兑换列表+1");
+            saveData("积分兑换--创建虚拟积分兑换，积分兑换列表+1");
+        }
+    }
+
+    //ok
+    @Test(description = "积分兑换--创建虚拟积分兑换，编辑库存-1，卡券可用库存+1")
+    public void integralExchange_data_4() {
+        logger.logCaseStart(caseResult.getCaseName());
+        Long id = null;
+        try {
+            Long voucherId = new VoucherGenerator.Builder().status(VoucherStatusEnum.WORKING).visitor(visitor).buildVoucher().getVoucherId();
+            VoucherPage voucherPage = util.getVoucherPage(voucherId);
+            //创建实物兑换
+            ExchangePage exchangePage = util.createExchangeFictitiousGoods(voucherId);
+            id = exchangePage.getId();
+            VoucherPage secondVoucherPage = util.getVoucherPage(voucherId);
+            CommonUtil.checkResult("创建积分兑换后" + voucherPage.getVoucherName() + "的可用库存", voucherPage.getAllowUseInventory() - 1, secondVoucherPage.getAllowUseInventory());
+            //减少库存1
+            EditExchangeStockScene.builder().changeStockType(ChangeStockTypeEnum.MINUS.name()).num(String.valueOf(1)).id(id)
+                    .goodsName(exchangePage.getGoodsName()).type(CommodityTypeEnum.FICTITIOUS.name()).build().invoke(visitor);
+            VoucherPage thirdVoucherPage = util.getVoucherPage(voucherId);
+            CommonUtil.checkResult("减少库存后卡券" + voucherPage.getVoucherName() + "的可用库存", voucherPage.getAllowUseInventory(), thirdVoucherPage.getAllowUseInventory());
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            ChangeSwitchStatusScene.builder().id(id).status(false).build().invoke(visitor);
+            DeleteExchangeGoodsScene.builder().id(id).build().invoke(visitor);
+            saveData("积分兑换--创建虚拟积分兑换，编辑库存-1，卡券可用库存+1");
+        }
+    }
+
+    //ok
+    @Test(description = "积分兑换--创建虚拟积分兑换，编辑库存+1，卡券可用库存-1")
+    public void integralExchange_data_5() {
+        logger.logCaseStart(caseResult.getCaseName());
+        Long id = null;
+        try {
+            Long voucherId = new VoucherGenerator.Builder().status(VoucherStatusEnum.WORKING).visitor(visitor).buildVoucher().getVoucherId();
+            VoucherPage voucherPage = util.getVoucherPage(voucherId);
+            //创建实物兑换
+            ExchangePage exchangePage = util.createExchangeFictitiousGoods(voucherId);
+            id = exchangePage.getId();
+            VoucherPage secondVoucherPage = util.getVoucherPage(voucherId);
+            CommonUtil.checkResult("创建积分兑换后" + voucherPage.getVoucherName() + "的可用库存", voucherPage.getAllowUseInventory() - 1, secondVoucherPage.getAllowUseInventory());
+            //增加库存1
+            EditExchangeStockScene.builder().changeStockType(ChangeStockTypeEnum.ADD.name()).num(String.valueOf(1)).id(id)
+                    .goodsName(exchangePage.getGoodsName()).type(CommodityTypeEnum.FICTITIOUS.name()).build().invoke(visitor);
+            VoucherPage thirdVoucherPage = util.getVoucherPage(voucherId);
+            CommonUtil.checkResult("减少库存后卡券" + voucherPage.getVoucherName() + "的可用库存", secondVoucherPage.getAllowUseInventory() - 1, thirdVoucherPage.getAllowUseInventory());
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            ChangeSwitchStatusScene.builder().id(id).status(false).build().invoke(visitor);
+            DeleteExchangeGoodsScene.builder().id(id).build().invoke(visitor);
+            saveData("积分兑换--创建虚拟积分兑换，编辑库存+1，卡券可用库存-1");
         }
     }
 
@@ -356,7 +414,7 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
             VoucherPage voucherPage = util.getVoucherPage(voucherId);
             String exchangeStartTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
             String exchangeEndTime = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 30), "yyyy-MM-dd HH:mm:ss");
-            long exchangeNum = voucherPage.getSurplusInventory() == 1 ? 1 : voucherPage.getSurplusInventory() - 1;
+            long exchangeNum = voucherPage.getAllowUseInventory() == 1 ? 1 : voucherPage.getAllowUseInventory() - 1;
             //创建积分兑换
             CreateExchangeGoodsScene.builder().exchangeGoodsType(CommodityTypeEnum.FICTITIOUS.name()).goodsId(voucherId).exchangePrice("1")
                     .exchangeNum(String.valueOf(exchangeNum)).isLimit(true).exchangePeopleNum("1").exchangeStartTime(exchangeStartTime)
@@ -406,7 +464,7 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
         }
     }
 
-    //bug  -1/1000000000没限制
+    //ok
     @Test(description = "积分兑换--创建虚拟积分兑换，兑换价异常")
     public void integralExchange_system_4() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -416,13 +474,13 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
             String exchangeStartTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
             String exchangeEndTime = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 30), "yyyy-MM-dd HH:mm:ss");
             long exchangeNum = voucherPage.getSurplusInventory() == 1 ? 1 : voucherPage.getSurplusInventory() - 1;
-            String[] strings = {"1.11", null, ""};
+            String[] strings = {"1.11", null, "", "-1"};
             Arrays.stream(strings).forEach(exchangePrice -> {
                 //创建积分兑换
                 String message = CreateExchangeGoodsScene.builder().exchangeGoodsType(CommodityTypeEnum.FICTITIOUS.name()).goodsId(voucherId).exchangePrice(exchangePrice)
                         .exchangeNum(String.valueOf(exchangeNum)).isLimit(true).exchangePeopleNum("1").exchangeStartTime(exchangeStartTime)
                         .exchangeEndTime(exchangeEndTime).build().invoke(visitor, false).getString("message");
-                String err = StringUtils.isEmpty(exchangePrice) ? "兑换价格不能为空" : "请求入参类型不正确";
+                String err = StringUtils.isEmpty(exchangePrice) ? "兑换价格不能为空" : Double.parseDouble(exchangePrice) < 0 ? "兑换价格必须大于等于0" : "请求入参类型不正确";
                 CommonUtil.checkResult("兑换价为" + exchangePrice, err, message);
             });
         } catch (Exception | AssertionError e) {
@@ -499,7 +557,7 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
         }
     }
 
-    //bug 1000000000没限制
+    //ok
     @Test(description = "积分兑换--修改实体积分兑换库存，异常情况")
     public void integralExchange_system_10() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -509,11 +567,12 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
             Long id = exchangePageList.stream().filter(e -> Integer.parseInt(e.getExchangedAndSurplus().split("/")[1]) < 10).map(ExchangePage::getId).findFirst().orElse(util.createExchangeRealGoods().getId());
             String goodsName = ExchangeGoodsStockScene.builder().id(String.valueOf(id)).build().invoke(visitor).getString("goods_name");
             JSONObject specificationDetail = ExchangeCommoditySpecificationsListScene.builder().id(id).build().invoke(visitor).getJSONArray("specification_detail_list").getJSONObject(0);
-            String[] strings = {"99.99", null, "", "-11", "0"};
+            String[] strings = {"1000000000", "99.99", null, "", "-11", "0"};
             Arrays.stream(strings).forEach(num -> {
                 String addMessage = EditExchangeStockScene.builder().changeStockType(ChangeStockTypeEnum.ADD.name()).num(num).id(specificationDetail.getLong("id"))
                         .goodsName(goodsName).type(CommodityTypeEnum.REAL.name()).build().invoke(visitor, false).getString("message");
-                String err = StringUtils.isEmpty(num) ? "改变库存数量不能为空" : Double.parseDouble(num) <= 0 ? "库存变动数量需大于等于1" : "请求入参类型不正确";
+                String err = StringUtils.isEmpty(num) ? "改变库存数量不能为空" : Double.parseDouble(num) >= 1000000000 ? "库存改变数量不能超过100000000" :
+                        Double.parseDouble(num) <= 0 ? "库存变动数量需大于等于1" : "请求入参类型不正确";
                 CommonUtil.checkResult(goodsName + "修改库存" + num, err, addMessage);
                 CommonUtil.logger(num);
                 String minusMessage = EditExchangeStockScene.builder().changeStockType(ChangeStockTypeEnum.MINUS.name()).num(num).id(specificationDetail.getLong("id"))
@@ -528,8 +587,8 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
         }
     }
 
-    //bug
-    @Test(description = "积分兑换--修改实体积分兑换库存，减少大于当前库存的数", enabled = false)
+    //ok
+    @Test(description = "积分兑换--修改实体积分兑换库存，减少大于当前库存的数")
     public void integralExchange_system_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -540,7 +599,7 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
             JSONObject specificationDetail = ExchangeCommoditySpecificationsListScene.builder().id(id).build().invoke(visitor).getJSONArray("specification_detail_list").getJSONObject(0);
             String message = EditExchangeStockScene.builder().changeStockType(ChangeStockTypeEnum.MINUS.name()).num(String.valueOf(specificationDetail.getInteger("num") + 1)).id(specificationDetail.getLong("id")).goodsName(goodsName).type(CommodityTypeEnum.REAL.name()).build().invoke(visitor, false).getString("message");
             String err = "减少库存量需小于等于当前库存量";
-            CommonUtil.checkResult(goodsName + "减少库存" + specificationDetail.getInteger("num") + 1, err, message);
+            CommonUtil.checkResult(goodsName + "减少库存" + (specificationDetail.getInteger("num") + 1), err, message);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -564,7 +623,7 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
             //增加库存
             String message = EditExchangeStockScene.builder().changeStockType(ChangeStockTypeEnum.ADD.name()).num(String.valueOf(num)).id(id)
                     .goodsName(goodsName).type(CommodityTypeEnum.FICTITIOUS.name()).build().invoke(visitor, false).getString("message");
-            String err = "积分商品库存不能超过商品库存";
+            String err = "积分商品库存不能超过商品可用库存";
             CommonUtil.checkResult(goodsName + "增加库存 " + num, err, message);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -598,7 +657,7 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
 
     //ok
     @Test(description = "积分兑换--创建实体积分兑换->小程序兑换实体商品->发货->确认收货->取消")
-    public void integralExchange_system_15() {
+    public void integralExchange_system_14() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene exchangePageScene = ExchangePageScene.builder().status(IntegralExchangeStatusEnum.WORKING.name()).exchangeType(CommodityTypeEnum.REAL.name()).build();
@@ -721,8 +780,8 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
     }
 
     //ok
-    @Test(description = "积分兑换--创建实体积分兑换->小程序兑换虚拟商品")
-    public void integralExchange_system_18() {
+    @Test(description = "积分兑换--创建虚拟积分兑换->小程序兑换虚拟商品")
+    public void integralExchange_system_15() {
         logger.logCaseStart(caseResult.getCaseName());
         Long exchangeGoodsId = null;
         try {
@@ -778,7 +837,7 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
         } finally {
             ChangeSwitchStatusScene.builder().id(exchangeGoodsId).status(false).build().invoke(visitor);
             DeleteExchangeGoodsScene.builder().id(exchangeGoodsId).build().invoke(visitor);
-            saveData("积分兑换--创建实体积分兑换->小程序兑换虚拟商品");
+            saveData("积分兑换--创建虚拟积分兑换->小程序兑换虚拟商品");
         }
     }
 
@@ -814,6 +873,194 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
             collectMessage(e);
         } finally {
             saveData("积分兑换--置顶某一积分兑换，小程序人气推荐置顶该兑换，再置顶一个积分兑换，人气推荐刷新第一位，原第一位降到第二位");
+        }
+    }
+
+    //ok
+    @Test(description = "积分兑换--删除未关闭的积分兑换，失败")
+    public void integralExchange_system_17() {
+        logger.logCaseStart(caseResult.getCaseName());
+        Long id = null;
+        try {
+            //创建积分兑换
+            ExchangePage exchangePage = util.createExchangeRealGoods(1);
+            id = exchangePage.getId();
+            String message = DeleteExchangeGoodsScene.builder().id(id).build().invoke(visitor, false).getString("message");
+            String err = "积分商品正在售卖中，不可删除";
+            CommonUtil.checkResult("置顶某一删除未关闭的积分兑换", err, message);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            ChangeSwitchStatusScene.builder().id(id).status(false).build().invoke(visitor);
+            DeleteExchangeGoodsScene.builder().id(id).build().invoke(visitor);
+            saveData("积分兑换--删除未关闭的积分兑换，失败");
+        }
+    }
+
+    //ok
+    @Test(description = "积分兑换--关闭积分兑换，优惠券可用库存释放")
+    public void integralExchange_system_18() {
+        logger.logCaseStart(caseResult.getCaseName());
+        Long id = null;
+        try {
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            VoucherPage voucherPage = util.getVoucherPage(voucherId);
+            //创建积分兑换
+            ExchangePage exchangePage = util.createExchangeFictitiousGoods(voucherId);
+            id = exchangePage.getId();
+            //开启
+            String message = util.getResponse(ChangeSwitchStatusScene.builder().id(exchangePage.getId()).status(true).build()).getMessage();
+            String err = "积分兑换商品已开启，请勿重复操作";
+            CommonUtil.checkResult("再次开启已开启的积分兑换商品", err, message);
+            VoucherPage secondVoucherPage = util.getVoucherPage(voucherId);
+            CommonUtil.checkResult(voucherPage.getVoucherName() + "的可用库存", voucherPage.getAllowUseInventory() - 1, secondVoucherPage.getAllowUseInventory());
+            CommonUtil.checkResult(voucherPage.getVoucherName() + "的剩余库存", voucherPage.getSurplusInventory(), secondVoucherPage.getSurplusInventory());
+            //关闭
+            ChangeSwitchStatusScene.builder().id(exchangePage.getId()).status(false).build().invoke(visitor);
+            VoucherPage thirdVoucherPage = util.getVoucherPage(voucherId);
+            CommonUtil.checkResult(voucherPage.getVoucherName() + "的可用库存", voucherPage.getAllowUseInventory(), thirdVoucherPage.getAllowUseInventory());
+            CommonUtil.checkResult(voucherPage.getVoucherName() + "的剩余库存", voucherPage.getSurplusInventory(), thirdVoucherPage.getSurplusInventory());
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            String message = util.getResponse(ChangeSwitchStatusScene.builder().id(id).status(false).build()).getMessage();
+            String err = "积分兑换商品已关闭，请勿重复操作";
+            CommonUtil.checkResult("再次关闭已关闭的积分兑换商品", err, message);
+            DeleteExchangeGoodsScene.builder().id(id).build().invoke(visitor);
+            saveData("积分兑换--关闭积分兑换，优惠券可用库存释放");
+        }
+    }
+
+    //ok
+    @Test(description = "积分兑换--兑换商品过期，不释放可用库存")
+    public void integralExchange_system_19() {
+        logger.logCaseStart(caseResult.getCaseName());
+        Long id = null;
+        try {
+            String exchangeStartTime = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), -2), "yyyy-MM-dd HH:mm:ss");
+            String exchangeEndTime = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), -1), "yyyy-MM-dd HH:mm:ss");
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            VoucherPage voucherPage = util.getVoucherPage(voucherId);
+            //创建积分兑换
+            ExchangePage exchangePage = util.createExchangeFictitiousGoods(voucherId);
+            id = exchangePage.getId();
+            IScene scene = ExchangeGoodsDetailScene.builder().id(id).build();
+            ExchangeGoodsDetailBean bean = util.collectBean(scene, ExchangeGoodsDetailBean.class);
+            //修改至过期
+            EditExchangeGoodsScene.builder().exchangeGoodsType(bean.getExchangeGoodsType())
+                    .goodsId(bean.getGoodsId()).exchangePrice(bean.getExchangePrice()).exchangeNum(bean.getExchangeNum())
+                    .isLimit(bean.getIsLimit()).exchangePeopleNum(bean.getExchangePeopleNum()).expireType(bean.getExpireType())
+                    .useDays(bean.getUseDays()).exchangeStartTime(exchangeStartTime).exchangeEndTime(exchangeEndTime)
+                    .id(id).build().invoke(visitor);
+            VoucherPage newVoucherPage = util.getVoucherPage(voucherId);
+            CommonUtil.checkResult(voucherPage.getVoucherName() + "的可用库存", voucherPage.getAllowUseInventory() - 1, newVoucherPage.getAllowUseInventory());
+            CommonUtil.checkResult(voucherPage.getVoucherName() + "的剩余库存", voucherPage.getSurplusInventory(), newVoucherPage.getSurplusInventory());
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            ChangeSwitchStatusScene.builder().id(id).status(false).build().invoke(visitor);
+            DeleteExchangeGoodsScene.builder().id(id).build().invoke(visitor);
+            saveData("积分兑换--兑换商品过期，释放可用库存");
+        }
+    }
+
+    //ok
+    @Test(description = "积分兑换--创建虚拟兑换商品时，可兑换库存大于卡券可用库存，创建失败")
+    public void integralExchange_system_20() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long voucherId = util.getOccupyVoucherId();
+            VoucherPage voucherPage = util.getVoucherPage(voucherId);
+            //创建积分兑换
+            String exchangeStartTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
+            String exchangeEndTime = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 30), "yyyy-MM-dd HH:mm:ss");
+            String message = CreateExchangeGoodsScene.builder().exchangeGoodsType(CommodityTypeEnum.FICTITIOUS.name()).goodsId(voucherId)
+                    .exchangePrice("1").isLimit(true).exchangePeopleNum("10").exchangeStartTime(exchangeStartTime)
+                    .exchangeEndTime(exchangeEndTime).expireType(2).useDays("10").exchangeNum(String.valueOf(voucherPage.getAllowUseInventory() + 1))
+                    .build().invoke(visitor, false).getString("message");
+            String err = "卡券【" + voucherPage.getVoucherName() + "】可用库存不足！";
+            CommonUtil.checkResult("创建虚拟兑换商品时，可兑换库存大于卡券剩余库存", err, message);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("积分兑换--创建虚拟兑换商品时，可兑换库存大于卡券可用库存，创建失败");
+        }
+    }
+
+    //ok
+    @Test(description = "积分兑换--先关闭虚拟兑换商品，商品内卡券库存不足再开启兑换商品，失败")
+    public void integralExchange_system_21() {
+        logger.logCaseStart(caseResult.getCaseName());
+        Long id = null;
+        try {
+            Long voucherId = util.getOccupyVoucherId();
+            VoucherPage voucherPage = util.getVoucherPage(voucherId);
+            Long exchangeNum = voucherPage.getAllowUseInventory() - 1;
+            //创建积分兑换，库存=可用库存-1
+            ExchangePage exchangePage = util.createExchangeFictitiousGoods(voucherId, exchangeNum);
+            id = exchangePage.getId();
+            VoucherPage secondVoucherPage = util.getVoucherPage(voucherId);
+            CommonUtil.checkResult("创建积分兑换后 " + voucherPage.getVoucherName() + " 的可用库存", voucherPage.getAllowUseInventory() - exchangeNum, secondVoucherPage.getAllowUseInventory());
+            //关闭积分兑换还库存
+            ChangeSwitchStatusScene.builder().id(id).status(false).build().invoke(visitor);
+            VoucherPage thirdVoucherPage = util.getVoucherPage(voucherId);
+            CommonUtil.checkResult("关闭积分兑换后 " + voucherPage.getVoucherName() + " 的可用库存", voucherPage.getAllowUseInventory(), thirdVoucherPage.getAllowUseInventory());
+            //占用两个卡券
+            JSONArray voucherArray = util.getVoucherArray(voucherId, 2);
+            util.buyTemporaryPackage(voucherArray, 1);
+            VoucherPage fourVoucherPage = util.getVoucherPage(voucherId);
+            CommonUtil.checkResult("占用卡券后 " + voucherPage.getVoucherName() + " 的可用库存", voucherPage.getAllowUseInventory() - 2, fourVoucherPage.getAllowUseInventory());
+            //再开启积分兑换
+            String message = ChangeSwitchStatusScene.builder().id(id).status(true).build().invoke(visitor, false).getString("message");
+            String err = "卡券【" + voucherPage.getVoucherName() + "】可用库存不足！";
+            CommonUtil.checkResult("创建虚拟兑换商品时，可兑换库存大于卡券剩余库存", err, message);
+            //取消卡券的购买
+            util.cancelSoldPackage("临时套餐");
+            VoucherPage fiveVoucherPage = util.getVoucherPage(voucherId);
+            CommonUtil.checkResult("拒绝支付后 " + voucherPage.getVoucherName() + " 的可用库存", voucherPage.getAllowUseInventory(), fiveVoucherPage.getAllowUseInventory());
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            ChangeSwitchStatusScene.builder().id(id).status(false).build().invoke(visitor, false);
+            DeleteExchangeGoodsScene.builder().id(id).build().invoke(visitor);
+            saveData("积分兑换--先关闭虚拟兑换商品，商品内卡券库存不足再开启兑换商品，失败");
+        }
+    }
+
+    //ok
+    @Test(description = "积分兑换--创建积分兑换，兑换一个，再关闭积分兑换")
+    public void integralExchange_system_22() {
+        logger.logCaseStart(caseResult.getCaseName());
+        Long exchangeGoodsId = null;
+        try {
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            //为确保可用库存够用，先增加两个
+            AddVoucherScene.builder().addNumber(2).id(voucherId).build().invoke(visitor);
+            util.applyVoucher(util.getVoucherName(voucherId), "1");
+            VoucherPage voucherPage = util.getVoucherPage(voucherId);
+            ExchangePage exchangePage = util.createExchangeFictitiousGoods(voucherId, 2L);
+            exchangeGoodsId = exchangePage.getId();
+            //不限兑换次数
+            util.modifyExchangeGoodsLimit(exchangeGoodsId, exchangePage.getExchangeType(), false);
+            visitor.login(APPLET_USER_ONE.getToken());
+            //兑换积分
+            AppletIntegralExchangeScene.builder().id(exchangeGoodsId).build().invoke(visitor);
+            user.loginPc(ALL_AUTHORITY);
+            VoucherPage secondExchangePage = util.getVoucherPage(voucherId);
+            CommonUtil.checkResult("兑换一张卡券后 " + voucherPage.getVoucherName() + " 的可用库存", voucherPage.getAllowUseInventory() - 2, secondExchangePage.getAllowUseInventory());
+            CommonUtil.checkResult("兑换一张卡券后 " + voucherPage.getVoucherName() + " 的剩余库存", voucherPage.getSurplusInventory() - 1, secondExchangePage.getSurplusInventory());
+            //关闭积分兑换
+            ChangeSwitchStatusScene.builder().id(exchangeGoodsId).status(false).build().invoke(visitor);
+            //卡券的可用库存还回去了
+            VoucherPage thirdExchangePage = util.getVoucherPage(voucherId);
+            CommonUtil.checkResult("关闭积分兑换后 " + voucherPage.getVoucherName() + " 的可用库存", secondExchangePage.getAllowUseInventory() + 1, thirdExchangePage.getAllowUseInventory());
+            CommonUtil.checkResult("关闭积分兑换后 " + voucherPage.getVoucherName() + " 的剩余库存", secondExchangePage.getSurplusInventory(), thirdExchangePage.getSurplusInventory());
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            ChangeSwitchStatusScene.builder().id(exchangeGoodsId).status(false).build().invoke(visitor, false);
+            DeleteExchangeGoodsScene.builder().id(exchangeGoodsId).build().invoke(visitor);
+            saveData("积分兑换--积分兑换--创建积分兑换，兑换一个，再关闭积分兑换");
         }
     }
 

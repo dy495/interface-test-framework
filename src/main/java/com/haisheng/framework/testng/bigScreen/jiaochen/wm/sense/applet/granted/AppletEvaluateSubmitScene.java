@@ -14,8 +14,8 @@ import java.util.List;
  */
 @Builder
 public class AppletEvaluateSubmitScene extends BaseScene {
-    private final Integer id;
-    private final Integer shopId;
+    private final Long id;
+    private final Long shopId;
     private final Integer type;
     private final Integer score;
     private final String describe;

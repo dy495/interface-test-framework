@@ -24,7 +24,7 @@ public class CreatePackageScene extends BaseScene {
     private final Long subjectId;
     private final Boolean status;
     private final Integer expireType;
-    private final String expiryDate;
+    private final Integer expiryDate;
 
     @Override
     public JSONObject getRequestBody() {

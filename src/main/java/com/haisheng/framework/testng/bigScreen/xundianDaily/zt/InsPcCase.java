@@ -327,7 +327,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
     public void update_shop() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String shopName = "创建测试门店333";
+            String shopName = "创建测试门店441";
             String shopName0 = "创建测试门店123";
             String label = "明星店";
             String openingTime = "00:00:00";
@@ -344,11 +344,12 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             String base64 = MendianInfo.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
             md.createShop(path, shopName, label, openingTime, closingTime, managerName, phone, city, address, longitude, latitude, tripartite_shop_id, recommended);
-            int total = md.searchShop(null, null, null, null, 1, 100).getInteger("total");
-            int a = total - 1;
-            int id = md.searchShop(null, null, null, null, 1, 100).getJSONArray("list").getJSONObject(a).getInteger("id");
+            int pages = md.searchShop(null, null, null, null, 1, 10).getInteger("pages");
+            int page_size = md.searchShop(null, null, null, null, pages, 10).getInteger("page_size");
+            int a = page_size - 1;
+            int id = md.searchShop(null, null, null, null, pages, 10).getJSONArray("list").getJSONObject(a).getInteger("id");
             md.updateShop(id, path, shopName0, label, openingTime, closingTime, managerName, phone, city, address, longitude, latitude, tripartite_shop_id, recommended);
-            JSONArray arr = md.searchShop(null, null, null, null, 1, 100).getJSONArray("list");
+            JSONArray arr = md.searchShop(null, null, null, null, pages, 10).getJSONArray("list");
             for (int i = 0; i < arr.size(); i++) {
                 JSONObject obj = arr.getJSONObject(i);
                 if (obj.getInteger("id") == id) {
@@ -524,33 +525,36 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    //查看客户详情
     @Test()
     public void memberSearch5(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            //搜索门店
+            JSONArray list = md.member_list(null, 1, 100, null,null,null).getJSONArray("list");
+            for (int i=0;i<list.size();i++){
+                String uid= md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(i).getString("uid");
+                String nickname = md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(i).getString("nickname");
+                String name = md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(i).getString("name");
+                int score = md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(i).getInteger("score");
+                String phone = md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(i).getString("phone");
+                int consume = md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(i).getInteger("consume");
 
-            String uid= md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(0).getString("uid");
-            String nickname = md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(0).getString("nickname");
-            String name = md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(0).getString("name");
-            int score = md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(0).getInteger("score");
-            String phone = md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(0).getString("phone");
-            int consume = md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(0).getInteger("consume");
 
+                String id = md.member_detail(null,uid).getString("id");
+                String nickname1 = md.member_detail(null,uid).getString("nickname");
+//                String name1 = md.member_detail(null,uid).getString("name");
+                int score1 = md.member_detail(null,uid).getInteger("score");
+                String phone1 = md.member_detail(null,uid).getString("phone");
+                int consume1= md.member_detail(null,uid).getInteger("consume");
 
-            String id = md.member_detail(null,uid).getString("id");
-            String nickname1 = md.member_detail(null,uid).getString("nickname");
-            String name1 = md.member_detail(null,uid).getString("name");
-            int score1 = md.member_detail(null,uid).getInteger("score");
-            String phone1 = md.member_detail(null,uid).getString("phone");
-            int consume1= md.member_detail(null,uid).getInteger("consume");
+//                Preconditions.checkArgument(id.equals(uid), "通过" + uid+ "客户详情展示结果为" + id);
+                Preconditions.checkArgument(nickname.equals(nickname1), "通过" + nickname+ "客户详情展示结果为" + nickname1);
+//                Preconditions.checkArgument(name.equals(name1), "通过" + name+ "客户详情展示结果为" + name1);
+                Preconditions.checkArgument(phone.equals(phone1), "通过" + phone+ "客户详情展示结果为" + phone1);
+                Preconditions.checkArgument(score==score1, "通过" + score+ "客户详情展示结果为" + score1);
+                Preconditions.checkArgument(consume==consume1, "通过" + consume+ "客户详情展示结果为" + consume1);
+            }
 
-            Preconditions.checkArgument(id.equals(uid), "通过" + uid+ "客户详情展示结果为" + id);
-            Preconditions.checkArgument(nickname.equals(nickname1), "通过" + nickname+ "客户详情展示结果为" + nickname1);
-            Preconditions.checkArgument(name.equals(name1), "通过" + name+ "客户详情展示结果为" + name1);
-            Preconditions.checkArgument(phone.equals(phone1), "通过" + phone+ "客户详情展示结果为" + phone1);
-            Preconditions.checkArgument(score==score1, "通过" + score+ "客户详情展示结果为" + score1);
-            Preconditions.checkArgument(consume==consume1, "通过" + consume+ "客户详情展示结果为" + consume1);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -564,21 +568,79 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //搜索门店
-
-            String id= md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(0).getString("id");
-            String name= md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(0).getString("nickname");
-            JSONArray list = md.exchange_detailed(null,1,100,null,null,null,null,null,null,id).getJSONArray("list");
-            for(int i=0;i<list.size();i++){
-                String name0 = list.getJSONObject(i).getString("exchange_customer_name");
-                Preconditions.checkArgument(name.equals(name0), "通过" + name+ "客户详情展示结果为" + name0);
+            JSONArray listnum = md.member_list(null, 1, 10, null,null,null).getJSONArray("list");
+            if(listnum.size()!=0){
+                String id= md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(0).getString("id");
+                String name= md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(0).getString("nickname");
+                JSONArray list = md.exchange_detailed(null,1,100,null,null,null,null,null,null,id).getJSONArray("list");
+                for(int i=0;i<list.size();i++){
+                    String name0 = list.getJSONObject(i).getString("exchange_customer_name");
+                    Preconditions.checkArgument(name.equals(name0), "通过" + name+ "客户详情展示结果为" + name0);
+                }
             }
-
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("查看会员积分详情");
         }
     }
+
+
+
+    //客户详情-积分明细
+    @Test()
+    public void memberSearch7(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray listnum = md.member_list(null, 1, 10, null,null,null).getJSONArray("list");
+            if(listnum.size()!=0){
+                String id= md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(0).getString("uid");
+                String name= md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(0).getString("nickname");
+                String id0 = md.member_detail(null,id).getString("id");
+
+                JSONArray list = md.exchange_detailed(null,1,100,null,null,null,null,null,null,id0).getJSONArray("list");
+                for(int i=0;i<list.size();i++){
+                    String name0 = list.getJSONObject(i).getString("exchange_customer_name");
+                    Preconditions.checkArgument(name.equals(name0), "通过" + name+ "客户详情展示结果为" + name0);
+                }
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("客户详情-积分明细");
+        }
+    }
+
+    //客户详情-分配等级
+    @Test()
+    public void memberSearch8(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray list = md.member_list(null,1,100,null,null,null).getJSONArray("list");
+            if (list.size()!=0){
+                for(int i=0;i<list.size();i++){
+                    String uid = list.getJSONObject(i).getString("uid");
+                    String levelname = md.member_detail(null,uid).getString("level");
+                    int level_id = md.member_level(null,uid).getInteger("level_id");
+                    JSONArray list_0= md.level_enum(null,null,1,10).getJSONArray("list");
+                    for(int j=0;j<list_0.size();j++){
+                        int id = list_0.getJSONObject(j).getInteger("id");
+                        if (level_id==id){
+                            String name = list_0.getJSONObject(j).getString("level_name");
+                            Preconditions.checkArgument(name.equals(levelname), "会员等级是" + levelname+ "分配等级展示为" + name);
+                        }
+                    }
+                }
+
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("客户详情-分配等级");
+        }
+    }
+
+
     //会员等级通过等级名称搜索
     @Test()
     public void levelSearch(){

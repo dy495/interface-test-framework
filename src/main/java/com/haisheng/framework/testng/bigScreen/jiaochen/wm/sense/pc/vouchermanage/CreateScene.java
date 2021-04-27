@@ -145,7 +145,8 @@ public class CreateScene extends BaseScene {
      * 是否必填 false
      * 版本 v2.0
      */
-    private final Boolean isDefaultPic;
+    @Builder.Default
+    private final Boolean isDefaultPic = true;
 
     /**
      * 描述 优惠券样式

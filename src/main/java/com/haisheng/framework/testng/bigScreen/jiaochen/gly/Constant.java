@@ -267,7 +267,7 @@ public class Constant {
                 {"name", "name"},
                 {"apply_name", "apply_name"},
                 {"status", "status_name"},
-                {"apply_group", "apply_group"},
+                {"subject_type", "subject_name"},
 
         };
     }
@@ -482,7 +482,7 @@ public class Constant {
         return new String[][]{
                 {"plate_number", "plate_number"},
                 {"service_sale_id", "service_sale_name"},
-                {"evaluate_type", "evaluate_type_name"},
+//                {"evaluate_type", "evaluate_type_name"},
                 {"shop_id", "shop_id"},
                 {"customer_name", "customer_name"},
                 {"score", "score"},

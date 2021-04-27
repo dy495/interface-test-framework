@@ -15,7 +15,7 @@ public enum EnumAppletToken {
 
     BSJ_XMF_DAILY(EnumTestProduce.PORSCHE_DAILY.getAbbreviation(), "HMV6S0IoBmUCgWrBAK2hEQ==", true, "15037286013"),
 
-    BSJ_GLY_DAILY(EnumTestProduce.PORSCHE_DAILY.getAbbreviation(), "MLlSMAp5oXR7cGuCfY6+NA==", true, "13373166806"),
+    BSJ_GLY_DAILY(EnumTestProduce.PORSCHE_DAILY.getAbbreviation(), "Dkj9ox+0FtVN20Ka1z89HA==", true, "13373166806"),
 
     BSJ_XMF_ONLINE(EnumTestProduce.PORSCHE_DAILY.getAbbreviation(), "cMzFau3/cRA7nTf/r3X3GQ==", false, "15037286013"),
 
@@ -23,7 +23,7 @@ public enum EnumAppletToken {
 
     BSJ_WM_SMALL_ONLINE(EnumTestProduce.PORSCHE_DAILY.getAbbreviation(), "UhqugJ3HUDI7BRKnIvxxKg==", false, "15321527989"),
 
-    JC_WM_DAILY(EnumTestProduce.JC_DAILY.getAbbreviation(), "uhFcIKEc05Q50D9kEfLkBg==", true, "15321527989"),
+    JC_WM_DAILY(EnumTestProduce.JC_DAILY.getAbbreviation(), "jVXDdP1MPHXpNPrzl5LRLg==", true, "15321527989"),
 
     JC_WM_ONLINE(EnumTestProduce.JC_DAILY.getAbbreviation(), "aTcP39Q3mJAUauGwmq2VMg==", false, "15321527989"),
 
@@ -31,17 +31,19 @@ public enum EnumAppletToken {
 
     JC_XMF_ONLINE(EnumTestProduce.JC_DAILY.getAbbreviation(), "EDCYsAK+NKACPGAEN8ToJQ==", false, "15037286013"),
 
-    JC_LXQ_DAILY(EnumTestProduce.JC_DAILY.getAbbreviation(), "WFv2MvCx/QFetcT5YSWW2A==", false, "13436941018"),
+    JC_LXQ_DAILY(EnumTestProduce.JC_DAILY.getAbbreviation(), "o6l2C5o6nBAvES/WELPF8Q==", false, "13436941018"),
 
-    JC_GLY_DAILY(EnumTestProduce.JC_DAILY.getAbbreviation(), "2znUb8n6BsBElItlprl0zQ==", true, "13373166806"),
+    JC_LXQ_ONLINE(EnumTestProduce.JC_DAILY.getAbbreviation(), "Ew8hYWcEvKcJI98VX6V7Dg==", false, "13436941018"),
 
-    JC_GLY_ONLINE(EnumTestProduce.JC_DAILY.getAbbreviation(), "OpAP8cimsJQBwPtjGDeLig", false, "13373166806"),
+    JC_GLY_DAILY(EnumTestProduce.JC_DAILY.getAbbreviation(), "vkspHVxuqSlNsXYMNFlmaA==", true, "13373166806"),
+
+    JC_GLY_ONLINE(EnumTestProduce.JC_DAILY.getAbbreviation(), "92FWKP9z1yNf7P3OLC6KPw==", false, "13373166806"),
 
     INS_WM_DAILY(EnumTestProduce.INS_DAILY.getAbbreviation(), "KmN5WYK4ptRf5ZFL/y3cOQ==", true, "15321527989"),
 
     INS_WM_ONLINE(EnumTestProduce.INS_ONLINE.getAbbreviation(), "3/xeCPoURoHfylTkD/d54Q==", false, "15321527989"),
 
-    INS_ZT_DAILY(EnumTestProduce.INS_DAILY.getAbbreviation(), "KILnG7Wx7U0WJrBoyXrDoQ==", true, "13604609869"),
+    INS_ZT_DAILY(EnumTestProduce.INS_DAILY.getAbbreviation(), "yaHa71FXwEu9VLsfKYQ4DA==", true, "13604609869"),
 
     INS_ZT_ONLINE(EnumTestProduce.INS_ONLINE.getAbbreviation(), "B77c97rNQTsQbRtzq6MC9g==", false, "13604609869"),
     ;

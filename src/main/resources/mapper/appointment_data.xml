@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.haisheng.framework.dao.IAppointmentDataDao">
+    <insert id="insert" parameterType="com.haisheng.framework.model.bean.AppointmentData" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into onepiece.t_appointment_data (
+                                        shop_id,
+                                        appointment_id,
+                                        appointment_type,
+                                        product,
+                                        appointment_date,
+                                        appointment_status
+                                    ) value (
+                                        #{shopId},
+                                        #{appointmentId},
+                                        #{appointmentType},
+                                        #{product},
+                                        #{appointmentDate},
+                                        #{appointmentStatus}
+                                    )
+    </insert>
+
+    <select id="select" parameterType="com.haisheng.framework.model.bean.AppointmentData"
+            resultType="com.haisheng.framework.model.bean.AppointmentData">
+        select * from onepiece.t_appointment_data
+        <where>
+            <if test="id !=null">
+                id = #{id}
+            </if>
+            <if test="shopId !=null">
+                and shop_id=#{shopId}
+            </if>
+            <if test="appointmentId !=null">
+                and appointment_id=#{appointmentId}
+            </if>
+            <if test="appointmentType !=null">
+                and appointment_type=#{appointmentType}
+            </if>
+            <if test="product !=null">
+                and product = #{product}
+            </if>
+            <if test="appointmentDate !=null">
+                and appointment_date like concat ('%',#{appointmentDate},'%')
+            </if>
+            <if test="appointmentStatus !=null">
+                and appointment_status=#{appointmentStatus}
+            </if>
+        </where>
+    </select>
+
+    <update id="update" parameterType="com.haisheng.framework.model.bean.AppointmentData">
+        update onepiece.t_appointment_data
+        <set>
+            <if test="appointmentStatus !=null">
+                appointment_status = #{appointmentStatus}
+            </if>
+        </set>
+        <where>
+            <if test="id !=null">
+                id = #{id}
+            </if>
+            <if test="shopId !=null">
+                and shop_id=#{shopId}
+            </if>
+            <if test="appointmentId !=null">
+                and appointment_id=#{appointmentId}
+            </if>
+            <if test="appointmentType !=null">
+                and appointment_type=#{appointmentType}
+            </if>
+            <if test="product !=null">
+                and product = #{product}
+            </if>
+            <if test="appointmentDate !=null">
+                and appointment_date=#{appointmentDate}
+            </if>
+        </where>
+    </update>
+</mapper>

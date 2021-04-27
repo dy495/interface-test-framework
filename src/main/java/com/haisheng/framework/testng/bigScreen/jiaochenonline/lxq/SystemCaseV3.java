@@ -1,11 +1,10 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.lxq;
+package com.haisheng.framework.testng.bigScreen.jiaochenonline.lxq;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.jiaoChenInfo;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.model.AppletModeListScene;
@@ -37,13 +36,13 @@ import java.lang.reflect.Method;
  * @date 2021/1/29 11:17
  */
 public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduce PRODUCE = EnumTestProduce.JC_DAILY;
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.ALL_AUTHORITY_DAILY_LXQ;
-    private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_LXQ_DAILY;
+    private static final EnumTestProduce PRODUCE = EnumTestProduce.JC_ONLINE;
+    private static final EnumAccount ALL_AUTHORITY = EnumAccount.ALL_JC_ONLINE;
+    private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_LXQ_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public UserUtil user = new UserUtil(visitor);
     public SupporterUtil util = new SupporterUtil(visitor);
-    jiaoChenInfo info = new  jiaoChenInfo();
+    jiaoChenInfoOnline info = new jiaoChenInfoOnline();
 
     @BeforeClass
     @Override
@@ -52,10 +51,10 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         CommonConfig commonConfig = new CommonConfig();
         //替换checklist的相关信息
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
-        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_DAILY_SERVICE.getId();
+        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
         commonConfig.checklistQaOwner = "吕雪晴";
         //替换jenkins-job的相关信息
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_ONLINE_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
@@ -94,8 +93,8 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             user.loginApplet(APPLET_USER_ONE);
-            Long brandId = info.BrandID;
-            Long modelId = AppletModeListScene.builder().brandId(brandId).styleId(info.CarStyleID).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            Long brandId = info.BrandIDOnline;
+            Long modelId = AppletModeListScene.builder().brandId(brandId).styleId(info.CarStyleIDOnline).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
             Long shopId  = AppletCommonShopListScene.builder().carModelId(modelId).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
 
             JSONObject obj = AppletConsultOnlineExpertsSubmitScene.builder().customerName(customerName).customerPhone(customerPhone).content(content)
@@ -122,8 +121,8 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             user.loginApplet(APPLET_USER_ONE);
-            Long brandId = info.BrandID;
-            Long modelId = AppletModeListScene.builder().brandId(brandId).styleId(info.CarStyleID).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            Long brandId = info.BrandIDOnline;
+            Long modelId = AppletModeListScene.builder().brandId(brandId).styleId(info.CarStyleIDOnline).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
             Long shopId  = AppletCommonShopListScene.builder().carModelId(modelId).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
 
             String customerName="奶糖";
@@ -822,8 +821,8 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            Long brandId = info.BrandID;
-            Long modelId = AppletModeListScene.builder().brandId(brandId).styleId(info.CarStyleID).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            Long brandId = info.BrandIDOnline;
+            Long modelId = AppletModeListScene.builder().brandId(brandId).styleId(info.CarStyleIDOnline).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
             Long shopId  = AppletCommonShopListScene.builder().carModelId(modelId).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
             String salesId  = AppletConsultDedicatedServiceSalesListScene.builder().build().invoke(visitor).getJSONArray("sales_list").getJSONObject(0).getString("sales_id");//销售
             String aftersalesId  = AppletConsultDedicatedServiceSalesListScene.builder().build().invoke(visitor).getJSONArray("after_sales_list").getJSONObject(0).getString("sales_id");//售后
@@ -852,8 +851,8 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            Long brandId = info.BrandID;
-            Long modelId = AppletModeListScene.builder().brandId(brandId).styleId(info.CarStyleID).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            Long brandId = info.BrandIDOnline;
+            Long modelId = AppletModeListScene.builder().brandId(brandId).styleId(info.CarStyleIDOnline).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
             Long shopId  = AppletCommonShopListScene.builder().carModelId(modelId).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
             String aftersalesId  = AppletConsultDedicatedServiceSalesListScene.builder().build().invoke(visitor).getJSONArray("after_sales_list").getJSONObject(0).getString("sales_id");//售后
 
@@ -880,8 +879,8 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
     public void preServiceSubmit2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long brandId = info.BrandID;
-            Long modelId = AppletModeListScene.builder().brandId(brandId).styleId(info.CarStyleID).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            Long brandId = info.BrandIDOnline;
+            Long modelId = AppletModeListScene.builder().brandId(brandId).styleId(info.CarStyleIDOnline).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
             Long shopId  = AppletCommonShopListScene.builder().carModelId(modelId).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
             String salesId  = AppletConsultDedicatedServiceSalesListScene.builder().build().invoke(visitor).getJSONArray("after_sales_list").getJSONObject(0).getString("sales_id");//售后
 
@@ -1002,8 +1001,8 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            Long brandId = info.BrandID;
-            Long modelId = AppletModeListScene.builder().brandId(brandId).styleId(info.CarStyleID).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            Long brandId = info.BrandIDOnline;
+            Long modelId = AppletModeListScene.builder().brandId(brandId).styleId(info.CarStyleIDOnline).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
             Long shopId  = AppletCommonShopListScene.builder().carModelId(modelId).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
 
             String salesId  = AppletConsultDedicatedServiceSalesListScene.builder().build().invoke(visitor).getJSONArray("after_sales_list").getJSONObject(0).getString("sales_id");
@@ -1031,8 +1030,8 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
     public void afterServiceSubmit2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long brandId = info.BrandID;
-            Long modelId = AppletModeListScene.builder().brandId(brandId).styleId(info.CarStyleID).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            Long brandId = info.BrandIDOnline;
+            Long modelId = AppletModeListScene.builder().brandId(brandId).styleId(info.CarStyleIDOnline).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
             Long shopId  = AppletCommonShopListScene.builder().carModelId(modelId).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
 
             String salesId  = AppletConsultDedicatedServiceSalesListScene.builder().build().invoke(visitor).getJSONArray("after_sales_list").getJSONObject(0).getString("sales_id");

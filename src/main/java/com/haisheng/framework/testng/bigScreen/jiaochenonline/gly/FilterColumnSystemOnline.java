@@ -3875,15 +3875,15 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void evaluatePageOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject response = jc.evaluatePage("", "1", "10", "", "");
+            JSONObject response = jc.evaluatePage("", "1", "10","1", "", "");
             if (response.getJSONArray("list").size() > 0) {
                 if(pram.equals("evaluate_type")){
                     String result = response.getJSONArray("list").getJSONObject(0).getString(output).equals("维修评价")?"维修评价":"新车评价";
                     String result1 = response.getJSONArray("list").getJSONObject(0).getString(output).equals("维修评价")?"2":"3";
-                    JSONObject response1 = jc.evaluatePage("", "1", "10",pram, result1);
+                    JSONObject response1 = jc.evaluatePage("", "1", "10","1",pram, result1);
                     int pages = response1.getInteger("pages")>10?10: response1.getInteger("pages");
                     for (int page = 1; page <= pages; page++) {
-                        JSONArray list = jc.evaluatePage("", String.valueOf(page),"10", pram, result1).getJSONArray("list");
+                        JSONArray list = jc.evaluatePage("", String.valueOf(page),"10","1", pram, result1).getJSONArray("list");
                         for (int i = 0; i < list.size(); i++) {
                             String Flag = list.getJSONObject(i).getString(output);
                             System.out.println("评价列表按" + result + "查询，结果错误" + Flag);
@@ -3893,10 +3893,10 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                 }else if(pram.equals("is_follow_up")){
                     String result = response.getJSONArray("list").getJSONObject(0).getString(output);
                     String result1="true";//response.getJSONArray("list").getJSONObject(0).getString(output).isEmpty()?"false":"true";
-                    JSONObject response1 = jc.evaluatePage("", "1", "10",pram, result1);
+                    JSONObject response1 = jc.evaluatePage("", "1", "10","1",pram, result1);
                     int pages = response1.getInteger("pages")>10?10: response1.getInteger("pages");
                     for (int page = 1; page <= pages; page++) {
-                        JSONArray list = jc.evaluatePage("", String.valueOf(page),"10", pram, result1).getJSONArray("list");
+                        JSONArray list = jc.evaluatePage("", String.valueOf(page),"10", "1",pram, result1).getJSONArray("list");
                         for (int i = 0; i < list.size(); i++) {
                             String Flag = list.getJSONObject(i).getString(output);
                             if(result1.equals("false")){
@@ -3910,10 +3910,10 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                 }else if(pram.equals("is_have_msg")){
                     String result = response.getJSONArray("list").getJSONObject(0).getString(output);
                     String result1="true";//response.getJSONArray("list").getJSONObject(0).getString(output).isEmpty()?"false":"true";
-                    JSONObject response1 = jc.evaluatePage("", "1", "10",pram, result1);
+                    JSONObject response1 = jc.evaluatePage("", "1", "10","1",pram, result1);
                     int pages = response1.getInteger("pages")>10?10: response1.getInteger("pages");
                     for (int page = 1; page <= pages; page++) {
-                        JSONArray list = jc.evaluatePage("", String.valueOf(page),"10", pram, result1).getJSONArray("list");
+                        JSONArray list = jc.evaluatePage("", String.valueOf(page),"10","1", pram, result1).getJSONArray("list");
                         for (int i = 0; i < list.size(); i++) {
                             String Flag = list.getJSONObject(i).getString(output);
                             System.out.println("评价列表按" + result1 + "查询，结果错误" + Flag);
@@ -3928,10 +3928,10 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                     String result = response.getJSONArray("list").getJSONObject(0).containsKey("service_sale_name")?response.getJSONArray("list").getJSONObject(0).getString(output):"Max";
                     String saleId=businessUtil.authNameTransformId(result,"AFTER_SALE_RECEPTION");
                     String name=businessUtil.getAuthNameExist(result,"AFTER_SALE_RECEPTION");
-                    JSONObject response1 = jc.evaluatePage("", "1", "10",pram, saleId);
+                    JSONObject response1 = jc.evaluatePage("", "1", "10","1",pram, saleId);
                     int pages = response1.getInteger("pages")>10?10:response1.getInteger("pages");
                     for (int page = 1; page <= pages; page++) {
-                        JSONArray list = jc.evaluatePage("", String.valueOf(page),"10", pram, saleId).getJSONArray("list");
+                        JSONArray list = jc.evaluatePage("", String.valueOf(page),"10","1", pram, saleId).getJSONArray("list");
                         for (int i = 0; i < list.size(); i++) {
                             String Flag = list.getJSONObject(i).getString(output);
                             System.out.println("评价列表按" + name + "查询，结果错误" + Flag);
@@ -3940,10 +3940,10 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                     }
                 }else if(pram.equals("plate_number")){
                     String result = response.getJSONArray("list").getJSONObject(0).containsKey("plate_number")?response.getJSONArray("list").getJSONObject(0).getString(output):"浙A12345";
-                    JSONObject response1 = jc.evaluatePage("", "1", "10",pram, result);
+                    JSONObject response1 = jc.evaluatePage("", "1", "10","1",pram, result);
                     int pages = response1.getInteger("pages")>10?10:response1.getInteger("pages");
                     for (int page = 1; page <= pages; page++) {
-                        JSONArray list = jc.evaluatePage("", String.valueOf(page),"10", pram, result).getJSONArray("list");
+                        JSONArray list = jc.evaluatePage("", String.valueOf(page),"10","1", pram, result).getJSONArray("list");
                         for (int i = 0; i < list.size(); i++) {
                             String Flag = list.getJSONObject(i).getString(output);
                             System.out.println("评价列表按" + result + "查询，结果错误" + Flag);
@@ -3952,10 +3952,10 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                     }
                 }else{
                     String result = response.getJSONArray("list").getJSONObject(0).getString(output);
-                    JSONObject response1 = jc.evaluatePage("", "1", "10",pram, result);
+                    JSONObject response1 = jc.evaluatePage("", "1", "10","1",pram, result);
                     int pages = response1.getInteger("pages")>10?10:response1.getInteger("pages");
                     for (int page = 1; page <= pages; page++) {
-                        JSONArray list = jc.evaluatePage("", String.valueOf(page),"10", pram, result).getJSONArray("list");
+                        JSONArray list = jc.evaluatePage("", String.valueOf(page),"10", "1",pram, result).getJSONArray("list");
                         for (int i = 0; i < list.size(); i++) {
                             String Flag = list.getJSONObject(i).getString(output);
                             System.out.println("评价列表按" + result + "查询，结果错误" + Flag);
@@ -3983,10 +3983,10 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         try {
             String startTime=  dt.getHistoryDate(-30);
             String endTime=  dt.getHistoryDate(30);
-            JSONObject respond=jc.evaluatePage("","1","10",startTime,endTime,startTime,endTime);
+            JSONObject respond=jc.evaluatePage("","1","10","1",startTime,endTime,startTime,endTime);
             int pages = respond.getInteger("pages")>10?10:respond.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = jc.evaluatePage("", String.valueOf(page),"10",startTime,endTime,startTime,endTime).getJSONArray("list");
+                JSONArray list = jc.evaluatePage("", String.valueOf(page),"10","1",startTime,endTime,startTime,endTime).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     String evaluateTime = list.getJSONObject(i).containsKey("evaluate_time")?list.getJSONObject(i).getString("evaluate_time").substring(0,10):startTime;
                     String sourceCreateTime = list.getJSONObject(i).containsKey("source_create_time")?list.getJSONObject(i).getString("source_create_time").substring(0,10):startTime;
@@ -4012,7 +4012,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         try {
             Object[][] flag = Constant.evaluatePageFilter_pram();
             EvaluatePageVariable variable = new EvaluatePageVariable();
-            JSONArray res = jc.evaluatePage("", "1", "10","", "").getJSONArray("list");
+            JSONArray res = jc.evaluatePage("", "1", "10","1","", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
                 variable.plateNumber = data.getString(flag[0][1].toString());
@@ -4025,6 +4025,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                 variable.customerPhone = data.getString(flag[7][1].toString());
                 variable.isHaveMsg = data.getString(flag[8][1].toString());
                 variable.page = "1";
+                variable.evaluateType="1";
                 variable.size = "10";
                 //全部筛选之后的结果
                 JSONObject result = jc.evaluatePage(variable).getJSONArray("list").getJSONObject(0);
@@ -4058,7 +4059,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         try {
             Object[][] flag = Constant.evaluatePageFilter_pram();
             EvaluatePageVariable variable = new EvaluatePageVariable();
-            JSONArray res = jc.evaluatePage("", "1", "10","", "").getJSONArray("list");
+            JSONArray res = jc.evaluatePage("", "1", "10","1","", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
                 variable.plateNumber = data.getString(flag[0][1].toString());
@@ -4070,6 +4071,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
 //                variable.isFollowUp = data.getString(flag[6][1].toString());
 //                variable.customerPhone = data.getString(flag[7][1].toString());
 //                variable.isHaveMsg = data.getString(flag[8][1].toString());
+                variable.evaluateType="1";
                 variable.page = "1";
                 variable.size = "10";
                 //筛选之后的结果
@@ -4102,7 +4104,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void evaluatePageEmptyFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            JSONArray res = jc.evaluatePage("","1","10","","").getJSONArray("list");
+            JSONArray res = jc.evaluatePage("","1","10","1","","").getJSONArray("list");
         }catch(AssertionError|Exception e){
             appendFailReason(e.toString());
         }finally{

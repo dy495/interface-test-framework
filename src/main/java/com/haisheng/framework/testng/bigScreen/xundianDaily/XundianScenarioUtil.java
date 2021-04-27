@@ -1660,9 +1660,9 @@ public class XundianScenarioUtil extends TestCaseCommon {
         json.put("start_time",start_time);
         json.put("end_time",end_time);
         json.put("data_dimension",data_dimension);
-        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+//        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
 
-        return JSON.parseObject(res).getJSONObject("data");
+        return invokeApi(url, JSONObject.parseObject(json.toJSONString()), false);
     }
 
 

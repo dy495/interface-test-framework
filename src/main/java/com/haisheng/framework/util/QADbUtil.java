@@ -73,7 +73,7 @@ public class QADbUtil {
         String resource = "configuration-rd-daily.xml";
         try {
             rdSessionFactory = new SqlSessionFactoryBuilder().build(Resources.getResourceAsReader(
-                    resource),"readonly");
+                    resource), "readonly");
             rdDailySqlSession = rdSessionFactory.openSession();
 
         } catch (IOException e) {
@@ -97,7 +97,8 @@ public class QADbUtil {
 
         DateTimeUtil dt = new DateTimeUtil();
         ReturnVisitTime returnVisitTime = new ReturnVisitTime();
-        returnVisitTime.setCustomerId(customerId);;
+        returnVisitTime.setCustomerId(customerId);
+        ;
         returnVisitTime.setReturnVisitDate(dt.getHistoryDate(0));
 
         returnVisitDao.updateReturnVisitTime(returnVisitTime);
@@ -353,17 +354,18 @@ public class QADbUtil {
 
         return dao.queryDataByName(dataName);
     }
-    public Integer selsetDataTempOne(String column_name,String dataName) {
+
+    public Integer selsetDataTempOne(String column_name, String dataName) {
         getNewSqlSession();
         IDataTempDao dao = sqlSession.getMapper(IDataTempDao.class);
 
-        return dao.queryDataOneByName(column_name,dataName);
+        return dao.queryDataOneByName(column_name, dataName);
     }
 
-    public void updateDataNum(String dataName,Integer pcAppointmentRecordNum) {
+    public void updateDataNum(String dataName, Integer pcAppointmentRecordNum) {
         getNewSqlSession();
         IDataTempDao dao = sqlSession.getMapper(IDataTempDao.class);
-        dao.updateDataNum(dataName,pcAppointmentRecordNum);
+        dao.updateDataNum(dataName, pcAppointmentRecordNum);
 
         sqlSession.commit();
 
@@ -377,14 +379,15 @@ public class QADbUtil {
         sqlSession.commit();
 
     }
-    public void updateAppletCustomer(String  wechatId) {
+
+    public void updateAppletCustomer(String wechatId) {
         getNewRdSqlSession();
         IAppletReturnNewDao AppletReturnNewDao = rdDailySqlSession.getMapper(IAppletReturnNewDao.class);
         AppletReturnNewDao.updateAppletCustomer(wechatId);
         rdDailySqlSession.commit();
     }
 
-    public AppletCustomer selectAppletCustomer(String  wechatId) {
+    public AppletCustomer selectAppletCustomer(String wechatId) {
         getNewRdSqlSession();
         IAppletReturnNewDao AppletReturnNewDao = rdDailySqlSession.getMapper(IAppletReturnNewDao.class);
         return AppletReturnNewDao.selectAppletCustomer(wechatId);
@@ -404,11 +407,12 @@ public class QADbUtil {
 
     }
 
-    public String selectTransIdBynumber(String trans_number){
+    public String selectTransIdBynumber(String trans_number) {
         getNewRdSqlSession();
         return rdDailySqlSession.getMapper(transIdDao.class).SelectIdByNumber(trans_number);
     }
-    public String SelectFaceUrlByTransId(String trans_id){
+
+    public String SelectFaceUrlByTransId(String trans_id) {
         getNewRdSqlSession();
         return rdDailySqlSession.getMapper(transIdDao.class).SelectFaceUrlByTransId(trans_id);
     }

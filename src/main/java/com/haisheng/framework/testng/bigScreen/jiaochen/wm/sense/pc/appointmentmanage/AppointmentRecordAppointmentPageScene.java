@@ -1,6 +1,5 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.appointmentmanage;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
@@ -18,14 +17,16 @@ public class AppointmentRecordAppointmentPageScene extends BaseScene {
      * 是否必填 true
      * 版本 v1.0
      */
-    private final Integer page;
+    @Builder.Default
+    private Integer page = 1;
 
     /**
      * 描述 页大小 范围为[1,100]
      * 是否必填 true
      * 版本 v1.0
      */
-    private final Integer size;
+    @Builder.Default
+    private Integer size = 10;
 
     /**
      * 描述 预约类型 见字典表《预约类型》
@@ -191,5 +192,16 @@ public class AppointmentRecordAppointmentPageScene extends BaseScene {
     @Override
     public String getPath() {
         return "/jiaochen/pc/appointment-manage/appointment-record/appointment-page";
+    }
+
+
+    @Override
+    public void setPage(Integer page) {
+        this.page = page;
+    }
+
+    @Override
+    public void setSize(Integer size) {
+        this.size = size;
     }
 }

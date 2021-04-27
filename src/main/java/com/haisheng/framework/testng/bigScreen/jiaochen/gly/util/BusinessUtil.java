@@ -292,6 +292,7 @@ public class BusinessUtil {
                 .shareNum("3")
                 .shareVoucher(shareVoucher)
                 .invitedVoucher(invitedVoucher)
+                .isCustomShareInfo(false)
                 .build();
     }
 
@@ -722,13 +723,14 @@ public class BusinessUtil {
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
+
                 if (status == ActivityStatusEnum.PENDING.getId()) {
                     Long id = list.getJSONObject(i).getLong("id");
                     ids.add(id);
                 }
             }
         }
-        if (ids.size() == 0) {
+        if (ids.size() == 0){
             Long id1 = createRecruitActivityApproval();
             ids.add(id1);
         }
@@ -867,8 +869,10 @@ public class BusinessUtil {
         List<Long> ids = new ArrayList<>();
         //活动列表
         IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
-        int pages = visitor.invokeApi(scene).getInteger("pages");
+        int pages = visitor.invokeApi(scene).getInteger("pages")>10?10:visitor.invokeApi(scene).getInteger("pages");
+        System.err.println("pages:"+pages);
         for (int page = 1; page <= pages; page++) {
+            System.err.println("------------"+page);
             IScene scene1 = ActivityManageListScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
@@ -1310,7 +1314,7 @@ public class BusinessUtil {
         List<Long> ids = new ArrayList<>();
         //活动列表
         IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
-        int pages = visitor.invokeApi(scene).getInteger("pages");
+        int pages = visitor.invokeApi(scene).getInteger("pages")>10?10:visitor.invokeApi(scene).getInteger("pages");
         for (int page = 1; page <= pages; page++) {
             IScene scene1 = ActivityManageListScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
@@ -1637,12 +1641,12 @@ public class BusinessUtil {
             IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
             JSONObject response = visitor.invokeApi(scene);
             lastValue = response.getJSONObject("last_value");
-            System.err.println(lastValue);
             list = response.getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 Long itemId = list.getJSONObject(i).getLong("itemId");
                 if (activityId.equals(itemId)) {
                     title = list.getJSONObject(i).getString("title");
+                    System.err.println("-----title----"+title);
                 }
             }
         } while (list.size() == 10);
@@ -1657,14 +1661,19 @@ public class BusinessUtil {
         JSONObject lastValue = null;
         JSONArray list;
         Long id = 0L;
+        //获取此活动的名称
+        jc.pcLogin("13114785236", pp.password);
+        String title=getRecruitActivityDetailDate1(activityId).getString("title");
+        System.out.println("----------"+title);
+        user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
         do {
             IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
             JSONObject response = visitor.invokeApi(scene);
             lastValue = response.getJSONObject("last_value");
             list = response.getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
-                Long itemId = list.getJSONObject(i).getLong("itemId");
-                if (activityId.equals(itemId)) {
+                String title1 = list.getJSONObject(i).getString("title");
+                if (title.equals(title1)) {
                     id = list.getJSONObject(i).getLong("id");
                 }
             }
@@ -1895,9 +1904,11 @@ public class BusinessUtil {
                 registerItems.add(jsonObjectEMail);
             }
         }
+        //获取此活动的名称
+        String title=getRecruitActivityDetailDate1(id).getString("title");
+        System.err.println("----------title:"+title);
         user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
         //获取小程序推荐列表
-        String title = "";
         JSONObject lastValue = null;
         JSONArray list = null;
         do {
@@ -1906,12 +1917,87 @@ public class BusinessUtil {
             lastValue = response1.getJSONObject("last_value");
             list = response1.getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
-                int itemId = list.getJSONObject(i).getInteger("itemId");
-                if (id == itemId) {
+                String title1=list.getJSONObject(i).getString("title");
+                System.out.println("------------"+title1);
+                if (title.equals(title1)) {
                     activityId = list.getJSONObject(i).getLong("id");
+                    System.err.println(title+"----------"+activityId);
                 }
             }
         } while (list.size() == 10);
+        IScene scene = ArticleActivityRegisterScene.builder().id(activityId).registerItems(registerItems).build();
+        visitor.invokeApi(scene);
+
+    }
+
+    /**
+     * 小程序报名招募活动
+     */
+    public void activityRegisterApplet(Long id, String phone, String name, int registerCount, String eMail, String age, String gender, String others,String activityName) {
+        JSONArray registerItems = new JSONArray();
+        //在活动详情中获得招募活动的报名信息
+        jc.pcLogin(pp.phone1, pp.password);
+        JSONObject response = getRecruitActivityDetailDate(id);
+        JSONArray registerInformationList = response.getJSONArray("register_information_list");
+        for (int i = 0; i < registerInformationList.size(); i++) {
+            int type = registerInformationList.getJSONObject(i).getInteger("type");
+            if (type == RegisterInfoEnum.PHONE.getId()) {
+                JSONObject jsonObjectPhone = new JSONObject();
+                jsonObjectPhone.put("type", type);
+                jsonObjectPhone.put("value", phone);
+                registerItems.add(jsonObjectPhone);
+            } else if (type == RegisterInfoEnum.NAME.getId()) {
+                JSONObject jsonObjectName = new JSONObject();
+                jsonObjectName.put("type", type);
+                jsonObjectName.put("value", name);
+                registerItems.add(jsonObjectName);
+            } else if (type == RegisterInfoEnum.EMAIL.getId()) {
+                JSONObject jsonObjectEMail = new JSONObject();
+                jsonObjectEMail.put("type", type);
+                jsonObjectEMail.put("value", eMail);
+                registerItems.add(jsonObjectEMail);
+            } else if (type == RegisterInfoEnum.GENDER.getId()) {
+                JSONObject jsonObjectEMail = new JSONObject();
+                jsonObjectEMail.put("type", type);
+                jsonObjectEMail.put("value", gender);
+                registerItems.add(jsonObjectEMail);
+            } else if (type == RegisterInfoEnum.AGE.getId()) {
+                JSONObject jsonObjectEMail = new JSONObject();
+                jsonObjectEMail.put("type", type);
+                jsonObjectEMail.put("value", age);
+                registerItems.add(jsonObjectEMail);
+            } else if (type == RegisterInfoEnum.REGISTER_COUNT.getId()) {
+                JSONObject jsonObjectEMail = new JSONObject();
+                jsonObjectEMail.put("type", type);
+                jsonObjectEMail.put("value", registerCount);
+                registerItems.add(jsonObjectEMail);
+            } else if (type == RegisterInfoEnum.OTHERS.getId()) {
+                JSONObject jsonObjectEMail = new JSONObject();
+                jsonObjectEMail.put("type", type);
+                jsonObjectEMail.put("value", others);
+                registerItems.add(jsonObjectEMail);
+            }
+        }
+        user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+        //获取小程序推荐列表
+        JSONObject lastValue = null;
+        JSONArray list = null;
+        Long activityId = 0L;
+        do {
+            IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
+            JSONObject response1 = visitor.invokeApi(scene);
+            lastValue = response1.getJSONObject("last_value");
+            list = response1.getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                String title1=list.getJSONObject(i).getString("title");
+                System.out.println("------------"+title1);
+                if (activityName.equals(title1)) {
+                    activityId = list.getJSONObject(i).getLong("id");
+                    System.err.println(activityName+"----------"+activityId);
+                }
+            }
+        } while (list.size() == 10);
+        System.err.println("-----activityId------"+activityId);
         IScene scene = ArticleActivityRegisterScene.builder().id(activityId).registerItems(registerItems).build();
         visitor.invokeApi(scene);
 
@@ -1925,6 +2011,11 @@ public class BusinessUtil {
         JSONArray list = null;
         JSONArray registerItems = new JSONArray();
         Long activityId = 0L;
+        //登录PC
+        jc.pcLogin(pp.phone1, pp.password);
+        //获取此活动的名称
+        String title=getRecruitActivityDetailDate1(id).getString("title");
+        System.err.println("----------title:"+title);
         user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
         //获取小程序推荐列表
         do {
@@ -1933,8 +2024,9 @@ public class BusinessUtil {
             lastValue = response1.getJSONObject("last_value");
             list = response1.getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
-                int itemId = list.getJSONObject(i).getInteger("itemId");
-                if (id == itemId) {
+                String title1 = list.getJSONObject(i).getString("title");
+                System.out.println("----------title1:"+title1);
+                if (title.equals(title1)) {
                     activityId = list.getJSONObject(i).getLong("id");
                 }
             }
@@ -2210,7 +2302,7 @@ public class BusinessUtil {
      * 判断小程序中小喇叭的状态
      */
     public JSONObject articleVoucherData(Long activityId) {
-        //获取此活动对应的小程序ID
+        //获取此活动对应的
         Long id = appointmentActivityId(activityId);
         //查看小喇叭中的优惠券
         IScene scene2 = ArticleVoucherList.builder().id(id).build();

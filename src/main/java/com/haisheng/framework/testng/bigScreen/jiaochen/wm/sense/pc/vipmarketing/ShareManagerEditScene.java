@@ -69,6 +69,11 @@ public class ShareManagerEditScene extends BaseScene {
      */
     private final String takeEffectType;
 
+    /**
+     * 任务有效期
+     */
+    private final String day;
+
     @Override
     public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
@@ -83,6 +88,7 @@ public class ShareManagerEditScene extends BaseScene {
         object.put("take_effect_end_time", takeEffectEndTime);
         object.put("business_type", businessType);
         object.put("take_effect_type", takeEffectType);
+        object.put("day", day);
         return object;
     }
 

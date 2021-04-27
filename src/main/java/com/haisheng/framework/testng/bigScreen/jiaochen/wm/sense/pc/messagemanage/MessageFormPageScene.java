@@ -11,8 +11,8 @@ import lombok.Builder;
 public class MessageFormPageScene extends BaseScene {
     private final String messageType;
     private final String sendAccount;
-    private final Long startTime;
-    private final Long endTime;
+    private final String startTime;
+    private final String endTime;
     private final String customerName;
     private final Long shopId;
     @Builder.Default

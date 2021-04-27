@@ -2,17 +2,20 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.dao.IAppointmentDataDao;
+import com.haisheng.framework.model.bean.AppointmentData;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.sql.SqlFactory;
+import com.haisheng.framework.testng.bigScreen.crm.wm.bean.Response;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.appointmentmanage.AppointmentRecordAppointmentPageBean;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.manage.EvaluatePageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppReceptionReceptorList;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletCommodity;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletIntegralRecord;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletShippingAddress;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VerificationRecordBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.appointmentmanage.AppointmentRecordAppointmentPageBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.manage.EvaluatePageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.ChangeStockTypeEnum;
@@ -22,7 +25,6 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.S
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.appointment.AppointmentConfirmStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.appointment.AppointmentTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.AppletCodeBusinessTypeEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VerifyChannelEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherSourceEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.reception.after.ReceptionStatusEnum;
@@ -34,6 +36,8 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.task.AppAp
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.task.AppReceptionFinishReceptionScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.task.AppReceptionReceptorChangePageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.appointmentmanage.AppointmentPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.appointmentmanage.AppointmentRecordAppointmentPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.appointmentmanage.AppointmentRecordConfirmScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.EditExchangeStockScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.ExchangeDetailedScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.ExchangePageScene;
@@ -41,13 +45,13 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcent
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.ReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.ReceptorChangeScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.AddVoucherScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VerificationPeopleScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VerificationRecordScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
+import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
+import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import org.testng.annotations.AfterClass;
@@ -81,14 +85,13 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("before class initial");
         CommonConfig commonConfig = new CommonConfig();
         //替换checklist的相关信息
-        commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
-        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_DAILY_SERVICE.getId();
+        commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
+        commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
-        //替换钉钉推送
-        commonConfig.dingHook = EnumDingTalkWebHook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
         commonConfig.product = PRODUCE.getAbbreviation();
         commonConfig.referer = PRODUCE.getReferer();
@@ -113,53 +116,12 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
-    @Test(description = "优惠券管理--小程序自助核销一张，使用的核销码对应人员册核销数量+1&【核销记录】列表数+1&&核销渠道=主动核销")
-    public void voucherManage_system_35() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-            String voucherName = util.getVoucherName(voucherId);
-            //发出一张卡券
-            util.pushCustomMessage(0, true, voucherId);
-            Thread.sleep(500);
-            //获取最新发出卡券的code
-            String voucherCode = util.getVoucherCode(voucherId);
-            CommonUtil.valueView(voucherCode);
-            //核销列表数
-            IScene verificationRecordScene = VerificationRecordScene.builder().voucherId(voucherId).build();
-            List<VerificationRecordBean> verificationRecords = util.collectBeanList(verificationRecordScene, VerificationRecordBean.class);
-            //获取核销码
-            String code = util.getVerificationCode("本司员工");
-            IScene verificationPeopleScene = VerificationPeopleScene.builder().verificationCode(code).build();
-            //核销人员核销数量
-            int verificationNumber = visitor.invokeApi(verificationPeopleScene).getJSONArray("list").getJSONObject(0).getInteger("verification_number");
-            //获取卡券核销id
-            user.loginApplet(APPLET_USER_ONE);
-            Long appletVoucherId = util.getAppletVoucherInfo(voucherCode).getId();
-            //核销
-            IScene voucherVerificationScene = AppletVoucherVerificationScene.builder().id(String.valueOf(appletVoucherId)).verificationCode(code).build();
-            visitor.invokeApi(voucherVerificationScene);
-            //核销之后数据
-            user.loginPc(ALL_AUTHORITY);
-            List<VerificationRecordBean> newVerificationRecords = util.collectBeanList(verificationRecordScene, VerificationRecordBean.class);
-            CommonUtil.checkResult(voucherName + " 核销记录列表数", verificationRecords.size() + 1, newVerificationRecords.size());
-            CommonUtil.checkResult(voucherCode + " 核销渠道", VerifyChannelEnum.ACTIVE.getName(), newVerificationRecords.get(0).getVerificationChannelName());
-            int newVerificationNumber = visitor.invokeApi(verificationPeopleScene).getJSONArray("list").getJSONObject(0).getInteger("verification_number");
-            CommonUtil.checkResult("核销码" + code + "核销数", verificationNumber + 1, newVerificationNumber);
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("优惠券管理--小程序自助核销一张，使用的核销码对应人员册核销数量+1&【核销记录】列表数+1&&核销渠道=主动核销");
-        }
-    }
-
-    //ok
     @Test(description = "预约保养->确认预约->点接待->变更接待->完成接待->评价->跟进", enabled = false)
     public void appointmentManager_maintain() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int i = 0;
-            Integer shopId = util.getShopId();
+            Long shopId = util.getShopId();
             IScene appointmentPageScene = AppointmentPageScene.builder().build();
             int appointmentPageTotal = appointmentPageScene.invoke(visitor).getInteger("total");
             int appointmentNumber = util.appointmentNumber(DateTimeUtil.addDay(new Date(), i));
@@ -168,7 +130,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             //预约保养
             user.loginApplet(APPLET_USER_ONE);
             int appointmentNum = util.getAppletAppointmentNum();
-            int appointmentId = util.appointment(AppointmentTypeEnum.MAINTAIN, DateTimeUtil.addDayFormat(new Date(), i));
+            Long appointmentId = util.appointment(AppointmentTypeEnum.MAINTAIN, DateTimeUtil.addDayFormat(new Date(), i));
             int newAppointmentNum = util.getAppletAppointmentNum();
             CommonUtil.checkResult("applet我的预约列表数", appointmentNum + 1, newAppointmentNum);
             user.loginApp(ALL_AUTHORITY);
@@ -266,7 +228,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int i = 0;
-            Integer shopId = util.getShopId();
+            Long shopId = util.getShopId();
             IScene appointmentPageScene = AppointmentPageScene.builder().build();
             int appointmentPageTotal = visitor.invokeApi(appointmentPageScene).getInteger("total");
             int appointmentNumber = util.appointmentNumber(DateTimeUtil.addDay(new Date(), i));
@@ -275,7 +237,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             //预约维修
             user.loginApplet(APPLET_USER_ONE);
             int appointmentNum = util.getAppletAppointmentNum();
-            int appointmentId = util.appointment(AppointmentTypeEnum.REPAIR, DateTimeUtil.addDayFormat(new Date(), i));
+            Long appointmentId = util.appointment(AppointmentTypeEnum.REPAIR, DateTimeUtil.addDayFormat(new Date(), i));
             int newAppointmentNum = util.getAppletAppointmentNum();
             CommonUtil.checkResult("applet我的预约列表数", appointmentNum + 1, newAppointmentNum);
             user.loginApp(ALL_AUTHORITY);
@@ -284,7 +246,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             user.loginPc(ALL_AUTHORITY);
             int newAppointmentNumber = util.appointmentNumber(DateTimeUtil.addDay(new Date(), i));
             CommonUtil.checkResult("pc预约看板分子数", appointmentNumber + 1, newAppointmentNumber);
-            int newAppointmentPageTotal = visitor.invokeApi(appointmentPageScene).getInteger("total");
+            int newAppointmentPageTotal = appointmentPageScene.invoke(visitor).getInteger("total");
             CommonUtil.checkResult("pc预约记录列表数", appointmentPageTotal + 1, newAppointmentPageTotal);
             AppointmentRecordAppointmentPageBean appointmentPage = util.getAppointmentPageById(appointmentId);
             CommonUtil.checkResult("预约类型", AppointmentTypeEnum.REPAIR.getValue(), appointmentPage.getTypeName());
@@ -296,8 +258,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             //确认预约
             user.loginApp(ALL_AUTHORITY);
             int makeSureAppointmentNum = util.getAppointmentPageNum();
-            IScene appointmentHandleScene = AppAppointmentHandleScene.builder().id(appointmentId).shopId(shopId).type(10).build();
-            visitor.invokeApi(appointmentHandleScene);
+            AppAppointmentHandleScene.builder().id(appointmentId).shopId(shopId).type(10).build().invoke(visitor);
             Integer newMakeSureAppAppointmentNum = util.getAppointmentPageNum();
             CommonUtil.checkResult("app预约记录数", makeSureAppointmentNum, newMakeSureAppAppointmentNum);
             user.loginPc(ALL_AUTHORITY);
@@ -311,13 +272,12 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             user.loginApp(ALL_AUTHORITY);
             int appReceptionPageNum = util.getReceptionPageNum();
             user.loginPc(ALL_AUTHORITY);
-            int pcReceptionPageNum = visitor.invokeApi(ReceptionPageScene.builder().build()).getInteger("total");
-            IScene appointmentReceptionScene = AppAppointmentReceptionScene.builder().id(appointmentId).build();
-            visitor.invokeApi(appointmentReceptionScene);
+            int pcReceptionPageNum = ReceptionPageScene.builder().build().invoke(visitor).getInteger("total");
+            AppAppointmentReceptionScene.builder().id(appointmentId).build().invoke(visitor);
             int newAppReceptionPageNum = util.getReceptionPageNum();
             CommonUtil.checkResult("app接待页列表数", appReceptionPageNum + 1, newAppReceptionPageNum);
             user.loginPc(ALL_AUTHORITY);
-            int newPcReceptionPageNum = visitor.invokeApi(ReceptionPageScene.builder().build()).getInteger("total");
+            int newPcReceptionPageNum = ReceptionPageScene.builder().build().invoke(visitor).getInteger("total");
             CommonUtil.checkResult("pc接待列表数", pcReceptionPageNum + 1, newPcReceptionPageNum);
             ReceptionPage receptionPage = util.getFirstReceptionPage();
             CommonUtil.checkResult("接待状态", ReceptionStatusEnum.IN_RECEPTION.getStatusName(), receptionPage.getReceptionStatusName());
@@ -329,8 +289,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             user.loginApp(ALL_AUTHORITY);
             AppReceptionReceptorList receptorList = util.getReceptorList();
             String uid = receptorList.getUid();
-            IScene receptionReceptorChangePageScene = AppReceptionReceptorChangePageScene.builder().id(receptionId).receptorId(uid).shopId(shopId).build();
-            visitor.invokeApi(receptionReceptorChangePageScene);
+            AppReceptionReceptorChangePageScene.builder().id(receptionId).receptorId(uid).shopId(shopId).build().invoke(visitor);
             user.loginPc(ALL_AUTHORITY);
             ReceptionPage newReceptionPage = util.getReceptionPageById(receptionId);
             CommonUtil.checkResult("变更接待后接待人员", receptorList.getName(), newReceptionPage.getReceptionSaleName());
@@ -339,8 +298,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             //登录此人app完成接待
             user.loginApp(ALL_AUTHORITY);
             int finishReceptionNum = util.getReceptionPageNum();
-            IScene receptionFinishReceptionScene = AppReceptionFinishReceptionScene.builder().id(receptionId).shopId(shopId).build();
-            visitor.invokeApi(receptionFinishReceptionScene);
+            AppReceptionFinishReceptionScene.builder().id(receptionId).shopId(shopId).build().invoke(visitor);
             int newFinishReceptionNum = util.getReceptionPageNum();
             CommonUtil.checkResult("完成接待后，app接待列表数", finishReceptionNum - 1, newFinishReceptionNum);
             user.loginPc(ALL_AUTHORITY);
@@ -368,6 +326,74 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             collectMessage(e);
         } finally {
             saveData("预约维修->确认预约->点接待->变更接待->完成接待->评价->跟进");
+        }
+    }
+
+    @Test(description = "保存预约记录")
+    public void saveAppointmentRecord() {
+        try {
+            visitor.login(APPLET_USER_ONE.getToken());
+            String date = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 0), "yyyy-MM-dd");
+            Long appointmentId = util.appointment(AppointmentTypeEnum.TEST_DRIVE, date);
+            AppointmentData data = new AppointmentData();
+            data.setAppointmentDate(DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss"));
+            data.setShopId(Long.parseLong(PRODUCE.getShopId()));
+            data.setProduct(PRODUCE.getAbbreviation());
+            data.setAppointmentType(AppointmentTypeEnum.TEST_DRIVE.name());
+            data.setAppointmentId(appointmentId);
+            data.setAppointmentStatus(0);
+            new SqlFactory.Builder().build().execute(IAppointmentDataDao.class).insert(data);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("保存预约记录");
+        }
+    }
+
+    @Test(description = "确认预约记录", enabled = false)
+    public void makeSureAppointmentRecord() {
+        try {
+            AppointmentData appointmentData = new AppointmentData();
+            appointmentData.setProduct(PRODUCE.getAbbreviation());
+            appointmentData.setShopId(Long.parseLong(PRODUCE.getShopId()));
+            appointmentData.setAppointmentDate("2021-04-23");
+            appointmentData.setAppointmentStatus(0);
+            appointmentData.setAppointmentType(AppointmentTypeEnum.TEST_DRIVE.name());
+            List<AppointmentData> appointmentDataList = new SqlFactory.Builder().build().execute(IAppointmentDataDao.class).select(appointmentData);
+            Long appointmentId = appointmentDataList.get(0).getAppointmentId();
+            IScene scene = AppointmentRecordAppointmentPageScene.builder().type(AppointmentTypeEnum.TEST_DRIVE.name()).build();
+            AppointmentRecordAppointmentPageBean appointmentPageBean = util.collectBean(scene, AppointmentRecordAppointmentPageBean.class, "id", appointmentId);
+            Long shopId = appointmentPageBean.getShopId();
+            //确认预约
+            IScene scene1 = AppointmentRecordConfirmScene.builder().id(appointmentId).shopId(shopId).type(AppointmentTypeEnum.TEST_DRIVE.name()).build();
+            Response response = util.getResponse(scene1);
+            if (response.getCode() == 1000) {
+                //将预约状态改为1
+                AppointmentData newAppointmentData = new AppointmentData();
+                newAppointmentData.setAppointmentStatus(1);
+                newAppointmentData.setAppointmentId(appointmentId);
+                new SqlFactory.Builder().build().execute(IAppointmentDataDao.class).update(newAppointmentData);
+            }
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("确认预约记录");
+        }
+    }
+
+    @Test(description = "预试驾->确认预约->点接待->变更接待->完成接待->评价->跟进", enabled = false)
+    public void appointmentManager_testDriver() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int i = 0;
+            visitor.login(APPLET_USER_ONE.getToken());
+            String date = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd");
+            Long appointmentId = util.appointment(AppointmentTypeEnum.TEST_DRIVE, date);
+            int appointmentNumber = util.appointmentNumber(DateTimeUtil.addDay(new Date(), i));
+
+
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
         }
     }
 
@@ -442,7 +468,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
         try {
             //找一个库存为大于0并且包含卡券剩余库存等于0的积分商品
             IScene exchangePageScene = ExchangePageScene.builder().status(IntegralExchangeStatusEnum.WORKING.name()).exchangeType(CommodityTypeEnum.FICTITIOUS.name()).build();
-            ExchangePage a = util.collectBeanList(exchangePageScene, ExchangePage.class).stream().filter(e -> Integer.parseInt(e.getExchangedAndSurplus().split("/")[1]) > 0 && util.getExchangeGoodsContainVoucher(e.getId()).getSurplusInventory() == 0).findFirst().orElse(null);
+            ExchangePage a = util.collectBeanList(exchangePageScene, ExchangePage.class).stream().filter(e -> Integer.parseInt(e.getExchangedAndSurplus().split("/")[1]) > 0 && util.getExchangeGoodsContainVoucher(e.getId()).getAllowUseInventory() == 0).findFirst().orElse(null);
             ExchangePage exchangePage;
             if (a == null) {
                 Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.SELL_OUT).buildVoucher().getVoucherId();
@@ -474,7 +500,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
         try {
             //找一个库存为大于0并且包含卡券剩余库存等于0的积分商品
             IScene exchangePageScene = ExchangePageScene.builder().status(IntegralExchangeStatusEnum.WORKING.name()).exchangeType(CommodityTypeEnum.FICTITIOUS.name()).build();
-            ExchangePage a = util.collectBeanList(exchangePageScene, ExchangePage.class).stream().filter(e -> Integer.parseInt(e.getExchangedAndSurplus().split("/")[1]) == 0 && util.getExchangeGoodsContainVoucher(e.getId()).getSurplusInventory() > 0).findFirst().orElse(null);
+            ExchangePage a = util.collectBeanList(exchangePageScene, ExchangePage.class).stream().filter(e -> Integer.parseInt(e.getExchangedAndSurplus().split("/")[1]) == 0 && util.getExchangeGoodsContainVoucher(e.getId()).getAllowUseInventory() > 0).findFirst().orElse(null);
             ExchangePage exchangePage;
             if (a == null) {
                 Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
@@ -505,10 +531,10 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             ExchangePage exchangePage;
             IScene exchangePageScene = ExchangePageScene.builder().status(IntegralExchangeStatusEnum.WORKING.name()).exchangeType(CommodityTypeEnum.FICTITIOUS.name()).build();
             //找一个库存为大于0并且包含卡券剩余库存大于0的积分商品
-            ExchangePage a = util.collectBeanList(exchangePageScene, ExchangePage.class).stream().filter(e -> Integer.parseInt(e.getExchangedAndSurplus().split("/")[1]) > 0 && util.getExchangeGoodsContainVoucher(e.getId()).getSurplusInventory() > 0 && util.getExchangeGoodsContainVoucher(e.getId()).getVoucherStatus().equals(VoucherStatusEnum.WORKING.name())).findFirst().orElse(null);
+            ExchangePage a = util.collectBeanList(exchangePageScene, ExchangePage.class).stream().filter(e -> Integer.parseInt(e.getExchangedAndSurplus().split("/")[1]) > 0 && util.getExchangeGoodsContainVoucher(e.getId()).getAllowUseInventory() > 0 && util.getExchangeGoodsContainVoucher(e.getId()).getVoucherStatus().equals(VoucherStatusEnum.WORKING.name())).findFirst().orElse(null);
             if (a == null) {
                 //如果没有找一个库存为0并且包含卡券剩余库存大于0的积分商品
-                ExchangePage b = util.collectBeanList(exchangePageScene, ExchangePage.class).stream().filter(e -> Integer.parseInt(e.getExchangedAndSurplus().split("/")[1]) == 0 && util.getExchangeGoodsContainVoucher(e.getId()).getSurplusInventory() > 0 && util.getExchangeGoodsContainVoucher(e.getId()).getVoucherStatus().equals(VoucherStatusEnum.WORKING.name())).findFirst().orElse(null);
+                ExchangePage b = util.collectBeanList(exchangePageScene, ExchangePage.class).stream().filter(e -> Integer.parseInt(e.getExchangedAndSurplus().split("/")[1]) == 0 && util.getExchangeGoodsContainVoucher(e.getId()).getAllowUseInventory() > 0 && util.getExchangeGoodsContainVoucher(e.getId()).getVoucherStatus().equals(VoucherStatusEnum.WORKING.name())).findFirst().orElse(null);
                 if (b == null) {
                     //如果没有创建一个库存为1并且包含卡券剩余库存>0的积分商品
                     voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
@@ -635,4 +661,6 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             saveData("小程序--签到--积分增加&积分明细记录增加类型");
         }
     }
+
+
 }

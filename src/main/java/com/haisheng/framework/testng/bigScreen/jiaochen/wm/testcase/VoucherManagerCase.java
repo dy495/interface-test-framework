@@ -13,6 +13,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherChange
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherSendRecord;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.voucher.ApplyPageBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VerificationRecordBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherDetailBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherFormVoucherPageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherInvalidPageBean;
@@ -31,7 +32,9 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
+import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
+import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import org.testng.annotations.AfterClass;
@@ -62,14 +65,13 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("before class initial");
         CommonConfig commonConfig = new CommonConfig();
         //替换checklist的相关信息
-        commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
-        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_DAILY_SERVICE.getId();
+        commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
+        commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
-        //替换钉钉推送
-        commonConfig.dingHook = EnumDingTalkWebHook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
         commonConfig.product = PRODUCE.getAbbreviation();
         commonConfig.referer = PRODUCE.getReferer();
@@ -262,8 +264,8 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             List<VoucherPage> voucherPages = util.collectBeanList(scene, VoucherPage.class);
             voucherPages.forEach(e -> {
                 String voucherName = e.getVoucherName();
-                Long totalInvalid = visitor.invokeApi(VoucherInfoScene.builder().id(e.getVoucherId()).build()).getLong("total_invalid");
-                Long total = visitor.invokeApi(VoucherInvalidPageScene.builder().id(e.getVoucherId()).build()).getLong("total");
+                long totalInvalid = visitor.invokeApi(VoucherInfoScene.builder().id(e.getVoucherId()).build()).getLong("total_invalid");
+                long total = visitor.invokeApi(VoucherInvalidPageScene.builder().id(e.getVoucherId()).build()).getLong("total");
                 CommonUtil.checkResultPlus(voucherName + " 共作废数", totalInvalid, "作废记录列表数", total);
                 CommonUtil.valueView(voucherName);
             });
@@ -416,12 +418,12 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
         try {
             Integer[] integers = {1000000000, null, -100, Integer.MAX_VALUE};
             Arrays.stream(integers).forEach(stock -> {
-                IScene scene = CreateScene.builder().voucherName(util.createVoucherName())
+                IScene scene = CreateScene.builder().voucherName(util.createVoucherName()).isDefaultPic(true)
                         .subjectType(util.getSubjectType()).cardType(VoucherTypeEnum.CUSTOM.name()).parValue(99.99).cost(99.99)
                         .voucherDescription(util.getDesc()).subjectId(util.getSubjectDesc(util.getSubjectType())).stock(stock)
                         .shopType(0).shopIds(util.getShopIdList()).selfVerification(true).build();
                 String message = visitor.invokeApi(scene, false).getString("message");
-                String err = stock == null ? "库存不能为空" : "卡券库存范围应在0 ～ 100000000张";
+                String err = stock == null ? "库存不能为空" : "优惠券发行总量范围应在0 ～ 100000000张";
                 CommonUtil.checkResult("卡券库存为：" + stock, err, message);
                 CommonUtil.logger(stock);
             });
@@ -439,7 +441,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
         try {
             Integer[] integers = {null, -1, 100};
             Arrays.stream(integers).forEach(shopType -> {
-                IScene scene = CreateScene.builder().voucherName(util.createVoucherName())
+                IScene scene = CreateScene.builder().voucherName(util.createVoucherName()).isDefaultPic(true)
                         .subjectType(util.getSubjectType()).cardType(VoucherTypeEnum.CUSTOM.name()).parValue(99.99).cost(99.99)
                         .voucherDescription(util.getDesc()).subjectId(util.getSubjectDesc(util.getSubjectType())).stock(1000)
                         .shopType(shopType).shopIds(util.getShopIdList()).selfVerification(true).build();
@@ -462,7 +464,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
         try {
             Double[] doubles = {(double) -1, (double) 1000000000, 100000000.11};
             Arrays.stream(doubles).forEach(cost -> {
-                IScene scene = CreateScene.builder().voucherName(util.createVoucherName())
+                IScene scene = CreateScene.builder().voucherName(util.createVoucherName()).isDefaultPic(true)
                         .subjectType(util.getSubjectType()).cardType(VoucherTypeEnum.CUSTOM.name()).parValue(99.99).cost(cost)
                         .voucherDescription(util.getDesc()).subjectId(util.getSubjectDesc(util.getSubjectType())).stock(1000)
                         .shopType(0).shopIds(util.getShopIdList()).selfVerification(true).build();
@@ -483,7 +485,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
     public void voucherManage_system_8() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene scene = CreateScene.builder().voucherName(util.createVoucherName())
+            IScene scene = CreateScene.builder().voucherName(util.createVoucherName()).isDefaultPic(true)
                     .subjectType(util.getSubjectType()).cardType(VoucherTypeEnum.CUSTOM.name()).parValue(99.99).cost(99.99)
                     .voucherDescription(util.getDesc()).subjectId(util.getSubjectDesc(util.getSubjectType())).stock(1000)
                     .shopType(0).selfVerification(true).build();
@@ -1226,6 +1228,46 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             collectMessage(e);
         } finally {
             saveData("优惠券管理--撤回的卡券再编辑");
+        }
+    }
+
+    //ok
+    @Test(description = "优惠券管理--小程序自助核销一张，使用的核销码对应人员册核销数量+1&【核销记录】列表数+1&&核销渠道=主动核销")
+    public void voucherManage_system_42() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            String voucherName = util.getVoucherName(voucherId);
+            //发出一张卡券
+            util.pushCustomMessage(0, true, voucherId);
+            Thread.sleep(500);
+            //获取最新发出卡券的code
+            String voucherCode = util.getVoucherCode(voucherId);
+            CommonUtil.valueView(voucherCode);
+            //核销列表数
+            IScene verificationRecordScene = VerificationRecordScene.builder().voucherId(voucherId).build();
+            List<VerificationRecordBean> verificationRecords = util.collectBeanList(verificationRecordScene, VerificationRecordBean.class);
+            //获取核销码
+            String code = util.getVerificationCode("本司员工");
+            IScene verificationPeopleScene = VerificationPeopleScene.builder().verificationCode(code).build();
+            //核销人员核销数量
+            int verificationNumber = verificationPeopleScene.invoke(visitor).getJSONArray("list").getJSONObject(0).getInteger("verification_number");
+            //获取卡券核销id
+            user.loginApplet(APPLET_USER_ONE);
+            Long appletVoucherId = util.getAppletVoucherInfo(voucherCode).getId();
+            //核销
+            AppletVoucherVerificationScene.builder().id(String.valueOf(appletVoucherId)).verificationCode(code).build().invoke(visitor);
+            //核销之后数据
+            user.loginPc(ALL_AUTHORITY);
+            List<VerificationRecordBean> newVerificationRecords = util.collectBeanList(verificationRecordScene, VerificationRecordBean.class);
+            CommonUtil.checkResult(voucherName + " 核销记录列表数", verificationRecords.size() + 1, newVerificationRecords.size());
+            CommonUtil.checkResult(voucherCode + " 核销渠道", VerifyChannelEnum.ACTIVE.getName(), newVerificationRecords.get(0).getVerificationChannelName());
+            int newVerificationNumber = verificationPeopleScene.invoke(visitor).getJSONArray("list").getJSONObject(0).getInteger("verification_number");
+            CommonUtil.checkResult("核销码" + code + "核销数", verificationNumber + 1, newVerificationNumber);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("优惠券管理--小程序自助核销一张，使用的核销码对应人员册核销数量+1&【核销记录】列表数+1&&核销渠道=主动核销");
         }
     }
 

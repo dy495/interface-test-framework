@@ -243,9 +243,11 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
     public void picSpot1(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int pages = md.picturePage("SPOT","","","",null,1,8).getInteger("pages");
+            String start_time =DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), -5), "yyyy-MM-dd");
+            String end_time = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd");
+            int pages = md.picturePage("SPOT",start_time,end_time,"",null,1,8).getInteger("pages");
             for(int i=1;i<=pages;i++){
-                JSONArray list = md.picturePage("SPOT","","","",null,i,8).getJSONArray("list");
+                JSONArray list = md.picturePage("SPOT",start_time,end_time,"",null,i,8).getJSONArray("list");
                 for(int j=0;j<list.size();j++){
                     String tips = list.getJSONObject(j).getString("tips");
                     checkArgument(tips.contains("现场巡店")||tips.contains("远程巡店"), "手动巡查" + "!=图片返回的类型" + tips);
@@ -291,15 +293,19 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //非自定义导出报表
+//    非自定义导出报表
     @Test
     public void ReportExport(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray list = xd.reportList(1,100,null,null,"MONTH",null).getJSONArray("list");
-            int id = list.getJSONObject(0).getInteger("id");
-            xd.customizeReportExport(id,null,null,null,null,null,null);
-//                Preconditions.checkArgument(code==1000,"非自定义导出报表 id="+id+", 状态码"+code);
+            JSONArray list = xd.reportList(1,100,"巡店月报",null,"MONTH",null).getJSONArray("list");
+            for(int i=0;i<list.size();i++){
+                int id = list.getJSONObject(i).getInteger("id");
+                int code = xd.customizeReportExport(id,null,null,null,null,null,null).getInteger("code");
+//                int code = xd. reportExport(id).getInteger("code");
+                Preconditions.checkArgument(code==1000,"非自定义导出报表 id="+id+", 状态码"+code);
+            }
+
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -312,11 +318,14 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
     public void ReportExport1(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            String start_time =DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), -5), "yyyy-MM-dd");
+            String end_time = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd");
             JSONArray list = xd.reportList(1,100,null,null,"CUSTOM",null).getJSONArray("list");
-            int id = list.getJSONObject(0).getInteger("id");
-            xd.customizeReportExport(id,null,null,null,"2021-03-23","2021-03-23",null);
-//                Preconditions.checkArgument(code==1000,"非自定义导出报表 id="+id+", 状态码"+code);
-
+            for (int i=0;i<list.size();i++){
+                int id = list.getJSONObject(i).getInteger("id");
+                int code = xd.customizeReportExport(id,null,null,null,start_time,end_time,null).getInteger("code");
+                Preconditions.checkArgument(code==1000,"非自定义导出报表 id="+id+", 状态码"+code);
+            }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -428,7 +437,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 
     //注册会员，会员管理列表+1，通过搜索框进行搜索
     @Test(dataProvider = "FACE_URL",dataProviderClass = DataProviderMethod.class)
-    public void MemberList(){
+    public void MemberList(String face_url){
         logger.logCaseStart(caseResult.getCaseName());
         try {
            //通过搜索框搜索会员
