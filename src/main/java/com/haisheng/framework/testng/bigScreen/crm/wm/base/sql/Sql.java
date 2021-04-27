@@ -125,11 +125,6 @@ public class Sql {
             return this;
         }
 
-        public Builder and(String condition) {
-            this.condition.append("and").append(blank).append(condition).append(blank);
-            return this;
-        }
-
         public <T> Builder and(String field, String compareTo, T value) {
             this.condition.append("and").append(blank).append(field).append(blank)
                     .append(compareTo).append(blank).append(setSqlValue(value)).append(blank);

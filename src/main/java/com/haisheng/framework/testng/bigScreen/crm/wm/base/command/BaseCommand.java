@@ -12,6 +12,8 @@ import org.apache.http.client.HttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
+
 public abstract class BaseCommand {
 
     protected final Logger logger = LoggerFactory.getLogger(getClass());
@@ -42,12 +44,12 @@ public abstract class BaseCommand {
         }
         HttpHeader httpHeader = HttpHeader.custom()
                 .contentType(api.getContentType())
-                .referer(api.getReferer())
                 .authorization(api.getAuthorization());
         for (String key : api.getHeaders().keySet()) {
             httpHeader.other(key, api.getHeaders().get(key));
         }
         headers = httpHeader.build();
+        logger.info(Arrays.toString(headers));
     }
 
     public abstract String buildRequest(HttpConfig config, Api api);
