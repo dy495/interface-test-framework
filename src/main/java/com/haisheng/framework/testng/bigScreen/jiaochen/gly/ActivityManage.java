@@ -1418,7 +1418,7 @@ public void justTry(){
             //小程序中第一个为此活动
             user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             JSONObject response=businessUtil.appointmentActivityTitleNew();
-            String title1=response.getJSONArray("list").getJSONObject(0).getString("title");            jc.pcLogin(pp.phone1, pp.password);
+            String title1=response.getJSONArray("list").getJSONObject(0).getString("title");
             Preconditions.checkArgument(title1.equals(title), "PC进行中活动的标题为：" + title+"小程序中的更多中的活动标题为："+title1);
             Preconditions.checkArgument(message.equals("success"), "置顶进行中的活动的相关提示:" + message);
         } catch (AssertionError | Exception e) {
@@ -1541,7 +1541,6 @@ public void justTry(){
             user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             JSONObject response=businessUtil.appointmentActivityTitleNew();
             String title1=response.getJSONArray("list").getJSONObject(0).getString("title");
-            jc.pcLogin(pp.phone1, pp.password);
             Preconditions.checkArgument(title1.equals(title), "PC未开始活动的ID为：" + title+"小程序中的更多中的活动ID为："+title);
             Preconditions.checkArgument(message.equals("success"), "置顶未开始的活动的相关提示:" + message);
         } catch (AssertionError | Exception e) {
@@ -2197,7 +2196,6 @@ public void justTry(){
             JSONObject response=businessUtil.appointmentActivityTitleNew();
             System.err.println(response);
             String title1=response.getJSONArray("list").getJSONObject(0).getString("title");
-            jc.pcLogin(pp.phone1, pp.password);
             Preconditions.checkArgument(title1.equals(title), "PC未开始活动的ID为：" + title+"小程序中的更多中的活动标题为："+title1);
             Preconditions.checkArgument(message.equals("success"), "置顶未开始的活动的相关提示:" + message);
         } catch (AssertionError | Exception e) {

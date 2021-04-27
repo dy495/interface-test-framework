@@ -1323,7 +1323,8 @@ public class BusinessUtilOnline {
             //创建活动
             Long id1 = createRecruitActivity();
             //审批活动
-            getApprovalPassed(id1);
+            String message=getApprovalPassed(id1);
+            System.err.println(message);
             ids.add(id1);
 
         }
