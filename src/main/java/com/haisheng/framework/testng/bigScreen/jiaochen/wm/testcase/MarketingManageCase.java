@@ -2084,8 +2084,8 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
                     CommonUtil.valueView("门店：" + shopName, "品牌：" + brandName, "客户类型：" + CustomerTypeEnum.SUCCESS_CUSTOMER.getName());
                     CommonUtil.valueView("消息推送人数：" + total);
                     CommonUtil.valueView("展厅客户人数：" + count);
-                    CommonUtil.logger("门店：" + shopName + " 品牌：" + brandName + " 客户类型：" + CustomerTypeEnum.SUCCESS_CUSTOMER.getName());
                     CommonUtil.checkResultPlus("门店：" + shopName + " 品牌：" + brandName + " 客户类型：" + CustomerTypeEnum.SUCCESS_CUSTOMER.getName() + "推送消息销售成交客户数量", total, "销售客户列表门店&品牌不为空的成交客户数量", count);
+                    CommonUtil.logger("门店：" + shopName + " 品牌：" + brandName + " 客户类型：" + CustomerTypeEnum.SUCCESS_CUSTOMER.getName());
                 });
             });
         } catch (Exception | AssertionError e) {
@@ -2126,8 +2126,8 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
                     CommonUtil.valueView("门店：" + shopName, "品牌：" + brandName, "客户类型：" + CustomerTypeEnum.POTENTIAL_CUSTOMER.getName());
                     CommonUtil.valueView("消息推送人数：" + total);
                     CommonUtil.valueView("展厅客户人数：" + count);
-                    CommonUtil.logger("门店：" + shopName + " 品牌：" + brandName + " 客户类型：" + CustomerTypeEnum.POTENTIAL_CUSTOMER.getName());
                     CommonUtil.checkResultPlus("门店：" + shopName + " 品牌：" + brandName + " 客户类型：" + CustomerTypeEnum.POTENTIAL_CUSTOMER.getName() + "推送消息销售潜在客户数量", total, "销售客户列表门店&品牌不为空的潜在客户数量", count);
+                    CommonUtil.logger("门店：" + shopName + " 品牌：" + brandName + " 客户类型：" + CustomerTypeEnum.POTENTIAL_CUSTOMER.getName());
                 });
             });
         } catch (Exception | AssertionError e) {
