@@ -118,11 +118,13 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             //获取活动的状态
             int statusRevoke = businessUtil.getActivityStatus(activityId);
             //再次创建裂变活动
-            Long activityId2 = businessUtil.createFissionActivity(voucherId);
+            Long voucherId2 = businessUtil.getVoucherId();
+            Long activityId2 = businessUtil.createFissionActivity(voucherId2);
             //审批通过裂变活动
-            businessUtil.getApprovalPassed(activityId2);
+            String message=businessUtil.getApprovalPassed(activityId2);
             //获取活动的状态
             int statusPassed = businessUtil.getActivityStatus(activityId2);
+            System.err.println(activityId2+"---------"+statusPassed+"-------"+message);
             //获取此活动的名称
             String title=businessUtil.getRecruitActivityDetailDate1(activityId2).getString("title");
             System.err.println("----------title:"+title);
@@ -628,6 +630,7 @@ public void justTry(){
             }
             //审批通过之后报名成功的数量
             int passedAfter = businessUtil.getRegisterData(activityId).getInteger("passed");
+            System.out.println(passedAfter+"--------"+passedBefore);
             Preconditions.checkArgument(passedAfter > 0 && passedAfter == (passedBefore + 1), "审批的通过的人数为:" + registerNum);
 
         } catch (AssertionError | Exception e) {
@@ -1284,7 +1287,7 @@ public void justTry(){
             isRequired.add(true);
             JSONArray registerInformationList = businessUtil.getRegisterInformationList(isShow, isRequired);
             //报名成功奖励
-            JSONArray registerObject = businessUtil.getRewardVouchers(voucherId, 1, businessUtil.getVoucherAllowUseInventory(voucherId));
+            JSONArray registerObject = businessUtil.getRewardVouchers(voucherId, 1, 1);
             //卡券有效期
             JSONObject voucherValid = businessUtil.getVoucherValid(2, "", "", 10);
             String subject= supporterUtil.getSubjectType();
@@ -1556,12 +1559,14 @@ public void justTry(){
     public void cancelWaitingStarActivity() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            //获取未开始活动的ID
-            List<Long> ids = businessUtil.getRecruitActivityWaitingStar();
+            //创建未开始的活动
+            Long id=businessUtil.createRecruitActivity();
+            //审批活动
+            businessUtil.getApprovalPassed(id);
             //取消未开始的活动
-            businessUtil.getCancelActivity(ids.get(0));
+            businessUtil.getCancelActivity(id);
             //获取活动的状态
-            int status = businessUtil.getActivityStatus(ids.get(0));
+            int status = businessUtil.getActivityStatus(id);
             System.err.println("------"+status);
             Preconditions.checkArgument(status == ActivityStatusEnum.CANCELED.getId(), "现在活动的状态为：" + status);
         } catch (AssertionError | Exception e) {
@@ -1599,18 +1604,19 @@ public void justTry(){
     public void promotionRecruitActivityEdit(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            //获取未开始活动的ID
-            List<Long> ids =  businessUtil.getRecruitActivityWaitingStar();
-            System.err.println("----ids:"+ids.get(0));
+            //创建未开始的活动
+            Long id=businessUtil.createRecruitActivity();
+            //审批活动
+            businessUtil.getApprovalPassed(id);
             //编辑活动名称、活动名额
-            String message = businessUtil.activityEditScene(ids.get(0));
+            String message = businessUtil.activityEditScene(id);
             System.err.println("--------" + message);
             //获取活动详情中编辑后的标题和活动规则
-            String title = businessUtil.getRecruitActivityDetailDate1(ids.get(0)).getString("title");
-            String rule = businessUtil.getRecruitActivityDetailDate(ids.get(0)).getString("rule");
+            String title = businessUtil.getRecruitActivityDetailDate1(id).getString("title");
+            String rule = businessUtil.getRecruitActivityDetailDate(id).getString("rule");
             //获取活动状态
-            int status=businessUtil.getActivityStatus(ids.get(0));
-            String content = businessUtil.changeRecordPage(ids.get(0)).getJSONArray("list").getJSONObject(0).getString("content");
+            int status=businessUtil.getActivityStatus(id);
+            String content = businessUtil.changeRecordPage(id).getJSONArray("list").getJSONObject(0).getString("content");
 
             System.out.println(title+"--------"+rule);
             Preconditions.checkArgument(message.equals("success")&&title.contains("编辑过后的招募活动")&&rule.equals(pp.EditRule)&&content.equals("编辑活动"), "进行中的活动编辑失败");
@@ -1888,29 +1894,6 @@ public void justTry(){
         }
     }
     /**
-     * 活动管理-【审核未通过】的活动-置顶
-     * 2021-3-17
-     */
-    @Test(description = "活动管理-【审核未通过】的活动-置顶")
-    public void rejectFissionActivityTop() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //获取审核未通过活动的ID
-            List<Long> ids = businessUtil.getFissionActivityReject();
-            //获取审核未通过的活动名称
-            String title=businessUtil.getActivityTitle(ids.get(0));
-            //置顶【审核未通过的活动】
-            IScene scene=ActivityManageTopScene.builder().id(ids.get(0)).build();
-            String message=visitor.invokeApi(scene,false).getString("message");
-            System.out.println(title+"-------"+message);
-            Preconditions.checkArgument(message.equals("活动未审核通过！暂不能置顶"), "置顶审核不通过的活动的相关提示:" + message);
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("活动管理-【审核未通过】的活动-置顶");
-        }
-    }
-    /**
      * 活动管理-删除【审核未通过】的活动       ok
      */
     @Test(description = "活动管理-删除【审核未通过】的活动")
@@ -1946,8 +1929,8 @@ public void justTry(){
             List<String> picList = new ArrayList<>();
             picList.add(businessUtil.getPicturePath());
             // 创建被邀请者和分享者的信息字段
-            JSONObject invitedVoucher = businessUtil.getInvitedVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherAllowUseInventory(voucherId)), 2, "", "", 1);
-            JSONObject shareVoucher = businessUtil.getShareVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherAllowUseInventory(voucherId)), 2, "", "", 1);
+            JSONObject invitedVoucher = businessUtil.getInvitedVoucher(voucherId, 1,String.valueOf(Math.min(businessUtil.getVoucherAllowUseInventory(voucherId),2)), 2, "", "", 1);
+            JSONObject shareVoucher = businessUtil.getShareVoucher(voucherId, 1, String.valueOf(Math.min(businessUtil.getVoucherAllowUseInventory(voucherId),2)), 2, "", "", 1);
             //所属主体
             String subject=supporterUtil.getSubjectType();
             //开始时间和结束时间
@@ -4054,7 +4037,7 @@ public void justTry(){
             isRequired.add(false);
             JSONArray registerInformationList = this.businessUtil.getRegisterInformationList(isShow, isRequired);
             //报名成功奖励
-            JSONArray registerObject = businessUtil.getRewardVouchers(voucherId, 1, businessUtil.getVoucherAllowUseInventory(voucherId));
+            JSONArray registerObject = businessUtil.getRewardVouchers(voucherId, 1, Math.min(businessUtil.getVoucherAllowUseInventory(voucherId),3));
             //卡券有效期
             JSONObject voucherValid = businessUtil.getVoucherValid(2, null, null, 10);
             //创建招募活动-共有的--基础信息
@@ -4108,7 +4091,6 @@ public void justTry(){
             String message=visitor.invokeApi(scene4,false).getString("message");
             String isReceivedAfter=businessUtil.articleVoucher(activityId);
             System.out.println(isReceivedAfter+"--------"+message);
-
             Preconditions.checkArgument(isReceivedBefore.equals("false")&&isReceivedAfter.equals("false")&&message.equals("很遗憾，优惠券已经被抢光了～更多活动敬请期待"),"招募活动中卡券领取失败，message提示为："+message);
         } catch (AssertionError | Exception e) {
             collectMessage(e);

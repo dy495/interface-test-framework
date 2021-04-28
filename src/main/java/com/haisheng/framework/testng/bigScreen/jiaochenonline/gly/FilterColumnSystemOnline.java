@@ -935,7 +935,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
             commonConfig.shopId="20032";
             Object[][] flag = Constant.maintainFilter_pram();
             maintainVariable variable = new maintainVariable();
-            JSONArray res = jc.maintainFilterManage("49195", "1", "10", "MAINTAIN","", "").getJSONArray("list");
+            JSONArray res = jc.maintainFilterManage("20032", "1", "10", "MAINTAIN","", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
                 variable.brand_name = data.getString(flag[0][1].toString());
@@ -975,7 +975,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
             commonConfig.shopId="20032";
             Object[][] flag = Constant.maintainFilter_pram();
             maintainVariable variable = new maintainVariable();
-            JSONArray res = jc.maintainFilterManage("49195", "1", "10", "MAINTAIN","", "").getJSONArray("list");
+            JSONArray res = jc.maintainFilterManage("20032", "1", "10", "MAINTAIN","", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
                 variable.brand_name = data.getString(flag[0][1].toString());

@@ -198,12 +198,13 @@ public class BusinessUtilOnline {
     /**
      * 判断剩余库存
      */
-    public int getVoucherSurplusInventory(Long voucherId) {
+    public int getVoucherAllowUseInventory(Long voucherId) {
         SupporterUtil su = new SupporterUtil(visitor);
-        Long surplusInventory = su.getVoucherPage(voucherId).getSurplusInventory();
-        return (int) (surplusInventory == 1 ? surplusInventory : surplusInventory - 1);
+        Long allowUseInventory = su.getVoucherPage(voucherId).getAllowUseInventory();
+        return (int) (allowUseInventory ==1  ? allowUseInventory : allowUseInventory - 1);
 
     }
+
 
     /**
      * 获取进行中的优惠券
@@ -272,8 +273,8 @@ public class BusinessUtilOnline {
         List<String> picList = new ArrayList<>();
         picList.add(supporterUtil.getPicPath());
         // 创建被邀请者和分享者的信息字段
-        JSONObject invitedVoucher = getInvitedVoucher(voucherId, 1, String.valueOf(getVoucherSurplusInventory(voucherId)), 2, "", "", 3);
-        JSONObject shareVoucher = getShareVoucher(voucherId, 1, String.valueOf(getVoucherSurplusInventory(voucherId)), 2, "", "", 3);
+        JSONObject invitedVoucher = getInvitedVoucher(voucherId, 1, String.valueOf(Math.min(getVoucherAllowUseInventory(voucherId),1)), 2, "", "", 3);
+        JSONObject shareVoucher = getShareVoucher(voucherId, 1, String.valueOf(Math.min(getVoucherAllowUseInventory(voucherId),1)), 2, "", "", 3);
         return FissionVoucherAddScene.builder()
                 .type(1)
                 .participationLimitType(0)
@@ -311,8 +312,8 @@ public class BusinessUtilOnline {
         List<String> picList = new ArrayList<>();
         picList.add(supporterUtil.getPicPath());
         // 创建被邀请者和分享者的信息字段
-        JSONObject invitedVoucher = getInvitedVoucher(voucherId, 1, String.valueOf(getVoucherSurplusInventory(voucherId)), 2, "", "", 1);
-        JSONObject shareVoucher = getShareVoucher(voucherId, 1, String.valueOf(getVoucherSurplusInventory(voucherId)), 2, "", "", 1);
+        JSONObject invitedVoucher = getInvitedVoucher(voucherId, 1, String.valueOf(getVoucherAllowUseInventory(voucherId)), 2, "", "", 1);
+        JSONObject shareVoucher = getShareVoucher(voucherId, 1, String.valueOf(getVoucherAllowUseInventory(voucherId)), 2, "", "", 1);
         //编辑裂变活动
         return FissionVoucherEditScene.builder()
                 .id(activityId)
@@ -410,7 +411,7 @@ public class BusinessUtilOnline {
         isRequired.add(true);
         JSONArray registerInformationList = this.getRegisterInformationList(isShow, isRequired);
         //报名成功奖励
-        JSONArray registerObject = getRewardVouchers(voucherId, 1, getVoucherSurplusInventory(voucherId));
+        JSONArray registerObject = getRewardVouchers(voucherId, 1, 1);
         //卡券有效期
         JSONObject voucherValid = getVoucherValid(2, null, null, 10);
         //创建招募活动-共有的--基础信息
@@ -473,7 +474,7 @@ public class BusinessUtilOnline {
         isRequired.add(true);
         JSONArray registerInformationList = this.getRegisterInformationList(isShow, isRequired);
         //报名成功奖励
-        JSONArray registerObject = getRewardVouchers(voucherId, 1, getVoucherSurplusInventory(voucherId));
+        JSONArray registerObject = getRewardVouchers(voucherId, 1, Math.min(getVoucherAllowUseInventory(voucherId),2));
         //卡券有效期
         JSONObject voucherValid = getVoucherValid(2, null, null, 10);
         //创建招募活动-共有的--基础信息
@@ -536,7 +537,7 @@ public class BusinessUtilOnline {
         isRequired.add(type);
         JSONArray registerInformationList = this.getRegisterInformationList(isShow, isRequired);
         //报名成功奖励
-        JSONArray registerObject = getRewardVouchers(voucherId, 1, getVoucherSurplusInventory(voucherId));
+        JSONArray registerObject = getRewardVouchers(voucherId, 1, getVoucherAllowUseInventory(voucherId));
         //卡券有效期
         JSONObject voucherValid = getVoucherValid(2, null, null, 10);
         //创建招募活动-共有的--基础信息
@@ -596,7 +597,7 @@ public class BusinessUtilOnline {
         isRequired.add(true);
         JSONArray registerInformationList = getRegisterInformationList(isShow, isRequired);
         //报名成功奖励
-        JSONArray registerObject = getRewardVouchers(voucherId, 1, getVoucherSurplusInventory(voucherId));
+        JSONArray registerObject = getRewardVouchers(voucherId, 1, Math.min(getVoucherAllowUseInventory(voucherId),2));
         //卡券有效期
         JSONObject voucherValid = getVoucherValid(2, "", "", 10);
         IScene scene = ManageRecruitEditScene.builder()
@@ -673,7 +674,7 @@ public class BusinessUtilOnline {
             for (int i = 0; i < list.size(); i++) {
                 Long voucherId = list.getJSONObject(i).getLong("voucher_id");
                 if (voucherId.equals(id)) {
-                    surplusInventory = list.getJSONObject(i).getString("surplus_inventory");
+                    surplusInventory = list.getJSONObject(i).getString("allow_use_inventory");
                     break;
                 }
             }
@@ -1593,45 +1594,23 @@ public class BusinessUtilOnline {
      */
     public String appointmentActivityStatus(Long activityId) {
         Integer lastValue = null;
-        JSONArray list=null;
+        JSONArray list = null;
         String status = "";
-        do{
+        do {
             IScene scene = AppointmentActivityListScene.builder().lastValue(lastValue).size(10).build();
             JSONObject response1 = visitor.invokeApi(scene);
             lastValue = response1.getInteger("last_value");
             list = response1.getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 Long id = list.getJSONObject(i).getLong("id");
+                System.out.println(i + "---------" + id);
                 if (activityId.equals(id)) {
                     status = list.getJSONObject(i).getString("status_name");
                 }
 
             }
-        }while(list.size()==10);
+        } while (list.size() == 10);
         return status;
-    }
-    /**
-     * 根据活动ID返回活动的标题
-     */
-    public String appointmentActivityTitleNew(Long activityId) {
-        JSONObject lastValue = null;
-        JSONArray list;
-        String title="";
-        do{
-            IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
-            JSONObject response = visitor.invokeApi(scene);
-            lastValue = response.getJSONObject("last_value");
-            System.err.println(lastValue);
-            list = response.getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                Long itemId = list.getJSONObject(i).getLong("itemId");
-                if (activityId.equals(itemId)) {
-                    title = list.getJSONObject(i).getString("title");
-                }
-            }
-        }while(list.size()==10);
-
-        return title;
     }
 
     /**
@@ -1650,20 +1629,23 @@ public class BusinessUtilOnline {
     public Long appointmentActivityId(Long activityId) {
         JSONObject lastValue = null;
         JSONArray list;
-        Long id=0L;
-        do{
+        Long id = 0L;
+        //获取此活动的名称
+        jc.pcLogin(pp.phone, pp.password);
+        String title=getRecruitActivityDetailDate1(activityId).getString("title");
+        user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
+        do {
             IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
             JSONObject response = visitor.invokeApi(scene);
             lastValue = response.getJSONObject("last_value");
-            System.err.println(lastValue);
             list = response.getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
-                Long itemId = list.getJSONObject(i).getLong("itemId");
-                if (activityId.equals(itemId)) {
+                String title1 = list.getJSONObject(i).getString("title");
+                if (title.equals(title1)) {
                     id = list.getJSONObject(i).getLong("id");
                 }
             }
-        }while(list.size()==10);
+        } while (list.size() == 10);
 
         return id;
     }
@@ -1889,9 +1871,10 @@ public class BusinessUtilOnline {
                 registerItems.add(jsonObjectEMail);
             }
         }
+        //获取此活动的名称
+        String title=getRecruitActivityDetailDate1(id).getString("title");
         user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
         //获取小程序推荐列表
-        String title="";
         JSONObject lastValue=null;
         JSONArray list=null;
         do {
@@ -1901,7 +1884,6 @@ public class BusinessUtilOnline {
             list = response1.getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 String title1=list.getJSONObject(i).getString("title");
-                System.out.println("------------"+title1);
                 if (title.equals(title1)) {
                     activityId = list.getJSONObject(i).getLong("id");
                     System.err.println(title+"----------"+activityId);
@@ -1920,20 +1902,24 @@ public class BusinessUtilOnline {
         JSONArray list=null;
         JSONArray registerItems = new JSONArray();
         Long activityId=0L;
+        //获取此活动的名称
+        jc.pcLogin(pp.phone, pp.password);
+        String title=getRecruitActivityDetailDate1(id).getString("title");
         user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
         //获取小程序推荐列表
-        do{
+        do {
             IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
             JSONObject response1 = visitor.invokeApi(scene);
             lastValue = response1.getJSONObject("last_value");
             list = response1.getJSONArray("list");
-            for(int i=0;i<list.size();i++){
-                int itemId=list.getJSONObject(i).getInteger("itemId");
-                if(id==itemId){
-                    activityId=list.getJSONObject(i).getLong("id");
+            for (int i = 0; i < list.size(); i++) {
+                String title1=list.getJSONObject(i).getString("title");
+                if (title.equals(title1)) {
+                    activityId = list.getJSONObject(i).getLong("id");
+                    System.err.println(title+"----------"+activityId);
                 }
             }
-        }while(list.size()==10);
+        } while (list.size() == 10);
         IScene scene = ArticleActivityRegisterScene.builder().id(activityId).registerItems(registerItems).build();
         visitor.invokeApi(scene);
     }

@@ -204,7 +204,7 @@ public class BusinessUtil {
     public int getVoucherAllowUseInventory(Long voucherId) {
         SupporterUtil su = new SupporterUtil(visitor);
         Long allowUseInventory = su.getVoucherPage(voucherId).getAllowUseInventory();
-        return (int) (allowUseInventory == 1 ? allowUseInventory : allowUseInventory - 1);
+        return (int) (allowUseInventory ==1  ? allowUseInventory : allowUseInventory - 1);
 
     }
 
@@ -275,8 +275,8 @@ public class BusinessUtil {
         List<String> picList = new ArrayList<>();
         picList.add(supporterUtil.getPicPath());
         // 创建被邀请者和分享者的信息字段
-        JSONObject invitedVoucher = getInvitedVoucher(voucherId, 1, String.valueOf(Math.min(getVoucherAllowUseInventory(voucherId), 10)), 2, "", "", 3);
-        JSONObject shareVoucher = getShareVoucher(voucherId, 1, String.valueOf(Math.min(getVoucherAllowUseInventory(voucherId), 10)), 2, "", "", 3);
+        JSONObject invitedVoucher = getInvitedVoucher(voucherId, 1, String.valueOf(Math.min(getVoucherAllowUseInventory(voucherId), 2)), 2, "", "", 3);
+        JSONObject shareVoucher = getShareVoucher(voucherId, 1, String.valueOf(Math.min(getVoucherAllowUseInventory(voucherId), 2)), 2, "", "", 3);
         return FissionVoucherAddScene.builder()
                 .type(1)
                 .participationLimitType(0)
@@ -679,7 +679,7 @@ public class BusinessUtil {
             for (int i = 0; i < list.size(); i++) {
                 Long voucherId = list.getJSONObject(i).getLong("voucher_id");
                 if (voucherId.equals(id)) {
-                    surplusInventory = list.getJSONObject(i).getString("surplus_inventory");
+                    surplusInventory = list.getJSONObject(i).getString("allow_use_inventory");
                     break;
                 }
             }
@@ -1662,9 +1662,8 @@ public class BusinessUtil {
         JSONArray list;
         Long id = 0L;
         //获取此活动的名称
-        jc.pcLogin("13114785236", pp.password);
+        jc.pcLogin(pp.phone1, pp.password);
         String title=getRecruitActivityDetailDate1(activityId).getString("title");
-        System.out.println("----------"+title);
         user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
         do {
             IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
@@ -2015,7 +2014,6 @@ public class BusinessUtil {
         jc.pcLogin(pp.phone1, pp.password);
         //获取此活动的名称
         String title=getRecruitActivityDetailDate1(id).getString("title");
-        System.err.println("----------title:"+title);
         user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
         //获取小程序推荐列表
         do {
