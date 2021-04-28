@@ -70,7 +70,7 @@ public class VisitorProxy extends TestCaseCommon {
             try {
                 result = httpPost(path, request, IpPort);
             } catch (Exception e) {
-                appendFailReason(e.toString());
+                collectMessage(e);
             }
             return JSON.parseObject(result);
         }

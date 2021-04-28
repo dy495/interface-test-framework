@@ -22,7 +22,7 @@ public class ReceptionPurchaseTemporaryPackageScene extends BaseScene {
     private final String extendedInsuranceYear;
     private final String extendedInsuranceCopies;
     private final Integer type;
-    private final Integer receptionId;
+    private final Long receptionId;
     private final Long customerId;
     private final Integer shopId;
 

@@ -60,10 +60,7 @@ import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import org.jetbrains.annotations.NotNull;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -110,6 +107,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
     @AfterClass
     @Override
     public void clean() {
+        util.cleanVoucher();
         afterClassClean();
     }
 
@@ -2035,21 +2033,6 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @AfterClass
-    @Test(description = "清理卡券")
-    public void cleanVoucher() {
-        Arrays.stream(VoucherTypeEnum.values()).forEach(anEnum -> {
-            IScene scene = VoucherFormVoucherPageScene.builder().voucherName(anEnum.getDesc()).voucherStatus(VoucherStatusEnum.WAITING.name()).build();
-            List<VoucherFormVoucherPageBean> voucherFormVoucherPageBeanList = util.collectBeanList(scene, VoucherFormVoucherPageBean.class);
-            List<Long> voucherIdList = voucherFormVoucherPageBeanList.stream().map(VoucherFormVoucherPageBean::getVoucherId).collect(Collectors.toList());
-            if (voucherIdList.size() != 0) {
-                voucherIdList.forEach(voucherId -> {
-                    RecallVoucherScene.builder().id(voucherId).build().invoke(visitor);
-                    DeleteVoucherScene.builder().id(voucherId).build().invoke(visitor);
-                });
-            }
-        });
-    }
 
     //------------------------------------------------------消息推送人员数据一致-------------------------------------------
 
@@ -2070,10 +2053,11 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "消息管理--推送消息销售成交客户数量=销售客户列表门店&品牌不为空的成交客户数量")
-    public void messageManagerPeople_data_2() {
+    //ok
+    @Test(description = "消息管理--推送消息销售成交客户数量=销售客户列表门店&品牌不为空的成交客户数量", dataProvider = "shopIds")
+    public void messageManagerPeople_data_2(String shopIds) {
         logger.logCaseStart(caseResult.getCaseName());
-        commonConfig.shopId = String.valueOf(util.getShopId());
+        commonConfig.shopId = shopIds;
         try {
             JSONArray shopList = ShopListScene.builder().build().invoke(visitor).getJSONArray("list");
             shopList.stream().map(e -> (JSONObject) e).forEach(shop -> {
@@ -2093,35 +2077,30 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
                             .preCustomerType(preCustomerType).shopIds(shopIdList).brandIds(brandIdList).build().invoke(visitor).getLong("total");
                     IScene preSaleCustomerPageScene = PreSaleCustomerPageScene.builder().build();
                     List<PreSaleCustomerPageBean> pageBeanList1 = util.collectBeanList(preSaleCustomerPageScene, PreSaleCustomerPageBean.class);
-                    long count = pageBeanList1
-                            .stream().filter(e -> e.getBrandName() != null
-                                    && e.getShopName() != null
-                                    && e.getCustomerTypeName() != null
-                                    && e.getCreateDate() != null
-                                    && e.getBrandName().equals(brandName)
-                                    && e.getCustomerTypeName().equals(CustomerTypeEnum.SUCCESS_CUSTOMER.getName())
-                                    && !e.getCreateDate().contains(DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd")))
-                            .count();
+                    long count = pageBeanList1.stream().filter(e -> e.getBrandName() != null && e.getShopName() != null
+                            && e.getCustomerTypeName() != null && e.getCreateDate() != null && e.getBrandName().equals(brandName)
+                            && e.getCustomerTypeName().equals(CustomerTypeEnum.SUCCESS_CUSTOMER.getName())
+                            && !e.getCreateDate().contains(DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd"))).count();
                     CommonUtil.valueView("门店：" + shopName, "品牌：" + brandName, "客户类型：" + CustomerTypeEnum.SUCCESS_CUSTOMER.getName());
                     CommonUtil.valueView("消息推送人数：" + total);
                     CommonUtil.valueView("展厅客户人数：" + count);
                     CommonUtil.logger("门店：" + shopName + " 品牌：" + brandName + " 客户类型：" + CustomerTypeEnum.SUCCESS_CUSTOMER.getName());
-                    CommonUtil.checkResultPlus("推送消息销售成交客户数量", total, "销售客户列表门店&品牌不为空的成交客户数量", count);
+                    CommonUtil.checkResultPlus("门店：" + shopName + " 品牌：" + brandName + " 客户类型：" + CustomerTypeEnum.SUCCESS_CUSTOMER.getName() + "推送消息销售成交客户数量", total, "销售客户列表门店&品牌不为空的成交客户数量", count);
                 });
             });
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-//            commonConfig.shopId = PRODUCE.getShopId();
+            commonConfig.shopId = PRODUCE.getShopId();
             saveData("消息管理--推送消息销售成交客客数量=销售客户列表门店&品牌不为空的成交客户数量");
         }
     }
 
     //ok
-    @Test(description = "消息管理--推送消息销售潜在客户数量=销售客户列表门店&品牌不为空的潜在客户数量")
-    public void messageManagerPeople_data_3() {
+    @Test(description = "消息管理--推送消息销售潜在客户数量=销售客户列表门店&品牌不为空的潜在客户数量", dataProvider = "shopIds")
+    public void messageManagerPeople_data_3(String shopIds) {
         logger.logCaseStart(caseResult.getCaseName());
-        commonConfig.shopId = String.valueOf(util.getShopId());
+        commonConfig.shopId = shopIds;
         try {
             JSONArray shopList = ShopListScene.builder().build().invoke(visitor).getJSONArray("list");
             shopList.stream().map(e -> (JSONObject) e).forEach(shop -> {
@@ -2137,21 +2116,18 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
                     brandIdList.add(brandId);
                     List<String> preCustomerType = new ArrayList<>();
                     preCustomerType.add(CustomerTypeEnum.POTENTIAL_CUSTOMER.name());
-                    Long total = SearchCustomerPhoneScene.builder().customerType(MessageCustomerTypeEnum.PRE_CUSTOMER.name())
-                            .preCustomerType(preCustomerType).shopIds(shopIdList).brandIds(brandIdList).build().invoke(visitor).getLong("total");
+                    Long total = SearchCustomerPhoneScene.builder().customerType(MessageCustomerTypeEnum.PRE_CUSTOMER.name()).preCustomerType(preCustomerType).shopIds(shopIdList).brandIds(brandIdList).build().invoke(visitor).getLong("total");
                     IScene preSaleCustomerPageScene = PreSaleCustomerPageScene.builder().build();
                     List<PreSaleCustomerPageBean> pageBeanList1 = util.collectBeanList(preSaleCustomerPageScene, PreSaleCustomerPageBean.class);
-                    long count = pageBeanList1
-                            .stream().filter(e -> e.getBrandName() != null
-                                    && e.getShopName() != null
-                                    && e.getCustomerTypeName() != null
-                                    && e.getCreateDate() != null
-                                    && e.getBrandName().equals(brandName)
-                                    && e.getCustomerTypeName().equals(CustomerTypeEnum.POTENTIAL_CUSTOMER.getName())
-                                    && !e.getCreateDate().contains(DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd")))
-                            .count();
+                    long count = pageBeanList1.stream().filter(e -> e.getBrandName() != null && e.getShopName() != null
+                            && e.getCustomerTypeName() != null && e.getCreateDate() != null && e.getBrandName().equals(brandName)
+                            && e.getCustomerTypeName().equals(CustomerTypeEnum.POTENTIAL_CUSTOMER.getName())
+                            && !e.getCreateDate().contains(DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd"))).count();
                     CommonUtil.valueView("门店：" + shopName, "品牌：" + brandName, "客户类型：" + CustomerTypeEnum.POTENTIAL_CUSTOMER.getName());
-                    CommonUtil.checkResultPlus("推送消息销售潜在客户数量", total, "销售客户列表门店&品牌不为空的潜在客户数量", count);
+                    CommonUtil.valueView("消息推送人数：" + total);
+                    CommonUtil.valueView("展厅客户人数：" + count);
+                    CommonUtil.logger("门店：" + shopName + " 品牌：" + brandName + " 客户类型：" + CustomerTypeEnum.POTENTIAL_CUSTOMER.getName());
+                    CommonUtil.checkResultPlus("门店：" + shopName + " 品牌：" + brandName + " 客户类型：" + CustomerTypeEnum.POTENTIAL_CUSTOMER.getName() + "推送消息销售潜在客户数量", total, "销售客户列表门店&品牌不为空的潜在客户数量", count);
                 });
             });
         } catch (Exception | AssertionError e) {
@@ -2203,6 +2179,10 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @DataProvider(name = "shopIds")
+    public Object[] shopIds() {
+        return new String[]{String.valueOf(util.getShopId()), "49195", "46439"};
+    }
 }
 
 

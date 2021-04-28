@@ -81,11 +81,13 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
         commonConfig.shopId = PRODUCE.getShopId();
         commonConfig.roleId = ALL_AUTHORITY.getRoleId();
         beforeClassInit(commonConfig);
+        util.cleanVoucher();
     }
 
     @AfterClass
     @Override
     public void clean() {
+        util.cleanVoucher();
         afterClassClean();
     }
 
@@ -334,29 +336,6 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
     }
 
     //ok
-    @Test(description = "优惠券管理--新建卡券--卡券说明异常")
-    public void voucherManage_system_2() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            String[] strings = {EnumDesc.DESC_BETWEEN_500_1000.getDesc()};
-            Arrays.stream(strings).forEach(desc -> {
-                IScene scene = CreateScene.builder().voucherName(util.createVoucherName())
-                        .subjectType(util.getSubjectType()).cardType(VoucherTypeEnum.CUSTOM.name()).cost(99.99).parValue(99.99)
-                        .voucherDescription(desc).subjectId(util.getSubjectDesc(util.getSubjectType())).stock(1000)
-                        .shopType(0).shopIds(util.getShopIdList(2)).selfVerification(true).build();
-                String message = visitor.invokeApi(scene, false).getString("message");
-                String err = StringUtils.isEmpty(desc) ? "卡券说明不能为空" : "卡券描述不能超过500个字";
-                CommonUtil.checkResult("卡券说明为：" + desc, err, message);
-                CommonUtil.logger(desc);
-            });
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("优惠券管理--新建卡券--卡券说明异常");
-        }
-    }
-
-    //ok
     @Test(description = "优惠券管理--新建卡券--主体类型异常")
     public void voucherManage_system_3() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -456,7 +435,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
                         .voucherDescription(util.getDesc()).subjectId(util.getSubjectDesc(util.getSubjectType())).stock(1000)
                         .shopType(0).shopIds(util.getShopIdList()).selfVerification(true).build();
                 String message = visitor.invokeApi(scene, false).getString("message");
-                String err = cost == null ? "成本不能为空" : "优惠券成本应在0～100000000元之间";
+                String err = cost == null ? "成本不能为空" : "优惠券成本应在0～10000000元之间";
                 CommonUtil.checkResult("成本为：" + cost, err, message);
                 CommonUtil.logger(cost);
             });

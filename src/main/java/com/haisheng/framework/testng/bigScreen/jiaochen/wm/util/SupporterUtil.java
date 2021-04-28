@@ -76,7 +76,7 @@ import java.util.stream.Collectors;
  */
 public class SupporterUtil {
     public final static Logger logger = LoggerFactory.getLogger(SupporterUtil.class);
-    public final static Integer SIZE = 100;
+    public final static Integer SIZE = 100 / 10;
     private final VisitorProxy visitor;
 
     /**
@@ -467,6 +467,30 @@ public class SupporterUtil {
      */
     public String getVoucherName(long voucherId) {
         return getVoucherPage(voucherId).getVoucherName();
+    }
+
+    /**
+     * 清理卡券
+     */
+    public void cleanVoucher() {
+        Arrays.stream(VoucherTypeEnum.values()).forEach(anEnum -> {
+            IScene scene = VoucherFormVoucherPageScene.builder().voucherName(anEnum.getDesc())
+                    .voucherStatus(VoucherStatusEnum.WAITING.name()).build();
+            List<VoucherFormVoucherPageBean> voucherPageBeanList = collectBeanList(scene, VoucherFormVoucherPageBean.class);
+            List<Long> voucherIdList = voucherPageBeanList.stream().map(VoucherFormVoucherPageBean::getVoucherId).collect(Collectors.toList());
+            voucherIdList.stream().filter(Objects::nonNull).forEach(this::clear);
+        });
+        Arrays.stream(VoucherTypeEnum.values()).forEach(anEnum -> {
+            IScene scene = VoucherFormVoucherPageScene.builder().voucherName(anEnum.getDesc()).voucherStatus(VoucherStatusEnum.REJECT.name()).build();
+            List<VoucherFormVoucherPageBean> voucherFormVoucherPageBeanList = collectBeanList(scene, VoucherFormVoucherPageBean.class);
+            List<Long> voucherIdList = voucherFormVoucherPageBeanList.stream().map(VoucherFormVoucherPageBean::getVoucherId).collect(Collectors.toList());
+            voucherIdList.stream().filter(Objects::nonNull).forEach(this::deleteVoucher);
+        });
+    }
+
+    private void clear(Long voucherId) {
+        recallVoucher(voucherId);
+        deleteVoucher(voucherId);
     }
 
     /**
@@ -992,8 +1016,8 @@ public class SupporterUtil {
      * @param appointmentId 预约id
      * @return 预约信息
      */
-    public AppointmentRecordAppointmentPageBean getAppointmentPageById(Long appointmentId) {
-        IScene scene = AppointmentPageScene.builder().build();
+    public AppointmentRecordAppointmentPageBean getAppointmentPageById(Long appointmentId, String type) {
+        IScene scene = AppointmentPageScene.builder().type(type).build();
         return collectBean(scene, AppointmentRecordAppointmentPageBean.class, "id", appointmentId);
     }
 
@@ -1005,7 +1029,7 @@ public class SupporterUtil {
      * @param receptionId 接待id
      * @return 接待信息
      */
-    public ReceptionPage getReceptionPageById(Integer receptionId) {
+    public ReceptionPage getReceptionPageById(Long receptionId) {
         IScene receptionPageScene = ReceptionPageScene.builder().build();
         return collectBean(receptionPageScene, ReceptionPage.class, "id", receptionId);
     }
@@ -1089,8 +1113,8 @@ public class SupporterUtil {
      *
      * @return 评价列表
      */
-    public List<EvaluatePageBean> getEvaluatePageList() {
-        IScene scene = EvaluatePageScene.builder().build();
+    public List<EvaluatePageBean> getEvaluatePageList(Integer evaluateType) {
+        IScene scene = EvaluatePageScene.builder().evaluateType(evaluateType).build();
         return collectBeanList(scene, EvaluatePageBean.class);
     }
 
@@ -1516,9 +1540,9 @@ public class SupporterUtil {
      * @param date 日期
      * @return 预约数量
      */
-    public Integer appointmentNumber(Date date) {
+    public Integer appointmentNumber(Date date, String type) {
         String nowDate = DateTimeUtil.getFormat(new Date(), "yyyy-MM");
-        IScene scene = TimeTableListScene.builder().appointmentMonth(nowDate).build();
+        IScene scene = TimeTableListScene.builder().type(type).appointmentMonth(nowDate).build();
         return scene.invoke(visitor).getJSONArray("list").stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("day").equals(DateTimeUtil.getDayOnMonth(date)))
                 .map(e -> e.getInteger("appointment_number") == null ? 0 : e.getInteger("appointment_number")).findFirst().orElse(0);
     }

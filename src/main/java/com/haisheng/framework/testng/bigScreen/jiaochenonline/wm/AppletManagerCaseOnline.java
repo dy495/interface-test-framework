@@ -4,40 +4,31 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.appointmentmanage.AppointmentRecordAppointmentPageBean;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.manage.EvaluatePageBean;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.AppReceptionReceptorList;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumChecklistUser;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletCommodity;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletIntegralRecord;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletShippingAddress;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.ExchangeDetailed;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.ExchangePage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherPage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherSendRecord;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.ChangeStockTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.CommodityTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.IntegralExchangeStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.SortTypeEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.appointment.AppointmentConfirmStatusEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.appointment.AppointmentTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.AppletCodeBusinessTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherSourceEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.reception.after.ReceptionStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.AppFollowUpCompleteScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.task.AppAppointmentHandleScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.task.AppAppointmentReceptionScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.task.AppReceptionFinishReceptionScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.task.AppReceptionReceptorChangePageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.appointmentmanage.AppointmentPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.EditExchangeStockScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.ExchangeDetailedScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.ExchangePageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.IntegralExchangeRulesScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.ReceptionPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.ReceptorChangeScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.AddVoucherScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
@@ -108,224 +99,6 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
-    }
-
-    //ok
-    @Test(description = "预约保养->确认预约->点接待->变更接待->完成接待->评价->跟进", enabled = false)
-    public void appointmentManager_maintain() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            int i = 0;
-            Long shopId = util.getShopId();
-            IScene appointmentPageScene = AppointmentPageScene.builder().build();
-            int appointmentPageTotal = appointmentPageScene.invoke(visitor).getInteger("total");
-            int appointmentNumber = util.appointmentNumber(DateTimeUtil.addDay(new Date(), i));
-            user.loginApp(ALL_AUTHORITY);
-            int appAppointmentNum = util.getAppointmentPageNum();
-            //预约保养
-            user.loginApplet(APPLET_USER_ONE);
-            int appointmentNum = util.getAppletAppointmentNum();
-            Long appointmentId = util.appointment(AppointmentTypeEnum.MAINTAIN, DateTimeUtil.addDayFormat(new Date(), i));
-            int newAppointmentNum = util.getAppletAppointmentNum();
-            CommonUtil.checkResult("applet我的预约列表数", appointmentNum + 1, newAppointmentNum);
-            user.loginApp(ALL_AUTHORITY);
-            int newAppAppointmentNum = util.getAppointmentPageNum();
-            CommonUtil.checkResult("app我的预约列表数", appAppointmentNum + 1, newAppAppointmentNum);
-            user.loginPc(ALL_AUTHORITY);
-            int newAppointmentNumber = util.appointmentNumber(DateTimeUtil.addDay(new Date(), i));
-            CommonUtil.checkResult("pc预约看板分子数", appointmentNumber + 1, newAppointmentNumber);
-            int newAppointmentPageTotal = appointmentPageScene.invoke(visitor).getInteger("total");
-            CommonUtil.checkResult("pc预约记录列表数", appointmentPageTotal + 1, newAppointmentPageTotal);
-            AppointmentRecordAppointmentPageBean appointmentPage = util.getAppointmentPageById(appointmentId);
-            CommonUtil.checkResult("预约类型", AppointmentTypeEnum.MAINTAIN.getValue(), appointmentPage.getTypeName());
-            CommonUtil.checkResult("预约状态", AppointmentConfirmStatusEnum.WAITING.getStatusName(), appointmentPage.getAppointmentStatusName());
-            CommonUtil.checkResult("是否可确认", true, appointmentPage.getIsCanConfirm());
-            CommonUtil.checkResult("是否可接待", true, appointmentPage.getIsCanReception());
-            CommonUtil.checkResult("是否可取消", true, appointmentPage.getIsCanCancel());
-            CommonUtil.checkResult("是否可调整时间", true, appointmentPage.getIsCanAdjust());
-            //确认预约
-            user.loginApp(ALL_AUTHORITY);
-            int makeSureAppointmentNum = util.getAppointmentPageNum();
-            AppAppointmentHandleScene.builder().id(appointmentId).shopId(shopId).type(10).build().invoke(visitor);
-            Integer newMakeSureAppAppointmentNum = util.getAppointmentPageNum();
-            CommonUtil.checkResult("app预约记录数", makeSureAppointmentNum, newMakeSureAppAppointmentNum);
-            user.loginPc(ALL_AUTHORITY);
-            AppointmentRecordAppointmentPageBean newAppointmentPage = util.getAppointmentPageById(appointmentId);
-            CommonUtil.checkResult("预约状态", AppointmentConfirmStatusEnum.AGREE.getStatusName(), newAppointmentPage.getAppointmentStatusName());
-            CommonUtil.checkResult("是否可确认", false, newAppointmentPage.getIsCanConfirm());
-            CommonUtil.checkResult("是否可接待", true, newAppointmentPage.getIsCanReception());
-            CommonUtil.checkResult("是否可取消", false, newAppointmentPage.getIsCanCancel());
-            CommonUtil.checkResult("是否可调整时间", true, newAppointmentPage.getIsCanAdjust());
-            //点接待
-            user.loginApp(ALL_AUTHORITY);
-            int appReceptionPageNum = util.getReceptionPageNum();
-            user.loginPc(ALL_AUTHORITY);
-            int pcReceptionPageNum = ReceptionPageScene.builder().build().invoke(visitor).getInteger("total");
-            AppAppointmentReceptionScene.builder().id(appointmentId).build().invoke(visitor);
-            int newAppReceptionPageNum = util.getReceptionPageNum();
-            CommonUtil.checkResult("app接待页列表数", appReceptionPageNum + 1, newAppReceptionPageNum);
-            user.loginPc(ALL_AUTHORITY);
-            int newPcReceptionPageNum = ReceptionPageScene.builder().build().invoke(visitor).getInteger("total");
-            CommonUtil.checkResult("pc接待列表数", pcReceptionPageNum + 1, newPcReceptionPageNum);
-            ReceptionPage receptionPage = util.getFirstReceptionPage();
-            CommonUtil.checkResult("接待状态", ReceptionStatusEnum.IN_RECEPTION.getStatusName(), receptionPage.getReceptionStatusName());
-            CommonUtil.checkResult("接待类型", "预约", receptionPage.getReceptionTypeName());
-            CommonUtil.checkResult("接待人", ALL_AUTHORITY.getName(), receptionPage.getReceptionSaleName());
-            CommonUtil.checkResult("注册状态", "已注册", receptionPage.getRegistrationStatusName());
-            //变更接待
-            int receptionId = receptionPage.getId();
-            user.loginApp(ALL_AUTHORITY);
-            AppReceptionReceptorList receptorList = util.getReceptorList();
-            String uid = receptorList.getUid();
-            AppReceptionReceptorChangePageScene.builder().id(receptionId).receptorId(uid).shopId(shopId).build().invoke(visitor);
-            user.loginPc(ALL_AUTHORITY);
-            ReceptionPage newReceptionPage = util.getReceptionPageById(receptionId);
-            CommonUtil.checkResult("变更接待后接待人员", receptorList.getName(), newReceptionPage.getReceptionSaleName());
-            user.loginPc(ALL_AUTHORITY);
-            ReceptorChangeScene.builder().id(receptionId).receptorId(util.getReceptorList(ALL_AUTHORITY).getUid()).shopId(shopId).build().invoke(visitor);
-            //登录此人app完成接待
-            user.loginApp(ALL_AUTHORITY);
-            int finishReceptionNum = util.getReceptionPageNum();
-            AppReceptionFinishReceptionScene.builder().id(receptionId).shopId(shopId).build().invoke(visitor);
-            int newFinishReceptionNum = util.getReceptionPageNum();
-            CommonUtil.checkResult("完成接待后，app接待列表数", finishReceptionNum - 1, newFinishReceptionNum);
-            user.loginPc(ALL_AUTHORITY);
-            ReceptionPage finishReceptionPage = util.getReceptionPageById(receptionId);
-            CommonUtil.checkResult("完成接待后pc接待列表接待状态", ReceptionStatusEnum.FINISH.getStatusName(), finishReceptionPage.getReceptionStatusName());
-            //评价
-            user.loginPc(ALL_AUTHORITY);
-            List<EvaluatePageBean> evaluatePageList = util.getEvaluatePageList();
-            user.loginApplet(APPLET_USER_ONE);
-            AppletEvaluateSubmitScene.builder().id(appointmentId).shopId(shopId).type(1).score(4).isAnonymous(true).describe(EnumDesc.DESC_BETWEEN_40_50.getDesc()).suggestion(EnumDesc.DESC_BETWEEN_40_50.getDesc()).build().invoke(visitor);
-            user.loginPc(ALL_AUTHORITY);
-            List<EvaluatePageBean> newEvaluatePageList = util.getEvaluatePageList();
-            CommonUtil.checkResult("评价列表数", evaluatePageList.size() + 1, newEvaluatePageList.size());
-            CommonUtil.checkResult("评价描述", EnumDesc.DESC_BETWEEN_40_50.getDesc(), newEvaluatePageList.get(0).getDescribe());
-            CommonUtil.checkResult("评价内容", EnumDesc.DESC_BETWEEN_40_50.getDesc(), newEvaluatePageList.get(0).getSuggestion());
-            CommonUtil.checkResult("评价星星", 4, newEvaluatePageList.get(0).getScore());
-            //跟进
-            user.loginApp(ALL_AUTHORITY);
-            Integer followId = util.getFollowUpPageList().get(0).getId();
-            AppFollowUpCompleteScene.builder().id(followId).shopId(shopId).remark(EnumDesc.DESC_BETWEEN_40_50.getDesc()).build().invoke(visitor);
-            user.loginPc(ALL_AUTHORITY);
-            List<EvaluatePageBean> followEvaluatePage = util.getEvaluatePageList();
-            CommonUtil.checkResult("跟进后跟进备注", EnumDesc.DESC_BETWEEN_40_50.getDesc(), followEvaluatePage.get(0).getFollowUpRemark());
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("预约保养->确认预约->点接待->变更接待->完成接待->评价->跟进");
-        }
-    }
-
-    //ok
-    @Test(description = "预约维修->确认预约->点接待->变更接待->完成接待->评价->跟进", enabled = false)
-    public void appointmentManager_repair() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            int i = 0;
-            Long shopId = util.getShopId();
-            IScene appointmentPageScene = AppointmentPageScene.builder().build();
-            int appointmentPageTotal = visitor.invokeApi(appointmentPageScene).getInteger("total");
-            int appointmentNumber = util.appointmentNumber(DateTimeUtil.addDay(new Date(), i));
-            user.loginApp(ALL_AUTHORITY);
-            int appAppointmentNum = util.getAppointmentPageNum();
-            //预约维修
-            user.loginApplet(APPLET_USER_ONE);
-            int appointmentNum = util.getAppletAppointmentNum();
-            long appointmentId = util.appointment(AppointmentTypeEnum.REPAIR, DateTimeUtil.addDayFormat(new Date(), i));
-            int newAppointmentNum = util.getAppletAppointmentNum();
-            CommonUtil.checkResult("applet我的预约列表数", appointmentNum + 1, newAppointmentNum);
-            user.loginApp(ALL_AUTHORITY);
-            int newAppAppointmentNum = util.getAppointmentPageNum();
-            CommonUtil.checkResult("app我的预约列表数", appAppointmentNum + 1, newAppAppointmentNum);
-            user.loginPc(ALL_AUTHORITY);
-            int newAppointmentNumber = util.appointmentNumber(DateTimeUtil.addDay(new Date(), i));
-            CommonUtil.checkResult("pc预约看板分子数", appointmentNumber + 1, newAppointmentNumber);
-            int newAppointmentPageTotal = visitor.invokeApi(appointmentPageScene).getInteger("total");
-            CommonUtil.checkResult("pc预约记录列表数", appointmentPageTotal + 1, newAppointmentPageTotal);
-            AppointmentRecordAppointmentPageBean appointmentPage = util.getAppointmentPageById(appointmentId);
-            CommonUtil.checkResult("预约类型", AppointmentTypeEnum.REPAIR.getValue(), appointmentPage.getTypeName());
-            CommonUtil.checkResult("预约状态", AppointmentConfirmStatusEnum.WAITING.getStatusName(), appointmentPage.getAppointmentStatusName());
-            CommonUtil.checkResult("是否可确认", true, appointmentPage.getIsCanConfirm());
-            CommonUtil.checkResult("是否可接待", true, appointmentPage.getIsCanReception());
-            CommonUtil.checkResult("是否可取消", true, appointmentPage.getIsCanCancel());
-            CommonUtil.checkResult("是否可调整时间", true, appointmentPage.getIsCanAdjust());
-            //确认预约
-            user.loginApp(ALL_AUTHORITY);
-            int makeSureAppointmentNum = util.getAppointmentPageNum();
-            IScene appointmentHandleScene = AppAppointmentHandleScene.builder().id(appointmentId).shopId(shopId).type(10).build();
-            visitor.invokeApi(appointmentHandleScene);
-            Integer newMakeSureAppAppointmentNum = util.getAppointmentPageNum();
-            CommonUtil.checkResult("app预约记录数", makeSureAppointmentNum, newMakeSureAppAppointmentNum);
-            user.loginPc(ALL_AUTHORITY);
-            AppointmentRecordAppointmentPageBean newAppointmentPage = util.getAppointmentPageById(appointmentId);
-            CommonUtil.checkResult("预约状态", AppointmentConfirmStatusEnum.AGREE.getStatusName(), newAppointmentPage.getAppointmentStatusName());
-            CommonUtil.checkResult("是否可确认", false, newAppointmentPage.getIsCanConfirm());
-            CommonUtil.checkResult("是否可接待", true, newAppointmentPage.getIsCanReception());
-            CommonUtil.checkResult("是否可取消", false, newAppointmentPage.getIsCanCancel());
-            CommonUtil.checkResult("是否可调整时间", true, newAppointmentPage.getIsCanAdjust());
-            //点接待
-            user.loginApp(ALL_AUTHORITY);
-            int appReceptionPageNum = util.getReceptionPageNum();
-            user.loginPc(ALL_AUTHORITY);
-            int pcReceptionPageNum = visitor.invokeApi(ReceptionPageScene.builder().build()).getInteger("total");
-            IScene appointmentReceptionScene = AppAppointmentReceptionScene.builder().id(appointmentId).build();
-            visitor.invokeApi(appointmentReceptionScene);
-            int newAppReceptionPageNum = util.getReceptionPageNum();
-            CommonUtil.checkResult("app接待页列表数", appReceptionPageNum + 1, newAppReceptionPageNum);
-            user.loginPc(ALL_AUTHORITY);
-            int newPcReceptionPageNum = visitor.invokeApi(ReceptionPageScene.builder().build()).getInteger("total");
-            CommonUtil.checkResult("pc接待列表数", pcReceptionPageNum + 1, newPcReceptionPageNum);
-            ReceptionPage receptionPage = util.getFirstReceptionPage();
-            CommonUtil.checkResult("接待状态", ReceptionStatusEnum.IN_RECEPTION.getStatusName(), receptionPage.getReceptionStatusName());
-            CommonUtil.checkResult("接待类型", "预约", receptionPage.getReceptionTypeName());
-            CommonUtil.checkResult("接待人", ALL_AUTHORITY.getName(), receptionPage.getReceptionSaleName());
-            CommonUtil.checkResult("注册状态", "已注册", receptionPage.getRegistrationStatusName());
-            //变更接待
-            int receptionId = receptionPage.getId();
-            user.loginApp(ALL_AUTHORITY);
-            AppReceptionReceptorList receptorList = util.getReceptorList();
-            String uid = receptorList.getUid();
-            IScene receptionReceptorChangePageScene = AppReceptionReceptorChangePageScene.builder().id(receptionId).receptorId(uid).shopId(shopId).build();
-            visitor.invokeApi(receptionReceptorChangePageScene);
-            user.loginPc(ALL_AUTHORITY);
-            ReceptionPage newReceptionPage = util.getReceptionPageById(receptionId);
-            CommonUtil.checkResult("变更接待后接待人员", receptorList.getName(), newReceptionPage.getReceptionSaleName());
-            user.loginPc(ALL_AUTHORITY);
-            ReceptorChangeScene.builder().id(receptionId).receptorId(util.getReceptorList(ALL_AUTHORITY).getUid()).shopId(shopId).build().invoke(visitor);
-            //登录此人app完成接待
-            user.loginApp(ALL_AUTHORITY);
-            int finishReceptionNum = util.getReceptionPageNum();
-            IScene receptionFinishReceptionScene = AppReceptionFinishReceptionScene.builder().id(receptionId).shopId(shopId).build();
-            visitor.invokeApi(receptionFinishReceptionScene);
-            int newFinishReceptionNum = util.getReceptionPageNum();
-            CommonUtil.checkResult("完成接待后，app接待列表数", finishReceptionNum - 1, newFinishReceptionNum);
-            user.loginPc(ALL_AUTHORITY);
-            ReceptionPage finishReceptionPage = util.getReceptionPageById(receptionId);
-            CommonUtil.checkResult("完成接待后pc接待列表接待状态", ReceptionStatusEnum.FINISH.getStatusName(), finishReceptionPage.getReceptionStatusName());
-            //评价
-            user.loginPc(ALL_AUTHORITY);
-            List<EvaluatePageBean> evaluatePageList = util.getEvaluatePageList();
-            user.loginApplet(APPLET_USER_ONE);
-            AppletEvaluateSubmitScene.builder().id(appointmentId).shopId(shopId).type(2).score(4).isAnonymous(true).describe(EnumDesc.DESC_BETWEEN_40_50.getDesc()).suggestion(EnumDesc.DESC_BETWEEN_40_50.getDesc()).build().invoke(visitor);
-            user.loginPc(ALL_AUTHORITY);
-            List<EvaluatePageBean> newEvaluatePageList = util.getEvaluatePageList();
-            CommonUtil.checkResult("评价列表数", evaluatePageList.size() + 1, newEvaluatePageList.size());
-            CommonUtil.checkResult("评价描述", EnumDesc.DESC_BETWEEN_40_50.getDesc(), newEvaluatePageList.get(0).getDescribe());
-            CommonUtil.checkResult("评价内容", EnumDesc.DESC_BETWEEN_40_50.getDesc(), newEvaluatePageList.get(0).getSuggestion());
-            CommonUtil.checkResult("评价星星", 4, newEvaluatePageList.get(0).getScore());
-            //跟进
-            user.loginApp(ALL_AUTHORITY);
-            Integer followId = util.getFollowUpPageList().get(0).getId();
-            AppFollowUpCompleteScene.builder().id(followId).shopId(shopId).remark(EnumDesc.DESC_BETWEEN_40_50.getDesc()).build().invoke(visitor);
-            user.loginPc(ALL_AUTHORITY);
-            List<EvaluatePageBean> followEvaluatePage = util.getEvaluatePageList();
-            CommonUtil.checkResult("跟进后跟进备注", EnumDesc.DESC_BETWEEN_40_50.getDesc(), followEvaluatePage.get(0).getFollowUpRemark());
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("预约维修->确认预约->点接待->变更接待->完成接待->评价->跟进");
-        }
     }
 
     //ok

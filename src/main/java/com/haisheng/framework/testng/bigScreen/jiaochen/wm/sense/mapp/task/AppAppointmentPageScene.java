@@ -10,7 +10,8 @@ import lombok.Builder;
  */
 @Builder
 public class AppAppointmentPageScene extends BaseScene {
-    private final Integer size;
+    @Builder.Default
+    private final Integer size = 10;
     private final Integer lastValue;
 
     @Override

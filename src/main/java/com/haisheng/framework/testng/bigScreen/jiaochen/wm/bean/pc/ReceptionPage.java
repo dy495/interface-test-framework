@@ -30,7 +30,7 @@ public class ReceptionPage implements Serializable {
      * 接待id （2.0版本由reception_id改为id）
      */
     @JSONField(name = "id")
-    private Integer id;
+    private Long id;
 
     /**
      * 接待状态
