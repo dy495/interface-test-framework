@@ -24,6 +24,7 @@
             <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.IntegralCenterCaseOnline"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.MarketingManageCaseOnline"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.ContentOperationCaseOnline"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.ApproveManagerCaseOnline"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.app.JcAppOnline"/>
 
         </classes>
