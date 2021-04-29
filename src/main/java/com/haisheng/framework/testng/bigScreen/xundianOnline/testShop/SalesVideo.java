@@ -106,7 +106,7 @@ public class SalesVideo extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    @Test(dataProvider = "DEVICE_ID1",dataProviderClass = XdPackageDataOnline.class)//小天才宝龙店
+   // @Test(dataProvider = "DEVICE_ID1",dataProviderClass = XdPackageDataOnline.class)//小天才宝龙店
     public void check_vedio1(String device_id1,String device_name) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
