@@ -12,12 +12,13 @@ import lombok.Builder;
  */
 @Builder
 public class AppCustomerEditScene extends BaseScene {
+    private final String shopId;
     /**
      * 描述 接待id
      * 是否必填 true
      * 版本 v3.0
      */
-    private final Long id;
+    private final String id;
 
     /**
      * 描述 客户名称
@@ -54,16 +55,20 @@ public class AppCustomerEditScene extends BaseScene {
      */
     private final String estimatedBuyTime;
 
+    private final String gender;
+
 
     @Override
     public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
+        object.put("shop_id", shopId);
         object.put("id", id);
         object.put("customer_name", customerName);
         object.put("customer_phone", customerPhone);
         object.put("car_style", carStyle);
         object.put("car_model", carModel);
         object.put("estimated_buy_time", estimatedBuyTime);
+        object.put("gender", gender);
         return object;
     }
 

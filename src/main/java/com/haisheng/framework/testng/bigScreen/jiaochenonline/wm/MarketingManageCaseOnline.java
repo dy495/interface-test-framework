@@ -1383,7 +1383,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             int pushMsgPageTotal = pushMsgPageScene.invoke(visitor).getInteger("total");
             Long surplusInventory = util.getVoucherPage(voucherId).getSurplusInventory();
             //消息发送一张卡券
-            util.pushCustomMessage(0, true, voucherId);
+            util.pushCustomMessage(0, true, true, voucherId);
             String sendStatusName = messageFormPageScene.invoke(visitor).getJSONArray("list").getJSONObject(0).getString("send_status_name");
             CommonUtil.checkResult("发送状态", CustomMessageStatusEnum.SUCCESS.getStatusName(), sendStatusName);
             CommonUtil.checkResult("消息管理列表", messageTotal + 1, visitor.invokeApi(messageFormPageScene).getInteger("total"));
@@ -1406,7 +1406,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             IScene messageFormPageScene = MessageFormPageScene.builder().build();
             int messageTotal = visitor.invokeApi(messageFormPageScene).getInteger("total");
             String pushTime = DateTimeUtil.getFormat(DateTimeUtil.addSecond(new Date(), 80), "yyyy-MM-dd HH:mm");
-            util.pushCustomMessage(0, false, voucherId);
+            util.pushCustomMessage(0, false, true, voucherId);
             String sendStatusName = visitor.invokeApi(messageFormPageScene).getJSONArray("list").getJSONObject(0).getString("send_status_name");
             CommonUtil.checkResult("消息管理列表", messageTotal + 1, visitor.invokeApi(messageFormPageScene).getInteger("total"));
             CommonUtil.checkResult("发送状态", CustomMessageStatusEnum.SCHEDULING.getStatusName(), sendStatusName);
@@ -1454,7 +1454,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
         try {
             //发消息
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-            util.pushCustomMessage(0, true, voucherId);
+            util.pushCustomMessage(0, true, true, voucherId);
             //消息列表消息内容
             user.loginApplet(APPLET_USER_ONE);
             IScene appletMessageListScene = AppletMessageListScene.builder().size(20).build();

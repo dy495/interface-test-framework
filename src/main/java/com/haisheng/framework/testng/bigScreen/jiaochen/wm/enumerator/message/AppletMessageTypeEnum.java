@@ -15,6 +15,7 @@ public enum AppletMessageTypeEnum {
     /**
      * 评价消息
      */
+    RECEPTION_EVALUATE_TIP("销售接待评价消息", EvaluateTypeEnum.PRE_SALES_RECEPTION, true),
     NEW_CAR_EVALUATE_TIP("新车评价消息", EvaluateTypeEnum.BUY_NEW_CAR, true),
     MAINTAIN_EVALUATE_TIP("保养评价消息", EvaluateTypeEnum.MAINTAIN, true),
     REPAIR_EVALUATE_TIP("维修评价消息", EvaluateTypeEnum.REPAIR, true),

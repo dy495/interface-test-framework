@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.JsonPathUtil;
-import com.haisheng.framework.testng.bigScreen.crm.commonDs.PackFunction;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
@@ -12,7 +11,10 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletConsultAfterServiceSubmitScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletConsultOnlineExpertsSubmitScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.followType;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.roleList;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -20,11 +22,12 @@ import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.ReadContext;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
-import java.awt.peer.LabelPeer;
 import java.lang.reflect.Method;
-import java.util.*;
 
 public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
 
@@ -156,7 +159,7 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
             System.out.println(reception[0]+":"+reception[1]);
             //编辑客户--名称超过50字
             IScene appcustomerEdit = AppCustomerEditScene.builder()
-                    .id(Long.valueOf(reception[0]))
+                    .id(String.valueOf(reception[0]))
                     .customerName(pp.String_50 + "字")
                     .estimatedBuyTime(dt.getHistoryDate(0))
                     .build();
@@ -188,7 +191,7 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
             String[] errphone = {};
             for (int i = 0; i < errphone.length; i++) {
                 IScene appcustomerEdit2 = AppCustomerEditScene.builder()
-                        .id(Long.valueOf(reception[0]))
+                        .id(String.valueOf(reception[0]))
                         .customerName("一个字")
                         .customerPhone(errphone[i])
                         .estimatedBuyTime(dt.getHistoryDate(0))
@@ -216,7 +219,7 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
             String[] reception = salereception(phone);
             //编辑客户信息
             IScene appcustomerEdit2 = AppCustomerEditScene.builder()
-                    .id(Long.valueOf(reception[0]))
+                    .id(String.valueOf(reception[0]))
                     .customerName("一个字")
                     .customerPhone(phone)
                     .estimatedBuyTime(dt.getHistoryDate(0))
@@ -231,7 +234,7 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
                     .build();
             jc.invokeApi(appbuycar);
             //购车记录数
-            IScene customerDetail=AppCustomerDetailScene.builder().id(Long.valueOf(reception[0])).build();
+            IScene customerDetail=AppCustomerDetailScene.builder().id(String.valueOf(reception[0])).build();
             JSONObject orderList=jc.invokeApi(customerDetail);
             ReadContext context = JsonPath.parse(orderList);
             JSONArray ll=context.read("$data.order_list");  //array 大小即为记录条数
@@ -261,7 +264,7 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
             String[] reception = salereception(phone);
             //编辑客户信息
             IScene appcustomerEdit2 = AppCustomerEditScene.builder()
-                    .id(Long.valueOf(reception[0]))
+                    .id(String.valueOf(reception[0]))
                     .customerName("一个字")
                     .customerPhone(phone)
                     .estimatedBuyTime(dt.getHistoryDate(0))
