@@ -106,13 +106,13 @@ public class XdPackageDataOnline extends TestCaseCommon {
         };
     }
 
-    @DataProvider(name = "DEVICE_ID1")//小天才宝龙店
-    public static Object[] device_id1() {
-        return new String[][]{
-                {"7769815058023424","小天才-宝龙店-门口"},
-                {"7769766555419648","小天才-巡店广角"}
-        };
-    }
+//    @DataProvider(name = "DEVICE_ID1")//小天才宝龙店
+//    public static Object[] device_id1() {
+//        return new String[][]{
+//                {"7769815058023424","小天才-宝龙店-门口"},
+//                {"7769766555419648","小天才-巡店广角"}
+//        };
+//    }
     @DataProvider(name = "DEVICE_ID2")//小天才西溪店
     public static Object[] device_id2() {
         return new String[][]{
