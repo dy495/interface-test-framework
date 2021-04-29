@@ -22,6 +22,7 @@ public enum ActivityStatusEnum {
     WAITING_START(501, "未开始", false, false, true, true, true),
     FINISH(601, "已结束", false, false, false, false, false);
 
+
     @Getter
     private final Integer id;
     @Getter

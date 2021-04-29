@@ -303,7 +303,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             //创建招募活动
             Long activityId = businessUtil.createRecruitActivity(voucherId, true, 0, true);
             //优惠券的面值
-            String parValue = businessUtil.getPrice(voucherId);
+//            String parValue = businessUtil.getPrice(voucherId);
             JSONArray list = businessUtil.getRecruitActivityDetail(activityId);
             //活动详情发放数量
             String num = list.getJSONObject(0).getString("num");
@@ -313,7 +313,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             String price = list.getJSONObject(0).getString("price");
             //填写库存数量
             String number = String.valueOf(businessUtil.getVoucherAllowUseInventory(voucherId));
-            System.out.println("发放数量：" + num + "--剩余库存" + leftNum + "--填写的库存数量" + number + "活动详情中的优惠券面值" + price + "优惠券面值" + parValue);
+            System.out.println("发放数量：" + num + "--剩余库存" + leftNum + "--填写的库存数量" + number);
             Preconditions.checkArgument(num.equals(number) && leftNum.equals(number), "活动详情中的数值与创建时的数字不一致");
 //            Preconditions.checkArgument(price.equals(parValue),"优惠券的面值和活动中优惠券的面值不一致");
         } catch (AssertionError | Exception e) {
@@ -812,25 +812,26 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             JSONObject response = businessUtil.getActivityApprovalDate();
             //待审批活动
             int waitBefore = response.getInteger("wait");
-            //通过的活动
-            int passedBefore = response.getInteger("passed");
-            //获取进行中的活动存在待审批ID合集
-            List<Long> ids = businessUtil.getActivityWait();
-            if (ids.size() > 0) {
-                //审批通过其中一条
-                businessUtil.getApprovalPassed(ids.get(0));
-                //获取审批后活动审批的数据
-                JSONObject response1 = businessUtil.getActivityApprovalDate();
-                //待审批活动
-                int waitAfter = response1.getInteger("wait");
+            if(waitBefore>0){
                 //通过的活动
-                int passedAfter = response1.getInteger("passed");
-                //获取活动审批后的状态
-                int status = businessUtil.getActivityStatus(ids.get(0));
-                Preconditions.checkArgument(waitAfter == (waitBefore - 1), "活动审批数后的待审批数量：" + waitAfter + "活动审批数前的待审批数量：" + waitBefore);
-                Preconditions.checkArgument(passedAfter == (passedBefore + 1), "活动审批数后的审批通过数量：" + passedAfter + "活动审批数前的审批通过数量：" + passedBefore);
-                Preconditions.checkArgument(status == ActivityStatusEnum.WAITING_START.getId()||status == ActivityStatusEnum.PASSED.getId(), "活动审批数后活动的状态应为【进行中】或者【未开始】，此时为为：" + status);
-
+                int passedBefore = response.getInteger("passed");
+                //获取进行中的活动存在待审批ID合集
+                List<Long> ids = businessUtil.getActivityWait();
+                if (ids.size() > 0) {
+                    //审批通过其中一条
+                    businessUtil.getApprovalPassed(ids.get(0));
+                    //获取审批后活动审批的数据
+                    JSONObject response1 = businessUtil.getActivityApprovalDate();
+                    //待审批活动
+                    int waitAfter = response1.getInteger("wait");
+                    //通过的活动
+                    int passedAfter = response1.getInteger("passed");
+                    //获取活动审批后的状态
+                    int status = businessUtil.getActivityStatus(ids.get(0));
+                    Preconditions.checkArgument(waitAfter == (waitBefore - 1), "活动审批数后的待审批数量：" + waitAfter + "活动审批数前的待审批数量：" + waitBefore);
+                    Preconditions.checkArgument(passedAfter == (passedBefore + 1), "活动审批数后的审批通过数量：" + passedAfter + "活动审批数前的审批通过数量：" + passedBefore);
+                    Preconditions.checkArgument(status == ActivityStatusEnum.WAITING_START.getId()||status == ActivityStatusEnum.PASSED.getId(), "活动审批数后活动的状态应为【进行中】或者【未开始】，此时为为：" + status);
+                }
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -2351,19 +2352,12 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         try {
             //获取已过期活动的ID
             List<Long> ids = businessUtil.getFissionActivityFinish();
-            //获取已过期的活动名称
-            String title=businessUtil.getActivityTitle(ids.get(0));
-            //置顶【已过期的活动】
-            IScene scene=ActivityManageTopScene.builder().id(ids.get(0)).build();
-            String message=visitor.invokeApi(scene,false).getString("message");
-            //小程序中第一个为此活动
-            user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
-            JSONObject response=businessUtil.appointmentActivityTitleNew();
-            String title1=response.getJSONArray("list").getJSONObject(0).getString("title");
-            jc.pcLogin(pp.phone, pp.password);
-            System.out.println("PC已过期活动的ID为：" + ids.get(0)+"小程序中的更多中的活动名称为："+title1);
-            Preconditions.checkArgument(title1.equals(title), "PC已过期活动的名称为：" + title+"小程序中的更多中的活动名称为："+title1);
-            Preconditions.checkArgument(message.equals("当前状态【 已结束】！不能置顶"), "置顶已过期的活动的相关提示:" + message);
+            if(ids.size()>0){
+                //置顶【已过期的活动】
+                IScene scene=ActivityManageTopScene.builder().id(ids.get(0)).build();
+                String message=visitor.invokeApi(scene,false).getString("message");
+                Preconditions.checkArgument(message.equals("当前状态【 已结束】！不能置顶"), "置顶已过期的活动的相关提示:" + message);
+            }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {

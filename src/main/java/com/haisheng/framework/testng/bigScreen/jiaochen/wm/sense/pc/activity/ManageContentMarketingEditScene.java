@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
+import java.util.List;
+
 /**
  * 22.9. 编辑内容营销活动 （谢）v3.0（2021-03-16）
  *
@@ -88,7 +90,7 @@ public class ManageContentMarketingEditScene extends BaseScene {
      * 是否必填 false
      * 版本 v2.0
      */
-    private final JSONArray picList;
+    private final List<String> picList;
 
     /**
      * 描述 是否自定义分享信息
@@ -116,7 +118,7 @@ public class ManageContentMarketingEditScene extends BaseScene {
      * 是否必填 true
      * 版本 v3.0
      */
-    private final String actionPoint;
+    private final int actionPoint;
 
     /**
      * 描述 活动id

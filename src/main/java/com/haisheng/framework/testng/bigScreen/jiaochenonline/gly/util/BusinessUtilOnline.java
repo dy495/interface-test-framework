@@ -196,7 +196,7 @@ public class BusinessUtilOnline {
     }
 
     /**
-     * 判断剩余库存
+     * 判断可用库存
      */
     public int getVoucherAllowUseInventory(Long voucherId) {
         SupporterUtil su = new SupporterUtil(visitor);
@@ -411,7 +411,7 @@ public class BusinessUtilOnline {
         isRequired.add(true);
         JSONArray registerInformationList = this.getRegisterInformationList(isShow, isRequired);
         //报名成功奖励
-        JSONArray registerObject = getRewardVouchers(voucherId, 1, 1);
+        JSONArray registerObject = getRewardVouchers(voucherId, 1,getVoucherAllowUseInventory(voucherId));
         //卡券有效期
         JSONObject voucherValid = getVoucherValid(2, null, null, 10);
         //创建招募活动-共有的--基础信息
