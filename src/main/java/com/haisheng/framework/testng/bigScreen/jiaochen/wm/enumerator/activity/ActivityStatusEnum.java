@@ -20,7 +20,8 @@ public enum ActivityStatusEnum {
     CANCELED(301, "已取消", false, false, false, false, false),
     REJECT(401, "审核未通过", true, false, true, false, false),
     WAITING_START(501, "未开始", false, false, true, true, true),
-    FINISH(601, "已结束", false, false, false, false, false);
+    FINISH(601, "已结束", false, false, false, false, false),
+    OFFLINE(701, "已结束", false, false, false, false, false);
 
 
     @Getter

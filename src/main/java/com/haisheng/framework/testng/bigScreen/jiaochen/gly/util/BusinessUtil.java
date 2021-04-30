@@ -12,6 +12,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.A
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.RegisterInfoEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.AppletPushTargetEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.*;
@@ -23,6 +24,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
+import sun.nio.cs.ext.ISCII91;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -208,6 +210,16 @@ public class BusinessUtil {
         return (int) (allowUseInventory ==1  ? allowUseInventory : allowUseInventory - 1);
 
     }
+    /**
+     * 判断可用库存
+     */
+    public Long getVoucherAllowUseInventoryNum(Long voucherId) {
+        SupporterUtil su = new SupporterUtil(visitor);
+        Long allowUseInventory = su.getVoucherPage(voucherId).getAllowUseInventory();
+        return  allowUseInventory;
+
+    }
+
 
     /**
      * 获取进行中的优惠券
@@ -275,28 +287,63 @@ public class BusinessUtil {
         PublicParameter pp = new PublicParameter();
         List<String> picList = new ArrayList<>();
         picList.add(supporterUtil.getPicPath());
-        // 创建被邀请者和分享者的信息字段
-        JSONObject invitedVoucher = getInvitedVoucher(voucherId, 1, String.valueOf(Math.min(getVoucherAllowUseInventory(voucherId), 2)), 2, "", "", 3);
-        JSONObject shareVoucher = getShareVoucher(voucherId, 1, String.valueOf(Math.min(getVoucherAllowUseInventory(voucherId), 2)), 2, "", "", 3);
-        return FissionVoucherAddScene.builder()
-                .type(1)
-                .participationLimitType(0)
-                .receiveLimitType(0)
-                .title(pp.fissionVoucherName)
-                .rule(pp.rule)
-                .startDate(getStartDate())
-                .endDate(getEndDate())
-                .subjectType(supporterUtil.getSubjectType())
-                .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                .label("RED_PAPER")
-                .picList(picList)
-                .shareNum("3")
-                .shareVoucher(shareVoucher)
-                .invitedVoucher(invitedVoucher)
-                .isCustomShareInfo(false)
-                .build();
-    }
+        IScene scene=null;
+        Long AllowUseInventory=getVoucherAllowUseInventoryNum(voucherId);
+        if(AllowUseInventory>6){
+            // 创建被邀请者和分享者的信息字段
+            JSONObject invitedVoucher = getInvitedVoucher(voucherId, 1, String.valueOf(Math.min(getVoucherAllowUseInventory(voucherId), 2)), 2, "", "", 3);
+            JSONObject shareVoucher = getShareVoucher(voucherId, 1, String.valueOf(Math.min(getVoucherAllowUseInventory(voucherId), 2)), 2, "", "", 3);
+            scene= FissionVoucherAddScene.builder()
+                    .type(1)
+                    .participationLimitType(0)
+                    .receiveLimitType(0)
+                    .title(pp.fissionVoucherName)
+                    .rule(pp.rule)
+                    .startDate(getStartDate())
+                    .endDate(getEndDate())
+                    .subjectType(supporterUtil.getSubjectType())
+                    .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
+                    .label("RED_PAPER")
+                    .picList(picList)
+                    .shareNum("3")
+                    .shareVoucher(shareVoucher)
+                    .invitedVoucher(invitedVoucher)
+                    .isCustomShareInfo(false)
+                    .build();
+        }else{
+            //创建卡券
+            Long voucherId3=supporterUtil.createVoucherId(1000, VoucherTypeEnum.COUPON);
+            //获取卡券的名字
+            String voucherName = supporterUtil.getVoucherName(voucherId3);
+            //审批通过
+            supporterUtil.applyVoucher(voucherName, "1");
+            //创建活动
+            // 创建被邀请者和分享者的信息字段
+            JSONObject invitedVoucher = getInvitedVoucher(voucherId3, 1, String.valueOf(Math.min(getVoucherAllowUseInventory(voucherId), 2)), 2, "", "", 3);
+            JSONObject shareVoucher = getShareVoucher(voucherId3, 1, String.valueOf(Math.min(getVoucherAllowUseInventory(voucherId), 2)), 2, "", "", 3);
+            scene= FissionVoucherAddScene.builder()
+                    .type(1)
+                    .participationLimitType(0)
+                    .receiveLimitType(0)
+                    .title(pp.fissionVoucherName)
+                    .rule(pp.rule)
+                    .startDate(getStartDate())
+                    .endDate(getEndDate())
+                    .subjectType(supporterUtil.getSubjectType())
+                    .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
+                    .label("RED_PAPER")
+                    .picList(picList)
+                    .shareNum("3")
+                    .shareVoucher(shareVoucher)
+                    .invitedVoucher(invitedVoucher)
+                    .isCustomShareInfo(false)
+                    .build();
 
+        }
+
+        return scene;
+
+    }
     /**
      * 创建裂变活动
      */
@@ -379,35 +426,77 @@ public class BusinessUtil {
         isRequired.add(true);
         isRequired.add(true);
         JSONArray registerInformationList = this.getRegisterInformationList(isShow, isRequired);
-        //报名成功奖励
-        JSONArray registerObject = getRewardVouchers(voucherId, 1, getVoucherAllowUseInventory(voucherId));
-        //卡券有效期
-        JSONObject voucherValid = getVoucherValid(2, null, null, 10);
-        //创建招募活动-共有的--基础信息
-        ManageRecruitAddScene.ManageRecruitAddSceneBuilder builder = ManageRecruitAddScene.builder()
-                .type(2)
-                .participationLimitType(0)
-                .title(pp.RecruitName)
-                .startDate(getStartDate())
-                .endDate(getEndDate())
-                .applyStart(getStartDate())
-                .applyEnd(getEndDate())
-                .isLimitQuota(true)
-                .quota(10)
-                .subjectType(supporterUtil.getSubjectType())
-                .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                .label("BARGAIN")
-                .picList(picList)
-                .rule(pp.rule)
-                .registerInformationList(registerInformationList)
-                .successReward(successReward)
-                .rewardReceiveType(rewardReceiveType)
-                .isNeedApproval(isNeedApproval);
-        if (successReward) {
-            builder.rewardVouchers(registerObject)
-                    .voucherValid(voucherValid);
+        //判断可用库存
+        Long AllowUseInventory=getVoucherAllowUseInventoryNum(voucherId);
+        ManageRecruitAddScene.ManageRecruitAddSceneBuilder builder=null;
+        if(AllowUseInventory>6){
+            //报名成功奖励
+            JSONArray registerObject = getRewardVouchers(voucherId, 1, Math.toIntExact(AllowUseInventory));
+            //卡券有效期
+            JSONObject voucherValid = getVoucherValid(2, null, null, 10);
+            //创建招募活动-共有的--基础信息
+            builder = ManageRecruitAddScene.builder()
+                    .type(2)
+                    .participationLimitType(0)
+                    .title(pp.RecruitName)
+                    .startDate(getStartDate())
+                    .endDate(getEndDate())
+                    .applyStart(getStartDate())
+                    .applyEnd(getEndDate())
+                    .isLimitQuota(true)
+                    .quota(10)
+                    .subjectType(supporterUtil.getSubjectType())
+                    .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
+                    .label("BARGAIN")
+                    .picList(picList)
+                    .rule(pp.rule)
+                    .registerInformationList(registerInformationList)
+                    .successReward(successReward)
+                    .rewardReceiveType(rewardReceiveType)
+                    .isNeedApproval(isNeedApproval);
+            if (successReward) {
+                builder.rewardVouchers(registerObject)
+                        .voucherValid(voucherValid);
 
+            }
+        }else {
+            //创建卡券
+            Long voucherId3 = supporterUtil.createVoucherId(1000, VoucherTypeEnum.COUPON);
+            //获取卡券的名字
+            String voucherName = supporterUtil.getVoucherName(voucherId3);
+            //审批通过
+            supporterUtil.applyVoucher(voucherName, "1");
+            //报名成功奖励
+            JSONArray registerObject = getRewardVouchers(voucherId3, 1, getVoucherAllowUseInventory(voucherId));
+            //卡券有效期
+            JSONObject voucherValid = getVoucherValid(2, null, null, 10);
+            //创建招募活动-共有的--基础信息
+            builder = ManageRecruitAddScene.builder()
+                    .type(2)
+                    .participationLimitType(0)
+                    .title(pp.RecruitName)
+                    .startDate(getStartDate())
+                    .endDate(getEndDate())
+                    .applyStart(getStartDate())
+                    .applyEnd(getEndDate())
+                    .isLimitQuota(true)
+                    .quota(10)
+                    .subjectType(supporterUtil.getSubjectType())
+                    .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
+                    .label("BARGAIN")
+                    .picList(picList)
+                    .rule(pp.rule)
+                    .registerInformationList(registerInformationList)
+                    .successReward(successReward)
+                    .rewardReceiveType(rewardReceiveType)
+                    .isNeedApproval(isNeedApproval);
+            if (successReward) {
+                builder.rewardVouchers(registerObject)
+                        .voucherValid(voucherValid);
+
+            }
         }
+
         return builder.build();
     }
 
@@ -805,16 +894,6 @@ public class BusinessUtil {
             IScene scene1 = ActivityManageListScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
-                //是否取消
-                Boolean isCanCancel = list.getJSONObject(i).getBoolean("is_can_cancel");
-                //是否删除
-                Boolean isCanDelete = list.getJSONObject(i).getBoolean("is_can_delete");
-                //是否编辑
-                Boolean isCanEdit = list.getJSONObject(i).getBoolean("is_can_edit");
-                //是否推广
-                Boolean isCanPromotion = list.getJSONObject(i).getBoolean("is_can_promotion");
-                //是否撤回
-                Boolean isCanRevoke = list.getJSONObject(i).getBoolean("is_can_revoke");
                 int status = list.getJSONObject(i).getInteger("status");
                 if (status == ActivityStatusEnum.PASSED.getId()) {
                     Long id = list.getJSONObject(i).getLong("id");
@@ -856,6 +935,8 @@ public class BusinessUtil {
         if (ids.size() == 0) {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             Long id1 = createFissionActivity(voucherId);
+            //审批活动
+            getApprovalPassed(id1);
             ids.add(id1);
 
         }
@@ -1364,7 +1445,7 @@ public class BusinessUtil {
         if (ids.size() == 0) {
             //创建活动
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-            Long id1 = createFissionActivity(voucherId);
+            Long id1 = createFissionActivityWaitingStarScene(voucherId);
             //审批活动
             getApprovalPassed(id1);
             ids.add(id1);
@@ -2357,7 +2438,7 @@ public class BusinessUtil {
     }
 
     /**
-     *创建招募活动，返回活动ID
+     *创建内容营销活动，返回活动ID
      */
     public Long getContentMarketingAdd(){
         SupporterUtil supporterUtil = new SupporterUtil(visitor);
@@ -2698,6 +2779,142 @@ public class BusinessUtil {
 
         }
         return ids;
+    }
+
+    /**
+     * 裂变活动-查询列表中的状态为【已下架的ID】
+     * 2021-3-17
+     */
+    public List<Long> getFissionActivityOffLine() {
+        List<Long> ids = new ArrayList<>();
+        //活动列表
+        IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
+        int pages = visitor.invokeApi(scene).getInteger("pages")>10?10:visitor.invokeApi(scene).getInteger("pages");
+        for (int page = 1; page <= pages; page++) {
+            IScene scene1 = ActivityManageListScene.builder().page(page).size(10).build();
+            JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                int status = list.getJSONObject(i).getInteger("status");
+                int activityType = list.getJSONObject(i).getInteger("activity_type");
+                if (status == ActivityStatusEnum.OFFLINE.getId() && activityType == 1) {
+                    Long id = list.getJSONObject(i).getLong("id");
+                    ids.add(id);
+                }
+            }
+        }
+        //创建活动并审批
+        if (ids.size() == 0) {
+            //创建活动
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long id1 = createFissionActivity(voucherId);
+            //审批活动
+            getApprovalPassed(id1);
+            //活动下架
+            getContentMarketingOffLine(id1);
+            ids.add(id1);
+
+        }
+        return ids;
+    }
+
+    /**
+     * 招募活动-查询列表中的状态为【已下架的ID】
+     * 2021-3-17
+     */
+    public List<Long> getRecruitActivityOffLine() {
+        List<Long> ids = new ArrayList<>();
+        //活动列表
+        IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
+        int pages = visitor.invokeApi(scene).getInteger("pages")>10?10:visitor.invokeApi(scene).getInteger("pages");
+        for (int page = 1; page <= pages; page++) {
+            IScene scene1 = ActivityManageListScene.builder().page(page).size(10).build();
+            JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                int status = list.getJSONObject(i).getInteger("status");
+                int activityType = list.getJSONObject(i).getInteger("activity_type");
+                if (status == ActivityStatusEnum.OFFLINE.getId() && activityType == 2) {
+                    Long id = list.getJSONObject(i).getLong("id");
+                    ids.add(id);
+                }
+            }
+        }
+        //创建活动并审批
+        if (ids.size() == 0) {
+            //创建活动
+            Long id1 = createRecruitActivityApproval();
+            //审批活动
+            getApprovalPassed(id1);
+            //活动下架
+            getContentMarketingOffLine(id1);
+            ids.add(id1);
+
+        }
+        return ids;
+    }
+
+    /**
+     * 裂变活动-创建未开始的活动
+     */
+    public Long createFissionActivityWaitingStarScene(Long voucherId) {
+        SupporterUtil supporterUtil = new SupporterUtil(visitor);
+        PublicParameter pp = new PublicParameter();
+        List<String> picList = new ArrayList<>();
+        picList.add(supporterUtil.getPicPath());
+        Long AllowUseInventory=getVoucherAllowUseInventoryNum(voucherId);
+        Long activityId=0L;
+        if(AllowUseInventory>6){
+            // 创建被邀请者和分享者的信息字段
+            JSONObject invitedVoucher = getInvitedVoucher(voucherId, 1, String.valueOf(Math.min(getVoucherAllowUseInventory(voucherId), 2)), 2, "", "", 3);
+            JSONObject shareVoucher = getShareVoucher(voucherId, 1, String.valueOf(Math.min(getVoucherAllowUseInventory(voucherId), 2)), 2, "", "", 3);
+            IScene scene= FissionVoucherAddScene.builder()
+                    .type(1)
+                    .participationLimitType(0)
+                    .receiveLimitType(0)
+                    .title(pp.fissionVoucherName)
+                    .rule(pp.rule)
+                    .startDate(getEndDate())
+                    .endDate(getEndDate())
+                    .subjectType(supporterUtil.getSubjectType())
+                    .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
+                    .label("RED_PAPER")
+                    .picList(picList)
+                    .shareNum("3")
+                    .shareVoucher(shareVoucher)
+                    .invitedVoucher(invitedVoucher)
+                    .isCustomShareInfo(false)
+                    .build();
+            activityId = visitor.invokeApi(scene).getLong("id");
+        }else{
+            //创建卡券
+            Long voucherId3=supporterUtil.createVoucherId(1000, VoucherTypeEnum.COUPON);
+            //获取卡券的名字
+            String voucherName = supporterUtil.getVoucherName(voucherId3);
+            //审批通过
+            supporterUtil.applyVoucher(voucherName, "1");
+            //创建活动
+            // 创建被邀请者和分享者的信息字段
+            JSONObject invitedVoucher = getInvitedVoucher(voucherId3, 1, String.valueOf(Math.min(getVoucherAllowUseInventory(voucherId), 2)), 2, "", "", 3);
+            JSONObject shareVoucher = getShareVoucher(voucherId3, 1, String.valueOf(Math.min(getVoucherAllowUseInventory(voucherId), 2)), 2, "", "", 3);
+            IScene scene= FissionVoucherAddScene.builder()
+                    .type(1)
+                    .participationLimitType(0)
+                    .receiveLimitType(0)
+                    .title(pp.fissionVoucherName)
+                    .rule(pp.rule)
+                    .startDate(getEndDate())
+                    .endDate(getEndDate())
+                    .subjectType(supporterUtil.getSubjectType())
+                    .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
+                    .label("RED_PAPER")
+                    .picList(picList)
+                    .shareNum("3")
+                    .shareVoucher(shareVoucher)
+                    .invitedVoucher(invitedVoucher)
+                    .isCustomShareInfo(false)
+                    .build();
+            activityId = visitor.invokeApi(scene).getLong("id");
+        }
+        return activityId;
     }
 
 
