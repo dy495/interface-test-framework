@@ -420,18 +420,16 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
     }
 
     //ok
-    @Test(description = "预试驾->确认预约->点接待->变更接待->完成接待->评价->跟进")
+    @Test(description = "预约试驾->确认预约->点接待->变更接待->完成接待->评价->跟进")
     public void appointmentManager_testDriver() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Date appointmentBoardDate = DateTimeUtil.addDay(new Date(), 0);
             String appointmentDate = DateTimeUtil.addDayFormat(new Date(), 0);
             AppointmentTypeEnum appointmentTypeEnum = AppointmentTypeEnum.TEST_DRIVE;
             AppletMessageTypeEnum appletMessageTypeEnum = AppletMessageTypeEnum.RECEPTION_EVALUATE_TIP;
             Long shopId = util.getShopId();
             IScene appointmentPageScene = AppointmentPageScene.builder().type(appointmentTypeEnum.name()).build();
             int appointmentPageTotal = appointmentPageScene.invoke(visitor).getInteger("total");
-            int appointmentNumber = util.appointmentNumber(appointmentBoardDate, appointmentTypeEnum.name());
             user.loginApp(ALL_AUTHORITY);
             int appAppointmentNum = util.getAppointmentPageNum();
             //预约试驾
@@ -452,8 +450,6 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
             CommonUtil.checkResult("app是否可取消", true, appAppointmentPage.getIsCanCancel());
             CommonUtil.checkResult("app是否可调整时间", true, appAppointmentPage.getIsCanAdjust());
             user.loginPc(ALL_AUTHORITY);
-            int newAppointmentNumber = util.appointmentNumber(appointmentBoardDate, appointmentTypeEnum.name());
-            CommonUtil.checkResult("pc预约看板分子数", appointmentNumber + 1, newAppointmentNumber);
             int newAppointmentPageTotal = appointmentPageScene.invoke(visitor).getInteger("total");
             CommonUtil.checkResult("pc预约记录列表数", appointmentPageTotal + 1, newAppointmentPageTotal);
             AppointmentRecordAppointmentPageBean appointmentPage = util.getAppointmentPageById(appointmentId, appointmentTypeEnum.name());
@@ -564,7 +560,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("预约保养->确认预约->点接待->变更接待->完成接待->评价->跟进");
+            saveData("预约试驾->确认预约->点接待->变更接待->完成接待->评价->跟进");
         }
     }
 
