@@ -1,6 +1,5 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.brand;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
@@ -12,7 +11,7 @@ import lombok.Builder;
  * @date 2021-03-31 12:47:27
  */
 @Builder
-public class PageScene extends BaseScene {
+public class BrandPageScene extends BaseScene {
     /**
      * 描述 页码 大于0
      * 是否必填 true

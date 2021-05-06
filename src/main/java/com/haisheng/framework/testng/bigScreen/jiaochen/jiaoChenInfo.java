@@ -5,8 +5,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.model.AppletModeListScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.brand.BrandPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shop.PageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
 import com.haisheng.framework.util.DateTimeUtil;
@@ -44,6 +47,7 @@ public class jiaoChenInfo {
     private static final EnumTestProduce PRODUCE = EnumTestProduce.JC_DAILY;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_LXQ_DAILY;
+    private static final EnumAccount ALL_AUTHORITY = EnumAccount.ALL_AUTHORITY_DAILY_LXQ;
     public UserUtil user = new UserUtil(visitor);
     //日常
     public final long BrandID = 61L;//自动化用的品牌id
@@ -436,6 +440,9 @@ public class jiaoChenInfo {
         obj1.put("customerName",customerName);
         obj1.put("customerPhone",customerPhone);
         obj1.put("content",content);
+        obj1.put("shopId",shopId);
+        obj1.put("shopName",shopIdForName(shopId));
+        obj1.put("brandId",brandIdForName(brandId));
         return obj1;
     }
 
@@ -453,10 +460,14 @@ public class jiaoChenInfo {
         String content="12345678901234567890";
         AppletConsultAfterServiceSubmitScene.builder().customerName(customerName).customerPhone(customerPhone).content(content)
                 .salesId(salesId).modelId(modelId).shopId(shopId).build().invoke(visitor);
+
         JSONObject obj1 = new JSONObject();
         obj1.put("customerName",customerName);
         obj1.put("customerPhone",customerPhone);
         obj1.put("content",content);
+        obj1.put("shopId",shopId);
+        obj1.put("shopName",shopIdForName(shopId));
+        obj1.put("brandId",brandIdForName(brandId));
         return obj1;
     }
 
@@ -500,6 +511,35 @@ public class jiaoChenInfo {
         return num;
     }
 
+    //门店id对应的门店名字
+    public String shopIdForName(Long id){
+        user.loginPc(ALL_AUTHORITY);
+        JSONArray array = PageScene.builder().page(1).size(100).build().invoke(visitor).getJSONArray("list");
+        String name = "";
+        for (int i = 0; i < array.size(); i++){
+            JSONObject obj = array.getJSONObject(i);
+            Long searchid = obj.getLong("id");
+            if (searchid.longValue() == id.longValue()){
+                name = obj.getString("name");
+            }
+        }
+        return name;
+    }
+
+    //品牌id对应的品牌名字
+    public String brandIdForName(Long id){
+        user.loginPc(ALL_AUTHORITY);
+        JSONArray array = BrandPageScene.builder().page(1).size(100).build().invoke(visitor).getJSONArray("list");
+        String name = "";
+        for (int i = 0; i < array.size(); i++){
+            JSONObject obj = array.getJSONObject(i);
+            Long searchid = obj.getLong("id");
+            if (searchid.longValue() == id.longValue()){
+                name = obj.getString("name");
+            }
+        }
+        return name;
+    }
 
 
 
