@@ -11,6 +11,7 @@ public class PublicParm {
     public String user;
     public String userpassword;
     public String userroleId="4965";
+    public String voucherIdevluate="3273";
 
     //3.0
 
@@ -81,7 +82,7 @@ public class PublicParm {
 
     public String appletTocken = EnumAppletToken.JC_XMF_DAILY.getToken();
     public JSONArray coordinate = getCoordinate();
-    public Long voucherId = 81L;  //经纬度
+    public Long voucherId = 81L;
 
     public JSONArray roleList = getRoleList();
     public JSONArray vouchers = getvouchersList();

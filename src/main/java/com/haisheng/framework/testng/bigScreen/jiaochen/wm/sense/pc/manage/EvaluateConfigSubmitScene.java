@@ -46,14 +46,14 @@ public class EvaluateConfigSubmitScene extends BaseScene {
      * 是否必填 false
      * 版本 v2.0
      */
-    private final JSONArray vouchers;
+    private final String  vouchersId;
 
     /**
      * 描述 卡券有效期配置 发送卡券时必填
      * 是否必填 false
      * 版本 v2.0
      */
-    private final JSONObject voucherValid;
+//    private final JSONObject voucherValid;
 
     /**
      * 描述 是否奖励积分
@@ -74,22 +74,82 @@ public class EvaluateConfigSubmitScene extends BaseScene {
      * 是否必填 true
      * 版本 v2.0
      */
-    private final JSONArray scores;
+
 
 
     @Override
     public JSONObject getRequestBody() {
-        JSONObject object = new JSONObject();
-        object.put("type", type);
-        object.put("default_favourable_cycle", defaultFavourableCycle);
-        object.put("evaluate_reward", evaluateReward);
-        object.put("is_send_voucher", isSendVoucher);
-        object.put("vouchers", vouchers);
-        object.put("voucher_valid", voucherValid);
-        object.put("is_send_points", isSendPoints);
-        object.put("points", points);
-        object.put("scores", scores);
-        return object;
+              String request="{\n" +
+                "    \"type\":"+type+",\n" +
+                "    \"default_favourable_cycle\":"+defaultFavourableCycle+",\n" +
+                "    \"evaluate_reward\":"+evaluateReward+",\n" +
+                "    \"is_send_points\":"+isSendPoints+",\n" +
+                "    \"is_send_voucher\":"+isSendVoucher+",\n" +
+                "    \"evaluate_reward\":"+evaluateReward+",\n" +
+                "    \"points\":"+points+",\n" +
+
+
+                "    \"vouchers\":[\n" +
+                        vouchersId+"\n" +
+                "    ],\n" +
+                "    \"voucher_valid\":{\n" +
+                "        \"expire_type\":2,\n" +
+                "        \"voucher_effective_days\":1\n" +
+                "    },\n" +
+
+                "    \"scores\":[\n" +
+                "        {\n" +
+                "            \"score\":1,\n" +
+                "            \"describe\":\"荣耀黄金\",\n" +
+                "            \"labels\":[\n" +
+                "                \"菜\",\n" +
+                "                \"跨开开\",\n" +
+                "                \"零零零零\",\n" +
+                "                \"卡卡卡卡\"\n" +
+                "            ]\n" +
+                "        },\n" +
+                "        {\n" +
+                "            \"score\":2,\n" +
+                "            \"describe\":\"华贵铂金\",\n" +
+                "            \"labels\":[\n" +
+                "                \"菜\",\n" +
+                "                \"科马\",\n" +
+                "                \"来了\",\n" +
+                "                \"你奶娘\"\n" +
+                "            ]\n" +
+                "        },\n" +
+                "        {\n" +
+                "            \"score\":3,\n" +
+                "            \"describe\":\"璀璨钻石\",\n" +
+                "            \"labels\":[\n" +
+                "                \"强\"\n" +
+                "            ]\n" +
+                "        },\n" +
+                "        {\n" +
+                "            \"score\":4,\n" +
+                "            \"describe\":\"超凡大师\",\n" +
+                "            \"labels\":[\n" +
+                "                \"半神\",\n" +
+                "                \"uuu\",\n" +
+                "                \"卡卡卡卡\",\n" +
+                "                \"经济经济\"\n" +
+                "            ]\n" +
+                "        },\n" +
+                "        {\n" +
+                "            \"score\":5,\n" +
+                "            \"describe\":\"最强王者\",\n" +
+                "            \"labels\":[\n" +
+                "                \"大神\",\n" +
+                "                \"u哈哈哈哈\",\n" +
+                "                \"卡卡卡卡\",\n" +
+                "                \"怕怕怕怕\"\n" +
+                "            ]\n" +
+                "        }\n" +
+                "    ]\n" +
+                "}";
+
+
+        return  JSONObject.parseObject(request);
     }
 
     @Override

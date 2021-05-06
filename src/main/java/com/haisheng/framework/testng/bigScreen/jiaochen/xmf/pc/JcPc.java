@@ -10,9 +10,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTest
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Constant;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.manage.AppointmentMaintainConfigDetailBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletEvaluateSubmitScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.manage.EvaluateConfigSubmitScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shopstylemodel.ManageModelEditScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shopstylemodel.ManageModelPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.DataAbnormal;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
@@ -24,10 +25,12 @@ import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.DateTimeUtil;
+import org.jooq.tools.StringUtils;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
 import java.util.Calendar;
+import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -1131,6 +1134,82 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             saveData("JC_pc门店按钮修改关联验证");
         }
     }
+
+    @DataProvider(name="EVALUATETYPE")
+    public static Object[][] evaluatetype(){
+        return new String[][]{
+                {"1","保养评价消息"},
+                {"2","维修评价消息"}
+        };
+    }
+    @Test(dataProvider="EVALUATETYPE")  //pc门店开关关闭，预约和洗车开关自动关闭
+    public void Jc_evalute(String  type1,String messageName) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            System.out.println(type1+":"+messageName);
+            Integer type=Integer.parseInt(type1);
+
+            Calendar calendar=Calendar.getInstance();
+            int day=calendar.get(Calendar.DAY_OF_WEEK);
+            Integer points;
+            if(day%2==1){
+                 points=3;
+            }else{
+                 points=2;
+            }
+            //修改配置，评价，积分数，卡券数
+            IScene evaluateConfig= EvaluateConfigSubmitScene.builder().evaluateReward(true)
+                    .defaultFavourableCycle(3)
+                    .isSendPoints(true).isSendVoucher(true).points(points)
+                    .type(type).vouchersId(pp.voucherIdevluate).build();
+            jc.invokeApi(evaluateConfig);
+
+            jc.appletLoginToken(pp.appletTocken);
+            String id[]=pf.getMessageId(messageName);
+            if(StringUtils.isEmpty(id[0])){
+                throw new Exception("没有待评价的消息，检查接待case 是否失败");
+            }
+            System.out.println("messageId"+id[0]);
+            //评价前的积分和卡券数
+            Integer voucherTotal = pf.getVoucherTotal();
+            Integer appletScore = jc.appletUserInfoDetail().getInteger("score");
+
+
+            JSONObject evaluateConfigDescribe= jc.AppletEvaluateConfigScene(type,Long.parseLong(pp.shopIdZ));
+           String describe=evaluateConfigDescribe.getJSONArray("list").getJSONObject(2).getString("describe");
+           List label=evaluateConfigDescribe.getJSONArray("list").getJSONObject(2).getJSONArray("labels");
+
+            //评价
+            IScene evaluatesubmit= AppletEvaluateSubmitScene.builder()
+                    .describe(describe).labels(label).id(Long.valueOf(id[1]))
+                    .isAnonymous(true)
+                    .score(2)
+                    .shopId(Long.parseLong(pp.shopIdZ)).suggestion("自动评价").type(type)
+                    .build();
+            jc.invokeApi(evaluatesubmit);
+
+            //评价前的积分和卡券数
+            Integer voucherTotalAfter = pf.getVoucherTotal();
+            Integer appletScoreAfter= jc.appletUserInfoDetail().getInteger("score");
+
+            Preconditions.checkArgument(voucherTotalAfter-voucherTotal==1,"评价完成后，卡券没+1");
+            Preconditions.checkArgument(appletScoreAfter-appletScore==points,"评价完成后，积分奖励没发");
+
+
+
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("JC_pc门店按钮修改关联验证");
+        }
+    }
+
+
+
+
+
+
 
 
 
