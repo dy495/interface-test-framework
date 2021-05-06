@@ -192,9 +192,9 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             JSONObject submitobj = info.submitonlineExpert();
             String name = submitobj.getString("customerName");
             String phone = submitobj.getString("customerPhone");
-            String brandId = submitobj.getString("brandId");
-            String modelId = submitobj.getString("modelId");
-            String shopId = submitobj.getString("shopId");
+            String brandId = info.brandIdForName(submitobj.getLong("brandId"));
+//            String modelId = submitobj.getString("modelId");
+            String shopId = info.shopIdForName(submitobj.getLong("shopId"));
 
             //获取小程序消息列表数量
             int afterApplet = info.getAppletmessNum();
@@ -223,7 +223,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(customer_phone.equals(phone),"提交时手机号"+phone+", PC展示"+customer_phone);
                 Preconditions.checkArgument(shop_name.equals(shopId),"提交时选择的门店"+shopId+", PC展示"+shop_name);
                 Preconditions.checkArgument(brand_name.equals(brandId),"提交时选择的品牌"+brandId+", PC展示"+brand_name);
-                Preconditions.checkArgument(model_name.equals(modelId),"提交时选择的品牌"+modelId+", PC展示"+model_name);
+//                Preconditions.checkArgument(model_name.equals(modelId),"提交时选择的品牌"+modelId+", PC展示"+model_name);
 
             }
 
@@ -952,8 +952,8 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             String name = submitobj.getString("customerName");
             String phone = submitobj.getString("customerPhone");
             String brandId = submitobj.getString("brandId");
-            String modelId = submitobj.getString("modelId");
-            String shopId = submitobj.getString("shopId");
+//            String modelId = submitobj.getString("modelId");
+            String shopId = submitobj.getString("shopName");
 
             //获取小程序消息列表数量
             int afterApplet = info.getAppletmessNum();
@@ -977,12 +977,12 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
                 String customer_phone = obj.getString("customer_phone");
                 String shop_name = obj.getString("shop_name");
                 String brand_name = obj.getString("brand_name");
-                String model_name = obj.getString("model_name");
+//                String model_name = obj.getString("model_name");
                 Preconditions.checkArgument(customer_name.equals(name),"提交时姓名"+name+", PC展示"+customer_name);
                 Preconditions.checkArgument(customer_phone.equals(phone),"提交时手机号"+phone+", PC展示"+customer_phone);
                 Preconditions.checkArgument(shop_name.equals(shopId),"提交时选择的门店"+shopId+", PC展示"+shop_name);
                 Preconditions.checkArgument(brand_name.equals(brandId),"提交时选择的品牌"+brandId+", PC展示"+brand_name);
-                Preconditions.checkArgument(model_name.equals(modelId),"提交时选择的品牌"+modelId+", PC展示"+model_name);
+//                Preconditions.checkArgument(model_name.equals(modelId),"提交时选择的品牌"+modelId+", PC展示"+model_name);
                 Preconditions.checkArgument(obj.getString("sale_type").contains("销售"),"提交时销售, PC展示"+obj.getString("sale_type"));
 
             }
@@ -1104,8 +1104,8 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             String name = submitobj.getString("customerName");
             String phone = submitobj.getString("customerPhone");
             String brandId = submitobj.getString("brandId");
-            String modelId = submitobj.getString("modelId");
-            String shopId = submitobj.getString("shopId");
+//            String modelId = submitobj.getString("modelId");
+            String shopId = submitobj.getString("shopName");
 
 
             Thread.sleep(1000);
@@ -1131,12 +1131,12 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
                 String customer_phone = obj.getString("customer_phone");
                 String shop_name = obj.getString("shop_name");
                 String brand_name = obj.getString("brand_name");
-                String model_name = obj.getString("model_name");
+//                String model_name = obj.getString("model_name");
                 Preconditions.checkArgument(customer_name.equals(name),"提交时姓名"+name+", PC展示"+customer_name);
                 Preconditions.checkArgument(customer_phone.equals(phone),"提交时手机号"+phone+", PC展示"+customer_phone);
                 Preconditions.checkArgument(shop_name.equals(shopId),"提交时选择的门店"+shopId+", PC展示"+shop_name);
                 Preconditions.checkArgument(brand_name.equals(brandId),"提交时选择的品牌"+brandId+", PC展示"+brand_name);
-                Preconditions.checkArgument(model_name.equals(modelId),"提交时选择的品牌"+modelId+", PC展示"+model_name);
+//                Preconditions.checkArgument(model_name.equals(modelId),"提交时选择的品牌"+modelId+", PC展示"+model_name);
                 Preconditions.checkArgument(obj.getString("sale_type").contains("售后"),"提交时售后, PC展示"+obj.getString("sale_type"));
 
             }

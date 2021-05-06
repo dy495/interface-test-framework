@@ -2188,7 +2188,7 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(obj.containsKey("phone"),"未展示客户手机号");
                 Preconditions.checkArgument(obj.containsKey("exchange_type"),"未展示兑换类型");
                 Preconditions.checkArgument(obj.containsKey("stock_detail"),"未展示库存明细");
-                Preconditions.checkArgument(obj.containsKey("order_code"),"未展示订单号");
+//                Preconditions.checkArgument(obj.containsKey("order_code"),"未展示订单号");
                 Preconditions.checkArgument(obj.containsKey("operate_time"),"未展示操作时间");
             }
 
