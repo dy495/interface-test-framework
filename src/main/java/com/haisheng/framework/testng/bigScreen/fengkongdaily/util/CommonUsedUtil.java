@@ -580,7 +580,6 @@ public class CommonUsedUtil {
                      "               \"car_plate\":\"京A11111\",\n" +
                      "               \"car_vehicle_number\":\""+carVehicleNumber+"\",\n" +
 //                     "                \"business_type\":\"FIRST_INSPECTION\",\n" +
-                     "                \"business_type\":\"FIRST_INSPECTION\",\n" +
                      "                \"business_order_id\":\"27389182\"\n" +
                      "    }    }\n" +
                      "  }\n" +
@@ -681,7 +680,7 @@ public class CommonUsedUtil {
                     "               \"car_plate\":\"京A11111\",\n" +
                     "               \"car_vehicle_number\":\""+carVehicleNumber+"\",\n" +
 //                    "               \"business_type\":"+business_type+",\n" +
-                    "                \"business_type\":\"GOODS_PAY\",\n" +
+//                    "                \"business_type\":\"GOODS_PAY\",\n" +
                     "                \"business_order_id\":\"27389182\"\n" +
                     "    }    }\n" +
                     "  }\n" +

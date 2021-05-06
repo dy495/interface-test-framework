@@ -312,8 +312,8 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
     public void follow_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject followListBefore=jc.AppPageV3Scene(10,null, followType.ONLINE_EXPERTS.getName());
-            int totalBefore=followListBefore.getInteger("total");
+            int totalBefore=pf.followPageNumber();
+            jc.appletLoginToken(pp.appletTocken);
             IScene onlineExpert = AppletConsultOnlineExpertsSubmitScene.builder()
                     .shopId(Long.valueOf(pp.shopIdZ))
                     .content("咨询轮胎保养")

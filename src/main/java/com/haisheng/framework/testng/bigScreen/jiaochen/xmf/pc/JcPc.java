@@ -4,11 +4,14 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.JsonPathUtil;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Constant;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.manage.AppointmentMaintainConfigDetailBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shopstylemodel.ManageModelEditScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shopstylemodel.ManageModelPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.DataAbnormal;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
@@ -725,8 +728,9 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
                 dataType = "WEEKEND";
             }
             Double price = 300.0;
+            IScene manageModelEdit= ManageModelEditScene.builder().price(price).id(Long.parseLong(pp.modolIdAppointment)).type(type).status("ENABLE").build();
             //修改预约价格
-            jc.pcCarModelPriceEdit(pp.modolIdAppointment, price, "ENABLE",type);
+            jc.invokeApi(manageModelEdit);
 
             //工位配置里的折扣
             JSONObject timeRangeDetail = jc.timeRangeDetail(type, dataType);
@@ -761,13 +765,13 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         }
     }
     @Test(dataProvider = "APPOINTMENTTYPE")  //pc修改车预约价格，价格格式异常判断
-    public void Jc_pcmaintainPriceEditAb() {
+    public void Jc_pcmaintainPriceEditAb(String type) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String price[]={"","qwe","我","!@#","100000000.011"};   //保养价格为空，保养价格异常格式
             //修改预约价格
             for(int i=0;i<price.length;i++){
-                int code=jc.pcCarModelPriceEdit(pp.modolIdAppointment, price[i], null,false).getInteger("code");
+                int code=jc.pcCarModelPriceEdit(pp.modolIdAppointment, price[i], null,false,type).getInteger("code");
                 System.out.println("code:"+code);
             }
 
@@ -779,8 +783,9 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(dataProvider = "APPOINTMENTTYPE")  //pc修改车预约价格，列表价格变更，其他不变更
-    public void Jc_pcmaintainPriceEdit2(String type) {
+    @Test()  //pc修改车预约价格，列表价格变更，其他不变更
+    public void Jc_pcmaintainPriceEdit2() {
+        String type="MAINTAIN";
         logger.logCaseStart(caseResult.getCaseName());
         try {
             pcLogin(pp.jdgw,pp.jdgwpassword,pp.roleidJdgw);
@@ -790,8 +795,10 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
                price="200.0";
             }
-           jc.pcCarModelPriceEdit(pp.modolIdAppointment,price , null,true);
-           String priceAfter= jc.maintainFilterManage("","1","10","car_model",pp.carModel).getJSONArray("list").getJSONObject(0).getString("price");
+           jc.pcCarModelPriceEdit(pp.modolIdAppointment,price , null,true,type);
+            IScene modelpage= ManageModelPageScene.builder().page(1).type(type).size(10).carModel(pp.carModel).build();
+
+           String priceAfter= jc.invokeApi(modelpage).getJSONArray("list").getJSONObject(0).getString("price");
            Preconditions.checkArgument(priceAfter.equals(price),"编辑后价格与入参不一致");
 
         } catch (AssertionError | Exception e) {
@@ -805,20 +812,22 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
     public void Jc_pcappointmentButton(String type) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject data=jc.maintainFilterManage("","1","10","car_model",pp.carModel).getJSONArray("list").getJSONObject(0);
+            IScene modelPage=ManageModelPageScene.builder().page(1).size(10).type(type).carModel(pp.carModel).build();
+            JSONObject data=jc.invokeApi(modelPage).getJSONArray("list").getJSONObject(0);
             String status=data.getString("status");
             if(!status.equals("ENABLE")){
-                throw new Exception("车型-赢识-xia,预约配置被关闭");
+                throw new Exception("车型,预约配置被关闭");
             }
-            jc.pcCarModelPriceEdit(pp.modolIdAppointment,null,"DISABLE",type);
+            //  public JSONObject pcCarModelPriceEdit(String id, String price, String status, Boolean checkcode,String  type) {
+            jc.pcCarModelPriceEdit(pp.modolIdAppointment,null,"DISABLE",true,type);
 
             jc.appletLoginToken(pp.appletTocken);
-            JSONObject isAble=jc.appletmaintainTimeList(Long.parseLong(pp.shopIdZ),pp.car_idA,dt.getHistoryDate(1),"MAINTAIN",false);
+            JSONObject isAble=jc.appletmaintainTimeList(Long.parseLong(pp.shopIdZ),pp.car_idA,dt.getHistoryDate(1),type,false);
             int code= isAble.getInteger("code");
             String message= isAble.getString("message");
 
             jc.pcLogin(pp.gwphone,pp.gwpassword);
-            jc.pcCarModelPriceEdit(pp.modolIdAppointment,null,"ENABLE",type);
+            jc.pcCarModelPriceEdit(pp.modolIdAppointment,null,"ENABLE",true,type);
 
 
             Preconditions.checkArgument(code!=1000,"预约配置关闭小程序预约保养页返回"+message);
@@ -834,16 +843,23 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
     public void Jc_pcappointmentButton2(String type) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject data=jc.maintainFilterManage("","1","10","car_model",pp.carModel).getJSONArray("list").getJSONObject(0);
+            IScene modelPage=ManageModelPageScene.builder().page(1).size(10).type(type).carModel(pp.carModel).build();
+            JSONObject data=jc.invokeApi(modelPage).getJSONArray("list").getJSONObject(0);
             String status=data.getString("status");
             if(!status.equals("ENABLE")){
                 throw new Exception("车型-赢识-xia,预约配置被关闭");
             }
-            int total=jc.maintainFilterManage("","1","10",null,null).getInteger("total");
-            jc.pcCarModelPriceEdit(pp.modolIdAppointment,null,"DISABLE",type);
-            int totalAfter=jc.maintainFilterManage("","1","10",null,null).getInteger("total");
-            jc.pcCarModelPriceEdit(pp.modolIdAppointment,null,"ENABLE",type);
-            int totalAfter2=jc.maintainFilterManage("","1","10",null,null).getInteger("total");
+            IScene modelPage2=ManageModelPageScene.builder().page(1).size(10).type(type).build();
+            int total=jc.invokeApi(modelPage2).getInteger("total");
+
+            jc.pcCarModelPriceEdit(pp.modolIdAppointment,null,"DISABLE",true,type);
+            IScene modelPage3=ManageModelPageScene.builder().page(1).size(10).type(type).build();
+            int totalAfter=jc.invokeApi(modelPage3).getInteger("total");
+
+            jc.pcCarModelPriceEdit(pp.modolIdAppointment,null,"ENABLE",true,type);
+            IScene modelPage4=ManageModelPageScene.builder().page(1).size(10).type(type).build();
+            int totalAfter2=jc.invokeApi(modelPage4).getInteger("total");
+
             Preconditions.checkArgument(total==totalAfter,"关闭后列表数量变化");
             Preconditions.checkArgument(totalAfter==totalAfter2,"开启预约配置后列表数量变化");
 

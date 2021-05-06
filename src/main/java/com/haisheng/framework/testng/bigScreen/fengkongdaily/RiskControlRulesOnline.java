@@ -82,7 +82,7 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
         beforeClassInit(commonConfig);
         logger.debug("FK: " + cu);
         System.out.println(product.getAddress());
-        md.pcLogin("salesdemo@winsense.ai","c216d5045fbeb18bcca830c235e7f3c8");
+        pclogin("salesdemo@winsense.ai","c216d5045fbeb18bcca830c235e7f3c8");
 
 //        qaDbUtil.openConnectionRdDailyEnvironment();
     }
@@ -91,7 +91,15 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
     @Override
     public void clean() {
         afterClassClean();
-//        qaDbUtil.closeConnectionRdDaily();
+//         qaDbUtil.closeConnectionRdDaily();
+    }
+    public  void pclogin(String name,String password){
+        String url="/risk-control/login-pc";
+        JSONObject data=new JSONObject();
+        data.put("username",name);
+        data.put("password",password);
+        data.put("type",0);
+        httpPost(url,data,product.getAddress());
     }
 
     /**
@@ -249,8 +257,8 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
 
 //                JSONObject jsonObject = JSON.parseObject(str);
                 String face=file.getImgStr( "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/xia.png");
-                //夏明凤的脸  是否在职 0是  1否
-                JSONObject jsonObject=staffObject("uid_edfe23f0","夏明凤","uid_edfe23f0",0,face);
+                //夏明凤的脸  是否在职 0否  1是
+                JSONObject jsonObject=staffObject("uid_edfe23f0","夏明凤","uid_edfe23f0",1,face);
                 logger.info("request:"+jsonObject.toJSONString());
                 System.out.println("over");
 
@@ -310,8 +318,8 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
             or.userId=pp.userId;
             or.openId=pp.openId;
             or.carVehicleNumber="AAAAAAAAAA22"+CommonUtil.getRandom(5);
-//            or.business_type="\"GOODS_PAY\"";
-            or.business_type=null;
+            or.business_type="\"GOODS_PAY\"";
+//            or.business_type=null;
             System.out.println(or.carVehicleNumber);
             //生成交易订单
             String post=cu.getCreateOrder3(or);
@@ -462,7 +470,7 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
      *生成交易订单--触发一车多人风控
      * 一车多人，多个openid/userId,一个car_vehicle_number 触发;QATest_42021-04-1418:17  QATest_16762021-04-1418:17
      **/
-    @Test(description = "一车多人成功,脸",enabled = false)   //userID  openid 都不一样 触发成功
+    @Test(description = "一车多人成功,脸",enabled = true)   //userID  openid 都不一样 触发成功
     public void getTriggerMorePersonRiskface(){
         try{
 
@@ -470,16 +478,17 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
             String transId2="QATest_" + CommonUtil.getRandom(4) + dt.getHistoryDate(0) + dt.getHHmm(0);
             String transId3="QATest_" + CommonUtil.getRandom(3) + dt.getHistoryDate(0) + dt.getHHmm(0);
             //客户ID1
-            String userId1="tester1"+CommonUtil.getRandom(3);
+            String userId1="tester1128";
+//            String userId1="tester1"+CommonUtil.getRandom(3);
             //客户ID2
-            String userId2="tester344552";
+//            String userId2="tester344552";
             //客户ID3
             //支付ID TODO：openId 是否也要不同  是
-            String openId = "dea123233"+CommonUtil.getRandom(3) ;
+            String openId = "dea123233940" ;
 
             //车架号
 //            String carVehicleNumber="AAAAAAAAAA15"+CommonUtil.getRandom(5);
-            String carVehicleNumber="AAAAAAAAAA1202337";
+            String carVehicleNumber="AAAAAAAAAA1202665";
 
             //生成交易订单
             String post1=cu.getCreateOrderOnline(shopId,transId,userId1,openId,carVehicleNumber);
@@ -584,7 +593,7 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
             String openId = "deal"+CommonUtil.getRandom(6);
 
             //车架号
-            String carVehicleNumber="AAAAAAAAAA1523513";
+            String carVehicleNumber="AAAAAAAAAA1523516";
 
             //生成交易订单
             String post1=cu.getCreateOrderOnline(shopId,transId,userId1,openId,carVehicleNumber);
@@ -652,14 +661,16 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
         }
     }
 
-//    @Test()
+    @Test()
     public void handle() {
         try{
-            JSONArray list=md.cashier_riskPage(Long.parseLong(product.getShopId()),"","","","","","PENDING",1,10).getJSONArray("list");
-            for(int i=0;i<list.size();i++){
-                Long id=list.getJSONObject(i).getLong("id");
-                IScene handle= RiskEventHandleScene.builder().result(1).remarks("自动正常处理").id(id).build();
-                visitor.invokeApi(handle);
+            for(int j=1;j<2;j++) {
+                JSONArray list = cashier_riskPage(Long.parseLong(product.getShopId()), "PENDING", j, 10).getJSONArray("list");
+                for (int i = 0; i < list.size(); i++) {
+                    Long id = list.getJSONObject(i).getLong("id");
+                    IScene handle = RiskEventHandleScene.builder().result(1).remarks("自动正常处理").id(id).build();
+                    visitor.invokeApi(handle);
+                }
             }
         }catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -668,6 +679,22 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
         }
     }
 
+    public JSONObject cashier_riskPage(long shop_id, String current_state, Integer page, Integer size) throws Exception {
+        String url = "/risk-control/auth/cashier/risk-event/page";
+        String json = "{" ;
+
+        if (current_state != "") {
+            json = json + "\"current_state\" :\"" + current_state + "\",\n";
+        }
+        json = json +
+                "\"page\" :" + page + ",\n" +
+                "\"size\" :" + size + "\n" +
+                "} ";
+
+        String res = httpPostWithCheckCode(url, json, EnumTestProduce.FK_ONLINE.getAddress());
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
 
 
 

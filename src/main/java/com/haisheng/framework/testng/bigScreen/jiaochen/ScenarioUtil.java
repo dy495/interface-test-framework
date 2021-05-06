@@ -475,29 +475,10 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(url, object);
     }
 
-    //保养配置修改
-    public JSONObject pcCarModelPriceEdit(String id, Double price, String status,String type) {
-        String url = "/jiaochen/pc/manage/maintain/car-model/edit";
-        JSONObject object = new JSONObject();
-        object.put("id", id);
-        object.put("price", price);
-        object.put("status", status);
-        return invokeApi(url, object);
-    }
-
-    //保养配置修改
-    public JSONObject pcCarModelPriceEdit(String id, String price, String status, Boolean checkcode) {
-        String url = "/jiaochen/pc/manage/maintain/car-model/edit";
-        JSONObject object = new JSONObject();
-        object.put("id", id);
-        object.put("price", price);
-        object.put("status", status);
-        return invokeApi(url, object, checkcode);
-    }
 
     //保养配置修改
     public JSONObject pcCarModelPriceEdit(String id, String price, String status, Boolean checkcode,String  type) {
-        String url = "/jiaochen/pc/manage/maintain/car-model/edit";
+        String url = "/jiaochen/pc/shop-style-model/manage/model/edit";
         JSONObject object = new JSONObject();
         object.put("id", id);
         object.put("price", price);
@@ -512,16 +493,6 @@ public class ScenarioUtil extends TestCaseCommon {
         JSONObject object = new JSONObject();
         object.put("type", type);
         object.put("date_type", dateType);
-        return invokeApi(url, object);
-    }
-
-    //保养配置修改
-    public JSONObject carModelPriceEdit(Long id, Double price, String status) {
-        String url = "/jiaochen/pc/manage/maintain/car-model/price/edit";
-        JSONObject object = new JSONObject();
-        object.put("id", id);
-        object.put("price", price);
-        object.put("status", status);
         return invokeApi(url, object);
     }
 
@@ -2292,7 +2263,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @time: 2020-11-24
      */
     public JSONObject maintainFilterManage(String shopId, String page, String size, String pram, String result) {
-        String url = "/jiaochen/pc/manage/maintain/car-model/page";
+        String url = "/jiaochen/pc/shop-style-model/manage/model/page";
         JSONObject json = new JSONObject();
         json.put("shop_id", shopId);
         json.put("page", page);

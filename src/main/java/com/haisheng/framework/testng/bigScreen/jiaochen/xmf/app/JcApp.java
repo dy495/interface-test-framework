@@ -192,7 +192,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "今日任务未完成接待（预约）数（分子）==【任务-接待（预约）】列表条数")  //ok
+//    @Test(description = "今日任务未完成接待（预约）数（分子）==【任务-接待（预约）】列表条数")  //ok
     public void Jc_appointmentPageAndtodaydate() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -213,7 +213,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "顾问：今日任务接待总数（分母）==【pc接待管理】接待时间为今天&&接待人为app登录接待顾问 数据和")
+//    @Test(description = "顾问：今日任务接待总数（分母）==【pc接待管理】接待时间为今天&&接待人为app登录接待顾问 数据和")
     public void Jc_receptionPageAndpctodaydate() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -266,7 +266,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "店长：今日任务接待总数（分母）==【pc接待管理】接待时间为今天数据和")  //ok
+//    @Test(description = "店长：今日任务接待总数（分母）==【pc接待管理】接待时间为今天数据和")  //ok
     public void Jc_receptionPageAndpctodaydate2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -317,7 +317,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "集团：今日任务接待总数（分母）==【pc接待管理】接待时间为今天数据和")
+//    @Test(description = "集团：今日任务接待总数（分母）==【pc接待管理】接待时间为今天数据和")
     public void Jc_receptionPageAndpctodaydate3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

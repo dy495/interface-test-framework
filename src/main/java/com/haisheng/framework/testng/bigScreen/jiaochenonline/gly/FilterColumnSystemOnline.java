@@ -14,6 +14,8 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.SelectRecept
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
+import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.ReadContext;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -2573,21 +2575,20 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         JSONObject respond = jc.staffListFilterManage(null, "1", "10", "", "");
         try {
+            System.out.println(commonConfig.shopId);
             if (respond.getJSONArray("list").size() > 0) {
                 if(pram.equals("shop_id")){
                     String result = respond.getJSONArray("list").getJSONObject(0).getJSONArray("shop_list").getJSONObject(0).getString(output);
                     JSONObject respond1 = jc.staffListFilterManage(null, "1", "10", pram, result);
                     int pages = respond1.getInteger("pages");
                     for (int page = 1; page <= pages; page++) {
-                        JSONArray list = jc.staffListFilterManage("", String.valueOf(page), "10", pram, result).getJSONArray("list");
+                        JSONArray list = jc.staffListFilterManage(null, String.valueOf(page), "10", pram, result).getJSONArray("list");
                         for (int i = 0; i < list.size(); i++) {
-                            String string="";
                             JSONArray list1 = list.getJSONObject(i).getJSONArray("shop_list");
-                            for(int j=0;j<list1.size();j++){
-                                String Flag = list1.getJSONObject(j).getString("shop_id");
-                                string=Flag+string;
-                            }
-                            Preconditions.checkArgument(string.contains(result), "员工列表按" + string + "查询，结果错误" + result);
+                            String listString =list1.toString();
+                            ReadContext context = JsonPath.parse(listString);
+                            List<String> shopList = context.read("$.[*].shop_id");
+                            Preconditions.checkArgument(shopList.contains(Integer.valueOf(result)), "员工列表按" + pram + "查询，结果错误" + result);
 
                         }
                     }

@@ -503,4 +503,21 @@ public class JcFunction {
         }
         return voucher_code;
     }
+
+    //app 跟进列表数量
+    public Integer followPageNumber(){
+        JSONObject lastValue=null;
+        JSONArray list;
+        int count=0;
+        do{
+            JSONObject data=jc.AppPageV3Scene(10,lastValue,null);
+            lastValue=data.getJSONObject("last_value");
+            list=data.getJSONArray("list");
+            count=count+list.size();
+            System.out.println("listsize:"+list.size());
+        }while (list.size()==10);
+        System.out.println("count:"+count);
+        return count;
+    }
+
 }

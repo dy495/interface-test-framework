@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.app;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.google.inject.internal.cglib.reflect.$FastClass;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.JsonPathUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
@@ -195,7 +196,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "顾问：今日任务接待总数（分母）==【pc接待管理】接待时间为今天&&接待人为app登录接待顾问 数据和")
+    @Test(description = "顾问：今日任务接待总数（分母）==【pc接待管理】接待时间为今天&&接待人为app登录接待顾问 数据和",enabled = false)  //数据待下期规划
     public void Jc_receptionPageAndpctodaydate() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -248,7 +249,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "店长：今日任务接待总数（分母）==【pc接待管理】接待时间为今天数据和")  //ok
+    @Test(description = "店长：今日任务接待总数（分母）==【pc接待管理】接待时间为今天数据和",enabled = false)  //数据待下期规划
     public void Jc_receptionPageAndpctodaydate2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -299,7 +300,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "集团：今日任务接待总数（分母）==【pc接待管理】接待时间为今天数据和")
+    @Test(description = "集团：今日任务接待总数（分母）==【pc接待管理】接待时间为今天数据和",enabled = false)  //数据待下期规划
     public void Jc_receptionPageAndpctodaydate3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
