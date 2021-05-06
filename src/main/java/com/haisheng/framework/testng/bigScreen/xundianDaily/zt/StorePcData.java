@@ -39,7 +39,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
     StoreFuncPackage mds = StoreFuncPackage.getInstance();
     MendianInfo info = new MendianInfo();
     String name = "zdh";
-    String phone = "13666666666";
+    String phone = "13614534511";
     String email = "334411@qq.com";
     @BeforeClass
     @Override
@@ -339,72 +339,105 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
 //    /**
 //     * ====================新增账号======================
 //     */
-//    @Test
-//    public void accountAdd_Phone() throws Exception{
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            JSONArray roleIdList = new JSONArray();
-//            roleIdList.add(2);
-//            JSONArray shopIdList = new JSONArray();
-//            shopIdList.add(4116);
-//            int status = 1;
-//            String type = "PHONE";
-//            //用phone新增一个账号
-//            JSONObject res = md.organizationAccountAddTwo("",name,"123456","uid_ef6d2de5", type,"", phone,status,roleIdList,shopIdList);
-//            Integer code = res.getInteger("code");
-//            Preconditions.checkArgument(code == 1000, "用手机号:" + phone + "新增一个账号失败了");
-//            //从列表获取刚刚新增的那个账户的名称进行搜获获取她的account
-//            JSONArray accountList = md.organizationAccountPage(name, "", "", phone, "", "", page, size).getJSONArray("list");
-//            String account = accountList.getJSONObject(0).getString("account");
-//            //新建后编辑账号
-//            JSONObject res1 = md.organizationAccountEditTwo(account,"qqqqq","111","uid_ef6d2de5",type,"",phone,status,roleIdList,shopIdList);
-//            Integer code2 = res1.getInteger("code");
-//            Preconditions.checkArgument(code2 == 1000, "用姓名:" + "qqqqq" + "编辑一个账号失败了");
-//            //新建成功以后删除新建的账号
-//            Integer code1 = md.organizationAccountDelete(account).getInteger("code");
-//            Preconditions.checkArgument(code1 == 1000, "删除手机号的账号:" + phone + "失败了");
-//        } catch (AssertionError e) {
-//            appendFailReason(e.toString());
-//        } catch (Exception e) {
-//            appendFailReason(e.toString());
-//        } finally {
-//            saveData("用手机号新增账号,编辑账号,删除账号");
-//        }
-//    }
+    @Test
+    public void accountAdd_Phone() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray roleIdList = new JSONArray();
+            roleIdList.add(2);
+            JSONArray shopIdList = new JSONArray();
+            shopIdList.add(4116);
+            int status = 1;
+            String type = "PHONE";
+            //用phone新增一个账号
+            JSONObject res = md.organizationAccountAddTwo("",name,"123456","uid_ef6d2de5", type,null, phone,status,roleIdList,shopIdList);
+            Integer code = res.getInteger("code");
+            Preconditions.checkArgument(code == 1000, "用手机号:" + phone + "新增一个账号失败了");
+            //从列表获取刚刚新增的那个账户的名称进行搜获获取她的account
+            JSONArray accountList = md.organizationAccountPage(name, "", "", phone, "", "", page, size).getJSONArray("list");
+            String account = accountList.getJSONObject(0).getString("account");
+            //新建后编辑账号
+            JSONObject res1 = md.organizationAccountEditTwo(account,"qqqqq","111","uid_ef6d2de5",type,null,phone,status,roleIdList,shopIdList);
+            Integer code2 = res1.getInteger("code");
+            Preconditions.checkArgument(code2 == 1000, "用姓名:" + "qqqqq" + "编辑一个账号失败了");
+            //新建成功以后删除新建的账号
+            Integer code1 = md.organizationAccountDelete(account).getInteger("code");
+            Preconditions.checkArgument(code1 == 1000, "删除手机号的账号:" + phone + "失败了");
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("用手机号新增账号,编辑账号,删除账号");
+        }
+    }
 //
-//    @Test
-//    public void accountAdd_Email() throws Exception{
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            JSONArray roleIdList = new JSONArray();
-//            roleIdList.add(2);
-//            JSONArray shopIdList = new JSONArray();
-//            shopIdList.add(4116);
-//            int status = 1;
-//            String type = "EMAIL";
-//            //用email新增一个账号
-//            JSONObject res = md.organizationAccountAddTwo("",name,"123456","uid_ef6d2de5", type,email, "",status,roleIdList,shopIdList);
-//            Integer code = res.getInteger("code");
-//            Preconditions.checkArgument(code == 1000, "用邮箱号:" + email + "新增一个账号失败了");
-//            //从列表获取刚刚新增的那个账户的名称进行搜获获取她的account
-//            JSONArray accountList = md.organizationAccountPage(name, "", email,"", "", "", page, size).getJSONArray("list");
-//            String account = accountList.getJSONObject(0).getString("account");
-//            //新建后编辑账号
-//            JSONObject res1 = md.organizationAccountEditTwo(account,"qqqqq","111","uid_ef6d2de5",type,"",phone,status,roleIdList,shopIdList);
-//            Integer code2 = res1.getInteger("code");
-//            Preconditions.checkArgument(code2 == 1000, "用姓名:" + "qqqqq" + "编辑一个账号失败了");
-//            //新建成功以后删除新建的账号
-//            Integer code1 = md.organizationAccountDelete(account).getInteger("code");
-//            Preconditions.checkArgument(code1 == 1000, "删邮箱的账号:" + email + "失败了");
-//        } catch (AssertionError e) {
-//            appendFailReason(e.toString());
-//        } catch (Exception e) {
-//            appendFailReason(e.toString());
-//        } finally {
-//            saveData("用邮箱号新增账号,编辑账号,删除账号");
-//        }
-//    }
+    @Test
+    public void accountAdd_Email(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray roleIdList = new JSONArray();
+            roleIdList.add(2);
+            JSONArray shopIdList = new JSONArray();
+            shopIdList.add(4116);
+            int status = 1;
+            String type = "EMAIL";
+            //用email新增一个账号
+            JSONObject res = md.organizationAccountAddTwo("",name,"123456","uid_ef6d2de5", type,email, null,status,roleIdList,shopIdList);
+            Integer code = res.getInteger("code");
+            Preconditions.checkArgument(code == 1000, "用邮箱号:" + email + "新增一个账号失败了");
+            //从列表获取刚刚新增的那个账户的名称进行搜获获取她的account
+            JSONArray accountList = md.organizationAccountPage(name, "", email,"", "", "", page, size).getJSONArray("list");
+            String account = accountList.getJSONObject(0).getString("account");
+            //新建后编辑账号
+            JSONObject res1 = md.organizationAccountEditTwo(account,"qqqqq","111","uid_ef6d2de5",type,"33@qq.com",null,status,roleIdList,shopIdList);
+            Integer code2 = res1.getInteger("code");
+            Preconditions.checkArgument(code2 == 1000, "用姓名:" + "qqqqq" + "编辑一个账号失败了");
+            //新建成功以后删除新建的账号
+            Integer code1 = md.organizationAccountDelete(account).getInteger("code");
+            Preconditions.checkArgument(code1 == 1000, "删邮箱的账号:" + email + "失败了");
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("用邮箱号新增账号,编辑账号,删除账号");
+        }
+    }
 
+
+    /**
+     * ====================新增角色======================
+     */
+    @Test
+    public void role_add() {
+        logger.logCaseStart(caseResult.getCaseName());
+
+        try {
+            String description = "青青测试给店长用的角色";
+            JSONArray moduleId = new JSONArray();
+            moduleId.add(7);
+            moduleId.add(9);
+            //新增一个角色
+            JSONObject res = md.organizationRoleAddTwo(name,2, description, moduleId);
+            Integer code = res.getInteger("code");
+            int role_id = md.organizationRolePage(name, page, size).getJSONArray("list").getJSONObject(0).getInteger("role_id");
+            checkArgument(code == 1000, "新增角色失败了");
+            //编辑角色
+            String name1 = "AUTOtest在编辑";
+            Integer code1 = md.organizationRoleEditTwo(role_id, 2,name1, description, moduleId).getInteger("code");
+            checkArgument(code1 == 1000, "编辑角色的信息失败了");
+            //列表中编辑过的角色是否已更新
+            JSONArray list1 = md.organizationRolePage(name1, page, size).getJSONArray("list");
+            String role_name = list1.getJSONObject(0).getString("role_name");
+            checkArgument(name1.equals(role_name), "编辑过的角色没有更新在列表");
+            //新建成功以后删除新建的账号
+            if (name1.equals(role_name)) {
+                Integer code2 = md.organizationRoleDelete(role_id).getInteger("code");
+                checkArgument(code2 == 1000, "删除角色:" + role_id + "失败了");
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("新增删改查角色");
+        }
+    }
 
 
     //会员身份添加、删除

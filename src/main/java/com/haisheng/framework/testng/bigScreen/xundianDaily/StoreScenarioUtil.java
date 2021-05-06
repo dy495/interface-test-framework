@@ -1393,21 +1393,21 @@ public class StoreScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res);
     }
 
-    public JSONObject organizationAccountAddTwo(String account,String name,String number,String leaderUid,String type,String email,String phone,int status,JSONArray roleIdList,JSONArray shopIdList) throws Exception {
+    public JSONObject organizationAccountAddTwo(String account,String name,String number,String leader_uid,String type,String email,String phone,int status,JSONArray role_id_list,JSONArray shop_list) throws Exception {
         String url = "/patrol/organization/account/add";
         JSONObject json = new JSONObject();
         json.put("account",account);
         json.put("name",name);
         json.put("number",number);
-        json.put("leaderUid",leaderUid);
+        json.put("leader_uid",leader_uid);
         json.put("type",type);
         json.put("email",email);
         json.put("phone",phone);
         json.put("status",status);
-        json.put("roleIdList",roleIdList);
-        json.put("shopIdList",shopIdList);
+        json.put("role_id_list",role_id_list);
+        json.put("shop_list",shop_list);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
     }
 
 
@@ -1460,21 +1460,21 @@ public class StoreScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res);
     }
 
-    public JSONObject organizationAccountEditTwo(String account,String name,String number,String leaderUid,String type,String email,String phone,int status,JSONArray roleIdList,JSONArray shopIdList) throws Exception {
+    public JSONObject organizationAccountEditTwo(String account,String name,String number,String leader_uid,String type,String email,String phone,int status,JSONArray role_id_list,JSONArray shop_list) throws Exception {
         String url = "/patrol/organization/account/edit";
         JSONObject json = new JSONObject();
         json.put("account",account);
         json.put("name",name);
         json.put("number",number);
-        json.put("leaderUid",leaderUid);
+        json.put("leader_uid",leader_uid);
         json.put("type",type);
         json.put("email",email);
         json.put("phone",phone);
         json.put("status",status);
-        json.put("roleIdList",roleIdList);
-        json.put("shopIdList",shopIdList);
+        json.put("role_id_list",role_id_list);
+        json.put("shop_list",shop_list);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
     }
 
 
@@ -1666,15 +1666,15 @@ public class StoreScenarioUtil extends TestCaseCommon {
     }
 
 
-    public JSONObject organizationRoleAddTwo(String roleName,int superiorRoleId,String description,JSONArray moduleIds) throws Exception {
+    public JSONObject organizationRoleAddTwo(String name,int superior_role_id,String description,JSONArray module_ids) throws Exception {
         String url = "/patrol/organization/role/add";
         JSONObject json = new JSONObject();
-        json.put("roleName",roleName);
-        json.put("superiorRoleId",superiorRoleId);
+        json.put("name",name);
+        json.put("superior_role_id",superior_role_id);
         json.put("description",description);
-        json.put("moduleIds",moduleIds);
+        json.put("module_ids",module_ids);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
     }
 
 
@@ -1719,16 +1719,16 @@ public class StoreScenarioUtil extends TestCaseCommon {
     }
 
 
-    public JSONObject organizationRoleEditTwo(int roleId,int superiorRoleId,String roleName, String description, JSONArray moduleIds) throws Exception {
+    public JSONObject organizationRoleEditTwo(int role_id,int superior_role_id,String name, String description, JSONArray module_ids) throws Exception {
         String url = "/patrol/organization/role/edit";
         JSONObject json = new JSONObject();
-        json.put("roleId",roleId);
-        json.put("superiorRoleId",superiorRoleId);
-        json.put("roleName",roleName);
+        json.put("role_id",role_id);
+        json.put("superior_role_id",superior_role_id);
+        json.put("name",name);
         json.put("description",description);
-        json.put("moduleIds",moduleIds);
+        json.put("module_ids",module_ids);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
     }
 
 
@@ -1748,7 +1748,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
         String res = httpPostWithCheckCode(url, json, IpPort);
 
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
     }
 
     /**
