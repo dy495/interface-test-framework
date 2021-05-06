@@ -7,7 +7,7 @@ import java.util.Optional;
 
 /**
  * @author wangmin
- * @date  2020/12/5  15:54
+ * @date 2020/12/5  15:54
  */
 public enum ReceptionStatusEnum {
     /**
@@ -15,7 +15,7 @@ public enum ReceptionStatusEnum {
      */
     IN_RECEPTION(1000, "接待中", false),
     CANCEL(2000, "已取消", true),
-    FINISH(3000, "完成", true);
+    FINISH(4000, "完成", true);
 
 
     private final Integer id;

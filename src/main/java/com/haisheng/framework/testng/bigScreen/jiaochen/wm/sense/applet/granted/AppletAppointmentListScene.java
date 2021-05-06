@@ -1,6 +1,5 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
@@ -18,7 +17,8 @@ public class AppletAppointmentListScene extends BaseScene {
      * 是否必填 true
      * 版本 v1.0
      */
-    private final Integer size;
+    @Builder.Default
+    private final Integer size = 10;
 
     /**
      * 描述 上次请求最后值

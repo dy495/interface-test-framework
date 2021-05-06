@@ -194,7 +194,7 @@ public class Constant {
         return new String[][]{
                 {"package_name", "package_name"},
                 {"send_type", "pay_type_name"},
-                {"sender","package_belongs"},
+                {"sender","recommender"},
                 {"customer_phone", "customer_phone"},
 
         };

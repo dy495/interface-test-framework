@@ -992,7 +992,10 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long id = null;
         try {
-            Long voucherId = util.getOccupyVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            String voucherName = util.getVoucherName(voucherId);
+            AddVoucherScene.builder().addNumber(1).id(voucherId).build().invoke(visitor);
+            util.applyVoucher(voucherName, "1");
             VoucherPage voucherPage = util.getVoucherPage(voucherId);
             Long exchangeNum = voucherPage.getAllowUseInventory() - 1;
             //创建积分兑换，库存=可用库存-1

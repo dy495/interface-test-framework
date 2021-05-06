@@ -23,6 +23,7 @@ public class AppointmentPageScene extends BaseScene {
     private Integer page = 1;
     @Builder.Default
     private Integer size = 10;
+    private final String type;
 
     @Override
     public JSONObject getRequestBody() {
@@ -39,6 +40,7 @@ public class AppointmentPageScene extends BaseScene {
         object.put("is_overtime", isOvertime);
         object.put("page", page);
         object.put("size", size);
+        object.put("type", type);
         return object;
     }
 

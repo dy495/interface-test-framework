@@ -214,37 +214,37 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
-    @Test(description = "积分兑换--库存详情--当前库存=兑换品库存明细加和")
-    public void integralExchange_data_1() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //上线日期，之前得数据不做校验
-            long time = Long.parseLong(DateTimeUtil.dateToStamp("2021-02-25", "yyyy-MM-dd"));
-            IScene exchangePageScene = ExchangePageScene.builder().build();
-            List<JSONObject> exchangePageList = util.collectBean(exchangePageScene, JSONObject.class);
-            exchangePageList.stream().filter(e -> Long.parseLong(DateTimeUtil.dateToStamp(e.getString("begin_use_time"))) >= time).forEach(e -> {
-                int id = e.getInteger("id");
-                AtomicInteger s = new AtomicInteger();
-                IScene exchangeStockScene = ExchangeGoodsStockScene.builder().id((long) id).build();
-                JSONObject response = visitor.invokeApi(exchangeStockScene);
-                String goodsName = response.getString("goods_name");
-                int goodsStock = response.getInteger("goods_stock");
-                IScene exchangeStockPageScene = ExchangeStockPageScene.builder().id((long) id).build();
-                List<JSONObject> exchangeStockPageList = util.collectBean(exchangeStockPageScene, JSONObject.class);
-                exchangeStockPageList.forEach(a -> {
-                    String exchangeType = a.getString("exchange_type");
-                    int stockDetail = a.getInteger("stock_detail");
-                    s.set(exchangeType.equals("ADD") ? s.addAndGet(stockDetail) : s.addAndGet(-stockDetail));
-                });
-                CommonUtil.checkResultPlus(goodsName + " 兑换品库存明细加和", s.get(), "当前库存", goodsStock);
-                CommonUtil.logger(goodsName);
-            });
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("积分兑换--库存详情--当前库存=兑换品库存明细加和");
-        }
-    }
+//    @Test(description = "积分兑换--库存详情--当前库存=兑换品库存明细加和")
+//    public void integralExchange_data_1() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            //上线日期，之前得数据不做校验
+//            long time = Long.parseLong(DateTimeUtil.dateToStamp("2021-02-25", "yyyy-MM-dd"));
+//            IScene exchangePageScene = ExchangePageScene.builder().build();
+//            List<JSONObject> exchangePageList = util.collectBean(exchangePageScene, JSONObject.class);
+//            exchangePageList.stream().filter(e -> Long.parseLong(DateTimeUtil.dateToStamp(e.getString("begin_use_time"))) >= time).forEach(e -> {
+//                int id = e.getInteger("id");
+//                AtomicInteger s = new AtomicInteger();
+//                IScene exchangeStockScene = ExchangeGoodsStockScene.builder().id((long) id).build();
+//                JSONObject response = visitor.invokeApi(exchangeStockScene);
+//                String goodsName = response.getString("goods_name");
+//                int goodsStock = response.getInteger("goods_stock");
+//                IScene exchangeStockPageScene = ExchangeStockPageScene.builder().id((long) id).build();
+//                List<JSONObject> exchangeStockPageList = util.collectBean(exchangeStockPageScene, JSONObject.class);
+//                exchangeStockPageList.forEach(a -> {
+//                    String exchangeType = a.getString("exchange_type");
+//                    int stockDetail = a.getInteger("stock_detail");
+//                    s.set(exchangeType.equals("ADD") ? s.addAndGet(stockDetail) : s.addAndGet(-stockDetail));
+//                });
+//                CommonUtil.checkResultPlus(goodsName + " 兑换品库存明细加和", s.get(), "当前库存", goodsStock);
+//                CommonUtil.logger(goodsName);
+//            });
+//        } catch (Exception | AssertionError e) {
+//            collectMessage(e);
+//        } finally {
+//            saveData("积分兑换--库存详情--当前库存=兑换品库存明细加和");
+//        }
+//    }
 
     //ok
     @Test(description = "积分明细--创建实物积分兑换，积分兑换列表+1")

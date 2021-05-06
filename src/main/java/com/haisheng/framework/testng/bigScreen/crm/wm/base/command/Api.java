@@ -9,27 +9,33 @@ import java.util.Map;
 @Getter
 public class Api {
     private final String authorization;
-    private final String referer;
     private final String contentType;
     private final JSONObject requestBody;
+    private final EnumMethod method;
     private final Map<String, String> headers = new LinkedHashMap<>(32);
     private final Map<String, Object> urlParams = new LinkedHashMap<>(32);
 
     public Api(Builder builder) {
+        this.method = builder.method;
         this.authorization = builder.authorization;
-        this.referer = builder.referer;
         this.requestBody = builder.requestBody;
         this.contentType = builder.contentType;
         this.headers.putAll(builder.headers);
+        this.urlParams.putAll(builder.urlParams);
     }
 
     public static class Builder {
+        private EnumMethod method;
         private String authorization;
-        private String referer;
         private String contentType;
         private JSONObject requestBody;
         private final Map<String, String> headers = new LinkedHashMap<>(32);
         private final Map<String, Object> urlParams = new LinkedHashMap<>(32);
+
+        public Builder method(EnumMethod method) {
+            this.method = method;
+            return this;
+        }
 
         public Builder requestBody(JSONObject requestBody) {
             this.requestBody = requestBody;
@@ -43,11 +49,6 @@ public class Api {
 
         public Builder contentType(String contentType) {
             this.contentType = contentType;
-            return this;
-        }
-
-        public Builder referer(String referer) {
-            this.referer = referer;
             return this;
         }
 

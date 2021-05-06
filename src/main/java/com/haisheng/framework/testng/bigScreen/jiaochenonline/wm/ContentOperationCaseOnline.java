@@ -164,7 +164,7 @@ public class ContentOperationCaseOnline extends TestCaseCommon implements TestCa
             array.add(jsonObject3);
             array.add(jsonObject4);
             array.add(jsonObject5);
-            EditScene.builder().list(array).build().invoke(visitor);
+            EditScene.builder().bannerType("HOME_PAGE").list(array).build().invoke(visitor);
             user.loginApplet(APPLET_USER_ONE);
             JSONArray list = AppletBannerScene.builder().build().invoke(visitor).getJSONArray("list");
             List<Long> appletArticleIds = list.stream().map(e -> (JSONObject) e).map(e -> e.getLong("article_id")).collect(Collectors.toList());

@@ -1,6 +1,5 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.task;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
@@ -34,14 +33,13 @@ public class AppReceptionReceptorChangeScene extends BaseScene {
      */
     private final String receptorId;
 
-
     @Override
     public JSONObject getRequestBody() {
-        JSONObject object = new JSONObject();
-        object.put("id", id);
-        object.put("shop_id", shopId);
-        object.put("receptor_id", receptorId);
-        return object;
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", id);
+        jsonObject.put("shop_id", shopId);
+        jsonObject.put("receptor_id", receptorId);
+        return jsonObject;
     }
 
     @Override

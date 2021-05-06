@@ -1,6 +1,5 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
@@ -12,7 +11,7 @@ import lombok.Builder;
  * @date 2021-03-31 13:03:23
  */
 @Builder
-public class AppPageScene extends BaseScene {
+public class AppPreSalesReceptionPageScene extends BaseScene {
     /**
      * 描述 页大小 范围为[1,100]
      * 是否必填 true
@@ -25,7 +24,7 @@ public class AppPageScene extends BaseScene {
      * 是否必填 false
      * 版本 v1.0
      */
-    private final JSONObject lastValue;
+    private final Integer lastValue;
 
 
     @Override

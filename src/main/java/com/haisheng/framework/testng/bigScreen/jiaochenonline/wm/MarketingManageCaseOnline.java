@@ -6,10 +6,14 @@ import com.aliyun.openservices.shade.org.apache.commons.lang3.StringUtils;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumChecklistUser;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.PackagePage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherSendRecord;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.customermanage.AfterSaleCustomerPageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.customermanage.PreSaleCustomerPageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.customermanage.WechatCustomerPageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.messagemanage.MessageFormPageBean;
@@ -25,12 +29,14 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.customer.C
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.customer.CustomerTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.export.ExportPageTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.message.ConsumeTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.message.MessageCustomerTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.Package.PackageGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.IVoucher;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.brand.AllScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanage.AfterSaleCustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanage.PreSaleCustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanage.WechatCustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.loginuser.ShopListScene;
@@ -54,10 +60,7 @@ import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import org.jetbrains.annotations.NotNull;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -105,6 +108,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     @AfterClass
     @Override
     public void clean() {
+        util.cleanVoucher();
         afterClassClean();
     }
 
@@ -1379,7 +1383,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             int pushMsgPageTotal = pushMsgPageScene.invoke(visitor).getInteger("total");
             Long surplusInventory = util.getVoucherPage(voucherId).getSurplusInventory();
             //消息发送一张卡券
-            util.pushCustomMessage(0, true, voucherId);
+            util.pushCustomMessage(0, true, true, voucherId);
             String sendStatusName = messageFormPageScene.invoke(visitor).getJSONArray("list").getJSONObject(0).getString("send_status_name");
             CommonUtil.checkResult("发送状态", CustomMessageStatusEnum.SUCCESS.getStatusName(), sendStatusName);
             CommonUtil.checkResult("消息管理列表", messageTotal + 1, visitor.invokeApi(messageFormPageScene).getInteger("total"));
@@ -1402,7 +1406,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             IScene messageFormPageScene = MessageFormPageScene.builder().build();
             int messageTotal = visitor.invokeApi(messageFormPageScene).getInteger("total");
             String pushTime = DateTimeUtil.getFormat(DateTimeUtil.addSecond(new Date(), 80), "yyyy-MM-dd HH:mm");
-            util.pushCustomMessage(0, false, voucherId);
+            util.pushCustomMessage(0, false, true, voucherId);
             String sendStatusName = visitor.invokeApi(messageFormPageScene).getJSONArray("list").getJSONObject(0).getString("send_status_name");
             CommonUtil.checkResult("消息管理列表", messageTotal + 1, visitor.invokeApi(messageFormPageScene).getInteger("total"));
             CommonUtil.checkResult("发送状态", CustomMessageStatusEnum.SCHEDULING.getStatusName(), sendStatusName);
@@ -1450,7 +1454,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
         try {
             //发消息
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-            util.pushCustomMessage(0, true, voucherId);
+            util.pushCustomMessage(0, true, true, voucherId);
             //消息列表消息内容
             user.loginApplet(APPLET_USER_ONE);
             IScene appletMessageListScene = AppletMessageListScene.builder().size(20).build();
@@ -1611,11 +1615,9 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             CommonUtil.checkResult("pc修改过权益说明后", description, newDescription);
             user.loginApplet(APPLET_USER_ONE);
             JSONObject response = AppletMemberCenterHomePageScene.builder().build().invoke(visitor);
-            int vipType = response.getInteger("vip_type");
             JSONObject equity = response.getJSONArray("equity_list").getJSONObject(0);
-            String equityName = equity.getString("equity_name");
-            CommonUtil.checkResultPlus("pc权益服务类型", VipTypeEnum.VIP.getId(), "applet权益服务类型", vipType);
-            CommonUtil.checkResultPlus("pc权益名称", AppletCodeBusinessTypeEnum.WASH_CAR.getTypeName(), "applet权益名称", equityName);
+            CommonUtil.checkResultPlus("pc权益服务类型", VipTypeEnum.VIP.getId(), "applet权益服务类型", response.getInteger("vip_type"));
+            CommonUtil.checkResultPlus("pc权益名称", AppletCodeBusinessTypeEnum.BIRTHDAY_SCORE.getTypeName(), "applet权益名称", equity.getString("equity_name"));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -1631,17 +1633,12 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             IScene equityPageScene = EquityPageScene.builder().build();
             JSONObject response = getResponseByEquityPageScene(equityPageScene);
             Integer equityId = response.getInteger("equity_id");
-            String status = response.getString("status");
-            if (status.equals(UseStatusEnum.DISABLE.name())) {
-                CommonUtil.warning("已经是禁用状态");
-            } else {
-                //关闭权益
-                EquityStartOrCloseScene.builder().equityId(equityId).equityStatus(UseStatusEnum.DISABLE.name()).build().invoke(visitor);
-            }
+            //关闭
+            EquityStartOrCloseScene.builder().equityId(equityId).equityStatus(UseStatusEnum.DISABLE.name()).build().invoke(visitor, false);
             user.loginApplet(APPLET_USER_ONE);
-            IScene memberCenterEquityListScene = AppletMemberCenterHomePageScene.builder().build();
-            JSONObject jsonObject = visitor.invokeApi(memberCenterEquityListScene).getJSONArray("equity_list").getJSONObject(0);
-            CommonUtil.checkResult(jsonObject.getString("equity_name") + "开启状态", UseStatusEnum.DISABLE.name(), jsonObject.getString("equity_status"));
+            IScene scene = AppletMemberCenterHomePageScene.builder().build();
+            String equityStatus = scene.invoke(visitor).getJSONArray("equity_list").getJSONObject(0).getString("equity_status");
+            CommonUtil.checkResult("生日积分的equity_status", UseStatusEnum.DISABLE.name(), equityStatus);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -1657,17 +1654,12 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             IScene equityPageScene = EquityPageScene.builder().build();
             JSONObject response = getResponseByEquityPageScene(equityPageScene);
             Integer equityId = response.getInteger("equity_id");
-            String status = response.getString("status");
-            if (status.equals(UseStatusEnum.ENABLE.name())) {
-                CommonUtil.warning("已经是开启状态");
-            } else {
-                //开启权益
-                EquityStartOrCloseScene.builder().equityId(equityId).equityStatus(UseStatusEnum.ENABLE.name()).build().invoke(visitor);
-            }
+            //开启
+            EquityStartOrCloseScene.builder().equityId(equityId).equityStatus(UseStatusEnum.ENABLE.name()).build().invoke(visitor, false);
             user.loginApplet(APPLET_USER_ONE);
-            IScene memberCenterEquityListScene = AppletMemberCenterHomePageScene.builder().build();
-            JSONObject jsonObject = visitor.invokeApi(memberCenterEquityListScene).getJSONArray("equity_list").getJSONObject(0);
-            CommonUtil.checkResult(jsonObject.getString("equity_name") + "开启状态", UseStatusEnum.ENABLE.name(), jsonObject.getString("equity_status"));
+            IScene scene = AppletMemberCenterHomePageScene.builder().build();
+            String equityStatus = scene.invoke(visitor).getJSONArray("equity_list").getJSONObject(0).getString("equity_status");
+            CommonUtil.checkResult("生日积分的equity_status", UseStatusEnum.ENABLE.name(), equityStatus);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -1721,7 +1713,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
 
     private JSONObject getResponseByEquityPageScene(@NotNull IScene equityPageScene) {
         JSONArray list = equityPageScene.invoke(visitor).getJSONArray("list");
-        JSONObject equityPageResponse = list.stream().map(e -> (JSONObject) e).filter(e -> e.getString("service_type_name").equals("vip会员") && e.getString("equity_name").equals("免费洗车")).findFirst().orElse(null);
+        JSONObject equityPageResponse = list.stream().map(e -> (JSONObject) e).filter(e -> e.getString("service_type_name").equals("vip会员") && e.getString("equity_name").equals("生日积分")).findFirst().orElse(null);
         Preconditions.checkArgument(equityPageResponse != null, "未找到vip会员免费洗车权益");
         return equityPageResponse;
     }
@@ -2024,7 +2016,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             JSONArray list = shareManagerPageScene.invoke(visitor).getJSONArray("list");
             List<Integer> ids = list.stream().map(e -> (JSONObject) e).map(e -> e.getInteger("id")).collect(Collectors.toList());
             ids.forEach(id -> {
-                String[] days = {null, "", "3651", "0"};
+                String[] days = {"3651", "0"};
                 Arrays.stream(days).forEach(day -> {
                     IScene shareManagerEditScene = ShareManagerEditScene.builder().id(id).dayNumber("9").day(day)
                             .awardScore(1000).awardCustomerRule("EVERY_TIME").awardCardVolumeId(voucherId)
@@ -2042,22 +2034,6 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
         }
     }
 
-    @AfterClass
-    @Test(description = "清理卡券")
-    public void cleanVoucher() {
-        Arrays.stream(VoucherTypeEnum.values()).forEach(anEnum -> {
-            IScene scene = VoucherFormVoucherPageScene.builder().voucherName(anEnum.getDesc()).voucherStatus(VoucherStatusEnum.WAITING.name()).build();
-            List<VoucherFormVoucherPageBean> voucherFormVoucherPageBeanList = util.collectBeanList(scene, VoucherFormVoucherPageBean.class);
-            List<Long> voucherIdList = voucherFormVoucherPageBeanList.stream().map(VoucherFormVoucherPageBean::getVoucherId).collect(Collectors.toList());
-            if (voucherIdList.size() != 0) {
-                voucherIdList.forEach(voucherId -> {
-                    RecallVoucherScene.builder().id(voucherId).build().invoke(visitor);
-                    DeleteVoucherScene.builder().id(voucherId).build().invoke(visitor);
-                });
-            }
-        });
-    }
-
     //------------------------------------------------------消息推送人员数据一致-------------------------------------------
 
     //ok
@@ -2069,7 +2045,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             IScene scene = WechatCustomerPageScene.builder().build();
             List<WechatCustomerPageBean> wechatCustomerPageBeanList = util.collectBeanList(scene, WechatCustomerPageBean.class);
             int count = (int) wechatCustomerPageBeanList.stream().filter(e -> !e.getCreateDate().contains(DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd"))).count();
-            CommonUtil.checkResultPlus("推送消息小程序客户数量", sendMessageTotal, "服务管理-小程序客户数量：", count);
+            CommonUtil.checkResultPlus("推送消息小程序客户数量", sendMessageTotal, "服务管理-小程序客户数量", count);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -2077,10 +2053,11 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
         }
     }
 
-    @Test(description = "消息管理--推送消息销售成交客户数量=销售客户列表门店&品牌不为空的成交客户数量")
-    public void messageManagerPeople_data_2() {
+    //ok
+    @Test(description = "消息管理--推送消息销售成交客户数量=销售客户列表门店&品牌不为空的成交客户数量", dataProvider = "shopIds")
+    public void messageManagerPeople_data_2(String shopIds) {
         logger.logCaseStart(caseResult.getCaseName());
-        commonConfig.shopId = String.valueOf(util.getShopId());
+        commonConfig.shopId = shopIds;
         try {
             JSONArray shopList = ShopListScene.builder().build().invoke(visitor).getJSONArray("list");
             shopList.stream().map(e -> (JSONObject) e).forEach(shop -> {
@@ -2100,20 +2077,15 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
                             .preCustomerType(preCustomerType).shopIds(shopIdList).brandIds(brandIdList).build().invoke(visitor).getLong("total");
                     IScene preSaleCustomerPageScene = PreSaleCustomerPageScene.builder().build();
                     List<PreSaleCustomerPageBean> pageBeanList1 = util.collectBeanList(preSaleCustomerPageScene, PreSaleCustomerPageBean.class);
-                    long count = pageBeanList1
-                            .stream().filter(e -> e.getBrandName() != null
-                                    && e.getShopName() != null
-                                    && e.getCustomerTypeName() != null
-                                    && e.getCreateDate() != null
-                                    && e.getBrandName().equals(brandName)
-                                    && e.getCustomerTypeName().equals(CustomerTypeEnum.SUCCESS_CUSTOMER.getName())
-                                    && !e.getCreateDate().contains(DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd")))
-                            .count();
+                    long count = pageBeanList1.stream().filter(e -> e.getBrandName() != null && e.getShopName() != null
+                            && e.getCustomerTypeName() != null && e.getCreateDate() != null && e.getBrandName().equals(brandName)
+                            && e.getCustomerTypeName().equals(CustomerTypeEnum.SUCCESS_CUSTOMER.getName())
+                            && !e.getCreateDate().contains(DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd"))).count();
                     CommonUtil.valueView("门店：" + shopName, "品牌：" + brandName, "客户类型：" + CustomerTypeEnum.SUCCESS_CUSTOMER.getName());
                     CommonUtil.valueView("消息推送人数：" + total);
                     CommonUtil.valueView("展厅客户人数：" + count);
+                    CommonUtil.checkResultPlus("门店：" + shopName + " 品牌：" + brandName + " 客户类型：" + CustomerTypeEnum.SUCCESS_CUSTOMER.getName() + "推送消息销售成交客户数量", total, "销售客户列表门店&品牌不为空的成交客户数量", count);
                     CommonUtil.logger("门店：" + shopName + " 品牌：" + brandName + " 客户类型：" + CustomerTypeEnum.SUCCESS_CUSTOMER.getName());
-//                    CommonUtil.checkResultPlus("推送消息销售成交客户数量：", total, "销售客户列表门店&品牌不为空的成交客户数量：", count);
                 });
             });
         } catch (Exception | AssertionError e) {
@@ -2125,10 +2097,10 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     }
 
     //ok
-    @Test(description = "消息管理--推送消息销售潜在客户数量=销售客户列表门店&品牌不为空的潜在客户数量")
-    public void messageManagerPeople_data_3() {
+    @Test(description = "消息管理--推送消息销售潜在客户数量=销售客户列表门店&品牌不为空的潜在客户数量", dataProvider = "shopIds")
+    public void messageManagerPeople_data_3(String shopIds) {
         logger.logCaseStart(caseResult.getCaseName());
-        commonConfig.shopId = String.valueOf(util.getShopId());
+        commonConfig.shopId = shopIds;
         try {
             JSONArray shopList = ShopListScene.builder().build().invoke(visitor).getJSONArray("list");
             shopList.stream().map(e -> (JSONObject) e).forEach(shop -> {
@@ -2144,21 +2116,18 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
                     brandIdList.add(brandId);
                     List<String> preCustomerType = new ArrayList<>();
                     preCustomerType.add(CustomerTypeEnum.POTENTIAL_CUSTOMER.name());
-                    Long total = SearchCustomerPhoneScene.builder().customerType(MessageCustomerTypeEnum.PRE_CUSTOMER.name())
-                            .preCustomerType(preCustomerType).shopIds(shopIdList).brandIds(brandIdList).build().invoke(visitor).getLong("total");
+                    Long total = SearchCustomerPhoneScene.builder().customerType(MessageCustomerTypeEnum.PRE_CUSTOMER.name()).preCustomerType(preCustomerType).shopIds(shopIdList).brandIds(brandIdList).build().invoke(visitor).getLong("total");
                     IScene preSaleCustomerPageScene = PreSaleCustomerPageScene.builder().build();
                     List<PreSaleCustomerPageBean> pageBeanList1 = util.collectBeanList(preSaleCustomerPageScene, PreSaleCustomerPageBean.class);
-                    long count = pageBeanList1
-                            .stream().filter(e -> e.getBrandName() != null
-                                    && e.getShopName() != null
-                                    && e.getCustomerTypeName() != null
-                                    && e.getCreateDate() != null
-                                    && e.getBrandName().equals(brandName)
-                                    && e.getCustomerTypeName().equals(CustomerTypeEnum.POTENTIAL_CUSTOMER.getName())
-                                    && !e.getCreateDate().contains(DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd")))
-                            .count();
+                    long count = pageBeanList1.stream().filter(e -> e.getBrandName() != null && e.getShopName() != null
+                            && e.getCustomerTypeName() != null && e.getCreateDate() != null && e.getBrandName().equals(brandName)
+                            && e.getCustomerTypeName().equals(CustomerTypeEnum.POTENTIAL_CUSTOMER.getName())
+                            && !e.getCreateDate().contains(DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd"))).count();
                     CommonUtil.valueView("门店：" + shopName, "品牌：" + brandName, "客户类型：" + CustomerTypeEnum.POTENTIAL_CUSTOMER.getName());
-                    CommonUtil.checkResultPlus("推送消息销售潜在客户数量", total, "销售客户列表门店&品牌不为空的潜在客户数量", count);
+                    CommonUtil.valueView("消息推送人数：" + total);
+                    CommonUtil.valueView("展厅客户人数：" + count);
+                    CommonUtil.checkResultPlus("门店：" + shopName + " 品牌：" + brandName + " 客户类型：" + CustomerTypeEnum.POTENTIAL_CUSTOMER.getName() + "推送消息销售潜在客户数量", total, "销售客户列表门店&品牌不为空的潜在客户数量", count);
+                    CommonUtil.logger("门店：" + shopName + " 品牌：" + brandName + " 客户类型：" + CustomerTypeEnum.POTENTIAL_CUSTOMER.getName());
                 });
             });
         } catch (Exception | AssertionError e) {
@@ -2167,6 +2136,52 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             commonConfig.shopId = PRODUCE.getShopId();
             saveData("消息管理--推送消息销售成交客户数量=销售客户列表门店&品牌不为空的潜在客户数量");
         }
+    }
+
+    @Test(description = "消息管理--售后客户查询", enabled = false)
+    public void messageManagerPeople_data_4() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray shopList = ShopListScene.builder().build().invoke(visitor).getJSONArray("list");
+            shopList.stream().map(shop -> (JSONObject) shop).forEach(shop -> {
+                Long shopId = shop.getLong("shop_id");
+                String shopName = shop.getString("shop_name");
+                List<Long> shopIdList = new ArrayList<>();
+                shopIdList.add(shopId);
+                JSONArray brandList = AllScene.builder().build().invoke(visitor).getJSONArray("list");
+                brandList.stream().map(e -> (JSONObject) e).forEach(brand -> {
+                    Long brandId = brand.getLong("id");
+                    String brandName = brand.getString("name");
+                    List<Long> brandIdList = new ArrayList<>();
+                    brandIdList.add(brandId);
+                    Arrays.stream(ConsumeTypeEnum.values()).forEach(anEnum -> {
+                        String customerName = anEnum.name();
+                        String consumeTypeName = anEnum.getDesc();
+                        List<String> consumeType = new ArrayList<>();
+                        consumeType.add(customerName);
+                        Long total = SearchCustomerPhoneScene.builder().customerType(MessageCustomerTypeEnum.AFTER_CUSTOMER.name())
+                                .consumeType(consumeType).shopIds(shopIdList).brandIds(brandIdList).build().invoke(visitor).getLong("total");
+                        IScene scene = AfterSaleCustomerPageScene.builder().shopId(shopId).brandId(brandId).build();
+                        List<AfterSaleCustomerPageBean> customerPageBeanList = util.collectBeanList(scene, AfterSaleCustomerPageBean.class);
+                        long count = customerPageBeanList.stream().filter(e -> e.getShopName() != null && e.getBrandName() != null
+                                && e.getTotalPrice() != null && e.getTotalPrice() >= anEnum.getMin()
+                                && e.getTotalPrice() <= anEnum.getMax()).map(AfterSaleCustomerPageBean::getCustomerId).distinct().count();
+                        CommonUtil.valueView("门店：" + shopName, "品牌：" + brandName, "消费价格区间：" + consumeTypeName, "消息推送人数：" + total, "售后客户人数：" + count);
+                        CommonUtil.logger("门店：" + shopName + " 品牌：" + brandName + " 消费价格区间：" + consumeTypeName);
+//                    CommonUtil.checkResultPlus("推送消息销售成交客户数量：", total, "销售客户列表门店&品牌不为空的成交客户数量：", count);
+                    });
+                });
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("消息管理--售后客户查询");
+        }
+    }
+
+    @DataProvider(name = "shopIds")
+    public Object[] shopIds() {
+        return new String[]{String.valueOf(util.getShopId()), "20032", "-1"};
     }
 }
 

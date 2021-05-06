@@ -27,4 +27,18 @@ public class AppAppointmentPage implements Serializable {
      */
     @JSONField(name = "arrive_time")
     private String arriveTime;
+    @JSONField(name = "type")
+    private String type;
+    @JSONField(name = "type_name")
+    private String typeName;
+    @JSONField(name = "is_can_confirm")
+    private Boolean isCanConfirm;
+    @JSONField(name = "is_can_reception")
+    private Boolean isCanReception;
+    @JSONField(name = "is_can_adjust")
+    private Boolean isCanAdjust;
+    @JSONField(name = "is_overtime")
+    private Boolean isOvertime;
+    @JSONField(name = "is_can_cancel")
+    private Boolean isCanCancel;
 }

@@ -10,7 +10,8 @@ import lombok.Builder;
 @Builder
 public class AppletMessageListScene extends BaseScene {
     private final Long lastValue;
-    private final Integer size;
+    @Builder.Default
+    private final Integer size = 10;
 
     @Override
     public JSONObject getRequestBody() {

@@ -41,8 +41,6 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
-//import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.*;
-
 /**
  * 业务场景工具
  *
@@ -51,7 +49,7 @@ import java.util.stream.Collectors;
  */
 public class SupporterUtil {
     public static final Logger logger = LoggerFactory.getLogger(SupporterUtil.class);
-    public final static Integer SIZE = 100;
+    public final static Integer SIZE = 100 / 10;
     private final VisitorProxy visitor;
 
     /**

@@ -17,18 +17,21 @@ public class AppCustomerDetailScene extends BaseScene {
      * 是否必填 true
      * 版本 v3.0
      */
-    private final Long id;
+    private final String id;
+
+    private final String shopId;
 
 
     @Override
     public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("id", id);
+        object.put("shop_id", shopId);
         return object;
     }
 
     @Override
     public String getPath() {
-        return "/jiaochen/m-app/pre-sales-reception/customer/detail";
+        return "/jiaochen/m-app/pre-sales-reception/detail";
     }
 }

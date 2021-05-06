@@ -10,11 +10,13 @@ import lombok.Builder;
 @Builder
 public class TimeTableListScene extends BaseScene {
     private final String appointmentMonth;
+    private final String type;
 
     @Override
     public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("appointment_month", appointmentMonth);
+        object.put("type", type);
         return object;
     }
 
