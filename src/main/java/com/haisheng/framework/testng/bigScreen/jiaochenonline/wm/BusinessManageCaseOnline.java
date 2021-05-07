@@ -501,7 +501,7 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
                     .carId(customerInfo.getCarId())
                     .build();
             String[] messageList = util.getMessageList(afterSaleCustomerEditScene);
-            String[] errList = {"性别不能为空", "shopId 不能为空", "品牌车型id不能为空", "用户手机号不能为空", "客户名称不能为空", "车牌号格式不正确", "客户不存在", "车量id不能为空", "底盘号格式不正确", "车系不存在", "购车时间不能为空", "最新公里数不能为空"};
+            String[] errList = {"性别不能为空", "shopId 不能为空", "品牌车型id不能为空", "用户手机号不能为空", "客户名称不能为空", "车牌号格式不正确", "客户不存在", "车辆id不能为空", "底盘号格式不正确", "车系不存在", "购车时间不能为空", "最新公里数不能为空"};
             CommonUtil.checkResultPlus("预期返回值message", errList, "实际返回值message", messageList);
         } catch (Exception | AssertionError e) {
             collectMessage(e);

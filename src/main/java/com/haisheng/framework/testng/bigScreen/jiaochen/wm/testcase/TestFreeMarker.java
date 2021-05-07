@@ -24,16 +24,14 @@ public class TestFreeMarker {
     @Test
     public void createScene() {
         String[] htmlPaths = {
-                "http://192.168.50.3/api-doc/business-jiaochen/applet/index.html",
-                "http://192.168.50.3/api-doc/business-jiaochen/pc/index.html",
-                "http://192.168.50.3/api-doc/business-jiaochen/app/index.html",
+                "http://192.168.50.3/api-doc/intelligent-control/app/index.html",
         };
         Arrays.stream(htmlPaths).forEach(htmlPath -> {
             SceneAttribute[] sceneAttributeList = new SceneParser.Builder().htmlUrl(htmlPath).build().getAttributes();
             Arrays.stream(sceneAttributeList).forEach(sceneAttribute -> new SceneMarker.Builder()
                     .templatePath("src\\main\\resources\\template")
                     .templateName("sceneTemplate.ftl")
-                    .parentPath("src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/sense")
+                    .parentPath("src/main/java/com/haisheng/framework/testng/bigScreen/yuntong/wm/scene")
                     .sceneAttribute(sceneAttribute)
                     .buildMarker()
                     .execute());
