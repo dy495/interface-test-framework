@@ -80,7 +80,6 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.shopId = PRODUCE.getShopId();
         commonConfig.roleId = ALL_AUTHORITY.getRoleId();
         beforeClassInit(commonConfig);
-        util.cleanVoucher();
     }
 
     @AfterClass

@@ -83,6 +83,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
     @AfterClass
     @Override
     public void clean() {
+        cleanVoucher();
         afterClassClean();
     }
 
@@ -156,21 +157,6 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @AfterClass
-    @Test(description = "清理卡券")
-    public void cleanVoucher() {
-        Arrays.stream(VoucherTypeEnum.values()).forEach(anEnum -> {
-            IScene scene = VoucherFormVoucherPageScene.builder().voucherName(anEnum.getDesc()).voucherStatus(VoucherStatusEnum.WAITING.name()).build();
-            List<VoucherFormVoucherPageBean> voucherFormVoucherPageBeanList = util.collectBean(scene, VoucherFormVoucherPageBean.class);
-            List<Long> voucherIdList = voucherFormVoucherPageBeanList.stream().map(VoucherFormVoucherPageBean::getVoucherId).collect(Collectors.toList());
-            if (voucherIdList.size() != 0) {
-                voucherIdList.forEach(voucherId -> {
-                    RecallVoucherScene.builder().id(voucherId).build().invoke(visitor);
-                    DeleteVoucherScene.builder().id(voucherId).build().invoke(visitor);
-                });
-            }
-        });
-    }
 
     //ok
     @Test(description = "卡券管理--编辑待审批卡券--卡券信息更新")
@@ -1197,5 +1183,19 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
         List<T> list = new ArrayList<>();
         list.add(str);
         return list;
+    }
+
+    public void cleanVoucher() {
+        Arrays.stream(VoucherTypeEnum.values()).forEach(anEnum -> {
+            IScene scene = VoucherFormVoucherPageScene.builder().voucherName(anEnum.getDesc()).voucherStatus(VoucherStatusEnum.WAITING.name()).build();
+            List<VoucherFormVoucherPageBean> voucherFormVoucherPageBeanList = util.collectBean(scene, VoucherFormVoucherPageBean.class);
+            List<Long> voucherIdList = voucherFormVoucherPageBeanList.stream().map(VoucherFormVoucherPageBean::getVoucherId).collect(Collectors.toList());
+            if (voucherIdList.size() != 0) {
+                voucherIdList.forEach(voucherId -> {
+                    RecallVoucherScene.builder().id(voucherId).build().invoke(visitor);
+                    DeleteVoucherScene.builder().id(voucherId).build().invoke(visitor);
+                });
+            }
+        });
     }
 }
