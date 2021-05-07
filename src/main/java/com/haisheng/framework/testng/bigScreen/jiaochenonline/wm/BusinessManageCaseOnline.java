@@ -10,9 +10,12 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumChec
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletVoucherInfo;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.customermanage.PreSaleCustomerInfoBean;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.customermanage.PreSaleCustomerPageBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.PackagePage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.ReceptionPage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherPage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherSendRecord;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.customermanage.AfterSaleCustomerInfoBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.customermanage.AfterSaleCustomerPageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.CustomerLabelTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.common.EnableStatusEnum;
@@ -20,7 +23,10 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherUseStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanage.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanage.AfterSaleCustomerEditScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanage.AfterSaleCustomerInfoScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanage.AfterSaleCustomerPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanage.RepairPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanage.BuyPackageRecordScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.PackageListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.ReceptionPageScene;
@@ -35,6 +41,7 @@ import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.CommonUtil;
+import com.haisheng.framework.util.DateTimeUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -42,6 +49,7 @@ import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -420,31 +428,19 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
         }
     }
 
-    @Test(description = "售后接待管理--套餐购买并发测试", threadPoolSize = 4, invocationCount = 4, enabled = false)
-    public void receptionManage_data_7() {
-        try {
-            long packageId = 146;
-            util.receptionBuyFixedPackage(packageId, 1);
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("售后接待管理--套餐购买并发测试");
-        }
-    }
-
     //ok
     @Test(description = "售后客户管理--相同底盘号的客户最新里程数相等")
     public void afterSaleCustomerManager_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene afterSaleCustomerPageScene = AfterSaleCustomerPageScene.builder().build();
-            List<AfterSaleCustomerPage> afterSaleCustomerPageList = util.collectBeanList(afterSaleCustomerPageScene, AfterSaleCustomerPage.class);
+            List<AfterSaleCustomerPageBean> afterSaleCustomerPageList = util.collectBeanList(afterSaleCustomerPageScene, AfterSaleCustomerPageBean.class);
             afterSaleCustomerPageList.forEach(afterSaleCustomerPage -> {
                 String vehicleChassisCode = afterSaleCustomerPage.getVehicleChassisCode();
                 if (vehicleChassisCode != null) {
                     IScene afterSaleCustomerPageScene1 = AfterSaleCustomerPageScene.builder().vehicleChassisCode(vehicleChassisCode).build();
-                    List<AfterSaleCustomerPage> afterSaleCustomerPageList1 = util.collectBeanList(afterSaleCustomerPageScene1, AfterSaleCustomerPage.class);
-                    List<Integer> miles = afterSaleCustomerPageList1.stream().map(AfterSaleCustomerPage::getNewestMiles).collect(Collectors.toList());
+                    List<AfterSaleCustomerPageBean> afterSaleCustomerPageList1 = util.collectBeanList(afterSaleCustomerPageScene1, AfterSaleCustomerPageBean.class);
+                    List<Integer> miles = afterSaleCustomerPageList1.stream().map(AfterSaleCustomerPageBean::getNewestMiles).collect(Collectors.toList());
                     for (int i = 0; i < miles.size() - 1; i++) {
                         CommonUtil.checkResult(vehicleChassisCode + " 最新里程数", miles.get(i), miles.get(i + 1));
                         CommonUtil.logger(vehicleChassisCode);
@@ -458,53 +454,55 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
         }
     }
 
-    //逻辑有问题
-    @Test(description = "售后客户管理--有维修记录的售后客户，列表最新里程数=维修记录中最新的里程数&总消费/元=维修记录产值/mb之和", enabled = false)
+    //ok
+    @Test(description = "售后客户管理--售后客户列表，消费频次=维修记录中产值不为0的记录之和，总消费=维修记录列表产值之和")
     public void afterSaleCustomerManager_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene afterSaleCustomerPageScene = AfterSaleCustomerPageScene.builder().build();
-            List<AfterSaleCustomerPage> afterSaleCustomerPageList = util.collectBeanList(afterSaleCustomerPageScene, AfterSaleCustomerPage.class);
-            afterSaleCustomerPageList.forEach(afterSaleCustomerPage -> {
-                IScene repairPageScene = RepairPageScene.builder().carId(String.valueOf(afterSaleCustomerPage.getCarId())).shopId(String.valueOf(afterSaleCustomerPage.getShopId())).build();
-                JSONArray list = visitor.invokeApi(repairPageScene).getJSONArray("list");
-                if (!list.isEmpty()) {
-                    int newestMiles = list.stream().map(object -> (JSONObject) object).map(e -> e.getInteger("newest_miles")).findFirst().orElse(0);
-                    double outputValue = list.stream().map(object -> (JSONObject) object).map(e -> e.getDouble("output_value")).mapToDouble(object -> object).sum();
-                    CommonUtil.checkResultPlus(afterSaleCustomerPage.getVehicleChassisCode() + " 列表最新里程数", afterSaleCustomerPage.getNewestMiles(), "维修记录中最新的里程数", newestMiles);
-                    CommonUtil.checkResultPlus(afterSaleCustomerPage.getVehicleChassisCode() + " 列表最总消费/元", afterSaleCustomerPage.getTotalPrice(), "维修记录中最新的产值/mb之和", outputValue);
-                    CommonUtil.logger(afterSaleCustomerPage.getVehicleChassisCode());
-                }
-            });
+            IScene scene = AfterSaleCustomerPageScene.builder().size(100).build();
+            scene.invoke(visitor).getJSONArray("list").stream().map(e -> (JSONObject) e)
+                    .forEach(e -> {
+                        AfterSaleCustomerPageBean pageBean = util.collectBean(e, AfterSaleCustomerPageBean.class);
+                        JSONObject responseData = RepairPageScene.builder().carId(String.valueOf(pageBean.getCarId())).shopId(String.valueOf(pageBean.getShopId())).build().invoke(visitor);
+                        JSONArray repairPageList = responseData.getJSONArray("list");
+                        int repairTimes = (int) repairPageList.stream().map(a -> (JSONObject) a).filter(a -> !util.collectBean(a, ReceptionPage.class).getOutputValue().equals("0")).count();
+                        CommonUtil.checkResultPlus("销售客户列表消费频次", pageBean.getRepairTimes() == null ? 0 : pageBean.getRepairTimes(), "维修记录列表维修次数", repairTimes);
+                        Double totalOutputValue = repairPageList.stream().map(a -> (JSONObject) a).map(a -> util.collectBean(a, ReceptionPage.class)).map(ReceptionPage::getOutputValue).map(a -> a.replace(",", "")).mapToDouble(Double::parseDouble).sum();
+                        CommonUtil.checkResultPlus("销售客户列表总消费", pageBean.getTotalPrice() == null ? 0.0 : pageBean.getTotalPrice(), "维修记录列表产值之和", totalOutputValue);
+                    });
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("售后客户管理--有维修记录的售后客户，列表最新里程数=维修记录中最新的里程数&总消费/元=维修记录产值/mb之和");
+            saveData("售后客户管理--售后客户列表，消费频次=维修记录中产值不为0的记录之和，总消费=维修记录列表产值之和");
         }
     }
 
-    //3.1
-    @Test(description = "售后售后客户管理--编辑售后客户各项信息，必填项不填，全部失败", enabled = false)
+    //bug会造成小程序车牌号消失，暂时关闭
+    @Test(description = "售后客户管理--编辑售后客户各项信息，必填项不填，全部失败", enabled = false)
     public void afterSaleCustomerManager_data_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene scene = PreSaleCustomerPageScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).build();
-            PreSaleCustomerPageBean customerPage = util.collectBeanList(scene, PreSaleCustomerPageBean.class).get(0);
-            IScene scene1 = PreSaleCustomerInfoScene.builder().customerId(customerPage.getCustomerId()).shopId(customerPage.getShopId()).build();
-            PreSaleCustomerInfoBean customerInfo = util.collectBean(scene1, PreSaleCustomerInfoBean.class);
-            IScene scene2 = PreSaleCustomerEditScene.builder()
-                    .shopId(customerInfo.getShopId())
-                    .customerId(customerInfo.getCustomerId())
-                    .subjectType(customerInfo.getSubjectType())
+            IScene saleCustomerPageScene = AfterSaleCustomerPageScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).build();
+            AfterSaleCustomerPageBean customerPage = util.collectBeanList(saleCustomerPageScene, AfterSaleCustomerPageBean.class).get(0);
+            IScene afterSaleCustomerInfoScene = AfterSaleCustomerInfoScene.builder().shopId(customerPage.getShopId()).carId(customerPage.getCarId()).customerId(customerPage.getCustomerId()).shopId(customerPage.getShopId()).build();
+            AfterSaleCustomerInfoBean customerInfo = util.collectBean(afterSaleCustomerInfoScene, AfterSaleCustomerInfoBean.class);
+            IScene afterSaleCustomerEditScene = AfterSaleCustomerEditScene.builder()
                     .customerPhone(customerInfo.getCustomerPhone())
                     .customerName(customerInfo.getCustomerName())
-                    .sex(customerInfo.getSex())
-                    .carModelId(customerInfo.getIntentionCarModelId())
-                    .carStyleId(customerInfo.getIntentionCarStyleId())
+                    .sexId(1)
+                    .vehicleChassisCode(customerInfo.getVehicleChassisCode())
+                    .plateNumber(util.getPlatNumber(APPLET_USER_ONE.getPhone()))
+                    .newestMiles(customerInfo.getNewestMiles())
+                    .carStyleId(customerInfo.getCarStyleId())
+                    .carModelId(customerInfo.getCarModelId())
+                    .buyCarTime(DateTimeUtil.getFormat(new Date()))
+                    .customerId(customerInfo.getCustomerId())
+                    .shopId(customerInfo.getShopId())
+                    .carId(customerInfo.getCarId())
                     .build();
-            String[] messageList = util.getMessageList(scene2);
-            System.err.println(Arrays.toString(messageList));
-            String[] errList = {"客户姓名不能为空", "客户性别不能为空"};
+            String[] messageList = util.getMessageList(afterSaleCustomerEditScene);
+            String[] errList = {"性别不能为空", "shopId 不能为空", "品牌车型id不能为空", "用户手机号不能为空", "客户名称不能为空", "车牌号格式不正确", "客户不存在", "车量id不能为空", "底盘号格式不正确", "车系不存在", "购车时间不能为空", "最新公里数不能为空"};
+            CommonUtil.checkResultPlus("预期返回值message", errList, "实际返回值message", messageList);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {

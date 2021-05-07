@@ -1,6 +1,5 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanage;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
@@ -40,13 +39,6 @@ public class AfterSaleCustomerEditScene extends BaseScene {
      * 版本 v3.0
      */
     private final String customerName;
-
-    /**
-     * 描述 性别
-     * 是否必填 true
-     * 版本 v3.0
-     */
-    private final String sex;
 
     /**
      * 描述 底盘号
@@ -97,6 +89,12 @@ public class AfterSaleCustomerEditScene extends BaseScene {
      */
     private final String buyCarTime;
 
+    /**
+     * 描述 性别
+     * 是否必填 false
+     * 版本 v3.0
+     */
+    private final Integer sexId;
 
     @Override
     public JSONObject getRequestBody() {
@@ -105,7 +103,7 @@ public class AfterSaleCustomerEditScene extends BaseScene {
         object.put("shop_id", shopId);
         object.put("customer_phone", customerPhone);
         object.put("customer_name", customerName);
-        object.put("sex", sex);
+        object.put("sex_id", sexId);
         object.put("vehicle_chassis_code", vehicleChassisCode);
         object.put("plate_number", plateNumber);
         object.put("newest_miles", newestMiles);

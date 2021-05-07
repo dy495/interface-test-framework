@@ -2,7 +2,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.sc
 
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.enumerator.FileFormatEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.enumerator.KeywordEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.enumerator.IpPortEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.enumerator.DNSEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.AbstractMarker;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.IMarker;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.Structure;
@@ -137,13 +137,13 @@ public class SceneMarker extends AbstractMarker {
     }
 
     public static String[] urlPathParse(String url) {
-        String str = url.replace(IpPortEnum.getContainAddress(url) + "/", "");
+        String str = url.replace(DNSEnum.getContainAddress(url) + "/", "");
         String newStr = str.substring(0, 1).contains("/") ? str.replaceFirst("/", "") : str;
         return newStr.split("/");
     }
 
     public static String urlExcludeIpPort(String url) {
-        String str = url.replace(IpPortEnum.getContainAddress(url), "");
+        String str = url.replace(DNSEnum.getContainAddress(url), "");
         return str.substring(0, 2).contains("//") ? str.replaceFirst("/", "") : str;
     }
 }
