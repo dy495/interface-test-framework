@@ -1,18 +1,17 @@
-package com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.personaldata;
+package com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.departmentdata;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 2.1. 数据总览（谢）
+ * 4.2. 能力模型（谢）
  *
  * @author wangmin
- * @date 2021-05-07 19:05:22
+ * @date 2021-05-07 19:22:48
  */
 @Builder
-public class OverviewScene extends BaseScene {
+public class AppCapabilityModelScene extends BaseScene {
     /**
      * 描述 查询数据周期 取值见字典表《数据查询周期》
      * 是否必填 true
@@ -34,13 +33,6 @@ public class OverviewScene extends BaseScene {
      */
     private final String endDate;
 
-    /**
-     * 描述 员工id 为空则默认为登录账号uid
-     * 是否必填 false
-     * 版本 v1.0
-     */
-    private final String salesId;
-
 
     @Override
     protected JSONObject getRequestBody() {
@@ -48,12 +40,11 @@ public class OverviewScene extends BaseScene {
         object.put("data_cycle_type", dataCycleType);
         object.put("start_date", startDate);
         object.put("end_date", endDate);
-        object.put("salesId", salesId);
         return object;
     }
 
     @Override
     public String getPath() {
-        return "/intelligent-control/app/personal-data/overview";
+        return "/intelligent-control/app/department-data/capability-model";
     }
 }

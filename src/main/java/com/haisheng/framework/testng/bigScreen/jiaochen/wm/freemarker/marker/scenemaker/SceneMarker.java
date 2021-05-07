@@ -77,7 +77,7 @@ public class SceneMarker extends AbstractMarker {
             }
         }
         className = CommonUtil.lineToHump(sb.toString(), true) + suffix;
-        className = urlPath.contains("m-app") ? "App" + className : urlPath.contains("applet") ? "Applet" + className : className;
+        className = urlPath.contains("app") ? "App" + className : urlPath.contains("applet") ? "Applet" + className : className;
         sb.setLength(0);
         for (int i = 1; i < index; i++) {
             sb.append(urlPathList[i]).append("/");

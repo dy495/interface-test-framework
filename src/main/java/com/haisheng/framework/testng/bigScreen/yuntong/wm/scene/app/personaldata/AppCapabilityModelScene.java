@@ -6,13 +6,13 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 2.5. 话术建议（谢）
+ * 2.2. 能力模型（谢）
  *
  * @author wangmin
- * @date 2021-05-07 19:05:22
+ * @date 2021-05-07 19:22:48
  */
 @Builder
-public class SpeechTechniqueAdviceScene extends BaseScene {
+public class AppCapabilityModelScene extends BaseScene {
     /**
      * 描述 查询数据周期 取值见字典表《数据查询周期》
      * 是否必填 true
@@ -54,6 +54,6 @@ public class SpeechTechniqueAdviceScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/intelligent-control/app/personal-data/speech-technique-advice";
+        return "/intelligent-control/app/personal-data/capability-model";
     }
 }

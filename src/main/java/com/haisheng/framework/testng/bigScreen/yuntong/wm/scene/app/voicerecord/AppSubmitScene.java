@@ -9,10 +9,10 @@ import lombok.Builder;
  * 3.1. 接待语音记录提交（谢）
  *
  * @author wangmin
- * @date 2021-05-07 19:05:22
+ * @date 2021-05-07 19:22:48
  */
 @Builder
-public class SubmitScene extends BaseScene {
+public class AppSubmitScene extends BaseScene {
     /**
      * 描述 接待id
      * 是否必填 true

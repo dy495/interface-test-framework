@@ -6,13 +6,13 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 3.2. 接待语音记录提交（谢）
+ * 3.3. 接待语音记录提交（谢）
  *
  * @author wangmin
- * @date 2021-05-07 19:05:22
+ * @date 2021-05-07 19:22:48
  */
 @Builder
-public class PersonalPageScene extends BaseScene {
+public class AppDepartmentPageScene extends BaseScene {
     /**
      * 描述 页大小 范围为[1,100]
      * 是否必填 true
@@ -26,13 +26,6 @@ public class PersonalPageScene extends BaseScene {
      * 版本 v1.0
      */
     private final JSONObject lastValue;
-
-    /**
-     * 描述 员工id 为空则默认为登录账号uid
-     * 是否必填 false
-     * 版本 v1.0
-     */
-    private final String salesId;
 
     /**
      * 描述 查询数据周期 取值见字典表《数据查询周期》
@@ -56,21 +49,7 @@ public class PersonalPageScene extends BaseScene {
     private final String endDate;
 
     /**
-     * 描述 客户名称
-     * 是否必填 false
-     * 版本 v1.0
-     */
-    private final String customerName;
-
-    /**
-     * 描述 排序环节 全部时传 null
-     * 是否必填 false
-     * 版本 v1.0
-     */
-    private final Integer orderLinkType;
-
-    /**
-     * 描述 排序字段 取值见《接待环节》
+     * 描述 排序字段 取值见《集团接待排序字典》
      * 是否必填 false
      * 版本 v1.0
      */
@@ -89,12 +68,9 @@ public class PersonalPageScene extends BaseScene {
         JSONObject object = new JSONObject();
         object.put("size", size);
         object.put("last_value", lastValue);
-        object.put("salesId", salesId);
         object.put("data_cycle_type", dataCycleType);
         object.put("start_date", startDate);
         object.put("end_date", endDate);
-        object.put("customer_name", customerName);
-        object.put("order_link_type", orderLinkType);
         object.put("order_column", orderColumn);
         object.put("is_reverse", isReverse);
         return object;
@@ -102,6 +78,6 @@ public class PersonalPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/intelligent-control/app/voice-record/personal-page";
+        return "/intelligent-control/app/voice-record/department-page";
     }
 }

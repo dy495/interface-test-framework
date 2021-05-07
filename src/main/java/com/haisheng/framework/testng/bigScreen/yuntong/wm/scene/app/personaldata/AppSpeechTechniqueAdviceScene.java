@@ -1,31 +1,18 @@
-package com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.voicerecord;
+package com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.personaldata;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 3.3. 接待语音记录提交（谢）
+ * 2.5. 话术建议（谢）
  *
  * @author wangmin
- * @date 2021-05-07 19:05:22
+ * @date 2021-05-07 19:22:48
  */
 @Builder
-public class DepartmentPageScene extends BaseScene {
-    /**
-     * 描述 页大小 范围为[1,100]
-     * 是否必填 true
-     * 版本 v1.0
-     */
-    private final Integer size;
-
-    /**
-     * 描述 上次请求最后值
-     * 是否必填 false
-     * 版本 v1.0
-     */
-    private final JSONObject lastValue;
-
+public class AppSpeechTechniqueAdviceScene extends BaseScene {
     /**
      * 描述 查询数据周期 取值见字典表《数据查询周期》
      * 是否必填 true
@@ -48,35 +35,25 @@ public class DepartmentPageScene extends BaseScene {
     private final String endDate;
 
     /**
-     * 描述 排序字段 取值见《集团接待排序字典》
+     * 描述 员工id 为空则默认为登录账号uid
      * 是否必填 false
      * 版本 v1.0
      */
-    private final Integer orderColumn;
-
-    /**
-     * 描述 是否倒序 不传默认false
-     * 是否必填 false
-     * 版本 v1.0
-     */
-    private final Boolean isReverse;
+    private final String salesId;
 
 
     @Override
     protected JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
-        object.put("size", size);
-        object.put("last_value", lastValue);
         object.put("data_cycle_type", dataCycleType);
         object.put("start_date", startDate);
         object.put("end_date", endDate);
-        object.put("order_column", orderColumn);
-        object.put("is_reverse", isReverse);
+        object.put("salesId", salesId);
         return object;
     }
 
     @Override
     public String getPath() {
-        return "/intelligent-control/app/voice-record/department-page";
+        return "/intelligent-control/app/personal-data/speech-technique-advice";
     }
 }
