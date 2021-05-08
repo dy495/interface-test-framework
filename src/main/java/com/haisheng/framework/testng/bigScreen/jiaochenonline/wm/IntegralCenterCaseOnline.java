@@ -1108,9 +1108,8 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
     @Test(description = "积分兑换--创建实体积分兑换-兑换价格异常")
     public void integralExchange_system_24() {
         logger.logCaseStart(caseResult.getCaseName());
-
         try {
-            String[] exchangePriceList = {"", null, "1.11", "-3"};
+            String[] exchangePriceList = {"", null, "1.11", "-3", "中文", "english"};
             Arrays.stream(exchangePriceList).forEach(exchangePrice -> {
                 String exchangeStartTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
                 String exchangeEndTime = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 30), "yyyy-MM-dd HH:mm:ss");
@@ -1131,6 +1130,7 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
         }
     }
 
+    //bug能创建成功
     @Test(description = "积分兑换--创建实体积分兑换-结束时间大于开始时间")
     public void integralExchange_system_25() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -1155,6 +1155,33 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
             ChangeSwitchStatusScene.builder().id(exchangeId).status(false).build().invoke(visitor);
             DeleteExchangeGoodsScene.builder().id(exchangeId).build().invoke(visitor);
             saveData("积分兑换--创建实体积分兑换-结束时间大于开始时间");
+        }
+    }
+
+    //bug有效天数为空没校验
+    @Test(description = "积分兑换--创建虚拟兑换商品时，优惠券有效期异常")
+    public void integralExchange_system_26() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long voucherId = new VoucherGenerator.Builder().status(VoucherStatusEnum.WORKING).visitor(visitor).buildVoucher().getVoucherId();
+            VoucherPage voucherPage = util.getVoucherPage(voucherId);
+            //创建积分兑换
+            String[] useDaysList = {"3651", "10.5"};
+            Arrays.stream(useDaysList).forEach(useDays -> {
+                String exchangeStartTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
+                String exchangeEndTime = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 30), "yyyy-MM-dd HH:mm:ss");
+                IScene scene = CreateExchangeGoodsScene.builder().exchangeGoodsType(CommodityTypeEnum.FICTITIOUS.name()).goodsId(voucherId)
+                        .exchangePrice("1").isLimit(true).exchangePeopleNum("10").exchangeStartTime(exchangeStartTime).expireType(2)
+                        .exchangeEndTime(exchangeEndTime).useDays(useDays).exchangeNum(String.valueOf(voucherPage.getAllowUseInventory()))
+                        .build();
+                String message = util.getResponse(scene).getMessage();
+                String err = StringUtils.isEmpty(useDays) ? "" : useDays.compareTo("3650") > 0 ? "使用时间不能超过3650天" : "请求入参类型不正确";
+                CommonUtil.checkResult("优惠券有效期为：" + useDays, err, message);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("积分兑换--创建虚拟兑换商品时，优惠券有效期异常");
         }
     }
 
@@ -1215,6 +1242,8 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
             });
         } catch (Exception | AssertionError e) {
             collectMessage(e);
+        } finally {
+            saveData("积分明细--各个积分规则的奖励积分=该规则的单笔发放积分");
         }
     }
 
