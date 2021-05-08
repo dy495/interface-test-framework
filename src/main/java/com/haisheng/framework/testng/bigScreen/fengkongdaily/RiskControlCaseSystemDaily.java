@@ -2305,33 +2305,24 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             Long roleId = cu.getAddRole(pp.roleName,pp.descriptionRole);
             checkArgument(roleId!=null, "新增角色失败了");
 
-            //编辑角色
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            String message1=cu.getEditRole(roleId,pp.roleEditName,pp.descriptionEditRole);
-            checkArgument(message1.equals("success"), "编辑角色的信息失败了");
-
-            //列表中编辑过的角色是否已更新
-            IScene scene2= com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.PageScene.builder().page(1).size(10).build();
-            JSONObject response2=visitor.invokeApi(scene2);
-            int pages=response2.getInteger("pages");
-            JSONArray list=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.PageScene.builder().page(pages).size(10).build().invoke(visitor,true).getJSONArray("list");
-            JSONArray list1 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.PageScene.builder().page(pages).size(list.size()).build().invoke(visitor,true).getJSONArray("list");
-            String name = list1.getJSONObject(0).getString("name");
-            checkArgument(name.equals(pp.roleEditName), "编辑过的角色没有更新在列表");
-
-            //新建成功以后删除新建的账号
-            if (roleId>0) {
-                String message13=cu.getDelRole(roleId);
-                checkArgument(message13.equals("success"), "删除角色:" + roleId + "失败了");
-            }
+//            //编辑角色
+//            String message1=cu.getEditRole(roleId,pp.roleEditName,pp.descriptionEditRole);
+//            checkArgument(message1.equals("success"), "编辑角色的信息失败了");
+//
+//            //列表中编辑过的角色是否已更新
+//            IScene scene2= com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.PageScene.builder().page(1).size(10).build();
+//            JSONObject response2=visitor.invokeApi(scene2);
+//            int pages=response2.getInteger("pages");
+//            JSONArray list=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.PageScene.builder().page(pages).size(10).build().invoke(visitor,true).getJSONArray("list");
+//            JSONArray list1 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.PageScene.builder().page(pages).size(list.size()).build().invoke(visitor,true).getJSONArray("list");
+//            String name = list1.getJSONObject(0).getString("name");
+//            checkArgument(name.equals(pp.roleEditName), "编辑过的角色没有更新在列表");
+//
+//            //新建成功以后删除新建的账号
+//            if (roleId>0) {
+//                String message13=cu.getDelRole(roleId);
+//                checkArgument(message13.equals("success"), "删除角色:" + roleId + "失败了");
+//            }
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
