@@ -24,6 +24,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.C
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.CommodityTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.IntegralExchangeStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.OrderStatusEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.commodity.CommodityStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.*;
@@ -1064,6 +1065,96 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
             ChangeSwitchStatusScene.builder().id(exchangeGoodsId).status(false).build().invoke(visitor, false);
             DeleteExchangeGoodsScene.builder().id(exchangeGoodsId).build().invoke(visitor);
             saveData("积分兑换--积分兑换--创建积分兑换，兑换一个，再关闭积分兑换");
+        }
+    }
+
+    //ok
+    @Test(description = "积分兑换--创建实体积分兑换时将商品下架")
+    public void integralExchange_system_23() {
+        logger.logCaseStart(caseResult.getCaseName());
+        Long exchangeId = null;
+        try {
+            String exchangeStartTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
+            String exchangeEndTime = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 30), "yyyy-MM-dd HH:mm:ss");
+            long goodsId = GoodsManagePageScene.builder().goodsStatus(CommodityStatusEnum.DOWN.name()).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            JSONArray specificationDetailList = CommoditySpecificationsListScene.builder().id(goodsId).build().invoke(visitor).getJSONArray("specification_detail_list");
+            JSONArray specificationList = new JSONArray(specificationDetailList.stream().map(e -> (JSONObject) e).map(e -> put(e.getInteger("id"), 1)).collect(Collectors.toList()));
+            IScene scene = CreateExchangeGoodsScene.builder().exchangeGoodsType(CommodityTypeEnum.REAL.name()).goodsId(goodsId)
+                    .exchangePrice("1").isLimit(true).exchangePeopleNum("10").specificationList(specificationList).expireType(2).useDays("10")
+                    .exchangeStartTime(exchangeStartTime).exchangeEndTime(exchangeEndTime).build();
+            ExchangePage exchangePage = util.collectBeanList(ExchangePageScene.builder().build(), ExchangePage.class).get(0);
+            exchangeId = exchangePage.getId();
+            String message = util.getResponse(scene).getMessage();
+            String err = "商品已下架，无法创建成功";
+            CommonUtil.checkResult("下架的商品创建积分兑换", err, message);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            ChangeSwitchStatusScene.builder().id(exchangeId).status(false).build().invoke(visitor);
+            DeleteExchangeGoodsScene.builder().id(exchangeId).build().invoke(visitor);
+            saveData("积分兑换--创建实体积分兑换时将商品下架");
+        }
+    }
+
+    @NotNull
+    private JSONObject put(Integer id, Integer stock) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", id);
+        jsonObject.put("stock", stock);
+        return jsonObject;
+    }
+
+    //ok
+    @Test(description = "积分兑换--创建实体积分兑换-兑换价格异常")
+    public void integralExchange_system_24() {
+        logger.logCaseStart(caseResult.getCaseName());
+
+        try {
+            String[] exchangePriceList = {"", null, "1.11", "-3"};
+            Arrays.stream(exchangePriceList).forEach(exchangePrice -> {
+                String exchangeStartTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
+                String exchangeEndTime = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 30), "yyyy-MM-dd HH:mm:ss");
+                long goodsId = GoodsManagePageScene.builder().goodsStatus(CommodityStatusEnum.UP.name()).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+                JSONArray specificationDetailList = CommoditySpecificationsListScene.builder().id(goodsId).build().invoke(visitor).getJSONArray("specification_detail_list");
+                JSONArray specificationList = new JSONArray(specificationDetailList.stream().map(e -> (JSONObject) e).map(e -> put(e.getInteger("id"), 2)).collect(Collectors.toList()));
+                IScene scene = CreateExchangeGoodsScene.builder().exchangeGoodsType(CommodityTypeEnum.REAL.name()).goodsId(goodsId)
+                        .exchangePrice(exchangePrice).isLimit(true).exchangePeopleNum("10").specificationList(specificationList).expireType(2).useDays("10")
+                        .exchangeStartTime(exchangeStartTime).exchangeEndTime(exchangeEndTime).build();
+                String message = util.getResponse(scene).getMessage();
+                String err = StringUtils.isEmpty(exchangePrice) ? "兑换价格不能为空" : exchangePrice.compareTo("0") < 0 ? "兑换价格必须大于等于0" : "请求入参类型不正确";
+                CommonUtil.checkResult("兑换价格为：" + exchangePrice, err, message);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("积分兑换--创建实体积分兑换-兑换价格异常");
+        }
+    }
+
+    @Test(description = "积分兑换--创建实体积分兑换-结束时间大于开始时间")
+    public void integralExchange_system_25() {
+        logger.logCaseStart(caseResult.getCaseName());
+        Long exchangeId = null;
+        try {
+            String exchangeStartTime = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 30), "yyyy-MM-dd HH:mm:ss");
+            String exchangeEndTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
+            long goodsId = GoodsManagePageScene.builder().goodsStatus(CommodityStatusEnum.UP.name()).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            JSONArray specificationDetailList = CommoditySpecificationsListScene.builder().id(goodsId).build().invoke(visitor).getJSONArray("specification_detail_list");
+            JSONArray specificationList = new JSONArray(specificationDetailList.stream().map(e -> (JSONObject) e).map(e -> put(e.getInteger("id"), 2)).collect(Collectors.toList()));
+            IScene scene = CreateExchangeGoodsScene.builder().exchangeGoodsType(CommodityTypeEnum.REAL.name()).goodsId(goodsId)
+                    .exchangePrice("1").isLimit(true).exchangePeopleNum("10").specificationList(specificationList).expireType(2).useDays("10")
+                    .exchangeStartTime(exchangeStartTime).exchangeEndTime(exchangeEndTime).build();
+            String message = util.getResponse(scene).getMessage();
+            String err = "";
+            ExchangePage exchangePage = util.collectBeanList(ExchangePageScene.builder().build(), ExchangePage.class).get(0);
+            exchangeId = exchangePage.getId();
+            CommonUtil.checkResult("结束时间大于开始时间", err, message);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            ChangeSwitchStatusScene.builder().id(exchangeId).status(false).build().invoke(visitor);
+            DeleteExchangeGoodsScene.builder().id(exchangeId).build().invoke(visitor);
+            saveData("积分兑换--创建实体积分兑换-结束时间大于开始时间");
         }
     }
 

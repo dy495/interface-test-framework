@@ -1,11 +1,10 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.scenemaker;
+package com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker;
 
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.attribute.ApiAttribute;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.attribute.SceneAttribute;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.enumerator.FileFormatEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.enumerator.KeywordEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.enumerator.DNSEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.AbstractMarker;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.IMarker;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.Structure;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 
@@ -113,13 +112,6 @@ public class SceneMarker extends AbstractMarker {
         private SceneAttribute sceneAttribute;
         private String parentPath;
 
-
-        /**
-         * 文件父路径
-         *
-         * @param parentPath 父类路径
-         * @return Builder.outputPath
-         */
         public Builder parentPath(String parentPath) {
             this.parentPath = parentPath;
             return this;

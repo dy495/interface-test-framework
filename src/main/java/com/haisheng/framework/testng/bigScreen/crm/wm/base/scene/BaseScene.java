@@ -82,6 +82,7 @@ public abstract class BaseScene implements IScene {
      * @param visitor 要执行的产品
      * @return 接口返回值
      */
+    @Override
     public JSONObject invoke(@NotNull VisitorProxy visitor) {
         return invoke(visitor, true);
     }

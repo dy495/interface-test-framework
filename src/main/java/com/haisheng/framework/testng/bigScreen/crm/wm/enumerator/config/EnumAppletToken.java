@@ -11,7 +11,7 @@ import java.util.Arrays;
  * 若失效统一修改此类，统一管理
  */
 public enum EnumAppletToken {
-    BSJ_WM_DAILY(EnumTestProduce.PORSCHE_DAILY.getAbbreviation(), "Zg0LsqAeP25MGL0ulmDtDg==", true, "15321527989"),
+    BSJ_WM_DAILY(EnumTestProduce.PORSCHE_DAILY.getAbbreviation(), "AxWi53xBTv/EKpEkNdrJBg==", true, "15321527989"),
 
     BSJ_XMF_DAILY(EnumTestProduce.PORSCHE_DAILY.getAbbreviation(), "HMV6S0IoBmUCgWrBAK2hEQ==", true, "15037286013"),
 
@@ -19,9 +19,9 @@ public enum EnumAppletToken {
 
     BSJ_XMF_ONLINE(EnumTestProduce.PORSCHE_DAILY.getAbbreviation(), "cMzFau3/cRA7nTf/r3X3GQ==", false, "15037286013"),
 
-    BSJ_WM_ONLINE(EnumTestProduce.PORSCHE_DAILY.getAbbreviation(), "m0XhSoGDFBdWwLt/XA2URA==", false, "15321527989"),
+    BSJ_WM_ONLINE(EnumTestProduce.PORSCHE_DAILY.getAbbreviation(), "+Lxwl2EDyIVPo3SD2sFuvw==", false, "15321527989"),
 
-    BSJ_WM_SMALL_ONLINE(EnumTestProduce.PORSCHE_DAILY.getAbbreviation(), "UhqugJ3HUDI7BRKnIvxxKg==", false, "15321527989"),
+    BSJ_WM_SMALL_ONLINE(EnumTestProduce.PORSCHE_DAILY.getAbbreviation(), "29c11pEn61vmjuKxyX5WZw==", false, "15321527989"),
 
     JC_WM_DAILY(EnumTestProduce.JC_DAILY.getAbbreviation(), "jVXDdP1MPHXpNPrzl5LRLg==", true, "15321527989"),
 
@@ -39,9 +39,9 @@ public enum EnumAppletToken {
 
     JC_GLY_ONLINE(EnumTestProduce.JC_DAILY.getAbbreviation(), "92FWKP9z1yNf7P3OLC6KPw==", false, "13373166806"),
 
-    INS_WM_DAILY(EnumTestProduce.INS_DAILY.getAbbreviation(), "pD/XFAqVM9xiQpI8Ea2xXQ==", true, "15321527989"),
+    INS_WM_DAILY(EnumTestProduce.INS_DAILY.getAbbreviation(), "n+KZJeG41Z0Nu11800aOEw==", true, "15321527989"),
 
-    INS_WM_ONLINE(EnumTestProduce.INS_ONLINE.getAbbreviation(), "3/xeCPoURoHfylTkD/d54Q==", false, "15321527989"),
+    INS_WM_ONLINE(EnumTestProduce.INS_ONLINE.getAbbreviation(), "TnJd0oOQ8wznvndM+0hV6A==", false, "15321527989"),
 
     INS_ZT_DAILY(EnumTestProduce.INS_DAILY.getAbbreviation(), "sck5BA9NaaCU6ar//hPJaA==", true, "13604609869"),
 
