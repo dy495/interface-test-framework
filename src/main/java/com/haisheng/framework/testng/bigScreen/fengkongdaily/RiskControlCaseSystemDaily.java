@@ -2306,6 +2306,15 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             checkArgument(roleId!=null, "新增角色失败了");
 
             //编辑角色
+            
+            
+            
+            
+            
+            
+            
+            
+            
             String message1=cu.getEditRole(roleId,pp.roleEditName,pp.descriptionEditRole);
             checkArgument(message1.equals("success"), "编辑角色的信息失败了");
 

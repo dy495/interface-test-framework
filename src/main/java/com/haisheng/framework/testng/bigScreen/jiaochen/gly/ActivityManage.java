@@ -320,7 +320,7 @@ public void justTry(){
             //活动详情中-优惠券面值
             String price = list.getJSONObject(0).getString("price");
             //填写库存数量
-            String number = String.valueOf(businessUtil.getVoucherAllowUseInventory(voucherId));
+            String number = String.valueOf(businessUtil.getVoucherAllowUseInventoryNum(voucherId));
             System.out.println("发放数量：" + num + "--剩余库存" + leftNum + "--填写的库存数量" + number);
             Preconditions.checkArgument(num.equals(number) && leftNum.equals(number), "活动详情中的数值与创建时的数字不一致");
 //            Preconditions.checkArgument(price.equals(parValue),"优惠券的面值和活动中优惠券的面值不一致");
