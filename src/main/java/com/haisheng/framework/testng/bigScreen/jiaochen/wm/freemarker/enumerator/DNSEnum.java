@@ -28,7 +28,7 @@ public enum DNSEnum {
 
     RISK_CONTROL_DAILY("http://127.0.0.1"),
 
-    YUNTONG_DAILY(""),
+    YUNTONG_DAILY("待定"),
     ;
 
     DNSEnum(String ipPort) {
