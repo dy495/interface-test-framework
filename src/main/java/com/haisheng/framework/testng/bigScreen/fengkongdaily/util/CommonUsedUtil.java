@@ -7,6 +7,7 @@ import com.arronlong.httpclientutil.builder.HCB;
 import com.arronlong.httpclientutil.common.HttpConfig;
 import com.arronlong.httpclientutil.common.HttpHeader;
 import com.arronlong.httpclientutil.exception.HttpProcessException;
+import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.orderParm;
@@ -384,62 +385,108 @@ public class CommonUsedUtil {
      * 创建一个账号
      */
     public String createAccountNumber(String name,String phone){
-        //新建账号       todo
+        //新建账号
         JSONArray roleList=new JSONArray();
         JSONObject object=new JSONObject();
         List<JSONObject> shopList=new ArrayList<>();
         JSONObject shopObject=new JSONObject();
-        shopObject.put("shop_id","");
-        shopObject.put("shop_name","");
+        shopObject.put("shop_id","43072");
+        shopObject.put("shop_name","AI-Test(门店订单录像)");
         shopList.add(shopObject);
-        object.put("role_id","");
+        object.put("role_id","4944");
+        object.put("role_name","超级管理员");
         object.put("shop_list",shopList);
         roleList.add(object);
-        IScene scene2=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.AddScene.builder().name(name).phone(phone).gender("女").roleList(roleList).build();
-        String id=visitor.invokeApi(scene2).getString("id");
-        return id;
+        IScene scene2=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.AddScene.builder()
+                .name(name)
+                .phone(phone)
+                .roleList(roleList)
+                .build();
+        String message=visitor.invokeApi(scene2,false).getString("message");
+        return message;
     }
 
     /**
      * 编辑账号的姓名和手机号
      */
     public String getEditAccountNumber(String id,String name,String phone){
-        // 角色及门店      todo
+        //新建账号
         JSONArray roleList=new JSONArray();
         JSONObject object=new JSONObject();
         List<JSONObject> shopList=new ArrayList<>();
         JSONObject shopObject=new JSONObject();
-        shopObject.put("shop_id","");
-        shopObject.put("shop_name","");
+        shopObject.put("shop_id","43072");
+        shopObject.put("shop_name","AI-Test(门店订单录像)");
         shopList.add(shopObject);
-        object.put("role_id","");
+        object.put("role_id","4944");
+        object.put("role_name","超级管理员");
         object.put("shop_list",shopList);
         roleList.add(object);
         //编辑账号
-        IScene scene=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.EditScene.builder().id(id).name(name).phone(phone).gender("女").roleList(roleList).build();
+        IScene scene=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.EditScene.builder()
+                .id(id)
+                .name(name)
+                .phone(phone)
+                .roleList(roleList)
+                .build();
         String message=visitor.invokeApi(scene,false).getString("message");
         return message;
     }
 
     /**
+     * 编辑账号的姓名和手机号,返回roleID
+     */
+    public Long getEditAccountNumberReturn(String id,String name,String phone){
+        //新增一个角色---上级角色为【总管理员】
+        getAddRole(pp.roleName,pp.descriptionRole);
+        //获取此角色的ID
+        Long roleId=authRoleNameTransId(pp.roleName);
+        //新建账号
+        JSONArray roleList=new JSONArray();
+        JSONObject object=new JSONObject();
+        List<JSONObject> shopList=new ArrayList<>();
+        JSONObject shopObject=new JSONObject();
+        shopObject.put("shop_id","43072");
+        shopObject.put("shop_name","AI-Test(门店订单录像)");
+        shopList.add(shopObject);
+        object.put("role_id",roleId);
+        object.put("role_name",pp.roleName);
+        object.put("shop_list",shopList);
+        roleList.add(object);
+        //编辑账号
+        IScene scene=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.EditScene.builder()
+                .id(id)
+                .name(name)
+                .phone(phone)
+                .roleList(roleList)
+                .build();
+        visitor.invokeApi(scene,false).getString("message");
+        return roleId;
+    }
+
+
+    /**
      * 新增角色
      */
-    public Long getAddRole(String name,String descriptionRole){
+    public void getAddRole(String name,String descriptionRole){
         //权限合集
         JSONArray authIds = new JSONArray();
-        authIds.add(7);
-        authIds.add(9);
+        authIds.add(232);
+        authIds.add(233);
+        authIds.add(234);
+        authIds.add(235);
+        authIds.add(236);
+        authIds.add(237);
+        authIds.add(238);
+        authIds.add(239);
         //新增一个角色---上级角色为【总管理员】
         IScene scene=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.AddScene.builder()
                 .name(name)
-                .parentRoleId(2)
+                .parentRoleId(4944)
                 .authList(authIds)
                 .description(descriptionRole)
                 .build();
         JSONObject response=visitor.invokeApi(scene);
-        String message=visitor.invokeApi(scene,false).getString("message");
-        Long roleId = response.getLong("role_id");
-        return  roleId;
     }
 
     /**
@@ -457,12 +504,15 @@ public class CommonUsedUtil {
     public String getEditRole(Long roleId,String name,String descriptionRole) {
         //权限合集
         JSONArray authIds = new JSONArray();
-        authIds.add(7);
-        authIds.add(9);
+        authIds.add(232);
+        authIds.add(233);
+        authIds.add(234);
         //上级角色为【总管理员】
         IScene scene=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.EditScene.builder()
-                .id(roleId).name(name )
-                .parentRoleId(2).authList(authIds)
+                .id(roleId)
+                .name(name )
+                .parentRoleId(4944)
+                .authList(authIds)
                 .description(descriptionRole)
                 .build();
         String message=visitor.invokeApi(scene,false).getString("message");
@@ -813,6 +863,50 @@ public class CommonUsedUtil {
         String carNumber= carVehicleNumber.length()!=17?carVehicleNumberCheck():carVehicleNumber;
         System.out.println("----carNumber-----"+carNumber);
         return carNumber;
+    }
+
+    /**
+     * 通过角色名称获取角色ID
+     */
+    public Long authRoleNameTransId(String name){
+        Long id=0L;
+        IScene scene= com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.PageScene.builder().page(1).size(10).build();
+        JSONObject response=visitor.invokeApi(scene);
+        int pages=response.getInteger("pages");
+        for(int page=1;page<=pages;page++){
+            JSONArray list=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.PageScene.builder().page(page).size(10).build().invoke(visitor,true).getJSONArray("list");
+            for(int i=0;i<list.size();i++){
+                String name1=list.getJSONObject(i).getString("name");
+                System.out.println("-------name1:---"+name1);
+                if(name1.equals(name)){
+                    id=list.getJSONObject(i).getLong("id");
+                }
+            }
+        }
+        return id;
+    }
+
+    /**
+     * 通过账号手机号获取账号的ID
+     */
+    public String authStaffTransId(String phone){
+        String id="";
+        IScene scene= com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().page(1).size(10).build();
+        JSONObject response=visitor.invokeApi(scene);
+        int pages=response.getInteger("pages")>10?10:response.getInteger("pages");
+        for(int page=1;page<=pages;page++){
+            JSONArray list=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().page(page).size(10).build().invoke(visitor,true).getJSONArray("list");
+            if(list.size()>0){
+                for(int i=0;i<list.size();i++){
+                    String phone1=list.getJSONObject(i).getString("phone");
+                    System.err.println(phone1);
+                    if(phone.equals(phone1)){
+                        id=list.getJSONObject(i).getString("id");
+                    }
+                }
+            }
+        }
+        return id;
     }
 
 
