@@ -39,11 +39,11 @@ public enum EnumAppletToken {
 
     JC_GLY_ONLINE(EnumTestProduce.JC_DAILY.getAbbreviation(), "fyjmSYPLARzumAnIbPrt5g==", false, "13373166806"),
 
-    INS_WM_DAILY(EnumTestProduce.INS_DAILY.getAbbreviation(), "n+KZJeG41Z0Nu11800aOEw==", true, "15321527989"),
+    INS_WM_DAILY(EnumTestProduce.INS_DAILY.getAbbreviation(), "FkHVInKeLZBuILgcwP6FCg==", true, "15321527989"),
 
     INS_WM_ONLINE(EnumTestProduce.INS_ONLINE.getAbbreviation(), "TnJd0oOQ8wznvndM+0hV6A==", false, "15321527989"),
 
-    INS_ZT_DAILY(EnumTestProduce.INS_DAILY.getAbbreviation(), "sck5BA9NaaCU6ar//hPJaA==", true, "13604609869"),
+    INS_ZT_DAILY(EnumTestProduce.INS_DAILY.getAbbreviation(), "za2nfvQigSqoma+cD1r4Fw==", true, "13604609869"),
 
     INS_ZT_ONLINE(EnumTestProduce.INS_ONLINE.getAbbreviation(), "Com3dkGhBuuZgzAir8SRDw==", false, "13604609869"),
     ;
