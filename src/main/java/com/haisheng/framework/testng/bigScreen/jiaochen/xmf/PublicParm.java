@@ -35,6 +35,7 @@ public class PublicParm {
     public String car_id = "24";    //小程序车id
     public String carplate = "津DAASSE";      //编辑小程序车牌号
     public String carplate7 = "津DAASSE";      //编辑小程序车牌号
+    public String carplate8 = "吉GBBA10";      //编辑小程序车牌号
 
     //预约使用车辆
     public Long car_idA =48L;  //plate_number=津DAASSE
@@ -87,6 +88,7 @@ public class PublicParm {
     public JSONArray roleList = getRoleList();
     public JSONArray vouchers = getvouchersList();
     public JSONArray vouchers2 =voucherSingle() ;
+
 
     public JSONArray getvouchersList() {   //创建精品套餐时创建的卡券数组
         JSONObject vouletList=new JSONObject();

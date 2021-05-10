@@ -707,6 +707,7 @@ public class CommonUsedUtil {
                 e.printStackTrace();
             }
             String timestamp = "" + System.currentTimeMillis();
+//            String timestamp = "1620454938752";
 
             String uid = router.getUid();
             String appId = router.getAppid();

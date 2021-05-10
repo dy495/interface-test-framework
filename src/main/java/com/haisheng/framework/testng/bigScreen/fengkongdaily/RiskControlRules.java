@@ -239,11 +239,11 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
 //                        "}";
 
 //                JSONObject jsonObject = JSON.parseObject(str);
-//                String face=file.getImgStr( "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/xia.png");
-                String face=file.getImgStr( "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/杨航.jpg");
+                String face=file.getImgStr( "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/xia.png");
+//                String face=file.getImgStr( "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/杨航.jpg");
                 //夏明凤的脸  是否在职 0否 1是
-                JSONObject jsonObject=staffObject("uid_663ad666","杨航","",1,face);
-//                JSONObject jsonObject=staffObject("uid_663ad653","店员1","uid_663ad653",0,face);
+//                JSONObject jsonObject=staffObject("uid_663ad666","杨航","",1,face);
+                JSONObject jsonObject=staffObject("uid_663ad653","店员1","uid_663ad653",1,face);
                 logger.info("request:"+jsonObject.toJSONString());
                 System.out.println("over");
 
@@ -387,14 +387,14 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
             //车架号1
             String carVehicleNumber1="AAAAAAAAAA22"+CommonUtil.getRandom(5);
             //车架号2
-//            String carVehicleNumber2="AAAAAAAAAA22"+CommonUtil.getRandom(5);
+            String carVehicleNumber2="AAAAAAAAAA22"+CommonUtil.getRandom(5);
             //车架号3
             String carVehicleNumber3="AAAAAAAAAA22"+CommonUtil.getRandom(5);
 
             //生成交易订单
             String post=cu.getCreateOrder(shopId,transId,userId,openId,carVehicleNumber1);
-            String post2=cu.getCreateOrder(shopId,transId2,userId,openId,carVehicleNumber1);
-//            String post3=cu.getCreateOrder(shopId,transId3,userId,openId,carVehicleNumber3);
+            String post2=cu.getCreateOrder(shopId,transId2,userId,openId,carVehicleNumber2);
+            String post3=cu.getCreateOrder(shopId,transId3,userId,openId,carVehicleNumber3);
 
             Preconditions.checkArgument(JSONObject.parseObject(post).getString("code").equals("1000"),"创单失败"+post);
             Preconditions.checkArgument(JSONObject.parseObject(post2).getString("code").equals("1000"),"创单失败"+post2);
@@ -606,9 +606,9 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
             //支付ID
             String openId=pp.openId;
             //车架号
-            String carVehicleNumber="AAAAAAAAAA1234784";
-            String carVehicleNumber2="AAAAAAAAAA1237885";
-            String carVehicleNumber3="AAAAAAAAAA1237881";
+            String carVehicleNumber="AAAAAAAAAA12"+ CommonUtil.getRandom(5);
+            String carVehicleNumber2="AAAAAAAAAA12"+ CommonUtil.getRandom(5);
+            String carVehicleNumber3="AAAAAAAAAA12"+ CommonUtil.getRandom(5);
 
             //生成交易订单
             String post1=cu.getCreateOrder(shopId,transId,userId1,openId,carVehicleNumber);
@@ -650,7 +650,7 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
     @Test()
     public void handle() {
         try{
-            for(int j=1;j<2;j++) {
+            for(int j=1;j<4;j++) {
                 JSONArray list = md.cashier_riskPage(Long.parseLong(product.getShopId()), "", "", "", "", "", "PENDING", j, 10).getJSONArray("list");
                 for (int i =0; i < list.size(); i++) {
                     Long id = list.getJSONObject(i).getLong("id");

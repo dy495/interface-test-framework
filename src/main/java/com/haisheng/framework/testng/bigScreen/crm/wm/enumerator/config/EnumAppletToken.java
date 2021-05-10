@@ -13,7 +13,7 @@ import java.util.Arrays;
 public enum EnumAppletToken {
     BSJ_WM_DAILY(EnumTestProduce.PORSCHE_DAILY.getAbbreviation(), "Zg0LsqAeP25MGL0ulmDtDg==", true, "15321527989"),
 
-    BSJ_XMF_DAILY(EnumTestProduce.PORSCHE_DAILY.getAbbreviation(), "HMV6S0IoBmUCgWrBAK2hEQ==", true, "15037286013"),
+    BSJ_XMF_DAILY(EnumTestProduce.PORSCHE_DAILY.getAbbreviation(), "doZhCo6nCMQq1HBzaToqww==", true, "15037286013"),
 
     BSJ_GLY_DAILY(EnumTestProduce.PORSCHE_DAILY.getAbbreviation(), "Dkj9ox+0FtVN20Ka1z89HA==", true, "13373166806"),
 
@@ -29,7 +29,7 @@ public enum EnumAppletToken {
 
     JC_XMF_DAILY(EnumTestProduce.JC_DAILY.getAbbreviation(), "LH4AyoNJqHnlX51e7pKwDQ==", false, "15037286013"),
 
-    JC_XMF_ONLINE(EnumTestProduce.JC_DAILY.getAbbreviation(), "EDCYsAK+NKACPGAEN8ToJQ==", false, "15037286013"),
+    JC_XMF_ONLINE(EnumTestProduce.JC_DAILY.getAbbreviation(), "doZhCo6nCMQq1HBzaToqww==", false, "15037286013"),
 
     JC_LXQ_DAILY(EnumTestProduce.JC_DAILY.getAbbreviation(), "o6l2C5o6nBAvES/WELPF8Q==", false, "13436941018"),
 

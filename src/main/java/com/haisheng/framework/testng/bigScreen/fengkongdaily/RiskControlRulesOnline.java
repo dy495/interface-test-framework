@@ -621,9 +621,9 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
             //支付ID
             String openId=pp.openId;
             //车架号
-            String carVehicleNumber="AAAAAAAAAA1234784";
-            String carVehicleNumber2="AAAAAAAAAA1237885";
-            String carVehicleNumber3="AAAAAAAAAA1237881";
+            String carVehicleNumber="AAAAAAAAAA12" +CommonUtil.getRandom(5);
+            String carVehicleNumber2="AAAAAAAAAA12" +CommonUtil.getRandom(5);
+            String carVehicleNumber3="AAAAAAAAAA12"+ CommonUtil.getRandom(5);
 
             //生成交易订单
             String post1=cu.getCreateOrderOnline(shopId,transId,userId1,openId,carVehicleNumber);

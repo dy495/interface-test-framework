@@ -511,7 +511,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
                        //开始接待
-            Long id[] = pf.startReception(pp.carplate7);
+            Long id[] = pf.startReception(pp.carplate8);
             //变更接待前
             int total = jc.appreceptionPage(null, 10).getInteger("total");
             int tasknum[] = pf.appTask();
@@ -538,7 +538,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             int total3 = jc.appreceptionPage(null, 10).getInteger("total");
 
             //完成接待
-            jc.finishReception(id[0], id[1]);
+//            jc.finishReception(id[0], id[1]);
 
             Preconditions.checkArgument(total - total2 == 1, "变更接待后接待列表未-1,接待前：" + total + "，接待后：" + total2);
             Preconditions.checkArgument(total3 - total2 == 1, "变更接待后接待列表未-1,接待前：" + total2 + "，接待后：" + total3);
@@ -561,11 +561,12 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             appLogin(pp.jdgw, pp.jdgwpassword,pp.roleidJdgw);
             //开始接待
             Long id[] = new Long[2];
-            JSONObject dd = jc.appreceptionPage(null, 10).getJSONArray("list").getJSONObject(0);
-            if(dd.size()==0){
+
+            JSONArray list = jc.appreceptionPage(null, 10).getJSONArray("list");
+            if(list.size()==0){
                 throw new Exception("暂无接待");
             }
-
+            JSONObject dd = list.getJSONObject(0);
             id[0] = dd.getLong("id");
             id[1] = dd.getLong("shop_id");
 

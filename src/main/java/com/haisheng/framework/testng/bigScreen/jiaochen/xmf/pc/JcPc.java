@@ -716,10 +716,11 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         };
     }
 
-    @Test(dataProvider = "APPOINTMENTTYPE") //pc修改车预约价格，小程序对应变更
-    public void Jc_pcmaintainPriceEdit(String type) {
+    @Test() //pc修改车预约价格，小程序对应变更
+    public void Jc_pcmaintainPriceEdit() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            String type="MAINTAIN";
             int num = 0;
             String dataType = "WEEKDAY";
             System.out.println(commonConfig.shopId);
@@ -1146,6 +1147,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
     public void Jc_evalute(String  type1,String messageName) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            pcLogin(pp.jdgw,pp.jdgwpassword,pp.roleidJdgw);
             System.out.println(type1+":"+messageName);
             Integer type=Integer.parseInt(type1);
 
@@ -1201,7 +1203,8 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("JC_pc门店按钮修改关联验证");
+            pcLogin(pp.jdgw,pp.jdgwpassword,pp.roleidJdgw);
+            saveData(type1+"评价配置修改验证");
         }
     }
 
