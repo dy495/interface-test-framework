@@ -43,14 +43,12 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     private static final EnumTestProduce product = EnumTestProduce.FK_DAILY;
     public VisitorProxy visitor = new VisitorProxy(product);
     private static final routerEnum router = routerEnum.SHOPDAILY;
-
-    //    StoreFuncPackage mds = StoreFuncPackage.getInstance();
     PublicParam pp=new PublicParam();
     CommonUsedUtil cu=new CommonUsedUtil(visitor, router);
     RiskControlUtil md=new RiskControlUtil();
     public String shopId="43072";
+    public String shopAllId="-1";
     FileUtil file = new FileUtil();
-//    public String face=file.texFile(pp.filePath);
     public String face=file.getImgStr(pp.filePath2);
 
 
@@ -96,8 +94,8 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
 
     //一人多车 user_id  相同; 多个car_vehicle_number车架号 触发；
     //一车多人，多个openid,一个car_vehicle_number 触发;
-    //一人多单 ，userId相同，openid相同;  ---userId 相同，或者transId; 单一客户数量监控
-    @Test
+    //一人多单 ，userId相同、opemId相同，多个transId交易订单触发
+    @Test(enabled = false)
     public void getA() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -209,78 +207,8 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
 
     }
 
-    @Test(enabled = true,description = "业务类型字典数据-获取")
-    public void cececec(){
-        try{
-            final String NUMBER = ".";
-            final String ALGORITHM = "HmacSHA256";
-            HttpClient client = null;
-            try {
-                client = HCB.custom()
-                        .pool(50, 10)
-                        .retry(3).build();
-            } catch (HttpProcessException e) {
-                e.printStackTrace();
-            }
-            String timestamp = "" + System.currentTimeMillis();
-            String uid = "uid_ef6d2de5";
-            String appId = "49998b971ea0";
-            String ak = "3fdce1db0e843ee0";
-            String router = "/business/risk/BUSINESS_TYPE_LIST/v1.0";
-            String nonce = UUID.randomUUID().toString();
-            String sk = "5036807b1c25b9312116fd4b22c351ac";
-            // java代码示例
-            // java代码示例
-            String requestUrl = "http://dev.api.winsenseos.com/retail/api/data/biz";
 
-            // 1. 将以下参数(uid、app_id、ak、router、timestamp、nonce)的值之间使用顿号(.)拼接成一个整体字符串
-            String signStr = uid + NUMBER + appId + NUMBER + ak + NUMBER + router + NUMBER + timestamp + NUMBER + nonce;
-            // 2. 使用HmacSHA256加密算法, 使用平台分配的sk作为算法的密钥. 对上面拼接后的字符串进行加密操作,得到byte数组
-            Mac sha256Hmac = Mac.getInstance(ALGORITHM);
-            SecretKeySpec encodeSecretKey = new SecretKeySpec(sk.getBytes(StandardCharsets.UTF_8), ALGORITHM);
-            sha256Hmac.init(encodeSecretKey);
-            byte[] hash = sha256Hmac.doFinal(signStr.getBytes(StandardCharsets.UTF_8));
-            // 3. 对2.中的加密结果,再进行一次base64操作, 得到一个字符串
-            String auth = Base64.getEncoder().encodeToString(hash);
-
-            Header[] headers = HttpHeader.custom()
-                    .other("Accept", "application/json")
-                    .other("Content-Type", "application/json;charset=utf-8")
-                    .other("timestamp", timestamp)
-                    .other("nonce", nonce)
-                    .other("ExpiredTime", "50 * 1000")
-                    .other("Authorization", auth)
-                    .build();
-            String str ="{\n" +
-                    "  \"uid\": \"uid_ef6d2de5\",\n" +
-                    "  \"app_id\": \"49998b971ea0\",\n" +
-                    "  \"request_id\": \"5d45a085-8774-4jd0-943e-ded373c8754252648\",\n" +
-                    "  \"version\": \"v1.0\",\n" +
-                    "  \"router\": \"/business/risk/BUSINESS_TYPE_LIST/v1.0\",\n" +
-                    "  \"data\": {\n" +
-                    "    \"biz_data\":  {\n" +
-                    "    }\n" +
-                    "  }\n" +
-
-                    "}";
-
-            JSONObject jsonObject = JSON.parseObject(str);
-            System.err.println("---------"+jsonObject);
-//                JSONObject jsonObject=staffObject("uid_27f11a9d","店员1","uid_27f11a9d",0);
-            logger.info("request:"+jsonObject.toJSONString());
-            logger.info("requestUrl:"+requestUrl);
-
-            HttpConfig config = HttpConfig.custom().headers(headers).url(requestUrl).json(JSON.toJSONString(jsonObject)).client(client);
-            String post = HttpClientUtil.post(config);
-            System.out.println(post);
-        }catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("ceshi");
-        }
-    }
-
-    @Test(description = "同步员工离职在职信息")
+    @Test(description = "同步员工离职在职信息",enabled = false)
     public void get1A() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -360,39 +288,10 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
 
 
 
-    public JSONObject staffObject(String id,String name,String account_uid, Integer status){
-
-        Random random=new Random();
-
-        JSONObject str=new JSONObject();
-        str.put("uid","uid_ef6d2de5");
-        str.put("app_id","49998b971ea0");
-        str.put("request_id","5d45a085-8774-4jd0-943e-ded373ca6a91998"+random.nextInt(10));
-        str.put("version","v1.0");
-        str.put("router","/business/patrol/STAFF_FACE_REGISTER/v1.0");
-
-        JSONObject data = new JSONObject();
-        data.put("resource",new JSONArray());
-
-        JSONObject body=new JSONObject();
-        body.put("id",id);
-        body.put("name",name);
-        body.put("account_uid",account_uid);
-        body.put("status",status);
-        body.put("face_base64",face);
-//        body.put("status",status);
-        data.put("biz_data",body);
-
-        str.put("data",data);
-
-        return str;
-    }
-
-
     /**
      *生成交易订单--触发无人风控(保证摄像头面前没有人)
      **/
-    @Test(enabled =true )
+    @Test(enabled = true)
     public void getTriggerUnmannedRisk(){
         try{
             //创建无人风控
@@ -655,7 +554,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             //收银风控列表第一条的shopId
             IScene scene = PageScene.builder().page(1).size(10).build();
             JSONObject response=visitor.invokeApi(scene);
-            Long shopId=response.getJSONArray("list").getJSONObject(0).getLong("shop_id");
+            Long shopId=response.getJSONArray("list").getJSONObject(1).getLong("shop_id");
             //收银追溯页面
             IScene scene1= TraceBackScene.builder().shopId(shopId).page(1).size(10).build();
             JSONObject response1=visitor.invokeApi(scene1);
@@ -678,7 +577,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     /**
      *收银追溯-门店信息内容校验
      */
-    @Test(description = "收银追溯-门店信息内容校验")
+    @Test(description = "收银追溯-门店信息内容校验",enabled = false)
     public void authCashierPageSystem3(){
         try{
             //收银风控列表第一条的shopId
@@ -751,7 +650,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             //收银风控列表第一条的shopId
             IScene scene = PageScene.builder().page(1).size(10).build();
             JSONObject response=visitor.invokeApi(scene);
-            Long shopId=response.getJSONArray("list").getJSONObject(0).getLong("shop_id");
+            Long shopId=response.getJSONArray("list").getJSONObject(1).getLong("shop_id");
             //收银风控事件页面
             IScene scene1=RiskEventPageScene.builder().shopId(shopId).page(1).size(10).build();
             JSONObject response1=visitor.invokeApi(scene1);
@@ -826,7 +725,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             IScene scene= traceBackTips.builder().build();
             String tip=visitor.invokeApi(scene).getString("tip");
 
-            Preconditions.checkArgument(tip.equals("您的账号可查看最近30天追溯视频（不包含今日）"),"收银追溯中的提示语不正确");
+            Preconditions.checkArgument(tip.equals("您的账号可查看最近365天追溯视频（不包含今日）"),"收银追溯中的提示语不正确");
 
         }catch(Exception|AssertionError e){
             collectMessage(e);
@@ -919,7 +818,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             //收银风控列表第一条的shopId
             IScene scene = PageScene.builder().page(1).size(10).build();
             JSONObject response=visitor.invokeApi(scene);
-            Long shopId=response.getJSONArray("list").getJSONObject(0).getLong("shop_id");
+            Long shopId=response.getJSONArray("list").getJSONObject(1).getLong("shop_id");
             //收银风控事件页面
             IScene scene1=RiskEventPageScene.builder().shopId(shopId).page(1).size(10).build();
             JSONObject response1=visitor.invokeApi(scene1);
@@ -1123,17 +1022,17 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             JSONObject response=visitor.invokeApi(scene);
             int pages=response.getInteger("pages")>10?10:response.getInteger("pages");
             for(int page=1;page<=pages;page++){
-                JSONArray list=visitor.invokeApi(com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.rule.PageScene.builder().page(page).size(10).build()).getJSONArray("list");
+                JSONArray list=visitor.invokeApi(com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.alarm.PageScene.builder().page(page).size(10).build()).getJSONArray("list");
                 for(int i=0;i<list.size();i++){
                     String name=list.getJSONObject(i).getString("name");
-                    String type=list.getJSONObject(i).getString("type");
-                    String detail=list.getJSONObject(i).getString("detail");
-                    String shopId=list.getJSONObject(i).getString("shop_id");
+                    String type=list.getJSONObject(i).getString("type_name");
+//                    String detail=list.getJSONObject(i).getString("detail");
+                    String shopName=list.getJSONObject(i).getString("shop_name");
                     String firstAlarmTime=list.getJSONObject(i).getString("first_alarm_time");
                     String lastAlarmTime=list.getJSONObject(i).getString("last_alarm_time");
                     String acceptRole=list.getJSONObject(i).getString("accept_role");
                     System.out.println(i+"------------"+name);
-                    Preconditions.checkArgument(name != null&&type!=null&&detail != null&&shopId!=null&&firstAlarmTime != null&&lastAlarmTime!=null&&acceptRole!=null,"第"+i+"行的列表项存在为空的值");
+                    Preconditions.checkArgument(name != null&&type!=null&&shopName!=null&&firstAlarmTime != null&&lastAlarmTime!=null&&acceptRole!=null,"第"+i+"行的列表项存在为空的值");
                 }
             }
         }catch(Exception|AssertionError e){
@@ -1709,12 +1608,15 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             //规则中的type
             JSONObject rule=new JSONObject();
             rule.put("type",RuleEnum.BLACK_LIST.getType());
+            //适用业务类型
+            List<String> businessTypeArray=new ArrayList<>();
+            businessTypeArray.add(RiskBusinessTypeEnum.FIRST_INSPECTION.getType());
             //新建风控规则
             IScene scene= AddScene.builder()
                     .name(pp.blackNameException)
                     .rule(rule)
                     .shopIds(shopIds)
-                    .businessType(RiskBusinessTypeEnum.FIRST_INSPECTION.getName())  //首次检查类型
+                    .businessType(businessTypeArray)  //首次检查类型
                     .build();
             String message=visitor.invokeApi(scene,false).getString("message");
 
@@ -1740,12 +1642,15 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             //规则中的type
             JSONObject rule=new JSONObject();
             rule.put("type",RuleEnum.BLACK_LIST.getType());
+            //适用业务类型
+            List<String> businessTypeArray=new ArrayList<>();
+            businessTypeArray.add(RiskBusinessTypeEnum.FIRST_INSPECTION.getType());
             //新建风控规则
             IScene scene= AddScene.builder()
                     .rule(rule)
                     .name("")
                     .shopIds(shopIds)
-                    .businessType("FIRST_INSPECTION")  //首次检查类型
+                    .businessType(businessTypeArray)  //首次检查类型
                     .build();
             String message=visitor.invokeApi(scene,false).getString("message");
 
@@ -1771,16 +1676,18 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             //规则中的type
             JSONObject rule=new JSONObject();
             rule.put("type",RuleEnum.BLACK_LIST.getType());
+            //适用业务类型
+            List<String> businessTypeArray=new ArrayList<>();
             //新建风控规则
             IScene scene= AddScene.builder()
                     .name(pp.blackName)
                     .rule(rule)
                     .shopIds(shopIds)
-                    .businessType("")
+                    .businessType(businessTypeArray)
                     .build();
             String message=visitor.invokeApi(scene,false).getString("message");
 
-            Preconditions.checkArgument(message.equals("系统繁忙，请稍后再试！！"),"风控规则业务类型为空个字创建成功");
+            Preconditions.checkArgument(message.equals("最少选择一个业务类型"),"风控规则业务类型为空个字创建成功");
         }catch(Exception|AssertionError e){
             collectMessage(e);
         }finally{
@@ -1801,12 +1708,15 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             shopIds.add("28762");
             //规则中的type
             JSONObject rule=new JSONObject();
+            //适用业务类型
+            List<String> businessTypeArray=new ArrayList<>();
+            businessTypeArray.add(RiskBusinessTypeEnum.FIRST_INSPECTION.getType());
             //新建风控规则
             IScene scene= AddScene.builder()
                     .name(pp.blackName)
                     .shopIds(shopIds)
                     .rule(rule)
-                    .businessType(RiskBusinessTypeEnum.FIRST_INSPECTION.getName())  //首次检查类型
+                    .businessType(businessTypeArray)  //首次检查类型
                     .build();
             String message=visitor.invokeApi(scene,false).getString("message");
             Preconditions.checkArgument(message.equals("规则类型不能为空"),"风控规则规则为空个字创建成功");
@@ -1828,12 +1738,15 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             //规则中的type
             JSONObject rule=new JSONObject();
             rule.put("type",RuleEnum.BLACK_LIST.getType());
+            //适用业务类型
+            List<String> businessTypeArray=new ArrayList<>();
+            businessTypeArray.add(RiskBusinessTypeEnum.FIRST_INSPECTION.getType());
             //新建风控规则
             IScene scene= AddScene.builder()
                     .name(pp.blackName)
                     .rule(rule)
                     .shopIds(shopIds)
-                    .businessType(RiskBusinessTypeEnum.FIRST_INSPECTION.getName())  //首次检查类型
+                    .businessType(businessTypeArray)  //首次检查类型
                     .build();
             String message=visitor.invokeApi(scene,false).getString("message");
 
@@ -1859,12 +1772,15 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             //规则中的type
             JSONObject rule=new JSONObject();
             rule.put("type",RuleEnum.FOCUS_LIST.getType());
+            //适用业务类型
+            List<String> businessTypeArray=new ArrayList<>();
+            businessTypeArray.add(RiskBusinessTypeEnum.FIRST_INSPECTION.getType());
             //新建风控规则
             IScene scene= AddScene.builder()
                     .name(pp.blackNameException)
                     .rule(rule)
                     .shopIds(shopIds)
-                    .businessType(RiskBusinessTypeEnum.FIRST_INSPECTION.getName())  //首次检查类型
+                    .businessType(businessTypeArray)  //首次检查类型
                     .build();
             String message=visitor.invokeApi(scene,false).getString("message");
 
@@ -1890,12 +1806,15 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             //规则中的type
             JSONObject rule=new JSONObject();
             rule.put("type",RuleEnum.FOCUS_LIST.getType());
+            //适用业务类型
+            List<String> businessTypeArray=new ArrayList<>();
+            businessTypeArray.add(RiskBusinessTypeEnum.FIRST_INSPECTION.getType());
             //新建风控规则
             IScene scene= AddScene.builder()
                     .name("")
                     .rule(rule)
                     .shopIds(shopIds)
-                    .businessType(RiskBusinessTypeEnum.FIRST_INSPECTION.getName())  //首次检查类型
+                    .businessType(businessTypeArray)  //首次检查类型
                     .build();
             String message=visitor.invokeApi(scene,false).getString("message");
 
@@ -1920,12 +1839,15 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             shopIds.add("28762");
             //规则中的type
             JSONObject rule=new JSONObject();
+            //适用业务类型
+            List<String> businessTypeArray=new ArrayList<>();
+            businessTypeArray.add(RiskBusinessTypeEnum.FIRST_INSPECTION.getType());
             //新建风控规则
             IScene scene= AddScene.builder()
                     .name(pp.observeName)
                     .rule(rule)
                     .shopIds(shopIds)
-                    .businessType(RiskBusinessTypeEnum.FIRST_INSPECTION.getName())  //首次检查类型
+                    .businessType(businessTypeArray)  //首次检查类型
                     .build();
             String message=visitor.invokeApi(scene,false).getString("message");
 
@@ -1948,16 +1870,19 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             //规则中的type
             JSONObject rule=new JSONObject();
             rule.put("type",RuleEnum.FOCUS_LIST.getType());
+            //适用业务类型
+            List<String> businessTypeArray=new ArrayList<>();
+            businessTypeArray.add(RiskBusinessTypeEnum.FIRST_INSPECTION.getType());
             //新建风控规则
             IScene scene= AddScene.builder()
                     .name(pp.observeName)
                     .shopIds(shopIds)
                     .rule(rule)
-                    .businessType(RiskBusinessTypeEnum.FIRST_INSPECTION.getName())  //首次检查类型
+                    .businessType(businessTypeArray)  //首次检查类型
                     .build();
             String message=visitor.invokeApi(scene,false).getString("message");
 
-            Preconditions.checkArgument(message.equals(""),"风控规则-适用门店为空个字个字创建成功");
+            Preconditions.checkArgument(message.equals(""),"风控规则-适用门店为空创建成功");
         }catch(Exception|AssertionError e){
             collectMessage(e);
         }finally{
@@ -1979,16 +1904,18 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             //规则中的type
             JSONObject rule=new JSONObject();
             rule.put("type",RuleEnum.FOCUS_LIST.getType());
+            //适用业务类型
+            List<String> businessTypeArray=new ArrayList<>();
             //新建风控规则
             IScene scene= AddScene.builder()
                     .name(pp.observeName)
                     .rule(rule)
                     .shopIds(shopIds)
-                    .businessType("")
+                    .businessType(businessTypeArray)
                     .build();
             String message=visitor.invokeApi(scene,false).getString("message");
 
-            Preconditions.checkArgument(message.equals(""),"风控规则-业务类型为空个字个字创建成功");
+            Preconditions.checkArgument(message.equals("最少选择一个业务类型"),"风控规则-业务类型为空个字个字创建成功");
         }catch(Exception|AssertionError e){
             collectMessage(e);
         }finally{
@@ -2012,12 +1939,15 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             JSONObject rule=new JSONObject();
             rule.put("type", RuleEnum.CASHIER.getType());
             rule.put("item", RuleTypeEnum.UNMANNED_ORDER.getType());
+            //适用业务类型
+            List<String> businessTypeArray=new ArrayList<>();
+            businessTypeArray.add(RiskBusinessTypeEnum.FIRST_INSPECTION.getType());
             //新建风控规则
             IScene scene= AddScene.builder()
                     .name(pp.blackNameException)
                     .rule(rule)
                     .shopIds(shopIds)
-                    .businessType(RiskBusinessTypeEnum.FIRST_INSPECTION.getName())  //首次检查类型
+                    .businessType(businessTypeArray)  //首次检查类型
                     .build();
             String message=visitor.invokeApi(scene,false).getString("message");
 
@@ -2044,12 +1974,15 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             JSONObject rule=new JSONObject();
             rule.put("type", RuleEnum.CASHIER.getType());
             rule.put("item", RuleTypeEnum.UNMANNED_ORDER.getType());
+            //适用业务类型
+            List<String> businessTypeArray=new ArrayList<>();
+            businessTypeArray.add(RiskBusinessTypeEnum.FIRST_INSPECTION.getType());
             //新建风控规则
             IScene scene= AddScene.builder()
                     .rule(rule)
                     .name("")
                     .shopIds(shopIds)
-                    .businessType(RiskBusinessTypeEnum.FIRST_INSPECTION.getName())  //首次检查类型
+                    .businessType(businessTypeArray)  //首次检查类型
                     .build();
             String message=visitor.invokeApi(scene,false).getString("message");
 
@@ -2074,12 +2007,15 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             shopIds.add("28762");
             //规则中的type
             JSONObject rule=new JSONObject();
+            //适用业务类型
+            List<String> businessTypeArray=new ArrayList<>();
+            businessTypeArray.add(RiskBusinessTypeEnum.FIRST_INSPECTION.getType());
             //新建风控规则
             IScene scene= AddScene.builder()
                     .name(pp.cashierName)
                     .rule(rule)
                     .shopIds(shopIds)
-                    .businessType(RiskBusinessTypeEnum.FIRST_INSPECTION.getName())  //首次检查类型
+                    .businessType(businessTypeArray)  //首次检查类型
                     .build();
             String message=visitor.invokeApi(scene,false).getString("message");
 
@@ -2104,12 +2040,15 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             JSONObject rule=new JSONObject();
             rule.put("type", RuleEnum.CASHIER.getType());
             rule.put("item", RuleTypeEnum.UNMANNED_ORDER.getType());
+            //适用业务类型
+            List<String> businessTypeArray=new ArrayList<>();
+            businessTypeArray.add(RiskBusinessTypeEnum.FIRST_INSPECTION.getType());
             //新建风控规则
             IScene scene= AddScene.builder()
                     .name(pp.cashierName)
                     .shopIds(shopIds)
                     .rule(rule)
-                    .businessType(RiskBusinessTypeEnum.FIRST_INSPECTION.getName())  //首次检查类型
+                    .businessType(businessTypeArray)  //首次检查类型
                     .build();
             String message=visitor.invokeApi(scene,false).getString("message");
 
@@ -2137,16 +2076,18 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             JSONObject rule=new JSONObject();
             rule.put("type", RuleEnum.CASHIER.getType());
             rule.put("item", RuleTypeEnum.UNMANNED_ORDER.getType());
+            //适用业务类型
+            List<String> businessTypeArray=new ArrayList<>();
             //新建风控规则
             IScene scene= AddScene.builder()
                     .name(pp.cashierName)
-                    .businessType("")
+                    .businessType(businessTypeArray)
                     .rule(rule)
                     .shopIds(shopIds)
                     .build();
             String message=visitor.invokeApi(scene,false).getString("message");
 
-            Preconditions.checkArgument(message.equals(""),"风控规则业务类型为空创建成功");
+            Preconditions.checkArgument(message.equals("最少选择一个业务类型"),"风控规则业务类型为空创建成功");
         }catch(Exception|AssertionError e){
             collectMessage(e);
         }finally{
@@ -2213,7 +2154,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             //一人多单/连续天数
             String message=cu.getCashierEmployeeRuleAdd("1","10001").getString("message");
 
-            Preconditions.checkArgument(message.equals("订单上限笔数应为1～10000"),"员工支付订单--上限单数10001 创建成功");
+            Preconditions.checkArgument(message.equals("订单上限笔数应为0～10000"),"员工支付订单--上限单数10001 创建成功");
         }catch(Exception|AssertionError e){
             collectMessage(e);
         }finally{
@@ -2691,7 +2632,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
      */
 
     /**
-     * 收银风控事件导出
+     * 收银风控事件导出----ok
      */
     @Test(description = "收银风控事件导出")
     public void ExportChecking1(){
@@ -2699,7 +2640,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             //收银风控列表第一条的shopId
             IScene scene = PageScene.builder().page(1).size(10).build();
             JSONObject response=visitor.invokeApi(scene);
-            Long shopId=response.getJSONArray("list").getJSONObject(1).getLong("shop_id");
+            Long shopId=response.getJSONArray("list").getJSONObject(0).getLong("shop_id");
             System.out.println("------"+shopId);
             //收银风控事件页面
             IScene scene1=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventPageScene.builder().shopId(shopId).page(1).size(10).isExport(true).build();
@@ -2714,7 +2655,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     }
 
     /**
-     * 风控告警页面导出
+     * 风控告警页面导出--ok
      */
     @Test(description = "风控告警页面导出")
     public void ExportChecking2(){
@@ -2731,15 +2672,16 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     }
 
     /**
-     * 特殊人员管理-风控白名单导出
+     * 特殊人员管理--白名单导出---ok
      */
     @Test(description = "特殊人员管理-风控白名单导出")
     public void ExportChecking3(){
         try{
-            //风控规则页面
+            //白名单
             IScene scene =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type("WHITE").isExport(true).build();
             String message=visitor.invokeApi(scene,false).getString("message");
             Preconditions.checkArgument(message.equals("success"),"特殊人员管理-风控白名单导出失败");
+
         }catch(Exception|AssertionError e){
             collectMessage(e);
         }finally{
@@ -2748,7 +2690,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     }
 
     /**
-     * 特殊人员管理-风控黑名单导出
+     * 特殊人员管理-风控黑名单导出--ok
      */
     @Test(description = "特殊人员管理-风控黑名单导出")
     public void ExportChecking4(){
@@ -2765,7 +2707,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     }
 
     /**
-     * 特殊人员管理-风控重点观察人员导出
+     * 特殊人员管理-风控重点观察人员导出--ok
      */
     @Test(description = "特殊人员管理-风控黑名单导出")
     public void ExportChecking5(){
@@ -2797,10 +2739,10 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
      */
 
     /**
-     * 收银风控筛选（单一筛选）
+     * 收银风控筛选（单一筛选）----ok
      */
     @Test
-    public void cashier_page_search() {
+    public void cashierPageSearch() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject res = md.cashier_page("", "", "", "", null, pp.page, pp.size);
@@ -2809,6 +2751,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             //根据门店名称进行筛选
             JSONArray list1 = md.cashier_page(shop_name, "", "", "", null, pp.page, pp.size).getJSONArray("list");
             String shop_name1 = list1.getJSONObject(0).getString("shop_name");
+            System.out.println(shop_name1+"----------"+shop_name1);
             checkArgument(shop_name.contains(shop_name1), "根据门店名称" + shop_name + "搜索,没有查询到应有的结果");
 
             //根据累计风险事件排序(传0为降序；从大-小)
@@ -2816,6 +2759,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             for (int i = 0; i < list2.size() - 1; i++) {
                 int risk_total1 = list2.getJSONObject(i).getInteger("risk_total");
                 int risk_total2 = list2.getJSONObject(i + 1).getInteger("risk_total");
+                System.out.println(risk_total1+"----根据累计风险事件排序-从大-小-----"+risk_total2);
                 checkArgument(risk_total1 >= risk_total2, "选择累计风险事件从大到小进行排序出现了排序错误");
             }
             //根据累计风险事件排序(传1为升序；从小-大)
@@ -2823,6 +2767,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             for (int i = 0; i < list3.size() - 1; i++) {
                 int risk_total1 = list3.getJSONObject(i).getInteger("risk_total");
                 int risk_total2 = list3.getJSONObject(i + 1).getInteger("risk_total");
+                System.out.println(risk_total1+"----根据累计风险事件排序-从小-大-----"+risk_total2);
                 checkArgument(risk_total1 <= risk_total2, "选择累计风险事件从小到大进行排序出现了排序错误");
 
             }
@@ -2833,6 +2778,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
                 if (list4.size() > 1) {
                     int abnormal_total1 = list4.getJSONObject(i).getInteger("abnormal_total");
                     int abnormal_total2 = list4.getJSONObject(i + 1).getInteger("abnormal_total");
+                    System.out.println(abnormal_total1+"----根据累计异常事件排序(传0为降序；从大-小)-----"+abnormal_total2);
                     checkArgument(abnormal_total1 >= abnormal_total2, "选择异常事件从大到小进行排序出现了排序错误");
                 } else {
                     System.err.println("该数组只有一个数据，无法进行排序");
@@ -2845,6 +2791,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
                 if (list5.size() > 1) {
                     int abnormal_total1 = list5.getJSONObject(i).getInteger("abnormal_total");
                     int abnormal_total2 = list5.getJSONObject(i + 1).getInteger("abnormal_total");
+                    System.out.println(abnormal_total1+"----根据累计异常事件排序(传1为升序；从小-大)-----"+abnormal_total2);
                     checkArgument(abnormal_total1 <= abnormal_total2, "选择异常事件从小到大进行排序出现了排序错误");
                 } else {
                     System.err.println("该数组只有一个数据，无法进行排序");
@@ -2857,6 +2804,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
                 if (list6.size() > 1) {
                     int normal_total1 = list6.getJSONObject(i).getInteger("normal_total");
                     int normal_total2 = list6.getJSONObject(i + 1).getInteger("normal_total");
+                    System.out.println(normal_total1+"----根据累计正常事件排序(传0为降序；从大-小)-----"+normal_total2);
                     checkArgument(normal_total1 >= normal_total2, "选择正常事件从大到小进行排序出现了排序错误");
                 } else {
                     System.err.println("该数组只有一个数据，无法进行排序");
@@ -2869,6 +2817,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
                 if (list7.size() > 1) {
                     int normal_total1 = list7.getJSONObject(i).getInteger("normal_total");
                     int normal_total2 = list7.getJSONObject(i + 1).getInteger("normal_total");
+                    System.out.println(normal_total1+"----根据累计正常事件排序(传1为升序；从小-大)-----"+normal_total2);
                     checkArgument(normal_total1 <= normal_total2, "选择正常事件从小到大进行排序出现了排序错误");
                 } else {
                     System.err.println("该数组只有一个数据，无法进行排序");
@@ -2882,6 +2831,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
                 if (list8.size() > 1) {
                     int pending_total1 = list8.getJSONObject(i).getInteger("pending_risks_total");
                     int pending_total2 = list8.getJSONObject(i + 1).getInteger("pending_risks_total");
+                    System.out.println(pending_total1+"----根据待处理风险事件排序(传0为降序；从大-小)-----"+pending_total2);
                     checkArgument(pending_total1 >= pending_total2, "选择待处理事件从大到小进行排序出现了排序错误");
                 } else {
                     System.err.println("该数组只有一个数据，无法进行排序");
@@ -2894,9 +2844,10 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
                 if (list9.size() > 1) {
                     int pending_total1 = list9.getJSONObject(i).getInteger("pending_risks_total");
                     int pending_total2 = list9.getJSONObject(i + 1).getInteger("pending_risks_total");
+                    System.out.println(pending_total1+"----根据待处理风险事件排序(传1为升序；从小-大)-----"+pending_total2);
                     checkArgument(pending_total1 <= pending_total2, "选择待处理事件从小到大进行排序出现了排序错误");
                 } else {
-                    System.err.println("该数组只有一个数据，无法进行排序");
+                    checkArgument(pp.size==1, "选择待处理事件从小到大进行排序出现了排序错误");
                 }
 
             }
@@ -2910,55 +2861,74 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
 
 
     /**
-     * 收银风控事件的筛选（单一查询）
+     * 收银风控事件的筛选（单一查询）--ok
      */
     @Test
     public void risk_eventSearch() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-
-            JSONArray list = md.cashier_riskPage(pp.shop_id_01, "", "", "", "", "", "", pp.page, pp.size).getJSONArray("list");
+            JSONArray list = md.cashier_riskPage(shopId, "", "", "", "", "", "", pp.page, pp.size).getJSONArray("list");
             String event_name = list.getJSONObject(0).getString("event_name");
             String order_id = list.getJSONObject(0).getString("order_id");
             String order_date = list.getJSONObject(0).getString("order_date").substring(0, 10);
             String order_date_01 = list.getJSONObject(0).getString("order_date");
+            String member_name = list.getJSONObject(0).getString("member_name");
             String handle_result = list.getJSONObject(0).getString("handle_result");
             String current_state = list.getJSONObject(0).getString("current_state");
-
             //根据事件名称进行筛选
-            JSONArray list1 = md.cashier_riskPage(pp.shop_id_01, event_name, "", "", "", "", "", pp.page, pp.size).getJSONArray("list");
-            String event_name1 = list1.getJSONObject(0).getString("event_name");
-            checkArgument(event_name.contains(event_name1), "根据日期" + event_name + "搜索,没有查询到应有的结果");
+            JSONArray list1 = md.cashier_riskPage(shopId, event_name, "", "", "", "", "", pp.page, pp.size).getJSONArray("list");
+            for(int i=0;i<list1.size();i++){
+                String event_name1 = list1.getJSONObject(0).getString("event_name");
+                System.out.println(event_name+"----根据事件名称进行筛选-----"+event_name1);
+                checkArgument(event_name.contains(event_name1), "根据日期" + event_name + "搜索,没有查询到应有的结果");
+
+            }
 
             //根据小票单号进行筛选
-            JSONArray list2 = md.cashier_riskPage(pp.shop_id_01, "", order_id, "", "", "", "", pp.page, pp.size).getJSONArray("list");
-            String order_id1 = list2.getJSONObject(0).getString("order_id");
-            checkArgument(order_id.contains(order_id1), "根据订单编号" + order_id + "搜索,没有查询到应有的结果");
+            JSONArray list2 = md.cashier_riskPage(shopId, "", order_id, "", "", "", "", pp.page, pp.size).getJSONArray("list");
+            for(int i=0;i<list1.size();i++){
+                String order_id1 = list2.getJSONObject(0).getString("order_id");
+                System.out.println(order_id1+"----根据小票单号进行筛选-----"+order_id);
+                checkArgument(order_id.contains(order_id1), "根据订单编号" + order_id + "搜索,没有查询到应有的结果");
+
+            }
 
             //根据收银日期进行筛选
-            JSONArray list3 = md.cashier_riskPage(pp.shop_id_01, "", "", order_date, "", "", "", pp.page, pp.size).getJSONArray("list");
-            String order_date1 = list3.getJSONObject(0).getString("order_date");
-            checkArgument(order_date_01.equals(order_date1), "根据收银日期" + order_date + "搜索,没有查询到应有的结果");
+            JSONArray list3 = md.cashier_riskPage(shopId, "", "", order_date, "", "", "", pp.page, pp.size).getJSONArray("list");
+            for(int i=0;i<list1.size();i++){
+                String order_date1 = list3.getJSONObject(0).getString("order_date");
+                System.out.println(order_date1+"----根据收银日期进行筛选-----"+order_date_01);
+                checkArgument(order_date_01.equals(order_date1), "根据收银日期" + order_date + "搜索,没有查询到应有的结果");
 
+            }
 
             //根据处理结果进行筛选
-            JSONArray list4 = md.cashier_riskPage(pp.shop_id_01, "", "", "", "", handle_result, "", pp.page, pp.size).getJSONArray("list");
+            JSONArray list4 = md.cashier_riskPage(shopId, "", "", "", "", handle_result, "", pp.page, pp.size).getJSONArray("list");
             for (int i = 0; i < list4.size(); i++) {
                 String handle_result1 = list4.getJSONObject(i).getString("handle_result");
+                System.out.println(handle_result1+"----根据处理结果进行筛选-----"+handle_result);
                 checkArgument(handle_result.contains(handle_result1), "根据订单编号" + handle_result + "搜索,没有查询到应有的结果");
             }
 
-//            //根据当前状态进行筛选
-//            JSONArray list5 = md.cashier_riskPage(shop_id_01, "", "", "", "", "", current_state, page, size).getJSONArray("list");
-//            for (int i = 0; i < list5.size(); i++) {
-//                String current_state1 = list1.getJSONObject(i).getString("current_state");
-//                checkArgument(current_state.contains(current_state1), "根据当前状态" + current_state + "搜索,没有查询到应有的结果");
-//            }
+            //根据当前状态进行筛选
+            JSONArray list5 = md.cashier_riskPage(shopId, "", "", "", "", "", current_state, pp.page, pp.size).getJSONArray("list");
+            for (int i = 0; i < list5.size(); i++) {
+                String current_state1 = list5.getJSONObject(i).getString("current_state");
+                System.out.println(current_state1+"----根据当前状态进行筛选-----"+current_state);
+                checkArgument(current_state1.equals(current_state), "根据当前状态" + current_state + "搜索,没有查询到应有的结果");
+            }
 
-//            //根据全部结果进行筛选
-//            JSONArray list6 = md.cashier_riskPage(shop_id_01, event_name, order_id, order_date, "", "", current_state, page, size).getJSONArray("list");
-//
-//            checkArgument(list6.size() == 1, "根据列表第一个内容作为条件进行筛选搜索,没有查询到应有的结果");
+            //根据客户姓名进行筛选
+            JSONArray list7 = md.cashier_riskPage(shopId, "", "", "", member_name, "", "", pp.page, pp.size).getJSONArray("list");
+            for (int i = 0; i < list7.size(); i++) {
+                String member_name1 = list7.getJSONObject(i).getString("member_name");
+                System.out.println(member_name+"----根据当前状态进行筛选-----"+member_name1);
+                checkArgument(member_name1.equals(member_name), "根据当前状态" + member_name + "搜索,没有查询到应有的结果");
+            }
+
+            //根据全部结果进行筛选
+            JSONArray list6 = md.cashier_riskPage(shopId, event_name, order_id, order_date, member_name, handle_result, current_state, pp.page, pp.size).getJSONArray("list");
+            checkArgument(list6.size() == 1, "根据列表第一个内容作为条件进行筛选搜索,没有查询到应有的结果");
 
 
         } catch (AssertionError e) {
@@ -2973,7 +2943,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     }
 
     /**
-     *风控规则列表筛选（单一查询）
+     *风控规则列表筛选（单一查询）---ok
      */
     @Test
     public void rule_pageSearch() {
@@ -2982,39 +2952,47 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             JSONArray list = md.risk_controlPage("", "", "", null, pp.page, pp.size).getJSONArray("list");
             String name = list.getJSONObject(0).getString("name");
             String type = list.getJSONObject(0).getString("type");
-            String shop_type = list.getJSONObject(0).getString("shop_type");
+            String shopName = list.getJSONObject(0).getJSONArray("shop_list").getJSONObject(0).getString("shop_name");
             Integer status = list.getJSONObject(0).getInteger("status");
 
             //根据规则名称进行筛选
             JSONArray list1 = md.risk_controlPage(name, "", "", null, pp.page, pp.size).getJSONArray("list");
-            checkArgument(name.equals(list1.getJSONObject(0).getString("name")), "根据列表第一个的规则名称作为条件进行筛选搜索,没有查询到应有的结果");
-
+            for(int i=0;i<list1.size();i++){
+                String name1=list1.getJSONObject(i).getString("name");
+                System.out.println(name+"------根据规则名称进行筛选-------"+name1);
+                checkArgument(name1.contains(name), "根据列表第一个的规则名称作为条件进行筛选搜索,没有查询到应有的结果");
+            }
             //根据规则类型进行筛选
             JSONArray list2 = md.risk_controlPage("", type, "", null, pp.page, pp.size).getJSONArray("list");
             for (int i = 0; i < list2.size(); i++) {
                 String type1 = list2.getJSONObject(i).getString("type");
+                System.out.println(type+"------根据规则类型进行筛选-------"+type1);
                 checkArgument(type.equals(type1), "根据列表第一个的规则类型作为条件进行筛选搜索,没有查询到应有的结果");
 
             }
             //根据门店类型进行筛选
-            JSONArray list3 = md.risk_controlPage("", "", shop_type, null, pp.page, pp.size).getJSONArray("list");
+            JSONArray list3 = md.risk_controlPage("", "", shopName, null, pp.page, pp.size).getJSONArray("list");
             for (int i = 0; i < list3.size(); i++) {
-                String shop_type1 = list3.getJSONObject(i).getString("shop_type");
-                checkArgument(shop_type.equals(shop_type1), "根据列表第一个的门店类型作为条件进行筛选搜索,没有查询到应有的结果");
+                String shopName1 = "";
+                for(int j=0;j<list3.getJSONObject(i).getJSONArray("shop_list").size();j++){
+                    shopName1+=list3.getJSONObject(i).getJSONArray("shop_list").getJSONObject(j).getString("shop_name");
+                }
+                System.out.println(shopName1+"------根据规则类型进行筛选-------"+shopName);
+                checkArgument(shopName1.contains(shopName), "根据列表第一个的门店类型作为条件进行筛选搜索,没有查询到应有的结果");
 
             }
             //根据规则开关进行筛选
             JSONArray list4 = md.risk_controlPage("", "", "", status, pp.page, pp.size).getJSONArray("list");
             for (int i = 0; i < list4.size(); i++) {
                 int status1 = list4.getJSONObject(i).getInteger("status");
+                System.out.println(status+"------根据规则开关进行筛选-------"+status1);
                 checkArgument(status == status1, "根据列表第一个的规则类型作为条件进行筛选搜索,没有查询到应有的结果");
 
             }
 
-
             //根据全部条件进行筛选
-            JSONArray list5 = md.risk_controlPage(name, type, shop_type, status, pp.page, pp.size).getJSONArray("list");
-            checkArgument(list5.size() == 1, "根据列表第一个的信息作为条件进行筛选搜索,没有查询到应有的结果");
+            JSONArray list5 = md.risk_controlPage(name, type, shopName, status, pp.page, pp.size).getJSONArray("list");
+            checkArgument(list5.size() >= 1, "根据列表第一个的信息作为条件进行筛选搜索,没有查询到应有的结果");
 
 
         } catch (AssertionError e) {
@@ -3029,42 +3007,65 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     }
 
     /**
-     * 风控告警列表的筛选（单一查询）
+     * 风控告警列表的筛选（单一查询）--ok
      */
     @Test
     public void alarm_pageSearch() {
         logger.logCaseStart(caseResult.getCaseName());
 
         try {
-            JSONArray list = md.alarm_page("", "", "", pp.page, pp.size).getJSONArray("list");
+            JSONArray list = md.alarm_page("", "", "","", pp.page, pp.size).getJSONArray("list");
             String name = list.getJSONObject(0).getString("name");
-            String type = list.getJSONObject(0).getString("type");
+            String typeName = list.getJSONObject(0).getString("type_name");
             String shop_name = list.getJSONObject(0).getString("shop_name");
+            String acceptRole=list.getJSONObject(0).getString("accept_role");
+            String type="";
+            if(typeName.equals("收银风控")){
+                type="CASHIER";
+            }else if(typeName.equals("黑名单风控")){
+                type="BLACK_LIST";
+            }else{
+                type="FOCUS_LIST";
+            }
 
             //根据列表第一个告警规则的名字进行筛查
-            JSONArray list1 = md.alarm_page(name, "", "", pp.page, pp.size).getJSONArray("list");
-            String name1 = list1.getJSONObject(0).getString("name");
-            checkArgument(name.equals(name1), "根据告警名称" + name + "筛查，没有查询到相应的结果");
+            JSONArray list1 = md.alarm_page(name, "", "","", pp.page, pp.size).getJSONArray("list");
+            for(int i=0;i<list1.size();i++){
+                String name1 = list1.getJSONObject(i).getString("name");
+                System.out.println(name1+"------根据列表第一个告警规则的名字进行筛查-------"+name);
+                checkArgument(name1.contains(name), "根据告警名称" + name + "筛查，没有查询到相应的结果");
+            }
 
-
-//            //根据列表第一个告警规则的类型进行筛查
-//            JSONArray list2 = md.alarm_page("", type, "", page, size).getJSONArray("list");
-//            for (int i = 0; i < list2.size(); i++) {
-//                String type1 = list2.getJSONObject(i).getString("type");
-//                checkArgument(type.equals(type1), "根据告警类型" + type + "筛查，没有查询到相应的结果");
-//            }
+            //根据列表第一个告警规则的类型进行筛查
+            JSONArray list2 = md.alarm_page("", type, "","", pp.page, pp.size).getJSONArray("list");
+            for (int i = 0; i < list2.size(); i++) {
+                String type1 = list2.getJSONObject(i).getString("type_name");
+                System.out.println(type1+"------根据列表第一个告警规则的类型进行筛查-------"+type);
+                checkArgument(type1.equals(typeName), "根据告警类型" + type + "筛查，没有查询到相应的结果");
+            }
 
             //根据列表第一个告警规则的门店名字进行筛查
-            JSONArray list3 = md.alarm_page("", "", shop_name, pp.page, pp.size).getJSONArray("list");
+            JSONArray list3 = md.alarm_page("", "", shop_name,"", pp.page, pp.size).getJSONArray("list");
             for (int i = 0; i < list3.size(); i++) {
                 String shop_name1 = list3.getJSONObject(i).getString("shop_name");
+                System.out.println(shop_name1+"------根据列表第一个告警规则的门店名字进行筛查-------"+shop_name);
                 checkArgument(shop_name.equals(shop_name1), "根据门店名称" + shop_name + "筛查，没有查询到相应的结果");
             }
 
-//            //根据列表第一个告警规则的信息进行筛查
-//            JSONArray list4 = md.alarm_page(name, "", shop_name, page, size).getJSONArray("list");
-//            checkArgument(list4.size() == 1, "根据列表第一个的信息作为条件进行筛选搜索,没有查询到应有的结果");
+            //根据列表第一个告警规则的告警接受者进行筛查
+            JSONArray list5 = md.alarm_page("", "", shop_name,acceptRole, pp.page, pp.size).getJSONArray("list");
+            for (int i = 0; i < list5.size(); i++) {
+                String acceptRole1 = list3.getJSONObject(i).getString("accept_role");
+                String role[]=acceptRole1.split(",");
+                System.out.println(acceptRole1+"------根据列表第一个告警规则的告警接受者进行筛查-------"+acceptRole);
+                for(int j=0;j<role.length;j++){
+                    checkArgument(acceptRole1.contains(role[j]), "根据告警接受者" + acceptRole + "筛查，没有查询到相应的结果");
+                }
+            }
 
+            //根据列表第一个告警规则的信息进行筛查
+            JSONArray list4 = md.alarm_page(name, type, shop_name, acceptRole,pp.page, pp.size).getJSONArray("list");
+            checkArgument(list4.size() >= 1, "根据列表第一个的信息作为条件进行筛选搜索,没有查询到应有的结果");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -3076,7 +3077,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     }
 
     /**
-     *风控告警规则的筛选（单一查询）
+     *风控告警规则的筛选（单一查询）--ok
      */
     @Test
     public void alarm_ruleSearch() {
@@ -3086,39 +3087,51 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             JSONArray list = md.alarm_rulePage("", "", "", null, pp.page, pp.size).getJSONArray("list");
             String name = list.getJSONObject(0).getString("name");
             String type = list.getJSONObject(0).getString("type");
-//            String accept_role = list.getJSONObject(0).getString("accept_role");
+            String accept_role = list.getJSONObject(0).getJSONArray("accept_role_list_name").get(0).toString();
+            String acceptId = list.getJSONObject(0).getJSONArray("accept_role_id_list").get(0).toString();
+            System.err.println("--------"+accept_role);
             int status = list.getJSONObject(0).getInteger("status");
 
             //根据列表第一个告警规则的名字进行筛查
             JSONArray list1 = md.alarm_rulePage(name, "", "", null, pp.page, pp.size).getJSONArray("list");
-            String name1 = list1.getJSONObject(0).getString("name");
-            checkArgument(name.equals(name1), "根据告警名称" + name + "筛查，没有查询到相应的结果");
+            for(int i=0;i<list1.size();i++){
+                String name1 = list1.getJSONObject(i).getString("name");
+                System.out.println(name1+"------根据列表第一个告警规则的名字进行筛查-------"+name);
+                checkArgument(name.equals(name1), "根据告警名称" + name + "筛查，没有查询到相应的结果");
+            }
 
 
             //根据列表第一个告警规则的类型进行筛查
             JSONArray list2 = md.alarm_rulePage("", type, "", null, pp.page, pp.size).getJSONArray("list");
             for (int i = 0; i < list2.size(); i++) {
                 String type1 = list2.getJSONObject(i).getString("type");
+                System.out.println(type1+"------根据列表第一个告警规则的类型进行筛查-------"+type);
                 checkArgument(type.equals(type1), "根据告警类型" + type + "筛查，没有查询到相应的结果");
             }
 
-//            //根据列表第一个告警规则的接收者进行筛查
-//            JSONArray list3 = md.alarm_rulePage("", "", accept_role, null, page, size).getJSONArray("list");
-//            for (int i = 0; i < list3.size(); i++) {
-//                JSONArray accept_role1 = list3.getJSONObject(i).getJSONArray("accept_role");
-//                checkArgument(accept_role1.contains(accept_role), "根据告警接收者" + accept_role + "筛查，没有查询到相应的结果");
-//            }
+            //根据列表第一个告警规则的接收者进行筛查
+            JSONArray list3 = md.alarm_rulePage("", "", acceptId, null, pp.page, pp.size).getJSONArray("list");
+            for (int i = 0; i < list3.size(); i++) {
+                String accept_role1 = "";
+                for(int j=0;j<list3.getJSONObject(i).getJSONArray("accept_role_list_name").size();j++){
+                    String role=list3.getJSONObject(i).getJSONArray("accept_role_list_name").get(j).toString();
+                    accept_role1+=role;
+                }
+                System.out.println(accept_role1+"------根据列表第一个告警规则的类型进行筛查-------"+accept_role);
+                checkArgument(accept_role1.contains(accept_role), "根据告警接收者" + accept_role + "筛查，没有查询到相应的结果");
+            }
 
             //根据列表第一个告警规则的状态进行筛查
             JSONArray list5 = md.alarm_rulePage("", "", "", status, pp.page, pp.size).getJSONArray("list");
             for (int i = 0; i < list5.size(); i++) {
                 int status1 = list5.getJSONObject(i).getInteger("status");
+                System.out.println(status1+"------根据列表第一个告警规则的状态进行筛查-------"+status);
                 checkArgument(status == status1, "根据告警规则状态" + status + "筛查，没有查询到相应的结果");
             }
 
             //根据列表第一个告警规则的名字进行筛查
-            JSONArray list4 = md.alarm_rulePage(name, type, "", null, pp.page, pp.size).getJSONArray("list");
-            checkArgument(list4.size() == 1, "根据列表第一个的信息作为条件进行筛选搜索,没有查询到应有的结果");
+            JSONArray list4 = md.alarm_rulePage(name, type, acceptId, status, pp.page, pp.size).getJSONArray("list");
+            checkArgument(list4.size() >= 1, "根据列表第一个的信息作为条件进行筛选搜索,没有查询到应有的结果");
 
 
         } catch (AssertionError | Exception e) {
@@ -3137,165 +3150,6 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
 
 
 
-
-    /**
-     *生成交易订单--触发一人多单风控
-     * 一人多单 ，userId/openid相同，多个transId交易订单触发
-     **/
-    @Test(enabled = true)
-    public void getTriggerMoreOrderRisk11(){
-        try{
-            //创建一人多单风控规则(1个人1天内最多2单)
-//            Long ruleId=cu.getCashierOrderRuleAdd("1","2").getJSONObject("data").getLong("id");
-            String time = dt.getHistoryDate(0);
-            String time1 = dt.getHHmm(0);
-
-            //交易ID(不同的3个)
-            String transId1= "QATest1_" + CommonUtil.getRandom(3) + time + time1;
-            String transId2= "QATest2_" + CommonUtil.getRandom(3) + time + time1;
-            String transId3= "QATest3_" + CommonUtil.getRandom(3) + time + time1;
-            //客户ID
-            String userId=pp.userId;
-            //支付ID
-            String openId=pp.openId;
-            //车架号
-            String carVehicleNumber="AAAAAAAAAA22"+CommonUtil.getRandom(5);
-//            String carVehicleNumber2="AAAAAAAAAA22"+CommonUtil.getRandom(5);
-//            String carVehicleNumber3="AAAAAAAAAA22"+CommonUtil.getRandom(5);
-
-            //生成交易订单
-            String post=cu.getCreateOrder(shopId,transId1,userId,openId,carVehicleNumber);
-            String post2=cu.getCreateOrder(shopId,transId2,userId,openId,carVehicleNumber);
-            String post3=cu.getCreateOrder(shopId,transId3,userId,openId,carVehicleNumber);
-            System.out.println("---------"+post);
-            System.out.println("---------"+post2);
-            System.out.println("---------"+post3);
-//            Preconditions.checkArgument(post1.equals("")&&post2.equals("")&&post3.equals("")&&ruleId!=null,"生成订单失败");
-
-        }catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("生成交易订单--触发一人多单风控");
-        }
-    }
-
-    /**
-     *生成交易订单--触发一人多车风控
-     * 一人多车 user_id  相同; 多个car_vehicle_number车架号 触发；
-     **/
-    @Test(enabled = true,description = "一人多车userId 触发")
-    public void getTriggerMoreCarRisk11(){
-        try{
-            //创建一人多车风控规则(1个人最多2个车)
-//            Long ruleId=cu.getCashierCarRuleAdd("2").getJSONObject("data").getLong("id");
-
-            //交易ID
-            String transId="QATest_" + CommonUtil.getRandom(3) + dt.getHistoryDate(0) + dt.getHHmm(0);
-            String transId2="QATest_" + CommonUtil.getRandom(3) + dt.getHistoryDate(0) + dt.getHHmm(0);
-            String transId3="QATest_" + CommonUtil.getRandom(3) + dt.getHistoryDate(0) + dt.getHHmm(0);
-            //客户ID
-            String userId=pp.userId;
-            //支付ID
-            String openId=pp.openId;
-            //车架号1
-            String carVehicleNumber1="AAAAAAAAAA22"+CommonUtil.getRandom(5);
-            //车架号2
-            String carVehicleNumber2="AAAAAAAAAA22"+CommonUtil.getRandom(5);
-            //车架号3
-            String carVehicleNumber3="AAAAAAAAAA22"+CommonUtil.getRandom(5);
-
-            //生成交易订单
-            String post1=cu.getCreateOrder(shopId,transId,userId,openId,carVehicleNumber1);
-            System.out.println(post1);
-            String post2=cu.getCreateOrder(shopId,transId2,userId,openId,carVehicleNumber2);
-            String post3=cu.getCreateOrder(shopId,transId3,userId,openId,carVehicleNumber3);
-
-
-//            Preconditions.checkArgument(post1.equals("")&&post2.equals("")&&post3.equals("")&&ruleId!=null,"生成订单失败");
-
-        }catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("生成交易订单--触发一人多车风控");
-        }
-    }
-
-    /**
-     *生成交易订单--触发一车多人风控
-     * 一车多人，多个openid/userId,一个car_vehicle_number 触发;QATest_42021-04-1418:17  QATest_16762021-04-1418:17
-     **/
-    @Test(enabled = true)
-    public void getTriggerMorePersonRisk11(){
-        try{
-            //创建一人多单风控规则(1个人最多2个车)
-//            Long ruleId=cu.getCashierMemberRuleAdd("2").getJSONObject("data").getLong("id");
-            //指定门店
-            //交易ID
-            String transId="QATest_" + CommonUtil.getRandom(1) + dt.getHistoryDate(0) + dt.getHHmm(0);
-            String transId2="QATest_" + CommonUtil.getRandom(4) + dt.getHistoryDate(0) + dt.getHHmm(0);
-            String transId3="QATest_" + CommonUtil.getRandom(3) + dt.getHistoryDate(0) + dt.getHHmm(0);
-            //客户ID1
-            String userId1="tester1" + CommonUtil.getRandom(6);
-            //客户ID2
-            String userId2="tester2" + CommonUtil.getRandom(6);
-            //客户ID3
-            String userId3="tester3" + CommonUtil.getRandom(6);
-            //支付ID TODO：openId 是否也要不同
-            String openId=pp.openId;
-            //车架号
-            String carVehicleNumber="AAAAAAAAAA1234678";
-
-            //生成交易订单
-            String post1=cu.getCreateOrder(shopId,transId,userId1,openId,carVehicleNumber);
-            String post2=cu.getCreateOrder(shopId,transId2,userId2,openId,carVehicleNumber);
-//            String post3=cu.getCreateOrder(shopId,transId3,userId3,openId,carVehicleNumber);
-            System.out.println("-----------"+post1);
-            System.out.println("-----------"+post2);
-//            System.out.println("-----------"+post3);
-
-        }catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("生成交易订单--触发一人车多人风控");
-        }
-    }
-
-
-    @Test(enabled = true,description = "一人多车 openid触发")
-    public void getTriggerMorePersonRisk2211(){
-        try{
-            //创建一人多单风控规则(1个人最多2个车)
-//            Long ruleId=cu.getCashierMemberRuleAdd("2").getJSONObject("data").getLong("id");
-            //指定门店
-            //交易ID
-            String transId="QATest_" + CommonUtil.getRandom(4) + dt.getHistoryDate(0) + dt.getHHmm(0);
-            String transId2="QATest_" + CommonUtil.getRandom(4) + dt.getHistoryDate(0) + dt.getHHmm(0);
-            String transId3="QATest_" + CommonUtil.getRandom(3) + dt.getHistoryDate(0) + dt.getHHmm(0);
-            //客户ID1
-            String userId1="tester1" + CommonUtil.getRandom(6);
-            String userId2="tester1" + CommonUtil.getRandom(6);
-            String userId3="tester1" + CommonUtil.getRandom(6);
-            //支付ID
-            String openId=pp.openId;
-            //车架号
-            String carVehicleNumber="AAAAAAAAAA1234784";
-            String carVehicleNumber2="AAAAAAAAAA1237885";
-            String carVehicleNumber3="AAAAAAAAAA1237881";
-
-            //生成交易订单
-            String post1=cu.getCreateOrder(shopId,transId,userId1,openId,carVehicleNumber);
-            String post2=cu.getCreateOrder(shopId,transId2,userId2,openId,carVehicleNumber2);
-            String post3=cu.getCreateOrder(shopId,transId3,userId3,openId,carVehicleNumber3);
-            System.out.println("-----------"+post1);
-            System.out.println("-----------"+post2);
-            System.out.println("-----------"+post3);
-
-        }catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("生成交易订单--触发一人车多人风控");
-        }
-    }
 
 
 

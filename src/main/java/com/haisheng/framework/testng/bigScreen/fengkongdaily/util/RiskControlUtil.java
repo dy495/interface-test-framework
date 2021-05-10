@@ -164,7 +164,7 @@ public class RiskControlUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject cashier_riskPage(long shop_id, String event_name, String order_id, String order_date, String member_name, String handle_result, String current_state, Integer page, Integer size) throws Exception {
+    public JSONObject cashier_riskPage(String shop_id, String event_name, String order_id, String order_date, String member_name, String handle_result, String current_state, Integer page, Integer size) throws Exception {
         String url = "/risk-control/auth/cashier/risk-event/page";
         String json =
                 "{" +
@@ -273,7 +273,7 @@ public class RiskControlUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject risk_controlPage(String name, String type, String shop_type, Integer status, Integer page, Integer size) throws Exception {
+    public JSONObject risk_controlPage(String name, String type, String shop_name, Integer status, Integer page, Integer size) throws Exception {
         String url = "/risk-control/auth/rule/page";
         String json =
                 "{";
@@ -283,8 +283,8 @@ public class RiskControlUtil extends TestCaseCommon {
         if (type != "") {
             json = json + "\"type\" :\"" + type + "\",\n";
         }
-        if (shop_type != "") {
-            json = json + "\"shop_type\" :\"" + shop_type + "\",\n";
+        if (shop_name != "") {
+            json = json + "\"shop_name\" :\"" + shop_name + "\",\n";
         }
         if (status != null) {
             json = json + "\"status\" :" + status + ",\n";
@@ -533,8 +533,8 @@ public class RiskControlUtil extends TestCaseCommon {
      * @author: qingqing
      *
      */
-    public JSONObject alarm_page(String name, String type, String shop_name, Integer page, Integer size) throws Exception {
-        String url = "/patrol/risk-control/alarm/page";
+    public JSONObject alarm_page(String name, String type, String shop_name,String accept_role,  Integer page, Integer size) throws Exception {
+        String url = "/risk-control/auth/alarm/page";
         String json =
                 "{";
         if (name != "") {
@@ -545,6 +545,9 @@ public class RiskControlUtil extends TestCaseCommon {
         }
         if (shop_name != "") {
             json = json + "\"shop_name\" :\"" + shop_name + "\",\n";
+        }
+        if (accept_role != "") {
+            json = json + "\"accept_role\" :\"" + accept_role + "\",\n";
         }
         json = json +
                 "\"page\" :" + page + ",\n" +

@@ -7,7 +7,6 @@ import com.arronlong.httpclientutil.builder.HCB;
 import com.arronlong.httpclientutil.common.HttpConfig;
 import com.arronlong.httpclientutil.common.HttpHeader;
 import com.arronlong.httpclientutil.exception.HttpProcessException;
-import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.orderParm;
@@ -25,7 +24,6 @@ import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import org.apache.http.Header;
 import org.apache.http.client.HttpClient;
-import org.testng.annotations.Test;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
@@ -51,6 +49,13 @@ public class CommonUsedUtil {
     public String getStartDate() {
         // 格式化时间
         return DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm");
+    }
+    /**
+     * 获取当前时间
+     */
+    public String getDate() {
+        // 格式化时间
+        return DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd");
     }
 
     /**
@@ -96,14 +101,19 @@ public class CommonUsedUtil {
         //规则中的type
         JSONObject rule=new JSONObject();
         rule.put("type",type);
+        //适用业务类型
+        List<String> businessTypeArray=new ArrayList<>();
+        businessTypeArray.add(RiskBusinessTypeEnum.FIRST_INSPECTION.getType());
         //新建风控规则
+        String name=type.equals("BLACK_LIST")?pp.blackName:pp.observeName;
         IScene scene= AddScene.builder()
-                .name(pp.blackName)
+                .name(name)
                 .rule(rule)
                 .shopIds(shopIds)
-                .businessType(RiskBusinessTypeEnum.FIRST_INSPECTION.getName())  //首次检查类型
+                .businessType(businessTypeArray)  //首次检查类型
                 .build();
         Long id=visitor.invokeApi(scene).getLong("id");
+        System.err.println("id:"+id);
         return id;
     }
 
@@ -126,12 +136,15 @@ public class CommonUsedUtil {
         object.put("type", RuleEnum.CASHIER.getType());
         object.put("item", RuleTypeEnum.RISK_SINGLE_MEMBER_ORDER_QUANTITY.getType());
         object.put("parameters",parameters);
+        //适用业务类型
+        List<String> businessTypeArray=new ArrayList<>();
+        businessTypeArray.add(RiskBusinessTypeEnum.FIRST_INSPECTION.getType());
         //新建风控规则
         IScene scene= AddScene.builder()
                 .name("一人多单"+(int) (Math.random() * 10000))
                 .rule(object)
                 .shopIds(shopIds)
-                .businessType(RiskBusinessTypeEnum.FIRST_INSPECTION.getName())  //首次检查类型
+                .businessType(businessTypeArray)  //首次检查类型
                 .build();
         JSONObject response=visitor.invokeApi(scene,false);
         return response;
@@ -151,12 +164,15 @@ public class CommonUsedUtil {
         JSONObject rule=new JSONObject();
         rule.put("type", RuleEnum.CASHIER.getType());
         rule.put("item",RuleTypeEnum.UNMANNED_ORDER.getType());
+        //适用业务类型
+        List<String> businessTypeArray=new ArrayList<>();
+        businessTypeArray.add(RiskBusinessTypeEnum.FIRST_INSPECTION.getType());
         //新建风控规则
         IScene scene= AddScene.builder()
                 .name("无人风控"+(int) (Math.random() * 10000))
                 .rule(rule)
                 .shopIds(shopIds)
-                .businessType(RiskBusinessTypeEnum.FIRST_INSPECTION.getName())  //首次检查类型
+                .businessType(businessTypeArray)  //首次检查类型
                 .build();
         JSONObject response=visitor.invokeApi(scene,false);
         return response;
@@ -179,12 +195,15 @@ public class CommonUsedUtil {
         object.put("type", RuleEnum.CASHIER.getType());
         object.put("item", RuleTypeEnum.EMPLOYEE_ORDER.getType());
         object.put("parameters",parameters);
+        //适用业务类型
+        List<String> businessTypeArray=new ArrayList<>();
+        businessTypeArray.add(RiskBusinessTypeEnum.FIRST_INSPECTION.getType());
         //新建风控规则
         IScene scene= AddScene.builder()
                 .name("员工支付"+(int) (Math.random() * 10000))
                 .rule(object)
                 .shopIds(shopIds)
-                .businessType(RiskBusinessTypeEnum.FIRST_INSPECTION.getName())  //首次检查类型
+                .businessType(businessTypeArray)  //首次检查类型
                 .build();
         JSONObject response=visitor.invokeApi(scene,false);
         return response;
@@ -202,16 +221,19 @@ public class CommonUsedUtil {
         //规则中的详情
         JSONObject object=new JSONObject();
         Map<String,String> parameters=new HashMap<>();
-        parameters.put("TIME_RANGE",upperLimit);
+        parameters.put("CAR_LIMIT",upperLimit);
         object.put("type", RuleEnum.CASHIER.getType());
         object.put("item", RuleTypeEnum.RISK_SINGLE_MEMBER_CAR_QUANTITY.getType());
         object.put("parameters",parameters);
+        //适用业务类型
+        List<String> businessTypeArray=new ArrayList<>();
+        businessTypeArray.add(RiskBusinessTypeEnum.FIRST_INSPECTION.getType());
         //新建风控规则
         IScene scene= AddScene.builder()
                 .name("一人多车"+(int) (Math.random() * 10000))
                 .rule(object)
                 .shopIds(shopIds)
-                .businessType(RiskBusinessTypeEnum.FIRST_INSPECTION.getName())  //首次检查类型
+                .businessType(businessTypeArray)  //首次检查类型
                 .build();
         JSONObject response=visitor.invokeApi(scene,false);
         return response;
@@ -229,16 +251,19 @@ public class CommonUsedUtil {
         //规则中的详情
         JSONObject object=new JSONObject();
         Map<String,String> parameters=new HashMap<>();
-        parameters.put("TIME_RANGE",upperLimit);
+        parameters.put("MEMBER_LIMIT",upperLimit);
         object.put("type", RuleEnum.CASHIER.getType());
         object.put("item", RuleTypeEnum.RISK_SINGLE_CAR_TRANSACTION_QUANTITY.getType());
         object.put("parameters",parameters);
+        //适用业务类型
+        List<String> businessTypeArray=new ArrayList<>();
+        businessTypeArray.add(RiskBusinessTypeEnum.FIRST_INSPECTION.getType());
         //新建风控规则
         IScene scene= AddScene.builder()
                 .name("一车多人"+(int) (Math.random() * 10000))
                 .rule(object)
                 .shopIds(shopIds)
-                .businessType(RiskBusinessTypeEnum.FIRST_INSPECTION.getName())  //首次检查类型
+                .businessType(businessTypeArray)  //首次检查类型
                 .build();
         JSONObject response=visitor.invokeApi(scene,false);
         return response;
@@ -355,7 +380,7 @@ public class CommonUsedUtil {
     /**
      * 风控事件处理
      * @param id
-     * @param result    1：订单正常  2：订单异常
+     * @param result    1：订单正常  0：订单异常
      * @param remarks   备注
      * @param customerIds  注册人物列表
      */
@@ -878,9 +903,9 @@ public class CommonUsedUtil {
             JSONArray list=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.PageScene.builder().page(page).size(10).build().invoke(visitor,true).getJSONArray("list");
             for(int i=0;i<list.size();i++){
                 String name1=list.getJSONObject(i).getString("name");
-                System.out.println("-------name1:---"+name1);
                 if(name1.equals(name)){
                     id=list.getJSONObject(i).getLong("id");
+                    System.err.println("-------id:---"+id);
                 }
             }
         }
@@ -910,6 +935,26 @@ public class CommonUsedUtil {
         return id;
     }
 
+    /**
+     * 通过员工id获取员工的创建时间
+     */
+    public JSONObject staffIdTransResponse(String id){
+        JSONObject res=null;
+        JSONObject response=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().page(1).size(10).build().invoke(visitor,true);
+        int numBefore=response.getInteger("total");
+        int pages=response.getInteger("pages");
+        for(int page=1;page<=pages;page++){
+            JSONArray list=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().page(page).size(10).build().invoke(visitor,true).getJSONArray("list");
+            for(int i=0;i<list.size();i++){
+                String id1=list.getJSONObject(i).getString("id");
+                if(id1.equals(id)){
+//                    createTime=list.getJSONObject(i).getString("create_time");
+                    res=list.getJSONObject(i);
+                }
+            }
+        }
+        return res;
+    }
 
 
 
