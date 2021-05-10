@@ -75,4 +75,22 @@ public class ReceptionPage implements Serializable {
     @JSONField(name = "shop_id")
     private Integer shopId;
 
+    /**
+     * 产值
+     */
+    @JSONField(name = "output_value")
+    private String outputValue;
+
+    /**
+     * 里程数
+     */
+    @JSONField(name = "newest_miles")
+    private Integer newestMiles;
+
+    /**
+     * 送修人姓名
+     */
+    @JSONField(name = "repair_customer_name")
+    private String repairCustomerName;
+
 }

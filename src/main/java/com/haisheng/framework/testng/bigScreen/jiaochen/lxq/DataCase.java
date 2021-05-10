@@ -3,10 +3,15 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.lxq;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.jiaoChenInfo;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shop.EditScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -27,6 +32,12 @@ import java.lang.reflect.Method;
  */
 
 public class DataCase extends TestCaseCommon implements TestCaseStd {
+
+    private static final EnumTestProduce PRODUCE = EnumTestProduce.JC_DAILY;
+    private static final EnumAccount ALL_AUTHORITY = EnumAccount.ALL_AUTHORITY_DAILY_LXQ;
+    private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_LXQ_DAILY;
+    public VisitorProxy visitor = new VisitorProxy(PRODUCE);
+    public UserUtil user = new UserUtil(visitor);
 
     ScenarioUtil jc = ScenarioUtil.getInstance();
     jiaoChenInfo info = new jiaoChenInfo();
@@ -169,8 +180,10 @@ public class DataCase extends TestCaseCommon implements TestCaseStd {
             int bef = jc.shopPage(1, 1, "").getInteger("total");
 
             //每次修改固定shop
-            jc.editShop(49522L, info.getLogo(), simple_name, name, arr, district_code, address, sale_tel, service_tel, Double.valueOf(longitude),
-                    Double.valueOf(latitude), appointment_status, washing_status, sale_tel);
+            int code = EditScene.builder().id(49522L).name(name).simpleName(simple_name).districtCode(district_code).address(address).brandList(arr)
+                    .saleTel(sale_tel).serviceTel(service_tel).longitude(Double.valueOf(longitude)).latitude(Double.valueOf(latitude)).avatarPath(info.getLogo()).customerServiceTel(sale_tel).rescueTel(sale_tel)
+                    .build().invoke(visitor,false).getInteger("code");
+            Preconditions.checkArgument(code==1000,"修改门店，状态码"+code);
             int after = jc.shopPage(1, 1, "").getInteger("total");
             int num = after - bef;
 

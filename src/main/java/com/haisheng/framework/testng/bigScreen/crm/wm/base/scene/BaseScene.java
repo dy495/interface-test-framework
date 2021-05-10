@@ -6,6 +6,8 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
  * @date 2020/9/27
  */
 public abstract class BaseScene implements IScene {
+    private final static Logger logger = LoggerFactory.getLogger(BaseScene.class);
     @Setter
     protected Integer size;
     @Setter
@@ -79,6 +82,7 @@ public abstract class BaseScene implements IScene {
      * @param visitor 要执行的产品
      * @return 接口返回值
      */
+    @Override
     public JSONObject invoke(@NotNull VisitorProxy visitor) {
         return invoke(visitor, true);
     }
@@ -97,6 +101,7 @@ public abstract class BaseScene implements IScene {
     }
 
     public JSONObject download(@NotNull VisitorProxy visitor) {
+        //todo 未开发
         return null;
     }
 
@@ -108,6 +113,7 @@ public abstract class BaseScene implements IScene {
      */
     public IScene remove(String... keys) {
         body = getRequestBody();
+        logger.info("移除键：{}", Arrays.stream(keys).toArray());
         Arrays.stream(keys).forEach(e -> body.remove(e));
         return this;
     }

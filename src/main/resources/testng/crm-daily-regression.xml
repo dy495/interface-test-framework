@@ -9,19 +9,19 @@
 
     <test name="daily-rgn" preserve-order="true">
         <classes>
-            <class name="com.haisheng.framework.testng.bigScreen.crm.lxq.CrmCase"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.crm.lxq.CrmSystemCase"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.crm.xmf.CrmAppletCase"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.crm.xmf.CrmPcTwoSystemCase"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.crm.xmf.Crm2_1AppX"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.crm.gly.CrmApp2_0_DataConsistency"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.crm.gly.Crm_AfterSale"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.crm.wm.AppSystem"/>
-            <class name="com.haisheng.framework.testng.bigScreen.crm.wm.PcSystem"/>
-            <class name="com.haisheng.framework.testng.bigScreen.crm.wm.AppData"/>
-            <class name="com.haisheng.framework.testng.bigScreen.crm.wm.PcData"/>
-            <class name="com.haisheng.framework.testng.bigScreen.crm.wm.PcDataPage"/>
-            <class name="com.haisheng.framework.testng.bigScreen.crm.wm.AfterSale"/>
+<!--            <class name="com.haisheng.framework.testng.bigScreen.crm.lxq.CrmCase"></class>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.crm.lxq.CrmSystemCase"></class>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.crm.xmf.CrmAppletCase"></class>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.crm.xmf.CrmPcTwoSystemCase"></class>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.crm.xmf.Crm2_1AppX"></class>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.crm.gly.CrmApp2_0_DataConsistency"></class>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.crm.gly.Crm_AfterSale"></class>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.crm.wm.AppSystem"/>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.crm.wm.PcSystem"/>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.crm.wm.AppData"/>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.crm.wm.PcData"/>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.crm.wm.PcDataPage"/>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.crm.wm.AfterSale"/>-->
         </classes>
     </test>
 </suite>

@@ -151,7 +151,10 @@ public class RiskControlCaseDataDaily extends TestCaseCommon implements TestCase
             //新建角色前的角色数量
             int totalBefore=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.PageScene.builder().page(1).size(10).build().invoke(visitor,true).getInteger("total");
             //新建角色
-            Long roleId=cu.getAddRole(pp.roleName,pp.descriptionRole);
+            cu.getAddRole(pp.roleName,pp.descriptionRole);
+            //获取此角色的ID
+            Long roleId=cu.authRoleNameTransId(pp.roleName);
+            System.err.println(roleId);
             //新建角色前的角色数量
             int totalAfter=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.PageScene.builder().page(1).size(10).build().invoke(visitor,true).getInteger("total");
             //删除新建的角色
@@ -173,7 +176,9 @@ public class RiskControlCaseDataDaily extends TestCaseCommon implements TestCase
     public void authCashierPageData4(){
         try{
             //新建角色
-            Long roleId=cu.getAddRole(pp.roleName,pp.descriptionRole);
+            cu.getAddRole(pp.roleName,pp.descriptionRole);
+            //获取此角色的ID
+            Long roleId=cu.authRoleNameTransId("自动化角色呀4092");
            //编辑角色
             String message=cu.getEditRole(roleId,pp.roleEditName,pp.descriptionEditRole);
             //获取编辑后的角色姓名和角色描述---角色是创建时间的正序

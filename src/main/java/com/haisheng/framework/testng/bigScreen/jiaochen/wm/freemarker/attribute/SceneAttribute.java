@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.scenemaker;
+package com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.attribute;
 
 import lombok.Getter;
 import lombok.Setter;

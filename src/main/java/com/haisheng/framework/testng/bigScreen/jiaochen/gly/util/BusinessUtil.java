@@ -2639,7 +2639,7 @@ public class BusinessUtil {
         if (ids.size() == 0) {
             Long id1 = getContentMarketingAdd();
             //审批通过
-            getApprovalReject(id1);
+            getApprovalPassed(id1);
             ids.add(id1);
 
         }

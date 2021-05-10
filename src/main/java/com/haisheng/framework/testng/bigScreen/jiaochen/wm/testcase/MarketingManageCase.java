@@ -63,10 +63,7 @@ import org.jetbrains.annotations.NotNull;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -1521,6 +1518,50 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
+    @Test(description = "消息管理--推送消息给全部小程序客户")
+    public void messageManager_system_3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            visitor.login(APPLET_USER_ONE.getToken());
+            int appletVoucherNum = util.getAppletVoucherNum();
+            int appletMessageNum = util.getAppletMessageNum();
+            user.loginApp(ALL_AUTHORITY);
+            IScene scene = SearchCustomerPhoneScene.builder().customerType(ExportPageTypeEnum.WECHAT_CUSTOMER.name()).build();
+            JSONObject data = scene.invoke(visitor);
+            List<Long> customerIdList = data.getJSONArray("customer_id_list").toJavaList(Long.class);
+            int sendMessageTotal = data.getInteger("total");
+            //增发卡券满足小程序人数
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            AddVoucherScene.builder().id(voucherId).addNumber(sendMessageTotal).build().invoke(visitor);
+            String voucherName = util.getVoucherName(voucherId);
+            //审核通过
+            util.applyVoucher(voucherName, "1");
+            //发送消息
+            PushMessageScene.builder().messageName(EnumDesc.DESC_BETWEEN_ALL_CUSTOMER.getDesc()).messageContent("卡券【" + voucherName + "】一张")
+                    .type(0).useTimeType(2).useDays("1").ifSendImmediately(true).voucherOrPackageList(getList(voucherId))
+                    .customerIdList(customerIdList).searchCustomerInfo(scene.getBody()).build().invoke(visitor);
+            //发送后验证
+            JSONObject response = MessageFormPageScene.builder().build().invoke(visitor);
+            JSONObject firstJSONObject = response.getJSONArray("list").getJSONObject(0);
+            CommonUtil.checkResult("消息标题", EnumDesc.DESC_BETWEEN_ALL_CUSTOMER.getDesc(), firstJSONObject.getString("message_title"));
+            CommonUtil.checkResult("消息内容", "卡券【" + voucherName + "】一张", firstJSONObject.getString("content"));
+            CommonUtil.checkResult("发送数量", sendMessageTotal, firstJSONObject.getInteger("send_count"));
+            //小程序接收消息验证
+            visitor.login(APPLET_USER_ONE.getToken());
+            CommonUtil.checkResult("小程序我的卡券数量", appletVoucherNum + 1, util.getAppletVoucherNum());
+            CommonUtil.checkResult("小程序我的消息数量", appletMessageNum + 1, util.getAppletMessageNum());
+            Long messageId = AppletMessageListScene.builder().size(20).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            JSONObject messageDetail = AppletMessageDetailScene.builder().id(messageId).build().invoke(visitor);
+            CommonUtil.checkResult("小程序消息标题", EnumDesc.DESC_BETWEEN_ALL_CUSTOMER.getDesc(), messageDetail.getString("title"));
+            CommonUtil.checkResult("小程序消息内容", "卡券【" + voucherName + "】一张", messageDetail.getString("content"));
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("消息管理--推送消息小程序客户数量=服务管理-小程序客户数量");
+        }
+    }
+
+    //ok
     @Test(description = "消息管理--发送已作废卡券，提交时提示：卡券【XXXXX】已作废, 请重新选择！")
     public void messageManager_system_10() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -2182,6 +2223,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
     @DataProvider(name = "shopIds")
     public Object[] shopIds() {
         return new String[]{String.valueOf(util.getShopId()), "49195", "46439"};
+    }
+
+    public <T> List<T> getList(T t) {
+        List<T> list = new ArrayList<>();
+        list.add(t);
+        return list;
     }
 }
 

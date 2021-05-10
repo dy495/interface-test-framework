@@ -214,7 +214,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             //报名取消后获得此报名的状态
             String activityStatus = businessUtil.appointmentActivityStatus(id);
 //            //获取【我的卡券】列表条数
-            int numAfter = jc.appletVoucherList(null, "GENERAL", 100).getJSONArray("list").size();
+//            int numAfter = jc.appletVoucherList(null, "GENERAL", 100).getJSONArray("list").size();
             Preconditions.checkArgument(status == ActivityStatusEnum.PENDING.getId(), "待审核的活动状态为：" + status);
             Preconditions.checkArgument(statusPassed == ActivityStatusEnum.PASSED.getId(), "审核通过的活动状态为：" + statusPassed);
             Preconditions.checkArgument(voucher != null, "小程序报名通过没有获得此卡券");
@@ -320,7 +320,7 @@ public void justTry(){
             //活动详情中-优惠券面值
             String price = list.getJSONObject(0).getString("price");
             //填写库存数量
-            String number = String.valueOf(businessUtil.getVoucherAllowUseInventory(voucherId));
+            String number = String.valueOf(businessUtil.getVoucherAllowUseInventoryNum(voucherId));
             System.out.println("发放数量：" + num + "--剩余库存" + leftNum + "--填写的库存数量" + number);
             Preconditions.checkArgument(num.equals(number) && leftNum.equals(number), "活动详情中的数值与创建时的数字不一致");
 //            Preconditions.checkArgument(price.equals(parValue),"优惠券的面值和活动中优惠券的面值不一致");

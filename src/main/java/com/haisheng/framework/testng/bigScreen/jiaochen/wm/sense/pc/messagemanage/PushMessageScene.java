@@ -27,6 +27,7 @@ public class PushMessageScene extends BaseScene {
     private final Long activityId;
     private final List<Long> customerIdList;
     private final Integer useTimeType;
+    private final JSONObject searchCustomerInfo;
 
     @Override
     public JSONObject getRequestBody() {
@@ -46,6 +47,7 @@ public class PushMessageScene extends BaseScene {
         object.put("activity_id", activityId);
         object.put("customer_id_list", customerIdList);
         object.put("use_time_type", useTimeType);
+        object.put("search_customer_info", searchCustomerInfo);
         return object;
     }
 

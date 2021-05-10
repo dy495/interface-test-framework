@@ -4,7 +4,6 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.enumerator.FileFormatEnum;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
-import freemarker.template.TemplateException;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;

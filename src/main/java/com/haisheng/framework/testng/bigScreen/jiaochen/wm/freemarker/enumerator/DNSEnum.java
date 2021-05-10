@@ -10,7 +10,7 @@ import java.util.Arrays;
  * @author wangmin
  * @date 2020/7/24 15:11
  */
-public enum IpPortEnum {
+public enum DNSEnum {
 
     CRM_DAILY("http://dev.porsche.dealer-ydauto.winsenseos.cn"),
 
@@ -27,9 +27,11 @@ public enum IpPortEnum {
     INS_DAILY("http://api.litemall.winsenseos.com"),
 
     RISK_CONTROL_DAILY("http://127.0.0.1"),
+
+    YUNTONG_DAILY("待定"),
     ;
 
-    IpPortEnum(String ipPort) {
+    DNSEnum(String ipPort) {
         this.address = ipPort;
     }
 
@@ -37,6 +39,6 @@ public enum IpPortEnum {
     private final String address;
 
     public static String getContainAddress(String url) {
-        return Arrays.stream(IpPortEnum.values()).filter(e -> url.contains(e.getAddress())).map(IpPortEnum::getAddress).findFirst().orElse(JIAOCHEN_DAILY.getAddress());
+        return Arrays.stream(DNSEnum.values()).filter(e -> url.contains(e.getAddress())).map(DNSEnum::getAddress).findFirst().orElse(JIAOCHEN_DAILY.getAddress());
     }
 }

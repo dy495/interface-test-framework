@@ -21,7 +21,6 @@ public class Jc_Pc_CustomerManageOnline extends TestCaseCommon implements TestCa
     ScenarioUtil jc = new ScenarioUtil();
     public String shopId = "-1";
     CommonPram cp = new CommonPram();
-    public String appletTocken = EnumAppletToken.JC_GLY_DAILY.getToken();
     private static final EnumTestProduce product = EnumTestProduce.JC_ONLINE;
     CommonConfig commonConfig = new CommonConfig();
 

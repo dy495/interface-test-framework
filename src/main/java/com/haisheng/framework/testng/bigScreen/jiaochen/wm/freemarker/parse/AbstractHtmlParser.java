@@ -1,8 +1,8 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.parse;
 
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.scenemaker.ApiAttribute;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.scenemaker.SceneAttribute;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.attribute.ApiAttribute;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.attribute.SceneAttribute;
 import lombok.Setter;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;

@@ -148,11 +148,11 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             String message3 = obj3.getString("message");
             Preconditions.checkArgument(code3==1001,"不填写咨询内容，状态码为:"+code3+", 提示语为:"+message3);
 
-            JSONObject obj4 = AppletConsultOnlineExpertsSubmitScene.builder().customerName(customerName).customerPhone(customerPhone).content(content)
-                    .modelId(modelId).shopId(shopId).build().invoke(visitor, false);
-            int code4 = obj4.getInteger("code");
-            String message4 = obj4.getString("message");
-            Preconditions.checkArgument(code4==1001,"不填写品牌，状态码为:"+code4+", 提示语为:"+message4);
+//            JSONObject obj4 = AppletConsultOnlineExpertsSubmitScene.builder().customerName(customerName).customerPhone(customerPhone).content(content)
+//                    .modelId(modelId).shopId(shopId).build().invoke(visitor, false);
+//            int code4 = obj4.getInteger("code");
+//            String message4 = obj4.getString("message");
+//            Preconditions.checkArgument(code4==1001,"不填写品牌，状态码为:"+code4+", 提示语为:"+message4);
 
             JSONObject obj5 = AppletConsultOnlineExpertsSubmitScene.builder().customerName(customerName).customerPhone(customerPhone).content(content)
                     .brandId(brandId).shopId(shopId).build().invoke(visitor, false);

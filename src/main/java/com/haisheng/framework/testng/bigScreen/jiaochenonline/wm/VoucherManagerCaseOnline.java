@@ -16,9 +16,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherChange
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherPage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherSendRecord;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.voucher.ApplyPageBean;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VerificationRecordBean;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherDetailBean;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherInvalidPageBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.financial.ApplyTypeEnum;
@@ -81,7 +79,6 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
         commonConfig.shopId = PRODUCE.getShopId();
         commonConfig.roleId = ALL_AUTHORITY.getRoleId();
         beforeClassInit(commonConfig);
-        util.cleanVoucher();
     }
 
     @AfterClass
@@ -513,12 +510,12 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("优惠券管理--卡券转移，选择要转移的卡券，卡券刚好过期，确认，提示：卡券【XXXX】已被使用或已过期，请重新选择！");
+            saveData("优惠券管理--卡券转移，接收账号异常");
         }
     }
 
     //ok
-    @Test(description = "优惠券管理--卡券增发,异常情况")
+    @Test(description = "优惠券管理-卡券增发,异常情况")
     public void voucherManage_system_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -534,6 +531,35 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
             collectMessage(e);
         } finally {
             saveData("优惠券管理--卡券增发,异常情况");
+        }
+    }
+
+    //ok
+    @Test(description = "优惠券管理--转移全部卡券")
+    public void voucherManage_system_12() {
+        logger.logCaseStart(caseResult.getCaseName());
+        List<Long> ids = null;
+        try {
+            visitor.login(APPLET_USER_ONE.getToken());
+            int transferNum = util.getAppletVoucherNum();
+            visitor.login(APPLET_USER_TWO.getToken());
+            int receiveNum = util.getAppletVoucherNum();
+            user.loginPc(ALL_AUTHORITY);
+            JSONArray list = VoucherListScene.builder().transferPhone(APPLET_USER_ONE.getPhone()).build().invoke(visitor).getJSONArray("list");
+            ids = list.stream().map(e -> (JSONObject) e).map(e -> util.collectBean(e, VoucherListBean.class)).map(VoucherListBean::getId).collect(Collectors.toList());
+            //转移
+            TransferScene.builder().transferPhone(APPLET_USER_ONE.getPhone()).receivePhone(APPLET_USER_TWO.getPhone()).voucherIds(ids).build().invoke(visitor);
+            visitor.login(APPLET_USER_ONE.getToken());
+            CommonUtil.checkResult("转移后，转移者优惠券数量", transferNum - ids.size(), util.getAppletVoucherNum());
+            visitor.login(APPLET_USER_TWO.getToken());
+            CommonUtil.checkResult("转移后，接收者优惠券数量", receiveNum + ids.size(), util.getAppletVoucherNum());
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            //转回去
+            user.loginPc(ALL_AUTHORITY);
+            TransferScene.builder().transferPhone(APPLET_USER_TWO.getPhone()).receivePhone(APPLET_USER_ONE.getPhone()).voucherIds(ids).build().invoke(visitor);
+            saveData("优惠券管理--转移全部卡券");
         }
     }
 
@@ -600,6 +626,70 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
         }
     }
 
+    //ok
+    @Test(description = "优惠券管理--删除待审核的卡券")
+    public void voucherManage_system_43() {
+        try {
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WAITING).buildVoucher().getVoucherId();
+            String voucherName = util.getVoucherName(voucherId);
+            IScene scene = VoucherFormVoucherPageScene.builder().build();
+            VoucherFormVoucherPageBean voucherFormVoucherPageBean = util.collectBean(scene, VoucherFormVoucherPageBean.class, "voucher_id", voucherId);
+            CommonUtil.checkResult("卡券 " + voucherName + " 能否删除", voucherFormVoucherPageBean.getIsDelete(), null);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("优惠券管理--删除待审核的卡券");
+        }
+    }
+
+    //ok
+    @Test(description = "优惠券管理--删除进行中的卡券")
+    public void voucherManage_system_44() {
+        try {
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            String voucherName = util.getVoucherName(voucherId);
+            IScene scene = VoucherFormVoucherPageScene.builder().build();
+            VoucherFormVoucherPageBean voucherFormVoucherPageBean = util.collectBean(scene, VoucherFormVoucherPageBean.class, "voucher_id", voucherId);
+            CommonUtil.checkResult("卡券 " + voucherName + " 能否删除", voucherFormVoucherPageBean.getIsDelete(), null);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("优惠券管理--删除进行中的卡券");
+        }
+    }
+
+    //ok
+    @Test(description = "优惠券管理--删除暂停发放的卡券")
+    public void voucherManage_system_45() {
+        try {
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.STOP).buildVoucher().getVoucherId();
+            String voucherName = util.getVoucherName(voucherId);
+            IScene scene = VoucherFormVoucherPageScene.builder().build();
+            VoucherFormVoucherPageBean voucherFormVoucherPageBean = util.collectBean(scene, VoucherFormVoucherPageBean.class, "voucher_id", voucherId);
+            CommonUtil.checkResult("卡券 " + voucherName + " 能否删除", voucherFormVoucherPageBean.getIsDelete(), null);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("优惠券管理--删除暂停发放的卡券");
+        }
+    }
+
+    //ok
+    @Test(description = "优惠券管理--删除已作废的卡券")
+    public void voucherManage_system_46() {
+        try {
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.INVALIDED).buildVoucher().getVoucherId();
+            String voucherName = util.getVoucherName(voucherId);
+            IScene scene = VoucherFormVoucherPageScene.builder().build();
+            VoucherFormVoucherPageBean voucherFormVoucherPageBean = util.collectBean(scene, VoucherFormVoucherPageBean.class, "voucher_id", voucherId);
+            CommonUtil.checkResult("卡券 " + voucherName + " 能否删除", voucherFormVoucherPageBean.getIsDelete(), null);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("优惠券管理--删除已作废的卡券");
+        }
+    }
+
     //---------------------------暂停-----------------------------
 
     //ok
@@ -638,6 +728,40 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
             collectMessage(e);
         } finally {
             saveData("优惠券管理--暂停发放已售罄的卡券");
+        }
+    }
+
+    //ok
+    @Test(description = "优惠券管理--暂停发放待审核的卡券")
+    public void voucherManage_system_47() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WAITING).buildVoucher().getVoucherId();
+            String voucherName = util.getVoucherName(voucherId);
+            IScene scene = VoucherFormVoucherPageScene.builder().build();
+            VoucherFormVoucherPageBean voucherFormVoucherPageBean = util.collectBean(scene, VoucherFormVoucherPageBean.class, "voucher_id", voucherId);
+            CommonUtil.checkResult("卡券 " + voucherName + " 能否暂停发放", voucherFormVoucherPageBean.getIsStop(), null);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("优惠券管理--暂停发放待审核的卡券");
+        }
+    }
+
+    //ok
+    @Test(description = "优惠券管理--暂停发放已撤回的卡券")
+    public void voucherManage_system_48() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.RECALL).buildVoucher().getVoucherId();
+            String voucherName = util.getVoucherName(voucherId);
+            IScene scene = VoucherFormVoucherPageScene.builder().build();
+            VoucherFormVoucherPageBean voucherFormVoucherPageBean = util.collectBean(scene, VoucherFormVoucherPageBean.class, "voucher_id", voucherId);
+            CommonUtil.checkResult("卡券 " + voucherName + " 能否暂停发放", voucherFormVoucherPageBean.getIsStop(), null);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("优惠券管理--暂停发放待审核的卡券");
         }
     }
 
@@ -758,6 +882,40 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
             collectMessage(e);
         } finally {
             saveData("优惠券管理--作废已售罄的卡券");
+        }
+    }
+
+    //ok
+    @Test(description = "优惠券管理--作废已撤回的卡券")
+    public void voucherManage_system_49() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.RECALL).buildVoucher().getVoucherId();
+            String voucherName = util.getVoucherName(voucherId);
+            IScene scene = VoucherFormVoucherPageScene.builder().build();
+            VoucherFormVoucherPageBean voucherFormVoucherPageBean = util.collectBean(scene, VoucherFormVoucherPageBean.class, "voucher_id", voucherId);
+            CommonUtil.checkResult("卡券 " + voucherName + " 能否作废", voucherFormVoucherPageBean.getIsStop(), null);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("优惠券管理--暂停发放待审核的卡券");
+        }
+    }
+
+    //ok
+    @Test(description = "优惠券管理--作废待审核的卡券")
+    public void voucherManage_system_50() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WAITING).buildVoucher().getVoucherId();
+            String voucherName = util.getVoucherName(voucherId);
+            IScene scene = VoucherFormVoucherPageScene.builder().build();
+            VoucherFormVoucherPageBean voucherFormVoucherPageBean = util.collectBean(scene, VoucherFormVoucherPageBean.class, "voucher_id", voucherId);
+            CommonUtil.checkResult("卡券 " + voucherName + " 能否作废", voucherFormVoucherPageBean.getIsStop(), null);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("优惠券管理--作废待审核的卡券");
         }
     }
 
@@ -1152,7 +1310,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
             IScene voucherPageScene = VoucherFormVoucherPageScene.builder().voucherStatus(VoucherStatusEnum.INVALIDED.name()).build();
             List<VoucherPage> voucherPageList = util.collectBeanList(voucherPageScene, VoucherPage.class);
             List<Long> invalidedVoucherList = voucherPageList.stream().map(VoucherPage::getVoucherId).collect(Collectors.toList());
-            IScene receptionVoucherListScene = com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.VoucherListScene.builder().build();
+            IScene receptionVoucherListScene = VoucherListScene.builder().build();
             JSONArray array = visitor.invokeApi(receptionVoucherListScene).getJSONArray("list");
             List<Long> voucherList = array.stream().map(e -> (JSONObject) e).map(e -> e.getLong("voucher_id")).collect(Collectors.toList());
             invalidedVoucherList.forEach(voucherId -> {
@@ -1282,9 +1440,10 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
         String code = null;
         try {
             code = util.getVerificationCode(false, "本司员工");
-            user.loginApplet(APPLET_USER_ONE);
+            visitor.login(APPLET_USER_ONE.getToken());
             long id = util.getAppletVoucher(VoucherUseStatusEnum.NEAR_EXPIRE).getId();
-            String message = AppletVoucherVerificationScene.builder().id(String.valueOf(id)).verificationCode(code).build().invoke(visitor, false).getString("message");
+            IScene scene = AppletVoucherVerificationScene.builder().id(String.valueOf(id)).verificationCode(code).build();
+            String message = util.getResponse(scene).getMessage();
             String err = "当前核销码已失效";
             CommonUtil.checkResult("核销卡券时核销码状态关闭", err, message);
         } catch (Exception | AssertionError e) {
@@ -1303,7 +1462,9 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
         try {
             String[] strings = {null, EnumDesc.DESC_BETWEEN_200_300.getDesc()};
             Arrays.stream(strings).forEach(name -> {
-                String message = CreateVerificationPeopleScene.builder().verificationPersonName(name).verificationPersonPhone("13663366788").status(1).type(1).build().invoke(visitor, false).getString("message");
+                IScene scene = CreateVerificationPeopleScene.builder().verificationPersonName(name)
+                        .verificationPersonPhone("13663366788").status(1).type(1).build();
+                String message = util.getResponse(scene).getMessage();
                 String err = StringUtils.isEmpty(name) ? "核销人员名字不能为空" : "核销人员名字必须为1～20个字";
                 CommonUtil.checkResult("核销人员名字为 " + name, err, message);
                 CommonUtil.logger(name);
@@ -1322,7 +1483,9 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
         try {
             String[] strings = {null, EnumDesc.DESC_BETWEEN_200_300.getDesc()};
             Arrays.stream(strings).forEach(name -> {
-                String message = CreateVerificationPeopleScene.builder().verificationPersonName(name).verificationPersonPhone("13663366788").status(1).type(1).build().invoke(visitor, false).getString("message");
+                IScene scene = CreateVerificationPeopleScene.builder().verificationPersonName(name)
+                        .verificationPersonPhone("13663366788").status(1).type(1).build();
+                String message = util.getResponse(scene).getMessage();
                 String err = StringUtils.isEmpty(name) ? "核销人员名字不能为空" : "核销人员名字必须为1～20个字";
                 CommonUtil.checkResult("核销人员名字为 " + name, err, message);
                 CommonUtil.logger(name);
@@ -1341,7 +1504,9 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
         try {
             String[] strings = {null, "", "11111111111", "1337316680", "133731668062"};
             Arrays.stream(strings).forEach(phone -> {
-                String message = CreateVerificationPeopleScene.builder().verificationPersonName("打工人").verificationPersonPhone(phone).status(1).type(0).build().invoke(visitor, false).getString("message");
+                IScene scene = CreateVerificationPeopleScene.builder().verificationPersonName("打工人")
+                        .verificationPersonPhone(phone).status(1).type(0).build();
+                String message = util.getResponse(scene).getMessage();
                 String err = "手机号格式不正确";
                 CommonUtil.checkResult("手机号格式为：" + phone, err, message);
                 CommonUtil.logger(phone);
@@ -1359,7 +1524,9 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String phone = util.getRepetitionVerificationPhone();
-            String message = CreateVerificationPeopleScene.builder().verificationPersonName("打工人").verificationPersonPhone(phone).status(1).type(0).build().invoke(visitor, false).getString("message");
+            IScene scene = CreateVerificationPeopleScene.builder().verificationPersonName("打工人")
+                    .verificationPersonPhone(phone).status(1).type(0).build();
+            String message = util.getResponse(scene).getMessage();
             String err = "手机号已存在";
             CommonUtil.checkResult("手机号格式为：" + phone, err, message);
         } catch (Exception | AssertionError e) {

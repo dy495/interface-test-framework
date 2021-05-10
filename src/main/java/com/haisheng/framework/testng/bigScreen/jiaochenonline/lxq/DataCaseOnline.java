@@ -3,7 +3,10 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline.lxq;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shop.EditScene;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.PublicParmOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -23,6 +26,10 @@ import java.lang.reflect.Method;
  */
 
 public class DataCaseOnline extends TestCaseCommon implements TestCaseStd {
+    private static final EnumTestProduce PRODUCE = EnumTestProduce.JC_ONLINE;
+    private static final EnumAccount ALL_AUTHORITY = EnumAccount.ALL_JC_ONLINE;
+    private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_LXQ_ONLINE;
+    public VisitorProxy visitor = new VisitorProxy(PRODUCE);
 
     ScenarioUtilOnline jc = ScenarioUtilOnline.getInstance();
     jiaoChenInfoOnline info = new jiaoChenInfoOnline();
@@ -86,8 +93,8 @@ public class DataCaseOnline extends TestCaseCommon implements TestCaseStd {
             String address = "地址" + System.currentTimeMillis();
             String sale_tel = "1380000" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000));
             String service_tel = "1389999" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000));
-            String longitude = "129." + Integer.toString((int) (Math.random() * 10000));
-            String latitude = "42." + Integer.toString((int) (Math.random() * 100000));
+            String longitude = "129." + Integer.toString((int) (Math.random() * 1000));
+            String latitude = "42." + Integer.toString((int) (Math.random() * 10000));
             String appointment_status = "DISABLE";
             String washing_status = "DISABLE";
 
@@ -98,8 +105,11 @@ public class DataCaseOnline extends TestCaseCommon implements TestCaseStd {
             int bef = jc.shopPage(1, 1, "").getInteger("total");
 
             //每次修改固定shop
-            jc.editShop(20709L, info.getLogo(), simple_name, name, arr, district_code, address, sale_tel, service_tel, Double.valueOf(longitude),
-                    Double.valueOf(latitude), appointment_status, washing_status,sale_tel);
+            int code = EditScene.builder().id(20709L).name(name).simpleName(simple_name).districtCode(district_code).address(address).brandList(arr)
+                    .saleTel(sale_tel).serviceTel(service_tel).longitude(Double.valueOf(longitude)).latitude(Double.valueOf(latitude)).avatarPath(info.getLogo()).customerServiceTel(sale_tel).rescueTel(sale_tel)
+                    .build().invoke(visitor,false).getInteger("code");
+            Preconditions.checkArgument(code==1000,"修改门店，状态码"+code);
+
             int after = jc.shopPage(1, 1, "").getInteger("total");
             int num = after - bef;
 

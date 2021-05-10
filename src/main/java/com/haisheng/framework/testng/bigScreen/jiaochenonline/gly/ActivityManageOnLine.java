@@ -313,7 +313,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             //活动详情中-优惠券面值
             String price = list.getJSONObject(0).getString("price");
             //填写库存数量
-            String number = String.valueOf(businessUtil.getVoucherAllowUseInventory(voucherId));
+            String number = String.valueOf(businessUtil.getVoucherAllowUseInventoryNum(voucherId));
             System.out.println("发放数量：" + num + "--剩余库存" + leftNum + "--填写的库存数量" + number);
             Preconditions.checkArgument(num.equals(number) && leftNum.equals(number), "活动详情中的数值与创建时的数字不一致");
 //            Preconditions.checkArgument(price.equals(parValue),"优惠券的面值和活动中优惠券的面值不一致");
@@ -913,10 +913,10 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
 
 
     /**
-     * 活动管理-【待审核】的活动-查看
+     * 招募活动-【待审核】的活动-查看
      * 2021-3-17
      */
-    @Test(description = "活动管理-【待审核】的活动-查看")
+    @Test(description = "招募活动-【待审核】的活动-查看")
     public void revokeActivityCheck() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -931,13 +931,13 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-【待审核】的活动-查看");
+            saveData("招募活动-【待审核】的活动-查看");
         }
     }
     /**
-     * 活动管理-撤回【待审批】的活动   ok
+     * 招募活动-撤回【待审批】的活动   ok
      */
-    @Test(description = "活动管理-【待审批】的活动撤回")
+    @Test(description = "招募活动-【待审批】的活动撤回")
     public void revokeApprovalsActivity() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -952,15 +952,15 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-活动审批未通过");
+            saveData("招募活动-活动审批未通过");
         }
     }
 
     /**
-     * 活动管理-【待审核】的活动-置顶
+     * 招募活动-【待审核】的活动-置顶
      * 2021-3-17
      */
-    @Test(description = "活动管理-【待审核】的活动-置顶")
+    @Test(description = "招募活动-【待审核】的活动-置顶")
     public void pendingActivityTop() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -976,15 +976,15 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-【待审核】的活动-置顶");
+            saveData("招募活动-【待审核】的活动-置顶");
         }
     }
 
     /**
-     * 活动管理-【已撤销】的活动-查看
+     * 招募活动-【已撤销】的活动-查看
      * 2021-3-17
      */
-    @Test(description = "活动管理-【已撤销】的活动-查看")
+    @Test(description = "招募活动-【已撤销】的活动-查看")
     public void pendingActivityCheck() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1000,15 +1000,15 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-【已撤销】的活动-查看");
+            saveData("招募活动-【已撤销】的活动-查看");
         }
     }
 
     /**
-     * 活动管理-【已撤销】的活动-置顶
+     * 招募活动-【已撤销】的活动-置顶
      * 2021-3-17
      */
-    @Test(description = "活动管理-【已撤销】的活动-置顶")
+    @Test(description = "招募活动-【已撤销】的活动-置顶")
     public void revokeActivityTop() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1024,15 +1024,15 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-【已撤销】的活动-置顶");
+            saveData("招募活动-【已撤销】的活动-置顶");
         }
     }
 
     /**
-     * 活动管理-【已撤销】的活动-删除
+     * 招募活动-【已撤销】的活动-删除
      * 2021-3-17
      */
-    @Test(description = "活动管理-【已撤销】的活动-删除")
+    @Test(description = "招募活动-【已撤销】的活动-删除")
     public void revokeActivityDele() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1044,15 +1044,15 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-【已撤销】的活动-删除");
+            saveData("招募活动-【已撤销】的活动-删除");
         }
     }
 
     /**
-     * 活动管理-【已撤销】的活动-编辑：名称，活动规则----招募活动
+     * 招募活动-【已撤销】的活动-编辑：名称，活动规则----招募活动
      * 2021-3-17
      */
-    @Test(description = "活动管理-【已撤销】的活动-编辑")
+    @Test(description = "招募活动-【已撤销】的活动-编辑")
     public void revokeActivityEdit(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1149,15 +1149,15 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-【已撤销】的活动-编辑");
+            saveData("招募活动-【已撤销】的活动-编辑");
         }
     }
 
     /**
-     * 活动管理-【审核未通过】的活动-查看
+     * 招募活动-【审核未通过】的活动-查看
      * 2021-3-17
      */
-    @Test(description = "活动管理-【审核未通过】的活动-查看")
+    @Test(description = "招募活动-【审核未通过】的活动-查看")
     public void rejectActivityCheck() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1173,14 +1173,14 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-【审核未通过】的活动-查看");
+            saveData("招募活动-【审核未通过】的活动-查看");
         }
     }
     /**
-     * 活动管理-【审核未通过】的活动-置顶
+     * 招募活动-【审核未通过】的活动-置顶
      * 2021-3-17
      */
-    @Test(description = "活动管理-【审核未通过】的活动-置顶")
+    @Test(description = "招募活动-【审核未通过】的活动-置顶")
     public void rejectActivityTop() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1196,13 +1196,13 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-【审核未通过】的活动-置顶");
+            saveData("招募活动-【审核未通过】的活动-置顶");
         }
     }
     /**
-     * 活动管理-删除【审核未通过】的活动       ok
+     * 招募活动-删除【审核未通过】的活动       ok
      */
-    @Test(description = "活动管理-删除【审核未通过】的活动")
+    @Test(description = "招募活动-删除【审核未通过】的活动")
     public void delWorkingActivity() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1214,15 +1214,15 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-删除【审核未通过】的活动");
+            saveData("招募活动-删除【审核未通过】的活动");
         }
     }
 
     /**
-     * 活动管理-【审核未通过】的活动-编辑：名称，活动规则----招募活动
+     * 招募活动-【审核未通过】的活动-编辑：名称，活动规则----招募活动
      * 2021-3-17
      */
-    @Test(description = "活动管理-【审核未通过】的活动-编辑")
+    @Test(description = "招募活动-【审核未通过】的活动-编辑")
     public void rejectActivityEdit(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1318,14 +1318,14 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-【审核未通过】的活动-编辑");
+            saveData("招募活动-【审核未通过】的活动-编辑");
         }
     }
     /**
-     * 活动管理-【已取消】的活动-查看
+     * 招募活动-【已取消】的活动-查看
      * 2021-3-17
      */
-    @Test(description = "活动管理-【已取消】的活动-查看")
+    @Test(description = "招募活动-【已取消】的活动-查看")
     public void canceledActivityCheck() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1341,15 +1341,15 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-【已取消】的活动-查看");
+            saveData("招募活动-【已取消】的活动-查看");
         }
     }
 
     /**
-     * 活动管理-【已取消】的活动-置顶
+     * 招募活动-【已取消】的活动-置顶
      * 2021-3-17
      */
-    @Test(description = "活动管理-【已取消】的活动-置顶")
+    @Test(description = "招募活动-【已取消】的活动-置顶")
     public void canceledActivityTop() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1365,15 +1365,15 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-【已取消】的活动-置顶");
+            saveData("招募活动-【已取消】的活动-置顶");
         }
     }
 
     /**
-     * 活动管理-【进行中】的活动-查看
+     * 招募活动-【进行中】的活动-查看
      * 2021-3-17
      */
-    @Test(description = "活动管理-【进行中】的活动-查看")
+    @Test(description = "招募活动-【进行中】的活动-查看")
     public void workingActivityCheck(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1389,15 +1389,15 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-【进行中】的活动-查看");
+            saveData("招募活动-【进行中】的活动-查看");
         }
     }
 
     /**
-     * 活动管理-【进行中】的活动-置顶
+     * 招募活动-【进行中】的活动-置顶
      * 2021-3-17
      */
-    @Test(description = "活动管理-【进行中】的活动-置顶")
+    @Test(description = "招募活动-【进行中】的活动-置顶")
     public void workingActivityTop() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1418,14 +1418,14 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-【进行中】的活动-置顶");
+            saveData("招募活动-【进行中】的活动-置顶");
         }
     }
 
     /**
-     * 活动管理-推广【进行中】的活动
+     * 招募活动-推广【进行中】的活动
      */
-    @Test(description = "活动管理-推广【进行中】的活动")
+    @Test(description = "招募活动-推广【进行中】的活动")
     public void promotionWorkingActivity() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1437,14 +1437,14 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-推广【进行中】的活动");
+            saveData("招募活动-推广【进行中】的活动");
         }
     }
 
     /**
-     * 活动管理-取消【进行中】的活动     ok
+     * 招募活动-取消【进行中】的活动     ok
      */
-    @Test(description = "活动管理-推广【进行中】的活动")
+    @Test(description = "招募活动-推广【进行中】的活动")
     public void cancelWorkingActivity() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1458,15 +1458,15 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-取消【进行中】的活动");
+            saveData("招募活动-取消【进行中】的活动");
         }
     }
 
     /**
-     * 活动管理-【进行中】的活动-编辑：名称，活动规则----招募活动
+     * 招募活动-【进行中】的活动-编辑：名称，活动规则----招募活动
      * 2021-3-17
      */
-    @Test(description = "活动管理-【进行中】的活动-编辑")
+    @Test(description = "招募活动-【进行中】的活动-编辑")
     public void workingActivityEdit(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1487,15 +1487,15 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-【进行中】的活动-编辑");
+            saveData("招募活动-【进行中】的活动-编辑");
         }
     }
 
     /**
-     * 活动管理-【未开始】的活动-查看
+     * 招募活动-【未开始】的活动-查看
      * 2021-3-17
      */
-    @Test(description = "活动管理-【未开始】的活动-查看")
+    @Test(description = "招募活动-【未开始】的活动-查看")
     public void waitingStarActivityCheck(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1511,15 +1511,15 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-【未开始】的活动-查看");
+            saveData("招募活动-【未开始】的活动-查看");
         }
     }
 
     /**
-     * 活动管理-【未开始】的活动-置顶
+     * 招募活动-【未开始】的活动-置顶
      * 2021-3-17
      */
-    @Test(description = "活动管理-【未开始】的活动-置顶")
+    @Test(description = "招募活动-【未开始】的活动-置顶")
     public void waitingStarActivityTop() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1542,13 +1542,13 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-【未开始】的活动-置顶");
+            saveData("招募活动-【未开始】的活动-置顶");
         }
     }
     /**
-     * 活动管理-取消【未开始】的活动
+     * 招募活动-取消【未开始】的活动
      */
-    @Test(description = "活动管理-推广【未开始】的活动")
+    @Test(description = "招募活动-推广【未开始】的活动")
     public void cancelWaitingStarActivity() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1563,14 +1563,14 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-取消【未开始】的活动");
+            saveData("招募活动-取消【未开始】的活动");
         }
     }
 
     /**
-     * 活动管理-推广【未开始】的活动  推广
+     * 招募活动-推广【未开始】的活动  推广
      */
-    @Test(description = "活动管理-推广【未开始】的活动")
+    @Test(description = "招募活动-推广【未开始】的活动")
     public void promotionWaitingStarActivity() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1583,15 +1583,15 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-推广【未开始】的活动");
+            saveData("招募活动-推广【未开始】的活动");
         }
     }
 
     /**
-     * 活动管理-【未开始】的活动-编辑：名称，活动规则----招募活动
+     * 招募活动-【未开始】的活动-编辑：名称，活动规则----招募活动
      * 2021-3-17
      */
-    @Test(description = "活动管理-【进行中】的活动-编辑")
+    @Test(description = "招募活动-【进行中】的活动-编辑")
     public void promotionRecruitActivityEdit(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1613,16 +1613,16 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-【未开始】的活动-编辑");
+            saveData("招募活动-【未开始】的活动-编辑");
         }
     }
 
 
     /**
-     * 活动管理-【已过期】的活动-查看
+     * 招募活动-【已过期】的活动-查看
      * 2021-3-17
      */
-    @Test(description = "活动管理-【已过期】的活动-查看")
+    @Test(description = "招募活动-【已过期】的活动-查看")
     public void FinishActivityCheck(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1640,15 +1640,15 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-【已过期】的活动-查看");
+            saveData("招募活动-【已过期】的活动-查看");
         }
     }
 
     /**
-     * 活动管理-【已过期】的活动-置顶
+     * 招募活动-【已过期】的活动-置顶
      * 2021-3-17
      */
-    @Test(description = "活动管理-【已过期】的活动-置顶")
+    @Test(description = "招募活动-【已过期】的活动-置顶")
     public void FinishActivityTop() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1663,7 +1663,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-【已过期】的活动-置顶");
+            saveData("招募活动-【已过期】的活动-置顶");
         }
     }
 
@@ -1674,10 +1674,10 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
 
 
     /**
-     * 活动管理-【待审核】的活动-查看
+     * 裂变活动-【待审核】的活动-查看
      * 2021-3-17
      */
-    @Test(description = "活动管理-【待审核】的活动-查看")
+    @Test(description = "裂变活动-【待审核】的活动-查看")
     public void revokeFissionActivityCheck() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1692,13 +1692,13 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-【待审核】的活动-查看");
+            saveData("裂变活动-【待审核】的活动-查看");
         }
     }
     /**
-     * 活动管理-撤回【待审批】的活动   ok
+     * 裂变活动-撤回【待审批】的活动   ok
      */
-    @Test(description = "活动管理-【待审批】的活动撤回")
+    @Test(description = "裂变活动-【待审批】的活动撤回")
     public void revokeApprovalsFissionActivity() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1713,15 +1713,15 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-活动审批未通过");
+            saveData("裂变活动-活动审批未通过");
         }
     }
 
     /**
-     * 活动管理-【待审核】的活动-置顶
+     * 裂变活动-【待审核】的活动-置顶
      * 2021-3-17
      */
-    @Test(description = "活动管理-【待审核】的活动-置顶")
+    @Test(description = "裂变活动-【待审核】的活动-置顶")
     public void pendingFissionActivityTop() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1737,15 +1737,15 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-【待审核】的活动-置顶");
+            saveData("裂变活动-【待审核】的活动-置顶");
         }
     }
 
     /**
-     * 活动管理-【已撤销】的活动-查看
+     * 裂变活动-【已撤销】的活动-查看
      * 2021-3-17
      */
-    @Test(description = "活动管理-【已撤销】的活动-查看")
+    @Test(description = "裂变活动-【已撤销】的活动-查看")
     public void pendingFissionActivityCheck() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1761,15 +1761,15 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-【已撤销】的活动-查看");
+            saveData("裂变活动-【已撤销】的活动-查看");
         }
     }
 
     /**
-     * 活动管理-【已撤销】的活动-置顶
+     * 裂变活动-【已撤销】的活动-置顶
      * 2021-3-17
      */
-    @Test(description = "活动管理-【已撤销】的活动-置顶")
+    @Test(description = "裂变活动-【已撤销】的活动-置顶")
     public void revokeFissionActivityTop() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1785,15 +1785,15 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-【已撤销】的活动-置顶");
+            saveData("裂变活动-【已撤销】的活动-置顶");
         }
     }
 
     /**
-     * 活动管理-【已撤销】的活动-删除
+     * 裂变活动-【已撤销】的活动-删除
      * 2021-3-17
      */
-    @Test(description = "活动管理-【已撤销】的活动-删除")
+    @Test(description = "裂变活动-【已撤销】的活动-删除")
     public void revokeFissionActivityDele() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1805,15 +1805,15 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-【已撤销】的活动-删除");
+            saveData("裂变活动-【已撤销】的活动-删除");
         }
     }
 
     /**
-     * 活动管理-【已撤销】的活动-编辑：名称，活动规则----裂变活动
+     * 裂变活动-【已撤销】的活动-编辑：名称，活动规则----裂变活动
      * 2021-3-17
      */
-    @Test(enabled = true,description = "活动管理-【已撤销】的活动-编辑")
+    @Test(enabled = true,description = "裂变活动-【已撤销】的活动-编辑")
     public void revokeFissionActivityEdit(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1882,15 +1882,15 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
-            saveData("活动管理-【已撤销】的活动-编辑");
+            saveData("裂变活动-【已撤销】的活动-编辑");
         }
     }
 
     /**
-     * 活动管理-【审核未通过】的活动-查看
+     * 裂变活动-【审核未通过】的活动-查看
      * 2021-3-17
      */
-    @Test(description = "活动管理-【审核未通过】的活动-查看")
+    @Test(description = "裂变活动-【审核未通过】的活动-查看")
     public void rejectFissionActivityCheck() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1906,14 +1906,14 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-【审核未通过】的活动-查看");
+            saveData("裂变活动-【审核未通过】的活动-查看");
         }
     }
     /**
-     * 活动管理-【审核未通过】的活动-置顶
+     * 裂变活动-【审核未通过】的活动-置顶
      * 2021-3-17
      */
-    @Test(description = "活动管理-【审核未通过】的活动-置顶")
+    @Test(description = "裂变活动-【审核未通过】的活动-置顶")
     public void rejectFissionActivityTop() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1929,13 +1929,13 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-【审核未通过】的活动-置顶");
+            saveData("裂变活动-【审核未通过】的活动-置顶");
         }
     }
     /**
-     * 活动管理-删除【审核未通过】的活动       ok
+     * 裂变活动-删除【审核未通过】的活动       ok
      */
-    @Test(description = "活动管理-删除【审核未通过】的活动")
+    @Test(description = "裂变活动-删除【审核未通过】的活动")
     public void delWorkingFissionActivity() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1947,15 +1947,15 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-删除【审核未通过】的活动");
+            saveData("裂变活动-删除【审核未通过】的活动");
         }
     }
 
     /**
-     * 活动管理-【审核未通过】的活动-编辑：名称，活动规则----裂变活动
+     * 裂变活动-【审核未通过】的活动-编辑：名称，活动规则----裂变活动
      * 2021-3-17
      */
-    @Test(enabled = true,description = "活动管理-【审核未通过】的活动-编辑")
+    @Test(enabled = true,description = "裂变活动-【审核未通过】的活动-编辑")
     public void rejectFissionActivityEdit(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2025,14 +2025,14 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             e.printStackTrace();
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-【审核未通过】的活动-编辑");
+            saveData("裂变活动-【审核未通过】的活动-编辑");
         }
     }
     /**
-     * 活动管理-【已取消】的活动-查看
+     * 裂变活动-【已取消】的活动-查看
      * 2021-3-17
      */
-    @Test(description = "活动管理-【已取消】的活动-查看")
+    @Test(description = "裂变活动-【已取消】的活动-查看")
     public void canceledFissionActivityCheck() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2048,15 +2048,15 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-【已取消】的活动-查看");
+            saveData("裂变活动-【已取消】的活动-查看");
         }
     }
 
     /**
-     * 活动管理-【已取消】的活动-置顶
+     * 裂变活动-【已取消】的活动-置顶
      * 2021-3-17
      */
-    @Test(description = "活动管理-【已取消】的活动-置顶")
+    @Test(description = "裂变活动-【已取消】的活动-置顶")
     public void canceledFissionActivityTop() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2077,10 +2077,10 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
     }
 
     /**
-     * 活动管理-【进行中】的活动-查看
+     * 裂变活动-【进行中】的活动-查看
      * 2021-3-17
      */
-    @Test(description = "活动管理-【进行中】的活动-查看")
+    @Test(description = "裂变活动-【进行中】的活动-查看")
     public void workingFissionActivityCheck(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2096,15 +2096,15 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-【进行中】的活动-查看");
+            saveData("裂变活动-【进行中】的活动-查看");
         }
     }
 
     /**
-     * 活动管理-【进行中】的活动-置顶
+     * 裂变活动-【进行中】的活动-置顶
      * 2021-3-17
      */
-    @Test(description = "活动管理-【进行中】的活动-置顶")
+    @Test(description = "裂变活动-【进行中】的活动-置顶")
     public void workingFissionActivityTop() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2125,14 +2125,14 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-【进行中】的活动-置顶");
+            saveData("裂变活动-【进行中】的活动-置顶");
         }
     }
 
     /**
-     * 活动管理-推广【进行中】的活动
+     * 裂变活动-推广【进行中】的活动
      */
-    @Test(description = "活动管理-推广【进行中】的活动")
+    @Test(description = "裂变活动-推广【进行中】的活动")
     public void promotionFissionWorkingActivity() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2144,14 +2144,14 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-推广【进行中】的活动");
+            saveData("裂变活动-推广【进行中】的活动");
         }
     }
 
     /**
-     * 活动管理-取消【进行中】的活动     ok
+     * 裂变活动-取消【进行中】的活动     ok
      */
-    @Test(description = "活动管理-推广【进行中】的活动")
+    @Test(description = "裂变活动-推广【进行中】的活动")
     public void cancelWorkingFissionActivity() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2165,15 +2165,15 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-取消【进行中】的活动");
+            saveData("裂变活动-取消【进行中】的活动");
         }
     }
 
     /**
-     * 活动管理-【进行中】的活动-编辑：名称，活动规则----裂变活动
+     * 裂变活动-【进行中】的活动-编辑：名称，活动规则----裂变活动
      * 2021-3-17
      */
-    @Test(enabled = true,description = "活动管理-【进行中】的活动-编辑")
+    @Test(enabled = true,description = "裂变活动-【进行中】的活动-编辑")
     public void workingFissionActivityEdit(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2193,15 +2193,15 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(message.equals("success")&&title.contains("编辑过的裂变活动")&&rule.equals(pp.EditFissionRule), "进行中的活动编辑失败");   } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-【进行中】的活动-编辑");
+            saveData("裂变活动-【进行中】的活动-编辑");
         }
     }
 
     /**
-     * 活动管理-【未开始】的活动-查看
+     * 裂变活动-【未开始】的活动-查看
      * 2021-3-17
      */
-    @Test(description = "活动管理-【未开始】的活动-查看")
+    @Test(description = "裂变活动-【未开始】的活动-查看")
     public void waitingStarFissionActivityCheck(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2217,15 +2217,15 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-【未开始】的活动-查看");
+            saveData("裂变活动-【未开始】的活动-查看");
         }
     }
 
     /**
-     * 活动管理-【未开始】的活动-置顶
+     * 裂变活动-【未开始】的活动-置顶
      * 2021-3-17
      */
-    @Test(description = "活动管理-【未开始】的活动-置顶")
+    @Test(description = "裂变活动-【未开始】的活动-置顶")
     public void waitingStarFissionActivityTop() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2246,13 +2246,13 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-【未开始】的活动-置顶");
+            saveData("裂变活动-【未开始】的活动-置顶");
         }
     }
     /**
-     * 活动管理-取消【未开始】的活动
+     * 裂变活动-取消【未开始】的活动
      */
-    @Test(description = "活动管理-推广【未开始】的活动")
+    @Test(description = "裂变活动-推广【未开始】的活动")
     public void cancelWaitingStarFissionActivity() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2270,14 +2270,14 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-取消【未开始】的活动");
+            saveData("裂变活动-取消【未开始】的活动");
         }
     }
 
     /**
-     * 活动管理-推广【未开始】的活动  推广
+     * 裂变活动-推广【未开始】的活动  推广
      */
-    @Test(description = "活动管理-推广【未开始】的活动")
+    @Test(description = "裂变活动-推广【未开始】的活动")
     public void promotionWaitingStarFissionActivity() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2290,15 +2290,15 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-推广【未开始】的活动");
+            saveData("裂变活动-推广【未开始】的活动");
         }
     }
 
     /**
-     * 活动管理-【未开始】的活动-编辑：名称，活动规则----裂变活动
+     * 裂变活动-【未开始】的活动-编辑：名称，活动规则----裂变活动
      * 2021-3-17
      */
-    @Test(enabled = true,description = "活动管理-【进行中】的活动-编辑")
+    @Test(enabled = true,description = "裂变活动-【进行中】的活动-编辑")
     public void promotionFissionActivityEdit(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2318,15 +2318,15 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(message.equals("success")&&title.contains("编辑过的裂变活动")&&rule.equals(pp.EditFissionRule), "未开始的活动编辑失败");} catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-【未开始】的活动-编辑");
+            saveData("裂变活动-【未开始】的活动-编辑");
         }
     }
 
     /**
-     * 活动管理-【已过期】的活动-查看
+     * 裂变活动-【已过期】的活动-查看
      * 2021-3-17
      */
-    @Test(description = "活动管理-【已过期】的活动-查看")
+    @Test(description = "裂变活动-【已过期】的活动-查看")
     public void FinishFissionActivityCheck(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2344,15 +2344,15 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-【已过期】的活动-查看");
+            saveData("裂变活动-【已过期】的活动-查看");
         }
     }
 
     /**
-     * 活动管理-【已过期】的活动-置顶
+     * 裂变活动-【已过期】的活动-置顶
      * 2021-3-17
      */
-    @Test(description = "活动管理-【已过期】的活动-置顶")
+    @Test(description = "裂变活动-【已过期】的活动-置顶")
     public void FinishFissionActivityTop() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2367,7 +2367,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("活动管理-【已过期】的活动-置顶");
+            saveData("裂变活动-【已过期】的活动-置顶");
         }
     }
 
@@ -4710,7 +4710,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             System.out.println("----message:-------"+message+"---statusOffLine----"+statusOffLine);
             Preconditions.checkArgument(message.equals("success")&&statusOffLine==ActivityStatusEnum.OFFLINE.getId(), "下架失败");
             Preconditions.checkArgument(!flag,"小程序中还是能够查看到此活动");
-            jc.pcLogin(pp.phone1,pp.password);
+            jc.pcLogin(pp.phone,pp.password);
             //活动上架
             String message1=businessUtil.getContentMarketingOnline(ids.get(0));
             //获取活动的状态
@@ -4890,7 +4890,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             } while (list.size() == 10);
             Preconditions.checkArgument(message.equals("success")&&statusOffLine==ActivityStatusEnum.OFFLINE.getId(), "下架失败");
             Preconditions.checkArgument(!flag,"小程序中还是能够查看到此活动");
-            jc.pcLogin(pp.phone1,pp.password);
+            jc.pcLogin(pp.phone,pp.password);
             //活动上架
             String message1=businessUtil.getContentMarketingOnline(ids.get(0));
             //获取活动的状态
@@ -4976,7 +4976,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                 } while (list.size() == 10);
                 Preconditions.checkArgument(message.equals("success")&&statusOffLine==ActivityStatusEnum.OFFLINE.getId(), "下架失败");
                 Preconditions.checkArgument(!flag,"小程序中还是能够查看到此活动");
-                jc.pcLogin(pp.phone1,pp.password);
+                jc.pcLogin(pp.phone,pp.password);
                 //活动上架
                 String message1=businessUtil.getContentMarketingOnline(ids.get(0));
                 //获取活动的状态
@@ -5083,7 +5083,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             System.out.println("----message:-------"+message+"---statusOffLine----"+statusOffLine);
             Preconditions.checkArgument(message.equals("success")&&statusOffLine==ActivityStatusEnum.OFFLINE.getId(), "下架失败");
             Preconditions.checkArgument(!flag,"小程序中还是能够查看到此活动");
-            jc.pcLogin(pp.phone1,pp.password);
+            jc.pcLogin(pp.phone,pp.password);
             //活动上架
             String message1=businessUtil.getContentMarketingOnline(ids.get(0));
             //获取活动的状态
@@ -5142,7 +5142,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                 } while (list.size() == 10);
                 Preconditions.checkArgument(message.equals("success")&&statusOffLine==ActivityStatusEnum.OFFLINE.getId(), "下架失败");
                 Preconditions.checkArgument(!flag,"小程序中还是能够查看到此活动");
-                jc.pcLogin(pp.phone1,pp.password);
+                jc.pcLogin(pp.phone,pp.password);
                 //活动上架
                 String message1=businessUtil.getContentMarketingOnline(ids.get(0));
                 //获取活动的状态
@@ -5273,7 +5273,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             System.out.println("----message:-------"+message+"---statusOffLine----"+statusOffLine);
             Preconditions.checkArgument(message.equals("success")&&statusOffLine==ActivityStatusEnum.OFFLINE.getId(), "下架失败");
             Preconditions.checkArgument(!flag,"小程序中还是能够查看到此活动");
-            jc.pcLogin(pp.phone1,pp.password);
+            jc.pcLogin(pp.phone,pp.password);
             //活动上架
             String message1=businessUtil.getContentMarketingOnline(ids.get(0));
             //获取活动的状态
@@ -5376,7 +5376,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                 } while (list.size() == 10);
                 Preconditions.checkArgument(message.equals("success")&&statusOffLine==ActivityStatusEnum.OFFLINE.getId(), "下架失败");
                 Preconditions.checkArgument(!flag,"小程序中还是能够查看到此活动");
-                jc.pcLogin(pp.phone1,pp.password);
+                jc.pcLogin(pp.phone,pp.password);
                 //活动上架
                 String message1=businessUtil.getContentMarketingOnline(ids.get(0));
                 //获取活动的状态

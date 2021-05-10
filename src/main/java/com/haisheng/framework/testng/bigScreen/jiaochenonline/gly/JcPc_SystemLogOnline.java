@@ -277,7 +277,7 @@ public class JcPc_SystemLogOnline extends TestCaseCommon implements TestCaseStd 
         try {
             //获取卡券
             Long voucherId= new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-            //推送推送消息
+            //推送推送消息SystemLog_Date6
             su.pushCustomMessage(0,true,voucherId);
             //查看消息记录中的第一条消息
             JSONObject respond = jc.pushMsgListFilterManage("", "1", "10", "", "");

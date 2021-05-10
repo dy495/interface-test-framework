@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.marker.scenemaker;
+package com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.attribute;
 
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.freemarker.enumerator.ValTypeEnum;
 import com.haisheng.framework.util.CommonUtil;
