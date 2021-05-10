@@ -214,7 +214,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             //报名取消后获得此报名的状态
             String activityStatus = businessUtil.appointmentActivityStatus(id);
 //            //获取【我的卡券】列表条数
-            int numAfter = jc.appletVoucherList(null, "GENERAL", 100).getJSONArray("list").size();
+//            int numAfter = jc.appletVoucherList(null, "GENERAL", 100).getJSONArray("list").size();
             Preconditions.checkArgument(status == ActivityStatusEnum.PENDING.getId(), "待审核的活动状态为：" + status);
             Preconditions.checkArgument(statusPassed == ActivityStatusEnum.PASSED.getId(), "审核通过的活动状态为：" + statusPassed);
             Preconditions.checkArgument(voucher != null, "小程序报名通过没有获得此卡券");
