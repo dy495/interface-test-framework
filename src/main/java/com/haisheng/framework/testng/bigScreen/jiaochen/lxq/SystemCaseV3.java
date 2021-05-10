@@ -1,10 +1,13 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.lxq;
 
+import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.jiaoChenInfo;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.*;
@@ -22,6 +25,8 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.record.Expor
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shop.AddScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -29,6 +34,7 @@ import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * 内容运营
@@ -44,6 +50,10 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
     public UserUtil user = new UserUtil(visitor);
     public SupporterUtil util = new SupporterUtil(visitor);
     jiaoChenInfo info = new  jiaoChenInfo();
+    ScenarioUtil jc = ScenarioUtil.getInstance();
+
+    PublicParm pp = new PublicParm();
+    JcFunction pf = new JcFunction();
 
     @BeforeClass
     @Override
@@ -293,21 +303,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
-    public void onlineExpertPC3() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
 
-            // todo
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("PC在线专家咨询列表咨询内容与小程序填写的一致");
-        }
-    }
 
     @Test
     public void onlineExpertPCsearch1() {
@@ -1476,6 +1472,70 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
 
+    //销售接待评价流程
+
+    public void Jc_evalute() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //PC配置评价奖励
+            int type = 0;
+            String messageName = "";
+            int points = info.setevaluate(type,messageName).getInteger("points");
+
+            user.loginApplet(APPLET_USER_ONE);
+
+            String id[]=pf.getMessageId(messageName);
+            if(StringUtils.isEmpty(id[0])){
+                throw new Exception("没有待评价的消息，检查接待case 是否失败");
+            }
+            System.out.println("messageId"+id[0]);
+            //评价前的积分和卡券数
+            Integer voucherTotal = pf.getVoucherTotal();
+            Integer appletScore = jc.appletUserInfoDetail().getInteger("score");
+
+
+            JSONObject evaluateConfigDescribe= jc.AppletEvaluateConfigScene(type,Long.parseLong(pp.shopIdZ));
+            String describe=evaluateConfigDescribe.getJSONArray("list").getJSONObject(2).getString("describe");
+            List label=evaluateConfigDescribe.getJSONArray("list").getJSONObject(2).getJSONArray("labels");
+            //app接待客户&完成接待
+
+            //评价
+            IScene evaluatesubmit= AppletEvaluateSubmitScene.builder()
+                    .describe(describe).labels(label).id(Long.valueOf(id[1]))
+                    .isAnonymous(true)
+                    .score(2)
+                    .shopId(Long.parseLong(pp.shopIdZ)).suggestion("自动评价").type(type)
+                    .build();
+            jc.invokeApi(evaluatesubmit);
+
+            //评价后的积分和卡券数
+            Integer voucherTotalAfter = pf.getVoucherTotal();
+            Integer appletScoreAfter= jc.appletUserInfoDetail().getInteger("score");
+
+            Preconditions.checkArgument(voucherTotalAfter-voucherTotal==1,"评价完成后，卡券没+1");
+            Preconditions.checkArgument(appletScoreAfter-appletScore==points,"评价完成后，积分奖励没发");
+
+
+
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("JC_pc门店按钮修改关联验证");
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
     /**
      *
      */
@@ -1649,6 +1709,14 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
                 {info.stringten, info.stringfifty,info.district_code,info.stringone, info.sitphone1,info.phone,"129.8439","42.96805","DISABLE","DISABLE"},
 //                {info.stringone, info.stringfifty,info.district_code,info.stringten, info.phone,info.sitphone2,"129.8439","42.96805","DISABLE","DISABLE"},
 
+        };
+    }
+
+    @DataProvider(name="EVALUATETYPE")
+    public static Object[][] evaluatetype(){
+        return new String[][]{
+                {"1","保养评价消息"},
+                {"2","维修评价消息"}
         };
     }
 }

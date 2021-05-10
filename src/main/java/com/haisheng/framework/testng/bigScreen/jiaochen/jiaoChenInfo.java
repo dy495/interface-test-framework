@@ -3,12 +3,14 @@ package com.haisheng.framework.testng.bigScreen.jiaochen;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.model.AppletModeListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.brand.BrandPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.manage.EvaluateConfigSubmitScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shop.PageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
@@ -16,6 +18,7 @@ import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 public class jiaoChenInfo {
@@ -282,6 +285,13 @@ public class jiaoChenInfo {
 
 
 
+    public static JSONObject getallauth(){
+        JSONObject all = new JSONObject();
+        all.put("123","aaa" );
+        return all;
+    }
+
+    public static final JSONObject obj = getallauth();
 
 
 
@@ -540,6 +550,33 @@ public class jiaoChenInfo {
         }
         return name;
     }
+
+
+    //配置评价
+    public JSONObject setevaluate(Integer type,String messageName){
+
+        Calendar calendar=Calendar.getInstance();
+        int day=calendar.get(Calendar.DAY_OF_WEEK);
+        Integer points;
+        if(day%2==1){
+            points=3;
+        }else{
+            points=2;
+        }
+        //修改配置，评价，积分数，卡券数
+        IScene evaluateConfig= EvaluateConfigSubmitScene.builder().evaluateReward(true)
+                .defaultFavourableCycle(3)
+                .isSendPoints(true).isSendVoucher(true).points(points)
+                .type(type).vouchersId(pp.voucherIdevluate).build();
+        jc.invokeApi(evaluateConfig);
+
+        JSONObject obj = new JSONObject();
+        obj.put("points",points);
+        return obj;
+
+    }
+
+
 
 
 
