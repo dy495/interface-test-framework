@@ -46,7 +46,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanag
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.SearchCustomerPhoneScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanage.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.PackageListScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.VoucherListScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.ReceptionManagerVoucherListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.record.PushMsgPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vipmarketing.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.*;
@@ -126,7 +126,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     public void packageManager_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int voucherListSize = VoucherListScene.builder().build().invoke(visitor).getJSONArray("list").size();
+            int voucherListSize = ReceptionManagerVoucherListScene.builder().build().invoke(visitor).getJSONArray("list").size();
             IScene voucherPageScene = VoucherFormVoucherPageScene.builder().voucherStatus(VoucherStatusEnum.WORKING.name()).build();
             int voucherTotal = voucherPageScene.invoke(visitor).getInteger("total");
             CommonUtil.checkResultPlus("套餐包含卡券列表数", voucherListSize, "进行中的卡券数", voucherTotal);
@@ -262,7 +262,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             IScene voucherPageScene = VoucherFormVoucherPageScene.builder().voucherStatus(VoucherStatusEnum.INVALIDED.name()).build();
             List<VoucherPage> voucherPageList = util.collectBeanList(voucherPageScene, VoucherPage.class);
             List<Long> voucherIdList = voucherPageList.stream().map(VoucherPage::getVoucherId).collect(Collectors.toList());
-            IScene voucherListScene = VoucherListScene.builder().build();
+            IScene voucherListScene = ReceptionManagerVoucherListScene.builder().build();
             JSONArray array = visitor.invokeApi(voucherListScene).getJSONArray("list");
             List<Long> voucherLit = array.stream().map(e -> (JSONObject) e).map(e -> e.getLong("voucher_id")).collect(Collectors.toList());
             voucherIdList.forEach(e -> Preconditions.checkArgument(!voucherLit.contains(e), voucherListScene.getPath() + " 接口包含已作废卡券 " + e));

@@ -8,7 +8,7 @@ import lombok.Builder;
  * 卡券列表
  */
 @Builder
-public class VoucherListScene extends BaseScene {
+public class ReceptionManagerVoucherListScene extends BaseScene {
 
     @Override
     public JSONObject getRequestBody() {

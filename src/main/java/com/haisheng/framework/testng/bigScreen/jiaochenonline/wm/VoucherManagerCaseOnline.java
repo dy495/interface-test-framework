@@ -25,6 +25,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.Vouc
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletMessageDetailScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletMessageListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletVoucherVerificationScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.ReceptionManagerVoucherListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.record.PushMsgPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.*;
@@ -503,8 +504,8 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
             user.loginPc(ALL_AUTHORITY);
             Arrays.stream(phones).forEach(phone -> {
                 IScene scene = TransferScene.builder().transferPhone(APPLET_USER_ONE.getPhone()).receivePhone(phone).voucherIds(getList(voucherId)).build();
-                String message = visitor.invokeApi(scene, false).getString("message");
-                String err = phone.equals(APPLET_USER_ONE.getPhone()) ? "转移账号和接收账号不能相同" : "卡券接收人未注册小程序";
+                String message = scene.invoke(visitor, false).getString("message");
+                String err = phone.equals(APPLET_USER_ONE.getPhone()) ? "转移账号和接收账号不能相同" : "您输入的手机号尚未注册小程序，请提醒用户注册小程序后再进行转移";
                 CommonUtil.checkResult("转移卡券" + voucherName, err, message);
             });
         } catch (Exception | AssertionError e) {
@@ -1310,8 +1311,8 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
             IScene voucherPageScene = VoucherFormVoucherPageScene.builder().voucherStatus(VoucherStatusEnum.INVALIDED.name()).build();
             List<VoucherPage> voucherPageList = util.collectBeanList(voucherPageScene, VoucherPage.class);
             List<Long> invalidedVoucherList = voucherPageList.stream().map(VoucherPage::getVoucherId).collect(Collectors.toList());
-            IScene receptionVoucherListScene = VoucherListScene.builder().build();
-            JSONArray array = visitor.invokeApi(receptionVoucherListScene).getJSONArray("list");
+            IScene receptionVoucherListScene = ReceptionManagerVoucherListScene.builder().build();
+            JSONArray array = receptionVoucherListScene.invoke(visitor).getJSONArray("list");
             List<Long> voucherList = array.stream().map(e -> (JSONObject) e).map(e -> e.getLong("voucher_id")).collect(Collectors.toList());
             invalidedVoucherList.forEach(voucherId -> {
                 Preconditions.checkArgument(!voucherList.contains(voucherId), "选择卡券列表能看见已作废的卡券：" + voucherId);
@@ -1320,7 +1321,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("优惠券管理--卡券增发,作废卡券增发");
+            saveData("优惠券管理--选择卡券列表不显示已作废卡券");
         }
     }
 
@@ -1328,8 +1329,9 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
     @Test(description = "优惠券管理--撤回的卡券再编辑")
     public void voucherManage_system_41() {
         logger.logCaseStart(caseResult.getCaseName());
+        Long voucherId = null;
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.RECALL).buildVoucher().getVoucherId();
+            voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.RECALL).buildVoucher().getVoucherId();
             VoucherDetailBean detail = util.getVoucherDetail(voucherId);
             EditVoucherScene.builder().voucherName(detail.getVoucherName()).subjectType(detail.getSubjectType())
                     .subjectId(detail.getSubjectId()).stock(detail.getStock()).cardType(detail.getCardType())
@@ -1337,8 +1339,8 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
                     .parValue(detail.getParValue()).replacePrice(detail.getReplacePrice()).discount(detail.getDiscount())
                     .mostDiscount(detail.getMostDiscount()).cost(detail.getCost()).isDefaultPic(detail.getIsDefaultPic())
                     .voucherDescription(detail.getVoucherDescription()).selfVerification(detail.getSelfVerification())
-                    .shopIds(detail.getShopIds().stream().map(e -> (JSONObject) e).map(e -> e.getLong("shop_id")).collect(Collectors.toList())).shopType(detail.getShopType())
-                    .subjectName(detail.getSubjectName()).id(voucherId).build().invoke(visitor);
+                    .shopIds(detail.getShopIds().stream().map(e -> (JSONObject) e).map(e -> e.getLong("shop_id")).collect(Collectors.toList()))
+                    .shopType(detail.getShopType()).subjectName(detail.getSubjectName()).id(voucherId).build().invoke(visitor);
             //编辑完成之后
             VoucherPage voucherPage = util.getVoucherPage(voucherId);
             CommonUtil.checkResult(voucherPage.getVoucherName() + " 的状态", VoucherStatusEnum.WAITING.name(), voucherPage.getVoucherStatus());
@@ -1351,6 +1353,8 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
+            //撤回
+            RecallVoucherScene.builder().id(voucherId).build().invoke(visitor);
             saveData("优惠券管理--撤回的卡券再编辑");
         }
     }
