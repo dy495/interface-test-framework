@@ -9,8 +9,8 @@
 
     <test name="daily-rgn" preserve-order="true">
         <classes>
-            <class name="com.haisheng.framework.testng.bigScreen.crmOnline.xmf.appletLoginOnline"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.JcAppletTockenOnline"></class>
+<!--            <class name="com.haisheng.framework.testng.bigScreen.crmOnline.xmf.appletLoginOnline"></class>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.JcAppletTockenOnline"></class>-->
         </classes>
     </test>
 </suite>
