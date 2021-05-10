@@ -17,7 +17,7 @@ public enum EnumAppletToken {
 
     BSJ_GLY_DAILY(EnumTestProduce.PORSCHE_DAILY.getAbbreviation(), "Dkj9ox+0FtVN20Ka1z89HA==", true, "13373166806"),
 
-    BSJ_XMF_ONLINE(EnumTestProduce.PORSCHE_DAILY.getAbbreviation(), "cMzFau3/cRA7nTf/r3X3GQ==", false, "15037286013"),
+    BSJ_XMF_ONLINE(EnumTestProduce.PORSCHE_DAILY.getAbbreviation(), "sht4pAFOJ1qo4qC3AyzZGQ==", false, "15037286013"),
 
     BSJ_WM_ONLINE(EnumTestProduce.PORSCHE_DAILY.getAbbreviation(), "+Lxwl2EDyIVPo3SD2sFuvw==", false, "15321527989"),
 
