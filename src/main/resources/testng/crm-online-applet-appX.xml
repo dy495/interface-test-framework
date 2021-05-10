@@ -9,9 +9,9 @@
 
     <test name="daily-rgn" preserve-order="true">
         <classes>
-            <class name="com.haisheng.framework.testng.bigScreen.crmOnline.xmf.Crm2_1AppXOnline"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.crmOnline.xmf.CrmPcTwoSystemCaseOnline"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.crmOnline.xmf.CrmAppletCaseOnline"></class>
+<!--            <class name="com.haisheng.framework.testng.bigScreen.crmOnline.xmf.Crm2_1AppXOnline"></class>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.crmOnline.xmf.CrmPcTwoSystemCaseOnline"></class>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.crmOnline.xmf.CrmAppletCaseOnline"></class>-->
 
         </classes>
     </test>
