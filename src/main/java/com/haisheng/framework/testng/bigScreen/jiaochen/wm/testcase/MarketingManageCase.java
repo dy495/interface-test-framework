@@ -17,8 +17,10 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.customermanag
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.customermanage.PreSaleCustomerPageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.customermanage.WechatCustomerPageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.messagemanage.MessageFormPageBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.packagemanage.BuyPackageRecordBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.packagemanage.PackageDetailBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.packagemanage.PackageFormPageBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.receptionmanage.ReceptionManagerVoucherListBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherFormVoucherPageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
@@ -150,14 +152,14 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             int newTotal = packageFormPageScene.invoke(visitor).getInteger("total");
             CommonUtil.checkResult("创建套餐后套餐列表数", total + 1, newTotal);
             //列表内容校验
-            PackagePage packagePage = util.collectBeanList(PackageFormPageScene.builder().packageName(packageName).build(), PackagePage.class).get(0);
+            PackagePage packagePage = util.toJavaObjectList(PackageFormPageScene.builder().packageName(packageName).build(), PackagePage.class).get(0);
             CommonUtil.checkResult(packageName + " 套餐价格", "49.99", packagePage.getPrice());
             CommonUtil.checkResult(packageName + " 套餐内含卡券数", 10, packagePage.getVoucherNumber());
             CommonUtil.checkResult(packageName + " 客户有效期", "10天", packagePage.getCustomerUseValidity());
             CommonUtil.checkResult(packageName + " 审核状态", AuditStatusEnum.AUDITING.getName(), packagePage.getAuditStatusName());
             //审核通过
             AuditPackageStatusScene.builder().id(packageId).status(AuditStatusEnum.AGREE.name()).build().invoke(visitor);
-            PackagePage newPackagePage = util.collectBeanList(PackageFormPageScene.builder().packageName(packageName).build(), PackagePage.class).get(0);
+            PackagePage newPackagePage = util.toJavaObjectList(PackageFormPageScene.builder().packageName(packageName).build(), PackagePage.class).get(0);
             CommonUtil.checkResult(packageName + " 审核状态", AuditStatusEnum.AGREE.getName(), newPackagePage.getAuditStatusName());
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -172,7 +174,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = WechatCustomerPageScene.builder().build();
-            List<JSONObject> jsonObjects = util.collectBeanList(scene, JSONObject.class);
+            List<JSONObject> jsonObjects = util.toJavaObjectList(scene, JSONObject.class);
             jsonObjects.forEach(e -> {
                 String customerPhone = e.getString("customer_phone");
                 String customerName = e.getString("customer_name");
@@ -193,7 +195,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene packageFormPageScene = PackageFormPageScene.builder().build();
-            List<PackagePage> packagePageList = util.collectBeanList(packageFormPageScene, PackagePage.class);
+            List<PackagePage> packagePageList = util.toJavaObjectList(packageFormPageScene, PackagePage.class, SupporterUtil.SIZE);
             packagePageList.forEach(packagePage -> {
                 PackageDetailBean packageDetail = util.getPackageDetail(packagePage.getPackageId());
                 int voucherCountSum = packageDetail.getVoucherList().stream().map(e -> (JSONObject) e).mapToInt(e -> e.getInteger("voucher_count")).sum();
@@ -216,7 +218,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             IScene packageListScene = PackageListScene.builder().build();
             int packageListSize = packageListScene.invoke(visitor).getJSONArray("list").size();
             IScene packageFormPageScene = PackageFormPageScene.builder().packageStatus(true).build();
-            List<PackagePage> packagePageList = util.collectBeanList(packageFormPageScene, PackagePage.class);
+            List<PackagePage> packagePageList = util.toJavaObjectList(packageFormPageScene, PackagePage.class);
             int packagePageListSize = (int) packagePageList.stream().filter(e -> e.getAuditStatusName().equals(PackageStatusEnum.AGREE.getName())).count();
             CommonUtil.checkResultPlus("购买套餐下拉列表数", packageListSize, "审核通过并且开启的套餐数", packagePageListSize);
         } catch (Exception | AssertionError e) {
@@ -231,15 +233,14 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
     public void packageManager_data_7() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String startTime = "2021-02-25";
-            IScene packageFormPageScene = PackageFormPageScene.builder().startTime(startTime).endTime(startTime).build();
-            List<PackagePage> packagePages = util.collectBeanList(packageFormPageScene, PackagePage.class);
+            IScene packageFormPageScene = PackageFormPageScene.builder().build();
+            List<PackagePage> packagePages = util.toJavaObjectList(packageFormPageScene, PackagePage.class, SupporterUtil.SIZE);
             packagePages.forEach(e -> {
                 String packageName = e.getPackageName();
                 int soldNumber = e.getSoldNumber();
                 IScene buyPackageRecordScene = BuyPackageRecordScene.builder().packageName(packageName).sendType(SendWayEnum.SOLD.getId()).build();
-                List<JSONObject> jsonObjectList = util.collectBeanList(buyPackageRecordScene, JSONObject.class);
-                int giverCount = jsonObjectList.stream().filter(jsonObject -> jsonObject.getString("package_name").equals(packageName)).mapToInt(jsonObject -> jsonObject.getInteger("send_number") == null ? 0 : jsonObject.getInteger("send_number")).sum();
+                List<BuyPackageRecordBean> buyPackageRecordBeanList = util.toJavaObjectList(buyPackageRecordScene, BuyPackageRecordBean.class);
+                int giverCount = buyPackageRecordBeanList.stream().filter(b -> b.getPackageName().equals(packageName)).mapToInt(b -> b.getSendNumber() == null ? 0 : b.getSendNumber()).sum();
                 CommonUtil.checkResultPlus(packageName + " 累计购买数", soldNumber, " 购买记录累计售出发出数量", giverCount);
                 CommonUtil.logger(e.getPackageName());
             });
@@ -256,11 +257,11 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene voucherPageScene = VoucherFormVoucherPageScene.builder().voucherStatus(VoucherStatusEnum.INVALIDED.name()).build();
-            List<VoucherPage> voucherPageList = util.collectBeanList(voucherPageScene, VoucherPage.class);
+            List<VoucherPage> voucherPageList = util.toJavaObjectList(voucherPageScene, VoucherPage.class);
             List<Long> voucherIdList = voucherPageList.stream().map(VoucherPage::getVoucherId).collect(Collectors.toList());
             IScene voucherListScene = ReceptionManagerVoucherListScene.builder().build();
-            JSONArray array = visitor.invokeApi(voucherListScene).getJSONArray("list");
-            List<Long> voucherLit = array.stream().map(e -> (JSONObject) e).map(e -> e.getLong("voucher_id")).collect(Collectors.toList());
+            List<ReceptionManagerVoucherListBean> managerVoucherListBeanList = util.JSONArrayToList(voucherListScene, ReceptionManagerVoucherListBean.class);
+            List<Long> voucherLit = managerVoucherListBeanList.stream().map(ReceptionManagerVoucherListBean::getVoucherId).collect(Collectors.toList());
             voucherIdList.forEach(e -> Preconditions.checkArgument(!voucherLit.contains(e), voucherListScene.getPath() + " 接口包含已作废卡券 " + e));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -286,14 +287,14 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             int newTotal = packageFormPageScene.invoke(visitor).getInteger("total");
             CommonUtil.checkResult("创建套餐后套餐列表数", total + 1, newTotal);
             //列表内容校验
-            PackagePage packagePage = util.collectBeanList(PackageFormPageScene.builder().packageName(packageName).build(), PackagePage.class).get(0);
+            PackagePage packagePage = util.toJavaObjectList(PackageFormPageScene.builder().packageName(packageName).build(), PackagePage.class).get(0);
             CommonUtil.checkResult(packageName + " 套餐价格", "49.99", packagePage.getPrice());
             CommonUtil.checkResult(packageName + " 套餐内含卡券数", 10, packagePage.getVoucherNumber());
             CommonUtil.checkResult(packageName + " 客户有效期", "10天", packagePage.getCustomerUseValidity());
             CommonUtil.checkResult(packageName + " 审核状态", AuditStatusEnum.AUDITING.getName(), packagePage.getAuditStatusName());
             //审核不通过
             AuditPackageStatusScene.builder().id(packageId).status(AuditStatusEnum.REFUSAL.name()).build().invoke(visitor);
-            PackagePage newPackagePage = util.collectBeanList(PackageFormPageScene.builder().packageName(packageName).build(), PackagePage.class).get(0);
+            PackagePage newPackagePage = util.toJavaObjectList(PackageFormPageScene.builder().packageName(packageName).build(), PackagePage.class).get(0);
             CommonUtil.checkResult(packageName + " 审核状态", AuditStatusEnum.REFUSAL.getName(), newPackagePage.getAuditStatusName());
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -1208,7 +1209,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = VoucherFormVoucherPageScene.builder().voucherStatus(VoucherStatusEnum.WORKING.name()).build();
-            List<VoucherFormVoucherPageBean> voucherPageBeanList = util.collectBeanList(scene, VoucherFormVoucherPageBean.class);
+            List<VoucherFormVoucherPageBean> voucherPageBeanList = util.toJavaObjectList(scene, VoucherFormVoucherPageBean.class);
             Long voucherId = voucherPageBeanList.stream().filter(e -> e.getAllowUseInventory() < 10).map(VoucherFormVoucherPageBean::getVoucherId).findFirst().orElse(null);
             voucherId = voucherId == null ? util.createVoucherId(1, VoucherTypeEnum.CUSTOM) : voucherId;
             int allowUseInventory = Math.toIntExact(util.getVoucherPage(voucherId).getAllowUseInventory());
@@ -1306,7 +1307,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
                     .expiryDate(packageDetail.getExpiryDate())
                     .build().invoke(visitor);
             IScene packageFormPageScene = PackageFormPageScene.builder().packageName(packageName).build();
-            PackageFormPageBean pageBean = util.collectBean(packageFormPageScene, PackageFormPageBean.class, "package_id", packageId);
+            PackageFormPageBean pageBean = util.toJavaObject(packageFormPageScene, PackageFormPageBean.class, "package_id", packageId);
             CommonUtil.checkResult(packageName + " 重新提交后状态", PackageStatusEnum.AUDITING.name(), pageBean.getAuditStatus());
             CommonUtil.checkResult(packageName + " 重新提交后状态", PackageStatusEnum.AUDITING.getName(), pageBean.getAuditStatusName());
         } catch (Exception | AssertionError e) {
@@ -1427,7 +1428,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             String startTime = DateTimeUtil.addDayFormat(new Date(), -5);
             String endTime = DateTimeUtil.getFormat(new Date());
             IScene scene = MessageFormPageScene.builder().startTime(startTime).endTime(endTime).build();
-            List<MessageFormPageBean> messageFormPageBeanList = util.collectBeanList(scene, MessageFormPageBean.class);
+            List<MessageFormPageBean> messageFormPageBeanList = util.toJavaObjectList(scene, MessageFormPageBean.class);
             messageFormPageBeanList.forEach(e -> {
                 int sendCount = e.getSendCount();
                 int receiveCount = e.getReceiveCount();
@@ -1567,7 +1568,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = VoucherFormVoucherPageScene.builder().voucherStatus(VoucherStatusEnum.INVALIDED.name()).build();
-            Long voucherId = util.collectBeanList(scene, VoucherFormVoucherPageBean.class).stream().filter(e -> e.getAllowUseInventory() > 0).map(VoucherFormVoucherPageBean::getVoucherId).findFirst().orElse(null);
+            Long voucherId = util.toJavaObjectList(scene, VoucherFormVoucherPageBean.class).stream().filter(e -> e.getAllowUseInventory() > 0).map(VoucherFormVoucherPageBean::getVoucherId).findFirst().orElse(null);
             Preconditions.checkArgument(voucherId != null, "不存在库存大于0的已作废卡券");
             //发消息
             String message = util.pushCustomMessage(0, true, false, voucherId).getString("message");
@@ -2074,7 +2075,6 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-
     //------------------------------------------------------消息推送人员数据一致-------------------------------------------
 
     //ok
@@ -2084,7 +2084,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         try {
             Integer sendMessageTotal = SearchCustomerPhoneScene.builder().customerType(ExportPageTypeEnum.WECHAT_CUSTOMER.name()).build().invoke(visitor).getInteger("total");
             IScene scene = WechatCustomerPageScene.builder().build();
-            List<WechatCustomerPageBean> wechatCustomerPageBeanList = util.collectBeanList(scene, WechatCustomerPageBean.class);
+            List<WechatCustomerPageBean> wechatCustomerPageBeanList = util.toJavaObjectList(scene, WechatCustomerPageBean.class);
             int count = (int) wechatCustomerPageBeanList.stream().filter(e -> !e.getCreateDate().contains(DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd"))).count();
             CommonUtil.checkResultPlus("推送消息小程序客户数量", sendMessageTotal, "服务管理-小程序客户数量", count);
         } catch (Exception | AssertionError e) {
@@ -2117,7 +2117,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
                     Long total = SearchCustomerPhoneScene.builder().customerType(MessageCustomerTypeEnum.PRE_CUSTOMER.name())
                             .preCustomerType(preCustomerType).shopIds(shopIdList).brandIds(brandIdList).build().invoke(visitor).getLong("total");
                     IScene preSaleCustomerPageScene = PreSaleCustomerPageScene.builder().build();
-                    List<PreSaleCustomerPageBean> pageBeanList1 = util.collectBeanList(preSaleCustomerPageScene, PreSaleCustomerPageBean.class);
+                    List<PreSaleCustomerPageBean> pageBeanList1 = util.toJavaObjectList(preSaleCustomerPageScene, PreSaleCustomerPageBean.class);
                     long count = pageBeanList1.stream().filter(e -> e.getBrandName() != null && e.getShopName() != null
                             && e.getCustomerTypeName() != null && e.getCreateDate() != null && e.getBrandName().equals(brandName)
                             && e.getCustomerTypeName().equals(CustomerTypeEnum.SUCCESS_CUSTOMER.getName())
@@ -2159,7 +2159,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
                     preCustomerType.add(CustomerTypeEnum.POTENTIAL_CUSTOMER.name());
                     Long total = SearchCustomerPhoneScene.builder().customerType(MessageCustomerTypeEnum.PRE_CUSTOMER.name()).preCustomerType(preCustomerType).shopIds(shopIdList).brandIds(brandIdList).build().invoke(visitor).getLong("total");
                     IScene preSaleCustomerPageScene = PreSaleCustomerPageScene.builder().build();
-                    List<PreSaleCustomerPageBean> pageBeanList1 = util.collectBeanList(preSaleCustomerPageScene, PreSaleCustomerPageBean.class);
+                    List<PreSaleCustomerPageBean> pageBeanList1 = util.toJavaObjectList(preSaleCustomerPageScene, PreSaleCustomerPageBean.class);
                     long count = pageBeanList1.stream().filter(e -> e.getBrandName() != null && e.getShopName() != null
                             && e.getCustomerTypeName() != null && e.getCreateDate() != null && e.getBrandName().equals(brandName)
                             && e.getCustomerTypeName().equals(CustomerTypeEnum.POTENTIAL_CUSTOMER.getName())
@@ -2203,7 +2203,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
                         Long total = SearchCustomerPhoneScene.builder().customerType(MessageCustomerTypeEnum.AFTER_CUSTOMER.name())
                                 .consumeType(consumeType).shopIds(shopIdList).brandIds(brandIdList).build().invoke(visitor).getLong("total");
                         IScene scene = AfterSaleCustomerPageScene.builder().shopId(shopId).brandId(brandId).build();
-                        List<AfterSaleCustomerPageBean> customerPageBeanList = util.collectBeanList(scene, AfterSaleCustomerPageBean.class);
+                        List<AfterSaleCustomerPageBean> customerPageBeanList = util.toJavaObjectList(scene, AfterSaleCustomerPageBean.class);
                         long count = customerPageBeanList.stream().filter(e -> e.getShopName() != null && e.getBrandName() != null
                                 && e.getTotalPrice() != null && e.getTotalPrice() >= anEnum.getMin()
                                 && e.getTotalPrice() <= anEnum.getMax()).map(AfterSaleCustomerPageBean::getCustomerId).distinct().count();
@@ -2222,7 +2222,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
 
     @DataProvider(name = "shopIds")
     public Object[] shopIds() {
-        return new String[]{String.valueOf(util.getShopId()), "49195", "46439"};
+        return new String[]{String.valueOf(util.getShopId())};
     }
 
     public <T> List<T> getList(T t) {

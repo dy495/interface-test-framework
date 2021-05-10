@@ -110,7 +110,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).build();
-            ReceptionPage receptionPage = util.collectBeanList(receptionPageScene, ReceptionPage.class).get(0);
+            ReceptionPage receptionPage = util.toJavaObjectList(receptionPageScene, ReceptionPage.class).get(0);
             String platNumber = receptionPage.getPlateNumber();
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
@@ -166,7 +166,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).build();
-            ReceptionPage receptionPage = util.collectBeanList(receptionPageScene, ReceptionPage.class).get(0);
+            ReceptionPage receptionPage = util.toJavaObjectList(receptionPageScene, ReceptionPage.class).get(0);
             String platNumber = receptionPage.getPlateNumber();
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
@@ -228,7 +228,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).build();
-            ReceptionPage receptionPage = util.collectBeanList(receptionPageScene, ReceptionPage.class).get(0);
+            ReceptionPage receptionPage = util.toJavaObjectList(receptionPageScene, ReceptionPage.class).get(0);
             String platNumber = receptionPage.getPlateNumber();
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
@@ -284,7 +284,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).build();
-            ReceptionPage receptionPage = util.collectBeanList(receptionPageScene, ReceptionPage.class).get(0);
+            ReceptionPage receptionPage = util.toJavaObjectList(receptionPageScene, ReceptionPage.class).get(0);
             String platNumber = receptionPage.getPlateNumber();
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
@@ -433,12 +433,12 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene afterSaleCustomerPageScene = AfterSaleCustomerPageScene.builder().build();
-            List<AfterSaleCustomerPageBean> afterSaleCustomerPageList = util.collectBeanList(afterSaleCustomerPageScene, AfterSaleCustomerPageBean.class);
+            List<AfterSaleCustomerPageBean> afterSaleCustomerPageList = util.toJavaObjectList(afterSaleCustomerPageScene, AfterSaleCustomerPageBean.class);
             afterSaleCustomerPageList.forEach(afterSaleCustomerPage -> {
                 String vehicleChassisCode = afterSaleCustomerPage.getVehicleChassisCode();
                 if (vehicleChassisCode != null) {
                     IScene afterSaleCustomerPageScene1 = AfterSaleCustomerPageScene.builder().vehicleChassisCode(vehicleChassisCode).build();
-                    List<AfterSaleCustomerPageBean> afterSaleCustomerPageList1 = util.collectBeanList(afterSaleCustomerPageScene1, AfterSaleCustomerPageBean.class);
+                    List<AfterSaleCustomerPageBean> afterSaleCustomerPageList1 = util.toJavaObjectList(afterSaleCustomerPageScene1, AfterSaleCustomerPageBean.class);
                     List<Integer> miles = afterSaleCustomerPageList1.stream().map(AfterSaleCustomerPageBean::getNewestMiles).collect(Collectors.toList());
                     for (int i = 0; i < miles.size() - 1; i++) {
                         CommonUtil.checkResult(vehicleChassisCode + " 最新里程数", miles.get(i), miles.get(i + 1));
@@ -458,17 +458,16 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
     public void afterSaleCustomerManager_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene scene = AfterSaleCustomerPageScene.builder().size(100).build();
-            scene.invoke(visitor).getJSONArray("list").stream().map(e -> (JSONObject) e)
-                    .forEach(e -> {
-                        AfterSaleCustomerPageBean pageBean = util.collectBean(e, AfterSaleCustomerPageBean.class);
-                        JSONObject responseData = RepairPageScene.builder().carId(String.valueOf(pageBean.getCarId())).shopId(String.valueOf(pageBean.getShopId())).build().invoke(visitor);
-                        JSONArray repairPageList = responseData.getJSONArray("list");
-                        int repairTimes = (int) repairPageList.stream().map(a -> (JSONObject) a).filter(a -> !util.collectBean(a, ReceptionPage.class).getOutputValue().equals("0")).count();
-                        CommonUtil.checkResultPlus("销售客户列表消费频次", pageBean.getRepairTimes() == null ? 0 : pageBean.getRepairTimes(), "维修记录列表维修次数", repairTimes);
-                        Double totalOutputValue = repairPageList.stream().map(a -> (JSONObject) a).map(a -> util.collectBean(a, ReceptionPage.class)).map(ReceptionPage::getOutputValue).map(a -> a.replace(",", "")).mapToDouble(Double::parseDouble).sum();
-                        CommonUtil.checkResultPlus("销售客户列表总消费", pageBean.getTotalPrice() == null ? 0.0 : pageBean.getTotalPrice(), "维修记录列表产值之和", totalOutputValue);
-                    });
+            IScene scene = AfterSaleCustomerPageScene.builder().build();
+            List<AfterSaleCustomerPageBean> customerPageBeanList = util.toJavaObjectList(scene, AfterSaleCustomerPageBean.class, SupporterUtil.SIZE);
+            customerPageBeanList.forEach(pageBean -> {
+                JSONObject responseData = RepairPageScene.builder().carId(String.valueOf(pageBean.getCarId())).shopId(String.valueOf(pageBean.getShopId())).build().invoke(visitor);
+                JSONArray repairPageList = responseData.getJSONArray("list");
+                int repairTimes = (int) repairPageList.stream().map(a -> (JSONObject) a).filter(a -> !util.toJavaObject(a, ReceptionPage.class).getOutputValue().equals("0")).count();
+                CommonUtil.checkResultPlus("销售客户列表消费频次", pageBean.getRepairTimes() == null ? 0 : pageBean.getRepairTimes(), "维修记录列表维修次数", repairTimes);
+                Double totalOutputValue = repairPageList.stream().map(a -> (JSONObject) a).map(a -> util.toJavaObject(a, ReceptionPage.class)).map(ReceptionPage::getOutputValue).map(a -> a.replace(",", "")).mapToDouble(Double::parseDouble).sum();
+                CommonUtil.checkResultPlus("销售客户列表总消费", pageBean.getTotalPrice() == null ? 0.0 : pageBean.getTotalPrice(), "维修记录列表产值之和", totalOutputValue);
+            });
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -482,9 +481,9 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene saleCustomerPageScene = AfterSaleCustomerPageScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).build();
-            AfterSaleCustomerPageBean customerPage = util.collectBeanList(saleCustomerPageScene, AfterSaleCustomerPageBean.class).get(0);
+            AfterSaleCustomerPageBean customerPage = util.toJavaObjectList(saleCustomerPageScene, AfterSaleCustomerPageBean.class).get(0);
             IScene afterSaleCustomerInfoScene = AfterSaleCustomerInfoScene.builder().shopId(customerPage.getShopId()).carId(customerPage.getCarId()).customerId(customerPage.getCustomerId()).shopId(customerPage.getShopId()).build();
-            AfterSaleCustomerInfoBean customerInfo = util.collectBean(afterSaleCustomerInfoScene, AfterSaleCustomerInfoBean.class);
+            AfterSaleCustomerInfoBean customerInfo = util.toJavaObject(afterSaleCustomerInfoScene, AfterSaleCustomerInfoBean.class);
             IScene afterSaleCustomerEditScene = AfterSaleCustomerEditScene.builder()
                     .customerPhone(customerInfo.getCustomerPhone())
                     .customerName(customerInfo.getCustomerName())

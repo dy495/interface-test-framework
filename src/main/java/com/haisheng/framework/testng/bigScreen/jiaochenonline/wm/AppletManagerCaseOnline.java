@@ -143,7 +143,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
             int newAppAppointmentNum = util.getAppointmentPageNum();
             CommonUtil.checkResult("app我的预约列表数", appAppointmentNum + 1, newAppAppointmentNum);
             IScene appAppointmentPageScene = AppAppointmentPageScene.builder().build();
-            AppAppointmentPage appAppointmentPage = util.collectFirstBean(appAppointmentPageScene, AppAppointmentPage.class);
+            AppAppointmentPage appAppointmentPage = util.toFirstJavaObject(appAppointmentPageScene, AppAppointmentPage.class);
             CommonUtil.checkResult("app预约类型", appointmentTypeEnum.getValue(), appAppointmentPage.getTypeName());
             CommonUtil.checkResult("app预约类型", appointmentTypeEnum.name(), appAppointmentPage.getType());
             CommonUtil.checkResult("app是否可确认", true, appAppointmentPage.getIsCanConfirm());
@@ -251,7 +251,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
             user.loginPc(ALL_AUTHORITY);
             JSONObject evaluatePageObject = evaluatePageScene.invoke(visitor);
             Long newTotal = evaluatePageObject.getLong("total");
-            EvaluatePageBean evaluatePageBean = util.collectFirstBean(evaluatePageScene, EvaluatePageBean.class);
+            EvaluatePageBean evaluatePageBean = util.toFirstJavaObject(evaluatePageScene, EvaluatePageBean.class);
             CommonUtil.checkResult("评价列表数", total + 1, newTotal);
             CommonUtil.checkResult("评价描述", EnumDesc.DESC_BETWEEN_40_50.getDesc(), evaluatePageBean.getDescribe());
             CommonUtil.checkResult("评价内容", EnumDesc.DESC_BETWEEN_40_50.getDesc(), evaluatePageBean.getSuggestion());
@@ -261,7 +261,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
             Integer followId = util.getFollowUpPageList().get(0).getId();
             AppFollowUpCompleteScene.builder().id(followId).shopId(shopId).remark(EnumDesc.DESC_BETWEEN_40_50.getDesc()).build().invoke(visitor);
             user.loginPc(ALL_AUTHORITY);
-            EvaluatePageBean followEvaluatePage = util.collectFirstBean(evaluatePageScene, EvaluatePageBean.class);
+            EvaluatePageBean followEvaluatePage = util.toFirstJavaObject(evaluatePageScene, EvaluatePageBean.class);
             CommonUtil.checkResult("跟进后跟进备注", EnumDesc.DESC_BETWEEN_40_50.getDesc(), followEvaluatePage.getFollowUpRemark());
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -293,7 +293,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
             int newAppAppointmentNum = util.getAppointmentPageNum();
             CommonUtil.checkResult("app我的预约列表数", appAppointmentNum + 1, newAppAppointmentNum);
             IScene appAppointmentPageScene = AppAppointmentPageScene.builder().build();
-            AppAppointmentPage appAppointmentPage = util.collectFirstBean(appAppointmentPageScene, AppAppointmentPage.class);
+            AppAppointmentPage appAppointmentPage = util.toFirstJavaObject(appAppointmentPageScene, AppAppointmentPage.class);
             CommonUtil.checkResult("app预约类型", appointmentTypeEnum.getValue(), appAppointmentPage.getTypeName());
             CommonUtil.checkResult("app预约类型", appointmentTypeEnum.name(), appAppointmentPage.getType());
             CommonUtil.checkResult("app是否可确认", true, appAppointmentPage.getIsCanConfirm());
@@ -399,7 +399,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
             user.loginPc(ALL_AUTHORITY);
             JSONObject evaluatePageObject = evaluatePageScene.invoke(visitor);
             Long newTotal = evaluatePageObject.getLong("total");
-            EvaluatePageBean evaluatePageBean = util.collectFirstBean(evaluatePageScene, EvaluatePageBean.class);
+            EvaluatePageBean evaluatePageBean = util.toFirstJavaObject(evaluatePageScene, EvaluatePageBean.class);
             CommonUtil.checkResult("评价列表数", total + 1, newTotal);
             CommonUtil.checkResult("评价描述", EnumDesc.DESC_BETWEEN_40_50.getDesc(), evaluatePageBean.getDescribe());
             CommonUtil.checkResult("评价内容", EnumDesc.DESC_BETWEEN_40_50.getDesc(), evaluatePageBean.getSuggestion());
@@ -409,7 +409,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
             Integer followId = util.getFollowUpPageList().get(0).getId();
             AppFollowUpCompleteScene.builder().id(followId).shopId(shopId).remark(EnumDesc.DESC_BETWEEN_40_50.getDesc()).build().invoke(visitor);
             user.loginPc(ALL_AUTHORITY);
-            EvaluatePageBean followEvaluatePage = util.collectFirstBean(evaluatePageScene, EvaluatePageBean.class);
+            EvaluatePageBean followEvaluatePage = util.toFirstJavaObject(evaluatePageScene, EvaluatePageBean.class);
             CommonUtil.checkResult("跟进后跟进备注", EnumDesc.DESC_BETWEEN_40_50.getDesc(), followEvaluatePage.getFollowUpRemark());
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -441,7 +441,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
             int newAppAppointmentNum = util.getAppointmentPageNum();
             CommonUtil.checkResult("app我的预约列表数", appAppointmentNum + 1, newAppAppointmentNum);
             IScene appAppointmentPageScene = AppAppointmentPageScene.builder().build();
-            AppAppointmentPage appAppointmentPage = util.collectFirstBean(appAppointmentPageScene, AppAppointmentPage.class);
+            AppAppointmentPage appAppointmentPage = util.toFirstJavaObject(appAppointmentPageScene, AppAppointmentPage.class);
             CommonUtil.checkResult("app预约类型", appointmentTypeEnum.getValue(), appAppointmentPage.getTypeName());
             CommonUtil.checkResult("app预约类型", appointmentTypeEnum.name(), appAppointmentPage.getType());
             CommonUtil.checkResult("app是否可确认", true, appAppointmentPage.getIsCanConfirm());
@@ -544,7 +544,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
             user.loginPc(ALL_AUTHORITY);
             JSONObject evaluatePageObject = evaluatePageScene.invoke(visitor);
             Long newTotal = evaluatePageObject.getLong("total");
-            EvaluatePageBean evaluatePageBean = util.collectFirstBean(evaluatePageScene, EvaluatePageBean.class);
+            EvaluatePageBean evaluatePageBean = util.toFirstJavaObject(evaluatePageScene, EvaluatePageBean.class);
             CommonUtil.checkResult("评价列表数", total + 1, newTotal);
             CommonUtil.checkResult("评价描述", EnumDesc.DESC_BETWEEN_40_50.getDesc(), evaluatePageBean.getDescribe());
             CommonUtil.checkResult("评价内容", EnumDesc.DESC_BETWEEN_40_50.getDesc(), evaluatePageBean.getSuggestion());
@@ -554,7 +554,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
             Integer followId = util.getFollowUpPageList().get(0).getId();
             AppFollowUpCompleteScene.builder().id(followId).shopId(shopId).remark(EnumDesc.DESC_BETWEEN_40_50.getDesc()).build().invoke(visitor);
             user.loginPc(ALL_AUTHORITY);
-            EvaluatePageBean followEvaluatePage = util.collectFirstBean(evaluatePageScene, EvaluatePageBean.class);
+            EvaluatePageBean followEvaluatePage = util.toFirstJavaObject(evaluatePageScene, EvaluatePageBean.class);
             CommonUtil.checkResult("跟进后跟进备注", EnumDesc.DESC_BETWEEN_40_50.getDesc(), followEvaluatePage.getFollowUpRemark());
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -570,7 +570,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
         try {
             user.loginApplet(APPLET_USER_ONE);
             IScene homePageScene = AppletHomePageScene.builder().build();
-            Integer integral = visitor.invokeApi(homePageScene).getInteger("integral");
+            Integer integral = homePageScene.invoke(visitor).getInteger("integral");
             AtomicInteger integralSum = new AtomicInteger();
             List<AppletIntegralRecord> appletIntegralRecordList = util.getAppletIntegralRecordList();
             appletIntegralRecordList.forEach(e -> {
@@ -609,7 +609,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene exchangePageScene = ExchangePageScene.builder().status(IntegralExchangeStatusEnum.WORKING.name()).exchangeType(CommodityTypeEnum.REAL.name()).build();
-            ExchangePage a = util.collectBeanList(exchangePageScene, ExchangePage.class).stream().filter(e -> e.getExchangedAndSurplus().split("/")[1].equals("0")).findFirst().orElse(null);
+            ExchangePage a = util.toJavaObjectList(exchangePageScene, ExchangePage.class).stream().filter(e -> e.getExchangedAndSurplus().split("/")[1].equals("0")).findFirst().orElse(null);
             ExchangePage exchangePage = a == null ? util.createExchangeRealGoods(0) : a;
             //修改为可兑换多次
             util.modifyExchangeGoodsLimit(exchangePage.getId(), exchangePage.getExchangeType(), false);
@@ -634,7 +634,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
         try {
             //找一个库存为大于0并且包含卡券剩余库存等于0的积分商品
             IScene exchangePageScene = ExchangePageScene.builder().status(IntegralExchangeStatusEnum.WORKING.name()).exchangeType(CommodityTypeEnum.FICTITIOUS.name()).build();
-            ExchangePage a = util.collectBeanList(exchangePageScene, ExchangePage.class).stream().filter(e -> Integer.parseInt(e.getExchangedAndSurplus().split("/")[1]) == 0 && util.getExchangeGoodsContainVoucher(e.getId()).getAllowUseInventory() > 0).findFirst().orElse(null);
+            ExchangePage a = util.toJavaObjectList(exchangePageScene, ExchangePage.class).stream().filter(e -> Integer.parseInt(e.getExchangedAndSurplus().split("/")[1]) == 0 && util.getExchangeGoodsContainVoucher(e.getId()).getAllowUseInventory() > 0).findFirst().orElse(null);
             ExchangePage exchangePage;
             if (a == null) {
                 Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
@@ -665,10 +665,10 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
             ExchangePage exchangePage;
             IScene exchangePageScene = ExchangePageScene.builder().status(IntegralExchangeStatusEnum.WORKING.name()).exchangeType(CommodityTypeEnum.FICTITIOUS.name()).build();
             //找一个库存为大于0并且包含卡券剩余库存大于0的积分商品
-            ExchangePage a = util.collectBeanList(exchangePageScene, ExchangePage.class).stream().filter(e -> Integer.parseInt(e.getExchangedAndSurplus().split("/")[1]) > 0 && util.getExchangeGoodsContainVoucher(e.getId()).getAllowUseInventory() > 0 && util.getExchangeGoodsContainVoucher(e.getId()).getVoucherStatus().equals(VoucherStatusEnum.WORKING.name())).findFirst().orElse(null);
+            ExchangePage a = util.toJavaObjectList(exchangePageScene, ExchangePage.class).stream().filter(e -> Integer.parseInt(e.getExchangedAndSurplus().split("/")[1]) > 0 && util.getExchangeGoodsContainVoucher(e.getId()).getAllowUseInventory() > 0 && util.getExchangeGoodsContainVoucher(e.getId()).getVoucherStatus().equals(VoucherStatusEnum.WORKING.name())).findFirst().orElse(null);
             if (a == null) {
                 //如果没有找一个库存为0并且包含卡券剩余库存大于0的积分商品
-                ExchangePage b = util.collectBeanList(exchangePageScene, ExchangePage.class).stream().filter(e -> Integer.parseInt(e.getExchangedAndSurplus().split("/")[1]) == 0 && util.getExchangeGoodsContainVoucher(e.getId()).getAllowUseInventory() > 0 && util.getExchangeGoodsContainVoucher(e.getId()).getVoucherStatus().equals(VoucherStatusEnum.WORKING.name())).findFirst().orElse(null);
+                ExchangePage b = util.toJavaObjectList(exchangePageScene, ExchangePage.class).stream().filter(e -> Integer.parseInt(e.getExchangedAndSurplus().split("/")[1]) == 0 && util.getExchangeGoodsContainVoucher(e.getId()).getAllowUseInventory() > 0 && util.getExchangeGoodsContainVoucher(e.getId()).getVoucherStatus().equals(VoucherStatusEnum.WORKING.name())).findFirst().orElse(null);
                 if (b == null) {
                     //如果没有创建一个库存为1并且包含卡券剩余库存>0的积分商品
                     voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
@@ -709,7 +709,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
     }
 
     //ok
-    @Test(description = "小程序--积分商城倒序排序，积分一次减少")
+    @Test(description = "小程序--积分商城倒序排序，积分依次减少")
     public void integralMall_system_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -726,7 +726,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("小程序--积分商城倒序排序，积分一次减少");
+            saveData("小程序--积分商城倒序排序，积分依次减少");
         }
     }
 
@@ -755,7 +755,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene integralExchangeRulesScene = IntegralExchangeRulesScene.builder().build();
-            int allSend = util.collectBeanList(integralExchangeRulesScene, JSONObject.class).stream().filter(e -> e.getString("rule_name").equals(AppletCodeBusinessTypeEnum.SIGN_IN.getTypeName())).map(e -> e.getInteger("all_send")).findFirst().orElse(0);
+            int allSend = util.toJavaObjectList(integralExchangeRulesScene, JSONObject.class).stream().filter(e -> e.getString("rule_name").equals(AppletCodeBusinessTypeEnum.SIGN_IN.getTypeName())).map(e -> e.getInteger("all_send")).findFirst().orElse(0);
             user.loginApplet(APPLET_USER_ONE);
             JSONObject response = AppletSignInDetailScene.builder().build().invoke(visitor);
             int signInScore = response.getInteger("sign_in_score");
@@ -781,13 +781,13 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
             CommonUtil.checkResult("小程序签到完成积分明细积分数", signInScore, Integer.parseInt(integralRecord.getIntegral()));
             user.loginPc(ALL_AUTHORITY);
             IScene exchangeDetailedScene = ExchangeDetailedScene.builder().build();
-            ExchangeDetailed exchangeDetailed = util.collectBeanList(exchangeDetailedScene, ExchangeDetailed.class).get(0);
+            ExchangeDetailed exchangeDetailed = util.toJavaObjectList(exchangeDetailedScene, ExchangeDetailed.class).get(0);
             CommonUtil.checkResult("pc积分明细获取时间", gainTime, exchangeDetailed.getOperateTime());
             CommonUtil.checkResult("pc积分明细内容", "签到获得" + signInScore + "积分", exchangeDetailed.getChangeReason());
             CommonUtil.checkResult("pc积分明细类型", ChangeStockTypeEnum.ADD.name(), exchangeDetailed.getExchangeType());
             CommonUtil.checkResult("pc积分明细类型", ChangeStockTypeEnum.ADD.getDescription(), exchangeDetailed.getExchangeTypeName());
             CommonUtil.checkResult("pc积分明细积分数", signInScore, exchangeDetailed.getStockDetail());
-            int newAllSend = util.collectBeanList(integralExchangeRulesScene, JSONObject.class).stream().filter(e -> e.getString("rule_name").equals(AppletCodeBusinessTypeEnum.SIGN_IN.getTypeName())).map(e -> e.getInteger("all_send")).findFirst().orElse(0);
+            int newAllSend = util.toJavaObjectList(integralExchangeRulesScene, JSONObject.class).stream().filter(e -> e.getString("rule_name").equals(AppletCodeBusinessTypeEnum.SIGN_IN.getTypeName())).map(e -> e.getInteger("all_send")).findFirst().orElse(0);
             CommonUtil.checkResult("pc积分规则中签到已发放积分", allSend + signInScore, newAllSend);
         } catch (Exception | AssertionError e) {
             collectMessage(e);

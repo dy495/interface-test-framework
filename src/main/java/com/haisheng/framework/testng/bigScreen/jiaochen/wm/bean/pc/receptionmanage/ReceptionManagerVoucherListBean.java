@@ -13,7 +13,7 @@ import java.io.Serializable;
  * @date 2021-04-02 14:47:46
  */
 @Data
-public class VoucherListBean implements Serializable {
+public class ReceptionManagerVoucherListBean implements Serializable {
     /**
      * 描述 数据列表
      * 版本 v1.0
