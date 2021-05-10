@@ -1,6 +1,5 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.manage;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
@@ -69,6 +68,7 @@ public class EvaluateConfigSubmitScene extends BaseScene {
      */
     private final Integer points;
 
+
     /**
      * 描述 评价分数列表
      * 是否必填 true
@@ -87,6 +87,7 @@ public class EvaluateConfigSubmitScene extends BaseScene {
                 "    \"is_send_voucher\":"+isSendVoucher+",\n" +
                 "    \"evaluate_reward\":"+evaluateReward+",\n" +
                 "    \"points\":"+points+",\n" +
+
 
 
                 "    \"vouchers\":[\n" +
