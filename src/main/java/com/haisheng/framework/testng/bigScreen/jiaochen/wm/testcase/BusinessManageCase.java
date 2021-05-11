@@ -433,7 +433,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene afterSaleCustomerPageScene = AfterSaleCustomerPageScene.builder().build();
-            List<AfterSaleCustomerPageBean> afterSaleCustomerPageList = util.toJavaObjectList(afterSaleCustomerPageScene, AfterSaleCustomerPageBean.class);
+            List<AfterSaleCustomerPageBean> afterSaleCustomerPageList = util.toJavaObjectList(afterSaleCustomerPageScene, AfterSaleCustomerPageBean.class, SupporterUtil.SIZE);
             afterSaleCustomerPageList.forEach(afterSaleCustomerPage -> {
                 String vehicleChassisCode = afterSaleCustomerPage.getVehicleChassisCode();
                 if (vehicleChassisCode != null) {
