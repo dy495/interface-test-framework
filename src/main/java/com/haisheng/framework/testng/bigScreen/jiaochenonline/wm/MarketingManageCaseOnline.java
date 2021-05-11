@@ -1376,6 +1376,8 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
         try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
+            AddVoucherScene.builder().id(voucherId).addNumber(2).build().invoke(visitor);
+            util.applyVoucher(voucherName, "1");
             IScene messageFormPageScene = MessageFormPageScene.builder().build();
             int messageTotal = messageFormPageScene.invoke(visitor).getInteger("total");
             IScene sendRecordScene = SendRecordScene.builder().voucherId(voucherId).build();
