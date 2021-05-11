@@ -852,7 +852,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             String voucherName = util.getVoucherName(voucherId);
             JSONArray voucherList = util.getVoucherArray(voucherId, 2);
             //购买临时套餐
-            IScene temporaryScene = PurchaseTemporaryPackageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone())
+            IScene temporaryScene = PurchaseTemporaryPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
                     .carType(PackageUseTypeEnum.ALL_CAR.name()).voucherList(voucherList).expiryDate("1").remark(EnumDesc.DESC_BETWEEN_20_30.getDesc())
                     .subjectType(util.getSubjectType()).subjectId(util.getSubjectDesc(util.getSubjectType()))
                     .extendedInsuranceYear("1").extendedInsuranceCopies("1").type(1).build();
@@ -874,7 +874,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             String voucherName = util.getVoucherName(voucherId);
             JSONArray voucherList = util.getVoucherArray(voucherId, 2);
             //购买临时套餐
-            IScene temporaryScene = PurchaseTemporaryPackageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone())
+            IScene temporaryScene = PurchaseTemporaryPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
                     .carType(PackageUseTypeEnum.ALL_CAR.name()).voucherList(voucherList).expiryDate("1").remark(EnumDesc.DESC_BETWEEN_20_30.getDesc())
                     .subjectType(util.getSubjectType()).subjectId(util.getSubjectDesc(util.getSubjectType()))
                     .extendedInsuranceYear("1").extendedInsuranceCopies("1").type(1).build();
@@ -897,7 +897,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             String voucherName = util.getVoucherName(voucherId);
             Long packageId = util.editPackage(voucherId, 1);
             //购买固定套餐
-            IScene purchaseFixedPackageScene = PurchaseFixedPackageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone())
+            IScene purchaseFixedPackageScene = PurchaseFixedPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
                     .carType(PackageUseTypeEnum.ALL_CAR.name()).packageId(packageId).expiryDate("1").remark(EnumDesc.DESC_BETWEEN_20_30.getDesc())
                     .subjectType(util.getSubjectType()).subjectId(util.getSubjectDesc(util.getSubjectType())).packagePrice("49.99")
                     .extendedInsuranceYear(1).extendedInsuranceCopies(1).type(1).build();
@@ -923,7 +923,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             IScene switchPackageStatusScene = PackageFormSwitchPackageStatusScene.builder().id(packageId).status(false).build();
             visitor.invokeApi(switchPackageStatusScene);
             //购买固定套餐
-            IScene purchaseFixedPackageScene = PurchaseFixedPackageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone())
+            IScene purchaseFixedPackageScene = PurchaseFixedPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
                     .carType(PackageUseTypeEnum.ALL_CAR.name()).packageId(packageId).expiryDate("1").remark(EnumDesc.DESC_BETWEEN_20_30.getDesc())
                     .subjectType(util.getSubjectType()).subjectId(util.getSubjectDesc(util.getSubjectType())).packagePrice("49.99")
                     .extendedInsuranceYear(1).extendedInsuranceCopies(1).type(1).build();
@@ -1219,7 +1219,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             String subjectType = util.getSubjectType();
             Long subjectId = util.getSubjectDesc(subjectType);
             //购买套餐
-            String message = PurchaseFixedPackageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone())
+            String message = PurchaseFixedPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
                     .carType(PackageUseTypeEnum.ALL_CAR.name()).packageId(packageId).packagePrice("1.00").expiryDate("1")
                     .remark(EnumDesc.DESC_BETWEEN_20_30.getDesc()).subjectType(subjectType).subjectId(subjectId)
                     .extendedInsuranceYear(10).extendedInsuranceCopies(10).type(1).build().invoke(visitor, false).getString("message");

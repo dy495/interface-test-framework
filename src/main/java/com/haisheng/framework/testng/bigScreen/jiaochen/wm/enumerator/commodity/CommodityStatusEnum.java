@@ -22,7 +22,7 @@ public enum CommodityStatusEnum {
 
 
 
-    private String name;
+    private final String name;
 
     CommodityStatusEnum(String name) {
         this.name = name;

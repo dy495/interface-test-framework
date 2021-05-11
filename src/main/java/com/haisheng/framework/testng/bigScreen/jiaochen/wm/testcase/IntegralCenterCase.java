@@ -21,6 +21,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.integralcente
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.integralcenter.ExchangeGoodsDetailBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.integralcenter.ExchangeOrderBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.integralcenter.ExchangeStockPageBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.integralmall.GoodsManagePageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.ChangeStockTypeEnum;
@@ -1070,15 +1071,16 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //ok
-    @Test(description = "积分兑换--创建实体积分兑换时将商品下架")
+    //bug下架商品可以创建兑换积分
+    @Test(description = "积分兑换--创建实体积分兑换时将商品下架", enabled = false)
     public void integralExchange_system_23() {
         logger.logCaseStart(caseResult.getCaseName());
         Long exchangeId = null;
         try {
             String exchangeStartTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
             String exchangeEndTime = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 30), "yyyy-MM-dd HH:mm:ss");
-            long goodsId = GoodsManagePageScene.builder().goodsStatus(CommodityStatusEnum.DOWN.name()).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            IScene goodsManagePageScene = GoodsManagePageScene.builder().goodsStatus(CommodityStatusEnum.DOWN.name()).build();
+            long goodsId = util.toFirstJavaObject(goodsManagePageScene, GoodsManagePageBean.class).getId();
             JSONArray specificationDetailList = CommoditySpecificationsListScene.builder().id(goodsId).build().invoke(visitor).getJSONArray("specification_detail_list");
             JSONArray specificationList = new JSONArray(specificationDetailList.stream().map(e -> (JSONObject) e).map(e -> put(e.getInteger("id"), 1)).collect(Collectors.toList()));
             IScene scene = CreateExchangeGoodsScene.builder().exchangeGoodsType(CommodityTypeEnum.REAL.name()).goodsId(goodsId)

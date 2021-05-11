@@ -1365,7 +1365,8 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
             //发出一张卡券
-            util.pushCustomMessage(0, true, true, voucherId);
+            String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/excel/发单人消息手机号.xlsx";
+            util.pushCustomMessage(0, true, true, filePath, voucherId);
             Thread.sleep(500);
             //获取最新发出卡券的code
             String voucherCode = util.getVoucherCode(voucherId);

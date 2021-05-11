@@ -6,6 +6,7 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.bean.Response;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.*;
@@ -805,8 +806,8 @@ public class SupporterUtil {
      * @param type        0赠送/1购买
      */
     public void buyTemporaryPackage(JSONArray voucherList, int type) {
-        PurchaseTemporaryPackageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone())
-                .carType(PackageUseTypeEnum.RECEPTION_CAR.name()).plateNumber(getPlatNumber(EnumAccount.MARKETING_DAILY.getPhone()))
+        PurchaseTemporaryPackageScene.builder().customerPhone(EnumAppletToken.JC_WM_DAILY.getPhone())
+                .carType(PackageUseTypeEnum.RECEPTION_CAR.name()).plateNumber(getPlatNumber(EnumAppletToken.JC_WM_DAILY.getPhone()))
                 .voucherList(voucherList).expiryDate("1").remark(EnumDesc.DESC_BETWEEN_20_30.getDesc())
                 .subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType()))
                 .extendedInsuranceYear("1").extendedInsuranceCopies("1").type(type).build().invoke(visitor);
@@ -819,7 +820,7 @@ public class SupporterUtil {
      * @param type      0赠送/1购买
      */
     public void buyFixedPackage(Long packageId, int type) {
-        PurchaseFixedPackageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone())
+        PurchaseFixedPackageScene.builder().customerPhone(EnumAppletToken.JC_WM_DAILY.getPhone())
                 .carType(PackageUseTypeEnum.ALL_CAR.name()).packageId(packageId).packagePrice("1.00").expiryDate("1")
                 .remark(EnumDesc.DESC_BETWEEN_20_30.getDesc())
                 .subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType()))
@@ -839,7 +840,7 @@ public class SupporterUtil {
         Integer expiryDate = packageDetail.getExpiryDate();
         Integer expireType = packageDetail.getExpireType();
         String packagePrice = packageDetail.getPackagePrice();
-        IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone()).build();
+        IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(EnumAppletToken.JC_WM_DAILY.getPhone()).build();
         ReceptionPage receptionPage = toJavaObjectList(receptionPageScene, ReceptionPage.class).get(0);
         //购买套餐
         ReceptionPurchaseFixedPackageScene.builder().customerId(receptionPage.getCustomerId())
@@ -857,7 +858,7 @@ public class SupporterUtil {
      * @param type        0赠送/1购买
      */
     public void receptionBuyTemporaryPackage(JSONArray voucherList, int type) {
-        IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(EnumAccount.MARKETING_DAILY.getPhone()).build();
+        IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(EnumAppletToken.JC_WM_DAILY.getPhone()).build();
         ReceptionPage receptionPage = toJavaObjectList(receptionPageScene, ReceptionPage.class).get(0);
         //购买套餐
         ReceptionPurchaseTemporaryPackageScene.builder().customerId(receptionPage.getCustomerId())

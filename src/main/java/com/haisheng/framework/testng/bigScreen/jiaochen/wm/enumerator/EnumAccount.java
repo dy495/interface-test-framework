@@ -7,15 +7,11 @@ import lombok.Getter;
  */
 public enum EnumAccount {
 
-    MARKETING_DAILY("15321527989", "000000", "营销管理", true, "", "", ""),
-
     ALL_AUTHORITY_DAILY("13402050025", "000000", "全部角色", true, "预约应答13402050025", "2942", "46522"),
 
     ALL_AUTHORITY_DAILY_LXQ("13114785236", "000000", "系统管理员", true, "轿辰（赢识测试）", "603", "46522"),
 
     ALL_AUTHORITY_ONLINE("15037286011", "000000", "所有权限", false, "接待顾问x", "2227", "20034"),
-
-    MARKETING_ONLINE("15321527989", "000000", "营销管理", false, "", "", ""),
 
     ALL_JC_ONLINE("15711200001", "000000", "所有权限", false, "轿辰线上", "395", "-1"),
 

@@ -198,8 +198,8 @@ public class ApproveManagerCase extends TestCaseCommon implements TestCaseStd {
             Long refusalTotal = ApplyPageScene.builder().status(VoucherApprovalStatusEnum.REFUSAL.getId()).build().invoke(visitor).getLong("total");
             Long recallTotal = ApplyPageScene.builder().status(VoucherApprovalStatusEnum.RECALL.getId()).build().invoke(visitor).getLong("total");
             Preconditions.checkArgument(wait.equals(auditingTotal), "审核数据接口待审核卡券数：" + wait + " 按照待审核搜索列表数：" + auditingTotal);
-            Preconditions.checkArgument(passed.equals(agreeTotal), "审核数据接口审核通过卡券数：" + wait + " 按照审核通过搜索列表数：" + agreeTotal);
-            Preconditions.checkArgument(failed.equals(refusalTotal), "审核数据接口审核未通过卡券数：" + wait + " 按照审核未通过搜索列表数：" + refusalTotal);
+            Preconditions.checkArgument(passed.equals(agreeTotal), "审核数据接口审核通过卡券数：" + passed + " 按照审核通过搜索列表数：" + agreeTotal);
+            Preconditions.checkArgument(failed.equals(refusalTotal), "审核数据接口审核未通过卡券数：" + failed + " 按照审核未通过搜索列表数：" + refusalTotal);
             Preconditions.checkArgument(total == (auditingTotal + agreeTotal + refusalTotal + recallTotal), " 审核数据接口全部审批卡券数：" + total + " 列表四种状态总数：" + (auditingTotal + agreeTotal + refusalTotal + recallTotal));
             Preconditions.checkArgument(total >= (wait + failed + passed), "审核数据接口全部审批卡券数：" + total + " 审核数据接口三种状态总数：" + (wait + failed + passed));
             Preconditions.checkArgument((wait + failed + passed) == (auditingTotal + agreeTotal + refusalTotal), "审核数据接口三种状态总数：" + (wait + failed + passed) + " 列表三种状态总数：" + (auditingTotal + agreeTotal + refusalTotal));
