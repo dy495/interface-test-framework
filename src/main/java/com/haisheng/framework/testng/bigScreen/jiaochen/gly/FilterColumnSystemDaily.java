@@ -2638,18 +2638,18 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 if(pram.equals("shop_id")){
                     String result = respond.getJSONArray("list").getJSONObject(0).getJSONArray("shop_list").getJSONObject(0).getString(output);
                     JSONObject respond1 = jc.staffListFilterManage(null, "1", "10", pram, result);
-                    System.out.println("----------"+respond1);
                     int pages = respond1.getInteger("pages");
                     for (int page = 1; page <= pages; page++) {
+                        System.err.println( pram+"     "+result);
                         JSONArray list = jc.staffListFilterManage("", String.valueOf(page), "10", pram, result).getJSONArray("list");
                         for (int i = 0; i < list.size(); i++) {
                             String string="";
                             JSONArray list1 = list.getJSONObject(i).getJSONArray("shop_list");
                             for(int j=0;j<list1.size();j++){
                                 String Flag = list1.getJSONObject(j).getString("shop_id");
-                                System.out.println(page +" ------"+i+"--------"+list1.size());
+                                System.out.println(Flag +" ------"+j+"--------"+list1.size());
 //                                string.append(Flag);
-                                string=string+Flag;
+                                string+=Flag;
                                 System.out.println("--Flag------"+Flag);
                                 System.out.println("--string------"+string);
                             }
@@ -2666,8 +2666,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                             String string="";
                             JSONArray list1 = list.getJSONObject(i).getJSONArray("role_list");
                             for(int j=0;j<list1.size();j++){
-                                String Flag = list1.getJSONObject(j).getString("role_id");
-                                string=Flag+string;
+                                string+=list1.getJSONObject(j).getString("role_id");
                             }
                             System.out.println("员工列表按" + string + "查询，结果错误" + result);
                             Preconditions.checkArgument(string.contains(result), "员工列表按" + string + "查询，结果错误" + result);
