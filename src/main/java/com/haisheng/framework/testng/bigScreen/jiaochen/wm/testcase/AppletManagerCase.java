@@ -778,7 +778,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             user.loginPc(ALL_AUTHORITY);
             IScene exchangeDetailedScene = ExchangeDetailedScene.builder().build();
             ExchangeDetailed exchangeDetailed = util.toJavaObjectList(exchangeDetailedScene, ExchangeDetailed.class).get(0);
-            CommonUtil.checkResult("pc积分明细获取时间", gainTime, exchangeDetailed.getOperateTime());
+            Preconditions.checkArgument(exchangeDetailed.getOperateTime().contains(gainTime), "pc积分明细获取时间：" + exchangeDetailed.getOperateTime());
             CommonUtil.checkResult("pc积分明细内容", "签到获得" + signInScore + "积分", exchangeDetailed.getChangeReason());
             CommonUtil.checkResult("pc积分明细类型", ChangeStockTypeEnum.ADD.name(), exchangeDetailed.getExchangeType());
             CommonUtil.checkResult("pc积分明细类型", ChangeStockTypeEnum.ADD.getDescription(), exchangeDetailed.getExchangeTypeName());

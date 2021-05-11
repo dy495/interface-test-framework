@@ -56,7 +56,6 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_ONLINE;
     private static final EnumAppletToken APPLET_USER_TWO = EnumAppletToken.JC_XMF_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
-    private static final Integer SIZE = 100;
     public UserUtil user = new UserUtil(visitor);
     public SupporterUtil util = new SupporterUtil(visitor);
 
@@ -85,7 +84,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
     @AfterClass
     @Override
     public void clean() {
-        util.cleanVoucher();
+//        util.cleanVoucher();
         afterClassClean();
     }
 
@@ -167,7 +166,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = VoucherFormVoucherPageScene.builder().build();
-            List<VoucherFormVoucherPageBean> voucherPageList = util.toJavaObjectList(scene, VoucherFormVoucherPageBean.class, SIZE);
+            List<VoucherFormVoucherPageBean> voucherPageList = util.toJavaObjectList(scene, VoucherFormVoucherPageBean.class, SupporterUtil.SIZE);
             voucherPageList.forEach(e -> {
                 Integer surplusInventory = e.getSurplusInventory();
                 Integer allowUseInventory = e.getAllowUseInventory();
@@ -203,7 +202,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = VoucherFormVoucherPageScene.builder().build();
-            List<VoucherFormVoucherPageBean> voucherPages = util.toJavaObjectList(scene, VoucherFormVoucherPageBean.class, SIZE);
+            List<VoucherFormVoucherPageBean> voucherPages = util.toJavaObjectList(scene, VoucherFormVoucherPageBean.class, SupporterUtil.SIZE);
             voucherPages.forEach(e -> {
                 String voucherName = e.getVoucherName();
                 Integer totalSend = VoucherInfoScene.builder().id(e.getVoucherId()).build().invoke(visitor).getInteger("total_send");
@@ -224,7 +223,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = VoucherFormVoucherPageScene.builder().build();
-            List<VoucherFormVoucherPageBean> voucherPages = util.toJavaObjectList(scene, VoucherFormVoucherPageBean.class, SIZE);
+            List<VoucherFormVoucherPageBean> voucherPages = util.toJavaObjectList(scene, VoucherFormVoucherPageBean.class, SupporterUtil.SIZE);
             voucherPages.forEach(e -> {
                 String voucherName = e.getVoucherName();
                 Integer totalVerify = VoucherInfoScene.builder().id(e.getVoucherId()).build().invoke(visitor).getInteger("total_verify");
@@ -248,7 +247,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = VoucherFormVoucherPageScene.builder().build();
-            List<VoucherFormVoucherPageBean> voucherPages = util.toJavaObjectList(scene, VoucherFormVoucherPageBean.class, SIZE);
+            List<VoucherFormVoucherPageBean> voucherPages = util.toJavaObjectList(scene, VoucherFormVoucherPageBean.class, SupporterUtil.SIZE);
             voucherPages.forEach(e -> {
                 String voucherName = e.getVoucherName();
                 long totalInvalid = VoucherInfoScene.builder().id(e.getVoucherId()).build().invoke(visitor).getLong("total_invalid");
@@ -269,7 +268,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = VoucherFormVoucherPageScene.builder().build();
-            List<VoucherFormVoucherPageBean> voucherPages = util.toJavaObjectList(scene, VoucherFormVoucherPageBean.class, SIZE);
+            List<VoucherFormVoucherPageBean> voucherPages = util.toJavaObjectList(scene, VoucherFormVoucherPageBean.class, SupporterUtil.SIZE);
             voucherPages.stream().map(VoucherFormVoucherPageBean::getVoucherId).forEach(voucherId -> {
                 IScene additionalRecordScene = AdditionalRecordScene.builder().voucherId(voucherId).build();
                 List<AdditionalRecord> additionalRecordList = util.toJavaObjectList(additionalRecordScene, AdditionalRecord.class);
@@ -1335,7 +1334,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
             VoucherDetailBean detail = util.getVoucherDetail(voucherId);
             EditVoucherScene.builder().voucherName(detail.getVoucherName()).subjectType(detail.getSubjectType())
                     .subjectId(detail.getSubjectId()).stock(detail.getStock()).cardType(detail.getCardType())
-                    .isThreshold(detail.getIsThreshold()).thresholdPrice(detail.getThresholdPrice())
+                    .isThreshold(detail.getIsThreshold()).thresholdPrice(detail.getThresholdPrice()).exchangeCommodityName(detail.getExchangeCommodityName())
                     .parValue(detail.getParValue()).replacePrice(detail.getReplacePrice()).discount(detail.getDiscount())
                     .mostDiscount(detail.getMostDiscount()).cost(detail.getCost()).isDefaultPic(detail.getIsDefaultPic())
                     .voucherDescription(detail.getVoucherDescription()).selfVerification(detail.getSelfVerification())

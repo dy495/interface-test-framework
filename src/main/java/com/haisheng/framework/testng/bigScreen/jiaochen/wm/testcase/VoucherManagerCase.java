@@ -1173,7 +1173,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
-    @Test(description = "优惠券管理--进行中的卡券增发，再撤回增发卡券", dependsOnMethods = "voucherManage_system_1")
+    @Test(description = "优惠券管理--进行中的卡券增发，再撤回增发卡券")
     public void voucherManage_system_36() {
         try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
@@ -1334,7 +1334,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
             VoucherDetailBean detail = util.getVoucherDetail(voucherId);
             EditVoucherScene.builder().voucherName(detail.getVoucherName()).subjectType(detail.getSubjectType())
                     .subjectId(detail.getSubjectId()).stock(detail.getStock()).cardType(detail.getCardType())
-                    .isThreshold(detail.getIsThreshold()).thresholdPrice(detail.getThresholdPrice())
+                    .isThreshold(detail.getIsThreshold()).thresholdPrice(detail.getThresholdPrice()).exchangeCommodityName(detail.getExchangeCommodityName())
                     .parValue(detail.getParValue()).replacePrice(detail.getReplacePrice()).discount(detail.getDiscount())
                     .mostDiscount(detail.getMostDiscount()).cost(detail.getCost()).isDefaultPic(detail.getIsDefaultPic())
                     .voucherDescription(detail.getVoucherDescription()).selfVerification(detail.getSelfVerification())
