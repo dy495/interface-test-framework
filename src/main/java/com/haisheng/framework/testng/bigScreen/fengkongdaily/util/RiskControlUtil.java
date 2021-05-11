@@ -19,7 +19,6 @@ public class RiskControlUtil extends TestCaseCommon {
 
     private static volatile ScenarioUtil instance = null;
 
-
     private static final String shopId = EnumTestProduce.FK_DAILY.getShopId();
     public static String IpPort=EnumTestProduce.FK_DAILY.getAddress();
     private static final EnumTestProduce product = EnumTestProduce.FK_DAILY;
@@ -69,6 +68,11 @@ public class RiskControlUtil extends TestCaseCommon {
             }
             return JSON.parseObject(result);
         }
+    }
+
+    //更换域名
+    public void changeIpPort(String ipPort) {
+        IpPort = ipPort;
     }
 
     /**

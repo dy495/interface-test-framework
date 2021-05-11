@@ -33,6 +33,9 @@
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase.IntegralCenterCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase.ContentOperationCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase.ApproveManagerCase"/>
+            <!-- 风控代码-->
+            <class name="com.haisheng.framework.testng.bigScreen.fengkongdaily.RiskControlCaseDataDaily"/>
+            <class name="com.haisheng.framework.testng.bigScreen.fengkongdaily.RiskControlCaseSystemDaily"/>
         </classes>
     </test>
 </suite>
