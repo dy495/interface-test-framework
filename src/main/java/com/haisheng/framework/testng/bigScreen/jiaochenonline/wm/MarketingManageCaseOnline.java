@@ -1384,13 +1384,14 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             int pushMsgPageTotal = pushMsgPageScene.invoke(visitor).getInteger("total");
             Long surplusInventory = util.getVoucherPage(voucherId).getSurplusInventory();
             //消息发送一张卡券
-            util.pushCustomMessage(0, true, true, voucherId);
+            JSONObject response = util.pushCustomMessage(0, true, true, voucherId);
+            int total = response.getInteger("total");
             String sendStatusName = messageFormPageScene.invoke(visitor).getJSONArray("list").getJSONObject(0).getString("send_status_name");
             CommonUtil.checkResult("发送状态", CustomMessageStatusEnum.SUCCESS.getStatusName(), sendStatusName);
-            CommonUtil.checkResult("消息管理列表", messageTotal + 1, visitor.invokeApi(messageFormPageScene).getInteger("total"));
-            CommonUtil.checkResult("消息记录", pushMsgPageTotal + 1, visitor.invokeApi(pushMsgPageScene).getInteger("total"));
-            CommonUtil.checkResult(voucherName + " 发卡记录列表", sendRecordTotal + 1, visitor.invokeApi(sendRecordScene).getInteger("total"));
-            CommonUtil.checkResult(voucherName + " 剩余库存", surplusInventory - 1, util.getVoucherPage(voucherId).getSurplusInventory());
+            CommonUtil.checkResult("消息管理列表", messageTotal + 1, messageFormPageScene.invoke(visitor).getInteger("total"));
+            CommonUtil.checkResult("消息记录", pushMsgPageTotal + 1, pushMsgPageScene.invoke(visitor).getInteger("total"));
+            CommonUtil.checkResult(voucherName + " 发卡记录列表", sendRecordTotal + total, visitor.invokeApi(sendRecordScene).getInteger("total"));
+            CommonUtil.checkResult(voucherName + " 剩余库存", surplusInventory - total, util.getVoucherPage(voucherId).getSurplusInventory());
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -2183,6 +2184,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
         }
     }
 
+    //关闭
     @Test(description = "消息管理--售后客户查询", enabled = false)
     public void messageManagerPeople_data_4() {
         logger.logCaseStart(caseResult.getCaseName());

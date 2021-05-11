@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase;
+package com.haisheng.framework.testng.bigScreen.jiaochen.wm.util;
 
 import com.haisheng.framework.dao.IAppointmentDataDao;
 import com.haisheng.framework.model.bean.AppointmentData;
