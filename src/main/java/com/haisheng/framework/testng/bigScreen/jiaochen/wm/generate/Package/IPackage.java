@@ -1,6 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.Package;
 
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.IGenerator;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.generator.IGenerator;
 
 public interface IPackage extends IGenerator {
 

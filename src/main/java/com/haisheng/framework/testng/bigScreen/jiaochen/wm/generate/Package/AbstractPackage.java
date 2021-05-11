@@ -4,7 +4,7 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.PackagePage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.PackageStatusEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.BaseGenerator;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.generator.BaseGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanage.PackageFormPageScene;
 
 /**

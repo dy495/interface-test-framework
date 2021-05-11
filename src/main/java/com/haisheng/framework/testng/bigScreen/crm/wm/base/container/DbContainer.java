@@ -31,7 +31,7 @@ public class DbContainer extends BaseRdbmsContainer {
             connect = DriverManager.getConnection(this.jdbcUrl, this.username, this.password);
             return connect.createStatement();
         } catch (Exception e) {
-            errorMsg.append(e);
+            e.printStackTrace();
         }
         return null;
     }

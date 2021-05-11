@@ -2,8 +2,6 @@ package com.haisheng.framework.testng.bigScreen.crm.wm.base.table;
 
 import com.aliyun.openservices.shade.org.apache.commons.lang3.StringUtils;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.container.ContainerConstants;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.property.BasicProperty;
-import com.haisheng.framework.testng.bigScreen.crm.wm.util.DingPushUtil;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -52,7 +50,7 @@ public class DbTable extends BaseTable {
                 }
             }
         } catch (Exception e) {
-            exceptionCollect(e);
+            e.printStackTrace();
         }
         return list;
     }
@@ -83,7 +81,7 @@ public class DbTable extends BaseTable {
                 }
             }
         } catch (Exception e) {
-            exceptionCollect(e);
+            e.printStackTrace();
         }
         return list;
     }
@@ -104,20 +102,15 @@ public class DbTable extends BaseTable {
                 resultSet = statement.executeQuery(sql);
                 return true;
             } catch (Exception e) {
-                exceptionCollect(e);
+                e.printStackTrace();
             }
         }
         return false;
     }
 
-    @Override
-    public void sendDing() {
-        DingPushUtil.sendText(errorMsg.toString(), getPath(), getMethodName());
-    }
-
     @Setter
     @Accessors(chain = true, fluent = true)
-    public static class Builder extends BasicProperty.Builder {
+    public static class Builder {
         private String path;
         private String tableName;
         private Statement statement;

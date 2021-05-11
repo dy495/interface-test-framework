@@ -2,7 +2,6 @@ package com.haisheng.framework.testng.bigScreen.crm.wm.base.container;
 
 import com.aliyun.openservices.shade.org.apache.commons.lang3.StringUtils;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.exception.SqlCreateException;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.property.BasicProperty;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
@@ -14,7 +13,7 @@ import java.util.Map;
 /**
  * 抽象容器
  */
-public abstract class BaseContainer extends BasicProperty implements IContainer {
+public abstract class BaseContainer implements IContainer {
     protected static final Logger log = LoggerFactory.getLogger(BaseContainer.class);
     protected static List<Map<String, Object>> table;
 
@@ -47,7 +46,7 @@ public abstract class BaseContainer extends BasicProperty implements IContainer 
     }
 
     @Setter
-    public static abstract class BaseBuilder<T extends BaseBuilder<?, ?>, R extends BaseContainer> extends BasicProperty.Builder {
+    public static abstract class BaseBuilder<T extends BaseBuilder<?, ?>, R extends BaseContainer> {
         protected String path;
 
         public T path(String path) {
