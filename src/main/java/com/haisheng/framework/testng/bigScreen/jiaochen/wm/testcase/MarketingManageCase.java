@@ -1380,14 +1380,14 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             int pushMsgPageTotal = pushMsgPageScene.invoke(visitor).getInteger("total");
             Long surplusInventory = util.getVoucherPage(voucherId).getSurplusInventory();
             //消息发送一张卡券
-            JSONObject response = util.pushCustomMessage(0, true, true, voucherId);
-            int total = response.getInteger("total");
+            util.pushCustomMessage(0, true, true, voucherId);
+            sleep(1);
             String sendStatusName = messageFormPageScene.invoke(visitor).getJSONArray("list").getJSONObject(0).getString("send_status_name");
             CommonUtil.checkResult("发送状态", CustomMessageStatusEnum.SUCCESS.getStatusName(), sendStatusName);
             CommonUtil.checkResult("消息管理列表", messageTotal + 1, messageFormPageScene.invoke(visitor).getInteger("total"));
-            CommonUtil.checkResult("消息记录", pushMsgPageTotal + 1, pushMsgPageScene.invoke(visitor).getInteger("total"));
-            CommonUtil.checkResult(voucherName + " 发卡记录列表", sendRecordTotal + total, visitor.invokeApi(sendRecordScene).getInteger("total"));
-            CommonUtil.checkResult(voucherName + " 剩余库存", surplusInventory - total, util.getVoucherPage(voucherId).getSurplusInventory());
+            CommonUtil.checkResult("消息记录", pushMsgPageTotal + 2, pushMsgPageScene.invoke(visitor).getInteger("total"));
+            CommonUtil.checkResult(voucherName + " 发卡记录列表", sendRecordTotal + 2, visitor.invokeApi(sendRecordScene).getInteger("total"));
+            CommonUtil.checkResult(voucherName + " 剩余库存", surplusInventory - 2, util.getVoucherPage(voucherId).getSurplusInventory());
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
