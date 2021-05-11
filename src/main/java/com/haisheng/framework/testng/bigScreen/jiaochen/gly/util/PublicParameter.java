@@ -37,7 +37,7 @@ public class PublicParameter {
     //活动图片的异常状态
     public String[] pic={"1","0.75","2.5"};
     //内容运营的活动名称
-    public String contentMarketingName="内容运营活动"+(int) (Math.random() * 10000);
+    public String contentMarketingName="内容营销活动"+(int) (Math.random() * 10000);
     //内容运营的编辑过后的活动名称
     public String contentMarketingNameEdit="已编辑的内容运营活动"+(int) (Math.random() * 10000);
 

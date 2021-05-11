@@ -1422,7 +1422,7 @@ public class BusinessUtilOnline {
     }
 
     /**
-     * 招募活动-查询列表中的状态为【未开始的ID】---裂变活动
+     * 查询列表中的状态为【未开始的ID】---裂变活动
      * 2021-3-17
      */
     public List<Long> getFissionActivityWaitingStar() {
@@ -1446,7 +1446,7 @@ public class BusinessUtilOnline {
         if (ids.size() == 0) {
             //创建活动
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-            Long id1 = createFissionActivity(voucherId);
+            Long id1 = createFissionActivityWaitingStarScene(voucherId);
             //审批活动
             getApprovalPassed(id1);
             ids.add(id1);
@@ -2538,7 +2538,7 @@ public class BusinessUtilOnline {
         if (ids.size() == 0) {
             Long id1 = getContentMarketingAdd();
             //审批通过
-            getApprovalReject(id1);
+            getApprovalPassed(id1);
             ids.add(id1);
 
         }
