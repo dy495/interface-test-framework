@@ -1141,27 +1141,27 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
         try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
-            util.pushCustomMessage(0, true, true, voucherId);
+            String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/excel/发单人消息手机号.xlsx";
+            util.pushCustomMessage(0, true, true, filePath, voucherId);
             //作废前数据
-            user.loginApplet(APPLET_USER_ONE);
+            visitor.login(APPLET_USER_ONE.getToken());
             int voucherCherNum = util.getAppletVoucherNum();
             user.loginPc(ALL_AUTHORITY);
             List<VoucherInvalidPageBean> voucherInvalidPages = util.getVoucherInvalidList(voucherId);
             IScene voucherInfoScene = VoucherInfoScene.builder().id(voucherId).build();
-            int totalInvalid = visitor.invokeApi(voucherInfoScene).getInteger("total_invalid");
+            int totalInvalid = voucherInfoScene.invoke(visitor).getInteger("total_invalid");
             //作废
             List<VoucherSendRecord> voucherSendRecords = util.getVoucherSendRecordList(voucherId);
             Long recordId = voucherSendRecords.get(0).getId();
             String voucherCode = voucherSendRecords.get(0).getVoucherCode();
-            IScene scene = InvalidCustomerVoucherScene.builder().id(recordId).invalidReason(EnumDesc.DESC_BETWEEN_10_15.getDesc()).build();
-            visitor.invokeApi(scene);
+            InvalidCustomerVoucherScene.builder().id(recordId).invalidReason(EnumDesc.DESC_BETWEEN_10_15.getDesc()).build().invoke(visitor);
             //作废后数据
             List<VoucherInvalidPageBean> newVoucherInvalidPages = util.getVoucherInvalidList(voucherId);
             CommonUtil.checkResult(voucherName + " 作废后作废记录列表数", voucherInvalidPages.size() + 1, newVoucherInvalidPages.size());
             CommonUtil.checkResult(voucherName + " 作废后作废人姓名", ALL_AUTHORITY.getName(), newVoucherInvalidPages.get(0).getInvalidName());
             CommonUtil.checkResult(voucherName + " 作废后作废人电话", ALL_AUTHORITY.getPhone(), newVoucherInvalidPages.get(0).getInvalidPhone());
             CommonUtil.checkResult(voucherName + " 作废后作废说明", EnumDesc.DESC_BETWEEN_10_15.getDesc(), newVoucherInvalidPages.get(0).getInvalidDescription());
-            CommonUtil.checkResult(voucherCode + " 作废后共作废数", totalInvalid + 1, visitor.invokeApi(voucherInfoScene).getInteger("total_invalid"));
+            CommonUtil.checkResult(voucherCode + " 作废后共作废数", totalInvalid + 1, voucherInfoScene.invoke(visitor).getInteger("total_invalid"));
             user.loginApplet(APPLET_USER_ONE);
             CommonUtil.checkResult(voucherName + " 作废后小程序我的卡券数量", voucherCherNum, util.getAppletVoucherNum());
         } catch (Exception | AssertionError e) {

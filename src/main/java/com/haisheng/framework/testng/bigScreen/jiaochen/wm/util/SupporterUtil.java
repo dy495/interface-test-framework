@@ -889,6 +889,10 @@ public class SupporterUtil {
      */
     public JSONObject pushCustomMessage(Integer type, boolean immediately, boolean checkCode, Long... voucherOrPackageId) {
         String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/excel/发消息手机号.xlsx";
+        return pushCustomMessage(type, immediately, checkCode, filePath, voucherOrPackageId);
+    }
+
+    public JSONObject pushCustomMessage(Integer type, boolean immediately, boolean checkCode, String filePath, Long... voucherOrPackageId) {
         List<Long> voucherOrPackageList = new ArrayList<>(Arrays.asList(voucherOrPackageId));
         JSONObject response = CustomerImportScene.builder().filePath(filePath).build().upload(visitor);
         Preconditions.checkArgument(response.getInteger("code") == 1000);

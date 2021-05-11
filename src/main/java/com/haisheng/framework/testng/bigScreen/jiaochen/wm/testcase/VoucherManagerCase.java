@@ -1140,7 +1140,8 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
         try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
-            util.pushCustomMessage(0, true, true, voucherId);
+            String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/excel/发单人消息手机号.xlsx";
+            util.pushCustomMessage(0, true, true, filePath, voucherId);
             //作废前数据
             user.loginApplet(APPLET_USER_ONE);
             int voucherCherNum = util.getAppletVoucherNum();
