@@ -295,7 +295,7 @@ public class ApproveManagerCaseOnline extends TestCaseCommon implements TestCase
             //创建2个待审批数据
             Arrays.stream(VoucherTypeEnum.values()).collect(Collectors.toList()).subList(0, 2).forEach(e -> util.createVoucher(1, e));
             IScene applyPageScene = ApplyPageScene.builder().status(ApplyStatusEnum.AUDITING.getId()).build();
-            List<ApplyPageBean> applyPageBeanList = util.toJavaObjectList(applyPageScene, ApplyPageBean.class).subList(0, 2);
+            List<ApplyPageBean> applyPageBeanList = util.toJavaObjectList(applyPageScene, ApplyPageBean.class, SupporterUtil.SIZE).subList(0, 2);
             List<Long> applyIdList = applyPageBeanList.stream().map(ApplyPageBean::getId).collect(Collectors.toList());
             List<Long> voucherIdList = applyPageBeanList.stream().map(ApplyPageBean::getVoucherId).collect(Collectors.toList());
             //批量审批通过
@@ -334,7 +334,7 @@ public class ApproveManagerCaseOnline extends TestCaseCommon implements TestCase
             //创建2个待审批数据
             Arrays.stream(VoucherTypeEnum.values()).collect(Collectors.toList()).subList(0, 2).forEach(e -> util.createVoucher(1, e));
             IScene applyPageScene = ApplyPageScene.builder().status(ApplyStatusEnum.AUDITING.getId()).build();
-            List<ApplyPageBean> applyPageBeanList = util.toJavaObjectList(applyPageScene, ApplyPageBean.class).subList(0, 2);
+            List<ApplyPageBean> applyPageBeanList = util.toJavaObjectList(applyPageScene, ApplyPageBean.class, SupporterUtil.SIZE).subList(0, 2);
             List<Long> applyIdList = applyPageBeanList.stream().map(ApplyPageBean::getId).collect(Collectors.toList());
             List<Long> voucherIdList = applyPageBeanList.stream().map(ApplyPageBean::getVoucherId).collect(Collectors.toList());
             //批量审批不通过

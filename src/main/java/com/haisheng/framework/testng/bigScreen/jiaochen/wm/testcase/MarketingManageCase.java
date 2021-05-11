@@ -1404,14 +1404,14 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             IScene messageFormPageScene = MessageFormPageScene.builder().build();
-            int messageTotal = visitor.invokeApi(messageFormPageScene).getInteger("total");
+            int messageTotal = messageFormPageScene.invoke(visitor).getInteger("total");
             String pushTime = DateTimeUtil.getFormat(DateTimeUtil.addSecond(new Date(), 80), "yyyy-MM-dd HH:mm");
             util.pushCustomMessage(0, false, true, voucherId);
-            String sendStatusName = visitor.invokeApi(messageFormPageScene).getJSONArray("list").getJSONObject(0).getString("send_status_name");
-            CommonUtil.checkResult("消息管理列表", messageTotal + 1, visitor.invokeApi(messageFormPageScene).getInteger("total"));
+            String sendStatusName = util.toFirstJavaObject(messageFormPageScene, MessageFormPageBean.class).getSendStatusName();
+            CommonUtil.checkResult("消息管理列表", messageTotal + 1, messageFormPageScene.invoke(visitor).getInteger("total"));
             CommonUtil.checkResult("发送状态", CustomMessageStatusEnum.SCHEDULING.getStatusName(), sendStatusName);
             sleep(90);
-            JSONArray list = visitor.invokeApi(messageFormPageScene).getJSONArray("list");
+            JSONArray list = messageFormPageScene.invoke(visitor).getJSONArray("list");
             JSONObject jsonObject = list.stream().map(e -> (JSONObject) e).filter(e -> e.getString("push_time").contains(pushTime)).findFirst().orElse(null);
             Preconditions.checkArgument(jsonObject != null, "不存在 " + pushTime + " 发送的消息");
             String newSendStatusName = jsonObject.getString("send_status_name");
@@ -1623,7 +1623,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
-    @Test(description = "消息管理--选择套餐时，套餐内包含无库存卡券，提交时提示：套餐不允许发送，请重新选择")
+    @Test(description = "消息管理--选择套餐时，套餐内包含无库存卡券，提交时提示：卡券【xxx】可用库存不足！")
     public void messageManager_system_14() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1637,7 +1637,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("消息管理--选择套餐时，套餐内包含无库存卡券，提交时提示：套餐不允许发送，请重新选择");
+            saveData("消息管理--选择套餐时，套餐内包含无库存卡券，提交时提示：卡券【xxx】可用库存不足！");
         }
     }
 

@@ -1191,11 +1191,11 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene exchangeOrderScene = ExchangeOrderScene.builder().build();
-            List<JSONObject> jsonObjectList = util.toJavaObjectList(exchangeOrderScene, JSONObject.class);
+            List<JSONObject> jsonObjectList = util.toJavaObjectList(exchangeOrderScene, JSONObject.class, SupporterUtil.SIZE);
             jsonObjectList.forEach(e -> {
                 int id = e.getInteger("id");
                 IScene orderDetailScene = OrderDetailScene.builder().id(id).build();
-                JSONObject response = visitor.invokeApi(orderDetailScene);
+                JSONObject response = orderDetailScene.invoke(visitor);
                 int integralNum = response.getInteger("integral_num");
                 JSONObject detailedList = response.getJSONArray("detailed_list").getJSONObject(0);
                 int commodityIntegral = detailedList.getInteger("commodity_integral");
