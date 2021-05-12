@@ -229,7 +229,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * 创建1个招募活动和个裂变活动
+     * 创建1个招募活动和1个裂变活动
      */
     @Test
     public void preCreateSomeActivity() {

@@ -809,6 +809,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
             String startTime=  dt.getHistoryDate(-10);
             String endTime=  dt.getHistoryDate(10);
             JSONObject respond=jc.appointmentRecordTimeManage("","1","10","MAINTAIN",startTime,endTime,startTime,endTime,startTime,endTime);
+            System.err.println(respond);
             int pages = respond.getInteger("pages")>10?10:respond.getInteger("pages");
             if(respond.getJSONArray("list").size()>0){
                 for (int page = 1; page <= pages; page++) {
@@ -816,6 +817,8 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     for (int i = 0; i < list.size(); i++) {
                         String createDate = list.getJSONObject(i).containsKey("create_date")?list.getJSONObject(i).getString("create_date").substring(0,10):startTime;
                         String confirmTime =list.getJSONObject(i).containsKey("confirm_time")? list.getJSONObject(i).getString("confirm_time").substring(0,10):startTime;
+                        System.out.println("预约记录确认开始时间："+startTime+" 确认结束时间："+endTime+" 列表中的确认时间为："+confirmTime);
+                        System.out.println("预约记录创建开始时间："+startTime+" 注册结束时间："+endTime+" 列表中的创建时间为："+createDate);
                         Preconditions.checkArgument(confirmTime.compareTo(startTime)>=0&&confirmTime.compareTo(endTime)<=0, "预约记录确认开始时间："+startTime+" 确认结束时间："+endTime+" 列表中的确认时间为："+confirmTime);
                         Preconditions.checkArgument(createDate.compareTo(startTime)>=0&&createDate.compareTo(endTime)<=0, "预约记录创建开始时间："+startTime+" 注册结束时间："+endTime+" 列表中的创建时间为："+createDate);
                     };
