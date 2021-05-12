@@ -460,7 +460,7 @@ public class BusinessUtilOnline {
         //判断可用库存
         Long AllowUseInventory=getVoucherAllowUseInventoryNum(voucherId);
         ManageRecruitAddScene.ManageRecruitAddSceneBuilder builder=null;
-        if(AllowUseInventory>6){
+        if(AllowUseInventory>0){
             //报名成功奖励
             JSONArray registerObject = getRewardVouchers(voucherId, 1,  Math.toIntExact(AllowUseInventory));
             //卡券有效期
@@ -735,7 +735,7 @@ public class BusinessUtilOnline {
      * @return 图片地址
      */
     public String getPicturePath() {
-        String path = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/活动.jpeg";
+        String path = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/banner-1.jpg";
         return getPicPath(path);
     }
     public String getPicPath(String picPath) {
@@ -749,6 +749,13 @@ public class BusinessUtilOnline {
         IScene scene = FileUpload.builder().isPermanent(false).permanentPicType(0).pic(picture).ratioStr(ratioStr).ratio(ratio).build();
         return visitor.invokeApi(scene).getString("pic_path");
     }
+
+    /**
+     * 获取图片地址
+     *
+     * @return 图片地址
+     */
+
 
     /**
      * 获取优惠券的库存
@@ -1008,8 +1015,9 @@ public class BusinessUtilOnline {
             //审批活动
             getApprovalPassed(id1);
             //小程序报名
+            user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
+            activityRegisterApplet(id1,"13373166806","郭丽雅",2,"1513814362@qq.com","22","女","其他");
             ids.add(id1);
-            activityRegisterApplet(ids.get(0),"13373166806","郭丽雅",2,"1513814362@qq.com","22","女","其他");
             jc.pcLogin(pp.phone, pp.password);
         }
         return ids;

@@ -51,7 +51,7 @@ public class RiskControlCaseDataDaily extends TestCaseCommon implements TestCase
         commonConfig.product = product.getAbbreviation();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "FengKong-daily-test");
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "风控 日常");        //替换钉钉推送
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "风控-日常-郭丽雅");        //替换钉钉推送
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //放入shopId
         commonConfig.referer = product.getReferer();

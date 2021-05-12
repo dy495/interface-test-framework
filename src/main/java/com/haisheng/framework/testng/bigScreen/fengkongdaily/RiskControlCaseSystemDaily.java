@@ -12,7 +12,6 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.riskControlEnum.*;
-import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.alarmrule.DetailScene;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.*;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.downloadcenter.DownloadPageScene;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.rule.AddScene;
@@ -64,7 +63,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
         commonConfig.product = product.getAbbreviation();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "FengKong-daily-test");
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "风控 日常");        //替换钉钉推送
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "风控-日常-郭丽雅");        //替换钉钉推送
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //放入shopId
         commonConfig.referer = product.getReferer();
@@ -680,8 +679,8 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
                     String orderTime=response2.getString("order_time");
                     String type=response2.getString("type");
                     String orderTypeName=response2.getString("order_type_name");
-                    Preconditions.checkArgument(shopName!=null&&memberName!=null&&memberPhone!=null&&carPlate!=null&&carVehicleNumber!=null&&orderNumber!=null,"小票详情中存在字段为空的情况，在第"+i+"行");
-                    Preconditions.checkArgument(totalPrice!=null&&realPrice!=null&&businessNumber!=null&&posId!=null&&transTypeName!=null&&orderTime!=null&&type!=null&&orderTypeName!=null,"小票详情中存在字段为空的情况，在第"+i+"行");
+                    Preconditions.checkArgument(shopName!=null&&memberName!=null&&memberPhone!=null&&carPlate!=null&&carVehicleNumber!=null&&orderNumber!=null,"小票详情中存在字段为空的情况，在第"+page+"页，第"+i+"行");
+                    Preconditions.checkArgument(totalPrice!=null&&realPrice!=null&&businessNumber!=null&&posId!=null&&transTypeName!=null&&orderTime!=null&&type!=null&&orderTypeName!=null,"小票详情中存在字段为空的情况，在第"+page+"页，第"+i+"行");
                 }
             }
 
@@ -796,10 +795,9 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
                     String managerPhone=response2.getString("manager_phone");
                     String memberName=response2.getString("member_name");
                     String memberId=response2.getString("member_id");
-                    String openId=response2.getString("open_id");
-//                    String transCustomerBodyUrl=response2.getString("trans_customer_body_url");
-                    System.out.println(i+"==="+roleId+"==="+shopId1+"==="+responseTime+"==="+managerName+"==="+managerPhone+"==="+memberName+"==="+memberId+"==="+openId);
-                    Preconditions.checkArgument(openId!=null&&roleId != null&&shopId1!=null&&responseTime!=null&&managerName!=null&&managerPhone!=null&&memberName!=null&&memberId!=null,"第"+i+"行的列表项存在为空的值");
+//                    String openId=response2.getString("open_id");
+                    System.out.println(i+"==="+roleId+"==="+shopId1+"==="+responseTime+"==="+managerName+"==="+managerPhone+"==="+memberName+"==="+memberId+"===");
+                    Preconditions.checkArgument(roleId != null&&shopId1!=null&&responseTime!=null&&managerName!=null&&managerPhone!=null&&memberName!=null&&memberId!=null,"第"+i+"行的列表项存在为空的值");
                 }
             }
         }catch(Exception|AssertionError e){
@@ -1737,7 +1735,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
                     .build();
             String message=visitor.invokeApi(scene,false).getString("message");
 
-            Preconditions.checkArgument(message.equals("系统繁忙，请稍后再试！！"),"风控规则适用门店为空个字创建成功");
+            Preconditions.checkArgument(message.equals("系统繁忙，请稍后再试！！"),"黑名单风控规则适用门店为空个字创建成功");
         }catch(Exception|AssertionError e){
             collectMessage(e);
         }finally{
@@ -1869,11 +1867,11 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
                     .build();
             String message=visitor.invokeApi(scene,false).getString("message");
 
-            Preconditions.checkArgument(message.equals(""),"风控规则-适用门店为空创建成功");
+            Preconditions.checkArgument(message.equals(""),"重点观察人员风控规则-适用门店为空创建成功");
         }catch(Exception|AssertionError e){
             collectMessage(e);
         }finally{
-            saveData("新建风控规则异常情况-重点观察人员风控-适用门店为空");
+            saveData("新建重点观察人员风控规则异常情况-重点观察人员风控-适用门店为空");
         }
     }
 
@@ -2039,7 +2037,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
                     .build();
             String message=visitor.invokeApi(scene,false).getString("message");
 
-            Preconditions.checkArgument(message.equals(""),"风控规则适用门店为空创建成功");
+            Preconditions.checkArgument(message.equals(""),"收银风控规则适用门店为空创建成功");
         }catch(Exception|AssertionError e){
             collectMessage(e);
         }finally{
@@ -2050,7 +2048,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     /**
      * 新建风控规则异常情况-收银风控-无人风控-业务类型为空--已提bug
      */
-    @Test(description = "新建风控规则异常情况-收银风控-无人风控-业务类型为空")
+    @Test(description = "新建收银风控规则异常情况-收银风控-无人风控-业务类型为空")
     public void authCashierPageSystem47(){
         try{
             //应用的门店
@@ -2521,7 +2519,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     /**
      * 禁用账号，登陆失败，开启账号，登陆成功
      */
-    @Test(description = "禁用账号，登陆失败，开启账号，登陆成功")
+    @Test(description = "禁用账号，登陆失败，开启账号，登陆成功",enabled = false)
     public void organizationChartSystem10(){
         try{
             String id="";

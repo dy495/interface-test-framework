@@ -165,7 +165,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
         try {
             Boolean flag = false;
             Long id = 0L;
-//            //获取一个卡券
+            //获取一个卡券
             Long voucherId = businessUtil.getVoucherId();
             //创建招募活动
             Long activityId = businessUtil.createRecruitActivity(voucherId, true, 0, true);
@@ -1106,7 +1106,7 @@ public void justTry(){
             List<String> picList = new ArrayList<>();
             SupporterUtil supporterUtil = new SupporterUtil(visitor);
             PublicParameter pp = new PublicParameter();
-            picList.add(businessUtil.getPicturePath());
+            picList.add(businessUtil.getPicPath());
             //填写报名所需要信息
             List<Boolean> isShow = new ArrayList<>();
             isShow.add(true);
@@ -1276,7 +1276,7 @@ public void justTry(){
             List<String> picList = new ArrayList<>();
             SupporterUtil supporterUtil = new SupporterUtil(visitor);
             PublicParameter pp = new PublicParameter();
-            picList.add(businessUtil.getPicturePath());
+            picList.add(businessUtil.getPicPath());
             //填写报名所需要信息
             List<Boolean> isShow = new ArrayList<>();
             isShow.add(true);
@@ -1819,7 +1819,7 @@ public void justTry(){
             SupporterUtil supporterUtil = new SupporterUtil(visitor);
             PublicParameter pp = new PublicParameter();
             List<String> picList = new ArrayList<>();
-            picList.add(businessUtil.getPicturePath());
+            picList.add(businessUtil.getPicPath());
             // 创建被邀请者和分享者的信息字段
             JSONObject invitedVoucher = businessUtil.getInvitedVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherAllowUseInventory(voucherId)), 2, "", "", 1);
             JSONObject shareVoucher = businessUtil.getShareVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherAllowUseInventory(voucherId)), 2, "", "", 1);
@@ -1938,7 +1938,7 @@ public void justTry(){
             SupporterUtil supporterUtil = new SupporterUtil(visitor);
             PublicParameter pp = new PublicParameter();
             List<String> picList = new ArrayList<>();
-            picList.add(businessUtil.getPicturePath());
+            picList.add(businessUtil.getPicPath());
             // 创建被邀请者和分享者的信息字段
             JSONObject invitedVoucher = businessUtil.getInvitedVoucher(voucherId, 1,String.valueOf(Math.min(businessUtil.getVoucherAllowUseInventory(voucherId),2)), 2, "", "", 1);
             JSONObject shareVoucher = businessUtil.getShareVoucher(voucherId, 1, String.valueOf(Math.min(businessUtil.getVoucherAllowUseInventory(voucherId),2)), 2, "", "", 1);

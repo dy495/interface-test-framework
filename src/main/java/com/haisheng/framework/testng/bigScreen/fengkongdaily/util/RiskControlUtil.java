@@ -18,10 +18,9 @@ import java.util.List;
 public class RiskControlUtil extends TestCaseCommon {
 
     private static volatile ScenarioUtil instance = null;
-
     private static final String shopId = EnumTestProduce.FK_DAILY.getShopId();
     public static String IpPort=EnumTestProduce.FK_DAILY.getAddress();
-    private static final EnumTestProduce product = EnumTestProduce.FK_DAILY;
+    private static  EnumTestProduce product = EnumTestProduce.FK_DAILY;
     public VisitorProxy visitor = new VisitorProxy(product);
     /**
      * 单例
@@ -71,8 +70,9 @@ public class RiskControlUtil extends TestCaseCommon {
     }
 
     //更换域名
-    public void changeIpPort(String ipPort) {
+    public void changeIpPort(String ipPort,EnumTestProduce product1) {
         IpPort = ipPort;
+        product=product1;
     }
 
     /**

@@ -61,7 +61,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
     public void initial() {
         logger.debug("before class initial");
         CommonConfig commonConfig = new CommonConfig();
-        md.changeIpPort(EnumTestProduce.FK_ONLINE.getAddress());
+        md.changeIpPort(EnumTestProduce.FK_ONLINE.getAddress(),EnumTestProduce.FK_ONLINE);
         //替换checklist的相关信息
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_JIAOCHEN_DAILY_SERVICE;
@@ -69,7 +69,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
         commonConfig.product = product.getAbbreviation();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "FengKong-Online-test");
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "风控 线上");        //替换钉钉推送
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "风控-线上-郭丽雅");        //替换钉钉推送
         commonConfig.dingHook = DingWebhook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //放入shopId
         commonConfig.referer = product.getReferer();
