@@ -22,7 +22,7 @@ public abstract class BaseTable extends BaseProperty implements ITable {
     }
 
     @Override
-    public abstract boolean init();
+    public abstract boolean load();
 
     @Override
     public boolean addRow(IRow row) {
@@ -33,8 +33,15 @@ public abstract class BaseTable extends BaseProperty implements ITable {
                 int count = currCount + 1;
                 rowsCount.put(row, count);
             } else {
-                rows.put(row.getKey(), row);
-                rowsCount.put(row, 1);
+                if (row.getKey() != null) {
+                    rows.put(row.getKey(), row);
+                    rowsCount.put(row, 1);
+                } else {
+                    int currCount = rows.size();
+                    int count = currCount + 1;
+                    rows.put(String.valueOf(count), row);
+                    rowsCount.put(row, count);
+                }
             }
             return true;
         }
@@ -58,7 +65,7 @@ public abstract class BaseTable extends BaseProperty implements ITable {
         return temp.toArray(new IRow[size]);
     }
 
-    public abstract static class BaseBuilder<T extends BaseBuilder<?, ?>, R extends ITable>
+    public abstract static class BaseBuilder<T extends BaseBuilder<?, ?>, R extends BaseTable>
             extends BaseProperty.BaseBuilder<T, R> {
 
         @Override

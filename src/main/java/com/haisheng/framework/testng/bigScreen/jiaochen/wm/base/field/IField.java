@@ -1,6 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.base.field;
 
-public interface IField {
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.base.property.IProperty;
 
-    String getKey();
+public interface IField extends IProperty {
+
 }

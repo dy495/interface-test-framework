@@ -1,32 +1,20 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.base.field;
 
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.base.property.BaseProperty;
 import lombok.Getter;
 
 @Getter
-public abstract class BaseField implements IField {
-    private final String key;
-    private final String value;
+public abstract class BaseField extends BaseProperty implements IField {
 
     protected BaseField(BaseBuilder<?, ?> baseBuilder) {
-        this.key = baseBuilder.name;
-        this.value = baseBuilder.value;
+        super(baseBuilder);
     }
 
-    public abstract static class BaseBuilder<T extends BaseBuilder<?, ?>, R extends IField> {
-        private String name;
-        private String value;
+    public abstract static class BaseBuilder<T extends BaseBuilder<?, ?>, R extends BaseField>
+            extends BaseProperty.BaseBuilder<T, R> {
 
-        public T name(String name) {
-            this.name = name;
-            return (T) this;
-        }
-
-        public T value(String value) {
-            this.value = value;
-            return (T) this;
-        }
-
-        public R build() {
+        @Override
+        protected R buildProperty() {
             return buildField();
         }
 

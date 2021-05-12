@@ -22,15 +22,15 @@ public class SheetTable extends BaseTable {
         this.sheet = builder.sheet;
     }
 
-    public boolean init() {
+    public boolean load() {
         String[] titles = getTitles();
         for (int rowIndex = hasHeader ? 1 : 0, index = 1; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
             Row currentRow = sheet.getRow(rowIndex);
             IRow row = new SimpleRow.Builder().index(index).build();
             for (int columnIndex = 0; columnIndex < titles.length; columnIndex++) {
-                String header = titles[columnIndex];
+                String title = titles[columnIndex];
                 String value = getCellValue(currentRow.getCell(columnIndex));
-                SimpleField simpleField = new SimpleField.Builder().name(header).value(value).build();
+                SimpleField simpleField = new SimpleField.Builder().name(title).value(value).build();
                 row.addField(simpleField);
             }
             if (row.getFields().length > 0) {
@@ -61,6 +61,8 @@ public class SheetTable extends BaseTable {
                 return df.format(cell.getNumericCellValue());
             case 1:
                 return cell.getRichStringCellValue().getString();
+            case 2:
+                return cell.getCellFormula();
             case 4:
                 return String.valueOf(cell.getBooleanCellValue()).trim();
             default:

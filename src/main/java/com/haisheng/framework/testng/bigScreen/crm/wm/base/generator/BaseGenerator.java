@@ -92,12 +92,12 @@ public abstract class BaseGenerator implements IGenerator {
      * @return bean
      */
     public <T> T findBeanByField(IScene scene, Class<T> bean, String key, Object value) {
-        int total = scene.invoke(visitor, true).getInteger("total");
+        int total = scene.invoke(visitor).getInteger("total");
         int s = CommonUtil.getTurningPage(total, SIZE);
         for (int i = 1; i < s; i++) {
             scene.setPage(i);
             scene.setSize(SIZE);
-            JSONArray array = scene.invoke(visitor, true).getJSONArray("list");
+            JSONArray array = scene.invoke(visitor).getJSONArray("list");
             T clazz = array.stream().map(e -> (JSONObject) e).filter(e -> e.getObject(key, value.getClass())
                     .equals(value)).findFirst().map(e -> JSONObject.toJavaObject(e, bean)).orElse(null);
             if (clazz != null) {

@@ -2,11 +2,18 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.util;
 
 import com.haisheng.framework.dao.IAppointmentDataDao;
 import com.haisheng.framework.model.bean.AppointmentData;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.sql.SqlFactory;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.freemarker.attribute.SceneAttribute;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.freemarker.marker.SceneMarker;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.freemarker.parse.BeanParser;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.freemarker.parse.SceneParser;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.base.container.ExcelContainer;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.base.container.IContainer;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.base.row.IRow;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.base.table.ITable;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.base.util.FileUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.appointmentmanage.AppointmentRecordAppointmentPageScene;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
@@ -113,4 +120,17 @@ public class TestUtil {
         });
     }
 
+    @Test
+    public void test() {
+        String path = FileUtil.getResourcePath("excel/预约维修记录_2021-05-12_1620792421661.xlsx");
+        IContainer container = new ExcelContainer.Builder().path(path).buildContainer();
+        container.init();
+        ITable[] tables = container.getTables();
+        ITable table = tables[0];
+        table.load();
+        IRow[] rows = table.getRows();
+        System.err.println("表行数：" + rows.length);
+        System.err.println(rows[0].findFields("品牌")[0].getValue());
+
+    }
 }

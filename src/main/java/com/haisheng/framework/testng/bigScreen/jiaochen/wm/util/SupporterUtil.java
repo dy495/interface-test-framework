@@ -7,6 +7,13 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.bean.Response;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.base.container.ExcelContainer;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.base.container.IContainer;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.base.enumerator.MappingEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.base.field.IField;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.base.row.IRow;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.base.table.ITable;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.base.util.FileUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.*;
@@ -60,6 +67,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanag
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
+import com.haisheng.framework.util.UrlToIoSavaUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -148,6 +156,20 @@ public class SupporterUtil {
     public <T> T toFirstJavaObject(@NotNull IScene scene, Class<T> bean) {
         JSONObject object = scene.invoke(visitor).getJSONArray("list").getJSONObject(0);
         return toJavaObject(object, bean);
+    }
+
+    public IRow[] getRows(String urlPath, String outputPath) {
+        UrlToIoSavaUtil.toIoSave(urlPath, outputPath);
+        String[] strings = outputPath.split("/");
+        String relativePath = strings[strings.length - 2] + "/" + strings[strings.length - 1];
+        logger.info(relativePath);
+        String path = FileUtil.getResourcePath(relativePath);
+        IContainer container = new ExcelContainer.Builder().path(path).buildContainer();
+        container.init();
+        ITable[] tables = container.getTables();
+        ITable table = tables[0];
+        table.load();
+        return table.getRows();
     }
 
     /**
