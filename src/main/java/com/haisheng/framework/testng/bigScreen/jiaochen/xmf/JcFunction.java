@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.registerListVariable;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.AppAdmitScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.AppStartReceptionScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.record.ImportPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appStartReception;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appletAppointment;
@@ -30,6 +32,21 @@ public class JcFunction {
         String num = "177" + (random.nextInt(89999999) + 10000000);
 
         return num;
+    }
+
+    public String[] salereception(String phone) {
+        //注册过的手机号接待
+        IScene appAdmitScene = AppAdmitScene.builder().phone(phone).build();
+        JSONObject data = jc.invokeApi(appAdmitScene);
+        Long customerId = data.getLong("customer_id");
+        //开始接待
+        IScene appstartReception = AppStartReceptionScene.builder()
+                .customerId(customerId)
+                .customerPhone(phone)
+                .build();
+        String[] receptionId = new String[2];
+        receptionId[0] = jc.invokeApi(appstartReception).getString("id");  //接待ID
+        return receptionId;
     }
 
     public  Integer importCheck(String name){
@@ -198,13 +215,22 @@ public class JcFunction {
         return total;
     }
 
-    //app[任务-接待数]
+    //app[任务-接待数]  AppPageScene
     public int appReceptionPage() {
         jc.appLogin(pp.jdgw, pp.jdgwpassword);
         JSONObject data = jc.appreceptionPage(null, 10);
         int total = data.getInteger("total");
         return total;
     }
+
+    //app[任务-接待数]  3.0
+    public int appSaleReceptionPage() {
+        JSONObject data = jc.AppPageScene( 10,null);
+        int total = data.getInteger("total");
+        return total;
+    }
+
+
 
     //app开始接待，并返回接待id
     public Long[] startReception(String carPlate) throws Exception {

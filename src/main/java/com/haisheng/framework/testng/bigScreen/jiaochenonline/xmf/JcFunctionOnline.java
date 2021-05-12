@@ -175,6 +175,14 @@ public class JcFunctionOnline {
         return total;
     }
 
+    //app[任务-接待数]  3.0
+    public int appSaleReceptionPage() {
+        JSONObject data = jc.AppPageScene( 10,null);
+        int total = data.getInteger("total");
+        return total;
+    }
+
+
     //app开始接待，并返回接待id
     public Long[] startReception(String carPlate) throws Exception {
 

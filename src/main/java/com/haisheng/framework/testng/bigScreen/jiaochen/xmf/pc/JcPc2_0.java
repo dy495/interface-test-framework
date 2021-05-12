@@ -688,7 +688,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    @Test(enabled = true,description = "导入流失客户")
+    @Test(enabled = true,description = "导入180天未接待车牌号")
     public void losscustomer() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -713,6 +713,42 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             PoiUtils.importlossCustomer(maile,vin,-181,plate,phone,pp.jdgwName);
             //导入工单
 //            jc.pcWorkOrder(pp.importFilepath2);      //导入工单文件的路径=新建excel 路径
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("导入流失客户");
+        }
+
+
+
+    }
+
+    @Test(enabled = true,description = "导入流失客户")
+    public void maintainRemind() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            pcLogin(pp.jdgw,pp.jdgwpassword,pp.roleidJdgw);
+
+            System.out.println(dt.getHistoryDate(-366));
+
+            System.out.println(dt.getHHmm(0,"HH:mm:ss"));
+            dt.getHHmm(0);
+            String maile="2001";
+            String vin="ASDAAAAAAA12"+ CommonUtil.getRandom(5);
+            String plate="京AS"+CommonUtil.getRandom(4);
+//            String phone="177"+CommonUtil.getRandom(8);
+            String phone="15037289013";
+
+            System.out.println("vin"+vin);
+            System.out.println("plate"+plate);
+            System.out.println("phone"+phone);
+
+            //新建一个excel,里程数=智能提醒公里数
+            PoiUtils.importlossCustomer(maile,vin,-366,plate,phone,pp.jdgwName);
+            //导入工单
+            jc.pcWorkOrder(pp.importFilepath2);      //导入工单文件的路径=新建excel 路径
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());

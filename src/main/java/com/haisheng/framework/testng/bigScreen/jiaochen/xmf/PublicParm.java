@@ -11,7 +11,7 @@ public class PublicParm {
     public String user;
     public String userpassword;
     public String userroleId="4965";
-    public String voucherIdevluate="3273";
+    public String voucherIdevluate="3273";  //评价配置使用的卡券id
 
     //3.0
 
@@ -60,7 +60,7 @@ public class PublicParm {
     public String dzcode = "000000";
 
     //---------2.0---------
-    public String String_50="一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十";
+    public String String_50="一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十";
     public String String_20="一二三四五六七八九十一二三四五六七八九十";
     public String String_200="一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十";
     public String StoreCommodityId="85";  //TODO:编辑需要的商品套餐的名字
@@ -74,7 +74,7 @@ public class PublicParm {
     public String userid2="uid_5eabfb9c"; //店长的userId;
 
     //3.0
-    public String useridxs="uid_5eabfb9c"; //销售的userId;
+    public String useridxs="uid_0216a935"; //销售的userId;
 
 
     public int ordeId=10; // 订单Id

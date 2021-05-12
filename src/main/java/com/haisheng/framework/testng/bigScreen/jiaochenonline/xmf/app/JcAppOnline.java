@@ -174,181 +174,181 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
             saveData("轿辰-今日任务数=今日数据各列数据之和");
         }
     }
-
-    @Test(description = "今日任务未完成接待（预约）数（分子）==【任务-接待（预约）】列表条数")  //ok
-    public void Jc_appointmentPageAndtodaydate() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
-            //app今日任务数
-            int tasknum[] = pf.appTask();
-
-            int appointmentTotal = jc.appointmentPage(null, 100).getInteger("total");
-            int receptionTotal = jc.appreceptionPage(null, 100).getInteger("total");
-
-            Preconditions.checkArgument(tasknum[0] == appointmentTotal, "今日任务待处理预约数" + tasknum[0] + "!=[任务-预约]列表数" + appointmentTotal);
-            Preconditions.checkArgument(tasknum[2] == receptionTotal, "今日任务待处理接待数" + tasknum[2] + "!=[任务-接待]列表数" + receptionTotal);
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("轿辰-今日任务未完成接待数（分子）==【任务-接待】列表条数");
-        }
-    }
-
-    @Test(description = "顾问：今日任务接待总数（分母）==【pc接待管理】接待时间为今天&&接待人为app登录接待顾问 数据和",enabled = false)  //数据待下期规划
-    public void Jc_receptionPageAndpctodaydate() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            appLogin(pp.jdgw, pp.gwpassword, pp.roleidJdgw);
-            //app今日任务数
-            int tasknum[] = pf.appTask();
-
-            //pc登录  预约记录页该顾问今日数据
-            pcLogin(pp.jdgw, pp.gwpassword, pp.roleidJdgw);
-            IScene scene = appointmentRecodeSelect.builder().page("1")
-                    .size("100").service_sale_id(pp.userid)
-                    .shop_id(pp.shopIdZ)
-                    .create_end(dt.getHistoryDate(0))
-                    .create_start(dt.getHistoryDate(0)).build();
-
-            int appointmentTotal1 = jc.invokeApi(scene).getInteger("total");
-
-            IScene scene2 = appointmentRecodeSelect.builder().page("1")
-                    .size("10").service_sale_id(pp.userid)
-                    .shop_id(pp.shopIdZ)
-                    .appointment_status("20")
-                    .create_end(dt.getHistoryDate(0))
-                    .create_start(dt.getHistoryDate(0)).build();
-
-            int appointmentTotal2 = jc.invokeApi(scene2).getInteger("total");
-            int appointmentTotal = appointmentTotal1 - appointmentTotal2;
-
-            //接待管理页今日数据
-            SelectReception sr = new SelectReception();
-            sr.shop_id = pp.shopIdZ;
-            sr.reception_sale_name = pp.reception_sale_id;
-            sr.reception_end = dt.getHistoryDate(0);
-            sr.reception_start = dt.getHistoryDate(0);
-
-            int total1 = jc.receptionManageC(sr).getInteger("total");
-            sr.reception_status = "2000";
-            int total2 = jc.receptionManageC(sr).getInteger("total");
-            int total = total1 - total2;
-            sr = null;
-
-            Preconditions.checkArgument(tasknum[3] == total, "今日任务接待总数" + tasknum[3] + "!=[pc今日该接待顾问接待总数]" + total);
-            Preconditions.checkArgument(tasknum[1] == appointmentTotal, "今日任务预约总数" + tasknum[1] + "!=[pc今日该接待顾问预约总数]" + appointmentTotal);
-
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            appLogin(pp.gwphone, pp.gwpassword, pp.roleId);
-            saveData("轿辰-今日任务接待（预约）总数（分母）==pc【】列表条数");
-        }
-    }
-
-    @Test(description = "店长：今日任务接待总数（分母）==【pc接待管理】接待时间为今天数据和",enabled = false)  //数据待下期规划
-    public void Jc_receptionPageAndpctodaydate2() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            appLogin(pp.dzphone, pp.dzcode, pp.dzroleId);
-            //app今日任务数
-            int tasknum[] = pf.appTask();
-
-            //pc登录  预约记录页该顾问今日数据
-            pcLogin(pp.dzphone, pp.dzcode, pp.dzroleId);
-            IScene scene = appointmentRecodeSelect.builder().page("1")
-                    .size("10")
-                    .shop_id(pp.shopIdZ)
-                    .create_end(dt.getHistoryDate(0))
-                    .create_start(dt.getHistoryDate(0)).build();
-
-            int appointmentTotal1 = jc.invokeApi(scene).getInteger("total");
-
-            IScene scene2 = appointmentRecodeSelect.builder().page("1")
-                    .size("10")
-                    .shop_id(pp.shopIdZ)
-                    .appointment_status("20")
-                    .create_end(dt.getHistoryDate(0))
-                    .create_start(dt.getHistoryDate(0)).build();
-
-            int appointmentTotal2 = jc.invokeApi(scene2).getInteger("total");
-            int appointmentTotal = appointmentTotal1 - appointmentTotal2;
-
-            //接待管理页今日数据
-            SelectReception sr = new SelectReception();
-            sr.shop_id = pp.shopIdZ;
-            sr.reception_end = dt.getHistoryDate(0);
-            sr.reception_start = dt.getHistoryDate(0);
-
-            int total1 = jc.receptionManageC(sr).getInteger("total");
-            sr.reception_status = "2000";
-            int total2 = jc.receptionManageC(sr).getInteger("total");
-            int total = total1 - total2;
-            sr = null;
-            Preconditions.checkArgument(tasknum[3] == total, "今日任务接待总数" + tasknum[3] + "!=[pc今日该接待顾问接待总数]" + total);
-            Preconditions.checkArgument(tasknum[1] == appointmentTotal, "今日任务预约总数" + tasknum[1] + "!=[pc今日该接待顾问预约总数]" + appointmentTotal);
-
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            appLogin(pp.gwphone, pp.gwpassword, pp.roleId);
-            saveData("轿辰-今日任务接待（预约）总数（分母）==pc【】列表条数");
-        }
-    }
-
-    @Test(description = "集团：今日任务接待总数（分母）==【pc接待管理】接待时间为今天数据和",enabled = false)  //数据待下期规划
-    public void Jc_receptionPageAndpctodaydate3() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            commonConfig.shopId = "-1";
-            appLogin(pp.gwphone, pp.gwpassword, pp.roleId);
-            //app今日任务数
-            int tasknum[] = pf.appTask();
-
-            //pc登录  预约记录页该顾问今日数据
-            pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
-            IScene scene = appointmentRecodeSelect.builder().page("1")
-                    .size("10")
-                    .create_end(dt.getHistoryDate(0))
-                    .create_start(dt.getHistoryDate(0)).build();
-
-            int appointmentTotal1 = jc.invokeApi(scene).getInteger("total");
-
-            IScene scene2 = appointmentRecodeSelect.builder().page("1")
-                    .size("10")
-                    .appointment_status("20")
-                    .create_end(dt.getHistoryDate(0))
-                    .create_start(dt.getHistoryDate(0)).build();
-
-            int appointmentTotal2 = jc.invokeApi(scene2).getInteger("total");
-            int appointmentTotal = appointmentTotal1 - appointmentTotal2;
-            //接待管理页今日数据
-            SelectReception sr = new SelectReception();
-//            sr.shop_id = pp.shopId;
-            sr.reception_end = dt.getHistoryDate(0);
-            sr.reception_start = dt.getHistoryDate(0);
-
-            int total1 = jc.receptionManageC(sr).getInteger("total");
-            sr.reception_status = "2000";
-            int total2 = jc.receptionManageC(sr).getInteger("total");
-            int total = total1 - total2;
-            sr = null;
-            Preconditions.checkArgument(tasknum[3] == total, "今日任务接待总数" + tasknum[3] + "!=[pc今日该接待顾问接待总数]" + total);
-            Preconditions.checkArgument(tasknum[1] == appointmentTotal, "今日任务预约总数" + tasknum[1] + "!=[pc今日该接待顾问预约总数]" + appointmentTotal);
-
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            appLogin(pp.gwphone, pp.gwpassword, pp.roleId);
-            commonConfig.shopId = pp.shopIdZ;
-            saveData("轿辰-今日任务接待（预约）总数（分母）==pc【】列表条数");
-        }
-    }
+//
+//    @Test(description = "今日任务未完成接待（预约）数（分子）==【任务-接待（预约）】列表条数")  //ok
+//    public void Jc_appointmentPageAndtodaydate() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
+//            //app今日任务数
+//            int tasknum[] = pf.appTask();
+//
+//            int appointmentTotal = jc.appointmentPage(null, 100).getInteger("total");
+//            int receptionTotal = jc.appreceptionPage(null, 100).getInteger("total");
+//
+//            Preconditions.checkArgument(tasknum[0] == appointmentTotal, "今日任务待处理预约数" + tasknum[0] + "!=[任务-预约]列表数" + appointmentTotal);
+//            Preconditions.checkArgument(tasknum[2] == receptionTotal, "今日任务待处理接待数" + tasknum[2] + "!=[任务-接待]列表数" + receptionTotal);
+//
+//        } catch (AssertionError | Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("轿辰-今日任务未完成接待数（分子）==【任务-接待】列表条数");
+//        }
+//    }
+//
+//    @Test(description = "顾问：今日任务接待总数（分母）==【pc接待管理】接待时间为今天&&接待人为app登录接待顾问 数据和",enabled = false)  //数据待下期规划
+//    public void Jc_receptionPageAndpctodaydate() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            appLogin(pp.jdgw, pp.gwpassword, pp.roleidJdgw);
+//            //app今日任务数
+//            int tasknum[] = pf.appTask();
+//
+//            //pc登录  预约记录页该顾问今日数据
+//            pcLogin(pp.jdgw, pp.gwpassword, pp.roleidJdgw);
+//            IScene scene = appointmentRecodeSelect.builder().page("1")
+//                    .size("100").service_sale_id(pp.userid)
+//                    .shop_id(pp.shopIdZ)
+//                    .create_end(dt.getHistoryDate(0))
+//                    .create_start(dt.getHistoryDate(0)).build();
+//
+//            int appointmentTotal1 = jc.invokeApi(scene).getInteger("total");
+//
+//            IScene scene2 = appointmentRecodeSelect.builder().page("1")
+//                    .size("10").service_sale_id(pp.userid)
+//                    .shop_id(pp.shopIdZ)
+//                    .appointment_status("20")
+//                    .create_end(dt.getHistoryDate(0))
+//                    .create_start(dt.getHistoryDate(0)).build();
+//
+//            int appointmentTotal2 = jc.invokeApi(scene2).getInteger("total");
+//            int appointmentTotal = appointmentTotal1 - appointmentTotal2;
+//
+//            //接待管理页今日数据
+//            SelectReception sr = new SelectReception();
+//            sr.shop_id = pp.shopIdZ;
+//            sr.reception_sale_name = pp.reception_sale_id;
+//            sr.reception_end = dt.getHistoryDate(0);
+//            sr.reception_start = dt.getHistoryDate(0);
+//
+//            int total1 = jc.receptionManageC(sr).getInteger("total");
+//            sr.reception_status = "2000";
+//            int total2 = jc.receptionManageC(sr).getInteger("total");
+//            int total = total1 - total2;
+//            sr = null;
+//
+//            Preconditions.checkArgument(tasknum[3] == total, "今日任务接待总数" + tasknum[3] + "!=[pc今日该接待顾问接待总数]" + total);
+//            Preconditions.checkArgument(tasknum[1] == appointmentTotal, "今日任务预约总数" + tasknum[1] + "!=[pc今日该接待顾问预约总数]" + appointmentTotal);
+//
+//
+//        } catch (AssertionError | Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            appLogin(pp.gwphone, pp.gwpassword, pp.roleId);
+//            saveData("轿辰-今日任务接待（预约）总数（分母）==pc【】列表条数");
+//        }
+//    }
+//
+//    @Test(description = "店长：今日任务接待总数（分母）==【pc接待管理】接待时间为今天数据和",enabled = false)  //数据待下期规划
+//    public void Jc_receptionPageAndpctodaydate2() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            appLogin(pp.dzphone, pp.dzcode, pp.dzroleId);
+//            //app今日任务数
+//            int tasknum[] = pf.appTask();
+//
+//            //pc登录  预约记录页该顾问今日数据
+//            pcLogin(pp.dzphone, pp.dzcode, pp.dzroleId);
+//            IScene scene = appointmentRecodeSelect.builder().page("1")
+//                    .size("10")
+//                    .shop_id(pp.shopIdZ)
+//                    .create_end(dt.getHistoryDate(0))
+//                    .create_start(dt.getHistoryDate(0)).build();
+//
+//            int appointmentTotal1 = jc.invokeApi(scene).getInteger("total");
+//
+//            IScene scene2 = appointmentRecodeSelect.builder().page("1")
+//                    .size("10")
+//                    .shop_id(pp.shopIdZ)
+//                    .appointment_status("20")
+//                    .create_end(dt.getHistoryDate(0))
+//                    .create_start(dt.getHistoryDate(0)).build();
+//
+//            int appointmentTotal2 = jc.invokeApi(scene2).getInteger("total");
+//            int appointmentTotal = appointmentTotal1 - appointmentTotal2;
+//
+//            //接待管理页今日数据
+//            SelectReception sr = new SelectReception();
+//            sr.shop_id = pp.shopIdZ;
+//            sr.reception_end = dt.getHistoryDate(0);
+//            sr.reception_start = dt.getHistoryDate(0);
+//
+//            int total1 = jc.receptionManageC(sr).getInteger("total");
+//            sr.reception_status = "2000";
+//            int total2 = jc.receptionManageC(sr).getInteger("total");
+//            int total = total1 - total2;
+//            sr = null;
+//            Preconditions.checkArgument(tasknum[3] == total, "今日任务接待总数" + tasknum[3] + "!=[pc今日该接待顾问接待总数]" + total);
+//            Preconditions.checkArgument(tasknum[1] == appointmentTotal, "今日任务预约总数" + tasknum[1] + "!=[pc今日该接待顾问预约总数]" + appointmentTotal);
+//
+//
+//        } catch (AssertionError | Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            appLogin(pp.gwphone, pp.gwpassword, pp.roleId);
+//            saveData("轿辰-今日任务接待（预约）总数（分母）==pc【】列表条数");
+//        }
+//    }
+//
+//    @Test(description = "集团：今日任务接待总数（分母）==【pc接待管理】接待时间为今天数据和",enabled = false)  //数据待下期规划
+//    public void Jc_receptionPageAndpctodaydate3() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            commonConfig.shopId = "-1";
+//            appLogin(pp.gwphone, pp.gwpassword, pp.roleId);
+//            //app今日任务数
+//            int tasknum[] = pf.appTask();
+//
+//            //pc登录  预约记录页该顾问今日数据
+//            pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
+//            IScene scene = appointmentRecodeSelect.builder().page("1")
+//                    .size("10")
+//                    .create_end(dt.getHistoryDate(0))
+//                    .create_start(dt.getHistoryDate(0)).build();
+//
+//            int appointmentTotal1 = jc.invokeApi(scene).getInteger("total");
+//
+//            IScene scene2 = appointmentRecodeSelect.builder().page("1")
+//                    .size("10")
+//                    .appointment_status("20")
+//                    .create_end(dt.getHistoryDate(0))
+//                    .create_start(dt.getHistoryDate(0)).build();
+//
+//            int appointmentTotal2 = jc.invokeApi(scene2).getInteger("total");
+//            int appointmentTotal = appointmentTotal1 - appointmentTotal2;
+//            //接待管理页今日数据
+//            SelectReception sr = new SelectReception();
+////            sr.shop_id = pp.shopId;
+//            sr.reception_end = dt.getHistoryDate(0);
+//            sr.reception_start = dt.getHistoryDate(0);
+//
+//            int total1 = jc.receptionManageC(sr).getInteger("total");
+//            sr.reception_status = "2000";
+//            int total2 = jc.receptionManageC(sr).getInteger("total");
+//            int total = total1 - total2;
+//            sr = null;
+//            Preconditions.checkArgument(tasknum[3] == total, "今日任务接待总数" + tasknum[3] + "!=[pc今日该接待顾问接待总数]" + total);
+//            Preconditions.checkArgument(tasknum[1] == appointmentTotal, "今日任务预约总数" + tasknum[1] + "!=[pc今日该接待顾问预约总数]" + appointmentTotal);
+//
+//
+//        } catch (AssertionError | Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            appLogin(pp.gwphone, pp.gwpassword, pp.roleId);
+//            commonConfig.shopId = pp.shopIdZ;
+//            saveData("轿辰-今日任务接待（预约）总数（分母）==pc【】列表条数");
+//        }
+//    }
 
 
     @DataProvider(name = "HEXIAONUM")
@@ -628,186 +628,5 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-
-    //    @Test(description = "app接待,接待任务列表+1,完成接待列表数-1")
-    public void Jc_reception() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //接待前，接待任务列表总数
-            int total = jc.appreceptionPage(null, 10).getInteger("total");
-
-            //开始接待
-            Long id[] = pf.startReception(pp.carplate7);
-
-            JSONObject dd = jc.appreceptionPage(null, 10);
-            int totalA = dd.getInteger("total");
-            String shopId = dd.getJSONArray("list").getJSONObject(0).getString("shop_id");
-
-            //完成接待
-            jc.finishReception(id[0], id[1]);
-            int totalC = jc.appreceptionPage(null, 10).getInteger("total");
-
-            Preconditions.checkArgument(totalA - total == 1, "接待后接待列表未+1,接待前：" + total + "，接待后：" + totalA);
-            Preconditions.checkArgument(totalA - totalC == 1, "完成接待后接待列表未-1,接待前：" + totalA + "，接待后：" + totalA);
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("轿辰-app接待,接待任务+1,完成接待，接待任务-1");
-        }
-    }
-
-    //    @Test(description = "app接待车牌号7位，汉字+字母",enabled = false)  //受接待车牌次数限制，此 case与上一个case合并/
-    public void Jc_reception2() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
-            Long id[] = pf.startReception(pp.carplate7);
-
-            jc.finishReception(id[0], id[1]);
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("app接待车牌号7位，汉字+字母");
-        }
-    }
-
-    //    @Test(description = "app接待,今日任务分子、分母+1，完成接待分子-1，分母-0")    //一次
-    public void Jc_receptionTodayTask() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
-            //接待前，今日任务
-            int tasknum[] = pf.appTask();
-            //开始接待
-            Long id[] = pf.startReception(pp.carplate7);
-            int tasknumA[] = pf.appTask();
-            //完成接待
-            jc.finishReception(id[0], id[1]);
-            int tasknumB[] = pf.appTask();
-
-            Preconditions.checkArgument(tasknumA[2] - tasknum[2] == 1, "接待后分子+1 ");
-            Preconditions.checkArgument(tasknumA[3] - tasknum[3] == 1, "接待后分母+1");
-
-            Preconditions.checkArgument(tasknumA[2] - tasknumB[2] == 1, "完成接待后分子-1 ");
-            Preconditions.checkArgument(tasknumA[3] - tasknumB[3] == 0, "完成接待后分母-0");
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("轿辰-app接待,接待任务+1,完成接待，接待任务-1");
-        }
-    }
-
-
-    //    @Test(description = "app接待,pc接待管理列表+1")   //二次
-    public void AJc_receptionPcPage() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //pc登录
-            pcLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
-            //接待前，接待任务列表总数
-            int total = jc.receptionManage(pp.shopIdZ, "1", "10", "", "").getInteger("total");
-
-            //app登录 开始接待
-            appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
-            Long id[] = pf.startReception(pp.carplate);
-
-            //pc登录
-            pcLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
-
-            int totalA = jc.receptionManage(pp.shopIdZ, "1", "10", "", "").getInteger("total");
-
-            //完成接待
-//            jc.appLogin(pp.jdgw, pp.jdgwpassword);
-//            jc.finishReception(id[0], id[1]);
-
-            //pc登录
-//            pcLogin(pp.jdgw, pp.jdgwpassword,pp.roleidJdgw);
-
-            int totalC = jc.receptionManage(pp.shopIdZ, "1", "10", "", "").getInteger("total");
-
-            Preconditions.checkArgument(totalA - total == 1, "接待后接待列表未+1,接待前：" + total + "，接待后：" + totalA);
-            Preconditions.checkArgument(totalA - totalC == 0, "完成接待后接待列表未-0,接待前：" + totalA + "，接待后：" + totalA);
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            jc.appLogin(pp.gwphone, pp.gwpassword);   //最后app登录
-            saveData("轿辰-app接待,接待任务+1,完成接待，接待任务-1");
-        }
-    }
-
-
-    //**************************今日数据******************************
-//    @Test(description = "app接待,今日数据分子、分母+1，完成接待分子-1，分母-0")   //三次
-    public void Jc_receptionTodayDate() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
-            String type = "all";
-            String name = pp.jdgwName; //Todo:账号名称, 或者店铺的名字
-            //接待前，今日任务
-            int tasknum[] = pf.apptodayDate(type, name);
-            //开始接待
-            Long id[] = pf.startReception(pp.carplate);
-            int tasknumA[] = pf.apptodayDate(type, name);
-            //完成接待
-            jc.finishReception(id[0], id[1]);
-            int tasknumB[] = pf.apptodayDate(type, name);
-
-            Preconditions.checkArgument(tasknumA[2] - tasknum[2] == 1, "接待后分子+1 ");
-            Preconditions.checkArgument(tasknumA[3] - tasknum[3] == 1, "接待后分母+1");
-
-            Preconditions.checkArgument(tasknumA[2] - tasknumB[2] == 1, "完成接待后分子-1 ");
-            Preconditions.checkArgument(tasknumA[3] - tasknumB[3] == 0, "完成接待后分母-0");
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("轿辰-app接待,今日数据待处理接待+1,完成接待，待处理接待-1");
-        }
-    }
-
-    /**
-     * @description :消息记录查询
-     * @date :2020/12/10 21:08
-     **/
-
-//    @Test()
-    public void messageFormOneFilter2() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
-            JSONArray result = jc.enummap().getJSONArray("PUSH_REASON_TYPE");
-
-            Map<String, String> map = new HashMap<String, String>();
-            for (int i = 0; i < result.size(); i++) {
-                String tt = result.getJSONObject(i).getString("key");
-                String vv = result.getJSONObject(i).getString("value");
-                map.put(tt, vv);
-            }
-            Set<String> keySet = map.keySet();
-            Iterator<String> t = keySet.iterator();
-            while (t.hasNext()) {
-                String key = t.next();
-                System.out.println("key:" + key);
-                JSONArray respon1 = jc.pushMsgListFilterManage("-1", "1", "10", "message_type", key).getJSONArray("list");
-                String temp = map.get(key);
-                for (int j = 0; j < respon1.size(); j++) {
-                    String resultA = respon1.getJSONObject(j).getString("message_type_name");
-                    Preconditions.checkArgument(resultA.equals(temp), resultA + ":" + temp);
-                    System.out.println("start:" + key + "___---------------------result:" + temp);
-                }
-            }
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            appLogin(pp.jdgw, pp.jdgwpassword, pp.roleId);
-            saveData("消息表单单项查询，结果校验");
-        }
-    }
 
 }

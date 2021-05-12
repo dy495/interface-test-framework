@@ -239,11 +239,16 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
 //                        "}";
 
 //                JSONObject jsonObject = JSON.parseObject(str);
-                String face=file.getImgStr( "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/xia.png");
-//                String face=file.getImgStr( "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/杨航.jpg");
                 //夏明凤的脸  是否在职 0否 1是
-//                JSONObject jsonObject=staffObject("uid_663ad666","杨航","",1,face);
-                JSONObject jsonObject=staffObject("uid_663ad653","店员1","uid_663ad653",1,face);
+                 String face=file.getImgStr( "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/杨航.jpg");
+                JSONObject jsonObject=staffObject("uid_663ad666","杨航","",1,face);
+
+//                String face=file.getImgStr( "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/xia.png");
+//                JSONObject jsonObject=staffObject("uid_663ad653","店员1","uid_663ad653",1,face);
+
+//             String face=file.getImgStr( "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/lv.jpg");
+//                JSONObject jsonObject=staffObject("uid_91cc8031","吕雪晴","uid_91cc8031",0,face);
+
                 logger.info("request:"+jsonObject.toJSONString());
                 System.out.println("over");
 
@@ -562,7 +567,7 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "一车多人订单追加，与原openID 相同，车架号相同")   //userID  openid 都不一样 触发成功
+    @Test(description = "一车多人订单追加，与原openID 相同，车架号相同",enabled = false)
     public void yicheduorenAppend(){
         try{
                        //指定门店
@@ -571,7 +576,7 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
             String transId2="QATest_" + CommonUtil.getRandom(4) + dt.getHistoryDate(0) + dt.getHHmm(0);
             String transId3="QATest_" + CommonUtil.getRandom(3) + dt.getHistoryDate(0) + dt.getHHmm(0);
             //客户ID1
-            String userId1="tester1752930";
+            String userId1="tester2334201";
             //客户ID2
             String userId2="tester2" + CommonUtil.getRandom(6);
             //TODO: 原openid
@@ -648,9 +653,9 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
 
 
     @Test()
-    public void handle() {
+    public void zhandle() {
         try{
-            for(int j=1;j<4;j++) {
+            for(int j=1;j<3;j++) {
                 JSONArray list = md.cashier_riskPage(Long.parseLong(product.getShopId()), "", "", "", "", "", "PENDING", j, 10).getJSONArray("list");
                 for (int i =0; i < list.size(); i++) {
                     Long id = list.getJSONObject(i).getLong("id");

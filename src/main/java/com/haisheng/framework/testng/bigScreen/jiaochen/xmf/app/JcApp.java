@@ -840,7 +840,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
     }
 
     //跟进列表数
-        @Test(description = "跟进数")   //三次
+    @Test(description = "跟进数")   //三次
     public void followNumber() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -863,5 +863,8 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             saveData("轿辰-app接待,今日数据待处理接待+1,完成接待，待处理接待-1");
         }
     }
+
+    //
+
 
 }

@@ -256,9 +256,14 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
 //                        "}";
 
 //                JSONObject jsonObject = JSON.parseObject(str);
-                String face=file.getImgStr( "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/xia.png");
+//                String face=file.getImgStr( "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/xia.png");
+//                //夏明凤的脸  是否在职 0否  1是
+//                JSONObject jsonObject=staffObject("uid_edfe23f0","夏明凤","uid_edfe23f0",0,face);
+//
+                String face=file.getImgStr( "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/guoliya.jpg");
                 //夏明凤的脸  是否在职 0否  1是
-                JSONObject jsonObject=staffObject("uid_edfe23f0","夏明凤","uid_edfe23f0",1,face);
+                JSONObject jsonObject=staffObject("uid_6b41fd04","郭丽雅","uid_6b41fd04",0,face);  //uid_6b41fd04	郭丽雅	uid_6b41fd04
+
                 logger.info("request:"+jsonObject.toJSONString());
                 System.out.println("over");
 
@@ -478,17 +483,17 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
             String transId2="QATest_" + CommonUtil.getRandom(4) + dt.getHistoryDate(0) + dt.getHHmm(0);
             String transId3="QATest_" + CommonUtil.getRandom(3) + dt.getHistoryDate(0) + dt.getHHmm(0);
             //客户ID1
-            String userId1="tester1128";
-//            String userId1="tester1"+CommonUtil.getRandom(3);
+//            String userId1="tester1120008";
+            String userId1="tester1"+CommonUtil.getRandom(3);
             //客户ID2
 //            String userId2="tester344552";
             //客户ID3
             //支付ID TODO：openId 是否也要不同  是
-            String openId = "dea123233940" ;
+            String openId = "dea123233009" +CommonUtil.getRandom(3);
 
             //车架号
 //            String carVehicleNumber="AAAAAAAAAA15"+CommonUtil.getRandom(5);
-            String carVehicleNumber="AAAAAAAAAA1202665";
+            String carVehicleNumber="AAAAAAAAAA8902805";
 
             //生成交易订单
             String post1=cu.getCreateOrderOnline(shopId,transId,userId1,openId,carVehicleNumber);
