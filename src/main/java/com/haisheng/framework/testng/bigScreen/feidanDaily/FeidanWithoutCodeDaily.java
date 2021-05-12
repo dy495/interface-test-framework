@@ -74,7 +74,7 @@ public class FeidanWithoutCodeDaily {
     //long firstAppearTime = 1582684439509L; //原
     //long firstAppearTime = 1583900897877L;
     //long firstAppearTime = 1584936946964L;
-    long firstAppearTime = 1603158881173L;
+    long firstAppearTime = 1609733247344L;
 
     String defaultRuleId = "837";
     String ahead1hRuleId = "996";

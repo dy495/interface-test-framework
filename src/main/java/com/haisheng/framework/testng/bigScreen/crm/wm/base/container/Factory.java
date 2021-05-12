@@ -1,6 +1,5 @@
 package com.haisheng.framework.testng.bigScreen.crm.wm.base.container;
 
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.property.BasicProperty;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.sql.Sql;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -8,7 +7,7 @@ import lombok.experimental.Accessors;
 import java.util.List;
 import java.util.Map;
 
-public class Factory extends BasicProperty {
+public class Factory {
     private final IContainer container;
 
     public Factory(Builder builder) {
@@ -37,7 +36,7 @@ public class Factory extends BasicProperty {
 
     @Setter
     @Accessors(chain = true, fluent = true)
-    public static class Builder extends BasicProperty.Builder {
+    public static class Builder {
         private IContainer container;
 
         public Factory build() {

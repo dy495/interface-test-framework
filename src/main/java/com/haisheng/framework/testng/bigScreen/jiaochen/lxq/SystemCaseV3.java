@@ -1,6 +1,5 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.lxq;
 
-import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
@@ -25,7 +24,6 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.record.Expor
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shop.AddScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -45,6 +43,7 @@ import java.util.List;
 public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce PRODUCE = EnumTestProduce.JC_DAILY;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.ALL_AUTHORITY_DAILY_LXQ;
+    private static final EnumAccount ALL_AUTHORITY_DAILY = EnumAccount.ALL_AUTHORITY_DAILY;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_LXQ_DAILY;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public UserUtil user = new UserUtil(visitor);
@@ -53,13 +52,14 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
     ScenarioUtil jc = ScenarioUtil.getInstance();
 
     PublicParm pp = new PublicParm();
-    JcFunction pf = new JcFunction();
+    CommonConfig commonConfig = new CommonConfig();
+
 
     @BeforeClass
     @Override
     public void initial() {
         logger.debug("before class initial");
-        CommonConfig commonConfig = new CommonConfig();
+
         //替换checklist的相关信息
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
         commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_DAILY_SERVICE.getId();
@@ -1472,58 +1472,126 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
 
 
 
-    //销售接待评价流程
-
-    public void Jc_evalute() {
+    //PC 创建成交记录
+    @Test
+    public void evalute_Buycar1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            //PC配置评价奖励
-            int type = 0;
-            String messageName = "";
+            user.loginPc(ALL_AUTHORITY);
+            //PC配置销售购车评价奖励
+            int type = 3;
+            String messageName = "新车评价消息";
             int points = info.setevaluate(type,messageName).getInteger("points");
 
-            user.loginApplet(APPLET_USER_ONE);
 
-            String id[]=pf.getMessageId(messageName);
-            if(StringUtils.isEmpty(id[0])){
-                throw new Exception("没有待评价的消息，检查接待case 是否失败");
-            }
-            System.out.println("messageId"+id[0]);
             //评价前的积分和卡券数
-            Integer voucherTotal = pf.getVoucherTotal();
+            int voucherTotal = info.getVoucherTotal("13436941018");
+            user.loginApplet(APPLET_USER_ONE);
             Integer appletScore = jc.appletUserInfoDetail().getInteger("score");
 
-
+            //PC购车
+            user.loginPc(ALL_AUTHORITY);
+            info.newBuyCarRec();
+            user.loginApplet(APPLET_USER_ONE);
             JSONObject evaluateConfigDescribe= jc.AppletEvaluateConfigScene(type,Long.parseLong(pp.shopIdZ));
             String describe=evaluateConfigDescribe.getJSONArray("list").getJSONObject(2).getString("describe");
             List label=evaluateConfigDescribe.getJSONArray("list").getJSONObject(2).getJSONArray("labels");
-            //app接待客户&完成接待
+
 
             //评价
+
             IScene evaluatesubmit= AppletEvaluateSubmitScene.builder()
-                    .describe(describe).labels(label).id(Long.valueOf(id[1]))
+                    .describe(describe).labels(label).id(info.getMessDetailId())
                     .isAnonymous(true)
                     .score(2)
-                    .shopId(Long.parseLong(pp.shopIdZ)).suggestion("自动评价").type(type)
+                    .shopId(info.oneshopid).suggestion("自动评价").type(type)
                     .build();
             jc.invokeApi(evaluatesubmit);
 
             //评价后的积分和卡券数
-            Integer voucherTotalAfter = pf.getVoucherTotal();
+
             Integer appletScoreAfter= jc.appletUserInfoDetail().getInteger("score");
+            user.loginPc(ALL_AUTHORITY);
+            int voucherTotalAfter = info.getVoucherTotal("13436941018");
 
             Preconditions.checkArgument(voucherTotalAfter-voucherTotal==1,"评价完成后，卡券没+1");
             Preconditions.checkArgument(appletScoreAfter-appletScore==points,"评价完成后，积分奖励没发");
 
 
-
-
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("JC_pc门店按钮修改关联验证");
+            saveData("PC配置购车奖励->小程序评价购车消息获得相应奖励");
         }
     }
+
+
+    //新建销售接待， 先注释掉
+//    @Test
+//    public void evalute_reception() {
+//        logger.logCaseStart(caseResult.getCase       try {
+//            user.loginPc(ALL_AUTHORITY);
+//            //PC配置销售接待评价奖励
+//            int type = 4;
+//            String messageName = "新车评价消息"; //手动阀
+//            int points = info.setevaluate(type,messageName).getInteger("points");
+//
+//
+//            //评价前的积分和卡券数
+//            int voucherTotal = info.getVoucherTotal("13436941018");
+//            user.loginApplet(APPLET_USER_ONE);
+//            Integer appletScore = jc.appletUserInfoDetail().getInteger("score");
+//
+//            //app接待
+//            user.loginApp(ALL_AUTHORITY_DAILY);
+////            commonConfig.shopId=info.oneshopid.toString();
+//            commonConfig.shopId="53704";
+//            commonConfig.roleId="2942";
+//
+//            Long recid = Long.valueOf(info.salereception("13436941018")[0]);
+//
+//            IScene appfinishReception = AppFinishReceptionScene.builder()
+////                    .shopId(Long.valueOf(info.oneshopid))
+//                    .shopId(53704L)
+//                    .id(recid).build();
+//
+//            jc.invokeApi(appfinishReception);
+//
+//            user.loginApplet(APPLET_USER_ONE);
+//            JSONObject evaluateConfigDescribe= jc.AppletEvaluateConfigScene(type,Long.parseLong(pp.shopIdZ));
+//            String describe=evaluateConfigDescribe.getJSONArray("list").getJSONObject(2).getString("describe");
+//            List label=evaluateConfigDescribe.getJSONArray("list").getJSONObject(2).getJSONArray("labels");
+//
+//
+//            //评价
+//
+//            IScene evaluatesubmit= AppletEvaluateSubmitScene.builder()
+//                    .describe(describe).labels(label).id(info.getMessDetailId())
+//                    .isAnonymous(true)
+//                    .score(2)
+////                    .shopId(info.oneshopid).suggestion("自动评价").type(type)
+//                    .shopId(53704L).suggestion("自动评价").type(type)
+//                    .build();
+//            jc.invokeApi(evaluatesubmit);
+//
+//            //评价后的积分和卡券数
+//
+//            Integer appletScoreAfter= jc.appletUserInfoDetail().getInteger("score");
+//            user.loginPc(ALL_AUTHORITY);
+//            commonConfig.shopId=PRODUCE.getShopId();
+//            commonConfig.roleId=PRODUCE.getRoleId();
+//            int voucherTotalAfter = info.getVoucherTotal("13436941018");
+//
+//            Preconditions.checkArgument(voucherTotalAfter-voucherTotal==1,"评价完成后，卡券没+1");
+//            Preconditions.checkArgument(appletScoreAfter-appletScore==points,"评价完成后，积分奖励没发");
+//
+//
+//        } catch (AssertionError | Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("app接待->小程序评价销售接待消息获得相应奖励");
+//        }
+//    }
 
 
 

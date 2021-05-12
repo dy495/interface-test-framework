@@ -429,7 +429,7 @@ public class BusinessUtil {
         //判断可用库存
         Long AllowUseInventory=getVoucherAllowUseInventoryNum(voucherId);
         ManageRecruitAddScene.ManageRecruitAddSceneBuilder builder=null;
-        if(AllowUseInventory>6){
+        if(AllowUseInventory>0){
             //报名成功奖励
             JSONArray registerObject = getRewardVouchers(voucherId, 1, Math.toIntExact(AllowUseInventory));
             //卡券有效期
@@ -1007,6 +1007,7 @@ public class BusinessUtil {
             //审批活动
             getApprovalPassed(id1);
             //小程序报名
+            user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
             activityRegisterApplet(id1, "13373166806", "郭丽雅", 2, "1513814362@qq.com", "22", "女", "其他");
             ids.add(id1);
             //登录PC
@@ -2647,7 +2648,7 @@ public class BusinessUtil {
     }
 
     /**
-     *编辑招募活动，返回活动ID
+     *编辑内容营销活动，返回活动ID
      */
     public String getContentMarketingEdit(Long id,String title,String rule){
         SupporterUtil supporterUtil = new SupporterUtil(visitor);

@@ -76,7 +76,6 @@ public class VisitorProxy extends TestCaseCommon {
         }
     }
 
-
     /**
      * 上传
      *
@@ -93,7 +92,6 @@ public class VisitorProxy extends TestCaseCommon {
      * pc登录
      *
      * @param scene 场景
-     * @return 返回值
      */
     public void login(@NotNull IScene scene) {
         httpPost(scene.getPath(), scene.getBody(), product.getAddress());

@@ -655,8 +655,8 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
     @Test()
     public void zhandle() {
         try{
-            for(int j=1;j<3;j++) {
-                JSONArray list = md.cashier_riskPage(Long.parseLong(product.getShopId()), "", "", "", "", "", "PENDING", j, 10).getJSONArray("list");
+            for(int j=1;j<4;j++) {
+                JSONArray list = md.cashier_riskPage(product.getShopId(), "", "", "", "", "", "PENDING", j, 10).getJSONArray("list");
                 for (int i =0; i < list.size(); i++) {
                     Long id = list.getJSONObject(i).getLong("id");
                     IScene handle = RiskEventHandleScene.builder().result(1).remarks("自动正常处理").id(id).build();

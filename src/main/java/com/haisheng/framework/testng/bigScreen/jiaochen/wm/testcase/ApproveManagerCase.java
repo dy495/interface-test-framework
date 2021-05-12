@@ -100,7 +100,7 @@ public class ApproveManagerCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene applyPageScene = ApplyPageScene.builder().build();
-            List<ApplyPageBean> applyPageList = util.collectBeanList(applyPageScene, ApplyPageBean.class);
+            List<ApplyPageBean> applyPageList = util.toJavaObjectList(applyPageScene, ApplyPageBean.class, SupporterUtil.SIZE);
             applyPageList.forEach(applyPage -> {
                 String voucherName = applyPage.getName();
                 Integer num = applyPage.getNum();
@@ -118,23 +118,21 @@ public class ApproveManagerCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //数据bug
+    //ok
     @Test(description = "优惠券审批--发出数量（首发）=【优惠券管理】发行库存数量")
     public void voucherApply_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Arrays.stream(VoucherTypeEnum.values()).forEach(anEnum -> {
-                IScene voucherPageScene = VoucherFormVoucherPageScene.builder().voucherName(anEnum.getDesc()).build();
-                List<VoucherPage> voucherPageList = util.collectBeanList(voucherPageScene, VoucherPage.class);
-                voucherPageList.forEach(voucherPage -> {
-                    VoucherDetailBean voucherDetail = util.getVoucherDetail(voucherPage.getVoucherId());
-                    String voucherName = voucherPage.getVoucherName();
-                    IScene applyPageScene = ApplyPageScene.builder().name(voucherName).build();
-                    List<ApplyPageBean> applyPageList = util.collectBeanList(applyPageScene, ApplyPageBean.class);
-                    ApplyPageBean applyPage = applyPageList.stream().filter(e -> e.getName().equals(voucherName) && e.getApplyTypeName().equals(ApplyTypeEnum.VOUCHER.getName())).findFirst().orElse(null);
-                    Preconditions.checkArgument(applyPage != null, voucherName + " 在审核列表为空");
-                    CommonUtil.checkResultPlus(voucherName + "发行库存数量", voucherDetail.getStock(), "发出数量（首发）", applyPage.getNum());
-                });
+            IScene voucherPageScene = VoucherFormVoucherPageScene.builder().build();
+            List<VoucherFormVoucherPageBean> voucherPageList = util.toJavaObjectList(voucherPageScene, VoucherFormVoucherPageBean.class, SupporterUtil.SIZE);
+            voucherPageList.forEach(voucherPage -> {
+                VoucherDetailBean voucherDetail = util.getVoucherDetail(voucherPage.getVoucherId());
+                String voucherName = voucherPage.getVoucherName();
+                IScene applyPageScene = ApplyPageScene.builder().name(voucherName).build();
+                List<ApplyPageBean> applyPageList = util.toJavaObjectList(applyPageScene, ApplyPageBean.class);
+                ApplyPageBean applyPage = applyPageList.stream().filter(e -> e.getName().equals(voucherName) && e.getApplyTypeName().equals(ApplyTypeEnum.VOUCHER.getName())).findFirst().orElse(null);
+                Preconditions.checkArgument(applyPage != null, voucherName + " 在审核列表为空");
+                CommonUtil.checkResultPlus(voucherName + "发行库存数量", voucherDetail.getStock(), "发出数量（首发）", applyPage.getNum());
             });
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -149,14 +147,14 @@ public class ApproveManagerCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene voucherPageScene = VoucherFormVoucherPageScene.builder().build();
-            List<VoucherPage> voucherPageList = util.collectBeanList(voucherPageScene, VoucherPage.class);
+            List<VoucherPage> voucherPageList = util.toJavaObjectList(voucherPageScene, VoucherPage.class, SupporterUtil.SIZE);
             voucherPageList.forEach(voucherPage -> {
                 CommonUtil.valueView(voucherPage.getVoucherName());
                 VoucherDetailBean voucherDetail = util.getVoucherDetail(voucherPage.getVoucherId());
                 String cost = voucherDetail.getCost();
                 String voucherName = voucherPage.getVoucherName();
                 IScene applyPageScene = ApplyPageScene.builder().name(voucherName).build();
-                List<ApplyPageBean> applyPageList = util.collectBeanList(applyPageScene, ApplyPageBean.class);
+                List<ApplyPageBean> applyPageList = util.toJavaObjectList(applyPageScene, ApplyPageBean.class);
                 applyPageList.stream().filter(applyPage -> applyPage.getName().equals(voucherName)).map(ApplyPageBean::getPrice).forEach(price -> CommonUtil.checkResultPlus(voucherName + " 成本", cost, "审批列表成本单价", price));
                 CommonUtil.logger(voucherName);
             });
@@ -174,7 +172,7 @@ public class ApproveManagerCase extends TestCaseCommon implements TestCaseStd {
         try {
             List<Long> totalLost = Arrays.stream(VoucherApprovalStatusEnum.values()).map(e -> ApplyPageScene.builder().status(e.getId()).build().invoke(visitor).getLong("total")).collect(Collectors.toList());
             IScene scene = ApplyApprovalInfoScene.builder().build();
-            ApplyApprovalInfoBean applyApprovalInfoBean = util.collectBean(scene, ApplyApprovalInfoBean.class);
+            ApplyApprovalInfoBean applyApprovalInfoBean = util.toJavaObject(scene, ApplyApprovalInfoBean.class);
             CommonUtil.checkResultPlus(VoucherApprovalStatusEnum.AUDITING.getName() + " 在优惠券审批页数量", totalLost.get(VoucherApprovalStatusEnum.AUDITING.getId()), "在审批数据统数量", applyApprovalInfoBean.getWaitApproval());
             CommonUtil.checkResultPlus(VoucherApprovalStatusEnum.AGREE.getName() + " 在优惠券审批页数量", totalLost.get(VoucherApprovalStatusEnum.AGREE.getId()), "在审批数据统数量", applyApprovalInfoBean.getPassApproval());
             CommonUtil.checkResultPlus(VoucherApprovalStatusEnum.REFUSAL.getName() + " 在优惠券审批页数量", totalLost.get(VoucherApprovalStatusEnum.REFUSAL.getId()), "在审批数据统数量", applyApprovalInfoBean.getFailApproval());
@@ -200,8 +198,8 @@ public class ApproveManagerCase extends TestCaseCommon implements TestCaseStd {
             Long refusalTotal = ApplyPageScene.builder().status(VoucherApprovalStatusEnum.REFUSAL.getId()).build().invoke(visitor).getLong("total");
             Long recallTotal = ApplyPageScene.builder().status(VoucherApprovalStatusEnum.RECALL.getId()).build().invoke(visitor).getLong("total");
             Preconditions.checkArgument(wait.equals(auditingTotal), "审核数据接口待审核卡券数：" + wait + " 按照待审核搜索列表数：" + auditingTotal);
-            Preconditions.checkArgument(passed.equals(agreeTotal), "审核数据接口审核通过卡券数：" + wait + " 按照审核通过搜索列表数：" + agreeTotal);
-            Preconditions.checkArgument(failed.equals(refusalTotal), "审核数据接口审核未通过卡券数：" + wait + " 按照审核未通过搜索列表数：" + refusalTotal);
+            Preconditions.checkArgument(passed.equals(agreeTotal), "审核数据接口审核通过卡券数：" + passed + " 按照审核通过搜索列表数：" + agreeTotal);
+            Preconditions.checkArgument(failed.equals(refusalTotal), "审核数据接口审核未通过卡券数：" + failed + " 按照审核未通过搜索列表数：" + refusalTotal);
             Preconditions.checkArgument(total == (auditingTotal + agreeTotal + refusalTotal + recallTotal), " 审核数据接口全部审批卡券数：" + total + " 列表四种状态总数：" + (auditingTotal + agreeTotal + refusalTotal + recallTotal));
             Preconditions.checkArgument(total >= (wait + failed + passed), "审核数据接口全部审批卡券数：" + total + " 审核数据接口三种状态总数：" + (wait + failed + passed));
             Preconditions.checkArgument((wait + failed + passed) == (auditingTotal + agreeTotal + refusalTotal), "审核数据接口三种状态总数：" + (wait + failed + passed) + " 列表三种状态总数：" + (auditingTotal + agreeTotal + refusalTotal));
@@ -292,30 +290,30 @@ public class ApproveManagerCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene applyApprovalInfoScene = ApplyApprovalInfoScene.builder().build();
-            ApplyApprovalInfoBean applyApprovalInfoBean = util.collectBean(applyApprovalInfoScene, ApplyApprovalInfoBean.class);
+            ApplyApprovalInfoBean applyApprovalInfoBean = util.toJavaObject(applyApprovalInfoScene, ApplyApprovalInfoBean.class);
             //创建2个待审批数据
             Arrays.stream(VoucherTypeEnum.values()).collect(Collectors.toList()).subList(0, 2).forEach(e -> util.createVoucher(1, e));
             IScene applyPageScene = ApplyPageScene.builder().status(ApplyStatusEnum.AUDITING.getId()).build();
-            List<ApplyPageBean> applyPageBeanList = util.collectBeanList(applyPageScene, ApplyPageBean.class).subList(0, 2);
+            List<ApplyPageBean> applyPageBeanList = util.toJavaObjectList(applyPageScene, ApplyPageBean.class, SupporterUtil.SIZE).subList(0, 2);
             List<Long> applyIdList = applyPageBeanList.stream().map(ApplyPageBean::getId).collect(Collectors.toList());
             List<Long> voucherIdList = applyPageBeanList.stream().map(ApplyPageBean::getVoucherId).collect(Collectors.toList());
             //批量审批通过
             ApplyBatchApprovalScene.builder().ids(applyIdList).status(ApplyStatusEnum.AGREE.getId()).build().invoke(visitor);
             //审批通过后状态
             applyIdList.forEach(applyId -> {
-                ApplyPageBean applyPageBean = util.collectBean(ApplyPageScene.builder().build(), ApplyPageBean.class, "id", applyId);
+                ApplyPageBean applyPageBean = util.toJavaObject(ApplyPageScene.builder().build(), ApplyPageBean.class, "id", applyId);
                 CommonUtil.checkResult("卡券的状态", ApplyStatusEnum.AGREE.getName(), applyPageBean.getStatusName());
                 CommonUtil.checkResult("卡券的状态", ApplyStatusEnum.AGREE.name(), applyPageBean.getStatus());
             });
             //卡券状态
             IScene scene = VoucherFormVoucherPageScene.builder().build();
             voucherIdList.forEach(voucherId -> {
-                VoucherFormVoucherPageBean voucherFormVoucherPageBean = util.collectBean(scene, VoucherFormVoucherPageBean.class, "voucher_id", voucherId);
+                VoucherFormVoucherPageBean voucherFormVoucherPageBean = util.toJavaObject(scene, VoucherFormVoucherPageBean.class, "voucher_id", voucherId);
                 CommonUtil.checkResult("卡券" + voucherFormVoucherPageBean.getVoucherName() + "的状态", VoucherStatusEnum.WORKING.getName(), voucherFormVoucherPageBean.getVoucherStatusName());
                 CommonUtil.checkResult("卡券" + voucherFormVoucherPageBean.getVoucherName() + "的状态", VoucherStatusEnum.WORKING.name(), voucherFormVoucherPageBean.getVoucherStatus());
             });
             //审批数据
-            ApplyApprovalInfoBean newApplyApprovalInfoBean = util.collectBean(applyApprovalInfoScene, ApplyApprovalInfoBean.class);
+            ApplyApprovalInfoBean newApplyApprovalInfoBean = util.toJavaObject(applyApprovalInfoScene, ApplyApprovalInfoBean.class);
             CommonUtil.checkResult("待审核卡券的数量", applyApprovalInfoBean.getWaitApproval(), newApplyApprovalInfoBean.getWaitApproval());
             CommonUtil.checkResult("已通过卡券的数量", applyApprovalInfoBean.getPassApproval() + voucherIdList.size(), newApplyApprovalInfoBean.getPassApproval());
         } catch (Exception | AssertionError e) {
@@ -331,11 +329,11 @@ public class ApproveManagerCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene applyApprovalInfoScene = ApplyApprovalInfoScene.builder().build();
-            ApplyApprovalInfoBean applyApprovalInfoBean = util.collectBean(applyApprovalInfoScene, ApplyApprovalInfoBean.class);
+            ApplyApprovalInfoBean applyApprovalInfoBean = util.toJavaObject(applyApprovalInfoScene, ApplyApprovalInfoBean.class);
             //创建2个待审批数据
             Arrays.stream(VoucherTypeEnum.values()).collect(Collectors.toList()).subList(0, 2).forEach(e -> util.createVoucher(1, e));
             IScene applyPageScene = ApplyPageScene.builder().status(ApplyStatusEnum.AUDITING.getId()).build();
-            List<ApplyPageBean> applyPageBeanList = util.collectBeanList(applyPageScene, ApplyPageBean.class).subList(0, 2);
+            List<ApplyPageBean> applyPageBeanList = util.toJavaObjectList(applyPageScene, ApplyPageBean.class, SupporterUtil.SIZE).subList(0, 2);
             List<Long> applyIdList = applyPageBeanList.stream().map(ApplyPageBean::getId).collect(Collectors.toList());
             List<Long> voucherIdList = applyPageBeanList.stream().map(ApplyPageBean::getVoucherId).collect(Collectors.toList());
             //批量审批不通过
@@ -343,19 +341,19 @@ public class ApproveManagerCase extends TestCaseCommon implements TestCaseStd {
             //审批不通过后状态
             applyIdList.forEach(applyId -> {
                 IScene scene = ApplyPageScene.builder().status(ApplyStatusEnum.REFUSAL.getId()).build();
-                ApplyPageBean applyPageBean = util.collectBean(scene, ApplyPageBean.class, "id", applyId);
+                ApplyPageBean applyPageBean = util.toJavaObject(scene, ApplyPageBean.class, "id", applyId);
                 CommonUtil.checkResult("卡券的状态", ApplyStatusEnum.REFUSAL.getName(), applyPageBean.getStatusName());
                 CommonUtil.checkResult("卡券的状态", ApplyStatusEnum.REFUSAL.name(), applyPageBean.getStatus());
             });
             //卡券状态
             IScene scene = VoucherFormVoucherPageScene.builder().build();
             voucherIdList.forEach(voucherId -> {
-                VoucherFormVoucherPageBean voucherFormVoucherPageBean = util.collectBean(scene, VoucherFormVoucherPageBean.class, "voucher_id", voucherId);
+                VoucherFormVoucherPageBean voucherFormVoucherPageBean = util.toJavaObject(scene, VoucherFormVoucherPageBean.class, "voucher_id", voucherId);
                 CommonUtil.checkResult("卡券" + voucherFormVoucherPageBean.getVoucherName() + "的状态", VoucherStatusEnum.REJECT.getName(), voucherFormVoucherPageBean.getVoucherStatusName());
                 CommonUtil.checkResult("卡券" + voucherFormVoucherPageBean.getVoucherName() + "的状态", VoucherStatusEnum.REJECT.name(), voucherFormVoucherPageBean.getVoucherStatus());
             });
             //审批数据
-            ApplyApprovalInfoBean newApplyApprovalInfoBean = util.collectBean(applyApprovalInfoScene, ApplyApprovalInfoBean.class);
+            ApplyApprovalInfoBean newApplyApprovalInfoBean = util.toJavaObject(applyApprovalInfoScene, ApplyApprovalInfoBean.class);
             CommonUtil.checkResult("待审核卡券的数量", applyApprovalInfoBean.getWaitApproval(), newApplyApprovalInfoBean.getWaitApproval());
             CommonUtil.checkResult("已拒绝卡券的数量", applyApprovalInfoBean.getFailApproval() + voucherIdList.size(), newApplyApprovalInfoBean.getFailApproval());
         } catch (Exception | AssertionError e) {

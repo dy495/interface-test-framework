@@ -109,7 +109,7 @@ public class ContentOperationCase extends TestCaseCommon implements TestCaseStd 
         try {
             int num = ArticleList.builder().build().invoke(visitor).getJSONArray("list").size();
             IScene articlePageScene = ArticlePageScene.builder().build();
-            int articlePageListSize = (int) util.collectBeanList(articlePageScene, ArticlePageBean.class).stream().filter(e -> e.getStatusName().equals(ArticleStatusEnum.SHOW.getTypeName())).count();
+            int articlePageListSize = (int) util.toJavaObjectList(articlePageScene, ArticlePageBean.class).stream().filter(e -> e.getStatusName().equals(ArticleStatusEnum.SHOW.getTypeName())).count();
             int passedSTotal = ActivityManageListScene.builder().status(ActivityStatusEnum.PASSED.getId()).build().invoke(visitor).getInteger("total");
             int finishTotal = ActivityManageListScene.builder().status(ActivityStatusEnum.FINISH.getId()).build().invoke(visitor).getInteger("total");
             CommonUtil.checkResult("跳转活动/文章的条数", passedSTotal + finishTotal + articlePageListSize, num);

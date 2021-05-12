@@ -809,17 +809,19 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
     public void activityApproval14() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            //获取活动审批的数据
-            JSONObject response = businessUtil.getActivityApprovalDate();
-            //待审批活动
-            int waitBefore = response.getInteger("wait");
-            //通过的活动
-            int passedBefore = response.getInteger("passed");
-            //获取进行中的活动存在待审批ID合集
-            List<Long> ids = businessUtil.getActivityWait();
-            if (ids.size() > 0) {
+            //创建待审批的活动
+            Long id= businessUtil.createRecruitActivityApproval();
+            System.err.println(id);
+            if (id > 0) {
+                //获取活动审批的数据
+                JSONObject response = businessUtil.getActivityApprovalDate();
+                //待审批活动
+                int waitBefore = response.getInteger("wait");
+                //通过的活动
+                int passedBefore = response.getInteger("passed");
                 //审批通过其中一条
-                businessUtil.getApprovalPassed(ids.get(0));
+                String message=businessUtil.getApprovalPassed(id);
+                System.err.println("--------------"+message);
                 //获取审批后活动审批的数据
                 JSONObject response1 = businessUtil.getActivityApprovalDate();
                 //待审批活动
@@ -827,7 +829,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                 //通过的活动
                 int passedAfter = response1.getInteger("passed");
                 //获取活动审批后的状态
-                int status = businessUtil.getActivityStatus(ids.get(0));
+                int status = businessUtil.getActivityStatus(id);
                 Preconditions.checkArgument(waitAfter == (waitBefore - 1), "活动审批数后的待审批数量：" + waitAfter + "活动审批数前的待审批数量：" + waitBefore);
                 Preconditions.checkArgument(passedAfter == (passedBefore + 1), "活动审批数后的审批通过数量：" + passedAfter + "活动审批数前的审批通过数量：" + passedBefore);
                 Preconditions.checkArgument(status == ActivityStatusEnum.WAITING_START.getId()||status == ActivityStatusEnum.PASSED.getId(), "活动审批数后活动的状态应为【进行中】或者【未开始】，此时为为：" + status);
@@ -1065,7 +1067,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             List<String> picList = new ArrayList<>();
             SupporterUtil supporterUtil = new SupporterUtil(visitor);
             PublicParameter pp = new PublicParameter();
-            picList.add(businessUtil.getPicturePath());
+            picList.add(businessUtil.getPicPath());
             //填写报名所需要信息
             List<Boolean> isShow = new ArrayList<>();
             isShow.add(true);
@@ -1235,7 +1237,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             List<String> picList = new ArrayList<>();
             SupporterUtil supporterUtil = new SupporterUtil(visitor);
             PublicParameter pp = new PublicParameter();
-            picList.add(businessUtil.getPicturePath());
+            picList.add(businessUtil.getPicPath());
             //填写报名所需要信息
             List<Boolean> isShow = new ArrayList<>();
             isShow.add(true);
@@ -1824,7 +1826,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             SupporterUtil supporterUtil = new SupporterUtil(visitor);
             PublicParameter pp = new PublicParameter();
             List<String> picList = new ArrayList<>();
-            picList.add(businessUtil.getPicturePath());
+            picList.add(businessUtil.getPicPath());
             // 创建被邀请者和分享者的信息字段
             JSONObject invitedVoucher = businessUtil.getInvitedVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherAllowUseInventory(voucherId)), 2, "", "", 1);
             JSONObject shareVoucher = businessUtil.getShareVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherAllowUseInventory(voucherId)), 2, "", "", 1);

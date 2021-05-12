@@ -1,25 +1,29 @@
 package com.haisheng.framework.testng.bigScreen.fengkongdaily.util;
 
+import com.google.inject.internal.util.$SourceProvider;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 
 public class PublicParam {
     DateTimeUtil dt =new DateTimeUtil();
-
     public int page = 1;
     public int size = 50;
+    //日常的账号
     public String userName="yuexiu@test.com";
     public String password="f5b3e737510f31b88eb2d4b5d0cd2fb4";
-    public String ownerPhone="1337316"+(int) (Math.random() * 10000);
+    //线上的账号
+    public String userNameOnline="salesdemo@winsense.ai";
+    public String passwordOnline="c216d5045fbeb18bcca830c235e7f3c8";
+    public String ownerPhone="1337316"+fouNumberCheck();
     public long shop_id_01 = 43072l;
     //黑名单风控名字
     public String blackName="黑名单风控规则"+(int) (Math.random() * 10000);
     //黑名单风控名字异常21个字
-    public String blackNameException="12345678901234567901";
+    public String blackNameException="1234567890123456790"+(int) (Math.random() * 10000);
     //收银风控名字
     public String cashierName="收银风控规则"+(int) (Math.random() * 10000);
     //重点观察人员风控名字  观察
-    public String observeName="收银风控规则"+(int) (Math.random() * 10000);
+    public String observeName="重点观察人员规则"+(int) (Math.random() * 10000);
     //黑名单风控名字
     public String blackAlarmName="黑名单告警风控规则"+(int) (Math.random() * 10000);
     //收银风控名字
@@ -68,4 +72,17 @@ public class PublicParam {
     public String filePath2 = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/xia.png";
 //    public String filePath2 = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/lv.jpg";
 //    public String filePath2 = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/guoliya.jpg";
+
+
+    /**
+     * 判断四位数
+     */
+    public String fouNumberCheck(){
+        String number=CommonUtil.getRandom(4);
+        if(number.length()!=4){
+            number=CommonUtil.getRandom(4);
+        }
+        String carNumber= number.length()!=4?fouNumberCheck():number;
+        return carNumber;
+    }
 }

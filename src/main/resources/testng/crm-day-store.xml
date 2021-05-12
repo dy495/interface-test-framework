@@ -9,8 +9,8 @@
 
     <test name="daily-rgn" preserve-order="true">
         <classes>
-            <class name="com.haisheng.framework.testng.bigScreen.crm.wm.datastore.A"/>
-            <class name="com.haisheng.framework.testng.bigScreen.crm.wm.datastore.AOnline"/>
+            <class name="com.haisheng.framework.testng.bigScreen.crm.wm.EverydayData"/>
+            <class name="com.haisheng.framework.testng.bigScreen.crm.wm.EverydayDataOnline"/>
         </classes>
     </test>
 </suite>

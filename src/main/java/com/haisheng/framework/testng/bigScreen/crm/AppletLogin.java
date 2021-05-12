@@ -29,6 +29,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
     public void initial() {
         logger.debug("before class initial");
         commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
+        commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
         commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_DAILY_SERVICE.getId();
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.CRM_DAILY_TEST.getJobName());
@@ -59,7 +60,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         commonConfig.pushRd = null;
     }
 
-    @Test(dataProvider = "BSJ_APPLET_TOKENS_DAILY", dataProviderClass = AppletLogin.class)
+    @Test(dataProvider = "BSJ_APPLET_TOKENS_DAILY", dataProviderClass = AppletLogin.class, enabled = false)
     public void BSJ_applet_daily(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -79,7 +80,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(dataProvider = "BSJ_APPLET_TOKENS_ONLINE", dataProviderClass = AppletLogin.class)
+    @Test(dataProvider = "BSJ_APPLET_TOKENS_ONLINE", dataProviderClass = AppletLogin.class, enabled = false)
     public void BSJ_applet_online(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {

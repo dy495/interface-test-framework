@@ -165,7 +165,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
         try {
             Boolean flag = false;
             Long id = 0L;
-//            //获取一个卡券
+            //获取一个卡券
             Long voucherId = businessUtil.getVoucherId();
             //创建招募活动
             Long activityId = businessUtil.createRecruitActivity(voucherId, true, 0, true);
@@ -229,7 +229,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * 创建1个招募活动和个裂变活动
+     * 创建1个招募活动和1个裂变活动
      */
     @Test
     public void preCreateSomeActivity() {
@@ -1106,7 +1106,7 @@ public void justTry(){
             List<String> picList = new ArrayList<>();
             SupporterUtil supporterUtil = new SupporterUtil(visitor);
             PublicParameter pp = new PublicParameter();
-            picList.add(businessUtil.getPicturePath());
+            picList.add(businessUtil.getPicPath());
             //填写报名所需要信息
             List<Boolean> isShow = new ArrayList<>();
             isShow.add(true);
@@ -1276,7 +1276,7 @@ public void justTry(){
             List<String> picList = new ArrayList<>();
             SupporterUtil supporterUtil = new SupporterUtil(visitor);
             PublicParameter pp = new PublicParameter();
-            picList.add(businessUtil.getPicturePath());
+            picList.add(businessUtil.getPicPath());
             //填写报名所需要信息
             List<Boolean> isShow = new ArrayList<>();
             isShow.add(true);
@@ -1819,7 +1819,7 @@ public void justTry(){
             SupporterUtil supporterUtil = new SupporterUtil(visitor);
             PublicParameter pp = new PublicParameter();
             List<String> picList = new ArrayList<>();
-            picList.add(businessUtil.getPicturePath());
+            picList.add(businessUtil.getPicPath());
             // 创建被邀请者和分享者的信息字段
             JSONObject invitedVoucher = businessUtil.getInvitedVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherAllowUseInventory(voucherId)), 2, "", "", 1);
             JSONObject shareVoucher = businessUtil.getShareVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherAllowUseInventory(voucherId)), 2, "", "", 1);
@@ -1938,7 +1938,7 @@ public void justTry(){
             SupporterUtil supporterUtil = new SupporterUtil(visitor);
             PublicParameter pp = new PublicParameter();
             List<String> picList = new ArrayList<>();
-            picList.add(businessUtil.getPicturePath());
+            picList.add(businessUtil.getPicPath());
             // 创建被邀请者和分享者的信息字段
             JSONObject invitedVoucher = businessUtil.getInvitedVoucher(voucherId, 1,String.valueOf(Math.min(businessUtil.getVoucherAllowUseInventory(voucherId),2)), 2, "", "", 1);
             JSONObject shareVoucher = businessUtil.getShareVoucher(voucherId, 1, String.valueOf(Math.min(businessUtil.getVoucherAllowUseInventory(voucherId),2)), 2, "", "", 1);
@@ -4692,15 +4692,16 @@ public void justTry(){
             Boolean flag=false;
             JSONObject lastValue=null;
             JSONArray list=null;
-            //获取进行中活动的ID
-            List<Long> ids = businessUtil.getContentMarketingWorking();
-            System.err.println("----ids:"+ids.get(0));
+            //创建内容营销活动
+            Long id = businessUtil.getContentMarketingAdd();
+            //审批通过
+            businessUtil.getApprovalPassed(id);
             //获取进行中的活动名称
-            String title=businessUtil.getActivityTitle(ids.get(0));
+            String title=businessUtil.getActivityTitle(id);
             //进行中的活动下架
-            String message=businessUtil.getContentMarketingOffLine(ids.get(0));
+            String message=businessUtil.getContentMarketingOffLine(id);
             //获取活动的状态
-            int statusOffLine=businessUtil.getActivityStatus(ids.get(0));
+            int statusOffLine=businessUtil.getActivityStatus(id);
             //登录小程序
             user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             //获取小程序推荐列表
@@ -4723,11 +4724,11 @@ public void justTry(){
             Preconditions.checkArgument(!flag,"小程序中还是能够查看到此活动");
             jc.pcLogin(pp.phone1,pp.password);
             //活动上架
-            String message1=businessUtil.getContentMarketingOnline(ids.get(0));
+            String message1=businessUtil.getContentMarketingOnline(id);
             //获取活动的状态
-            int statusOnLine=businessUtil.getActivityStatus(ids.get(0));
+            int statusOnLine=businessUtil.getActivityStatus(id);
             //置顶此活动
-            IScene scene=ActivityManageTopScene.builder().id(ids.get(0)).build();
+            IScene scene=ActivityManageTopScene.builder().id(id).build();
             visitor.invokeApi(scene,false).getString("message");
             //小程序中第一个为此活动
             user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
@@ -4875,15 +4876,16 @@ public void justTry(){
             Boolean flag=false;
             JSONObject lastValue=null;
             JSONArray list=null;
-            //获取未开始活动的ID
-            List<Long> ids = businessUtil.getContentMarketingWaitingStar();
-            System.err.println("----ids:"+ids.get(0));
+            //创建活动
+            Long id = businessUtil.getContentMarketingNotStar();
+            //审批活动
+            businessUtil.getApprovalPassed(id);
             //获取进行中的活动名称
-            String title=businessUtil.getActivityTitle(ids.get(0));
+            String title=businessUtil.getActivityTitle(id);
             //进行中的活动下架
-            String message=businessUtil.getContentMarketingOffLine(ids.get(0));
+            String message=businessUtil.getContentMarketingOffLine(id);
             //获取活动的状态
-            int statusOffLine=businessUtil.getActivityStatus(ids.get(0));
+            int statusOffLine=businessUtil.getActivityStatus(id);
             //登录小程序
             user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             //获取小程序推荐列表
@@ -4903,11 +4905,11 @@ public void justTry(){
             Preconditions.checkArgument(!flag,"小程序中还是能够查看到此活动");
             jc.pcLogin(pp.phone1,pp.password);
             //活动上架
-            String message1=businessUtil.getContentMarketingOnline(ids.get(0));
+            String message1=businessUtil.getContentMarketingOnline(id);
             //获取活动的状态
-            int statusOnLine=businessUtil.getActivityStatus(ids.get(0));
+            int statusOnLine=businessUtil.getActivityStatus(id);
             //置顶此活动
-            IScene scene=ActivityManageTopScene.builder().id(ids.get(0)).build();
+            IScene scene=ActivityManageTopScene.builder().id(id).build();
             visitor.invokeApi(scene,false).getString("message");
             //小程序中第一个为此活动
             user.loginApplet(EnumAppletToken.JC_GLY_DAILY);

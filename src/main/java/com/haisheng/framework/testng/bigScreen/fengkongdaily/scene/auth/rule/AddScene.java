@@ -41,7 +41,7 @@ public class AddScene extends BaseScene {
      * 是否必填 true
      * 版本 -
      */
-    private final String businessType;
+    private final List<String> businessType;
 
 
     @Override
@@ -50,7 +50,7 @@ public class AddScene extends BaseScene {
         object.put("name", name);
         object.put("rule", rule);
         object.put("shop_ids", shopIds);
-        object.put("business_type", businessType);
+        object.put("business_type_list", businessType);
         return object;
     }
 
