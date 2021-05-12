@@ -2336,7 +2336,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
                         String roleId=list.getJSONObject(i).getJSONArray("role_list").getJSONObject(0).getString("role_id");
                         String shopId=list.getJSONObject(i).getJSONArray("shop_list").getJSONObject(0).getString("shop_id");
                         String status=list.getJSONObject(i).getString("status");
-                        Preconditions.checkArgument(createTime!=null&&id!=null&&name!=null&&createTime!=null&&phone!=null&&status!=null&&roleId!=null&&shopId!=null,"第"+page+"页"+"第"+i+"行的列表项存在为空的值");
+                        Preconditions.checkArgument(createTime!=null&&id!=null&&name!=null&&phone!=null&&status!=null&&roleId!=null&&shopId!=null,"第"+page+"页"+"第"+i+"行的列表项存在为空的值");
                     }
                 }
             }
