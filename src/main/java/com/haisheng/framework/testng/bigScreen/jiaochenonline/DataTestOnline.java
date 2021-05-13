@@ -68,7 +68,7 @@ public class DataTestOnline extends TestCaseCommon implements TestCaseStd {
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-        user.loginPc(ALL_AUTHORITY);
+//        user.loginPc(ALL_AUTHORITY);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);

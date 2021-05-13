@@ -4623,22 +4623,22 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      * @description :V3.1维修预约记录-筛选栏单项查询
      * @date :2021/3/26
      **/
-    @Test(dataProvider = "SELECT_appointmentRecordFilter", dataProviderClass = Constant.class,enabled = false)
+    @Test(dataProvider = "SELECT_appointmentRecordFilter", dataProviderClass = Constant.class,enabled = true)
     public void maintainAppointmentRecordOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject respond = jc.appointmentRecordManage("", "1", "10", "MAINTAIN","", "");
+            JSONObject respond = jc.appointmentRecordManage("", "1", "10", "REPAIR","", "");
             String confirmStatus = respond.getJSONArray("list").getJSONObject(0).getString("appointment_status_name");
             String status = messageFormCustomerTurnMethod("MAINTAIN_CONFIRM_STATUS", confirmStatus);
             String result = null;
             if (respond.getJSONArray("list").size() > 0) {
                 if (pram.equals("confirm_status")) {
-                    JSONObject respond1 = jc.appointmentRecordManage("", "1", "10", "MAINTAIN",pram, status);
+                    JSONObject respond1 = jc.appointmentRecordManage("", "1", "10", "REPAIR",pram, status);
                     int pages = respond1.getInteger("pages")>10?10:respond1.getInteger("pages");
                     for (int page = 1; page <= pages; page++) {
-                        JSONArray list = jc.appointmentRecordManage("", String.valueOf(page), "10", "MAINTAIN",pram, status).getJSONArray("list");
+                        JSONArray list = jc.appointmentRecordManage("", String.valueOf(page), "10", "REPAIR",pram, status).getJSONArray("list");
                         for (int i = 0; i < list.size(); i++) {
-                            String Flag = jc.appointmentRecordManage("", String.valueOf(page), String.valueOf(list.size()), pram, status).getJSONArray("list").getJSONObject(i).getString(output);
+                            String Flag = jc.appointmentRecordManage("", String.valueOf(page), String.valueOf(list.size()),"REPAIR", pram, status).getJSONArray("list").getJSONObject(i).getString(output);
                             Preconditions.checkArgument(Flag.contains(confirmStatus), "预约记录管理按" + confirmStatus + "查询，结果错误" + Flag);
                         }
                     }
@@ -4646,10 +4646,10 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     result = respond.getJSONArray("list").getJSONObject(0).getString(output);
                     String saleId=businessUtil.authNameTransformId(result,"MAINTAIN_DISTRIBUTION");
                     String name=businessUtil.getAuthNameExist(result,"MAINTAIN_DISTRIBUTION");
-                    JSONObject respond1 = jc.appointmentRecordManage("", "1", "10","MAINTAIN", pram, saleId);
+                    JSONObject respond1 = jc.appointmentRecordManage("", "1", "10","REPAIR", pram, saleId);
                     int pages = respond1.getInteger("pages")>10?10:respond1.getInteger("pages");
                     for (int page = 1; page <= pages; page++) {
-                        JSONArray list = jc.appointmentRecordManage("", String.valueOf(page), "10","MAINTAIN", pram, saleId).getJSONArray("list");
+                        JSONArray list = jc.appointmentRecordManage("", String.valueOf(page), "10","REPAIR", pram, saleId).getJSONArray("list");
                         for (int i = 0; i < list.size(); i++) {
                             String Flag=list.getJSONObject(i).getString(output);
                             Preconditions.checkArgument(Flag.contains(name), "预约记录管理按" + name + "查询，结果错误" + Flag);
@@ -4657,10 +4657,10 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     }
                 }else {
                     result = respond.getJSONArray("list").getJSONObject(0).getString(output);
-                    JSONObject respond1 = jc.appointmentRecordManage("", "1", "10", "MAINTAIN",pram, result);
+                    JSONObject respond1 = jc.appointmentRecordManage("", "1", "10", "REPAIR",pram, result);
                     int pages = respond1.getInteger("pages")>10?10:respond1.getInteger("pages");
                     for (int page = 1; page <= pages; page++) {
-                        JSONArray list = jc.appointmentRecordManage("", String.valueOf(page), "10", "MAINTAIN",pram, result).getJSONArray("list");
+                        JSONArray list = jc.appointmentRecordManage("", String.valueOf(page), "10", "REPAIR",pram, result).getJSONArray("list");
                         for (int i = 0; i < list.size(); i++) {
                             String Flag=list.getJSONObject(i).getString(output);
                             Preconditions.checkArgument(Flag.contains(result), "预约记录管理按" + result + "查询，结果错误" + Flag);
@@ -4669,12 +4669,12 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                 }
 
             } else {
-                Preconditions.checkArgument(respond.getJSONArray("list") == null, "接待列表系统错误,请联系开发人员");
+                Preconditions.checkArgument(respond.getJSONArray("list") == null, "维修预约记录列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("预约记录单项查询，结果校验");
+            saveData("预约维修记录单项查询，结果校验");
         }
     }
 

@@ -184,9 +184,9 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             String title=businessUtil.getRecruitActivityDetailDate1(activityId).getString("title");
             System.err.println("----------title:"+title);
             //登录小程序
-            user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
+            user.loginApplet(EnumAppletToken.JC_LXQ_ONLINE);
             //小程序报名此活动
-            businessUtil.activityRegisterApplet(activityId, "13373166806", "郭丽雅", 2, "1513814362@qq.com", "22", "女","其他");
+            businessUtil.activityRegisterApplet1(activityId, "13436941018", "雪晴", 2, "1513814362@qq.com", "22", "女","其他");
             //登录PC
             user.loginPc(ADMINISTRATOR);
             //审批通过小程序活动报名
@@ -197,7 +197,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             String voucherCode = vList.get(0).getVoucherCode();
             System.err.println("-----获取卡券码-----" + voucherCode);
             //登录小程序
-            user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
+            user.loginApplet(EnumAppletToken.JC_LXQ_ONLINE);
             System.err.println("AD:"+activityId+"      title:"+title);
             //查询是否获得此卡券(通过卡券码查询，看看能否有此卡券的返回值)
             AppletVoucherInfo voucher = supporterUtil.getAppletVoucherInfo(voucherCode);
@@ -216,7 +216,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             String activityStatus = businessUtil.appointmentActivityStatus(id);
             System.err.println(title+"-----------"+activityStatus);
 //            //获取【我的卡券】列表条数
-            int numAfter = jc.appletVoucherList(null, "GENERAL", 100).getJSONArray("list").size();
+//            int numAfter = jc.appletVoucherList(null, "GENERAL", 100).getJSONArray("list").size();
             Preconditions.checkArgument(status == ActivityStatusEnum.PENDING.getId(), "待审核的活动状态为：" + status);
             Preconditions.checkArgument(statusPassed == ActivityStatusEnum.PASSED.getId(), "审核通过的活动状态为：" + statusPassed);
             Preconditions.checkArgument(voucher != null, "小程序报名通过没有获得此卡券");
@@ -233,9 +233,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
     @Test(enabled = false)
     public void justTry(){
         try {
-            user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
-          //小程序报名活动(报名信息不填写)
-            businessUtil.activityRegisterApplet(2122L,"","",1,"","","","");
+
         }catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -657,9 +655,17 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
     public void activityRegisterDate10() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            List<Long> ids = new ArrayList<>();
             int registerNum = 0;
-            //获取进行中的活动存在待审批数量的ID
-            List<Long> ids = businessUtil.getRecruitActivityWorkingApproval();
+            //创建活动
+            Long id1 = businessUtil.createRecruitActivityApproval();
+            //审批活动
+            businessUtil.getApprovalPassed(id1);
+            //小程序报名
+            user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
+            businessUtil.activityRegisterApplet(id1,"13373166806","郭丽雅",2,"1513814362@qq.com","22","女","其他");
+            jc.pcLogin(pp.phone, pp.password);
+            ids.add(id1);
             if(ids.size()>0){
                 System.err.println("ids:"+ids);
                 sleep(3);
@@ -4866,15 +4872,17 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Boolean flag=false;
             JSONObject lastValue=null;
             JSONArray list=null;
-            //获取未开始活动的ID
-            List<Long> ids = businessUtil.getContentMarketingWaitingStar();
-            System.err.println("----ids:"+ids.get(0));
+            //创建活动
+            Long id = businessUtil.getContentMarketingNotStar();
+            //审批活动
+            businessUtil.getApprovalPassed(id);
+            System.err.println("----ids:"+id);
             //获取进行中的活动名称
-            String title=businessUtil.getActivityTitle(ids.get(0));
+            String title=businessUtil.getActivityTitle(id);
             //进行中的活动下架
-            String message=businessUtil.getContentMarketingOffLine(ids.get(0));
+            String message=businessUtil.getContentMarketingOffLine(id);
             //获取活动的状态
-            int statusOffLine=businessUtil.getActivityStatus(ids.get(0));
+            int statusOffLine=businessUtil.getActivityStatus(id);
             //登录小程序
             user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
             //获取小程序推荐列表
@@ -4890,15 +4898,16 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                     }
                 }
             } while (list.size() == 10);
+            System.err.println(flag+"     title:"+title);
             Preconditions.checkArgument(message.equals("success")&&statusOffLine==ActivityStatusEnum.OFFLINE.getId(), "下架失败");
             Preconditions.checkArgument(!flag,"小程序中还是能够查看到此活动");
             jc.pcLogin(pp.phone,pp.password);
             //活动上架
-            String message1=businessUtil.getContentMarketingOnline(ids.get(0));
+            String message1=businessUtil.getContentMarketingOnline(id);
             //获取活动的状态
-            int statusOnLine=businessUtil.getActivityStatus(ids.get(0));
+            int statusOnLine=businessUtil.getActivityStatus(id);
             //置顶此活动
-            IScene scene=ActivityManageTopScene.builder().id(ids.get(0)).build();
+            IScene scene=ActivityManageTopScene.builder().id(id).build();
             visitor.invokeApi(scene,false).getString("message");
             //小程序中第一个为此活动
             user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
@@ -5246,15 +5255,17 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Boolean flag=false;
             JSONObject lastValue=null;
             JSONArray list=null;
-            //获取进行中活动的ID
-            List<Long> ids = businessUtil.getRecruitActivityWorking();
-            System.err.println("----ids:"+ids.get(0));
+            //创建活动
+            Long id = businessUtil.createRecruitActivityApproval();
+            //审批活动
+            businessUtil.getApprovalPassed(id);
+            System.err.println("----ids:"+id);
             //获取进行中的活动名称
-            String title=businessUtil.getActivityTitle(ids.get(0));
+            String title=businessUtil.getActivityTitle(id);
             //进行中的活动下架
-            String message=businessUtil.getContentMarketingOffLine(ids.get(0));
+            String message=businessUtil.getContentMarketingOffLine(id);
             //获取活动的状态
-            int statusOffLine=businessUtil.getActivityStatus(ids.get(0));
+            int statusOffLine=businessUtil.getActivityStatus(id);
             //登录小程序
             user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
             //获取小程序推荐列表
@@ -5277,11 +5288,11 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(!flag,"小程序中还是能够查看到此活动");
             jc.pcLogin(pp.phone,pp.password);
             //活动上架
-            String message1=businessUtil.getContentMarketingOnline(ids.get(0));
+            String message1=businessUtil.getContentMarketingOnline(id);
             //获取活动的状态
-            int statusOnLine=businessUtil.getActivityStatus(ids.get(0));
+            int statusOnLine=businessUtil.getActivityStatus(id);
             //置顶此活动
-            IScene scene=ActivityManageTopScene.builder().id(ids.get(0)).build();
+            IScene scene=ActivityManageTopScene.builder().id(id).build();
             visitor.invokeApi(scene,false).getString("message");
             //小程序中第一个为此活动
             user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);

@@ -181,9 +181,9 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             String title=businessUtil.getRecruitActivityDetailDate1(activityId).getString("title");
             System.err.println("----------title:"+title);
             //登录小程序
-            user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+            user.loginApplet(EnumAppletToken.JC_LXQ_DAILY);
             //小程序报名此活动
-            businessUtil.activityRegisterApplet(activityId, "13373166806", "郭丽雅", 2, "1513814362@qq.com", "22", "女","其他",title);
+            businessUtil.activityRegisterApplet1(activityId, "13436941018", "雪晴", 2, "1513814362@qq.com", "22", "女","其他",title);
             //登录PC
             jc.pcLogin(pp.phone1, pp.password);
             //审批通过小程序活动报名
@@ -194,7 +194,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             String voucherCode = vList.get(0).getVoucherCode();
             System.err.println("-----获取卡券码-----" + voucherCode);
             //登录小程序
-            user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+            user.loginApplet(EnumAppletToken.JC_LXQ_DAILY);
             System.err.println("AD:"+activityId+"      title:"+title);
             //获取【我的卡券】列表条数
 //            int numBefore=jc.appletVoucherList(null,"GENERAL",100).getJSONArray("list").size();
