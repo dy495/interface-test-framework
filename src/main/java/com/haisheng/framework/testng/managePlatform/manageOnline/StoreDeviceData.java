@@ -68,7 +68,6 @@ public class StoreDeviceData extends TestCaseCommon implements TestCaseStd {
     public void deviceList() {
         logger.logCaseStart(caseResult.getCaseName());
         List<OnlineScopeDevice> onlineScopeDeviceList = new LinkedList<>();
-
         try {
             int total = store.store_manage(page,size,null,null,null,null,null).getInteger("total");
             int t = CommonUtil.getTurningPage(total, 50);
