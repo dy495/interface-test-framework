@@ -3,7 +3,6 @@ package com.haisheng.framework.testng.bigScreen.jiaochen;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.*;
@@ -295,7 +294,7 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     //预约管理 -> 预约看板
-    public JSONObject pcTimeTableList(String appointmentMonth,String type) {
+    public JSONObject pcTimeTableList(String appointmentMonth, String type) {
         String url = "/jiaochen/pc/appointment-manage/time-table/list";
         JSONObject object = new JSONObject();
         object.put("appointment_month", appointmentMonth);
@@ -477,7 +476,7 @@ public class ScenarioUtil extends TestCaseCommon {
 
 
     //保养配置修改
-    public JSONObject pcCarModelPriceEdit(String id, String price, String status, Boolean checkcode,String  type) {
+    public JSONObject pcCarModelPriceEdit(String id, String price, String status, Boolean checkcode, String type) {
         String url = "/jiaochen/pc/shop-style-model/manage/model/edit";
         JSONObject object = new JSONObject();
         object.put("id", id);
@@ -614,7 +613,7 @@ public class ScenarioUtil extends TestCaseCommon {
      */
     public JSONObject invokeApi(String path, JSONObject requestBody, boolean checkCode) {
         if (StringUtils.isEmpty(path)) {
-            throw new DataException("path不可为空");
+            throw new RuntimeException("path不可为空");
         }
         String request = JSON.toJSONString(requestBody);
         String result = null;
@@ -2161,7 +2160,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject appointmentRecordManage1(String shopId, String page, String size,String type, String pram, String result) {
+    public JSONObject appointmentRecordManage1(String shopId, String page, String size, String type, String pram, String result) {
         String url = "/jiaochen/pc/appointment-manage/appointment-record/appointment-page";
         JSONObject json = new JSONObject();
         json.put("shopId", shopId);
@@ -2179,7 +2178,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject appointmentRecordManage(String shopId, String page, String size,String type, String pram, String result) {
+    public JSONObject appointmentRecordManage(String shopId, String page, String size, String type, String pram, String result) {
         String url = "/jiaochen/pc/appointment-manage/appointment-record/appointment-page";
         JSONObject json = new JSONObject();
         json.put("shopId", shopId);
@@ -2217,7 +2216,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-12-16
      */
-    public JSONObject appointmentRecordTimeManage(String shopId, String page, String size,String type, String appointment_start, String appointment_end, String confirm_start, String confirm_end, String create_start, String create_end) {
+    public JSONObject appointmentRecordTimeManage(String shopId, String page, String size, String type, String appointment_start, String appointment_end, String confirm_start, String confirm_end, String create_start, String create_end) {
         String url = "/jiaochen/pc/appointment-manage/appointment-record/appointment-page";
         JSONObject json = new JSONObject();
         json.put("shopId", shopId);
@@ -2279,7 +2278,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject maintainFilterManage(String shopId, String page, String size, String type,String pram, String result) {
+    public JSONObject maintainFilterManage(String shopId, String page, String size, String type, String pram, String result) {
         String url = "/jiaochen/pc/shop-style-model/manage/model/page";
         JSONObject json = new JSONObject();
         json.put("shop_id", shopId);
@@ -2545,8 +2544,8 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     /**
-
-    /**
+     * /**
+     *
      * @description:套餐表单列表
      * @author: gly
      * @time: 2020-12-16
@@ -5619,7 +5618,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :PC评价列表
      * @date :2021/2/2
      **/
-    public JSONObject evaluatePage(String shopId, String page, String size,String evaluateType, String pram, String result) {
+    public JSONObject evaluatePage(String shopId, String page, String size, String evaluateType, String pram, String result) {
         String url = "/jiaochen/pc/manage/evaluate/page";
         JSONObject json = new JSONObject();
         json.put("page", page);
@@ -5636,7 +5635,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :PC评价列表
      * @date :2021/2/2
      **/
-    public JSONObject evaluatePage(String shopId, String page, String size,String evaluateType, String evaluateStart, String evaluateEnd, String sourceCreateStart, String sourceCreateEnd) {
+    public JSONObject evaluatePage(String shopId, String page, String size, String evaluateType, String evaluateStart, String evaluateEnd, String sourceCreateStart, String sourceCreateEnd) {
         String url = "/jiaochen/pc/manage/evaluate/page";
         JSONObject json = new JSONObject();
         json.put("page", page);
@@ -5983,7 +5982,7 @@ public class ScenarioUtil extends TestCaseCommon {
      *
      * @return
      */
-    public JSONObject saleList(Long shop_id,String type) {
+    public JSONObject saleList(Long shop_id, String type) {
         JSONObject json = new JSONObject();
         String url = "/jiaochen/pc/customer-manage/pre-sale-customer/sales-list";
         json.put("shop_id", shop_id);

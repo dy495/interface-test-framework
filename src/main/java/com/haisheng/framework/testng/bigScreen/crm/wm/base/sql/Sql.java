@@ -1,8 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.crm.wm.base.sql;
 
 import com.aliyun.openservices.shade.org.apache.commons.lang3.StringUtils;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.container.ContainerConstants;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.exception.SqlCreateException;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.util.ContainerConstants;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -10,9 +9,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * sql构建类
+ *
  * @author wangmin
  * @date 2021/1/11 13:36
- * @desc sql构建类
  */
 public class Sql {
 
@@ -99,7 +99,7 @@ public class Sql {
             StringBuilder fList = new StringBuilder();
             fList.append("select").append(blank);
             Arrays.stream(f).forEach(key -> fList.append(key).append(",").append(blank));
-            this.grammar = fList.toString().substring(0, fList.length() - 2) + blank;
+            this.grammar = fList.substring(0, fList.length() - 2) + blank;
             return this;
         }
 
@@ -133,20 +133,20 @@ public class Sql {
 
         public Sql end() {
             if (StringUtils.isEmpty(grammar)) {
-                throw new SqlCreateException("sql语句头为空");
+                throw new RuntimeException("sql语句头为空");
             }
             if (StringUtils.isEmpty(tableName)) {
-                throw new SqlCreateException("tableName为空");
+                throw new RuntimeException("tableName为空");
             }
             if (grammar.contains(ContainerConstants.INSERT)) {
                 if (StringUtils.isEmpty(fieldList)) {
-                    throw new SqlCreateException("field为空");
+                    throw new RuntimeException("field为空");
                 }
                 if (StringUtils.isEmpty(valueList)) {
-                    throw new SqlCreateException("value为空");
+                    throw new RuntimeException("value为空");
                 }
                 if (valueList.split(", ").length != fieldList.split(", ").length) {
-                    throw new SqlCreateException("value个数与field个数不相同，请检查");
+                    throw new RuntimeException("value个数与field个数不相同，请检查");
                 }
             }
             return new Sql(this);

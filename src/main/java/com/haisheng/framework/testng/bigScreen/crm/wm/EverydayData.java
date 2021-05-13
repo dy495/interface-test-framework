@@ -5,13 +5,13 @@ import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicMethod;
 import com.haisheng.framework.testng.bigScreen.crm.wm.bean.SaleInfo;
 import com.haisheng.framework.testng.bigScreen.crm.wm.bean.TPorscheTodayData;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.container.EnumContainer;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.container.Factory;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.sql.Sql;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.DingPushUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.UserUtil;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.entity.Factory;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.util.ContainerEnum;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -95,7 +95,7 @@ public class EverydayData extends TestCaseCommon implements TestCaseStd {
                                 db.getTodayReceptionNum(), db.getTodayAppointmentNum(), db.getTodayDate(), db.getShopId(),
                                 db.getSaleName(), db.getTodayNewCustomerReceptionNum(), db.getTodayOldCustomerReceptionNum(), db.getSaleId())
                         .end().getSql();
-                new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
+                new Factory.Builder().container(ContainerEnum.DB_ONE_PIECE.getContainer()).build().create(sql);
             });
         } catch (Exception e) {
             e.printStackTrace();
@@ -110,7 +110,7 @@ public class EverydayData extends TestCaseCommon implements TestCaseStd {
                 .where("today_date", "=", date)
                 .and("shop_id", "=", shopId)
                 .end();
-        int count = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
+        int count = new Factory.Builder().container(ContainerEnum.DB_ONE_PIECE.getContainer()).build().create(sql).length;
         if (!(count > 0)) {
             DingPushUtil.sendText(CommonUtil.humpToLineReplaceFirst(TPorscheTodayData.class.getSimpleName()) + "表记录数据失败");
         }

@@ -10,7 +10,6 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppl
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppointmentType;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerInfo;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.EditAfterSaleCustomerScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.UserUtil;
@@ -951,7 +950,7 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
         if (!list.isEmpty()) {
             return list.getJSONObject(0).getInteger("my_car_id");
         }
-        throw new DataException("该用户小程序没有绑定车");
+        throw new RuntimeException("该用户小程序没有绑定车");
     }
 
     private void appointmentRepair() throws Exception {

@@ -1,26 +1,26 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.util;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.haisheng.framework.dao.IAppointmentDataDao;
 import com.haisheng.framework.model.bean.AppointmentData;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.sql.SqlFactory;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.freemarker.attribute.SceneAttribute;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.freemarker.marker.SceneMarker;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.freemarker.parse.BeanParser;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.freemarker.parse.SceneParser;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.base.container.ExcelContainer;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.base.container.IContainer;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.base.row.IRow;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.base.table.ITable;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.base.util.FileUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.appointmentmanage.AppointmentRecordAppointmentPageScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.marker.attribute.SceneAttribute;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.marker.marker.SceneMarker;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.marker.parse.BeanParser;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.marker.parse.SceneParser;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.util.ContainerEnum;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.entity.Factory;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.entity.IEntity;
+import lombok.Data;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
 import org.jooq.impl.DSL;
 import org.testng.annotations.Test;
 
+import java.io.Serializable;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author wangmin
@@ -31,8 +31,8 @@ public class TestUtil {
     @Test
     public void createScene() {
         String[] htmlPaths = {
-                "http://192.168.50.3/api-doc/intelligent-control/app/index.html",
-                "http://192.168.50.3/api-doc/intelligent-control/pc/index.html",
+                "https://192.168.50.3/api-doc/intelligent-control/app/index.html",
+                "https://192.168.50.3/api-doc/intelligent-control/pc/index.html",
         };
         Arrays.stream(htmlPaths).forEach(htmlPath -> {
             SceneAttribute[] sceneAttributeList = new SceneParser.Builder().htmlUrl(htmlPath).build().getAttributes();
@@ -49,9 +49,9 @@ public class TestUtil {
     @Test
     public void createBean() {
         String[] htmlPaths = {
-                "http://192.168.50.3/api-doc/business-jiaochen/applet/index.html",
-                "http://192.168.50.3/api-doc/business-jiaochen/pc/index.html",
-                "http://192.168.50.3/api-doc/business-jiaochen/app/index.html",
+                "https://192.168.50.3/api-doc/business-jiaochen/applet/index.html",
+                "https://192.168.50.3/api-doc/business-jiaochen/pc/index.html",
+                "https://192.168.50.3/api-doc/business-jiaochen/app/index.html",
         };
         Arrays.stream(htmlPaths).forEach(htmlPath -> {
             SceneAttribute[] sceneAttributeList = new BeanParser.Builder().htmlUrl(htmlPath).build().getAttributes();
@@ -67,7 +67,7 @@ public class TestUtil {
 
     @Test
     public void createRisk() {
-        String[] htmlPaths = {"http://192.168.50.3/api-doc/business-risk-platform/index.html#_7_1_%E7%89%B9%E6%AE%8A%E4%BA%BA%E5%91%98%E5%88%86%E9%A1%B5"};
+        String[] htmlPaths = {"https://192.168.50.3/api-doc/business-risk-platform/index.html#_7_1_%E7%89%B9%E6%AE%8A%E4%BA%BA%E5%91%98%E5%88%86%E9%A1%B5"};
         Arrays.stream(htmlPaths).forEach(htmlPath -> {
             SceneAttribute[] sceneAttributeList = new SceneParser.Builder().htmlUrl(htmlPath).build().getAttributes();
             Arrays.stream(sceneAttributeList).forEach(sceneAttribute -> new SceneMarker.Builder()
@@ -80,31 +80,12 @@ public class TestUtil {
         });
     }
 
-    @Test
-    public void testJooq() {
-        DSLContext create = DSL.using("jdbc:mysql://rm-2zeg4an1kr1437xu6no.mysql.rds.aliyuncs.com/onepiece", "qa_wr", "qa_wr1234");
-        create.selectQuery().addConditions();
-        Result<Record> result = create.selectFrom("t_case").where("id=1").limit(100).fetch();
-    }
-
-    @Test
-    public void testMybatis() {
-        AppointmentData data = new AppointmentData();
-        data.setAppointmentDate("2021-04-21");
-        data.setAppointmentId(1L);
-        data.setAppointmentType("保养");
-        data.setProduct("轿辰");
-        data.setShopId(2222L);
-        data.setAppointmentStatus(1);
-        new SqlFactory.Builder().build().execute(IAppointmentDataDao.class).insert(data);
-    }
-
     @Test   //参数四个以内的接口
     public void createScene2() {
         String[] htmlPaths = {
-                "http://192.168.50.3/api-doc-v2.3/business-jiaochen/app/index.html",
-                "http://192.168.50.3/api-doc/business-jiaochen/applet/index.html",
-                "http://192.168.50.3/api-doc/business-jiaochen/pc/index.html",
+                "https://192.168.50.3/api-doc-v2.3/business-jiaochen/app/index.html",
+                "https://192.168.50.3/api-doc/business-jiaochen/applet/index.html",
+                "https://192.168.50.3/api-doc/business-jiaochen/pc/index.html",
         };
         Arrays.stream(htmlPaths).forEach(htmlPath -> {
             SceneAttribute[] sceneAttributeList = new SceneParser.Builder().htmlUrl(htmlPath).build().getAttributes();
@@ -121,16 +102,51 @@ public class TestUtil {
     }
 
     @Test
-    public void test() {
-        String path = FileUtil.getResourcePath("excel/预约维修记录_2021-05-12_1620792421661.xlsx");
-        IContainer container = new ExcelContainer.Builder().path(path).buildContainer();
-        container.init();
-        ITable[] tables = container.getTables();
-        ITable table = tables[0];
-        table.load();
-        IRow[] rows = table.getRows();
-        System.err.println("表行数：" + rows.length);
-        System.err.println(rows[0].findFields("品牌")[0].getValue());
+    public void testJooq() {
+        DSLContext create = DSL.using("jdbc:mysql://rm-2zeg4an1kr1437xu6no.mysql.rds.aliyuncs.com/onepiece", "qa_wr", "qa_wr1234");
+        create.selectQuery().addConditions();
+        Result<Record> result = create.selectFrom("t_case").where("id=1").limit(100).fetch();
+        System.err.println(result);
+    }
 
+    @Test
+    public void testMybatis() {
+        AppointmentData data = new AppointmentData();
+        data.setAppointmentDate("2021-04-21");
+        data.setAppointmentId(1L);
+        data.setAppointmentType("保养");
+        data.setProduct("轿辰");
+        data.setShopId(2222L);
+        data.setAppointmentStatus(1);
+        new SqlFactory.Builder().build().execute(IAppointmentDataDao.class).insert(data);
+    }
+
+    @Test
+    public void testReadDb() {
+        IEntity<?, ?>[] entities = new Factory.Builder().container(ContainerEnum.DB_ONE_PIECE.getContainer()).build().create("select * from t_case limit 10");
+        System.err.println(entities.length);
+        String caseName = entities[0].getFieldValue("case_name");
+        System.err.println(caseName);
+    }
+
+    @Test
+    public void testReadDb2() {
+        List<B> bs = new Factory.Builder().container(ContainerEnum.DB_ONE_PIECE.getContainer()).build().toJavaObjectList("select * from t_case limit 10", B.class);
+        String caseName = bs.get(0).getCaseName();
+        System.err.println(caseName);
+    }
+
+    @Test
+    public void testReadExcel() {
+        IEntity<?, ?> entity = new Factory.Builder().container(ContainerEnum.EXCEL.getContainer()).build().createE("/excel/客户卡券补充数据-去掉截止512过期数据-补充数据V2.0.xlsx")[0];
+        String voucherCode = entity.getFieldValue("卡券号");
+        System.err.println(voucherCode);
+    }
+
+    @Data
+    static
+    class B implements Serializable {
+        @JSONField(name = "case_name")
+        private String caseName;
     }
 }

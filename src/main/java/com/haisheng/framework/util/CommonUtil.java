@@ -3,7 +3,6 @@ package com.haisheng.framework.util;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.exception.DataException;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -140,10 +139,10 @@ public class CommonUtil {
         List<String> list = new ArrayList<>();
         Arrays.stream(paramName).forEach(e -> {
             if (StringUtils.isEmpty(e)) {
-                throw new DataException("param类型应为String类型且不能为空");
+                throw new RuntimeException("param类型应为String类型且不能为空");
             } else {
                 if (!object.containsKey(e)) {
-                    throw new DataException("object中不包含此key");
+                    throw new RuntimeException("object中不包含此key");
                 }
                 list.add(object.getString(e));
             }
@@ -274,10 +273,10 @@ public class CommonUtil {
      */
     public static int getTurningPage(double listSize, double pageSize) {
         if (listSize < 0) {
-            throw new DataException("listSize不可为负数");
+            throw new RuntimeException("listSize不可为负数");
         }
         if (pageSize < 0) {
-            throw new DataException("pageSize不可为负数");
+            throw new RuntimeException("pageSize不可为负数");
         }
         double a;
         a = listSize > pageSize ? listSize % pageSize == 0 ? listSize / pageSize : Math.ceil(listSize / pageSize) + 1 : 2;
