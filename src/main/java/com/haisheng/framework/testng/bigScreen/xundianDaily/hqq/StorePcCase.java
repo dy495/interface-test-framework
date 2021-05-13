@@ -189,7 +189,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
 //                        "        \"openid\": \"823849023iidijdiwiodede3330\",\n" +
                         "        \"shopType\": \"SHOP_TYPE\",\n" +
                         "        \"orderNumber\": \"13444894484\",\n" +
-                        "        \"memberName\":\"自动化在回归\",\n" +
+                        "        \"memberName\":\"自动化测试\",\n" +
                         "        \"receipt_type\":\"小票类型\",\n" +
                         "        \"posId\": \"pos-1234586789\",\n" +
                         "        \"commodityList\": [\n" +
@@ -1529,8 +1529,6 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
         }
 
     }
-
-
 
     /**
      * ====================历史数据-区域关注度数据不为空======================
