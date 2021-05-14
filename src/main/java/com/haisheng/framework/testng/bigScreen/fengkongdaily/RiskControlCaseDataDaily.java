@@ -495,11 +495,12 @@ public class RiskControlCaseDataDaily extends TestCaseCommon implements TestCase
             //新增一个风控规则
             Long id=cu.getRuleAdd(RuleEnum.BLACK_LIST.getType());
             //获取当前时间
-            String time= DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
+            String time= DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm");
             //新建前风控规则后列表数
             JSONObject response= com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.rule.PageScene.builder().page(1).size(10).build().invoke(visitor,true);
             int totalAfter =response.getInteger("total");
-            String updateTime=response.getJSONArray("list").getJSONObject(0).getString("update_time");
+            String updateTime=response.getJSONArray("list").getJSONObject(0).getString("update_time").substring(0,16);
+            System.err.println(updateTime);
 //            String updateUser=response.getJSONArray("list").getJSONObject(0).getString("update_user");
             Preconditions.checkArgument(totalAfter==totalBefore+1&&time.equals(updateTime),"新建前风控规则列表数量:"+totalBefore+"  新建前风控规则后列表数："+totalAfter+"  更新时间和当前时间分别为："+updateTime+"   "+time);
             //关闭风控规则

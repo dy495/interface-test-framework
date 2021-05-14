@@ -286,13 +286,13 @@ public class BusinessUtil {
         SupporterUtil supporterUtil = new SupporterUtil(visitor);
         PublicParameter pp = new PublicParameter();
         List<String> picList = new ArrayList<>();
-        picList.add(supporterUtil.getPicPath());
+        picList.add(getPicPath());
         IScene scene=null;
         Long AllowUseInventory=getVoucherAllowUseInventoryNum(voucherId);
-        if(AllowUseInventory>6){
+        if(AllowUseInventory>2){
             // 创建被邀请者和分享者的信息字段
-            JSONObject invitedVoucher = getInvitedVoucher(voucherId, 1, String.valueOf(Math.min(getVoucherAllowUseInventory(voucherId), 2)), 2, "", "", 3);
-            JSONObject shareVoucher = getShareVoucher(voucherId, 1, String.valueOf(Math.min(getVoucherAllowUseInventory(voucherId), 2)), 2, "", "", 3);
+            JSONObject invitedVoucher = getInvitedVoucher(voucherId, 1, String.valueOf(Math.min(getVoucherAllowUseInventory(voucherId), 1)), 2, "", "", 3);
+            JSONObject shareVoucher = getShareVoucher(voucherId, 1, String.valueOf(Math.min(getVoucherAllowUseInventory(voucherId), 1)), 2, "", "", 3);
             scene= FissionVoucherAddScene.builder()
                     .type(1)
                     .participationLimitType(0)
@@ -319,8 +319,8 @@ public class BusinessUtil {
             supporterUtil.applyVoucher(voucherName, "1");
             //创建活动
             // 创建被邀请者和分享者的信息字段
-            JSONObject invitedVoucher = getInvitedVoucher(voucherId3, 1, String.valueOf(Math.min(getVoucherAllowUseInventory(voucherId), 2)), 2, "", "", 3);
-            JSONObject shareVoucher = getShareVoucher(voucherId3, 1, String.valueOf(Math.min(getVoucherAllowUseInventory(voucherId), 2)), 2, "", "", 3);
+            JSONObject invitedVoucher = getInvitedVoucher(voucherId3, 1, String.valueOf(Math.min(getVoucherAllowUseInventory(voucherId), 1)), 2, "", "", 3);
+            JSONObject shareVoucher = getShareVoucher(voucherId3, 1, String.valueOf(Math.min(getVoucherAllowUseInventory(voucherId), 1)), 2, "", "", 3);
             scene= FissionVoucherAddScene.builder()
                     .type(1)
                     .participationLimitType(0)
@@ -1633,6 +1633,7 @@ public class BusinessUtil {
      */
     public String getApprovalPassed(Long... id) {
         List<Long> ids = Arrays.asList(id);
+        System.err.println("---------"+ids);
         IScene scene = ManageApprovalScene.builder().ids(ids).status(ActivityApprovalStatusEnum.PASSED.getId()).build();
         String message = visitor.invokeApi(scene, false).getString("message");
         return message;

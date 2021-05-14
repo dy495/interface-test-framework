@@ -461,7 +461,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
     }
 
     /**
-     * @description 售后客户查询-时间的筛选
+     * @description 售后客户查询-导入时间的筛选
      * @date :2020/12/16
      **/
     @Test(enabled = true)
@@ -470,22 +470,73 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
         try {
             String startTime=  dt.getHistoryDate(-10);
             String endTime=  dt.getHistoryDate(10);
-            JSONObject respond=jc.afterSleCustomerTimeManage("","1","10",startTime,endTime,startTime,endTime);
+            JSONObject respond=jc.afterSleCustomerCreateTimeManage("","1","10",startTime,endTime);
             int pages = respond.getInteger("pages")>10?10:respond.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = jc.afterSleCustomerTimeManage("", String.valueOf(page),"10",startTime,endTime,startTime,endTime).getJSONArray("list");
+                JSONArray list = jc.afterSleCustomerCreateTimeManage("", String.valueOf(page),"10",startTime,endTime).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
-                    String orderDate = list.getJSONObject(i).containsKey("start_order_date")?list.getJSONObject(i).getString("start_order_date").substring(0,10):startTime;
-                    System.out.println(orderDate+"-------------"+startTime);
                     String importDate = list.getJSONObject(i).containsKey("import_date")?list.getJSONObject(i).getString("import_date").substring(0,10):startTime;
-                    Preconditions.checkArgument(orderDate.compareTo(startTime)>=0&&orderDate.compareTo(endTime)<=0, "订单开始时间："+startTime+" 订单结束时间："+endTime+" 列表中的开单时间为："+orderDate);
+                    System.out.println("创建开始时间："+startTime+" 创建结束时间："+endTime+" 列表中的导入时间为："+importDate);
                     Preconditions.checkArgument(importDate.compareTo(startTime)>=0&&importDate.compareTo(endTime)<=0, "创建开始时间："+startTime+" 创建结束时间："+endTime+" 列表中的导入时间为："+importDate);
                 }
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("售后客户列表时间的筛选，结果校验");
+            saveData("售后客户列表导入时间的筛选，结果校验");
+        }
+    }
+
+    /**
+     * @description 售后客户查询-开单时间的筛选
+     * @date :2020/12/16
+     **/
+    @Test(enabled = true)
+    public void selectAfterSleCustomerManageCreateTimeFilter() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String startTime=  dt.getHistoryDate(-10);
+            String endTime=  dt.getHistoryDate(10);
+            JSONObject respond=jc.afterSleCustomerOrderTimeManage("","1","10",startTime,endTime);
+            int pages = respond.getInteger("pages")>10?10:respond.getInteger("pages");
+            for (int page = 1; page <= pages; page++) {
+                JSONArray list = jc.afterSleCustomerOrderTimeManage("", String.valueOf(page),"10",startTime,endTime).getJSONArray("list");
+                for (int i = 0; i < list.size(); i++) {
+                    String orderDate = list.getJSONObject(i).containsKey("start_order_date")?list.getJSONObject(i).getString("start_order_date").substring(0,10):startTime;
+                    System.out.println(orderDate+"-------------"+startTime);
+                    Preconditions.checkArgument(orderDate.compareTo(startTime)>=0&&orderDate.compareTo(endTime)<=0, "订单开始时间："+startTime+" 订单结束时间："+endTime+" 列表中的开单时间为："+orderDate);
+                }
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("售后客户列表开单时间的筛选，结果校验");
+        }
+    }
+    /**
+     * @description 售后客户查询-购车时间的筛选
+     * @date :2020/12/16
+     **/
+    @Test(enabled = true)
+    public void selectAfterSleCustomerManageOrderTimeFilter() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String startTime=  dt.getHistoryDate(-10);
+            String endTime=  dt.getHistoryDate(10);
+            JSONObject respond=jc.afterSleCustomerBuyTimeManage("","1","10",startTime,endTime);
+            int pages = respond.getInteger("pages")>10?10:respond.getInteger("pages");
+            for (int page = 1; page <= pages; page++) {
+                JSONArray list = jc.afterSleCustomerBuyTimeManage("", String.valueOf(page),"10",startTime,endTime).getJSONArray("list");
+                for (int i = 0; i < list.size(); i++) {
+                    String buyCarTime = list.getJSONObject(i).containsKey("buy_car_time")?list.getJSONObject(i).getString("buy_car_time").substring(0,10):startTime;
+                    System.out.println(buyCarTime+"-------------"+startTime);
+                    Preconditions.checkArgument(buyCarTime.compareTo(startTime)>=0&&buyCarTime.compareTo(endTime)<=0, "订单开始时间："+startTime+" 订单结束时间："+endTime+" 列表中的购车时间为："+buyCarTime);
+                }
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("售后客户列表购车时间的筛选，结果校验");
         }
     }
 
@@ -4682,17 +4733,17 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      * @description V3.1预约维修记录查询-时间的筛选
      * @date :2021/3/26
      **/
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void maintainAppointmentRecordTimeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String startTime=  dt.getHistoryDate(-10);
             String endTime=  dt.getHistoryDate(10);
-            JSONObject respond=jc.appointmentRecordTimeManage("","1","10",startTime,endTime,startTime,endTime,startTime,endTime);
+            JSONObject respond=jc.appointmentRecordTimeManage("","1","10","REPAIR",startTime,endTime,startTime,endTime,startTime,endTime);
             int pages = respond.getInteger("pages")>10?10:respond.getInteger("pages");
             if(respond.getJSONArray("list").size()>0){
                 for (int page = 1; page <= pages; page++) {
-                    JSONArray list = jc.appointmentRecordTimeManage("", String.valueOf(page),"10",startTime,endTime,startTime,endTime,startTime,endTime).getJSONArray("list");
+                    JSONArray list = jc.appointmentRecordTimeManage("", String.valueOf(page),"10","REPAIR",startTime,endTime,startTime,endTime,startTime,endTime).getJSONArray("list");
                     for (int i = 0; i < list.size(); i++) {
                         String createDate = list.getJSONObject(i).containsKey("create_date")?list.getJSONObject(i).getString("create_date").substring(0,10):startTime;
                         String confirmTime =list.getJSONObject(i).containsKey("confirm_time")? list.getJSONObject(i).getString("confirm_time").substring(0,10):startTime;
@@ -4813,207 +4864,107 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
     }
 
     /**
-     * @deprecated V3.1在线专家-筛选栏单项搜索
-     * @date :2021-3-16
-     */
-    @Test(dataProvider = "SELECT_onlineExpertsPageListLRecordFilter", dataProviderClass = Constant.class,enabled = false)
-    public void onlineExpertsPageListRecordOneFilter(String pram,String output){
+     * @description :V3.1预约试驾记录-筛选栏单项查询
+     * @date :2021/3/26
+     **/
+    @Test(dataProvider = "SELECT_appointmentDriverRecordFilter", dataProviderClass = Constant.class,enabled = true)
+    public void driveAppointmentRecordOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject response = jc.onlineExpertsPageList("1", "10", "", "");
-            if (response.getJSONArray("list").size() > 0) {
-                if (pram.equals("shop_id")) {
-                    String result = response.getJSONArray("list").getJSONObject(0).getString(output);
-                    String shopId=businessUtil.shopNameTransformId(result);
-                    String shopName=businessUtil.getShopNameExist(result);
-                    JSONObject response1 = jc.onlineExpertsPageList("1", "10", pram, shopId);
-                    int pages = response1.getInteger("pages");
-                    for (int page = 1; page <= pages; page++) {
-                        JSONArray list = jc.onlineExpertsPageList(String.valueOf(page), "10", pram, shopId).getJSONArray("list");
-                        for (int i = 0; i < list.size(); i++) {
-                            String Flag = list.getJSONObject(i).getString(output);
-                            System.out.println("在线专家按" + shopName + "查询，结果错误" + Flag);
-                            Preconditions.checkArgument(Flag.contains(shopName), "在线专家列表按" + shopName + "查询，结果错误" + Flag);
-                        }
-                    }
-                }else if (pram.equals("is_over_time")) {
-                    String result = response.getJSONArray("list").getJSONObject(0).getString(output);
-                    JSONObject response1 = jc.onlineExpertsPageList("1", "10", pram, result);
-                    int pages = response1.getInteger("pages");
-                    for (int page = 1; page <= pages; page++) {
-                        JSONArray list = jc.onlineExpertsPageList(String.valueOf(page), "10", pram, result).getJSONArray("list");
-                        for (int i = 0; i < list.size(); i++) {
-                            String Flag = list.getJSONObject(i).getString(output);
-                            System.out.println("在线专家列表按" + result + "查询，结果错误" + Flag);
-                            Preconditions.checkArgument(Flag.contains(result), "在线专家列表按" + result + "查询，结果错误" + Flag);
-                        }
-                    }
+            JSONObject respond = jc.appointmentRecordManage("", "1", "10", "TEST_DRIVE","", "");
+            String result = null;
+            if (respond.getJSONArray("list").size() > 0) {
+                if (pram.equals("cancel_account")) {
+                    result = respond.getJSONArray("list").getJSONObject(0).containsKey("cancel_account")?respond.getJSONArray("list").getJSONObject(0).getString(output):"0000";
+                   if(!result.equals("0000")){
+                       JSONObject respond1 = jc.appointmentRecordManage("", "1", "10", "TEST_DRIVE",pram, result);
+                       int pages = respond1.getInteger("pages")>10?10:respond1.getInteger("pages");
+                       for (int page = 1; page <= pages; page++) {
+                           JSONArray list = jc.appointmentRecordManage("", String.valueOf(page), "10", "REPAIR",pram, result).getJSONArray("list");
+                           for (int i = 0; i < list.size(); i++) {
+                               String Flag = jc.appointmentRecordManage("", String.valueOf(page), String.valueOf(list.size()),"TEST_DRIVE", pram, result).getJSONArray("list").getJSONObject(i).getString(output);
+                               Preconditions.checkArgument(Flag.contains(result), "预约记录管理按" + result + "查询，结果错误" + Flag);
+                           }
+                       }
+                   }
                 }else {
-                    String result = response.getJSONArray("list").getJSONObject(0).getString(output);
-                    JSONObject response1 = jc.onlineExpertsPageList("1", "10", pram, result);
-                    int pages = response1.getInteger("pages");
+                    result = respond.getJSONArray("list").getJSONObject(0).getString(output);
+                    JSONObject respond1 = jc.appointmentRecordManage("", "1", "10", "TEST_DRIVE",pram, result);
+                    int pages = respond1.getInteger("pages")>10?10:respond1.getInteger("pages");
                     for (int page = 1; page <= pages; page++) {
-                        JSONArray list = jc.onlineExpertsPageList(String.valueOf(page), "10", pram, result).getJSONArray("list");
+                        JSONArray list = jc.appointmentRecordManage("", String.valueOf(page), "10", "TEST_DRIVE",pram, result).getJSONArray("list");
                         for (int i = 0; i < list.size(); i++) {
-                            String Flag = list.getJSONObject(i).getString(output);
-                            System.out.println("在线专家列表按" + result + "查询，结果错误" + Flag);
-                            Preconditions.checkArgument(Flag.contains(result), "在线专家列表按" + result + "查询，结果错误" + Flag);
+                            String Flag=list.getJSONObject(i).getString(output);
+                            Preconditions.checkArgument(Flag.contains(result), "预约记录管理按" + result + "查询，结果错误" + Flag);
                         }
                     }
                 }
+
+            } else {
+                Preconditions.checkArgument(respond.getJSONArray("list") == null, "试驾预约记录列表系统错误,请联系开发人员");
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("V3.1在线专家-筛选栏单项搜索 ");
+            saveData("预约试驾记录单项查询，结果校验");
         }
     }
 
     /**
-     * @deprecated  V3.1在线专家列表-筛选栏时间搜索
-     * @date :2021-3-26
-     */
-    @Test(enabled = false)
-    public void onlineExpertsPageListTimeFilter(){
+     * @description V3.1预约试驾记录查询-时间的筛选
+     * @date :2021/3/26
+     **/
+    @Test(enabled = true)
+    public void maintainDriverAppointmentRecordTimeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String startTime=  dt.getHistoryDate(-30);
-            String endTime=  dt.getHistoryDate(30);
-            JSONObject response=jc.onlineExpertsPageListTimeManage("1","10",startTime,endTime);
-            System.out.println("---------"+response);
-            int pages = response.getInteger("pages")>10?10:response.getInteger("pages");
-            for (int page = 1; page <= pages; page++) {
-                JSONArray list = jc.onlineExpertsPageListTimeManage(String.valueOf(page),"10",startTime,endTime).getJSONArray("list");
-                for (int i = 0; i < list.size(); i++) {
-                    String consultTime = list.getJSONObject(i).containsKey("time")?list.getJSONObject(i).getString("time").substring(0,10):startTime;
-                    Preconditions.checkArgument(consultTime.compareTo(startTime)>=0&&consultTime.compareTo(endTime)<=0, "开始时间："+startTime+" 结束时间："+endTime +"列表中的增发时间:"+consultTime);
+            String startTime=  dt.getHistoryDate(-10);
+            String endTime=  dt.getHistoryDate(10);
+            JSONObject respond=jc.appointmentDreiverRecordTimeManage("","1","10","TEST_DRIVE",startTime,endTime,startTime,endTime,startTime,endTime);
+            int pages = respond.getInteger("pages")>10?10:respond.getInteger("pages");
+            if(respond.getJSONArray("list").size()>0){
+                for (int page = 1; page <= pages; page++) {
+                    JSONArray list = jc.appointmentDreiverRecordTimeManage("", String.valueOf(page),"10","TEST_DRIVE",startTime,endTime,startTime,endTime,startTime,endTime).getJSONArray("list");
+                    for (int i = 0; i < list.size(); i++) {
+                        String createDate = list.getJSONObject(i).containsKey("create_date")?list.getJSONObject(i).getString("create_date").substring(0,10):startTime;
+                        String cancelTime =list.getJSONObject(i).containsKey("confirm_time")? list.getJSONObject(i).getString("cancel_time").substring(0,10):startTime;
+                        String receptionTime =list.getJSONObject(i).containsKey("reception_time")? list.getJSONObject(i).getString("reception_time").substring(0,10):startTime;
+                        System.out.println("预约记录确认开始时间："+startTime+" 确认结束时间："+endTime+" 列表中的取消时间为："+cancelTime+"    "+createDate+"   "+receptionTime);
+                        Preconditions.checkArgument(cancelTime.compareTo(startTime)>=0&&cancelTime.compareTo(endTime)<=0, "预约记录确认开始时间："+startTime+" 确认结束时间："+endTime+" 列表中的取消时间为："+cancelTime);
+                        Preconditions.checkArgument(createDate.compareTo(startTime)>=0&&createDate.compareTo(endTime)<=0, "预约记录创建开始时间："+startTime+" 注册结束时间："+endTime+" 列表中的创建时间为："+createDate);
+                        Preconditions.checkArgument(receptionTime.compareTo(startTime)>=0&&receptionTime.compareTo(endTime)<=0, "预约记录创建开始时间："+startTime+" 注册结束时间："+endTime+" 列表中的接待时间为："+receptionTime);
+                    };
                 }
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("V3.1在线专家列表-筛选栏时间搜索 ");
+            saveData("预约试驾记录列表时间的筛选，结果校验");
         }
     }
 
-    /**
-     * @deprecated V3.1专属服务顾问-筛选栏单项搜索
-     * @date :2021-3-16
-     */
-    @Test(dataProvider = "SELECT_dedicatedServicePageListLRecordFilter", dataProviderClass = Constant.class,enabled = false)
-    public void dedicatedServicePageListRecordOneFilter(String pram,String output){
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONObject response = jc.dedicatedServicePageList("1", "10", "", "");
-            if (response.getJSONArray("list").size() > 0) {
-                if (pram.equals("shop_id")) {
-                    String result = response.getJSONArray("list").getJSONObject(0).getString(output);
-                    String shopId=businessUtil.shopNameTransformId(result);
-                    String shopName=businessUtil.getShopNameExist(result);
-                    JSONObject response1 = jc.dedicatedServicePageList("1", "10", pram, shopId);
-                    int pages = response1.getInteger("pages");
-                    for (int page = 1; page <= pages; page++) {
-                        JSONArray list = jc.dedicatedServicePageList(String.valueOf(page), "10", pram, shopId).getJSONArray("list");
-                        for (int i = 0; i < list.size(); i++) {
-                            String Flag = list.getJSONObject(i).getString(output);
-                            System.out.println("V3.1专属服务顾问列表按" + shopName + "查询，结果错误" + Flag);
-                            Preconditions.checkArgument(Flag.contains(shopName), "V3.1专属服务顾问列表按" + shopName + "查询，结果错误" + Flag);
-                        }
-                    }
-                }else if (pram.equals("is_over_time")) {
-                    String result = response.getJSONArray("list").getJSONObject(0).getString(output);
-                    JSONObject response1 = jc.dedicatedServicePageList("1", "10", pram, result);
-                    int pages = response1.getInteger("pages");
-                    for (int page = 1; page <= pages; page++) {
-                        JSONArray list = jc.dedicatedServicePageList(String.valueOf(page), "10", pram, result).getJSONArray("list");
-                        for (int i = 0; i < list.size(); i++) {
-                            String Flag = list.getJSONObject(i).getString(output);
-                            System.out.println("V3.1专属服务顾问列表按" + result + "查询，结果错误" + Flag);
-                            Preconditions.checkArgument(Flag.contains(result), "V3.1专属服务顾问列表按" + result + "查询，结果错误" + Flag);
-                        }
-                    }
-                }else {
-                    String result = response.getJSONArray("list").getJSONObject(0).getString(output);
-                    JSONObject response1 = jc.dedicatedServicePageList("1", "10", pram, result);
-                    int pages = response1.getInteger("pages");
-                    for (int page = 1; page <= pages; page++) {
-                        JSONArray list = jc.dedicatedServicePageList(String.valueOf(page), "10", pram, result).getJSONArray("list");
-                        for (int i = 0; i < list.size(); i++) {
-                            String Flag = list.getJSONObject(i).getString(output);
-                            System.out.println("V3.1专属服务顾问列表按" + result + "查询，结果错误" + Flag);
-                            Preconditions.checkArgument(Flag.contains(result), "V3.1专属服务顾问列表按" + result + "查询，结果错误" + Flag);
-                        }
-                    }
-                }
-            }
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("V3.1专属服务顾问-筛选栏单项搜索 ");
-        }
-    }
-
-    /**
-     * @deprecated  V3.1专属服务顾问列表-筛选栏时间搜索
-     * @date :2021-3-26
-     */
-    @Test(enabled = false)
-    public void dedicatedServicePageTimeFilter(){
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            String startTime=  dt.getHistoryDate(-30);
-            String endTime=  dt.getHistoryDate(30);
-            JSONObject response=jc.lossCustomerTimeManage("1","10",startTime,endTime);
-            System.out.println("---------"+response);
-            int pages = response.getInteger("pages")>10?10:response.getInteger("pages");
-            for (int page = 1; page <= pages; page++) {
-                JSONArray list = jc.lossCustomerTimeManage(String.valueOf(page),"10",startTime,endTime).getJSONArray("list");
-                for (int i = 0; i < list.size(); i++) {
-                    String consultTime = list.getJSONObject(i).containsKey("time")?list.getJSONObject(i).getString("time").substring(0,10):startTime;
-                    Preconditions.checkArgument(consultTime.compareTo(startTime)>=0&&consultTime.compareTo(endTime)<=0, "开始时间："+startTime+" 结束时间："+endTime +"列表中的增发时间:"+consultTime);
-                }
-            }
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("V3.1专属服务顾问列表-筛选栏时间搜索 ");
-        }
-    }
 
     /**
      * @deprecated V3.1销售客户接待列表-筛选栏单项搜索
      * @date :2021-3-16
      */
-    @Test(dataProvider = "SELECT_preSalesReceptionPageRecordFilter", dataProviderClass = Constant.class,enabled = false)
+    @Test(dataProvider = "SELECT_preSalesReceptionPageRecordFilter", dataProviderClass = Constant.class,enabled = true)
     public void preSaleCustomerPageRecordOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject response = jc.preSalesReceptionPage("1", "10", "", "");
+            JSONObject response = jc.salesReceptionPage("1", "10", "", "");
             if (response.getJSONArray("list").size() > 0) {
+                System.out.println(pram+"   "+output);
                 String result = response.getJSONArray("list").getJSONObject(0).getString(output);
-                if(pram.equals("shop_id")){
-                    String shopId=businessUtil.shopNameTransformId(result);
-                    String shopName=businessUtil.getShopNameExist(result);
-                    JSONObject response1 = jc.dedicatedServicePageList("1", "10", pram, shopId);
-                    int pages = response1.getInteger("pages");
-                    for (int page = 1; page <= pages; page++) {
-                        JSONArray list = jc.dedicatedServicePageList(String.valueOf(page), "10", pram, shopId).getJSONArray("list");
-                        for (int i = 0; i < list.size(); i++) {
-                            String Flag = list.getJSONObject(i).getString(output);
-                            System.out.println("V3.1销售客户接待列表按" + shopName + "查询，结果错误" + Flag);
-                            Preconditions.checkArgument(Flag.contains(shopName), "V3.1销售客户接待列表按" + shopName + "查询，结果错误" + Flag);
-                        }
-                    }
-                }else{
-                    JSONObject response1 = jc.preSalesReceptionPage( "1", "10",pram, result);
-                    int pages = response1.getInteger("pages");
-                    for (int page = 1; page <= pages; page++) {
-                        JSONArray list = jc.preSalesReceptionPage(String.valueOf(page),"10", pram, result).getJSONArray("list");
-                        for (int i = 0; i < list.size(); i++) {
-                            String Flag = list.getJSONObject(i).getString(output);
-                            System.out.println("V3.1销售客户接待列表按" + result + "查询，结果错误" + Flag);
-                            Preconditions.checkArgument(Flag.contains(result), "V3.1销售客户接待列表按" + result + "查询，结果错误" + Flag);
-                        }
+                System.err.println(result);
+                JSONObject response1 = jc.salesReceptionPage("1", "10", pram, result);
+                int pages = response1.getInteger("pages");
+                for (int page = 1; page <= pages; page++) {
+                    JSONArray list = jc.salesReceptionPage(String.valueOf(page), "10", pram, result).getJSONArray("list");
+                    for (int i = 0; i < list.size(); i++) {
+                        String Flag = list.getJSONObject(i).getString(output);
+                        System.out.println("V3.1销售客户接待列表按" + result + "查询，结果错误" + Flag);
+                        Preconditions.checkArgument(Flag.contains(result), "V3.1销售客户接待列表按" + result + "查询，结果错误" + Flag);
                     }
                 }
             }
@@ -5025,26 +4976,90 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
     }
 
     /**
+     * @deprecated  V3.1销售接待列表-筛选栏时间搜索
+     * @date :2021-3-26
+     */
+    @Test(enabled = true)
+    public void salesReceptionPageTimeFilter(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String startTime=  dt.getHistoryDate(-30);
+            String endTime=  dt.getHistoryDate(30);
+            JSONObject response=jc.salesReceptionPageTime("1","10",startTime,endTime);
+            System.out.println("---------"+response);
+            int pages = response.getInteger("pages")>10?10:response.getInteger("pages");
+            for (int page = 1; page <= pages; page++) {
+                JSONArray list = jc.salesReceptionPageTime(String.valueOf(page),"10",startTime,endTime).getJSONArray("list");
+                for (int i = 0; i < list.size(); i++) {
+                    String receptionStartTime = list.getJSONObject(i).containsKey("reception_start_time")?list.getJSONObject(i).getString("reception_start_time").substring(0,10):startTime;
+                    String receptionEndTime = list.getJSONObject(i).containsKey("reception_start_time")?list.getJSONObject(i).getString("reception_end_time").substring(0,10):startTime;
+                    System.out.println("开始时间："+startTime+" 结束时间："+endTime +"列表中接待开始时间和结束时间:"+receptionStartTime+"    "+receptionEndTime);
+                    Preconditions.checkArgument(receptionStartTime.compareTo(startTime)>=0&&receptionEndTime.compareTo(endTime)<=0, "开始时间："+startTime+" 结束时间："+endTime +"列表中接待开始时间和结束时间:"+receptionStartTime+"    "+receptionEndTime);
+                }
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData(" V3.1销售接待列表-筛选栏时间搜索 ");
+        }
+    }
+
+
+
+    /**
      * @deprecated V3.1流失客户接待列表-筛选栏单项搜索
      * @date :2021-3-26
      */
-    @Test(dataProvider = "SELECT_lossCustomerPageRecordFilter", dataProviderClass = Constant.class,enabled = false)
+    @Test(dataProvider = "SELECT_AfterSleCustomerManageFilter", dataProviderClass = Constant.class,enabled = true)
     public void lossCustomerPageRecordOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject response = jc.lossCustomerPage("1", "10", "", "");
-            if (response.getJSONArray("list").size() > 0) {
-                String result = response.getJSONArray("list").getJSONObject(0).getString(output);
-                JSONObject response1 = jc.lossCustomerPage( "1", "10",pram, result);
-                int pages = response1.getInteger("pages");
-                for (int page = 1; page <= pages; page++) {
-                    JSONArray list = jc.lossCustomerPage(String.valueOf(page),"10", pram, result).getJSONArray("list");
-                    for (int i = 0; i < list.size(); i++) {
-                        String Flag = list.getJSONObject(i).getString(output);
-                        System.out.println("V3.1流失客户接待列表按" + result + "查询，结果错误" + Flag);
-                        Preconditions.checkArgument(Flag.contains(result), "V3.1销售客户接待列表按" + result + "查询，结果错误" + Flag);
+            JSONObject respond = jc.lossCustomerPage( "1", "10", "", "");
+            if (respond.getJSONArray("list").size() > 0) {
+                String result = respond.getJSONArray("list").getJSONObject(0).getString(output);
+                if(pram.equals("registration_status")){
+                    String result1 = respond.getJSONArray("list").getJSONObject(0).getString(output).equals("是")?"true":"false";
+                    if (result != null) {
+                        JSONObject respond1 = jc.lossCustomerPage("1", "10", pram, result1);
+                        int pages = respond1.getInteger("pages")>10?10:respond1.getInteger("pages");
+                        for (int page = 1; page <= pages; page++) {
+                            JSONArray list = jc.lossCustomerPage( String.valueOf(page), "10", pram, result1).getJSONArray("list");
+                            for (int i = 0; i < list.size(); i++) {
+                                String Flag = list.getJSONObject(i).getString(output);
+                                System.out.println("V3.1流失客户接待列表按" + result + "查询，结果错误" + Flag);
+                                Preconditions.checkArgument(Flag.contains(result), "V3.1流失客户接待列表按" + result + "查询，结果错误" + Flag);
+                            }
+                        }
+                    }
+                }else if(pram.equals("brand_id")){
+                    String result1 = businessUtil.brandPageExchange(result);
+                    if (result != null) {
+                        JSONObject respond1 = jc.lossCustomerPage( "1", "10", pram, result1);
+                        int pages = respond1.getInteger("pages")>10?10:respond1.getInteger("pages");
+                        for (int page = 1; page <= pages; page++) {
+                            JSONArray list = jc.lossCustomerPage(String.valueOf(page), "10", pram, result1).getJSONArray("list");
+                            for (int i = 0; i < list.size(); i++) {
+                                String Flag = list.getJSONObject(i).getString(output);
+                                System.out.println("V3.1流失客户接待列表按" + result + "查询，结果错误" + Flag);
+                                Preconditions.checkArgument(Flag.contains(result), "V3.1流失客户接待列表按" + result + "查询，结果错误" + Flag);
+                            }
+                        }
+                    }
+                }else{
+                    if (result != null) {
+                        JSONObject respond1 = jc.lossCustomerPage("1", "10", pram, result);
+                        int pages = respond1.getInteger("pages")>10?10:respond1.getInteger("pages");
+                        for (int page = 1; page <= pages; page++) {
+                            JSONArray list = jc.lossCustomerPage( String.valueOf(page), "10", pram, result).getJSONArray("list");
+                            for (int i = 0; i < list.size(); i++) {
+                                String Flag = list.getJSONObject(i).getString(output);
+                                System.out.println("V3.1流失客户接待列表按" + result + "查询，结果错误" + Flag);
+                                Preconditions.checkArgument(Flag.contains(result), "V3.1流失客户接待列表按" + result + "查询，结果错误" + Flag);
+                            }
+                        }
                     }
                 }
+
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -5054,39 +5069,91 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
     }
 
     /**
-     * @deprecated  V3.1流失客户接待列表-筛选栏时间搜索
-     * @date :2021-3-26
-     */
-    @Test(enabled = false)
-    public void lossCustomerPageTimeFilter(){
+     * @description 流失客户查询-导入时间的筛选
+     * @date :2020/12/16
+     **/
+    @Test(enabled = true)
+    public void selectLossCustomerManageTimeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String startTime=  dt.getHistoryDate(-30);
-            String endTime=  dt.getHistoryDate(30);
-            JSONObject response=jc.lossCustomerTimeManage("1","10",startTime,endTime,startTime,endTime);
-            System.out.println("---------"+response);
-            int pages = response.getInteger("pages")>10?10:response.getInteger("pages");
+            String startTime=  dt.getHistoryDate(-10);
+            String endTime=  dt.getHistoryDate(10);
+            JSONObject respond=jc.lossCustomerCreateTimeManage("","1","10",startTime,endTime);
+            int pages = respond.getInteger("pages")>10?10:respond.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = jc.lossCustomerTimeManage(String.valueOf(page),"10",startTime,endTime,startTime,endTime).getJSONArray("list");
+                JSONArray list = jc.lossCustomerCreateTimeManage("", String.valueOf(page),"10",startTime,endTime).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
-                    String createTime = list.getJSONObject(i).containsKey("time")?list.getJSONObject(i).getString("time").substring(0,10):startTime;
-                    String orderTime = list.getJSONObject(i).containsKey("time")?list.getJSONObject(i).getString("time").substring(0,10):startTime;
-                    Preconditions.checkArgument(createTime.compareTo(startTime)>=0&&createTime.compareTo(endTime)<=0, "开始时间："+startTime+" 结束时间："+endTime +"列表中的增发时间:"+orderTime);
-                    Preconditions.checkArgument(orderTime.compareTo(startTime)>=0&&orderTime.compareTo(endTime)<=0, "开始时间："+startTime+" 结束时间："+endTime +"列表中的增发时间:"+orderTime);
+                    String importDate = list.getJSONObject(i).containsKey("import_date")?list.getJSONObject(i).getString("import_date").substring(0,10):startTime;
+                    System.out.println("创建开始时间："+startTime+" 创建结束时间："+endTime+" 列表中的导入时间为："+importDate);
+                    Preconditions.checkArgument(importDate.compareTo(startTime)>=0&&importDate.compareTo(endTime)<=0, "创建开始时间："+startTime+" 创建结束时间："+endTime+" 列表中的导入时间为："+importDate);
                 }
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("V3.1流失客户接待列表-筛选栏时间搜索 ");
+            saveData("流失客户列表导入时间的筛选，结果校验");
         }
     }
+
+    /**
+     * @description 流失客户查询-开单时间的筛选
+     * @date :2020/12/16
+     **/
+    @Test(enabled = true)
+    public void selectLossCustomerManageCreateTimeFilter() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String startTime=  dt.getHistoryDate(-10);
+            String endTime=  dt.getHistoryDate(10);
+            JSONObject respond=jc.lossCustomerOrderTimeManage("","1","10",startTime,endTime);
+            int pages = respond.getInteger("pages")>10?10:respond.getInteger("pages");
+            for (int page = 1; page <= pages; page++) {
+                JSONArray list = jc.lossCustomerOrderTimeManage("", String.valueOf(page),"10",startTime,endTime).getJSONArray("list");
+                for (int i = 0; i < list.size(); i++) {
+                    String orderDate = list.getJSONObject(i).containsKey("start_order_date")?list.getJSONObject(i).getString("start_order_date").substring(0,10):startTime;
+                    System.out.println(orderDate+"-------------"+startTime);
+                    Preconditions.checkArgument(orderDate.compareTo(startTime)>=0&&orderDate.compareTo(endTime)<=0, "订单开始时间："+startTime+" 订单结束时间："+endTime+" 列表中的开单时间为："+orderDate);
+                }
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("流失客户列表开单时间的筛选，结果校验");
+        }
+    }
+    /**
+     * @description 流失客户查询-购车时间的筛选
+     * @date :2020/12/16
+     **/
+    @Test(enabled = true)
+    public void selectLossCustomerManageOrderTimeFilter() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String startTime=  dt.getHistoryDate(-10);
+            String endTime=  dt.getHistoryDate(10);
+            JSONObject respond=jc.lossCustomerBuyTimeManage("","1","10",startTime,endTime);
+            int pages = respond.getInteger("pages")>10?10:respond.getInteger("pages");
+            for (int page = 1; page <= pages; page++) {
+                JSONArray list = jc.lossCustomerBuyTimeManage("", String.valueOf(page),"10",startTime,endTime).getJSONArray("list");
+                for (int i = 0; i < list.size(); i++) {
+                    String buyCarTime = list.getJSONObject(i).containsKey("buy_car_time")?list.getJSONObject(i).getString("buy_car_time").substring(0,10):startTime;
+                    System.out.println(buyCarTime+"-------------"+startTime);
+                    Preconditions.checkArgument(buyCarTime.compareTo(startTime)>=0&&buyCarTime.compareTo(endTime)<=0, "订单开始时间："+startTime+" 订单结束时间："+endTime+" 列表中的购车时间为："+buyCarTime);
+                }
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("流失客户列表时间的筛选，结果校验");
+        }
+    }
+
 
     /**
      * @deprecated V3.1登录日志列表-筛选栏单项搜索
      * @date :2021-3-26
      */
-    @Test(dataProvider = "SELECT_loginLogStaffRecordFilter", dataProviderClass = Constant.class,enabled = false)
+    @Test(dataProvider = "SELECT_loginLogStaffRecordFilter", dataProviderClass = Constant.class,enabled = true)
     public void loginLogStaffRecordOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try {

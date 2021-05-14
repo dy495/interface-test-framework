@@ -4689,15 +4689,16 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Boolean flag=false;
             JSONObject lastValue=null;
             JSONArray list=null;
-            //获取进行中活动的ID
-            List<Long> ids = businessUtil.getContentMarketingWorking();
-            System.err.println("----ids:"+ids.get(0));
+            Long id = businessUtil.getContentMarketingAdd();
+            //审批通过
+            businessUtil.getApprovalPassed(id);
+            System.err.println("----ids:"+id);
             //获取进行中的活动名称
-            String title=businessUtil.getActivityTitle(ids.get(0));
+            String title=businessUtil.getActivityTitle(id);
             //进行中的活动下架
-            String message=businessUtil.getContentMarketingOffLine(ids.get(0));
+            String message=businessUtil.getContentMarketingOffLine(id);
             //获取活动的状态
-            int statusOffLine=businessUtil.getActivityStatus(ids.get(0));
+            int statusOffLine=businessUtil.getActivityStatus(id);
             //登录小程序
             user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
             //获取小程序推荐列表
@@ -4720,11 +4721,11 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(!flag,"小程序中还是能够查看到此活动");
             jc.pcLogin(pp.phone,pp.password);
             //活动上架
-            String message1=businessUtil.getContentMarketingOnline(ids.get(0));
+            String message1=businessUtil.getContentMarketingOnline(id);
             //获取活动的状态
-            int statusOnLine=businessUtil.getActivityStatus(ids.get(0));
+            int statusOnLine=businessUtil.getActivityStatus(id);
             //置顶此活动
-            IScene scene=ActivityManageTopScene.builder().id(ids.get(0)).build();
+            IScene scene=ActivityManageTopScene.builder().id(id).build();
             visitor.invokeApi(scene,false).getString("message");
             //小程序中第一个为此活动
             user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
@@ -4862,7 +4863,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
     }
 
     /**
-     * 内容营销-【未开始中】的活动-下架
+     * 内容营销-【未开始中】的活动-上架下架
      * 2021-3-17
      */
     @Test(enabled = true,description = "内容营销-【未开始中】的活动-下架")
@@ -5126,16 +5127,19 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Boolean flag=false;
             JSONObject lastValue=null;
             JSONArray list=null;
-            //获取未开始活动的ID
-            List<Long> ids = businessUtil.getFissionActivityWaitingStar();
-            if(ids.size()>0){
-                System.err.println("----ids:"+ids.get(0));
+            //创建活动
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long id = businessUtil.createFissionActivityWaitingStarScene(voucherId);
+            //审批活动
+            businessUtil.getApprovalPassed(id);
+            if(id>0){
+                System.err.println("----ids:"+id);
                 //获取进行中的活动名称
-                String title=businessUtil.getActivityTitle(ids.get(0));
+                String title=businessUtil.getActivityTitle(id);
                 //进行中的活动下架
-                String message=businessUtil.getContentMarketingOffLine(ids.get(0));
+                String message=businessUtil.getContentMarketingOffLine(id);
                 //获取活动的状态
-                int statusOffLine=businessUtil.getActivityStatus(ids.get(0));
+                int statusOffLine=businessUtil.getActivityStatus(id);
                 //登录小程序
                 user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
                 //获取小程序推荐列表
@@ -5155,11 +5159,11 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                 Preconditions.checkArgument(!flag,"小程序中还是能够查看到此活动");
                 jc.pcLogin(pp.phone,pp.password);
                 //活动上架
-                String message1=businessUtil.getContentMarketingOnline(ids.get(0));
+                String message1=businessUtil.getContentMarketingOnline(id);
                 //获取活动的状态
-                int statusOnLine=businessUtil.getActivityStatus(ids.get(0));
+                int statusOnLine=businessUtil.getActivityStatus(id);
                 //置顶此活动
-                IScene scene=ActivityManageTopScene.builder().id(ids.get(0)).build();
+                IScene scene=ActivityManageTopScene.builder().id(id).build();
                 visitor.invokeApi(scene,false).getString("message");
                 //小程序中第一个为此活动
                 user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
