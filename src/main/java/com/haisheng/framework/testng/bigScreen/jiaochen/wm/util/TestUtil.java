@@ -8,9 +8,13 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.marker.attribute.Scen
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.marker.marker.SceneMarker;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.marker.parse.BeanParser;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.marker.parse.SceneParser;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.row.IRow;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.table.CsvTable;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.table.ITable;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.util.ContainerEnum;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.entity.Factory;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.entity.IEntity;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.util.FileUtil;
 import lombok.Data;
 import org.jooq.DSLContext;
 import org.jooq.Record;
@@ -123,7 +127,8 @@ public class TestUtil {
 
     @Test
     public void testReadDb() {
-        IEntity<?, ?>[] entities = new Factory.Builder().container(ContainerEnum.DB_ONE_PIECE.getContainer()).build().create("select * from t_case limit 10");
+        String sql = "select * from t_case limit 10";
+        IEntity<?, ?>[] entities = new Factory.Builder().container(ContainerEnum.DB_ONE_PIECE.getContainer()).build().create(sql);
         System.err.println(entities.length);
         String caseName = entities[0].getFieldValue("case_name");
         System.err.println(caseName);
@@ -131,16 +136,28 @@ public class TestUtil {
 
     @Test
     public void testReadDb2() {
-        List<B> bs = new Factory.Builder().container(ContainerEnum.DB_ONE_PIECE.getContainer()).build().toJavaObjectList("select * from t_case limit 10", B.class);
+        String sql = "select * from t_case limit 10";
+        List<B> bs = new Factory.Builder().container(ContainerEnum.DB_ONE_PIECE.getContainer()).build().toJavaObjectList(sql, B.class);
         String caseName = bs.get(0).getCaseName();
         System.err.println(caseName);
     }
 
     @Test
     public void testReadExcel() {
-        IEntity<?, ?> entity = new Factory.Builder().container(ContainerEnum.EXCEL.getContainer()).build().createE("/excel/客户卡券补充数据-去掉截止512过期数据-补充数据V2.0.xlsx")[0];
-        String voucherCode = entity.getFieldValue("卡券号");
+        String path = "/excel/客户卡券补充数据-去掉截止512过期数据-补充数据V2.0.xlsx";
+        IEntity<?, ?>[] entities = new Factory.Builder().container(ContainerEnum.EXCEL.getContainer()).build().createE(path);
+        System.err.println(entities.length);
+        String voucherCode = entities[0].getFieldValue("卡券号");
         System.err.println(voucherCode);
+    }
+
+    @Test
+    public void testReadCsv() {
+        String path = "/excel/卡券数据-新模板-所有去重数据-未使用状态（3家门店除外）0510.csv";
+        IEntity<?, ?>[] entities = new Factory.Builder().build().createC(path);
+        System.err.println(entities.length);
+        String voucherName = entities[0].getFieldValue("卡券名称");
+        System.err.println(voucherName);
     }
 
     @Data

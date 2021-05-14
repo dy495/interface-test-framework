@@ -1071,11 +1071,10 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //bug下架商品可以创建兑换积分
-    @Test(description = "积分兑换--创建实体积分兑换时将商品下架", enabled = false)
+    //ok
+    @Test(description = "积分兑换--创建实体积分兑换时将商品下架")
     public void integralExchange_system_23() {
         logger.logCaseStart(caseResult.getCaseName());
-        Long exchangeId = null;
         try {
             String exchangeStartTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
             String exchangeEndTime = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 30), "yyyy-MM-dd HH:mm:ss");
@@ -1086,16 +1085,12 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             IScene scene = CreateExchangeGoodsScene.builder().exchangeGoodsType(CommodityTypeEnum.REAL.name()).goodsId(goodsId)
                     .exchangePrice("1").isLimit(true).exchangePeopleNum("10").specificationList(specificationList).expireType(2).useDays("10")
                     .exchangeStartTime(exchangeStartTime).exchangeEndTime(exchangeEndTime).build();
-            ExchangePage exchangePage = util.toJavaObjectList(ExchangePageScene.builder().build(), ExchangePage.class).get(0);
-            exchangeId = exchangePage.getId();
             String message = util.getResponse(scene).getMessage();
-            String err = "商品已下架，无法创建成功";
+            String err = "商品已下架";
             CommonUtil.checkResult("下架的商品创建积分兑换", err, message);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            ChangeSwitchStatusScene.builder().id(exchangeId).status(false).build().invoke(visitor);
-            DeleteExchangeGoodsScene.builder().id(exchangeId).build().invoke(visitor);
             saveData("积分兑换--创建实体积分兑换时将商品下架");
         }
     }
@@ -1152,7 +1147,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
             String err = "";
             ExchangePage exchangePage = util.toJavaObjectList(ExchangePageScene.builder().build(), ExchangePage.class).get(0);
             exchangeId = exchangePage.getId();
-            CommonUtil.checkResult("结束时间大于开始时间", err, message);
+            CommonUtil.checkResult("结束时间小于开始时间", err, message);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {

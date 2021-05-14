@@ -27,6 +27,8 @@ public class ExcelContainer extends BaseContainer {
     public boolean init() {
         Preconditions.checkArgument(!StringUtils.isBlank(getPath()), "文件路径为空，无法初始化");
         try {
+            logger.info("文件开始加载...");
+            long start = System.currentTimeMillis();
             BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(getPath()));
             Workbook workbook = getPath().endsWith(SUFFIX) ? new XSSFWorkbook(inputStream) : new HSSFWorkbook(inputStream);
             for (int sheetIndex = 0; sheetIndex < workbook.getNumberOfSheets(); sheetIndex++) {
@@ -34,6 +36,7 @@ public class ExcelContainer extends BaseContainer {
                 SheetTable sheetTable = new SheetTable.Builder().sheet(sheet).hsaHeader(hsaHeader).name(sheet.getSheetName()).build();
                 addTable(sheetTable);
             }
+            logger.info("文件加载结束... 耗时：{} ms", System.currentTimeMillis() - start);
         } catch (IOException e) {
             e.printStackTrace();
         }

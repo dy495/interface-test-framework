@@ -3,10 +3,19 @@ package com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.container;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.property.IProperty;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.table.ITable;
 
+/**
+ * 容器接口
+ * 每种类型对应一种容器：db、excel
+ *
+ * @author wangmin
+ * @data 2021-05-11
+ */
 public interface IContainer extends IProperty {
 
     /**
      * 初始化
+     *
+     * @return boolean
      */
     boolean init();
 
@@ -17,7 +26,11 @@ public interface IContainer extends IProperty {
      */
     String getPath();
 
-
+    /**
+     * 放入路径
+     *
+     * @param path 路径
+     */
     void setPath(String path);
 
     /**

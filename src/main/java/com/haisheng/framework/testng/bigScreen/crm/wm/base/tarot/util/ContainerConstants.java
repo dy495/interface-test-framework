@@ -24,6 +24,8 @@ public class ContainerConstants {
 
     public static final int COLLECT_INIT_CAPACITY = 1024;
 
+    public static final char CSV_DEFAULT_SEPARATOR = ',';
+
     /**
      * 数据库表默认sql
      */

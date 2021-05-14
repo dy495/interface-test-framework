@@ -7,6 +7,8 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.row.IRow;
  *
  * @param <S> sql类
  * @param <F> 工厂类
+ * @author wangmin
+ * @date 2021-05-11
  */
 public interface IEntity<S, F> {
 

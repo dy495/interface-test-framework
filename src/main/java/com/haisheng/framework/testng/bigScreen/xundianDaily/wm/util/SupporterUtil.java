@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.util.BasicUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.*;
@@ -33,9 +34,6 @@ import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.voucherm
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
-import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -47,9 +45,7 @@ import java.util.stream.Collectors;
  * @author wangmin
  * @date 2021/1/20 13:36
  */
-public class SupporterUtil {
-    public static final Logger logger = LoggerFactory.getLogger(SupporterUtil.class);
-    public final static Integer SIZE = 100 / 10;
+public class SupporterUtil extends BasicUtil {
     private final VisitorProxy visitor;
 
     /**
@@ -58,55 +54,8 @@ public class SupporterUtil {
      * @param visitor visitor
      */
     public SupporterUtil(VisitorProxy visitor) {
+        super(visitor);
         this.visitor = visitor;
-    }
-
-    /**
-     * 收集结果
-     * 结果为bean类型
-     *
-     * @param scene 接口场景
-     * @param bean  bean类
-     * @param <T>   T
-     * @return bean的集合
-     */
-    public <T> List<T> collectBean(IScene scene, Class<T> bean) {
-        List<T> list = new ArrayList<>();
-        int total = scene.invoke(visitor).getInteger("total");
-        int s = CommonUtil.getTurningPage(total, SIZE);
-        for (int i = 1; i < s; i++) {
-            scene.setPage(i);
-            scene.setSize(SIZE);
-            JSONArray array = visitor.invokeApi(scene).getJSONArray("list");
-            list.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, bean)).collect(Collectors.toList()));
-        }
-        return list;
-    }
-
-    /**
-     * 收集结果
-     * 结果为bean类型
-     *
-     * @param scene 接口场景
-     * @param bean  bean类
-     * @param key   指定的key
-     * @param value 指定key的指定value
-     * @param <T>   T
-     * @return bean
-     */
-    public <T> T collectBeanByField(@NotNull IScene scene, Class<T> bean, String key, Object value) {
-        int total = scene.invoke(visitor).getInteger("total");
-        int s = CommonUtil.getTurningPage(total, SIZE);
-        for (int i = 1; i < s; i++) {
-            scene.setPage(i);
-            scene.setSize(SIZE);
-            JSONArray array = scene.invoke(visitor).getJSONArray("list");
-            T clazz = array.stream().map(e -> (JSONObject) e).filter(e -> e.getObject(key, value.getClass()).equals(value)).findFirst().map(e -> JSONObject.toJavaObject(e, bean)).orElse(null);
-            if (clazz != null) {
-                return clazz;
-            }
-        }
-        return null;
     }
 
     /**
@@ -191,7 +140,7 @@ public class SupporterUtil {
         int num = CommonUtil.getRandom(1, 100000);
         String voucherName = typeEnum.getDesc() + num;
         IScene scene = VoucherFormVoucherPageScene.builder().voucherName(voucherName).build();
-        List<VoucherPage> vouchers = collectBean(scene, VoucherPage.class);
+        List<VoucherPage> vouchers = toJavaObjectList(scene, VoucherPage.class);
         if (vouchers.isEmpty()) {
             return voucherName;
         }
@@ -269,7 +218,7 @@ public class SupporterUtil {
      */
     public List<VoucherSendRecord> getVoucherSendRecordList(Long voucherId) {
         IScene scene = SendRecordScene.builder().voucherId(voucherId).build();
-        return collectBean(scene, VoucherSendRecord.class);
+        return toJavaObjectList(scene, VoucherSendRecord.class);
     }
 
     /**
@@ -291,7 +240,7 @@ public class SupporterUtil {
      */
     public List<VoucherInvalidPageBean> getVoucherInvalidList(Long voucherId) {
         IScene scene = VoucherInvalidPageScene.builder().id(voucherId).build();
-        return collectBean(scene, VoucherInvalidPageBean.class);
+        return toJavaObjectList(scene, VoucherInvalidPageBean.class);
     }
 
     /**
@@ -312,7 +261,7 @@ public class SupporterUtil {
      */
     public VoucherPage getVoucherPage(String voucherName) {
         IScene scene = VoucherFormVoucherPageScene.builder().voucherName(voucherName).build();
-        return collectBeanByField(scene, VoucherPage.class, "voucher_name", voucherName);
+        return toJavaObject(scene, VoucherPage.class, "voucher_name", voucherName);
     }
 
     /**
@@ -323,7 +272,7 @@ public class SupporterUtil {
      */
     public VoucherPage getVoucherPage(Long voucherId) {
         IScene scene = VoucherFormVoucherPageScene.builder().build();
-        return collectBeanByField(scene, VoucherPage.class, "voucher_id", voucherId);
+        return toJavaObject(scene, VoucherPage.class, "voucher_id", voucherId);
     }
 
     /**
@@ -373,7 +322,7 @@ public class SupporterUtil {
      */
     public ApplyPageBean getAuditingApplyPage(String voucherName) {
         IScene scene = ApplyPageScene.builder().name(voucherName).status(ApplyStatusEnum.AUDITING.getId()).build();
-        return collectBeanByField(scene, ApplyPageBean.class, "name", voucherName);
+        return toJavaObject(scene, ApplyPageBean.class, "name", voucherName);
     }
 
     /**
@@ -384,7 +333,7 @@ public class SupporterUtil {
      */
     public ApplyPageBean getApplyPage(String voucherName) {
         IScene scene = ApplyPageScene.builder().name(voucherName).build();
-        return collectBeanByField(scene, ApplyPageBean.class, "name", voucherName);
+        return toJavaObject(scene, ApplyPageBean.class, "name", voucherName);
     }
 
     /**
@@ -396,7 +345,7 @@ public class SupporterUtil {
     public ApplyPageBean getApplyPageByTime(String voucherName, String time) {
         logger.info("time is:{}", time);
         IScene scene = ApplyPageScene.builder().name(voucherName).build();
-        List<ApplyPageBean> voucherApplies = collectBean(scene, ApplyPageBean.class);
+        List<ApplyPageBean> voucherApplies = toJavaObjectList(scene, ApplyPageBean.class);
         return voucherApplies.stream().filter(e -> e.getName().equals(voucherName) && e.getApplyTime().contains(time)).findFirst().orElse(null);
     }
 
@@ -408,7 +357,7 @@ public class SupporterUtil {
      */
     public void applyVoucher(String voucherName, String status) {
         IScene scene = ApplyPageScene.builder().name(voucherName).status(ApplyStatusEnum.AUDITING.getId()).build();
-        ApplyPageBean applyPage = collectBeanByField(scene, ApplyPageBean.class, "name", voucherName);
+        ApplyPageBean applyPage = toJavaObject(scene, ApplyPageBean.class, "name", voucherName);
         ApplyApprovalScene.builder().id(applyPage.getId()).status(status).build().invoke(visitor);
     }
 
@@ -723,7 +672,7 @@ public class SupporterUtil {
 
     public ExchangePage getExchangePage(Long id) {
         IScene exchangePageScene = ExchangePageScene.builder().build();
-        return collectBeanByField(exchangePageScene, ExchangePage.class, "id", id);
+        return toJavaObject(exchangePageScene, ExchangePage.class, "id", id);
     }
 
     /**
@@ -761,7 +710,7 @@ public class SupporterUtil {
                 .exchangeStartTime(exchangeStartTime)
                 .exchangeEndTime(exchangeEndTime)
                 .build().invoke(visitor);
-        return collectBean(ExchangePageScene.builder().build(), ExchangePage.class).get(0);
+        return toJavaObjectList(ExchangePageScene.builder().build(), ExchangePage.class).get(0);
     }
 
     /**
@@ -777,7 +726,7 @@ public class SupporterUtil {
         CreateExchangeGoodsScene.builder().exchangeGoodsType(CommodityTypeEnum.FICTITIOUS.name()).goodsId(voucherId)
                 .exchangePrice(1L).isLimit(true).exchangePeopleNum(10).exchangeStartTime(exchangeStartTime)
                 .exchangeEndTime(exchangeEndTime).expireType(2).useDays(10).exchangeNum(1L).build().invoke(visitor);
-        return collectBean(ExchangePageScene.builder().build(), ExchangePage.class).get(0);
+        return toJavaObjectList(ExchangePageScene.builder().build(), ExchangePage.class).get(0);
     }
 
     /**
@@ -882,7 +831,7 @@ public class SupporterUtil {
      */
     public Long getCategoryId(String categoryName) {
         IScene scene = CategoryPageScene.builder().build();
-        CategoryPageBean categoryPageBean = collectBeanByField(scene, CategoryPageBean.class, "category_name", categoryName);
+        CategoryPageBean categoryPageBean = toJavaObject(scene, CategoryPageBean.class, "category_name", categoryName);
         logger.info("categoryName is：{}", categoryPageBean.getCategoryName());
         logger.info("categoryId is：{}", categoryPageBean.getId());
         return categoryPageBean.getId();
@@ -896,7 +845,7 @@ public class SupporterUtil {
      */
     public Long getCategoryId(IntegralCategoryTypeEnum categoryLevel) {
         IScene scene = CategoryPageScene.builder().build();
-        CategoryPageBean categoryPageBean = collectBeanByField(scene, CategoryPageBean.class, "category_level", categoryLevel.getDesc());
+        CategoryPageBean categoryPageBean = toJavaObject(scene, CategoryPageBean.class, "category_level", categoryLevel.getDesc());
         logger.info("categoryName is：{}", categoryPageBean.getCategoryName());
         logger.info("categoryId is：{}", categoryPageBean.getId());
         return categoryPageBean.getId();
@@ -910,7 +859,7 @@ public class SupporterUtil {
      */
     public String getCategoryName(Long id) {
         IScene scene = CategoryPageScene.builder().build();
-        return collectBeanByField(scene, CategoryPageBean.class, "id", id).getCategoryName();
+        return toJavaObject(scene, CategoryPageBean.class, "id", id).getCategoryName();
     }
 
     /**
@@ -921,7 +870,7 @@ public class SupporterUtil {
      */
     public Boolean goodsIsOccupation(String goodsName) {
         IScene scene = ExchangePageScene.builder().exchangeGoods(goodsName).build();
-        ExchangePageBean exchangePageBean = collectBeanByField(scene, ExchangePageBean.class, "goods_name", goodsName);
+        ExchangePageBean exchangePageBean = toJavaObject(scene, ExchangePageBean.class, "goods_name", goodsName);
         return exchangePageBean != null;
     }
 

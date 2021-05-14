@@ -264,7 +264,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             List<VoucherPage> voucherPageList = util.toJavaObjectList(voucherPageScene, VoucherPage.class);
             List<Long> voucherIdList = voucherPageList.stream().map(VoucherPage::getVoucherId).collect(Collectors.toList());
             IScene voucherListScene = ReceptionManagerVoucherListScene.builder().build();
-            List<ReceptionManagerVoucherListBean> managerVoucherListBeanList = util.JSONArrayToList(voucherListScene, ReceptionManagerVoucherListBean.class);
+            List<ReceptionManagerVoucherListBean> managerVoucherListBeanList = util.toJavaObjectList(voucherListScene, ReceptionManagerVoucherListBean.class,"list");
             List<Long> voucherLit = managerVoucherListBeanList.stream().map(ReceptionManagerVoucherListBean::getVoucherId).collect(Collectors.toList());
             voucherIdList.forEach(e -> Preconditions.checkArgument(!voucherLit.contains(e), voucherListScene.getPath() + " 接口包含已作废卡券 " + e));
         } catch (Exception | AssertionError e) {

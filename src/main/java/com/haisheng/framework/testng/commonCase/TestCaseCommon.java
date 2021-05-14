@@ -173,7 +173,7 @@ public class TestCaseCommon {
             return JSON.toJSONString(apiResponse);
 
         } catch (Exception e) {
-            logger.debug("apiCustomerRequest Exception: " + e.toString());
+            logger.debug("apiCustomerRequest Exception: " + e.getMessage());
             throw e;
         }
     }
@@ -301,22 +301,6 @@ public class TestCaseCommon {
             int status = resJo.getInteger("status");
             String path = resJo.getString("path");
             throw new Exception("接口调用失败，status：" + status + "，path：" + path);
-        }
-    }
-
-    public void checkMessage(String function, ApiResponse apiResponse, String message) throws Exception {
-
-        String messageRes = apiResponse.getMessage();
-        if (!message.equals(messageRes)) {
-            throw new Exception(function + "，提示信息与期待不符，期待=" + message + "，实际=" + messageRes);
-        }
-    }
-
-    public void checkMessage(String function, ApiResponse apiResponse, String message, boolean isEqual) throws Exception {
-
-        String messageRes = apiResponse.getMessage();
-        if (!messageRes.contains(message)) {
-            throw new Exception(function + "，提示信息与期待不符，期待提示信息包括-" + message + "，实际=" + messageRes);
         }
     }
 
@@ -450,13 +434,15 @@ public class TestCaseCommon {
         }
         String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36";
         Header[] headers;
-        headers = HttpHeader.custom().contentType("application/json; charset=utf-8")
-                .other("shop_id", commonConfig.shopId)
-                .other("role_id", commonConfig.roleId)
+        HttpHeader httpHeader = HttpHeader.custom()
+                .contentType("application/json; charset=utf-8")
                 .userAgent(userAgent)
                 .referer(commonConfig.referer)
-                .authorization(authorization)
-                .build();
+                .authorization(authorization);
+        //有的业务线不存在shopId和roleId时传入空会失败，在此加个判断
+        httpHeader = commonConfig.shopId != null ? httpHeader.other("shop_id", commonConfig.shopId) : httpHeader;
+        httpHeader = commonConfig.roleId != null ? httpHeader.other("role_id", commonConfig.roleId) : httpHeader;
+        headers = httpHeader.build();
         config = HttpConfig.custom()
                 .headers(headers)
                 .client(client);
@@ -479,7 +465,7 @@ public class TestCaseCommon {
     }
 
     private void dingPushFinal(boolean isFAIL) {
-        if (DEBUG.trim().toLowerCase().equals("false") && isFAIL) {
+        if (DEBUG.trim().equalsIgnoreCase("false") && isFAIL) {
             AlarmPush alarmPush = new AlarmPush();
             alarmPush.setDingWebhook(commonConfig.dingHook);
             alarmPush.alarmToRd(commonConfig.pushRd);
@@ -490,7 +476,7 @@ public class TestCaseCommon {
         logger.info("ding msg: " + msg);
 
         AlarmPush alarmPush = new AlarmPush();
-        if (DEBUG.trim().toLowerCase().equals("false")) {
+        if (DEBUG.trim().equalsIgnoreCase("false")) {
             alarmPush.setDingWebhook(commonConfig.dingHook);
         } else {
             alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
@@ -506,7 +492,7 @@ public class TestCaseCommon {
 
     public void saveData(String caseDesc) {
         setBasicParaToDB(caseDesc);
-        if (DEBUG.trim().toLowerCase().equals("false")) {
+        if (DEBUG.trim().equalsIgnoreCase("false")) {
             qaDbUtil.saveToCaseTable(caseResult);
         }
         logger.debug("insert case done");

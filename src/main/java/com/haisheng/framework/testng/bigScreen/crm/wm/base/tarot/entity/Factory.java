@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.sql.Sql;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.container.IContainer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.row.IRow;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.table.CsvTable;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.table.ITable;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.util.FileUtil;
 import lombok.Setter;
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
 public class Factory implements IFactory {
     private final IContainer container;
 
-    protected Factory(@NotNull Builder builder) {
+    private Factory(@NotNull Builder builder) {
         this.container = builder.container;
     }
 
@@ -38,6 +39,14 @@ public class Factory implements IFactory {
         return create(relativePath);
     }
 
+    @Override
+    public IEntity<?, ?>[] createC(String path) {
+        String relativePath = FileUtil.getResourcePath(path);
+        ITable table = new CsvTable.Builder().path(relativePath).buildTable();
+        IRow[] rows = table.load() ? table.getRows() : new IRow[0];
+        return createEntity(rows).toArray(new IEntity[0]);
+    }
+
     public <T> List<T> toJavaObjectList(@NotNull Sql sql, Class<T> aClass) {
         return toJavaObjectList(sql.getSql(), aClass);
     }
@@ -45,13 +54,6 @@ public class Factory implements IFactory {
     public <T> List<T> toJavaObjectList(String sql, Class<T> aClass) {
         IRow[] rows = invoke(sql);
         return Arrays.stream(rows).map(this::createJSONObject).map(e -> JSONObject.toJavaObject(e, aClass)).collect(Collectors.toList());
-    }
-
-    @NotNull
-    private JSONObject createJSONObject(@NotNull IRow row) {
-        JSONObject object = new JSONObject();
-        Arrays.stream(row.getFields()).forEach(field -> object.put(field.getKey(), row.getField(field.getKey()).getValue()));
-        return object;
     }
 
     @Setter
@@ -80,5 +82,11 @@ public class Factory implements IFactory {
 
     private List<IEntity<?, ?>> createEntity(IRow[] rows) {
         return Arrays.stream(rows).map(row -> new Entity.Builder().row(row).factory(this).buildEntity()).collect(Collectors.toList());
+    }
+
+    private JSONObject createJSONObject(IRow row) {
+        JSONObject object = new JSONObject();
+        Arrays.stream(row.getFields()).forEach(field -> object.put(field.getKey(), row.getField(field.getKey()).getValue()));
+        return object;
     }
 }

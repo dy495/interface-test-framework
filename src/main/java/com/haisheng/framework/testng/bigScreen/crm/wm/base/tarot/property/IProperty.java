@@ -2,6 +2,9 @@ package com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.property;
 
 /**
  * 公共的基本属性接口
+ *
+ * @author wngmin
+ * @date 2021-05-11
  */
 public interface IProperty {
 
