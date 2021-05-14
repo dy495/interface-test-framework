@@ -1,8 +1,8 @@
-package com.haisheng.framework.testng.bigScreen.crm.wm.util;
+package com.haisheng.framework.testng.bigScreen.xundianDaily.wm.util;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumDingTalkWebHook;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.bean.ShopInfo;
 import com.haisheng.framework.util.DateTimeUtil;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -17,48 +17,37 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DingPushUtil {
-    public static final Logger logger = LoggerFactory.getLogger(DingPushUtil.class);
-    private static final String WEBHOOK_TOKEN = EnumDingTalkWebHook.XMX.getWebHook();
+    public static final Logger logger = LoggerFactory.getLogger(com.haisheng.framework.testng.bigScreen.crm.wm.util.DingPushUtil.class);
+    private static final String WEBHOOK_TOKEN = "https://oapi.dingtalk.com/robot/send?access_token=30334438d6943ac6a34ed2708a9ef16b15be3e502e5591ffc95224bdcacf1ac2";
 
-    public static void sendText(String msg, String sql, String caseName) {
-        try {
-            String date = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
-            JSONObject object = new JSONObject();
-            JSONObject markdown = new JSONObject();
-            object.put("msgtype", "markdown");
-            object.put("markdown", markdown);
-            markdown.put("title", "balabala");
-            markdown.put("text", "### " + "**" + "Ding，有空看一下" + "**" + "\n"
-                    + "\n" + date + "\n"
-                    + "\n" + "caseName：" + caseName + "\n"
-                    + "\n" + "SQL错误：" + msg + "\n"
-                    + "\n" + "SQL语句：" + sql + "\n"
-                    + "\n" + "@15321527989" + "\n");
-            JSONObject at = new JSONObject();
-            JSONArray atMobiles = new JSONArray();
-            atMobiles.add("15321527989");
-            at.put("atMobiles", atMobiles);
-            at.put("isAtAll", false);
-            object.put("at", at);
-            send(object);
-        } catch (Exception e) {
-            logger.error(e.toString());
-        }
+    public static void sendMessage(List<ShopInfo> shopInfos) {
+        StringBuilder sb = new StringBuilder();
+        shopInfos.forEach(shopInfo -> {
+            String shopName = shopInfo.getShopName();
+            sb.append("\n").append("### **").append("门店：").append(shopName).append("**").append("\n");
+            shopInfo.getRealTimeShopPvUvBeanList().forEach(realTimeShopPvUvBean -> {
+                sb.append("\n").append("##### **").append("时间段：").append(realTimeShopPvUvBean.getTime()).append("**").append("\n")
+                        .append("###### 昨日人次：").append(realTimeShopPvUvBean.getYesterdayPv()).append("        昨日人数：").append(realTimeShopPvUvBean.getYesterdayUv()).append("\n");
+            });
+        });
+        send(sb.toString());
     }
 
-    public static void sendText(final String msg) {
+    public static void send(String messageDetail) {
         Map<String, String> map = new HashMap<>();
-        map.put("title", "balabala");
-        map.put("text", "### " + "**" + "Ding，有空看一下" + "**" + "\n"
-                + "\n" + DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss") + "\n"
-                + "\n" + "异常：" + msg + "\n");
-        sendText(map);
+        map.put("title", "巡检");
+        String text = "## **" + "线上巡检数据提醒：" + "**" + "\n" +
+                "\n" + "### **" + DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss") + "**" + "\n" +
+                "\n" + messageDetail + "\n";
+        map.put("text", text);
+        send(map);
     }
 
-    public static void sendText(Map<String, String> map) {
+    public static void send(Map<String, String> map) {
         try {
             String text = map.get("text");
             String title = map.get("title");

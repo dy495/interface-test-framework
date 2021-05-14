@@ -1,15 +1,6 @@
-package com.haisheng.framework.testng.bigScreen.xundianDaily.wm.testcase;
+package com.haisheng.framework.testng.bigScreen.xundianOnline.wm.testcase;
 
-import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.entity.Factory;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.entity.IEntity;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.row.IRow;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.table.CsvTable;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.table.ITable;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.util.ContainerEnum;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.util.FileUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
@@ -17,7 +8,9 @@ import com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.sence.pc.Passeng
 import com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.sence.pc.RealTimeShopPvUv;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.bean.PassengerFlowBean;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.bean.RealTimeShopPvUvBean;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.bean.ShopInfo;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.enumerator.AccountEnum;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.util.DingPushUtil;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -28,7 +21,9 @@ import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 门店管理中心
@@ -79,22 +74,42 @@ public class ShopManagerCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             user.loginPc(AccountEnum.ZD);
-            IScene passengerFlow = PassengerFlow.builder().build();
-            List<PassengerFlowBean> passengerFlowBeanList = util.toJavaObjectList(passengerFlow, PassengerFlowBean.class, "list");
+            List<ShopInfo> shopInfos = new LinkedList<>();
+            List<PassengerFlowBean> passengerFlowBeanList = util.toJavaObjectList(PassengerFlow.builder().build(), PassengerFlowBean.class, "list");
             passengerFlowBeanList.forEach(e -> {
-                Long shopId = e.getId();
-                IScene realTimeShopPvUv = RealTimeShopPvUv.builder().shopId(String.valueOf(shopId)).build();
-                List<RealTimeShopPvUvBean> realTimeShopPvUvBeanList = util.toJavaObjectList(realTimeShopPvUv, RealTimeShopPvUvBean.class, "list");
-                int todayPvSum = realTimeShopPvUvBeanList.stream().mapToInt(RealTimeShopPvUvBean::getTodayPv).sum();
-                int todayUvSum = realTimeShopPvUvBeanList.stream().mapToInt(RealTimeShopPvUvBean::getTodayUv).sum();
-                int yesterdayPvSum = realTimeShopPvUvBeanList.stream().mapToInt(RealTimeShopPvUvBean::getYesterdayPv).sum();
-                int yesterdayUvSum = realTimeShopPvUvBeanList.stream().mapToInt(RealTimeShopPvUvBean::getYesterdayUv).sum();
-                Preconditions.checkArgument(todayPvSum != 0);
-
-
+                ShopInfo shopInfo = new ShopInfo();
+                List<RealTimeShopPvUvBean> realTimeShopPvUvBeanList = util.toJavaObjectList(RealTimeShopPvUv.builder().shopId(String.valueOf(e.getId())).build(), RealTimeShopPvUvBean.class, "list")
+                        .stream().filter(b -> b.getTime().compareTo("08:00") >= 0 && b.getTime().compareTo("22:00") <= 0).collect(Collectors.toList());
+                shopInfo.setShopName(e.getName());
+                shopInfo.setRealTimeShopPvUvBeanList(realTimeShopPvUvBeanList);
+                shopInfos.add(shopInfo);
             });
+            DingPushUtil.sendMessage(shopInfos);
         } catch (Exception e) {
             collectMessage(e);
         }
     }
+
+    @Test
+    public void test2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            user.loginPc(AccountEnum.JKQS);
+            List<ShopInfo> shopInfos = new LinkedList<>();
+            List<PassengerFlowBean> passengerFlowBeanList = util.toJavaObjectList(PassengerFlow.builder().build(), PassengerFlowBean.class, "list");
+            passengerFlowBeanList.forEach(e -> {
+                ShopInfo shopInfo = new ShopInfo();
+                List<RealTimeShopPvUvBean> realTimeShopPvUvBeanList = util.toJavaObjectList(RealTimeShopPvUv.builder().shopId(String.valueOf(e.getId())).build(), RealTimeShopPvUvBean.class, "list")
+                        .stream().filter(b -> b.getTime().compareTo("08:00") >= 0 && b.getTime().compareTo("22:00") <= 0).collect(Collectors.toList());
+                shopInfo.setShopName(e.getName());
+                shopInfo.setRealTimeShopPvUvBeanList(realTimeShopPvUvBeanList);
+                shopInfos.add(shopInfo);
+            });
+            DingPushUtil.sendMessage(shopInfos);
+        } catch (Exception e) {
+            collectMessage(e);
+        }
+    }
+
+
 }

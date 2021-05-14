@@ -10,6 +10,7 @@ import java.io.Serializable;
  */
 @Data
 public class RealTimeShopPvUvBean implements Serializable {
+
     /**
      * 时间段
      */
@@ -28,9 +29,15 @@ public class RealTimeShopPvUvBean implements Serializable {
     @JSONField(name = "today_uv")
     private Integer todayUv;
 
+    /**
+     * 昨日人次
+     */
     @JSONField(name = "yesterday_pv")
     private Integer yesterdayPv;
 
+    /**
+     * 昨日人数
+     */
     @JSONField(name = "yesterday_uv")
     private Integer yesterdayUv;
 

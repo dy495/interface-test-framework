@@ -8,13 +8,15 @@
 
     <test name="online-monitor" preserve-order="true">
         <classes>
+            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.wm.testcase.ShopManagerCase"/>
+
             <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.testShop.StorePcCaseOnline"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.bgy.StoreDataConsistentcyBgy"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.testShop.StoreDataCenter"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.zdf.SurveillanceForZDF"></class>
-<!--            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.xtc.StoreDataForXtc"></class>-->
+            <!--            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.xtc.StoreDataForXtc"></class>-->
             <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.testShop.XundianAppData"></class>
-<!--            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.testShop.XundianCaseOnline"></class>-->
+            <!--            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.testShop.XundianCaseOnline"></class>-->
             <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.dzy.StoreDataForDzy"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.heyShop.StoreDataForHS"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.lxq.XundianAppDataOnline"></class>
