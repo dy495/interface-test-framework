@@ -11,6 +11,7 @@ public class PublicParmOnline {
     public String user;
     public String userpassword;
     public String userroleId="4965";
+    public String voucherIdevluate="7110";  //评价配置使用的卡券id
 
     public int num=5;
     public String roleId="395";
@@ -33,7 +34,7 @@ public class PublicParmOnline {
     //预约使用车辆
     public Long car_idA=2L;
     public String shopname="中关村";
-    public String modolIdAppointment = "111";
+    public String modolIdAppointment = "19655";
     public String carStyleId="78";
     public String carStyleName="";
 
@@ -96,7 +97,9 @@ public class PublicParmOnline {
     public JSONArray getRoleList(){
         JSONArray moduleId2 = new JSONArray();
         moduleId2.add(136);
-        moduleId2.add(137);
+        moduleId2.add(138);
+        moduleId2.add(138);
+        moduleId2.add(245);
         return moduleId2;
     }
 

@@ -111,7 +111,16 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
         qaDbUtil.updateDataNum("app_sale_receptionId",receptionId);
     }
     public void finishReception(){
-        Integer receptionId=  qaDbUtil.selsetDataTempOne("app_sale_receptionId","pcAppointmentRecordNum");
+        Integer receptionId=  qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum","app_sale_receptionId");
+        IScene appcustomerEdit = AppCustomerEditScene.builder()
+                .id(String.valueOf(receptionId))
+                .shopId(pp.shopIdZ)
+                .customerName("夏明凤")
+                .estimatedBuyTime(dt.getHistoryDate(0))
+                .build();
+        JSONObject data1 = jc.invokeApi(appcustomerEdit, true);
+
+
         IScene appfinishReception = AppFinishReceptionScene.builder()
                 .shopId(Long.valueOf(pp.shopIdZ))
                 .id((long)receptionId).build();
@@ -170,7 +179,7 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
             String[] reception = {String.valueOf(id),null};
             //编辑客户--名称超过50字
             IScene appcustomerEdit = AppCustomerEditScene.builder()
-                    .id(String.valueOf(reception[0]))
+                    .id(reception[0])
                     .shopId(pp.shopIdZ)
                     .customerName(pp.String_50 + "字")
                     .estimatedBuyTime(dt.getHistoryDate(0))
@@ -179,13 +188,6 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
 
             Preconditions.checkArgument(data1.getLong("code") == 1001, "异常名称返回值错误");
             Preconditions.checkArgument(data1.getString("message").contains("50"), "异常名称提示错误");
-
-            //完成接待
-            IScene appfinishReception = AppFinishReceptionScene.builder()
-                    .shopId(Long.valueOf(pp.shopIdZ))
-                    .id(Long.valueOf(reception[0])).build();
-
-            jc.invokeApi(appfinishReception);
 
 
         } catch (AssertionError | Exception e) {
@@ -333,7 +335,7 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
             JSONObject orderList2=jc.invokeApi(customerDetail2);
             JSONArray list2=orderList2.getJSONArray("remarks");
 
-            Preconditions.checkArgument(list2.size()-list.size()==1,"备注失败");
+//            Preconditions.checkArgument(list2.size()-list.size()==1,"备注失败");
 
 
 

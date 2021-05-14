@@ -11,7 +11,7 @@ public class PublicParm {
     public String user;
     public String userpassword;
     public String userroleId="4965";
-    public String voucherIdevluate="3273";  //评价配置使用的卡券id
+    public String voucherIdevluate="3273";  //评价配置使用的卡券id    评价任务专用
 
     //3.0
 

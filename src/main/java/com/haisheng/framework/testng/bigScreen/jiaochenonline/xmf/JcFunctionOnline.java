@@ -74,6 +74,34 @@ public class JcFunctionOnline {
         return id;
     }
 
+    //new 获取小程序待评价的消息id
+    public String[]  getMessageId(String messageType){
+        String messageId[] =new String[2];
+        //小程序获取评价id
+        Long lastValue=null;
+        int size=20;
+        while(size==20) {
+            JSONObject data = jc.appletMessageList(lastValue, 20);
+            lastValue = data.getLong("last_value");
+            JSONArray list = data.getJSONArray("list");
+            size = list.size();
+            for (int i = 0; i < list.size(); i++) {
+                messageId[0]= list.getJSONObject(i).getString("id");
+                JSONObject messageDetail = jc.appletMessageDetail(messageId[0]);
+                String messageTypeName = messageDetail.getString("message_type_name");
+                String isCanEvaluate = messageDetail.getString("is_can_evaluate");
+                if (messageTypeName.equals(messageType) && isCanEvaluate.equals("true")) {
+                    messageId[1] = messageDetail.getJSONObject("evaluate_info").getString("id");
+                    return messageId;
+                }else{
+                    messageId[0]=null;
+                }
+            }
+        }
+        return messageId;
+
+    }
+
     public JSONArray getroleLlist(){
         //shopList
         JSONObject shopdate=new JSONObject();

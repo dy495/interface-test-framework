@@ -520,7 +520,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             er.effective_days="1";     //卡券有效期
 //            er.days="1";            //提醒天数
             er.mileage=maile;        //提醒公里数
-            Integer RemindId =jc.createRemindMethod(er).getInteger("id");
+//            Integer RemindId =jc.createRemindMethod(er).getInteger("id");
 //            公里数同一任务只触发一次智能提醒，小程序收不到卡券
             Preconditions.checkArgument(totalAfter-totalAfter2==0,"第一次导入工单后卡券数:"+totalAfter+";第二次导入工单数："+totalAfter2+",导入工单前："+total);
             Preconditions.checkArgument(totalAfter-total==1,"第一次导入工单后卡券数："+totalAfter+"；导入工单前卡券数："+total);
@@ -688,7 +688,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    @Test(enabled = true,description = "导入180天未接待车牌号")
+//    @Test(enabled = true,description = "导入180天未接待车牌号")
     public void losscustomer() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -710,7 +710,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             System.out.println("phone"+phone);
 
             //新建一个excel,里程数=智能提醒公里数
-            PoiUtils.importlossCustomer(maile,vin,-181,plate,phone,pp.jdgwName);
+//            PoiUtils.importlossCustomer(maile,vin,-181,plate,phone,pp.jdgwName);
             //导入工单
 //            jc.pcWorkOrder(pp.importFilepath2);      //导入工单文件的路径=新建excel 路径
 
@@ -735,7 +735,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
 
             System.out.println(dt.getHHmm(0,"HH:mm:ss"));
             dt.getHHmm(0);
-            String maile="2001";
+            String maile="500";
             String vin="ASDAAAAAAA12"+ CommonUtil.getRandom(5);
             String plate="京AS"+CommonUtil.getRandom(4);
 //            String phone="177"+CommonUtil.getRandom(8);

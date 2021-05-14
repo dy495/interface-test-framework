@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.xmf.pc;
+package com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.pc;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -12,6 +12,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Constant;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.manage.AppointmentMaintainConfigDetailBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletEvaluateSubmitScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.manage.EvaluateConfigSubmitScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.role.PageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shopstylemodel.ManageModelEditScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shopstylemodel.ManageModelPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.DataAbnormal;
@@ -19,6 +20,8 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.SelectReception;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.pcAppointmentConfig;
+import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.JcFunctionOnline;
+import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.PublicParmOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -30,18 +33,19 @@ import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
 
-public class JcPc extends TestCaseCommon implements TestCaseStd {
+public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
     CommonConfig commonConfig = new CommonConfig();
     ScenarioUtil jc = ScenarioUtil.getInstance();
     DateTimeUtil dt = new DateTimeUtil();
     JsonPathUtil jpu = new JsonPathUtil();
-    PublicParm pp = new PublicParm();
-    JcFunction pf = new JcFunction();
+    PublicParmOnline pp = new PublicParmOnline();
+    JcFunctionOnline pf = new JcFunctionOnline();
 
     public int page = 1;
     public int size = 10;
@@ -58,23 +62,23 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
     @Override
     public void initial() {
         logger.debug("before classs initial");
-        jc.changeIpPort(EnumTestProduce.JC_DAILY.getAddress());
+        jc.changeIpPort(EnumTestProduce.JC_ONLINE.getAddress());
 
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "xmf";
-        commonConfig.referer = EnumTestProduce.JC_DAILY.getReferer();
-        commonConfig.product = EnumTestProduce.JC_DAILY.name();
+        commonConfig.referer = EnumTestProduce.JC_ONLINE.getReferer();
+        commonConfig.product = EnumTestProduce.JC_ONLINE.name();
 
         //replace backend gateway url
         //commonConfig.gateway = "";
 
         //replace jenkins job name
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_ONLINE_TEST.getJobName());
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JC_DAILY.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JC_ONLINE.getDesc() + commonConfig.checklistQaOwner);
 
 
         //replace ding push conf
@@ -84,8 +88,8 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 //        commonConfig.referer="http://dev.dealer-jc.winsenseos.cn/authpage/login";
         //set shop id
-        commonConfig.shopId ="49195";
-        commonConfig.roleId="603";
+        commonConfig.shopId =pp.shopIdZ;
+        commonConfig.roleId=pp.roleId;
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);
@@ -110,7 +114,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         object.put("phone", phone);
         object.put("verification_code", verificationCode);
         commonConfig.roleId=roleId;
-        httpPost(path, object, EnumTestProduce.JC_DAILY.getAddress());
+        httpPost(path, object, EnumTestProduce.JC_ONLINE.getAddress());
     }
 
 
@@ -408,15 +412,17 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
     @Test(description = "创建账号角色5个")    //ok
     public void Jc_account5() {
         try {
-            JSONArray r_dList = new JSONArray();
 
-            String [][]roleId={
-                    {"2874","角色1（东东测试）"},
-                    {"2875","角色2（东东测试）"},
-                    {"2847","角色A"},
-                    {"2889","测试角色"},
-                    {"2873","个人-售前接待"},
-            };
+            String roleId [][]=new String [5][2];
+            JSONArray r_dList = new JSONArray();
+            IScene rolepage= PageScene.builder().page(1).size(10).build();
+            JSONArray list=jc.invokeApi(rolepage).getJSONArray("list");
+            for(int i=0;i<5;i++){
+                String id=list.getJSONObject(i).getString("id");
+                String name=list.getJSONObject(i).getString("name");
+                roleId[i][0]=id;
+                roleId[i][1]=name;
+            }
             for(int i=0;i<roleId.length;i++){
                 JSONObject roleList1=pf.getRoleList1(roleId[i][0],roleId[i][1]);
                 r_dList.add(roleList1);
@@ -647,7 +653,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
      * @description :开始接待接口车牌号异常验证
      * @date :2020/12/15 17:47
      **/
-    @Test(description = "pc接待车牌号验证", dataProvider = "PLATE", dataProviderClass = ScenarioUtil.class)
+//    @Test(description = "pc接待车牌号验证", dataProvider = "PLATE", dataProviderClass = ScenarioUtil.class)
     public void Jc_pcReceiptAb(String plate) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -677,7 +683,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
     }
 
     //pc-取消接待
-    @Test()
+//    @Test()
     public void Jc_pcCancleReception() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

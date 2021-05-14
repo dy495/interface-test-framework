@@ -653,7 +653,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
             Long id = message.getLong("id");
 
             String messageName = jc.appletMessageDetail(id.toString()).getString("content");
-            Preconditions.checkArgument(messageName.equals("您的卡券【" + voucher_code[1] + "】已被核销，请立即查看"));
+            Preconditions.checkArgument(messageName.equals("您的卡券【" + voucher_code[1] + "】已被核销，请立即查看"),"");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -680,6 +680,29 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
             collectMessage(e);
         } finally {
             saveData("申请道路救援，pc救援列表+1");
+        }
+    }
+
+    @Test(description = "文章详情")  //ok
+    public void actiaclDetail() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject last_value=null;
+            int size=10;
+            while(size==10){
+                JSONObject data = jc.AppletPageScene(10,last_value);
+                last_value=data.getJSONObject("last_value");
+                JSONArray list=data.getJSONArray("list");
+                size=list.size();
+                for(int i=0;i<list.size();i++){
+                    String id=list.getJSONObject(i).getString("id");
+                    jc.appletArticleDetail(id);
+                }
+            }
+        } catch (AssertionError | Exception e) {
+            collectMessage(e);
+        } finally {
+            saveData("文章详情");
         }
     }
 

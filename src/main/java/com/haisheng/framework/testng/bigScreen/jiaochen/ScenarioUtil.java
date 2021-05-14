@@ -1684,7 +1684,7 @@ public class ScenarioUtil extends TestCaseCommon {
     public static Object[] plate() {   //异常车牌号集合
         return new String[]{
                 "苏BJ123",   //6位
-                "BJ12345",    //不含汉字
+//                "BJ12345",    //不含汉字
                 "京1234567",  //不含英文
 //                "京bj12345", //含小写
                 "京B@12345", //含字母
