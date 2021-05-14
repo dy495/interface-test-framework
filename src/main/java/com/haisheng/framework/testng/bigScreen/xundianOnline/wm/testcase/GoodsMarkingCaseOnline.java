@@ -93,7 +93,7 @@ public class GoodsMarkingCaseOnline extends TestCaseCommon implements TestCaseSt
                 CommonUtil.checkResult("返回值message", err, message);
                 //删除品牌
                 IScene scene = BrandPageScene.builder().build();
-                BrandPageBean brandPageBean = util.collectBeanByField(scene, BrandPageBean.class, "brand_name", name);
+                BrandPageBean brandPageBean = util.toJavaObject(scene, BrandPageBean.class, "brand_name", name);
                 DeleteBrandScene.builder().id(brandPageBean.getId()).build().invoke(visitor);
             });
         } catch (AssertionError | Exception e) {
@@ -110,11 +110,11 @@ public class GoodsMarkingCaseOnline extends TestCaseCommon implements TestCaseSt
         try {
             CreateBrandScene.builder().brandName("奔驰").brandDescription("梅赛德斯奔驰").brandPic(util.getCategoryPicPath()).build().invoke(visitor);
             IScene scene = BrandPageScene.builder().build();
-            Long id = util.collectBeanByField(scene, BrandPageBean.class, "brand_name", "奔驰").getId();
+            Long id = util.toJavaObject(scene, BrandPageBean.class, "brand_name", "奔驰").getId();
             //修改品牌
             ChangeBrandStatusScene.builder().id(id).status(false).build().invoke(visitor);
             EditBrandScene.builder().id(id).brandName("联想").brandDescription("thinkPad").brandPic(util.getCategoryPicPath()).build().invoke(visitor);
-            BrandPageBean newBrandPageBean = util.collectBeanByField(scene, BrandPageBean.class, "id", id);
+            BrandPageBean newBrandPageBean = util.toJavaObject(scene, BrandPageBean.class, "id", id);
             CommonUtil.checkResult("修改后品牌名称", "联想", newBrandPageBean.getBrandName());
             CommonUtil.checkResult("修改后品牌描述", "thinkPad", newBrandPageBean.getBrandDescription());
             //删除品牌
@@ -156,7 +156,7 @@ public class GoodsMarkingCaseOnline extends TestCaseCommon implements TestCaseSt
             Long id = util.getCategoryByLevel(IntegralCategoryTypeEnum.FIRST_CATEGORY);
             String categoryName = util.getCategoryName(id);
             IScene scene = CategoryPageScene.builder().firstCategory(id).build();
-            List<CategoryPageBean> categoryPageBeanList = util.collectBean(scene, CategoryPageBean.class);
+            List<CategoryPageBean> categoryPageBeanList = util.toJavaObjectList(scene, CategoryPageBean.class);
             categoryPageBeanList.forEach(e -> {
                 if (e.getCategoryLevel().equals(IntegralCategoryTypeEnum.SECOND_CATEGORY.getDesc())) {
                     CommonUtil.checkResult(e.getCategoryName() + "的父级品类", categoryName, e.getParentCategory());
@@ -183,14 +183,14 @@ public class GoodsMarkingCaseOnline extends TestCaseCommon implements TestCaseSt
             List<Long> categoryIdList = new ArrayList<>();
             Long id = util.getCategoryByLevel(IntegralCategoryTypeEnum.FIRST_CATEGORY);
             IScene scene = CategoryPageScene.builder().firstCategory(id).build();
-            List<CategoryPageBean> categoryPageBeanList = util.collectBean(scene, CategoryPageBean.class);
+            List<CategoryPageBean> categoryPageBeanList = util.toJavaObjectList(scene, CategoryPageBean.class);
             categoryPageBeanList.forEach(e -> {
                 if (e.getCategoryLevel().equals(IntegralCategoryTypeEnum.SECOND_CATEGORY.getDesc())) {
                     categoryIdList.add(e.getId());
                 }
             });
             IScene newScene = CategoryPageScene.builder().firstCategory(id).secondCategory(categoryIdList.get(0)).build();
-            List<CategoryPageBean> newCategoryPageBeanList = util.collectBean(newScene, CategoryPageBean.class);
+            List<CategoryPageBean> newCategoryPageBeanList = util.toJavaObjectList(newScene, CategoryPageBean.class);
             newCategoryPageBeanList.forEach(e -> {
                 if (e.getCategoryLevel().equals(IntegralCategoryTypeEnum.THIRD_CATEGORY.getDesc())) {
                     CommonUtil.checkResult(e.getCategoryName() + "的父级品类", util.getCategoryName(categoryIdList.get(0)), e.getParentCategory());
@@ -649,10 +649,10 @@ public class GoodsMarkingCaseOnline extends TestCaseCommon implements TestCaseSt
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = BrandPageScene.builder().build();
-            BrandPageBean brandPageBean = util.collectBean(scene, BrandPageBean.class).get(0);
+            BrandPageBean brandPageBean = util.toJavaObjectList(scene, BrandPageBean.class).get(0);
             String name = brandPageBean.getBrandName().substring(0, 1);
             IScene newScene = BrandPageScene.builder().brandName(name).build();
-            List<BrandPageBean> brandPageBeans = util.collectBean(newScene, BrandPageBean.class);
+            List<BrandPageBean> brandPageBeans = util.toJavaObjectList(newScene, BrandPageBean.class);
             brandPageBeans.forEach(e -> Preconditions.checkArgument(e.getBrandName().contains(name), "搜索结果" + e.getBrandName() + "不包含" + name));
         } catch (AssertionError | Exception e) {
             collectMessage(e);
@@ -667,7 +667,7 @@ public class GoodsMarkingCaseOnline extends TestCaseCommon implements TestCaseSt
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = BrandPageScene.builder().brandStatus(true).build();
-            List<BrandPageBean> brandPageBeans = util.collectBean(scene, BrandPageBean.class);
+            List<BrandPageBean> brandPageBeans = util.toJavaObjectList(scene, BrandPageBean.class);
             brandPageBeans.forEach(e -> Preconditions.checkArgument(e.getBrandStatus(), "搜索结果中" + e.getBrandName() + "的状态为" + e.getBrandStatus()));
         } catch (AssertionError | Exception e) {
             collectMessage(e);
@@ -682,7 +682,7 @@ public class GoodsMarkingCaseOnline extends TestCaseCommon implements TestCaseSt
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = BrandPageScene.builder().brandStatus(false).build();
-            List<BrandPageBean> brandPageBeans = util.collectBean(scene, BrandPageBean.class);
+            List<BrandPageBean> brandPageBeans = util.toJavaObjectList(scene, BrandPageBean.class);
             brandPageBeans.forEach(e -> Preconditions.checkArgument(!e.getBrandStatus(), "搜索结果中" + e.getBrandName() + "的状态为" + e.getBrandStatus()));
         } catch (AssertionError | Exception e) {
             collectMessage(e);
@@ -726,7 +726,7 @@ public class GoodsMarkingCaseOnline extends TestCaseCommon implements TestCaseSt
             int newBrandTotal = scene.invoke(visitor).getInteger("total");
             CommonUtil.checkResult("商品品牌列表数量", brandTotal + 1, newBrandTotal);
             //判断品牌状态
-            BrandPageBean brandPageBean = util.collectBeanByField(scene, BrandPageBean.class, "brand_name", name);
+            BrandPageBean brandPageBean = util.toJavaObject(scene, BrandPageBean.class, "brand_name", name);
             Long id = brandPageBean.getId();
             Boolean status = brandPageBean.getBrandStatus();
             CommonUtil.checkResult("品牌 " + name + " 的状态", true, status);
@@ -876,10 +876,10 @@ public class GoodsMarkingCaseOnline extends TestCaseCommon implements TestCaseSt
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene goodsManagePageScene = GoodsManagePageScene.builder().build();
-            GoodsManagePageBean goodsManagePageBean = util.collectBean(goodsManagePageScene, GoodsManagePageBean.class).get(0);
+            GoodsManagePageBean goodsManagePageBean = util.toJavaObjectList(goodsManagePageScene, GoodsManagePageBean.class).get(0);
             String goodsName = goodsManagePageBean.getGoodsName();
             IScene newScene = GoodsManagePageScene.builder().goodsName(goodsName).build();
-            List<GoodsManagePageBean> newGoodsManagePageBean = util.collectBean(newScene, GoodsManagePageBean.class);
+            List<GoodsManagePageBean> newGoodsManagePageBean = util.toJavaObjectList(newScene, GoodsManagePageBean.class);
             newGoodsManagePageBean.forEach(e -> Preconditions.checkArgument(e.getGoodsName().contains(goodsName), "搜索" + goodsName + ", 结果中包含" + e.getGoodsName()));
         } catch (AssertionError | Exception e) {
             collectMessage(e);
@@ -897,7 +897,7 @@ public class GoodsMarkingCaseOnline extends TestCaseCommon implements TestCaseSt
             List<BrandListBean> brandPageBeanList = list.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, BrandListBean.class)).collect(Collectors.toList());
             brandPageBeanList.forEach(brandListBean -> {
                 IScene goodsManagePageScene = GoodsManagePageScene.builder().goodsBrand(brandListBean.getId()).build();
-                List<GoodsManagePageBean> goodsManagePageBeanList = util.collectBean(goodsManagePageScene, GoodsManagePageBean.class);
+                List<GoodsManagePageBean> goodsManagePageBeanList = util.toJavaObjectList(goodsManagePageScene, GoodsManagePageBean.class);
                 goodsManagePageBeanList.forEach(goodsManagePageBean -> CommonUtil.checkResult(goodsManagePageBean.getGoodsName() + "的所属品牌", brandListBean.getBrandName(), goodsManagePageBean.getBelongsBrand()));
             });
         } catch (AssertionError | Exception e) {
@@ -914,7 +914,7 @@ public class GoodsMarkingCaseOnline extends TestCaseCommon implements TestCaseSt
         try {
             Arrays.stream(CommodityStatusEnum.values()).forEach(e -> {
                 IScene scene = GoodsManagePageScene.builder().goodsStatus(e.name()).build();
-                List<GoodsManagePageBean> goodsManagePageBeanList = util.collectBean(scene, GoodsManagePageBean.class);
+                List<GoodsManagePageBean> goodsManagePageBeanList = util.toJavaObjectList(scene, GoodsManagePageBean.class);
                 goodsManagePageBeanList.forEach(goodsManagePageBean -> {
                     CommonUtil.checkResult(goodsManagePageBean.getGoodsName() + "的商品状态", e.name(), goodsManagePageBean.getGoodsStatus());
                     CommonUtil.checkResult(goodsManagePageBean.getGoodsName() + "的商品状态", e.getName(), goodsManagePageBean.getGoodsStatusName());
@@ -937,7 +937,7 @@ public class GoodsMarkingCaseOnline extends TestCaseCommon implements TestCaseSt
             List<CategoryListBean> categoryListBeanList = list.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, CategoryListBean.class)).collect(Collectors.toList());
             categoryListBeanList.forEach(categoryListBean -> {
                 IScene goodsManagePageScene = GoodsManagePageScene.builder().firstCategory(categoryListBean.getCategoryType()).build();
-                List<GoodsManagePageBean> goodsManagePageBeanList = util.collectBean(goodsManagePageScene, GoodsManagePageBean.class);
+                List<GoodsManagePageBean> goodsManagePageBeanList = util.toJavaObjectList(goodsManagePageScene, GoodsManagePageBean.class);
                 goodsManagePageBeanList.forEach(goodsManagePageBean -> CommonUtil.checkResult("按照一级品类搜索结果的商品分类", categoryListBean.getCategoryName(), goodsManagePageBean.getGoodsCategory()));
             });
         } catch (AssertionError | Exception e) {
@@ -974,7 +974,7 @@ public class GoodsMarkingCaseOnline extends TestCaseCommon implements TestCaseSt
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene goodsManagePageScene = GoodsManagePageScene.builder().build();
-            List<GoodsManagePageBean> goodsManagePageBeanListA = util.collectBean(goodsManagePageScene, GoodsManagePageBean.class);
+            List<GoodsManagePageBean> goodsManagePageBeanListA = util.toJavaObjectList(goodsManagePageScene, GoodsManagePageBean.class);
             GoodsManagePageBean goodsManagePageBean = goodsManagePageBeanListA.stream().filter(e -> util.goodsIsOccupation(e.getGoodsName())).findFirst().orElse(goodsManagePageBeanListA.get(0));
             //下架商品
             String message = ChangeGoodsStatusScene.builder().id(goodsManagePageBean.getId()).status(CommodityStatusEnum.DOWN.name()).build().invoke(visitor, false).getString("message");
@@ -993,7 +993,7 @@ public class GoodsMarkingCaseOnline extends TestCaseCommon implements TestCaseSt
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene goodsManagePageScene = GoodsManagePageScene.builder().build();
-            List<GoodsManagePageBean> goodsManagePageBeanListA = util.collectBean(goodsManagePageScene, GoodsManagePageBean.class);
+            List<GoodsManagePageBean> goodsManagePageBeanListA = util.toJavaObjectList(goodsManagePageScene, GoodsManagePageBean.class);
             GoodsManagePageBean goodsManagePageBean = goodsManagePageBeanListA.stream().filter(e -> util.goodsIsOccupation(e.getGoodsName())).findFirst().orElse(goodsManagePageBeanListA.get(0));
             //下架商品
             String message = DeleteGoodsScene.builder().id(goodsManagePageBean.getId()).build().invoke(visitor, false).getString("message");
@@ -1017,14 +1017,14 @@ public class GoodsMarkingCaseOnline extends TestCaseCommon implements TestCaseSt
             IScene goodsManagePageScene = GoodsManagePageScene.builder().build();
             Arrays.stream(CommodityStatusEnum.values()).forEach(anEnum -> {
                 ChangeGoodsStatusScene.builder().id(goodsId).status(anEnum.name()).build().invoke(visitor);
-                List<GoodsManagePageBean> goodsManagePageBeanList = util.collectBean(goodsManagePageScene, GoodsManagePageBean.class);
+                List<GoodsManagePageBean> goodsManagePageBeanList = util.toJavaObjectList(goodsManagePageScene, GoodsManagePageBean.class);
                 goodsManagePageBeanList.stream().filter(e -> e.getId().equals(goodsId)).forEach(e -> {
                     CommonUtil.checkResult(e.getGoodsName() + "的商品状态", anEnum.getName(), e.getGoodsStatusName());
                     CommonUtil.checkResult(e.getGoodsName() + "的商品状态", anEnum.name(), e.getGoodsStatus());
                 });
                 if (anEnum.equals(CommodityStatusEnum.DOWN)) {
                     IScene scene = GoodsManagePageScene.builder().goodsStatus(CommodityStatusEnum.UP.name()).build();
-                    util.collectBean(scene, GoodsManagePageBean.class).forEach(e -> Preconditions.checkArgument(!e.getId().equals(goodsId), "下架的商品" + e.getGoodsName() + "在创建积分兑换时可见"));
+                    util.toJavaObjectList(scene, GoodsManagePageBean.class).forEach(e -> Preconditions.checkArgument(!e.getId().equals(goodsId), "下架的商品" + e.getGoodsName() + "在创建积分兑换时可见"));
                 }
             });
             GoodsParamBean goodsParamBean = goodsBean.getGoodsParamBean();

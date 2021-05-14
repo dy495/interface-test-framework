@@ -7,6 +7,10 @@ public enum AccountEnum {
     YUE_XIU_DAILY("yuexiu@test.com", "yuexiu", true, "18513118484", "越秀测试账号", 2, "总管理员"),
 
     YUE_XIU_ONLINE("yinshiciyuan@winsense.ai", "yinshiciyuan", false, "12365478952", "银石次元", 2, "总管理员"),
+
+    ZD("zhengda@zhengda.com", "zhengda", true, null, "正大", null, null),
+
+    JKQS("jiekeqiongsi@jiekeqiongsi.com", "jiekeqiongsi", true, null, "杰克琼斯", null, null),
     ;
 
     AccountEnum(String username, String password, boolean isDaily, String phone, String name, Integer roleId, String roleName) {

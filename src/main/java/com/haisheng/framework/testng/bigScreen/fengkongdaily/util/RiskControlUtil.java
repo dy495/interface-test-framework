@@ -1,8 +1,8 @@
 package com.haisheng.framework.testng.bigScreen.fengkongdaily.util;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
@@ -13,15 +13,17 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.util.DateTimeUtil;
 import org.springframework.util.StringUtils;
+
 import java.util.List;
 
 public class RiskControlUtil extends TestCaseCommon {
 
     private static volatile ScenarioUtil instance = null;
     private static final String shopId = EnumTestProduce.FK_DAILY.getShopId();
-    public static String IpPort=EnumTestProduce.FK_DAILY.getAddress();
-    private static  EnumTestProduce product = EnumTestProduce.FK_DAILY;
+    public static String IpPort = EnumTestProduce.FK_DAILY.getAddress();
+    private static EnumTestProduce product = EnumTestProduce.FK_DAILY;
     public VisitorProxy visitor = new VisitorProxy(product);
+
     /**
      * 单例
      *
@@ -52,7 +54,7 @@ public class RiskControlUtil extends TestCaseCommon {
      */
     public JSONObject invokeApi(String path, JSONObject requestBody, boolean checkCode) {
         if (StringUtils.isEmpty(path)) {
-            throw new DataException("path不可为空");
+            throw new RuntimeException("path不可为空");
         }
         String request = JSON.toJSONString(requestBody);
         String result = null;
@@ -70,18 +72,18 @@ public class RiskControlUtil extends TestCaseCommon {
     }
 
     //更换域名
-    public void changeIpPort(String ipPort,EnumTestProduce product1) {
+    public void changeIpPort(String ipPort, EnumTestProduce product1) {
         IpPort = ipPort;
-        product=product1;
+        product = product1;
     }
 
     /**
-     * @description:风控登录--手机号验证码登录（0：账号密码，1：验证码 ,2:用户名密码）
+     * @description:风控登录--手机号验证码登录（0：账号密码，1：验证码 , 2:用户名密码）
      * @author:gly
      * @time:2021/4/1
      */
     public void pcLogin(String username, String password) {
-       IScene scene= LoginPcScene.builder().type(0).username(username).password(password).build();
+        IScene scene = LoginPcScene.builder().type(0).username(username).password(password).build();
         visitor.login(scene);
     }
 
@@ -427,28 +429,29 @@ public class RiskControlUtil extends TestCaseCommon {
      * @author: zt
      * @time:
      */
-    public JSONObject white_black_list(Integer page,Integer size,String name,String  member_id,String customer_id,String type) throws Exception {
+    public JSONObject white_black_list(Integer page, Integer size, String name, String member_id, String customer_id, String type) throws Exception {
         String url = "/risk-control/auth/rule/white-list/page";
         JSONObject json = new JSONObject();
-        json.put("page",page);
-        json.put("size",size);
-        json.put("name",name);
-        json.put("member_id",member_id);
-        json.put("customer_id",customer_id);
-        json.put("type",type);
+        json.put("page", page);
+        json.put("size", size);
+        json.put("name", name);
+        json.put("member_id", member_id);
+        json.put("customer_id", customer_id);
+        json.put("type", type);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     /**
      * @description: 特殊人员管理 ---黑白名单-删除黑白名单(黑白名单共用)
      * @author: zt
      * @time:
      */
-    public JSONObject white_black_delete(String customer_id,String type) throws Exception {
+    public JSONObject white_black_delete(String customer_id, String type) throws Exception {
         String url = "/risk-control/auth/rule/black-white-list/delete";
         JSONObject json = new JSONObject();
-        json.put("customer_id",customer_id);
-        json.put("type",type);
+        json.put("customer_id", customer_id);
+        json.put("type", type);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -458,15 +461,15 @@ public class RiskControlUtil extends TestCaseCommon {
      * @author: zt
      * @time:
      */
-    public JSONObject white_black_addList(Integer page,Integer size,String name,String  member_id,String customer_id,String type) throws Exception {
+    public JSONObject white_black_addList(Integer page, Integer size, String name, String member_id, String customer_id, String type) throws Exception {
         String url = "/risk-control/auth/rule/white-list/add/page";
         JSONObject json = new JSONObject();
-        json.put("page",page);
-        json.put("size",size);
-        json.put("name",name);
-        json.put("member_id",member_id);
-        json.put("customer_id",customer_id);
-        json.put("type",type);
+        json.put("page", page);
+        json.put("size", size);
+        json.put("name", name);
+        json.put("member_id", member_id);
+        json.put("customer_id", customer_id);
+        json.put("type", type);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -476,11 +479,11 @@ public class RiskControlUtil extends TestCaseCommon {
      * @author: zt
      * @time:
      */
-    public JSONObject white_black_addDetail(String customer_id,String type) throws Exception {
+    public JSONObject white_black_addDetail(String customer_id, String type) throws Exception {
         String url = "/risk-control/auth/rule/black-white-list/add/detail";
         JSONObject json = new JSONObject();
-        json.put("customer_id",customer_id);
-        json.put("type",type);
+        json.put("customer_id", customer_id);
+        json.put("type", type);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -490,14 +493,14 @@ public class RiskControlUtil extends TestCaseCommon {
      * @author: zt
      * @time:
      */
-    public JSONObject white_black_add(String customer_id,String shop_id,String name,String add_reason,String type) throws Exception {
+    public JSONObject white_black_add(String customer_id, String shop_id, String name, String add_reason, String type) throws Exception {
         String url = "/risk-control/auth/rule/black-white-list/add";
         JSONObject json = new JSONObject();
-        json.put("customer_id",customer_id);
-        json.put("shop_id",shop_id);
-        json.put("name",name);
-        json.put("add_reason",add_reason);
-        json.put("type",type);
+        json.put("customer_id", customer_id);
+        json.put("shop_id", shop_id);
+        json.put("name", name);
+        json.put("add_reason", add_reason);
+        json.put("type", type);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -507,12 +510,12 @@ public class RiskControlUtil extends TestCaseCommon {
      * @author: zt
      * @time:
      */
-    public JSONObject white_black_operate(Integer page,Integer size,String customer_id) throws Exception {
+    public JSONObject white_black_operate(Integer page, Integer size, String customer_id) throws Exception {
         String url = "/risk-control/auth/rule/black-white-list/operate/page";
         JSONObject json = new JSONObject();
-        json.put("page",page);
-        json.put("size",size);
-        json.put("customer_id",customer_id);
+        json.put("page", page);
+        json.put("size", size);
+        json.put("customer_id", customer_id);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -521,12 +524,12 @@ public class RiskControlUtil extends TestCaseCommon {
      * @description: 特殊人员管理 ---添加黑名单-风控事件列表
      * @time:
      */
-    public JSONObject black_listPage(Integer page,Integer size,String customer_id) throws Exception {
+    public JSONObject black_listPage(Integer page, Integer size, String customer_id) throws Exception {
         String url = "/risk-control/auth/rule/black-list/event/page";
         JSONObject json = new JSONObject();
-        json.put("page",page);
-        json.put("size",size);
-        json.put("customer_id",customer_id);
+        json.put("page", page);
+        json.put("size", size);
+        json.put("customer_id", customer_id);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -535,9 +538,8 @@ public class RiskControlUtil extends TestCaseCommon {
     /**
      * @description:13.4.1 风控告警事件列表
      * @author: qingqing
-     *
      */
-    public JSONObject alarm_page(String name, String type, String shop_name,String accept_role,  Integer page, Integer size) throws Exception {
+    public JSONObject alarm_page(String name, String type, String shop_name, String accept_role, Integer page, Integer size) throws Exception {
         String url = "/risk-control/auth/alarm/page";
         String json =
                 "{";
@@ -641,20 +643,19 @@ public class RiskControlUtil extends TestCaseCommon {
     public JSONObject organizationAccountAddTwo(String account, String name, String number, String leaderUid, String type, String email, String phone, int status, JSONArray roleIdList, JSONArray shopIdList) throws Exception {
         String url = "/risk-control/auth/account/add";
         JSONObject json = new JSONObject();
-        json.put("account",account);
-        json.put("name",name);
-        json.put("number",number);
-        json.put("leaderUid",leaderUid);
-        json.put("type",type);
-        json.put("email",email);
-        json.put("phone",phone);
-        json.put("status",status);
-        json.put("roleIdList",roleIdList);
-        json.put("shopIdList",shopIdList);
+        json.put("account", account);
+        json.put("name", name);
+        json.put("number", number);
+        json.put("leaderUid", leaderUid);
+        json.put("type", type);
+        json.put("email", email);
+        json.put("phone", phone);
+        json.put("status", status);
+        json.put("roleIdList", roleIdList);
+        json.put("shopIdList", shopIdList);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
-
 
 
     /**
@@ -705,24 +706,22 @@ public class RiskControlUtil extends TestCaseCommon {
         return JSON.parseObject(res);
     }
 
-    public JSONObject organizationAccountEditTwo(String account,String name,String number,String leaderUid,String type,String email,String phone,int status,JSONArray roleIdList,JSONArray shopIdList) throws Exception {
+    public JSONObject organizationAccountEditTwo(String account, String name, String number, String leaderUid, String type, String email, String phone, int status, JSONArray roleIdList, JSONArray shopIdList) throws Exception {
         String url = "/risk-control/auth/account/edit";
         JSONObject json = new JSONObject();
-        json.put("account",account);
-        json.put("name",name);
-        json.put("number",number);
-        json.put("leaderUid",leaderUid);
-        json.put("type",type);
-        json.put("email",email);
-        json.put("phone",phone);
-        json.put("status",status);
-        json.put("roleIdList",roleIdList);
-        json.put("shopIdList",shopIdList);
+        json.put("account", account);
+        json.put("name", name);
+        json.put("number", number);
+        json.put("leaderUid", leaderUid);
+        json.put("type", type);
+        json.put("email", email);
+        json.put("phone", phone);
+        json.put("status", status);
+        json.put("roleIdList", roleIdList);
+        json.put("shopIdList", shopIdList);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
-
-
 
 
     /**
@@ -774,7 +773,6 @@ public class RiskControlUtil extends TestCaseCommon {
     }
 
 
-
     /**
      * @description:权限包列表
      * @author:
@@ -783,7 +781,7 @@ public class RiskControlUtil extends TestCaseCommon {
     public JSONObject rolePackage(int superior_role_id) throws Exception {
         String url = "/risk-control/auth/role-management/query-permission-map";
         JSONObject json = new JSONObject();
-        json.put("superior_role_id",superior_role_id);
+        json.put("superior_role_id", superior_role_id);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -894,7 +892,7 @@ public class RiskControlUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject organizationRoleAdd(String name, int superiorRoleId,String description, JSONArray module_ids) throws Exception {
+    public JSONObject organizationRoleAdd(String name, int superiorRoleId, String description, JSONArray module_ids) throws Exception {
         String url = "/risk-control/auth/role/add";
         String json =
                 "{" +
@@ -911,17 +909,16 @@ public class RiskControlUtil extends TestCaseCommon {
     }
 
 
-    public JSONObject organizationRoleAddTwo(String roleName,int superiorRoleId,String description,JSONArray moduleIds) throws Exception {
+    public JSONObject organizationRoleAddTwo(String roleName, int superiorRoleId, String description, JSONArray moduleIds) throws Exception {
         String url = "/risk-control/auth/role/add";
         JSONObject json = new JSONObject();
-        json.put("roleName",roleName);
-        json.put("superiorRoleId",superiorRoleId);
-        json.put("description",description);
-        json.put("moduleIds",moduleIds);
+        json.put("roleName", roleName);
+        json.put("superiorRoleId", superiorRoleId);
+        json.put("description", description);
+        json.put("moduleIds", moduleIds);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
-
 
 
     /**
@@ -964,18 +961,17 @@ public class RiskControlUtil extends TestCaseCommon {
     }
 
 
-    public JSONObject organizationRoleEditTwo(int roleId,int superiorRoleId,String roleName, String description, JSONArray moduleIds) throws Exception {
+    public JSONObject organizationRoleEditTwo(int roleId, int superiorRoleId, String roleName, String description, JSONArray moduleIds) throws Exception {
         String url = "/risk-control/auth/role/edit";
         JSONObject json = new JSONObject();
-        json.put("roleId",roleId);
-        json.put("superiorRoleId",superiorRoleId);
-        json.put("roleName",roleName);
-        json.put("description",description);
-        json.put("moduleIds",moduleIds);
+        json.put("roleId", roleId);
+        json.put("superiorRoleId", superiorRoleId);
+        json.put("roleName", roleName);
+        json.put("description", description);
+        json.put("moduleIds", moduleIds);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
-
 
 
     /**

@@ -5,15 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.crm.wm.bean.Response;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.util.BasicUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.base.container.ExcelContainer;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.base.container.IContainer;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.base.enumerator.MappingEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.base.field.IField;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.base.row.IRow;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.base.table.ITable;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.base.util.FileUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.*;
@@ -67,11 +60,8 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanag
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
-import com.haisheng.framework.util.UrlToIoSavaUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -83,118 +73,12 @@ import java.util.stream.Collectors;
  * @author wangmin
  * @date 2021/1/20 13:36
  */
-public class SupporterUtil {
-    public final static Logger logger = LoggerFactory.getLogger(SupporterUtil.class);
-    public final static Integer SIZE = 100;
+public class SupporterUtil extends BasicUtil {
     private final VisitorProxy visitor;
 
     public SupporterUtil(VisitorProxy visitor) {
+        super(visitor);
         this.visitor = visitor;
-    }
-
-    public <T> List<T> JSONArrayToList(@NotNull IScene scene, Class<T> clazz) {
-        JSONArray list = scene.invoke(visitor).getJSONArray("list");
-        return list.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, clazz)).collect(Collectors.toList());
-    }
-
-    public <T> List<T> toJavaObjectList(@NotNull IScene scene, Class<T> bean) {
-        int total = scene.invoke(visitor).getInteger("total");
-        return toJavaObjectList(scene, bean, total);
-    }
-
-    public <T> List<T> toJavaObjectList(IScene scene, Class<T> bean, Integer size) {
-        List<T> list = new ArrayList<>();
-        int s = CommonUtil.getTurningPage(size, SIZE);
-        for (int i = 1; i < s; i++) {
-            scene.setPage(i);
-            scene.setSize(SIZE);
-            JSONArray array = scene.invoke(visitor).getJSONArray("list");
-            list.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, bean)).collect(Collectors.toList()));
-        }
-        return list;
-    }
-
-    public <T> List<T> toJavaObjectList(@NotNull IScene scene, Class<T> bean, String key, Object value) {
-        List<T> list = new ArrayList<>();
-        int total = scene.invoke(visitor).getInteger("total");
-        int s = CommonUtil.getTurningPage(total, SIZE);
-        for (int i = 1; i < s; i++) {
-            scene.setPage(i);
-            scene.setSize(SIZE);
-            JSONArray array = scene.invoke(visitor).getJSONArray("list");
-            T clazz = array.stream().map(e -> (JSONObject) e).filter(e -> e.getObject(key, value.getClass()).equals(value))
-                    .findFirst().map(e -> JSONObject.toJavaObject(e, bean)).orElse(null);
-            list.add(clazz);
-        }
-        return list;
-    }
-
-    public <T> T toJavaObject(@NotNull IScene scene, Class<T> bean) {
-        return JSONObject.toJavaObject(scene.invoke(visitor), bean);
-    }
-
-    public <T> T toJavaObject(JSONObject object, Class<T> bean) {
-        return JSONObject.toJavaObject(object, bean);
-    }
-
-    public <T> T toJavaObject(@NotNull IScene scene, Class<T> bean, String key, Object value) {
-        int total = scene.invoke(visitor).getInteger("total");
-        int s = CommonUtil.getTurningPage(total, SIZE);
-        for (int i = 1; i < s; i++) {
-            scene.setPage(i);
-            scene.setSize(SIZE);
-            JSONArray array = scene.invoke(visitor).getJSONArray("list");
-            T clazz = array.stream().map(e -> (JSONObject) e).filter(e -> e.getObject(key, value.getClass())
-                    .equals(value)).findFirst().map(e -> JSONObject.toJavaObject(e, bean)).orElse(null);
-            if (clazz != null) {
-                return clazz;
-            }
-        }
-        return null;
-    }
-
-    public <T> T toFirstJavaObject(@NotNull IScene scene, Class<T> bean) {
-        JSONObject object = scene.invoke(visitor).getJSONArray("list").getJSONObject(0);
-        return toJavaObject(object, bean);
-    }
-
-    public IRow[] getRows(String urlPath, String outputPath) {
-        UrlToIoSavaUtil.toIoSave(urlPath, outputPath);
-        String[] strings = outputPath.split("/");
-        String relativePath = strings[strings.length - 2] + "/" + strings[strings.length - 1];
-        logger.info(relativePath);
-        String path = FileUtil.getResourcePath(relativePath);
-        IContainer container = new ExcelContainer.Builder().path(path).buildContainer();
-        container.init();
-        ITable[] tables = container.getTables();
-        ITable table = tables[0];
-        table.load();
-        return table.getRows();
-    }
-
-    /**
-     * 获取message信息集合
-     *
-     * @param scene 接口
-     * @return 信息集合
-     */
-    public String[] getMessageList(@NotNull IScene scene) {
-        List<String> list = scene.getKeyList();
-        logger.info("---------------------");
-        logger.info("keyList is：{}", list);
-        logger.info("---------------------");
-        return list.stream().map(e -> JSONObject.toJavaObject(scene.remove(e).invoke(visitor, false), Response.class))
-                .map(Response::getMessage).collect(Collectors.toList()).toArray(new String[list.size()]);
-    }
-
-    /**
-     * 获取接口返回值
-     *
-     * @param scene 接口
-     * @return 返回值内容
-     */
-    public Response getResponse(@NotNull IScene scene) {
-        return JSONObject.toJavaObject(scene.invoke(visitor, false), Response.class);
     }
 
     /**

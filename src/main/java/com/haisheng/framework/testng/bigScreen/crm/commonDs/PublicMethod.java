@@ -9,7 +9,6 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppl
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAppointmentType;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarModel;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.EditAfterSaleCustomerScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.EditCustomerScene;
@@ -341,7 +340,7 @@ public class PublicMethod {
                 return list.getJSONObject(i).getInteger("id");
             }
         }
-        throw new DataException("当前时间段可预约次数为0");
+        throw new RuntimeException("当前时间段可预约次数为0");
     }
 
     /**
@@ -352,7 +351,7 @@ public class PublicMethod {
         if (!list.isEmpty()) {
             return list.getJSONObject(0).getInteger("my_car_id");
         }
-        throw new DataException("该用户小程序没有绑定车");
+        throw new RuntimeException("该用户小程序没有绑定车");
     }
 
     /**

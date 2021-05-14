@@ -286,13 +286,13 @@ public class BusinessUtil {
         SupporterUtil supporterUtil = new SupporterUtil(visitor);
         PublicParameter pp = new PublicParameter();
         List<String> picList = new ArrayList<>();
-        picList.add(supporterUtil.getPicPath());
+        picList.add(getPicPath());
         IScene scene=null;
         Long AllowUseInventory=getVoucherAllowUseInventoryNum(voucherId);
-        if(AllowUseInventory>6){
+        if(AllowUseInventory>2){
             // 创建被邀请者和分享者的信息字段
-            JSONObject invitedVoucher = getInvitedVoucher(voucherId, 1, String.valueOf(Math.min(getVoucherAllowUseInventory(voucherId), 2)), 2, "", "", 3);
-            JSONObject shareVoucher = getShareVoucher(voucherId, 1, String.valueOf(Math.min(getVoucherAllowUseInventory(voucherId), 2)), 2, "", "", 3);
+            JSONObject invitedVoucher = getInvitedVoucher(voucherId, 1, String.valueOf(Math.min(getVoucherAllowUseInventory(voucherId), 1)), 2, "", "", 3);
+            JSONObject shareVoucher = getShareVoucher(voucherId, 1, String.valueOf(Math.min(getVoucherAllowUseInventory(voucherId), 1)), 2, "", "", 3);
             scene= FissionVoucherAddScene.builder()
                     .type(1)
                     .participationLimitType(0)
@@ -319,8 +319,8 @@ public class BusinessUtil {
             supporterUtil.applyVoucher(voucherName, "1");
             //创建活动
             // 创建被邀请者和分享者的信息字段
-            JSONObject invitedVoucher = getInvitedVoucher(voucherId3, 1, String.valueOf(Math.min(getVoucherAllowUseInventory(voucherId), 2)), 2, "", "", 3);
-            JSONObject shareVoucher = getShareVoucher(voucherId3, 1, String.valueOf(Math.min(getVoucherAllowUseInventory(voucherId), 2)), 2, "", "", 3);
+            JSONObject invitedVoucher = getInvitedVoucher(voucherId3, 1, String.valueOf(Math.min(getVoucherAllowUseInventory(voucherId), 1)), 2, "", "", 3);
+            JSONObject shareVoucher = getShareVoucher(voucherId3, 1, String.valueOf(Math.min(getVoucherAllowUseInventory(voucherId), 1)), 2, "", "", 3);
             scene= FissionVoucherAddScene.builder()
                     .type(1)
                     .participationLimitType(0)
@@ -1633,6 +1633,7 @@ public class BusinessUtil {
      */
     public String getApprovalPassed(Long... id) {
         List<Long> ids = Arrays.asList(id);
+        System.err.println("---------"+ids);
         IScene scene = ManageApprovalScene.builder().ids(ids).status(ActivityApprovalStatusEnum.PASSED.getId()).build();
         String message = visitor.invokeApi(scene, false).getString("message");
         return message;
@@ -2060,6 +2061,79 @@ public class BusinessUtil {
             }
         }
         user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+        //获取小程序推荐列表
+        JSONObject lastValue = null;
+        JSONArray list = null;
+        Long activityId = 0L;
+        do {
+            IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
+            JSONObject response1 = visitor.invokeApi(scene);
+            lastValue = response1.getJSONObject("last_value");
+            list = response1.getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                String title1=list.getJSONObject(i).getString("title");
+                System.out.println("------------"+title1);
+                if (activityName.equals(title1)) {
+                    activityId = list.getJSONObject(i).getLong("id");
+                    System.err.println(activityName+"----------"+activityId);
+                }
+            }
+        } while (list.size() == 10);
+        System.err.println("-----activityId------"+activityId);
+        IScene scene = ArticleActivityRegisterScene.builder().id(activityId).registerItems(registerItems).build();
+        visitor.invokeApi(scene);
+
+    }
+
+    /**
+     * 小程序报名招募活动
+     */
+    public void activityRegisterApplet1(Long id, String phone, String name, int registerCount, String eMail, String age, String gender, String others,String activityName) {
+        JSONArray registerItems = new JSONArray();
+        //在活动详情中获得招募活动的报名信息
+        jc.pcLogin(pp.phone1, pp.password);
+        JSONObject response = getRecruitActivityDetailDate(id);
+        JSONArray registerInformationList = response.getJSONArray("register_information_list");
+        for (int i = 0; i < registerInformationList.size(); i++) {
+            int type = registerInformationList.getJSONObject(i).getInteger("type");
+            if (type == RegisterInfoEnum.PHONE.getId()) {
+                JSONObject jsonObjectPhone = new JSONObject();
+                jsonObjectPhone.put("type", type);
+                jsonObjectPhone.put("value", phone);
+                registerItems.add(jsonObjectPhone);
+            } else if (type == RegisterInfoEnum.NAME.getId()) {
+                JSONObject jsonObjectName = new JSONObject();
+                jsonObjectName.put("type", type);
+                jsonObjectName.put("value", name);
+                registerItems.add(jsonObjectName);
+            } else if (type == RegisterInfoEnum.EMAIL.getId()) {
+                JSONObject jsonObjectEMail = new JSONObject();
+                jsonObjectEMail.put("type", type);
+                jsonObjectEMail.put("value", eMail);
+                registerItems.add(jsonObjectEMail);
+            } else if (type == RegisterInfoEnum.GENDER.getId()) {
+                JSONObject jsonObjectEMail = new JSONObject();
+                jsonObjectEMail.put("type", type);
+                jsonObjectEMail.put("value", gender);
+                registerItems.add(jsonObjectEMail);
+            } else if (type == RegisterInfoEnum.AGE.getId()) {
+                JSONObject jsonObjectEMail = new JSONObject();
+                jsonObjectEMail.put("type", type);
+                jsonObjectEMail.put("value", age);
+                registerItems.add(jsonObjectEMail);
+            } else if (type == RegisterInfoEnum.REGISTER_COUNT.getId()) {
+                JSONObject jsonObjectEMail = new JSONObject();
+                jsonObjectEMail.put("type", type);
+                jsonObjectEMail.put("value", registerCount);
+                registerItems.add(jsonObjectEMail);
+            } else if (type == RegisterInfoEnum.OTHERS.getId()) {
+                JSONObject jsonObjectEMail = new JSONObject();
+                jsonObjectEMail.put("type", type);
+                jsonObjectEMail.put("value", others);
+                registerItems.add(jsonObjectEMail);
+            }
+        }
+        user.loginApplet(EnumAppletToken.JC_LXQ_DAILY);
         //获取小程序推荐列表
         JSONObject lastValue = null;
         JSONArray list = null;

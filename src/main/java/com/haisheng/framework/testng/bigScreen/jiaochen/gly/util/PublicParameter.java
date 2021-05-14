@@ -13,17 +13,17 @@ public class PublicParameter {
             "国家卫健委相关负责人今天在发布会上表示，宫颈癌是妇女常见的恶性肿瘤，严重威胁着妇女的健康。从2009年开始，国家就把宫颈癌的检查纳入了深化医药卫生体制改革重大公共卫生服务项目，为广大农村的妇女进行免费的宫颈癌检查。截至目前，全国的宫颈癌检查项目工作已经覆盖到全国近2600个县市区，免费检查了近1.2亿人次。通过早筛查、早诊断、早治疗，使很多的患病妇女能够得到及时的帮助。" +
             "国家卫健委相关负责人今天在发布会上表示，宫颈癌是妇女常见的恶性肿瘤，严重威胁着妇女的健康。从2009年开始，国家就把宫颈癌的检查纳入了深化医药卫生体制改革重大公共卫生服务项目，为广大农村的妇女进行免费的宫颈癌检查。截至目前，全国的宫颈癌检查项目工作已经覆盖到全国近2600个县市区，免费检查了近1.2亿人次。通过早筛查、早诊断、早治疗，使很多的患病妇女能够得到及时的帮助。";
     //编辑后的活动名字
-    public String editTitle="编辑过后的招募活动"+(int) (Math.random() * 10000);
+    public String editTitle="编辑过后的招募活动呀"+(int) (Math.random() * 10000);
     //活动规则
-    public String EditRule="编辑后的活动规则";
+    public String EditRule="编辑后的活动规则呀";
     //招募活动名称
-    public String RecruitName="招募活动"+(int) (Math.random() * 10000);
+    public String RecruitName="招募活动呀"+(int) (Math.random() * 10000);
     //裂变活动名称
-    public String fissionVoucherName="裂变活动"+(int) (Math.random() * 10000);
+    public String fissionVoucherName="裂变活动呀"+(int) (Math.random() * 10000);
     //编辑裂变活动名称
-    public String fissionVoucherNameEdit="编辑过的裂变活动"+(int) (Math.random() * 10000);
+    public String fissionVoucherNameEdit="编辑过的裂变活动呀"+(int) (Math.random() * 10000);
     //编辑裂变活动规则
-    public String EditFissionRule="编辑后的裂变活动规则";
+    public String EditFissionRule="编辑后的裂变活动规则呀";
     //活动地址
     public String address="北京海淀中关村SOHO-10-16";
     //活动的领取次数限制异常情况
@@ -37,9 +37,9 @@ public class PublicParameter {
     //活动图片的异常状态
     public String[] pic={"1","0.75","2.5"};
     //内容运营的活动名称
-    public String contentMarketingName="内容营销活动"+(int) (Math.random() * 10000);
+    public String contentMarketingName="内容营销活动呀"+(int) (Math.random() * 10000);
     //内容运营的编辑过后的活动名称
-    public String contentMarketingNameEdit="已编辑的内容运营活动"+(int) (Math.random() * 10000);
+    public String contentMarketingNameEdit="已编辑的内容运营活动呀"+(int) (Math.random() * 10000);
 
 
 

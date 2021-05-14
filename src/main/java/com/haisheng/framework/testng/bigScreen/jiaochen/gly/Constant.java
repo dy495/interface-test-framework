@@ -90,6 +90,22 @@ public class Constant {
     }
 
     /**
+     * @description:V2.0预约试驾列表-筛选栏
+     * @author: gly
+     * @time: 2020-11-24
+     */
+    @DataProvider(name = "SELECT_appointmentDriverRecordFilter")
+    public static Object[][] appointmentDriverRecordFilter_pram() {
+        return new String[][]{
+                {"shop_id", "shop_id"},
+                {"customer_name", "customer_name"},
+                {"customer_phone", "customer_phone"},
+                {"is_overtime", "is_overtime"},
+                {"cancel_account", "cancel_account"},
+        };
+    }
+
+    /**
      * @description:保养配置列表-筛选栏
      * @author: gly
      * @time: 2020-11-24
@@ -634,12 +650,11 @@ public class Constant {
     @DataProvider(name = "SELECT_preSalesReceptionPageRecordFilter")
     public static Object[][] preSalesReceptionPageRecordFilter_pram(){
         return new String[][]{
-                {"shop_id", "shop_name"},
                 {"customer_name", "customer_name"},
-                {"phone", "phone"},
-                {"car_style_id", "car_style_id"},
-                {"pre_sale_name", "pre_sale_name"},
-                {"pre_sale_account", "pre_sale_account"},
+                {"phone", "customer_phone"},
+                {"pre_sale_account", "belong_sale_account"},
+                {"pre_sale_name", "belong_sale_name"},
+                {"shop_id", "shop_id"}
         };
     }
 
@@ -665,8 +680,8 @@ public class Constant {
     @DataProvider(name = "SELECT_loginLogStaffRecordFilter")
     public static Object[][] loginLogStaffRecordFilter_pram(){
         return new String[][]{
-                {"name", "name"},
-                {"phone", "phone"},
+                {"login_name", "login_name"},
+                {"login_account", "login_account"},
         };
     }
 

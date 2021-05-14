@@ -6,8 +6,6 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.bean.SaleInfo;
 import com.haisheng.framework.testng.bigScreen.crm.wm.bean.TPorscheDeliverInfo;
 import com.haisheng.framework.testng.bigScreen.crm.wm.bean.TPorscheOrderInfo;
 import com.haisheng.framework.testng.bigScreen.crm.wm.bean.TPorscheReceptionData;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.container.EnumContainer;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.container.Factory;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarStyle;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
@@ -19,6 +17,8 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.util.DingPushUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.UserUtil;
 import com.haisheng.framework.testng.bigScreen.crmOnline.CrmScenarioUtilOnline;
 import com.haisheng.framework.testng.bigScreen.crmOnline.commonDsOnline.PublicMethodOnline;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.entity.Factory;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.util.ContainerEnum;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -83,7 +83,7 @@ public class BusinessDataOnline extends TestCaseCommon implements TestCaseStd {
                         .field("shop_id", "reception_sale_id", "reception_sale", "reception_start_time", "reception_end_time", "reception_duration", "customer_id", "customer_name", "customer_type_name", "customer_phone", "reception_date")
                         .setValue(e.getShopId(), e.getReceptionSaleId(), e.getReceptionSale(), e.getReceptionStartTime(), e.getReceptionEndTime(), e.getReceptionDuration(), e.getCustomerId(), e.getCustomerName(), e.getCustomerTypeName(), e.getCustomerPhone(), e.getReceptionDate())
                         .end().getSql();
-                new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
+                new Factory.Builder().container(ContainerEnum.DB_ONE_PIECE.getContainer()).build().create(sql);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -109,7 +109,7 @@ public class BusinessDataOnline extends TestCaseCommon implements TestCaseStd {
                             .field("shop_id", "customer_id", "customer_name", "id_number", "birthday", "address", "gender", "age", "phone", "subject_type_name", "sale_name", "sale_id", "car_style", "car_model", "deliver_date", "plate_type_name", "defray_type_name", "source_channel_name", "pay_type_name", "plate_number", "vehicle_chassis_code")
                             .setValue(e.getShopId(), e.getCustomerId(), e.getCustomerName(), e.getIdNumber(), e.getBirthday(), e.getAddress(), e.getGender(), e.getAge(), e.getPhone(), e.getSubjectTypeName(), e.getSaleName(), e.getSaleId(), e.getCarStyle(), e.getCarModel(), e.getDeliverDate(), e.getPlateTypeName(), e.getDefrayTypeName(), e.getSourceChannelName(), e.getPayTypeName(), e.getPlateNumber(), e.getVehicleChassisCode())
                             .end().getSql();
-                    new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
+                    new Factory.Builder().container(ContainerEnum.DB_ONE_PIECE.getContainer()).build().create(sql);
                 }
             });
         } catch (Exception e) {
@@ -135,7 +135,7 @@ public class BusinessDataOnline extends TestCaseCommon implements TestCaseStd {
                             .field("shop_id", "customer_id", "customer_name", "id_number", "birthday", "address", "gender", "age", "phone", "subject_type_name", "sale_name", "sale_id", "car_style", "car_model", "order_date", "plate_type_name", "defray_type_name", "source_channel_name", "pay_type_name", "plate_number", "vehicle_chassis_code")
                             .setValue(e.getShopId(), e.getCustomerId(), e.getCustomerName(), e.getIdNumber(), e.getBirthday(), e.getAddress(), e.getGender(), e.getAge(), e.getPhone(), e.getSubjectTypeName(), e.getSaleName(), e.getSaleId(), e.getCarStyle(), e.getCarModel(), e.getOrderDate(), e.getPlateTypeName(), e.getDefrayTypeName(), e.getSourceChannelName(), e.getPayTypeName(), e.getPlateNumber(), e.getVehicleChassisCode())
                             .end().getSql();
-                    new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql);
+                    new Factory.Builder().container(ContainerEnum.DB_ONE_PIECE.getContainer()).build().create(sql);
                 }
             });
         } catch (Exception e) {
@@ -152,7 +152,7 @@ public class BusinessDataOnline extends TestCaseCommon implements TestCaseStd {
                 .where("deliver_date", "=", date)
                 .and("shop_id", "=", shopId)
                 .end();
-        int count = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql).size();
+        int count = new Factory.Builder().container(ContainerEnum.DB_ONE_PIECE.getContainer()).build().create(sql).length;
         if (count <= 0) {
             DingPushUtil.sendText(CommonUtil.humpToLineReplaceFirst(TPorscheDeliverInfo.class.getSimpleName()) + "表记录数据失败");
         }
@@ -160,7 +160,7 @@ public class BusinessDataOnline extends TestCaseCommon implements TestCaseStd {
                 .where("order_date", "=", date)
                 .and("shop_id", "=", shopId)
                 .end();
-        int count1 = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql1).size();
+        int count1 = new Factory.Builder().container(ContainerEnum.DB_ONE_PIECE.getContainer()).build().create(sql1).length;
         if (count1 <= 0) {
             DingPushUtil.sendText(CommonUtil.humpToLineReplaceFirst(TPorscheOrderInfo.class.getSimpleName()) + "表记录数据失败");
         }
@@ -168,7 +168,7 @@ public class BusinessDataOnline extends TestCaseCommon implements TestCaseStd {
                 .where("reception_date", "=", date)
                 .and("shop_id", "=", shopId)
                 .end();
-        int count2 = new Factory.Builder().container(EnumContainer.ONE_PIECE.getContainer()).build().create(sql2).size();
+        int count2 = new Factory.Builder().container(ContainerEnum.DB_ONE_PIECE.getContainer()).build().create(sql2).length;
         if (count2 <= 0) {
             DingPushUtil.sendText(CommonUtil.humpToLineReplaceFirst(TPorscheReceptionData.class.getSimpleName()) + "表记录数据失败");
         }

@@ -1014,10 +1014,10 @@ public class BusinessUtilOnline {
             Long id1 = createRecruitActivityApproval();
             //审批活动
             getApprovalPassed(id1);
+            ids.add(id1);
             //小程序报名
             user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
             activityRegisterApplet(id1,"13373166806","郭丽雅",2,"1513814362@qq.com","22","女","其他");
-            ids.add(id1);
             jc.pcLogin(pp.phone, pp.password);
         }
         return ids;
@@ -1971,6 +1971,78 @@ public class BusinessUtilOnline {
         //获取此活动的名称
         String title=getRecruitActivityDetailDate1(id).getString("title");
         user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
+        //获取小程序推荐列表
+        JSONObject lastValue=null;
+        JSONArray list=null;
+        do {
+            IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
+            JSONObject response1 = visitor.invokeApi(scene);
+            lastValue = response1.getJSONObject("last_value");
+            list = response1.getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                String title1=list.getJSONObject(i).getString("title");
+                if (title.equals(title1)) {
+                    activityId = list.getJSONObject(i).getLong("id");
+                    System.err.println(title+"----------"+activityId);
+                }
+            }
+        } while (list.size() == 10);
+        IScene scene = ArticleActivityRegisterScene.builder().id(activityId).registerItems(registerItems).build();
+        visitor.invokeApi(scene);
+    }
+
+    /**
+     * 小程序报名招募活动
+     */
+    public void activityRegisterApplet1(Long id, String phone, String name, int registerCount, String eMail,String age,String gender,String others) {
+        JSONArray registerItems = new JSONArray();
+        Long activityId=0L;
+        //在活动详情中获得招募活动的报名信息
+        user.loginPc(EnumAccount.ALL_JC_ONLINE);
+        JSONObject response = getRecruitActivityDetailDate(id);
+        JSONArray registerInformationList = response.getJSONArray("register_information_list");
+        for (int i = 0; i< registerInformationList.size(); i++) {
+            int type = registerInformationList.getJSONObject(i).getInteger("type");
+            if (type == RegisterInfoEnum.PHONE.getId()) {
+                JSONObject jsonObjectPhone = new JSONObject();
+                jsonObjectPhone.put("type", type);
+                jsonObjectPhone.put("value", phone);
+                registerItems.add(jsonObjectPhone);
+            } else if (type == RegisterInfoEnum.NAME.getId()) {
+                JSONObject jsonObjectName = new JSONObject();
+                jsonObjectName.put("type", type);
+                jsonObjectName.put("value", name);
+                registerItems.add(jsonObjectName);
+            } else if (type == RegisterInfoEnum.EMAIL.getId()) {
+                JSONObject jsonObjectEMail = new JSONObject();
+                jsonObjectEMail.put("type", type);
+                jsonObjectEMail.put("value", eMail);
+                registerItems.add(jsonObjectEMail);
+            }else if (type == RegisterInfoEnum.GENDER.getId()) {
+                JSONObject jsonObjectEMail = new JSONObject();
+                jsonObjectEMail.put("type", type);
+                jsonObjectEMail.put("value", gender);
+                registerItems.add(jsonObjectEMail);
+            }else if (type == RegisterInfoEnum.AGE.getId()) {
+                JSONObject jsonObjectEMail = new JSONObject();
+                jsonObjectEMail.put("type", type);
+                jsonObjectEMail.put("value", age);
+                registerItems.add(jsonObjectEMail);
+            }else if (type == RegisterInfoEnum.REGISTER_COUNT.getId()) {
+                JSONObject jsonObjectEMail = new JSONObject();
+                jsonObjectEMail.put("type", type);
+                jsonObjectEMail.put("value", registerCount);
+                registerItems.add(jsonObjectEMail);
+            }else if (type == RegisterInfoEnum.OTHERS.getId()) {
+                JSONObject jsonObjectEMail = new JSONObject();
+                jsonObjectEMail.put("type", type);
+                jsonObjectEMail.put("value", others);
+                registerItems.add(jsonObjectEMail);
+            }
+        }
+        //获取此活动的名称
+        String title=getRecruitActivityDetailDate1(id).getString("title");
+        user.loginApplet(EnumAppletToken.JC_LXQ_ONLINE);
         //获取小程序推荐列表
         JSONObject lastValue=null;
         JSONArray list=null;

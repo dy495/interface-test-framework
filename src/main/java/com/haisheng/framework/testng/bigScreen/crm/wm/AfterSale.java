@@ -12,7 +12,6 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumAp
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCustomerInfo;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.other.EnumOperation;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.pc.OrderMaintainPageScene;
@@ -757,10 +756,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
                 }
             }
             //3.全部回访>=今日回访
-            boolean flag = false;
-            if (total >= todayListTotal) {
-                flag = true;
-            }
+            boolean flag = total >= todayListTotal;
             CommonUtil.valueView(total, listTotal, todayViNum, todayListTotal);
             Preconditions.checkArgument(total == listTotal, "售后工作管理中我的回访-首保提醒中的全部回访" + total + "不等于售后后工作管理中我的回访-首保提醒中的列表条数" + listTotal);
             Preconditions.checkArgument(todayViNum == todayListTotal, "售后工作管理中我的回访-售后回访中的今日回访" + todayViNum + "不等于后工作管理中我的回访-售后回访中任务日期为今天的条数" + todayListTotal);
@@ -850,10 +846,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
                 }
             }
             //3.全部回访>=今日回访
-            boolean flag = false;
-            if (total >= todayListTotal) {
-                flag = true;
-            }
+            boolean flag = total >= todayListTotal;
             CommonUtil.valueView(total, listTotal, todayViNum, todayListTotal);
             Preconditions.checkArgument(total == listTotal, "售后工作管理中我的回访-流失预警中的全部回访" + total + "不等于售后工作管理中我的回访-流失预警中的列表条数" + listTotal);
             Preconditions.checkArgument(todayViNum == todayListTotal, "售后工作管理中我的回访-流失预警中的今日回访" + todayViNum + "不等于售后工作管理中我的回访-流失预警中任务日期为今天的条数" + todayListTotal);
@@ -1569,7 +1562,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
         if (!list.isEmpty()) {
             return list.getJSONObject(0).getInteger("my_car_id");
         }
-        throw new DataException("该用户小程序没有绑定车");
+        throw new RuntimeException("该用户小程序没有绑定车");
     }
 
     /**

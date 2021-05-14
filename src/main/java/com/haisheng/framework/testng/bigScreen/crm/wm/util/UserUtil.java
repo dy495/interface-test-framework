@@ -3,7 +3,6 @@ package com.haisheng.framework.testng.bigScreen.crm.wm.util;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.exception.DataException;
 import com.haisheng.framework.testng.bigScreen.crmOnline.CrmScenarioUtilOnline;
 
 public class UserUtil {
@@ -17,7 +16,7 @@ public class UserUtil {
      */
     public static void login(EnumAccount enumAccount) {
         if (enumAccount == null) {
-            throw new DataException("enumAccount is null");
+            throw new RuntimeException("enumAccount is null");
         }
         if (enumAccount.getIsDaily()) {
             crm.login(enumAccount.getAccount(), enumAccount.getPassword());
@@ -33,7 +32,7 @@ public class UserUtil {
      */
     public static void loginApplet(EnumAppletToken appletToken) {
         if (appletToken == null) {
-            throw new DataException("appletToken is null");
+            throw new RuntimeException("appletToken is null");
         }
         crm.appletLoginToken(appletToken.getToken());
     }

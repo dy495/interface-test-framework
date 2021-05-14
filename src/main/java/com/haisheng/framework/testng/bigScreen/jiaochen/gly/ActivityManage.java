@@ -181,9 +181,9 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             String title=businessUtil.getRecruitActivityDetailDate1(activityId).getString("title");
             System.err.println("----------title:"+title);
             //登录小程序
-            user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+            user.loginApplet(EnumAppletToken.JC_LXQ_DAILY);
             //小程序报名此活动
-            businessUtil.activityRegisterApplet(activityId, "13373166806", "郭丽雅", 2, "1513814362@qq.com", "22", "女","其他",title);
+            businessUtil.activityRegisterApplet1(activityId, "13436941018", "雪晴", 2, "1513814362@qq.com", "22", "女","其他",title);
             //登录PC
             jc.pcLogin(pp.phone1, pp.password);
             //审批通过小程序活动报名
@@ -194,7 +194,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             String voucherCode = vList.get(0).getVoucherCode();
             System.err.println("-----获取卡券码-----" + voucherCode);
             //登录小程序
-            user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+            user.loginApplet(EnumAppletToken.JC_LXQ_DAILY);
             System.err.println("AD:"+activityId+"      title:"+title);
             //获取【我的卡券】列表条数
 //            int numBefore=jc.appletVoucherList(null,"GENERAL",100).getJSONArray("list").size();
@@ -229,49 +229,40 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * 创建1个招募活动和1个裂变活动
+     * 创建1个招募活动和1个裂变活动和1个内容营销
      */
     @Test
     public void preCreateSomeActivity() {
-        //获取一个卡券
-        Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-        //创建招募活动
-        for (int i = 0; i < 2; i++) {
-            jc.pcLogin(pp.phone1,pp.password);
-            //创建裂变活动
-            businessUtil.createFissionActivity(voucherId);
-            Long activityId = businessUtil.createRecruitActivity(voucherId, true, 0, true);
-            //审批通过
-            businessUtil.getApprovalPassed(activityId);
-            //登陆小程序
-            user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
-            businessUtil.activityRegisterApplet(activityId, "13373166806", "郭丽雅", 2, "1513814362@qq.com", "22", "女","其他");
-        }
+      try{
+          //获取一个卡券
+          Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+          //创建招募活动
+          for (int i = 0; i < 1; i++) {
+              jc.pcLogin(pp.phone1,pp.password);
+              //创建营销活动
+              Long id1=businessUtil.getContentMarketingAdd();
+              //创建裂变活动
+              Long id2=businessUtil.createFissionActivity(voucherId);
+              businessUtil.getApprovalPassed(id1,id2);
+              //创建招募活动
+              Long activityId = businessUtil.createRecruitActivity(voucherId, true, 0, true);
+              //审批通过
+              businessUtil.getApprovalPassed(activityId);
+              //登陆小程序
+              user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+              businessUtil.activityRegisterApplet(activityId, "13373166806", "郭丽雅", 2, "1513814362@qq.com", "22", "女","其他");
+          }
+      }catch (AssertionError | Exception e) {
+          collectMessage(e);
+      } finally {
+          saveData("创建1个招募活动和1个裂变活动和1个内容营销");
+      }
     }
 
 /**
  * ===================================活动管理的数据一致性==================================
  */
 
-@Test
-public void justTry(){
-    try{
-        //置顶【未开始的活动】
-        IScene scene=ActivityManageTopScene.builder().id(772L).build();
-        String message=visitor.invokeApi(scene,false).getString("message");
-        //小程序中第一个为此活动
-        user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
-        JSONObject response=businessUtil.appointmentActivityTitleNew();
-        System.err.println(response);
-        String title1=response.getJSONArray("list").getJSONObject(0).getString("title");
-
-        System.out.println(message+"---------:"+title1);
-    }catch (AssertionError | Exception e) {
-        collectMessage(e);
-    } finally {
-        saveData("ceshish");
-    }
-}
     /**
      * 创建招募活动-数据一致性校验{列表+1&状态=待审核,【活动审批】列表+1&状态=待审核}    √
      */

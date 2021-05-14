@@ -532,12 +532,12 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
         try {
             JSONArray list = md.member_list(null, 1, 100, null,null,null).getJSONArray("list");
             for (int i=0;i<list.size();i++){
-                String uid= md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(i).getString("uid");
-                String nickname = md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(i).getString("nickname");
-                String name = md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(i).getString("name");
-                int score = md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(i).getInteger("score");
-                String phone = md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(i).getString("phone");
-                int consume = md.member_list(null, 1, 10, null,null,null).getJSONArray("list").getJSONObject(i).getInteger("consume");
+                String uid= md.member_list(null, 1, 100, null,null,null).getJSONArray("list").getJSONObject(i).getString("uid");
+                String nickname = md.member_list(null, 1, 100, null,null,null).getJSONArray("list").getJSONObject(i).getString("nickname");
+                String name = md.member_list(null, 1, 100, null,null,null).getJSONArray("list").getJSONObject(i).getString("name");
+                int score = md.member_list(null, 1, 100, null,null,null).getJSONArray("list").getJSONObject(i).getInteger("score");
+                String phone = md.member_list(null, 1, 100, null,null,null).getJSONArray("list").getJSONObject(i).getString("phone");
+                int consume = md.member_list(null, 1, 100, null,null,null).getJSONArray("list").getJSONObject(i).getInteger("consume");
 
 
                 String id = md.member_detail(null,uid).getString("id");
