@@ -588,7 +588,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd{
     }
 
     //设备管理，查看设备
-    @Test(dataProvider = "device_id",dataProviderClass = DataProviderMethod.class)
+    @Test(dataProvider = "device_id",dataProviderClass = DataProviderMethodOnline.class)
     public void deviceDetail(String deviceid,String devicename){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -617,7 +617,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd{
     }
 
     //查看看守位
-    @Test(dataProvider = "device_id",dataProviderClass = DataProviderMethod.class)
+    @Test(dataProvider = "device_id",dataProviderClass = DataProviderMethodOnline.class)
     public void guardList(String deviceid,String devicename){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -626,12 +626,12 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd{
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("查询预置位");
+            saveData("查询看守位");
         }
     }
 
     //新建预置位,删除一个预置位
-    @Test(dataProvider = "device_id",dataProviderClass = DataProviderMethod.class)
+    @Test(dataProvider = "device_id",dataProviderClass = DataProviderMethodOnline.class)
     public void createPreset0(String deviceid,String devicename){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -694,14 +694,14 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd{
 
 
     //调用预置位
-    @Test(dataProvider = "device_id",dataProviderClass = DataProviderMethod.class)
+    @Test(dataProvider = "device_id",dataProviderClass = DataProviderMethodOnline.class)
     public void backPreset(String deviceid,String devicename){
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取预置位列表
             JSONObject data = md.cameraList(14630,deviceid,"PRESET").getJSONObject("data");
             JSONArray list = data.getJSONArray("list");
-            for(int i=0;i<=list.size();i++){
+            for(int i=0;i<list.size();i++){
                 int index = list.getJSONObject(i).getInteger("preset_index");
                 JSONObject res = md.dyPreset(14630,deviceid,index);
                 Preconditions.checkArgument(res.getInteger("code")==1000, "调用不成功原因" + res.getString("message")+"设备名称:"+devicename+" 设备ID:"+deviceid);

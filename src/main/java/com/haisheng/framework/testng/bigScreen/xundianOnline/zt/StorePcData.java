@@ -217,20 +217,20 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
     }
 
     //新建预置位、新建预置位不加名称、新建预置位不加时间、新建预置位后列表+1、删除一个预置位列表-1
-    @Test(dataProvider = "device_id",dataProviderClass = DataProviderMethod.class)
+    @Test(dataProvider = "device_id",dataProviderClass = DataProviderMethodOnline.class)
     public void createPreset(String deviceid,String devicename){
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取预置位列表数量
-            JSONObject data = md.cameraList(43072,deviceid,"PRESET").getJSONObject("data");
+            JSONObject data = md.cameraList(14630,deviceid,"PRESET").getJSONObject("data");
             JSONArray list = data.getJSONArray("list");
             int num = list.size();
             //新建一个预置位
             String name = "预置位_" + CommonUtil.getRandom(2);
-            JSONObject res1 = md.creatPreset(43072,deviceid,name,"60");
+            JSONObject res1 = md.creatPreset(14630,deviceid,name,"60");
             Preconditions.checkArgument(res1.getInteger("code")==1000, "创建不成功" + res1.getString("message"));
             //获取创建预置位后的预置位列表
-            JSONObject data1 = md.cameraList(43072,deviceid,"PRESET").getJSONObject("data");
+            JSONObject data1 = md.cameraList(14630,deviceid,"PRESET").getJSONObject("data");
             JSONArray list1 = data1.getJSONArray("list");
             int num1 = list1.size();
             int s = num1-num;
@@ -238,10 +238,10 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
             //获取最后一个预置位的preset_index
             int preset_index =list1.getJSONObject(num1-1).getInteger("preset_index");
             //删除最后一个预置位
-            JSONObject res3 = md.deletePreset(43072,deviceid,preset_index);
+            JSONObject res3 = md.deletePreset(14630,deviceid,preset_index);
             Preconditions.checkArgument(res3.getInteger("code")==1000, "删除不成功" + res3.getString("message"));
             //获取删除预置位后的预置位列表
-            JSONObject data2 = md.cameraList(43072,deviceid,"PRESET").getJSONObject("data");
+            JSONObject data2 = md.cameraList(14630,deviceid,"PRESET").getJSONObject("data");
             JSONArray list2 = data2.getJSONArray("list");
             int num2 = list2.size();
             int d = num1-num2;
@@ -259,15 +259,15 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取预置位列表数量
-            JSONObject data = md.cameraList(43072,"8070121884156928","GUARD").getJSONObject("data");
+            JSONObject data = md.cameraList(14630,"8070121884156928","GUARD").getJSONObject("data");
             boolean status = data.getBooleanValue("status");
             if(!status){
                 int num = 0;
                 //新建一个看守位
-                JSONObject res1 = md.Guard(43072,"8070121884156928");
+                JSONObject res1 = md.Guard(14630,"8070121884156928");
                 Preconditions.checkArgument(res1.getInteger("code")==1000, "创建不成功" + res1.getString("message"));
                 //获取创建预置位后的预置位列表
-                JSONObject data1 = md.cameraList(43072,"8070121884156928","GUARD").getJSONObject("data");
+                JSONObject data1 = md.cameraList(14630,"8070121884156928","GUARD").getJSONObject("data");
                 JSONArray list1 = data1.getJSONArray("list");
                 int num1 = list1.size();
                 int s = num1-num;
