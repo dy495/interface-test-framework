@@ -47,4 +47,12 @@ public interface IContainer extends IProperty {
      * @return tables
      */
     ITable[] getTables();
+
+    /**
+     * 设置表
+     *
+     * @param table 新表
+     * @return boolean
+     */
+    boolean setTable(ITable table);
 }

@@ -1,9 +1,9 @@
 package com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.row;
 
-import com.aliyun.openservices.shade.org.apache.commons.lang3.StringUtils;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.field.IField;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.property.BaseProperty;
 import lombok.Getter;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedHashMap;
@@ -66,7 +66,7 @@ public abstract class BaseRow extends BaseProperty implements IRow {
     @Override
     public IField getField(String key) {
         if (!StringUtils.isEmpty(key)) {
-            return fields.get(key.toLowerCase());
+            return fields.get(key);
         }
         return null;
     }

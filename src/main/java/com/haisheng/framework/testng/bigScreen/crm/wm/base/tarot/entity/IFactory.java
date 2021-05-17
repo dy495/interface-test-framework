@@ -32,7 +32,7 @@ public interface IFactory {
      * @param path 文件路径
      * @return 结果实体
      */
-    IEntity<?, ?>[] createE(String path);
+    IEntity<?, ?>[] createExcel(String path);
 
     /**
      * 创建Csv实体
@@ -40,5 +40,5 @@ public interface IFactory {
      * @param path 文件路径
      * @return 结果实体
      */
-    IEntity<?, ?>[] createC(String path);
+    IEntity<?, ?>[] createCsv(String path);
 }

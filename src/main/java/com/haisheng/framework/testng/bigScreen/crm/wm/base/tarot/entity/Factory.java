@@ -34,19 +34,27 @@ public class Factory implements IFactory {
     }
 
     @Override
-    public IEntity<?, ?>[] createE(String path) {
+    public IEntity<?, ?>[] createExcel(String path) {
         String relativePath = FileUtil.getResourcePath(path);
         return create(relativePath);
     }
 
     @Override
-    public IEntity<?, ?>[] createC(String path) {
+    public IEntity<?, ?>[] createCsv(String path) {
         String relativePath = FileUtil.getResourcePath(path);
         ITable table = new CsvTable.Builder().path(relativePath).buildTable();
         IRow[] rows = table.load() ? table.getRows() : new IRow[0];
         return createEntity(rows).toArray(new IEntity[0]);
     }
 
+    /**
+     * 数据表值映射java文件
+     *
+     * @param sql    sql
+     * @param aClass java文件
+     * @param <T>    T
+     * @return List<T>
+     */
     public <T> List<T> toJavaObjectList(@NotNull Sql sql, Class<T> aClass) {
         return toJavaObjectList(sql.getSql(), aClass);
     }
@@ -84,7 +92,8 @@ public class Factory implements IFactory {
         return Arrays.stream(rows).map(row -> new Entity.Builder().row(row).factory(this).buildEntity()).collect(Collectors.toList());
     }
 
-    private JSONObject createJSONObject(IRow row) {
+    @NotNull
+    private JSONObject createJSONObject(@NotNull IRow row) {
         JSONObject object = new JSONObject();
         Arrays.stream(row.getFields()).forEach(field -> object.put(field.getKey(), row.getField(field.getKey()).getValue()));
         return object;

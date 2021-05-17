@@ -8,8 +8,10 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.marker.attribute.Scen
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.marker.marker.SceneMarker;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.marker.parse.BeanParser;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.marker.parse.SceneParser;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.container.ExcelContainer;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.container.IContainer;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.field.IField;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.row.IRow;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.table.CsvTable;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.table.ITable;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.util.ContainerEnum;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.entity.Factory;
@@ -22,7 +24,7 @@ import org.jooq.Result;
 import org.jooq.impl.DSL;
 import org.testng.annotations.Test;
 
-import java.io.Serializable;
+import java.io.*;
 import java.util.Arrays;
 import java.util.List;
 
@@ -144,17 +146,27 @@ public class TestUtil {
 
     @Test
     public void testReadExcel() {
-        String path = "/excel/客户卡券补充数据-去掉截止512过期数据-补充数据V2.0.xlsx";
-        IEntity<?, ?>[] entities = new Factory.Builder().container(ContainerEnum.EXCEL.getContainer()).build().createE(path);
-        System.err.println(entities.length);
-        String voucherCode = entities[0].getFieldValue("卡券号");
-        System.err.println(voucherCode);
+        String path = FileUtil.getResourcePath("/excel/数据.xlsx");
+        IContainer container = new ExcelContainer.Builder().path(path).buildContainer();
+        container.init();
+        ITable table = container.getTables()[0];
+        table.load();
+        IRow[] rows = table.getRows();
+        Arrays.stream(rows).map(row -> row.getField("卡券号")).forEach(row -> row.setValue(row.getValue() + "改动"));
+        container.setTable(table);
+        //修改后验证
+        IContainer container1 = new ExcelContainer.Builder().path(path).buildContainer();
+        container1.init();
+        ITable table1 = container1.getTables()[0];
+        table1.load();
+        IRow[] rows1 = table1.getRows();
+        Arrays.stream(rows1).forEach(e -> System.err.println(e.getField("卡券号")));
     }
 
     @Test
     public void testReadCsv() {
         String path = "/excel/卡券数据-新模板-所有去重数据-未使用状态（3家门店除外）0510.csv";
-        IEntity<?, ?>[] entities = new Factory.Builder().build().createC(path);
+        IEntity<?, ?>[] entities = new Factory.Builder().build().createCsv(path);
         System.err.println(entities.length);
         String voucherName = entities[0].getFieldValue("卡券名称");
         System.err.println(voucherName);
@@ -165,5 +177,25 @@ public class TestUtil {
     class B implements Serializable {
         @JSONField(name = "case_name")
         private String caseName;
+    }
+
+    @Test
+    public void sss() {
+        String path = "/excel/规则文件.xlsx";
+        String resourcePath = FileUtil.getResourcePath(path);
+        IContainer container = new ExcelContainer.Builder().path(resourcePath).build();
+        container.init();
+        ITable table = container.getTables()[0];
+        table.load();
+        IRow[] rows = table.getRows();
+        Arrays.stream(rows).forEach(e -> System.err.println(Arrays.toString(e.getFieldsValue())));
+        IRow row = rows[0];
+        IField count = row.getField("COUNT");
+        IField index = row.getField("INDEX");
+        index.setValue(String.valueOf(Integer.parseInt(count.getValue()) + Integer.parseInt(index.getValue())));
+        container.setTable(table);
+        IEntity<?, ?> entity = new Factory.Builder().container(ContainerEnum.EXCEL.getContainer()).build().createExcel(path)[0];
+        String newIndex = entity.getFieldValue("INDEX");
+        System.err.println(newIndex);
     }
 }

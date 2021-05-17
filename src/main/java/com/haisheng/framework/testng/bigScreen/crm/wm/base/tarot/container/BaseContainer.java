@@ -51,6 +51,11 @@ public abstract class BaseContainer extends BaseProperty implements IContainer {
         this.path = path;
     }
 
+    @Override
+    public boolean setTable(ITable table) {
+        return false;
+    }
+
     public abstract static class BaseBuilder<T extends BaseBuilder<?, ?>, R extends IContainer>
             extends BaseProperty.BaseBuilder<T, R> {
         private String path;

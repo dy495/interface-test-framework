@@ -10,7 +10,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.row.IRow;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.util.ContainerEnum;
 import com.haisheng.framework.testng.bigScreen.crm.wm.bean.Response;
 import com.haisheng.framework.util.CommonUtil;
-import com.haisheng.framework.util.UrlToIoOutputUtil;
+import com.haisheng.framework.util.UrlOutputUtil;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -128,10 +128,10 @@ public class BasicUtil {
     public IRow[] getRows(String urlPath, String excelName) {
         //下载文件到resources/excel
         String outputPath = "/src/main/resources/excel/" + excelName;
-        UrlToIoOutputUtil.toIoSave(urlPath, outputPath);
+        UrlOutputUtil.toIoSave(urlPath, outputPath);
         String relativePath = "/excel/" + excelName;
         logger.info("relativePath is {}", relativePath);
-        IEntity<?, ?>[] entities = new Factory.Builder().container(ContainerEnum.EXCEL.getContainer()).build().createE(relativePath);
+        IEntity<?, ?>[] entities = new Factory.Builder().container(ContainerEnum.EXCEL.getContainer()).build().createExcel(relativePath);
         return Arrays.stream(entities).map(IEntity::getCurrent).toArray(IRow[]::new);
     }
 

@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 public abstract class BaseProperty implements IProperty {
     protected final static Logger logger = LoggerFactory.getLogger(BaseProperty.class);
     private final String key;
-    private final String value;
+    private String value;
 
     protected BaseProperty(@NotNull BaseBuilder<?, ?> baseBuilder) {
         this.key = baseBuilder.name;
@@ -19,6 +19,11 @@ public abstract class BaseProperty implements IProperty {
     @Override
     public String toString() {
         return "BasicProperty [key=" + key + ", value=" + value + "]";
+    }
+
+    @Override
+    public void setValue(String value) {
+        this.value = value == null ? "" : value;
     }
 
     public abstract static class BaseBuilder<T, R> {

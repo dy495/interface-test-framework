@@ -17,7 +17,6 @@ public class FileUtil {
      * @return String 资源的绝对路径
      */
     public static String getResourcePath(String relativePath) {
-        logger.info("relativePath is {}", relativePath);
         String str = Objects.requireNonNull(FileUtil.class.getResource(relativePath)).getPath();
         String path = null;
         try {

@@ -21,4 +21,9 @@ public interface IProperty {
      * @return Object
      */
     String getValue();
+
+    /**
+     * 设置值
+     */
+    void setValue(String value);
 }

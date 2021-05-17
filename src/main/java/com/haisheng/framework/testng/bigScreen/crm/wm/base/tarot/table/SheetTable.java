@@ -60,18 +60,14 @@ public class SheetTable extends BaseTable {
             return "";
         }
         switch (cell.getCellType()) {
-            case HSSFCell
-                    .CELL_TYPE_NUMERIC:
+            case 0:
                 DecimalFormat df = new DecimalFormat("#");
                 return df.format(cell.getNumericCellValue());
-            case HSSFCell
-                    .CELL_TYPE_STRING:
+            case 1:
                 return cell.getRichStringCellValue().getString();
-            case HSSFCell
-                    .CELL_TYPE_FORMULA:
+            case 2:
                 return cell.getCellFormula();
-            case HSSFCell
-                    .CELL_TYPE_BOOLEAN:
+            case 4:
                 return String.valueOf(cell.getBooleanCellValue()).trim();
             default:
                 return "";
