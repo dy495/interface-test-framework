@@ -2504,6 +2504,162 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
     }
 
 
+    //-------------------------------摄像头云台控制相关接口---------------------------------------
+
+    /**
+     * @description:   查看设备详情
+     * @author: zt
+     * @time:
+     */
+    public JSONObject cameraDetail(String referer,String device_id) throws Exception {
+        String url = "/patrol/equipment-management/device/detail";
+        JSONObject json = new JSONObject();
+        json.put("referer",referer);
+        json.put("device_id",device_id);
+//        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return invokeApi(url, JSONObject.parseObject(json.toJSONString()), false);
+    }
+
+    /**
+     * @description:   20.1预置位/看守位列表
+     * @author: zt
+     * @time:
+     */
+    public JSONObject cameraList(int shop_id,String terminal_device_id,String type) throws Exception {
+        String url = "/patrol/ptz/control/preset/list";
+        JSONObject json = new JSONObject();
+        json.put("shop_id",shop_id);
+        json.put("terminal_device_id",terminal_device_id);
+        json.put("type",type);
+        return invokeApi(url, JSONObject.parseObject(json.toJSONString()), false);
+    }
+
+    /**
+     * @description: 20.2新建预置位
+     * @author: zt
+     * @time:
+     */
+    public JSONObject creatPreset(int shop_id,String terminal_device_id,String name,String time) throws Exception {
+        String url = "/patrol/ptz/control/preset/add";
+        JSONObject json = new JSONObject();
+        json.put("shop_id",shop_id);
+        json.put("terminal_device_id",terminal_device_id);
+        json.put("name",name);
+        json.put("time",time);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res);
+    }
+
+
+
+    /**
+     * @description: 20.3更新预置位
+     * @author: zt
+     * @time:
+     */
+    public JSONObject gxPreset(String terminal_device_id,String name,int preset_index) throws Exception {
+        String url = "/patrol/ptz/control/preset/update";
+        JSONObject json = new JSONObject();
+        json.put("terminal_device_id",terminal_device_id);
+        json.put("name",name);
+        json.put("preset_index",preset_index);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 20.4删除预置位
+     * @author: zt
+     * @time:
+     */
+    public JSONObject deletePreset(int shop_id,String terminal_device_id,int preset_index) throws Exception {
+        String url = "/patrol/ptz/control/preset/delete";
+        JSONObject json = new JSONObject();
+        json.put("shop_id",shop_id);
+        json.put("terminal_device_id",terminal_device_id);
+        json.put("preset_index",preset_index);
+//        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return invokeApi(url, JSONObject.parseObject(json.toJSONString()), false);
+    }
+
+
+
+    /**
+     * @description: 20.5删除看守位
+     * @author: zt
+     * @time:
+     */
+    public JSONObject deleteGuard(String terminal_device_id) throws Exception {
+        String url = "/patrol/ptz/control/preset/delete";
+        JSONObject json = new JSONObject();
+        json.put("terminal_device_id",terminal_device_id);
+//        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return invokeApi(url, JSONObject.parseObject(json.toJSONString()), false);
+    }
+
+
+
+    /**
+     * @description: 20.6云台设备轮巡
+     * @author: zt
+     * @time:
+     */
+    public JSONObject Polling(String terminal_device_id,JSONArray preset_list) throws Exception {
+        String url = "/patrol/ptz/control/polling";
+        JSONObject json = new JSONObject();
+        json.put("terminal_device_id",terminal_device_id);
+        json.put("preset_list",preset_list);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    /**
+     * @description: 20.7设置看守位
+     * @author: zt
+     * @time:
+     */
+    public JSONObject Guard(int shop_id,String terminal_device_id) throws Exception {
+        String url = "/patrol/ptz/control/guard-position/add";
+        JSONObject json = new JSONObject();
+        json.put("shop_id",shop_id);
+        json.put("terminal_device_id",terminal_device_id);
+//        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return invokeApi(url, JSONObject.parseObject(json.toJSONString()), false);
+    }
+
+
+
+    /**
+     * @description: 20.8调用看守位
+     * @author: zt
+     * @time:
+     */
+    public JSONObject dyGuard(int shop_id,String terminal_device_id) throws Exception {
+        String url = "/patrol/ptz/control/guard-position/back";
+        JSONObject json = new JSONObject();
+        json.put("shop_id",shop_id);
+        json.put("terminal_device_id",terminal_device_id);
+        return invokeApi(url, JSONObject.parseObject(json.toJSONString()), false);
+    }
+
+
+
+    /**
+     * @description: 20.9调用预置位
+     * @author: zt
+     * @time:
+     */
+    public JSONObject dyPreset(int shop_id,String terminal_device_id,int preset_index) throws Exception {
+        String url = "/patrol/ptz/control/preset/back";
+        JSONObject json = new JSONObject();
+        json.put("shop_id",shop_id);
+        json.put("terminal_device_id",terminal_device_id);
+        json.put("preset_index",preset_index);
+//        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return invokeApi(url, JSONObject.parseObject(json.toJSONString()), false);
+    }
+
     /**
      * @description:会员等级枚举
      * @author

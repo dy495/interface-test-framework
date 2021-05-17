@@ -2,13 +2,13 @@ package com.haisheng.framework.testng.bigScreen.xundianOnline.zt;
 
 import org.testng.annotations.DataProvider;
 
-public class DataProviderMethod {
+public class DataProviderMethodOnline {
     @DataProvider(name = "device_id")
     public Object[] cameraId() {
         return new String[][]{
-                {"8061349193417728"},
-                {"8097818264503296"},
-                {"8058611994690560"}
+                {"8070127575729152","yushi150-3"},
+                {"8070121884156928","yushipingtai(全功能)"},
+
 
         };
     }
