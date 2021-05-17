@@ -49,13 +49,12 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     public String shopAllId="-1";
     FileUtil file = new FileUtil();
     public String face=file.getImgStr(pp.filePath2);
-
+    CommonConfig commonConfig = new CommonConfig();
 
     @BeforeClass
     @Override
     public void initial() {
         logger.debug("before classs initial");
-        CommonConfig commonConfig = new CommonConfig();
         //替换checklist的相关信息
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_JIAOCHEN_DAILY_SERVICE;
@@ -67,7 +66,8 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //放入shopId
         commonConfig.referer = product.getReferer();
-        commonConfig.shopId = product.getShopId();
+        //全部门店--需要单个门店时需要修改
+        commonConfig.shopId = shopAllId;
         commonConfig.roleId = product.getRoleId();
         beforeClassInit(commonConfig);
         logger.debug("FK: " + cu);
@@ -519,12 +519,14 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     @Test(description = "收银风控列表项校验")
     public void authCashierPageSystem1(){
         try{
+
             //收银风页面的接口
             IScene scene =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.PageScene.builder().page(1).size(10).build();
             JSONObject response=visitor.invokeApi(scene);
             int pages=response.getInteger("pages")>10?10:response.getInteger("pages");
             for(int page=1;page<=pages;page++){
                 JSONArray list=visitor.invokeApi(PageScene.builder().page(page).size(10).build()).getJSONArray("list");
+                System.err.println(list.size());
                 for(int i=0;i<list.size();i++){
                     //校验列表的每一项
                     String shopName=list.getJSONObject(i).getString("shop_name");
@@ -2549,11 +2551,13 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String shopId2="";
+            String roleId2="";
             JSONArray list =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
             String name = list.getJSONObject(0).getString("name");
             Long shopId = list.getJSONObject(0).getJSONArray("shop_list").getJSONObject(0).getLong("shop_id");
-            Long roleId = list.getJSONObject(0).getJSONArray("role_list").getJSONObject(0).getLong("role_id");
+            String roleId = list.getJSONObject(0).getJSONArray("role_list").getJSONObject(0).getString("role_id");
             String phone = list.getJSONObject(1).getString("phone");
+            System.out.println("------shopId-----"+shopId);
 
             //根据账号名称筛选
             JSONObject response1 =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().name(name).page(1).size(10).build().invoke(visitor,true);
@@ -2576,30 +2580,39 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
 
 //            //根据门店筛选
 //            JSONObject response3 =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().shopId(shopId).page(1).size(10).build().invoke(visitor,true);
-//            int pages3=response3.getInteger("pages")>3?3:response3.getInteger("pages");
+//            int pages3=response3.getInteger("pages")>5?5:response3.getInteger("pages");
 //            for(int page=1;page<=pages3;page++) {
 //                JSONArray list3 =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().shopId(shopId).page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
 //                for (int i = 0; i < list3.size(); i++) {
-//                    int num=list.getJSONObject(0).getJSONArray("shop_list").size();
+//                    int num=list3.getJSONObject(i).getJSONArray("shop_list").size();
+//                    shopId2="";
 //                    for(int j=0;j<num;j++){
-//                         String shopId1 = list.getJSONObject(0).getJSONArray("shop_list").getJSONObject(j).getString("shop_id");
-//                         shopId2=shopId2.concat(shopId1);
-//                        System.err.println("-----------"+shopId1);
+//                         String shopId1 = list.getJSONObject(i).getJSONArray("shop_list").getJSONObject(j).getString("shop_id");
+//                         shopId2=shopId2+shopId1;
+//                        System.out.println(shopId1+"-------"+shopId2);
 //                    }
+//                    System.err.println(shopId2);
 //                    Preconditions.checkArgument(shopId2.contains(String.valueOf(shopId)), "根据shopId:" + shopId + "进行筛选的结果和筛选条件不一致");
 //                }
 //            }
 
-//            //根据角色筛选
-//            JSONObject response4 =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().shopId(shopId).page(1).size(10).build().invoke(visitor,true);
-//            int pages4=response4.getInteger("pages")>3?3:response4.getInteger("pages");
-//            for(int page=1;page<=pages4;page++) {
-//                JSONArray list4 =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().roleId(roleId).page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
-//                for (int i = 0; i < list4.size(); i++) {
-//                    Preconditions.checkArgument(roleId.equals(list4.getJSONObject(0).getJSONArray("shop_list").getJSONObject(0).getLong("role_id")), "根据roleId:" + roleId + "进行筛选的结果和筛选条件不一致");
-//                }
-//            }
-
+            //根据角色筛选
+            JSONObject response4 =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().roleId(Long.valueOf(String.valueOf(roleId))).page(1).size(10).build().invoke(visitor,true);
+            int pages4=response4.getInteger("pages")>5?5:response4.getInteger("pages");
+            for(int page=1;page<=pages4;page++) {
+                JSONArray list4 =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().roleId(Long.valueOf(roleId)).page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
+                for (int i = 0; i < list4.size(); i++) {
+                    roleId2="";
+                    int num=list4.getJSONObject(i).getJSONArray("role_list").size();
+                    for(int j=0;j<num;j++){
+                        String roleId1=list4.getJSONObject(i).getJSONArray("role_list").getJSONObject(j).getString("role_id");
+                        roleId2+=roleId1;
+                        System.out.println(roleId+"--------"+roleId2);
+                    }
+                    System.err.println(roleId2);
+                    Preconditions.checkArgument(roleId2.contains(roleId), "根据roleId:" + roleId + "进行筛选的结果和筛选条件不一致");
+                }
+            }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {

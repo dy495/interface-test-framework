@@ -366,16 +366,16 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void selectAfterSleCustomerManageOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject respond = jc.afterSleCustomerManage("", "1", "10", "", "");
+            JSONObject respond = jc.afterSleCustomerManage("1", "10", "", "");
             if (respond.getJSONArray("list").size() > 0) {
                 String result = respond.getJSONArray("list").getJSONObject(0).getString(output);
                 if(pram.equals("registration_status")){
                     String result1 = respond.getJSONArray("list").getJSONObject(0).getString(output).equals("是")?"true":"false";
                     if (result != null) {
-                        JSONObject respond1 = jc.afterSleCustomerManage("", "1", "10", pram, result1);
+                        JSONObject respond1 = jc.afterSleCustomerManage( "1", "10", pram, result1);
                         int pages = respond1.getInteger("pages")>10?10:respond1.getInteger("pages");
                         for (int page = 1; page <= pages; page++) {
-                            JSONArray list = jc.afterSleCustomerManage("", String.valueOf(page), "10", pram, result1).getJSONArray("list");
+                            JSONArray list = jc.afterSleCustomerManage(String.valueOf(page), "10", pram, result1).getJSONArray("list");
                             for (int i = 0; i < list.size(); i++) {
                                 String Flag = list.getJSONObject(i).getString(output);
                                 System.out.println("售后客户管理按" + result + "查询，结果错误" + Flag);
@@ -386,10 +386,10 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                 }else if(pram.equals("brand_id")){
                     String result1 = businessUtil.brandPageExchange(result);
                     if (result != null) {
-                        JSONObject respond1 = jc.afterSleCustomerManage("", "1", "10", pram, result1);
+                        JSONObject respond1 = jc.afterSleCustomerManage( "1", "10", pram, result1);
                         int pages = respond1.getInteger("pages")>10?10:respond1.getInteger("pages");
                         for (int page = 1; page <= pages; page++) {
-                            JSONArray list = jc.afterSleCustomerManage("", String.valueOf(page), "10", pram, result1).getJSONArray("list");
+                            JSONArray list = jc.afterSleCustomerManage(String.valueOf(page), "10", pram, result1).getJSONArray("list");
                             for (int i = 0; i < list.size(); i++) {
                                 String Flag = list.getJSONObject(i).getString(output);
                                 System.out.println("售后客户管理按" + result + "查询，结果错误" + Flag);
@@ -399,10 +399,10 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                     }
                 }else{
                     if (result != null) {
-                        JSONObject respond1 = jc.afterSleCustomerManage("", "1", "10", pram, result);
+                        JSONObject respond1 = jc.afterSleCustomerManage( "1", "10", pram, result);
                         int pages = respond1.getInteger("pages")>10?10:respond1.getInteger("pages");
                         for (int page = 1; page <= pages; page++) {
-                            JSONArray list = jc.afterSleCustomerManage("", String.valueOf(page), "10", pram, result).getJSONArray("list");
+                            JSONArray list = jc.afterSleCustomerManage( String.valueOf(page), "10", pram, result).getJSONArray("list");
                             for (int i = 0; i < list.size(); i++) {
                                 String Flag = list.getJSONObject(i).getString(output);
                                 System.out.println("售后客户管理按" + result + "查询，结果错误" + Flag);
@@ -757,18 +757,18 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void appointmentRecordOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject respond = jc.appointmentRecordManage1("", "1", "10", "MAINTAIN","", "");
+            JSONObject respond = jc.appointmentRecordManage1("1", "10", "MAINTAIN","", "");
             String confirmStatus = respond.getJSONArray("list").getJSONObject(0).getString("appointment_status_name");
             String status = messageFormCustomerTurnMethod("MAINTAIN_CONFIRM_STATUS", confirmStatus);
             String result = null;
             if (respond.getJSONArray("list").size() > 0) {
                 if (pram.equals("confirm_status")) {
-                    JSONObject respond1 = jc.appointmentRecordManage1("", "1", "10","MAINTAIN", pram, status);
+                    JSONObject respond1 = jc.appointmentRecordManage1("1", "10","MAINTAIN", pram, status);
                     int pages = respond1.getInteger("pages")>10?10:respond1.getInteger("pages");
                     for (int page = 1; page <= pages; page++) {
-                        JSONArray list = jc.appointmentRecordManage1("", String.valueOf(page), "10","MAINTAIN", pram, status).getJSONArray("list");
+                        JSONArray list = jc.appointmentRecordManage1(String.valueOf(page), "10","MAINTAIN", pram, status).getJSONArray("list");
                         for (int i = 0; i < list.size(); i++) {
-                            String Flag = jc.appointmentRecordManage1("", String.valueOf(page), String.valueOf(list.size()),"MAINTAIN", pram, status).getJSONArray("list").getJSONObject(i).getString(output);
+                            String Flag = jc.appointmentRecordManage1(String.valueOf(page), String.valueOf(list.size()),"MAINTAIN", pram, status).getJSONArray("list").getJSONObject(i).getString(output);
                             Preconditions.checkArgument(Flag.contains(confirmStatus), "预约记录管理按" + confirmStatus + "查询，结果错误" + Flag);
                         }
                     }
@@ -776,10 +776,10 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                     result = respond.getJSONArray("list").getJSONObject(0).getString(output);
                     String saleId=businessUtil.authNameTransformId(result,"MAINTAIN_DISTRIBUTION");
                     String name=businessUtil.getAuthNameExist(result,"MAINTAIN_DISTRIBUTION");
-                    JSONObject respond1 = jc.appointmentRecordManage1("", "1", "10","MAINTAIN", pram, saleId);
+                    JSONObject respond1 = jc.appointmentRecordManage1( "1", "10","MAINTAIN", pram, saleId);
                     int pages = respond1.getInteger("pages")>10?10:respond1.getInteger("pages");
                     for (int page = 1; page <= pages; page++) {
-                        JSONArray list = jc.appointmentRecordManage1("", String.valueOf(page), "10", "MAINTAIN",pram, saleId).getJSONArray("list");
+                        JSONArray list = jc.appointmentRecordManage1( String.valueOf(page), "10", "MAINTAIN",pram, saleId).getJSONArray("list");
                         for (int i = 0; i < list.size(); i++) {
                             String Flag=list.getJSONObject(i).getString(output);
                             System.err.println(pages+"---------"+i+"-------------"+Flag);
@@ -788,10 +788,10 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                     }
                 }else {
                     result = respond.getJSONArray("list").getJSONObject(0).getString(output);
-                    JSONObject respond1 = jc.appointmentRecordManage1("", "1", "10","MAINTAIN", pram, result);
+                    JSONObject respond1 = jc.appointmentRecordManage1("1", "10","MAINTAIN", pram, result);
                     int pages = respond1.getInteger("pages")>10?10:respond1.getInteger("pages");
                     for (int page = 1; page <= pages; page++) {
-                        JSONArray list = jc.appointmentRecordManage1("", String.valueOf(page), "10","MAINTAIN", pram, result).getJSONArray("list");
+                        JSONArray list = jc.appointmentRecordManage1( String.valueOf(page), "10","MAINTAIN", pram, result).getJSONArray("list");
                         for (int i = 0; i < list.size(); i++) {
                             String Flag=list.getJSONObject(i).getString(output);
                             Preconditions.checkArgument(Flag.contains(result), "预约记录管理按" + result + "查询，结果错误" + Flag);
@@ -849,7 +849,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         try {
             Object[][] flag = Constant.appointmentRecordFilter_pram();
             appointmentRecordVariable variable = new appointmentRecordVariable();
-            JSONArray res = jc.appointmentRecordManage1("", "1", "10","MAINTAIN", "", "").getJSONArray("list");
+            JSONArray res = jc.appointmentRecordManage1("1", "10","MAINTAIN", "", "").getJSONArray("list");
             String confirmStatus = res.getJSONObject(0).getString("appointment_status_name");
             String status = messageFormCustomerTurnMethod("MAINTAIN_CONFIRM_STATUS", confirmStatus);
             if (res.size() > 0) {
@@ -898,7 +898,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         try {
             Object[][] flag = Constant.appointmentRecordFilter_pram();
             appointmentRecordVariable variable = new appointmentRecordVariable();
-            JSONArray res = jc.appointmentRecordManage1("", "1", "10", "MAINTAIN", "", "").getJSONArray("list");
+            JSONArray res = jc.appointmentRecordManage1("1", "10", "MAINTAIN", "", "").getJSONArray("list");
             String confirmStatus = res.getJSONObject(0).getString("appointment_status_name");
             String status = messageFormCustomerTurnMethod("MAINTAIN_CONFIRM_STATUS", confirmStatus);
             if (res.size() > 0) {
@@ -1515,17 +1515,17 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void packageFormOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject respond = jc.packageFormFilterManage("", "1", "10", "", "");
+            JSONObject respond = jc.packageFormFilterManage( "1", "10", "", "");
             if (respond.getJSONArray("list").size() > 0) {
                 String result = respond.getJSONArray("list").getJSONObject(0).getString(output);
                 if(pram.equals("shop_id")){
                     String shopId=businessUtil.shopNameTransformId(result);
                     String shopName=businessUtil.getShopNameExist(result);
                     System.out.println(shopId+"--------"+shopName);
-                    JSONObject respond1 = jc.packageFormFilterManage("", "1", "10", pram, shopId);
+                    JSONObject respond1 = jc.packageFormFilterManage( "1", "10", pram, shopId);
                     int pages = respond1.getInteger("pages")>10?10:respond1.getInteger("pages");
                     for (int page = 1; page <= pages; page++) {
-                        JSONArray list = jc.packageFormFilterManage("", String.valueOf(page),"10", pram, shopId).getJSONArray("list");
+                        JSONArray list = jc.packageFormFilterManage( String.valueOf(page),"10", pram, shopId).getJSONArray("list");
                         for (int i = 0; i < list.size(); i++) {
                             String Flag = list.getJSONObject(i).getString(output);
                             System.out.println("套餐表单管理按" + shopName + "查询，结果错误" + Flag);
@@ -1533,10 +1533,10 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                         }
                     }
                 }else{
-                    JSONObject respond1 = jc.packageFormFilterManage("", "1", "10", pram, result);
+                    JSONObject respond1 = jc.packageFormFilterManage( "1", "10", pram, result);
                     int pages = respond1.getInteger("pages")>10?10:respond1.getInteger("pages");
                     for (int page = 1; page <= pages; page++) {
-                        JSONArray list = jc.packageFormFilterManage("", String.valueOf(page),"10", pram, result).getJSONArray("list");
+                        JSONArray list = jc.packageFormFilterManage( String.valueOf(page),"10", pram, result).getJSONArray("list");
                         for (int i = 0; i < list.size(); i++) {
                             String Flag = list.getJSONObject(i).getString(output);
                             Preconditions.checkArgument(Flag.contains(result), "套餐表单管理按" + result + "查询，结果错误" + Flag);
@@ -1591,7 +1591,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         try {
             Object[][] flag = Constant.packageFormFilter_pram();
             packageFormVariable variable = new packageFormVariable();
-            JSONArray res = jc.packageFormFilterManage("", "1", "10", "", "").getJSONArray("list");
+            JSONArray res = jc.packageFormFilterManage( "1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
                 variable.package_name = data.getString(flag[0][1].toString());
@@ -1625,7 +1625,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         try {
             Object[][] flag = Constant.packageFormFilter_pram();
             packageFormVariable variable = new packageFormVariable();
-            JSONArray res = jc.packageFormFilterManage("", "1", "10", "", "").getJSONArray("list");
+            JSONArray res = jc.packageFormFilterManage("1", "10", "", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
                 variable.package_name = data.getString(flag[0][1].toString());
@@ -1655,7 +1655,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void packageFormEmptyFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            jc.packageFormFilterManage("", "1", "10", "", "").getJSONArray("list");
+            jc.packageFormFilterManage( "1", "10", "", "").getJSONArray("list");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -2634,16 +2634,16 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     @Test(dataProvider = "SELECT_staffListFilter", dataProviderClass = Constant.class)
     public void staffListOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
-        JSONObject respond = jc.staffListFilterManage(null, "1", "10", "", "");
+        JSONObject respond = jc.staffListFilterManage( "1", "10", "", "");
         try {
             System.out.println(commonConfig.shopId);
             if (respond.getJSONArray("list").size() > 0) {
                 if(pram.equals("shop_id")){
                     String result = respond.getJSONArray("list").getJSONObject(0).getJSONArray("shop_list").getJSONObject(0).getString(output);
-                    JSONObject respond1 = jc.staffListFilterManage(null, "1", "10", pram, result);
+                    JSONObject respond1 = jc.staffListFilterManage( "1", "10", pram, result);
                     int pages = respond1.getInteger("pages");
                     for (int page = 1; page <= pages; page++) {
-                        JSONArray list = jc.staffListFilterManage(null, String.valueOf(page), "10", pram, result).getJSONArray("list");
+                        JSONArray list = jc.staffListFilterManage(String.valueOf(page), "10", pram, result).getJSONArray("list");
                         for (int i = 0; i < list.size(); i++) {
                             JSONArray list1 = list.getJSONObject(i).getJSONArray("shop_list");
                             String listString =list1.toString();
@@ -2655,10 +2655,10 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                     }
                 }else if(pram.equals("role_id")){
                     String result = respond.getJSONArray("list").getJSONObject(0).getJSONArray("role_list").getJSONObject(0).getString(output);
-                    JSONObject respond1 = jc.staffListFilterManage(null, "1", "10", pram, result);
+                    JSONObject respond1 = jc.staffListFilterManage( "1", "10", pram, result);
                     int pages = respond1.getInteger("pages");
                     for (int page = 1; page <= pages; page++) {
-                        JSONArray list = jc.staffListFilterManage("", String.valueOf(page), "10", pram, result).getJSONArray("list");
+                        JSONArray list = jc.staffListFilterManage( String.valueOf(page), "10", pram, result).getJSONArray("list");
                         for (int i = 0; i < list.size(); i++) {
                             String string="";
                             JSONArray list1 = list.getJSONObject(i).getJSONArray("role_list");
@@ -2673,10 +2673,10 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                     }
                 }else{
                     String result = respond.getJSONArray("list").getJSONObject(0).getString(pram);
-                    JSONObject respond1 = jc.staffListFilterManage(null, "1", "10", pram, result);
+                    JSONObject respond1 = jc.staffListFilterManage("1", "10", pram, result);
                     int pages = respond1.getInteger("pages");
                     for (int page = 1; page <= pages; page++) {
-                        JSONArray list = jc.staffListFilterManage("", String.valueOf(page), "10", pram, result).getJSONArray("list");
+                        JSONArray list = jc.staffListFilterManage(String.valueOf(page), "10", pram, result).getJSONArray("list");
                         for (int i = 0; i < list.size(); i++) {
                             String Flag = list.getJSONObject(i).getString(output);
                             Preconditions.checkArgument(Flag.contains(result), "员工列表按" + result + "查询，结果错误" + Flag);
@@ -2686,50 +2686,6 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
             } else {
                 Preconditions.checkArgument(respond.getJSONArray("list") == null, "员工列表错误,请自行检查");
             }
-
-//            if (respond.getJSONArray("list").size() > 0) {
-//                System.out.println("-------"+pram);
-//                if(pram.equals("role_id")) {
-//                    if (respond.getJSONArray("list").size() > 0) {
-//                        String result = respond.getJSONArray("list").getJSONObject(0).getJSONArray("role_list").getJSONObject(0).getString(pram);
-//                        JSONObject respond1 = jc.staffListFilterManage(null, "1", "10", pram, result);
-//                        int pages = respond1.getInteger("pages");
-//                        for (int page = 1; page <= pages; page++) {
-//                            JSONArray list = jc.staffListFilterManage("", String.valueOf(page), "10", pram, result).getJSONArray("list");
-//                            for (int i = 0; i < list.size(); i++) {
-//                                String Flag = list.getJSONObject(i).getJSONArray("role_list").getJSONObject(0).getString("role_id");
-//                                System.out.println("-------"+Flag);
-//                                Preconditions.checkArgument(Flag.contains(result), "员工列表按" + result + "查询，结果错误" + Flag);
-//                            }
-//                        }
-//                    }
-//                }if(pram.equals("shop_id")) {
-//                    if (respond.getJSONArray("list").size() > 0) {
-//                        String result = respond.getJSONArray("list").getJSONObject(0).getJSONArray("shop_list").getJSONObject(0).getString(pram);
-//                        JSONObject respond1 = jc.staffListFilterManage(null, "1", "10", pram, result);
-//                        int pages = respond1.getInteger("pages");
-//                        for (int page = 1; page <= pages; page++) {
-//                            JSONArray list = jc.staffListFilterManage("", String.valueOf(page), "10", pram, result).getJSONArray("list");
-//                            for (int i = 0; i < list.size(); i++) {
-//                                String Flag = list.getJSONObject(i).getJSONArray("shop_list").getJSONObject(0).getString("shop_id");
-//                                System.out.println("-------"+Flag);
-//                                Preconditions.checkArgument(Flag.contains(result), "员工列表按" + result + "查询，结果错误" + Flag);
-//                            }
-//                        }
-//                    }
-//                } else{
-//                    String result = respond.getJSONArray("list").getJSONObject(0).getString(pram);
-//                    JSONObject respond1 = jc.staffListFilterManage(null, "1", "10", pram, result);
-//                    int pages = respond1.getInteger("pages");
-//                    for (int page = 1; page <= pages; page++) {
-//                        JSONArray list = jc.staffListFilterManage("", String.valueOf(page),"10", pram, result).getJSONArray("list");
-//                        for (int i = 0; i < list.size(); i++) {
-//                            String Flag = list.getJSONObject(i).getString(output);
-//                            Preconditions.checkArgument(Flag.contains(result), "员工列表按" + result + "查询，结果错误" + Flag);
-//                        }
-//                    }
-//                    }
-//                }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -2746,7 +2702,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void staffListEmptyFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray list=jc.staffListFilterManage(null, "1", "10", "", "").getJSONArray("list");
+            JSONArray list=jc.staffListFilterManage("1", "10", "", "").getJSONArray("list");
             System.err.println(list);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -4664,18 +4620,18 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void maintainAppointmentRecordOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject respond = jc.appointmentRecordManage("", "1", "10", "REPAIR","", "");
+            JSONObject respond = jc.appointmentRecordManage1( "1", "10", "REPAIR","", "");
             String confirmStatus = respond.getJSONArray("list").getJSONObject(0).getString("appointment_status_name");
             String status = messageFormCustomerTurnMethod("MAINTAIN_CONFIRM_STATUS", confirmStatus);
             String result = null;
             if (respond.getJSONArray("list").size() > 0) {
                 if (pram.equals("confirm_status")) {
-                    JSONObject respond1 = jc.appointmentRecordManage("", "1", "10", "REPAIR",pram, status);
+                    JSONObject respond1 = jc.appointmentRecordManage1("1", "10", "REPAIR",pram, status);
                     int pages = respond1.getInteger("pages")>10?10:respond1.getInteger("pages");
                     for (int page = 1; page <= pages; page++) {
-                        JSONArray list = jc.appointmentRecordManage("", String.valueOf(page), "10", "REPAIR",pram, status).getJSONArray("list");
+                        JSONArray list = jc.appointmentRecordManage1(String.valueOf(page), "10", "REPAIR",pram, status).getJSONArray("list");
                         for (int i = 0; i < list.size(); i++) {
-                            String Flag = jc.appointmentRecordManage("", String.valueOf(page), String.valueOf(list.size()),"REPAIR", pram, status).getJSONArray("list").getJSONObject(i).getString(output);
+                            String Flag = jc.appointmentRecordManage1( String.valueOf(page), String.valueOf(list.size()),"REPAIR", pram, status).getJSONArray("list").getJSONObject(i).getString(output);
                             Preconditions.checkArgument(Flag.contains(confirmStatus), "预约记录管理按" + confirmStatus + "查询，结果错误" + Flag);
                         }
                     }
@@ -4683,10 +4639,10 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                     result = respond.getJSONArray("list").getJSONObject(0).getString(output);
                     String saleId=businessUtil.authNameTransformId(result,"MAINTAIN_DISTRIBUTION");
                     String name=businessUtil.getAuthNameExist(result,"MAINTAIN_DISTRIBUTION");
-                    JSONObject respond1 = jc.appointmentRecordManage("", "1", "10","REPAIR", pram, saleId);
+                    JSONObject respond1 = jc.appointmentRecordManage1("1", "10","REPAIR", pram, saleId);
                     int pages = respond1.getInteger("pages")>10?10:respond1.getInteger("pages");
                     for (int page = 1; page <= pages; page++) {
-                        JSONArray list = jc.appointmentRecordManage("", String.valueOf(page), "10","REPAIR", pram, saleId).getJSONArray("list");
+                        JSONArray list = jc.appointmentRecordManage1( String.valueOf(page), "10","REPAIR", pram, saleId).getJSONArray("list");
                         for (int i = 0; i < list.size(); i++) {
                             String Flag=list.getJSONObject(i).getString(output);
                             Preconditions.checkArgument(Flag.contains(name), "预约记录管理按" + name + "查询，结果错误" + Flag);
@@ -4694,10 +4650,10 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
                     }
                 }else {
                     result = respond.getJSONArray("list").getJSONObject(0).getString(output);
-                    JSONObject respond1 = jc.appointmentRecordManage("", "1", "10", "REPAIR",pram, result);
+                    JSONObject respond1 = jc.appointmentRecordManage1( "1", "10", "REPAIR",pram, result);
                     int pages = respond1.getInteger("pages")>10?10:respond1.getInteger("pages");
                     for (int page = 1; page <= pages; page++) {
-                        JSONArray list = jc.appointmentRecordManage("", String.valueOf(page), "10", "REPAIR",pram, result).getJSONArray("list");
+                        JSONArray list = jc.appointmentRecordManage1( String.valueOf(page), "10", "REPAIR",pram, result).getJSONArray("list");
                         for (int i = 0; i < list.size(); i++) {
                             String Flag=list.getJSONObject(i).getString(output);
                             Preconditions.checkArgument(Flag.contains(result), "预约记录管理按" + result + "查询，结果错误" + Flag);
@@ -4857,28 +4813,28 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void driveAppointmentRecordOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject respond = jc.appointmentRecordManage("", "1", "10", "TEST_DRIVE","", "");
+            JSONObject respond = jc.appointmentRecordManage1( "1", "10", "TEST_DRIVE","", "");
             String result = null;
             if (respond.getJSONArray("list").size() > 0) {
                 if (pram.equals("cancel_account")) {
                     result = respond.getJSONArray("list").getJSONObject(0).containsKey("cancel_account")?respond.getJSONArray("list").getJSONObject(0).getString(output):"0000";
                     if(!result.equals("0000")){
-                        JSONObject respond1 = jc.appointmentRecordManage("", "1", "10", "TEST_DRIVE",pram, result);
+                        JSONObject respond1 = jc.appointmentRecordManage1( "1", "10", "TEST_DRIVE",pram, result);
                         int pages = respond1.getInteger("pages")>10?10:respond1.getInteger("pages");
                         for (int page = 1; page <= pages; page++) {
-                            JSONArray list = jc.appointmentRecordManage("", String.valueOf(page), "10", "REPAIR",pram, result).getJSONArray("list");
+                            JSONArray list = jc.appointmentRecordManage1( String.valueOf(page), "10", "REPAIR",pram, result).getJSONArray("list");
                             for (int i = 0; i < list.size(); i++) {
-                                String Flag = jc.appointmentRecordManage("", String.valueOf(page), String.valueOf(list.size()),"TEST_DRIVE", pram, result).getJSONArray("list").getJSONObject(i).getString(output);
+                                String Flag = jc.appointmentRecordManage1( String.valueOf(page), String.valueOf(list.size()),"TEST_DRIVE", pram, result).getJSONArray("list").getJSONObject(i).getString(output);
                                 Preconditions.checkArgument(Flag.contains(result), "预约记录管理按" + result + "查询，结果错误" + Flag);
                             }
                         }
                     }
                 }else {
                     result = respond.getJSONArray("list").getJSONObject(0).getString(output);
-                    JSONObject respond1 = jc.appointmentRecordManage("", "1", "10", "TEST_DRIVE",pram, result);
+                    JSONObject respond1 = jc.appointmentRecordManage1( "1", "10", "TEST_DRIVE",pram, result);
                     int pages = respond1.getInteger("pages")>10?10:respond1.getInteger("pages");
                     for (int page = 1; page <= pages; page++) {
-                        JSONArray list = jc.appointmentRecordManage("", String.valueOf(page), "10", "TEST_DRIVE",pram, result).getJSONArray("list");
+                        JSONArray list = jc.appointmentRecordManage1( String.valueOf(page), "10", "TEST_DRIVE",pram, result).getJSONArray("list");
                         for (int i = 0; i < list.size(); i++) {
                             String Flag=list.getJSONObject(i).getString(output);
                             Preconditions.checkArgument(Flag.contains(result), "预约记录管理按" + result + "查询，结果错误" + Flag);
@@ -4976,9 +4932,10 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
             int pages = response.getInteger("pages")>10?10:response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
                 JSONArray list = jc.salesReceptionPageTime(String.valueOf(page),"10",startTime,endTime).getJSONArray("list");
+                System.out.println(list.size());
                 for (int i = 0; i < list.size(); i++) {
                     String receptionStartTime = list.getJSONObject(i).containsKey("reception_start_time")?list.getJSONObject(i).getString("reception_start_time").substring(0,10):startTime;
-                    String receptionEndTime = list.getJSONObject(i).containsKey("reception_start_time")?list.getJSONObject(i).getString("reception_end_time").substring(0,10):startTime;
+                    String receptionEndTime = list.getJSONObject(i).containsKey("reception_end_time")?list.getJSONObject(i).getString("reception_end_time").substring(0,10):endTime;
                     System.out.println("开始时间："+startTime+" 结束时间："+endTime +"列表中接待开始时间和结束时间:"+receptionStartTime+"    "+receptionEndTime);
                     Preconditions.checkArgument(receptionStartTime.compareTo(startTime)>=0&&receptionEndTime.compareTo(endTime)<=0, "开始时间："+startTime+" 结束时间："+endTime +"列表中接待开始时间和结束时间:"+receptionStartTime+"    "+receptionEndTime);
                 }

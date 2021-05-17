@@ -2032,6 +2032,22 @@ public class ScenarioUtil extends TestCaseCommon {
         return invokeApi(url, json);
     }
 
+    /**
+     * @description:售后管理列表
+     * @author: gly
+     * @time: 2020-11-24
+     */
+    public JSONObject afterSleCustomerManage( String page, String size, String pram, String result) {
+        String url = "/jiaochen/pc/customer-manage/after-sale-customer/page";
+        JSONObject json = new JSONObject();
+        json.put("page", page);
+        json.put("size", size);
+        if (pram != null) {
+            json.put(pram, result);
+        }
+        return invokeApi(url, json);
+    }
+
 
     /**
      * @description:售后管理列表-导入时间筛选
@@ -2190,10 +2206,9 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject appointmentRecordManage1(String shopId, String page, String size, String type, String pram, String result) {
+    public JSONObject appointmentRecordManage1( String page, String size, String type, String pram, String result) {
         String url = "/jiaochen/pc/appointment-manage/appointment-record/appointment-page";
         JSONObject json = new JSONObject();
-        json.put("shopId", shopId);
         json.put("page", page);
         json.put("size", size);
         json.put("type", type);
@@ -2582,10 +2597,9 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject packageFormFilterManage(String shopId, String page, String size, String pram, String result) {
+    public JSONObject packageFormFilterManage( String page, String size, String pram, String result) {
         String url = "/jiaochen/pc/package-manage/package-form/page";
         JSONObject json = new JSONObject();
-        json.put("shopId", shopId);
         json.put("page", page);
         json.put("size", size);
         if (pram != null) {
@@ -3153,13 +3167,14 @@ public class ScenarioUtil extends TestCaseCommon {
      * @author: gly
      * @time: 2020-11-24
      */
-    public JSONObject staffListFilterManage(String shopId, String page, String size, String role_name) {
+    public JSONObject staffListFilterManage( String page, String size, String pram, String result) {
         String url = "/jiaochen/pc/staff/page";
         JSONObject json = new JSONObject();
-        json.put("shopId", shopId);
         json.put("page", page);
         json.put("size", size);
-        json.put("role_name", role_name);
+        if (pram != null) {
+            json.put(pram, result);
+        }
         return invokeApi(url, json);
     }
 
