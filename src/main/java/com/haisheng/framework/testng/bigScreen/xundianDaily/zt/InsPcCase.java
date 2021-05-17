@@ -620,14 +620,17 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             if (list.size()!=0){
                 for(int i=0;i<list.size();i++){
                     String uid = list.getJSONObject(i).getString("uid");
-                    String levelname = md.member_detail(null,uid).getString("level");
-                    int level_id = md.member_level(null,uid).getInteger("level_id");
-                    JSONArray list_0= md.level_enum(null,null,1,10).getJSONArray("list");
-                    for(int j=0;j<list_0.size();j++){
-                        int id = list_0.getJSONObject(j).getInteger("id");
-                        if (level_id==id){
-                            String name = list_0.getJSONObject(j).getString("level_name");
-                            Preconditions.checkArgument(name.equals(levelname), "会员等级是" + levelname+ "分配等级展示为" + name);
+                    if(md.member_detail(null,uid).getString("level")!=null){
+                        String levelname = md.member_detail(null,uid).getString("level");
+                        int level_id = md.member_level(null,uid).getInteger("level_id");
+                        JSONArray list_0= md.level_enum(null,null,1,10).getJSONArray("list");
+                        for(int j=0;j<list_0.size();j++){
+                            int id = list_0.getJSONObject(j).getInteger("id");
+                            if (level_id==id){
+                                String name = list_0.getJSONObject(j).getString("level_name");
+                                Preconditions.checkArgument(name.equals(levelname), "会员等级是" + levelname+ "分配等级展示为" + name);
+                            }
+
                         }
                     }
                 }
