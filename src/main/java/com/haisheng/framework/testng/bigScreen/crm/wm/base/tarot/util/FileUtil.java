@@ -1,14 +1,10 @@
 package com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Objects;
 
 public class FileUtil {
-    private static final Logger logger = LoggerFactory.getLogger(FileUtil.class);
 
     /**
      * 获取资源文件在当前项目下的绝对路径
