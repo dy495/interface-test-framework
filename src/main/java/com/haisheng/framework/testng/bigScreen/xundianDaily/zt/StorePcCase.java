@@ -787,6 +787,8 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
             //新建一个看守位
             JSONObject res1 = md.Guard(43072,"8058611994690560");
             Preconditions.checkArgument(res1.getInteger("code")==1000, "创建不成功" + res1.getString("message"));
+            JSONObject res = md.dyGuard(43072,"8097818264503296");
+            checkArgument(res.getInteger("code")==1000, "调用不成功原因" + res.getString("message"));
             //获取创建预置位后的预置位列表
             JSONObject data1 = md.cameraList(43072,"8058611994690560","GUARD").getJSONObject("data");
             JSONArray list1 = data1.getJSONArray("list");
@@ -798,22 +800,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("新建看守位、删除看守位");
-        }
-    }
-
-
-    //调用看守位
-    @Test()
-    public void backGuard(){
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONObject res = md.dyGuard(43072,"8097818264503296");
-            checkArgument(res.getInteger("code")==1000, "调用不成功原因" + res.getString("message"));
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("调用看守位 ");
+            saveData("新建看守位、调用看守位、删除看守位");
         }
     }
 
