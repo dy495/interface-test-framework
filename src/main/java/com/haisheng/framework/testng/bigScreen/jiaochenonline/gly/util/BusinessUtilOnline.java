@@ -2778,6 +2778,7 @@ public class BusinessUtilOnline {
                 if (status == ActivityStatusEnum.OFFLINE.getId() && activityType == 1) {
                     Long id = list.getJSONObject(i).getLong("id");
                     ids.add(id);
+                    System.err.println("----------"+id);
                 }
             }
         }
@@ -2786,6 +2787,7 @@ public class BusinessUtilOnline {
             //创建活动
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             Long id1 = createFissionActivity(voucherId);
+            System.err.println("-----新建活动的ID-----"+id1);
             //审批活动
             getApprovalPassed(id1);
             //活动下架

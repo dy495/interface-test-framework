@@ -12,7 +12,6 @@ import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.util.CommonUsedUtil;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.util.PublicParam;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.util.RiskControlUtil;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.StoreScenarioUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -42,7 +41,7 @@ public class RiskControlCaseDataDaily extends TestCaseCommon implements TestCase
     @BeforeClass
     @Override
     public void initial() {
-        logger.debug("before classs initial");
+        logger.debug("before class initial");
         CommonConfig commonConfig = new CommonConfig();
         //替换checklist的相关信息
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
@@ -370,33 +369,35 @@ public class RiskControlCaseDataDaily extends TestCaseCommon implements TestCase
         try{
             //获取收银追溯列表第一个门店的门第ID和门店名称，累计正常事件，和待处理事件
             JSONArray dataList = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.PageScene.builder().page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
-            long shopId = dataList.getJSONObject(1).getInteger("shop_id");
+            long shopId = dataList.getJSONObject(0).getInteger("shop_id");
             //累计风险数量
-            int riskTotal = dataList.getJSONObject(1).getInteger("risk_total");
+            int riskTotal = dataList.getJSONObject(0).getInteger("risk_total");
             //待处理
             int pendingTotal=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventPageScene.builder().shopId(shopId).page(1).size(10).currentState("PENDING").build().invoke(visitor,true).getInteger("total");
-            //收银风控事件里面正常的事件
-            int normalTotal=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventPageScene.builder().shopId(shopId).page(1).size(10).handleResult("NORMAL").build().invoke(visitor,true).getInteger("total");
+            if(pendingTotal>0){
+                //收银风控事件里面正常的事件
+                int normalTotal=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventPageScene.builder().shopId(shopId).page(1).size(10).handleResult("NORMAL").build().invoke(visitor,true).getInteger("total");
 
-            //获取待处理风险事件ID
-            JSONArray list=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventPageScene.builder().shopId(shopId).page(1).size(10).currentState("PENDING").build().invoke(visitor,true).getJSONArray("list");
-            long id = list.getJSONObject(0).getInteger("id");
-            String order = list.getJSONObject(0).getString("order_id");
+                //获取待处理风险事件ID
+                JSONArray list=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventPageScene.builder().shopId(shopId).page(1).size(10).currentState("PENDING").build().invoke(visitor,true).getJSONArray("list");
+                long id = list.getJSONObject(0).getInteger("id");
+                String order = list.getJSONObject(0).getString("order_id");
 
-            //将待处理的风控事件处理成正常
-            String message=cu.getRiskEventHandle(id,1,"订单正常",null).getString("message");
-            //获取处理完以后的累计正常事件和待处理事项
-            JSONArray dataList1 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.PageScene.builder().page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
-            //待处理
-            int pendingTotal1=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventPageScene.builder().shopId(shopId).page(1).size(10).currentState("PENDING").build().invoke(visitor,true).getInteger("total");
-            //收银风控事件里面正常的事件
-            int normalTotal1=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventPageScene.builder().shopId(shopId).page(1).size(10).handleResult("NORMAL").build().invoke(visitor,true).getInteger("total");
-            //累计风险数量
-            int riskTotal1 = dataList1.getJSONObject(1).getInteger("risk_total");
-            Preconditions.checkArgument(normalTotal1==normalTotal+1, "将待处理事件中小票单号为" + order + "处理成正常，【收银风控】列表正常事件-处理前正常事件！=1");
-            Preconditions.checkArgument(pendingTotal1==pendingTotal-1, "将待处理事件中小票单号为" + order + "处理成正常，【收银风控】列表待处理没有-1");
-            Preconditions.checkArgument(riskTotal == riskTotal1, "将待处理事件中小票单号为" + order + "处理成正常，累计风险数量数量变化了，处理前：" + riskTotal + "处理以后：" + riskTotal1);
+                //将待处理的风控事件处理成正常
+                cu.getRiskEventHandle(id,1,"订单正常",null).getString("message");
+                //获取处理完以后的累计正常事件和待处理事项
+                JSONArray dataList1 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.PageScene.builder().page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
+                //待处理
+                int pendingTotal1=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventPageScene.builder().shopId(shopId).page(1).size(10).currentState("PENDING").build().invoke(visitor,true).getInteger("total");
+                //收银风控事件里面正常的事件
+                int normalTotal1=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventPageScene.builder().shopId(shopId).page(1).size(10).handleResult("NORMAL").build().invoke(visitor,true).getInteger("total");
+                //累计风险数量
+                int riskTotal1 = dataList1.getJSONObject(0).getInteger("risk_total");
+                Preconditions.checkArgument(normalTotal1==normalTotal+1, "将待处理事件中小票单号为" + order + "处理成正常，【收银风控】列表正常事件-处理前正常事件！=1");
+                Preconditions.checkArgument(pendingTotal1==pendingTotal-1, "将待处理事件中小票单号为" + order + "处理成正常，【收银风控】列表待处理没有-1");
+                Preconditions.checkArgument(riskTotal == riskTotal1, "将待处理事件中小票单号为" + order + "处理成正常，累计风险数量数量变化了，处理前：" + riskTotal + "处理以后：" + riskTotal1);
 
+            }
         }catch(Exception|AssertionError e){
             collectMessage(e);
         }finally{
@@ -412,34 +413,36 @@ public class RiskControlCaseDataDaily extends TestCaseCommon implements TestCase
         try{
             //获取收银追溯列表第一个门店的门第ID和门店名称，累计正常事件，和待处理事件
             JSONArray dataList = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.PageScene.builder().page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
-            long shopId = dataList.getJSONObject(1).getInteger("shop_id");
+            long shopId = dataList.getJSONObject(0).getInteger("shop_id");
             //累计风险数量
-            int riskTotal = dataList.getJSONObject(1).getInteger("risk_total");
+            int riskTotal = dataList.getJSONObject(0).getInteger("risk_total");
             //待处理
             int pendingTotal=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventPageScene.builder().shopId(shopId).page(1).size(10).currentState("PENDING").build().invoke(visitor,true).getInteger("total");
-            //收银风控事件里面异常的事件
-            int abnormalTotal=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventPageScene.builder().shopId(shopId).page(1).size(10).handleResult("ABNORMAL").build().invoke(visitor,true).getInteger("total");
+            if(pendingTotal>0){
+                //收银风控事件里面异常的事件
+                int abnormalTotal=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventPageScene.builder().shopId(shopId).page(1).size(10).handleResult("ABNORMAL").build().invoke(visitor,true).getInteger("total");
 
-            //获取待处理风险事件ID
-            JSONArray list=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventPageScene.builder().shopId(shopId).page(1).size(10).currentState("PENDING").build().invoke(visitor,true).getJSONArray("list");
-            long id = list.getJSONObject(0).getInteger("id");
-            String order = list.getJSONObject(0).getString("order_id");
+                //获取待处理风险事件ID
+                JSONArray list=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventPageScene.builder().shopId(shopId).page(1).size(10).currentState("PENDING").build().invoke(visitor,true).getJSONArray("list");
+                long id = list.getJSONObject(0).getInteger("id");
+                String order = list.getJSONObject(0).getString("order_id");
 
-            //将待处理的风控事件处理成异常
-            String message=cu.getRiskEventHandle(id,0,"订单正常",null).getString("message");
+                //将待处理的风控事件处理成异常
+                cu.getRiskEventHandle(id,0,"订单正常",null).getString("message");
 
-            //获取处理完以后的累计正常事件和待处理事项
-            JSONArray dataList1 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.PageScene.builder().page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
-            //累计风险数量
-            int riskTotal1 = dataList1.getJSONObject(1).getInteger("risk_total");
-            //待处理
-            int pendingTotal1=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventPageScene.builder().shopId(shopId).page(1).size(10).currentState("PENDING").build().invoke(visitor,true).getInteger("total");
-            //收银风控事件里面异常的事件
-            int abnormalTotal1=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventPageScene.builder().shopId(shopId).page(1).size(10).handleResult("ABNORMAL").build().invoke(visitor,true).getInteger("total");
-            Preconditions.checkArgument(abnormalTotal1==abnormalTotal+1, "将待处理事件中小票单号为" + order + "处理成异常，【收银风控】列表正常事件-处理前正常事件！=1");
-            Preconditions.checkArgument(pendingTotal1==pendingTotal-1, "将待处理事件中小票单号为" + order + "处理成异常，【收银风控】列表待处理没有-1");
-            Preconditions.checkArgument(riskTotal == riskTotal1, "将待处理事件中小票单号为" + order + "处理成异常，累计风险数量数量变化了，处理前：" + riskTotal + "处理以后：" + riskTotal1);
+                //获取处理完以后的累计正常事件和待处理事项
+                JSONArray dataList1 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.PageScene.builder().page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
+                //累计风险数量
+                int riskTotal1 = dataList1.getJSONObject(0).getInteger("risk_total");
+                //待处理
+                int pendingTotal1=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventPageScene.builder().shopId(shopId).page(1).size(10).currentState("PENDING").build().invoke(visitor,true).getInteger("total");
+                //收银风控事件里面异常的事件
+                int abnormalTotal1=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventPageScene.builder().shopId(shopId).page(1).size(10).handleResult("ABNORMAL").build().invoke(visitor,true).getInteger("total");
+                Preconditions.checkArgument(abnormalTotal1==abnormalTotal+1, "将待处理事件中小票单号为" + order + "处理成异常，【收银风控】列表正常事件-处理前正常事件！=1");
+                Preconditions.checkArgument(pendingTotal1==pendingTotal-1, "将待处理事件中小票单号为" + order + "处理成异常，【收银风控】列表待处理没有-1");
+                Preconditions.checkArgument(riskTotal == riskTotal1, "将待处理事件中小票单号为" + order + "处理成异常，累计风险数量数量变化了，处理前：" + riskTotal + "处理以后：" + riskTotal1);
 
+            }
         }catch(Exception|AssertionError e){
             collectMessage(e);
         }finally{
@@ -456,23 +459,25 @@ public class RiskControlCaseDataDaily extends TestCaseCommon implements TestCase
         try {
             //获取收银追溯列表第一个门店的门第ID
             JSONArray dataList = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.PageScene.builder().page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
-            long shopId = dataList.getJSONObject(1).getInteger("shop_id");
+            long shopId = dataList.getJSONObject(0).getInteger("shop_id");
 
             JSONObject response= RiskEventPageScene.builder().shopId(shopId).page(1).size(10).currentState("PENDING").build().invoke(visitor,true);
-            int pages=response.getInteger("pages")>5?5:response.getInteger("pages");
-            for(int page=1;page<=pages;page++){
-                JSONArray list=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventPageScene.builder().shopId(shopId).page(page).size(10).currentState("PENDING").build().invoke(visitor,true).getJSONArray("list");
-                for (int i = 0; i < list.size(); i++) {
-                    String orderId = list.getJSONObject(i).getString("order_id");
-//                    String responseTime = list.getJSONObject(i).containsKey("response_time")?list.getJSONObject(i).getString("response_time"):"000000";
-//                    String handler = list.getJSONObject(i).containsKey("handler")?list.getJSONObject(i).getString("handler"):"000000";
-                    String remarks = list.getJSONObject(i).containsKey("remarks")?list.getJSONObject(i).getString("remarks"):"000000";
-                    String handleResult =list.getJSONObject(i).containsKey("handle_result")?list.getJSONObject(i).getString("handle_result"):"000000";
+            if(response.getJSONArray("list").size()>0){
+                int pages=response.getInteger("pages")>5?5:response.getInteger("pages");
+                for(int page=1;page<=pages;page++){
+                    JSONArray list=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventPageScene.builder().shopId(shopId).page(page).size(10).currentState("PENDING").build().invoke(visitor,true).getJSONArray("list");
+                    for (int i = 0; i < list.size(); i++) {
+                        String orderId = list.getJSONObject(i).getString("order_id");
+                        String responseTime = list.getJSONObject(i).containsKey("response_time")?list.getJSONObject(i).getString("response_time"):"000000";
+                        String handler = list.getJSONObject(i).containsKey("handler")?list.getJSONObject(i).getString("handler"):"000000";
+                        String remarks = list.getJSONObject(i).containsKey("remarks")?list.getJSONObject(i).getString("remarks"):"000000";
+                        String handleResult =list.getJSONObject(i).containsKey("handle_result")?list.getJSONObject(i).getString("handle_result"):"000000";
 
-//                    Preconditions.checkArgument(responseTime.equals("000000"), "待处理的事件：" + orderId + "的响应时间不为空");
-//                    Preconditions.checkArgument(handler.equals("000000"), "待处理的事件：" + orderId + "的处理人不为空");
-                    Preconditions.checkArgument(remarks.equals("000000"), "待处理的事件：" + orderId + "的备注不为空");
-                    Preconditions.checkArgument(handleResult.equals("000000"), "待处理的事件：" + orderId + "的处理结果不为空");
+                        Preconditions.checkArgument(responseTime!=null, "待处理的事件：" + orderId + "的响应时间不为空");
+                        Preconditions.checkArgument(handler.equals("000000"), "待处理的事件：" + orderId + "的处理人不为空");
+                        Preconditions.checkArgument(remarks.equals("000000"), "待处理的事件：" + orderId + "的备注不为空");
+                        Preconditions.checkArgument(handleResult.equals("000000"), "待处理的事件：" + orderId + "的处理结果不为空");
+                    }
                 }
             }
         } catch (AssertionError | Exception e) {
@@ -693,36 +698,37 @@ public class RiskControlCaseDataDaily extends TestCaseCommon implements TestCase
             //获取黑名单列表的条数
             int totalBefore = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type("BLACK").build().invoke(visitor,true).getInteger("total");
             //收银追溯的ID
-            Long id=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.PageScene.builder().page(1).size(10).build().invoke(visitor,true).getJSONArray("list").getJSONObject(1).getLong("shop_id");
+            Long id=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.PageScene.builder().page(1).size(10).build().invoke(visitor,true).getJSONArray("list").getJSONObject(0).getLong("shop_id");
             //待处理事件的ID
             JSONObject response1=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventPageScene.builder().shopId(id).page(1).size(10).currentState("PENDING").build().invoke(visitor,true);
-            Long pendId=response1.getJSONArray("list").getJSONObject(0).getLong("id");
+            if(response1.getJSONArray("list").size()>0){
+                Long pendId=response1.getJSONArray("list").getJSONObject(0).getLong("id");
+                //判断此处理事件是否有人脸
+                JSONObject res=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventOrderCustomerListScene.builder().id(pendId).build().invoke(visitor,true);
+                JSONArray list=res.getJSONArray("list");
+                if(list.size()>0){
+                    String customerId=list.getJSONObject(0).getString("customer_id");
+                    String faceUrl=list.getJSONObject(0).getString("face_url");
+                    String transId=list.getJSONObject(0).getString("trans_id");
+                    //风控处理事件为：添加白名单
+                    JSONArray customerIds=new JSONArray();
+                    JSONObject object=new JSONObject();
+                    object.put("face_url",faceUrl);
+                    object.put("customer_id",customerId);
+                    object.put("trans_id",transId);
+                    object.put("type","BLACK");
+                    customerIds.add(object);
+                    cu.getRiskEventHandle(pendId,0,"订单异常，请关注",customerIds);
+                    //获取黑名单列表的条数
+                    int totalAfter = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type("BLACK").build().invoke(visitor,true).getInteger("total");
+                    Preconditions.checkArgument(totalAfter==totalBefore+1,"加入黑名单前黑名单的数据为："+totalBefore+"   加入黑名单后黑名单的数据为："+totalAfter);
+                    //删除黑名单中
+                    cu.getRiskPersonDel(customerId,"BLACK");
+                    //删除后黑名单的条数
+                    int totalDel = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type("BLACK").build().invoke(visitor,true).getInteger("total");
+                    Preconditions.checkArgument(totalDel==totalAfter-1,"加入黑名单后黑名单的数据为："+totalAfter+"   删除后黑名单的条数："+totalDel);
 
-            //判断此处理事件是否有人脸
-            JSONObject res=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventOrderCustomerListScene.builder().id(pendId).build().invoke(visitor,true);
-            JSONArray list=res.getJSONArray("list");
-            if(list.size()>0){
-                String customerId=list.getJSONObject(0).getString("customer_id");
-                String faceUrl=list.getJSONObject(0).getString("face_url");
-                String transId=list.getJSONObject(0).getString("trans_id");
-                //风控处理事件为：添加白名单
-                JSONArray customerIds=new JSONArray();
-                JSONObject object=new JSONObject();
-                object.put("face_url",faceUrl);
-                object.put("customer_id",customerId);
-                object.put("trans_id",transId);
-                object.put("type","BLACK");
-                customerIds.add(object);
-                JSONObject response=cu.getRiskEventHandle(pendId,2,"订单异常，请关注",customerIds);
-                //获取黑名单列表的条数
-                int totalAfter = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type("BLACK").build().invoke(visitor,true).getInteger("total");
-                Preconditions.checkArgument(totalAfter==totalBefore+1,"加入黑名单前黑名单的数据为："+totalBefore+"   加入黑名单后黑名单的数据为："+totalAfter);
-                //删除黑名单中
-                cu.getRiskPersonDel(customerId,"BLACK");
-                //删除后黑名单的条数
-                int totalDel = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type("BLACK").build().invoke(visitor,true).getInteger("total");
-                Preconditions.checkArgument(totalDel==totalAfter-1,"加入黑名单后黑名单的数据为："+totalAfter+"   删除后黑名单的条数："+totalDel);
-
+                }
             }
 
         } catch (AssertionError | Exception e) {
@@ -743,38 +749,41 @@ public class RiskControlCaseDataDaily extends TestCaseCommon implements TestCase
             //获取白名单列表的条数
             int totalBefore = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type("WHITE").build().invoke(visitor,true).getInteger("total");
             //收银追溯的ID
-            Long id=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.PageScene.builder().page(1).size(10).build().invoke(visitor,true).getJSONArray("list").getJSONObject(1).getLong("shop_id");
+            Long id=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.PageScene.builder().page(1).size(10).build().invoke(visitor,true).getJSONArray("list").getJSONObject(0).getLong("shop_id");
             //待处理事件的ID
             JSONObject response1=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventPageScene.builder().shopId(id).page(1).size(10).currentState("PENDING").build().invoke(visitor,true);
-            Long pendId= response1.getJSONArray("list").getJSONObject(0).getLong("id");
+            if(response1.getJSONArray("list").size()>0){
+                Long pendId= response1.getJSONArray("list").getJSONObject(0).getLong("id");
 
-            //判断此处理事件是否有人脸
-            JSONObject res=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventOrderCustomerListScene.builder().id(pendId).build().invoke(visitor,true);
-            JSONArray list=res.getJSONArray("list");
-            System.out.println(list.size()+"list------"+list);
-            if(list.size()>0){
-                String customerId=list.getJSONObject(0).getString("customer_id");
-                String faceUrl=list.getJSONObject(0).getString("face_url");
-                String transId=list.getJSONObject(0).getString("trans_id");
-                //风控处理事件为：添加白名单
-                JSONArray customerIds=new JSONArray();
-                JSONObject object=new JSONObject();
-                object.put("face_url",faceUrl);
-                object.put("customer_id",customerId);
-                object.put("trans_id",transId);
-                object.put("type","WHITE");
-                customerIds.add(object);
-                JSONObject response=cu.getRiskEventHandle(pendId,1,"订单正常，请关注",customerIds);
-                //获取白名单列表的条数
-                int totalAfter = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type("WHITE").build().invoke(visitor,true).getInteger("total");
-                Preconditions.checkArgument(totalAfter==totalBefore+1,"加入白名单前黑名单的数据为："+totalBefore+"   加入白名单后黑名单的数据为："+totalAfter);
-                //删除白名单中
-                cu.getRiskPersonDel(customerId,"WHITE");
-                //删除后白名单的条数
-                int totalDel = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type("WHITE").build().invoke(visitor,true).getInteger("total");
-                Preconditions.checkArgument(totalDel==totalAfter-1,"加入白名单后的数据为："+totalAfter+"   删除后白名单的条数："+totalDel);
+                //判断此处理事件是否有人脸
+                JSONObject res=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventOrderCustomerListScene.builder().id(pendId).build().invoke(visitor,true);
+                JSONArray list=res.getJSONArray("list");
+                System.out.println(list.size()+"list------"+list);
+                if(list.size()>0){
+                    String customerId=list.getJSONObject(0).getString("customer_id");
+                    String faceUrl=list.getJSONObject(0).getString("face_url");
+                    String transId=list.getJSONObject(0).getString("trans_id");
+                    //风控处理事件为：添加白名单
+                    JSONArray customerIds=new JSONArray();
+                    JSONObject object=new JSONObject();
+                    object.put("face_url",faceUrl);
+                    object.put("customer_id",customerId);
+                    object.put("trans_id",transId);
+                    object.put("type","WHITE");
+                    customerIds.add(object);
+                    cu.getRiskEventHandle(pendId,1,"订单正常，请关注",customerIds);
+                    //获取白名单列表的条数
+                    int totalAfter = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type("WHITE").build().invoke(visitor,true).getInteger("total");
+                    Preconditions.checkArgument(totalAfter==totalBefore+1,"加入白名单前黑名单的数据为："+totalBefore+"   加入白名单后黑名单的数据为："+totalAfter);
+                    //删除白名单中
+                    cu.getRiskPersonDel(customerId,"WHITE");
+                    //删除后白名单的条数
+                    int totalDel = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type("WHITE").build().invoke(visitor,true).getInteger("total");
+                    Preconditions.checkArgument(totalDel==totalAfter-1,"加入白名单后的数据为："+totalAfter+"   删除后白名单的条数："+totalDel);
 
+                }
             }
+
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -793,36 +802,39 @@ public class RiskControlCaseDataDaily extends TestCaseCommon implements TestCase
             //获取重点观察人员列表的条数
             int totalBefore = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type("FOCUS").build().invoke(visitor,true).getInteger("total");
             //收银追溯的ID
-            Long id=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.PageScene.builder().page(1).size(10).build().invoke(visitor,true).getJSONArray("list").getJSONObject(1).getLong("shop_id");
+            Long id=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.PageScene.builder().page(1).size(10).build().invoke(visitor,true).getJSONArray("list").getJSONObject(0).getLong("shop_id");
             //待处理事件的ID
             JSONObject response1=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventPageScene.builder().shopId(id).page(1).size(10).currentState("PENDING").build().invoke(visitor,true);
-            Long pendId=response1.getJSONArray("list").getJSONObject(0).getLong("id");
+            if(response1.getJSONArray("list").size()>0){
+                Long pendId=response1.getJSONArray("list").getJSONObject(0).getLong("id");
 
-            //判断此处理事件是否有人脸
-            JSONObject res=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventOrderCustomerListScene.builder().id(pendId).build().invoke(visitor,true);
-            JSONArray list=res.getJSONArray("list");
-            System.out.println(list.size()+"list------"+list);
-            if(list.size()>0){
-                String customerId=list.getJSONObject(0).getString("customer_id");
-                String faceUrl=list.getJSONObject(0).getString("face_url");
-                String transId=list.getJSONObject(0).getString("trans_id");
-                //风控处理事件为：添加白名单
-                JSONArray customerIds=new JSONArray();
-                JSONObject object=new JSONObject();
-                object.put("face_url",faceUrl);
-                object.put("customer_id",customerId);
-                object.put("trans_id",transId);
-                object.put("type","FOCUS");
-                customerIds.add(object);
-                JSONObject response=cu.getRiskEventHandle(pendId,2,"订单异常，请关注",customerIds);
-                //获取重点观察人员列表的条数
-                int totalAfter = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type("FOCUS").build().invoke(visitor,true).getInteger("total");
-                Preconditions.checkArgument(totalAfter==totalBefore+1,"加入重点观察人员前重点观察人员的数据为："+totalBefore+"   加入重点观察人员后重点观察人员的数据为："+totalAfter);
-                //删除重点观察人员中
-                cu.getRiskPersonDel(customerId,"FOCUS");
-                //删除后重点观察人员的条数
-                int totalDel = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type("FOCUS").build().invoke(visitor,true).getInteger("total");
-                Preconditions.checkArgument(totalDel==totalAfter-1,"加入黑名单后重点观察人员的数据为："+totalAfter+"   删除后重点观察人员的条数："+totalDel);
+                //判断此处理事件是否有人脸
+                JSONObject res=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventOrderCustomerListScene.builder().id(pendId).build().invoke(visitor,true);
+                JSONArray list=res.getJSONArray("list");
+                System.out.println(list.size()+"list------"+list);
+                if(list.size()>0){
+                    String customerId=list.getJSONObject(0).getString("customer_id");
+                    String faceUrl=list.getJSONObject(0).getString("face_url");
+                    String transId=list.getJSONObject(0).getString("trans_id");
+                    //风控处理事件为：添加白名单
+                    JSONArray customerIds=new JSONArray();
+                    JSONObject object=new JSONObject();
+                    object.put("face_url",faceUrl);
+                    object.put("customer_id",customerId);
+                    object.put("trans_id",transId);
+                    object.put("type","FOCUS");
+                    customerIds.add(object);
+                    cu.getRiskEventHandle(pendId,0,"订单异常，请关注",customerIds);
+                    //获取重点观察人员列表的条数
+                    int totalAfter = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type("FOCUS").build().invoke(visitor,true).getInteger("total");
+                    Preconditions.checkArgument(totalAfter==totalBefore+1,"加入重点观察人员前重点观察人员的数据为："+totalBefore+"   加入重点观察人员后重点观察人员的数据为："+totalAfter);
+                    //删除重点观察人员中
+                    cu.getRiskPersonDel(customerId,"FOCUS");
+                    //删除后重点观察人员的条数
+                    int totalDel = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type("FOCUS").build().invoke(visitor,true).getInteger("total");
+                    Preconditions.checkArgument(totalDel==totalAfter-1,"加入黑名单后重点观察人员的数据为："+totalAfter+"   删除后重点观察人员的条数："+totalDel);
+
+                }
 
             }
 

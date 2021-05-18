@@ -54,7 +54,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     @BeforeClass
     @Override
     public void initial() {
-        logger.debug("before classs initial");
+        logger.debug("before class initial");
         //替换checklist的相关信息
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_JIAOCHEN_DAILY_SERVICE;
@@ -67,7 +67,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
         //放入shopId
         commonConfig.referer = product.getReferer();
         //全部门店--需要单个门店时需要修改
-        commonConfig.shopId = shopAllId;
+        commonConfig.shopId =product.getShopId();
         commonConfig.roleId = product.getRoleId();
         beforeClassInit(commonConfig);
         logger.debug("FK: " + cu);
@@ -321,7 +321,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
      *生成交易订单--触发一人多单风控
      * 一人多单 ，userId/openid相同，多个transId交易订单触发
      **/
-    @Test(enabled = true)
+    @Test(enabled = false)
     public void getTriggerMoreOrderRisk(){
         try{
             //创建一人多单风控规则(1个人1天内最多2单)
@@ -360,7 +360,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
      *生成交易订单--触发一人多车风控
      * 一人多车 user_id  相同; 多个car_vehicle_number车架号 触发；
      **/
-    @Test(enabled = true,description = "一人多车userId 触发")
+    @Test(enabled = false,description = "一人多车userId 触发")
     public void getTriggerMoreCarRisk(){
         try{
             //创建一人多车风控规则(1个人最多2个车)
@@ -401,7 +401,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
      *生成交易订单--触发一车多人风控--user_id相同
      * 一车多人，多个openid/userId,一个car_vehicle_number 触发;QATest_42021-04-1418:17  QATest_16762021-04-1418:17
      **/
-    @Test(enabled = true)
+    @Test(enabled = false)
     public void getTriggerMorePersonRisk(){
         try{
             //创建一人多单风控规则(1个人最多2个车)
@@ -438,7 +438,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     }
 
 
-    @Test(enabled = true,description = "一人多车 openid触发")
+    @Test(enabled = false,description = "一人多车 openid触发")
     public void getTriggerMorePersonRisk22(){
         try{
             //创建一人多单风控规则(1个人最多2个车)
@@ -479,7 +479,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     /**
      *生成交易订单--触发员工下单风控(下单时保证摄像头下只有员工，没有顾客)
      **/
-    @Test(enabled = true)
+    @Test(enabled = false)
     public void getTriggerEmployeeOrderRisk() {
         try{
             //创建员工支付风控规则(一个员工一天最多2单)
@@ -555,7 +555,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             //收银风控列表第一条的shopId
             IScene scene = PageScene.builder().page(1).size(10).build();
             JSONObject response=visitor.invokeApi(scene);
-            Long shopId=response.getJSONArray("list").getJSONObject(1).getLong("shop_id");
+            Long shopId=response.getJSONArray("list").getJSONObject(0).getLong("shop_id");
             //收银追溯页面
             IScene scene1= TraceBackScene.builder().shopId(shopId).page(1).size(10).build();
             JSONObject response1=visitor.invokeApi(scene1);
@@ -651,7 +651,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             //收银风控列表第一条的shopId
             IScene scene = PageScene.builder().page(1).size(10).build();
             JSONObject response=visitor.invokeApi(scene);
-            Long shopId=response.getJSONArray("list").getJSONObject(1).getLong("shop_id");
+            Long shopId=response.getJSONArray("list").getJSONObject(0).getLong("shop_id");
             //收银风控事件页面
             IScene scene1=RiskEventPageScene.builder().shopId(shopId).page(1).size(10).build();
             JSONObject response1=visitor.invokeApi(scene1);
@@ -744,7 +744,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             //收银风控列表第一条的shopId
             IScene scene = PageScene.builder().page(1).size(10).build();
             JSONObject response=visitor.invokeApi(scene);
-            Long shopId=response.getJSONArray("list").getJSONObject(1).getLong("shop_id");
+            Long shopId=response.getJSONArray("list").getJSONObject(0).getLong("shop_id");
             //收银风控事件页面
             IScene scene1=RiskEventPageScene.builder().shopId(shopId).page(1).size(10).build();
             JSONObject response1=visitor.invokeApi(scene1);
@@ -778,7 +778,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             //收银风控列表第一条的shopId
             IScene scene = PageScene.builder().page(1).size(10).build();
             JSONObject response=visitor.invokeApi(scene);
-            Long shopId=response.getJSONArray("list").getJSONObject(1).getLong("shop_id");
+            Long shopId=response.getJSONArray("list").getJSONObject(0).getLong("shop_id");
             //收银风控事件页面
             IScene scene1=RiskEventPageScene.builder().shopId(shopId).page(1).size(10).build();
             JSONObject response1=visitor.invokeApi(scene1);
@@ -818,7 +818,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             //收银风控列表第一条的shopId
             IScene scene = PageScene.builder().page(1).size(10).build();
             JSONObject response=visitor.invokeApi(scene);
-            Long shopId=response.getJSONArray("list").getJSONObject(1).getLong("shop_id");
+            Long shopId=response.getJSONArray("list").getJSONObject(0).getLong("shop_id");
             //收银风控事件页面
             IScene scene1=RiskEventPageScene.builder().shopId(shopId).page(1).size(10).build();
             JSONObject response1=visitor.invokeApi(scene1);
@@ -854,7 +854,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             //收银风控列表第一条的shopId
             IScene scene = PageScene.builder().page(1).size(10).build();
             JSONObject response=visitor.invokeApi(scene);
-            Long shopId=response.getJSONArray("list").getJSONObject(1).getLong("shop_id");
+            Long shopId=response.getJSONArray("list").getJSONObject(0).getLong("shop_id");
             //收银风控事件页面
             IScene scene1=RiskEventPageScene.builder().shopId(shopId).page(1).size(10).build();
             JSONObject response1=visitor.invokeApi(scene1);
@@ -1488,7 +1488,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             //收银风控列表第一条的shopId
             IScene scene = PageScene.builder().page(1).size(10).build();
             JSONObject response=visitor.invokeApi(scene);
-            Long shopId=response.getJSONArray("list").getJSONObject(1).getLong("shop_id");
+            Long shopId=response.getJSONArray("list").getJSONObject(0).getLong("shop_id");
             //收银风控事件页面-获取待处理第一条的ID
             IScene scene1=RiskEventPageScene.builder().shopId(shopId).page(1).size(10).currentState("PENDING").build();
             JSONObject response1=visitor.invokeApi(scene1);
@@ -2578,23 +2578,24 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
                 }
             }
 
-//            //根据门店筛选
-//            JSONObject response3 =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().shopId(shopId).page(1).size(10).build().invoke(visitor,true);
-//            int pages3=response3.getInteger("pages")>5?5:response3.getInteger("pages");
-//            for(int page=1;page<=pages3;page++) {
-//                JSONArray list3 =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().shopId(shopId).page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
-//                for (int i = 0; i < list3.size(); i++) {
-//                    int num=list3.getJSONObject(i).getJSONArray("shop_list").size();
-//                    shopId2="";
-//                    for(int j=0;j<num;j++){
-//                         String shopId1 = list.getJSONObject(i).getJSONArray("shop_list").getJSONObject(j).getString("shop_id");
-//                         shopId2=shopId2+shopId1;
-//                        System.out.println(shopId1+"-------"+shopId2);
-//                    }
-//                    System.err.println(shopId2);
-//                    Preconditions.checkArgument(shopId2.contains(String.valueOf(shopId)), "根据shopId:" + shopId + "进行筛选的结果和筛选条件不一致");
-//                }
-//            }
+            //根据门店筛选
+            JSONObject response3 =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().shopId(shopId).page(1).size(10).build().invoke(visitor,true);
+            int pages3=response3.getInteger("pages")>5?5:response3.getInteger("pages");
+            for(int page=1;page<=pages3;page++) {
+                JSONArray list3 =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().shopId(shopId).page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
+                for (int i = 0; i < list3.size(); i++) {
+                    int num=list3.getJSONObject(i).getJSONArray("shop_list").size();
+                    System.out.println("--------==="+num+"-----"+list3.getJSONObject(i).getJSONArray("shop_list"));
+                    shopId2="";
+                    for(int j=0;j<num;j++){
+                         String shopId1 = list3.getJSONObject(i).getJSONArray("shop_list").getJSONObject(j).getString("shop_id");
+                         shopId2=shopId2+shopId1;
+                        System.out.println(shopId1+"-------"+shopId2);
+                    }
+                    System.err.println(shopId2);
+                    Preconditions.checkArgument(shopId2.contains(String.valueOf(shopId)), "根据shopId:" + shopId + "结果为"+shopId2);
+                }
+            }
 
             //根据角色筛选
             JSONObject response4 =com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().roleId(Long.valueOf(String.valueOf(roleId))).page(1).size(10).build().invoke(visitor,true);
@@ -2632,7 +2633,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     /**
      * 收银风控事件导出----ok
      */
-    @Test(description = "收银风控事件导出")
+    @Test(description = "收银风控事件导出",enabled = true)
     public void ExportChecking1(){
         try{
             //收银风控列表第一条的shopId
