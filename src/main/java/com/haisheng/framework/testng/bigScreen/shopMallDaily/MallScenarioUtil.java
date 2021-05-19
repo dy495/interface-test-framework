@@ -799,7 +799,7 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject weatherTypeListV3() throws Exception {
-        String url = "/patrol/weather/type/list";
+        String url = "/mall/weather/type/list";
         String json =
                 "{} ";
 
@@ -848,7 +848,7 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject activityTypeListV3(long shop_id) throws Exception {
-        String url = "/patrol/activity/type/list";
+        String url = "/mall/activity/type/list";
         String json =
                 "{" +
                         "\"shop_id\" :" + shop_id + "\n" +
@@ -865,7 +865,7 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject activityAddV3(String activity_description, String activity_type, String start_date, String end_date, long shop_id) throws Exception {
-        String url = "/patrol/activity/add";
+        String url = "/mall/activity/add";
         String json =
                 "{" +
                         "\"activity_description\" :\"" + activity_description + "\",\n" +
@@ -1325,7 +1325,7 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject organizationAccountPage(String name, String account, String email, String phone, String role_name, String shop_list, Integer page, Integer size) throws Exception {
-        String url = "/patrol/organization/account/page";
+        String url = "/mall/organization/account/page";
         String json =
                 "{";
         if (name != "") {
@@ -1368,7 +1368,7 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject organizationAccountAdd(String name, String email, String phone, List role_id_list, Integer status, List shop_list, String type) throws Exception {
-        String url = "/patrol/organization/account/add";
+        String url = "/mall/organization/account/add";
         String json =
                 "{" +
                         "\"name\" :\"" + name + "\",\n";
@@ -1393,7 +1393,7 @@ public class MallScenarioUtil extends TestCaseCommon {
     }
 
     public JSONObject organizationAccountAddTwo(String account,String name,String number,String leader_uid,String type,String email,String phone,int status,JSONArray role_id_list,JSONArray shop_list) throws Exception {
-        String url = "/patrol/organization/account/add";
+        String url = "/mall/organization/account/add";
         JSONObject json = new JSONObject();
         json.put("account",account);
         json.put("name",name);
@@ -1417,7 +1417,7 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject organizationAccountDetail(String account) throws Exception {
-        String url = "/patrol/organization/account/detail";
+        String url = "/mall/organization/account/detail";
         String json =
                 "{" +
                         "\"account\" :\"" + account + "\"\n" +
@@ -1434,7 +1434,7 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject organizationAccountEdit(String account, String name, String email, String phone, List role_id_list, Integer status, List shop_list, String type) throws Exception {
-        String url = "/patrol/organization/account/edit";
+        String url = "/mall/organization/account/edit";
         String json =
                 "{" +
                         "\"account\" :\"" + account + "\",\n" +
@@ -1460,7 +1460,7 @@ public class MallScenarioUtil extends TestCaseCommon {
     }
 
     public JSONObject organizationAccountEditTwo(String account,String name,String number,String leader_uid,String type,String email,String phone,int status,JSONArray role_id_list,JSONArray shop_list) throws Exception {
-        String url = "/patrol/organization/account/edit";
+        String url = "/mall/organization/account/edit";
         JSONObject json = new JSONObject();
         json.put("account",account);
         json.put("name",name);
@@ -1485,7 +1485,7 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject organizationAccountDelete(String account) throws Exception {
-        String url = "/patrol/organization/account/delete";
+        String url = "/mall/organization/account/delete";
         String json =
                 "{" +
                         "\"account\" :\"" + account + "\"\n" +
@@ -1502,7 +1502,7 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject organizationAccountButtom(String account, Integer status) throws Exception {
-        String url = "/patrol/organization/account/change-status";
+        String url = "/mall/organization/account/change-status";
         String json =
                 "{" +
                         "\"account\" :\"" + account + "\",\n" +
@@ -1521,7 +1521,7 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject leaderList() throws Exception {
-        String url = "/patrol/organization/account/leader/list";
+        String url = "/mall/organization/account/leader/list";
         JSONObject json = new JSONObject();
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
@@ -1549,7 +1549,7 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject superiorList() throws Exception {
-        String url = "/patrol/organization/role/superior/list";
+        String url = "/mall/organization/role/superior/list";
         JSONObject json = new JSONObject();
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
@@ -1562,7 +1562,7 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject organizationRoleList() throws Exception {
-        String url = "/patrol/organization/role/list";
+        String url = "/mall/organization/role/list";
         String json =
                 "{}";
 
@@ -1595,7 +1595,7 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject patrolShopList(String new_password, String old_password) throws Exception {
-        String url = "/patrol/organization/account/change-password";
+        String url = "/mall/organization/account/change-password";
         String json =
                 "{" +
                         "\"new_password\" :\"" + new_password + "\",\n" +
@@ -1614,7 +1614,7 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject query_permission_map() throws Exception {
-        String url = "/patrol/organization/role-management/query-permission-map";
+        String url = "/mall/organization/role-management/query-permission-map";
         String json =
                 "{} ";
 
@@ -1629,7 +1629,7 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject organizationRolePage(String role_name, Integer page, Integer size) throws Exception {
-        String url = "/patrol/organization/role/page";
+        String url = "/mall/organization/role/page";
         String json =
                 "{" +
                         "\"role_name\" :\"" + role_name + "\",\n" +
@@ -1649,7 +1649,7 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject organizationRoleAdd(String name, int superiorRoleId,String description, JSONArray module_ids) throws Exception {
-        String url = "/patrol/organization/role/add";
+        String url = "/mall/organization/role/add";
         String json =
                 "{" +
                         "\"name\" :\"" + name + "\",\n" +
@@ -1666,7 +1666,7 @@ public class MallScenarioUtil extends TestCaseCommon {
 
 
     public JSONObject organizationRoleAddTwo(String name,int superior_role_id,String description,JSONArray module_ids) throws Exception {
-        String url = "/patrol/organization/role/add";
+        String url = "/mall/organization/role/add";
         JSONObject json = new JSONObject();
         json.put("name",name);
         json.put("superior_role_id",superior_role_id);
@@ -1684,7 +1684,7 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject organizationRoleDetail(long role_id) throws Exception {
-        String url = "/patrol/organization/role/detail";
+        String url = "/mall/organization/role/detail";
         String json =
                 "{" +
                         "\"role_id\" :" + role_id + "\n" +
@@ -1702,7 +1702,7 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject organizationRoleEdit(long role_id, String name, String description, JSONArray module_ids) throws Exception {
-        String url = "/patrol/organization/role/edit";
+        String url = "/mall/organization/role/edit";
         String json =
                 "{" +
                         "\"role_id\" :" + role_id + ",\n" +
@@ -1738,7 +1738,7 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject organizationRoleDelete(long role_id) throws Exception {
-        String url = "/patrol/organization/role/delete";
+        String url = "/mall/organization/role/delete";
         String json =
                 "{" +
                         "\"role_id\" :" + role_id + "\n" +
@@ -1756,7 +1756,7 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject AccountRolePage(long role_id, Integer page, Integer size) throws Exception {
-        String url = "/patrol/organization/account/role/page";
+        String url = "/mall/organization/account/role/page";
         String json =
                 "{" +
                         "\"role_id\" :" + role_id + "\n" +
