@@ -1925,10 +1925,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String[] strings = {EnumDesc.DESC_BETWEEN_200_300.getDesc(), EnumDesc.DESC_BETWEEN_400_500.getDesc(), EnumDesc.DESC_BETWEEN_10_15.getDesc()};
+            //微信规则详情
             String ruleDetail = WashCarManagerRuleDetailScene.builder().build().invoke(visitor).getString("rule_detail");
             String detail = Arrays.stream(strings).filter(e -> !e.equals(ruleDetail)).findFirst().orElse(ruleDetail);
             WashCarManagerEditRuleScene.builder().ruleDetail(detail).build().invoke(visitor);
             user.loginApplet(APPLET_USER_ONE);
+            //pc规则详情
             JSONObject jsonObject = AppletCommonRuleExplainDetailScene.builder().businessType(AppletCodeBusinessTypeEnum.WASH_CAR.getKey()).build().invoke(visitor);
             CommonUtil.checkResultPlus("pc端洗车规则说明为", detail, "applet端洗车规则说明为", jsonObject.getString("rule_explain"));
         } catch (Exception | AssertionError e) {
@@ -2017,6 +2019,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
     public void vipMarketing_system_21() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            //异常数据
             String[] adjustNumbers = {"", "6", null, "0"};
             Arrays.stream(adjustNumbers).forEach(adjustNumber -> {
                 String message = WashCarManagerAdjustNumberScene.builder().customerPhone(APPLET_USER_ONE.getPhone())

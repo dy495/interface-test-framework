@@ -108,8 +108,7 @@ public class ApproveManagerCaseOnline extends TestCaseCommon implements TestCase
                 Integer num = applyPage.getNum();
                 String price = applyPage.getPrice();
                 String totalPrice = applyPage.getTotalPrice();
-                Preconditions.checkArgument(Double.parseDouble(totalPrice) <= Double.parseDouble(price) * num
-                                + 0.000001 || Double.parseDouble(totalPrice) >= Double.parseDouble(price) * num - 0.000001,
+                Preconditions.checkArgument(Double.parseDouble(totalPrice) <= Double.parseDouble(price) * num + 0.000001 || Double.parseDouble(totalPrice) >= Double.parseDouble(price) * num - 0.000001,
                         voucherName + "成本累计：" + Double.parseDouble(totalPrice) + "发出数量*成本单价：" + Double.parseDouble(price) * num);
                 CommonUtil.logger(voucherName);
             });
@@ -125,6 +124,7 @@ public class ApproveManagerCaseOnline extends TestCaseCommon implements TestCase
     public void voucherApply_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            //卡券列表
             IScene voucherPageScene = VoucherFormVoucherPageScene.builder().build();
             List<VoucherFormVoucherPageBean> voucherPageList = util.toJavaObjectList(voucherPageScene, VoucherFormVoucherPageBean.class, SupporterUtil.SIZE);
             voucherPageList.forEach(voucherPage -> {
@@ -148,6 +148,7 @@ public class ApproveManagerCaseOnline extends TestCaseCommon implements TestCase
     public void voucherApply_data_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            //卡券列表
             IScene voucherPageScene = VoucherFormVoucherPageScene.builder().build();
             List<VoucherPage> voucherPageList = util.toJavaObjectList(voucherPageScene, VoucherPage.class, SupporterUtil.SIZE);
             voucherPageList.forEach(voucherPage -> {

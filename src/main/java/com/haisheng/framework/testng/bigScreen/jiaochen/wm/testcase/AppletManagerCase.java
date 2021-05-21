@@ -760,10 +760,12 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             boolean isSignIn = response.getBoolean("is_sign_in");
             CommonUtil.checkResult("小程序是否已签到", false, isSignIn);
             int integralRecordNum = util.getAppletIntegralRecordNum();
-            //签到
+
             String gainTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm");
             String monthType = DateTimeUtil.getFormat(new Date(), "yyyy-MM");
+            //签到
             AppletSignInScene.builder().build().invoke(visitor);
+            //签到完成后数据校验
             JSONObject newResponse = AppletSignInDetailScene.builder().build().invoke(visitor);
             CommonUtil.checkResult("小程序签到完成累计签到积分", signInScoreCount + signInScore, newResponse.getInteger("sign_in_score_count"));
             CommonUtil.checkResult("小程序签到完成累计签到次数", signInTime + 1, newResponse.getInteger("sign_in_time"));

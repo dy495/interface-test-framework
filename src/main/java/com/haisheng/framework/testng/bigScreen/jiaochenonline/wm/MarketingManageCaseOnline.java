@@ -264,7 +264,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             List<VoucherPage> voucherPageList = util.toJavaObjectList(voucherPageScene, VoucherPage.class);
             List<Long> voucherIdList = voucherPageList.stream().map(VoucherPage::getVoucherId).collect(Collectors.toList());
             IScene voucherListScene = ReceptionManagerVoucherListScene.builder().build();
-            List<ReceptionManagerVoucherListBean> managerVoucherListBeanList = util.toJavaObjectList(voucherListScene, ReceptionManagerVoucherListBean.class,"list");
+            List<ReceptionManagerVoucherListBean> managerVoucherListBeanList = util.toJavaObjectList(voucherListScene, ReceptionManagerVoucherListBean.class, "list");
             List<Long> voucherLit = managerVoucherListBeanList.stream().map(ReceptionManagerVoucherListBean::getVoucherId).collect(Collectors.toList());
             voucherIdList.forEach(e -> Preconditions.checkArgument(!voucherLit.contains(e), voucherListScene.getPath() + " 接口包含已作废卡券 " + e));
         } catch (Exception | AssertionError e) {
@@ -856,7 +856,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             String voucherName = util.getVoucherName(voucherId);
             JSONArray voucherList = util.getVoucherArray(voucherId, 2);
             //购买临时套餐
-            IScene temporaryScene = PurchaseTemporaryPackageScene.builder().customerPhone(EnumAppletToken.JC_WM_DAILY.getPhone())
+            IScene temporaryScene = PurchaseTemporaryPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
                     .carType(PackageUseTypeEnum.ALL_CAR.name()).voucherList(voucherList).expiryDate("1").remark(EnumDesc.DESC_BETWEEN_20_30.getDesc())
                     .subjectType(util.getSubjectType()).subjectId(util.getSubjectDesc(util.getSubjectType()))
                     .extendedInsuranceYear("1").extendedInsuranceCopies("1").type(1).build();
@@ -878,7 +878,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             String voucherName = util.getVoucherName(voucherId);
             JSONArray voucherList = util.getVoucherArray(voucherId, 2);
             //购买临时套餐
-            IScene temporaryScene = PurchaseTemporaryPackageScene.builder().customerPhone(EnumAppletToken.JC_WM_DAILY.getPhone())
+            IScene temporaryScene = PurchaseTemporaryPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
                     .carType(PackageUseTypeEnum.ALL_CAR.name()).voucherList(voucherList).expiryDate("1").remark(EnumDesc.DESC_BETWEEN_20_30.getDesc())
                     .subjectType(util.getSubjectType()).subjectId(util.getSubjectDesc(util.getSubjectType()))
                     .extendedInsuranceYear("1").extendedInsuranceCopies("1").type(1).build();
@@ -901,7 +901,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             String voucherName = util.getVoucherName(voucherId);
             Long packageId = util.editPackage(voucherId, 1);
             //购买固定套餐
-            IScene purchaseFixedPackageScene = PurchaseFixedPackageScene.builder().customerPhone(EnumAppletToken.JC_WM_DAILY.getPhone())
+            IScene purchaseFixedPackageScene = PurchaseFixedPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
                     .carType(PackageUseTypeEnum.ALL_CAR.name()).packageId(packageId).expiryDate("1").remark(EnumDesc.DESC_BETWEEN_20_30.getDesc())
                     .subjectType(util.getSubjectType()).subjectId(util.getSubjectDesc(util.getSubjectType())).packagePrice("49.99")
                     .extendedInsuranceYear(1).extendedInsuranceCopies(1).type(1).build();
@@ -927,7 +927,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             IScene switchPackageStatusScene = PackageFormSwitchPackageStatusScene.builder().id(packageId).status(false).build();
             visitor.invokeApi(switchPackageStatusScene);
             //购买固定套餐
-            IScene purchaseFixedPackageScene = PurchaseFixedPackageScene.builder().customerPhone(EnumAppletToken.JC_WM_DAILY.getPhone())
+            IScene purchaseFixedPackageScene = PurchaseFixedPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
                     .carType(PackageUseTypeEnum.ALL_CAR.name()).packageId(packageId).expiryDate("1").remark(EnumDesc.DESC_BETWEEN_20_30.getDesc())
                     .subjectType(util.getSubjectType()).subjectId(util.getSubjectDesc(util.getSubjectType())).packagePrice("49.99")
                     .extendedInsuranceYear(1).extendedInsuranceCopies(1).type(1).build();
@@ -1223,7 +1223,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             String subjectType = util.getSubjectType();
             Long subjectId = util.getSubjectDesc(subjectType);
             //购买套餐
-            String message = PurchaseFixedPackageScene.builder().customerPhone(EnumAppletToken.JC_WM_DAILY.getPhone())
+            String message = PurchaseFixedPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
                     .carType(PackageUseTypeEnum.ALL_CAR.name()).packageId(packageId).packagePrice("1.00").expiryDate("1")
                     .remark(EnumDesc.DESC_BETWEEN_20_30.getDesc()).subjectType(subjectType).subjectId(subjectId)
                     .extendedInsuranceYear(10).extendedInsuranceCopies(10).type(1).build().invoke(visitor, false).getString("message");
@@ -1929,10 +1929,12 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String[] strings = {EnumDesc.DESC_BETWEEN_200_300.getDesc(), EnumDesc.DESC_BETWEEN_400_500.getDesc(), EnumDesc.DESC_BETWEEN_10_15.getDesc()};
+            //微信规则详情
             String ruleDetail = WashCarManagerRuleDetailScene.builder().build().invoke(visitor).getString("rule_detail");
             String detail = Arrays.stream(strings).filter(e -> !e.equals(ruleDetail)).findFirst().orElse(ruleDetail);
             WashCarManagerEditRuleScene.builder().ruleDetail(detail).build().invoke(visitor);
             user.loginApplet(APPLET_USER_ONE);
+            //pc规则详情
             JSONObject jsonObject = AppletCommonRuleExplainDetailScene.builder().businessType(AppletCodeBusinessTypeEnum.WASH_CAR.getKey()).build().invoke(visitor);
             CommonUtil.checkResultPlus("pc端洗车规则说明为", detail, "applet端洗车规则说明为", jsonObject.getString("rule_explain"));
         } catch (Exception | AssertionError e) {
@@ -2021,6 +2023,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     public void vipMarketing_system_21() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            //异常数据
             String[] adjustNumbers = {"", "6", null, "0"};
             Arrays.stream(adjustNumbers).forEach(adjustNumber -> {
                 String message = WashCarManagerAdjustNumberScene.builder().customerPhone(APPLET_USER_ONE.getPhone())

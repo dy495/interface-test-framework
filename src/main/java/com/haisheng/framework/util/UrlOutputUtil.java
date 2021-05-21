@@ -24,7 +24,8 @@ public class UrlOutputUtil {
             byte[] chs = new byte[1024];
             //标记
             int len;
-            while ((len = is.read(chs)) != -1) {// read() 方法，读取输入流的下一个字节，返回一个0-255之间的int类型整数。如果到达流的末端，返回-1
+            while ((len = is.read(chs)) != -1) {
+                // read() 方法，读取输入流的下一个字节，返回一个0-255之间的int类型整数。如果到达流的末端，返回-1
                 output.write(chs, 0, len);
             }
             close(is, output);

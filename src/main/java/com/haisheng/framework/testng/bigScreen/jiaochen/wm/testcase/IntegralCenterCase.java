@@ -1108,13 +1108,15 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     public void integralExchange_system_24() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            String exchangeStartTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
+            String exchangeEndTime = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 30), "yyyy-MM-dd HH:mm:ss");
+            //获取商品id
+            long goodsId = GoodsManagePageScene.builder().goodsStatus(CommodityStatusEnum.UP.name()).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            JSONArray specificationDetailList = CommoditySpecificationsListScene.builder().id(goodsId).build().invoke(visitor).getJSONArray("specification_detail_list");
+            JSONArray specificationList = new JSONArray(specificationDetailList.stream().map(e -> (JSONObject) e).map(e -> put(e.getInteger("id"), 2)).collect(Collectors.toList()));
             String[] exchangePriceList = {"", null, "1.11", "-3", "中文", "english"};
             Arrays.stream(exchangePriceList).forEach(exchangePrice -> {
-                String exchangeStartTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
-                String exchangeEndTime = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 30), "yyyy-MM-dd HH:mm:ss");
-                long goodsId = GoodsManagePageScene.builder().goodsStatus(CommodityStatusEnum.UP.name()).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
-                JSONArray specificationDetailList = CommoditySpecificationsListScene.builder().id(goodsId).build().invoke(visitor).getJSONArray("specification_detail_list");
-                JSONArray specificationList = new JSONArray(specificationDetailList.stream().map(e -> (JSONObject) e).map(e -> put(e.getInteger("id"), 2)).collect(Collectors.toList()));
+                //创建积分兑换
                 IScene scene = CreateExchangeGoodsScene.builder().exchangeGoodsType(CommodityTypeEnum.REAL.name()).goodsId(goodsId)
                         .exchangePrice(exchangePrice).isLimit(true).exchangePeopleNum("10").specificationList(specificationList).expireType(2).useDays("10")
                         .exchangeStartTime(exchangeStartTime).exchangeEndTime(exchangeEndTime).build();
