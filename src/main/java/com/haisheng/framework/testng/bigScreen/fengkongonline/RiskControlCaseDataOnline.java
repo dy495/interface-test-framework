@@ -481,7 +481,7 @@ public class RiskControlCaseDataOnline extends TestCaseCommon implements TestCas
      * ①新增一个规则,列表风险规则+1，更新时间=新增该规则的时间，更新者==新增该风控规则的人员   ②删除一个风险规则，列表风险规则-1 --ok
      */
     @Test(description = "①新增一个规则,列表风险规则+1，更新时间=新增该规则的时间，更新者==新增该风控规则的人员   ②删除一个风险规则，列表风险规则-1")
-    public void riskControlData13() {
+    public void riskControlData13(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //新建前风控规则前列表数量
@@ -489,11 +489,11 @@ public class RiskControlCaseDataOnline extends TestCaseCommon implements TestCas
             //新增一个风控规则
             Long id=cu.getRuleAdd(RuleEnum.BLACK_LIST.getType());
             //获取当前时间
-            String time= DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
+            String time= DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm");
             //新建前风控规则后列表数
             JSONObject response= com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.rule.PageScene.builder().page(1).size(10).build().invoke(visitor,true);
             int totalAfter =response.getInteger("total");
-            String updateTime=response.getJSONArray("list").getJSONObject(0).getString("update_time");
+            String updateTime=response.getJSONArray("list").getJSONObject(0).getString("update_time").substring(0,16);
 //            String updateUser=response.getJSONArray("list").getJSONObject(0).getString("update_user");
             Preconditions.checkArgument(totalAfter==totalBefore+1&&time.equals(updateTime),"新建前风控规则列表数量:"+totalBefore+"  新建前风控规则后列表数："+totalAfter+"  更新时间和当前时间分别为："+updateTime+"   "+time);
             //关闭风控规则
