@@ -28,13 +28,14 @@ import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.*;
 import org.apache.http.Header;
 import org.apache.http.client.HttpClient;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -89,6 +90,20 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
     public void clean() {
         afterClassClean();
         qaDbUtil.closeConnectionRdDaily();
+    }
+
+    public void recode(String tranid,String casename) throws IOException {
+        Writer out=null;
+        try {
+             out = new BufferedWriter(new FileWriter("src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\fengkongdaily\\things.txt", true));
+            out.write("测试规则：" + casename + "\n");
+            out.write("订单id：" + tranid + "\n");
+            out.write( "\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            out.close();
+        }
     }
 
     /**
@@ -154,7 +169,8 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
             or.openId=pp.openId;
             or.type="ONLINE";
             or.carVehicleNumber="AAAAAAAAAA22"+CommonUtil.getRandom(5);
-            or.business_type="INSURANCE_CONTRACT_CUSTOMERS";
+//            or.business_type="INSURANCE_CONTRACT_CUSTOMERS";
+            or.business_type=null;
             System.out.println(or.carVehicleNumber);
             //生成交易订单
             String post=cu.getCreateOrder3(or);
@@ -165,6 +181,7 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
             Integer total=cu.riskTotal();
             Preconditions.checkArgument(total.equals(totalBefore),"线上交易 仍产生风控,创单后："+total+"创单前："+totalBefore);
 
+            recode(or.transId,"无人风控，交易类型线上，不触发风控");
 
 
         }catch (AssertionError | Exception e) {
@@ -239,15 +256,15 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
 //                        "}";
 
 //                JSONObject jsonObject = JSON.parseObject(str);
-                //夏明凤的脸  是否在职 0否 1是
-                 String face=file.getImgStr( "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/杨航.jpg");
-                JSONObject jsonObject=staffObject("uid_663ad666","杨航","",1,face);
-
-//                String face=file.getImgStr( "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/xia.png");
-//                JSONObject jsonObject=staffObject("uid_663ad653","店员1","uid_663ad653",1,face);
-
+                //  是否在职 0否 1是
+//                 String face=file.getImgStr( "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/杨航.jpg");
+//                JSONObject jsonObject=staffObject("uid_663ad666","杨航","",0,face);
+//
+                String face=file.getImgStr( "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/xia.png");
+                JSONObject jsonObject=staffObject("uid_663ad653","店员1","uid_663ad653",1,face);
+//
 //             String face=file.getImgStr( "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/lv.jpg");
-//                JSONObject jsonObject=staffObject("uid_91cc8031","吕雪晴","uid_91cc8031",0,face);
+//                JSONObject jsonObject=staffObject("uid_91cc8031","吕雪晴","uid_91cc8031",1,face);
 
                 logger.info("request:"+jsonObject.toJSONString());
                 System.out.println("over");
@@ -296,7 +313,7 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
     /**
      *生成交易订单--触发无人风控(保证摄像头面前没有人)
      **/
-    @Test(enabled =true )
+    @Test(enabled =true )  //TODO:
     public void getTriggerUnmannedRisk(){
         try{
 
@@ -308,7 +325,7 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
             or.shopId=router.getShopid();
             or.openId=pp.openId;
             or.carVehicleNumber="AAAAAAAAAA22"+CommonUtil.getRandom(5);
-//            or.business_type="\"ROUTINE_MAINTENANCE\"";
+//            or.business_type="\"PDI_FACTORY\"";
             or.business_type=null;
             System.out.println(or.carVehicleNumber);
             //生成交易订单
@@ -319,6 +336,8 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
 
             Integer total=cu.riskTotal();
             System.out.println("创单前："+totalBefore+",创单后："+total);
+            recode(or.transId,"员工3");
+
 //            Preconditions.checkArgument(total-totalBefore==1,"无人风控未产生事件，创单前："+totalBefore+",创单后："+total);
 
         }catch (AssertionError | Exception e) {
@@ -375,7 +394,7 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
      *生成交易订单--触发一人多车风控
      * 一人多车 user_id  相同; 多个car_vehicle_number车架号 触发；
      **/
-    @Test(enabled = true,description = "一人多车userId 触发")
+    @Test(enabled = true,description = "一人多车userId 触发")   //TODO:
     public void getTriggerMoreCarRisk(){
         try{
             //创建一人多车风控规则(1个人最多2个车)
@@ -461,7 +480,7 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
      *生成交易订单--触发一车多人风控
      * 一车多人，多个openid/userId,一个car_vehicle_number 触发;QATest_42021-04-1418:17  QATest_16762021-04-1418:17
      **/
-    @Test(description = "一车多人成功,脸",enabled = false)   //userID  openid 都不一样 触发成功
+    @Test(description = "一车多人成功,脸",enabled = true)   //userID  openid 都不一样 触发成功
     public void getTriggerMorePersonRiskface(){
         try{
             //创建一人多单风控规则(1个人最多2个车)
@@ -481,7 +500,12 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
 
             //车架号
 //            String carVehicleNumber="AAAAAAAAAA15"+CommonUtil.getRandom(5);
-            String carVehicleNumber="AAAAAAAAAA1202337";
+//            String carVehicleNumber="AAAAAAAAAA1202337";
+//            String carVehicleNumber="AAAAAAAAAA9254056";  //雪佳、 徐鹏
+            String carVehicleNumber="AAAAAAAAAA2285700";   //沈彤的车
+
+            recode(transId,"一车多人");
+
 
             //生成交易订单
             String post1=cu.getCreateOrder(shopId,transId,userId1,openId,carVehicleNumber);
@@ -623,6 +647,10 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(JSONObject.parseObject(post2).getString("code").equals("1000"),"创单失败"+post2);
             Preconditions.checkArgument(JSONObject.parseObject(post3).getString("code").equals("1000"),"创单失败"+post3);
 
+            recode(transId,"一人多车1");
+            recode(transId2,"一人多车2");
+            recode(transId3,"一人多车3");
+
 
         }catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -655,8 +683,8 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
     @Test()
     public void zhandle() {
         try{
-            for(int j=1;j<4;j++) {
-                JSONArray list = md.cashier_riskPage(product.getShopId(), "", "", "", "", "", "PENDING", j, 10).getJSONArray("list");
+            for(int j=1;j<3;j++) {
+                JSONArray list = md.cashier_riskPage(shopId, "", "", "", "", "", "PENDING", j, 10).getJSONArray("list");
                 for (int i =0; i < list.size(); i++) {
                     Long id = list.getJSONObject(i).getLong("id");
                     IScene handle = RiskEventHandleScene.builder().result(1).remarks("自动正常处理").id(id).build();

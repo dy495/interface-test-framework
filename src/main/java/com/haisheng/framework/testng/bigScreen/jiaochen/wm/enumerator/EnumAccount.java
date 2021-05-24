@@ -11,7 +11,7 @@ public enum EnumAccount {
 
     ALL_AUTHORITY_DAILY_LXQ("13114785236", "000000", "系统管理员", true, "轿辰（赢识测试）", "603", "46522"),
 
-    ALL_AUTHORITY_ONLINE("15037286011", "000000", "所有权限", false, "接待顾问x", "2227", "20034"),
+    ALL_AUTHORITY_ONLINE("15037286012", "000000", "所有权限", false, "石矶娘娘", "2227", "20034"),
 
     ALL_JC_ONLINE("15711200001", "000000", "所有权限", false, "轿辰线上", "395", "-1"),
 

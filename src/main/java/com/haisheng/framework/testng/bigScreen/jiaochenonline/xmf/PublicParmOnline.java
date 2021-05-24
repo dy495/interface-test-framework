@@ -10,7 +10,7 @@ public class PublicParmOnline {
     public Long brandId=1L;  //TODO:
     public String user;
     public String userpassword;
-    public String userroleId="4965";
+    public String userroleId="423";
     public String voucherIdevluate="7110";  //评价配置使用的卡券id
 
     public int num=5;
@@ -55,6 +55,7 @@ public class PublicParmOnline {
     public String dzcode="000000";
 
     //---------2.0---------
+    public String String_50="一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十";
     public String String_20="一二三四五六七八九十一二三四五六七八九十";
     public String String_200="一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十";
     public String StoreCommodityId="1902";  //TODO:编辑需要的商品套餐的名字
@@ -66,6 +67,9 @@ public class PublicParmOnline {
     public  String CarplateOther="浙ZXCV123";
     public String userid="uid_2960c1cf"; //接待顾问x 15037286011 的userId;
     public String userid2="uid_bf9d24ef"; //接待顾问2 6013的userId;
+
+    //3.0
+    public String useridxs="uid_2960c1cf"; //销售的userId;
 
     public int ordeId=10; // 订单Id
     public String filepath11="src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/1_1.jpg";

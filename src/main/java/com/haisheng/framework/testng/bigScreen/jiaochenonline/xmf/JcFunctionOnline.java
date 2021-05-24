@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.registerListVariable;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.AppAdmitScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.AppStartReceptionScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.record.ImportPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appStartReception;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appletAppointment;
@@ -29,6 +31,20 @@ public class JcFunctionOnline {
         String num = "177" + (random.nextInt(89999999) + 10000000);
 
         return num;
+    }
+    public String[] salereception(String phone) {
+        //注册过的手机号接待
+        IScene appAdmitScene = AppAdmitScene.builder().phone(phone).build();
+        JSONObject data = jc.invokeApi(appAdmitScene);
+        Long customerId = data.getLong("customer_id");
+        //开始接待
+        IScene appstartReception = AppStartReceptionScene.builder()
+                .customerId(customerId)
+                .customerPhone(phone)
+                .build();
+        String[] receptionId = new String[2];
+        receptionId[0] = jc.invokeApi(appstartReception).getString("id");  //接待ID
+        return receptionId;
     }
 
     public  Integer importCheck(String name){
@@ -531,6 +547,22 @@ public class JcFunctionOnline {
             throw new Exception("小程序卡券不足，需领取卡券");
         }
         return voucher_code;
+    }
+
+    //app 跟进列表数量
+    public Integer followPageNumber(){
+        JSONObject lastValue=null;
+        JSONArray list;
+        int count=0;
+        do{
+            JSONObject data=jc.AppPageV3Scene(10,lastValue,null);
+            lastValue=data.getJSONObject("last_value");
+            list=data.getJSONArray("list");
+            count=count+list.size();
+            System.out.println("listsize:"+list.size());
+        }while (list.size()==10);
+        System.out.println("count:"+count);
+        return count;
     }
 
 }
