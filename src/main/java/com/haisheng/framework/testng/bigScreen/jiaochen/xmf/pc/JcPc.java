@@ -25,12 +25,15 @@ import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.DateTimeUtil;
+import jdk.nashorn.internal.runtime.regexp.joni.Regex;
 import org.jooq.tools.StringUtils;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
 import java.util.Calendar;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -1207,6 +1210,35 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             saveData(type1+"评价配置修改验证");
         }
     }
+
+    @Test()
+    public void dele() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            pcLogin(pp.gwphone,pp.jdgwpassword,pp.roleId);
+            for(int j=13;j<16;j++) {
+                JSONArray list = jc.organizationRolePage(j, 10).getJSONArray("list");
+                for (int i = 0; i < list.size(); i++) {
+                    String id = list.getJSONObject(i).getString("id");
+                    String name = list.getJSONObject(i).getString("name");
+                    Pattern p = Pattern.compile("[\u4e00-\u9fa5]");
+                    Matcher m = p.matcher(name);
+                    if (m.find()) {
+                       continue;
+                    }
+                    jc.organizationidRoleDelete(id);
+                }
+            }
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            pcLogin(pp.jdgw,pp.jdgwpassword,pp.roleidJdgw);
+            saveData("");
+        }
+    }
+
+
 
 
 

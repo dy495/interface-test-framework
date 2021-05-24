@@ -739,7 +739,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             String vin="ASDAAAAAAA12"+ CommonUtil.getRandom(5);
             String plate="京AS"+CommonUtil.getRandom(4);
 //            String phone="177"+CommonUtil.getRandom(8);
-            String phone="15037289013";
+            String phone="15037289114";
 
             System.out.println("vin"+vin);
             System.out.println("plate"+plate);

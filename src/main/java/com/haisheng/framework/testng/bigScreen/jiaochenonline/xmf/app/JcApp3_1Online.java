@@ -309,10 +309,11 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
                     .id(Long.valueOf(reception[0]))
                     .build();
             jc.invokeApi(appreceptionChange);
+            appLogin(pp.jdgw,pp.gwpassword,pp.roleidJdgw);
             int totalAfter=pf.appSaleReceptionPage();
 
             Preconditions.checkArgument(total-totalBefore==-1,"变更接待列表-1");
-            Preconditions.checkArgument(total-totalAfter==1,"再次变更列表+1");
+            Preconditions.checkArgument(total-totalAfter==-1,"再次变更列表+1");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -469,20 +470,25 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
         try {
             pcLogin(pp.gwphone,pp.gwpassword,pp.roleId);
 //            Long i=pf.getAccessId2("个人");
+//            System.out.println(i);
+//            System.out.println(pf.getAccessId2("门店"));
+//
+//            System.out.println(pf.getAccessId2("预约保养分配"));
 
             //账户登录  修改角色的权限
             JSONArray roleList1 = new JSONArray();
-            roleList1.add( roleList.findByLable("个人").getValue());
-            roleList1.add(roleList.findByLable("门店").getValue());
+            roleList1.add( pf.getAccessId2("个人"));
+            roleList1.add(pf.getAccessId2("门店"));
             //预约保养分配
-            jc.organizationRoleEdit(Long.parseLong(pp.userroleId),"临时用户","随时修改用户权限",roleList1);
+            jc.organizationRoleEdit(Long.parseLong(pp.userroleId),"权限","随时修改用户权限",roleList1);
             jc.appletLoginToken(pp.appletTocken);
             int staffTotalBefore =  jc.AppletAppointmentStaffListScene("MAINTAIN",Long.valueOf(pp.shopIdZ)).getJSONArray("list").size();
 
-            roleList1.add(roleList.findByLable("预约保养分配").getValue());
             //            appLogin(pp.user,pp.userpassword,pp.userroleId);
             pcLogin(pp.gwphone,pp.gwpassword,pp.roleId);
-            jc.organizationRoleEdit(Long.parseLong(pp.userroleId),"临时用户","随时修改用户权限",roleList1);
+            roleList1.add(pf.getAccessId2("预约保养分配"));
+
+            jc.organizationRoleEdit(Long.parseLong(pp.userroleId),"权限","随时修改用户权限",roleList1);
 
             //小程序 门店下接待人员总数
             jc.appletLoginToken(pp.appletTocken);
@@ -490,7 +496,7 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
 
             roleList1.remove(2);
             pcLogin(pp.gwphone,pp.gwpassword,pp.roleId);
-            jc.organizationRoleEdit(Long.parseLong(pp.userroleId),"临时用户","随时修改用户权限",roleList1);
+            jc.organizationRoleEdit(Long.parseLong(pp.userroleId),"权限","随时修改用户权限",roleList1);
 
             jc.appletLoginToken(pp.appletTocken);
             int staffTotalAfter=  jc.AppletAppointmentStaffListScene("MAINTAIN",Long.valueOf(pp.shopIdZ)).getJSONArray("list").size();

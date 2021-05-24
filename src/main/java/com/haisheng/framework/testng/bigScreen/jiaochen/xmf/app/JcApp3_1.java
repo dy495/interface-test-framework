@@ -32,6 +32,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
 
@@ -306,10 +308,11 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
                     .id(Long.valueOf(reception[0]))
                     .build();
             jc.invokeApi(appreceptionChange);
+            appLogin(pp.jdgw,pp.gwpassword,pp.roleidJdgw);
             int totalAfter=pf.appSaleReceptionPage();
 
             Preconditions.checkArgument(total-totalBefore==-1,"变更接待列表-1");
-            Preconditions.checkArgument(total-totalAfter==1,"再次变更列表+1");
+            Preconditions.checkArgument(total-totalAfter==-1,"再次变更列表+1");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -674,22 +677,12 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
             saveData("轿辰-app接待,今日数据待处理接待+1,完成接待，待处理接待-1");
         }
     }
-    @Test
-    public void collectsort(){
-        List<Integer> aa=new ArrayList();
-        aa.add(1);
-        aa.add(6);
-        aa.add(2);
-        aa.add(4);
-
-        Collections.sort(aa);
-        for(Integer a:aa){
-            System.out.println(a);
-
-        }
-
-    }
-
+//    @Test
+//    public void collectsort(){
+//        Pattern p=Pattern.compile("\\d");
+//        Matcher m=p.matcher("QWe");
+//        System.out.println(m.find());
+//    }
 
 
 
