@@ -814,7 +814,7 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject historyShopTrendV3(String cycle_type, String month, long shop_id) throws Exception {
-        String url = "/patrol/history/shop/trend-pv-uv";
+        String url = "/mall/history/shop/trend-pv-uv";
         JSONObject json = new JSONObject();
         json.put("cycle_type", cycle_type);
         json.put("month", month);
@@ -1268,7 +1268,7 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject historyShopConversionV3(long shop_id, String cycle_type, String month) throws Exception {
-        String url = "/patrol/history/shop/conversion";
+        String url = "/mall/history/shop/conversion";
         JSONObject json = new JSONObject();
         json.put("shop_id",shop_id);
         json.put("cycle_type",cycle_type);
@@ -1284,7 +1284,7 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject historyShopHourV3(long shop_id, String cycle_type, String month) throws Exception {
-        String url = "/patrol/history/shop/hour-data";
+        String url = "/mall/history/shop/hour-data";
         String json =
                 "{" +
                         "\"shop_id\" :" + shop_id + ",\n" +
@@ -1303,7 +1303,7 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject historyShopAgeV3(long shop_id, String cycle_type, String month) throws Exception {
-        String url = "/patrol/history/shop/age-gender/distribution";
+        String url = "/mall/history/shop/age-gender/distribution";
         String json =
                 "{" +
                         "\"shop_id\" :" + shop_id + ",\n" +
@@ -1719,7 +1719,7 @@ public class MallScenarioUtil extends TestCaseCommon {
 
 
     public JSONObject organizationRoleEditTwo(int role_id,int superior_role_id,String name, String description, JSONArray module_ids) throws Exception {
-        String url = "/patrol/organization/role/edit";
+        String url = "/mall/organization/role/edit";
         JSONObject json = new JSONObject();
         json.put("role_id",role_id);
         json.put("superior_role_id",superior_role_id);
@@ -2941,7 +2941,7 @@ public class MallScenarioUtil extends TestCaseCommon {
 //        return JSON.parseObject(res).getJSONObject("data");
 //    }
     public JSONObject regin_PUv(long shop_id, String dateType,String day) throws Exception {
-        String path = "/patrol/history/shop/day/region-pv-uv";
+        String path = "/mall/history/shop/day/region-pv-uv";
         String json =
                 "{" +
                         "\"shop_id\" :" + shop_id + ",\n" +
@@ -3014,12 +3014,12 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject history_shop_all() throws Exception {
-        String path = "/patrol/history/shop/all/conversion";
-        String json =
-                "{} ";
-
-        String res = httpPostWithCheckCode(path, json, IpPort);
+    public JSONObject history_shop_all(String cycle_type,String month) throws Exception {
+        String path = "/mall/history/shop/all/conversion";
+        JSONObject json = new JSONObject();
+        json.put("cycle_type",cycle_type);
+        json.put("month",month);
+        String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
 
@@ -3028,12 +3028,12 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject history_shop_hourData() throws Exception {
-        String path = "/patrol/history/shop/all/hour-data";
-        String json =
-                "{} ";
-
-        String res = httpPostWithCheckCode(path, json, IpPort);
+    public JSONObject history_shop_hourData(String cycle_type,String month) throws Exception {
+        String path = "/mall/history/shop/all/hour-data";
+        JSONObject json = new JSONObject();
+        json.put("cycle_type",cycle_type);
+        json.put("month",month);
+        String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
 
@@ -3042,12 +3042,12 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject history_shop_ageData() throws Exception {
-        String path = "/patrol/history/shop/all/age-gender/distribution";
-        String json =
-                "{} ";
-
-        String res = httpPostWithCheckCode(path, json, IpPort);
+    public JSONObject history_shop_ageData(String cycle_type,String month) throws Exception {
+        String path = "/mall/history/shop/all/age-gender/distribution";
+        JSONObject json = new JSONObject();
+        json.put("cycle_type",cycle_type);
+        json.put("month",month);
+        String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
 
@@ -3056,10 +3056,12 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject history_shop_arrivData(String cycle_type) throws Exception {
-        String path = "/patrol/history/shop/all/trend-pv-uv";
+    public JSONObject history_shop_arrivData(String cycle_type,String month,String day) throws Exception {
+        String path = "/mall/history/shop/all/trend-pv-uv";
         JSONObject json = new JSONObject();
         json.put("cycle_type",cycle_type);
+        json.put("month",month);
+        json.put("day",day);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -3068,12 +3070,11 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject history_shop_dayData() throws Exception {
-        String path = "/patrol/history/shop/all/day/trend-pv-uv";
-        String json =
-                "{} ";
-
-        String res = httpPostWithCheckCode(path, json, IpPort);
+    public JSONObject history_shop_dayData(String day) throws Exception {
+        String path = "/mall/history/shop/all/day/trend-pv-uv";
+        JSONObject json = new JSONObject();
+        json.put("day",day);
+        String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
 
@@ -4057,6 +4058,37 @@ public class MallScenarioUtil extends TestCaseCommon {
         String url = "/patrol/feedback/feedback-type/info";
         JSONObject json = new JSONObject();
         json.put("id",id);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+
+
+    //---------------------------------购物中心新加，通用的在上方----------------------------------
+    /**
+     *@description: 获取到店趋势数据 天级别
+     *@time:
+     */
+    public JSONObject dayTrendPvUv(String day,int shop_id) throws Exception {
+        String url = "/mall/history/shop/day/trend-pv-uv";
+        JSONObject json = new JSONObject();
+        json.put("day",day);
+        json.put("shop_id",shop_id);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     *@description: 历史数据-区域图片
+     *@time:
+     */
+    public JSONObject regionMap(String day,String date_type,int shop_id) throws Exception {
+        String url = "/mall/history/shop/day/region-map";
+        JSONObject json = new JSONObject();
+        json.put("day",day);
+        json.put("date_type",date_type);
+        json.put("shop_id",shop_id);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
