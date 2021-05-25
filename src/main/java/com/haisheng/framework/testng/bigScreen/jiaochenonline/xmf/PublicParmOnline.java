@@ -33,7 +33,7 @@ public class PublicParmOnline {
     public String carplate7 = "浙ASD124";      //编辑小程序车牌号
     //预约使用车辆
     public Long car_idA=2L;
-    public String shopname="中关村";
+    public String shopname="中关村店简";
     public String modolIdAppointment = "19655";
     public String carStyleId="78";
     public String carStyleName="";

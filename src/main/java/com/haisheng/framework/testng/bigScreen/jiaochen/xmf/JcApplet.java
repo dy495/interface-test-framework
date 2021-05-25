@@ -130,7 +130,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
      * @description :添加车辆，车牌8位，数量+1 ok
      * @date :2020/7/10 18:03
      **/
-    @Test()
+//    @Test()
     public void mycarConsistency() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -159,7 +159,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
      * @description :添加车辆，车牌7位 ok
      * @date :2020/7/10 18:03
      **/
-    @Test()
+//    @Test()
     public void mycarConsistencySeven() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -189,7 +189,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
      * @description :添加重复车牌失败ok
      * @date :2020/7/10 18:03
      **/
-    @Test()
+//    @Test()
     public void sameCarFail() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -212,7 +212,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
      * @description :【我的】添加车辆，10辆边界
      * @date :2020/7/27 19:43
      **/
-    @Test()
+//    @Test()
     public void myCarTen() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

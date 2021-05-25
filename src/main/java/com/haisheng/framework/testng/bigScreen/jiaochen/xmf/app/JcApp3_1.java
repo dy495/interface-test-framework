@@ -677,12 +677,15 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
             saveData("轿辰-app接待,今日数据待处理接待+1,完成接待，待处理接待-1");
         }
     }
-//    @Test
-//    public void collectsort(){
-//        Pattern p=Pattern.compile("\\d");
-//        Matcher m=p.matcher("QWe");
-//        System.out.println(m.find());
-//    }
+    @Test
+    public void collectsort(){
+        Pattern p=Pattern.compile("\\d");
+        Matcher m=p.matcher("QWe");
+        System.out.println(m.find());
+
+        List a=new ArrayList();
+        Collections.sort(a);
+    }
 
 
 

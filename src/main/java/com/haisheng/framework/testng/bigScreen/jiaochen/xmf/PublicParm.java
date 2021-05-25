@@ -23,7 +23,7 @@ public class PublicParm {
     public String shopId = "-1";   //门店Id
     public String shopIdZ = "49195";   //门店Id
 
-    public String shopname="中关村店(全称)";
+    public String shopname="中关村店(简称)";
     public String reception_sale_id = "2945";
     public String name = "";
     public String customerPhone = "15037286013";

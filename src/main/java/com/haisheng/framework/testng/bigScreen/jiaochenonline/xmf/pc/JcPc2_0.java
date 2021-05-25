@@ -68,8 +68,8 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "xmf";
-        commonConfig.referer = EnumTestProduce.JC_DAILY.getReferer();
-        commonConfig.product = EnumTestProduce.JC_DAILY.name();
+        commonConfig.referer = EnumTestProduce.JC_ONLINE.getReferer();
+        commonConfig.product = EnumTestProduce.JC_ONLINE.name();
         jc.changeIpPort(EnumTestProduce.JC_ONLINE.getAddress());
 
         //replace backend gateway url
@@ -94,7 +94,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);
-        pcLogin(pp.gwname, pp.gwpassword,pp.roleidJdgw);
+        pcLogin(pp.gwname, pp.gwpassword,pp.roleId);
         qaDbUtil.openConnection();
 
     }
@@ -105,7 +105,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         object.put("phone", username);
         object.put("verification_code", password);
         commonConfig.roleId=roleId;
-        httpPost(path, object, EnumTestProduce.JC_DAILY.getAddress());
+        httpPost(path, object, EnumTestProduce.JC_ONLINE.getAddress());
     }
 
     //pc登录
@@ -115,7 +115,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         object.put("phone", phone);
         object.put("verification_code", verificationCode);
         commonConfig.roleId=roleId;
-        httpPost(path, object, EnumTestProduce.JC_DAILY.getAddress());
+        httpPost(path, object, EnumTestProduce.JC_ONLINE.getAddress());
     }
     @AfterClass
     @Override
@@ -688,10 +688,10 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
     public void losscustomer() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-
+            System.out.println(IpPort);
             pcLogin(pp.jdgw,pp.jdgwpassword,pp.roleidJdgw);
 
-            System.out.println(dt.getHistoryDate(-181));
+            System.out.println(dt.getHistoryDate(-366));
 
             System.out.println(dt.getHHmm(0,"HH:mm:ss"));
             dt.getHHmm(0);
@@ -708,7 +708,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             //新建一个excel,里程数=智能提醒公里数
             PoiUtils.importlossCustomer(maile,vin,-181,plate,phone,pp.jdgwName);
             //导入工单
-//            jc.pcWorkOrder(pp.importFilepath2);      //导入工单文件的路径=新建excel 路径
+            jc.pcWorkOrder(pp.importFilepath2);      //导入工单文件的路径=新建excel 路径
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -751,7 +751,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String[] parm = {
-                    "中关村店(全称)",
+                    pp.shopname,
                     "个人",
                     "潜客"+CommonUtil.getRandom(2),
                     "157"+ CommonUtil.getRandom(8),
@@ -786,7 +786,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String[] parm = {
-                    "中关村店(全称)",
+                    pp.shopname,
                     "个人",
                     "潜客"+CommonUtil.getRandom(2),
                     "157"+ CommonUtil.getRandom(8),
@@ -820,7 +820,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String[] parm = {
-                    "中关村店(全称)",
+                    pp.shopname,
                     "个人",
                     "潜客"+CommonUtil.getRandom(2),
                     "157"+ CommonUtil.getRandom(8),
@@ -853,7 +853,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String[] parm = {
-                    "中关村店(全称)",
+                    pp.shopname,
                     "个人",
                     "潜客"+CommonUtil.getRandom(2),
                     "157"+ CommonUtil.getRandom(8),

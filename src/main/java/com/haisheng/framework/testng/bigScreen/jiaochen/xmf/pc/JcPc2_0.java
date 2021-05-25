@@ -791,7 +791,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String[] parm = {
-                    "中关村店(全称)",
+                    "中关村店(简称)",
                     "个人",
                     "潜客"+CommonUtil.getRandom(2),
                     "157"+ CommonUtil.getRandom(8),
@@ -826,7 +826,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String[] parm = {
-                    "中关村店(全称)",
+                    pp.shopname,
                     "个人",
                     "潜客"+CommonUtil.getRandom(2),
                     "157"+ CommonUtil.getRandom(8),
@@ -860,7 +860,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String[] parm = {
-                    "中关村店(全称)",
+                     pp.shopname,
                     "个人",
                     "潜客"+CommonUtil.getRandom(2),
                     "157"+ CommonUtil.getRandom(8),
@@ -893,7 +893,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String[] parm = {
-                    "中关村店(全称)",
+                     pp.shopname,
                     "个人",
                     "潜客"+CommonUtil.getRandom(2),
                     "157"+ CommonUtil.getRandom(8),
