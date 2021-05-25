@@ -528,7 +528,7 @@ public class XundianScenarioUtil extends TestCaseCommon {
     }
 
     //适用于现场巡店
-    public JSONObject checkStartapp(Long shop_id, String check_type, Integer reset,boolean is_personalized_check_list) throws Exception {
+    public JSONObject checkStartapp(Long shop_id, String check_type, Integer reset,int is_personalized_check_list) throws Exception {
         String url = "/store/m-app/auth/shop/checks/start";
         JSONObject json = new JSONObject();
         json.put("shop_id", shop_id);

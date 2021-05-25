@@ -430,9 +430,9 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
             JSONArray accountList = md.organizationAccountPage(name, "", email,"", "", "", page, size).getJSONArray("list");
             String account = accountList.getJSONObject(0).getString("account");
             //新建后编辑账号
-            JSONObject res1 = md.organizationAccountEditTwo(account,"qqqqq","111","uid_ef6d2de5",type,"33@qq.com",null,status,roleIdList,shopIdList);
+            JSONObject res1 = md.organizationAccountEditTwo(account,"qqqqq","111","uid_ef6d2de5",type,"33001@qq.com",null,status,roleIdList,shopIdList);
             Integer code2 = res1.getInteger("code");
-            Preconditions.checkArgument(code2 == 1000, "用姓名:" + "qqqqq" + "编辑一个账号失败了");
+            Preconditions.checkArgument(code2 == 1000, "编辑失败:" +res.getString("message") );
             //新建成功以后删除新建的账号
             Integer code1 = md.organizationAccountDelete(account).getInteger("code");
             Preconditions.checkArgument(code1 == 1000, "删邮箱的账号:" + email + "失败了");

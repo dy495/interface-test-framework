@@ -28,7 +28,7 @@ public class MendianInfo {
 
 
 
-    public final Long xdOperateitem(Long shopid, String type, int reset, int result,boolean is_personalized_check_list) throws Exception {
+    public final Long xdOperateitem(Long shopid, String type, int reset, int result,int is_personalized_check_list) throws Exception {
         JSONObject obj = xd.checkStartapp(shopid, type, reset,is_personalized_check_list);
         Long patrolID = obj.getLong("id");
         JSONArray checklist = obj.getJSONArray("check_lists");
@@ -51,7 +51,7 @@ public class MendianInfo {
         return patrolID;
     }
 
-    public final JSONObject xdOperate(Long shopid, String type, int reset, int result,boolean is_personalized_check_list) throws Exception {
+    public final JSONObject xdOperate(Long shopid, String type, int reset, int result,int is_personalized_check_list) throws Exception {
 
         Long patrolID =  xdOperateitem(shopid,type,reset,result,is_personalized_check_list);
         xd.checks_submit(shopid, patrolID, "一次巡店完成");

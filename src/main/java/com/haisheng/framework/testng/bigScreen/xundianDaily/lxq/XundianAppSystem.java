@@ -309,7 +309,7 @@ public class XundianAppSystem extends TestCaseCommon implements TestCaseStd {
     public void commmitxdResult(String chkcode, String content, String mess) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long id = info.xdOperateitem(info.shop_id_01,"REMOTE",1,1,true);
+            Long id = info.xdOperateitem(info.shop_id_01,"REMOTE",1,1,0);
             int code = 0;
             if (chkcode.equals("1000")){
                 code = xd.checks_submitNotChk(info.shop_id_01, id, content).getInteger("code");
