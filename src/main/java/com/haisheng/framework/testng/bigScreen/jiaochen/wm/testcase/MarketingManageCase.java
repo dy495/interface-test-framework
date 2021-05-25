@@ -361,6 +361,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             JSONArray voucherList = util.getVoucherArray(voucherId, 1);
             String packageName = util.editPackage(voucherList);
             Long packageId = util.getPackageId(packageName);
+            PackageFormSwitchPackageStatusScene.builder().id(packageId).status(true).build().invoke(visitor);
             //购买前数据
             VoucherPage voucherPage = util.getVoucherPage(voucherId);
             IScene buyPackageRecordScene = BuyPackageRecordScene.builder().build();
@@ -1244,13 +1245,13 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             user.loginPc(ALL_AUTHORITY);
             PackagePage packagePage = util.getPackagePage(PackageStatusEnum.AGREE);
             packageId = packagePage.getPackageId();
+            PackageFormSwitchPackageStatusScene.builder().id(packageId).status(true).build().invoke(visitor);
             String packageName = packagePage.getPackageName();
             util.editPackage(packageId, util.getVoucherArray());
             //购买套餐
             util.buyFixedPackage(packageId, 1);
             //将套餐关闭
-            IScene switchPackageStatusScene = PackageFormSwitchPackageStatusScene.builder().id(packageId).status(false).build();
-            visitor.invokeApi(switchPackageStatusScene);
+            PackageFormSwitchPackageStatusScene.builder().id(packageId).status(false).build().invoke(visitor);
             //确认购买
             util.makeSureBuyPackage(packageName);
             user.loginApplet(APPLET_USER_ONE);
@@ -1262,8 +1263,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             collectMessage(e);
         } finally {
             user.loginPc(ALL_AUTHORITY);
-            IScene switchPackageStatusScene = PackageFormSwitchPackageStatusScene.builder().id(packageId).status(true).build();
-            visitor.invokeApi(switchPackageStatusScene);
+            PackageFormSwitchPackageStatusScene.builder().id(packageId).status(true).build().invoke(visitor);
             saveData("套餐管理--购买套餐，确认购买前，套餐状态改为关闭，再确认购买小程序会收到套餐/卡券");
         }
     }
@@ -1883,7 +1883,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             Arrays.stream(awardCounts).forEach(awardCount -> {
                 IScene equityEditScene = EquityEditScene.builder().awardCount(awardCount).equityId(equityId).description(EnumDesc.DESC_BETWEEN_15_20.getDesc()).build();
                 String message = visitor.invokeApi(equityEditScene, false).getString("message");
-                String err = awardCount == null ? "奖励数不能为空" : "次数范围1-1000";
+                String err = awardCount == null ? "奖励数不能为空" : "奖励积分的范围1-1000";
                 CommonUtil.checkResult("积分为" + awardCount, err, message);
             });
         } catch (Exception | AssertionError e) {

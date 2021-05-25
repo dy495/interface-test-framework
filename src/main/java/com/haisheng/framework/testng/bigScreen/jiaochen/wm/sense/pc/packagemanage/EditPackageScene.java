@@ -24,6 +24,8 @@ public class EditPackageScene extends BaseScene {
     private final Long subjectId;
     private final Integer expireType;
     private final Integer expiryDate;
+    private final String beginUseTime;
+    private final String endUseTime;
 
     @Override
     public JSONObject getRequestBody() {
@@ -39,6 +41,8 @@ public class EditPackageScene extends BaseScene {
         object.put("subject_id", subjectId);
         object.put("expiry_date", expiryDate);
         object.put("expire_type", expireType);
+        object.put("begin_use_time", beginUseTime);
+        object.put("end_use_time", endUseTime);
         return object;
     }
 

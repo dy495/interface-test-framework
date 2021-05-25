@@ -83,7 +83,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
     @AfterClass
     @Override
     public void clean() {
-//        util.cleanVoucher();
+        util.cleanVoucher();
         afterClassClean();
     }
 
@@ -533,7 +533,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //ok
+    //bug 数量不一致
     @Test(description = "优惠券管理--转移全部卡券")
     public void voucherManage_system_12() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -1364,6 +1364,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
         try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
+            util.editVoucher(voucherId);
             //发出一张卡券
             String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/excel/发单人消息手机号.xlsx";
             util.pushCustomMessage(0, true, true, filePath, voucherId);

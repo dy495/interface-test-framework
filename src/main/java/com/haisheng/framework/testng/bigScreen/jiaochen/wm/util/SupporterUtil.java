@@ -316,6 +316,23 @@ public class SupporterUtil extends BasicUtil {
     }
 
     /**
+     * 修改卡券selfVerification变为可核销
+     *
+     * @param voucherId 卡券id
+     */
+    public void editVoucher(Long voucherId) {
+        VoucherDetailBean detail = getVoucherDetail(voucherId);
+        EditVoucherScene.builder().voucherName(detail.getVoucherName()).subjectType(detail.getSubjectType())
+                .subjectId(detail.getSubjectId()).stock(detail.getStock()).cardType(detail.getCardType())
+                .isThreshold(detail.getIsThreshold()).thresholdPrice(detail.getThresholdPrice()).exchangeCommodityName(detail.getExchangeCommodityName())
+                .parValue(detail.getParValue()).replacePrice(detail.getReplacePrice()).discount(detail.getDiscount())
+                .mostDiscount(detail.getMostDiscount()).cost(detail.getCost()).isDefaultPic(detail.getIsDefaultPic())
+                .voucherDescription(detail.getVoucherDescription()).selfVerification(true)
+                .shopIds(detail.getShopIds().stream().map(e -> (JSONObject) e).map(e -> e.getLong("shop_id")).collect(Collectors.toList()))
+                .shopType(detail.getShopType()).subjectName(detail.getSubjectName()).id(voucherId).build().invoke(visitor);
+    }
+
+    /**
      * 清理卡券
      */
     public void cleanVoucher() {
@@ -660,6 +677,8 @@ public class SupporterUtil extends BasicUtil {
         PackageDetailBean packageDetail = toJavaObject(scene, PackageDetailBean.class);
         Preconditions.checkArgument(packageDetail != null, packageId + " 套餐没找到相关信息");
         EditPackageScene.builder().packageName(packageDetail.getPackageName())
+                .beginUseTime(packageDetail.getBeginUseTime())
+                .endUseTime(packageDetail.getEndUseTime())
                 .packageDescription(packageDetail.getPackageDescription())
                 .subjectType(packageDetail.getSubjectType())
                 .subjectId(packageDetail.getSubjectId())
