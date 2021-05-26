@@ -41,7 +41,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
         logger.debug("before classs initial");
         //替换checklist的相关信息
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_JIAOCHEN_DAILY_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "郭丽雅";
         commonConfig.product = product.getAbbreviation();
         //替换jenkins-job的相关信息
@@ -4387,16 +4387,16 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
     public void storeSalesPageOneFilter(String pram,String output){
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject response = jc.storeSalesPage("", "1", "10", "", "");
+            JSONObject response = jc.storeSalesPage( "1", "10", "", "");
             if (response.getJSONArray("list").size() > 0) {
                 if(pram.equals("shop_id")){
                     String result = response.getJSONArray("list").getJSONObject(0).getString(output);
                     String shopId=businessUtil.shopNameTransformId(result);
                     String name=businessUtil.getShopNameExist(result);
-                    JSONObject response1 = jc.storeSalesPage("", "1", "10",pram, shopId);
+                    JSONObject response1 = jc.storeSalesPage( "1", "10",pram, shopId);
                     int pages = response1.getInteger("pages");
                     for (int page = 1; page <= pages; page++) {
-                        JSONArray list = jc.storeSalesPage("", String.valueOf(page),"10", pram, shopId).getJSONArray("list");
+                        JSONArray list = jc.storeSalesPage( String.valueOf(page),"10", pram, shopId).getJSONArray("list");
                         for (int i = 0; i < list.size(); i++) {
                             String Flag = list.getJSONObject(i).getString(output);
                             System.out.println("分销员管理列表按" + name + "查询，结果错误" + Flag);
@@ -4405,10 +4405,10 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                     }
                 }else{
                     String result = response.getJSONArray("list").getJSONObject(0).getString(output);
-                    JSONObject response1 = jc.storeSalesPage("", "1", "10",pram, result);
+                    JSONObject response1 = jc.storeSalesPage("1", "10",pram, result);
                     int pages = response1.getInteger("pages");
                     for (int page = 1; page <= pages; page++) {
-                        JSONArray list = jc.storeSalesPage("", String.valueOf(page),"10", pram, result).getJSONArray("list");
+                        JSONArray list = jc.storeSalesPage( String.valueOf(page),"10", pram, result).getJSONArray("list");
                         for (int i = 0; i < list.size(); i++) {
                             String Flag = list.getJSONObject(i).getString(output);
                             System.out.println("分销员管理列表按" + result + "查询，结果错误" + Flag);
@@ -4436,7 +4436,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
         try {
             Object[][] flag = Constant.storeSalesPageFilter_pram();
             StoreSalesPageVariable variable = new StoreSalesPageVariable();
-            JSONArray res = jc.storeSalesPage("", "1", "10","", "").getJSONArray("list");
+            JSONArray res = jc.storeSalesPage( "1", "10","", "").getJSONArray("list");
             if (res.size() > 0) {
                 JSONObject data = res.getJSONObject(0);
                 variable.salesPhone = data.getString(flag[0][1].toString());
@@ -4464,7 +4464,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
     public void storeSalesPageEmptyFilter(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            JSONArray res = jc.storeSalesPage("","1","10","","").getJSONArray("list");
+            JSONArray res = jc.storeSalesPage("1","10","","").getJSONArray("list");
         }catch(AssertionError|Exception e){
             appendFailReason(e.toString());
         }finally{

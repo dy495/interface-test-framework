@@ -35,7 +35,7 @@ public class ListKeyCheck extends TestCaseCommon implements TestCaseStd {
         CommonConfig commonConfig = new CommonConfig();
         //替换checklist的相关信息
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_JIAOCHEN_DAILY_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "郭丽雅";
         commonConfig.product = EnumTestProduce.JC_DAILY.getAbbreviation();
         //替换jenkins-job的相关信息

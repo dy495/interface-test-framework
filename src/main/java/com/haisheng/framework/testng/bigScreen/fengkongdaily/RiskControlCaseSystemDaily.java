@@ -57,7 +57,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
         logger.debug("before class initial");
         //替换checklist的相关信息
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_JIAOCHEN_DAILY_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "郭丽雅";
         commonConfig.product = product.getAbbreviation();
         //替换jenkins-job的相关信息
