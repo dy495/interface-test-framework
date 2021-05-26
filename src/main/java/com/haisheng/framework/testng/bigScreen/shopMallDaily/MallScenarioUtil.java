@@ -72,7 +72,7 @@ public class MallScenarioUtil extends TestCaseCommon {
      */
     public void login(String userName, String passwd) {
         initHttpConfig();
-        String path = "/patrol-login";
+        String path = "/mall-login";
         String loginUrl = IpPort + path;
         String json = "{\"type\":0, \"username\":\"" + userName + "\",\"password\":\"" + passwd + "\"}";
         config.url(loginUrl)

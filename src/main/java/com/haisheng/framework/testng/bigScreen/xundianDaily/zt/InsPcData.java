@@ -98,7 +98,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             JSONArray applet = wx.nearshop(null,null,116.29845,39.95933).getJSONArray("list");
             int appsize = applet.size();
             xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
-            String shopName = "两杆大烟枪";
+            String shopName = "两杆大烟枪啊";
             String label = "明星店";
             String openingTime = "00:00:00";
             String closingTime = "23:59:59";
@@ -161,9 +161,9 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(statusnum4==1,"期望数量+1实际增加了" + statusnum4);
 
             xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
-            int total = md.searchShop("两杆大烟枪", null, null, null, 1, 100).getInteger("total");
+            int total = md.searchShop("两杆大烟枪啊", null, null, null, 1, 100).getInteger("total");
             int a = total-1;
-            int id1 = md.searchShop("两杆大烟枪", null, null, null, 1, 100).getJSONArray("list").getJSONObject(a).getInteger("id");
+            int id1 = md.searchShop("两杆大烟枪啊", null, null, null, 1, 100).getJSONArray("list").getJSONObject(a).getInteger("id");
             md.deleteShop(id1);
             int mdsum3 = md.searchShop(null, null, null, null, 1, 100).getInteger("total");
             int delete = mdsum1-mdsum3;

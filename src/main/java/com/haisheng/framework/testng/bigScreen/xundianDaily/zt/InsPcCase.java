@@ -293,7 +293,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            String shopName = "两杆大烟枪";
+            String shopName = "两杆大烟枪啊";
             String label = "明星店";
             String openingTime = "00:00:00";
             String closingTime = "23:59:59";
@@ -310,9 +310,9 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             String path = md.pcFileUpload(base64).getString("pic_path");
             String result = md.createShop(path, shopName, label, openingTime, closingTime, managerName, managerPhone, city, address, longitude, latitude, tripartite_shop_id, recommended).getString("result");
             Preconditions.checkArgument(result.equals("true"), "新建门店失败" + result);
-            int total = md.searchShop("两杆大烟枪", null, null, null, 1, 100).getInteger("total");
+            int total = md.searchShop("两杆大烟枪啊", null, null, null, 1, 100).getInteger("total");
             int a = total-1;
-            int id = md.searchShop("两杆大烟枪", null, null, null, 1, 100).getJSONArray("list").getJSONObject(a).getInteger("id");
+            int id = md.searchShop("两杆大烟枪啊", null, null, null, 1, 100).getJSONArray("list").getJSONObject(a).getInteger("id");
             md.deleteShop(id);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -327,8 +327,8 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
     public void update_shop() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String shopName = "创建测试门店441";
-            String shopName0 = "创建测试门店123";
+            String shopName = "创建测试门店4414";
+            String shopName0 = "创建测试门店1234";
             String label = "明星店";
             String openingTime = "00:00:00";
             String closingTime = "23:59:59";
