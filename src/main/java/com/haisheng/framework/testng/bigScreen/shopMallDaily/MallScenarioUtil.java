@@ -45,7 +45,7 @@ public class MallScenarioUtil extends TestCaseCommon {
     /***
      * 方法区，不同产品的测试场景各不相同，自行更改
      */
-    public String IpPort = "http://123.57.148.247";
+    public String IpPort = "http://dev.mall.store.winsenseos.cn";
     public String httpGet(String path, Map<String, Object> paramMap, String IpPort) throws Exception {
         initHttpConfig();
         StringBuilder stringBuilder = new StringBuilder();
@@ -4089,6 +4089,32 @@ public class MallScenarioUtil extends TestCaseCommon {
         json.put("day",day);
         json.put("date_type",date_type);
         json.put("shop_id",shop_id);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    /**
+     *@description: 楼层列表
+     *@time:
+     */
+    public JSONObject floor_list() throws Exception {
+        String url = "/mall/shop/floor-list";
+        JSONObject json = new JSONObject();
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    /**
+     *@description: 楼层导航
+     *@time:
+     */
+    public JSONObject shop_list(String name,Integer floor_id,int page,int size) throws Exception {
+        String url = "/mall/shop/shop-navigation";
+        JSONObject json = new JSONObject();
+        json.put("name",name);
+        json.put("floor_id",floor_id);
+        json.put("page",page);
+        json.put("size",size);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
