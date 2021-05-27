@@ -8,8 +8,8 @@ import com.haisheng.framework.testng.bigScreen.crm.commonDs.PackFunction;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicParm;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.destDriver;
-import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.finishReceive;
+import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.TestDriver;
+import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.FinishReception;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -23,7 +23,7 @@ import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 
-public class testDriverCase extends TestCaseCommon implements TestCaseStd {
+public class TestDriverCase extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     DateTimeUtil dt = new DateTimeUtil();
     PublicParm pp = new PublicParm();
@@ -208,7 +208,7 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
             int driverNum[] = pf.driverSum();         //计数函数
 
             JSONObject object = pf.creatCust();  //创建新客
-            finishReceive fr = new finishReceive();
+            FinishReception fr = new FinishReception();
             fr.customer_id = object.getString("customerId");
             fr.reception_id = object.getString("reception_id");
             fr.name = object.getString("name");
@@ -262,7 +262,7 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject object = pf.creatCust();  //创建新客
-            finishReceive fr = new finishReceive();
+            FinishReception fr = new FinishReception();
             fr.customer_id = object.getString("customerId");
             fr.reception_id = object.getString("reception_id");
             fr.name = object.getString("name");
@@ -318,7 +318,7 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
             int driverNum[] = pf.driverSum();
 
             JSONObject object = pf.creatCust();  //创建新客
-            finishReceive fr = new finishReceive();
+            FinishReception fr = new FinishReception();
             fr.customer_id = object.getString("customerId");
             fr.reception_id = object.getString("reception_id");
             fr.name = object.getString("name");
@@ -376,7 +376,7 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
             int driverNum[] = pf.driverSum();
 
             JSONObject object = pf.creatCust();  //创建新客
-            finishReceive fr = new finishReceive();
+            FinishReception fr = new FinishReception();
             fr.customer_id = object.getString("customerId");
             fr.reception_id = object.getString("reception_id");
             fr.name = object.getString("name");
@@ -418,7 +418,7 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
             int driverNum[] = pf.driverSum();
 
             JSONObject object = pf.creatCust();  //创建新客
-            finishReceive fr = new finishReceive();
+            FinishReception fr = new FinishReception();
             fr.customer_id = object.getString("customerId");
             fr.reception_id = object.getString("reception_id");
             fr.name = object.getString("name");
@@ -459,7 +459,7 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject object = pf.creatCustOld(pp.customer_phone_numberO);
-            finishReceive fr = new finishReceive();
+            FinishReception fr = new FinishReception();
             fr.customer_id = object.getString("customerId");
             fr.reception_id = object.getString("reception_id");
             fr.name = "编辑";
@@ -497,7 +497,7 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject object = pf.creatCustOld(pp.customer_phone_numberO);  //创建新客
-            finishReceive fr = new finishReceive();
+            FinishReception fr = new FinishReception();
             fr.customer_id = object.getString("customerId");
             fr.reception_id = object.getString("reception_id");
             fr.name = "编辑";
@@ -540,7 +540,7 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
         try {
             JSONObject json;
             json = pf.creatCustOld(pp.customer_phone_numberO);
-            finishReceive fr = new finishReceive();
+            FinishReception fr = new FinishReception();
             fr.name = "试驾编辑";
             fr.reception_id = json.getString("id");
             fr.customer_id = json.getString("customerId");
@@ -549,7 +549,7 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
             fr.reception_type = "BB";
             fr.remark = new JSONArray();
 
-            destDriver dd = new destDriver();
+            TestDriver dd = new TestDriver();
 
             JSONArray list = crm.testDriverList().getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
@@ -614,7 +614,7 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
         try {
             JSONObject json;
             json = pf.creatCustOld(pp.customer_phone_numberO);
-            finishReceive fr = new finishReceive();
+            FinishReception fr = new FinishReception();
             fr.name = "试驾编辑";
             fr.reception_id = json.getString("id");
             fr.customer_id = json.getString("customerId");
@@ -622,7 +622,7 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
             fr.phoneList = json.getJSONArray("phoneList");
             fr.reception_type = "BB";
             fr.remark = new JSONArray();
-            destDriver dd = new destDriver();
+            TestDriver dd = new TestDriver();
             JSONArray list = crm.testDriverList().getJSONArray("list");
             int driverTimeList = 0;
             for (int i = 0; i < list.size(); i++) {
@@ -664,7 +664,7 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
         try {
             JSONObject json;
             json = pf.creatCustOld(pp.customer_phone_numberO);
-            finishReceive fr = new finishReceive();
+            FinishReception fr = new FinishReception();
             fr.name = "试驾编辑";
             fr.reception_id = json.getString("id");
             fr.customer_id = json.getString("customerId");
@@ -672,7 +672,7 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
             fr.phoneList = json.getJSONArray("phoneList");
             fr.reception_type = "BB";
             fr.remark = new JSONArray();
-            destDriver dd = new destDriver();
+            TestDriver dd = new TestDriver();
             JSONArray list = crm.testDriverList().getJSONArray("list");
             int driverTimeList = 0;
             for (int i = 0; i < list.size(); i++) {
@@ -716,7 +716,7 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject json = pf.creatCustOld(pp.customer_phone_numberE);
-            finishReceive fr = new finishReceive();
+            FinishReception fr = new FinishReception();
             fr.name = "校验必填项";
             fr.reception_id = json.getString("reception_id");
             fr.customer_id = json.getString("customerId");
@@ -727,7 +727,7 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
             String phone = pp.customer_phone_numberE;
 
             JSONObject driverCar = pf.cartime();
-            destDriver dd = new destDriver();
+            TestDriver dd = new TestDriver();
 
             dd.test_drive_car = driverCar.getLong("test_car_id");
             dd.apply_time = driverCar.getString("apply_time");
@@ -786,7 +786,7 @@ public class testDriverCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject object = pf.creatCustOld(pp.customer_phone_numberO);
-            finishReceive fr = new finishReceive();
+            FinishReception fr = new FinishReception();
             fr.customer_id = object.getString("customerId");
             fr.reception_id = object.getString("reception_id");
             fr.name = "编辑";

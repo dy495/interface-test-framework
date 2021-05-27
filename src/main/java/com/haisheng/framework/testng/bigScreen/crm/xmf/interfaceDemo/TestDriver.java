@@ -6,7 +6,7 @@ import com.haisheng.framework.util.FileUtil;
 
 import java.text.ParseException;
 
-public class destDriver {
+public class TestDriver {
     public static DateTimeUtil dt = new DateTimeUtil();
     PublicParm pp=new PublicParm();
     FileUtil file = new FileUtil();
@@ -32,6 +32,6 @@ public class destDriver {
     public Long test_drive_car;
     public boolean checkCode=true;
     public String Empty;
-    public destDriver() throws ParseException {
+    public TestDriver() throws ParseException {
     }
 }

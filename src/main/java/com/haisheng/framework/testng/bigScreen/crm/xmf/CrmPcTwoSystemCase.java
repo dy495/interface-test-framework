@@ -10,7 +10,7 @@ import com.haisheng.framework.testng.bigScreen.crm.commonDs.PackFunction;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicParm;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.createArticle;
+import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.CreateArticle;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -1976,7 +1976,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             crm.login(pp.zongjingli, pp.adminpassword);
-            createArticle ca = new createArticle();
+            CreateArticle ca = new CreateArticle();
             ca.customer_types = new String[]{"PRE_SALES", "AFTER_SALES"};
             ca.customer_level = new int[]{8, 6, 3, 2, 1, 7, 4, 16};
             ca.customer_property = new String[]{"LOST", "LOYAL", "MAINTENANCE"};
@@ -1998,7 +1998,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             crm.login(pp.zongjingli, pp.adminpassword);
-            createArticle ca = new createArticle();
+            CreateArticle ca = new CreateArticle();
             ca.checkCode = false;
             ca.Empty = parm;
             JSONObject data = crm.createArticle(ca);
@@ -2022,7 +2022,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             crm.login(pp.zongjingli, pp.adminpassword);
-            createArticle ca = new createArticle();
+            CreateArticle ca = new CreateArticle();
             ca.customer_types = new String[]{"PRE_SALES", "AFTER_SALES"};
             ca.customer_level = new int[]{8, 6, 3, 2, 1, 7, 4, 16};
             ca.customer_property = new String[]{"LOST", "LOYAL", "MAINTENANCE"};

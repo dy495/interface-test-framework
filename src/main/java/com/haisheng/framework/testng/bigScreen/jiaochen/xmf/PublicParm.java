@@ -64,7 +64,7 @@ public class PublicParm {
     public String String_20="一二三四五六七八九十一二三四五六七八九十";
     public String String_200="一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十";
     public String StoreCommodityId="85";  //TODO:编辑需要的商品套餐的名字
-    public String importFilepath="src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/importfile.xlsx";   //导入工单文件路径
+    public String importFilepath="src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/测试.xlsx";   //导入工单文件路径
     public String importFilepath2="src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/importfile2.xlsx";   //导入工单文件路径
     public String importFilepath3="src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/importPotentialCustomerfile.xlsx";   //导入工单文件路径
     //其他小程序用户tocken和车牌号信息
@@ -120,7 +120,6 @@ public class PublicParm {
        dd.add(116.29845);
         return dd;
     }
-    //3.0
 
 
 }

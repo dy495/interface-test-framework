@@ -9,7 +9,7 @@
 
     <test name="daily-rgn" preserve-order="true">
         <classes>
-            <class name="com.haisheng.framework.testng.bigScreen.crm.xmf.Crm2_1AppX_11receipt"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.crm.xmf.Crm2_1Appx_reception_11"></class>
         </classes>
     </test>
 </suite>

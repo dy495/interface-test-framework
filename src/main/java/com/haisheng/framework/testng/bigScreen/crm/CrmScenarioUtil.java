@@ -1154,7 +1154,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    public JSONObject driveradd6(destDriver dd) throws Exception {
+    public JSONObject driveradd6(TestDriver dd) throws Exception {
         String url = "/porsche/daily-work/test-drive/app/addWithCustomerInfo";
 
         JSONObject json1 = new JSONObject();
@@ -1375,7 +1375,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //新建交车 2.1修改
-    public JSONObject deliverAddDX(deliverCar dc) throws Exception {
+    public JSONObject deliverAddDX(DeliverCar dc) throws Exception {
         String url = "/porsche/daily-work/deliver-car/app/addWithCustomerInfo";
         JSONObject json1 = new JSONObject();
         json1.put("customer_id", dc.customer_id);
@@ -2188,7 +2188,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    public JSONObject createArticle(createArticle ca) throws Exception {
+    public JSONObject createArticle(CreateArticle ca) throws Exception {
         String url = "/porsche/article/add";
         JSONObject json1 = new JSONObject();
         json1.put("position", ca.positions);
@@ -2286,7 +2286,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    public JSONObject createArticleReal(createArticle ca) throws Exception {
+    public JSONObject createArticleReal(CreateArticle ca) throws Exception {
         String url = "/porsche/article/add";
         JSONObject json1 = new JSONObject();
         json1.put("position", ca.positions);
@@ -5242,7 +5242,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //购车
-    public JSONObject addOrderCar1(orderCar oc) throws Exception {
+    public JSONObject addOrderCar1(OrderCar oc) throws Exception {
         String url = "/porsche/app/customer/add-order-car";
         JSONObject json1 = new JSONObject();
         json1.put("car_model_id", oc.car_model_id);
@@ -5469,7 +5469,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(result).getJSONArray("data");
     }
 
-    public JSONArray nonReceptionList(selectTest ss) {
+    public JSONArray nonReceptionList(SelectTest ss) {
         String url = "/porsche/app/customer/non_reception_list";
         JSONObject object = new JSONObject();
         if (!StringUtils.isEmpty(ss.startTime)) {
@@ -5484,7 +5484,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(result).getJSONArray("data");
     }
 
-    public JSONObject finishReception3(finishReceive pm) throws Exception {
+    public JSONObject finishReception3(FinishReception pm) throws Exception {
         String url = "/porsche/app/customer/finishReception";
         JSONObject json1 = new JSONObject();
         json1.put("customer_id", pm.customer_id);
@@ -5534,7 +5534,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return result;
     }
 
-    public JSONObject editCustomer(finishReceive pm) throws Exception {
+    public JSONObject editCustomer(FinishReception pm) throws Exception {
         String url = "/porsche/app/customer/edit";
         JSONObject json1 = new JSONObject();
         json1.put("customer_id", pm.customer_id);

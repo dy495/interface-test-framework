@@ -2,7 +2,7 @@ package com.haisheng.framework.testng.bigScreen.crmOnline.xmf.interfaceOnline;
 
 import com.haisheng.framework.util.DateTimeUtil;
 
-public class orderCarOnline {
+public class OrderCarOnline {
     public static DateTimeUtil dt = new DateTimeUtil();
     public String receptionId;
     public String customer_id;

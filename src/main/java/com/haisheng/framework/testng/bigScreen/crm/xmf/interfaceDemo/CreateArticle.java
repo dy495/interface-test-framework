@@ -5,7 +5,7 @@ import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.FileUtil;
 
 
-public class createArticle {
+public class CreateArticle {
     public static DateTimeUtil dt = new DateTimeUtil();
     PublicParm pp=new PublicParm();
     FileUtil file = new FileUtil();

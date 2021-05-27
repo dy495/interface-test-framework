@@ -20,7 +20,7 @@ import java.lang.reflect.Method;
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.lang.Integer.parseInt;
 
-public class appointLimitOnline extends TestCaseCommon implements TestCaseStd {
+public class AppointLimitOnline extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtilOnlineX crm = CrmScenarioUtilOnlineX.getInstance();
     DateTimeUtil dt = new DateTimeUtil();
     PublicParmOnline pp = new PublicParmOnline();

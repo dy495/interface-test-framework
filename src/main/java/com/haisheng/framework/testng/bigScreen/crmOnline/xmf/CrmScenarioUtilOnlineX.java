@@ -11,8 +11,8 @@ import com.arronlong.httpclientutil.HttpClientUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.*;
 import com.haisheng.framework.testng.bigScreen.crmOnline.commonDsOnline.CustomerInfoOnline;
-import com.haisheng.framework.testng.bigScreen.crmOnline.xmf.interfaceOnline.finishReceiveOnline;
-import com.haisheng.framework.testng.bigScreen.crmOnline.xmf.interfaceOnline.orderCarOnline;
+import com.haisheng.framework.testng.bigScreen.crmOnline.xmf.interfaceOnline.FinishReceptionOnline;
+import com.haisheng.framework.testng.bigScreen.crmOnline.xmf.interfaceOnline.OrderCarOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.util.HttpExecutorUtil;
@@ -1305,7 +1305,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    public JSONObject driveradd6(destDriver dd) throws Exception {
+    public JSONObject driveradd6(TestDriver dd) throws Exception {
         String url = "/porsche/daily-work/test-drive/app/addWithCustomerInfo";
 
         JSONObject json1 = new JSONObject();
@@ -1526,7 +1526,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
     }
 
     //新建交车 2.1修改
-    public JSONObject deliverAddDX(deliverCar dc) throws Exception {
+    public JSONObject deliverAddDX(DeliverCar dc) throws Exception {
         String url = "/porsche/daily-work/deliver-car/app/addWithCustomerInfo";
         JSONObject json1 = new JSONObject();
         json1.put("customer_id", dc.customer_id);
@@ -5091,7 +5091,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
     }
 
     //购车
-    public JSONObject addOrderCar1(orderCarOnline oc) throws Exception {
+    public JSONObject addOrderCar1(OrderCarOnline oc) throws Exception {
         String url = "/porsche/app/customer/add-order-car";
         JSONObject json1 = new JSONObject();
         json1.put("car_model_id", oc.car_model_id);
@@ -5306,7 +5306,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
         return JSON.parseObject(result).getJSONArray("data");
     }
 
-    public JSONArray nonReceptionList(selectTest ss) {
+    public JSONArray nonReceptionList(SelectTest ss) {
         String url = "/porsche/app/customer/non_reception_list";
         JSONObject object = new JSONObject();
         if (!StringUtils.isEmpty(ss.startTime)) {
@@ -5321,7 +5321,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
         return JSON.parseObject(result).getJSONArray("data");
     }
 
-    public JSONObject finishReception3(finishReceiveOnline pm) throws Exception {
+    public JSONObject finishReception3(FinishReceptionOnline pm) throws Exception {
         String url = "/porsche/app/customer/finishReception";
         JSONObject json1 = new JSONObject();
         json1.put("customer_id", pm.customer_id);
@@ -5371,7 +5371,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
         return result;
     }
 
-    public JSONObject editCustomer(finishReceiveOnline pm) throws Exception {
+    public JSONObject editCustomer(FinishReceptionOnline pm) throws Exception {
         String url = "/porsche/app/customer/edit";
         JSONObject json1 = new JSONObject();
         json1.put("customer_id", pm.customer_id);

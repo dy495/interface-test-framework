@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
-import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.finishReceive;
+import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.FinishReception;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.FileUtil;
 
@@ -337,7 +337,7 @@ public class PackFunction {
         //前台分配老客
         JSONObject json;
         json = creatCustOld(pp.customer_phone_number);
-        finishReceive fr = new finishReceive();
+        FinishReception fr = new FinishReception();
         fr.name = pp.customer_name;
         fr.reception_id = json.getString("id");
         fr.customer_id = json.getString("customerId");

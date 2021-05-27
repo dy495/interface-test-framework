@@ -3,7 +3,7 @@ package com.haisheng.framework.testng.bigScreen.crmOnline.xmf;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crmOnline.PublicParmOnline;
-import com.haisheng.framework.testng.bigScreen.crmOnline.xmf.interfaceOnline.finishReceiveOnline;
+import com.haisheng.framework.testng.bigScreen.crmOnline.xmf.interfaceOnline.FinishReceptionOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -93,7 +93,7 @@ public class Crm2_1AppXOnline23_receipt extends TestCaseCommon implements TestCa
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject json = pf.creatCust();
-            finishReceiveOnline fr = new finishReceiveOnline();
+            FinishReceptionOnline fr = new FinishReceptionOnline();
             fr.name = json.getString("name");
             fr.reception_id = json.getString("reception_id");
             fr.customer_id = json.getString("customerId");
@@ -116,7 +116,7 @@ public class Crm2_1AppXOnline23_receipt extends TestCaseCommon implements TestCa
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject json = pf.creatCust();
-            finishReceiveOnline fr = new finishReceiveOnline();
+            FinishReceptionOnline fr = new FinishReceptionOnline();
             fr.name = json.getString("name");
             fr.reception_id = json.getString("reception_id");
             fr.customer_id = json.getString("customerId");

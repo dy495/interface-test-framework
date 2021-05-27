@@ -7,7 +7,7 @@ import com.haisheng.framework.util.FileUtil;
 
 import java.util.Random;
 
-public class deliverCar {
+public class DeliverCar {
     public static DateTimeUtil dt = new DateTimeUtil();
     PublicParm pp=new PublicParm();
     FileUtil file = new FileUtil();

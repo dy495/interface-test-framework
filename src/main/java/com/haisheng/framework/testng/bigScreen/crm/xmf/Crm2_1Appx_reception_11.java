@@ -5,7 +5,7 @@ import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PackFunction;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicParm;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.finishReceive;
+import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.FinishReception;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -25,7 +25,7 @@ import java.lang.reflect.Method;
  **/
 
 
-public class Crm2_1AppX_11receipt extends TestCaseCommon implements TestCaseStd {
+public class Crm2_1Appx_reception_11 extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     DateTimeUtil dt = new DateTimeUtil();
     PublicParm pp = new PublicParm();
@@ -95,7 +95,7 @@ public class Crm2_1AppX_11receipt extends TestCaseCommon implements TestCaseStd 
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject json = pf.creatCust();
-            finishReceive fr = new finishReceive();
+            FinishReception fr = new FinishReception();
             fr.name = json.getString("name");
             fr.reception_id = json.getString("reception_id");
             fr.customer_id = json.getString("customerId");
@@ -119,7 +119,7 @@ public class Crm2_1AppX_11receipt extends TestCaseCommon implements TestCaseStd 
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject json = pf.creatCust();
-            finishReceive fr = new finishReceive();
+            FinishReception fr = new FinishReception();
             fr.name = json.getString("name");
             fr.reception_id = json.getString("reception_id");
             fr.customer_id = json.getString("customerId");

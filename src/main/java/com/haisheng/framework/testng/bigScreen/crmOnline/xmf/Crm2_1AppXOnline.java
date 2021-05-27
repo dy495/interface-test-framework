@@ -6,10 +6,10 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
-import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.deliverCar;
+import com.haisheng.framework.testng.bigScreen.crm.xmf.interfaceDemo.DeliverCar;
 import com.haisheng.framework.testng.bigScreen.crmOnline.PublicParmOnline;
-import com.haisheng.framework.testng.bigScreen.crmOnline.xmf.interfaceOnline.finishReceiveOnline;
-import com.haisheng.framework.testng.bigScreen.crmOnline.xmf.interfaceOnline.orderCarOnline;
+import com.haisheng.framework.testng.bigScreen.crmOnline.xmf.interfaceOnline.FinishReceptionOnline;
+import com.haisheng.framework.testng.bigScreen.crmOnline.xmf.interfaceOnline.OrderCarOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -112,7 +112,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
             String type = "MSG";
             crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
             int total = crm.messageList(20, type).getInteger("total");
-            finishReceiveOnline fr = new finishReceiveOnline();
+            FinishReceptionOnline fr = new FinishReceptionOnline();
             //预约接待完成
             JSONObject json = pf.creatCustOld(pp.customer_phone_number);
             fr.name = pp.customer_name;
@@ -186,7 +186,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
             int num[] = pf.deliverSum();
 
             JSONObject json = pf.creatCust();
-            finishReceiveOnline fr = new finishReceiveOnline();
+            FinishReceptionOnline fr = new FinishReceptionOnline();
             fr.name = "新客交车数据校验";
             fr.reception_id = json.getString("reception_id");
             fr.customer_id = json.getString("customerId");
@@ -246,7 +246,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
             int num[] = pf.deliverSum();
 
             JSONObject json = pf.creatCust();
-            finishReceiveOnline fr = new finishReceiveOnline();
+            FinishReceptionOnline fr = new FinishReceptionOnline();
             fr.name = "新客交车数据校验";
             fr.reception_id = json.getString("reception_id");
             fr.customer_id = json.getString("customerId");
@@ -296,7 +296,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject json = pf.creatCust();
-            finishReceiveOnline fr = new finishReceiveOnline();
+            FinishReceptionOnline fr = new FinishReceptionOnline();
             fr.name = json.getString("name");
             fr.reception_id = json.getString("reception_id");
             fr.customer_id = json.getString("customerId");
@@ -745,7 +745,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject object = pf.creatCustOld(pp.customer_phone_numberO);
-            finishReceiveOnline fr = new finishReceiveOnline();
+            FinishReceptionOnline fr = new FinishReceptionOnline();
             fr.customer_id = object.getString("customerId");
             fr.reception_id = object.getString("reception_id");
             fr.name = "编辑";
@@ -796,7 +796,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
                 total = list.size();
             }
             JSONObject object = pf.creatCust();
-            finishReceiveOnline fr = new finishReceiveOnline();
+            FinishReceptionOnline fr = new FinishReceptionOnline();
             fr.customer_id = object.getString("customerId");
             fr.reception_id = object.getString("reception_id");
             fr.name = object.getString("name");
@@ -842,7 +842,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
                 total = list.size();
             }
             JSONObject object = pf.creatCust();
-            finishReceiveOnline fr = new finishReceiveOnline();
+            FinishReceptionOnline fr = new FinishReceptionOnline();
             fr.customer_id = object.getString("customerId");
             fr.reception_id = object.getString("reception_id");
             fr.name = object.getString("name");
@@ -1070,7 +1070,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject object = pf.creatCustOld(pp.customer_phone_numberO);
-            finishReceiveOnline fr = new finishReceiveOnline();
+            FinishReceptionOnline fr = new FinishReceptionOnline();
             fr.customer_id = object.getString("customerId");
             fr.reception_id = object.getString("reception_id");
             fr.phoneList = object.getJSONArray("phoneList");
@@ -1113,7 +1113,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject object = pf.creatCustOld(pp.customer_phone_numberO);
-            finishReceiveOnline fr = new finishReceiveOnline();
+            FinishReceptionOnline fr = new FinishReceptionOnline();
             fr.customer_id = object.getString("customerId");
             fr.reception_id = object.getString("reception_id");
             fr.name = "编辑客户";
@@ -1156,7 +1156,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject object = pf.creatCustOld(pp.customer_phone_numberO);
-            finishReceiveOnline fr = new finishReceiveOnline();
+            FinishReceptionOnline fr = new FinishReceptionOnline();
             fr.customer_id = object.getString("customerId");
             fr.reception_id = object.getString("reception_id");
             fr.name = "编辑客户";
@@ -1193,7 +1193,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject object = pf.creatCustOld(pp.customer_phone_numberO);
-            finishReceiveOnline fr = new finishReceiveOnline();
+            FinishReceptionOnline fr = new FinishReceptionOnline();
             fr.customer_id = object.getString("customerId");
             fr.reception_id = object.getString("reception_id");
             fr.name = "编辑客户";
@@ -1238,7 +1238,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject object = pf.creatCust();
-            finishReceiveOnline fr = new finishReceiveOnline();
+            FinishReceptionOnline fr = new FinishReceptionOnline();
             fr.customer_id = object.getString("customerId");
             fr.reception_id = object.getString("reception_id");
             fr.phoneList = object.getJSONArray("phoneList");
@@ -1273,7 +1273,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject json = pf.creatCustOld(pp.customer_phone_numberO);
-            finishReceiveOnline fr = new finishReceiveOnline();
+            FinishReceptionOnline fr = new FinishReceptionOnline();
             fr.name = "编辑";
             fr.reception_id = json.getString("reception_id");
             fr.customer_id = json.getString("customerId");
@@ -1283,7 +1283,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
             fr.remark = new JSONArray();
             int buyCatTotal = crm.buyCarList(fr.customer_id).getJSONArray("list").size();
 
-            orderCarOnline oc = new orderCarOnline();
+            OrderCarOnline oc = new OrderCarOnline();
             oc.customerName = "交车编辑";
             oc.customer_id = fr.customer_id;
             oc.receptionId = fr.reception_id;
@@ -1336,7 +1336,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
             Random random = new Random();
             JSONObject json;
             json = pf.creatCustOld(pp.customer_phone_numberO);
-            finishReceiveOnline fr = new finishReceiveOnline();
+            FinishReceptionOnline fr = new FinishReceptionOnline();
             fr.name = "交车编辑";
             fr.reception_id = json.getString("id");
             fr.customer_id = json.getString("customerId");
@@ -1349,7 +1349,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
                     pp.vehicle_code_same1, pp.vehicle_code_same2, // 其他客户底盘号、试驾车管理中底盘号
             };
 
-            orderCarOnline oc = new orderCarOnline();
+            OrderCarOnline oc = new OrderCarOnline();
             oc.customerName = "交车编辑";
             oc.customer_id = fr.customer_id;
             oc.receptionId = fr.reception_id;
@@ -1398,7 +1398,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
                     "is_assessed",};
 
             JSONObject json = pf.creatCustOld(pp.customer_phone_numberE);
-            finishReceiveOnline fr = new finishReceiveOnline();
+            FinishReceptionOnline fr = new FinishReceptionOnline();
             fr.name = "必填参数空";
             fr.reception_id = json.getString("reception_id");
             fr.customer_id = json.getString("customerId");
@@ -1430,7 +1430,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject json = pf.creatCustOld(pp.customer_phone_numberE);
-            finishReceiveOnline fr = new finishReceiveOnline();
+            FinishReceptionOnline fr = new FinishReceptionOnline();
             fr.name = "校验必填项";
             fr.reception_id = json.getString("reception_id");
             fr.customer_id = json.getString("customerId");
@@ -1438,7 +1438,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
             fr.phoneList = json.getJSONArray("phoneList");
             fr.reception_type = "BB";
 
-            orderCarOnline oc = new orderCarOnline();
+            OrderCarOnline oc = new OrderCarOnline();
             oc.customerName = "交车编辑";
             oc.customer_id = fr.customer_id;
             oc.receptionId = fr.reception_id;
@@ -1472,7 +1472,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject json = pf.creatCustOld(pp.customer_phone_numberE);
-            finishReceiveOnline fr = new finishReceiveOnline();
+            FinishReceptionOnline fr = new FinishReceptionOnline();
             fr.name = "校验必填项";
             fr.reception_id = json.getString("reception_id");
             fr.customer_id = json.getString("customerId");
@@ -1480,7 +1480,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
             fr.phoneList = json.getJSONArray("phoneList");
             fr.reception_type = "BB";
 
-            orderCarOnline oc = new orderCarOnline();
+            OrderCarOnline oc = new OrderCarOnline();
             oc.customerName = "交车编辑";
             oc.customer_id = fr.customer_id;
             oc.receptionId = fr.reception_id;
@@ -1488,7 +1488,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
             Long car_id = crm.addOrderCar1(oc).getLong("car_id");
 //            Long car_id = crm.customerOrderCar(fr.customer_id).getJSONArray("list").getJSONObject(0).getLong("id");
 
-            deliverCar dc = new deliverCar();
+            DeliverCar dc = new DeliverCar();
             dc.customer_name = "交车编辑";
             dc.reception_id = fr.reception_id;
             dc.customer_id = fr.customer_id;
@@ -1540,7 +1540,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject json = pf.creatCustOld(pp.customer_phone_numberE);
-            finishReceiveOnline fr = new finishReceiveOnline();
+            FinishReceptionOnline fr = new FinishReceptionOnline();
             fr.name = "校验必填项";
             fr.reception_id = json.getString("reception_id");
             fr.customer_id = json.getString("customerId");
@@ -1548,13 +1548,13 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
             fr.phoneList = json.getJSONArray("phoneList");
             fr.reception_type = "BB";
 
-            orderCarOnline oc = new orderCarOnline();
+            OrderCarOnline oc = new OrderCarOnline();
             oc.customerName = "交车编辑";
             oc.customer_id = fr.customer_id;
             oc.receptionId = fr.reception_id;
 
             Long car_id = crm.addOrderCar1(oc).getLong("car_id");
-            deliverCar dc = new deliverCar();
+            DeliverCar dc = new DeliverCar();
             dc.customer_name = "必填";
             dc.reception_id = fr.reception_id;
             dc.customer_id = fr.customer_id;
@@ -1582,7 +1582,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject json = pf.creatCust();
-            finishReceiveOnline fr = new finishReceiveOnline();
+            FinishReceptionOnline fr = new FinishReceptionOnline();
             fr.name = json.getString("name");
             fr.reception_id = json.getString("reception_id");
             fr.customer_id = json.getString("customerId");
@@ -1590,7 +1590,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
             fr.phoneList = json.getJSONArray("phoneList");
             fr.reception_type = "FU";
 
-            orderCarOnline oc = new orderCarOnline();
+            OrderCarOnline oc = new OrderCarOnline();
             oc.customerName = fr.name;
             oc.customer_id = fr.customer_id;
             oc.receptionId = fr.reception_id;
@@ -1599,7 +1599,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
 //            Long car_id = crm.customerOrderCar(fr.customer_id).getJSONArray("list").getJSONObject(0).getLong("id");
             String customer_level_name = crm.customerMyReceptionList("", "", "", 10, 1).getJSONArray("list").getJSONObject(0).getString("customer_level_name");
 
-            deliverCar dc = new deliverCar();
+            DeliverCar dc = new DeliverCar();
             dc.customer_name = fr.name;
             dc.reception_id = fr.reception_id;
             dc.customer_id = fr.customer_id;
@@ -1627,7 +1627,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject object = pf.creatCust();
-            finishReceiveOnline fr = new finishReceiveOnline();
+            FinishReceptionOnline fr = new FinishReceptionOnline();
             fr.customer_id = object.getString("customerId");
             fr.reception_id = object.getString("reception_id");
             fr.name = object.getString("name");
@@ -1673,7 +1673,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
         try {
             JSONObject object = pf.creatCust();
 
-            finishReceiveOnline fr = new finishReceiveOnline();
+            FinishReceptionOnline fr = new FinishReceptionOnline();
             fr.customer_id = object.getString("customerId");
             fr.reception_id = object.getString("reception_id");
             fr.name = object.getString("name");
@@ -1720,7 +1720,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
             crm.dccCreate(name, phone, "");
             JSONObject object = pf.creatCustOld(phone);
 
-            finishReceiveOnline fr = new finishReceiveOnline();
+            FinishReceptionOnline fr = new FinishReceptionOnline();
             fr.name=name;
             fr.customer_id = object.getString("customerId");
             fr.reception_id = object.getString("reception_id");
@@ -1752,7 +1752,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject object = pf.creatCust();
-            finishReceiveOnline fr = new finishReceiveOnline();
+            FinishReceptionOnline fr = new FinishReceptionOnline();
             fr.customer_id = object.getString("customerId");
             fr.reception_id = object.getString("reception_id");
             fr.phoneList = object.getJSONArray("phoneList");

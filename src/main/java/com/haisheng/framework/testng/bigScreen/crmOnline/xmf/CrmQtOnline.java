@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crmOnline.PublicParmOnline;
-import com.haisheng.framework.testng.bigScreen.crmOnline.xmf.interfaceOnline.finishReceiveOnline;
+import com.haisheng.framework.testng.bigScreen.crmOnline.xmf.interfaceOnline.FinishReceptionOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -376,7 +376,7 @@ public class CrmQtOnline extends TestCaseCommon implements TestCaseStd {
 //            ll.put("id", 0);
 //            ll.put("is_decision", true);
 
-            finishReceiveOnline pm = new finishReceiveOnline();
+            FinishReceptionOnline pm = new FinishReceptionOnline();
             pm.customer_id = customer_id;
             pm.reception_id = receiptId;
             pm.belongs_sale_id = belong_sale_id;
@@ -534,7 +534,7 @@ public class CrmQtOnline extends TestCaseCommon implements TestCaseStd {
             int beforeReceipt[]=pf.receiptSum();
             JSONObject json = pf.creatCust();
 
-            finishReceiveOnline pm = new finishReceiveOnline();
+            FinishReceptionOnline pm = new FinishReceptionOnline();
             pm.customer_id = json.getString("customerId");
             pm.reception_id = json.getString("reception_id");
             pm.belongs_sale_id = json.getString("sale_id");
@@ -618,7 +618,7 @@ public class CrmQtOnline extends TestCaseCommon implements TestCaseStd {
 
             crm.login(loginTemp, pp.adminpassword);
 
-            finishReceiveOnline pm = new finishReceiveOnline();
+            FinishReceptionOnline pm = new FinishReceptionOnline();
             pm.customer_id = customer_id;
             pm.reception_id = receiptId;
 
@@ -655,7 +655,7 @@ public class CrmQtOnline extends TestCaseCommon implements TestCaseStd {
             String customer_id=data.getString("customer_id");
             String customer_phone=pf.genPhoneNum();
 
-            finishReceiveOnline pm = new finishReceiveOnline();
+            FinishReceptionOnline pm = new FinishReceptionOnline();
             pm.customer_id = customer_id;
 
             pm.name = data.getString("customer_name");
@@ -713,7 +713,7 @@ public class CrmQtOnline extends TestCaseCommon implements TestCaseStd {
     public void qtFenpei() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            finishReceiveOnline fr=new finishReceiveOnline();
+            FinishReceptionOnline fr=new FinishReceptionOnline();
             crm.login(pp.qiantai, pp.adminpassword);
             int totaol=crm.qtreceptionPage("","","","1","10").getInteger("total");
 
@@ -762,7 +762,7 @@ public class CrmQtOnline extends TestCaseCommon implements TestCaseStd {
 
             JSONObject json = pf.creatCust();
 
-            finishReceiveOnline pm = new finishReceiveOnline();
+            FinishReceptionOnline pm = new FinishReceptionOnline();
             pm.customer_id = json.getString("customerId");
             pm.reception_id = json.getString("reception_id");
             pm.belongs_sale_id = json.getString("sale_id");

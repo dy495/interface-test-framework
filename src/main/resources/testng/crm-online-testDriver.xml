@@ -12,7 +12,7 @@
 <!--            <class name="com.haisheng.framework.testng.bigScreen.crmOnline.xmf.testDriverCaseOnline"></class>-->
 <!--            <class name="com.haisheng.framework.testng.bigScreen.crmOnline.xmf.CrmQtOnline"></class>-->
 <!--            <class name="com.haisheng.framework.testng.bigScreen.crmOnline.xmf.CrmQtOnlineWarm"></class>-->
-<!--            <class name="com.haisheng.framework.testng.bigScreen.crmOnline.xmf.appointLimitOnline"></class>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.crmOnline.xmf.AppointLimitOnline"></class>-->
             <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.AppletManagerCaseOnline"/>
         </classes>
     </test>

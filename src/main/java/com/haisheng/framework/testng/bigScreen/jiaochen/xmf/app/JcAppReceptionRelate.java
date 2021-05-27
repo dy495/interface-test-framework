@@ -87,7 +87,7 @@ public class JcAppReceptionRelate extends TestCaseCommon implements TestCaseStd 
     public void initial() {
         initial1();
         qaDbUtil.openConnection();
-        BeforeStart();               //调试单个case时注释此行
+        beforeStart();               //调试单个case时注释此行
     }
 
     @AfterClass
@@ -109,7 +109,7 @@ public class JcAppReceptionRelate extends TestCaseCommon implements TestCaseStd 
     }
 
     //操作
-    public void BeforeStart() {
+    public void beforeStart() {
         try {
             DataTemp dataTemp = new DataTemp();
             dataTemp.setDataName(dataName);
@@ -134,7 +134,7 @@ public class JcAppReceptionRelate extends TestCaseCommon implements TestCaseStd 
     }
 
     @Test()  //接待后pc接待列表+1
-    public void Pc_appointmentMessage() {
+    public void pcappointmentMessage() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int result2 = pf.pcReceptionPage();  //先调取函数可先验证此接口，在验证数据
@@ -149,7 +149,7 @@ public class JcAppReceptionRelate extends TestCaseCommon implements TestCaseStd 
     }
 
     @Test()  //app任务列数
-    public void AppTask() {
+    public void appTask() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int result2 = pf.appReceptionPage();  //先调取函数可先验证此接口，在验证数据
@@ -164,7 +164,7 @@ public class JcAppReceptionRelate extends TestCaseCommon implements TestCaseStd 
     }
 
     @Test()  //接待后，app今日任务分子分母+1
-    public void AppAppointmentTodayTask() {
+    public void appAppointmentTodayTask() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int appTask[] = pf.appTask();  //先调取函数可先验证此接口，在验证数据

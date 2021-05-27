@@ -23,7 +23,7 @@ import java.lang.reflect.Method;
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.lang.Integer.parseInt;
 
-public class appointLimit extends TestCaseCommon implements TestCaseStd {
+public class AppointmentLimit extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     DateTimeUtil dt = new DateTimeUtil();
     PublicParm pp = new PublicParm();

@@ -11,8 +11,8 @@
         <classes>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase.AppletManagerCase"/>
 <!--            <class name="com.haisheng.framework.testng.bigScreen.crm.xmf.CrmQt"></class>-->
-<!--            <class name="com.haisheng.framework.testng.bigScreen.crm.xmf.testDriverCase"></class>-->
-<!--            <class name="com.haisheng.framework.testng.bigScreen.crm.xmf.appointLimit"></class>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.crm.xmf.TestDriverCase"></class>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.crm.xmf.AppointmentLimit"></class>-->
         </classes>
     </test>
 </suite>

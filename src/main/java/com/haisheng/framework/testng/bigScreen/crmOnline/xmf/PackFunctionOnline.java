@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crmOnline.PublicParmOnline;
-import com.haisheng.framework.testng.bigScreen.crmOnline.xmf.interfaceOnline.finishReceiveOnline;
+import com.haisheng.framework.testng.bigScreen.crmOnline.xmf.interfaceOnline.FinishReceptionOnline;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.FileUtil;
 
@@ -324,7 +324,7 @@ public class PackFunctionOnline {
         //前台分配老客
         JSONObject json;
         json = creatCustOld(pp.customer_phone_number);
-        finishReceiveOnline fr = new finishReceiveOnline();
+        FinishReceptionOnline fr = new FinishReceptionOnline();
         fr.name = pp.customer_name;
         fr.reception_id = json.getString("id");
         fr.customer_id = json.getString("customerId");

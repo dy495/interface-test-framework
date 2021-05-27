@@ -1,18 +1,22 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.xmf.app;
+package com.haisheng.framework.testng.bigScreen.yuntong.xmf;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.commonDs.JsonPathUtil;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletConsultAfterServiceSubmitScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletConsultOnlineExpertsSubmitScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletConsultPreServiceSubmitScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.consultmanagement.ResponseRuleEditScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.followType;
@@ -24,8 +28,6 @@ import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.QADbProxy;
 import com.haisheng.framework.util.QADbUtil;
-import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.ReadContext;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
@@ -35,7 +37,12 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
+public class YongtongApp extends TestCaseCommon implements TestCaseStd {
+
+    private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY;
+
+    public VisitorProxy visitor = new VisitorProxy(PRODUCE);
+    public SupporterUtil util = new SupporterUtil(visitor);
 
     ScenarioUtil jc = new ScenarioUtil();
     PublicParm pp = new PublicParm();
@@ -60,8 +67,8 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.referer = EnumTestProduce.JC_DAILY.getReferer();
-        commonConfig.product=EnumTestProduce.JC_DAILY.getAbbreviation();
+        commonConfig.referer = PRODUCE.getReferer();
+        commonConfig.product=PRODUCE.getAbbreviation();
 
         //replace backend gateway url
         //commonConfig.gateway = "";
@@ -79,8 +86,8 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = "49195";
-        commonConfig.roleId = "2945";
+        commonConfig.shopId = PRODUCE.getShopId();
+        commonConfig.roleId = PRODUCE.getRoleId();
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);
