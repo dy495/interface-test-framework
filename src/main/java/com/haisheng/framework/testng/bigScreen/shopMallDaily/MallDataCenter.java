@@ -2449,6 +2449,47 @@ public class MallDataCenter extends TestCaseCommon implements TestCaseStd {
             saveData("用手机号新增账号,编辑账号,删除账号");
         }
     }
+
+    @Test
+    public void mall_accountAdd_Phone_data() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray roleIdList = new JSONArray();
+            roleIdList.add(6339);
+            JSONArray shopIdList = new JSONArray();
+            shopIdList.add(55456);
+            int status = 1;
+            String type = "PHONE";
+            //获取账号页数量
+            int total = mall.organizationAccountPage("", "", "", "", "", "", page, size).getInteger("total");
+            //用phone新增一个账号
+            JSONObject res = mall.organizationAccountAddTwo("",name,"123456","uid_ef6d2de5", type,null, phone,status,roleIdList,shopIdList);
+            Integer code = res.getInteger("code");
+            Preconditions.checkArgument(code == 1000, "用手机号:" + phone + "新增一个账号失败了");
+            //获取添加后的账号列表
+            int total0 = mall.organizationAccountPage("", "", "", "", "", "", page, size).getInteger("total");
+            int a = total0-total;
+            Preconditions.checkArgument(a==1, "通过手机号添加账号实际添加了:" +a);
+            //从列表获取刚刚新增的那个账户的名称进行搜获获取她的account
+            JSONArray accountList = mall.organizationAccountPage(name, "", "", phone, "", "", page, size).getJSONArray("list");
+            String account = accountList.getJSONObject(0).getString("account");
+//            //新建后编辑账号
+            JSONObject res1 = mall.organizationAccountEditTwo(account,"qqqqq","111","uid_ef6d2de5",type,null,phone,status,roleIdList,shopIdList);
+            Integer code2 = res1.getInteger("code");
+            Preconditions.checkArgument(code2 == 1000, "用姓名:" + "qqqqq" + "编辑一个账号失败了");
+//            新建成功以后删除新建的账号
+            Integer code1 = mall.organizationAccountDelete(account).getInteger("code");
+            Preconditions.checkArgument(code1 == 1000, "删除手机号的账号:" + phone + "失败了");
+            int total1 = mall.organizationAccountPage("", "", "", "", "", "", page, size).getInteger("total");
+            int b = total0-total1;
+            Preconditions.checkArgument(b==1, "删除账号实际减少了:" +b);
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("用手机号新增账号,编辑账号,删除账号+-1");
+        }
+    }
+
     //
     @Test
     public void mall_accountAdd_Email(){
@@ -2460,6 +2501,7 @@ public class MallDataCenter extends TestCaseCommon implements TestCaseStd {
             shopIdList.add(55456);
             int status = 1;
             String type = "EMAIL";
+
             //用email新增一个账号
             JSONObject res = mall.organizationAccountAddTwo("",name,"123456","uid_ef6d2de5", type,email, null,status,roleIdList,shopIdList);
             Integer code = res.getInteger("code");
@@ -2474,6 +2516,46 @@ public class MallDataCenter extends TestCaseCommon implements TestCaseStd {
             //新建成功以后删除新建的账号
             Integer code1 = mall.organizationAccountDelete(account).getInteger("code");
             Preconditions.checkArgument(code1 == 1000, "删邮箱的账号:" + email + "失败了");
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("用邮箱号新增账号,编辑账号,删除账号");
+        }
+    }
+
+    @Test
+    public void mall_accountAdd_Email_data(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray roleIdList = new JSONArray();
+            roleIdList.add(6339);
+            JSONArray shopIdList = new JSONArray();
+            shopIdList.add(55456);
+            int status = 1;
+            String type = "EMAIL";
+            //获取账号页数量
+            int total = mall.organizationAccountPage("", "", "", "", "", "", page, size).getInteger("total");
+            //用email新增一个账号
+            JSONObject res = mall.organizationAccountAddTwo("",name,"123456","uid_ef6d2de5", type,email, null,status,roleIdList,shopIdList);
+            Integer code = res.getInteger("code");
+            Preconditions.checkArgument(code == 1000, "用邮箱号:" + email + "新增一个账号失败了");
+            //获取添加后的账号列表
+            int total0 = mall.organizationAccountPage("", "", "", "", "", "", page, size).getInteger("total");
+            int a = total0-total;
+            Preconditions.checkArgument(a==1, "通过邮箱添加账号实际添加了:" +a);
+            //从列表获取刚刚新增的那个账户的名称进行搜获获取她的account
+            JSONArray accountList = mall.organizationAccountPage(name, "", email,"", "", "", page, size).getJSONArray("list");
+            String account = accountList.getJSONObject(0).getString("account");
+            //新建后编辑账号
+            JSONObject res1 = mall.organizationAccountEditTwo(account,"qqqqq","111","uid_ef6d2de5",type,"33001@qq.com",null,status,roleIdList,shopIdList);
+            Integer code2 = res1.getInteger("code");
+            Preconditions.checkArgument(code2 == 1000, "编辑失败:" +res.getString("message") );
+            //新建成功以后删除新建的账号
+            Integer code1 = mall.organizationAccountDelete(account).getInteger("code");
+            Preconditions.checkArgument(code1 == 1000, "删邮箱的账号:" + email + "失败了");
+            int total1 = mall.organizationAccountPage("", "", "", "", "", "", page, size).getInteger("total");
+            int b = total0-total1;
+            Preconditions.checkArgument(b==1, "删除账号实际减少了:" +b);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -2520,8 +2602,74 @@ public class MallDataCenter extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //新增账号异常情况
     @Test
+    public void mall_role_add_data() {
+        logger.logCaseStart(caseResult.getCaseName());
+
+        try {
+            String description = "青青测试给店长用的角色";
+            JSONArray moduleId = new JSONArray();
+            moduleId.add(139);
+            moduleId.add(140);
+            int superior_role_id = 6339;
+            //角色列表
+            int total = mall.organizationRolePage("", page, size).getInteger("total");
+            //角色下拉框数量
+            JSONArray list = mall.organizationRoleList().getJSONArray("list");
+            int searchlist0 = list.size();
+            //账号下拉框的账号角色数量
+            JSONArray rolelist = mall.organizationRoleList().getJSONArray("list");
+            int rlist = rolelist.size();
+            //新增一个角色
+            JSONObject res = mall.organizationRoleAddTwo(name,superior_role_id, description, moduleId);
+            Integer code = res.getInteger("code");
+            int role_id = mall.organizationRolePage(name, page, size).getJSONArray("list").getJSONObject(0).getInteger("role_id");
+            checkArgument(code == 1000, "新增角色失败了");
+            //获取添加后角色列表
+            int total0 = mall.organizationRolePage("", page, size).getInteger("total");
+            int rolea = total0-total;
+            Preconditions.checkArgument(rolea==1, "新增角色实际添加了:" +rolea);
+            JSONArray list0 = mall.organizationRoleList().getJSONArray("list");
+            int searchlist1 = list0.size();
+            int s = searchlist1-searchlist0;
+            Preconditions.checkArgument(s==1, "新增角色下拉框实际添加了:" +s);
+            JSONArray rolelist0 = mall.organizationRoleList().getJSONArray("list");
+            int rlist0 = rolelist0.size();
+            int r1 = rlist0-rlist;
+            Preconditions.checkArgument(r1==1, "新增角色后账号下拉框实际添加了:" +r1);
+            //编辑角色
+            String name1 = "AUTOtest在编辑";
+            Integer code1 = mall.organizationRoleEditTwo(role_id, superior_role_id,name1, description, moduleId).getInteger("code");
+            checkArgument(code1 == 1000, "编辑角色的信息失败了");
+            //列表中编辑过的角色是否已更新
+            JSONArray list1 = mall.organizationRolePage(name1, page, size).getJSONArray("list");
+            String role_name = list1.getJSONObject(0).getString("role_name");
+            checkArgument(name1.equals(role_name), "编辑过的角色没有更新在列表");
+            //新建成功以后删除新建的账号
+            if (name1.equals(role_name)) {
+                Integer code2 = mall.organizationRoleDelete(role_id).getInteger("code");
+                checkArgument(code2 == 1000, "删除角色:" + role_id + "失败了");
+                int total1 = mall.organizationRolePage("", page, size).getInteger("total");
+                int roleb = total0-total1;
+                Preconditions.checkArgument(roleb==1, "删除角色实际减少了:" +roleb);
+                JSONArray list00 = mall.organizationRoleList().getJSONArray("list");
+                int searchlist2 = list00.size();
+                int s1 = searchlist1-searchlist2;
+                Preconditions.checkArgument(s1==1, "删除角色下拉框实际添减少了:" +s1);
+                JSONArray rolelist1 = mall.organizationRoleList().getJSONArray("list");
+                int rlist1 = rolelist1.size();
+                int r2 = rlist0-rlist1;
+                Preconditions.checkArgument(r2==1, "删除角色后账号下拉框实际添加了:" +r2);
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("新增删改查角色列表数量+-1");
+        }
+    }
+
+    //新增账号异常情况
+//    @Test
     public void mall_accountAdd_error() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2559,7 +2707,7 @@ public class MallDataCenter extends TestCaseCommon implements TestCaseStd {
     }
 
     //新增角色异常情况
-    @Test
+//    @Test
     public void mall_role_add_error() {
         logger.logCaseStart(caseResult.getCaseName());
 
