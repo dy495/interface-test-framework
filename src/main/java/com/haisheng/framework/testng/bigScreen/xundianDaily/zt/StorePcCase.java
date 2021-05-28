@@ -812,11 +812,14 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
         try {
             //获取预置位列表
             JSONObject data = md.cameraList(43072,deviceid,"PRESET").getJSONObject("data");
-            JSONArray list = data.getJSONArray("list");
-            for(int i=0;i<list.size();i++){
-                int index = list.getJSONObject(i).getInteger("preset_index");
-                JSONObject res = md.dyPreset(43072,deviceid,index);
-                Preconditions.checkArgument(res.getInteger("code")==1000, "调用不成功原因" + res.getString("message")+"设备名称:"+devicename+" 设备ID:"+deviceid);
+            boolean status2 = data.getBooleanValue("status");
+            if(status2){
+                JSONArray list = data.getJSONArray("list");
+                for(int i=0;i<list.size();i++){
+                    int index = list.getJSONObject(i).getInteger("preset_index");
+                    JSONObject res = md.dyPreset(43072,deviceid,index);
+                    Preconditions.checkArgument(res.getInteger("code")==1000, "调用不成功原因" + res.getString("message")+"设备名称:"+devicename+" 设备ID:"+deviceid);
+                }
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
