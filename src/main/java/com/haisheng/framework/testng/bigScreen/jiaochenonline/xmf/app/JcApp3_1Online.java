@@ -327,6 +327,7 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
     public void remark() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
             int id= qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum",dataName);
             String[] reception = {String.valueOf(id),null};
 

@@ -46,7 +46,7 @@ public class PublicParmOnline {
     public String jdgw="15037286011";  //xx ,属于中关村店
     public String roleidJdgw="424";
     public String nameJdgw="接待顾问x";
-    public String jdgw2="15037286013";  //xx ,属于中关村店
+    public String jdgw2="15037286011";  //xx ,属于中关村店
     public String jdgwpassword="000000"; //单个店的客户的数据  登录密码
     public String jdgwName="接待顾问x"; //单个店的客户的数据  登录密码
 

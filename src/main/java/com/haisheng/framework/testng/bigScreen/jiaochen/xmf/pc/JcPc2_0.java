@@ -315,39 +315,8 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-//    @Test  //下单，发送卡券，下架商城套餐，下单，不发送套餐  TODO:无法自动化实现有赞下单
-    public void Commodity2() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //固定某一套餐
 
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("pc-新建商城套餐单接口");
-        }
-    }
-
-//    @Test  //下单，发送卡券，下架商城套餐，下单，不发送套餐  TODO:
-    public void CommodityUpAndDown() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //固定某一套餐
-             int id=0;  //套餐id
-            String status="up";    //DOWN 下架
-            jc.communityUpAndDown(status,id);
-
-
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("pc-新建商城套餐单接口");
-        }
-    }
-
-    @Test  //仅编辑商城套餐
+//    @Test  //仅编辑商城套餐
     public void EditCommodity() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -484,7 +453,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test(description = "",enabled = true)  //新建智能提醒（公里数）,由于智能提醒隔天生效，故此case一天运行一次  明天调试
+    @Test(description = "",enabled = false)  //新建智能提醒（公里数）,由于智能提醒隔天生效，故此case一天运行一次  明天调试
     public void CreateRemindCheck() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -779,14 +748,14 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("导入流失客户");
+            saveData("导入流失客户数量");
         }
 
 
 
     }
 
-    @Test(enabled = true,description = "导入潜客,参数全填正常")
+    @Test(enabled = false,description = "导入潜客,参数全填正常")
     public void importPotentialCustomer() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -881,14 +850,14 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("导入潜客");
+            saveData("导入潜客车系不填 期待失败");
         }
 
 
 
     }
 
-    @Test(enabled = true,description = "导入潜客,参数全填正常")
+    @Test(enabled = false,description = "导入潜客,参数全填正常")
     public void importPotentialCustomer5000() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -905,7 +874,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
                     "13402050050"};
             System.out.println(parm.length);
 
-            PoiUtils.importPotentialCustomer(parm);
+            PoiUtils.importPotential5000();
             //导入工单
             jc.pcPotentialCustomer(pp.importFilepath3);      //导入工单文件的路径=新建excel 路径
             sleep(10);

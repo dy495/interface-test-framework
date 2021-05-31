@@ -505,6 +505,7 @@ public class JcFunctionOnline {
             size = list.size();
             count = count + size;
             i = i + 1;
+//            String status_name=
         }
         return count;
     }
