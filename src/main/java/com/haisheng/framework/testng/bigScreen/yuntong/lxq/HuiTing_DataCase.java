@@ -1,0 +1,129 @@
+package com.haisheng.framework.testng.bigScreen.yuntong.lxq;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.manage.VoiceDetailScene;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.manage.VoiceEvaluationPageScene;
+import com.haisheng.framework.testng.commonCase.TestCaseCommon;
+import com.haisheng.framework.testng.commonCase.TestCaseStd;
+import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
+import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import java.lang.reflect.Method;
+
+/**
+ * 内容运营
+ *
+ * @author lxq
+ * @date 2021/1/29 11:17
+ */
+public class HuiTing_DataCase extends TestCaseCommon implements TestCaseStd {
+    private static final EnumTestProduce PRODUCE = EnumTestProduce.JC_DAILY;
+    private static final EnumAccount ALL_AUTHORITY = EnumAccount.ALL_AUTHORITY_DAILY_LXQ;
+    private static final EnumAccount ALL_AUTHORITY_DAILY = EnumAccount.ALL_AUTHORITY_DAILY;
+    private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_LXQ_DAILY;
+    public VisitorProxy visitor = new VisitorProxy(PRODUCE);
+    public UserUtil user = new UserUtil(visitor);
+    public SupporterUtil util = new SupporterUtil(visitor);
+    YunTongInfo info = new  YunTongInfo();
+
+
+
+    CommonConfig commonConfig = new CommonConfig();
+
+
+    @BeforeClass
+    @Override
+    public void initial() {
+        logger.debug("before class initial");
+
+        //替换checklist的相关信息
+        commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
+        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_DAILY_SERVICE.getId();
+        commonConfig.checklistQaOwner = "吕雪晴";
+        //替换jenkins-job的相关信息
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
+        //替换钉钉推送
+        commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
+        //放入shopId
+        commonConfig.product = PRODUCE.getAbbreviation();
+        commonConfig.referer = PRODUCE.getReferer();
+        commonConfig.shopId = PRODUCE.getShopId();
+        commonConfig.roleId = ALL_AUTHORITY.getRoleId();
+        beforeClassInit(commonConfig);
+    }
+
+    @AfterClass
+    @Override
+    public void clean() {
+        afterClassClean();
+    }
+
+    @BeforeMethod
+    @Override
+    public void createFreshCase(Method method) {
+        user.loginApplet(APPLET_USER_ONE);
+        logger.debug("beforeMethod");
+        caseResult = getFreshCaseResult(method);
+        logger.debug("case: " + caseResult);
+
+    }
+
+
+    /**
+     * --------------------------------- 语音评鉴列表 ---------------------------------
+     */
+    @Test
+    public void voiceEvaluationIn1() {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {//这个枚举0 要改
+            JSONArray arr1 = VoiceEvaluationPageScene.builder().page(1).size(50).evaluateStatus(0).build().invoke(visitor).getJSONArray("list");
+            if (arr1.size()>0){
+                JSONObject obj = arr1.getJSONObject(0);
+                String list_receptor_name = obj.getString("receptor_name");
+                String list_reception_time = obj.getString("reception_time");
+                String list_reception_duration = obj.getString("reception_duration");
+                String list_customer_name = obj.getString("customer_name");
+                String list_customer_phone = obj.getString("customer_phone");
+                Long id = obj.getLong("id");
+
+                JSONObject detailObj  = VoiceDetailScene.builder().id(id).build().invoke(visitor);
+                String detail_receptor_name = detailObj.getString("receptor_name");
+                String detail_reception_time = detailObj.getString("start_time").substring(0,10);
+                String detail_reception_duration = detailObj.getString("reception_duration");
+                String detail_customer_name = detailObj.getString("customer_name");
+                String detail_customer_phone = detailObj.getString("customer_phone");
+
+                Preconditions.checkArgument(list_receptor_name.equals(detail_receptor_name), "列表中接待顾问姓名="+list_receptor_name+" ,详情中接待顾问姓名="+detail_receptor_name);
+                Preconditions.checkArgument(list_reception_time.equals(detail_reception_time), "列表中接待日期="+list_reception_time+" ,详情中接待日期="+detail_reception_time);
+                Preconditions.checkArgument(list_reception_duration.equals(detail_reception_duration), "列表中接待时长="+list_reception_duration+" ,详情中接待时长="+detail_reception_duration);
+                Preconditions.checkArgument(list_customer_name.equals(detail_customer_name), "列表中客户姓名="+list_customer_name+" ,详情中客户姓名="+detail_customer_name);
+                Preconditions.checkArgument(list_customer_phone.equals(detail_customer_phone), "列表中客户电话="+list_customer_phone+" ,详情中客户电话="+detail_customer_phone);
+
+            }
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("语音评鉴列表与详情页客户信息一致");
+        }
+    }
+
+
+
+}

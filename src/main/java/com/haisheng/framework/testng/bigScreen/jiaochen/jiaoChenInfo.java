@@ -407,7 +407,7 @@ public class jiaoChenInfo {
 
     public String getLogo(){
         String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
-        String base64 = new ImageUtil().getImageBinary(filePath);
+        String bbase64 = new ImageUtil().getImageBinary(filePath);
         String logo = jc.pcFileUploadNew(new ImageUtil().getImageBinary(filePath)).getString("pic_path");
         return logo;
     }
