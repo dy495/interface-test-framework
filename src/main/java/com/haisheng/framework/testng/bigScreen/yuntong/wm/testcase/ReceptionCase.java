@@ -10,12 +10,9 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobN
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
-import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.pc.manage.EvaluateV4DetailBean;
-import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.pc.manage.EvaluateV4ScoreTrendBean;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.personaldata.AppCapabilityModelScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.personaldata.AppOverviewScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.personaldata.AppReceptionLinkScoreScene;
-import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.manage.EvaluateV4DetailScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.manage.EvaluateV4ScoreTrendScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.util.BusinessUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -165,8 +162,6 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
             String receptionStartDate = DateTimeUtil.addDayFormat(new Date(), -1);
             String receptionEndDate = DateTimeUtil.getFormat(new Date());
             IScene scoreTrendScene = EvaluateV4ScoreTrendScene.builder().receptionStart(receptionStartDate).receptionEnd(receptionEndDate).build();
-            EvaluateV4ScoreTrendBean scoreTrendBean = util.toJavaObject(scoreTrendScene, EvaluateV4ScoreTrendBean.class);
-            int source = scoreTrendBean.getScore();
 //            EvaluateV4DetailScene.builder().
 
 
