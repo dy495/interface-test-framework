@@ -44,7 +44,7 @@ public enum KeywordEnum {
      * @param str str
      * @return string
      */
-    public static String transferEqualKeyword(String str) {
+    public static String transferKeyword(String str) {
         return Arrays.stream(KeywordEnum.values()).filter(e -> str.equals(e.getKeyword())).map(e -> str.replace(e.getKeyword(), e.getTransfer())).findFirst().orElse(str);
     }
 }

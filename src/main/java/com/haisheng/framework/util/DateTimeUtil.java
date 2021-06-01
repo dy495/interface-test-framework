@@ -670,6 +670,18 @@ public class DateTimeUtil {
      * @param i    天数
      * @return 最后的日期
      */
+    public static String addDayFormat(Date date, int i, String format) {
+        Date newDate = addDay(date, i);
+        return getFormat(newDate, format);
+    }
+
+    /**
+     * 给指定日期增加若干天并装换格式
+     *
+     * @param date 日期
+     * @param i    天数
+     * @return 最后的日期
+     */
     public static String addDayFormat(Date date, int i) {
         Date newDate = addDay(date, i);
         return getFormat(newDate);

@@ -38,7 +38,8 @@ public class TestUtil {
     public void createScene() {
         String[] htmlPaths = {
                 "http://192.168.50.3/api-doc/intelligent-control/pc/index.html",
-                "http://192.168.50.3/api-doc/intelligent-control/app/index.html"
+                "http://192.168.50.3/api-doc/intelligent-control/app/index.html",
+                "http://192.168.50.3/api-doc/yt/pc/index.html"
         };
         Arrays.stream(htmlPaths).forEach(htmlPath -> {
             SceneAttribute[] sceneAttributeList = new SceneParser.Builder().htmlUrl(htmlPath).build().getAttributes();
@@ -55,16 +56,17 @@ public class TestUtil {
     @Test
     public void createBean() {
         String[] htmlPaths = {
-                "https://192.168.50.3/api-doc/business-jiaochen/applet/index.html",
-                "https://192.168.50.3/api-doc/business-jiaochen/pc/index.html",
-                "https://192.168.50.3/api-doc/business-jiaochen/app/index.html",
+                "http://192.168.50.3/api-doc/intelligent-control/pc/index.html",
+                "http://192.168.50.3/api-doc/intelligent-control/app/index.html",
+                "http://192.168.50.3/api-doc/yt/pc/index.html",
+                "http://192.168.50.3/api-doc/yt/app/index.html"
         };
         Arrays.stream(htmlPaths).forEach(htmlPath -> {
             SceneAttribute[] sceneAttributeList = new BeanParser.Builder().htmlUrl(htmlPath).build().getAttributes();
             Arrays.stream(sceneAttributeList).forEach(sceneAttribute -> new SceneMarker.Builder()
                     .templatePath("src\\main\\resources\\template")
                     .templateName("beanTemplate.ftl")
-                    .parentPath("src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/b")
+                    .parentPath("src/main/java/com/haisheng/framework/testng/bigScreen/yuntong/wm/bean")
                     .sceneAttribute(sceneAttribute)
                     .buildMarker()
                     .execute());

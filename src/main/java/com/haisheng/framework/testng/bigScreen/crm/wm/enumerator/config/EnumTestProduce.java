@@ -32,7 +32,7 @@ public enum EnumTestProduce {
 
     MD_ONLINE("门店管理中心 监控 ", "http://inspect.store.winsenseos.com/", "http://inspect.store.winsenseos.com", null, "MD", null, true),
 
-    YT_DAILY("运通一期 ", "http://inspect.store.winsenseos.com/", "http://inspect.store.winsenseos.com", null, "MD", null, true),
+    YT_DAILY("汽车-运通 日常 ", "http://inspect.store.winsenseos.com/", "http://inspect.store.winsenseos.com", null, "YT", null, true),
     ;
 
     EnumTestProduce(String desc, String referer, String address, String shopId, String abbreviation, String roleId, Boolean isDaily) {

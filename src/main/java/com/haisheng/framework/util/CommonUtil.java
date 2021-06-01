@@ -177,6 +177,21 @@ public class CommonUtil {
     }
 
     /**
+     * 四舍五入取整
+     *
+     * @param numerator   分子
+     * @param denominator 分母
+     * @param scale       保留小数点后位数
+     * @return 取整结果
+     */
+    public static int getIntValue(int numerator, int denominator, int scale) {
+        return new BigDecimal(numerator / denominator).setScale(scale, BigDecimal.ROUND_HALF_UP).intValue();
+    }
+
+
+
+
+    /**
      * 获取百分比
      *
      * @param a     a
