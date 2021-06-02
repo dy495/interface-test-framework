@@ -20,6 +20,9 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * 内容运营
@@ -111,9 +114,7 @@ public class HuiTing_DataCase extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(list_reception_duration.equals(detail_reception_duration), "列表中接待时长="+list_reception_duration+" ,详情中接待时长="+detail_reception_duration);
                 Preconditions.checkArgument(list_customer_name.equals(detail_customer_name), "列表中客户姓名="+list_customer_name+" ,详情中客户姓名="+detail_customer_name);
                 Preconditions.checkArgument(list_customer_phone.equals(detail_customer_phone), "列表中客户电话="+list_customer_phone+" ,详情中客户电话="+detail_customer_phone);
-
             }
-
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -121,6 +122,121 @@ public class HuiTing_DataCase extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             saveData("语音评鉴列表与详情页客户信息一致");
+        }
+    }
+
+    @Test
+    public void voiceEvaluationDetailIn1() {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray arr1 = VoiceEvaluationPageScene.builder().page(1).size(20).evaluateStatus(0).build().invoke(visitor).getJSONArray("list");
+            if (arr1.size()>0) {
+                for (int i = 0 ; i < arr1.size();i++){
+                    JSONObject obj = arr1.getJSONObject(i);
+                    Long id = obj.getLong("id");
+                    JSONObject detailObj = VoiceDetailScene.builder().id(id).build().invoke(visitor);
+                    int average_score = detailObj.getInteger("average_score");
+                    int score = 0;
+                    JSONArray scores = detailObj.getJSONArray("scores");
+                    for (int j = 0 ; j < scores.size();j++){
+                        score = score + scores.getJSONObject(j).getInteger("score");
+                    }
+                    int jisuan = Math.round(score / 5);
+                    Preconditions.checkArgument(average_score == jisuan,"接待平均分"+average_score +" != 环节计算结果"+jisuan);
+                }
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("语音评鉴详情，接待得分=各环节得分之和/5 四舍五入");
+        }
+    }
+
+    @Test
+    public void voiceEvaluationDetailIn2() {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray arr1 = VoiceEvaluationPageScene.builder().page(1).size(20).evaluateStatus(0).build().invoke(visitor).getJSONArray("list");
+            if (arr1.size()>0) {
+                for (int i = 0 ; i < arr1.size();i++){
+                    JSONObject obj = arr1.getJSONObject(i);
+                    Long id = obj.getLong("id");
+                    JSONObject detailObj = VoiceDetailScene.builder().id(id).build().invoke(visitor);
+                    List lable = new ArrayList<>();
+                    JSONArray link_label_list = detailObj.getJSONArray("link_label_list");
+                    for (int j = 0; j < link_label_list.size();j++){ //取出 link_label_list 中每一个置灰的标签
+                        JSONArray link_labels = link_label_list.getJSONObject(j).getJSONArray("labels");
+                        for (int k = 0 ; k < link_labels.size();k++){
+                            if (!link_labels.getJSONObject(k).getBoolean("is_hit"))
+                                lable.add(link_labels.getJSONObject(k).getString("lable"));
+                        }
+                    }
+                    JSONArray advice_list = detailObj.getJSONArray("advice_list");
+                    for (int j = 0 ; j < advice_list.size();j++){
+                        String advice_lable = advice_list.getJSONObject(j).getString("lable");
+                        Preconditions.checkArgument(lable.contains(advice_lable),"记录ID"+id+"的建议标签"+advice_lable+"未在置灰标签内");
+                    }
+                }
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("语音评鉴详情，建议中的环节内容 是 各环节得分标签中 置灰环节 的子集");
+        }
+    }
+
+    @Test
+    public void voiceEvaluationDetailIn3() {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray arr1 = VoiceEvaluationPageScene.builder().page(1).size(20).evaluateStatus(0).build().invoke(visitor).getJSONArray("list");
+            if (arr1.size()>0) {
+                for (int i = 0 ; i < arr1.size();i++){
+                    JSONObject obj = arr1.getJSONObject(i);
+                    Long id = obj.getLong("id");
+                    JSONObject detailObj = VoiceDetailScene.builder().id(id).build().invoke(visitor);
+                    //展示的各环节分数
+                    HashMap<String, String> showscore = new HashMap<>();
+                    JSONArray scores = detailObj.getJSONArray("scores");
+                    for (int j = 0 ; j < scores.size();j++){
+                        JSONObject obj1 = scores.getJSONObject(j);
+                        showscore.put(obj1.getString("type"),obj1.getString("score"));
+                    }
+                    HashMap<String, String> jisuanscore = new HashMap<>();
+
+                    //根据置灰标签计算出来的各环节分数
+                    JSONArray link_label_list = detailObj.getJSONArray("link_label_list");
+                    for (int j = 0; j < link_label_list.size();j++){
+                        int count = 0 ;
+                        JSONArray link_labels = link_label_list.getJSONObject(j).getJSONArray("labels");
+                        for (int k = 0 ; k < link_labels.size();k++){
+                            if (link_labels.getJSONObject(k).getBoolean("is_hit"))
+                                count++;
+                        }
+                        jisuanscore.put(link_label_list.getJSONObject(j).getString("type"),Integer.toString(Math.round(count *100 / link_labels.size())));
+                    }
+                    //两个集合比较
+                    for (String key : showscore.keySet()){
+                        Preconditions.checkArgument(showscore.get(key).equals(jisuanscore.get(key)),key+"环节中，PC展示分数"+showscore.get(key) +" != 根据标签计算出的分数"+jisuanscore.get(key));
+                    }
+                }
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("语音评鉴详情，各环节得分 约等于 该环节的 高亮标签数/总标签数 * 100");
         }
     }
 
