@@ -308,7 +308,7 @@ public class jiaoChenInfoOnline {
             JSONObject obj = array.getJSONObject(i);
             Long searchid = obj.getLong("id");
             if (searchid.longValue() == id.longValue()){
-                name = obj.getString("name");
+                name = obj.getString("simple_name");
             }
         }
         return name;
