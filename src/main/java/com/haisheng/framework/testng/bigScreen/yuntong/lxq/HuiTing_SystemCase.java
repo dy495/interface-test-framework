@@ -10,6 +10,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.general.EnumValueListScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.manage.VoiceEvaluationPageScene;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.sensitivewords.SensitiveBehaviorPageScene;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -303,6 +304,162 @@ public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
             saveData("语音评鉴列表文本框组合筛选");
         }
     }
+
+
+    @Test
+    public void sensitiveShow() {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray arrlist = SensitiveBehaviorPageScene.builder().page(1).size(50).build().invoke(visitor).getJSONArray("list");
+                for (int j = 0; j < arrlist.size();j++){
+                    Preconditions.checkArgument(arrlist.getJSONObject(j).containsKey("receptor_name"),"记录"+arrlist.getJSONObject(j).getString("id")+"没展示接待顾问");
+                    Preconditions.checkArgument(arrlist.getJSONObject(j).containsKey("words"),"记录"+arrlist.getJSONObject(j).getString("id")+"没展示敏感词");
+                    Preconditions.checkArgument(arrlist.getJSONObject(j).containsKey("sensitive_words_type_name"),"记录"+arrlist.getJSONObject(j).getString("id")+"没展示敏感词类型");
+                    Preconditions.checkArgument(arrlist.getJSONObject(j).containsKey("approval_status_name"),"记录"+arrlist.getJSONObject(j).getString("id")+"没展示审核状态");
+                    Preconditions.checkArgument(arrlist.getJSONObject(j).containsKey("reception_start_time"),"记录"+arrlist.getJSONObject(j).getString("id")+"没展示开始接待时间");
+                }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("敏感词风控列表展示项校验");
+        }
+    }
+
+
+    @Test
+    public void sensitiveFilter1() {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray arr = SensitiveBehaviorPageScene.builder().page(1).size(1).build().invoke(visitor).getJSONArray("list");
+            if (arr.size()>0){
+                String receptor_name = arr.getJSONObject(0).getString("receptor_name");
+                JSONArray arrlist = SensitiveBehaviorPageScene.builder().page(1).size(20).receptorName(receptor_name).build().invoke(visitor).getJSONArray("list");
+                Preconditions.checkArgument(arrlist.size()>=0,"搜索列表存在的顾问，无结果");
+                for (int i = 0; i < arrlist.size();i++){
+                    String search = arrlist.getJSONObject(i).getString("receptor_name");
+                    Preconditions.checkArgument(search.contains(receptor_name),"搜索"+receptor_name+" ,结果包含"+search);
+                }
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("敏感词风控文本框筛选");
+        }
+    }
+
+    @Test(dataProvider = "FILTER",dataProviderClass = YunTongInfo.class)
+    public void sensitiveFilter2(String receptor_name) {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            JSONArray arrlist = SensitiveBehaviorPageScene.builder().page(1).size(20).receptorName(receptor_name).build().invoke(visitor).getJSONArray("list");
+            for (int i = 0; i < arrlist.size();i++){
+                String search = arrlist.getJSONObject(i).getString("receptor_name").toUpperCase();
+                Preconditions.checkArgument(search.contains(receptor_name),"搜索"+receptor_name+" ,结果包含"+search);
+            }
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("敏感词风控接待顾问文本框筛选");
+        }
+    }
+
+    @Test
+    public void sensitiveFilter3() {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray arr = EnumValueListScene.builder().enumType("SENSITIVE_WORDS_TYPES").build().invoke(visitor).getJSONArray("list");
+            for (int i = 0 ; i < arr.size();i++){
+                int evaluate_status = arr.getJSONObject(i).getInteger("key");
+                String evaluate_status_name = arr.getJSONObject(i).getString("value");
+                JSONArray arrlist = SensitiveBehaviorPageScene.builder().page(1).size(50).sensitiveWordsType(evaluate_status).build().invoke(visitor).getJSONArray("list");
+                for (int j = 0; j < arrlist.size();j++){
+                    String search = arrlist.getJSONObject(j).getString("sensitive_words_type_name");
+                    Preconditions.checkArgument(search.equals(evaluate_status_name),"搜索"+evaluate_status_name+" ,结果包含"+search);
+                }
+
+            }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("敏感词风控敏感词类别下拉框筛选");
+        }
+    }
+
+    @Test
+    public void sensitiveFilter4() {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray arr = EnumValueListScene.builder().enumType("APPROVAL_STATUSES").build().invoke(visitor).getJSONArray("list");
+            for (int i = 0 ; i < arr.size();i++){
+                int evaluate_status = arr.getJSONObject(i).getInteger("key");
+                String evaluate_status_name = arr.getJSONObject(i).getString("value");
+
+                JSONArray arrlist = SensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(evaluate_status).build().invoke(visitor).getJSONArray("list");
+                for (int j = 0; j < arrlist.size();j++){
+                    String search = arrlist.getJSONObject(j).getString("approval_status_name");
+                    Preconditions.checkArgument(search.equals(evaluate_status_name),"搜索"+evaluate_status_name+" ,结果包含"+search);
+                }
+
+            }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("敏感词风控审核状态下拉框筛选");
+        }
+    }
+
+    @Test(dataProvider = "TIME",dataProviderClass = YunTongInfo.class)
+    public void sensitiveFilter5(String start,String end, String mess, String bool) {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            JSONObject obj = SensitiveBehaviorPageScene.builder().page(1).size(50).receptionStart(start).receptionEnd(end).build().invoke(visitor,false);
+            int code = obj.getInteger("code");
+            if (bool.equals("true")){
+                JSONArray arr1 = SensitiveBehaviorPageScene.builder().page(1).size(50).receptionStart(start).receptionEnd(end).build().invoke(visitor).getJSONArray("list");
+                for (int i = 0 ; i < arr1.size();i++){
+                    JSONObject obj1 = arr1.getJSONObject(i);
+                    String search_reception_time = obj1.getString("reception_time")+":000";
+                    Preconditions.checkArgument(Long.valueOf(dt.dateToTimestamp1(start)) <= Long.valueOf(dt.dateToTimestamp1(search_reception_time)) &&
+                                    Long.valueOf(dt.dateToTimestamp1(search_reception_time)) <= Long.valueOf(dt.dateToTimestamp1(end)),
+                            "搜索开始时间="+start +", 结束时间="+end +" , 结果包含"+search_reception_time );
+                }
+            }
+            else {
+                Preconditions.checkArgument(code==1001,mess+"状态码期待1001，实际"+code);
+            }
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("敏感词风控时间框筛选");
+        }
+    }
+
 
 
 }
