@@ -202,7 +202,7 @@ public class BusinessUtilOnline {
     public int getVoucherAllowUseInventory(Long voucherId) {
         SupporterUtil su = new SupporterUtil(visitor);
         Long allowUseInventory = su.getVoucherPage(voucherId).getAllowUseInventory();
-        return (int) (allowUseInventory ==1  ? allowUseInventory : allowUseInventory - 1);
+        return (int) Math.min((allowUseInventory ==1  ? allowUseInventory : allowUseInventory - 1),30L);
 
     }
 
@@ -211,7 +211,7 @@ public class BusinessUtilOnline {
      */
     public Long getVoucherAllowUseInventoryNum(Long voucherId) {
         SupporterUtil su = new SupporterUtil(visitor);
-        Long allowUseInventory = su.getVoucherPage(voucherId).getAllowUseInventory();
+        Long allowUseInventory = Math.min(su.getVoucherPage(voucherId).getAllowUseInventory(),30L);
         return  allowUseInventory;
 
     }
