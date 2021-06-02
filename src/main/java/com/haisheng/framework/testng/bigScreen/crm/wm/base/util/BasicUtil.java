@@ -125,6 +125,13 @@ public class BasicUtil {
         return JSONObject.toJavaObject(scene.invoke(visitor, false), Response.class);
     }
 
+    /**
+     * 获取行集合
+     *
+     * @param urlPath   接口路径
+     * @param excelName 表格名称
+     * @return 行集合
+     */
     public IRow[] getRows(String urlPath, String excelName) {
         //下载文件到resources/excel
         String outputPath = "/src/main/resources/excel/" + excelName;

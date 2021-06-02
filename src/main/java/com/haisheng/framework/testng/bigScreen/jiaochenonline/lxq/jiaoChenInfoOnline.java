@@ -18,7 +18,7 @@ import com.haisheng.framework.util.ImageUtil;
 public class jiaoChenInfoOnline {
 
     private static final EnumTestProduce PRODUCE = EnumTestProduce.JC_ONLINE;
-    public VisitorProxy visitor = new VisitorProxy(PRODUCE);
+    public VisitorProxy visitor = VisitorProxy.getInstance(PRODUCE);
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_LXQ_ONLINE;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.ALL_JC_ONLINE;
     public UserUtil user = new UserUtil(visitor);

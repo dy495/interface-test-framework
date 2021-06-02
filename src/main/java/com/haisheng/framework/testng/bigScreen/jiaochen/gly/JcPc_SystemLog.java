@@ -36,7 +36,7 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
     PublicParm pp = new PublicParm();
     public String shopId = "-1";
     public String appletToken = EnumAppletToken.JC_GLY_DAILY.getToken();
-    public VisitorProxy visitor = new VisitorProxy(product);
+    public VisitorProxy visitor = VisitorProxy.getInstance(product);
     SupporterUtil su=new SupporterUtil(visitor);
 
     /**

@@ -32,7 +32,7 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
     ScenarioUtil jc = new ScenarioUtil();
     private static final EnumTestProduce product = EnumTestProduce.JC_ONLINE;
     private static final EnumAccount ADMINISTRATOR=EnumAccount.ALL_JC_ONLINE;
-    public VisitorProxy visitor = new VisitorProxy(product);
+    public VisitorProxy visitor = VisitorProxy.getInstance(product);
     //    BusinessUtil businessUtil = new BusinessUtil(visitor);
     BusinessUtilOnline businessUtil=new BusinessUtilOnline(visitor);
     SupporterUtil supporterUtil = new SupporterUtil(visitor);

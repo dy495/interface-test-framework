@@ -22,7 +22,7 @@ public class RiskControlUtil extends TestCaseCommon {
     private static final String shopId = EnumTestProduce.FK_DAILY.getShopId();
     public static String IpPort = EnumTestProduce.FK_DAILY.getAddress();
     private static EnumTestProduce product = EnumTestProduce.FK_DAILY;
-    public VisitorProxy visitor = new VisitorProxy(product);
+    public VisitorProxy visitor = VisitorProxy.getInstance(product);
 
     /**
      * 单例

@@ -614,6 +614,13 @@ public class DateTimeUtil {
         return day;
     }
 
+    public static int timeToSecond(String timeStr) {
+        String[] strings = timeStr.split(":");
+        int hour = Integer.parseInt(strings[0]) * 60 * 60;
+        int minute = Integer.parseInt(strings[1]) * 60;
+        return hour + minute + Integer.parseInt(strings[2]);
+    }
+
     /**
      * 将一个时间日期格式化为指定格式
      *

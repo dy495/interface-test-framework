@@ -69,7 +69,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, produce.getDesc());
             commonConfig.referer = produce.getReferer();
             commonConfig.pushQa = new String[]{EnumAppletToken.getPhoneByToken(token)};
-            VisitorProxy visitor = new VisitorProxy(produce);
+            VisitorProxy visitor = VisitorProxy.getInstance(produce);
             visitor.login(token);
             Response response = invokePorsche(visitor);
             Preconditions.checkArgument(response.getCode() == 1000, token + " " + response.getMsg());
@@ -89,7 +89,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, produce.getDesc());
             commonConfig.referer = produce.getReferer();
             commonConfig.pushQa = new String[]{EnumAppletToken.getPhoneByToken(token)};
-            VisitorProxy visitor = new VisitorProxy(produce);
+            VisitorProxy visitor = VisitorProxy.getInstance(produce);
             visitor.login(token);
             Response response = invokePorsche(visitor);
             Preconditions.checkArgument(response.getCode() == 1000, token + " " + response.getMsg());
@@ -109,7 +109,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, produce.getDesc());
             commonConfig.referer = produce.getReferer();
             commonConfig.pushQa = new String[]{EnumAppletToken.getPhoneByToken(token)};
-            VisitorProxy visitor = new VisitorProxy(produce);
+            VisitorProxy visitor = VisitorProxy.getInstance(produce);
             visitor.login(token);
             Response response = invokeJC(visitor);
             Preconditions.checkArgument(response.getCode() == 1000, token + " " + response.getMessage());
@@ -129,7 +129,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, produce.getDesc());
             commonConfig.referer = produce.getReferer();
             commonConfig.pushQa = new String[]{EnumAppletToken.getPhoneByToken(token)};
-            VisitorProxy visitor = new VisitorProxy(produce);
+            VisitorProxy visitor = VisitorProxy.getInstance(produce);
             visitor.login(token);
             Response response = invokeJC(visitor);
             Preconditions.checkArgument(response.getCode() == 1000, token + " " + response.getMessage());
@@ -148,7 +148,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, produce.getDesc());
             commonConfig.referer = produce.getReferer();
             commonConfig.pushQa = new String[]{EnumAppletToken.getPhoneByToken(token)};
-            VisitorProxy visitor = new VisitorProxy(produce);
+            VisitorProxy visitor = VisitorProxy.getInstance(produce);
             visitor.login(token);
             Response response = invokeIns(visitor);
             Preconditions.checkArgument(response.getCode() == 1000, token + " " + response.getMsg());
@@ -167,7 +167,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, produce.getDesc());
             commonConfig.referer = produce.getReferer();
             commonConfig.pushQa = new String[]{EnumAppletToken.getPhoneByToken(token)};
-            VisitorProxy visitor = new VisitorProxy(produce);
+            VisitorProxy visitor = VisitorProxy.getInstance(produce);
             visitor.login(token);
             Response response = invokeIns(visitor);
             Preconditions.checkArgument(response.getCode() == 1000, token + " " + response.getMsg());

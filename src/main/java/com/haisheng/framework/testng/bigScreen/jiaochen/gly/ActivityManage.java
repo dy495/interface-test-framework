@@ -43,7 +43,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
     ScenarioUtil jc = new ScenarioUtil();
     private static final EnumTestProduce product = EnumTestProduce.JC_DAILY;
 //    private static final EnumAppletToken APPLET_USER = EnumAppletToken.JC_GLY_DAILY;
-    public VisitorProxy visitor = new VisitorProxy(product);
+    public VisitorProxy visitor = VisitorProxy.getInstance(product);
     BusinessUtil businessUtil = new BusinessUtil(visitor);
     SupporterUtil supporterUtil = new SupporterUtil(visitor);
     PublicParameter pp = new PublicParameter();

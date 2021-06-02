@@ -35,11 +35,10 @@ public class HuiTing_DataCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.ALL_AUTHORITY_DAILY_LXQ;
     private static final EnumAccount ALL_AUTHORITY_DAILY = EnumAccount.ALL_AUTHORITY_DAILY;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_LXQ_DAILY;
-    public VisitorProxy visitor = new VisitorProxy(PRODUCE);
+    public VisitorProxy visitor = VisitorProxy.getInstance(PRODUCE);
     public UserUtil user = new UserUtil(visitor);
     public SupporterUtil util = new SupporterUtil(visitor);
-    YunTongInfo info = new  YunTongInfo();
-
+    YunTongInfo info = new YunTongInfo();
 
 
     CommonConfig commonConfig = new CommonConfig();
@@ -93,7 +92,7 @@ public class HuiTing_DataCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {//这个枚举0 要改
             JSONArray arr1 = VoiceEvaluationPageScene.builder().page(1).size(50).evaluateStatus(0).build().invoke(visitor).getJSONArray("list");
-            if (arr1.size()>0){
+            if (arr1.size() > 0) {
                 JSONObject obj = arr1.getJSONObject(0);
                 String list_receptor_name = obj.getString("receptor_name");
                 String list_reception_time = obj.getString("reception_time");
@@ -102,18 +101,18 @@ public class HuiTing_DataCase extends TestCaseCommon implements TestCaseStd {
                 String list_customer_phone = obj.getString("customer_phone");
                 Long id = obj.getLong("id");
 
-                JSONObject detailObj  = VoiceDetailScene.builder().id(id).build().invoke(visitor);
+                JSONObject detailObj = VoiceDetailScene.builder().id(id).build().invoke(visitor);
                 String detail_receptor_name = detailObj.getString("receptor_name");
-                String detail_reception_time = detailObj.getString("start_time").substring(0,10);
+                String detail_reception_time = detailObj.getString("start_time").substring(0, 10);
                 String detail_reception_duration = detailObj.getString("reception_duration");
                 String detail_customer_name = detailObj.getString("customer_name");
                 String detail_customer_phone = detailObj.getString("customer_phone");
 
-                Preconditions.checkArgument(list_receptor_name.equals(detail_receptor_name), "列表中接待顾问姓名="+list_receptor_name+" ,详情中接待顾问姓名="+detail_receptor_name);
-                Preconditions.checkArgument(list_reception_time.equals(detail_reception_time), "列表中接待日期="+list_reception_time+" ,详情中接待日期="+detail_reception_time);
-                Preconditions.checkArgument(list_reception_duration.equals(detail_reception_duration), "列表中接待时长="+list_reception_duration+" ,详情中接待时长="+detail_reception_duration);
-                Preconditions.checkArgument(list_customer_name.equals(detail_customer_name), "列表中客户姓名="+list_customer_name+" ,详情中客户姓名="+detail_customer_name);
-                Preconditions.checkArgument(list_customer_phone.equals(detail_customer_phone), "列表中客户电话="+list_customer_phone+" ,详情中客户电话="+detail_customer_phone);
+                Preconditions.checkArgument(list_receptor_name.equals(detail_receptor_name), "列表中接待顾问姓名=" + list_receptor_name + " ,详情中接待顾问姓名=" + detail_receptor_name);
+                Preconditions.checkArgument(list_reception_time.equals(detail_reception_time), "列表中接待日期=" + list_reception_time + " ,详情中接待日期=" + detail_reception_time);
+                Preconditions.checkArgument(list_reception_duration.equals(detail_reception_duration), "列表中接待时长=" + list_reception_duration + " ,详情中接待时长=" + detail_reception_duration);
+                Preconditions.checkArgument(list_customer_name.equals(detail_customer_name), "列表中客户姓名=" + list_customer_name + " ,详情中客户姓名=" + detail_customer_name);
+                Preconditions.checkArgument(list_customer_phone.equals(detail_customer_phone), "列表中客户电话=" + list_customer_phone + " ,详情中客户电话=" + detail_customer_phone);
             }
 
         } catch (AssertionError e) {
@@ -131,19 +130,19 @@ public class HuiTing_DataCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray arr1 = VoiceEvaluationPageScene.builder().page(1).size(20).evaluateStatus(0).build().invoke(visitor).getJSONArray("list");
-            if (arr1.size()>0) {
-                for (int i = 0 ; i < arr1.size();i++){
+            if (arr1.size() > 0) {
+                for (int i = 0; i < arr1.size(); i++) {
                     JSONObject obj = arr1.getJSONObject(i);
                     Long id = obj.getLong("id");
                     JSONObject detailObj = VoiceDetailScene.builder().id(id).build().invoke(visitor);
                     int average_score = detailObj.getInteger("average_score");
                     int score = 0;
                     JSONArray scores = detailObj.getJSONArray("scores");
-                    for (int j = 0 ; j < scores.size();j++){
+                    for (int j = 0; j < scores.size(); j++) {
                         score = score + scores.getJSONObject(j).getInteger("score");
                     }
                     int jisuan = Math.round(score / 5);
-                    Preconditions.checkArgument(average_score == jisuan,"接待平均分"+average_score +" != 环节计算结果"+jisuan);
+                    Preconditions.checkArgument(average_score == jisuan, "接待平均分" + average_score + " != 环节计算结果" + jisuan);
                 }
             }
 
@@ -162,24 +161,24 @@ public class HuiTing_DataCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray arr1 = VoiceEvaluationPageScene.builder().page(1).size(20).evaluateStatus(0).build().invoke(visitor).getJSONArray("list");
-            if (arr1.size()>0) {
-                for (int i = 0 ; i < arr1.size();i++){
+            if (arr1.size() > 0) {
+                for (int i = 0; i < arr1.size(); i++) {
                     JSONObject obj = arr1.getJSONObject(i);
                     Long id = obj.getLong("id");
                     JSONObject detailObj = VoiceDetailScene.builder().id(id).build().invoke(visitor);
                     List lable = new ArrayList<>();
                     JSONArray link_label_list = detailObj.getJSONArray("link_label_list");
-                    for (int j = 0; j < link_label_list.size();j++){ //取出 link_label_list 中每一个置灰的标签
+                    for (int j = 0; j < link_label_list.size(); j++) { //取出 link_label_list 中每一个置灰的标签
                         JSONArray link_labels = link_label_list.getJSONObject(j).getJSONArray("labels");
-                        for (int k = 0 ; k < link_labels.size();k++){
+                        for (int k = 0; k < link_labels.size(); k++) {
                             if (!link_labels.getJSONObject(k).getBoolean("is_hit"))
                                 lable.add(link_labels.getJSONObject(k).getString("lable"));
                         }
                     }
                     JSONArray advice_list = detailObj.getJSONArray("advice_list");
-                    for (int j = 0 ; j < advice_list.size();j++){
+                    for (int j = 0; j < advice_list.size(); j++) {
                         String advice_lable = advice_list.getJSONObject(j).getString("lable");
-                        Preconditions.checkArgument(lable.contains(advice_lable),"记录ID"+id+"的建议标签"+advice_lable+"未在置灰标签内");
+                        Preconditions.checkArgument(lable.contains(advice_lable), "记录ID" + id + "的建议标签" + advice_lable + "未在置灰标签内");
                     }
                 }
             }
@@ -199,34 +198,34 @@ public class HuiTing_DataCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray arr1 = VoiceEvaluationPageScene.builder().page(1).size(20).evaluateStatus(0).build().invoke(visitor).getJSONArray("list");
-            if (arr1.size()>0) {
-                for (int i = 0 ; i < arr1.size();i++){
+            if (arr1.size() > 0) {
+                for (int i = 0; i < arr1.size(); i++) {
                     JSONObject obj = arr1.getJSONObject(i);
                     Long id = obj.getLong("id");
                     JSONObject detailObj = VoiceDetailScene.builder().id(id).build().invoke(visitor);
                     //展示的各环节分数
                     HashMap<String, String> showscore = new HashMap<>();
                     JSONArray scores = detailObj.getJSONArray("scores");
-                    for (int j = 0 ; j < scores.size();j++){
+                    for (int j = 0; j < scores.size(); j++) {
                         JSONObject obj1 = scores.getJSONObject(j);
-                        showscore.put(obj1.getString("type"),obj1.getString("score"));
+                        showscore.put(obj1.getString("type"), obj1.getString("score"));
                     }
                     HashMap<String, String> jisuanscore = new HashMap<>();
 
                     //根据置灰标签计算出来的各环节分数
                     JSONArray link_label_list = detailObj.getJSONArray("link_label_list");
-                    for (int j = 0; j < link_label_list.size();j++){
-                        int count = 0 ;
+                    for (int j = 0; j < link_label_list.size(); j++) {
+                        int count = 0;
                         JSONArray link_labels = link_label_list.getJSONObject(j).getJSONArray("labels");
-                        for (int k = 0 ; k < link_labels.size();k++){
+                        for (int k = 0; k < link_labels.size(); k++) {
                             if (link_labels.getJSONObject(k).getBoolean("is_hit"))
                                 count++;
                         }
-                        jisuanscore.put(link_label_list.getJSONObject(j).getString("type"),Integer.toString(Math.round(count *100 / link_labels.size())));
+                        jisuanscore.put(link_label_list.getJSONObject(j).getString("type"), Integer.toString(Math.round(count * 100 / link_labels.size())));
                     }
                     //两个集合比较
-                    for (String key : showscore.keySet()){
-                        Preconditions.checkArgument(showscore.get(key).equals(jisuanscore.get(key)),key+"环节中，PC展示分数"+showscore.get(key) +" != 根据标签计算出的分数"+jisuanscore.get(key));
+                    for (String key : showscore.keySet()) {
+                        Preconditions.checkArgument(showscore.get(key).equals(jisuanscore.get(key)), key + "环节中，PC展示分数" + showscore.get(key) + " != 根据标签计算出的分数" + jisuanscore.get(key));
                     }
                 }
             }
@@ -239,7 +238,6 @@ public class HuiTing_DataCase extends TestCaseCommon implements TestCaseStd {
             saveData("语音评鉴详情，各环节得分 约等于 该环节的 高亮标签数/总标签数 * 100");
         }
     }
-
 
 
 }
