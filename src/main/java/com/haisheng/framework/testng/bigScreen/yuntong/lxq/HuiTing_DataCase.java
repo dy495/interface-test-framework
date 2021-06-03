@@ -90,6 +90,7 @@ public class HuiTing_DataCase extends TestCaseCommon implements TestCaseStd {
     /**
      * --------------------------------- 语音评鉴列表 ---------------------------------
      */
+
     @Test
     public void voiceEvaluationIn1() {
 
@@ -243,6 +244,11 @@ public class HuiTing_DataCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+
+    /**
+     * --------------------------------- 敏感词风控 ---------------------------------
+     */
+
     @Test
     public void sensitiveIn1() {
 
@@ -291,6 +297,10 @@ public class HuiTing_DataCase extends TestCaseCommon implements TestCaseStd {
             saveData("敏感词风控审核柱状图中类别数量与记录详情中数量一致");
         }
     }
+
+    /**
+     * --------------------------------- 特殊音频审核 ---------------------------------
+     */
 
 
 }

@@ -12,6 +12,7 @@ import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.general.EnumV
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.manage.VoiceEvaluationPageScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.sensitivewords.AppSensitiveBehaviorApprovalScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.sensitivewords.SensitiveBehaviorPageScene;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.specialaudio.PageScene;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -306,6 +307,10 @@ public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    /**
+     * --------------------------------- 敏感词风控 ---------------------------------
+     */
+
 
     @Test
     public void sensitiveShow() {
@@ -532,6 +537,166 @@ public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
             saveData("敏感词行为审核不通过");
         }
     }
+
+    /**
+     * --------------------------------- 特殊音频审核 ---------------------------------
+     */
+
+    @Test
+    public void specialAudioShow() {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray arrlist = PageScene.builder().page(1).size(50).build().invoke(visitor).getJSONArray("list");
+            for (int j = 0; j < arrlist.size();j++){
+                Preconditions.checkArgument(arrlist.getJSONObject(j).containsKey("receptor_name"),"记录"+arrlist.getJSONObject(j).getString("id")+"没展示接待顾问");
+                Preconditions.checkArgument(arrlist.getJSONObject(j).containsKey("audio_duration"),"记录"+arrlist.getJSONObject(j).getString("id")+"没展示音频时长");
+                Preconditions.checkArgument(arrlist.getJSONObject(j).containsKey("score"),"记录"+arrlist.getJSONObject(j).getString("id")+"没展示得分");
+                Preconditions.checkArgument(arrlist.getJSONObject(j).containsKey("is_region_compliance"),"记录"+arrlist.getJSONObject(j).getString("id")+"没展示区域是否合规");
+                Preconditions.checkArgument(arrlist.getJSONObject(j).containsKey("reception_time"),"记录"+arrlist.getJSONObject(j).getString("id")+"没展示开始接待时间");
+                Preconditions.checkArgument(arrlist.getJSONObject(j).containsKey("approval_status"),"记录"+arrlist.getJSONObject(j).getString("id")+"没展示审核状态");
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("特殊音频审核列表展示项校验");
+        }
+    }
+
+    @Test
+    public void specialAudioFilter1() {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String receptor_name = "";
+
+            JSONArray arr = PageScene.builder().page(1).size(50).build().invoke(visitor).getJSONArray("list");
+            if (arr.size()>0){
+                JSONObject obj = arr.getJSONObject(0);
+                receptor_name = obj.getString("receptor_name");
+
+                JSONArray arr1 = PageScene.builder().page(1).size(50).receptorName(receptor_name).build().invoke(visitor).getJSONArray("list");
+                for (int i = 0 ; i < arr1.size();i++){
+                    JSONObject obj1 = arr1.getJSONObject(i);
+                    String search_receptor_name = obj1.getString("receptor_name");
+                    Preconditions.checkArgument(search_receptor_name.contains(receptor_name),"搜索接待顾问="+receptor_name+" ,结果包含"+search_receptor_name);
+                }
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("特殊音频审核文本框筛选");
+        }
+    }
+
+    @Test(dataProvider = "FILTER",dataProviderClass = YunTongInfo.class)
+    public void specialAudioFilter2(String search) {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            JSONArray arr1 = PageScene.builder().page(1).size(50).receptorName(search).build().invoke(visitor).getJSONArray("list");
+            for (int i = 0 ; i < arr1.size();i++){
+                JSONObject obj1 = arr1.getJSONObject(i);
+                String search_receptor_name = obj1.getString("receptor_name").toUpperCase();
+                Preconditions.checkArgument(search_receptor_name.contains(search),"搜索接待顾问="+search+" ,结果包含"+search_receptor_name);
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("特殊音频审核文本框筛选");
+        }
+    }
+
+    @Test(dataProvider = "TIME",dataProviderClass = YunTongInfo.class)
+    public void specialAudioFilter3(String start,String end, String mess, String bool) {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            JSONObject obj = PageScene.builder().page(1).size(50).receptionStart(start).receptionEnd(end).build().invoke(visitor,false);
+            int code = obj.getInteger("code");
+            if (bool.equals("true")){
+                JSONArray arr1 = PageScene.builder().page(1).size(50).receptionStart(start).receptionEnd(end).build().invoke(visitor).getJSONArray("list");
+                for (int i = 0 ; i < arr1.size();i++){
+                    JSONObject obj1 = arr1.getJSONObject(i);
+                    String search_reception_time = obj1.getString("reception_time")+":000";
+                    Preconditions.checkArgument(Long.valueOf(dt.dateToTimestamp1(start)) <= Long.valueOf(dt.dateToTimestamp1(search_reception_time)) &&
+                                    Long.valueOf(dt.dateToTimestamp1(search_reception_time)) <= Long.valueOf(dt.dateToTimestamp1(end)),
+                            "搜索开始时间="+start +", 结束时间="+end +" , 结果包含"+search_reception_time );
+                }
+            }
+            else {
+                Preconditions.checkArgument(code==1001,mess+"状态码期待1001，实际"+code);
+            }
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("特殊音频审核时间框筛选");
+        }
+    }
+
+    @Test
+    public void specialAudioFilter4() {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            String start=dt.getHistoryDate(-369);
+            String end=dt.getHistoryDate(-1);
+
+            JSONObject obj = PageScene.builder().page(1).size(50).receptionStart(start).receptionEnd(end).build().invoke(visitor,false);
+            int code = obj.getInteger("code");
+            Preconditions.checkArgument(code==1001,"时间跨度大于1年，期待失败，实际提示"+obj.getString("message"));
+
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("特殊音频审核时间框筛选");
+        }
+    }
+
+    @Test
+    public void specialAudioFilter5() {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray arr = EnumValueListScene.builder().enumType("APPROVAL_STATUSES").build().invoke(visitor).getJSONArray("list");
+            for (int i = 0 ; i < arr.size();i++){
+                int evaluate_status = arr.getJSONObject(i).getInteger("key");
+                String evaluate_status_name = arr.getJSONObject(i).getString("value");
+                JSONArray arr1 = PageScene.builder().page(1).size(50).approvalStatus(evaluate_status).build().invoke(visitor).getJSONArray("list");
+                for (int j = 0 ; j < arr1.size();j++){
+                    String search = arr1.getJSONObject(j).getString("approval_status_name");
+                    Preconditions.checkArgument(search.equals(evaluate_status_name),"搜索审核状态="+ evaluate_status_name+" ,结果包含"+search);
+                }
+            }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("特殊音频审核根据状态筛选");
+        }
+    }
+
 
 
 }
