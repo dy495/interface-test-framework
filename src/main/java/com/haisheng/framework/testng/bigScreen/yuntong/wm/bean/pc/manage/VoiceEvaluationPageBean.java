@@ -34,7 +34,7 @@ public class VoiceEvaluationPageBean implements Serializable {
      * 版本 v1.0
      */
     @JSONField(name = " page_size")
-    private Integer  pageSize;
+    private Integer pageSize;
 
     /**
      * 描述 总数
@@ -62,7 +62,7 @@ public class VoiceEvaluationPageBean implements Serializable {
      * 版本 v1.0
      */
     @JSONField(name = "id")
-    private JSONObject id;
+    private Long id;
 
     /**
      * 描述 接待顾问姓名

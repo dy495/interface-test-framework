@@ -12,14 +12,16 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccoun
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.departmentdata.AppCapabilityModelBean;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.departmentdata.AppLinkDataCarouselBean;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.departmentdata.AppOverviewBean;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.personaldata.AppReceptionAverageScoreTrendBean;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.personaldata.AppReceptionLinkScoreBean;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.personaldata.AppReceptionScoreTrendBean;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.voicerecord.AppDepartmentPageBean;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.voicerecord.AppPersonalPageBean;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.pc.manage.VoiceDetailBean;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.pc.manage.VoiceEvaluationPageBean;
-import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.departmentdata.AppCapabilityModelScene;
-import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.departmentdata.AppLinkDataCarouselScene;
-import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.departmentdata.AppOverviewScene;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.departmentdata.*;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.personaldata.AppReceptionLinkScoreScene;
-import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.manage.EvaluateV4ScoreTrendScene;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.manage.VoiceDetailScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.manage.VoiceEvaluationPageScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.util.BusinessUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -29,6 +31,7 @@ import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
+import org.jetbrains.annotations.NotNull;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -362,6 +365,208 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test
+    public void capabilityModel_data_4() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Integer dataCycleType = 0;
+            String startDate = DateTimeUtil.addDayFormat(new Date(), -1);
+            String endDate = DateTimeUtil.getFormat(new Date());
+            IScene scene = AppCapabilityModelScene.builder().startDate(startDate).endDate(endDate).dataCycleType(dataCycleType).build();
+            int scoreSum = UTIL.toJavaObjectList(scene, AppCapabilityModelBean.class).stream().mapToInt(AppCapabilityModelBean::getScore).sum();
+            int mathResult = CommonUtil.getIntRatio(scoreSum, 5, 0);
+            List<AppPersonalPageBean> list = new ArrayList<>();
+            UTIL.getAppDepartmentPageList(startDate, endDate).stream().map(e -> UTIL.getAppPersonalPageList(e.getId(), startDate, endDate)).forEach(list::addAll);
+            List<Integer> averageScoreList = list.stream().filter(e -> UTIL.getAverageScoreByReceptionDetail(e.getId()) != null && UTIL.getAverageScoreByReceptionDetail(e.getId()) != 0).map(e -> UTIL.getAverageScoreByReceptionDetail(e.getId())).collect(Collectors.toList());
+            int averageScoreSum = averageScoreList.stream().mapToInt(e -> e).sum();
+            int newMathResult = CommonUtil.getIntRatio(averageScoreSum, averageScoreList.size(), 0);
+            Preconditions.checkArgument(mathResult == newMathResult, "【我的能力模型】各话术环节分数相加/5：" + mathResult + "部门接待评鉴中【员工接待评鉴】接待详情中的首次接待平均分：" + mathResult);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("【我的能力模型】各话术环节分数相加/5=部门接待评鉴中【员工接待评鉴】接待详情中的首次接待平均分");
+        }
+    }
+
+    @Test
+    public void capabilityModel_data_5() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Map<Integer, Integer> map = new HashMap<>();
+            Integer dataCycleType = 0;
+            String startDate = DateTimeUtil.addDayFormat(new Date(), -1);
+            String endDate = DateTimeUtil.getFormat(new Date());
+            IScene receptionLinkScoreScene = AppReceptionLinkScoreScene.builder().startDate(startDate).endDate(endDate).dataCycleType(dataCycleType).build();
+            UTIL.toJavaObjectList(receptionLinkScoreScene, AppReceptionLinkScoreBean.class).forEach(e -> map.put(e.getType(), e.getDepartmentAverageScore()));
+            List<AppPersonalPageBean> list = new ArrayList<>();
+            UTIL.getAppDepartmentPageList(startDate, endDate).stream().map(e -> UTIL.getAppPersonalPageList(e.getId(), startDate, endDate)).forEach(list::addAll);
+            List<AppPersonalPageBean> newList = list.stream().filter(e -> UTIL.getAverageScoreByReceptionDetail(e.getId()) != null && UTIL.getAverageScoreByReceptionDetail(e.getId()) != 0).collect(Collectors.toList());
+            IScene linkDataCarouselScene = AppLinkDataCarouselScene.builder().startDate(startDate).endDate(endDate).dataCycleType(dataCycleType).build();
+            List<AppLinkDataCarouselBean> linkDataCarouselBeanList = UTIL.toJavaObjectList(linkDataCarouselScene, AppLinkDataCarouselBean.class);
+            map.forEach((key, value) -> {
+                int averageRatio = linkDataCarouselBeanList.stream().filter(e -> e.getType().equals(key)).map(AppLinkDataCarouselBean::getAverageRatio).findFirst().orElse(0);
+                int passCount = (int) newList.stream().filter(e -> UTIL.getScoreByType(e.getId(), key) > value).count();
+                int mathResult = CommonUtil.getIntRatio(passCount, newList.size(), 0);
+                Preconditions.checkArgument(averageRatio == mathResult, "平均分达成率：" + averageRatio + "【员工接待评鉴列表】超过部门平均分的接待次数/参与评分的总接待次数：" + mathResult);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("平均分达成率=【员工接待评鉴列表】超过部门平均分的接待次数/参与评分的总接待次数*100%");
+        }
+    }
+
+    @Test
+    public void capabilityModel_data_6() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Map<Integer, Integer> map = new HashMap<>();
+            Integer dataCycleType = 0;
+            String startDate = DateTimeUtil.addDayFormat(new Date(), -1);
+            String endDate = DateTimeUtil.getFormat(new Date());
+            IScene receptionLinkScoreScene = AppReceptionLinkScoreScene.builder().startDate(startDate).endDate(endDate).dataCycleType(dataCycleType).build();
+            UTIL.toJavaObjectList(receptionLinkScoreScene, AppReceptionLinkScoreBean.class).forEach(e -> map.put(e.getType(), e.getDepartmentAverageScore()));
+            List<AppPersonalPageBean> list = new ArrayList<>();
+            UTIL.getAppDepartmentPageList(startDate, endDate).stream().map(e -> UTIL.getAppPersonalPageList(e.getId(), startDate, endDate)).forEach(list::addAll);
+            List<AppPersonalPageBean> newList = list.stream().filter(e -> UTIL.getAverageScoreByReceptionDetail(e.getId()) != null && UTIL.getAverageScoreByReceptionDetail(e.getId()) != 0).collect(Collectors.toList());
+            IScene linkDataCarouselScene = AppLinkDataCarouselScene.builder().startDate(startDate).endDate(endDate).dataCycleType(dataCycleType).build();
+            List<AppLinkDataCarouselBean> linkDataCarouselBeanList = UTIL.toJavaObjectList(linkDataCarouselScene, AppLinkDataCarouselBean.class);
+            map.forEach((key, value) -> {
+                int qualifiedRatio = linkDataCarouselBeanList.stream().filter(e -> e.getType().equals(key)).map(AppLinkDataCarouselBean::getQualifiedRatio).findFirst().orElse(0);
+                int passCount = (int) newList.stream().filter(e -> UTIL.getScoreByType(e.getId(), key) > 60).count();
+                int mathResult = CommonUtil.getIntRatio(passCount, newList.size(), 0);
+                Preconditions.checkArgument(qualifiedRatio == mathResult, "某一环节的接待合格率：" + qualifiedRatio + "【员工接待评鉴列表】超过60分的接待次数/参与评分的总接待次数：" + mathResult);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("某一环节的接待合格率=【员工接待评鉴列表】超过60分的接待次数/参与评分的总接待次数*100%");
+        }
+    }
+
+    @Test
+    public void receptionAverageScoreTrend_data_1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Integer dataCycleType = 0;
+            String startDate = DateTimeUtil.addDayFormat(new Date(), -1);
+            String endDate = DateTimeUtil.getFormat(new Date());
+            IScene scene = AppReceptionScoreTrendScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
+            AppReceptionScoreTrendBean appReceptionScoreTrend = UTIL.toFirstJavaObject(scene, AppReceptionScoreTrendBean.class);
+            int sum = appReceptionScoreTrend.getOne() + appReceptionScoreTrend.getTwo() + appReceptionScoreTrend.getThree() + appReceptionScoreTrend.getFour() + appReceptionScoreTrend.getFive();
+            int mathResult = CommonUtil.getIntRatio(sum, 5, 0);
+            IScene scene1 = AppReceptionAverageScoreTrendScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
+            AppReceptionAverageScoreTrendBean appReceptionAverageScoreTrend = UTIL.toFirstJavaObject(scene1, AppReceptionAverageScoreTrendBean.class);
+            int totalAverageScore = appReceptionAverageScoreTrend.getTotalAverageScore();
+            Preconditions.checkArgument(totalAverageScore == mathResult, "（筛选某一天）【部门总平均分趋势】分数：" + totalAverageScore + "【各环节得分趋势】各话术环节平均分之和/5：" + mathResult);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("（筛选某一天）【部门总平均分趋势】分数=【各环节得分趋势】各话术环节平均分之和/5");
+        }
+    }
+
+    @Test
+    public void receptionAverageScoreTrend_data_2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Map<Integer, Integer> map = new HashMap<>();
+            Integer dataCycleType = 0;
+            String startDate = DateTimeUtil.addDayFormat(new Date(), -1);
+            String endDate = DateTimeUtil.getFormat(new Date());
+            IScene receptionScoreTrendScene = AppReceptionScoreTrendScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
+            AppReceptionScoreTrendBean appReceptionScoreTrend = UTIL.toFirstJavaObject(receptionScoreTrendScene, AppReceptionScoreTrendBean.class);
+            IScene capabilityModelScene = AppCapabilityModelScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
+            List<AppCapabilityModelBean> capabilityModelBeanList = UTIL.toJavaObjectList(capabilityModelScene, AppCapabilityModelBean.class);
+            capabilityModelBeanList.forEach(e -> map.put(e.getType(), e.getScore()));
+            Preconditions.checkArgument(appReceptionScoreTrend.getOne().equals(map.get(100)), "【我的能力模型】各环节得分：" + map.get(100) + "【各环节得分趋势】中的各环节得分：" + appReceptionScoreTrend.getOne());
+            Preconditions.checkArgument(appReceptionScoreTrend.getTwo().equals(map.get(200)), "【我的能力模型】各环节得分：" + map.get(200) + "【各环节得分趋势】中的各环节得分：" + appReceptionScoreTrend.getTwo());
+            Preconditions.checkArgument(appReceptionScoreTrend.getThree().equals(map.get(300)), "【我的能力模型】各环节得分：" + map.get(300) + "【各环节得分趋势】中的各环节得分：" + appReceptionScoreTrend.getThree());
+            Preconditions.checkArgument(appReceptionScoreTrend.getFour().equals(map.get(400)), "【我的能力模型】各环节得分：" + map.get(400) + "【各环节得分趋势】中的各环节得分：" + appReceptionScoreTrend.getFour());
+            Preconditions.checkArgument(appReceptionScoreTrend.getFive().equals(map.get(500)), "【我的能力模型】各环节得分：" + map.get(500) + "【各环节得分趋势】中的各环节得分：" + appReceptionScoreTrend.getFive());
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("（筛选为某一天）【各环节得分趋势】中的各环节得分=【我的能力模型】各环节得分");
+        }
+    }
+
+    @Test
+    public void receptionAverageScoreTrend_data_3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Map<Integer, Integer> map = new HashMap<>();
+            Integer dataCycleType = 0;
+            String startDate = DateTimeUtil.addDayFormat(new Date(), -1);
+            String endDate = DateTimeUtil.getFormat(new Date());
+            IScene receptionScoreTrendScene = AppReceptionScoreTrendScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
+            AppReceptionScoreTrendBean appReceptionScoreTrend = UTIL.toFirstJavaObject(receptionScoreTrendScene, AppReceptionScoreTrendBean.class);
+            IScene voiceEvaluationPageScene = VoiceEvaluationPageScene.builder().receptionStart(startDate).receptionEnd(endDate).build();
+            List<VoiceEvaluationPageBean> evaluationPageBeanList = UTIL.toJavaObjectList(voiceEvaluationPageScene, VoiceEvaluationPageBean.class);
+            List<VoiceEvaluationPageBean> newList = evaluationPageBeanList.stream().filter(e -> e.getEvaluateScore() != null && e.getEvaluateScore() != 0).collect(Collectors.toList());
+            List<JSONArray> scoresList = newList.stream().map(e -> UTIL.toJavaObject(VoiceDetailScene.builder().id(e.getId()).build(), VoiceDetailBean.class)).map(VoiceDetailBean::getScores).collect(Collectors.toList());
+            scoresList.forEach(e -> e.stream().map(a -> (JSONObject) a).forEach(a -> map.put(a.getInteger("type"), (getScore(map, a.getInteger("type")) + a.getInteger("score")) / newList.size())));
+            Preconditions.checkArgument(appReceptionScoreTrend.getOne().equals(map.get(100)), "PC【语音接待评鉴】中相同时间段的首次到店的的接待详情中的各环节的平均分：" + map.get(100) + "【各环节得分趋势】中的各环节得分：" + appReceptionScoreTrend.getOne());
+            Preconditions.checkArgument(appReceptionScoreTrend.getTwo().equals(map.get(200)), "PC【语音接待评鉴】中相同时间段的首次到店的的接待详情中的各环节的平均分：" + map.get(200) + "【各环节得分趋势】中的各环节得分：" + appReceptionScoreTrend.getTwo());
+            Preconditions.checkArgument(appReceptionScoreTrend.getThree().equals(map.get(300)), "PC【语音接待评鉴】中相同时间段的首次到店的的接待详情中的各环节的平均分：" + map.get(300) + "【各环节得分趋势】中的各环节得分：" + appReceptionScoreTrend.getThree());
+            Preconditions.checkArgument(appReceptionScoreTrend.getFour().equals(map.get(400)), "PC【语音接待评鉴】中相同时间段的首次到店的的接待详情中的各环节的平均分：" + map.get(400) + "【各环节得分趋势】中的各环节得分：" + appReceptionScoreTrend.getFour());
+            Preconditions.checkArgument(appReceptionScoreTrend.getFive().equals(map.get(500)), "PC【语音接待评鉴】中相同时间段的首次到店的的接待详情中的各环节的平均分：" + map.get(500) + "【各环节得分趋势】中的各环节得分：" + appReceptionScoreTrend.getFive());
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("（筛选为某一天）【各环节得分趋势】中的各环节得分＝PC【语音接待评鉴】中相同时间段的首次到店的的接待详情中的各环节的平均分");
+        }
+    }
+
+    private int getScore(@NotNull Map<Integer, Integer> map, Integer type) {
+        return map.get(type) == null ? 0 : map.get(type);
+    }
+
+    @Test
+    public void receptionAverageScoreTrend_data_4() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Integer dataCycleType = 0;
+            String startDate = DateTimeUtil.addDayFormat(new Date(), -1);
+            String endDate = DateTimeUtil.getFormat(new Date());
+            IScene receptionAverageScoreTrendScene = AppReceptionAverageScoreTrendScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
+            AppReceptionAverageScoreTrendBean appReceptionAverageScoreTrendBean = UTIL.toFirstJavaObject(receptionAverageScoreTrendScene, AppReceptionAverageScoreTrendBean.class);
+            int totalAverageScore = appReceptionAverageScoreTrendBean.getTotalAverageScore();
+            IScene capabilityModelScene = AppCapabilityModelScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
+            int scoreSum = UTIL.toJavaObjectList(capabilityModelScene, AppCapabilityModelBean.class).stream().mapToInt(AppCapabilityModelBean::getScore).sum();
+            int mathResult = CommonUtil.getIntRatio(scoreSum, 5, 0);
+            Preconditions.checkArgument(totalAverageScore == mathResult, "（筛选某一天）【部门总平均分趋势】平均分：" + totalAverageScore + "【我的能力模型】各话术环节平均分之和/5：" + mathResult);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("（筛选某一天）【部门总平均分趋势】平均分=【我的能力模型】各话术环节平均分之和/5");
+        }
+    }
+
+    @Test
+    public void receptionAverageScoreTrend_data_5() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Integer dataCycleType = 0;
+            String startDate = DateTimeUtil.addDayFormat(new Date(), -1);
+            String endDate = DateTimeUtil.getFormat(new Date());
+            IScene receptionAverageScoreTrendScene = AppReceptionAverageScoreTrendScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
+            AppReceptionAverageScoreTrendBean appReceptionAverageScoreTrendBean = UTIL.toFirstJavaObject(receptionAverageScoreTrendScene, AppReceptionAverageScoreTrendBean.class);
+            int totalAverageScore = appReceptionAverageScoreTrendBean.getTotalAverageScore();
+
+//            VoiceEvaluationPageScene.builder()
+
+            IScene capabilityModelScene = AppCapabilityModelScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
+            int scoreSum = UTIL.toJavaObjectList(capabilityModelScene, AppCapabilityModelBean.class).stream().mapToInt(AppCapabilityModelBean::getScore).sum();
+            int mathResult = CommonUtil.getIntRatio(scoreSum, 5, 0);
+            Preconditions.checkArgument(totalAverageScore == mathResult, "（筛选某一天）【部门总平均分趋势】平均分：" + totalAverageScore + "【我的能力模型】各话术环节平均分之和/5：" + mathResult);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("（筛选某一天）【部门总平均分趋势】平均分＝PC【语音接待评鉴】中相同时间段的首次到店的接待评分之和平均分");
+        }
+    }
+
+    @Test
     public void receptionCriticism_data_12() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -386,7 +591,6 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-
     @Test
     public void receptionCriticism_data_13() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -405,22 +609,4 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
             saveData("app我的能力模型各项数值=各环节得分的平均分");
         }
     }
-
-
-    @Test
-    public void receptionCriticism_data_50() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            String receptionStartDate = DateTimeUtil.addDayFormat(new Date(), -1);
-            String receptionEndDate = DateTimeUtil.getFormat(new Date());
-            IScene scoreTrendScene = EvaluateV4ScoreTrendScene.builder().receptionStart(receptionStartDate).receptionEnd(receptionEndDate).build();
-//            EvaluateV4DetailScene.builder().
-
-
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        }
-    }
-
-
 }

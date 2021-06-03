@@ -18,11 +18,15 @@ public class VisitorProxy extends TestCaseCommon {
     private static volatile VisitorProxy INSTANCE = null;
     private static EnumTestProduce PRODUCT;
 
-    public static synchronized VisitorProxy getInstance(EnumTestProduce product) {
+    public static VisitorProxy getInstance(EnumTestProduce product) {
         if (INSTANCE == null) {
-            INSTANCE = new VisitorProxy(product);
-        } else {
-            if (PRODUCT != product) {
+            synchronized (VisitorProxy.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new VisitorProxy(product);
+                }
+            }
+        } else if (PRODUCT != product) {
+            synchronized (VisitorProxy.class) {
                 INSTANCE = new VisitorProxy(product);
             }
         }
