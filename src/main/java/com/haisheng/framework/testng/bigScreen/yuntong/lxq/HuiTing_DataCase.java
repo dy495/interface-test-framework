@@ -8,8 +8,12 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.general.EnumValueListScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.manage.VoiceDetailScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.manage.VoiceEvaluationPageScene;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.sensitivewords.LabelListScene;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.sensitivewords.SensitiveBehaviorDetailScene;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.sensitivewords.SensitiveBehaviorPageScene;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -236,6 +240,55 @@ public class HuiTing_DataCase extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             saveData("语音评鉴详情，各环节得分 约等于 该环节的 高亮标签数/总标签数 * 100");
+        }
+    }
+
+    @Test
+    public void sensitiveIn1() {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray arr = EnumValueListScene.builder().enumType("SENSITIVE_WORDS_TYPES").build().invoke(visitor).getJSONArray("list");
+            for (int i = 0 ; i < arr.size();i++){
+                int evaluate_status = arr.getJSONObject(i).getInteger("key");
+                String evaluate_status_name = arr.getJSONObject(i).getString("value"); //各敏感词类别
+
+                int lablecount = 0 ; // 标签数量
+                JSONArray lablearray = LabelListScene.builder().sensitiveWordsType(evaluate_status).build().invoke(visitor).getJSONArray("list");
+                for (int j = 0 ; j < lablearray.size();j++){
+                    lablecount += lablearray.getJSONObject(j).getInteger("count");
+                }
+
+                int listcount =0; //列表中每个记录涉及到敏感词的数量
+                int total = SensitiveBehaviorPageScene.builder().page(1).size(1).sensitiveWordsType(evaluate_status).build().invoke(visitor).getInteger("total");
+                if (total<=200){
+                    JSONArray listarray = SensitiveBehaviorPageScene.builder().page(1).size(200).sensitiveWordsType(evaluate_status).build().invoke(visitor).getJSONArray("list");
+                    for (int k = 0 ; k < listarray.size();k++){
+                        Long id = listarray.getJSONObject(k).getLong("id");
+                        listcount += SensitiveBehaviorDetailScene.builder().id(id).build().invoke(visitor).getJSONArray("sensitive_words").size();
+                    }
+                }
+                else {
+                    for (int j = 1 ; j < total / 200 +1 ; j++){
+                        JSONArray listarray = SensitiveBehaviorPageScene.builder().page(j).size(200).sensitiveWordsType(evaluate_status).build().invoke(visitor).getJSONArray("list");
+                        for (int k = 0 ; k < listarray.size();k++){
+                            Long id = listarray.getJSONObject(k).getLong("id");
+                            listcount += SensitiveBehaviorDetailScene.builder().id(id).build().invoke(visitor).getJSONArray("sensitive_words").size();
+                        }
+                    }
+                }
+                Preconditions.checkArgument(lablecount==listcount,"敏感词类别："+evaluate_status_name+" 在柱状图中数量"+lablecount+" != 列表中计算结果"+listcount);
+
+
+
+            }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+
+            appendFailReason(e.toString());
+        } finally {
+            saveData("敏感词风控审核柱状图中类别数量与记录详情中数量一致");
         }
     }
 

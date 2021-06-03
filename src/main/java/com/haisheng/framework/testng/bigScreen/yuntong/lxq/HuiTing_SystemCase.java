@@ -10,6 +10,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.general.EnumValueListScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.manage.VoiceEvaluationPageScene;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.sensitivewords.AppSensitiveBehaviorApprovalScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.sensitivewords.SensitiveBehaviorPageScene;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -460,6 +461,77 @@ public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @Test
+    public void sensitiveBehaviorApproval1() {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            Long id ;
+            //这个要去待审核的状态 100 随便写的 要改
+            JSONArray arrlist = SensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(100).build().invoke(visitor).getJSONArray("list");
+            if (arrlist.size()>0){
+                id = arrlist.getJSONObject(0).getLong("id");
+                //审核前审核通过数量 状态数要改
+                int bef = SensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(100).build().invoke(visitor).getInteger("total");
+
+                //审核通过 10 随便写的 要改
+                JSONObject obj = AppSensitiveBehaviorApprovalScene.builder().id(id).approvalStatus(10).build().invoke(visitor,false);
+                Preconditions.checkArgument(obj.getInteger("code")==1000,"审核失败,提示"+obj.getString("message"));
+
+                //审核后审核通过数量
+                int after = SensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(100).build().invoke(visitor).getInteger("total");
+                Preconditions.checkArgument(after - bef ==1,"审核通过后，审核通过记录未+1");
+
+            }
+            else {
+                Preconditions.checkArgument(false==true,"无待审核记录，case跳过");
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("敏感词行为审核通过");
+        }
+    }
+
+    @Test
+    public void sensitiveBehaviorApproval2() {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            Long id ;
+            //这个要去待审核的状态 100 随便写的 要改
+            JSONArray arrlist = SensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(100).build().invoke(visitor).getJSONArray("list");
+            if (arrlist.size()>0){
+                id = arrlist.getJSONObject(0).getLong("id");
+                //审核前审核通过数量 状态数要改
+                int bef = SensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(100).build().invoke(visitor).getInteger("total");
+
+                //审核通过 10 随便写的 要改
+                JSONObject obj = AppSensitiveBehaviorApprovalScene.builder().id(id).approvalStatus(10).build().invoke(visitor,false);
+                Preconditions.checkArgument(obj.getInteger("code")==1000,"审核失败,提示"+obj.getString("message"));
+
+                //审核后审核通过数量
+                int after = SensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(100).build().invoke(visitor).getInteger("total");
+                Preconditions.checkArgument(after - bef ==1,"审核通过后，审核通过记录未+1");
+
+            }
+            else {
+                Preconditions.checkArgument(false==true,"无待审核记录，case跳过");
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("敏感词行为审核不通过");
+        }
+    }
 
 
 }
