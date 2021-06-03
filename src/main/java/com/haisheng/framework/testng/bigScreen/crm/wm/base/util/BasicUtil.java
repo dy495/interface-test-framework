@@ -4,20 +4,15 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.entity.Factory;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.entity.IEntity;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.row.IRow;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.util.ContainerEnum;
 import com.haisheng.framework.testng.bigScreen.crm.wm.bean.Response;
 import com.haisheng.framework.util.CommonUtil;
-import com.haisheng.framework.util.UrlOutputUtil;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -102,12 +97,11 @@ public class BasicUtil {
         return toJavaObject(object, tClass);
     }
 
-    /**
-     * 获取接口返回值message的list
-     *
-     * @param scene 接口
-     * @return string[]
-     */
+
+    public <K, Y, T> Y getValueByKey(@NotNull Map<K, Y> map, T key) {
+        return map.entrySet().stream().filter(e -> e.getKey().equals(key)).map(Map.Entry::getValue).findFirst().orElse(null);
+    }
+
     public String[] getMessageList(@NotNull IScene scene) {
         List<String> list = scene.getKeyList();
         logger.info("keyList is：{}", list);
@@ -115,31 +109,8 @@ public class BasicUtil {
                 .map(Response::getMessage).collect(Collectors.toList()).toArray(new String[list.size()]);
     }
 
-    /**
-     * 获取接口返回值
-     *
-     * @param scene 接口
-     * @return 返回值内容
-     */
     public Response getResponse(@NotNull IScene scene) {
         return JSONObject.toJavaObject(scene.invoke(visitor, false), Response.class);
-    }
-
-    /**
-     * 获取行集合
-     *
-     * @param urlPath   接口路径
-     * @param excelName 表格名称
-     * @return 行集合
-     */
-    public IRow[] getRows(String urlPath, String excelName) {
-        //下载文件到resources/excel
-        String outputPath = "/src/main/resources/excel/" + excelName;
-        UrlOutputUtil.toIoSave(urlPath, outputPath);
-        String relativePath = "/excel/" + excelName;
-        logger.info("relativePath is {}", relativePath);
-        IEntity<?, ?>[] entities = new Factory.Builder().container(ContainerEnum.EXCEL.getContainer()).build().createExcel(relativePath);
-        return Arrays.stream(entities).map(IEntity::getCurrent).toArray(IRow[]::new);
     }
 
 }

@@ -105,7 +105,6 @@ public class BusinessUtil extends BasicUtil {
         return list;
     }
 
-
     /**
      * 获取接待详情中的平均分
      *
@@ -119,6 +118,16 @@ public class BusinessUtil extends BasicUtil {
             return null;
         }
         int scoreSum = scores.stream().map(e -> (JSONObject) e).mapToInt(e -> e.getInteger("score")).sum();
-        return CommonUtil.getIntValue(scoreSum, 5, 0);
+        return CommonUtil.getIntRatio(scoreSum, 5, 0);
     }
+
+    public Integer getScoreByType(Long receptionId, Integer type) {
+        IScene scene = AppDetailScene.builder().id(receptionId).build();
+        JSONArray scores = toJavaObject(scene, AppDetailBean.class).getScores();
+        if (scores == null) {
+            return null;
+        }
+        return scores.stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("type").equals(type)).map(e -> e.getInteger("score")).findFirst().orElse(0);
+    }
+
 }
