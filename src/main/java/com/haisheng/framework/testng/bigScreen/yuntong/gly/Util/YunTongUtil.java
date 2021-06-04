@@ -10,31 +10,32 @@ import org.springframework.util.StringUtils;
 
 public class YunTongUtil extends TestCaseCommon {
     private static volatile YunTongUtil instance = null;
-    private static String IpPort ;
-    private static EnumTestProduce product ;
-    private VisitorProxy visitor ;
+    private static String IpPort;
+    private static EnumTestProduce product;
+    private VisitorProxy visitor;
 
     /**
      * 单例
+     *
      * @return YunTongUtil
      */
     public static synchronized YunTongUtil getInstance(EnumTestProduce product) {
         if (instance == null) {
-            instance=new YunTongUtil(product);
-            IpPort=product.getAddress();
+            instance = new YunTongUtil(product);
+            IpPort = product.getAddress();
         } else {
-            if(YunTongUtil.product!=product){
-                instance=new YunTongUtil(product);
-                IpPort=product.getAddress();
+            if (YunTongUtil.product != product) {
+                instance = new YunTongUtil(product);
+                IpPort = product.getAddress();
             }
         }
         return instance;
     }
 
-    private YunTongUtil(EnumTestProduce product){
-        this.product=product;
-        this.IpPort=product.getAddress();
-        this.visitor=VisitorProxy.getInstance(product);
+    private YunTongUtil(EnumTestProduce product) {
+        this.product = product;
+        this.IpPort = product.getAddress();
+        this.visitor = new VisitorProxy(product);
     }
 
 
@@ -91,7 +92,6 @@ public class YunTongUtil extends TestCaseCommon {
         }
         return invokeApi(url, json);
     }
-
 
 
 }

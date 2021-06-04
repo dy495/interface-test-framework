@@ -50,7 +50,7 @@ import java.util.stream.Collectors;
 public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.ALL_AUTHORITY_DAILY;
-    public VisitorProxy visitor = VisitorProxy.getInstance(PRODUCE);
+    public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public BusinessUtil UTIL = BusinessUtil.getInstance(visitor);
 
     @BeforeClass

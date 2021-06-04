@@ -27,14 +27,14 @@ import java.util.*;
 public class YongtongApp extends TestCaseCommon implements TestCaseStd {
 
     private static final EnumTestProduce product = EnumTestProduce.YT_DAILY;
-    private VisitorProxy visitor=VisitorProxy.getInstance(product);
+    private VisitorProxy visitor = new VisitorProxy(product);
 
 
     ScenarioUtil jc = new ScenarioUtil();
 
     DateTimeUtil dt = new DateTimeUtil();
     PublicParm pp = new PublicParm();
-    JcFunction pf = new JcFunction(visitor,pp);
+    JcFunction pf = new JcFunction(visitor, pp);
     JsonPathUtil jp = new JsonPathUtil();
     CommonConfig commonConfig = new CommonConfig();
 
@@ -864,12 +864,6 @@ public class YongtongApp extends TestCaseCommon implements TestCaseStd {
             saveData("轿辰-app接待,今日数据待处理接待+1,完成接待，待处理接待-1");
         }
     }
-
-
-
-
-
-
 
 
 }

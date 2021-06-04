@@ -29,12 +29,12 @@ import java.lang.reflect.Method;
 
 public class JcPcAffirmReception extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce product = EnumTestProduce.JC_DAILY;
-    private VisitorProxy visitor=VisitorProxy.getInstance(product);
+    private VisitorProxy visitor = new VisitorProxy(product);
     ScenarioUtil jc = new ScenarioUtil();
     private QADbProxy qaDbProxy = QADbProxy.getInstance();
     public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
     PublicParm pp = new PublicParm();
-    JcFunction pf = new JcFunction(visitor,pp);
+    JcFunction pf = new JcFunction(visitor, pp);
 
     String dataName = "pc_reception";
 
@@ -120,9 +120,9 @@ public class JcPcAffirmReception extends TestCaseCommon implements TestCaseStd {
             dataTemp.setApp_surplus_reception(appTodayTask[2]);
             dataTemp.setApp_all_reception(appTodayTask[3]);
             //pc 完成接待
-            Integer receptionId=qaDbUtil.selsetDataTempOne("appointmentId",dataName);
-            jc.pcFinishReception((long)receptionId,pp.shopIdZ);
-            dataTemp.setAppointmentId((long)receptionId);
+            Integer receptionId = qaDbUtil.selsetDataTempOne("appointmentId", dataName);
+            jc.pcFinishReception((long) receptionId, pp.shopIdZ);
+            dataTemp.setAppointmentId((long) receptionId);
             qaDbUtil.updateDataAll(dataTemp);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());

@@ -19,12 +19,12 @@ import java.lang.reflect.Method;
 
 public class JcAppAppointment extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce product = EnumTestProduce.JC_DAILY;
-    private VisitorProxy visitor=VisitorProxy.getInstance(product);
+    private final VisitorProxy visitor = new VisitorProxy(product);
     ScenarioUtil jc = new ScenarioUtil();
 
     DateTimeUtil dt = new DateTimeUtil();
     PublicParm pp = new PublicParm();
-    JcFunction pf = new JcFunction(visitor,pp);
+    JcFunction pf = new JcFunction(visitor, pp);
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name

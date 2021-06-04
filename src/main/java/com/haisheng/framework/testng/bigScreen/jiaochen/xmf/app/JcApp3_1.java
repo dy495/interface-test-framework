@@ -39,16 +39,15 @@ import java.util.regex.Pattern;
 public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
 
     private static final EnumTestProduce product = EnumTestProduce.JC_DAILY;
-    private VisitorProxy visitor=VisitorProxy.getInstance(product);
+    private VisitorProxy visitor = new VisitorProxy(product);
 
     ScenarioUtil jc = new ScenarioUtil();
     PublicParm pp = new PublicParm();
-    JcFunction pf = new JcFunction(visitor,pp);
+    JcFunction pf = new JcFunction(visitor, pp);
     CommonConfig commonConfig = new CommonConfig();
 
     private QADbProxy qaDbProxy = QADbProxy.getInstance();
     public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
-
 
 
     /**
@@ -65,7 +64,7 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
         commonConfig.referer = EnumTestProduce.JC_DAILY.getReferer();
-        commonConfig.product=EnumTestProduce.JC_DAILY.getAbbreviation();
+        commonConfig.product = EnumTestProduce.JC_DAILY.getAbbreviation();
 
         //replace backend gateway url
         //commonConfig.gateway = "";
@@ -112,12 +111,13 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
         httpPost(path, object, EnumTestProduce.JC_DAILY.getAddress());
     }
 
-    public void startReception(){
-        int receptionId=Integer.valueOf(pf.salereception(pp.customerPhone)[0]);
-        qaDbUtil.updateDataNum("app_sale_receptionId",receptionId);
+    public void startReception() {
+        int receptionId = Integer.valueOf(pf.salereception(pp.customerPhone)[0]);
+        qaDbUtil.updateDataNum("app_sale_receptionId", receptionId);
     }
-    public void finishReception(){
-        Integer receptionId=  qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum","app_sale_receptionId");
+
+    public void finishReception() {
+        Integer receptionId = qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum", "app_sale_receptionId");
         IScene appcustomerEdit = AppCustomerEditScene.builder()
                 .id(String.valueOf(receptionId))
                 .shopId(pp.shopIdZ)
@@ -129,7 +129,7 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
 
         IScene appfinishReception = AppFinishReceptionScene.builder()
                 .shopId(Long.valueOf(pp.shopIdZ))
-                .id((long)receptionId).build();
+                .id((long) receptionId).build();
 
         jc.invokeApi(appfinishReception);
     }
@@ -150,6 +150,7 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
     }
+
     @Test()
     public void Astart() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -167,7 +168,7 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
     public void zfinish() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-           finishReception();
+            finishReception();
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -181,8 +182,8 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
     public void editCustomer1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-           int id= qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum","app_sale_receptionId");
-            String[] reception = {String.valueOf(id),null};
+            int id = qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum", "app_sale_receptionId");
+            String[] reception = {String.valueOf(id), null};
             //编辑客户--名称超过50字
             IScene appcustomerEdit = AppCustomerEditScene.builder()
                     .id(reception[0])
@@ -207,9 +208,9 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
     public void editCustomer2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int id= qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum","app_sale_receptionId");
-            String[] reception = {String.valueOf(id),null};
-            String[] errphone = {"1590293829","178273766554","新人%￥#"};
+            int id = qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum", "app_sale_receptionId");
+            String[] reception = {String.valueOf(id), null};
+            String[] errphone = {"1590293829", "178273766554", "新人%￥#"};
             for (int i = 0; i < errphone.length; i++) {
                 IScene appcustomerEdit2 = AppCustomerEditScene.builder()
                         .id(reception[0])
@@ -231,16 +232,16 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-   /**
-    * @description :     为避免在小程序端产生较多脏数据，仅测试时运行
-    * @date :2021/5/27 11:51
-    **/
+    /**
+     * @description :     为避免在小程序端产生较多脏数据，仅测试时运行
+     * @date :2021/5/27 11:51
+     **/
 //    @Test(description = "买车购车记录+1")
     public void buyCar() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int id= qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum","app_sale_receptionId");
-            String[] reception = {String.valueOf(id),null};
+            int id = qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum", "app_sale_receptionId");
+            String[] reception = {String.valueOf(id), null};
             //编辑客户信息
             IScene appcustomerEdit2 = AppCustomerEditScene.builder()
                     .id(reception[0])
@@ -253,26 +254,23 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
             JSONObject data1 = jc.invokeApi(appcustomerEdit2);
 
             //购车记录数
-            IScene customerDetail=AppCustomerDetailScene.builder().id(reception[0]).shopId(pp.shopIdZ).build();
-            JSONObject orderList=jc.invokeApi(customerDetail);
-            JSONArray list=orderList.getJSONArray("order_list");
+            IScene customerDetail = AppCustomerDetailScene.builder().id(reception[0]).shopId(pp.shopIdZ).build();
+            JSONObject orderList = jc.invokeApi(customerDetail);
+            JSONArray list = orderList.getJSONArray("order_list");
 
             //购车
-            IScene appbuycar= AppBuyCarScene.builder().id(Long.valueOf(reception[0]))
+            IScene appbuycar = AppBuyCarScene.builder().id(Long.valueOf(reception[0]))
                     .carModel(Long.valueOf(pp.carModelId))
                     .shopId(Long.valueOf(pp.shopIdZ))
                     .vin("AAAAAAASDS1829837")   //底盘号
                     .build();
             jc.invokeApi(appbuycar);
             //购车记录数
-            IScene customerDetail2=AppCustomerDetailScene.builder().id(reception[0]).shopId(pp.shopIdZ).build();
-            JSONObject orderList2=jc.invokeApi(customerDetail2);
-            JSONArray list2=orderList2.getJSONArray("order_list");
+            IScene customerDetail2 = AppCustomerDetailScene.builder().id(reception[0]).shopId(pp.shopIdZ).build();
+            JSONObject orderList2 = jc.invokeApi(customerDetail2);
+            JSONArray list2 = orderList2.getJSONArray("order_list");
 
-            Preconditions.checkArgument(list2.size()-list.size()==1,"购车后记录+1");
-
-
-
+            Preconditions.checkArgument(list2.size() - list.size() == 1, "购车后记录+1");
 
 
         } catch (AssertionError | Exception e) {
@@ -286,43 +284,43 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
     public void changeReception() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int id= qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum","app_sale_receptionId");
-            String[] reception = {String.valueOf(id),null};
-            String uid="";
+            int id = qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum", "app_sale_receptionId");
+            String[] reception = {String.valueOf(id), null};
+            String uid = "";
 
-            JSONArray saleList=jc.AppReceptorListScene(Long.parseLong(pp.shopIdZ)).getJSONArray("list");
-            for(int i=0;i<saleList.size();i++){
-                 uid=saleList.getJSONObject(i).getString("uid");
-                if(!uid.equals(pp.useridxs)){
-                   break;
+            JSONArray saleList = jc.AppReceptorListScene(Long.parseLong(pp.shopIdZ)).getJSONArray("list");
+            for (int i = 0; i < saleList.size(); i++) {
+                uid = saleList.getJSONObject(i).getString("uid");
+                if (!uid.equals(pp.useridxs)) {
+                    break;
                 }
             }
-            int totalBefore=pf.appSaleReceptionPage();
+            int totalBefore = pf.appSaleReceptionPage();
             //变更接待
-            IScene appreceptionChange=AppReceptorChangeScene.builder().receptorId(uid)
+            IScene appreceptionChange = AppReceptorChangeScene.builder().receptorId(uid)
                     .shopId(Long.valueOf(pp.shopIdZ))
                     .id(Long.valueOf(reception[0]))
                     .build();
             jc.invokeApi(appreceptionChange);
-            int total=pf.appSaleReceptionPage();
+            int total = pf.appSaleReceptionPage();
 
-            pcLogin(pp.dzphone,pp.dzcode,pp.dzroleId);
+            pcLogin(pp.dzphone, pp.dzcode, pp.dzroleId);
             //店长登录 变更接待
-            appreceptionChange=AppReceptorChangeScene.builder().receptorId(pp.useridxs)
+            appreceptionChange = AppReceptorChangeScene.builder().receptorId(pp.useridxs)
                     .shopId(Long.valueOf(pp.shopIdZ))
                     .id(Long.valueOf(reception[0]))
                     .build();
             jc.invokeApi(appreceptionChange);
-            appLogin(pp.jdgw,pp.gwpassword,pp.roleidJdgw);
-            int totalAfter=pf.appSaleReceptionPage();
+            appLogin(pp.jdgw, pp.gwpassword, pp.roleidJdgw);
+            int totalAfter = pf.appSaleReceptionPage();
 
-            Preconditions.checkArgument(total-totalBefore==-1,"变更接待列表-1");
-            Preconditions.checkArgument(total-totalAfter==-1,"再次变更列表+1");
+            Preconditions.checkArgument(total - totalBefore == -1, "变更接待列表-1");
+            Preconditions.checkArgument(total - totalAfter == -1, "再次变更列表+1");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            pcLogin(pp.jdgw,pp.jdgwpassword,pp.roleidJdgw);
+            pcLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
             saveData("变更接待+1");
         }
     }
@@ -331,23 +329,21 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
     public void remark() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int id= qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum","app_sale_receptionId");
-            String[] reception = {String.valueOf(id),null};
+            int id = qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum", "app_sale_receptionId");
+            String[] reception = {String.valueOf(id), null};
 
-            IScene customerDetail=AppCustomerDetailScene.builder().id(reception[0]).shopId(pp.shopIdZ).build();
-            JSONObject orderList=jc.invokeApi(customerDetail);
-            JSONArray list=orderList.getJSONArray("remarks");
+            IScene customerDetail = AppCustomerDetailScene.builder().id(reception[0]).shopId(pp.shopIdZ).build();
+            JSONObject orderList = jc.invokeApi(customerDetail);
+            JSONArray list = orderList.getJSONArray("remarks");
 
-            String remark=pp.String_50;
-            jc.AppCustomerRemarkScene(Long.valueOf(reception[0]),Long.valueOf(pp.shopIdZ),remark);
+            String remark = pp.String_50;
+            jc.AppCustomerRemarkScene(Long.valueOf(reception[0]), Long.valueOf(pp.shopIdZ), remark);
 
-            IScene customerDetail2=AppCustomerDetailScene.builder().id(reception[0]).shopId(pp.shopIdZ).build();
-            JSONObject orderList2=jc.invokeApi(customerDetail2);
-            JSONArray list2=orderList2.getJSONArray("remarks");
+            IScene customerDetail2 = AppCustomerDetailScene.builder().id(reception[0]).shopId(pp.shopIdZ).build();
+            JSONObject orderList2 = jc.invokeApi(customerDetail2);
+            JSONArray list2 = orderList2.getJSONArray("remarks");
 
 //            Preconditions.checkArgument(list2.size()-list.size()==1,"备注失败");
-
-
 
 
         } catch (AssertionError | Exception e) {
@@ -357,11 +353,11 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-//    @Test(description = "在线专家回复")
+    //    @Test(description = "在线专家回复")
     public void follow_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int totalBefore=pf.followPageNumber();
+            int totalBefore = pf.followPageNumber();
             jc.appletLoginToken(pp.appletTocken);
             IScene onlineExpert = AppletConsultOnlineExpertsSubmitScene.builder()
                     .shopId(Long.valueOf(pp.shopIdZ))
@@ -371,32 +367,32 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
                     .modelId(Long.valueOf(pp.carModelId))
                     .brandId(pp.brandId)
                     .build();
-            JSONObject data=jc.invokeApi(onlineExpert);
+            JSONObject data = jc.invokeApi(onlineExpert);
 
             //跟进列表 获取id
-            JSONObject followList=jc.AppPageV3Scene(10,null, followType.ONLINE_EXPERTS.getName());
-            int total=followList.getInteger("total");
-            Long id=followList.getJSONArray("list").getJSONObject(0).getLong("id");
+            JSONObject followList = jc.AppPageV3Scene(10, null, followType.ONLINE_EXPERTS.getName());
+            int total = followList.getInteger("total");
+            Long id = followList.getJSONArray("list").getJSONObject(0).getLong("id");
 
-            Preconditions.checkArgument(total-totalBefore==1,"在线咨询，跟进列表+1");
+            Preconditions.checkArgument(total - totalBefore == 1, "在线咨询，跟进列表+1");
 
             //回复
-            jc.AppReplyV3Scene(id,"轮胎保养参考用户手册");
+            jc.AppReplyV3Scene(id, "轮胎保养参考用户手册");
 
             //备注
-            jc.AppRemarkV3Scene(id,"我是备注");
+            jc.AppRemarkV3Scene(id, "我是备注");
 
-            JSONObject lastvalue=null;
-            int size=10;
-            while(size<10){
-                JSONObject followPageAfter=jc.AppPageV3Scene(10,lastvalue, followType.ONLINE_EXPERTS.getName());
-                JSONArray followListAfter=followPageAfter.getJSONArray("list");
-                size=followListAfter.size();
-                lastvalue=followPageAfter.getJSONObject("last_value");
+            JSONObject lastvalue = null;
+            int size = 10;
+            while (size < 10) {
+                JSONObject followPageAfter = jc.AppPageV3Scene(10, lastvalue, followType.ONLINE_EXPERTS.getName());
+                JSONArray followListAfter = followPageAfter.getJSONArray("list");
+                size = followListAfter.size();
+                lastvalue = followPageAfter.getJSONObject("last_value");
 
-                for(int i=0;i<followListAfter.size();i++){
+                for (int i = 0; i < followListAfter.size(); i++) {
                     Long idAfter = followListAfter.getJSONObject(i).getLong("id");
-                    if(idAfter.equals(id)){
+                    if (idAfter.equals(id)) {
                         //返回跟进和 备注的内容
                         break;
                     }
@@ -413,12 +409,12 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
     }
 
 
-//    @Test(description = "专属售后咨询")   //TODO: 销售顾问咨询 copy 即可
+    //    @Test(description = "专属售后咨询")   //TODO: 销售顾问咨询 copy 即可
     public void follow_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject followListBefore=jc.AppPageV3Scene(10,null, followType.ONLINE_EXPERTS.getName());
-            int totalBefore=followListBefore.getInteger("total");
+            JSONObject followListBefore = jc.AppPageV3Scene(10, null, followType.ONLINE_EXPERTS.getName());
+            int totalBefore = followListBefore.getInteger("total");
             IScene onlineExpert = AppletConsultAfterServiceSubmitScene.builder()
                     .shopId(Long.valueOf(pp.shopIdZ))
                     .content("专属售后咨询")
@@ -427,33 +423,33 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
                     .modelId(Long.valueOf(pp.carModelId))
                     .salesId(pp.userid)
                     .build();
-            JSONObject data=jc.invokeApi(onlineExpert);
+            JSONObject data = jc.invokeApi(onlineExpert);
 
             //跟进列表 获取id
-            JSONObject followList=jc.AppPageV3Scene(10,null, followType.ONLINE_EXPERTS.getName());
-            int total=followList.getInteger("total");
-            Long id=followList.getJSONArray("list").getJSONObject(0).getLong("id");
+            JSONObject followList = jc.AppPageV3Scene(10, null, followType.ONLINE_EXPERTS.getName());
+            int total = followList.getInteger("total");
+            Long id = followList.getJSONArray("list").getJSONObject(0).getLong("id");
 
-            Preconditions.checkArgument(total-totalBefore==1,"在线咨询，跟进列表+1");
+            Preconditions.checkArgument(total - totalBefore == 1, "在线咨询，跟进列表+1");
 
             //回复
-            jc.AppReplyV3Scene(id,"轮胎保养参考用户手册");
+            jc.AppReplyV3Scene(id, "轮胎保养参考用户手册");
 
             //备注
-            jc.AppRemarkV3Scene(id,"我是备注");
+            jc.AppRemarkV3Scene(id, "我是备注");
 
             //循环查找 列表中需要的跟进任务
-            JSONObject lastvalue=null;
-            int size=10;
-            while(size<10){
-                JSONObject followPageAfter=jc.AppPageV3Scene(10,lastvalue, followType.ONLINE_EXPERTS.getName());
-                JSONArray followListAfter=followPageAfter.getJSONArray("list");
-                size=followListAfter.size();
-                lastvalue=followPageAfter.getJSONObject("last_value");
+            JSONObject lastvalue = null;
+            int size = 10;
+            while (size < 10) {
+                JSONObject followPageAfter = jc.AppPageV3Scene(10, lastvalue, followType.ONLINE_EXPERTS.getName());
+                JSONArray followListAfter = followPageAfter.getJSONArray("list");
+                size = followListAfter.size();
+                lastvalue = followPageAfter.getJSONObject("last_value");
 
-                for(int i=0;i<followListAfter.size();i++){
+                for (int i = 0; i < followListAfter.size(); i++) {
                     Long idAfter = followListAfter.getJSONObject(i).getLong("id");
-                    if(idAfter.equals(id)){
+                    if (idAfter.equals(id)) {
                         //返回跟进和 备注的内容
                         break;
                     }
@@ -470,35 +466,35 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
     public void permissions() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            pcLogin(pp.gwphone,pp.gwpassword,pp.roleId);
+            pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
 //            Long i=pf.getAccessId2("个人");
 
             //账户登录  修改角色的权限
             JSONArray roleList1 = new JSONArray();
-            roleList1.add( roleList.findByLable("个人").getValue());
+            roleList1.add(roleList.findByLable("个人").getValue());
             roleList1.add(roleList.findByLable("门店").getValue());
             //预约保养分配
-            jc.organizationRoleEdit(Long.parseLong(pp.userroleId),"临时用户","随时修改用户权限",roleList1);
+            jc.organizationRoleEdit(Long.parseLong(pp.userroleId), "临时用户", "随时修改用户权限", roleList1);
             jc.appletLoginToken(pp.appletTocken);
-            int staffTotalBefore =  jc.AppletAppointmentStaffListScene("MAINTAIN",Long.valueOf(pp.shopIdZ)).getJSONArray("list").size();
+            int staffTotalBefore = jc.AppletAppointmentStaffListScene("MAINTAIN", Long.valueOf(pp.shopIdZ)).getJSONArray("list").size();
 
             roleList1.add(roleList.findByLable("预约保养分配").getValue());
             //            appLogin(pp.user,pp.userpassword,pp.userroleId);
-            pcLogin(pp.gwphone,pp.gwpassword,pp.roleId);
-            jc.organizationRoleEdit(Long.parseLong(pp.userroleId),"临时用户","随时修改用户权限",roleList1);
+            pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
+            jc.organizationRoleEdit(Long.parseLong(pp.userroleId), "临时用户", "随时修改用户权限", roleList1);
 
             //小程序 门店下接待人员总数
             jc.appletLoginToken(pp.appletTocken);
-            int staffTotal=  jc.AppletAppointmentStaffListScene("MAINTAIN",Long.valueOf(pp.shopIdZ)).getJSONArray("list").size();
+            int staffTotal = jc.AppletAppointmentStaffListScene("MAINTAIN", Long.valueOf(pp.shopIdZ)).getJSONArray("list").size();
 
             roleList1.remove(2);
-            pcLogin(pp.gwphone,pp.gwpassword,pp.roleId);
-            jc.organizationRoleEdit(Long.parseLong(pp.userroleId),"临时用户","随时修改用户权限",roleList1);
+            pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
+            jc.organizationRoleEdit(Long.parseLong(pp.userroleId), "临时用户", "随时修改用户权限", roleList1);
 
             jc.appletLoginToken(pp.appletTocken);
-            int staffTotalAfter=  jc.AppletAppointmentStaffListScene("MAINTAIN",Long.valueOf(pp.shopIdZ)).getJSONArray("list").size();
-            Preconditions.checkArgument(staffTotalAfter-staffTotal==-1,"去掉权限后："+staffTotalAfter+"去掉权限前:"+staffTotal);
-            Preconditions.checkArgument(staffTotalBefore-staffTotal==-1,"增加权限前："+staffTotalBefore+"增加之后:"+staffTotal);
+            int staffTotalAfter = jc.AppletAppointmentStaffListScene("MAINTAIN", Long.valueOf(pp.shopIdZ)).getJSONArray("list").size();
+            Preconditions.checkArgument(staffTotalAfter - staffTotal == -1, "去掉权限后：" + staffTotalAfter + "去掉权限前:" + staffTotal);
+            Preconditions.checkArgument(staffTotalBefore - staffTotal == -1, "增加权限前：" + staffTotalBefore + "增加之后:" + staffTotal);
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -511,65 +507,9 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
     public void expertsConfig() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String type="ONLINE_EXPERTS";
-            Integer remind=1;
-            pcLogin(pp.gwphone,pp.gwpassword,pp.roleId);
-            String workday = "{\n" +
-                    "            \"afternoon_date_start\":\"13:00\",\n" +
-                    "            \"forenoon_date_end\":\"12:00\",\n" +
-                    "            \"forenoon_date_start\":\"04:00\",\n" +
-                    "            \"afternoon_date_end\":\"23:59\"\n" +
-                    "        }";
-            String weekDay = "{\n" +
-                    "            \"afternoon_date_start\":\"13:00\",\n" +
-                    "            \"forenoon_date_end\":\"12:00\",\n" +
-                    "            \"forenoon_date_start\":\"04:00\",\n" +
-                    "            \"afternoon_date_end\":\"17:00\"\n" +
-                    "        }";
-            JSONObject work_day = JSONObject.parseObject(workday);
-            JSONObject week_day = JSONObject.parseObject(weekDay);
-           IScene responseRuleEditScene = ResponseRuleEditScene.builder().businessType(type).remindTime(remind).overTime(remind)
-                    .workDay(work_day).weekDay(week_day).build();
-            jc.invokeApi(responseRuleEditScene);
-
-
-            jc.appletLoginToken(pp.appletTocken);
-            //发起专属服务
-            IScene appletCustomer= AppletConsultOnlineExpertsSubmitScene.builder().customerName("夏明凤").customerPhone(pp.customerPhone)
-                    .content("自动询问有权限者收1234567890")
-                    .modelId(Long.parseLong(pp.carModelId)).shopId(Long.parseLong(pp.shopIdZ)).build();
-            jc.invokeApi(appletCustomer);
-
-            appLogin(pp.jdgw,pp.jdgwpassword,pp.roleidJdgw);
-            //消息数
-            int gwtotal=jc.appmessageList("20",null).getInteger("total");
-            appLogin(pp.dzphone,pp.dzcode,pp.dzroleId);
-            int dztotal=jc.appmessageList("20",null).getInteger("total");
-
-            sleep(remind*60);
-            int dztotalAfter=jc.appmessageList("20",null).getInteger("total");
-
-            appLogin(pp.jdgw,pp.jdgwpassword,pp.roleidJdgw);
-            int gwtotalAfter=jc.appmessageList("20",null).getInteger("total");
-
-            Preconditions.checkArgument(gwtotalAfter==gwtotal,"销售顾问没有提醒接受权限,确收到提醒");
-            Preconditions.checkArgument(dztotalAfter-dztotal==1,"店长有提醒接受权限，没有收到提醒");
-
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("配置在线专家，提醒接收人在超时事件后收到提醒");
-        }
-    }
-
-    @Test(description = "pc配置专属服务")
-    public void serverConfig() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            String type="SALES";
-            Integer remind=1;
-            pcLogin(pp.gwphone,pp.gwpassword,pp.roleId);
+            String type = "ONLINE_EXPERTS";
+            Integer remind = 1;
+            pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
             String workday = "{\n" +
                     "            \"afternoon_date_start\":\"13:00\",\n" +
                     "            \"forenoon_date_end\":\"12:00\",\n" +
@@ -591,25 +531,81 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
 
             jc.appletLoginToken(pp.appletTocken);
             //发起专属服务
-            IScene appletCustomer= AppletConsultPreServiceSubmitScene.builder().customerName("夏明凤").customerPhone(pp.customerPhone)
+            IScene appletCustomer = AppletConsultOnlineExpertsSubmitScene.builder().customerName("夏明凤").customerPhone(pp.customerPhone)
+                    .content("自动询问有权限者收1234567890")
+                    .modelId(Long.parseLong(pp.carModelId)).shopId(Long.parseLong(pp.shopIdZ)).build();
+            jc.invokeApi(appletCustomer);
+
+            appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
+            //消息数
+            int gwtotal = jc.appmessageList("20", null).getInteger("total");
+            appLogin(pp.dzphone, pp.dzcode, pp.dzroleId);
+            int dztotal = jc.appmessageList("20", null).getInteger("total");
+
+            sleep(remind * 60);
+            int dztotalAfter = jc.appmessageList("20", null).getInteger("total");
+
+            appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
+            int gwtotalAfter = jc.appmessageList("20", null).getInteger("total");
+
+            Preconditions.checkArgument(gwtotalAfter == gwtotal, "销售顾问没有提醒接受权限,确收到提醒");
+            Preconditions.checkArgument(dztotalAfter - dztotal == 1, "店长有提醒接受权限，没有收到提醒");
+
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("配置在线专家，提醒接收人在超时事件后收到提醒");
+        }
+    }
+
+    @Test(description = "pc配置专属服务")
+    public void serverConfig() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String type = "SALES";
+            Integer remind = 1;
+            pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
+            String workday = "{\n" +
+                    "            \"afternoon_date_start\":\"13:00\",\n" +
+                    "            \"forenoon_date_end\":\"12:00\",\n" +
+                    "            \"forenoon_date_start\":\"04:00\",\n" +
+                    "            \"afternoon_date_end\":\"23:59\"\n" +
+                    "        }";
+            String weekDay = "{\n" +
+                    "            \"afternoon_date_start\":\"13:00\",\n" +
+                    "            \"forenoon_date_end\":\"12:00\",\n" +
+                    "            \"forenoon_date_start\":\"04:00\",\n" +
+                    "            \"afternoon_date_end\":\"17:00\"\n" +
+                    "        }";
+            JSONObject work_day = JSONObject.parseObject(workday);
+            JSONObject week_day = JSONObject.parseObject(weekDay);
+            IScene responseRuleEditScene = ResponseRuleEditScene.builder().businessType(type).remindTime(remind).overTime(remind)
+                    .workDay(work_day).weekDay(week_day).build();
+            jc.invokeApi(responseRuleEditScene);
+
+
+            jc.appletLoginToken(pp.appletTocken);
+            //发起专属服务
+            IScene appletCustomer = AppletConsultPreServiceSubmitScene.builder().customerName("夏明凤").customerPhone(pp.customerPhone)
                     .content("自动发起专属服务，有提醒权限者收1111111")
                     .salesId(pp.userid).modelId(Long.parseLong(pp.carModelId)).shopId(Long.parseLong(pp.shopIdZ)).build();
             jc.invokeApi(appletCustomer);
 
-            appLogin(pp.jdgw,pp.jdgwpassword,pp.roleidJdgw);
+            appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
             //消息数
-            int gwtotal=jc.appmessageList("20",null).getInteger("total");
-            appLogin(pp.dzphone,pp.dzcode,pp.dzroleId);
-            int dztotal=jc.appmessageList("20",null).getInteger("total");
+            int gwtotal = jc.appmessageList("20", null).getInteger("total");
+            appLogin(pp.dzphone, pp.dzcode, pp.dzroleId);
+            int dztotal = jc.appmessageList("20", null).getInteger("total");
 
-            sleep(remind*60);
-            int dztotalAfter=jc.appmessageList("20",null).getInteger("total");
+            sleep(remind * 60);
+            int dztotalAfter = jc.appmessageList("20", null).getInteger("total");
 
-            appLogin(pp.jdgw,pp.jdgwpassword,pp.roleidJdgw);
-            int gwtotalAfter=jc.appmessageList("20",null).getInteger("total");
+            appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
+            int gwtotalAfter = jc.appmessageList("20", null).getInteger("total");
 
-            Preconditions.checkArgument(gwtotalAfter==gwtotal,"销售顾问没有提醒接受权限,确收到提醒");
-            Preconditions.checkArgument(dztotalAfter-dztotal==1,"店长有提醒接受权限，没有收到提醒");
+            Preconditions.checkArgument(gwtotalAfter == gwtotal, "销售顾问没有提醒接受权限,确收到提醒");
+            Preconditions.checkArgument(dztotalAfter - dztotal == 1, "店长有提醒接受权限，没有收到提醒");
 
 
         } catch (AssertionError | Exception e) {
@@ -620,31 +616,29 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
     }
 
     @DataProvider(name = "onlineExpertInfo")
-    public static Object[] onlineExpertInfo(){
+    public static Object[] onlineExpertInfo() {
         return new String[]{
                 followType.ONLINE_EXPERTS.getType(),
                 followType.SALES.getType(),
         };
     }
 
-    @Test(dataProvider ="onlineExpertInfo", description = "跟进回复在线专家和专属服务")   //三次
+    @Test(dataProvider = "onlineExpertInfo", description = "跟进回复在线专家和专属服务")   //三次
     public void zfollowRemark(String type) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            appLogin(pp.jdgw, pp.jdgwpassword,pp.roleidJdgw);
-            JSONObject data=jc.AppPageV3Scene(10,null,type);
-            JSONArray list=data.getJSONArray("list");
-            Long followId=list.getJSONObject(0).getLong("id");
+            appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
+            JSONObject data = jc.AppPageV3Scene(10, null, type);
+            JSONArray list = data.getJSONArray("list");
+            Long followId = list.getJSONObject(0).getLong("id");
 //            jc.AppRemarkV3Scene(followId,"自动回复在线专家专属服务您可满意！！！");AppReplyV3Scene
-            jc.AppReplyV3Scene(followId,"自动回复在线专家专属服务您可满意！！！");
+            jc.AppReplyV3Scene(followId, "自动回复在线专家专属服务您可满意！！！");
 
 //            JSONObject dataAfter=jc.AppPageV3Scene(10,null,type);
 //            JSONArray listAfter=dataAfter.getJSONArray("list");
 //            Long followIdAfter=listAfter.getJSONObject(0).getLong("id");
 //            String isreply=listAfter.getJSONObject(0).getString("is_reply");
 //            Preconditions.checkArgument(isreply.equals("true"),"");
-
-
 
 
         } catch (AssertionError | Exception e) {
@@ -655,47 +649,40 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
     }
 
     @DataProvider(name = "repairreply")
-    public static Object[] repairreply(){
+    public static Object[] repairreply() {
         return new String[]{
                 followType.MAINTAIN_EVALUATE.getType(),
                 followType.REPAIR_EVALUATE.getType(),
         };
     }
 
-//    @Test(dataProvider ="repairreply", description = "跟进回复差评")   //三次
+    //    @Test(dataProvider ="repairreply", description = "跟进回复差评")   //三次
     public void zfollowRemark2(String type) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            appLogin(pp.dzphone, pp.dzcode,pp.dzroleId);
-            JSONObject data=jc.AppPageV3Scene(10,null,type);
-            JSONArray list=data.getJSONArray("list");
-            Long followId=list.getJSONObject(0).getLong("id");
-            jc.AppRemarkV3Scene(followId,"自动回复维修保养差评您可满意！！！");
+            appLogin(pp.dzphone, pp.dzcode, pp.dzroleId);
+            JSONObject data = jc.AppPageV3Scene(10, null, type);
+            JSONArray list = data.getJSONArray("list");
+            Long followId = list.getJSONObject(0).getLong("id");
+            jc.AppRemarkV3Scene(followId, "自动回复维修保养差评您可满意！！！");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            appLogin(pp.jdgw, pp.jdgwpassword,pp.roleidJdgw);
+            appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
             saveData("轿辰-app接待,今日数据待处理接待+1,完成接待，待处理接待-1");
         }
     }
+
     @Test
-    public void collectsort(){
-        Pattern p=Pattern.compile("\\d");
-        Matcher m=p.matcher("QWe");
+    public void collectsort() {
+        Pattern p = Pattern.compile("\\d");
+        Matcher m = p.matcher("QWe");
         System.out.println(m.find());
 
-        List a=new ArrayList();
+        List a = new ArrayList();
         Collections.sort(a);
     }
-
-
-
-
-
-
-
-
 
 
 }

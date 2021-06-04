@@ -19,9 +19,9 @@ import java.util.List;
 public class RiskControlUtil extends TestCaseCommon {
 
     private static volatile RiskControlUtil instance = null;
-    private static String IpPort ;
-    private static EnumTestProduce product ;
-    private final VisitorProxy visitor ;
+    private static String IpPort;
+    private static EnumTestProduce product;
+    private final VisitorProxy visitor;
 
     /**
      * 单例
@@ -30,20 +30,20 @@ public class RiskControlUtil extends TestCaseCommon {
      */
     public static synchronized RiskControlUtil getInstance(EnumTestProduce product) {
         if (instance == null) {
-           instance=new RiskControlUtil(product);
-           IpPort=product.getAddress();
+            instance = new RiskControlUtil(product);
+            IpPort = product.getAddress();
         } else {
-            if(RiskControlUtil.product!=product){
-                instance=new RiskControlUtil(product);
-                IpPort=product.getAddress();
+            if (RiskControlUtil.product != product) {
+                instance = new RiskControlUtil(product);
+                IpPort = product.getAddress();
             }
         }
         return instance;
     }
 
-    private RiskControlUtil(EnumTestProduce product){
-        RiskControlUtil.product=product;
-        visitor=VisitorProxy.getInstance(product);
+    private RiskControlUtil(EnumTestProduce product) {
+        RiskControlUtil.product = product;
+        visitor = new VisitorProxy(product);
     }
 
     /**

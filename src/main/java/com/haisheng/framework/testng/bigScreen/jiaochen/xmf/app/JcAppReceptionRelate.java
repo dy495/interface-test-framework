@@ -32,11 +32,11 @@ import java.lang.reflect.Method;
 public class JcAppReceptionRelate extends TestCaseCommon implements TestCaseStd {
     PublicParm pp = new PublicParm();
     private static final EnumTestProduce product = EnumTestProduce.JC_DAILY;
-    private VisitorProxy visitor=VisitorProxy.getInstance(product);
+    private VisitorProxy visitor = new VisitorProxy(product);
     ScenarioUtil jc = new ScenarioUtil();
     private QADbProxy qaDbProxy = QADbProxy.getInstance();
     public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
-    JcFunction pf = new JcFunction(visitor,pp);
+    JcFunction pf = new JcFunction(visitor, pp);
     String dataName = "app_reception";
 
 
@@ -50,8 +50,7 @@ public class JcAppReceptionRelate extends TestCaseCommon implements TestCaseStd 
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
         commonConfig.referer = EnumTestProduce.JC_DAILY.getReferer();
-        commonConfig.product=EnumTestProduce.JC_DAILY.getAbbreviation();
-
+        commonConfig.product = EnumTestProduce.JC_DAILY.getAbbreviation();
 
 
         //replace backend gateway url
@@ -181,12 +180,13 @@ public class JcAppReceptionRelate extends TestCaseCommon implements TestCaseStd 
             saveData("接待后，app今日任务分子分母+1");
         }
     }
+
     @Test(description = "今日任务数==今日数据各列数据之和")  //ok
     public void taskEquelDate() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-           jc.appLogin(pp.jdgw, pp.jdgwpassword);
-           String name=pp.nameJdgw;
+            jc.appLogin(pp.jdgw, pp.jdgwpassword);
+            String name = pp.nameJdgw;
             String type = "all";   //home \all
             //获取今日任务数
             int tasknum[] = pf.appTask();
