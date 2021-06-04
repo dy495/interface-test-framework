@@ -5464,7 +5464,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             //获取卡券的可用库存
             Long AllowUseInventoryAfter=businessUtil.getVoucherAllowUseInventoryNum(voucherId);
             System.out.println("可用库存的数量不为:"+AllowUseInventory+"+++++++++"+AllowUseInventoryAfter+"    "+activityId);
-            Preconditions.checkArgument(AllowUseInventoryBefore==1000&&AllowUseInventoryAfter==0L,"可用库存的数量不为0");
+            Preconditions.checkArgument(AllowUseInventoryBefore==1000&&AllowUseInventoryAfter==970L,"可用库存的数量不为0");
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {

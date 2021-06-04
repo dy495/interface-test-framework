@@ -1691,7 +1691,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             //获取待审批活动的ID
             List<Long> ids = businessUtil.getFissionActivityWaitingApproval();
             //撤回待审批的活动
-            String message = businessUtil.getRevokeActivity(ids.get(0));
+            businessUtil.getRevokeActivity(ids.get(0));
             //获取刚才通过的活动的状态
             int status = businessUtil.getActivityStatus(ids.get(0));
             Preconditions.checkArgument(status == ActivityStatusEnum.REVOKE.getId(), "撤回的待审批的活动,现活动的状态为：" + ActivityStatusEnum.REVOKE.getStatusName());
@@ -1699,7 +1699,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("裂变活动-活动审批未通过");
+            saveData("裂变活动-【待审批】的活动撤回");
         }
     }
 
@@ -5449,8 +5449,8 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             businessUtil.getApprovalPassed(activityId);
             //获取卡券的可用库存
             Long AllowUseInventoryAfter=businessUtil.getVoucherAllowUseInventoryNum(voucherId);
-            System.out.println("可用库存的数量不为:"+AllowUseInventory+"+++++++++"+AllowUseInventoryAfter+"    "+activityId);
-            Preconditions.checkArgument(AllowUseInventoryBefore==1000&&AllowUseInventoryAfter==0L,"可用库存的数量不为0");
+            System.out.println("可用库存的数量不为:"+AllowUseInventory+"--------"+AllowUseInventoryAfter+"    "+activityId);
+            Preconditions.checkArgument(AllowUseInventory==1000L&&AllowUseInventoryAfter==970L,"可用库存的数量不为0");
             } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
