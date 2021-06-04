@@ -9,6 +9,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.entity.IEntity;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.row.IRow;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.util.ContainerEnum;
 import com.haisheng.framework.testng.bigScreen.crm.wm.bean.Response;
+import com.haisheng.framework.testng.bigScreen.yuntong.xmf.PublicParm;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.UrlOutputUtil;
 import org.jetbrains.annotations.NotNull;

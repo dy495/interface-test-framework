@@ -27,6 +27,8 @@ import org.apache.http.client.HttpClient;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 
 
@@ -810,7 +812,8 @@ public class CommonUsedUtil {
                     .other("ExpiredTime", "50 * 1000")
                     .other("Authorization", auth)
                     .build();
-            String transTime = "" + System.currentTimeMillis();
+//            String transTime = "" + LocalDateTime.now().plusHours(1).toInstant(ZoneOffset.of("+8")).toEpochMilli();
+            String transTime = "" +System.currentTimeMillis();
             //ONLINE   SCAN
             String str = "{\n" +
                     "   \"uid\": \""+uid+"\",\n" +
@@ -875,6 +878,12 @@ public class CommonUsedUtil {
         return  cashierTolta;
     }
 
+
+    public static void main(String[] args) {
+        String transTime = "" + LocalDateTime.now().plusHours(1).toInstant(ZoneOffset.of("+8")).toEpochMilli()
+                ;
+        System.out.println(transTime);
+    }
     /**
      * 判断车架号是否17位
      */

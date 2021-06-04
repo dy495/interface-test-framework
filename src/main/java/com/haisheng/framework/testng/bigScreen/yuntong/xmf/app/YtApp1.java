@@ -1,13 +1,13 @@
-package com.haisheng.framework.testng.bigScreen.jiaochen.xmf.app;
+package com.haisheng.framework.testng.bigScreen.yuntong.xmf.app;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.JsonPathUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.DataAbnormal;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
@@ -25,11 +25,9 @@ import org.testng.annotations.*;
 import java.lang.reflect.Method;
 import java.util.*;
 
-public class JcApp extends TestCaseCommon implements TestCaseStd {
-
+public class YtApp1 extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce product = EnumTestProduce.JC_DAILY;
     public VisitorProxy visitor=new VisitorProxy(product);
-
     ScenarioUtil jc = new ScenarioUtil();
 
     DateTimeUtil dt = new DateTimeUtil();

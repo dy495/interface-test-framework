@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.JsonPathUtil;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
@@ -37,9 +38,12 @@ import java.util.regex.Pattern;
 
 public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
 
+    private static final EnumTestProduce product = EnumTestProduce.JC_DAILY;
+    public VisitorProxy visitor=new VisitorProxy(product);
+
     ScenarioUtil jc = new ScenarioUtil();
     PublicParm pp = new PublicParm();
-    JcFunction pf = new JcFunction();
+    JcFunction pf = new JcFunction(visitor,pp);
     CommonConfig commonConfig = new CommonConfig();
 
     private QADbProxy qaDbProxy = QADbProxy.getInstance();

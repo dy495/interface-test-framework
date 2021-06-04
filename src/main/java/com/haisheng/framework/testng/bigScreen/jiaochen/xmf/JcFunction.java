@@ -2,7 +2,9 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.xmf;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.util.BasicUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.registerListVariable;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.AppAdmitScene;
@@ -21,12 +23,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
-public class JcFunction {
+public class JcFunction extends BasicUtil {
+    private final VisitorProxy visitor;
+    public final PublicParm pp;
     ScenarioUtil jc = new ScenarioUtil();
-    PublicParm pp = new PublicParm();
+
     Random random = new Random();
     DateTimeUtil dt = new DateTimeUtil();
     FileUtil file = new FileUtil();
+
+    public JcFunction(VisitorProxy visitor,PublicParm pp){
+        super(visitor);
+        this.visitor = visitor;
+        this.pp=pp;
+    }
 
     public String genPhoneNum() {
         String num = "177" + (random.nextInt(89999999) + 10000000);

@@ -287,7 +287,9 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
             or.shopId=router.getShopid();
             or.userId=pp.userId;
             or.openId=pp.openId;
-            or.carVehicleNumber="AAAAAAAAAA22"+CommonUtil.getRandom(5);
+//            or.carVehicleNumber="AAAAAAAAAA22"+CommonUtil.getRandom(5);
+            or.carVehicleNumber="AAAAAAAAAA2256599";
+
 //            or.business_type="\"GOODS_PAY\"";
             or.business_type=null;
             System.out.println(or.carVehicleNumber);

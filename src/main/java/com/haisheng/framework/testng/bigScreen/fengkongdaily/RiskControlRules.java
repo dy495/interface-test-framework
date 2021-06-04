@@ -261,7 +261,7 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
 //                JSONObject jsonObject=staffObject("uid_663ad666","杨航","",0,face);
 //
                 String face=file.getImgStr( "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/xia.png");
-                JSONObject jsonObject=staffObject("uid_663ad653","店员1","uid_663ad653",1,face);
+                JSONObject jsonObject=staffObject("uid_663ad653","店员1","uid_663ad653",0,face);
 //
 //             String face=file.getImgStr( "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/lv.jpg");
 //                JSONObject jsonObject=staffObject("uid_91cc8031","吕雪晴","uid_91cc8031",1,face);
