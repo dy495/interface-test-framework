@@ -1794,3 +1794,863 @@ public JSONObject ExchangeCommoditySpecificationsListScene( Long id) {
 
     return invokeApi(url, json);
 }
+
+/**
+     * 1.1. app销售客户列表（杨）v4.0（2021-05-06）的接口
+     * @date 2021-05-31 16:21:16
+     * Integer size : 页大小 范围为[1,100]  是否必填 true  版本 v1.0
+     * JSONObject lastValue : 上次请求最后值  是否必填 false  版本 v1.0
+   */
+
+public JSONObject AppPreCustomerScene( Integer size, JSONObject lastValue) {
+    String url = "/car-platform/m-app/customer-manager/pre-customer";
+    JSONObject json = new JSONObject();
+        json.put("size", size);
+        json.put("last_value", lastValue);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 1.2. app销售客户详情（杨）v4.0（2021-05-06)的接口
+     * @date 2021-05-31 16:21:16
+     * Long shopId : 门店Id  是否必填 true  版本 v4.0
+     * Long customerId : 顾客Id  是否必填 true  版本 v4.0
+   */
+
+public JSONObject AppPreCustomerInfoScene( Long shopId, Long customerId) {
+    String url = "/car-platform/m-app/customer-manager/pre-customer-info";
+    JSONObject json = new JSONObject();
+        json.put("shop_id", shopId);
+        json.put("customer_id", customerId);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 1.4. app销售客户车牌新增（杨）v4.0（2021-05-06)的接口
+     * @date 2021-05-31 16:21:16
+     * Long shopId : 门店Id  是否必填 true  版本 v4.0
+     * Long customerId : 顾客Id  是否必填 true  版本 v4.0
+     * String plateNumber : 车牌号  是否必填 true  版本 v4.0
+   */
+
+public JSONObject AppPreCustomerAddPlateScene( Long shopId, Long customerId, String plateNumber) {
+    String url = "/car-platform/m-app/customer-manager/pre-customer-add-plate";
+    JSONObject json = new JSONObject();
+        json.put("shop_id", shopId);
+        json.put("customer_id", customerId);
+        json.put("plate_number", plateNumber);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 1.5. 客户备注（杨）v4.0 （2021-03-16）的接口
+     * @date 2021-05-31 16:21:16
+     * Long customerId : 门店id  是否必填 true  版本 v4.0
+     * Long shopId : 门店id  是否必填 true  版本 v3.0
+     * String remark : 客户备注信息  是否必填 true  版本 v3.0
+   */
+
+public JSONObject AppPreCustomerAddRemarkScene( Long customerId, Long shopId, String remark) {
+    String url = "/car-platform/m-app/customer-manager/pre-customer-add-remark";
+    JSONObject json = new JSONObject();
+        json.put("customer_id", customerId);
+        json.put("shop_id", shopId);
+        json.put("remark", remark);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 1.6. 客户车辆编辑（杨）v4.0 （2021-05-18）的接口
+     * @date 2021-05-31 16:21:16
+     * Long id : 车辆id  是否必填 true  版本 v4.0
+     * String vin : 车辆底盘号  是否必填 false  版本 v3.0
+   */
+
+public JSONObject AppPreCustomerEditVehicleScene( Long id, String vin) {
+    String url = "/car-platform/m-app/customer-manager/pre-customer-edit-vehicle";
+    JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("vin", vin);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 2.1. app评价跟进列表（谢）（2020-12-15）的接口
+     * @date 2021-05-31 16:21:16
+     * Integer size : 页大小 范围为[1,100]  是否必填 true  版本 v1.0
+     * JSONObject lastValue : 上次请求最后值  是否必填 false  版本 v1.0
+     * String type : 跟进类型  是否必填 false  版本 v3.0
+   */
+
+public JSONObject AppPageScene( Integer size, JSONObject lastValue, String type) {
+    String url = "/car-platform/m-app/follow-up/page";
+    JSONObject json = new JSONObject();
+        json.put("size", size);
+        json.put("last_value", lastValue);
+        json.put("type", type);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 2.2. app完成评价跟进（谢）（2020-12-15） (不用)的接口
+     * @date 2021-05-31 16:21:16
+     * Long id : 跟进任务id  是否必填 true  版本 v2.0
+     * Long shopId : 跟进任务所属门店id  是否必填 true  版本 v2.0
+     * String remark : 跟进备注  是否必填 true  版本 v2.0
+   */
+
+public JSONObject AppCompleteScene( Long id, Long shopId, String remark) {
+    String url = "/car-platform/m-app/follow-up/complete";
+    JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("shop_id", shopId);
+        json.put("remark", remark);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 2.3. app跟进列表（池）V3（2020-03-09）的接口
+     * @date 2021-05-31 16:21:16
+     * Integer size : 页大小 范围为[1,100]  是否必填 true  版本 v1.0
+     * JSONObject lastValue : 上次请求最后值  是否必填 false  版本 v1.0
+     * String type : 跟进类型  是否必填 false  版本 v3.0
+   */
+
+public JSONObject AppPageV3Scene( Integer size, JSONObject lastValue, String type) {
+    String url = "/car-platform/m-app/follow-up/page-v3";
+    JSONObject json = new JSONObject();
+        json.put("size", size);
+        json.put("last_value", lastValue);
+        json.put("type", type);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 2.4. app 跟进列表回复 v3 (池)(2020-03-09)的接口
+     * @date 2021-05-31 16:21:16
+     * Long followId : 跟进id  是否必填 true  版本 v3.0
+     * String content : 回复内容  是否必填 true  版本 v3.0
+   */
+
+public JSONObject AppReplyV3Scene( Long followId, String content) {
+    String url = "/car-platform/m-app/follow-up/reply-v3";
+    JSONObject json = new JSONObject();
+        json.put("follow_id", followId);
+        json.put("content", content);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 2.5. app 跟进列表备注 v3 (池)(2020-03-11)的接口
+     * @date 2021-05-31 16:21:17
+     * Long followId : 跟进id  是否必填 true  版本 v3.0
+     * String remark : 备注内容  是否必填 true  版本 v3.0
+   */
+
+public JSONObject AppRemarkV3Scene( Long followId, String remark) {
+    String url = "/car-platform/m-app/follow-up/remark-v3";
+    JSONObject json = new JSONObject();
+        json.put("follow_id", followId);
+        json.put("remark", remark);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 3.1. app跟进列表（池）v4（2020-05-06）的接口
+     * @date 2021-05-31 16:21:17
+     * Integer size : 页大小 范围为[1,100]  是否必填 true  版本 v1.0
+     * JSONObject lastValue : 上次请求最后值  是否必填 false  版本 v1.0
+     * String type : 跟进类型  是否必填 false  版本 v3.0
+   */
+
+public JSONObject AppPageV4Scene( Integer size, JSONObject lastValue, String type) {
+    String url = "/car-platform/m-app/follow-up/page-v4";
+    JSONObject json = new JSONObject();
+        json.put("size", size);
+        json.put("last_value", lastValue);
+        json.put("type", type);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 3.2. app 跟进列表备注 v4 (池)(2020-03-11)的接口
+     * @date 2021-05-31 16:21:17
+     * Long followId : 跟进id  是否必填 true  版本 v3.0
+     * String remark : 备注内容  是否必填 true  版本 v3.0
+   */
+
+public JSONObject AppRemarkV4Scene( Long followId, String remark) {
+    String url = "/car-platform/m-app/follow-up/remark-v4";
+    JSONObject json = new JSONObject();
+        json.put("follow_id", followId);
+        json.put("remark", remark);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 3.3. app 跟进列详情 v4 (池)(2020-03-11)的接口
+     * @date 2021-05-31 16:21:17
+     * Long id : 唯一id  是否必填 true  版本 v2.0
+   */
+
+public JSONObject AppFollowDetailScene( Long id) {
+    String url = "/car-platform/m-app/follow-up/follow-detail";
+    JSONObject json = new JSONObject();
+        json.put("id", id);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 4.3. 今日数据 (池) v1.0的接口
+     * @date 2021-05-31 16:21:17
+     * Integer size : 页大小 范围为[1,100]  是否必填 true  版本 v1.0
+     * JSONObject lastValue : 上次请求最后值  是否必填 false  版本 v1.0
+     * String type : 是否全部数据  是否必填 false  版本 v1.0
+   */
+
+public JSONObject AppTodayDataScene( Integer size, JSONObject lastValue, String type) {
+    String url = "/car-platform/m-app/home-page/today-data";
+    JSONObject json = new JSONObject();
+        json.put("size", size);
+        json.put("last_value", lastValue);
+        json.put("type", type);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 4.4. 代办数量 (谢) v3.0 （2021-03-27）的接口
+     * @date 2021-05-31 16:21:17
+     * String type : 待办类型 见字典表《待办类型》  是否必填 true  版本 1.0
+     * Boolean isAllDataAuth : No comments found.  是否必填 false  版本 -
+   */
+
+public JSONObject AppWaitingTaskNumScene( String type, Boolean isAllDataAuth) {
+    String url = "/car-platform/m-app/home-page/waiting-task/num";
+    JSONObject json = new JSONObject();
+        json.put("type", type);
+        json.put("isAllDataAuth", isAllDataAuth);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 4.5. 读取代办 (谢) v3.0 （2021-03-27）的接口
+     * @date 2021-05-31 16:21:17
+     * String type : 待办类型 见字典表《待办类型》  是否必填 true  版本 1.0
+     * Boolean isAllDataAuth : No comments found.  是否必填 false  版本 -
+   */
+
+public JSONObject AppWaitingTaskReadScene( String type, Boolean isAllDataAuth) {
+    String url = "/car-platform/m-app/home-page/waiting-task/read";
+    JSONObject json = new JSONObject();
+        json.put("type", type);
+        json.put("isAllDataAuth", isAllDataAuth);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 4.6. 代办数量 (谢) v3.0 （2021-03-27）的接口
+     * @date 2021-05-31 16:21:17
+     * String type : 待办类型 见字典表《待办类型》  是否必填 true  版本 1.0
+     * Boolean isAllDataAuth : No comments found.  是否必填 false  版本 -
+   */
+
+public JSONObject AppWaitingTaskNumv3Scene( String type, Boolean isAllDataAuth) {
+    String url = "/car-platform/m-app/home-page/waiting-task/numV3";
+    JSONObject json = new JSONObject();
+        json.put("type", type);
+        json.put("isAllDataAuth", isAllDataAuth);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 4.7. 读取代办 (谢) v3.0 （2021-03-27）的接口
+     * @date 2021-05-31 16:21:17
+     * String type : 待办类型 见字典表《待办类型》  是否必填 true  版本 1.0
+     * Boolean isAllDataAuth : No comments found.  是否必填 false  版本 -
+   */
+
+public JSONObject AppWaitingTaskReadv3Scene( String type, Boolean isAllDataAuth) {
+    String url = "/car-platform/m-app/home-page/waiting-task/readV3";
+    JSONObject json = new JSONObject();
+        json.put("type", type);
+        json.put("isAllDataAuth", isAllDataAuth);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 4.8. 今日数据 (池) v3.0的接口
+     * @date 2021-05-31 16:21:17
+     * Integer size : 页大小 范围为[1,100]  是否必填 true  版本 v1.0
+     * JSONObject lastValue : 上次请求最后值  是否必填 false  版本 v1.0
+     * String type : 是否全部数据  是否必填 false  版本 v1.0
+   */
+
+public JSONObject AppTodayDatav3Scene( Integer size, JSONObject lastValue, String type) {
+    String url = "/car-platform/m-app/home-page/today-dataV3";
+    JSONObject json = new JSONObject();
+        json.put("size", size);
+        json.put("last_value", lastValue);
+        json.put("type", type);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 5.2. 今日数据 (池) v4.0的接口
+     * @date 2021-05-31 16:21:17
+     * Integer size : 页大小 范围为[1,100]  是否必填 true  版本 v1.0
+     * JSONObject lastValue : 上次请求最后值  是否必填 false  版本 v1.0
+     * String type : 是否全部数据  是否必填 false  版本 v1.0
+   */
+
+public JSONObject AppTodayDataScene( Integer size, JSONObject lastValue, String type) {
+    String url = "/car-platform/m-app/home-page-v4/today-data";
+    JSONObject json = new JSONObject();
+        json.put("size", size);
+        json.put("last_value", lastValue);
+        json.put("type", type);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 6.1. app预约分页（谢）v3.0（2021-03-16）的接口
+     * @date 2021-05-31 16:21:17
+     * Integer size : 页大小 范围为[1,100]  是否必填 true  版本 v1.0
+     * JSONObject lastValue : 上次请求最后值  是否必填 false  版本 v1.0
+   */
+
+public JSONObject AppAppointmentPageScene( Integer size, JSONObject lastValue) {
+    String url = "/car-platform/m-app/task/appointment/page";
+    JSONObject json = new JSONObject();
+        json.put("size", size);
+        json.put("last_value", lastValue);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 6.2. app预约确认/取消（谢）的接口
+     * @date 2021-05-31 16:21:17
+     * Long id : 预约记录id  是否必填 true  版本 v1.0
+     * Long shopId : 预约门店id  是否必填 true  版本 v1.0
+     * Integer type : 处理类型 10：确认，20取消  是否必填 true  版本 v1.0
+   */
+
+public JSONObject AppAppointmentHandleScene( Long id, Long shopId, Integer type) {
+    String url = "/car-platform/m-app/task/appointment/handle";
+    JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("shop_id", shopId);
+        json.put("type", type);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 6.4. app获取可变更预约日期时间段列表（谢）v3.0（2021-03-16）的接口
+     * @date 2021-05-31 16:21:18
+     * String type : 预约类型 取值见字典表《预约类型》v3.0  是否必填 true  版本 v2.0
+     * Long shopId : 预约门店id  是否必填 true  版本 v1.0
+   */
+
+public JSONObject AppAppointmentMaintainTimeListScene( String type, Long shopId) {
+    String url = "/car-platform/m-app/task/appointment/maintain/time/list";
+    JSONObject json = new JSONObject();
+        json.put("type", type);
+        json.put("shop_id", shopId);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 6.5. app接待预约（谢）的接口
+     * @date 2021-05-31 16:21:18
+     * Long id : 预约id  是否必填 true  版本 v2.0
+   */
+
+public JSONObject AppAppointmentReceptionScene( Long id) {
+    String url = "/car-platform/m-app/task/appointment/reception";
+    JSONObject json = new JSONObject();
+        json.put("id", id);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 6.6. app接待预约（谢）v3.0（2020-12-15）的接口
+     * @date 2021-05-31 16:21:18
+     * Long id : 预约id  是否必填 true  版本 v2.0
+     * String type : 预约类型 见字典表《预约类型》  是否必填 true  版本 v3.0
+   */
+
+public JSONObject AppAppointmentReceptionV3Scene( Long id, String type) {
+    String url = "/car-platform/m-app/task/appointment/reception/v3";
+    JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("type", type);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 7.1. 查询手机号客户信息（谢）v3.0 （2021-03-16）的接口
+     * @date 2021-05-31 16:21:18
+     * String phone : 手机号  是否必填 true  版本 v1.0
+   */
+
+public JSONObject AppAdmitScene( String phone) {
+    String url = "/car-platform/m-app/pre-sales-reception/admit";
+    JSONObject json = new JSONObject();
+        json.put("phone", phone);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 7.2. 开始接待车主车辆（谢）v3.0 （2021-03-16）的接口
+     * @date 2021-05-31 16:21:18
+     * Long customerId : 接待顾客id  是否必填 true  版本 v3.0
+     * String customerPhone : 接待顾客手机号  是否必填 true  版本 v3.0
+   */
+
+public JSONObject AppStartReceptionScene( Long customerId, String customerPhone) {
+    String url = "/car-platform/m-app/pre-sales-reception/start-reception";
+    JSONObject json = new JSONObject();
+        json.put("customer_id", customerId);
+        json.put("customer_phone", customerPhone);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 7.3. 完成接待（谢）v3.0 （2021-03-16）的接口
+     * @date 2021-05-31 16:21:18
+     * Long id : 接待id  是否必填 true  版本 v1.0
+     * Long shopId : 接待门店id  是否必填 true  版本 v1.0
+   */
+
+public JSONObject AppFinishReceptionScene( Long id, Long shopId) {
+    String url = "/car-platform/m-app/pre-sales-reception/finish-reception";
+    JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("shop_id", shopId);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 7.4. 取消接待（谢）v3.0 （2021-03-16）的接口
+     * @date 2021-05-31 16:21:18
+     * Long id : 接待id  是否必填 true  版本 v1.0
+     * Long shopId : 接待门店id  是否必填 true  版本 v1.0
+   */
+
+public JSONObject AppCancelReceptionScene( Long id, Long shopId) {
+    String url = "/car-platform/m-app/pre-sales-reception/cancel-reception";
+    JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("shop_id", shopId);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 7.5. app接待分页（谢）v3.0 （2021-03-29）的接口
+     * @date 2021-05-31 16:21:18
+     * Integer size : 页大小 范围为[1,100]  是否必填 true  版本 v1.0
+     * JSONObject lastValue : 上次请求最后值  是否必填 false  版本 v1.0
+   */
+
+public JSONObject AppPageScene( Integer size, JSONObject lastValue) {
+    String url = "/car-platform/m-app/pre-sales-reception/page";
+    JSONObject json = new JSONObject();
+        json.put("size", size);
+        json.put("last_value", lastValue);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 7.6. 接待详情（谢）v3.0 （2021-03-16）的接口
+     * @date 2021-05-31 16:21:18
+     * Long id : 接待id  是否必填 true  版本 v3.0
+     * Long shopId : 门店id  是否必填 true  版本 v3.0
+   */
+
+public JSONObject AppDetailScene( Long id, Long shopId) {
+    String url = "/car-platform/m-app/pre-sales-reception/detail";
+    JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("shop_id", shopId);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 7.7. 销售接待员工列表（谢）v3.0 （2021-03-16）的接口
+     * @date 2021-05-31 16:21:18
+     * Long shopId : 门店id  是否必填 true  版本 v2.0
+   */
+
+public JSONObject AppReceptorListScene( Long shopId) {
+    String url = "/car-platform/m-app/pre-sales-reception/receptor/list";
+    JSONObject json = new JSONObject();
+        json.put("shop_id", shopId);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 7.8. 变更销售接待（谢）v3.0 （2021-03-16）的接口
+     * @date 2021-05-31 16:21:18
+     * Long id : 接待id  是否必填 true  版本 v2.0
+     * Long shopId : 门店id  是否必填 true  版本 v2.0
+     * String receptorId : 售后接待员工id  是否必填 true  版本 v2.0
+   */
+
+public JSONObject AppReceptorChangeScene( Long id, Long shopId, String receptorId) {
+    String url = "/car-platform/m-app/pre-sales-reception/receptor/change";
+    JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("shop_id", shopId);
+        json.put("receptor_id", receptorId);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 7.11. 客户车辆编辑（谢）v3.0 （2021-03-16）的接口
+     * @date 2021-05-31 16:21:18
+     * Long id : 车辆id  是否必填 true  版本 v3.0
+     * Long carModel : 购买车辆车型  是否必填 true  版本 v3.0
+     * String vin : 车辆底盘号  是否必填 false  版本 v3.0
+   */
+
+public JSONObject AppVehicleEditScene( Long id, Long carModel, String vin) {
+    String url = "/car-platform/m-app/pre-sales-reception/vehicle/edit";
+    JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("car_model", carModel);
+        json.put("vin", vin);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 7.13. 客户接待记录列表（杨）v4.0 （2021-05-18）的接口
+     * @date 2021-05-31 16:21:18
+     * Long customerId : 客户id  是否必填 true  版本 v3.0
+     * Integer size : 查询数量  是否必填 true  版本 v3.0
+     * Long shopId : 门店id 不传则查询全集团的接待记录  是否必填 false  版本 v3.0
+   */
+
+public JSONObject AppListV4Scene( Long customerId, Integer size, Long shopId) {
+    String url = "/car-platform/m-app/pre-sales-reception/list-v4";
+    JSONObject json = new JSONObject();
+        json.put("customer_id", customerId);
+        json.put("size", size);
+        json.put("shop_id", shopId);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 7.14. 接待详情（杨）v4.0 （2021-05-08）的接口
+     * @date 2021-05-31 16:21:19
+     * Long id : 接待id  是否必填 true  版本 v3.0
+     * Long customerId : 顾客Id  是否必填 true  版本 v4.0
+     * Long shopId : 门店id  是否必填 true  版本 v3.0
+   */
+
+public JSONObject AppDetailV4Scene( Long id, Long customerId, Long shopId) {
+    String url = "/car-platform/m-app/pre-sales-reception/detail-v4";
+    JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("customer_id", customerId);
+        json.put("shop_id", shopId);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 7.16. 客户备注（杨）v4.0 （2021-03-16）的接口
+     * @date 2021-05-31 16:21:19
+     * Long id : 接待id  是否必填 true  版本 v3.0
+     * Long shopId : 门店id  是否必填 true  版本 v3.0
+     * String remark : 客户备注信息  是否必填 true  版本 v3.0
+   */
+
+public JSONObject AppCustomerRemarkV4Scene( Long id, Long shopId, String remark) {
+    String url = "/car-platform/m-app/pre-sales-reception/customer/remark-v4";
+    JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("shop_id", shopId);
+        json.put("remark", remark);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 8.3. 接待评价二维码（池）v4.0 （2021-05-08 更新）的接口
+     * @date 2021-05-31 16:21:19
+     * Long receptionId : 接待id  是否必填 false  版本 v4.0
+   */
+
+public JSONObject AppEvaluateQrCodeScene( Long receptionId) {
+    String url = "/car-platform/m-app/pre-sales-reception/evaluate-qr-code";
+    JSONObject json = new JSONObject();
+        json.put("reception_id", receptionId);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 9.1. 查询接待车辆车主信息（谢）的接口
+     * @date 2021-05-31 16:21:19
+     * String plateNumber : 车牌号  是否必填 true  版本 v1.0
+   */
+
+public JSONObject AppReceptionAdmitScene( String plateNumber) {
+    String url = "/car-platform/m-app/task/reception/admit";
+    JSONObject json = new JSONObject();
+        json.put("plate_number", plateNumber);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 9.2. 开始接待车主车辆（谢）的接口
+     * @date 2021-05-31 16:21:19
+     * Long customerId : 接待顾客id  是否必填 true  版本 v1.0
+     * String plateNumber : 接待车牌号  是否必填 true  版本 v1.0
+   */
+
+public JSONObject AppReceptionStartReceptionScene( Long customerId, String plateNumber) {
+    String url = "/car-platform/m-app/task/reception/start-reception";
+    JSONObject json = new JSONObject();
+        json.put("customer_id", customerId);
+        json.put("plate_number", plateNumber);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 9.3. 开始接待车主车辆v3版本 （谢）v3.0 替换"开始接待车主车辆"接口的接口
+     * @date 2021-05-31 16:21:19
+     * Long customerId : 接待顾客id  是否必填 true  版本 v1.0
+     * String plateNumber : 接待车牌号  是否必填 true  版本 v1.0
+     * String afterSalesType : 售后接待类型 通过枚举接口获取，key为 AFTER_SALES_RECEPTION_TYPE  是否必填 true  版本 v3.0
+   */
+
+public JSONObject AppReceptionStartReceptionV3Scene( Long customerId, String plateNumber, String afterSalesType) {
+    String url = "/car-platform/m-app/task/reception/start-reception/v3";
+    JSONObject json = new JSONObject();
+        json.put("customer_id", customerId);
+        json.put("plate_number", plateNumber);
+        json.put("after_sales_type", afterSalesType);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 9.4. 完成接待（谢）的接口
+     * @date 2021-05-31 16:21:19
+     * Long id : 接待id  是否必填 true  版本 v1.0
+     * Long shopId : 接待门店id  是否必填 true  版本 v1.0
+   */
+
+public JSONObject AppReceptionFinishReceptionScene( Long id, Long shopId) {
+    String url = "/car-platform/m-app/task/reception/finish-reception";
+    JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("shop_id", shopId);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 9.5. 取消接待（谢）的接口
+     * @date 2021-05-31 16:21:19
+     * Long id : 接待id  是否必填 true  版本 v1.0
+     * Long shopId : 接待门店id  是否必填 true  版本 v1.0
+   */
+
+public JSONObject AppReceptionCancelReceptionScene( Long id, Long shopId) {
+    String url = "/car-platform/m-app/task/reception/cancel-reception";
+    JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("shop_id", shopId);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 9.6. app接待分页（谢）（2020-12-15）的接口
+     * @date 2021-05-31 16:21:19
+     * Integer size : 页大小 范围为[1,100]  是否必填 true  版本 v1.0
+     * JSONObject lastValue : 上次请求最后值  是否必填 false  版本 v1.0
+   */
+
+public JSONObject AppReceptionPageScene( Integer size, JSONObject lastValue) {
+    String url = "/car-platform/m-app/task/reception/page";
+    JSONObject json = new JSONObject();
+        json.put("size", size);
+        json.put("last_value", lastValue);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 9.7. 售后接待员工列表（谢）（2020-12-15）的接口
+     * @date 2021-05-31 16:21:19
+     * Long shopId : 门店id  是否必填 true  版本 v2.0
+   */
+
+public JSONObject AppReceptionReceptorListScene( Long shopId) {
+    String url = "/car-platform/m-app/task/reception/receptor/list";
+    JSONObject json = new JSONObject();
+        json.put("shop_id", shopId);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 9.8. 变更售后接待（谢）（2020-12-15）的接口
+     * @date 2021-05-31 16:21:19
+     * Long id : 接待id  是否必填 true  版本 v2.0
+     * Long shopId : 门店id  是否必填 true  版本 v2.0
+     * String receptorId : 售后接待员工id  是否必填 true  版本 v2.0
+   */
+
+public JSONObject AppReceptionReceptorChangeScene( Long id, Long shopId, String receptorId) {
+    String url = "/car-platform/m-app/task/reception/receptor/change";
+    JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("shop_id", shopId);
+        json.put("receptor_id", receptorId);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 10.1. app 卡券核销（张小龙）的接口
+     * @date 2021-05-31 16:21:19
+     * String cardNumber : No comments found.  是否必填 false  版本 -
+   */
+
+public JSONObject AppVerificationScene( String cardNumber) {
+    String url = "/car-platform/m-app/voucher/verification";
+    JSONObject json = new JSONObject();
+        json.put("card_number", cardNumber);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 10.2. app 我的核销记录分页（张小龙）的接口
+     * @date 2021-05-31 16:21:19
+     * Integer size : 页大小 范围为[1,100]  是否必填 true  版本 v1.0
+     * JSONObject lastValue : 上次请求最后值  是否必填 false  版本 v1.0
+   */
+
+public JSONObject AppWriteOffRecordsPageScene( Integer size, JSONObject lastValue) {
+    String url = "/car-platform/m-app/personal-center/write-off-records/page";
+    JSONObject json = new JSONObject();
+        json.put("size", size);
+        json.put("last_value", lastValue);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 11.2. 获取指定枚举值列表（谢）（2021-02-19）的接口
+     * @date 2021-05-31 16:21:19
+     * String enumType : 枚举类型  是否必填 true  版本 v2.0
+   */
+
+public JSONObject AppEnumValueListScene( String enumType) {
+    String url = "/car-platform/m-app/enum-value-list";
+    JSONObject json = new JSONObject();
+        json.put("enum_type", enumType);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 11.8. 获取车系车型树（谢志东）v3.0（2021-03-27）的接口
+     * @date 2021-05-31 16:21:19
+     * Long shopId : 门店id  是否必填 true  版本 v3.0
+   */
+
+public JSONObject AppTreeScene( Long shopId) {
+    String url = "/car-platform/m-app/car-model/tree";
+    JSONObject json = new JSONObject();
+        json.put("shop_id", shopId);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 12.1. 获取消息分页 （谢）（2021-01-29）的接口
+     * @date 2021-05-31 16:21:19
+     * Integer size : 页大小 范围为[1,100]  是否必填 true  版本 v1.0
+     * JSONObject lastValue : 上次请求最后值  是否必填 false  版本 v1.0
+   */
+
+public JSONObject AppPageScene( Integer size, JSONObject lastValue) {
+    String url = "/car-platform/m-app/message/page";
+    JSONObject json = new JSONObject();
+        json.put("size", size);
+        json.put("last_value", lastValue);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 12.2. 获取消息分页 （池）（2021-01-29）的接口
+     * @date 2021-05-31 16:21:20
+     * Integer size : 页大小 范围为[1,100]  是否必填 true  版本 v1.0
+     * JSONObject lastValue : 上次请求最后值  是否必填 false  版本 v1.0
+   */
+
+public JSONObject AppPageV3Scene( Integer size, JSONObject lastValue) {
+    String url = "/car-platform/m-app/message/page-v3";
+    JSONObject json = new JSONObject();
+        json.put("size", size);
+        json.put("last_value", lastValue);
+
+    return invokeApi(url, json);
+}
+
+/**
+     * 12.3. 获取消息详情（张小龙）（2021-03-11）v3.0 modify的接口
+     * @date 2021-05-31 16:21:20
+     * Long id : 消息id  是否必填 true  版本 v2.0
+   */
+
+public JSONObject AppDetailScene( Long id) {
+    String url = "/car-platform/m-app/message/detail";
+    JSONObject json = new JSONObject();
+        json.put("id", id);
+
+    return invokeApi(url, json);
+}

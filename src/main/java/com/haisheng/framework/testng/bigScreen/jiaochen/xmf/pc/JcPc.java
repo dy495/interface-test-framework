@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.JsonPathUtil;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
@@ -39,12 +40,15 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 
 public class JcPc extends TestCaseCommon implements TestCaseStd {
+
+    private static final EnumTestProduce product = EnumTestProduce.JC_DAILY;
+    private VisitorProxy visitor=VisitorProxy.getInstance(product);
     CommonConfig commonConfig = new CommonConfig();
     ScenarioUtil jc = ScenarioUtil.getInstance();
     DateTimeUtil dt = new DateTimeUtil();
     JsonPathUtil jpu = new JsonPathUtil();
     PublicParm pp = new PublicParm();
-    JcFunction pf = new JcFunction();
+    JcFunction pf = new JcFunction(visitor,pp);
 
     public int page = 1;
     public int size = 10;

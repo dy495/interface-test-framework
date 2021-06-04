@@ -89,9 +89,10 @@ public class TestUtil {
     @Test   //参数四个以内的接口
     public void createScene2() {
         String[] htmlPaths = {
-                "https://192.168.50.3/api-doc-v2.3/business-jiaochen/app/index.html",
-                "https://192.168.50.3/api-doc/business-jiaochen/applet/index.html",
-                "https://192.168.50.3/api-doc/business-jiaochen/pc/index.html",
+                "http://192.168.50.3/api-doc/yt/app/index.html",
+//                "https://192.168.50.3/api-doc-v2.3/business-jiaochen/app/index.html",
+//                "https://192.168.50.3/api-doc/business-jiaochen/applet/index.html",
+//                "https://192.168.50.3/api-doc/business-jiaochen/pc/index.html",
         };
         Arrays.stream(htmlPaths).forEach(htmlPath -> {
             SceneAttribute[] sceneAttributeList = new SceneParser.Builder().htmlUrl(htmlPath).build().getAttributes();

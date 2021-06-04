@@ -44,7 +44,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     private static final routerEnum router = routerEnum.SHOPDAILY;
     PublicParam pp=new PublicParam();
     CommonUsedUtil cu=new CommonUsedUtil(visitor, router);
-    RiskControlUtil md=new RiskControlUtil();
+    RiskControlUtil md= RiskControlUtil.getInstance(product);
     public String shopId="43072";
     public String shopAllId="-1";
     FileUtil file = new FileUtil();

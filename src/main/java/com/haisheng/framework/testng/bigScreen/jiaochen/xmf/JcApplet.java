@@ -41,7 +41,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
     UserUtil user = new UserUtil(visitor);
     DateTimeUtil dt = new DateTimeUtil();
     PublicParm pp = new PublicParm();
-    JcFunction pf = new JcFunction();
+    JcFunction pf = new JcFunction(visitor,pp);
     CommonConfig commonConfig = new CommonConfig();
 
     /**

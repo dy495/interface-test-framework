@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.bean.Response;
+import com.haisheng.framework.testng.bigScreen.yuntong.xmf.PublicParm;
 import com.haisheng.framework.util.CommonUtil;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;

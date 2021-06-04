@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.bean.DataTemp;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
@@ -30,11 +31,15 @@ import java.lang.reflect.Method;
 
 public class JcAppAffirmReception extends TestCaseCommon implements TestCaseStd {
 
+    private static final EnumTestProduce product = EnumTestProduce.JC_DAILY;
+
+    public VisitorProxy visitor=VisitorProxy.getInstance(product);
+    PublicParm pp = new PublicParm();
+
     ScenarioUtil jc = new ScenarioUtil();
     private QADbProxy qaDbProxy = QADbProxy.getInstance();
     public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
-    JcFunction pf = new JcFunction();
-    PublicParm pp = new PublicParm();
+    JcFunction pf = new JcFunction(visitor,pp);
     String dataName = "app_reception";
 
 

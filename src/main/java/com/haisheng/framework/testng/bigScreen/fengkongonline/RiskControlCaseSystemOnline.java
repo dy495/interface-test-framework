@@ -51,7 +51,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
     private static final routerEnum router = routerEnum.SHOPDAILY;
     PublicParam pp=new PublicParam();
     CommonUsedUtilOnline cu=new CommonUsedUtilOnline(visitor, router);
-    RiskControlUtil md=new RiskControlUtil();
+    RiskControlUtil md= RiskControlUtil.getInstance(product);
     public String shopId="13260";
     FileUtil file = new FileUtil();
     public String face=file.getImgStr(pp.filePath2);

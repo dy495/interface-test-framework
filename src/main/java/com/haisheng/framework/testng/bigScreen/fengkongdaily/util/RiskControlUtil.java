@@ -18,30 +18,32 @@ import java.util.List;
 
 public class RiskControlUtil extends TestCaseCommon {
 
-    private static volatile ScenarioUtil instance = null;
-    private static final String shopId = EnumTestProduce.FK_DAILY.getShopId();
-    public static String IpPort = EnumTestProduce.FK_DAILY.getAddress();
-    private static EnumTestProduce product = EnumTestProduce.FK_DAILY;
-    public VisitorProxy visitor = VisitorProxy.getInstance(product);
+    private static volatile RiskControlUtil instance = null;
+    private static String IpPort ;
+    private static EnumTestProduce product ;
+    private final VisitorProxy visitor ;
 
     /**
      * 单例
      *
      * @return ScenarioUtil
      */
-    public static ScenarioUtil getInstance() {
+    public static synchronized RiskControlUtil getInstance(EnumTestProduce product) {
         if (instance == null) {
-            synchronized (ScenarioUtil.class) {
-                if (instance == null) {
-                    instance = new ScenarioUtil();
-                }
+           instance=new RiskControlUtil(product);
+           IpPort=product.getAddress();
+        } else {
+            if(RiskControlUtil.product!=product){
+                instance=new RiskControlUtil(product);
+                IpPort=product.getAddress();
             }
         }
         return instance;
     }
 
-    private JSONObject invokeApi(String path, JSONObject requestBody) {
-        return invokeApi(path, requestBody, true);
+    private RiskControlUtil(EnumTestProduce product){
+        RiskControlUtil.product=product;
+        visitor=VisitorProxy.getInstance(product);
     }
 
     /**
