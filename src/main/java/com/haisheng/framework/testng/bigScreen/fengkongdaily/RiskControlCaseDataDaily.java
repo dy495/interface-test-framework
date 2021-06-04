@@ -33,7 +33,7 @@ public class RiskControlCaseDataDaily extends TestCaseCommon implements TestCase
     private static final routerEnum router = routerEnum.SHOPDAILY;
     PublicParam pp=new PublicParam();
     CommonUsedUtil cu=new CommonUsedUtil(visitor, router);
-    RiskControlUtil ru=new RiskControlUtil();
+    RiskControlUtil ru= RiskControlUtil.getInstance(product);
 
 
 

@@ -54,7 +54,7 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
     public VisitorProxy visitor = VisitorProxy.getInstance(product);
     PublicParam pp=new PublicParam();
     CommonUsedUtil cu=new CommonUsedUtil(visitor, router);
-    RiskControlUtil md=new RiskControlUtil();
+    RiskControlUtil md= RiskControlUtil.getInstance(product);
     public String shopId=router.getShopid();
     FileUtil file = new FileUtil();
     public String face=file.getImgStr(pp.filePath2);
