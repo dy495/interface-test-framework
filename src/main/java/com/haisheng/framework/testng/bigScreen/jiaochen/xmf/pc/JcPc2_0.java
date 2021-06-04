@@ -42,7 +42,7 @@ import java.util.Random;
 public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
 
     private static final EnumTestProduce product = EnumTestProduce.JC_DAILY;
-    public VisitorProxy visitor=new VisitorProxy(product);
+    private VisitorProxy visitor=VisitorProxy.getInstance(product);
 
     ScenarioUtil jc = ScenarioUtil.getInstance();
     DateTimeUtil dt = new DateTimeUtil();

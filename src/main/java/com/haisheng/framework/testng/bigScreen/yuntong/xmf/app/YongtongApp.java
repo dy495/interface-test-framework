@@ -27,7 +27,8 @@ import java.util.*;
 public class YongtongApp extends TestCaseCommon implements TestCaseStd {
 
     private static final EnumTestProduce product = EnumTestProduce.YT_DAILY;
-    public VisitorProxy visitor=new VisitorProxy(product);
+    private VisitorProxy visitor=VisitorProxy.getInstance(product);
+
 
     ScenarioUtil jc = new ScenarioUtil();
 

@@ -64,7 +64,7 @@ public class SceneMarker extends AbstractMarker {
         StringBuilder sb = new StringBuilder();
         String[] urlPathList = urlPathParse(urlPath);
         for (int i = 0; i < urlPathList.length; i++) {
-            String s = KeywordEnum.transferEqualKeyword(urlPathList[i]);
+            String s = KeywordEnum.transferKeyword(urlPathList[i]);
             urlPathList[i] = s;
         }
         int index = urlPathList.length <= 3 ? urlPathList.length - 1 : 4 - 1;

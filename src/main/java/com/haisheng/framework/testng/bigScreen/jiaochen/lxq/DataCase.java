@@ -36,7 +36,7 @@ public class DataCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce PRODUCE = EnumTestProduce.JC_DAILY;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.ALL_AUTHORITY_DAILY_LXQ;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_LXQ_DAILY;
-    public VisitorProxy visitor = new VisitorProxy(PRODUCE);
+    public VisitorProxy visitor = VisitorProxy.getInstance(PRODUCE);
     public UserUtil user = new UserUtil(visitor);
 
     ScenarioUtil jc = ScenarioUtil.getInstance();
@@ -182,8 +182,8 @@ public class DataCase extends TestCaseCommon implements TestCaseStd {
             //每次修改固定shop
             int code = EditScene.builder().id(49522L).name(name).simpleName(simple_name).districtCode(district_code).address(address).brandList(arr)
                     .saleTel(sale_tel).serviceTel(service_tel).longitude(Double.valueOf(longitude)).latitude(Double.valueOf(latitude)).avatarPath(info.getLogo()).customerServiceTel(sale_tel).rescueTel(sale_tel)
-                    .build().invoke(visitor,false).getInteger("code");
-            Preconditions.checkArgument(code==1000,"修改门店，状态码"+code);
+                    .build().invoke(visitor, false).getInteger("code");
+            Preconditions.checkArgument(code == 1000, "修改门店，状态码" + code);
             int after = jc.shopPage(1, 1, "").getInteger("total");
             int num = after - bef;
 

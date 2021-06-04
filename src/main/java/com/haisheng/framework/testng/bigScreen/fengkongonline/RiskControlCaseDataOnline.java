@@ -30,11 +30,11 @@ import java.util.List;
 
 public class RiskControlCaseDataOnline extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce product = EnumTestProduce.FK_ONLINE;
-    public VisitorProxy visitor = new VisitorProxy(product);
+    public VisitorProxy visitor = VisitorProxy.getInstance(product);
     private static final routerEnum router = routerEnum.SHOPDAILY;
     PublicParam pp=new PublicParam();
     CommonUsedUtilOnline cu=new CommonUsedUtilOnline(visitor, router);
-    RiskControlUtil ru=new RiskControlUtil();
+    RiskControlUtil ru= RiskControlUtil.getInstance(product);
 
 
     @BeforeClass

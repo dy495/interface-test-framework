@@ -5,6 +5,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.entity.Factory;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.entity.IEntity;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.row.IRow;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.util.ContainerEnum;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.util.BasicUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.*;
@@ -60,6 +64,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanag
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
+import com.haisheng.framework.util.UrlOutputUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -1584,5 +1589,22 @@ public class SupporterUtil extends BasicUtil {
     public List<Long> getArticleIdList() {
         JSONArray array = ArticleList.builder().build().invoke(visitor).getJSONArray("list");
         return array.stream().map(e -> (JSONObject) e).map(e -> e.getLong("id")).collect(Collectors.toList());
+    }
+
+    /**
+     * 获取行集合
+     *
+     * @param urlPath   接口路径
+     * @param excelName 表格名称
+     * @return 行集合
+     */
+    public IRow[] getRows(String urlPath, String excelName) {
+        //下载文件到resources/excel
+        String outputPath = "/src/main/resources/excel/" + excelName;
+        UrlOutputUtil.toIoSave(urlPath, outputPath);
+        String relativePath = "/excel/" + excelName;
+        logger.info("relativePath is {}", relativePath);
+        IEntity<?, ?>[] entities = new Factory.Builder().container(ContainerEnum.EXCEL.getContainer()).build().createExcel(relativePath);
+        return Arrays.stream(entities).map(IEntity::getCurrent).toArray(IRow[]::new);
     }
 }

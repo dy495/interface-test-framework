@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
 
 public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
     private final static EnumTestProduce PRODUCE = EnumTestProduce.INS_DAILY;
-    public VisitorProxy visitor = new VisitorProxy(PRODUCE);
+    public VisitorProxy visitor = VisitorProxy.getInstance(PRODUCE);
     public UserUtil user = new UserUtil(visitor);
     public SupporterUtil util = new SupporterUtil(visitor);
     private final static String FILEPATH = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";

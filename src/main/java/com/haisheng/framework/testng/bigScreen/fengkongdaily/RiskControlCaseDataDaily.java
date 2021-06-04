@@ -29,11 +29,11 @@ import java.util.List;
 
 public class RiskControlCaseDataDaily extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce product = EnumTestProduce.FK_DAILY;
-    public VisitorProxy visitor = new VisitorProxy(product);
+    public VisitorProxy visitor =  VisitorProxy.getInstance(product);
     private static final routerEnum router = routerEnum.SHOPDAILY;
     PublicParam pp=new PublicParam();
     CommonUsedUtil cu=new CommonUsedUtil(visitor, router);
-    RiskControlUtil ru=new RiskControlUtil();
+    RiskControlUtil ru= RiskControlUtil.getInstance(product);
 
 
 

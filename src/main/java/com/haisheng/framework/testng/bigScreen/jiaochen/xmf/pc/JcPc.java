@@ -42,7 +42,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 public class JcPc extends TestCaseCommon implements TestCaseStd {
 
     private static final EnumTestProduce product = EnumTestProduce.JC_DAILY;
-    public VisitorProxy visitor=new VisitorProxy(product);
+    private VisitorProxy visitor=VisitorProxy.getInstance(product);
     CommonConfig commonConfig = new CommonConfig();
     ScenarioUtil jc = ScenarioUtil.getInstance();
     DateTimeUtil dt = new DateTimeUtil();

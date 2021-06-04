@@ -614,6 +614,13 @@ public class DateTimeUtil {
         return day;
     }
 
+    public static int timeToSecond(String timeStr) {
+        String[] strings = timeStr.split(":");
+        int hour = Integer.parseInt(strings[0]) * 60 * 60;
+        int minute = Integer.parseInt(strings[1]) * 60;
+        return hour + minute + Integer.parseInt(strings[2]);
+    }
+
     /**
      * 将一个时间日期格式化为指定格式
      *
@@ -661,6 +668,18 @@ public class DateTimeUtil {
         long curr = date.getTime();
         curr += (long) s * 1000;
         return new Date(curr);
+    }
+
+    /**
+     * 给指定日期增加若干天并装换格式
+     *
+     * @param date 日期
+     * @param i    天数
+     * @return 最后的日期
+     */
+    public static String addDayFormat(Date date, int i, String format) {
+        Date newDate = addDay(date, i);
+        return getFormat(newDate, format);
     }
 
     /**

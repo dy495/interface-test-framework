@@ -2680,18 +2680,18 @@ public class MallDataCenter extends TestCaseCommon implements TestCaseStd {
             int status = 1;
             String type = "PHONE";
             String type0 = "EMAIL";
-//            新增账号时，不添加员工姓名为空
+////            新增账号时，不添加员工姓名为空
             JSONObject res = mall.organizationAccountAddTwo("",null,"123456","uid_ef6d2de5", type,null, phone,status,roleIdList,shopIdList);
             String message = res.getString("message");
             Preconditions.checkArgument(message.equals("新增账户失败:登陆昵称不可为空"), "员工姓名为空也成功了"+res.getString("message"));
-
-            //新增账号时，添加员工姓名长度的大于20
+//
+//            //新增账号时，添加员工姓名长度的大于20
             JSONObject res1 = mall.organizationAccountAddTwo("",EnumDesc.DESC_BETWEEN_20_30.getDesc(),"123456","uid_ef6d2de5", type,null, phone,status,roleIdList,shopIdList);
             String message1 = res.getString("message");
             Preconditions.checkArgument(message1.equals("新增账户失败:登陆昵称不可为空"), "员工姓名大于20也成功了"+res1.getString("message"));
 
             JSONObject res2 = mall.organizationAccountAddTwo("",EnumDesc.DESC_BETWEEN_5_10.getDesc(),"123456","uid_ef6d2de5", type,null, null,status,roleIdList,shopIdList);
-            String message2 = res.getString("message");
+            String message2 = res2.getString("message");
             Preconditions.checkArgument(message2.equals("登陆手机号不可为空"), "手机号为空也成功了"+res2.getString("message"));
 
 
@@ -2726,24 +2726,24 @@ public class MallDataCenter extends TestCaseCommon implements TestCaseStd {
             JSONObject res1 = mall.organizationRoleAddTwo(null,superior_role_id, description, moduleId);
             String message1 = res1.getString("message");
             checkArgument(message1.equals("新增角色异常:角色名称不能为空"), "角色名称大于20也成功了"+res1.getString("message"));
-
-
-//            权限说明大于50
+//
+//
+////            权限说明大于50
             JSONObject res2 = mall.organizationRoleAddTwo(EnumDesc.DESC_BETWEEN_5_10.getDesc(),superior_role_id,EnumDesc.DESC_BETWEEN_200_300.getDesc(), moduleId);
             String message2 = res2.getString("message");
-            checkArgument(message2.equals("角色名称需要在1-50个字内"), "角色名称大于20也成功了"+res2.getString("message"));
-
-//            权限说明为空
+            checkArgument(message2.equals("角色描述需要在1-50个字内"), "角色描述大于50也成功了"+res2.getString("message"));
+////
+////            权限说明为空
             JSONObject res3 = mall.organizationRoleAddTwo(EnumDesc.DESC_BETWEEN_5_10.getDesc(),superior_role_id,null, moduleId);
             String message3 = res3.getString("message");
-            checkArgument(message3.equals("权限不可以为空"), "权限为空也成功了"+res3.getString("message"));
-
-//            权限说明大于50字
+            checkArgument(message3.equals("角色权限描述不能为空"), "权限为空也成功了"+res3.getString("message"));
+//
+////            权限说明大于50字
             JSONObject res4 = mall.organizationRoleAddTwo(EnumDesc.DESC_BETWEEN_5_10.getDesc(),superior_role_id,EnumDesc.DESC_BETWEEN_200_300.getDesc(), moduleId);
             String message4 = res4.getString("message");
-            checkArgument(message4.equals("角色名称需要在1-50个字内"), "权限为空也成功了"+res4.getString("message"));
-
-            //上级角色为空
+            checkArgument(message4.equals("角色描述需要在1-50个字内"), "角色描述大于50也成功了"+res4.getString("message"));
+//
+//            //上级角色为空
             JSONObject res5 = mall.organizationRoleAddTwo(EnumDesc.DESC_BETWEEN_5_10.getDesc(),superior_role_id,EnumDesc.DESC_BETWEEN_5_10.getDesc(),null);
             String message5 = res5.getString("message");
             checkArgument(message5.equals("新增角色异常:角色权限项不能为空"), "权限为空也成功了"+res5.getString("message"));

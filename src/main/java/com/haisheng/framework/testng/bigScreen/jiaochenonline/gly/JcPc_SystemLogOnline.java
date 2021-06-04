@@ -35,7 +35,7 @@ public class JcPc_SystemLogOnline extends TestCaseCommon implements TestCaseStd 
     CommonConfig commonConfig = new CommonConfig();
     private static final EnumTestProduce product = EnumTestProduce.JC_ONLINE;
     PublicParameter pp = new PublicParameter();
-    public VisitorProxy visitor = new VisitorProxy(product);
+    public VisitorProxy visitor =  VisitorProxy.getInstance(product);
     SupporterUtil su=new SupporterUtil(visitor);
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name

@@ -56,7 +56,7 @@ public class jiaoChenInfo {
     public final String AFTER_SALES = "AFTER_SALES"; //专属售后
 
     private static final EnumTestProduce PRODUCE = EnumTestProduce.JC_DAILY;
-    public VisitorProxy visitor = new VisitorProxy(PRODUCE);
+    public VisitorProxy visitor = VisitorProxy.getInstance(PRODUCE);
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_LXQ_DAILY;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.ALL_AUTHORITY_DAILY_LXQ;
     public UserUtil user = new UserUtil(visitor);
@@ -407,7 +407,7 @@ public class jiaoChenInfo {
 
     public String getLogo(){
         String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
-        String base64 = new ImageUtil().getImageBinary(filePath);
+        String bbase64 = new ImageUtil().getImageBinary(filePath);
         String logo = jc.pcFileUploadNew(new ImageUtil().getImageBinary(filePath)).getString("pic_path");
         return logo;
     }

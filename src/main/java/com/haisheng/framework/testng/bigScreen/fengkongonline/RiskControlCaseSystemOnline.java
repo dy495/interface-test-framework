@@ -47,11 +47,11 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce product = EnumTestProduce.FK_ONLINE;
-    public VisitorProxy visitor = new VisitorProxy(product);
+    public VisitorProxy visitor = VisitorProxy.getInstance(product);
     private static final routerEnum router = routerEnum.SHOPDAILY;
     PublicParam pp=new PublicParam();
     CommonUsedUtilOnline cu=new CommonUsedUtilOnline(visitor, router);
-    RiskControlUtil md=new RiskControlUtil();
+    RiskControlUtil md= RiskControlUtil.getInstance(product);
     public String shopId="13260";
     FileUtil file = new FileUtil();
     public String face=file.getImgStr(pp.filePath2);

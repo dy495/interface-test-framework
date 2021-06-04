@@ -15,16 +15,31 @@ import org.springframework.util.StringUtils;
  * @date 2021/1/20 13:36
  */
 public class VisitorProxy extends TestCaseCommon {
+    private static volatile VisitorProxy INSTANCE = null;
+    private static EnumTestProduce PRODUCT;
 
-    private final EnumTestProduce product;
+    public static VisitorProxy getInstance(EnumTestProduce product) {
+        if (INSTANCE == null) {
+            synchronized (VisitorProxy.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new VisitorProxy(product);
+                }
+            }
+        } else if (PRODUCT != product) {
+            synchronized (VisitorProxy.class) {
+                INSTANCE = new VisitorProxy(product);
+            }
+        }
+        return INSTANCE;
+    }
 
     /**
-     * 构造函数
+     * 构造函数，私有
      *
      * @param product 调用产品
      */
-    public VisitorProxy(EnumTestProduce product) {
-        this.product = product;
+    private VisitorProxy(EnumTestProduce product) {
+        PRODUCT = product;
     }
 
     /**
@@ -56,7 +71,7 @@ public class VisitorProxy extends TestCaseCommon {
      * @return JSONObject response.data
      */
     public JSONObject invokeApi(String path, JSONObject requestBody, boolean checkCode) {
-        String IpPort = product.getAddress();
+        String IpPort = PRODUCT.getAddress();
         if (StringUtils.isEmpty(path)) {
             throw new RuntimeException("path不可为空");
         }
@@ -83,7 +98,7 @@ public class VisitorProxy extends TestCaseCommon {
      * @return 返回值
      */
     public JSONObject upload(String path, String filePath) {
-        String response = uploadFile(filePath, path, product.getAddress());
+        String response = uploadFile(filePath, path, PRODUCT.getAddress());
         return JSON.parseObject(response);
     }
 
@@ -93,7 +108,7 @@ public class VisitorProxy extends TestCaseCommon {
      * @param scene 场景
      */
     public void login(@NotNull IScene scene) {
-        httpPost(scene.getPath(), scene.getBody(), product.getAddress());
+        httpPost(scene.getPath(), scene.getBody(), PRODUCT.getAddress());
     }
 
     /**
@@ -112,7 +127,7 @@ public class VisitorProxy extends TestCaseCommon {
      * @return true/false
      */
     public Boolean isEmpty() {
-        return product == null;
+        return PRODUCT == null;
     }
 
     /**
@@ -121,6 +136,6 @@ public class VisitorProxy extends TestCaseCommon {
      * @return boolean
      */
     public Boolean isDaily() {
-        return product.getIsDaily();
+        return PRODUCT.getIsDaily();
     }
 }

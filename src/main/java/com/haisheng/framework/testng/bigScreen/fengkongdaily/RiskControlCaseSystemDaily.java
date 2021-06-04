@@ -40,11 +40,11 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce product = EnumTestProduce.FK_DAILY;
-    public VisitorProxy visitor = new VisitorProxy(product);
+    public VisitorProxy visitor =  VisitorProxy.getInstance(product);
     private static final routerEnum router = routerEnum.SHOPDAILY;
     PublicParam pp=new PublicParam();
     CommonUsedUtil cu=new CommonUsedUtil(visitor, router);
-    RiskControlUtil md=new RiskControlUtil();
+    RiskControlUtil md= RiskControlUtil.getInstance(product);
     public String shopId="43072";
     public String shopAllId="-1";
     FileUtil file = new FileUtil();

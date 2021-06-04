@@ -30,7 +30,7 @@ import java.lang.reflect.Method;
 
 public class JcPcReceptionRelate extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce product = EnumTestProduce.JC_DAILY;
-    public VisitorProxy visitor=new VisitorProxy(product);
+    private VisitorProxy visitor=VisitorProxy.getInstance(product);
     ScenarioUtil jc = new ScenarioUtil();
     private QADbProxy qaDbProxy = QADbProxy.getInstance();
     public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();

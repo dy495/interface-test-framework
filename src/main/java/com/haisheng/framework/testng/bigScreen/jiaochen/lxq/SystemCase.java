@@ -2841,7 +2841,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     public void show() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            VisitorProxy visitor =new VisitorProxy(EnumTestProduce.JC_DAILY);
+            VisitorProxy visitor = VisitorProxy.getInstance(EnumTestProduce.JC_DAILY);
 
             Long voucherId=new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.INVALIDED).buildVoucher().getVoucherId();
 

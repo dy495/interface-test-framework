@@ -163,6 +163,30 @@ public class CommonUtil {
     }
 
     /**
+     * 四舍五入取整
+     *
+     * @param numerator   分子
+     * @param denominator 分母
+     * @param scale       保留小数点后位数
+     * @return 取整结果
+     */
+    public static int getIntRatio(int numerator, int denominator, int scale) {
+        return new BigDecimal(numerator / denominator).setScale(scale, BigDecimal.ROUND_HALF_UP).intValue();
+    }
+
+    /**
+     * 计算比值
+     *
+     * @param numerator   分子
+     * @param denominator 分母
+     * @param scale       保留小数点后位数
+     * @return 比值
+     */
+    public static double getDoubleRatio(double numerator, double denominator, int scale) {
+        return new BigDecimal(numerator / denominator).setScale(scale, BigDecimal.ROUND_HALF_UP).doubleValue();
+    }
+
+    /**
      * 特殊计算
      */
     public static String getPercent(double a, double b) {
@@ -203,11 +227,7 @@ public class CommonUtil {
     }
 
     private static String getS(final String y) {
-        String result = y;
-        if (y.contains(",")) {
-            result = y.replace(y.substring(y.indexOf(","), y.indexOf(",") + 1), "");
-        }
-        return result;
+        return y.contains(",") ? y.replace(y.substring(y.indexOf(","), y.indexOf(",") + 1), "") : y;
     }
 
     public static String humpToLineReplaceFirst(String str) {
