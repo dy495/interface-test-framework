@@ -3,9 +3,12 @@ package com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.util.BasicUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 /**
@@ -15,19 +18,21 @@ import org.springframework.util.StringUtils;
  * @date 2021/1/20 13:36
  */
 public class VisitorProxy extends TestCaseCommon {
+    public final static Logger logger = LoggerFactory.getLogger(BasicUtil.class);
     private static volatile VisitorProxy INSTANCE = null;
     private static volatile EnumTestProduce PRODUCT;
 
+
     public static VisitorProxy getInstance(EnumTestProduce product) {
         if (INSTANCE == null) {
-            System.err.println(product.getAddress());
+            logger.info("product is{}", product.getAddress());
             synchronized (VisitorProxy.class) {
                 if (INSTANCE == null) {
                     INSTANCE = new VisitorProxy(product);
                 }
             }
         } else if (PRODUCT != product) {
-            System.err.println(product.getAddress());
+            logger.info("product is{}", product.getAddress());
             synchronized (VisitorProxy.class) {
                 INSTANCE = new VisitorProxy(product);
             }
