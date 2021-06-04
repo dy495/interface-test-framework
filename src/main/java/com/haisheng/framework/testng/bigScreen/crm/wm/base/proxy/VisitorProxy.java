@@ -16,16 +16,18 @@ import org.springframework.util.StringUtils;
  */
 public class VisitorProxy extends TestCaseCommon {
     private static volatile VisitorProxy INSTANCE = null;
-    private static EnumTestProduce PRODUCT;
+    private static volatile EnumTestProduce PRODUCT;
 
     public static VisitorProxy getInstance(EnumTestProduce product) {
         if (INSTANCE == null) {
+            System.err.println(product.getAddress());
             synchronized (VisitorProxy.class) {
                 if (INSTANCE == null) {
                     INSTANCE = new VisitorProxy(product);
                 }
             }
         } else if (PRODUCT != product) {
+            System.err.println(product.getAddress());
             synchronized (VisitorProxy.class) {
                 INSTANCE = new VisitorProxy(product);
             }
