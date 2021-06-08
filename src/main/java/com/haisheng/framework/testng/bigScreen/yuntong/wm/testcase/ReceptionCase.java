@@ -13,6 +13,7 @@ import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.departmentdat
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.departmentdata.AppLinkDataCarouselBean;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.departmentdata.AppOverviewBean;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.departmentdata.AppReceptionAverageScoreTrendBean;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.personaldata.AppPersonalOverviewBean;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.personaldata.AppReceptionLinkScoreBean;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.personaldata.AppReceptionScoreTrendBean;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.voicerecord.AppDepartmentPageBean;
@@ -21,6 +22,7 @@ import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.voicerecord.A
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.pc.manage.VoiceDetailBean;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.pc.manage.VoiceEvaluationPageBean;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.departmentdata.*;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.personaldata.AppPersonalOverviewScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.personaldata.AppReceptionLinkScoreScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.voicerecord.AppDepartmentPageScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.voicerecord.AppDetailScene;
@@ -295,7 +297,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test
-    public void capabilityModel_data_1() {
+    public void department_data_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Integer dataCycleType = 0;
@@ -318,7 +320,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test
-    public void capabilityModel_data_2() {
+    public void department_data_12() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Map<Integer, Integer> map = new HashMap<>();
@@ -345,7 +347,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test
-    public void capabilityModel_data_3() {
+    public void department_data_13() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Integer dataCycleType = 0;
@@ -368,7 +370,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test
-    public void capabilityModel_data_4() {
+    public void department_data_14() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Integer dataCycleType = 0;
@@ -391,7 +393,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test
-    public void capabilityModel_data_5() {
+    public void department_data_15() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Map<Integer, Integer> map = new HashMap<>();
@@ -419,7 +421,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test
-    public void capabilityModel_data_6() {
+    public void department_data_16() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Map<Integer, Integer> map = new HashMap<>();
@@ -447,7 +449,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test
-    public void receptionAverageScoreTrend_data_1() {
+    public void department_data_17() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Integer dataCycleType = 0;
@@ -469,7 +471,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test
-    public void receptionAverageScoreTrend_data_2() {
+    public void department_data_18() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Map<Integer, Integer> map = new HashMap<>();
@@ -494,7 +496,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test
-    public void receptionAverageScoreTrend_data_3() {
+    public void department_data_19() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Map<Integer, Integer> map = new HashMap<>();
@@ -525,7 +527,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test
-    public void receptionAverageScoreTrend_data_4() {
+    public void department_data_20() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Integer dataCycleType = 0;
@@ -546,7 +548,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test
-    public void receptionAverageScoreTrend_data_5() {
+    public void department_data_21() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Integer dataCycleType = 0;
@@ -569,7 +571,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test
-    public void receptionAverageScoreTrend_data_6() {
+    public void department_data_22() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Integer dataCycleType = 0;
@@ -590,18 +592,18 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test
-    public void receptionAverageScoreTrend_data_7() {
+    public void department_data_23() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Integer dataCycleType = 0;
             String startDate = DateTimeUtil.addDayFormat(new Date(), -1);
             String endDate = DateTimeUtil.getFormat(new Date());
-            //todo 登录员工A
+            //todo 登录员工A账号
             String uid = "";
-            IScene appOverviewScene = com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.personaldata.AppOverviewScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).salesId(uid).build();
-            com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.personaldata.AppOverviewBean overviewBean = util.toFirstJavaObject(appOverviewScene, com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.personaldata.AppOverviewBean.class);
+            IScene appOverviewScene = AppPersonalOverviewScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).salesId(uid).build();
+            AppPersonalOverviewBean overviewBean = util.toFirstJavaObject(appOverviewScene, AppPersonalOverviewBean.class);
             int averageDuration = overviewBean.getAverageDuration();
-            //todo 登录高级账号
+            //todo 登录部门账号
             IScene appDepartmentPageScene = AppDepartmentPageScene.builder().startDate(startDate).endDate(endDate).build();
             List<AppDepartmentPageBean> departmentPageBeanList = util.toJavaObjectList(appDepartmentPageScene, AppDepartmentPageBean.class);
             int mathResult = departmentPageBeanList.stream().filter(e -> e.getId().equals(uid)).map(e -> CommonUtil.getIntRatio(Math.toIntExact(e.getTotalScore()), e.getReceptionTimes(), 0)).collect(Collectors.toList()).get(0);
@@ -614,7 +616,57 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test
-    public void receptionAverageScoreTrend_data_8() {
+    public void personal_data_23() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String startDate = DateTimeUtil.addDayFormat(new Date(), -1);
+            String endDate = DateTimeUtil.getFormat(new Date());
+            //todo 登录员工A账号
+            String uid = "";
+            IScene appPersonalPageScene = AppPersonalPageScene.builder().startDate(startDate).endDate(endDate).salesId(uid).build();
+            AppPersonalPageBean personalPageBean = util.toJavaObject(appPersonalPageScene, AppPersonalPageBean.class);
+            IScene appDetailScene = AppDetailScene.builder().id(personalPageBean.getId()).build();
+            AppDetailBean appDetailBean = util.toJavaObject(appDetailScene, AppDetailBean.class);
+            int scoreSum = appDetailBean.getScores().stream().map(e -> (JSONObject) e).mapToInt(e -> e.getInteger("score")).sum();
+            int mathResult = CommonUtil.getIntRatio(scoreSum, 5, 0);
+            int averageScore = appDetailBean.getAverageScore();
+            Preconditions.checkArgument(averageScore == mathResult, "本次接待得分：" + averageScore + "各环节的接待得分之和/5：" + mathResult);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("本次接待得分=各环节的接待得分之和/5");
+        }
+    }
+
+    @Test
+    public void personal_data_24() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String startDate = DateTimeUtil.addDayFormat(new Date(), -1);
+            String endDate = DateTimeUtil.getFormat(new Date());
+            //todo 登录员工A账号
+            String uid = "";
+            List<AppPersonalPageBean> list = util.getAppPersonalPageList(uid, startDate, endDate);
+            AppPersonalPageBean appPersonalPageBean = list.stream().filter(e -> util.getAverageScoreByReceptionDetail(e.getId()) != null && util.getAverageScoreByReceptionDetail(e.getId()) > 0).findFirst().orElse(null);
+            assert appPersonalPageBean != null;
+            IScene scene = AppDetailScene.builder().id(appPersonalPageBean.getId()).build();
+            int departmentAverageScore = util.toJavaObject(scene, AppDetailBean.class).getDepartmentAverageScore();
+            //todo 登录部门账号
+            List<AppPersonalPageBean> personalPageBeanList = new ArrayList<>();
+            util.getAppDepartmentPageList(startDate, endDate).stream().map(a -> util.getAppPersonalPageList(a.getId(), startDate, endDate)).forEach(personalPageBeanList::addAll);
+            List<AppPersonalPageBean> newList = personalPageBeanList.stream().filter(e -> util.getAverageScoreByReceptionDetail(e.getId()) != null && util.getAverageScoreByReceptionDetail(e.getId()) != 0).collect(Collectors.toList());
+            int scoreSum = newList.stream().mapToInt(e -> util.getScoreSum(e.getId())).sum();
+            int mathResult = CommonUtil.getIntRatio(scoreSum, 5 * newList.size(), 0);
+            Preconditions.checkArgument(departmentAverageScore == mathResult, "部门平均分：" + departmentAverageScore + "部门的全部员工全流程接待分值之和/参与评分的接待次数：" + mathResult);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("部门平均分=此部门的全部员工全流程接待分值之和/参与评分的接待次数");
+        }
+    }
+
+    @Test
+    public void personal_data_25() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String startDate = DateTimeUtil.addDayFormat(new Date(), -1);
@@ -634,6 +686,26 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @Test
+    public void personal_data_26() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String startDate = DateTimeUtil.addDayFormat(new Date(), -1);
+            String endDate = DateTimeUtil.getFormat(new Date());
+            List<AppPersonalPageBean> personalPageBeanList = new ArrayList<>();
+            util.getAppDepartmentPageList(startDate, endDate).stream().map(a -> util.getAppPersonalPageList(a.getId(), startDate, endDate)).forEach(personalPageBeanList::addAll);
+            List<AppPersonalPageBean> newList = personalPageBeanList.stream().filter(e -> util.getAverageScoreByReceptionDetail(e.getId()) != null && util.getAverageScoreByReceptionDetail(e.getId()) != 0).collect(Collectors.toList());
+            int scoreSum = newList.stream().mapToInt(e -> util.getScoreSum(e.getId())).sum();
+            int mathResult = CommonUtil.getIntRatio(scoreSum, 5 * newList.size(), 0);
+            IScene appDetailScene = AppDetailScene.builder().id(newList.get(0).getId()).build();
+            int departmentAverageScore = util.toJavaObject(appDetailScene, AppDetailBean.class).getDepartmentAverageScore();
+            Preconditions.checkArgument(departmentAverageScore == mathResult, "部门平均分：" + departmentAverageScore + "部门的全部员工全流程接待分值之和/参与评分的接待次数：" + mathResult);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("部门平均分=此部门的全部员工全流程接待分值之和/参与评分的接待次数");
+        }
+    }
 
     @Test
     public void receptionCriticism_data_12() {

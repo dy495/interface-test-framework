@@ -14,7 +14,7 @@ import java.io.Serializable;
  * @date 2021-06-02 17:56:15
  */
 @Data
-public class AppOverviewBean implements Serializable {
+public class AppPersonalOverviewBean implements Serializable {
     /**
      * 描述 接待次数
      * 版本 v1.0

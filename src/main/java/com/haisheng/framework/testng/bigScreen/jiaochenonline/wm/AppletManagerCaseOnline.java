@@ -310,6 +310,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
             CommonUtil.checkResult("是否可接待", true, appointmentPage.getIsCanReception());
             CommonUtil.checkResult("是否可取消", true, appointmentPage.getIsCanCancel());
             CommonUtil.checkResult("是否可调整时间", true, appointmentPage.getIsCanAdjust());
+            CommonUtil.checkResult("故障描述", EnumDesc.DESC_BETWEEN_15_20.getDesc(), appointmentPage.getFaultDescription());
             //确认预约
             user.loginApp(ALL_AUTHORITY);
             int makeSureAppointmentNum = util.getAppointmentPageNum();

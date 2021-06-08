@@ -99,7 +99,7 @@ public class BasicUtil {
         return toJavaObject(object, tClass);
     }
 
-    public <K, Y, T> Y getValueByKey(@NotNull Map<K, Y> map, T key) {
+    public <K, V, T> V getValueByKey(@NotNull Map<K, V> map, T key) {
         return map.entrySet().stream().filter(e -> e.getKey().equals(key)).map(Map.Entry::getValue).findFirst().orElse(null);
     }
 
