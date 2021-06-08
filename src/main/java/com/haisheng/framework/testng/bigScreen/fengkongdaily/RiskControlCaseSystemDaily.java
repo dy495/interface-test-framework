@@ -32,7 +32,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.lang.reflect.Method;
@@ -998,7 +997,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             //开启活动1
             cu.ruleSwitch(id1, 1);
             //关闭活动2
-            cu.ruleSwitch(id1, 0);
+            cu.ruleSwitch(id2, 0);
             //对开启的规则进行删除
             String message1 = cu.ruleDelete(id1);
             Preconditions.checkArgument(message1.equals("success"), "删除开启中的规则失败");

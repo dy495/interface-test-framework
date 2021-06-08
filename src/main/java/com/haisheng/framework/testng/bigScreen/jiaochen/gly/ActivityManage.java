@@ -3,8 +3,10 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.gly;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.mapper.CustomerPageEnum;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.util.BasicUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
@@ -19,6 +21,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.AppletArticleListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.ArticleVoucherReceiveScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanage.PreSaleCustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpload;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.ChangeProvideStatusScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.InvalidVoucherScene;
@@ -1167,8 +1170,6 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             String approval = object.getJSONObject("recruit_activity_info").getString("is_need_approval");
             String picName = object.getJSONArray("pic_list").getJSONObject(0).getString("pic_path");
             String content = businessUtil.changeRecordPage(ids.get(0)).getJSONArray("list").getJSONObject(0).getString("content");
-            System.out.println("---------" + picName);
-            System.out.println(title + "--------" + rule + "--------" + participationLimitType + "--------" + startDate + "--------" + endDate + "--------" + applyStart + "--------" + applyEnd + "--------" + quota + "--------" + subjectType + "--------" + label + "--------" + address + "--------" + approval + "--------" + id + "--------" + voucherId);
             Preconditions.checkArgument(message.equals("success") && title.equals(pp.editTitle) && rule.equals(pp.EditRule), "已撤销的活动编辑失败1");
             Preconditions.checkArgument(participationLimitType.equals("0") && quota.equals("2"), "已撤销的活动编辑失败2");
             Preconditions.checkArgument(startDate.equals(businessUtil.getStartDate()) && endDate.equals(businessUtil.getEndDate()), "已撤销的活动编辑失败3");
@@ -5464,5 +5465,11 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @Test(enabled = false)
+    public void test(){
+        IScene scene= PreSaleCustomerPageScene.builder().customerName("我").customerType("PERSON").build();
+        supporterUtil.compareResponseAndParam(scene, CustomerPageEnum.values());
+
+    }
 
 }

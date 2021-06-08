@@ -8,7 +8,7 @@ public enum CustomerPageEnum implements IEnum {
 
     CUSTOMER_TYPE("customer_type", "subject_type"),
 
-    CUSTOMER_NAME("customer_name", "customer_name"),
+//    CUSTOMER_NAME("customer_name", "customer_name"),
     ;
 
     CustomerPageEnum(String requestParam, String responseHeader) {

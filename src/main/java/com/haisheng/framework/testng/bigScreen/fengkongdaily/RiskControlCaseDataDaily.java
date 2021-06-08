@@ -23,7 +23,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
@@ -857,7 +856,7 @@ public class RiskControlCaseDataDaily extends TestCaseCommon implements TestCase
             int num = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().page(1).size(10).build().invoke(visitor, true).getInteger("total");
             //获取员工查询信息列表的条数
             IScene scene = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.outstaff.PageScene.builder().page(1).size(10).build();
-            int total = visitor.invokeApi(scene).getInteger("tatal");
+            int total = visitor.invokeApi(scene).getInteger("total");
             Preconditions.checkArgument(num <= total, "账号管理中的数量为：" + num + "   员工信息查询中的数量为：" + total);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());

@@ -685,11 +685,23 @@ public class Constant {
         };
     }
 
-
-
-
-
-
+    /**
+     * @description:v3.1销售客户接待列表
+     * @author: gly
+     * @time: 2020-3-26
+     */
+    @DataProvider(name = "SELECT_ preSaleBuyCarPageFilter")
+    public static Object[][] preSaleBuyCarPageFilter_pram(){
+        return new String[][]{
+                {"customer_name", "customer_name"},
+                {"phone", "customer_phone"},
+                {"pre_sale_account", "pre_sale_account"},
+                {"pre_sale_name", "pre_sale_name"},
+                {"vehicle_chassis_code", "vehicle_chassis_code"},
+                {"shop_id", "shop_name"},
+                {"car_style_id", "intention_car_style_name"},
+        };
+    }
 
 
 

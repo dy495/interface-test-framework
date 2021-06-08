@@ -9,7 +9,7 @@ import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import org.springframework.util.StringUtils;
 
 public class YunTongUtil extends TestCaseCommon {
-    private static volatile YunTongUtil instance = null;
+//    private static volatile YunTongUtil instance = null;
     private static String IpPort;
     private static EnumTestProduce product;
     private VisitorProxy visitor;
@@ -19,20 +19,19 @@ public class YunTongUtil extends TestCaseCommon {
      *
      * @return YunTongUtil
      */
-    public static synchronized YunTongUtil getInstance(EnumTestProduce product) {
-        if (instance == null) {
-            instance = new YunTongUtil(product);
-            IpPort = product.getAddress();
-        } else {
-            if (YunTongUtil.product != product) {
-                instance = new YunTongUtil(product);
-                IpPort = product.getAddress();
-            }
-        }
-        return instance;
-    }
-
-    private YunTongUtil(EnumTestProduce product) {
+//    public static synchronized YunTongUtil getInstance(EnumTestProduce product) {
+//        if (instance == null) {
+//            instance = new YunTongUtil(product);
+//            IpPort = product.getAddress();
+//        } else {
+//            if (YunTongUtil.product != product) {
+//                instance = new YunTongUtil(product);
+//                IpPort = product.getAddress();
+//            }
+//        }
+//        return instance;
+//    }
+     public YunTongUtil(EnumTestProduce product) {
         this.product = product;
         this.IpPort = product.getAddress();
         this.visitor = new VisitorProxy(product);
@@ -82,7 +81,7 @@ public class YunTongUtil extends TestCaseCommon {
     /**
      * 销售客户列表
      */
-    public JSONObject preSalesReceptionPage(String page, String size, String pram, String result) {
+    public JSONObject preSalesCustomerPage(String page, String size, String pram, String result) {
         String url = "/car-platform/pc/customer-manage/pre-sale-customer/page";
         JSONObject json = new JSONObject();
         json.put("page", page);
@@ -92,6 +91,107 @@ public class YunTongUtil extends TestCaseCommon {
         }
         return invokeApi(url, json);
     }
+
+    /**
+     * 成交记录列表
+     */
+    public JSONObject preSalesBuyCarPage(String page, String size, String pram, String result) {
+        String url = "/car-platform/pc/customer-manage/pre-sale-customer/buy-car/page";
+        JSONObject json = new JSONObject();
+        json.put("page", page);
+        json.put("size", size);
+        if (pram != null) {
+            json.put(pram, result);
+        }
+        return invokeApi(url, json);
+    }
+
+    /**
+     * 销售客户的门店名称和ID的列表
+     */
+    public JSONObject userShopList(){
+        String url = "/pc/login-user/shop-list";
+        JSONObject json = new JSONObject();
+        return invokeApi(url, json);
+    }
+
+    /**
+     * 销售客户的车系列表
+     */
+    public JSONObject preSaleStyleList(){
+        String url = "/pc/customer-manage/pre-sale-customer/style-list";
+        JSONObject json = new JSONObject();
+        return invokeApi(url, json);
+    }
+
+
+    /**
+     * @description :成交记录-时间筛选接口
+     * * * @author: gly
+     * @date :2020/06/08
+     **/
+    public JSONObject preSalesBuyCarPageTime(String page, String size, String startTime, String endTime) {
+        String url = "/car-platform/pc/customer-manage/pre-sale-customer/buy-car/page";
+        JSONObject json = new JSONObject();
+        json.put("page", page);
+        json.put("size", size);
+        json.put("end_time", endTime);
+        json.put("start_time", startTime);
+
+        return invokeApi(url, json);
+    }
+
+    /**
+     * 销售客户列表
+     */
+    public JSONObject preSalesCustomerPageTime(String page, String size, String startTime, String endTime) {
+        String url = "/car-platform/pc/customer-manage/pre-sale-customer/page";
+        JSONObject json = new JSONObject();
+        json.put("page", page);
+        json.put("size", size);
+        json.put("end_time", endTime);
+        json.put("start_time", startTime);
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description :销售接待记录
+     *  @author: gly
+     **/
+    public JSONObject salesReceptionPage(String page, String size, String pram, String result) {
+        String url = "/car-platform/pc/pre-sales-reception/page";
+        JSONObject json = new JSONObject();
+        json.put("page", page);
+        json.put("size", size);
+        if (pram != null) {
+            json.put(pram, result);
+        }
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description :销售接待记录--时间
+     *  @author: gly
+     **/
+    public JSONObject salesReceptionPageTime(String page, String size, String reception_start, String reception_end) {
+        String url = "/jiaochen/pc/pre-sales-reception/page";
+        JSONObject json = new JSONObject();
+        json.put("page", page);
+        json.put("size", size);
+        json.put("reception_end", reception_end);
+        json.put("reception_start", reception_start);
+
+        return invokeApi(url, json);
+    }
+
+
+
+
+
+
+
+
+
 
 
 }
