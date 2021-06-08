@@ -131,75 +131,75 @@ public class SalesVideoOne extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(dataProvider = "DEVICE_ID5",dataProviderClass = XdPackageDataOnline.class)
-    public void check_vedio_1(String device_id,String device_name) {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONObject res = xd.device_live(device_id,shop_id);
-            Integer code = res.getInteger("code");
-            JSONArray list = md.device_page("","",device_id,"","CAMERA",1,10).getJSONArray("list");
-            String status_name = list.getJSONObject(0).getString("status_name");
-            Preconditions.checkArgument(code == 1000, "典集门店的直播报错了,设备名称:"+device_name+"  设备ID:"+device_id + "code :"+code);
-            Preconditions.checkArgument(status_name.equals("运行中") , "典集门店的直播报错了,设备名称:"+device_name+"  设备ID:"+device_id + "摄像头状态 :"+status_name);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            String failure = e.toString();
-            if (failure.contains("java.lang.NullPointerException")) {
-                failure = failure.replaceFirst("java.lang.NullPointerException", "接口网络连接失败");
-                failure = failure.replaceAll("java.lang.NullPointerException", "");
-            }
-            appendFailReason(failure);
-        } finally {
-            saveData("典集门店的直播情况");
-        }
-    }
-
-    @Test(dataProvider = "DEVICE_ID6",dataProviderClass = XdPackageDataOnline.class)
-    public void check_vedio_2(String device_id,String device_name) {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONObject res = xd.device_live(device_id,shop_id);
-            Integer code = res.getInteger("code");
-            JSONArray list = md.device_page("","",device_id,"","CAMERA",1,10).getJSONArray("list");
-            String status_name = list.getJSONObject(0).getString("status_name");
-            Preconditions.checkArgument(code == 1000, "美学门店的直播报错了,设备名称:"+device_name+"  设备ID:"+device_id + "code :"+code);
-            Preconditions.checkArgument(status_name.equals("运行中") , "美学门店的直播报错了,设备名称:"+device_name+"  设备ID:"+device_id + "摄像头状态 :"+status_name);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            String failure = e.toString();
-            if (failure.contains("java.lang.NullPointerException")) {
-                failure = failure.replaceFirst("java.lang.NullPointerException", "接口网络连接失败");
-                failure = failure.replaceAll("java.lang.NullPointerException", "");
-            }
-            appendFailReason(failure);
-        } finally {
-            saveData("美学门店的直播情况");
-        }
-    }
-    @Test(dataProvider = "DEVICE_ID7",dataProviderClass = XdPackageDataOnline.class)
-    public void check_vedio_3(String device_id,String device_name) {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONObject res = xd.device_live(device_id,shop_id);
-            Integer code = res.getInteger("code");
-            JSONArray list = md.device_page("","",device_id,"","CAMERA",1,10).getJSONArray("list");
-            String status_name = list.getJSONObject(0).getString("status_name");
-            Preconditions.checkArgument(code == 1000, "博展门店的直播报错了,设备名称:"+device_name+"  设备ID:"+device_id + "code :"+code);
-            Preconditions.checkArgument(status_name.equals("运行中") , "博展门店的直播报错了,设备名称:"+device_name+"  设备ID:"+device_id + "摄像头状态 :"+status_name);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            String failure = e.toString();
-            if (failure.contains("java.lang.NullPointerException")) {
-                failure = failure.replaceFirst("java.lang.NullPointerException", "接口网络连接失败");
-                failure = failure.replaceAll("java.lang.NullPointerException", "");
-            }
-            appendFailReason(failure);
-        } finally {
-            saveData("博展门店的直播情况");
-        }
-    }
+//    @Test(dataProvider = "DEVICE_ID5",dataProviderClass = XdPackageDataOnline.class)
+//    public void check_vedio_1(String device_id,String device_name) {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            JSONObject res = xd.device_live(device_id,shop_id);
+//            Integer code = res.getInteger("code");
+//            JSONArray list = md.device_page("","",device_id,"","CAMERA",1,10).getJSONArray("list");
+//            String status_name = list.getJSONObject(0).getString("status_name");
+//            Preconditions.checkArgument(code == 1000, "典集门店的直播报错了,设备名称:"+device_name+"  设备ID:"+device_id + "code :"+code);
+//            Preconditions.checkArgument(status_name.equals("运行中") , "典集门店的直播报错了,设备名称:"+device_name+"  设备ID:"+device_id + "摄像头状态 :"+status_name);
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            String failure = e.toString();
+//            if (failure.contains("java.lang.NullPointerException")) {
+//                failure = failure.replaceFirst("java.lang.NullPointerException", "接口网络连接失败");
+//                failure = failure.replaceAll("java.lang.NullPointerException", "");
+//            }
+//            appendFailReason(failure);
+//        } finally {
+//            saveData("典集门店的直播情况");
+//        }
+//    }
+//
+//    @Test(dataProvider = "DEVICE_ID6",dataProviderClass = XdPackageDataOnline.class)
+//    public void check_vedio_2(String device_id,String device_name) {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            JSONObject res = xd.device_live(device_id,shop_id);
+//            Integer code = res.getInteger("code");
+//            JSONArray list = md.device_page("","",device_id,"","CAMERA",1,10).getJSONArray("list");
+//            String status_name = list.getJSONObject(0).getString("status_name");
+//            Preconditions.checkArgument(code == 1000, "美学门店的直播报错了,设备名称:"+device_name+"  设备ID:"+device_id + "code :"+code);
+//            Preconditions.checkArgument(status_name.equals("运行中") , "美学门店的直播报错了,设备名称:"+device_name+"  设备ID:"+device_id + "摄像头状态 :"+status_name);
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            String failure = e.toString();
+//            if (failure.contains("java.lang.NullPointerException")) {
+//                failure = failure.replaceFirst("java.lang.NullPointerException", "接口网络连接失败");
+//                failure = failure.replaceAll("java.lang.NullPointerException", "");
+//            }
+//            appendFailReason(failure);
+//        } finally {
+//            saveData("美学门店的直播情况");
+//        }
+//    }
+//    @Test(dataProvider = "DEVICE_ID7",dataProviderClass = XdPackageDataOnline.class)
+//    public void check_vedio_3(String device_id,String device_name) {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            JSONObject res = xd.device_live(device_id,shop_id);
+//            Integer code = res.getInteger("code");
+//            JSONArray list = md.device_page("","",device_id,"","CAMERA",1,10).getJSONArray("list");
+//            String status_name = list.getJSONObject(0).getString("status_name");
+//            Preconditions.checkArgument(code == 1000, "博展门店的直播报错了,设备名称:"+device_name+"  设备ID:"+device_id + "code :"+code);
+//            Preconditions.checkArgument(status_name.equals("运行中") , "博展门店的直播报错了,设备名称:"+device_name+"  设备ID:"+device_id + "摄像头状态 :"+status_name);
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            String failure = e.toString();
+//            if (failure.contains("java.lang.NullPointerException")) {
+//                failure = failure.replaceFirst("java.lang.NullPointerException", "接口网络连接失败");
+//                failure = failure.replaceAll("java.lang.NullPointerException", "");
+//            }
+//            appendFailReason(failure);
+//        } finally {
+//            saveData("博展门店的直播情况");
+//        }
+//    }
 
 }
