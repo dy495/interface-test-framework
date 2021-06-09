@@ -806,7 +806,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
     }
 
     //ok
-    @Test(description = "卡券管理--转移卡券，转移人小程序我的卡券数量-1，被转移人我的卡券数量+1")
+//    @Test(description = "卡券管理--转移卡券，转移人小程序我的卡券数量-1，被转移人我的卡券数量+1")
     public void voucherManage_data_30() {
         logger.logCaseStart(caseResult.getCaseName());
         Long id = null;
@@ -1009,7 +1009,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
     }
 
     //ok
-    @Test(description = "卡券管理--卡券转移，转移账号异常")
+//    @Test(description = "卡券管理--卡券转移，转移账号异常")
     public void voucherManage_system_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1034,7 +1034,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
     }
 
     //ok
-    @Test(description = "卡券管理--卡券转移，接收账号异常")
+//    @Test(description = "卡券管理--卡券转移，接收账号异常")
     public void voucherManage_system_12() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1060,7 +1060,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
     }
 
     //ok
-    @Test(description = "卡券管理--卡券转移列表数=小程序可用卡券数量")
+//    @Test(description = "卡券管理--卡券转移列表数=小程序可用卡券数量")
     public void voucherManage_system_13() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

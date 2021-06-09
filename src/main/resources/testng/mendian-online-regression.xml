@@ -28,7 +28,9 @@
             <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.zt.StorePcData"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.zt.XundianAppData"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.zt.XundianPcCase"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.zt.InsPcCase">
+            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.zt.InsPcCase"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.wm.testcase.GoodsMarkingCaseOnline"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.wm.testcase.VoucherManagerCaseOnline">
 
                 <methods>
                     <exclude name="myReportFilter1"/>
