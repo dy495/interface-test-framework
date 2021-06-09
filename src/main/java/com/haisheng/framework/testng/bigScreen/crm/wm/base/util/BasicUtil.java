@@ -2,16 +2,17 @@ package com.haisheng.framework.testng.bigScreen.crm.wm.base.util;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.mapper.IEnum;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.bean.Response;
-import com.haisheng.framework.testng.bigScreen.yuntong.xmf.PublicParm;
 import com.haisheng.framework.util.CommonUtil;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -98,7 +99,7 @@ public class BasicUtil {
         return toJavaObject(object, tClass);
     }
 
-    public <K, Y, T> Y getValueByKey(@NotNull Map<K, Y> map, T key) {
+    public <K, V, T> V getValueByKey(@NotNull Map<K, V> map, T key) {
         return map.entrySet().stream().filter(e -> e.getKey().equals(key)).map(Map.Entry::getValue).findFirst().orElse(null);
     }
 
@@ -113,4 +114,14 @@ public class BasicUtil {
         return JSONObject.toJavaObject(scene.invoke(visitor, false), Response.class);
     }
 
+    public void compareResponseAndParam(IScene scene, IEnum[] iEnums) {
+        List<JSONObject> list = toJavaObjectList(scene, JSONObject.class);
+        scene.getBody().entrySet().stream().filter(body -> body.getValue() != null && !body.getKey().equals("page") && !body.getKey().equals("size"))
+                .forEach(body -> list.forEach(jsonObject -> jsonObject.entrySet().stream().filter(e -> e.getKey().equals(getHeader(iEnums, body.getKey())))
+                        .forEach(e -> CommonUtil.checkResult(e.getKey(), (String) body.getValue(), (String) e.getValue()))));
+    }
+
+    private String getHeader(IEnum[] iEnums, String key) {
+        return Arrays.stream(iEnums).map(e -> e.findAttributeByKey(key)).collect(Collectors.toList()).get(0);
+    }
 }

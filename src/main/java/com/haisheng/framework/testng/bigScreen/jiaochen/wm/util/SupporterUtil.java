@@ -966,7 +966,7 @@ public class SupporterUtil extends BasicUtil {
             builder.faultDescription(EnumDesc.DESC_BETWEEN_15_20.getDesc());
         }
         if (type.equals(AppointmentTypeEnum.TEST_DRIVE)) {
-            String staffId = visitor.isDaily() ? "uid_df9293ba" : "uid_2960c1cf";
+            String staffId = visitor.isDaily() ? "uid_df9293ba" : "uid_35a1d271";
             builder.carStyleId(getCarStyleId()).staffId(staffId).build().remove("car_id");
         }
         return builder.build().invoke(visitor).getLong("id");

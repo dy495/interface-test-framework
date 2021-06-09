@@ -31,10 +31,10 @@ import java.util.List;
 public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
     ScenarioUtil jc = new ScenarioUtil();
     private static final EnumTestProduce product = EnumTestProduce.JC_ONLINE;
-    private static final EnumAccount ADMINISTRATOR=EnumAccount.ALL_JC_ONLINE;
-    public VisitorProxy visitor = VisitorProxy.getInstance(product);
+    private static final EnumAccount ADMINISTRATOR = EnumAccount.ALL_JC_ONLINE;
+    public VisitorProxy visitor = new VisitorProxy(product);
     //    BusinessUtil businessUtil = new BusinessUtil(visitor);
-    BusinessUtilOnline businessUtil=new BusinessUtilOnline(visitor);
+    BusinessUtilOnline businessUtil = new BusinessUtilOnline(visitor);
     SupporterUtil supporterUtil = new SupporterUtil(visitor);
     PublicParameter pp = new PublicParameter();
     UserUtil user = new UserUtil(visitor);
@@ -86,12 +86,13 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
 
     /**
      * 裂变活动-参与客户不限制，领取次数不限制，分享人数=2
+     *
      * @return
      */
     @Test(description = "裂变活动-参与客户不限制，领取次数不限制，分享人数=2")
-    public void activityType1(){
+    public void activityType1() {
         logger.logCaseStart(caseResult.getCaseName());
-        try{
+        try {
 //            获取优惠券ID
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
 //            Long voucherId=49L;
@@ -100,7 +101,7 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
             // 创建被邀请者和分享者的信息字段
             JSONObject invitedVoucher = businessUtil.getInvitedVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherAllowUseInventory(voucherId)), 2, "", "", 3);
             JSONObject shareVoucher = businessUtil.getShareVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherAllowUseInventory(voucherId)), 2, "", "", 3);
-            IScene scene =FissionVoucherAddScene.builder()
+            IScene scene = FissionVoucherAddScene.builder()
                     .type(1)
                     .participationLimitType(0)
                     .receiveLimitType(0)
@@ -119,9 +120,9 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
             Long activityId = visitor.invokeApi(scene).getLong("id");
             //审批通过招募活动
             businessUtil.getApprovalPassed(activityId);
-            Preconditions.checkArgument(activityId>0,"裂变活动1创建失败");
+            Preconditions.checkArgument(activityId > 0, "裂变活动1创建失败");
 
-        }catch (AssertionError | Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("裂变活动-参与客户不限制，领取次数不限制，分享人数=2");
@@ -131,12 +132,13 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
 
     /**
      * 裂变活动-参与客户不限制，领取次数限制1，分享人数=1
+     *
      * @return
      */
     @Test(description = "裂变活动-参与客户不限制，领取次数限制1，分享人数=1")
-    public void activityType2(){
+    public void activityType2() {
         logger.logCaseStart(caseResult.getCaseName());
-        try{
+        try {
             //获取优惠券ID
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
 //            Long voucherId=49L;
@@ -145,7 +147,7 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
             // 创建被邀请者和分享者的信息字段
             JSONObject invitedVoucher = businessUtil.getInvitedVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherAllowUseInventory(voucherId)), 2, "", "", 3);
             JSONObject shareVoucher = businessUtil.getShareVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherAllowUseInventory(voucherId)), 2, "", "", 3);
-            IScene scene =FissionVoucherAddScene.builder()
+            IScene scene = FissionVoucherAddScene.builder()
                     .type(1)
                     .participationLimitType(0)
                     .receiveLimitType(1)
@@ -165,23 +167,25 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
             Long activityId = visitor.invokeApi(scene).getLong("id");
             //审批通过招募活动
             businessUtil.getApprovalPassed(activityId);
-            Preconditions.checkArgument(activityId>0,"裂变活动2创建失败");
+            Preconditions.checkArgument(activityId > 0, "裂变活动2创建失败");
 
-        }catch (AssertionError | Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("裂变活动-参与客户不限制，领取次数限制1，分享人数=1");
         }
 
     }
+
     /**
      * 裂变活动-参与客户不限制，每人每天领取限制1，分享人数=1
+     *
      * @return
      */
     @Test(description = "裂变活动-参与客户不限制，每天领取限制1，分享人数=1")
-    public void activityType3(){
+    public void activityType3() {
         logger.logCaseStart(caseResult.getCaseName());
-        try{
+        try {
             //获取优惠券ID
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
 //            Long voucherId=49L;
@@ -190,7 +194,7 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
             // 创建被邀请者和分享者的信息字段
             JSONObject invitedVoucher = businessUtil.getInvitedVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherAllowUseInventory(voucherId)), 2, "", "", 3);
             JSONObject shareVoucher = businessUtil.getShareVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherAllowUseInventory(voucherId)), 2, "", "", 3);
-            IScene scene =FissionVoucherAddScene.builder()
+            IScene scene = FissionVoucherAddScene.builder()
                     .type(1)
                     .participationLimitType(0)
                     .receiveLimitType(2)
@@ -210,9 +214,9 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
             Long activityId = visitor.invokeApi(scene).getLong("id");
             //审批通过招募活动
             businessUtil.getApprovalPassed(activityId);
-            Preconditions.checkArgument(activityId>0,"裂变活动3创建失败");
+            Preconditions.checkArgument(activityId > 0, "裂变活动3创建失败");
 
-        }catch (AssertionError | Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("裂变活动-参与客户不限制，每人每天领取限制1，分享人数=1");
@@ -221,12 +225,13 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
 
     /**
      * 裂变活动-领取次数不限制，分享人数=2，参与客户限制为普通、VIP、小程序、销售、售后
+     *
      * @return
      */
     @Test(description = "裂变活动-领取次数不限制，分享人数=2，参与客户限制为普通、VIP、小程序、销售、售后")
-    public void activityType4(){
+    public void activityType4() {
         logger.logCaseStart(caseResult.getCaseName());
-        try{
+        try {
             //参与客户限制
             List<Integer> labels = new ArrayList<>();
             String[][] label = {{"1", "普通会员"}, {"100", "VIP会员"}, {"1000", "小程序客户"}, {"2000", "销售客户"}, {"3000", "售后客户"}};
@@ -238,14 +243,14 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
             // 创建被邀请者和分享者的信息字段
             JSONObject invitedVoucher = businessUtil.getInvitedVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherAllowUseInventory(voucherId)), 2, "", "", 3);
             JSONObject shareVoucher = businessUtil.getShareVoucher(voucherId, 1, String.valueOf(businessUtil.getVoucherAllowUseInventory(voucherId)), 2, "", "", 3);
-            for(int i=0;i<label.length;i++){
+            for (int i = 0; i < label.length; i++) {
                 labels.add(Integer.valueOf(label[i][0]));
-                IScene scene =FissionVoucherAddScene.builder()
+                IScene scene = FissionVoucherAddScene.builder()
                         .type(1)
                         .participationLimitType(1)
                         .chooseLabels(labels)
                         .receiveLimitType(0)
-                        .title("裂变-分享人数2-限制为"+label[i][1])
+                        .title("裂变-分享人数2-限制为" + label[i][1])
                         .rule(pp.rule)
                         .startDate(businessUtil.getStartDate())
                         .endDate(businessUtil.getEndDate())
@@ -260,10 +265,10 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
                 Long activityId = visitor.invokeApi(scene).getLong("id");
                 //审批通过招募活动
                 businessUtil.getApprovalPassed(activityId);
-                Preconditions.checkArgument(activityId>0,"裂变活动4创建失败");
+                Preconditions.checkArgument(activityId > 0, "裂变活动4创建失败");
 
             }
-        }catch (AssertionError | Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("裂变活动-领取次数不限制，分享人数=2，参与客户限制为普通、VIP、小程序、销售、售后");
@@ -273,12 +278,13 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
 
     /**
      * 招募活动-参与客户限制为普通、VIP、小程序、销售、售后
+     *
      * @return
      */
     @Test(description = "招募活动-参与客户限制为普通、VIP、小程序、销售、售后")
-    public void activityType5(){
+    public void activityType5() {
         logger.logCaseStart(caseResult.getCaseName());
-        try{
+        try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
 //            Long voucherId=49L;
             //客户限制
@@ -311,13 +317,13 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
             //卡券有效期
             JSONObject voucherValid = businessUtil.getVoucherValid(2, null, null, 10);
             //创建招募活动-共有的--基础信息
-            for(int i=0;i<label.length;i++){
+            for (int i = 0; i < label.length; i++) {
                 labels.add(Integer.valueOf(label[i][0]));
                 ManageRecruitAddScene.ManageRecruitAddSceneBuilder builder = ManageRecruitAddScene.builder()
                         .type(2)
                         .participationLimitType(1)
                         .chooseLabels(labels)
-                        .title("招募-参与客户限制：" +label[i][1])
+                        .title("招募-参与客户限制：" + label[i][1])
                         .startDate(businessUtil.getStartDate())
                         .endDate(businessUtil.getEndDate())
                         .applyStart(businessUtil.getStartDate())
@@ -341,10 +347,10 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
                 Long activityId = visitor.invokeApi(scene).getLong("id");
                 //审批通过招募活动
                 businessUtil.getApprovalPassed(activityId);
-                Preconditions.checkArgument(activityId>0,"招募活动5创建失败");
+                Preconditions.checkArgument(activityId > 0, "招募活动5创建失败");
             }
 
-        }catch (AssertionError | Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("招募活动-参与客户限制为普通、VIP、小程序、销售、售后");
@@ -353,12 +359,13 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
 
     /**
      * 招募活动-客户类型不限制，报名成功奖励：有奖励，自动发放，需要审批
+     *
      * @return
      */
     @Test(description = "招募活动-客户类型不限制，报名成功奖励：有奖励，自动发放，需要审批")
-    public void activityType6(){
+    public void activityType6() {
         logger.logCaseStart(caseResult.getCaseName());
-        try{
+        try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
 //            Long voucherId=49L;
             //客户限制
@@ -391,37 +398,37 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
             //卡券有效期
             JSONObject voucherValid = businessUtil.getVoucherValid(2, null, null, 10);
             //创建招募活动-共有的--基础信息
-                ManageRecruitAddScene.ManageRecruitAddSceneBuilder builder = ManageRecruitAddScene.builder()
-                        .type(2)
-                        .participationLimitType(0)
-                        .chooseLabels(labels)
-                        .title("招募-有奖励-自动发放-需审批" )
-                        .startDate(businessUtil.getStartDate())
-                        .endDate(businessUtil.getEndDate())
-                        .applyStart(businessUtil.getStartDate())
-                        .applyEnd(businessUtil.getEndDate())
-                        .isLimitQuota(true)
-                        .quota(10)
-                        .subjectType(supporterUtil.getSubjectType())
-                        .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                        .label("BARGAIN")
-                        .picList(picList)
-                        .rule(pp.rule)
-                        .registerInformationList(registerInformationList)
-                        .successReward(true)
-                        .rewardReceiveType(0)
-                        .isNeedApproval(true);
-                if (true) {
-                    builder.rewardVouchers(registerObject)
-                            .voucherValid(voucherValid);
-                }
-                IScene scene = builder.build();
-                Long activityId = visitor.invokeApi(scene).getLong("id");
-                //审批通过招募活动
-                 businessUtil.getApprovalPassed(activityId);
-                Preconditions.checkArgument(activityId>0,"招募活动6创建失败");
+            ManageRecruitAddScene.ManageRecruitAddSceneBuilder builder = ManageRecruitAddScene.builder()
+                    .type(2)
+                    .participationLimitType(0)
+                    .chooseLabels(labels)
+                    .title("招募-有奖励-自动发放-需审批")
+                    .startDate(businessUtil.getStartDate())
+                    .endDate(businessUtil.getEndDate())
+                    .applyStart(businessUtil.getStartDate())
+                    .applyEnd(businessUtil.getEndDate())
+                    .isLimitQuota(true)
+                    .quota(10)
+                    .subjectType(supporterUtil.getSubjectType())
+                    .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
+                    .label("BARGAIN")
+                    .picList(picList)
+                    .rule(pp.rule)
+                    .registerInformationList(registerInformationList)
+                    .successReward(true)
+                    .rewardReceiveType(0)
+                    .isNeedApproval(true);
+            if (true) {
+                builder.rewardVouchers(registerObject)
+                        .voucherValid(voucherValid);
+            }
+            IScene scene = builder.build();
+            Long activityId = visitor.invokeApi(scene).getLong("id");
+            //审批通过招募活动
+            businessUtil.getApprovalPassed(activityId);
+            Preconditions.checkArgument(activityId > 0, "招募活动6创建失败");
 
-        }catch (AssertionError | Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("招募活动-客户类型不限制，报名成功奖励：有奖励，自动发放，需要审批");
@@ -430,12 +437,13 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
 
     /**
      * 招募活动-客户类型不限制，报名成功奖励：有奖励，自动发放，不需要审批
+     *
      * @return
      */
     @Test(description = "招募活动-客户类型不限制，报名成功奖励：有奖励，自动发放，不需要审批")
-    public void activityType7(){
+    public void activityType7() {
         logger.logCaseStart(caseResult.getCaseName());
-        try{
+        try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
 //            Long voucherId=49L;
             //客户限制
@@ -471,7 +479,7 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
                     .type(2)
                     .participationLimitType(0)
                     .chooseLabels(labels)
-                    .title("招募-有奖励-自动发放-不需审批" )
+                    .title("招募-有奖励-自动发放-不需审批")
                     .startDate(businessUtil.getStartDate())
                     .endDate(businessUtil.getEndDate())
                     .applyStart(businessUtil.getStartDate())
@@ -495,9 +503,9 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
             Long activityId = visitor.invokeApi(scene).getLong("id");
             //审批通过招募活动
             businessUtil.getApprovalPassed(activityId);
-            Preconditions.checkArgument(activityId>0,"招募活动7创建失败");
+            Preconditions.checkArgument(activityId > 0, "招募活动7创建失败");
 
-        }catch (AssertionError | Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("招募活动-客户类型不限制，报名成功奖励：有奖励，自动发放，不需要审批");
@@ -506,12 +514,13 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
 
     /**
      * 招募活动-客户类型不限制，报名成功奖励：有奖励，用户领取，需要审批
+     *
      * @return
      */
     @Test(description = "招募活动-客户类型不限制，报名成功奖励：有奖励，用户领取，需要审批")
-    public void activityType8(){
+    public void activityType8() {
         logger.logCaseStart(caseResult.getCaseName());
-        try{
+        try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
 //            Long voucherId=49L;
             //客户限制
@@ -547,7 +556,7 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
                     .type(2)
                     .participationLimitType(0)
                     .chooseLabels(labels)
-                    .title("招募-有奖励-用户领取-需审批" )
+                    .title("招募-有奖励-用户领取-需审批")
                     .startDate(businessUtil.getStartDate())
                     .endDate(businessUtil.getEndDate())
                     .applyStart(businessUtil.getStartDate())
@@ -571,9 +580,9 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
             Long activityId = visitor.invokeApi(scene).getLong("id");
             //审批通过招募活动
             businessUtil.getApprovalPassed(activityId);
-            Preconditions.checkArgument(activityId>0,"招募活动7创建失败");
+            Preconditions.checkArgument(activityId > 0, "招募活动7创建失败");
 
-        }catch (AssertionError | Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("招募活动-客户类型不限制，报名成功奖励：有奖励，用户领取，需要审批");
@@ -582,12 +591,13 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
 
     /**
      * 招募活动-客户类型不限制，报名成功奖励：有奖励，用户领取，不需要审批
+     *
      * @return
      */
     @Test(description = "招募活动-客户类型不限制，报名成功奖励：有奖励，用户领取，不需要审批")
-    public void activityType9(){
+    public void activityType9() {
         logger.logCaseStart(caseResult.getCaseName());
-        try{
+        try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
 //            Long voucherId=49L;
             //客户限制
@@ -623,7 +633,7 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
                     .type(2)
                     .participationLimitType(0)
                     .chooseLabels(labels)
-                    .title("招募-有奖励-用户领取-不需审批" )
+                    .title("招募-有奖励-用户领取-不需审批")
                     .startDate(businessUtil.getStartDate())
                     .endDate(businessUtil.getEndDate())
                     .applyStart(businessUtil.getStartDate())
@@ -647,9 +657,9 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
             Long activityId = visitor.invokeApi(scene).getLong("id");
             //审批通过招募活动
             businessUtil.getApprovalPassed(activityId);
-            Preconditions.checkArgument(activityId>0,"招募活动9创建失败");
+            Preconditions.checkArgument(activityId > 0, "招募活动9创建失败");
 
-        }catch (AssertionError | Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("招募活动-客户类型不限制，报名成功奖励：有奖励，用户领取，不需要审批");
@@ -658,12 +668,13 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
 
     /**
      * 招募活动-客户类型不限制，报名成功无奖励，用户领取，需要审批
+     *
      * @return
      */
     @Test(description = "招募活动-客户类型不限制，报名成功无奖励，用户领取，需要审批")
-    public void activityType10(){
+    public void activityType10() {
         logger.logCaseStart(caseResult.getCaseName());
-        try{
+        try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
 //            Long voucherId=49L;
             //客户限制
@@ -699,7 +710,7 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
                     .type(2)
                     .participationLimitType(0)
                     .chooseLabels(labels)
-                    .title("招募-无奖励-用户领取-需审批" )
+                    .title("招募-无奖励-用户领取-需审批")
                     .startDate(businessUtil.getStartDate())
                     .endDate(businessUtil.getEndDate())
                     .applyStart(businessUtil.getStartDate())
@@ -723,9 +734,9 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
             Long activityId = visitor.invokeApi(scene).getLong("id");
             //审批通过招募活动
             businessUtil.getApprovalPassed(activityId);
-            Preconditions.checkArgument(activityId>0,"招募活动10创建失败");
+            Preconditions.checkArgument(activityId > 0, "招募活动10创建失败");
 
-        }catch (AssertionError | Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("招募活动-客户类型不限制，报名成功无奖励，用户领取，需要审批");
@@ -734,12 +745,13 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
 
     /**
      * 招募活动-客户类型不限制，报名成功无奖励，用户领取，不需要审批
+     *
      * @return
      */
     @Test(description = "招募活动-客户类型不限制，报名成功无奖励，用户领取，不需要审批")
-    public void activityType11(){
+    public void activityType11() {
         logger.logCaseStart(caseResult.getCaseName());
-        try{
+        try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
 //            Long voucherId=49L;
             //客户限制
@@ -775,7 +787,7 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
                     .type(2)
                     .participationLimitType(0)
                     .chooseLabels(labels)
-                    .title("招募-无奖励-用户领取-不需审批" )
+                    .title("招募-无奖励-用户领取-不需审批")
                     .startDate(businessUtil.getStartDate())
                     .endDate(businessUtil.getEndDate())
                     .applyStart(businessUtil.getStartDate())
@@ -799,9 +811,9 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
             Long activityId = visitor.invokeApi(scene).getLong("id");
             //审批通过招募活动
             businessUtil.getApprovalPassed(activityId);
-            Preconditions.checkArgument(activityId>0,"招募活动11创建失败");
+            Preconditions.checkArgument(activityId > 0, "招募活动11创建失败");
 
-        }catch (AssertionError | Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("招募活动-客户类型不限制，报名成功无奖励，用户领取，不需要审批");
@@ -809,11 +821,10 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
     }
 
 
-
     /**
      * 创建裂变活动-客户标签
      */
-    @Test(description ="创建裂变活动-客户标签" )
+    @Test(description = "创建裂变活动-客户标签")
     public void activityType12() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1022,13 +1033,6 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
             saveData("招募活动，报名信息为空");
         }
     }
-
-
-
-
-
-
-
 
 
 }

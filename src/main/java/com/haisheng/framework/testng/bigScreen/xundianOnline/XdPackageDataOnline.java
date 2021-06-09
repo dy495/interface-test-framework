@@ -103,6 +103,7 @@ public class XdPackageDataOnline extends TestCaseCommon {
                 {"8256597211415552","AI摄像头【180】"},
                 {"8446461860381696","巡店1"},
                 {"8446463209866240","巡店2"},
+                {"8498026616816640 "},
 //                {"8166364248540160","AI摄像头【151】"},
 //                {"8256597211415552","AI摄像头【180】"}
 
@@ -140,6 +141,32 @@ public class XdPackageDataOnline extends TestCaseCommon {
                 {"7934264226186240","雷诺表-巡店2"},
                 {"7934225610671104","雷诺表-巡店1"},
                 {"7934141931160576","雷诺表-进过店"}
+        };
+    }
+
+    @DataProvider(name = "DEVICE_ID5")//典集
+    public static Object[] device_id5() {
+        return new String[][]{
+                {"8498026616816640","典集-摄像头通道4"},
+                {"8498025780151296","典集-摄像头通道3"},
+                {"8498024951907328","典集-摄像头通道2"},
+                {"8498023201309696","典集-摄像头通道1"}
+        };
+    }
+
+    @DataProvider(name = "DEVICE_ID6")//典集
+    public static Object[] device_id6() {
+        return new String[][]{
+                {"8498021092426752","美学-摄像头通道2"},
+                {"8498019702899712","美学-摄像头通道1"}
+        };
+    }
+
+    @DataProvider(name = "DEVICE_ID7")//典集
+    public static Object[] device_id7() {
+        return new String[][]{
+                {"8498014461985792","博展-摄像头通道2"},
+                {"8498013714842624","博展-摄像头通道1"}
         };
     }
     /**

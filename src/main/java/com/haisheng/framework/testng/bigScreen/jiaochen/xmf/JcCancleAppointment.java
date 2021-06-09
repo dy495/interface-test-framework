@@ -27,12 +27,12 @@ import java.lang.reflect.Method;
 
 public class JcCancleAppointment extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce product = EnumTestProduce.JC_DAILY;
-    private VisitorProxy visitor=VisitorProxy.getInstance(product);
+    private VisitorProxy visitor = new VisitorProxy(product);
     ScenarioUtil jc = new ScenarioUtil();
     private QADbProxy qaDbProxy = QADbProxy.getInstance();
     public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
     PublicParm pp = new PublicParm();
-    JcFunction pf = new JcFunction(visitor,pp);
+    JcFunction pf = new JcFunction(visitor, pp);
 
     int num = pp.num;   //预约天数控制
     String dataName = "pc_appointmentPage";
@@ -48,7 +48,7 @@ public class JcCancleAppointment extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
         commonConfig.referer = EnumTestProduce.JC_DAILY.getReferer();
-        commonConfig.product=EnumTestProduce.JC_DAILY.getAbbreviation();
+        commonConfig.product = EnumTestProduce.JC_DAILY.getAbbreviation();
 
 //        commonConfig.referer=getJcReferdaily();
 
@@ -131,7 +131,7 @@ public class JcCancleAppointment extends TestCaseCommon implements TestCaseStd {
             System.out.println("id:" + id);
             //取消预约前 记录数， 取消预约
             jc.appletLoginToken(pp.appletTocken);
-            jc.appletCancleAppointment(id.longValue(),"MAINTAIN");
+            jc.appletCancleAppointment(id.longValue(), "MAINTAIN");
 
             qaDbUtil.updateDataAll(dataTemp);
         } catch (AssertionError | Exception e) {
@@ -173,7 +173,7 @@ public class JcCancleAppointment extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-//    @Test()  //取消预约后，该小程序客户预约次数 没-1
+    //    @Test()  //取消预约后，该小程序客户预约次数 没-1
     public void Pc_customerAppointmentTimes() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

@@ -398,6 +398,13 @@ public class CommonUtil {
         check(expect, actual, reason);
     }
 
+    public static void checkResult(String key, String bodyValue, String responseValue) {
+        valueView("参数：" + key, "输入值：" + bodyValue, "输出值：" + responseValue);
+        Preconditions.checkArgument(String.valueOf(responseValue).contains(String.valueOf(bodyValue)),
+                "参数：" + key + " 查询结果：" + responseValue + " 不包含所查参数：" + bodyValue);
+        logger(key);
+    }
+
     public static <T> void checkResultPlus(String key1, T value1, String key2, T value2) {
         String reason = key1 + ": " + value1 + " " + key2 + ": " + value2;
         check(value1, value2, reason);

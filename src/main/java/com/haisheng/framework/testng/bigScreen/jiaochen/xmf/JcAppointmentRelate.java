@@ -27,12 +27,12 @@ import java.lang.reflect.Method;
 
 public class JcAppointmentRelate extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce product = EnumTestProduce.JC_DAILY;
-    public VisitorProxy visitor=VisitorProxy.getInstance(product);
+    public VisitorProxy visitor = new VisitorProxy(product);
     ScenarioUtil jc = new ScenarioUtil();
     private QADbProxy qaDbProxy = QADbProxy.getInstance();
     public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
     PublicParm pp = new PublicParm();
-    JcFunction pf = new JcFunction(visitor,pp);
+    JcFunction pf = new JcFunction(visitor, pp);
 
     int num = pp.num;   //预约天数控制
     String dataName = "pc_appointmentPage";
@@ -48,7 +48,7 @@ public class JcAppointmentRelate extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
         commonConfig.referer = EnumTestProduce.JC_DAILY.getReferer();
-        commonConfig.product=EnumTestProduce.JC_DAILY.getAbbreviation();
+        commonConfig.product = EnumTestProduce.JC_DAILY.getAbbreviation();
 
 //        commonConfig.referer=getJcReferdaily();
 
@@ -169,7 +169,7 @@ public class JcAppointmentRelate extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-//    @Test()  //预约后，该小程序客户预约次数
+    //    @Test()  //预约后，该小程序客户预约次数
     public void Pc_customerAppointmentTimes() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -236,9 +236,9 @@ public class JcAppointmentRelate extends TestCaseCommon implements TestCaseStd {
     public void pcAppointmentRecodeCheck() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene appointmentPage= AppointmentRecordAppointmentPageScene.builder().page(1).size(10).type("MAINTAIN")
+            IScene appointmentPage = AppointmentRecordAppointmentPageScene.builder().page(1).size(10).type("MAINTAIN")
                     .customerPhone(pp.customerPhone).build();
-            JSONObject data =jc.invokeApi(appointmentPage).getJSONArray("list").getJSONObject(0);
+            JSONObject data = jc.invokeApi(appointmentPage).getJSONArray("list").getJSONObject(0);
             String customer_name = data.getString("customer_name");
             String customer_phone = data.getString("customer_phone");
             String plate_number = data.getString("plate_number");
@@ -255,9 +255,7 @@ public class JcAppointmentRelate extends TestCaseCommon implements TestCaseStd {
     }
 
 
-
-
-//        @Test()  //测试函数
+    //        @Test()  //测试函数
     public void test1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

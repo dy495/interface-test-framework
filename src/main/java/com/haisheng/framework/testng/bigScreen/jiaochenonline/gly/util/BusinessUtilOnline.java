@@ -211,7 +211,7 @@ public class BusinessUtilOnline {
      */
     public Long getVoucherAllowUseInventoryNum(Long voucherId) {
         SupporterUtil su = new SupporterUtil(visitor);
-        Long allowUseInventory = Math.min(su.getVoucherPage(voucherId).getAllowUseInventory(),30L);
+        Long allowUseInventory =su.getVoucherPage(voucherId).getAllowUseInventory();
         return  allowUseInventory;
 
     }
@@ -284,7 +284,7 @@ public class BusinessUtilOnline {
         List<String> picList = new ArrayList<>();
         picList.add(supporterUtil.getPicPath());
         IScene scene=null;
-        Long AllowUseInventory=getVoucherAllowUseInventoryNum(voucherId);
+        int AllowUseInventory=getVoucherAllowUseInventory(voucherId);
         if(AllowUseInventory>6){
             // 创建被邀请者和分享者的信息字段
             JSONObject invitedVoucher = getInvitedVoucher(voucherId, 1, String.valueOf(Math.min(getVoucherAllowUseInventory(voucherId), 2)), 2, "", "", 3);
@@ -458,7 +458,7 @@ public class BusinessUtilOnline {
         isRequired.add(true);
         JSONArray registerInformationList = this.getRegisterInformationList(isShow, isRequired);
         //判断可用库存
-        Long AllowUseInventory=getVoucherAllowUseInventoryNum(voucherId);
+        int AllowUseInventory=getVoucherAllowUseInventory(voucherId);
         ManageRecruitAddScene.ManageRecruitAddSceneBuilder builder=null;
         if(AllowUseInventory>0){
             //报名成功奖励
@@ -2841,7 +2841,7 @@ public class BusinessUtilOnline {
         PublicParameter pp = new PublicParameter();
         List<String> picList = new ArrayList<>();
         picList.add(supporterUtil.getPicPath());
-        Long AllowUseInventory=getVoucherAllowUseInventoryNum(voucherId);
+        int AllowUseInventory=getVoucherAllowUseInventory(voucherId);
         Long activityId=0L;
         if(AllowUseInventory>6){
             // 创建被邀请者和分享者的信息字段

@@ -33,13 +33,13 @@ public class JcAppAffirmReception extends TestCaseCommon implements TestCaseStd 
 
     private static final EnumTestProduce product = EnumTestProduce.JC_DAILY;
 
-    public VisitorProxy visitor=VisitorProxy.getInstance(product);
+    public VisitorProxy visitor = new VisitorProxy(product);
     PublicParm pp = new PublicParm();
 
     ScenarioUtil jc = new ScenarioUtil();
     private QADbProxy qaDbProxy = QADbProxy.getInstance();
     public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
-    JcFunction pf = new JcFunction(visitor,pp);
+    JcFunction pf = new JcFunction(visitor, pp);
     String dataName = "app_reception";
 
 
@@ -53,8 +53,7 @@ public class JcAppAffirmReception extends TestCaseCommon implements TestCaseStd 
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
         commonConfig.referer = EnumTestProduce.JC_DAILY.getReferer();
-        commonConfig.product=EnumTestProduce.JC_DAILY.getAbbreviation();
-
+        commonConfig.product = EnumTestProduce.JC_DAILY.getAbbreviation();
 
 
         //replace backend gateway url
@@ -125,10 +124,10 @@ public class JcAppAffirmReception extends TestCaseCommon implements TestCaseStd 
             dataTemp.setApp_surplus_reception(appTodayTask[2]);
             dataTemp.setApp_all_reception(appTodayTask[3]);
             //pc 完成接待
-            Integer receptionId=qaDbUtil.selsetDataTempOne("appointmentId",dataName);
+            Integer receptionId = qaDbUtil.selsetDataTempOne("appointmentId", dataName);
             jc.appLogin(pp.jdgw, pp.jdgwpassword);
-            jc.finishReception(receptionId.longValue(),Long.parseLong(pp.shopIdZ));
-            dataTemp.setAppointmentId((long)receptionId);
+            jc.finishReception(receptionId.longValue(), Long.parseLong(pp.shopIdZ));
+            dataTemp.setAppointmentId((long) receptionId);
             qaDbUtil.updateDataAll(dataTemp);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -190,7 +189,7 @@ public class JcAppAffirmReception extends TestCaseCommon implements TestCaseStd 
         logger.logCaseStart(caseResult.getCaseName());
         try {
             jc.appLogin(pp.jdgw, pp.jdgwpassword);
-            String name=pp.nameJdgw;
+            String name = pp.nameJdgw;
             String type = "all";   //home \all
             //获取今日任务数
             int tasknum[] = pf.appTask();

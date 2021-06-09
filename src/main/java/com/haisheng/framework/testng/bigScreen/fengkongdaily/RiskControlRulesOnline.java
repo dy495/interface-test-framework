@@ -52,7 +52,7 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
 
     private static final routerEnum router = routerEnum.SHOPONLINE;
 
-    public VisitorProxy visitor = VisitorProxy.getInstance(product);
+    public VisitorProxy visitor = new VisitorProxy(product);
     PublicParam pp=new PublicParam();
     CommonUsedUtil cu=new CommonUsedUtil(visitor, router);
     RiskControlUtil md= RiskControlUtil.getInstance(product);

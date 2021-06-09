@@ -14,6 +14,8 @@
             <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.bgy.StoreDataConsistentcyBgy"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.testShop.StoreDataCenter"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.zdf.SurveillanceForZDF"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.ddc.StoreDataConsistentcyDdc"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.jkqs.StoreDataConsistentcyLz"></class>
             <!--            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.xtc.StoreDataForXtc"></class>-->
             <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.testShop.XundianAppData"></class>
             <!--            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.testShop.XundianCaseOnline"></class>-->
