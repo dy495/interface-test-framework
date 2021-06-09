@@ -10,6 +10,7 @@ import com.arronlong.httpclientutil.common.HttpConfig;
 import com.arronlong.httpclientutil.common.HttpHeader;
 import com.arronlong.httpclientutil.exception.HttpProcessException;
 import com.google.common.base.Preconditions;
+import com.google.inject.internal.cglib.reflect.$FastClass;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
@@ -154,7 +155,7 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
         }
     }
 
-    @Test(description = "同步员工离职在职信息",enabled = true)
+    @Test(description = "同步员工离职在职信息",enabled = false)
     public void updateStaffStatus() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -441,7 +442,7 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
      *生成交易订单--触发一车多人风控
      * 一车多人，多个openid/userId,一个car_vehicle_number 触发;QATest_42021-04-1418:17  QATest_16762021-04-1418:17
      **/
-    @Test(description = "一车多人成功,脸",enabled = true)   //userID  openid 都不一样 触发成功
+    @Test(description = "一车多人成功,脸",enabled = false)   //userID  openid 都不一样 触发成功
     public void getTriggerMorePersonRiskface(){
         try{
 
@@ -483,9 +484,9 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
 //            Long ruleId=cu.getCashierMemberRuleAdd("2").getJSONObject("data").getLong("id");
             //指定门店
             //交易ID
-            String transId="QATest_" + CommonUtil.getRandom(1) + dt.getHistoryDate(0) + dt.getHHmm(0);
-            String transId2="QATest_" + CommonUtil.getRandom(4) + dt.getHistoryDate(0) + dt.getHHmm(0);
-            String transId3="QATest_" + CommonUtil.getRandom(3) + dt.getHistoryDate(0) + dt.getHHmm(0);
+            String transId="QATestcar_" + CommonUtil.getRandom(1) + dt.getHistoryDate(0) + dt.getHHmm(0);
+            String transId2="QATestcar_" + CommonUtil.getRandom(4) + dt.getHistoryDate(0) + dt.getHHmm(0);
+            String transId3="QATestcar_" + CommonUtil.getRandom(3) + dt.getHistoryDate(0) + dt.getHHmm(0);
             //客户ID1
             String userId1="tester1" + CommonUtil.getRandom(6);
 
@@ -519,9 +520,9 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
 //            Long ruleId=cu.getCashierMemberRuleAdd("2").getJSONObject("data").getLong("id");
             //指定门店
             //交易ID
-            String transId="QATest_" + CommonUtil.getRandom(1) + dt.getHistoryDate(0) + dt.getHHmm(0);
-            String transId2="QATest_" + CommonUtil.getRandom(4) + dt.getHistoryDate(0) + dt.getHHmm(0);
-            String transId3="QATest_" + CommonUtil.getRandom(3) + dt.getHistoryDate(0) + dt.getHHmm(0);
+            String transId="QATestcar_" + CommonUtil.getRandom(1) + dt.getHistoryDate(0) + dt.getHHmm(0);
+            String transId2="QATestcar_" + CommonUtil.getRandom(4) + dt.getHistoryDate(0) + dt.getHHmm(0);
+            String transId3="QATestcar_" + CommonUtil.getRandom(3) + dt.getHistoryDate(0) + dt.getHHmm(0);
             //客户ID1
             String userId1="tester1" + CommonUtil.getRandom(6);
             //客户ID2
@@ -548,7 +549,7 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
         }
     }
 
-    @Test(description = "一车多人订单追加，与原openID 相同，车架号相同")   //userID  openid 都不一样 触发成功
+    @Test(description = "一车多人订单追加，与原openID 相同，车架号相同",enabled = false)   //userID  openid 都不一样 触发成功
     public void yicheduorenAppend(){
         try{
                        //指定门店
@@ -614,7 +615,7 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
 
 
     @Test()
-    public void handle() {
+    public void zhandle() {
         try{
             for(int j=1;j<3;j++) {
                 JSONArray list = cashier_riskPage(Long.parseLong(shopId), "PENDING", j, 10).getJSONArray("list");

@@ -445,7 +445,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
      * @description :核销----需要小程序有源源不断的卡券;  核销，核销记录+1
      * @date :2020/12/17 14:58
      **/
-//    @Test()
+    @Test()
     public void write() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

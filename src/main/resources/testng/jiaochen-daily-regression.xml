@@ -12,14 +12,13 @@
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.lxq.SystemCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.lxq.DataCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.lxq.SystemCaseV3"/>
-            <!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.emunListCheckNotNull"/>-->
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.emunListCheckNotNull"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.pc.JcPc"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.pc.JcPc2_0"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.app.JcApp"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.app.JcApp3_1"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcApplet"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.gly.ActivityManage"/>
-            <!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcAppAppointment"/>-->
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.gly.FilterColumnSystemDaily"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.gly.JcPc_SystemLog"/>
             <!--&lt;!&ndash;            以下case一天运行一次&ndash;&gt;-->

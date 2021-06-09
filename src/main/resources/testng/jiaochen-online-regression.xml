@@ -33,6 +33,7 @@
             <!--风控代码-->
             <class name="com.haisheng.framework.testng.bigScreen.fengkongonline.RiskControlCaseDataOnline"/>
             <class name="com.haisheng.framework.testng.bigScreen.fengkongonline.RiskControlCaseSystemOnline"/>
+            <class name="com.haisheng.framework.testng.bigScreen.fengkongdaily.RiskControlRulesOnline"/>
 
         </classes>
     </test>

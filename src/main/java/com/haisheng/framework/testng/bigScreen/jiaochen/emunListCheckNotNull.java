@@ -69,8 +69,8 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = "-1";
-        commonConfig.shopId="603";
+        commonConfig.shopId = pp.shopIdZ;
+        commonConfig.roleId=pp.roleidJdgw;
         commonConfig.referer = EnumTestProduce.JC_DAILY.getReferer();
         beforeClassInit(commonConfig);
 
@@ -127,7 +127,7 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
         }
     }
 
-    @Test
+//    @Test  接口不存在
     public void AJc_shopList() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -187,7 +187,7 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
         }
     }
 
-    @Test
+//    @Test  接口变更
     public void AJc_appletMaintainShop() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -196,7 +196,7 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
             coor.add(39.95933);
 
             JSONObject data = jc.appletmaintainShopList(pp.car_id, coor,"MAINTAIN");
-            String jsonpath = "$.list[*].id\"&&$.list[*].name&&$.list[*].address&&$.list[*].distance&&$.list[*].pic_url&&$.list[*].label";
+            String jsonpath = "$.list[*].id&&$.list[*].name&&$.list[*].address&&$.list[*].distance&&$.list[*].pic_url&&$.list[*].label";
             jpu.spiltString(data.toJSONString(), jsonpath);
 
         } catch (AssertionError | Exception e) {
@@ -206,11 +206,11 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
         }
     }
 
-    @Test
+//    @Test  接口不存在
     public void AJc_appletStaffList() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject data = jc.appletStaffList(pp.shopId);
+            JSONObject data = jc.appletStaffList(pp.shopIdZ);
             String jsonpath = "$.list[*].uid&&$.list[*].name&&$.list[*].greetings&&$.list[*].pic_url&&$.list[*].label&&$.list[*].is_selected";
             jpu.spiltString(data.toJSONString(), jsonpath);
 
@@ -225,7 +225,8 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
     public void BAerCode() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            jc.appLogin(pp.gwphone, pp.gwpassword);
+            jc.appLogin(pp.jdgw, pp.jdgwpassword);
+            System.out.println();
             JSONObject data = jc.apperCOde();
             String jsonpath = "$.er_code_url";
             jpu.spiltString(data.toJSONString(), jsonpath);
@@ -233,7 +234,7 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("轿辰-app个人中心，小程序码返回结果不为空");
+//            saveData("轿辰-app个人中心，小程序码返回结果不为空");
         }
     }
 
@@ -277,6 +278,7 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
     public void BJc_appfollowUp1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            jc.appLogin(pp.jdgw, pp.jdgwpassword);
             JSONObject data = jc.appFollowUpList("10",null);
             JSONArray list=data.getJSONArray("list");
             if(list.size()==0){
@@ -295,6 +297,8 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
     public void BJc_appmessageList() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            jc.appLogin(pp.jdgw, pp.jdgwpassword);
+
             JSONObject data = jc.appmessageList("10",null);
             JSONArray list=data.getJSONArray("list");
             if(list.size()!=0){
@@ -308,11 +312,12 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
         }
     }
 
-    //消息
-    @Test(description = "消息详情不为空校验")
+    //消息  jsonpath 未校验
+    @Test(description = "消息详情不为空校验",enabled = false)
     public void ABappmessagedetail() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            jc.appLogin(pp.jdgw, pp.jdgwpassword);
             JSONObject data = jc.appmessageList("10",null);
             JSONArray list=data.getJSONArray("list");
             if(list.size()==0){

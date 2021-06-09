@@ -4048,6 +4048,7 @@ public class ScenarioUtil extends TestCaseCommon {
         JSONObject json1 = new JSONObject();
         json1.put("size", size);
         json1.put("last_value", last_value);
+        json1.put("page", 10);
 
         return invokeApi(url, json1);
     }

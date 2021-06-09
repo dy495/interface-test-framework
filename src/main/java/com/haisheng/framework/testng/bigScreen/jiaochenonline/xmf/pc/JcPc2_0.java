@@ -94,7 +94,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);
-        pcLogin(pp.gwname, pp.gwpassword,pp.roleId);
+        pcLogin(pp.jdgw, pp.jdgwpassword,pp.roleidJdgw);
         qaDbUtil.openConnection();
 
     }
@@ -316,38 +316,6 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-//    @Test  //下单，发送卡券，下架商城套餐，下单，不发送套餐  TODO:无法自动化实现有赞下单
-    public void Commodity2() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //固定某一套餐
-
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("pc-新建商城套餐单接口");
-        }
-    }
-
-//    @Test  //下单，发送卡券，下架商城套餐，下单，不发送套餐  TODO:
-    public void CommodityUpAndDown() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //固定某一套餐
-             int id=0;  //套餐id
-            String status="up";    //DOWN 下架
-            jc.communityUpAndDown(status,id);
-
-
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("pc-新建商城套餐单接口");
-        }
-    }
-
     @Test  //仅编辑商城套餐
     public void EditCommodity() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -485,7 +453,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test(description = "",enabled = true)  //新建智能提醒（公里数）,由于智能提醒隔天生效，故此case一天运行一次  明天调试
+//    @Test(description = "",enabled = true)  //新建智能提醒（公里数）,由于智能提醒隔天生效，故此case一天运行一次  明天调试
     public void CreateRemindCheck() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -596,93 +564,41 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    /**
-     * @description :创建积分商品
-     * @date :2021/1/22 18:42
-     **/
-
-//    @Test
-    public void createGoods() {
+//        @Test(enabled = true,description = "导入180天未接待车牌号")
+    public void losscustomer2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int total=jc.GoodsList("1","10").getInteger("total");
-            pcCreateGoods er=new pcCreateGoods();
 
-            //品类树
-            JSONObject category=jc.categoryList().getJSONArray("list").getJSONObject(0);  //品类数
-            ReadContext context = JsonPath.parse(category.toJSONString());
-            List<Integer> result = context.read("$..category_id");
-            System.out.println("result:"+result);
-            System.out.println(result.get(0));
-            er.first_category=result.get(0).longValue();
-            er.second_category=result.get(1).longValue();
-            er.third_category=result.get(2).longValue();  //品类
+            pcLogin(pp.jdgw,pp.jdgwpassword,pp.roleidJdgw);
 
-            er.goods_brand=jc.bandList().getJSONArray("list").getJSONObject(0).getLong("id");  //品牌
-            er.price="9.99";  //价格
-            er.select_specifications=jc.specifications(er.first_category).getJSONArray("list");  //品类下规格
-            jc.createGoodMethod(er);
+            System.out.println(dt.getHistoryDate(-181));
 
-            JSONObject data=jc.GoodsList("1","10");
-            int totalAfterCreate=data.getInteger("total");
-            Long id=data.getJSONArray("list").getJSONObject(0).getLong("id");
-            jc.deleteGoodMethod(id);
-            int totalAfterDelete=jc.GoodsList("1","10").getInteger("total");
+            System.out.println(dt.getHHmm(0,"HH:mm:ss"));
+            dt.getHHmm(0);
+            String maile="2001";
+            String vin="ASDAAAAAAA12"+ CommonUtil.getRandom(5);
+            String plate="京AS"+CommonUtil.getRandom(4);
+//            String phone="177"+CommonUtil.getRandom(8);
+            String phone="15037286013";
 
-            Preconditions.checkArgument(totalAfterCreate-total==1,"新建商品，列表+1");
-            Preconditions.checkArgument(totalAfterCreate-totalAfterDelete==-1,"删除商品，列表-1");
+            System.out.println("vin"+vin);
+            System.out.println("plate"+plate);
+            System.out.println("phone"+phone);
+
+            //新建一个excel,里程数=智能提醒公里数
+            PoiUtils.importlossCustomer(maile,vin,-181,plate,phone,pp.jdgwName);
+            //导入工单
+            jc.pcWorkOrder(pp.importFilepath2);      //导入工单文件的路径=新建excel 路径
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-
-            saveData("新建/删除积分商品,商品列表+-1");
+            saveData("导入流失客户");
         }
 
-    }
 
-//    @Test(description = "创建积分商品，名称异常")
-    public void createGoodsAb() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            pcCreateGoods er=new pcCreateGoods();
-
-            //品类树
-            JSONObject category=jc.categoryList().getJSONArray("list").getJSONObject(0);  //品类数
-            ReadContext context = JsonPath.parse(category.toJSONString());
-            List<Long> result = context.read("$..category_id");
-            er.first_category=result.get(0);
-            er.second_category=result.get(1);
-            er.third_category=result.get(2);  //品类
-            er.goods_brand=jc.bandList().getJSONArray("list").getJSONObject(0).getLong("id");  //品牌
-            er.select_specifications=jc.specifications(er.first_category).getJSONArray("list");  //品类下规格
-
-            er.price="10000000000";  //价格
-            int code=jc.createGoodMethod(er).getInteger("code");
-            Preconditions.checkArgument(code==1001,"创建商品，价格异常");
-            er.price="9.99";
-
-            er.goods_name=pp.String_20+"1";
-            int code2=jc.createGoodMethod(er).getInteger("code");
-            Preconditions.checkArgument(code2==1001,"创建商品，价格异常");
-
-            er.goods_name=System.currentTimeMillis()+"";
-            er.goods_description=pp.String_20+pp.String_20+"1";
-            int code3=jc.createGoodMethod(er).getInteger("code");
-            Preconditions.checkArgument(code3==1001,"创建商品，价格异常");
-            er.goods_description="商品描述";
-
-
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-
-            saveData("新建/删除积分商品,商品列表+-1");
-        }
 
     }
-
 
     @Test(enabled = true,description = "导入流失客户")
     public void losscustomer() {
@@ -758,9 +674,9 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
                     "女",
                     "Model",
                     "Model 3",
-                    dt.getHistoryDate1(0)+" "+dt.getHHmm(0,"HH:mm:ss"),
-                    "自动化专用账号",
-                    "13402050050"};
+                    dt.getHistoryDate(0)+" "+dt.getHHmm(0),
+                    pp.nameJdgw,
+                    pp.jdgw};
 
             PoiUtils.importPotentialCustomer(parm);
             //导入工单
@@ -794,8 +710,8 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
                     "Model",
                     "",
                     dt.getHistoryDate(0)+" "+dt.getHHmm(0),
-                    "自动化专用账号",
-                    "13402050050"};
+                    pp.nameJdgw,
+                    pp.jdgw};
 
             PoiUtils.importPotentialCustomer(parm);
             //导入工单
@@ -828,8 +744,8 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
                     "",
                     "",
                     dt.getHistoryDate(0)+" "+dt.getHHmm(0),
-                    "自动化专用账号",
-                    "13402050050"};
+                    pp.nameJdgw,
+                    pp.jdgw};
 
             PoiUtils.importPotentialCustomer(parm);
             //导入工单
@@ -852,6 +768,8 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
     public void importPotentialCustomer5000() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+
+            System.out.println(IpPort);
             String[] parm = {
                     pp.shopname,
                     "个人",
@@ -859,10 +777,10 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
                     "157"+ CommonUtil.getRandom(8),
                     "女",
                     "Model",
-                    "Model 3",
+                    "特斯拉 Model 3",
                     dt.getHistoryDate(0)+" "+dt.getHHmm(0),
-                    "自动化专用账号",
-                    "13402050050"};
+                    pp.nameJdgw,
+                    pp.jdgw};
             System.out.println(parm.length);
 
             PoiUtils.importPotentialCustomer(parm);
