@@ -1,5 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.util;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.haisheng.framework.dao.IAppointmentDataDao;
 import com.haisheng.framework.model.bean.AppointmentData;
@@ -12,12 +14,14 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.container.Excel
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.container.IContainer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.field.IField;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.row.IRow;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.table.CsvTable;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.table.ITable;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.util.ContainerEnum;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.entity.Factory;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.entity.IEntity;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.util.FileUtil;
 import lombok.Data;
+import org.jetbrains.annotations.NotNull;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
@@ -25,8 +29,7 @@ import org.jooq.impl.DSL;
 import org.testng.annotations.Test;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author wangmin
@@ -198,5 +201,23 @@ public class TestUtil {
         IEntity<?, ?> entity = new Factory.Builder().container(ContainerEnum.EXCEL.getContainer()).build().createExcel(path)[0];
         String newIndex = entity.getFieldValue("INDEX");
         System.err.println(newIndex);
+    }
+
+    @Test
+    public void ss() {
+        String path = FileUtil.getResourcePath("csv/dcbbde6f-2002-43fe-9857-3ef41da24c4b.csv");
+        ITable table = new CsvTable.Builder().path(path).build();
+        table.load();
+        IRow[] rows = table.getRows();
+        Map<String, JSONObject> map = new HashMap<>();
+        Arrays.stream(rows).forEach(row -> JSONArray.parseArray(row.getField("region").getValue()).stream()
+                .map(e -> (JSONObject) e).filter(e -> rule(e, "region_id", "55503", "status", "PASS"))
+                .forEach(e -> map.put(row.getField("user_id").getValue(), e)));
+        long count = map.entrySet().stream().filter(e -> !e.getKey().equals("N")).count();
+        System.err.println(count);
+    }
+
+    public boolean rule(@NotNull JSONObject jsonObject, String key1, String value1, String key2, String value2) {
+        return jsonObject.getString(key1).equals(value1) && jsonObject.getString(key2).equals(value2);
     }
 }

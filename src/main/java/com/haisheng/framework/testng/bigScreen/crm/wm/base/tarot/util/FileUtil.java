@@ -13,6 +13,7 @@ public class FileUtil {
      * @return String 资源的绝对路径
      */
     public static String getResourcePath(String relativePath) {
+        relativePath = relativePath.charAt(0) == '/' ? relativePath : "/" + relativePath;
         String str = Objects.requireNonNull(FileUtil.class.getResource(relativePath)).getPath();
         String path = null;
         try {
