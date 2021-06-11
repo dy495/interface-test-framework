@@ -363,7 +363,7 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
                     .intentionCarModelId(intentionCarModelId)
                     .carStyleId(intentionCarStyleId)
                     .build();
-            JSONObject message=visitor.invokeApi(scene,true);
+            String message=visitor.invokeApi(scene,false).getString("message");
             Preconditions.checkArgument(message.equals("success"),"编辑客户失败");
             //编辑后的列表信息
             JSONObject response1 = yt.preSalesCustomerPage("1", "10", "", "");
