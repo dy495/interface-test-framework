@@ -616,7 +616,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test
-    public void personal_data_23() {
+    public void personal_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String startDate = DateTimeUtil.addDayFormat(new Date(), -1);
@@ -639,7 +639,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test
-    public void personal_data_24() {
+    public void personal_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String startDate = DateTimeUtil.addDayFormat(new Date(), -1);

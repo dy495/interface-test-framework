@@ -190,7 +190,7 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
                     Long customerId=list.getJSONObject(i).getLong("customer_id");
                     //进入销售客户详情
                     IScene scene= PreSaleCustomerInfoScene.builder().customerId(customerId).shopId(shopId).build();
-                    JSONObject response1=visitor.invokeApi(scene,false);
+                    JSONObject response1=visitor.invokeApi(scene,true);
                     String sexDetails=response1.getString("sex");
                     String saleNameDetails=response1.getString("sale_name");
                     String customerPhoneDetails=response1.getString("customer_phone");
@@ -454,34 +454,44 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
      */
 
     /**
-     * 新建成交记录,成交客户的手机号在销售客户的列表中存在，成交记录+1
+     * 新建成交记录,成交客户的手机号在销售客户的列表中存在，成交记录+1，销售客户+0
      */
     @Test(description = "新建成交记录,成交客户的手机号在销售客户的列表中存在，成交记录+1   ")
     public void preSaleCustomerPageCase1(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            //成交记录列表
             IScene scene = PreSaleCustomerBuyCarPageScene.builder().page(1).size(10).build();
-            JSONObject response=visitor.invokeApi(scene,false);
+            JSONObject response=visitor.invokeApi(scene,true);
             //新建成交记录前的列表条数
             int totalBefore=response.getInteger("total");
+            //展厅客户的列表
+            IScene scene1 = PreSaleCustomerPageScene.builder().page(1).size(10).build();
+            JSONObject response2=visitor.invokeApi(scene1,true);
+            //新建成交记录前的销售客户列表条数
+            int totalBefore1=response2.getInteger("total");
+
             //新建成交记录
             systemCase.newCstmRecord("Max","13373166806","CORPORATION","0","","true");
             //新建成交记录后的列表条数
-            JSONObject response1=PreSaleCustomerBuyCarPageScene.builder().page(1).size(10).build().invoke(visitor,false);
+            JSONObject response1=PreSaleCustomerBuyCarPageScene.builder().page(1).size(10).build().invoke(visitor,true);
             int totalAfter=response1.getInteger("total");
+            //新建成交记录后的销售客户列表条数
+            int totalAfter1=PreSaleCustomerPageScene.builder().page(1).size(10).build().invoke(visitor,true).getInteger("total");
             //获取新建的成家记录的信息
             JSONObject object=response1.getJSONArray("list").getJSONObject(0);
             String customerName=object.getString("customer_name");
             String customerPhone=object.getString("customer_phone");
             String ownerTypeId=object.getString("owner_type_name").equals("公司")?"CORPORATION":"PERSON";
             String sex=object.getString("sex").equals("女")?"0":"1";
-            Preconditions.checkArgument(totalAfter==totalBefore+1,"新建成交记录前的条数为："+totalBefore+"   新建成交记录以后的条数为："+totalAfter);
+            Preconditions.checkArgument(totalAfter==totalBefore+1,"新建成交记录前的成交记录条数为："+totalBefore+"   新建成交记录以后的成交记录条数为："+totalAfter);
+            Preconditions.checkArgument(totalAfter1==totalBefore1+1,"新建成交记录前的销售客户条数为："+totalBefore1+"   新建成交记录以后的销售客户条数为："+totalAfter1);
             Preconditions.checkArgument(customerName.equals("Max")&&customerPhone.equals("13373166806")&&ownerTypeId.equals("CORPORATION")&&sex.equals("0"),"新建成交记录的信息与创建时填写的不一致");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("新建成交记录,成交客户的手机号在销售客户的列表中存在，成交记录+1 ");
+            saveData("新建成交记录,成交客户的手机号在销售客户的列表中存在，成交记录+1 ，销售客户+0");
         }
     }
 
@@ -493,16 +503,16 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = PreSaleCustomerPageScene.builder().page(1).size(10).customerPhone("13373166806").build();
-            JSONObject response=visitor.invokeApi(scene,false).getJSONArray("list").getJSONObject(0);
+            JSONObject response=visitor.invokeApi(scene,true).getJSONArray("list").getJSONObject(0);
             Long shopId=response.getLong("shop_id");
             Long customerId=response.getLong("customer_id");
-            JSONObject respond= PreSaleCustomerInfoBuyCarRecordScene.builder().customerId(customerId).shopId(shopId).build().invoke(visitor,false);
+            JSONObject respond= PreSaleCustomerInfoBuyCarRecordScene.builder().customerId(customerId).shopId(shopId).build().invoke(visitor,true);
             //新建成交记录前客户详情中的购车记录条数
             int totalBefore=respond.getInteger("total");
             //新建成交记录
             systemCase.newCstmRecord("Max","13373166806","CORPORATION","0","","true");
             //新建成交记录后的列表条数
-            JSONObject respond1= PreSaleCustomerInfoBuyCarRecordScene.builder().customerId(customerId).shopId(shopId).build().invoke(visitor,false);
+            JSONObject respond1= PreSaleCustomerInfoBuyCarRecordScene.builder().customerId(customerId).shopId(shopId).build().invoke(visitor,true);
             int totalAfter=respond1.getInteger("total");
             JSONObject object=respond1.getJSONArray("list").getJSONObject(0);
             String customerName=object.getString("customer_name");
@@ -515,6 +525,39 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             saveData("新建成交记录,成交客户的手机号在销售客户的列表中存在，展厅客户中的购车记录+1");
+        }
+    }
+
+    /**
+     * 新建潜客记录,潜客的手机号在列表中不存在，销售客户+1
+     */
+    @Test(description = "新建潜客记录,潜客的手机号在列表中不存在，销售客户+1")
+    public void preSaleCustomerPageCase3(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //展厅客户的列表
+            IScene scene= PreSaleCustomerPageScene.builder().page(1).size(10).build();
+            JSONObject response=visitor.invokeApi(scene,true);
+            //新建潜客前的销售客户列表条数
+            int totalBefore=response.getInteger("total");
+            //新建潜客
+            systemCase.newPotentialCustomer("自动化潜客"+businessUtil.randomNumber(),"1337316"+businessUtil.randomNumber(),"CORPORATION","0","","true");
+            //新建潜客后的列表条数
+            JSONObject response1=PreSaleCustomerPageScene.builder().page(1).size(10).build().invoke(visitor,true);
+            int totalAfter=response1.getInteger("total");
+            //获取新建的潜客的信息
+            JSONObject object=response1.getJSONArray("list").getJSONObject(0);
+            String customerName=object.getString("customer_name");
+            String customerPhone=object.getString("customer_phone");
+            String ownerTypeId=object.getString("owner_type_name").equals("公司")?"CORPORATION":"PERSON";
+            String sex=object.getString("sex").equals("女")?"0":"1";
+            Preconditions.checkArgument(totalAfter==totalBefore+1,"新建潜客前的条数为："+totalBefore+"   新建潜客以后的条数为："+totalAfter);
+            Preconditions.checkArgument(customerName.equals("Max")&&customerPhone.equals("13373166806")&&ownerTypeId.equals("CORPORATION")&&sex.equals("0"),"新建潜客的信息与创建时填写的不一致");
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("新建潜客记录,潜客的手机号在列表中不存在，销售客户+1");
         }
     }
 
