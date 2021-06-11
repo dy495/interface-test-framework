@@ -271,6 +271,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
     public void editplateab(String plate) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            System.out.println(authorization);
             Long code = jc.appletCarEdit(pp.car_id, plate, pp.carModelId).getLong("code");
             $Preconditions.checkArgument(code == 1001, "编辑输入错误车牌，仍成功");
         } catch (AssertionError | Exception e) {
@@ -451,7 +452,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
             appletInfoEdit er = new appletInfoEdit();
             er.birthday = "1996-02-19";
             er.gender = "FEMALE";
-            er.name = "夏明凤";
+            er.name = "自动";
             er.contact = "15037286013";
 //            er.shipping_address = "中关村soho" + dt.getHHmm(0);
             jc.appletUserInfoEdit(er);
@@ -725,7 +726,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         return count;
     }
 
-    //    @Test(description = "道路救援门店数=门店管理开启的门店")
+// @Test(description = "道路救援门店数=门店管理开启的门店")   这个case 待确定，救援门店 可能时预约开启门店
     public void recuseShopList() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -762,7 +763,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //    @Test(description = "洗车，剩余次数-1，pc洗车管理+1")
+    //    @Test(description = "洗车，剩余次数-1，pc洗车管理+1")   //改功能暂被取消，无需监控
     public void washCar() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

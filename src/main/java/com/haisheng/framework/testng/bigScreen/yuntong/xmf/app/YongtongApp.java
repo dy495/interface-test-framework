@@ -9,6 +9,11 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletConsultAfterServiceSubmitScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletConsultOnlineExpertsSubmitScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletConsultPreServiceSubmitScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.consultmanagement.ResponseRuleEditScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.SelectReception;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appointmentRecodeSelect;
@@ -18,10 +23,14 @@ import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.DateTimeUtil;
+import com.haisheng.framework.util.QADbProxy;
+import com.haisheng.framework.util.QADbUtil;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class YongtongApp extends TestCaseCommon implements TestCaseStd {
@@ -37,6 +46,9 @@ public class YongtongApp extends TestCaseCommon implements TestCaseStd {
     JcFunction pf = new JcFunction(visitor, pp);
     JsonPathUtil jp = new JsonPathUtil();
     CommonConfig commonConfig = new CommonConfig();
+
+    private QADbProxy qaDbProxy = QADbProxy.getInstance();
+    public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
 
 
     /**
@@ -54,8 +66,6 @@ public class YongtongApp extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistQaOwner = "夏明凤";
         commonConfig.referer = EnumTestProduce.JC_DAILY.getReferer();
         commonConfig.product = EnumTestProduce.JC_DAILY.getAbbreviation();
-//        commonConfig.referer=getJcReferdaily();
-
 
         //replace backend gateway url
         //commonConfig.gateway = "";
@@ -76,11 +86,9 @@ public class YongtongApp extends TestCaseCommon implements TestCaseStd {
         commonConfig.shopId = "49195";
         commonConfig.roleId = "2945";
         beforeClassInit(commonConfig);
-        jc.changeIpPort(EnumTestProduce.JC_DAILY.getAddress());
 
         logger.debug("jc: " + jc);
         appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
-
 
     }
 
@@ -104,6 +112,29 @@ public class YongtongApp extends TestCaseCommon implements TestCaseStd {
         httpPost(path, object, EnumTestProduce.JC_DAILY.getAddress());
     }
 
+    public void startReception() {
+        int receptionId = Integer.valueOf(pf.salereception(pp.customerPhone)[0]);
+        qaDbUtil.updateDataNum("app_sale_receptionId", receptionId);
+    }
+
+    public void finishReception() {
+        Integer receptionId = qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum", "app_sale_receptionId");
+        IScene appcustomerEdit = AppCustomerEditScene.builder()
+                .id(String.valueOf(receptionId))
+                .shopId(pp.shopIdZ)
+                .customerName("夏明凤")
+                .estimatedBuyTime(dt.getHistoryDate(0))
+                .build();
+        JSONObject data1 = jc.invokeApi(appcustomerEdit, true);
+
+
+        IScene appfinishReception = AppFinishReceptionScene.builder()
+                .shopId(Long.valueOf(pp.shopIdZ))
+                .id((long) receptionId).build();
+
+        jc.invokeApi(appfinishReception);
+    }
+
     @AfterClass
     @Override
     public void clean() {
@@ -121,748 +152,537 @@ public class YongtongApp extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
     }
 
-    @DataProvider(name = "ACOUNT")
-    public static Object[] acount() {
-        return new String[][]{
-                {"13114785236", "000000", "轿辰（赢识测试）", "603"},
-//                {"13412010055", "000000", "全部-区域"},
-//                {"13412010054", "000000", "全部-品牌"},
-                {"13402050050", "000000", "自动化专用账号", "2945"},
-                {"13402050049", "000000", "中关村店长勿动", "2946"},
-        };
-    }
-
-    @Test(description = "今日任务数==今日数据各列数据之和", dataProvider = "ACOUNT")  //ok
-    public void taskEqualDate(String name, String code, String names, String roleId) {
+    @Test()
+    public void Astart() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            appLogin(name, code, roleId);
-            String type = "all";   //home \all
-            //获取今日任务数
-            int tasknum[] = pf.appTask();
+            startReception();
 
-            Integer appointmentcountZ = 0;  //预约
-            Integer appointmentcountM = 0;
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("开始接待");
+        }
+    }
 
-            Integer receptioncountZ = 0;  //接待
-            Integer receptioncountM = 0;
+    @Test()
+    public void zfinish() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            finishReception();
 
-            Integer followcountZ = 0;  //跟进
-            Integer followcountM = 0;
-            //今日数据
-            JSONArray todaydate = jc.apptodayDate(type, null, 100).getJSONArray("list");
-
-            for (int i = 0; i < todaydate.size(); i++) {
-                JSONObject list_data = todaydate.getJSONObject(i);
-//                待处理预约数和
-                String pending_appointment = list_data.getString("pending_appointment");
-                if (!pending_appointment.contains("-")) {
-                    String[] appointment = pending_appointment.split("/");
-                    appointmentcountZ += Integer.valueOf(appointment[0]);
-                    appointmentcountM += Integer.valueOf(appointment[1]);
-
-                }
-
-                //接待
-                String pending_reception = list_data.getString("pending_reception");
-                if (!pending_reception.contains("-")) {
-                    String[] reception = pending_reception.split("/");
-                    receptioncountZ += Integer.valueOf(reception[0]);
-                    receptioncountM += Integer.valueOf(reception[1]);
-                }
-                //跟进
-                //接待
-                String pending_foll = list_data.getString("pending_follow");
-                if (!pending_foll.contains("-")) {
-                    String[] reception = pending_foll.split("/");
-                    followcountZ += Integer.valueOf(reception[0]);
-                    followcountM += Integer.valueOf(reception[1]);
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("完成接待");
+        }
+    }
 
 
-                }
+    @Test(description = "编辑用户名称51个字异常")
+    public void editCustomer1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int id = qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum", "app_sale_receptionId");
+            String[] reception = {String.valueOf(id), null};
+            //编辑客户--名称超过50字
+            IScene appcustomerEdit = AppCustomerEditScene.builder()
+                    .id(reception[0])
+                    .shopId(pp.shopIdZ)
+                    .customerName(pp.String_50 + "字")
+                    .estimatedBuyTime(dt.getHistoryDate(0))
+                    .build();
+            JSONObject data1 = jc.invokeApi(appcustomerEdit, false);
 
+            Preconditions.checkArgument(data1.getLong("code") == 1001, "异常名称返回值错误");
+            Preconditions.checkArgument(data1.getString("message").contains("50"), "异常名称提示错误");
+
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("编辑客户名称异常验证");
+        }
+    }
+
+    @Test(description = "编辑用户手机号异常")
+    public void editCustomer2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int id = qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum", "app_sale_receptionId");
+            String[] reception = {String.valueOf(id), null};
+            String[] errphone = {"1590293829", "178273766554", "新人%￥#"};
+            for (int i = 0; i < errphone.length; i++) {
+                IScene appcustomerEdit2 = AppCustomerEditScene.builder()
+                        .id(reception[0])
+                        .shopId(pp.shopIdZ)
+                        .customerName("一个字")
+                        .customerPhone(errphone[i])
+                        .estimatedBuyTime(dt.getHistoryDate(0))
+                        .build();
+                JSONObject data1 = jc.invokeApi(appcustomerEdit2, false);
+
+                Preconditions.checkArgument(data1.getLong("code") == 1001, "异常手机号返回值错误");
+                Preconditions.checkArgument(data1.getString("message").contains("手机号"), "异常手机号提示错误");
             }
-            Preconditions.checkArgument(tasknum[0] == appointmentcountZ, name + "今日任务未处理预约数:" + tasknum[0] + "!=今日数据处理数据和" + appointmentcountZ);
-            Preconditions.checkArgument(tasknum[1] == appointmentcountM, name + "今日任务总预约数:" + tasknum[1] + "!=今日数据处理数据和" + appointmentcountM);
-            Preconditions.checkArgument(tasknum[2] == receptioncountZ, name + "今日任务未处理接待数:" + tasknum[2] + "!=今日数据处理数据和" + receptioncountZ);
-            Preconditions.checkArgument(tasknum[3] == receptioncountM, name + "今日任务总接待数:" + tasknum[3] + "!=今日数据处理数据和" + receptioncountM);
-
-            Preconditions.checkArgument(tasknum[4] == followcountZ, name + "今日任务未处理跟进数:" + tasknum[4] + "!=今日数据处理数据和" + followcountZ);
-            Preconditions.checkArgument(tasknum[5] == followcountM, name + "今日任务总跟进数:" + tasknum[5] + "!=今日数据处理数据和" + followcountM);
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("轿辰-今日任务数=今日数据各列数据之和");
+            saveData("编辑客户手机号异常验证");
         }
     }
 
-    //    @Test(description = "今日任务未完成接待（预约）数（分子）==【任务-接待（预约）】列表条数")  //ok
-    public void appointmentPageAndtodaydate() {
+    /**
+     * @description :     为避免在小程序端产生较多脏数据，仅测试时运行
+     * @date :2021/5/27 11:51
+     **/
+//    @Test(description = "买车购车记录+1")
+    public void buyCar() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
-            //app今日任务数
-            int tasknum[] = pf.appTask();
+            int id = qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum", "app_sale_receptionId");
+            String[] reception = {String.valueOf(id), null};
+            //编辑客户信息
+            IScene appcustomerEdit2 = AppCustomerEditScene.builder()
+                    .id(reception[0])
+                    .shopId(pp.shopIdZ)
+                    .customerName("一个字")
+                    .customerPhone(pp.customerPhone)
+                    .estimatedBuyTime(dt.getHistoryDate(0))
+                    .carModel(Long.valueOf(pp.carModelId))
+                    .build();
+            JSONObject data1 = jc.invokeApi(appcustomerEdit2);
 
-            int appointmentTotal = jc.appointmentPage(null, 100).getInteger("total");
-            int receptionTotal = jc.appreceptionPage(null, 100).getInteger("total");
+            //购车记录数
+            IScene customerDetail = AppCustomerDetailScene.builder().id(reception[0]).shopId(pp.shopIdZ).build();
+            JSONObject orderList = jc.invokeApi(customerDetail);
+            JSONArray list = orderList.getJSONArray("order_list");
 
-            Preconditions.checkArgument(tasknum[0] == appointmentTotal, "今日任务待处理预约数" + tasknum[0] + "!=[任务-预约]列表数" + appointmentTotal);
-            Preconditions.checkArgument(tasknum[2] == receptionTotal, "今日任务待处理接待数" + tasknum[2] + "!=[任务-接待]列表数" + receptionTotal);
+            //购车
+            IScene appbuycar = AppBuyCarScene.builder().id(Long.valueOf(reception[0]))
+                    .carModel(Long.valueOf(pp.carModelId))
+                    .shopId(Long.valueOf(pp.shopIdZ))
+                    .vin("AAAAAAASDS1829837")   //底盘号
+                    .build();
+            jc.invokeApi(appbuycar);
+            //购车记录数
+            IScene customerDetail2 = AppCustomerDetailScene.builder().id(reception[0]).shopId(pp.shopIdZ).build();
+            JSONObject orderList2 = jc.invokeApi(customerDetail2);
+            JSONArray list2 = orderList2.getJSONArray("order_list");
 
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("轿辰-今日任务未完成接待数（分子）==【任务-接待】列表条数");
-        }
-    }
-
-    //    @Test(description = "顾问：今日任务接待总数（分母）==【pc接待管理】接待时间为今天&&接待人为app登录接待顾问 数据和")
-    public void receptionPageAndpctodaydate() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            appLogin(pp.jdgw, pp.gwpassword, pp.roleidJdgw);
-            //app今日任务数
-            int tasknum[] = pf.appTask();
-
-            //pc登录  预约记录页该顾问今日数据
-            pcLogin(pp.jdgw, pp.gwpassword, pp.roleidJdgw);
-            IScene scene = appointmentRecodeSelect.builder().page("1")
-                    .size("100").service_sale_id(pp.userid)
-                    .shop_id(pp.shopIdZ)
-                    .create_end(dt.getHistoryDate(0))
-                    .create_start(dt.getHistoryDate(0)).build();
-
-            int appointmentTotal1 = jc.invokeApi(scene).getInteger("total");
-
-            IScene scene2 = appointmentRecodeSelect.builder().page("1")
-                    .size("10").service_sale_id(pp.userid)
-                    .shop_id(pp.shopIdZ)
-                    .appointment_status("20")
-                    .create_end(dt.getHistoryDate(0))
-                    .create_start(dt.getHistoryDate(0)).build();
-
-            int appointmentTotal2 = jc.invokeApi(scene2).getInteger("total");
-            int appointmentTotal = appointmentTotal1 - appointmentTotal2;
-
-            //接待管理页今日数据
-            SelectReception sr = new SelectReception();
-            sr.shop_id = pp.shopIdZ;
-            sr.reception_sale_name = pp.reception_sale_id;
-            sr.reception_end = dt.getHistoryDate(0);
-            sr.reception_start = dt.getHistoryDate(0);
-
-            int total1 = jc.receptionManageC(sr).getInteger("total");
-            sr.reception_status = "2000";
-            int total2 = jc.receptionManageC(sr).getInteger("total");
-            int total = total1 - total2;
-            sr = null;
-
-            Preconditions.checkArgument(tasknum[3] == total, "今日任务接待总数" + tasknum[3] + "!=[pc今日该接待顾问接待总数]" + total);
-            Preconditions.checkArgument(tasknum[1] == appointmentTotal, "今日任务预约总数" + tasknum[1] + "!=[pc今日该接待顾问预约总数]" + appointmentTotal);
+            Preconditions.checkArgument(list2.size() - list.size() == 1, "购车后记录+1");
 
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            appLogin(pp.gwphone, pp.gwpassword, pp.roleId);
-            saveData("轿辰-今日任务接待（预约）总数（分母）==pc【】列表条数");
+            saveData("买车购车记录+1");
         }
     }
 
-    //    @Test(description = "店长：今日任务接待总数（分母）==【pc接待管理】接待时间为今天数据和")  //ok
-    public void receptionPageAndpctodaydate2() {
+    @Test(description = "销售变更接待")
+    public void changeReception() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            appLogin(pp.dzphone, pp.dzcode, pp.dzroleId);
-            //app今日任务数
-            int tasknum[] = pf.appTask();
+            int id = qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum", "app_sale_receptionId");
+            String[] reception = {String.valueOf(id), null};
+            String uid = "";
 
-            //pc登录  预约记录页该顾问今日数据
+            JSONArray saleList = jc.AppReceptorListScene(Long.parseLong(pp.shopIdZ)).getJSONArray("list");
+            for (int i = 0; i < saleList.size(); i++) {
+                uid = saleList.getJSONObject(i).getString("uid");
+                if (!uid.equals(pp.useridxs)) {
+                    break;
+                }
+            }
+            int totalBefore = pf.appSaleReceptionPage();
+            //变更接待
+            IScene appreceptionChange = AppReceptorChangeScene.builder().receptorId(uid)
+                    .shopId(Long.valueOf(pp.shopIdZ))
+                    .id(Long.valueOf(reception[0]))
+                    .build();
+            jc.invokeApi(appreceptionChange);
+            int total = pf.appSaleReceptionPage();
+
             pcLogin(pp.dzphone, pp.dzcode, pp.dzroleId);
-            IScene scene = appointmentRecodeSelect.builder().page("1")
-                    .size("10")
-                    .shop_id(pp.shopIdZ)
-                    .create_end(dt.getHistoryDate(0))
-                    .create_start(dt.getHistoryDate(0)).build();
+            //店长登录 变更接待
+            appreceptionChange = AppReceptorChangeScene.builder().receptorId(pp.useridxs)
+                    .shopId(Long.valueOf(pp.shopIdZ))
+                    .id(Long.valueOf(reception[0]))
+                    .build();
+            jc.invokeApi(appreceptionChange);
+            appLogin(pp.jdgw, pp.gwpassword, pp.roleidJdgw);
+            int totalAfter = pf.appSaleReceptionPage();
 
-            int appointmentTotal1 = jc.invokeApi(scene).getInteger("total");
-
-            IScene scene2 = appointmentRecodeSelect.builder().page("1")
-                    .size("10")
-                    .shop_id(pp.shopIdZ)
-                    .appointment_status("20")
-                    .create_end(dt.getHistoryDate(0))
-                    .create_start(dt.getHistoryDate(0)).build();
-
-            int appointmentTotal2 = jc.invokeApi(scene2).getInteger("total");
-            int appointmentTotal = appointmentTotal1 - appointmentTotal2;
-
-            //接待管理页今日数据
-            SelectReception sr = new SelectReception();
-            sr.shop_id = pp.shopIdZ;
-            sr.reception_end = dt.getHistoryDate(0);
-            sr.reception_start = dt.getHistoryDate(0);
-
-            int total1 = jc.receptionManageC(sr).getInteger("total");
-            sr.reception_status = "2000";
-            int total2 = jc.receptionManageC(sr).getInteger("total");
-            int total = total1 - total2;
-            sr = null;
-            Preconditions.checkArgument(tasknum[3] == total, "今日任务接待总数" + tasknum[3] + "!=[pc今日该接待顾问接待总数]" + total);
-            Preconditions.checkArgument(tasknum[1] == appointmentTotal, "今日任务预约总数" + tasknum[1] + "!=[pc今日该接待顾问预约总数]" + appointmentTotal);
-
+            Preconditions.checkArgument(total - totalBefore == -1, "变更接待列表-1");
+            Preconditions.checkArgument(total - totalAfter == -1, "再次变更列表+1");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            appLogin(pp.gwphone, pp.gwpassword, pp.roleId);
-            saveData("轿辰-今日任务接待（预约）总数（分母）==pc【】列表条数");
+            pcLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
+            saveData("变更接待+1");
         }
     }
 
-    //    @Test(description = "集团：今日任务接待总数（分母）==【pc接待管理】接待时间为今天数据和")
-    public void receptionPageAndpctodaydate3() {
+    @Test(description = "备注")
+    public void remark() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            commonConfig.shopId = "-1";
-            appLogin(pp.gwphone, pp.gwpassword, pp.roleId);
-            //app今日任务数
-            int tasknum[] = pf.appTask();
+            int id = qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum", "app_sale_receptionId");
+            String[] reception = {String.valueOf(id), null};
 
-            //pc登录  预约记录页该顾问今日数据
-            pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
-            IScene scene = appointmentRecodeSelect.builder().page("1")
-                    .size("10")
-                    .create_end(dt.getHistoryDate(0))
-                    .create_start(dt.getHistoryDate(0)).build();
+            IScene customerDetail = AppCustomerDetailScene.builder().id(reception[0]).shopId(pp.shopIdZ).build();
+            JSONObject orderList = jc.invokeApi(customerDetail);
+            JSONArray list = orderList.getJSONArray("remarks");
 
-            int appointmentTotal1 = jc.invokeApi(scene).getInteger("total");
+            String remark = pp.String_50;
+            jc.AppCustomerRemarkScene(Long.valueOf(reception[0]), Long.valueOf(pp.shopIdZ), remark);
 
-            IScene scene2 = appointmentRecodeSelect.builder().page("1")
-                    .size("10")
-                    .appointment_status("20")
-                    .create_end(dt.getHistoryDate(0))
-                    .create_start(dt.getHistoryDate(0)).build();
+            IScene customerDetail2 = AppCustomerDetailScene.builder().id(reception[0]).shopId(pp.shopIdZ).build();
+            JSONObject orderList2 = jc.invokeApi(customerDetail2);
+            JSONArray list2 = orderList2.getJSONArray("remarks");
 
-            int appointmentTotal2 = jc.invokeApi(scene2).getInteger("total");
-            int appointmentTotal = appointmentTotal1 - appointmentTotal2;
-            //接待管理页今日数据
-            SelectReception sr = new SelectReception();
-//            sr.shop_id = pp.shopId;
-            sr.reception_end = dt.getHistoryDate(0);
-            sr.reception_start = dt.getHistoryDate(0);
-
-            int total1 = jc.receptionManageC(sr).getInteger("total");
-            sr.reception_status = "2000";
-            int total2 = jc.receptionManageC(sr).getInteger("total");
-            int total = total1 - total2;
-            sr = null;
-            Preconditions.checkArgument(tasknum[3] == total, "今日任务接待总数" + tasknum[3] + "!=[pc今日该接待顾问接待总数]" + total);
-            Preconditions.checkArgument(tasknum[1] == appointmentTotal, "今日任务预约总数" + tasknum[1] + "!=[pc今日该接待顾问预约总数]" + appointmentTotal);
+//            Preconditions.checkArgument(list2.size()-list.size()==1,"备注失败");
 
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            appLogin(pp.gwphone, pp.gwpassword, pp.roleId);
-            commonConfig.shopId = pp.shopIdZ;
-            saveData("轿辰-今日任务接待（预约）总数（分母）==pc【】列表条数");
+            saveData("备注 查看详情");
+        }
+    }
+
+    //    @Test(description = "在线专家回复")
+    public void follow_1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int totalBefore = pf.followPageNumber();
+            jc.appletLoginToken(pp.appletTocken);
+            IScene onlineExpert = AppletConsultOnlineExpertsSubmitScene.builder()
+                    .shopId(Long.valueOf(pp.shopIdZ))
+                    .content("咨询轮胎保养")
+                    .customerName("小明")
+                    .customerPhone("15037286013")
+                    .modelId(Long.valueOf(pp.carModelId))
+                    .brandId(pp.brandId)
+                    .build();
+            JSONObject data = jc.invokeApi(onlineExpert);
+
+            //跟进列表 获取id
+            JSONObject followList = jc.AppPageV3Scene(10, null, followType.ONLINE_EXPERTS.getName());
+            int total = followList.getInteger("total");
+            Long id = followList.getJSONArray("list").getJSONObject(0).getLong("id");
+
+            Preconditions.checkArgument(total - totalBefore == 1, "在线咨询，跟进列表+1");
+
+            //回复
+            jc.AppReplyV3Scene(id, "轮胎保养参考用户手册");
+
+            //备注
+            jc.AppRemarkV3Scene(id, "我是备注");
+
+            JSONObject lastvalue = null;
+            int size = 10;
+            while (size < 10) {
+                JSONObject followPageAfter = jc.AppPageV3Scene(10, lastvalue, followType.ONLINE_EXPERTS.getName());
+                JSONArray followListAfter = followPageAfter.getJSONArray("list");
+                size = followListAfter.size();
+                lastvalue = followPageAfter.getJSONObject("last_value");
+
+                for (int i = 0; i < followListAfter.size(); i++) {
+                    Long idAfter = followListAfter.getJSONObject(i).getLong("id");
+                    if (idAfter.equals(id)) {
+                        //返回跟进和 备注的内容
+                        break;
+                    }
+
+                }
+
+            }
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("在线专家回复");
         }
     }
 
 
-    @DataProvider(name = "HEXIAONUM")
-    public static Object[] hexiaonum() {   //异常核销码集合  (正常：17-19数字)
+    //    @Test(description = "专属售后咨询")   //TODO: 销售顾问咨询 copy 即可
+    public void follow_2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject followListBefore = jc.AppPageV3Scene(10, null, followType.ONLINE_EXPERTS.getName());
+            int totalBefore = followListBefore.getInteger("total");
+            IScene onlineExpert = AppletConsultAfterServiceSubmitScene.builder()
+                    .shopId(Long.valueOf(pp.shopIdZ))
+                    .content("专属售后咨询")
+                    .customerName("小明")
+                    .customerPhone("15037286013")
+                    .modelId(Long.valueOf(pp.carModelId))
+                    .salesId(pp.userid)
+                    .build();
+            JSONObject data = jc.invokeApi(onlineExpert);
+
+            //跟进列表 获取id
+            JSONObject followList = jc.AppPageV3Scene(10, null, followType.ONLINE_EXPERTS.getName());
+            int total = followList.getInteger("total");
+            Long id = followList.getJSONArray("list").getJSONObject(0).getLong("id");
+
+            Preconditions.checkArgument(total - totalBefore == 1, "在线咨询，跟进列表+1");
+
+            //回复
+            jc.AppReplyV3Scene(id, "轮胎保养参考用户手册");
+
+            //备注
+            jc.AppRemarkV3Scene(id, "我是备注");
+
+            //循环查找 列表中需要的跟进任务
+            JSONObject lastvalue = null;
+            int size = 10;
+            while (size < 10) {
+                JSONObject followPageAfter = jc.AppPageV3Scene(10, lastvalue, followType.ONLINE_EXPERTS.getName());
+                JSONArray followListAfter = followPageAfter.getJSONArray("list");
+                size = followListAfter.size();
+                lastvalue = followPageAfter.getJSONObject("last_value");
+
+                for (int i = 0; i < followListAfter.size(); i++) {
+                    Long idAfter = followListAfter.getJSONObject(i).getLong("id");
+                    if (idAfter.equals(id)) {
+                        //返回跟进和 备注的内容
+                        break;
+                    }
+                }
+            }
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("在线专家回复");
+        }
+    }
+
+    @Test(description = "权限相关")  //修改预约应答人权限，小程序接待人列表对应变更 ok
+    public void permissions() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
+//            Long i=pf.getAccessId2("个人");
+
+            //账户登录  修改角色的权限
+            JSONArray roleList1 = new JSONArray();
+            roleList1.add(roleList.findByLable("个人").getValue());
+            roleList1.add(roleList.findByLable("门店").getValue());
+            //预约保养分配
+            jc.organizationRoleEdit(Long.parseLong(pp.userroleId), "临时用户", "随时修改用户权限", roleList1);
+            jc.appletLoginToken(pp.appletTocken);
+            int staffTotalBefore = jc.AppletAppointmentStaffListScene("MAINTAIN", Long.valueOf(pp.shopIdZ)).getJSONArray("list").size();
+
+            roleList1.add(roleList.findByLable("预约保养分配").getValue());
+            //            appLogin(pp.user,pp.userpassword,pp.userroleId);
+            pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
+            jc.organizationRoleEdit(Long.parseLong(pp.userroleId), "临时用户", "随时修改用户权限", roleList1);
+
+            //小程序 门店下接待人员总数
+            jc.appletLoginToken(pp.appletTocken);
+            int staffTotal = jc.AppletAppointmentStaffListScene("MAINTAIN", Long.valueOf(pp.shopIdZ)).getJSONArray("list").size();
+
+            roleList1.remove(2);
+            pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
+            jc.organizationRoleEdit(Long.parseLong(pp.userroleId), "临时用户", "随时修改用户权限", roleList1);
+
+            jc.appletLoginToken(pp.appletTocken);
+            int staffTotalAfter = jc.AppletAppointmentStaffListScene("MAINTAIN", Long.valueOf(pp.shopIdZ)).getJSONArray("list").size();
+            Preconditions.checkArgument(staffTotalAfter - staffTotal == -1, "去掉权限后：" + staffTotalAfter + "去掉权限前:" + staffTotal);
+            Preconditions.checkArgument(staffTotalBefore - staffTotal == -1, "增加权限前：" + staffTotalBefore + "增加之后:" + staffTotal);
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("预约应答人权限");
+        }
+    }
+
+    @Test(description = "在线专家配置")
+    public void expertsConfig() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String type = "ONLINE_EXPERTS";
+            Integer remind = 1;
+            pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
+            String workday = "{\n" +
+                    "            \"afternoon_date_start\":\"13:00\",\n" +
+                    "            \"forenoon_date_end\":\"12:00\",\n" +
+                    "            \"forenoon_date_start\":\"04:00\",\n" +
+                    "            \"afternoon_date_end\":\"23:59\"\n" +
+                    "        }";
+            String weekDay = "{\n" +
+                    "            \"afternoon_date_start\":\"13:00\",\n" +
+                    "            \"forenoon_date_end\":\"12:00\",\n" +
+                    "            \"forenoon_date_start\":\"04:00\",\n" +
+                    "            \"afternoon_date_end\":\"17:00\"\n" +
+                    "        }";
+            JSONObject work_day = JSONObject.parseObject(workday);
+            JSONObject week_day = JSONObject.parseObject(weekDay);
+            IScene responseRuleEditScene = ResponseRuleEditScene.builder().businessType(type).remindTime(remind).overTime(remind)
+                    .workDay(work_day).weekDay(week_day).build();
+            jc.invokeApi(responseRuleEditScene);
+
+
+            jc.appletLoginToken(pp.appletTocken);
+            //发起专属服务
+            IScene appletCustomer = AppletConsultOnlineExpertsSubmitScene.builder().customerName("夏明凤").customerPhone(pp.customerPhone)
+                    .content("自动询问有权限者收1234567890")
+                    .modelId(Long.parseLong(pp.carModelId)).shopId(Long.parseLong(pp.shopIdZ)).build();
+            jc.invokeApi(appletCustomer);
+
+            appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
+            //消息数
+            int gwtotal = jc.appmessageList("20", null).getInteger("total");
+            appLogin(pp.dzphone, pp.dzcode, pp.dzroleId);
+            int dztotal = jc.appmessageList("20", null).getInteger("total");
+
+            sleep(remind * 60);
+            int dztotalAfter = jc.appmessageList("20", null).getInteger("total");
+
+            appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
+            int gwtotalAfter = jc.appmessageList("20", null).getInteger("total");
+
+            Preconditions.checkArgument(gwtotalAfter == gwtotal, "销售顾问没有提醒接受权限,确收到提醒");
+            Preconditions.checkArgument(dztotalAfter - dztotal == 1, "店长有提醒接受权限，没有收到提醒");
+
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("配置在线专家，提醒接收人在超时事件后收到提醒");
+        }
+    }
+
+    @Test(description = "pc配置专属服务")
+    public void serverConfig() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String type = "SALES";
+            Integer remind = 1;
+            pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
+            String workday = "{\n" +
+                    "            \"afternoon_date_start\":\"13:00\",\n" +
+                    "            \"forenoon_date_end\":\"12:00\",\n" +
+                    "            \"forenoon_date_start\":\"04:00\",\n" +
+                    "            \"afternoon_date_end\":\"23:59\"\n" +
+                    "        }";
+            String weekDay = "{\n" +
+                    "            \"afternoon_date_start\":\"13:00\",\n" +
+                    "            \"forenoon_date_end\":\"12:00\",\n" +
+                    "            \"forenoon_date_start\":\"04:00\",\n" +
+                    "            \"afternoon_date_end\":\"17:00\"\n" +
+                    "        }";
+            JSONObject work_day = JSONObject.parseObject(workday);
+            JSONObject week_day = JSONObject.parseObject(weekDay);
+            IScene responseRuleEditScene = ResponseRuleEditScene.builder().businessType(type).remindTime(remind).overTime(remind)
+                    .workDay(work_day).weekDay(week_day).build();
+            jc.invokeApi(responseRuleEditScene);
+
+
+            jc.appletLoginToken(pp.appletTocken);
+            //发起专属服务
+            IScene appletCustomer = AppletConsultPreServiceSubmitScene.builder().customerName("夏明凤").customerPhone(pp.customerPhone)
+                    .content("自动发起专属服务，有提醒权限者收1111111")
+                    .salesId(pp.userid).modelId(Long.parseLong(pp.carModelId)).shopId(Long.parseLong(pp.shopIdZ)).build();
+            jc.invokeApi(appletCustomer);
+
+            appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
+            //消息数
+            int gwtotal = jc.appmessageList("20", null).getInteger("total");
+            appLogin(pp.dzphone, pp.dzcode, pp.dzroleId);
+            int dztotal = jc.appmessageList("20", null).getInteger("total");
+
+            sleep(remind * 60);
+            int dztotalAfter = jc.appmessageList("20", null).getInteger("total");
+
+            appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
+            int gwtotalAfter = jc.appmessageList("20", null).getInteger("total");
+
+            Preconditions.checkArgument(gwtotalAfter == gwtotal, "销售顾问没有提醒接受权限,确收到提醒");
+            Preconditions.checkArgument(dztotalAfter - dztotal == 1, "店长有提醒接受权限，没有收到提醒");
+
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("配置在线专家，提醒接收人在超时事件后收到提醒");
+        }
+    }
+
+    @DataProvider(name = "onlineExpertInfo")
+    public static Object[] onlineExpertInfo() {
         return new String[]{
-                "1234567890123456",     //16位
-                "12345678901234561234",     //20位
-                "一二三四五六七八九十一二三四五六七",    //汉字
-                "123456789012四五六七",  //含汉字
-                "1234567890123ASD", //含小写
-                "1234567890123asd", //含字母
-                "234567890123asd&**",//含字符
-                "160731387200000030",//已使用的核销码
-//                "160741180800000005",//已过期
+                followType.ONLINE_EXPERTS.getType(),
+                followType.SALES.getType(),
         };
     }
 
-    @Test(description = "app核销码异常验证", dataProvider = "HEXIAONUM")
-    public void writeOffAbnornal(String num) {
+    @Test(dataProvider = "onlineExpertInfo", description = "跟进回复在线专家和专属服务")   //三次
+    public void zfollowRemark(String type) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
-            int code = jc.verification(num, false).getInteger("code");
-            Preconditions.checkArgument(code == 1001, "异常核销码，返回不是1001，code:" + code);
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("app核销码异常验证");
-        }
-    }
+            JSONObject data = jc.AppPageV3Scene(10, null, type);
+            JSONArray list = data.getJSONArray("list");
+            Long followId = list.getJSONObject(0).getLong("id");
+//            jc.AppRemarkV3Scene(followId,"自动回复在线专家专属服务您可满意！！！");AppReplyV3Scene
+            jc.AppReplyV3Scene(followId, "自动回复在线专家专属服务您可满意！！！");
 
-    @Test(description = "app接待车牌号验证", dataProvider = "PLATE", dataProviderClass = ScenarioUtil.class)
-    public void receptionNormal(String plate) {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            int code = jc.appReceptionAdmitcode(plate).getInteger("code");
-            Preconditions.checkArgument(code == 1001, "异常车牌号依然成功");
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("app接待车牌号验证");
-        }
-    }
-
-
-    @Test(description = "登录登出验证")
-    public void loginAbnormal() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            jc.appLogin2(pp.jdgw, pp.jdgwpassword, true);
-            jc.appLoginout();
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
-            saveData("登录登出校验");
-        }
-    }
-
-    /**
-     * @description :登录异常
-     * @date :2020/12/17 11:45
-     **/
-    @Test(dataProvider = "ERR_PHONE", dataProviderClass = DataAbnormal.class)
-    public void loginAbnormal(String phone) {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            int code = jc.appLogin2(phone, "000000", false).getInteger("code");
-            Preconditions.checkArgument(code == 1001, "登录异常手机号");
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("登录手机号异常校验");
-        }
-    }
-
-    @Test(dataProvider = "CODE", dataProviderClass = DataAbnormal.class)
-    public void apploginAbnormal_2(String code) {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
-            int code1 = jc.appLogin2(pp.jdgw, code, false).getInteger("code");
-            Preconditions.checkArgument(code1 == 1001, "登录异常手机号");
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("登录验证码异常校验");
-        }
-    }
-
-    /**
-     * @description :核销----需要小程序有源源不断的卡券;  核销，核销记录+1
-     * @date :2020/12/17 14:58
-     **/
-    @Test(description = "核销")
-    public void writeOff() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            String voucher_code[] = pf.voucherName();
-            //pc
-            System.out.println(commonConfig.shopId);
-            System.out.println(commonConfig.roleId);
-            pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
-            int messagePctotal = jc.pushMsgListFilterManage("-1", "1", "10", null, null).getInteger("total");
-            int verificationReordPctotal = jc.verificationReordFilterManage("-1", voucher_code[2], "1", "10", null, null).getInteger("total");
-
-            //核销记录总数
-            appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
-            int total = jc.appWriteOffRecordsPage("ALL", "10", null).getInteger("total");
-            //核销
-            jc.verification(voucher_code[0], true);
-            int totalA = jc.appWriteOffRecordsPage("ALL", "10", null).getInteger("total");
-            //小程序消息最新一条信息校验
-            jc.appletLoginToken(pp.appletTocken);
-            JSONObject message = jc.appletMessageList(null, 20).getJSONArray("list").getJSONObject(0);
-            String messageName = message.getString("content");
-//            String messageTime=message.getString("content");
-
-            pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
-            int messagePctotalA = jc.pushMsgListFilterManage("-1", "1", "10", null, null).getInteger("total");
-            int verificationReordPctotalA = jc.verificationReordFilterManage("-1", voucher_code[2], "1", "10", null, null).getInteger("total");
-
-
-            Preconditions.checkArgument(messagePctotalA - messagePctotal == 1, "核销后pc消息总数没-1");
-//            Preconditions.checkArgument(verificationReordPctotalA - verificationReordPctotal == 1, "核销后pc核销记录记录总数没-1");
-            Preconditions.checkArgument(totalA - total == 1, "核销后记录总数没+1" + totalA + ":" + total);
-            Preconditions.checkArgument(messageName.equals("您的卡券【" + voucher_code[1] + "】已被核销，请立即查看"));
+//            JSONObject dataAfter=jc.AppPageV3Scene(10,null,type);
+//            JSONArray listAfter=dataAfter.getJSONArray("list");
+//            Long followIdAfter=listAfter.getJSONObject(0).getLong("id");
+//            String isreply=listAfter.getJSONObject(0).getString("is_reply");
+//            Preconditions.checkArgument(isreply.equals("true"),"");
 
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
-            saveData("app核销记录数据一致校验");
+            saveData("跟进回复在线专家和专属服务");
         }
     }
 
-    /**
-     * @description :  2.0 变更接待  调试时需注意账号登录登出顺序
-     * @date :2021/5/27 11:50
-     **/
-    @Test(description = "app变更接待,接待任务变更")
-    public void Arecepchangetion() {
+    @DataProvider(name = "repairreply")
+    public static Object[] repairreply() {
+        return new String[]{
+                followType.MAINTAIN_EVALUATE.getType(),
+                followType.REPAIR_EVALUATE.getType(),
+        };
+    }
+
+    //    @Test(dataProvider ="repairreply", description = "跟进回复差评")   //三次
+    public void zfollowRemark2(String type) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            //开始接待
-            Long id[] = pf.startReception(pp.carplate8);
-            //变更接待前
-            int total = jc.appreceptionPage(null, 10).getInteger("total");
-            int tasknum[] = pf.appTask();
-
             appLogin(pp.dzphone, pp.dzcode, pp.dzroleId);
-            int totalDz = jc.appreceptionPage(null, 10).getInteger("total");
-            int tasknumDZ[] = pf.appTask();
+            JSONObject data = jc.AppPageV3Scene(10, null, type);
+            JSONArray list = data.getJSONArray("list");
+            Long followId = list.getJSONObject(0).getLong("id");
+            jc.AppRemarkV3Scene(followId, "自动回复维修保养差评您可满意！！！");
 
-            jc.receptorChange(id[0], id[1], pp.userid2);    //变更接待
-
-            //变更接待后
-            int total2Dz = jc.appreceptionPage(null, 10).getInteger("total");
-            int tasknumADz[] = pf.appTask();
-
-
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
             appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
-            int total2 = jc.appreceptionPage(null, 10).getInteger("total");
-            int tasknumA[] = pf.appTask();
-
-            appLogin(pp.dzphone, pp.dzcode, pp.dzroleId);
-            jc.receptorChange(id[0], id[1], pp.userid);    //变更接待，变回来
-
-            appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
-            int total3 = jc.appreceptionPage(null, 10).getInteger("total");
-
-            //完成接待
-//            jc.finishReception(id[0], id[1]);
-
-            Preconditions.checkArgument(total - total2 == 1, "变更接待后接待列表未-1,接待前：" + total + "，接待后：" + total2);
-            Preconditions.checkArgument(total3 - total2 == 1, "变更接待后接待列表未-1,接待前：" + total2 + "，接待后：" + total3);
-
-            Preconditions.checkArgument(tasknumA[2] - tasknum[2] == -1, "变更接待后今日任务-分子+1 ");
-            Preconditions.checkArgument(tasknumA[3] - tasknum[3] == -1, "变更接待后今日任务-分母+1");
-            Preconditions.checkArgument(Arrays.equals(tasknumDZ, tasknumADz), "变更接待前后，店长今日数据变更了");
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("轿辰-appapp变更接待,接待任务变更");
-        }
-    }
-
-    @Test(description = "app取消接待,接待任务列表-1，今日任务数分子分母都-1")
-    public void Bcanclereception() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
-            //开始接待
-            Long id[] = new Long[2];
-
-            JSONArray list = jc.appreceptionPage(null, 10).getJSONArray("list");
-            if (list.size() == 0) {
-                throw new Exception("暂无接待");
-            }
-            JSONObject dd = list.getJSONObject(0);
-            id[0] = dd.getLong("id");
-            id[1] = dd.getLong("shop_id");
-
-            int total = jc.appreceptionPage(null, 10).getInteger("total");
-            int tasknum[] = pf.appTask();
-
-            //取消接待
-            jc.cancleReception(id[0], id[1]);
-            int totalA = jc.appreceptionPage(null, 10).getInteger("total");
-            int tasknumA[] = pf.appTask();
-
-            Preconditions.checkArgument(total - totalA == 1, "取消接待后接待列表未-1,接待前：" + total + "，接待后：" + totalA);
-            Preconditions.checkArgument(tasknum[2] - tasknumA[2] == 1, "取消接待后今日任务-1,接待前：" + tasknum[2] + "，接待后：" + tasknumA[2]);
-            Preconditions.checkArgument(tasknum[3] - tasknumA[3] == 1, "取消接待后今日任务未-1,接待前：" + tasknum[3] + "，接待后：" + tasknumA[3]);
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("轿辰-app取消接待,接待任务-1,今日任务-1");
-        }
-    }
-
-    @Test(description = "变更接待列表")
-    public void receptorOnlyList() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONObject data = jc.receptorList(Long.parseLong(pp.shopIdZ));
-            jp.spiltString(data.toJSONString(), "$.list[*].uid&&$.list[*].name&&$.list[*].phone");
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("变更接待列表返回值校验");
-        }
-    }
-
-    @Test(description = "新增一个接待权限账户，接待人员列表+1")
-    public void receptorListAndCreateAccount() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
-            //新建账户前，接待列表人数
-            Integer total = jc.receptorList(Long.parseLong(pp.shopIdZ)).getJSONArray("list").size();
-            //创建账户
-
-            //shopList
-            JSONObject shopdate = new JSONObject();
-            shopdate.put("shop_id", pp.shopIdZ);
-            shopdate.put("shop_name", pp.shopname);
-            JSONArray shop_list = new JSONArray();
-            shop_list.add(shopdate);
-            //shopList
-            JSONObject roleList = new JSONObject();
-            roleList.put("role_id", pp.roleidJdgw);
-            roleList.put("role_name", pp.nameJdgw);
-            roleList.put("shop_list", shop_list);
-
-            JSONArray r_dList = new JSONArray();
-            r_dList.add(roleList);
-
-            String name = "" + System.currentTimeMillis();
-            String phone = pf.genPhoneNum();
-
-            pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
-            jc.organizationAccountAdd(name, phone, r_dList, shop_list, true);
-
-            JSONArray accountList = jc.pcStaffPage(name, 1, 10).getJSONArray("list");
-            String account = accountList.getJSONObject(0).getString("id");
-            appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
-            Integer totalAfterAdd = jc.receptorList(Long.parseLong(pp.shopIdZ)).getJSONArray("list").size();
-
-            pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
-            jc.organizationAccountDelete(account);
-
-            appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
-            Integer totalAfterDelate = jc.receptorList(Long.parseLong(pp.shopIdZ)).getJSONArray("list").size();
-            Preconditions.checkArgument(totalAfterAdd - total == 1, "新增接待权限账户，接待人原列表+1");
-            Preconditions.checkArgument(totalAfterDelate - totalAfterAdd == -1, "删除接待权限账户，接待人原列表-1");
-
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("新增/删除接待权限账户，接待人原列表+-1");
-        }
-    }
-
-
-    //        @Test(description = "app接待,接待任务列表+1,完成接待列表数-1")
-    public void reception() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //接待前，接待任务列表总数
-            int total = jc.appreceptionPage(null, 10).getInteger("total");
-
-            //开始接待
-            Long id[] = pf.startReception(pp.carplate7);
-
-            JSONObject dd = jc.appreceptionPage(null, 10);
-            int totalA = dd.getInteger("total");
-            String shopId = dd.getJSONArray("list").getJSONObject(0).getString("shop_id");
-
-            //完成接待
-            jc.finishReception(id[0], id[1]);
-            int totalC = jc.appreceptionPage(null, 10).getInteger("total");
-
-            Preconditions.checkArgument(totalA - total == 1, "接待后接待列表未+1,接待前：" + total + "，接待后：" + totalA);
-            Preconditions.checkArgument(totalA - totalC == 1, "完成接待后接待列表未-1,接待前：" + totalA + "，接待后：" + totalA);
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("轿辰-app接待,接待任务+1,完成接待，接待任务-1");
-        }
-    }
-
-    //    @Test(description = "app接待车牌号7位，汉字+字母",enabled = false)  //受接待车牌次数限制，此 case与上一个case合并
-    public void reception2() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-
-            Long id[] = pf.startReception(pp.carplate7);
-
-            jc.finishReception(id[0], id[1]);
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("app接待车牌号7位，汉字+字母");
-        }
-    }
-
-    //    @Test(description = "app接待,今日任务分子、分母+1，完成接待分子-1，分母-0")    //一次
-    public void receptionTodayTask() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //接待前，今日任务
-            int tasknum[] = pf.appTask();
-            //开始接待
-            Long id[] = pf.startReception(pp.carplate);
-            int tasknumA[] = pf.appTask();
-            //完成接待
-            jc.finishReception(id[0], id[1]);
-            int tasknumB[] = pf.appTask();
-
-            Preconditions.checkArgument(tasknumA[2] - tasknum[2] == 1, "接待后分子+1 ");
-            Preconditions.checkArgument(tasknumA[3] - tasknum[3] == 1, "接待后分母+1");
-
-            Preconditions.checkArgument(tasknumA[2] - tasknumB[2] == 1, "完成接待后分子-1 ");
-            Preconditions.checkArgument(tasknumA[3] - tasknumB[3] == 0, "完成接待后分母-0");
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("轿辰-app接待,接待任务+1,完成接待，接待任务-1");
-        }
-    }
-
-
-    //    @Test(description = "app接待,pc接待管理列表+1")   //二次
-    public void AreceptionPcPage() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //pc登录
-            pcLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
-            //接待前，接待任务列表总数
-            int total = jc.receptionManage(pp.shopIdZ, "1", "10", "", "").getInteger("total");
-
-            //app登录 开始接待
-            appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
-            Long id[] = pf.startReception(pp.carplate);
-
-            //pc登录
-            pcLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
-
-            int totalA = jc.receptionManage(pp.shopIdZ, "1", "10", "", "").getInteger("total");
-
-            //完成接待
-//            jc.appLogin(pp.jdgw, pp.jdgwpassword);
-//            jc.finishReception(id[0], id[1]);
-
-            //pc登录
-//            pcLogin(pp.jdgw, pp.jdgwpassword,pp.roleidJdgw);
-
-            int totalC = jc.receptionManage(pp.shopIdZ, "1", "10", "", "").getInteger("total");
-
-            Preconditions.checkArgument(totalA - total == 1, "接待后接待列表未+1,接待前：" + total + "，接待后：" + totalA);
-            Preconditions.checkArgument(totalA - totalC == 0, "完成接待后接待列表未-0,接待前：" + totalA + "，接待后：" + totalA);
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            jc.appLogin(pp.gwphone, pp.gwpassword);   //最后app登录
-            saveData("轿辰-app接待,接待任务+1,完成接待，接待任务-1");
-        }
-    }
-
-    /**
-     * @description :消息记录查询
-     * @date :2020/12/10 21:08
-     **/
-
-//    @Test()
-    public void messageFormOneFilter2() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
-            JSONArray result = jc.enummap().getJSONArray("PUSH_REASON_TYPE");
-
-            Map<String, String> map = new HashMap<String, String>();
-            for (int i = 0; i < result.size(); i++) {
-                String tt = result.getJSONObject(i).getString("key");
-                String vv = result.getJSONObject(i).getString("value");
-                map.put(tt, vv);
-            }
-            Set<String> keySet = map.keySet();
-            Iterator<String> t = keySet.iterator();
-            while (t.hasNext()) {
-                String key = t.next();
-                System.out.println("key:" + key);
-                JSONArray respon1 = jc.pushMsgListFilterManage("-1", "1", "10", "message_type", key).getJSONArray("list");
-                String temp = map.get(key);
-                for (int j = 0; j < respon1.size(); j++) {
-                    String resultA = respon1.getJSONObject(j).getString("message_type_name");
-                    Preconditions.checkArgument(resultA.equals(temp), resultA + ":" + temp);
-                    System.out.println("start:" + key + "___---------------------result:" + temp);
-                }
-            }
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            appLogin(pp.jdgw, pp.jdgwpassword, pp.roleId);
-            saveData("消息表单单项查询，结果校验");
-        }
-    }
-
-    //**************************今日数据******************************
-//    @Test(description = "app接待,今日数据分子、分母+1，完成接待分子-1，分母-0")   //三次
-    public void receptionTodayDate() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
-            String type = "all";
-            String name = pp.jdgwName; //Todo:账号名称, 或者店铺的名字
-            //接待前，今日任务
-            int tasknum[] = pf.apptodayDate(type, name);
-            //开始接待
-            Long id[] = pf.startReception(pp.carplate);
-            int tasknumA[] = pf.apptodayDate(type, name);
-            //完成接待
-            jc.finishReception(id[0], id[1]);
-            int tasknumB[] = pf.apptodayDate(type, name);
-
-            Preconditions.checkArgument(tasknumA[2] - tasknum[2] == 1, "接待后分子+1 ");
-            Preconditions.checkArgument(tasknumA[3] - tasknum[3] == 1, "接待后分母+1");
-
-            Preconditions.checkArgument(tasknumA[2] - tasknumB[2] == 1, "完成接待后分子-1 ");
-            Preconditions.checkArgument(tasknumA[3] - tasknumB[3] == 0, "完成接待后分母-0");
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
             saveData("轿辰-app接待,今日数据待处理接待+1,完成接待，待处理接待-1");
         }
     }
 
-    //跟进列表数
-    @Test(description = "跟进数")
-    public void followUpNumber() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
-            JSONObject lastValue = null;
-            JSONArray list;
-            int count = 0;
-            do {
-                JSONObject data = jc.AppPageV3Scene(10, lastValue, null);
-                lastValue = data.getJSONObject("last_value");
-                list = data.getJSONArray("list");
-                count = count + list.size();
-                System.out.println("listsize:" + list.size());
-            } while (list.size() == 10);
-            System.out.println("count:" + count);
+    @Test
+    public void collectsort() {
+        Pattern p = Pattern.compile("\\d");
+        Matcher m = p.matcher("QWe");
+        System.out.println(m.find());
 
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("轿辰-app接待,今日数据待处理接待+1,完成接待，待处理接待-1");
-        }
+        List a = new ArrayList();
+        Collections.sort(a);
     }
 
 

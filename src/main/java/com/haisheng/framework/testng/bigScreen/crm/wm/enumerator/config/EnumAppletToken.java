@@ -29,7 +29,7 @@ public enum EnumAppletToken {
 
     JC_XMF_DAILY(EnumTestProduce.JC_DAILY.getAbbreviation(), "LH4AyoNJqHnlX51e7pKwDQ==", false, "15037286013"),
 
-    JC_XMF_ONLINE(EnumTestProduce.JC_DAILY.getAbbreviation(), "doZhCo6nCMQq1HBzaToqww==", false, "15037286013"),
+    JC_XMF_ONLINE(EnumTestProduce.JC_DAILY.getAbbreviation(), "Aq7FpRIIVId1vffctPRYiA==", false, "15037286013"),
 
     JC_LXQ_DAILY(EnumTestProduce.JC_DAILY.getAbbreviation(), "W5Frcy3PvcsOQ5Z1MmzNEw==", false, "13436941018"),
 
