@@ -151,7 +151,7 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
         }catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("生成交易订单onlinr--不触发无人风控");
+            saveData("生成交易订单online--不触发无人风控");
         }
     }
 

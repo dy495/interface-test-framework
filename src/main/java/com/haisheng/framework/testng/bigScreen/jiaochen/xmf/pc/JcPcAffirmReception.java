@@ -36,7 +36,7 @@ public class JcPcAffirmReception extends TestCaseCommon implements TestCaseStd {
     PublicParm pp = new PublicParm();
     JcFunction pf = new JcFunction(visitor, pp);
 
-    String dataName = "pc_reception";
+    String dataName = "pc_reception";  //数据存储的行名称
 
 
     public void initial1() {
@@ -49,7 +49,6 @@ public class JcPcAffirmReception extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
         commonConfig.referer = EnumTestProduce.JC_DAILY.getReferer();
-//        commonConfig.referer=getJcReferdaily();
 
 
         //replace backend gateway url
