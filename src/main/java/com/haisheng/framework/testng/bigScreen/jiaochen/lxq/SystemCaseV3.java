@@ -19,7 +19,6 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.consultmanag
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanage.PreSaleCustomerStyleListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.loginuser.ShopListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.manage.EvaluateExportScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.presalesreception.CustomerRemarkScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.record.ExportPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shop.AddScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
@@ -1608,15 +1607,28 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    //@Test
+    @Test
     public void remark() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            user.loginPc(ALL_AUTHORITY);
+//            user.loginPc(ALL_AUTHORITY);
+//
+//
+//            CustomerRemarkScene.builder().remark(info.string200).id(161L).shopId(46522L).build().invoke(visitor);
+//
+//
 
+            //小程序删除无牌爱车
+            user.loginApplet(APPLET_USER_ONE);
+            JSONArray arr = AppletCarListScene.builder().build().invoke(visitor).getJSONArray("list");
+            for (int i = 0 ; i < arr.size();i++){
+                JSONObject obj = arr.getJSONObject(i);
+                if (!obj.containsKey("plate_number")){
+                    AppletCarDeleteScene.builder().id(obj.getLong("id")).build().invoke(visitor);
 
-            CustomerRemarkScene.builder().remark(info.string200).id(161L).shopId(46522L).build().invoke(visitor);
+                }
+            }
 
 
         } catch (AssertionError e) {
