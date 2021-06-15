@@ -2,6 +2,7 @@ package com.haisheng.framework.testng.bigScreen.yuntong.wm.util;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.util.BasicUtil;
@@ -22,33 +23,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class BusinessUtil extends BasicUtil {
-    private static volatile BusinessUtil INSTANCE = null;
-    private static VisitorProxy visitorProxy;
+    private final VisitorProxy visitor;
 
     /**
      * 构造函数私有化。外部不可调用构造函数
      *
      * @param visitor 访问者
      */
-    private BusinessUtil(VisitorProxy visitor) {
+    public BusinessUtil(VisitorProxy visitor) {
         super(visitor);
-        visitorProxy = visitor;
-    }
-
-    /**
-     * 配置一个懒汉单例
-     *
-     * @param visitor 访问者
-     * @return BusinessUtil
-     */
-    public static synchronized BusinessUtil getInstance(VisitorProxy visitor) {
-        if (INSTANCE == null) {
-            INSTANCE = new BusinessUtil(visitor);
-            if (visitorProxy != visitor) {
-                INSTANCE = new BusinessUtil(visitor);
-            }
-        }
-        return INSTANCE;
+        this.visitor = visitor;
     }
 
     /**
@@ -57,7 +41,7 @@ public class BusinessUtil extends BasicUtil {
      * @param enumAccount 账号
      */
     public void loginPc(@NotNull EnumAccount enumAccount) {
-        LoginPc.builder().phone(enumAccount.getPhone()).verificationCode(enumAccount.getPassword()).build().invoke(visitorProxy);
+        LoginPc.builder().phone(enumAccount.getPhone()).verificationCode(enumAccount.getPassword()).build().invoke(visitor);
     }
 
     /**
@@ -66,7 +50,7 @@ public class BusinessUtil extends BasicUtil {
      * @param enumAccount 账号
      */
     public void loginApp(@NotNull EnumAccount enumAccount) {
-        LoginApp.builder().phone(enumAccount.getPhone()).verificationCode(enumAccount.getPassword()).build().invoke(visitorProxy);
+        LoginApp.builder().phone(enumAccount.getPhone()).verificationCode(enumAccount.getPassword()).build().invoke(visitor);
     }
 
     /**
@@ -80,7 +64,7 @@ public class BusinessUtil extends BasicUtil {
         List<AppDepartmentPageBean> list = new ArrayList<>();
         JSONObject lastValue = null;
         do {
-            JSONObject response = AppDepartmentPageScene.builder().startDate(startDate).endDate(endDate).lastValue(lastValue).size(20).build().invoke(visitorProxy);
+            JSONObject response = AppDepartmentPageScene.builder().startDate(startDate).endDate(endDate).lastValue(lastValue).size(20).build().invoke(visitor);
             lastValue = response.getJSONObject("last_value");
             list.addAll(response.getJSONArray("list").stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppDepartmentPageBean.class)).collect(Collectors.toList()));
         } while (list.size() == 20);
@@ -98,7 +82,7 @@ public class BusinessUtil extends BasicUtil {
         List<AppPersonalPageBean> list = new ArrayList<>();
         JSONObject lastValue = null;
         do {
-            JSONObject response = AppPersonalPageScene.builder().salesId(salesId).startDate(startDate).endDate(endDate).lastValue(lastValue).size(20).build().invoke(visitorProxy);
+            JSONObject response = AppPersonalPageScene.builder().salesId(salesId).startDate(startDate).endDate(endDate).lastValue(lastValue).size(20).build().invoke(visitor);
             lastValue = response.getJSONObject("last_value");
             list.addAll(response.getJSONArray("list").stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppPersonalPageBean.class)).collect(Collectors.toList()));
         } while (list.size() == 20);
@@ -121,6 +105,13 @@ public class BusinessUtil extends BasicUtil {
         return CommonUtil.getIntRatio(scoreSum, 5, 0);
     }
 
+    /**
+     * 获取接待话术得分
+     *
+     * @param receptionId 接待id
+     * @param type        话术id
+     * @return 分数
+     */
     public Integer getScoreByType(Long receptionId, Integer type) {
         IScene scene = AppDetailScene.builder().id(receptionId).build();
         JSONArray scores = toJavaObject(scene, AppDetailBean.class).getScores();
@@ -129,5 +120,19 @@ public class BusinessUtil extends BasicUtil {
         }
         return scores.stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("type").equals(type)).map(e -> e.getInteger("score")).findFirst().orElse(0);
     }
+
+    /**
+     * 获取总分
+     *
+     * @param receptionId 接待id
+     * @return 总分
+     */
+    public Integer getScoreSum(Long receptionId) {
+        IScene scene = AppDetailScene.builder().id(receptionId).build();
+        JSONArray scores = toJavaObject(scene, AppDetailBean.class).getScores();
+        return scores == null ? 0 : scores.stream().map(e -> (JSONObject) e).mapToInt(e -> e.getInteger("score")).sum();
+    }
+
+
 
 }

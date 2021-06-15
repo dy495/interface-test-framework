@@ -25,15 +25,15 @@ public enum EnumAppletToken {
 
     JC_WM_DAILY(EnumTestProduce.JC_DAILY.getAbbreviation(), "jVXDdP1MPHXpNPrzl5LRLg==", true, "15321527989"),
 
-    JC_WM_ONLINE(EnumTestProduce.JC_DAILY.getAbbreviation(), "aTcP39Q3mJAUauGwmq2VMg==", false, "15321527989"),
+    JC_WM_ONLINE(EnumTestProduce.JC_DAILY.getAbbreviation(), "ozWh4QcCow9uvHXvVGoQAg==", false, "15321527989"),
 
     JC_XMF_DAILY(EnumTestProduce.JC_DAILY.getAbbreviation(), "LH4AyoNJqHnlX51e7pKwDQ==", false, "15037286013"),
 
-    JC_XMF_ONLINE(EnumTestProduce.JC_DAILY.getAbbreviation(), "doZhCo6nCMQq1HBzaToqww==", false, "15037286013"),
+    JC_XMF_ONLINE(EnumTestProduce.JC_DAILY.getAbbreviation(), "Aq7FpRIIVId1vffctPRYiA==", false, "15037286013"),
 
     JC_LXQ_DAILY(EnumTestProduce.JC_DAILY.getAbbreviation(), "W5Frcy3PvcsOQ5Z1MmzNEw==", false, "13436941018"),
 
-    JC_LXQ_ONLINE(EnumTestProduce.JC_DAILY.getAbbreviation(), "ORwlXpsC2yWsZ7f+tPMV9A==", false, "13436941018"),
+    JC_LXQ_ONLINE(EnumTestProduce.JC_DAILY.getAbbreviation(), "1SPV5Fc31ADQOaQvp5Q/tw==", false, "13436941018"),
 
     JC_GLY_DAILY(EnumTestProduce.JC_DAILY.getAbbreviation(), "7JOlh1/4nIVehoCVD++WyA==", true, "13373166806"),
 

@@ -65,7 +65,7 @@ public class YunTongInfo {
     }
 
     @DataProvider(name = "TIME")
-    public Object[] time(){
+    public Object[][] time(){
         return new String[][]{ // 开始时间 结束时间 提示语 是否正常
 
                 {dt.getHistoryDate(-2),dt.getHistoryDate(-1),"开始时间<结束时间 && 结束时间<今天","true"},

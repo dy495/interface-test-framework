@@ -29,7 +29,7 @@ public class DataCaseOnline extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce PRODUCE = EnumTestProduce.JC_ONLINE;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.ALL_JC_ONLINE;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_LXQ_ONLINE;
-    public VisitorProxy visitor =  VisitorProxy.getInstance(PRODUCE);
+    public VisitorProxy visitor = new VisitorProxy(PRODUCE);
 
     ScenarioUtilOnline jc = ScenarioUtilOnline.getInstance();
     jiaoChenInfoOnline info = new jiaoChenInfoOnline();
@@ -56,7 +56,7 @@ public class DataCaseOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.dingHook = EnumDingTalkWebHook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
         commonConfig.shopId = EnumTestProduce.JC_ONLINE.getShopId();
-        commonConfig.roleId="395";
+        commonConfig.roleId = "395";
         beforeClassInit(commonConfig);
         logger.debug("jc: " + jc);
 
@@ -107,8 +107,8 @@ public class DataCaseOnline extends TestCaseCommon implements TestCaseStd {
             //每次修改固定shop
             int code = EditScene.builder().id(20709L).name(name).simpleName(simple_name).districtCode(district_code).address(address).brandList(arr)
                     .saleTel(sale_tel).serviceTel(service_tel).longitude(Double.valueOf(longitude)).latitude(Double.valueOf(latitude)).avatarPath(info.getLogo()).customerServiceTel(sale_tel).rescueTel(sale_tel)
-                    .build().invoke(visitor,false).getInteger("code");
-            Preconditions.checkArgument(code==1000,"修改门店，状态码"+code);
+                    .build().invoke(visitor, false).getInteger("code");
+            Preconditions.checkArgument(code == 1000, "修改门店，状态码" + code);
 
             int after = jc.shopPage(1, 1, "").getInteger("total");
             int num = after - bef;

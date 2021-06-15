@@ -21,6 +21,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
 import java.io.File;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
@@ -36,8 +37,8 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
     PublicParm pp = new PublicParm();
     public String shopId = "-1";
     public String appletToken = EnumAppletToken.JC_GLY_DAILY.getToken();
-    public VisitorProxy visitor = VisitorProxy.getInstance(product);
-    SupporterUtil su=new SupporterUtil(visitor);
+    public VisitorProxy visitor = new VisitorProxy(product);
+    SupporterUtil su = new SupporterUtil(visitor);
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
@@ -92,7 +93,7 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
         try {
             JSONObject respond = jc.importListFilterManage(shopId, "1", "10", "", "");
             if (respond.getJSONArray("list").size() > 0) {
-                int pages = respond.getInteger("pages")>10?10: respond.getInteger("pages");
+                int pages = respond.getInteger("pages") > 10 ? 10 : respond.getInteger("pages");
                 for (int page = 1; page <= Integer.valueOf(pages); page++) {
                     JSONArray list = jc.importListFilterManage(shopId, String.valueOf(page), "10", "", "").getJSONArray("list");
                     for (int i = 0; i < list.size(); i++) {
@@ -124,7 +125,7 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
         try {
             JSONObject respon = jc.importListFilterManage(shopId, "1", "10", "", "");
             if (respon.getJSONArray("list").size() > 0) {
-                int pages = respon.getInteger("pages")>10?10: respon.getInteger("pages");
+                int pages = respon.getInteger("pages") > 10 ? 10 : respon.getInteger("pages");
                 for (int page = 1; page <= Integer.valueOf(pages); page++) {
                     JSONArray list = jc.importListFilterManage(shopId, String.valueOf(page), "10", "", "").getJSONArray("list");
                     for (int i = 0; i < list.size(); i++) {
@@ -153,7 +154,7 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
         try {
             JSONObject respon = jc.importListFilterManage(shopId, "1", "10", "", "");
             if (respon.getJSONArray("list").size() > 0) {
-                int pages = respon.getInteger("pages")>10?10: respon.getInteger("pages");
+                int pages = respon.getInteger("pages") > 10 ? 10 : respon.getInteger("pages");
                 for (int page = 1; page <= pages; page++) {
                     JSONArray list = jc.importListFilterManage(shopId, String.valueOf(page), "10", "", "").getJSONArray("list");
                     for (int i = 0; i < list.size(); i++) {
@@ -276,9 +277,9 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取卡券
-            Long voucherId= new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             //推送推送消息
-            su.pushCustomMessage(0,true,voucherId);
+            su.pushCustomMessage(0, true, voucherId);
             //查看消息记录中的第一条消息
             JSONObject respond = jc.pushMsgListFilterManage("", "1", "10", "", "");
             String isReadBefore = respond.getJSONArray("list").getJSONObject(0).getString("is_read");
@@ -290,8 +291,8 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
             jc.messageDetail(id);
             //查看现在的-客户查看
             jc.pcLogin(pp.gwphone, pp.gwpassword);
-            JSONArray list1= jc.pushMsgListFilterManage("", "1", "10", "", "").getJSONArray("list");
-            String isReadAfter =list1.getJSONObject(0).getString("phone").equals("13373166806")?list1.getJSONObject(0).getString("is_read"):list1.getJSONObject(1).getString("is_read");
+            JSONArray list1 = jc.pushMsgListFilterManage("", "1", "10", "", "").getJSONArray("list");
+            String isReadAfter = list1.getJSONObject(0).getString("phone").equals("13373166806") ? list1.getJSONObject(0).getString("is_read") : list1.getJSONObject(1).getString("is_read");
             System.out.println("客户查看之前的状态为:" + isReadBefore + "现在客户查看的状态为:" + isReadAfter);
             Preconditions.checkArgument(isReadAfter.equals("true"), "客户查看之前的状态为:" + isReadBefore + "现在客户查看的状态为:" + isReadAfter);
         } catch (AssertionError | Exception e) {
@@ -310,12 +311,12 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取卡券
-            Long voucherId= new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             //查看消息记录的总条数
             JSONObject respond = jc.pushMsgListFilterManage("", "1", "10", "", "");
             int total = respond.getInteger("total");
             //推送推送消息
-            su.pushCustomMessage(0,true,voucherId);
+            su.pushCustomMessage(0, true, voucherId);
             sleep(3);
             //推送消息以后再次查看消息记录的总条数
             JSONObject respond1 = jc.pushMsgListFilterManage("", "1", "10", "", "");
@@ -337,12 +338,12 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取卡券
-            Long voucherId= new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             //查看消息记录的总条数
             JSONObject respond = jc.pushMsgListFilterManage("", "1", "10", "", "");
             int total = respond.getInteger("total");
             //推送推送消息
-            su.pushCustomMessage(0,true,voucherId);
+            su.pushCustomMessage(0, true, voucherId);
             int sendCount = jc.messageFormFilterManage("", "1", "10", "", "").getJSONArray("list").getJSONObject(0).getInteger("send_count");
             //推送消息以后再次查看消息记录的总条数
             JSONObject respond1 = jc.pushMsgListFilterManage("", "1", "10", "", "");
@@ -350,7 +351,7 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
             //消息记录新增的数量
             int num = total1 - total;
 
-            Preconditions.checkArgument(num == sendCount , "推送消息之后消息新增的数量:" + (total1 - total) + "消息记录中发出的消息为:" + sendCount );
+            Preconditions.checkArgument(num == sendCount, "推送消息之后消息新增的数量:" + (total1 - total) + "消息记录中发出的消息为:" + sendCount);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -368,13 +369,13 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
         try {
             int isReadNum = 0;
             //获取卡券
-            Long voucherId= new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             //查看消息记录的总条数
             JSONObject respond = jc.pushMsgListFilterManage("", "1", "10", "", "");
             int total = respond.getInteger("total");
             //推送推送消息
-            su.pushCustomMessage(0,true,voucherId);
-            int sendCount = jc.messageFormFilterManage("", "1", "10","","").getJSONArray("list").getJSONObject(0).getInteger("send_count");
+            su.pushCustomMessage(0, true, voucherId);
+            int sendCount = jc.messageFormFilterManage("", "1", "10", "", "").getJSONArray("list").getJSONObject(0).getInteger("send_count");
             //推送消息以后再次查看消息记录的总条数
             JSONObject respond1 = jc.pushMsgListFilterManage("", "1", "100", "", "");
             int total1 = respond1.getInteger("total");
@@ -405,8 +406,8 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject respond = jc.importListFilterManage(shopId, "1", "10", "", "");
-            int pages=respond.getInteger("pages")>10?10:respond.getInteger("pages");
-            for(int page=1;page<=pages;page++){
+            int pages = respond.getInteger("pages") > 10 ? 10 : respond.getInteger("pages");
+            for (int page = 1; page <= pages; page++) {
                 JSONObject respond1 = jc.importListFilterManage(shopId, String.valueOf(page), "10", "", "");
                 JSONArray list = respond1.getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
@@ -414,10 +415,10 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
                     String typeName = list.getJSONObject(i).getString("type_name");
                     String importTime = list.getJSONObject(i).getString("import_time");
                     String fileType = list.getJSONObject(i).getString("file_type");
-                    String importNum = list.getJSONObject(i).containsKey("import_num")? list.getJSONObject(i).getString("import_num"):"0";
-                    String successNum = list.getJSONObject(i).containsKey("success_num")? list.getJSONObject(i).getString("success_num"):"0";
-                    String failureNum = list.getJSONObject(i).containsKey("failure_num")? list.getJSONObject(i).getString("failure_num"):"0";
-                    System.out.println(importNum+"----"+successNum+"---"+failureNum);
+                    String importNum = list.getJSONObject(i).containsKey("import_num") ? list.getJSONObject(i).getString("import_num") : "0";
+                    String successNum = list.getJSONObject(i).containsKey("success_num") ? list.getJSONObject(i).getString("success_num") : "0";
+                    String failureNum = list.getJSONObject(i).containsKey("failure_num") ? list.getJSONObject(i).getString("failure_num") : "0";
+                    System.out.println(importNum + "----" + successNum + "---" + failureNum);
                     String operateShopName = list.getJSONObject(i).getString("operate_shop_name");
                     String userName = list.getJSONObject(i).getString("user_name");
                     String userAccount = list.getJSONObject(i).getString("user_account");
@@ -441,8 +442,8 @@ public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject respond = jc.pushMsgListFilterManage(shopId, "1", "10", "", "");
-            int pages=respond.getInteger("pages")>5?5:respond.getInteger("pages");
-            for(int page=1;page<=pages;page++){
+            int pages = respond.getInteger("pages") > 5 ? 5 : respond.getInteger("pages");
+            for (int page = 1; page <= pages; page++) {
                 JSONObject respond1 = jc.pushMsgListFilterManage(shopId, "1", "10", "", "");
                 JSONArray list = respond1.getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {

@@ -12,7 +12,7 @@ import lombok.Builder;
  * @date 2021-05-07 19:22:48
  */
 @Builder
-public class AppOverviewScene extends BaseScene {
+public class AppPersonalOverviewScene extends BaseScene {
     /**
      * 描述 查询数据周期 取值见字典表《数据查询周期》
      * 是否必填 true

@@ -15,33 +15,15 @@ import org.springframework.util.StringUtils;
  * @date 2021/1/20 13:36
  */
 public class VisitorProxy extends TestCaseCommon {
-    private static volatile VisitorProxy INSTANCE = null;
-    private static volatile EnumTestProduce PRODUCT;
-
-    public static VisitorProxy getInstance(EnumTestProduce product) {
-        if (INSTANCE == null) {
-            System.err.println(product.getAddress());
-            synchronized (VisitorProxy.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = new VisitorProxy(product);
-                }
-            }
-        } else if (PRODUCT != product) {
-            System.err.println(product.getAddress());
-            synchronized (VisitorProxy.class) {
-                INSTANCE = new VisitorProxy(product);
-            }
-        }
-        return INSTANCE;
-    }
+    private final EnumTestProduce product;
 
     /**
      * 构造函数，私有
      *
      * @param product 调用产品
      */
-    private VisitorProxy(EnumTestProduce product) {
-        PRODUCT = product;
+    public VisitorProxy(EnumTestProduce product) {
+        this.product = product;
     }
 
     /**
@@ -73,7 +55,7 @@ public class VisitorProxy extends TestCaseCommon {
      * @return JSONObject response.data
      */
     public JSONObject invokeApi(String path, JSONObject requestBody, boolean checkCode) {
-        String IpPort = PRODUCT.getAddress();
+        String IpPort = product.getAddress();
         if (StringUtils.isEmpty(path)) {
             throw new RuntimeException("path不可为空");
         }
@@ -100,7 +82,7 @@ public class VisitorProxy extends TestCaseCommon {
      * @return 返回值
      */
     public JSONObject upload(String path, String filePath) {
-        String response = uploadFile(filePath, path, PRODUCT.getAddress());
+        String response = uploadFile(filePath, path, product.getAddress());
         return JSON.parseObject(response);
     }
 
@@ -110,7 +92,7 @@ public class VisitorProxy extends TestCaseCommon {
      * @param scene 场景
      */
     public void login(@NotNull IScene scene) {
-        httpPost(scene.getPath(), scene.getBody(), PRODUCT.getAddress());
+        httpPost(scene.getPath(), scene.getBody(), product.getAddress());
     }
 
     /**
@@ -129,7 +111,7 @@ public class VisitorProxy extends TestCaseCommon {
      * @return true/false
      */
     public Boolean isEmpty() {
-        return PRODUCT == null;
+        return product == null;
     }
 
     /**
@@ -138,6 +120,6 @@ public class VisitorProxy extends TestCaseCommon {
      * @return boolean
      */
     public Boolean isDaily() {
-        return PRODUCT.getIsDaily();
+        return product.getIsDaily();
     }
 }

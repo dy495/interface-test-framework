@@ -27,7 +27,10 @@ public class PoiUtils {
 
 //        importCustomer("2000");
     }
-    //导入工单，公里数=固定值
+    /**
+     * @description :  导入工单
+     * @date :2021/6/10 15:36
+     **/
     public static void importCustomer(String mile) throws IOException {
         Random random = new Random();
         String serverNumber = "A" + random.nextInt(100000);
@@ -69,6 +72,10 @@ public class PoiUtils {
         output.flush();
 
     }
+    /**
+     * @description :导入流失客户
+     * @date :2021/6/10 15:31
+     **/
 
     public static void importlossCustomer(String mile,String vin,int dataNum,String plate,String phone,String staff ) throws IOException {
         Random random = new Random();
@@ -112,6 +119,11 @@ public class PoiUtils {
 
     }
 
+    /**
+     * @description :导入潜客
+     * @date :2021/6/10 15:37
+     **/
+
     public static void importPotentialCustomer(String []parm ) throws IOException {
         DateTimeUtil dt = new DateTimeUtil();
         String importFilepath="src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/importPotentialCustomerfile.xlsx";
@@ -132,6 +144,10 @@ public class PoiUtils {
         output.flush();
 
     }
+    /**
+     * @description :导入潜客5000条
+     * @date :2021/6/10 15:31
+     **/
 
     public static void importPotential5000() throws IOException {
         DateTimeUtil dt = new DateTimeUtil();

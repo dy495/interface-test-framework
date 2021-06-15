@@ -18,13 +18,13 @@ public enum EnumTestProduce {
 
     JC_DAILY("汽车-轿辰 日常 ", "https://servicewechat.com/wxbd41de85739a00c7/0/page-frame.html", "http://dev.dealer-jc.winsenseos.cn", "-1", "JC", "603", true),
 
-    JC_ONLINE("汽车-轿辰 赢识线上 ", "https://servicewechat.com/wxbd41de85739a00c7/31/page-frame.html", "http://nb.jiaochenclub.com", "-1", "JC", "395", false),
+    JC_ONLINE("汽车-轿辰 赢识线上 ", "https://servicewechat.com/wxbd41de85739a00c7/0/page-frame.html", "http://www.4001000574.com", "-1", "JC", "395", false),
 
     XD_DAILY("门店 日常 ", "", "", "4116", "XD", "", true),
 
     INS_DAILY("门店-INS 日常 ", "https://servicewechat.com/wx937d85ff683db555/0/page-frame.html", "http://dev.inspect.store.winsenseos.cn", "", "INS", "", true),
 
-    INS_ONLINE("门店-INS 预发 ", "https://servicewechat.com/wx03bb8777c5f04172/0/page-frame.html", "http://pre.inspect.store.winsenseos.com", "", "INS", "", false),
+    INS_ONLINE("门店-INS 线上 ", "http://inspect.store.winsenseos.com/authpage/login", "http://inspect.store.winsenseos.com", "", "INS", "", false),
 
     FK_DAILY("风控 赢识日常 ", "http://39.105.17.58/page/shoprisk/cashriskcontrol/", "http://39.105.17.58", "43072", "FK", "4944", true),
 

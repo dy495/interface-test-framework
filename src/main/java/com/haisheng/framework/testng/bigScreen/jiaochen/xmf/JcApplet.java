@@ -34,14 +34,14 @@ import java.text.SimpleDateFormat;
 import static com.google.common.base.Preconditions.checkArgument;
 
 public class JcApplet extends TestCaseCommon implements TestCaseStd {
-    VisitorProxy visitor =  VisitorProxy.getInstance(EnumTestProduce.JC_DAILY);
+    VisitorProxy visitor = new VisitorProxy(EnumTestProduce.JC_DAILY);
     private static final EnumAccount administrator = EnumAccount.ALL_AUTHORITY_DAILY;
     ScenarioUtil jc = new ScenarioUtil();
     SupporterUtil util = new SupporterUtil(visitor);
     UserUtil user = new UserUtil(visitor);
     DateTimeUtil dt = new DateTimeUtil();
     PublicParm pp = new PublicParm();
-    JcFunction pf = new JcFunction(visitor,pp);
+    JcFunction pf = new JcFunction(visitor, pp);
     CommonConfig commonConfig = new CommonConfig();
 
     /**
@@ -116,7 +116,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             jc.appletLoginToken(pp.appletTocken);
-            System.out.println("卡券数量"+pf.getVoucherTotal());
+            System.out.println("卡券数量" + pf.getVoucherTotal());
 //            System.out.println("套餐数量"+pf.getpackgeTotal());
 
 
@@ -126,6 +126,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
             saveData("number");
         }
     }
+
     /**
      * @description :添加车辆，车牌8位，数量+1 ok
      * @date :2020/7/10 18:03
@@ -270,6 +271,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
     public void editplateab(String plate) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            System.out.println(authorization);
             Long code = jc.appletCarEdit(pp.car_id, plate, pp.carModelId).getLong("code");
             $Preconditions.checkArgument(code == 1001, "编辑输入错误车牌，仍成功");
         } catch (AssertionError | Exception e) {
@@ -450,7 +452,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
             appletInfoEdit er = new appletInfoEdit();
             er.birthday = "1996-02-19";
             er.gender = "FEMALE";
-            er.name = "夏明凤";
+            er.name = "自动";
             er.contact = "15037286013";
 //            er.shipping_address = "中关村soho" + dt.getHHmm(0);
             jc.appletUserInfoEdit(er);
@@ -653,7 +655,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
             Long id = message.getLong("id");
 
             String messageName = jc.appletMessageDetail(id.toString()).getString("content");
-            Preconditions.checkArgument(messageName.equals("您的卡券【" + voucher_code[1] + "】已被核销，请立即查看"),"");
+            Preconditions.checkArgument(messageName.equals("您的卡券【" + voucher_code[1] + "】已被核销，请立即查看"), "");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -687,15 +689,15 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
     public void actiaclDetail() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject last_value=null;
-            int size=10;
-            while(size==10){
-                JSONObject data = jc.AppletPageScene(10,last_value);
-                last_value=data.getJSONObject("last_value");
-                JSONArray list=data.getJSONArray("list");
-                size=list.size();
-                for(int i=0;i<list.size();i++){
-                    String id=list.getJSONObject(i).getString("id");
+            JSONObject last_value = null;
+            int size = 10;
+            while (size == 10) {
+                JSONObject data = jc.AppletPageScene(10, last_value);
+                last_value = data.getJSONObject("last_value");
+                JSONArray list = data.getJSONArray("list");
+                size = list.size();
+                for (int i = 0; i < list.size(); i++) {
+                    String id = list.getJSONObject(i).getString("id");
                     jc.appletArticleDetail(id);
                 }
             }
@@ -724,7 +726,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         return count;
     }
 
-//    @Test(description = "道路救援门店数=门店管理开启的门店")
+// @Test(description = "道路救援门店数=门店管理开启的门店")   这个case 待确定，救援门店 可能时预约开启门店
     public void recuseShopList() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -733,7 +735,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
             int openShoptotal = getshopNumber("status");
             jc.appletLoginToken(pp.appletTocken);
             int total = jc.rescueShopList(pp.coordinate, "null").getJSONArray("list").size();  //TODO：接口没有返回门店列表总数，暂取list的size
-            Preconditions.checkArgument(openShoptotal == total, "道路救援门店数"+total+"!=门店管理开启的门店"+openShoptotal);
+            Preconditions.checkArgument(openShoptotal == total, "道路救援门店数" + total + "!=门店管理开启的门店" + openShoptotal);
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
@@ -743,7 +745,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
     }
 
 
-//    @Test(description = "免费洗车门店数=门店管理开启的门店")
+    //    @Test(description = "免费洗车门店数=门店管理开启的门店")
     public void washShopList() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -761,7 +763,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-//    @Test(description = "洗车，剩余次数-1，pc洗车管理+1")
+    //    @Test(description = "洗车，剩余次数-1，pc洗车管理+1")   //改功能暂被取消，无需监控
     public void washCar() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

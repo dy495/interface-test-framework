@@ -48,7 +48,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
     public static final int page = 1;
     public static final int size = 100;
     private static final EnumTestProduce PRODUCE = EnumTestProduce.INS_DAILY;
-    public VisitorProxy visitor = VisitorProxy.getInstance(PRODUCE);
+    public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     XundianScenarioUtil xd = XundianScenarioUtil.getInstance();
     StoreScenarioUtil md = StoreScenarioUtil.getInstance();
     WechatScenarioUtil wx = WechatScenarioUtil.getInstance();

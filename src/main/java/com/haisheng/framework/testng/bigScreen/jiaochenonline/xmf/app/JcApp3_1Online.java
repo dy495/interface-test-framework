@@ -231,7 +231,7 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
     }
 
     //购车  为避免在小程序端产生较多脏数据，仅
-//    @Test(description = "买车购车记录+1")
+    @Test(description = "买车购车记录+1",enabled = false)
     public void buyCar() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

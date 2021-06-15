@@ -54,7 +54,7 @@ import java.util.stream.Collectors;
 public class ApproveManagerCaseOnline extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce PRODUCE = EnumTestProduce.JC_ONLINE;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.ALL_AUTHORITY_ONLINE;
-    public VisitorProxy visitor = VisitorProxy.getInstance(PRODUCE);
+    public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public UserUtil user = new UserUtil(visitor);
     public SupporterUtil util = new SupporterUtil(visitor);
 

@@ -81,7 +81,7 @@ public class PublicParm {
     public String filepath11="src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/1_1.jpg";
     //---------2.0---------
 
-    public String appletTocken = EnumAppletToken.JC_XMF_DAILY.getToken();
+    public String appletTocken = EnumAppletToken.JC_WM_DAILY.getToken();
     public JSONArray coordinate = getCoordinate();
     public Long voucherId = 81L;
 

@@ -30,6 +30,11 @@ public class JsonPathUtil {
 
 
     }
+    /**
+     * @description :解析json,校验jsonpath表达式
+     * @date :2021/6/10 15:58
+     **/
+
     public static void spiltString(String json, String str) throws Exception {
         for (String retval : str.split("&&")) {
             System.out.println("1:"+retval);
