@@ -316,7 +316,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test  //仅编辑商城套餐
+//    @Test  //仅编辑商城套餐
     public void EditCommodity() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

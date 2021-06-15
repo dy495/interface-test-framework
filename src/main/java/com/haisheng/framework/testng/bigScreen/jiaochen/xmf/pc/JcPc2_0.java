@@ -325,45 +325,6 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-
-    //    @Test  //仅编辑商城套餐
-    public void EditCommodity() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONObject data = jc.StoreCommodityDetail(pp.StoreCommodityId);
-            data.put("id", pp.StoreCommodityId);
-            Random random = new Random();
-            String name = "一二三四" + random.nextInt(10);
-            data.put("commodity_name", name);
-            httpPostWithCheckCode("/jiaochen/pc/store/commodity/edit", data.toJSONString(), IpPort);
-            String nameAfter = jc.StoreCommodityDetail(pp.StoreCommodityId).getString("commodity_name");
-//            Preconditions.checkArgument(nameAfter.equals(name),"编辑名称后没有变化");
-            data.put("commodity_specification", "颜色:黑色");
-            String result = httpPost("/jiaochen/pc/store/commodity/edit", data.toJSONString(), IpPort);
-            Integer code = JSONObject.parseObject(result).getInteger("code");
-            Preconditions.checkArgument(code == 1001, "规格编辑不应该成功");
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("pc-编辑商城套餐");
-        }
-    }
-
-    //    @Test  //商城订单页  //TODO: JSONpath 没校准
-    public void StoreOrderList() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            JSONObject data = jc.StoreorderPage("1", "10", "", "", "", "");
-            jpu.spiltString(data.toJSONString(), "$.commodity_name&&$.commission&&$.commodity_specification&&$.create_date&&$.id&&$.invitation_payment&&$.price&&$.consignee&&$.status_name&&$.subject_type&&$.subject_type_name");
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("pc-新建商城套餐单接口");
-        }
-    }
-
     @Test  //商城页套餐
     public void StoreList() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -375,38 +336,6 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             saveData("pc-商城套餐列表字段不为空校验");
-        }
-    }
-
-    //    @Test  //商城订单页，作废&发放  TODO:订单id 需要给定
-    public void StoreOrderVolumeSend() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            //提前创建好订单，写入订单号
-            int totalBefore = pf.getVoucherTotal();  //小程序 卡券个数
-            //发放，套餐个数+1
-            jc.volumeSend(pp.ordeId);
-
-            int total = pf.getVoucherTotal();
-//            JSONArray list=jc.appletpackageList(null,"GENERAL",20).getJSONArray("list");
-//            Integer id=list.getJSONObject(0).getInteger("id");
-
-            //作废，套餐状态变更 失效
-            jc.volumeCancel(pp.ordeId);
-            int totalAfter = pf.getVoucherTotal();
-
-//            JSONArray packageList=jc.appletpackageDeatil(id.toString()).getJSONArray("list");
-//            for(int i=0;i<packageList.size();i++) {
-//                String status_name=packageList.getJSONObject(i).getString("status_name");
-//                Preconditions.checkArgument(status_name.equals("已过期"));
-//            }
-            Preconditions.checkArgument(totalBefore - total == -1, "发放卡券，卡券数+1");
-            Preconditions.checkArgument(totalAfter - total == 1, "作废卡券，卡券数-1");
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("pc-新建商城套餐单接口");
         }
     }
 
