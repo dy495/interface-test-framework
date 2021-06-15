@@ -272,27 +272,6 @@ public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd 
             saveData("跟进列表不为空校验");
         }
     }
-
-    //跟进
-    @Test(description = "跟进列表不为空校验")
-    public void BJc_appfollowUp1() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            jc.appLogin(pp.jdgw, pp.jdgwpassword);
-            JSONObject data = jc.appFollowUpList("10",null);
-            JSONArray list=data.getJSONArray("list");
-            if(list.size()==0){
-                return;
-            }
-            String id=list.getJSONObject(0).getString("id");
-            jc.appFollowUp(id,pp.shopIdZ,"ewiqoe1",true);
-
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("跟进操作");
-        }
-    }
     @Test(description = "消息列表不为空校验")
     public void BJc_appmessageList() {
         logger.logCaseStart(caseResult.getCaseName());

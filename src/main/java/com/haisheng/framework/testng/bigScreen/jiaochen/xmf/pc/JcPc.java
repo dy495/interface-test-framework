@@ -1238,7 +1238,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             pcLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
-            saveData("");
+//            saveData("");
         }
     }
 
