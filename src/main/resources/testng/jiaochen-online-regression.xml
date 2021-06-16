@@ -9,27 +9,27 @@
 
     <test name="daily-rgn" preserve-order="true">
         <classes>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.app.JcAppOnline"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.app.JcApp3_1Online"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.pc.JcPcOnline"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.pc.JcPc2_0"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.app.JcAppReceptionRelateOnline"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.app.JcAppAffirmReceptionOnLine"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.pc.JcPcReceptionRelateOnline"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.pc.JcPcAffirmReceptionOnLine"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.lxq.SystemCaseOnline"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.lxq.SystemCaseV3"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.lxq.DataCaseOnline"/>
+<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.app.JcAppOnline"/>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.app.JcApp3_1Online"/>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.pc.JcPcOnline"/>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.pc.JcPc2_0"/>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.app.JcAppReceptionRelateOnline"/>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.app.JcAppAffirmReceptionOnLine"/>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.pc.JcPcReceptionRelateOnline"/>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.pc.JcPcAffirmReceptionOnLine"/>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.lxq.SystemCaseOnline"/>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.lxq.SystemCaseV3"/>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.lxq.DataCaseOnline"/>-->
             <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.FilterColumnSystemOnline"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.ActivityManageOnLine"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.JcPc_SystemLogOnline"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.BusinessManageCaseOnline"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.VoucherManagerCaseOnline"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.IntegralCenterCaseOnline"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.MarketingManageCaseOnline"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.ContentOperationCaseOnline"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.ApproveManagerCaseOnline"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.app.JcAppOnline"/>
+<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.BusinessManageCaseOnline"/>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.VoucherManagerCaseOnline"/>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.IntegralCenterCaseOnline"/>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.MarketingManageCaseOnline"/>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.ContentOperationCaseOnline"/>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.ApproveManagerCaseOnline"/>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.app.JcAppOnline"/>-->
             <!--风控代码-->
             <class name="com.haisheng.framework.testng.bigScreen.fengkongonline.RiskControlCaseDataOnline"/>
             <class name="com.haisheng.framework.testng.bigScreen.fengkongonline.RiskControlCaseSystemOnline"/>
