@@ -52,7 +52,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         //replace product name for ding push
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.XD_DAILY.getDesc());
         commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.pushRd = new String[]{"15898182672", "18513118484", "18810332354", "15084928847"};
+        commonConfig.pushRd = new String[]{"15898182672", "18513118484", "18810332354", "13604609869","13373166806"};
         commonConfig.shopId = EnumTestProduce.XD_DAILY.getShopId();
         commonConfig.checklistQaOwner = "青青";
         beforeClassInit(commonConfig);

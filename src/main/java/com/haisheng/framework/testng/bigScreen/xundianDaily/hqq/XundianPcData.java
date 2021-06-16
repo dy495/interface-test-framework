@@ -58,10 +58,9 @@ public class XundianPcData extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "xundian-daily-test");
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "巡店 日常");
         commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.pushRd = new String[]{"15084928847"};
+        commonConfig.pushRd = new String[]{"13604609869","13373166806"};
         //13436941018 吕雪晴
         //17610248107 廖祥茹
-        //15084928847 黄青青
         //13581630214 马琨
         //18513118484 杨航
         //13259979249 黄鑫

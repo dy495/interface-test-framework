@@ -597,7 +597,7 @@ public class jiaoChenInfo {
         String type = "PERSON";
         String sex = "0";
 
-        jc.createCstm(name, phone, type, sex, car_style_id, car_model_id, shop_id, salesId, dt.getHistoryDate(0), "ASDFUGGDSF99" + Integer.toString((int) ((Math.random() * 9 + 1) * 10000)), false).getInteger("code");
+        jc.createCstm(name, phone, type, sex, car_style_id, car_model_id, shop_id, salesId, dt.getHistoryDate(0), "ASDFUGGDSF99" + Integer.toString((int) ((Math.random() * 9 + 1) * 10000)), true);
 
     }
 

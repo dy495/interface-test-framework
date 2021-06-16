@@ -6,7 +6,6 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.mapper.CustomerPageEnum;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.util.BasicUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
@@ -38,7 +37,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -60,7 +58,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
     @BeforeClass
     @Override
     public void initial() {
-        logger.debug("before classs initial");
+        logger.debug("before class initial");
         CommonConfig commonConfig = new CommonConfig();
         //替换checklist的相关信息
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
@@ -5457,7 +5455,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             //获取卡券的可用库存
             Long AllowUseInventoryAfter = businessUtil.getVoucherAllowUseInventoryNum(voucherId);
             System.out.println("可用库存的数量不为:" + AllowUseInventory + "+++++++++" + AllowUseInventoryAfter + "    " + activityId);
-            Preconditions.checkArgument(AllowUseInventoryBefore == 1000 && AllowUseInventoryAfter == 0L, "可用库存的数量不为0");
+            Preconditions.checkArgument(AllowUseInventoryBefore == 1000 && AllowUseInventoryAfter == 970L, "可用库存的数量不为0");
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
