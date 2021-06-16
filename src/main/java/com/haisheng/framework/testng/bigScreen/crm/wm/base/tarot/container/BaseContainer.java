@@ -47,6 +47,11 @@ public abstract class BaseContainer extends BaseProperty implements IContainer {
     }
 
     @Override
+    public ITable getTable(String tableName) {
+        return tables.entrySet().stream().filter(e -> e.getKey().equals(tableName)).map(Map.Entry::getValue).findFirst().orElse(null);
+    }
+
+    @Override
     public void setPath(String path) {
         this.path = path;
     }
