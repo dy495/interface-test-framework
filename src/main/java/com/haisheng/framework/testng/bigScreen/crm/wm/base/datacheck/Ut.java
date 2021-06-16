@@ -78,8 +78,9 @@ public class Ut {
             if (isReception.equals("false")) {
                 list.forEach(e -> map.put(e.getUserId(), e));
             }
-            System.err.println(map.values().size());
-            System.err.println(list.size());
+            System.err.println("去重:" + map.values().size());
+            System.err.println("不去重" + list.size());
+            logger.info("--------------------{}跑完---------------------------",fieldRuleTableName);
         });
 
     }
