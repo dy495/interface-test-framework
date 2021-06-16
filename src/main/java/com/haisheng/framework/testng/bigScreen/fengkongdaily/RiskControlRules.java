@@ -56,8 +56,8 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
     public String face = file.getImgStr(pp.filePath2);
     Random random = new Random();
 
-    private QADbProxy qaDbProxy = QADbProxy.getInstance();
-    public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
+//    private QADbProxy qaDbProxy = QADbProxy.getInstance();
+//    public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
 
 
     @BeforeClass
@@ -80,7 +80,7 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
         commonConfig.roleId = product.getRoleId();
         beforeClassInit(commonConfig);
         logger.debug("FK: " + cu);
-        qaDbUtil.openConnectionRdDailyEnvironment();
+//        qaDbUtil.openConnectionRdDailyEnvironment();
         md.pcLogin(pp.userName, pp.password);
 
     }
@@ -137,23 +137,23 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
     //一车多人，多个openid,一个car_vehicle_number 触发;
     //一人多单 ，userId相同，openid相同;  ---userId 相同，或者transId; 单一客户数量监控
 
-    public String checkOrderSuccess(String transNumber) {
-        String id = qaDbUtil.selectTransIdBynumber(transNumber);
-        if (StringUtils.isEmpty(id)) {
-            System.out.println("null");
-            return "创单失败";
-        }
-        return id;
-    }
+//    public String checkOrderSuccess(String transNumber) {
+//        String id = qaDbUtil.selectTransIdBynumber(transNumber);
+//        if (StringUtils.isEmpty(id)) {
+//            System.out.println("null");
+//            return "创单失败";
+//        }
+//        return id;
+//    }
 
     //是否是无人单
-    public boolean face(String transId) {
-        String faceurl = qaDbUtil.SelectFaceUrlByTransId(transId);
-        if (StringUtils.isEmpty(faceurl)) {
-            return false;
-        }
-        return true;
-    }
+//    public boolean face(String transId) {
+//        String faceurl = qaDbUtil.SelectFaceUrlByTransId(transId);
+//        if (StringUtils.isEmpty(faceurl)) {
+//            return false;
+//        }
+//        return true;
+//    }
 
     /**
      * 生成交易订单--触发无人风控(保证摄像头面前没有人)
@@ -177,7 +177,7 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
             String post = cu.getCreateOrder3(or);
             Preconditions.checkArgument(JSONObject.parseObject(post).getString("code").equals("1000"), "创单失败" + post);
             sleep(10);
-            checkOrderSuccess(or.transId);
+//            checkOrderSuccess(or.transId);
 
             Integer total = cu.riskTotal();
             Preconditions.checkArgument(total.equals(totalBefore), "线上交易 仍产生风控,创单后：" + total + "创单前：" + totalBefore);
@@ -333,7 +333,7 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
             String post = cu.getCreateOrder3(or);
             Preconditions.checkArgument(JSONObject.parseObject(post).getString("code").equals("1000"), "创单失败" + post);
 //            sleep(30);
-            checkOrderSuccess(or.transId);
+//            checkOrderSuccess(or.transId);
 
             Integer total = cu.riskTotal();
             System.out.println("创单前：" + totalBefore + ",创单后：" + total);
