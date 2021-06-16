@@ -43,7 +43,7 @@ public class Ut {
 
     @Test
     public void test() {
-        IEntity<?, ?>[] entity = new Factory.Builder().build().createCsv("csv/dcbbde6f-2002-43fe-9857-3ef41da24c4b.csv");
+        IEntity<?, ?>[] entity = new Factory.Builder().build().createCsv("csv/a316052c-dcab-4abb-ac36-dba1d468e0c4.csv");
         IRow[] rows = Arrays.stream(entity).map(IEntity::getCurrent).toArray(IRow[]::new);
         List<DataStructure> dataStructureList = new LinkedList<>();
         Arrays.stream(rows).forEach(iRow -> dataStructureList.addAll(JSONArray.parseArray(iRow.getField("region").getValue())
@@ -56,29 +56,32 @@ public class Ut {
         ITable dataSourceTable = container.getTable(Constants.SHEET_TITLE_DATA_SOURCE);
         dataSourceTable.load();
         IRow[] dataSourceTableRows = dataSourceTable.getRows();
-        IRow row = dataSourceTableRows[0];
-        String fieldRuleTableName = Constants.SHEET_TITLE_COLUMN + row.getField(Constants.DATA_SOURCE_COLUMN_NAME).getValue();
-        logger.info("表名:{}", fieldRuleTableName);
-        ITable fieldRuleTable = container.getTable(fieldRuleTableName);
-        fieldRuleTable.load();
-        IRow[] fieldRuleRows = fieldRuleTable.getRows();
-        Map<String, DataStructure> map = new LinkedHashMap<>();
-        String[] regionIds = DataSource.parse(getRowByField(fieldRuleRows, "region_id").getField(Constants.RULE_COLUMN_RANGE).getValue());
-        logger.info("regionIds:{}", Arrays.toString(regionIds));
-        String status = getRowByField(fieldRuleRows, "status").getField(Constants.RULE_COLUMN_RANGE).getValue();
-        logger.info("status:{}", status);
-        String isNull = getRowByField(fieldRuleRows, "user_id").getField(Constants.RULE_COLUMN_IS_NULL).getValue();
-        logger.info("isNull:{}", isNull);
-        String isReception = getRowByField(fieldRuleRows, "user_id").getField(Constants.RULE_COLUMN_IS_RECEPTION).getValue();
-        logger.info("isReception:{}", isReception);
-        List<DataStructure> list = dataStructureList.stream().filter(e -> e.getStatus().equals(status))
-                .filter(e -> Arrays.asList(regionIds).contains(e.getRegionId())).collect(Collectors.toCollection(LinkedList::new));
-        list = isNull.equals("false") ? list.stream().filter(e -> !e.getUserId().equals("N")).collect(Collectors.toCollection(LinkedList::new)) : list;
-        if (isReception.equals("false")) {
-            list.forEach(e -> map.put(e.getUserId(), e));
-        }
-        System.err.println(map.values().size());
-        System.err.println(list.size());
+//        IRow row = dataSourceTableRows[0];
+        Arrays.stream(dataSourceTableRows).forEach(row ->{
+            String fieldRuleTableName = Constants.SHEET_TITLE_COLUMN + row.getField(Constants.DATA_SOURCE_COLUMN_NAME).getValue();
+            logger.info("表名:{}", fieldRuleTableName);
+            ITable fieldRuleTable = container.getTable(fieldRuleTableName);
+            fieldRuleTable.load();
+            IRow[] fieldRuleRows = fieldRuleTable.getRows();
+            Map<String, DataStructure> map = new LinkedHashMap<>();
+            String[] regionIds = DataSource.parse(getRowByField(fieldRuleRows, "region_id").getField(Constants.RULE_COLUMN_RANGE).getValue());
+            logger.info("regionIds:{}", Arrays.toString(regionIds));
+            String status = getRowByField(fieldRuleRows, "status").getField(Constants.RULE_COLUMN_RANGE).getValue();
+            logger.info("status:{}", status);
+            String isNull = getRowByField(fieldRuleRows, "user_id").getField(Constants.RULE_COLUMN_IS_NULL).getValue();
+            logger.info("isNull:{}", isNull);
+            String isReception = getRowByField(fieldRuleRows, "user_id").getField(Constants.RULE_COLUMN_IS_RECEPTION).getValue();
+            logger.info("isReception:{}", isReception);
+            List<DataStructure> list = dataStructureList.stream().filter(e -> e.getStatus().equals(status))
+                    .filter(e -> Arrays.asList(regionIds).contains(e.getRegionId())).collect(Collectors.toCollection(LinkedList::new));
+            list = isNull.equals("false") ? list.stream().filter(e -> !e.getUserId().equals("N")).collect(Collectors.toCollection(LinkedList::new)) : list;
+            if (isReception.equals("false")) {
+                list.forEach(e -> map.put(e.getUserId(), e));
+            }
+            System.err.println(map.values().size());
+            System.err.println(list.size());
+        });
+
     }
 
     public IRow getRowByField(IRow[] rows, String field) {
