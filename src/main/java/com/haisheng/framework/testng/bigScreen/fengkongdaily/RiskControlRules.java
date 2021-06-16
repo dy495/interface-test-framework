@@ -3,7 +3,6 @@ package com.haisheng.framework.testng.bigScreen.fengkongdaily;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.aliyun.openservices.shade.org.apache.commons.lang3.StringUtils;
 import com.arronlong.httpclientutil.HttpClientUtil;
 import com.arronlong.httpclientutil.builder.HCB;
 import com.arronlong.httpclientutil.common.HttpConfig;
@@ -13,11 +12,8 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.fengkongdaily.riskControlEnum.*;
-import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.alarmrule.DetailScene;
-import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.*;
-import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.downloadcenter.DownloadPageScene;
-import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.rule.AddScene;
+import com.haisheng.framework.testng.bigScreen.fengkongdaily.riskControlEnum.routerEnum;
+import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventHandleScene;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.util.CommonUsedUtil;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.util.PublicParam;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.util.RiskControlUtil;
@@ -26,10 +22,14 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import com.haisheng.framework.util.*;
+import com.haisheng.framework.util.CommonUtil;
+import com.haisheng.framework.util.FileUtil;
 import org.apache.http.Header;
 import org.apache.http.client.HttpClient;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -39,7 +39,9 @@ import java.io.IOException;
 import java.io.Writer;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Base64;
+import java.util.Random;
+import java.util.UUID;
 
 
 public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
@@ -312,7 +314,7 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * 生成交易订单--触发无人风控(保证摄像头面前没有人)
+     * 生成交易订单--触发无人风控(保证摄像头面前没有人) 跑单的case
      **/
     @Test(enabled = true)  //TODO:
     public void getTriggerUnmannedRisk() {
@@ -327,7 +329,7 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
             or.openId = pp.openId;
             or.carVehicleNumber = "AAAAAAAAAA22" + CommonUtil.getRandom(5);
 //            or.business_type="\"PDI_FACTORY\"";
-            or.business_type = null;
+            or.business_type = null; //要和想触发的规则 业务类型想同； 不写的话 全部匹配
             System.out.println(or.carVehicleNumber);
             //生成交易订单
             String post = cu.getCreateOrder3(or);

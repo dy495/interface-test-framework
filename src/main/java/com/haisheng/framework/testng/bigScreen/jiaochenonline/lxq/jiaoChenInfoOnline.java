@@ -3,17 +3,29 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline.lxq;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.model.AppletModeListScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.AppAdmitScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.AppStartReceptionScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.brand.BrandPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.manage.EvaluateConfigSubmitScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shop.PageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyBatchApprovalScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.AddVoucherScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherFormVoucherPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
+
+import java.util.ArrayList;
+import java.util.Calendar;
 
 public class jiaoChenInfoOnline {
 
@@ -323,6 +335,91 @@ public class jiaoChenInfoOnline {
             }
         }
         return name;
+    }
+
+    public void newBuyCarRec() {
+        Long shop_id = oneshopid;
+        Long car_style_id = jc.styleList(shop_id).getJSONArray("list").getJSONObject(0).getLong("style_id");
+        Long car_model_id = jc.modelList(car_style_id).getJSONArray("list").getJSONObject(0).getLong("model_id");
+        String salesId = jc.saleList(shop_id, "PRE").getJSONArray("list").getJSONObject(0).getString("sales_id");
+
+        String name = "吕吕";
+        String phone = "13436941018";
+        String type = "PERSON";
+        String sex = "0";
+
+        jc.createCstm(name, phone, type, sex, car_style_id, car_model_id, shop_id, salesId, dt.getHistoryDate(0), "ASDFUGGDSF99" + Integer.toString((int) ((Math.random() * 9 + 1) * 10000)), true);
+
+    }
+
+    public String getVoucherId() {
+        JSONObject obj = VoucherFormVoucherPageScene.builder().voucherStatus("WORKING").page(1).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0);
+        String id = obj.getString("id");
+        int allow = obj.getInteger("allow_use_inventory");
+        if (allow > 1) {
+            return id;
+        } else {
+            //增发
+            AddVoucherScene.builder().addNumber(100).id(Long.parseLong(id)).build().invoke(visitor);
+            //审核通过
+            Long applyid = ApplyPageScene.builder().page(1).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            ArrayList list = new ArrayList();
+            list.add(applyid);
+            ApplyBatchApprovalScene.builder().ids(list).status(1).build().invoke(visitor);
+            return id;
+
+        }
+    }
+
+    //配置评价
+    public JSONObject setevaluate(Integer type, String messageName) {
+
+        Calendar calendar = Calendar.getInstance();
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+        Integer points;
+        if (day % 2 == 1) {
+            points = 3;
+        } else {
+            points = 2;
+        }
+        //修改配置，评价，积分数，卡券数
+        IScene evaluateConfig = EvaluateConfigSubmitScene.builder().evaluateReward(true)
+                .defaultFavourableCycle(3)
+                .isSendPoints(true).isSendVoucher(true).points(points)
+                .type(type).vouchersId(getVoucherId()).build();
+        jc.invokeApi(evaluateConfig);
+
+        JSONObject obj = new JSONObject();
+        obj.put("points", points);
+        return obj;
+
+    }
+
+    public int getVoucherTotal(String phone) {
+        int total = VoucherListScene.builder().transferPhone(phone).build().invoke(visitor).getJSONArray("list").size();
+        return total;
+    }
+
+    public Long getMessDetailId() {
+        Long listid = AppletMessageListScene.builder().build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+        Long detailid = AppletMessageDetailScene.builder().id(listid).build().invoke(visitor).getJSONObject("evaluate_info").getLong("id");
+        return detailid;
+    }
+
+
+    public String[] salereception(String phone) {
+        //注册过的手机号接待
+        IScene appAdmitScene = AppAdmitScene.builder().phone(phone).build();
+        JSONObject data = jc.invokeApi(appAdmitScene);
+        Long customerId = data.getLong("customer_id");
+        //开始接待
+        IScene appstartReception = AppStartReceptionScene.builder()
+                .customerId(customerId)
+                .customerPhone(phone)
+                .build();
+        String[] receptionId = new String[2];
+        receptionId[0] = jc.invokeApi(appstartReception).getString("id");  //接待ID
+        return receptionId;
     }
 
 

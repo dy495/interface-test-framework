@@ -16,7 +16,6 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.consultmanag
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanage.PreSaleCustomerStyleListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.loginuser.ShopListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.manage.EvaluateExportScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.presalesreception.CustomerRemarkScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.record.ExportPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shop.AddScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
@@ -28,6 +27,7 @@ import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * 内容运营
@@ -1490,16 +1490,84 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    //PC 创建成交记录
+    @Test
+    public void evalute_Buycar1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            user.loginPc(ALL_AUTHORITY);
+            //PC配置销售购车评价奖励
+            int type = 3;
+            String messageName = "新车评价消息";
+            int points = info.setevaluate(type, messageName).getInteger("points");
 
-    //@Test
+
+            //评价前的积分和卡券数
+            int voucherTotal = info.getVoucherTotal("13436941018");
+            user.loginApplet(APPLET_USER_ONE);
+            Integer appletScore = AppletUserInfoDetailScene.builder().build().invoke(visitor).getInteger("score");
+
+            //PC购车
+            user.loginPc(ALL_AUTHORITY);
+            info.newBuyCarRec();
+            user.loginApplet(APPLET_USER_ONE);
+            JSONObject evaluateConfigDescribe = AppletEvaluateConfigScene.builder().type(type).shopId(info.oneshopid).build().invoke(visitor);
+
+            String describe = evaluateConfigDescribe.getJSONArray("list").getJSONObject(2).getString("describe");
+            List label = evaluateConfigDescribe.getJSONArray("list").getJSONObject(2).getJSONArray("labels");
+
+
+            //评价
+
+            AppletEvaluateSubmitScene.builder()
+                    .describe(describe).labels(label).id(info.getMessDetailId())
+                    .isAnonymous(true)
+                    .score(2)
+                    .shopId(info.oneshopid).suggestion("自动评价").type(type)
+                    .build().invoke(visitor);
+
+
+            //评价后的积分和卡券数
+
+            Integer appletScoreAfter = AppletUserInfoDetailScene.builder().build().invoke(visitor).getInteger("score");
+            user.loginPc(ALL_AUTHORITY);
+            int voucherTotalAfter = info.getVoucherTotal("13436941018");
+
+            Preconditions.checkArgument(voucherTotalAfter - voucherTotal == 1, "评价完成后，卡券没+1");
+            Preconditions.checkArgument(appletScoreAfter - appletScore == points, "评价完成后，积分奖励没发");
+
+
+        } catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC配置购车奖励->小程序评价购车消息获得相应奖励");
+        }
+    }
+
+
+
+    @Test
     public void remark() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            user.loginPc(ALL_AUTHORITY);
+//            user.loginPc(ALL_AUTHORITY);
+//
+//
+//            CustomerRemarkScene.builder().remark(info.string200).id(161L).shopId(46522L).build().invoke(visitor);
+//
+//
 
+            //小程序删除无牌爱车
+            user.loginApplet(APPLET_USER_ONE);
+            JSONArray arr = AppletCarListScene.builder().build().invoke(visitor).getJSONArray("list");
+            for (int i = 0 ; i < arr.size();i++){
+                JSONObject obj = arr.getJSONObject(i);
+                if (!obj.containsKey("plate_number")){
+                    AppletCarDeleteScene.builder().id(obj.getLong("id")).build().invoke(visitor);
 
-            CustomerRemarkScene.builder().remark(info.string200).id(161L).shopId(46522L).build().invoke(visitor);
+                }
+            }
 
 
         } catch (AssertionError e) {
