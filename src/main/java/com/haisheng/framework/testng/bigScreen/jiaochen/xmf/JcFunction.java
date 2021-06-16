@@ -432,8 +432,8 @@ public class JcFunction extends BasicUtil {
         jc.appletLoginToken(pp.appletTocken);
         appletAppointment pm = new appletAppointment();
         pm.car_id = pp.car_idA;
-        pm.appointment_name = "自动夏";
-        pm.appointment_phone="15037286013";
+        pm.appointment_name = "自动吕";
+        pm.appointment_phone="13436941018";
         pm.shop_id = Long.parseLong(pp.shopIdZ);
         pm.staff_id = pp.userid;
         pm.time_id = getTimeId(pm.shop_id, pm.car_id, dt.getHistoryDate(num));

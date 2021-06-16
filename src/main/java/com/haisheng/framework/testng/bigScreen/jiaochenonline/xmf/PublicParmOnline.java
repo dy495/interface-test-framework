@@ -32,7 +32,7 @@ public class PublicParmOnline {
     public String carplate="浙MNB789";      //编辑小程序车牌号
     public String carplate7 = "浙ASD124";      //编辑小程序车牌号
     //预约使用车辆
-    public Long car_idA=2L;
+    public Long car_idA=206834L;
     public String shopname="中关村店简";
     public String modolIdAppointment = "19655";
     public String carStyleId="78";
@@ -74,7 +74,7 @@ public class PublicParmOnline {
     public int ordeId=10; // 订单Id
     public String filepath11="src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/1_1.jpg";
     //---------2.0---------
-    public String appletTocken= EnumAppletToken.JC_XMF_ONLINE.getToken();
+    public String appletTocken= EnumAppletToken.JC_LXQ_DAILY.getToken();
     public JSONArray coordinate = getCoordinate();
     public Long voucherId = 81L;  //经纬度
 
