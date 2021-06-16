@@ -297,8 +297,12 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
     public void createActivityDate2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            //获取一个卡券
-            Long voucherId = businessUtil.getVoucherId();
+            //创建卡券
+            Long voucherId = supporterUtil.createVoucherId(1000, VoucherTypeEnum.COUPON);
+            //获取卡券的名字
+            String voucherName = supporterUtil.getVoucherName(voucherId);
+            //审批通过
+            supporterUtil.applyVoucher(voucherName, "1");
             //创建招募活动
             Long activityId = businessUtil.createRecruitActivity(voucherId, true, 0, true);
             //优惠券的面值
@@ -311,7 +315,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             //活动详情中-优惠券面值
             String price = list.getJSONObject(0).getString("price");
             //填写库存数量
-            String number = String.valueOf(businessUtil.getVoucherAllowUseInventoryNum(voucherId));
+            String number = String.valueOf(businessUtil.getVoucherAllowUseInventory(voucherId));
             System.out.println("发放数量：" + num + "--剩余库存" + leftNum + "--填写的库存数量" + number);
             Preconditions.checkArgument(num.equals(number) && leftNum.equals(number), "活动详情中的数值与创建时的数字不一致");
 //            Preconditions.checkArgument(price.equals(parValue),"优惠券的面值和活动中优惠券的面值不一致");
@@ -652,7 +656,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
      * 报名列表-审批不通过1条，报名失败
      */
     @Test
-    public void activityRegisterDate10() {
+    public void activityRegisterDate10(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
             List<Long> ids = new ArrayList<>();
