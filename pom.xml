@@ -62,6 +62,20 @@
             <groupId>com.aliyun.openservices</groupId>
             <artifactId>tablestore</artifactId>
             <version>5.4.0</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>fastjson</artifactId>
+                    <groupId>com.alibaba</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>guava</artifactId>
+                    <groupId>com.google.guava</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>joda-time</artifactId>
+                    <groupId>joda-time</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!--csv文件处理-->
         <dependency>
