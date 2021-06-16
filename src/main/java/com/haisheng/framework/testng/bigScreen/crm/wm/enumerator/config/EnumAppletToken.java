@@ -37,7 +37,7 @@ public enum EnumAppletToken {
 
     JC_GLY_DAILY(EnumTestProduce.JC_DAILY.getAbbreviation(), "7JOlh1/4nIVehoCVD++WyA==", true, "13373166806"),
 
-    JC_GLY_ONLINE(EnumTestProduce.JC_DAILY.getAbbreviation(), "fyjmSYPLARzumAnIbPrt5g==", false, "13373166806"),
+    JC_GLY_ONLINE(EnumTestProduce.JC_DAILY.getAbbreviation(), "Lle2O9LilbiQEcbGAFHE2A==", false, "13373166806"),
 
     INS_WM_DAILY(EnumTestProduce.INS_DAILY.getAbbreviation(), "FkHVInKeLZBuILgcwP6FCg==", true, "15321527989"),
 
