@@ -689,7 +689,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test(enabled = false, description = "导入潜客,参数全填正常")
+    @Test(enabled = true, description = "导入潜客,参数全填正常")
     public void importPotentialCustomer() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
