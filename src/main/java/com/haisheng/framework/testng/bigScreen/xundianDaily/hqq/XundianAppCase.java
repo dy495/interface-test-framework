@@ -71,7 +71,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "xundian-daily-test");
         commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "巡店 日常");
-        commonConfig.pushRd = new String[]{ "15084928847"};
+        commonConfig.pushRd = new String[]{ "13604609869,13373166806"};
         commonConfig.shopId = getXundianShop(); //要改！！！
         beforeClassInit(commonConfig);
         logger.debug("xundian " + xd);
