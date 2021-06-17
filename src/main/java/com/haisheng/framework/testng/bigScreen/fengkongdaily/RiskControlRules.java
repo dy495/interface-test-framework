@@ -33,10 +33,7 @@ import org.testng.annotations.Test;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
+import java.io.*;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -97,7 +94,9 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
     public void recode(String tranid, String casename) throws IOException {
         Writer out = null;
         try {
-            out = new BufferedWriter(new FileWriter("src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\fengkongdaily\\things.txt", true));
+            String path="src/main/java/com/haisheng/framework/testng/bigScreen/fengkongdaily/things.txt".replace("/", File.separator);
+//            path.replace("/", File.separator);
+            out = new BufferedWriter(new FileWriter(path, true));
             out.write("测试规则：" + casename + "\n");
             out.write("订单id：" + tranid + "\n");
             out.write("\n");
