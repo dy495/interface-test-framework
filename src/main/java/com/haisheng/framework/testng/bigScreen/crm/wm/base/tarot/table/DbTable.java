@@ -42,7 +42,7 @@ public class DbTable extends BaseTable {
                 int count = md.getColumnCount();
                 int index = 1;
                 while (rs.next()) {
-                    IRow row = new SimpleRow.Builder().index(index).build();
+                    IRow row = new SimpleRow.Builder().index(index++).build();
                     for (int i = 1; i <= count; i++) {
                         String columnName = md.getColumnName(i);
                         Object rsValue = rs.getObject(i);

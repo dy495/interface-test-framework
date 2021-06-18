@@ -1,5 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.table;
 
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.config.OTSPrimaryKeyBuilder;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.property.BaseProperty;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.row.IRow;
 import lombok.Getter;
@@ -16,6 +17,7 @@ public abstract class BaseTable extends BaseProperty implements ITable {
     private final Map<String, IRow> rows = new LinkedHashMap<>();
     private final Map<IRow, Integer> rowsCount = new LinkedHashMap<>();
     private final String path;
+    private OTSPrimaryKeyBuilder otsPrimaryKeyBuilder;
 
     protected BaseTable(@NotNull BaseBuilder<?, ?> baseBuilder) {
         super(baseBuilder);
@@ -70,6 +72,11 @@ public abstract class BaseTable extends BaseProperty implements ITable {
     public void clear() {
         this.rows.clear();
         this.rowsCount.clear();
+    }
+
+    @Override
+    public void setOTSPrimaryKeyBuilder(OTSPrimaryKeyBuilder otsPrimaryKeyBuilder) {
+        this.otsPrimaryKeyBuilder = otsPrimaryKeyBuilder;
     }
 
     public abstract static class BaseBuilder<T extends BaseBuilder<?, ?>, R extends BaseTable>

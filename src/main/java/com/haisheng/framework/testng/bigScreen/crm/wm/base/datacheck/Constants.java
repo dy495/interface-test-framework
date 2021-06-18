@@ -1,14 +1,17 @@
 package com.haisheng.framework.testng.bigScreen.crm.wm.base.datacheck;
 
-import javax.swing.plaf.PanelUI;
-
+/**
+ * 规则表常量
+ *
+ * @author wangmin
+ * @data 2021-06-16
+ */
 public class Constants {
     public static final String SHEET_TITLE_CONTAINER = "数据容器定义";
     public static final String SHEET_TITLE_DATA_SOURCE = "数据实体定义";
     public static final String SHEET_TITLE_COLUMN = "字段_";
-
-
     public static final String CONTAINER_COLUMN_PATH = "路径";
+
 
     public static final String DATA_SOURCE_COLUMN_NAME = "数据源";
     public static final String DATA_SOURCE_COLUMN_PATH = "数据源路径";

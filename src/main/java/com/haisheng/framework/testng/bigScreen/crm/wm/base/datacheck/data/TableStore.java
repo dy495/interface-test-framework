@@ -9,10 +9,10 @@ import java.io.Serializable;
  * tableStore内部结构
  *
  * @author wangmin
- * @date 2021-06-11
+ * @date 2021-06-16
  */
 @Data
-public class DataStructure implements Serializable {
+public class TableStore implements Serializable {
 
     @JSONField(name = "end_time")
     private String endTime;

@@ -6,6 +6,12 @@ import lombok.Data;
 
 import java.io.Serializable;
 
+/**
+ * 数据源表结构
+ *
+ * @author wangmin
+ * @date 2021-06-16
+ */
 @Data
 public class DataSource implements Serializable {
 
@@ -22,7 +28,7 @@ public class DataSource implements Serializable {
      * @return 数据源
      */
     public DataSource getDataSource(IRow row) {
-        this.primaryKeys = parse(row.getField(Constants.DATA_SOURCE_COLUMN_KEY).getKey());
+        this.primaryKeys = parse(row.getField(Constants.DATA_SOURCE_COLUMN_KEY).getValue());
         this.name = row.getField(Constants.DATA_SOURCE_COLUMN_NAME).getValue();
         String path = row.getField(Constants.DATA_SOURCE_COLUMN_PATH).getValue();
         String[] paths = path.split("/");

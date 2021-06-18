@@ -1,5 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.table;
 
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.config.OTSPrimaryKeyBuilder;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.property.IProperty;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.row.IRow;
 
@@ -46,4 +47,11 @@ public interface ITable extends IProperty {
      * 清空表
      */
     void clear();
+
+    /**
+     * 设置主键，仅供ots使用
+     *
+     * @param otsPrimaryKeyBuilder 主键构造器
+     */
+    void setOTSPrimaryKeyBuilder(OTSPrimaryKeyBuilder otsPrimaryKeyBuilder);
 }

@@ -5,6 +5,12 @@ import lombok.Data;
 
 import java.io.Serializable;
 
+/**
+ * 阿里云的相关配置
+ *
+ * @author wanmin
+ * @date 2021-06-16
+ */
 @Data
 public class AliyunConfig implements Serializable {
 
