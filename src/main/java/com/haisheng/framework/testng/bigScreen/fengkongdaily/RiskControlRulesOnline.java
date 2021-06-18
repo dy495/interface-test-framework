@@ -154,7 +154,7 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
         }
     }
 
-    @Test(description = "同步员工离职在职信息",enabled = false)
+    @Test(description = "同步员工离职在职信息",enabled = true)
     public void updateStaffStatus() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -224,13 +224,13 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
 //                        "}";
 
 //                JSONObject jsonObject = JSON.parseObject(str);
-                String face=file.getImgStr( "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/xia.png");
-                //夏明凤的脸  是否在职 0否  1是
-                JSONObject jsonObject=staffObject("uid_edfe23f0","夏明凤","uid_edfe23f0",0,face);
-//
-//                String face=file.getImgStr( "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/guoliya.jpg");
+//                String face=file.getImgStr( "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/xia.png");
 //                //夏明凤的脸  是否在职 0否  1是
-//                JSONObject jsonObject=staffObject("uid_6b41fd04","郭丽雅","uid_6b41fd04",0,face);  //uid_6b41fd04	郭丽雅	uid_6b41fd04
+//                JSONObject jsonObject=staffObject("uid_edfe23f0","夏明凤","uid_edfe23f0",0,face);
+//
+                String face=file.getImgStr( "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/guoliya.jpg");
+                //夏明凤的脸  是否在职 0否  1是
+                JSONObject jsonObject=staffObject("uid_6b41fd04","郭丽雅","uid_6b41fd04",0,face);  //uid_6b41fd04	郭丽雅	uid_6b41fd04
 
                 logger.info("request:"+jsonObject.toJSONString());
                 System.out.println("over");
@@ -287,8 +287,8 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
             or.shopId=router.getShopid();
             or.userId=pp.userId;
             or.openId=pp.openId;
-//            or.carVehicleNumber="AAAAAAAAAA22"+CommonUtil.getRandom(5);
-            or.carVehicleNumber="AAAAAAAAAA2256599";
+            or.carVehicleNumber="AAAAAAAAAA22"+CommonUtil.getRandom(5);
+//            or.carVehicleNumber="AAAAAAAAAA2256599";
 
 //            or.business_type="\"GOODS_PAY\"";
             or.business_type=null;

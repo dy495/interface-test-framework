@@ -263,7 +263,7 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
 //                JSONObject jsonObject=staffObject("uid_663ad666","杨航","",0,face);
 //
                 String face = file.getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/xia.png");
-                JSONObject jsonObject = staffObject("uid_663ad653", "店员1", "uid_663ad653", 0, face);
+                JSONObject jsonObject = staffObject("uid_663ad653", "店员1", "uid_663ad653", 1, face);
 //
 //             String face=file.getImgStr( "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/lv.jpg");
 //                JSONObject jsonObject=staffObject("uid_91cc8031","吕雪晴","uid_91cc8031",1,face);
@@ -338,7 +338,7 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
 
             Integer total = cu.riskTotal();
             System.out.println("创单前：" + totalBefore + ",创单后：" + total);
-            recode(or.transId, "员工3");
+            recode(or.transId, "无人pid");
 
 //            Preconditions.checkArgument(total-totalBefore==1,"无人风控未产生事件，创单前："+totalBefore+",创单后："+total);
 
@@ -549,6 +549,8 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
             String post2 = cu.getCreateOrder(shopId, transId2, userId1, openId2, carVehicleNumber);
 //            String post3=cu.getCreateOrder(shopId,transId3,userId3,openId,carVehicleNumber);
 //            System.out.println("-----------"+post1);
+            recode(transId,"一车多人失败");
+            recode(transId2,"一车多人失败");
             System.out.println("-----------" + post2);
 //            System.out.println("-----------"+post3);
 
