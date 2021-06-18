@@ -3,8 +3,8 @@ package com.haisheng.framework.testng.bigScreen.crm.wm.base.datacheck;
 import ai.winsense.retail.scenario.gate.domain.SystemConstant;
 import com.alicloud.openservices.tablestore.model.PrimaryKeyValue;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.datacheck.data.DataResult;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.datacheck.data.DataSource;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.datacheck.data.OTSTableData;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.datacheck.data.RuleDataSource;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.container.ExcelContainer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.container.IContainer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.container.OTSContainer;
@@ -13,12 +13,13 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.table.ITable;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.config.OTSPrimaryKey;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.config.OTSPrimaryKeyBuilder;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.util.Md5Utility;
+import com.haisheng.framework.util.DateTimeUtil;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,64 +31,90 @@ import java.util.List;
 public class DataCheckRunner {
     private final String rulePath;
     private final String shopId;
-    private final String date;
     private final String queryPrimaryKeyName;
-    private List<DataResult> dataResultList;
+    private String date;
+    private IContainer ruleContainer;
+    private List<OTSTableData> tableStoreList;
 
     public DataCheckRunner(Builder builder) {
         this.rulePath = builder.rulePath;
         this.shopId = builder.shopId;
         this.date = builder.date;
         this.queryPrimaryKeyName = builder.queryPrimaryKeyName;
+        initRuleContainer();
     }
 
-    @Test
-    public void load() {
-        IContainer excelContainer = new ExcelContainer.Builder().path(rulePath).build();
-        excelContainer.init();
-        ITable dataContainerTable = excelContainer.getTable(Constants.SHEET_TITLE_CONTAINER);
+    private void load() {
+        ITable dataContainerTable = ruleContainer.getTable(Constants.SHEET_TITLE_CONTAINER);
         dataContainerTable.load();
         Arrays.stream(dataContainerTable.getRows()).forEach(sheetOne -> {
             AliyunConfig config = new AliyunConfig();
             config.getConfig(sheetOne.getField(Constants.CONTAINER_COLUMN_PATH).getValue());
-            ITable dataSourceTable = excelContainer.getTable(Constants.SHEET_TITLE_DATA_SOURCE);
+            ITable dataSourceTable = ruleContainer.getTable(Constants.SHEET_TITLE_DATA_SOURCE);
             dataSourceTable.load();
-            List<DataResult> list = new ArrayList<>();
+            List<OTSTableData> list = new ArrayList<>();
             //遍历数据源表
             Arrays.stream(dataSourceTable.getRows()).forEach(dataSourceRow -> {
-                DataResult dataResult = new DataResult();
-                DataSource dataSource = new DataSource();
+                OTSTableData otsTableData = new OTSTableData();
+                RuleDataSource dataSource = new RuleDataSource();
                 dataSource.getDataSource(dataSourceRow);
-                IContainer otsContainer = createOTSContainer(config, dataSource);
+                IContainer otsContainer = initOTSContainer(config, dataSource);
+                //其实只有一张表
                 ITable[] otsTables = otsContainer.getTables();
+                //如果是实时表获取当前日期
+                date = dataSource.getName().contains("实时") ? DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd") : DateTimeUtil.addDayFormat(new Date(), -1, "yyyy-MM-dd");
                 //遍历ots表获取所行
                 Arrays.stream(otsTables).forEach(otsTable -> {
                     loadTable(otsTable, dataSource.getPrimaryKeys());
                     IRow[] otsRows = otsTable.getRows();
-                    dataResult.setInstanceName(dataSource.getInstancePath());
-                    dataResult.setTableName(dataSource.getTablePath());
-                    dataResult.setRows(otsRows);
+                    otsTableData.setInstanceName(dataSource.getInstancePath());
+                    otsTableData.setTableName(dataSource.getTablePath());
+                    otsTableData.setRows(otsRows);
+                    otsTableData.setName(dataSource.getName());
                 });
-                //每张数据源表等于一个dataResult:包含实例名、表名、所有行数据
-                list.add(dataResult);
-                dataResultList = list;
+                //每张数据源表等于一个tableStoreData:包含实例名、表名、所有行数据
+                list.add(otsTableData);
             });
+            tableStoreList = list;
         });
     }
 
-    public List<DataResult> getDataResultList() {
+    /**
+     * 获取对外提供的结果集合
+     *
+     * @return 结果集合
+     */
+    public List<OTSTableData> getTableStoreList() {
         load();
-        return this.dataResultList;
+        return this.tableStoreList;
     }
 
     /**
-     * 构建ots的容器
+     * 获取字段规则表集合
+     *
+     * @return 规则表集合
+     */
+    public ITable[] getFieldRuleTables() {
+        return ruleContainer.findTables(Constants.RULE_COLUMN_FIELD);
+    }
+
+    /**
+     * 初始化规则容器
+     */
+    private void initRuleContainer() {
+        IContainer container = new ExcelContainer.Builder().path(rulePath).build();
+        container.init();
+        ruleContainer = container;
+    }
+
+    /**
+     * 初始化ots的容器
      *
      * @param config     容器配置
-     * @param dataSource 数据来源
+     * @param dataSource 数据源
      * @return ots容器
      */
-    private IContainer createOTSContainer(AliyunConfig config, DataSource dataSource) {
+    private IContainer initOTSContainer(AliyunConfig config, RuleDataSource dataSource) {
         IContainer otsContainer = new OTSContainer.Builder().endPoint(config.getEndPoint())
                 .accessKeyId(config.getAccessKeyId()).accessKeySecret(config.getAccessKeySecret())
                 .instanceName(dataSource.getInstancePath()).path(dataSource.getTablePath()).build();
@@ -158,6 +185,4 @@ public class DataCheckRunner {
             return new DataCheckRunner(this);
         }
     }
-
-
 }

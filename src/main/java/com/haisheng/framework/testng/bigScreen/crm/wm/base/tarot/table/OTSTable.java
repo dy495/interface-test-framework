@@ -33,20 +33,22 @@ public class OTSTable extends BaseTable {
     @Override
     public boolean load() {
         init();
-        logger.info(">>>>>>收集结果");
         int index = 1;
         try {
             Iterator<Row> iterator = syncClient.createRangeIterator(rangeIteratorParameter);
+            logger.info(">>>>>>收集结果");
             while (iterator.hasNext()) {
-                Row row = iterator.next();
                 IRow otsRow = new SimpleRow.Builder().index(index++).build();
-                Column[] columns = row.getColumns();
-                for (Column column : columns) {
-                    IField field = new SimpleField.Builder().name(column.getName()).value(column.getValue().toString()).build();
+                Row row = iterator.next();
+                for (Column column : row.getColumns()) {
+                    String name = column.getName();
+                    String value = column.getValue().toString();
+                    IField field = new SimpleField.Builder().name(name).value(value).build();
                     otsRow.addField(field);
                 }
                 addRow(otsRow);
             }
+            logger.info("<<<<<<收集完毕");
             return true;
         } catch (Exception e) {
             e.printStackTrace();

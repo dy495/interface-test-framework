@@ -33,7 +33,7 @@ public class OTSContainer extends NoSqlContainer {
         clientConfiguration.setConnectionTimeoutInMillisecond(5000);
         clientConfiguration.setSocketTimeoutInMillisecond(5000);
         clientConfiguration.setRetryStrategy(new AlwaysRetryStrategy());
-        logger.info("instanceName is：{}", instanceName);
+        logger.info("instanceName is:{}", instanceName);
         return new SyncClient(endPoint, accessKeyId, accessKeySecret, instanceName);
     }
 

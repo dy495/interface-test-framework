@@ -57,6 +57,14 @@ public interface IContainer extends IProperty {
     ITable getTable(String tableName);
 
     /**
+     * 查询表名
+     *
+     * @param tableName 表名
+     * @return tables
+     */
+    ITable[] findTables(String tableName);
+
+    /**
      * 设置表
      *
      * @param table 新表

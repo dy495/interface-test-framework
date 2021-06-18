@@ -6,13 +6,13 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * tableStore内部结构
+ * 每一行的数据内容
  *
  * @author wangmin
  * @date 2021-06-16
  */
 @Data
-public class TableStore implements Serializable {
+public class OTSRowData implements Serializable {
 
     @JSONField(name = "end_time")
     private String endTime;

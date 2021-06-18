@@ -3,14 +3,17 @@ package com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.container;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.property.BaseProperty;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.table.ITable;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.util.ContainerConstants;
+import com.haisheng.framework.util.StringUtil;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
+import org.jooq.tools.StringUtils;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Setter
 public abstract class BaseContainer extends BaseProperty implements IContainer {
@@ -44,6 +47,16 @@ public abstract class BaseContainer extends BaseProperty implements IContainer {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public ITable[] findTables(String tableName) {
+        List<ITable> temp = new LinkedList<>();
+        if (!StringUtils.isEmpty(tableName)) {
+            temp.addAll(tables.entrySet().stream().filter(e -> e.getKey().contains(tableName)).map(Map.Entry::getValue).collect(Collectors.toList()));
+        }
+        final int size = temp.size();
+        return temp.toArray(new ITable[size]);
     }
 
     @Override
