@@ -1,8 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.config;
 
-import lombok.Data;
-
-import java.io.Serializable;
+import lombok.Getter;
 
 /**
  * ots主键构造器
@@ -10,34 +8,19 @@ import java.io.Serializable;
  * @author wangmin
  * @data 2021-06-18
  */
-@Data
-public class OTSPrimaryKeyBuilder implements Serializable {
+@Getter
+public class OTSPrimaryKeyBuilder {
 
-    public OTSPrimaryKeyBuilder(Builder builder) {
-        this.inclusiveStartPrimaryKey = builder.inclusiveStartPrimaryKey;
-        this.exclusiveEndPrimaryKey = builder.exclusiveEndPrimaryKey;
+    private OTSPrimaryKey inclusiveStartPrimaryKey;
+    private OTSPrimaryKey exclusiveEndPrimaryKey;
+
+    public OTSPrimaryKeyBuilder inclusiveStartPrimaryKey(OTSPrimaryKey inclusiveStartPrimaryKey) {
+        this.inclusiveStartPrimaryKey = inclusiveStartPrimaryKey;
+        return this;
     }
 
-    private final OTSPrimaryKey inclusiveStartPrimaryKey;
-    private final OTSPrimaryKey exclusiveEndPrimaryKey;
-
-    public static class Builder {
-        private OTSPrimaryKey inclusiveStartPrimaryKey;
-        private OTSPrimaryKey exclusiveEndPrimaryKey;
-
-        public Builder inclusiveStartPrimaryKey(OTSPrimaryKey inclusiveStartPrimaryKey) {
-            this.inclusiveStartPrimaryKey = inclusiveStartPrimaryKey;
-            return this;
-        }
-
-        public Builder exclusiveEndPrimaryKey(OTSPrimaryKey exclusiveEndPrimaryKey) {
-            this.exclusiveEndPrimaryKey = exclusiveEndPrimaryKey;
-            return this;
-        }
-
-        public OTSPrimaryKeyBuilder build() {
-            return new OTSPrimaryKeyBuilder(this);
-        }
-
+    public OTSPrimaryKeyBuilder exclusiveEndPrimaryKey(OTSPrimaryKey exclusiveEndPrimaryKey) {
+        this.exclusiveEndPrimaryKey = exclusiveEndPrimaryKey;
+        return this;
     }
 }

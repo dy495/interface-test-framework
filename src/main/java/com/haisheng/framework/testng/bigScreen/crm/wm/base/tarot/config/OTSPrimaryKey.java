@@ -7,7 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * ots主键
+ * ots主键，包含主键名和主键值
  *
  * @author wangmin
  * @date 2021-06-18
@@ -18,13 +18,6 @@ public class OTSPrimaryKey {
 
     public OTSPrimaryKey(Builder builder) {
         this.otsPrimaryKey = builder.map;
-    }
-
-    @Override
-    public String toString() {
-        return "OTSPrimaryKey{" +
-                "otsPrimaryKey=" + otsPrimaryKey +
-                '}';
     }
 
     public static class Builder {
@@ -42,5 +35,12 @@ public class OTSPrimaryKey {
         public OTSPrimaryKey build() {
             return new OTSPrimaryKey(this);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "OTSPrimaryKey{" +
+                "otsPrimaryKey=" + otsPrimaryKey +
+                '}';
     }
 }

@@ -129,13 +129,12 @@ public class DataCheckRunner {
      * @param primaryKeys 主键
      */
     private void loadTable(ITable table, String[] primaryKeys) {
-        OTSPrimaryKeyBuilder otsPrimaryKeyBuilder = creatOTSPrimaryKeyBuilder(primaryKeys, queryPrimaryKeyName, shopId, date);
-        table.setOTSPrimaryKeyBuilder(otsPrimaryKeyBuilder);
+        table.setOTSPrimaryKeyBuilder(initOTSPrimaryKeyBuilder(primaryKeys, queryPrimaryKeyName, shopId, date));
         table.load();
     }
 
     /**
-     * 构建ots主键构造器
+     * 初始化ots主键构造器
      *
      * @param primaryValueNames   主键名集合
      * @param queryPrimaryKeyName 需要查询的主键名
@@ -143,15 +142,14 @@ public class DataCheckRunner {
      * @param date                日期
      * @return OTSPrimaryKeyBuilder 主键构造器
      */
-    private OTSPrimaryKeyBuilder creatOTSPrimaryKeyBuilder(String[] primaryValueNames, String queryPrimaryKeyName, String scope, String date) {
+    private OTSPrimaryKeyBuilder initOTSPrimaryKeyBuilder(String[] primaryValueNames, String queryPrimaryKeyName, String scope, String date) {
         OTSPrimaryKey.Builder inclusiveStartPrimaryKeyBuilder = new OTSPrimaryKey.Builder();
         Arrays.stream(primaryValueNames).map(e -> inclusiveStartPrimaryKeyBuilder.primaryKey(e, PrimaryKeyValue.INF_MIN)).filter(e -> e.containsKey(queryPrimaryKeyName))
                 .forEach(e -> e.primaryKey(queryPrimaryKeyName, PrimaryKeyValue.fromString(scopeKeyGen(scope, date))));
         OTSPrimaryKey.Builder exclusiveEndPrimaryKeyBuilder = new OTSPrimaryKey.Builder();
         Arrays.stream(primaryValueNames).map(e -> exclusiveEndPrimaryKeyBuilder.primaryKey(e, PrimaryKeyValue.INF_MAX)).filter(e -> e.containsKey(queryPrimaryKeyName))
                 .forEach(e -> e.primaryKey(queryPrimaryKeyName, PrimaryKeyValue.fromString(scopeKeyGen(scope, date))));
-        return new OTSPrimaryKeyBuilder.Builder().inclusiveStartPrimaryKey(inclusiveStartPrimaryKeyBuilder.build())
-                .exclusiveEndPrimaryKey(exclusiveEndPrimaryKeyBuilder.build()).build();
+        return new OTSPrimaryKeyBuilder().inclusiveStartPrimaryKey(inclusiveStartPrimaryKeyBuilder.build()).exclusiveEndPrimaryKey(exclusiveEndPrimaryKeyBuilder.build());
     }
 
     /**

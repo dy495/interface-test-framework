@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.bigScreen.crm.wm.base.datacheck.data;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.datacheck.Constants;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.row.IRow;
 import lombok.Data;
+import lombok.Getter;
 
 import java.io.Serializable;
 
@@ -12,7 +13,7 @@ import java.io.Serializable;
  * @author wangmin
  * @date 2021-06-16
  */
-@Data
+@Getter
 public class RuleDataSource implements Serializable {
 
     private String name;
@@ -39,7 +40,6 @@ public class RuleDataSource implements Serializable {
     }
 
     public static String[] parse(String primaryKey) {
-        primaryKey = primaryKey.replace("]", "").replace("[", "");
-        return primaryKey.split(",");
+        return primaryKey.replace("]", "").replace("[", "").split(",");
     }
 }

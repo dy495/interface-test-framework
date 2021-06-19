@@ -100,7 +100,7 @@ public abstract class BaseScene implements IScene {
         return visitor.upload(getPath(), filePath);
     }
 
-    public JSONObject download(@NotNull VisitorProxy visitor) {
+    public JSONObject download() {
         //todo 未开发
         return null;
     }
