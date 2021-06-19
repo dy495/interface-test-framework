@@ -12,6 +12,9 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.entity.IEntity;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.row.IRow;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.datacheck.data.OTSRowData;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.table.ITable;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.bean.DetailMessage;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.bean.PvUvInfo;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.util.DingPushUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
@@ -49,10 +52,12 @@ public class TestRunner {
 
     @Test
     public void methodB() {
+        PvUvInfo pvUvInfo = new PvUvInfo();
         String rulePath = "D:\\JetBrains\\IntelliJ IDEAProjects\\interface-test-framework\\src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\crm\\wm\\base\\datacheck\\rule\\规则表.xlsx";
         DataCheckRunner dataCheckRunner = new DataCheckRunner.Builder().rulePath(rulePath).queryPrimaryKeyName("scope_date").shopId("33467").date("2021-06-17").build();
         ITable[] fieldRuleTables = dataCheckRunner.getFieldRuleTables();
         //所有表的结果
+        List<DetailMessage> detailMessages = new ArrayList<>();
         dataCheckRunner.getTableStoreList().forEach(otsTableData -> {
             otsTableData.initOTSRowData();
             List<OTSRowData> otsRowDataList = otsTableData.getRowDataList();
@@ -77,9 +82,17 @@ public class TestRunner {
                 }
                 logger.info("去重结果：{}", map.values().size());
                 logger.info("不去重结果：{}", list.size());
+                DetailMessage detailMessage = new DetailMessage();
+                detailMessage.setName(otsTableData.getName());
+                detailMessage.setHasReception(map.values().size());
+                detailMessage.setNoReception(list.size());
+                detailMessages.add(detailMessage);
                 logger.info("--------------------{}跑完---------------------------", otsTableData.getName());
             });
         });
+        pvUvInfo.setShopId("33467");
+        pvUvInfo.setDetailMessages(detailMessages);
+        DingPushUtil.sendPVUVMessage(pvUvInfo);
     }
 
     //比较算法

@@ -1,6 +1,8 @@
 package com.haisheng.framework.testng.bigScreen.xundianDaily.wm.util;
 
 import com.alibaba.fastjson.JSONObject;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.bean.DetailMessage;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.bean.PvUvInfo;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.bean.ShopInfo;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
@@ -42,10 +44,30 @@ public class DingPushUtil {
         }
     }
 
+    public static void sendPVUVMessage(PvUvInfo pvUvInfo) {
+        List<DetailMessage> detailMessages = pvUvInfo.getDetailMessages();
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n").append("### **").append("门店：").append(pvUvInfo.getShopId()).append("**").append("\n");
+        detailMessages.forEach(detailMessage -> sb.append("\n").append("##### **").append("数据：").append(detailMessage.getName()).append("**").append("\n")
+                .append("###### 去重数据：").append(detailMessage.getHasReception()).append("      不去重数据：").append(detailMessage.getNoReception()).append("\n"));
+//        System.err.println(sb);
+        send(sb.toString());
+    }
+
     public static void send(String messageDetail) {
         Map<String, String> map = new HashMap<>();
         map.put("title", "巡检");
         String text = "## **" + "线上巡检数据提醒：" + "**" + "\n"
+                + "\n" + "### **" + DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss") + "**" + "\n"
+                + "\n" + messageDetail + "\n";
+        map.put("text", text);
+        send(map);
+    }
+
+    public static void send_PV_UV(String messageDetail) {
+        Map<String, String> map = new HashMap<>();
+        map.put("title", "购物中心数据监控");
+        String text = "## **" + "流量巡检：" + "**" + "\n"
                 + "\n" + "### **" + DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss") + "**" + "\n"
                 + "\n" + messageDetail + "\n";
         map.put("text", text);

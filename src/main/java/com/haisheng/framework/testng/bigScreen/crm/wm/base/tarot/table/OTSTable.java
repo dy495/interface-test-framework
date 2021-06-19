@@ -36,7 +36,7 @@ public class OTSTable extends BaseTable {
         int index = 1;
         try {
             Iterator<Row> iterator = syncClient.createRangeIterator(rangeIteratorParameter);
-            logger.info(">>>>>>收集结果");
+            logger.info(">>>>>>开始收集结果");
             while (iterator.hasNext()) {
                 IRow otsRow = new SimpleRow.Builder().index(index++).build();
                 Row row = iterator.next();
@@ -48,7 +48,7 @@ public class OTSTable extends BaseTable {
                 }
                 addRow(otsRow);
             }
-            logger.info("<<<<<<收集完毕");
+            logger.info("<<<<<<结果收集完毕");
             return true;
         } catch (Exception e) {
             e.printStackTrace();
