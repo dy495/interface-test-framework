@@ -7,13 +7,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.Optional;
 
-public enum AppointmentRepairRecordEnum implements MappingEnum<AppointmentRepairRecordEnum, String> {
+public enum EnumAppointmentRepairRecord implements EnumMapping<EnumAppointmentRepairRecord, String> {
 
     SHOP_NAME("shop_name", "归属门店"),
 
     BRAND_NAME("brand_name", "品牌");
 
-    AppointmentRepairRecordEnum(String rearField, String frontField) {
+    EnumAppointmentRepairRecord(String rearField, String frontField) {
         this.frontField = frontField;
         this.rearField = rearField;
     }
@@ -25,8 +25,8 @@ public enum AppointmentRepairRecordEnum implements MappingEnum<AppointmentRepair
 
     @NotNull
     @Override
-    public AppointmentRepairRecordEnum findByField(String rearField) {
-        Optional<AppointmentRepairRecordEnum> any = Arrays.stream(values()).filter(f -> f.rearField.equals(rearField)).findAny();
+    public EnumAppointmentRepairRecord findByField(String rearField) {
+        Optional<EnumAppointmentRepairRecord> any = Arrays.stream(values()).filter(f -> f.rearField.equals(rearField)).findAny();
         Preconditions.checkArgument(any.isPresent(), "映射字段不存在");
         return any.get();
     }

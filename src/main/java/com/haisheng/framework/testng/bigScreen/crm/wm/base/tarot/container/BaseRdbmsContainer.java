@@ -28,11 +28,12 @@ public abstract class BaseRdbmsContainer extends BaseContainer {
                 ResultSet rs = statement.executeQuery(getPath());
                 while (rs.next()) {
                     String tableName = rs.getString(1);
-                    ITable table = new DbTable.Builder().path(getPath()).name(tableName).statement(statement).buildTable();
+                    ITable table = new DbTable.Builder().path(getPath()).name(tableName).statement(statement).build();
                     addTable(table);
                 }
             } else {
-                new DbTable.Builder().path(getPath()).statement(statement).buildTable();
+                ITable table = new DbTable.Builder().path(getPath()).statement(statement).build();
+                addTable(table);
             }
         } catch (SQLException e) {
             e.printStackTrace();

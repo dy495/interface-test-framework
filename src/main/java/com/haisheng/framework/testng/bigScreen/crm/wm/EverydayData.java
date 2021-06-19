@@ -11,7 +11,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.sql.Sql;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.DingPushUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.UserUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.entity.Factory;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.util.ContainerEnum;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.enumerator.EnumContainer;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -95,7 +95,7 @@ public class EverydayData extends TestCaseCommon implements TestCaseStd {
                                 db.getTodayReceptionNum(), db.getTodayAppointmentNum(), db.getTodayDate(), db.getShopId(),
                                 db.getSaleName(), db.getTodayNewCustomerReceptionNum(), db.getTodayOldCustomerReceptionNum(), db.getSaleId())
                         .end().getSql();
-                new Factory.Builder().container(ContainerEnum.DB_ONE_PIECE.getContainer()).build().create(sql);
+                new Factory.Builder().container(EnumContainer.DB_ONE_PIECE.getContainer()).build().create(sql);
             });
         } catch (Exception e) {
             e.printStackTrace();
@@ -110,7 +110,7 @@ public class EverydayData extends TestCaseCommon implements TestCaseStd {
                 .where("today_date", "=", date)
                 .and("shop_id", "=", shopId)
                 .end();
-        int count = new Factory.Builder().container(ContainerEnum.DB_ONE_PIECE.getContainer()).build().create(sql).length;
+        int count = new Factory.Builder().container(EnumContainer.DB_ONE_PIECE.getContainer()).build().create(sql).length;
         if (!(count > 0)) {
             DingPushUtil.sendText(CommonUtil.humpToLineReplaceFirst(TPorscheTodayData.class.getSimpleName()) + "表记录数据失败");
         }

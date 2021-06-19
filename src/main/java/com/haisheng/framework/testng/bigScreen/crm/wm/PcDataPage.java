@@ -20,7 +20,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.sql.Sql;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.UserUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.entity.Factory;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.entity.IEntity;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.util.ContainerEnum;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.enumerator.EnumContainer;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
  * 门店数据中心测试用例
  */
 public class PcDataPage extends TestCaseCommon implements TestCaseStd {
-    public static final Factory ONE_PIECE_FACTORY = new Factory.Builder().container(ContainerEnum.DB_ONE_PIECE.getContainer()).build();
+    public static final Factory ONE_PIECE_FACTORY = new Factory.Builder().container(EnumContainer.DB_ONE_PIECE.getContainer()).build();
     PublicMethod method = new PublicMethod();
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     private static final EnumAccount zjl = EnumAccount.ZJL_DAILY;

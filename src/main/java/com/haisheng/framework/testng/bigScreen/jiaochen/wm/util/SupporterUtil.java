@@ -8,7 +8,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.entity.Factory;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.entity.IEntity;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.row.IRow;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.util.ContainerEnum;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.enumerator.EnumContainer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.util.BasicUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.*;
@@ -1604,7 +1604,7 @@ public class SupporterUtil extends BasicUtil {
         UrlOutputUtil.toIoSave(urlPath, outputPath);
         String relativePath = "/excel/" + excelName;
         logger.info("relativePath is {}", relativePath);
-        IEntity<?, ?>[] entities = new Factory.Builder().container(ContainerEnum.EXCEL.getContainer()).build().createExcel(relativePath);
+        IEntity<?, ?>[] entities = new Factory.Builder().container(EnumContainer.EXCEL.getContainer()).build().createExcel(relativePath);
         return Arrays.stream(entities).map(IEntity::getCurrent).toArray(IRow[]::new);
     }
 }

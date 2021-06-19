@@ -20,7 +20,7 @@ import com.haisheng.framework.testng.bigScreen.crmOnline.CrmScenarioUtilOnline;
 import com.haisheng.framework.testng.bigScreen.crmOnline.commonDsOnline.PublicMethodOnline;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.entity.Factory;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.entity.IEntity;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.util.ContainerEnum;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.enumerator.EnumContainer;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -37,7 +37,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class PcDataPageOnline extends TestCaseCommon implements TestCaseStd {
-    public static final Factory ONE_PIECE_FACTORY = new Factory.Builder().container(ContainerEnum.DB_ONE_PIECE.getContainer()).build();
+    public static final Factory ONE_PIECE_FACTORY = new Factory.Builder().container(EnumContainer.DB_ONE_PIECE.getContainer()).build();
     PublicMethodOnline method = new PublicMethodOnline();
     CrmScenarioUtilOnline crm = CrmScenarioUtilOnline.getInstance();
     private static final EnumAccount zjl = EnumAccount.ZJL_ONLINE;

@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.util;
+package com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.enumerator;
 
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.container.DbContainer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.container.ExcelContainer;
@@ -8,7 +8,7 @@ import lombok.Getter;
 /**
  * 容器类型枚举
  */
-public enum ContainerEnum {
+public enum EnumContainer {
 
     DB_BUSINESS_PORSCHE(new DbContainer.Builder().driverName("com.mysql.cj.jdbc.Driver")
             .jdbcUrl("jdbc:mysql://rm-2zeg4an1kr1437xu6no.mysql.rds.aliyuncs.com/business-porsche")
@@ -21,7 +21,7 @@ public enum ContainerEnum {
     EXCEL(new ExcelContainer.Builder().buildContainer()),
     ;
 
-    ContainerEnum(IContainer container) {
+    EnumContainer(IContainer container) {
         this.container = container;
     }
 

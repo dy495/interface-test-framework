@@ -5,16 +5,19 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.datacheck.data.RuleDataSource;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.sql.Sql;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.container.ExcelContainer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.container.IContainer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.entity.Factory;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.entity.IEntity;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.enumerator.EnumContainer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.row.IRow;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.datacheck.data.OTSRowData;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.table.ITable;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.bean.DetailMessage;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.bean.PvUvInfo;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.util.DingPushUtil;
+import com.haisheng.framework.util.DateTimeUtil;
+import org.jooq.SQL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
@@ -92,7 +95,17 @@ public class TestRunner {
         });
         pvUvInfo.setShopId("33467");
         pvUvInfo.setDetailMessages(detailMessages);
-        DingPushUtil.sendPVUVMessage(pvUvInfo);
+        List<DetailMessage> detailMessageList = pvUvInfo.getDetailMessages();
+        detailMessageList.forEach(e -> {
+            String date = e.getName().contains("实时") ? DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd") : DateTimeUtil.addDayFormat(new Date(), -1, "yyyy-MM-dd");
+            Sql sql = Sql.instance().insert()
+                    .from("t_shop_today_data")
+                    .field("shop_id", "source", "value", "data", "environment")
+                    .setValue("33467", e.getName(), e.getHasReception(), date, "online")
+                    .end();
+            new Factory.Builder().container(EnumContainer.DB_ONE_PIECE.getContainer()).build().create(sql);
+        });
+//        DingPushUtil.sendPVUVMessage(pvUvInfo);
     }
 
     //比较算法

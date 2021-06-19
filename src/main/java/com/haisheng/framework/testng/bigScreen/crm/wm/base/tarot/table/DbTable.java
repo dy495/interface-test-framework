@@ -26,6 +26,7 @@ public class DbTable extends BaseTable {
     @Override
     public boolean load() {
         String sql = !StringUtils.isEmpty(getPath()) ? getPath() : String.format(ContainerConstants.DB_TABLE_DEFAULT_SQL, getKey());
+        System.err.println(sql);
         if (statement != null) {
             try {
                 if (sql.contains(ContainerConstants.UPDATE) || sql.contains(ContainerConstants.DELETE)) {

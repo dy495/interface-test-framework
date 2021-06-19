@@ -16,7 +16,7 @@ public class SqlFactory {
         configPath = builder.configPath;
     }
 
-    public SqlSession sqlSession = null;
+    private SqlSession sqlSession = null;
 
     public <T> T execute(Class<T> tClass) {
         try {

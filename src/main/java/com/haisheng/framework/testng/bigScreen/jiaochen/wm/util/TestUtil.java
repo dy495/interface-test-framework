@@ -16,7 +16,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.field.IField;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.row.IRow;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.table.CsvTable;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.table.ITable;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.util.ContainerEnum;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.enumerator.EnumContainer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.entity.Factory;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.entity.IEntity;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.util.FileUtil;
@@ -134,7 +134,7 @@ public class TestUtil {
     @Test
     public void testReadDb() {
         String sql = "select * from t_case limit 10";
-        IEntity<?, ?>[] entities = new Factory.Builder().container(ContainerEnum.DB_ONE_PIECE.getContainer()).build().create(sql);
+        IEntity<?, ?>[] entities = new Factory.Builder().container(EnumContainer.DB_ONE_PIECE.getContainer()).build().create(sql);
         System.err.println(entities.length);
         String caseName = entities[0].getFieldValue("case_name");
         System.err.println(caseName);
@@ -143,7 +143,7 @@ public class TestUtil {
     @Test
     public void testReadDb2() {
         String sql = "select * from t_case limit 10";
-        List<B> bs = new Factory.Builder().container(ContainerEnum.DB_ONE_PIECE.getContainer()).build().toJavaObjectList(sql, B.class);
+        List<B> bs = new Factory.Builder().container(EnumContainer.DB_ONE_PIECE.getContainer()).build().toJavaObjectList(sql, B.class);
         String caseName = bs.get(0).getCaseName();
         System.err.println(caseName);
     }
@@ -198,7 +198,7 @@ public class TestUtil {
         IField index = row.getField("INDEX");
         index.setValue(String.valueOf(Integer.parseInt(count.getValue()) + Integer.parseInt(index.getValue())));
         container.setTable(table);
-        IEntity<?, ?> entity = new Factory.Builder().container(ContainerEnum.EXCEL.getContainer()).build().createExcel(path)[0];
+        IEntity<?, ?> entity = new Factory.Builder().container(EnumContainer.EXCEL.getContainer()).build().createExcel(path)[0];
         String newIndex = entity.getFieldValue("INDEX");
         System.err.println(newIndex);
     }
