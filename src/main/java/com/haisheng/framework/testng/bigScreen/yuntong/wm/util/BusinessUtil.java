@@ -24,11 +24,6 @@ import java.util.stream.Collectors;
 public class BusinessUtil extends BasicUtil {
     private final VisitorProxy visitor;
 
-    /**
-     * 构造函数私有化。外部不可调用构造函数
-     *
-     * @param visitor 访问者
-     */
     public BusinessUtil(VisitorProxy visitor) {
         super(visitor);
         this.visitor = visitor;
@@ -131,7 +126,6 @@ public class BusinessUtil extends BasicUtil {
         JSONArray scores = toJavaObject(scene, AppDetailBean.class).getScores();
         return scores == null ? 0 : scores.stream().map(e -> (JSONObject) e).mapToInt(e -> e.getInteger("score")).sum();
     }
-
 
 
 }
