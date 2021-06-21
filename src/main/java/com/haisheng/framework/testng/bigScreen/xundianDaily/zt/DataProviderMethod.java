@@ -7,9 +7,9 @@ public class DataProviderMethod {
     @DataProvider(name = "device_id")
     public Object[] cameraId() {
         return new String[][]{
-                {"8097818264503296","uniview-云台全功能"},
-                {"8061349193417728","uniview-own"},
-                {"8058611994690560","uniview-68"},
+                {"8097818264503296","uniview-云台全功能（33）"},
+//                {"8304102614631424","unview-G3XXH(69)"},
+//                {"8058611994690560","uniview-68"},
 
         };
     }
