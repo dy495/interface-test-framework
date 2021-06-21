@@ -39,7 +39,7 @@ public class DataCheckRunner {
     public DataCheckRunner(Builder builder) {
         this.rulePath = builder.rulePath;
         this.shopId = builder.shopId;
-        this.date = builder.date;
+//        this.date = builder.date;
         this.queryPrimaryKeyName = builder.queryPrimaryKeyName;
         initRuleContainer();
     }
@@ -172,13 +172,13 @@ public class DataCheckRunner {
     public static class Builder {
         private String rulePath;
         private String shopId;
-        private String date;
+//        private String date;
         private String queryPrimaryKeyName;
 
         public DataCheckRunner build() {
             Preconditions.checkNotNull(rulePath, "规则文件不能为空");
             Preconditions.checkNotNull(shopId, "门店id不能为空");
-            Preconditions.checkNotNull(date, "查询日期不能空");
+//            Preconditions.checkNotNull(date, "查询日期不能空");
             Preconditions.checkNotNull(queryPrimaryKeyName, "主键查询不能为空");
             return new DataCheckRunner(this);
         }

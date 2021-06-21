@@ -20,6 +20,7 @@ import com.haisheng.framework.util.DateTimeUtil;
 import org.jooq.SQL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.util.*;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 
 public class TestRunner {
     private static final Logger logger = LoggerFactory.getLogger(TestRunner.class);
+    private PvUvInfo pvUvInfo;
 
     @Test
     public void methodA() {
@@ -53,11 +55,44 @@ public class TestRunner {
         return jsonObject;
     }
 
+
     @Test
+    public void realTimeData() {
+        List<DetailMessage> detailMessageList = pvUvInfo.getDetailMessages();
+        detailMessageList.forEach(e -> {
+            if (e.getName().contains("实时")) {
+                String date = DateTimeUtil.addDayFormat(new Date(), -1, "yyyy-MM-dd HH:mm:ss");
+                Sql sql = Sql.instance().insert()
+                        .from("t_shop_realtime_data")
+                        .field("shop_id", "source", "map_value", "list_value", "data", "environment")
+                        .setValue("33467", e.getName(), e.getNoReception(), e.getHasReception(), date, "online")
+                        .end();
+                new Factory.Builder().container(EnumContainer.DB_ONE_PIECE.getContainer()).build().create(sql);
+            }
+        });
+    }
+
+    @Test
+    public void historyData() {
+        List<DetailMessage> detailMessageList = pvUvInfo.getDetailMessages();
+        detailMessageList.forEach(e -> {
+            if (!e.getName().contains("实时")) {
+                String date = DateTimeUtil.addDayFormat(new Date(), -1, "yyyy-MM-dd");
+                Sql sql = Sql.instance().insert()
+                        .from("t_shop_history_data")
+                        .field("shop_id", "source", "map_value", "list_value", "data", "environment")
+                        .setValue("33467", e.getName(), e.getNoReception(), e.getHasReception(), date, "online")
+                        .end();
+                new Factory.Builder().container(EnumContainer.DB_ONE_PIECE.getContainer()).build().create(sql);
+            }
+        });
+    }
+
+    @BeforeClass
     public void methodB() {
-        PvUvInfo pvUvInfo = new PvUvInfo();
+        pvUvInfo = new PvUvInfo();
         String rulePath = "D:\\JetBrains\\IntelliJ IDEAProjects\\interface-test-framework\\src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\crm\\wm\\base\\datacheck\\rule\\规则表.xlsx";
-        DataCheckRunner dataCheckRunner = new DataCheckRunner.Builder().rulePath(rulePath).queryPrimaryKeyName("scope_date").shopId("33467").date("2021-06-17").build();
+        DataCheckRunner dataCheckRunner = new DataCheckRunner.Builder().rulePath(rulePath).queryPrimaryKeyName("scope_date").shopId("33467").build();
         ITable[] fieldRuleTables = dataCheckRunner.getFieldRuleTables();
         //所有表的结果
         List<DetailMessage> detailMessages = new ArrayList<>();
@@ -80,32 +115,19 @@ public class TestRunner {
                 List<OTSRowData> list = otsRowDataList.stream().filter(e -> e.getStatus().equals(status))
                         .filter(e -> Arrays.asList(regionIds).contains(e.getRegionId())).collect(Collectors.toCollection(LinkedList::new));
                 list = isNull.equals("false") ? list.stream().filter(e -> !e.getUserId().equals("N")).collect(Collectors.toCollection(LinkedList::new)) : list;
-                if (isReception.equals("false")) {
-                    list.forEach(e -> map.put(e.getUserId(), e));
-                }
+                list.stream().filter(e -> isReception.equals("false")).forEach(e -> map.put(e.getUserId(), e));
                 logger.info("去重结果：{}", map.values().size());
                 logger.info("不去重结果：{}", list.size());
                 DetailMessage detailMessage = new DetailMessage();
                 detailMessage.setName(otsTableData.getName());
-                detailMessage.setHasReception(map.values().size());
-                detailMessage.setNoReception(list.size());
+                detailMessage.setNoReception(map.values().size());
+                detailMessage.setHasReception(list.size());
                 detailMessages.add(detailMessage);
                 logger.info("--------------------{}跑完---------------------------", otsTableData.getName());
             });
         });
         pvUvInfo.setShopId("33467");
         pvUvInfo.setDetailMessages(detailMessages);
-        List<DetailMessage> detailMessageList = pvUvInfo.getDetailMessages();
-        detailMessageList.forEach(e -> {
-            String date = e.getName().contains("实时") ? DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd") : DateTimeUtil.addDayFormat(new Date(), -1, "yyyy-MM-dd");
-            Sql sql = Sql.instance().insert()
-                    .from("t_shop_today_data")
-                    .field("shop_id", "source", "value", "data", "environment")
-                    .setValue("33467", e.getName(), e.getHasReception(), date, "online")
-                    .end();
-            new Factory.Builder().container(EnumContainer.DB_ONE_PIECE.getContainer()).build().create(sql);
-        });
-//        DingPushUtil.sendPVUVMessage(pvUvInfo);
     }
 
     //比较算法
