@@ -28,7 +28,7 @@ public class RuleDataSource implements Serializable {
      * @param row 行
      * @return 数据源
      */
-    public RuleDataSource getDataSource(IRow row) {
+    public RuleDataSource initDataSource(IRow row) {
         this.primaryKeys = parse(row.getField(Constants.DATA_SOURCE_COLUMN_KEY).getValue());
         this.name = row.getField(Constants.DATA_SOURCE_COLUMN_NAME).getValue();
         String path = row.getField(Constants.DATA_SOURCE_COLUMN_PATH).getValue();

@@ -34,7 +34,7 @@ public class DataCheckRunner {
     private final String queryPrimaryKeyName;
     private String date;
     private IContainer ruleContainer;
-    private List<OTSTableData> tableStoreList;
+    private List<OTSTableData> otsTableDataList;
 
     public DataCheckRunner(Builder builder) {
         this.rulePath = builder.rulePath;
@@ -57,13 +57,14 @@ public class DataCheckRunner {
             Arrays.stream(dataSourceTable.getRows()).forEach(dataSourceRow -> {
                 OTSTableData otsTableData = new OTSTableData();
                 RuleDataSource dataSource = new RuleDataSource();
-                dataSource.getDataSource(dataSourceRow);
+                dataSource.initDataSource(dataSourceRow);
                 IContainer otsContainer = initOTSContainer(config, dataSource);
                 //其实只有一张表
                 ITable[] otsTables = otsContainer.getTables();
                 //如果是实时表获取当前日期
-                date = dataSource.getName().contains("实时") ? DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd") : DateTimeUtil.addDayFormat(new Date(), -1, "yyyy-MM-dd");
-                //遍历ots表获取所行
+                date = dataSource.getName().contains("实时") ? DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd")
+                        : DateTimeUtil.addDayFormat(new Date(), -1, "yyyy-MM-dd");
+                //遍历ots表获取所有行
                 Arrays.stream(otsTables).forEach(otsTable -> {
                     loadTable(otsTable, dataSource.getPrimaryKeys());
                     IRow[] otsRows = otsTable.getRows();
@@ -75,7 +76,7 @@ public class DataCheckRunner {
                 //每张数据源表等于一个tableStoreData:包含实例名、表名、所有行数据
                 list.add(otsTableData);
             });
-            tableStoreList = list;
+            otsTableDataList = list;
         });
     }
 
@@ -84,9 +85,9 @@ public class DataCheckRunner {
      *
      * @return 结果集合
      */
-    public List<OTSTableData> getTableStoreList() {
-        load();
-        return this.tableStoreList;
+    public List<OTSTableData> getOtsTableDataList() {
+        this.load();
+        return this.otsTableDataList;
     }
 
     /**
@@ -129,6 +130,7 @@ public class DataCheckRunner {
      * @param primaryKeys 主键
      */
     private void loadTable(ITable table, String[] primaryKeys) {
+        //此处不设置主键无法执行
         table.setOTSPrimaryKeyBuilder(initOTSPrimaryKeyBuilder(primaryKeys, queryPrimaryKeyName, shopId, date));
         table.load();
     }
@@ -143,13 +145,13 @@ public class DataCheckRunner {
      * @return OTSPrimaryKeyBuilder 主键构造器
      */
     private OTSPrimaryKeyBuilder initOTSPrimaryKeyBuilder(String[] primaryValueNames, String queryPrimaryKeyName, String scope, String date) {
-        OTSPrimaryKey.Builder inclusiveStartPrimaryKeyBuilder = new OTSPrimaryKey.Builder();
-        Arrays.stream(primaryValueNames).map(e -> inclusiveStartPrimaryKeyBuilder.primaryKey(e, PrimaryKeyValue.INF_MIN)).filter(e -> e.containsKey(queryPrimaryKeyName))
+        OTSPrimaryKey.Builder inclusiveBuilder = new OTSPrimaryKey.Builder();
+        Arrays.stream(primaryValueNames).map(e -> inclusiveBuilder.primaryKey(e, PrimaryKeyValue.INF_MIN)).filter(e -> e.containsKey(queryPrimaryKeyName))
                 .forEach(e -> e.primaryKey(queryPrimaryKeyName, PrimaryKeyValue.fromString(scopeKeyGen(scope, date))));
-        OTSPrimaryKey.Builder exclusiveEndPrimaryKeyBuilder = new OTSPrimaryKey.Builder();
-        Arrays.stream(primaryValueNames).map(e -> exclusiveEndPrimaryKeyBuilder.primaryKey(e, PrimaryKeyValue.INF_MAX)).filter(e -> e.containsKey(queryPrimaryKeyName))
+        OTSPrimaryKey.Builder exclusiveBuilder = new OTSPrimaryKey.Builder();
+        Arrays.stream(primaryValueNames).map(e -> exclusiveBuilder.primaryKey(e, PrimaryKeyValue.INF_MAX)).filter(e -> e.containsKey(queryPrimaryKeyName))
                 .forEach(e -> e.primaryKey(queryPrimaryKeyName, PrimaryKeyValue.fromString(scopeKeyGen(scope, date))));
-        return new OTSPrimaryKeyBuilder().inclusiveStartPrimaryKey(inclusiveStartPrimaryKeyBuilder.build()).exclusiveEndPrimaryKey(exclusiveEndPrimaryKeyBuilder.build());
+        return new OTSPrimaryKeyBuilder().inclusiveStartPrimaryKey(inclusiveBuilder.build()).exclusiveEndPrimaryKey(exclusiveBuilder.build());
     }
 
     /**
@@ -172,7 +174,7 @@ public class DataCheckRunner {
     public static class Builder {
         private String rulePath;
         private String shopId;
-//        private String date;
+        //        private String date;
         private String queryPrimaryKeyName;
 
         public DataCheckRunner build() {

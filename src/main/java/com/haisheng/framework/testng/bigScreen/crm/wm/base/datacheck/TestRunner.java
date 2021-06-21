@@ -6,8 +6,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.datacheck.data.RuleDataSource;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.sql.Sql;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.container.ExcelContainer;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.container.IContainer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.entity.Factory;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.entity.IEntity;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.enumerator.EnumContainer;
@@ -17,7 +15,6 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.table.ITable;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.bean.DetailMessage;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.bean.PvUvInfo;
 import com.haisheng.framework.util.DateTimeUtil;
-import org.jooq.SQL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeClass;
@@ -96,7 +93,7 @@ public class TestRunner {
         ITable[] fieldRuleTables = dataCheckRunner.getFieldRuleTables();
         //所有表的结果
         List<DetailMessage> detailMessages = new ArrayList<>();
-        dataCheckRunner.getTableStoreList().forEach(otsTableData -> {
+        dataCheckRunner.getOtsTableDataList().forEach(otsTableData -> {
             otsTableData.initOTSRowData();
             List<OTSRowData> otsRowDataList = otsTableData.getRowDataList();
             Preconditions.checkNotNull(otsRowDataList);
