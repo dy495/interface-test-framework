@@ -2,6 +2,7 @@ package com.haisheng.framework.testng.bigScreen.yuntong.lxq;
 
 import com.aliyun.openservices.shade.org.apache.commons.codec.binary.Base64;
 import com.haisheng.framework.util.DateTimeUtil;
+import com.haisheng.framework.util.ImageUtil;
 import org.testng.annotations.DataProvider;
 
 import java.io.FileInputStream;
@@ -12,7 +13,8 @@ public class YunTongInfo {
     DateTimeUtil dt = new DateTimeUtil();
     public final String donephone = "";//成交客户手机号
     public final String phone = "1380110"+Integer.toString((int)((Math.random()*9+1)*1000));//手机号
-    public final Long oneshopid = 1L;
+    public final Long oneshopid = 56721L;
+    public final String stringone = "a";//字符串长度1
     public final String stringten = "a2！啊A"+Integer.toString((int)((Math.random()*9+1)*10000));//字符串长度10
     public final String stringsix = "A"+ Integer.toString((int)((Math.random()*9+1)*10000));//随机字符串长度6
     public final String stringfifty = "自动化创建--ZDHZDH"+Integer.toString((int)(Math.random()*10))+"1234567890ABCDeFGHIJ啊啊啊～！@#¥%，：67890";//随机字符串长度50
@@ -44,6 +46,15 @@ public class YunTongInfo {
         }
         return new String(Base64.encodeBase64(data));
     }
+
+    public String getLogo() {
+        String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
+        String bbase64 = new ImageUtil().getImageBinary(filePath);
+//        String logo = jc.pcFileUploadNew(new ImageUtil().getImageBinary(filePath)).getString("pic_path"); //要改
+        String logo = ""; //要改
+        return logo;
+    }
+
 
 
 
