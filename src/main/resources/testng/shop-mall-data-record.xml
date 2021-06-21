@@ -8,7 +8,12 @@
 
     <test name="daily-rgn" preserve-order="true">
         <classes>
-
+            <class name="com.haisheng.framework.testng.bigScreen.crm.wm.base.datacheck.TestRunner">
+                <methods>
+                    <include name="realTimeData"/>
+                    <exclude name="historyData"/>
+                </methods>
+            </class>
         </classes>
     </test>
 </suite>

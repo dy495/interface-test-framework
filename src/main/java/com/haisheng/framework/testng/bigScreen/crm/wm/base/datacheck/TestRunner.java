@@ -30,7 +30,7 @@ public class TestRunner {
     private static final Logger logger = LoggerFactory.getLogger(TestRunner.class);
     private PvUvInfo pvUvInfo;
 
-    @Test
+//    @Test
     public void methodA() {
         IEntity<?, ?>[] entity = new Factory.Builder().build().createCsv("csv/a316052c-dcab-4abb-ac36-dba1d468e0c4.csv");
         IRow[] rows = Arrays.stream(entity).map(IEntity::getCurrent).toArray(IRow[]::new);
