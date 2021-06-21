@@ -7,6 +7,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccoun
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.customermanage.*;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.util.BusinessUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -16,7 +17,6 @@ import org.testng.annotations.*;
 import java.lang.reflect.Method;
 
 /**
-
  * @author lxq
  * @date 2021/1/29 11:17
  */
@@ -76,15 +76,11 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
-
-
-            EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_ZT;
+            EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_ZH;
             EnumAccount ALL_AUTHORITY = EnumAccount.ALL_YT_DAILY;
             VisitorProxy visitor = new VisitorProxy(PRODUCE);
-            UserUtil user = new UserUtil(visitor);
-
-
-            user.loginPc(ALL_AUTHORITY);
+            BusinessUtil businessUtil = new BusinessUtil(visitor);
+            businessUtil.loginPc(ALL_AUTHORITY);
 
             int bef = PreSaleCustomerPageScene.builder().page(1).size(1).build().invoke(visitor).getInteger("total");
             Long shop_id = info.oneshopid;
