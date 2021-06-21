@@ -126,10 +126,5 @@ public class TestRunner {
         pvUvInfo.setShopId("33467");
         pvUvInfo.setDetailMessages(detailMessages);
     }
-
-    @Test
-    public void testA() {
-        System.err.println("ssssss");
-    }
 }
 
