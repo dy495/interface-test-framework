@@ -61,7 +61,7 @@ public class TestRunner {
         List<DetailMessage> detailMessageList = pvUvInfo.getDetailMessages();
         detailMessageList.forEach(e -> {
             if (e.getName().contains("实时")) {
-                String date = DateTimeUtil.addDayFormat(new Date(), -1, "yyyy-MM-dd HH:mm:ss");
+                String date = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
                 Sql sql = Sql.instance().insert()
                         .from("t_shop_realtime_data")
                         .field("shop_id", "source", "map_value", "list_value", "data", "environment")
@@ -89,9 +89,9 @@ public class TestRunner {
     }
 
     @BeforeClass
-    public void methodB() {
+    public void initData() {
         pvUvInfo = new PvUvInfo();
-        String rulePath = "D:\\JetBrains\\IntelliJ IDEAProjects\\interface-test-framework\\src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\crm\\wm\\base\\datacheck\\rule\\规则表.xlsx";
+        String rulePath = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/wm/base/datacheck/rule/规则表.xlsx";
         DataCheckRunner dataCheckRunner = new DataCheckRunner.Builder().rulePath(rulePath).queryPrimaryKeyName("scope_date").shopId("33467").build();
         ITable[] fieldRuleTables = dataCheckRunner.getFieldRuleTables();
         //所有表的结果
@@ -129,50 +129,5 @@ public class TestRunner {
         pvUvInfo.setShopId("33467");
         pvUvInfo.setDetailMessages(detailMessages);
     }
-
-    //比较算法
-    @Test
-    public void methodC() {
-        IEntity<?, ?>[] entity = new Factory.Builder().build().createCsv("csv/a316052c-dcab-4abb-ac36-dba1d468e0c4.csv");
-        IRow[] rows = Arrays.stream(entity).map(IEntity::getCurrent).toArray(IRow[]::new);
-        List<OTSRowData> dataStructureList = new LinkedList<>();
-        Arrays.stream(rows).forEach(iRow -> dataStructureList.addAll(JSONArray.parseArray(iRow.getField("region").getValue())
-                .stream().map(e -> (JSONObject) e).map(e -> putField(e, iRow, "user_id", "start_time"))
-                .map(e -> JSONObject.toJavaObject(e, OTSRowData.class)).collect(Collectors.toList())));
-        IContainer container = new ExcelContainer.Builder().path("src/main/java/com/haisheng/framework/testng/bigScreen/crm/wm/base/datacheck/rule/规则表.xlsx").build();
-        container.init();
-        ITable containerTable = container.getTable(Constants.SHEET_TITLE_CONTAINER);
-        containerTable.load();
-        ITable dataSourceTable = container.getTable(Constants.SHEET_TITLE_DATA_SOURCE);
-        dataSourceTable.load();
-        IRow[] dataSourceTableRows = dataSourceTable.getRows();
-        Arrays.stream(dataSourceTableRows).forEach(row -> {
-            String fieldRuleTableName = Constants.SHEET_TITLE_COLUMN + row.getField(Constants.DATA_SOURCE_COLUMN_NAME).getValue();
-            logger.info("表名:{}", fieldRuleTableName);
-            ITable fieldRuleTable = container.getTable(fieldRuleTableName);
-            fieldRuleTable.load();
-            IRow[] fieldRuleRows = fieldRuleTable.getRows();
-            Map<String, OTSRowData> map = new LinkedHashMap<>();
-            String[] regionIds = RuleDataSource.parse(getRowByField(fieldRuleRows, "region_id").getField(Constants.RULE_COLUMN_RANGE).getValue());
-            logger.info("regionIds:{}", Arrays.toString(regionIds));
-            String status = getRowByField(fieldRuleRows, "status").getField(Constants.RULE_COLUMN_RANGE).getValue();
-            logger.info("status:{}", status);
-            String isNull = getRowByField(fieldRuleRows, "user_id").getField(Constants.RULE_COLUMN_IS_NULL).getValue();
-            logger.info("isNull:{}", isNull);
-            String isReception = getRowByField(fieldRuleRows, "user_id").getField(Constants.RULE_COLUMN_IS_RECEPTION).getValue();
-            logger.info("isReception:{}", isReception);
-            List<OTSRowData> list = dataStructureList.stream().filter(e -> e.getStatus().equals(status))
-                    .filter(e -> Arrays.asList(regionIds).contains(e.getRegionId())).collect(Collectors.toCollection(LinkedList::new));
-            list = isNull.equals("false") ? list.stream().filter(e -> !e.getUserId().equals("N")).collect(Collectors.toCollection(LinkedList::new)) : list;
-            if (isReception.equals("false")) {
-                list.forEach(e -> map.put(e.getUserId(), e));
-            }
-            System.err.println("去重:" + map.values().size());
-            System.err.println("不去重" + list.size());
-            logger.info("--------------------{}跑完---------------------------", fieldRuleTableName);
-        });
-
-    }
-
 }
 
