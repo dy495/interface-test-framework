@@ -15,7 +15,7 @@ import org.springframework.util.StringUtils;
  * @date 2021/1/20 13:36
  */
 public class VisitorProxy extends TestCaseCommon {
-    private final EnumTestProduce product;
+    private EnumTestProduce product;
 
     /**
      * 构造函数，私有
@@ -121,5 +121,10 @@ public class VisitorProxy extends TestCaseCommon {
      */
     public Boolean isDaily() {
         return product.getIsDaily();
+    }
+
+
+    public void setProduct(EnumTestProduce product) {
+        this.product = product;
     }
 }

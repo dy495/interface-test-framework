@@ -19,6 +19,6 @@ public class LoginApp extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/login-m-app";
+        return "/account-platform/login-m-app";
     }
 }

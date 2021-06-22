@@ -54,8 +54,8 @@ import java.util.stream.Collectors;
  * @date 2021/1/29 11:17
  */
 public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY;
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.ALL_AUTHORITY_DAILY;
+    private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_HT;
+    private static final EnumAccount ALL_AUTHORITY = EnumAccount.ALL_YT_DAILY;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public BusinessUtil util = new BusinessUtil(visitor);
 
@@ -89,7 +89,8 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-//        user.loginPc(ALL_AUTHORITY);
+        visitor.setProduct(EnumTestProduce.YT_DAILY_ZH);
+        util.loginApp(ALL_AUTHORITY);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
@@ -99,6 +100,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     public void department_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            visitor.setProduct(EnumTestProduce.YT_DAILY_HT);
             Integer dataCycleType = 0;
             String startDate = DateTimeUtil.addDayFormat(new Date(), -1);
             String endDate = DateTimeUtil.getFormat(new Date());

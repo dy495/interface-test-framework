@@ -308,12 +308,14 @@ public class TestCaseCommon {
         initHttpConfig();
         String queryUrl = IpPort + path;
         config.url(queryUrl).json(json);
+        logger.info("ip: {}", IpPort);
         logger.info("{} json param: {}", path, json);
         long start = System.currentTimeMillis();
         try {
             response = HttpClientUtil.post(config);
             logger.info("response: {}", response);
             checkCode(response, StatusCode.SUCCESS, path);
+            authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
         } catch (Exception e) {
             e.printStackTrace();
             appendFailReason(e.toString());
@@ -327,6 +329,7 @@ public class TestCaseCommon {
         initHttpConfig();
         String queryUrl = IpPort + path;
         config.url(queryUrl).json(JSONObject.toJSONString(object));
+        logger.info("ip: {}", IpPort);
         logger.info("{} json param: {}", path, JSONObject.toJSONString(object));
         long start = System.currentTimeMillis();
         try {
@@ -344,6 +347,7 @@ public class TestCaseCommon {
         initHttpConfig();
         String queryUrl = IpPort + path;
         config.url(queryUrl).json(json);
+        logger.info("ip: {}", IpPort);
         logger.info("{} json param: {}", path, json);
         long start = System.currentTimeMillis();
 
