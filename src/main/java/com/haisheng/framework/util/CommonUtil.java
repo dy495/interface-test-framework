@@ -170,8 +170,14 @@ public class CommonUtil {
      * @param scale       保留小数点后位数
      * @return 取整结果
      */
-    public static int getIntRatio(int numerator, int denominator, int scale) {
-        return new BigDecimal(numerator / denominator).setScale(scale, BigDecimal.ROUND_HALF_UP).intValue();
+    public static int getIntRatio(int numerator, int denominator) {
+        double c = (double) numerator / denominator;
+        return (int) Math.ceil(c);
+    }
+
+    public static void main(String[] args) {
+        int s = getIntRatio(17, 5);
+        System.err.println(s);
     }
 
     /**

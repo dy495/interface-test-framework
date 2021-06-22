@@ -7,7 +7,6 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.datacheck.data.RuleDataSource;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.sql.Sql;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.entity.Factory;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.entity.IEntity;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.enumerator.EnumContainer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.row.IRow;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.datacheck.data.OTSRowData;
@@ -26,22 +25,6 @@ import java.util.stream.Collectors;
 public class TestRunner {
     private static final Logger logger = LoggerFactory.getLogger(TestRunner.class);
     private PvUvInfo pvUvInfo;
-
-    //    @Test
-    public void methodA() {
-        IEntity<?, ?>[] entity = new Factory.Builder().build().createCsv("csv/a316052c-dcab-4abb-ac36-dba1d468e0c4.csv");
-        IRow[] rows = Arrays.stream(entity).map(IEntity::getCurrent).toArray(IRow[]::new);
-        List<OTSRowData> list = new LinkedList<>();
-        Map<String, OTSRowData> map = new HashMap<>();
-        Arrays.stream(rows).forEach(iRow -> list.addAll(JSONArray.parseArray(iRow.getField("region").getValue())
-                .stream().map(e -> (JSONObject) e).map(e -> putField(e, iRow, "user_id", "start_time"))
-                .map(e -> JSONObject.toJavaObject(e, OTSRowData.class)).collect(Collectors.toList())));
-        long count = list.stream().filter(e -> (e.getRegionId().equals("33468") || e.getRegionId().equals("33489"))
-                && e.getStatus().equals("ENTER") && !e.getUserId().equals("N"))
-                .map(e -> map.put(e.getUserId(), e)).count();
-        System.err.println(map.values().size());
-        System.err.println(count);
-    }
 
     public IRow getRowByField(IRow[] rows, String field) {
         return Arrays.stream(rows).filter(e -> e.getField(Constants.RULE_COLUMN_FIELD).getValue().equals(field)).findFirst().orElse(null);

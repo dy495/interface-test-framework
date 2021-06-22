@@ -89,7 +89,7 @@ public class AppPersonalPageScene extends BaseScene {
         JSONObject object = new JSONObject();
         object.put("size", size);
         object.put("last_value", lastValue);
-        object.put("salesId", salesId);
+        object.put("sales_id", salesId);
         object.put("data_cycle_type", dataCycleType);
         object.put("start_date", startDate);
         object.put("end_date", endDate);

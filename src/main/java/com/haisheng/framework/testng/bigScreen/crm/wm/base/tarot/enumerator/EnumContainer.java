@@ -18,6 +18,10 @@ public enum EnumContainer {
             .jdbcUrl("jdbc:mysql://rm-2zeg4an1kr1437xu6no.mysql.rds.aliyuncs.com/onepiece")
             .password("qa_wr1234").username("qa_wr").build()),
 
+    MALL_ONLINE(new DbContainer.Builder().driverName("com.mysql.cj.jdbc.Driver")
+            .jdbcUrl("jdbc:mysql://retail-online-polardb.mysql.polardb.rds.aliyuncs.com/business-analysis")
+            .password("winsense@mall123").username("mall_read_only").build()),
+
     EXCEL(new ExcelContainer.Builder().buildContainer()),
     ;
 

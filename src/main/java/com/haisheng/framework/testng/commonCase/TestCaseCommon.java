@@ -335,14 +335,10 @@ public class TestCaseCommon {
 
     public String httpGet(String path, Map<String, Object> paramMap, String IpPort) throws Exception {
         initHttpConfig();
-        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         String queryUrl = IpPort + path + "?";
-        for (Map.Entry<String, Object> entry : paramMap.entrySet()) {
-            String key = entry.getKey();
-            Object value = paramMap.get(key);
-            stringBuilder.append("&").append(key).append("=").append(value);
-        }
-        String param = stringBuilder.toString().replaceFirst("&", "");
+        paramMap.forEach((key, value) -> sb.append("&").append(key).append("=").append(value));
+        String param = sb.toString().replaceFirst("&", "");
         config.url(queryUrl + param);
         logger.info("{} json param: {}", path.replace("?", ""), param);
         long start = System.currentTimeMillis();
@@ -380,8 +376,7 @@ public class TestCaseCommon {
     public String httpRequest(String dns, String path, String requestBody, boolean checkCode, boolean hasToken) {
         initHttpConfig();
         String url = dns + path;
-        logger.info("dns: {}", dns);
-        logger.info("path: {}", path);
+        logger.info("url: {}", url);
         logger.info("body: {}", requestBody);
         config.url(url).json(requestBody);
         long start = System.currentTimeMillis();
