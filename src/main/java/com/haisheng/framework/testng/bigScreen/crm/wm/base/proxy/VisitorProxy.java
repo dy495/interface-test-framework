@@ -124,6 +124,11 @@ public class VisitorProxy extends TestCaseCommon {
     }
 
 
+    /**
+     * 更换域名
+     *
+     * @param product 新域名
+     */
     public void setProduct(EnumTestProduce product) {
         this.product = product;
     }

@@ -35,7 +35,8 @@ public class BusinessUtil extends BasicUtil {
      * @param enumAccount 账号
      */
     public void loginPc(@NotNull EnumAccount enumAccount) {
-        LoginPc.builder().phone(enumAccount.getPhone()).verificationCode(enumAccount.getPassword()).build().invoke(visitor);
+        IScene scene = LoginPc.builder().phone(enumAccount.getPhone()).verificationCode(enumAccount.getPassword()).build();
+        visitor.login(scene);
     }
 
     /**
@@ -44,7 +45,8 @@ public class BusinessUtil extends BasicUtil {
      * @param enumAccount 账号
      */
     public void loginApp(@NotNull EnumAccount enumAccount) {
-        LoginApp.builder().phone(enumAccount.getPhone()).verificationCode(enumAccount.getPassword()).build().invoke(visitor);
+        IScene scene = LoginApp.builder().phone(enumAccount.getPhone()).verificationCode(enumAccount.getPassword()).build();
+        visitor.login(scene);
     }
 
     /**

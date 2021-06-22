@@ -315,7 +315,6 @@ public class TestCaseCommon {
             response = HttpClientUtil.post(config);
             logger.info("response: {}", response);
             checkCode(response, StatusCode.SUCCESS, path);
-            authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
         } catch (Exception e) {
             e.printStackTrace();
             appendFailReason(e.toString());
@@ -324,6 +323,11 @@ public class TestCaseCommon {
         caseResult.setResponse(response);
         return response;
     }
+
+
+
+
+
 
     public void httpPost(String path, JSONObject object, String IpPort) {
         initHttpConfig();
