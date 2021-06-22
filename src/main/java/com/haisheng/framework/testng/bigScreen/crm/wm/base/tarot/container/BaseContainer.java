@@ -3,7 +3,6 @@ package com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.container;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.property.BaseProperty;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.table.ITable;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.util.ContainerConstants;
-import com.haisheng.framework.util.StringUtil;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
@@ -53,7 +52,8 @@ public abstract class BaseContainer extends BaseProperty implements IContainer {
     public ITable[] findTables(String tableName) {
         List<ITable> temp = new LinkedList<>();
         if (!StringUtils.isEmpty(tableName)) {
-            temp.addAll(tables.entrySet().stream().filter(e -> e.getKey().contains(tableName)).map(Map.Entry::getValue).collect(Collectors.toList()));
+            temp.addAll(tables.entrySet().stream().filter(e -> e.getKey().contains(tableName))
+                    .map(Map.Entry::getValue).collect(Collectors.toCollection(LinkedList::new)));
         }
         final int size = temp.size();
         return temp.toArray(new ITable[size]);
@@ -61,7 +61,8 @@ public abstract class BaseContainer extends BaseProperty implements IContainer {
 
     @Override
     public ITable getTable(String tableName) {
-        return tables.entrySet().stream().filter(e -> e.getKey().equals(tableName)).map(Map.Entry::getValue).findFirst().orElse(null);
+        return tables.entrySet().stream().filter(e -> e.getKey().equals(tableName))
+                .map(Map.Entry::getValue).findFirst().orElse(null);
     }
 
     @Override

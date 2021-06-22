@@ -1,7 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.crm.wm.base.scene;
 
 import com.alibaba.fastjson.JSONObject;
-import com.aliyun.openservices.shade.org.apache.commons.lang3.StringUtils;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import lombok.Setter;
@@ -95,7 +94,7 @@ public abstract class BaseScene implements IScene {
      */
     @Override
     public JSONObject upload(@NotNull VisitorProxy visitor) {
-        Preconditions.checkArgument(!StringUtils.isEmpty(getBody().getString("filePath")), "文件路径为空");
+        Preconditions.checkNotNull(getBody().getString("filePath"), "文件路径为空");
         String filePath = getBody().getString("filePath");
         return visitor.upload(getPath(), filePath);
     }
@@ -124,6 +123,7 @@ public abstract class BaseScene implements IScene {
      * @return key的集合
      */
     public List<String> getKeyList() {
-        return getBody().entrySet().stream().filter(e -> e.getValue() != null).map(Map.Entry::getKey).collect(Collectors.toCollection(LinkedList::new));
+        return getBody().entrySet().stream().filter(e -> e.getValue() != null)
+                .map(Map.Entry::getKey).collect(Collectors.toCollection(LinkedList::new));
     }
 }

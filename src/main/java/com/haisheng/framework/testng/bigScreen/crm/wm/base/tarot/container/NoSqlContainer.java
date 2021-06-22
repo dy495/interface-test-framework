@@ -26,7 +26,7 @@ public abstract class NoSqlContainer extends BaseContainer {
         if (syncClient == null) {
             return false;
         }
-        logger.info("tableName is：{}", getPath());
+        logger.info("tableName is:{}", getPath());
         if (!StringUtils.isEmpty(getPath())) {
             ITable table = new OTSTable.Builder().path(getPath()).name(getPath()).syncClient(syncClient).buildTable();
             addTable(table);

@@ -35,6 +35,7 @@ public abstract class BaseRdbmsContainer extends BaseContainer {
                 ITable table = new DbTable.Builder().path(getPath()).statement(statement).build();
                 addTable(table);
             }
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
