@@ -47,6 +47,7 @@ public class OTSTableData implements Serializable {
     List<OTSRowData> rowDataList;
 
     /**
+     * 如果想要行数据需执行此方法
      * 将所有行数据插入OTSRowData
      */
     public void initOTSRowData() {
@@ -54,10 +55,12 @@ public class OTSTableData implements Serializable {
         Arrays.stream(rows).forEach(iRow -> {
             String region = iRow.getField("region").getValue();
             String userId = iRow.getField("user_id") == null ? "N" : iRow.getField("user_id").getValue();
+            String startTime = iRow.getField("start_time").getValue();
             JSONArray regions = JSONArray.parseArray(region);
             for (int i = 0; i < regions.size(); i++) {
                 JSONObject jsonObject = regions.getJSONObject(i);
                 jsonObject.put("user_id", userId);
+                jsonObject.put("start_time", startTime);
                 OTSRowData otsRowData = JSONObject.toJavaObject(jsonObject, OTSRowData.class);
                 list.add(otsRowData);
             }

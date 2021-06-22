@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.datacheck.data.OTSTableData;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.datacheck.data.RuleDataSource;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.sql.Sql;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.entity.Factory;
