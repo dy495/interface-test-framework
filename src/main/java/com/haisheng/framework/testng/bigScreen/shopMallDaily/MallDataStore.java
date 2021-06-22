@@ -1,10 +1,9 @@
-package com.haisheng.framework.testng.bigScreen.crm.wm.base.datacheck;
-
-import com.alibaba.fastjson.JSONArray;
+package com.haisheng.framework.testng.bigScreen.shopMallDaily;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.datacheck.data.OTSTableData;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.datacheck.Constants;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.datacheck.DataCheckRunner;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.datacheck.data.RuleDataSource;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.sql.Sql;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.entity.Factory;
@@ -23,8 +22,8 @@ import org.testng.annotations.Test;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class TestRunner {
-    private static final Logger logger = LoggerFactory.getLogger(TestRunner.class);
+public class MallDataStore {
+    private static final Logger logger = LoggerFactory.getLogger(MallDataStore.class);
     private PvUvInfo pvUvInfo;
 
     public IRow getRowByField(IRow[] rows, String field) {

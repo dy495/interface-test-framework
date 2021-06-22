@@ -8,10 +8,9 @@
 
     <test name="daily-rgn" preserve-order="true">
         <classes>
-            <class name="com.haisheng.framework.testng.bigScreen.crm.wm.base.datacheck.TestRunner">
+            <class name="com.haisheng.framework.testng.bigScreen.shopMallDaily.MallDataStore">
                 <methods>
                     <include name="realTimeData"/>
-                    <exclude name="historyData"/>
                 </methods>
             </class>
             <class name="com.haisheng.framework.testng.bigScreen.shopMallDaily.MallDataCenter"></class>
