@@ -101,20 +101,21 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             visitor.setProduct(EnumTestProduce.YT_DAILY_HT);
-            Integer dataCycleType = 0;
-            String startDate = DateTimeUtil.addDayFormat(new Date(), -1);
-            String endDate = DateTimeUtil.getFormat(new Date());
-            IScene scene = AppOverviewScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
-            AppOverviewBean appOverviewBean = util.toJavaObject(scene, AppOverviewBean.class);
-            int count = appOverviewBean.getCount();
-            int totalDuration = appOverviewBean.getTotalDuration();
-            int averageDuration = appOverviewBean.getAverageDuration();
-            int mathResult = CommonUtil.getIntRatio(totalDuration, count, 0);
-            Preconditions.checkArgument(averageDuration == mathResult, "app平均接待时长为：" + averageDuration + "app总时长除以接待次数：" + mathResult);
+            AppOverviewScene.builder().dataCycleType(300).build().invoke(visitor);
+//            Integer dataCycleType = 0;
+//            String startDate = DateTimeUtil.addDayFormat(new Date(), -1);
+//            String endDate = DateTimeUtil.getFormat(new Date());
+//            IScene scene = AppOverviewScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
+//            AppOverviewBean appOverviewBean = util.toJavaObject(scene, AppOverviewBean.class);
+//            int count = appOverviewBean.getCount();
+//            int totalDuration = appOverviewBean.getTotalDuration();
+//            int averageDuration = appOverviewBean.getAverageDuration();
+//            int mathResult = CommonUtil.getIntRatio(totalDuration, count, 0);
+//            Preconditions.checkArgument(averageDuration == mathResult, "app平均接待时长为：" + averageDuration + "app总时长除以接待次数：" + mathResult);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("app平均接待时长=APP总接待时长/接待次数");
+//            saveData("app平均接待时长=APP总接待时长/接待次数");
         }
     }
 

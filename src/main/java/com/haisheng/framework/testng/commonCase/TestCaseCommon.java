@@ -304,66 +304,6 @@ public class TestCaseCommon {
         }
     }
 
-    public String httpPostWithCheckCode(String path, String json, String IpPort) {
-        initHttpConfig();
-        String queryUrl = IpPort + path;
-        config.url(queryUrl).json(json);
-        logger.info("ip: {}", IpPort);
-        logger.info("{} json param: {}", path, json);
-        long start = System.currentTimeMillis();
-        try {
-            response = HttpClientUtil.post(config);
-            logger.info("response: {}", response);
-            checkCode(response, StatusCode.SUCCESS, path);
-        } catch (Exception e) {
-            e.printStackTrace();
-            appendFailReason(e.toString());
-        }
-        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
-        caseResult.setResponse(response);
-        return response;
-    }
-
-
-
-
-
-
-    public void httpPost(String path, JSONObject object, String IpPort) {
-        initHttpConfig();
-        String queryUrl = IpPort + path;
-        config.url(queryUrl).json(JSONObject.toJSONString(object));
-        logger.info("ip: {}", IpPort);
-        logger.info("{} json param: {}", path, JSONObject.toJSONString(object));
-        long start = System.currentTimeMillis();
-        try {
-            response = HttpClientUtil.post(config);
-            checkCode(response, StatusCode.SUCCESS, path);
-            authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
-            logger.info("authorization:" + authorization);
-        } catch (Exception e) {
-            appendFailReason(e.toString());
-        }
-        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
-    }
-
-    public String httpPost(String path, String json, String IpPort) throws Exception {
-        initHttpConfig();
-        String queryUrl = IpPort + path;
-        config.url(queryUrl).json(json);
-        logger.info("ip: {}", IpPort);
-        logger.info("{} json param: {}", path, json);
-        long start = System.currentTimeMillis();
-
-        response = HttpClientUtil.post(config);
-
-        logger.info("response: {}", response);
-
-        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
-        caseResult.setResponse(response);
-        return response;
-    }
-
     public String uploadFile(String filePath, String path, String IpPort) {
         String url = IpPort + path;
         CloseableHttpClient httpClient = HttpClients.createDefault();
@@ -427,6 +367,53 @@ public class TestCaseCommon {
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
         caseResult.setResponse(response);
         return response;
+    }
+
+    /**
+     * @param dns         域名
+     * @param path        地址
+     * @param requestBody 请求体
+     * @param checkCode   是否校验code
+     * @param hasToken    是否获取token
+     * @return response
+     */
+    public String httpRequest(String dns, String path, String requestBody, boolean checkCode, boolean hasToken) {
+        initHttpConfig();
+        String url = dns + path;
+        logger.info("dns: {}", dns);
+        logger.info("path: {}", path);
+        logger.info("body: {}", requestBody);
+        config.url(url).json(requestBody);
+        long start = System.currentTimeMillis();
+        try {
+            response = HttpClientUtil.post(config);
+            logger.info("response: {}", response);
+            if (checkCode) {
+                checkCode(response, StatusCode.SUCCESS, path);
+            }
+            if (hasToken) {
+                authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
+                logger.info("authorization:" + authorization);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            appendFailReason(e.toString());
+        }
+        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
+        caseResult.setResponse(response);
+        return response;
+    }
+
+    public String httpPostWithCheckCode(String path, String json, String IpPort) {
+        return httpRequest(IpPort, path, json, true, false);
+    }
+
+    public void httpPost(String path, JSONObject object, String IpPort) {
+        httpRequest(IpPort, path, JSONObject.toJSONString(object), true, true);
+    }
+
+    public String httpPost(String path, String json, String IpPort) throws Exception {
+        return httpRequest(IpPort, path, json, false, false);
     }
 
     public void initHttpConfig() {
