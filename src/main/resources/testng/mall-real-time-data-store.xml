@@ -13,6 +13,7 @@
                     <include name="realTimeData"/>
                 </methods>
             </class>
+            <class name="com.haisheng.framework.testng.bigScreen.shopMallDaily.MallEveryHourDataStore"/>
             <class name="com.haisheng.framework.testng.bigScreen.shopMallDaily.MallDataCenter"></class>
         </classes>
     </test>
