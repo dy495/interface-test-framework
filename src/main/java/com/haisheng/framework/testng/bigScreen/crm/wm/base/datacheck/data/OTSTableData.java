@@ -50,7 +50,7 @@ public class OTSTableData implements Serializable {
      * 如果想要行数据需执行此方法
      * 将所有行数据插入OTSRowData
      */
-    public void initOTSRowData() {
+    public OTSTableData initOTSRowData() {
         List<OTSRowData> list = new LinkedList<>();
         Arrays.stream(rows).forEach(iRow -> {
             String region = iRow.getField("region").getValue();
@@ -66,5 +66,6 @@ public class OTSTableData implements Serializable {
             }
         });
         rowDataList = list;
+        return this;
     }
 }

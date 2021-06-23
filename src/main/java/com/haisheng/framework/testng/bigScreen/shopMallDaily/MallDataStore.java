@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.datacheck.Constants;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.datacheck.DataCheckRunner;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.datacheck.data.OTSTableData;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.datacheck.data.RuleDataSource;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.sql.Sql;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.entity.Factory;
@@ -43,7 +44,7 @@ public class MallDataStore {
             if (e.getName().contains("实时")) {
                 String date = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
                 Sql sql = Sql.instance().insert()
-                        .from("t_shop_realtime_data")
+                        .from("t_mall_realtime_data")
                         .field("shop_id", "source", "map_value", "list_value", "data", "environment")
                         .setValue("33467", e.getName(), e.getNoReception(), e.getHasReception(), date, "online")
                         .end();
@@ -59,7 +60,7 @@ public class MallDataStore {
             if (!e.getName().contains("实时")) {
                 String date = DateTimeUtil.addDayFormat(new Date(), -1, "yyyy-MM-dd");
                 Sql sql = Sql.instance().insert()
-                        .from("t_shop_history_data")
+                        .from("t_mall_history_data")
                         .field("shop_id", "source", "map_value", "list_value", "data", "environment")
                         .setValue("33467", e.getName(), e.getNoReception(), e.getHasReception(), date, "online")
                         .end();
@@ -76,8 +77,7 @@ public class MallDataStore {
         ITable[] fieldRuleTables = dataCheckRunner.getFieldRuleTables();
         //所有表的结果
         List<DetailMessage> detailMessages = new ArrayList<>();
-        dataCheckRunner.getOtsTableDataList().forEach(otsTableData -> {
-            otsTableData.initOTSRowData();
+        dataCheckRunner.getOtsTableDataList().stream().map(OTSTableData::initOTSRowData).forEach(otsTableData -> {
             List<OTSRowData> otsRowDataList = otsTableData.getRowDataList();
             Preconditions.checkNotNull(otsRowDataList);
             Arrays.stream(fieldRuleTables).filter(iTable -> iTable.getKey().contains(otsTableData.getName())).forEach(iTable -> {
