@@ -35,9 +35,9 @@ public enum EnumTestProduce {
     YT_DAILY("汽车-运通 日常 ", "http://inspect.store.winsenseos.com/", "http://inspect.store.winsenseos.com", null, "YT", null, true),
 
 
-    YT_DAILY_ZT("汽车-运通 日常 ", "http://dev.car.yuntong.winsenseos.cn/", "http://dev.car.yuntong.winsenseos.cn", null, "YT", null, true),
-    YT_DAILY_HT("汽车-运通 日常 ", "http://dev.control.yuntong.winsenseos.cn/", "http://dev.control.yuntong.winsenseos.cn", null, "YT", null, true),
-    YT_DAILY_ZH("汽车-运通 日常 ", "http://dev.sso.yuntong.winsenseos.cn/", "http://dev.sso.yuntong.winsenseos.cn", null, "YT", null, true),
+    YT_DAILY_ZT("汽车-运通 日常 ", "http://dev.car.yuntong.winsenseos.cn/", "http://dev.car.yuntong.winsenseos.cn", "-1", "YT", null, true),
+    YT_DAILY_HT("汽车-运通 日常 ", "http://dev.control.yuntong.winsenseos.cn/", "http://dev.control.yuntong.winsenseos.cn", "-1", "YT", null, true),
+    YT_DAILY_ZH("汽车-运通 日常 ", "http://dev.sso.yuntong.winsenseos.cn/", "http://dev.sso.yuntong.winsenseos.cn", "-1", "YT", null, true),
     ;
 
     EnumTestProduce(String desc, String referer, String address, String shopId, String abbreviation, String roleId, Boolean isDaily) {

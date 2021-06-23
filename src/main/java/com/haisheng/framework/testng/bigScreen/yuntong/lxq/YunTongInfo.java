@@ -11,9 +11,9 @@ import java.io.InputStream;
 
 public class YunTongInfo {
     DateTimeUtil dt = new DateTimeUtil();
-    public final String donephone = "";//成交客户手机号
+//    public final String donephone = "";//成交客户手机号
     public final String phone = "1380110"+Integer.toString((int)((Math.random()*9+1)*1000));//手机号
-    public final Long oneshopid = 56721L;
+    public final Long oneshopid = 56721L; //自动化门店
     public final String stringone = "a";//字符串长度1
     public final String stringten = "a2！啊A"+Integer.toString((int)((Math.random()*9+1)*10000));//字符串长度10
     public final String stringsix = "A"+ Integer.toString((int)((Math.random()*9+1)*10000));//随机字符串长度6
