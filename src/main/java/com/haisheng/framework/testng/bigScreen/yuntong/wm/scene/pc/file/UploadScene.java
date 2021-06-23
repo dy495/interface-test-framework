@@ -1,6 +1,5 @@
 package com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.file;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
@@ -46,7 +45,7 @@ public class UploadScene extends BaseScene {
     protected JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("pic", pic);
-        object.put("permanent_pic_type", permanentPicType);
+        object.put("permanent_pic_type", 7);
         object.put("ratio", ratio);
         object.put("ratio_str", ratioStr);
         return object;
@@ -54,6 +53,6 @@ public class UploadScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/file/upload";
+        return "/car-platform/pc/file/upload";
     }
 }

@@ -1,6 +1,10 @@
 package com.haisheng.framework.testng.bigScreen.yuntong.lxq;
 
 import com.aliyun.openservices.shade.org.apache.commons.codec.binary.Base64;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.file.UploadScene;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
 import org.testng.annotations.DataProvider;
@@ -10,6 +14,9 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class YunTongInfo {
+    EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_ZT;
+    EnumAccount ALL_AUTHORITY = EnumAccount.ALL_YT_DAILY;
+    VisitorProxy visitor = new VisitorProxy(PRODUCE);
     DateTimeUtil dt = new DateTimeUtil();
 //    public final String donephone = "";//成交客户手机号
     public final String phone = "1380110"+Integer.toString((int)((Math.random()*9+1)*1000));//手机号
@@ -22,6 +29,8 @@ public class YunTongInfo {
     public final String string20 = "ZdH啊！_*"+System.currentTimeMillis(); //20位字符串
     public final String string200 = "自动化自动化自动化自动化自动化自动化自动化AAAAAAA12345AAAAAA次sssssss!@#$%^&*自动化自动化自动化自动化自动化自动化自动化AAAAAAA12345AAAAAA次sssssss!@#$%^&*自动化自动化自动化自动化自动化自动化自动化AAAAAAA12345AAAAAA次sssssss!@#$%^&*自动化自动化自动化自动化自动化自动化自动化AAAAAAA12345AA";
 
+
+    public final Long BrandID = 1526L;
 
     public  long toMinute(String time){
         long mintue = 0L;
@@ -49,9 +58,9 @@ public class YunTongInfo {
 
     public String getLogo() {
         String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
-        String bbase64 = new ImageUtil().getImageBinary(filePath);
-//        String logo = jc.pcFileUploadNew(new ImageUtil().getImageBinary(filePath)).getString("pic_path"); //要改
-        String logo = ""; //要改
+
+        String logo = UploadScene.builder().pic(new ImageUtil().getImageBinary(filePath)).build().invoke(visitor).getString("pic_path");
+
         return logo;
     }
 

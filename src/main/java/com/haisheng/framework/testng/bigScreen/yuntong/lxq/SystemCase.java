@@ -1,5 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.yuntong.lxq;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumChecklistAppId;
@@ -7,6 +9,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumChec
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.brand.*;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.customermanage.*;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.util.BusinessUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -274,126 +277,149 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
 
     //品牌--正常
-//    @Test
-//    public void addBrand_name1() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//
-//            int code = AddScene.builder().name(info.stringone).logoPath(info.getLogo()).build().invoke(visitor,false).getInteger("code");
-//
-//            Preconditions.checkArgument(code == 1000, "状态码期待1000，实际" + code);
-//
-//            //删除品牌
-//            Long id = PageScene.builder().page(1).size(10).build().invoke(visitor).JSONArray("list").getJSONObject(0).getLong("id");
-//            DeleteScene.builder().id(id).build().invoke(visitor);
-//
-//        } catch (AssertionError e) {
-//            appendFailReason(e.toString());
-//        } catch (Exception e) {
-//            appendFailReason(e.toString());
-//        } finally {
-////            saveData("PC【品牌管理】，创建品牌，名称1个字");
-//        }
-//
-//    }
-//
-//    @Test
-//    public void addBrand_name10() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//
-//            int code = jc.addBrandNotChk(info.stringten, info.getLogo()).getInteger("code");
-//            Preconditions.checkArgument(code == 1000, "状态码期待1000，实际" + code);
-//
-//            //删除品牌
-//            Long id = jc.brandPage(1, 10, "", "").getJSONArray("list").getJSONObject(0).getLong("id");
-//            jc.delBrand(id);
-//
-//        } catch (AssertionError e) {
-//            appendFailReason(e.toString());
-//        } catch (Exception e) {
-//            appendFailReason(e.toString());
-//        } finally {
-//            saveData("PC【品牌管理】，创建品牌，名称10个字");
-//        }
-//
-//    }
-//
-//    @Test
-//    public void editBrand_name() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            //创建一个品牌
-//            String name1 = info.stringsix;
-//            String name2 = info.stringsix + "aaa";
-//            jc.addBrand(name1, info.getLogo());
-//            //获取创建的品牌id
-//            Long id = jc.brandPage(1, 10, "", "").getJSONArray("list").getJSONObject(0).getLong("id");
-//            //修改这个品牌的名字
-//            jc.editBrand(id, name2, info.getLogo());
-//            //根据id查询，名字为name2
-//            JSONArray arr = jc.brandPage(1, 100, "", "").getJSONArray("list");
-//            for (int i = 0; i < arr.size(); i++) {
-//                JSONObject obj = arr.getJSONObject(i);
-//                if (obj.getLong("id") == id) {
-//                    Preconditions.checkArgument(obj.getString("name").equals(name2), "修改前名字是" + name1 + "，期望修改为" + name2 + "，实际修改后为" + obj.getString("name"));
-//                }
-//            }
-//
-//            //删除品牌
-//            jc.delBrand(id);
-//
-//        } catch (AssertionError e) {
-//            appendFailReason(e.toString());
-//        } catch (Exception e) {
-//            appendFailReason(e.toString());
-//        } finally {
-//            saveData("PC【品牌管理】，创建品牌后进行修改");
-//        }
-//
-//    }
-//
-//    //品牌--异常
-//    @Test
-//    public void addBrand_nameerr() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            String name = "12345aA啊！@1";
-//            int code = jc.addBrandNotChk(name, info.getLogo()).getInteger("code");
-//            Preconditions.checkArgument(code == 1001, "状态码期待1001，实际" + code);
-//
-//        } catch (AssertionError e) {
-//            appendFailReason(e.toString());
-//        } catch (Exception e) {
-//            appendFailReason(e.toString());
-//        } finally {
-//            saveData("PC【品牌管理】，创建品牌，名称11个字");
-//        }
-//
-//    }
-//
-//    //品牌车系--正常
-//
-//    @Test(dataProvider = "CAR_STYLE")
-//    public void addCarStyle(String manufacturer, String name, String online_time) {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//
-//            int code = jc.addCarStyleNotChk(info.BrandID, manufacturer, name, online_time).getInteger("code");
-//            Preconditions.checkArgument(code == 1000, "创建车系：生产商 " + manufacturer + ", 车系 " + name + ", 上线日期" + online_time + "状态码" + code);
-//
-//            //删除品牌车系
-//            Long id = jc.carStylePage(1, 1, info.BrandID, "").getJSONArray("list").getJSONObject(0).getLong("id");
-//            jc.delCarStyle(id);
-//
-//        } catch (AssertionError e) {
-//            appendFailReason(e.toString());
-//        } catch (Exception e) {
-//            appendFailReason(e.toString());
-//        } finally {
-//            saveData("PC【品牌管理】，创建车系");
-//        }
-//    }
+    @Test
+    public void addBrand_name1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            visitor.setProduct(EnumTestProduce.YT_DAILY_ZT);
+
+            int code = AddScene.builder().name(info.stringone).logoPath(info.getLogo()).build().invoke(visitor,false).getInteger("code");
+
+            Preconditions.checkArgument(code == 1000, "状态码期待1000，实际" + code);
+
+            //删除品牌
+            Long id = PageScene.builder().page(1).size(10).name(info.stringone).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+
+            DeleteScene.builder().id(id).build().invoke(visitor);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【品牌管理】，创建品牌，名称1个字");
+        }
+
+    }
+
+    @Test
+    public void addBrand_name10() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            visitor.setProduct(EnumTestProduce.YT_DAILY_ZT);
+
+            int code = AddScene.builder().name(info.stringten).logoPath(info.getLogo()).build().invoke(visitor,false).getInteger("code");
+
+            Preconditions.checkArgument(code == 1000, "状态码期待1000，实际" + code);
+
+            //删除品牌
+            Long id = PageScene.builder().page(1).size(10).name(info.stringten).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+
+            DeleteScene.builder().id(id).build().invoke(visitor);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【品牌管理】，创建品牌，名称10个字");
+        }
+
+    }
+
+    @Test
+    public void editBrand_name() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            visitor.setProduct(EnumTestProduce.YT_DAILY_ZT);
+
+            //创建一个品牌
+            String name1 = info.stringsix;
+            String name2 = info.stringsix + "aaa";
+            AddScene.builder().name(name1).logoPath(info.getLogo()).build().invoke(visitor);
+            //获取创建的品牌id
+            Long id = PageScene.builder().page(1).size(10).name(name1).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+
+            //修改这个品牌的名字
+            EditScene.builder().id(id).name(name2).logoPath(info.getLogo()).build().invoke(visitor);
+            //根据id查询，名字为name2
+            JSONArray arr = PageScene.builder().page(1).size(10).build().invoke(visitor).getJSONArray("list");
+
+            for (int i = 0; i < arr.size(); i++) {
+                JSONObject obj = arr.getJSONObject(i);
+                if (obj.getLong("id") == id) {
+                    Preconditions.checkArgument(obj.getString("name").equals(name2), "修改前名字是" + name1 + "，期望修改为" + name2 + "，实际修改后为" + obj.getString("name"));
+                }
+            }
+
+            //删除品牌
+            DeleteScene.builder().id(id).build().invoke(visitor);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【品牌管理】，创建品牌后进行修改");
+        }
+
+    }
+
+    //品牌--异常
+    @Test
+    public void addBrand_nameerr() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            visitor.setProduct(EnumTestProduce.YT_DAILY_ZT);
+
+            String name = "12345aA啊！@1";
+            int code = AddScene.builder().name(name).logoPath(info.getLogo()).build().invoke(visitor,false).getInteger("code");
+
+            Preconditions.checkArgument(code == 1001, "状态码期待1001，实际" + code);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【品牌管理】，创建品牌，名称11个字");
+        }
+
+    }
+
+    //品牌车系--正常
+
+    @Test(dataProvider = "CAR_STYLE")
+    public void addCarStyle(String manufacturer, String name, String online_time) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            visitor.setProduct(EnumTestProduce.YT_DAILY_ZT);
+            int code = CarStyleAddScene.builder().brandId(info.BrandID).manufacturer(manufacturer).name(name).onlineTime(online_time).build().invoke(visitor,false).getInteger("code");
+            Preconditions.checkArgument(code == 1000, "创建车系：生产商 " + manufacturer + ", 车系 " + name + ", 上线日期" + online_time + "状态码" + code);
+
+            //删除品牌车系
+            Long id = CarStylePageScene.builder().brandId(info.BrandID).page(1).size(1).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            CarStyleDeleteScene.builder().id(id).build().invoke(visitor);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【品牌管理】，创建车系");
+        }
+    }
+
+    @DataProvider(name = "CAR_STYLE")
+    public Object[] carStyle() {
+        return new String[][]{
+                {info.stringone, info.stringone, dt.getHistoryDate(0)},
+                {info.stringfifty, info.stringfifty, dt.getHistoryDate(-1)},
+                {info.stringsix, info.stringsix, dt.getHistoryDate(1)},
+        };
+    }
 //
 //    @Test
 //    public void editCarStyle() {
