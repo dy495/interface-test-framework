@@ -1,6 +1,5 @@
 package com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.customermanage;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
@@ -38,6 +37,6 @@ public class PreSaleCustomerSalesListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/customer-manage/pre-sale-customer/sales-list";
+        return "/car-platform/pc/customer-manage/pre-sale-customer/sales-list";
     }
 }

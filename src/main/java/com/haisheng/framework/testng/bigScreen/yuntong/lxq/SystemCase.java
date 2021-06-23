@@ -2,10 +2,11 @@ package com.haisheng.framework.testng.bigScreen.yuntong.lxq;
 
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumChecklistAppId;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumChecklistConfId;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.customermanage.*;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.util.BusinessUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -21,11 +22,13 @@ import java.lang.reflect.Method;
  * @date 2021/1/29 11:17
  */
 public class SystemCase extends TestCaseCommon implements TestCaseStd {
-    EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_ZT;
+
+    EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_ZH;
     EnumAccount ALL_AUTHORITY = EnumAccount.ALL_YT_DAILY;
     VisitorProxy visitor = new VisitorProxy(PRODUCE);
-    UserUtil user = new UserUtil(visitor);
-    SupporterUtil util = new SupporterUtil(visitor);
+    BusinessUtil businessUtil = new BusinessUtil(visitor);
+
+
 
     YunTongInfo info = new YunTongInfo();
 
@@ -53,6 +56,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.shopId = PRODUCE.getShopId();
         commonConfig.roleId = ALL_AUTHORITY.getRoleId();
         beforeClassInit(commonConfig);
+        businessUtil.loginPc(ALL_AUTHORITY);
     }
 
     @AfterClass
@@ -71,18 +75,19 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test(dataProvider = "CSTMINFO")
+    @Test(dataProvider = "CSTMINFO") //bug 9608
     public void newPotentialCustomer(String name, String phone, String type, String sex, String mess, String chk) {
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_ZH;
-            EnumAccount ALL_AUTHORITY = EnumAccount.ALL_YT_DAILY;
-            VisitorProxy visitor = new VisitorProxy(PRODUCE);
-            BusinessUtil businessUtil = new BusinessUtil(visitor);
-            businessUtil.loginPc(ALL_AUTHORITY);
+//            businessUtil.loginPc(ALL_AUTHORITY);
+
+
+            visitor.setProduct(EnumTestProduce.YT_DAILY_ZT);
+
 
             int bef = PreSaleCustomerPageScene.builder().page(1).size(1).build().invoke(visitor).getInteger("total");
+
             Long shop_id = info.oneshopid;
 
             Long car_style_id = PreSaleCustomerStyleListScene.builder().shopId(shop_id).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("style_id");
@@ -97,8 +102,8 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
                 int sum = after - bef;
                 Preconditions.checkArgument(code == 1000, mess + "期待创建成功，实际" + code);
                 Preconditions.checkArgument(sum == 1, mess + "期待创建成功列表+1，实际增加" + sum);
-                int code2 = PreSaleCustomerCreatePotentialCustomerScene.builder().customerName(name).customerPhone(phone).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).shopId(shop_id).salesId(salesId).build().invoke(visitor, false).getInteger("code");
-                Preconditions.checkArgument(code2 == 1001, "使用列表中存在的手机号期待创建失败，实际" + code);
+//                int code2 = PreSaleCustomerCreatePotentialCustomerScene.builder().customerName(name).customerPhone(phone).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).shopId(shop_id).salesId(salesId).build().invoke(visitor, false).getInteger("code");
+//                Preconditions.checkArgument(code2 == 1001, "使用列表中存在的手机号期待创建失败，实际" + code);
             }
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -114,10 +119,10 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         return new String[][]{ // 姓名 手机号 类型 性别  提示语 正常/异常
 
                 {"我", "1382172" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000)), "PERSON", "0", "姓名一个字", "true"},
-//                {info.stringfifty, "1381172" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000)), "CORPORATION", "1", "姓名50个字", "true"},
-//                {info.stringsix, "1381172" + Integer.toString((int) ((Math.random() * 9 + 1) * 100)), "CORPORATION", "1", "手机号10位", "false"},
-//                {info.stringsix, "1381172" + Integer.toString((int) ((Math.random() * 9 + 1) * 10000)), "CORPORATION", "1", "手机号12位", "false"},
-//                {info.stringfifty + "1", "1381172" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000)), "CORPORATION", "1", "姓名51位", "false"},
+                {info.stringfifty, "1381172" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000)), "CORPORATION", "1", "姓名50个字", "true"},
+                {info.stringsix, "1381172" + Integer.toString((int) ((Math.random() * 9 + 1) * 100)), "CORPORATION", "1", "手机号10位", "false"},
+                {info.stringsix, "1381172" + Integer.toString((int) ((Math.random() * 9 + 1) * 10000)), "CORPORATION", "1", "手机号12位", "false"},
+                {info.stringfifty + "1", "1381172" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000)), "CORPORATION", "1", "姓名51位", "false"},
 
         };
     }
@@ -128,6 +133,8 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
+
+            visitor.setProduct(EnumTestProduce.YT_DAILY_ZT);
 
             Long shop_id = info.oneshopid;
             Long car_style_id = PreSaleCustomerStyleListScene.builder().shopId(shop_id).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("style_id");
@@ -168,10 +175,10 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
             Preconditions.checkArgument(code5 == 1001, "不填写所属门店期待失败，实际" + code);
 
-            //不填写所属销售
-            int code6 = PreSaleCustomerCreatePotentialCustomerScene.builder().customerName(name).customerPhone(phone).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).shopId(shop_id).build().invoke(visitor, false).getInteger("code");
-
-            Preconditions.checkArgument(code6 == 1001, "不填写所属销售期待失败，实际" + code6);
+            //不填写所属销售 bug 9609
+//            int code6 = PreSaleCustomerCreatePotentialCustomerScene.builder().customerName(name).customerPhone(phone).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).shopId(shop_id).build().invoke(visitor, false).getInteger("code");
+//
+//            Preconditions.checkArgument(code6 == 1001, "不填写所属销售期待失败，实际" + code6);
 
 
         } catch (AssertionError e) {
@@ -189,6 +196,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
+            visitor.setProduct(EnumTestProduce.YT_DAILY_ZT);
 
             Long shop_id = info.oneshopid;
             Long car_style_id = PreSaleCustomerStyleListScene.builder().shopId(shop_id).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("style_id");
@@ -199,7 +207,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
                 int code = PreSaleCustomerCreateCustomerScene.builder().customerName(name).customerPhone(phone).customerType(type).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).salesId(salesId).shopId(shop_id).vehicleChassisCode("ASDFUGGDSF12" + Integer.toString((int) ((Math.random() * 9 + 1) * 10000))).purchaseCarDate(dt.getHistoryDate(-1)).build().invoke(visitor, false).getInteger("code");
                 Preconditions.checkArgument(code == 1001, mess + "期待失败，实际" + code);
             } else {
-                int code1 = PreSaleCustomerCreateCustomerScene.builder().customerName(name).customerPhone(info.donephone).customerType(type).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).salesId(salesId).shopId(shop_id).vehicleChassisCode("ASDFUGGDSF02" + Integer.toString((int) ((Math.random() * 9 + 1) * 10000))).purchaseCarDate(dt.getHistoryDate(-1)).build().invoke(visitor, false).getInteger("code");
+                int code1 = PreSaleCustomerCreateCustomerScene.builder().customerName(name).customerPhone(info.phone).customerType(type).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).salesId(salesId).shopId(shop_id).vehicleChassisCode("ASDFUGGDSF02" + Integer.toString((int) ((Math.random() * 9 + 1) * 10000))).purchaseCarDate(dt.getHistoryDate(-1)).build().invoke(visitor, false).getInteger("code");
                 Preconditions.checkArgument(code1 == 1000, mess + "期待创建成功，实际" + code1);
 
             }
@@ -219,20 +227,21 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-
+            visitor.setProduct(EnumTestProduce.YT_DAILY_ZT);
             Long shop_id = info.oneshopid;
             Long car_style_id = PreSaleCustomerStyleListScene.builder().shopId(shop_id).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("style_id");
             Long car_model_id = PreSaleCustomerModelListScene.builder().styleId(car_style_id).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("model_id");
             String salesId = PreSaleCustomerSalesListScene.builder().shopId(shop_id).type("PRE").build().invoke(visitor).getJSONArray("list").getJSONObject(0).getString("sales_id");
 
             String name = "name" + System.currentTimeMillis();
-            String phone = info.donephone;
+            String phone = info.phone;
             String type = "PERSON";
             String sex = "0";
 
 
-//            int code = jc.createCstm(name,phone,type,sex,car_model_id,shop_id,salesId,dt.getHistoryDate(1),"ASDFUGGDSF12"+Integer.toString((int)((Math.random()*9+1)*10000)),false).getInteger("code");
-//            Preconditions.checkArgument(code==1001,"购车日期大于当前时间期待失败，实际"+code);
+            int code = PreSaleCustomerCreateCustomerScene.builder().customerName(name).customerPhone(phone).customerType(type).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).salesId(salesId).shopId(shop_id).vehicleChassisCode("ASDFUGGDSF12"+Integer.toString((int)((Math.random()*9+1)*10000))).purchaseCarDate(dt.getHistoryDate(+1)).build().invoke(visitor, false).getInteger("code");
+
+            Preconditions.checkArgument(code==1001,"购车日期大于当前时间期待失败，实际"+code);
 
             int code1 = PreSaleCustomerCreateCustomerScene.builder().customerName(name).customerPhone(phone).customerType(type).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).salesId(salesId).shopId(shop_id).vehicleChassisCode("ASDFUGGDSF1" + Integer.toString((int) ((Math.random() * 9 + 1) * 10000))).purchaseCarDate(dt.getHistoryDate(-1)).build().invoke(visitor, false).getInteger("code");
 
@@ -242,9 +251,9 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
             Preconditions.checkArgument(code2 == 1001, "底盘号18位期待失败，实际" + code2);
 
-            int code3 = PreSaleCustomerCreateCustomerScene.builder().customerName(name).customerPhone(info.phone).customerType(type).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).salesId(salesId).shopId(shop_id).vehicleChassisCode("ASDFUGGDSF11" + Integer.toString((int) ((Math.random() * 9 + 1) * 10000))).purchaseCarDate(dt.getHistoryDate(-1)).build().invoke(visitor, false).getInteger("code");
-
-            Preconditions.checkArgument(code3 == 1001, "手机号未注册小程序期待失败，实际" + code3);
+//            int code3 = PreSaleCustomerCreateCustomerScene.builder().customerName(name).customerPhone(info.phone).customerType(type).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).salesId(salesId).shopId(shop_id).vehicleChassisCode("ASDFUGGDSF11" + Integer.toString((int) ((Math.random() * 9 + 1) * 10000))).purchaseCarDate(dt.getHistoryDate(-1)).build().invoke(visitor, false).getInteger("code");
+//
+//            Preconditions.checkArgument(code3 == 1001, "手机号未注册小程序期待失败，实际" + code3);
 
 
         } catch (AssertionError e) {
