@@ -1,11 +1,11 @@
 package com.haisheng.framework.testng.bigScreen.crm.wm;
 
 import com.alibaba.fastjson.JSONObject;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.sql.Sql;
 import com.haisheng.framework.testng.bigScreen.crm.wm.bean.SaleInfo;
 import com.haisheng.framework.testng.bigScreen.crm.wm.bean.TPorscheTodayData;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.sql.Sql;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.DingPushUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.UserUtil;
 import com.haisheng.framework.testng.bigScreen.crmOnline.CrmScenarioUtilOnline;
@@ -57,7 +57,7 @@ public class EverydayDataOnline extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
     }
 
-    @Test
+    @Test()
     public void everydayData() {
         try {
             TPorscheTodayData db = new TPorscheTodayData();
@@ -65,7 +65,7 @@ public class EverydayDataOnline extends TestCaseCommon implements TestCaseStd {
             saleInfos.forEach(arr -> {
                 CommonUtil.valueView(arr.getUserName());
                 if (arr.getUserName().contains("总经理")) {
-                    UserUtil.login(zjl);
+                    crm.login(arr.getAccount(), zjl.getPassword());
                     JSONObject response = crm.receptionPage(1, 10, "", "");
                     db.setTodayReceptionNum(response.getInteger("today_reception_num"));
                     db.setTodayClueNum(response.getInteger("all_customer_num"));
@@ -86,18 +86,24 @@ public class EverydayDataOnline extends TestCaseCommon implements TestCaseStd {
                 db.setShopId(shopId);
                 db.setSaleName(arr.getUserName());
                 db.setSaleId(arr.getUserId());
-                String sql = Sql.instance().insert()
-                        .from(TPorscheTodayData.class)
-                        .field("today_test_driver_num", "today_order_num", "today_deal_num", "today_clue_num",
-                                "today_reception_num", "today_appointment_num", "today_date", "shop_id", "sale_name",
-                                "today_new_customer_reception_num", "today_old_customer_reception_num", "sale_id")
-                        .setValue(db.getTodayTestDriverNum(), db.getTodayOrderNum(), db.getTodayDealNum(), db.getTodayClueNum(),
-                                db.getTodayReceptionNum(), db.getTodayAppointmentNum(), db.getTodayDate(), db.getShopId(),
-                                db.getSaleName(), db.getTodayNewCustomerReceptionNum(), db.getTodayOldCustomerReceptionNum(), db.getSaleId())
-                        .end().getSql();
-                new Factory.Builder().container(EnumContainer.DB_ONE_PIECE.getContainer()).build().create(sql);
+                Sql sql = Sql.instance().insert(TPorscheTodayData.class)
+                        .set("today_test_driver_num", db.getTodayTestDriverNum())
+                        .set("today_order_num", db.getTodayOrderNum())
+                        .set("today_deal_num", db.getTodayDealNum())
+                        .set("today_clue_num", db.getTodayClueNum())
+                        .set("today_reception_num", db.getTodayReceptionNum())
+                        .set("today_appointment_num", db.getTodayAppointmentNum())
+                        .set("today_date", db.getTodayDate())
+                        .set("shop_id", db.getShopId())
+                        .set("sale_name", db.getSaleName())
+                        .set("today_new_customer_reception_num", db.getTodayNewCustomerReceptionNum())
+                        .set("today_old_customer_reception_num", db.getTodayOldCustomerReceptionNum())
+                        .set("sale_id", db.getSaleId())
+                        .end();
+                new Factory.Builder().container(EnumContainer.DB_ONE_PIECE.getContainer()).build().create(sql.getSql());
             });
         } catch (Exception e) {
+            e.printStackTrace();
             DingPushUtil.sendText(e.toString());
         }
     }

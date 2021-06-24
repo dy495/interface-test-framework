@@ -4,5 +4,5 @@ public interface IInsertStep {
 
     IInsertStep set(String key, Object value);
 
-    SqlPlus end();
+    Sql end();
 }

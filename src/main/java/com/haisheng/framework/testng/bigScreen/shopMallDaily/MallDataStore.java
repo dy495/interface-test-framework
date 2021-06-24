@@ -36,19 +36,22 @@ public class MallDataStore {
         return jsonObject;
     }
 
-
     @Test
     public void realTimeData() {
         List<DetailMessage> detailMessageList = pvUvInfo.getDetailMessages();
         detailMessageList.forEach(e -> {
             if (e.getName().contains("实时")) {
                 String date = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
-                Sql sql = Sql.instance().insert()
-                        .from("t_mall_realtime_data")
-                        .field("shop_id", "source", "map_value", "list_value", "data", "environment")
-                        .setValue("33467", e.getName(), e.getNoReception(), e.getHasReception(), date, "online")
+                Sql sql = Sql.instance()
+                        .insert("t_mall_realtime_data")
+                        .set("shop_id", "33467")
+                        .set("source", e.getName())
+                        .set("map_value", e.getNoReception())
+                        .set("list_value", e.getHasReception())
+                        .set("data", date)
+                        .set("environment", "online")
                         .end();
-                new Factory.Builder().container(EnumContainer.DB_ONE_PIECE.getContainer()).build().create(sql);
+                new Factory.Builder().container(EnumContainer.DB_ONE_PIECE.getContainer()).build().create(sql.getSql());
             }
         });
     }
@@ -59,12 +62,16 @@ public class MallDataStore {
         detailMessageList.forEach(e -> {
             if (!e.getName().contains("实时")) {
                 String date = DateTimeUtil.addDayFormat(new Date(), -1, "yyyy-MM-dd");
-                Sql sql = Sql.instance().insert()
-                        .from("t_mall_history_data")
-                        .field("shop_id", "source", "map_value", "list_value", "data", "environment")
-                        .setValue("33467", e.getName(), e.getNoReception(), e.getHasReception(), date, "online")
+                Sql sql = Sql.instance()
+                        .insert("t_mall_history_data")
+                        .set("shop_id", "33467")
+                        .set("source", e.getName())
+                        .set("map_value", e.getNoReception())
+                        .set("list_value", e.getHasReception())
+                        .set("data", date)
+                        .set("environment", "online")
                         .end();
-                new Factory.Builder().container(EnumContainer.DB_ONE_PIECE.getContainer()).build().create(sql);
+                new Factory.Builder().container(EnumContainer.DB_ONE_PIECE.getContainer()).build().create(sql.getSql());
             }
         });
     }

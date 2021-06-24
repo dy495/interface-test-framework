@@ -8,5 +8,5 @@ public interface ISelectStep {
 
     <T> IFromStep from(@NotNull Class<T> clazz);
 
-    SqlPlus end();
+    Sql end();
 }

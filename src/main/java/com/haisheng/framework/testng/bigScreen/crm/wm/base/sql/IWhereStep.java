@@ -10,5 +10,5 @@ public interface IWhereStep {
 
     IOtherStep limit(Integer limit);
 
-    SqlPlus end();
+    Sql end();
 }

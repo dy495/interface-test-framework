@@ -1,6 +1,8 @@
 package com.haisheng.framework.testng.bigScreen.crm.wm.base.sql;
 
-public interface ISqlStep<T> {
+import org.jetbrains.annotations.NotNull;
+
+public interface ISqlStep {
 
     ISelectStep select();
 
@@ -8,7 +10,7 @@ public interface ISqlStep<T> {
 
     IInsertStep insert(String tableName);
 
-    IUpdateStep update(String tableName);
+    <T> IInsertStep insert(@NotNull Class<T> clazz);
 
-    T end();
+    IUpdateStep update(String tableName);
 }

@@ -36,10 +36,10 @@ public class MallEveryHourDataStore {
         detailMessages.add(getDetailMessage("楼层B1实时数据", "33489"));
         String date = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
         detailMessages.forEach(e -> {
-            Sql sql = Sql.instance().insert().from("t_mall_moment_data")
-                    .field("shop_id", "source", "map_value", "list_value", "data", "environment")
-                    .setValue("33467", e.getName(), e.getNoReception(), e.getHasReception(), date, "online").end();
-            new Factory.Builder().container(EnumContainer.DB_ONE_PIECE.getContainer()).build().create(sql);
+            Sql sql = Sql.instance().insert("t_mall_moment_data")
+                    .set("shop_id", "33467").set("source", e.getName()).set("map_value", e.getNoReception())
+                    .set("list_value", e.getHasReception()).set("data", date).set("environment", "online").end();
+            new Factory.Builder().container(EnumContainer.DB_ONE_PIECE.getContainer()).build().create(sql.getSql());
         });
     }
 

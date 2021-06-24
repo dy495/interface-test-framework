@@ -4,5 +4,5 @@ public interface IFromStep {
 
     <T> IWhereStep where(String field, String compareTo, T value);
 
-    SqlPlus end();
+    Sql end();
 }

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.crm.commonDs.PublicMethod;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.sql.Sql;
 import com.haisheng.framework.testng.bigScreen.crm.wm.bean.SaleInfo;
 import com.haisheng.framework.testng.bigScreen.crm.wm.bean.TPorscheDeliverInfo;
 import com.haisheng.framework.testng.bigScreen.crm.wm.bean.TPorscheOrderInfo;
@@ -14,7 +15,6 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.sale.EnumAccoun
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.app.CustomerMyReceptionListScene;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.pc.OrderInfoPageScene;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.sql.Sql;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.DingPushUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.util.UserUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.entity.Factory;
@@ -80,17 +80,26 @@ public class BusinessData extends TestCaseCommon implements TestCaseStd {
                 e.setReceptionSaleId(getSaleId(e.getReceptionSale()));
                 e.setShopId(shopId);
                 e.setReceptionDuration(getReceptionDuration(e));
-                String sql = Sql.instance().insert().from(TPorscheReceptionData.class)
-                        .field("shop_id", "reception_sale_id", "reception_sale", "reception_start_time", "reception_end_time", "reception_duration", "customer_id", "customer_name", "customer_type_name", "customer_phone", "reception_date")
-                        .setValue(e.getShopId(), e.getReceptionSaleId(), e.getReceptionSale(), e.getReceptionStartTime(), e.getReceptionEndTime(), e.getReceptionDuration(), e.getCustomerId(), e.getCustomerName(), e.getCustomerTypeName(), e.getCustomerPhone(), e.getReceptionDate())
-                        .end().getSql();
-                new Factory.Builder().container(EnumContainer.DB_ONE_PIECE.getContainer()).build().create(sql);
+                Sql sql = Sql.instance()
+                        .insert(TPorscheReceptionData.class)
+                        .set("shop_id", e.getShopId())
+                        .set("reception_sale_id", e.getReceptionSaleId())
+                        .set("reception_sale", e.getReceptionSale())
+                        .set("reception_start_time", e.getReceptionStartTime())
+                        .set("reception_end_time", e.getReceptionEndTime())
+                        .set("reception_duration", e.getReceptionDuration())
+                        .set("customer_id", e.getCustomerId())
+                        .set("customer_name", e.getCustomerName())
+                        .set("customer_type_name", e.getCustomerTypeName())
+                        .set("customer_phone", e.getCustomerPhone())
+                        .set("reception_date", e.getReceptionDate())
+                        .end();
+                new Factory.Builder().container(EnumContainer.DB_ONE_PIECE.getContainer()).build().create(sql.getSql());
             }
         } catch (Exception e) {
             e.printStackTrace();
             DingPushUtil.sendText(e.toString());
         }
-
     }
 
     @Test(description = "每日交车记录")
@@ -106,11 +115,29 @@ public class BusinessData extends TestCaseCommon implements TestCaseStd {
                     e.setCarStyle(getCarStyleId(e.getCarStyle()));
                     e.setSaleId(getSaleId(e.getSaleName()));
                     e.setShopId(shopId);
-                    String sql = Sql.instance().insert().from(TPorscheDeliverInfo.class)
-                            .field("shop_id", "customer_id", "customer_name", "id_number", "birthday", "address", "gender", "age", "phone", "subject_type_name", "sale_name", "sale_id", "car_style", "car_model", "deliver_date", "plate_type_name", "defray_type_name", "source_channel_name", "pay_type_name", "plate_number", "vehicle_chassis_code")
-                            .setValue(e.getShopId(), e.getCustomerId(), e.getCustomerName(), e.getIdNumber(), e.getBirthday(), e.getAddress(), e.getGender(), e.getAge(), e.getPhone(), e.getSubjectTypeName(), e.getSaleName(), e.getSaleId(), e.getCarStyle(), e.getCarModel(), e.getDeliverDate(), e.getPlateTypeName(), e.getDefrayTypeName(), e.getSourceChannelName(), e.getPayTypeName(), e.getPlateNumber(), e.getVehicleChassisCode())
-                            .end().getSql();
-                    new Factory.Builder().container(EnumContainer.DB_ONE_PIECE.getContainer()).build().create(sql);
+                    Sql sql = Sql.instance().insert(TPorscheReceptionData.class)
+                            .set("shop_id", e.getShopId())
+                            .set("customer_id", e.getCustomerId())
+                            .set("customer_name", e.getCustomerName())
+                            .set("id_number", e.getIdNumber())
+                            .set("birthday", e.getBirthday())
+                            .set("address", e.getAddress())
+                            .set("gender", e.getGender())
+                            .set("age", e.getAge())
+                            .set("phone", e.getPhone())
+                            .set("subject_type_name", e.getSubjectTypeName())
+                            .set("sale_name", e.getSaleName())
+                            .set("sale_id", e.getSaleId())
+                            .set("car_style", e.getCarStyle())
+                            .set("car_model", e.getCarModel())
+                            .set("deliver_date", e.getDeliverDate())
+                            .set("plate_type_name", e.getPlateTypeName())
+                            .set("defray_type_name", e.getDefrayTypeName())
+                            .set("source_channel_name", e.getSourceChannelName())
+                            .set("pay_type_name", e.getPayTypeName())
+                            .set("plate_number", e.getPlateNumber())
+                            .set("vehicle_chassis_code", e.getVehicleChassisCode()).end();
+                    new Factory.Builder().container(EnumContainer.DB_ONE_PIECE.getContainer()).build().create(sql.getSql());
                 }
             });
         } catch (Exception e) {
@@ -132,11 +159,29 @@ public class BusinessData extends TestCaseCommon implements TestCaseStd {
                     e.setSaleId(getSaleId(e.getSaleName()));
                     e.setCarStyle(getCarStyleId(e.getCarStyle()));
                     e.setShopId(shopId);
-                    String sql = Sql.instance().insert().from(TPorscheOrderInfo.class)
-                            .field("shop_id", "customer_id", "customer_name", "id_number", "birthday", "address", "gender", "age", "phone", "subject_type_name", "sale_name", "sale_id", "car_style", "car_model", "order_date", "plate_type_name", "defray_type_name", "source_channel_name", "pay_type_name", "plate_number", "vehicle_chassis_code")
-                            .setValue(e.getShopId(), e.getCustomerId(), e.getCustomerName(), e.getIdNumber(), e.getBirthday(), e.getAddress(), e.getGender(), e.getAge(), e.getPhone(), e.getSubjectTypeName(), e.getSaleName(), e.getSaleId(), e.getCarStyle(), e.getCarModel(), e.getOrderDate(), e.getPlateTypeName(), e.getDefrayTypeName(), e.getSourceChannelName(), e.getPayTypeName(), e.getPlateNumber(), e.getVehicleChassisCode())
-                            .end().getSql();
-                    new Factory.Builder().container(EnumContainer.DB_ONE_PIECE.getContainer()).build().create(sql);
+                    Sql sql = Sql.instance().insert(TPorscheOrderInfo.class)
+                            .set("shop_id", e.getShopId())
+                            .set("customer_id", e.getCustomerId())
+                            .set("customer_name", e.getCustomerName())
+                            .set("id_number", e.getIdNumber())
+                            .set("birthday", e.getBirthday())
+                            .set("address", e.getAddress())
+                            .set("gender", e.getGender())
+                            .set("age", e.getAge())
+                            .set("phone", e.getPhone())
+                            .set("subject_type_name", e.getSubjectTypeName())
+                            .set("sale_name", e.getSaleName())
+                            .set("sale_id", e.getSaleId())
+                            .set("car_style", e.getCarStyle())
+                            .set("car_model", e.getCarModel())
+                            .set("order_date", e.getOrderDate())
+                            .set("plate_type_name", e.getPlateTypeName())
+                            .set("defray_type_name", e.getDefrayTypeName())
+                            .set("source_channel_name", e.getSourceChannelName())
+                            .set("pay_type_name", e.getPayTypeName())
+                            .set("plate_number", e.getPlateNumber())
+                            .set("vehicle_chassis_code", e.getVehicleChassisCode()).end();
+                    new Factory.Builder().container(EnumContainer.DB_ONE_PIECE.getContainer()).build().create(sql.getSql());
                 }
             });
         } catch (Exception e) {
@@ -152,7 +197,7 @@ public class BusinessData extends TestCaseCommon implements TestCaseStd {
                 .where("deliver_date", "=", date)
                 .and("shop_id", "=", shopId)
                 .end();
-        int count = new Factory.Builder().container(EnumContainer.DB_ONE_PIECE.getContainer()).build().create(sql).length;
+        int count = new Factory.Builder().container(EnumContainer.DB_ONE_PIECE.getContainer()).build().create(sql.getSql()).length;
         if (count <= 0) {
             DingPushUtil.sendText(CommonUtil.humpToLineReplaceFirst(TPorscheDeliverInfo.class.getSimpleName()) + "表记录数据失败");
         }
@@ -160,7 +205,7 @@ public class BusinessData extends TestCaseCommon implements TestCaseStd {
                 .where("order_date", "=", date)
                 .and("shop_id", "=", shopId)
                 .end();
-        int count1 = new Factory.Builder().container(EnumContainer.DB_ONE_PIECE.getContainer()).build().create(sql1).length;
+        int count1 = new Factory.Builder().container(EnumContainer.DB_ONE_PIECE.getContainer()).build().create(sql1.getSql()).length;
         if (count1 <= 0) {
             DingPushUtil.sendText(CommonUtil.humpToLineReplaceFirst(TPorscheOrderInfo.class.getSimpleName()) + "表记录数据失败");
         }
@@ -168,7 +213,7 @@ public class BusinessData extends TestCaseCommon implements TestCaseStd {
                 .where("reception_date", "=", date)
                 .and("shop_id", "=", shopId)
                 .end();
-        int count2 = new Factory.Builder().container(EnumContainer.DB_ONE_PIECE.getContainer()).build().create(sql2).length;
+        int count2 = new Factory.Builder().container(EnumContainer.DB_ONE_PIECE.getContainer()).build().create(sql2.getSql()).length;
         if (count2 <= 0) {
             DingPushUtil.sendText(CommonUtil.humpToLineReplaceFirst(TPorscheReceptionData.class.getSimpleName()) + "表记录数据失败");
         }
@@ -211,7 +256,6 @@ public class BusinessData extends TestCaseCommon implements TestCaseStd {
         }
         return null;
     }
-
 
     /**
      * @param scene 接口场景
