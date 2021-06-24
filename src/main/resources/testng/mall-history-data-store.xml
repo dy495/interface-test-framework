@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 <suite name="test" data-provider-thread-count="1" parallel="tests" thread-count="1">
 
-
     <listeners>
         <listener class-name="com.haisheng.framework.testng.service.TestFilterListener"/>
     </listeners>
@@ -10,11 +9,9 @@
         <classes>
             <class name="com.haisheng.framework.testng.bigScreen.shopMallDaily.MallDataStore">
                 <methods>
-                    <include name="realTimeData"/>
+                    <include name="historyData"/>
                 </methods>
             </class>
-            <class name="com.haisheng.framework.testng.bigScreen.shopMallDaily.MallEveryHourDataStore"/>
-            <class name="com.haisheng.framework.testng.bigScreen.shopMallDaily.MallDataCenter"></class>
         </classes>
     </test>
 </suite>

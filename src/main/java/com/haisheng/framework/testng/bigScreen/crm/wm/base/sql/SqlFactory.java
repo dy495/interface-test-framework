@@ -5,6 +5,7 @@ import lombok.experimental.Accessors;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionManager;
+import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,5 +39,30 @@ public class SqlFactory {
         public SqlFactory build() {
             return new SqlFactory(this);
         }
+    }
+
+    @Test
+    public void a() {
+        SqlPlus.instance().select()
+                .from("")
+                .where("", "", "")
+                .and("", "", "")
+                .or("", "", "")
+                .limit(100)
+                .end();
+
+        SqlPlus.instance().insert("")
+                .set("", "")
+                .set("", "")
+                .set("", "")
+                .end();
+
+        SqlPlus.instance().update("")
+                .set("", "", "")
+                .set("", "", "")
+                .where("", "", "")
+                .and("", "", "")
+                .end();
+
     }
 }
