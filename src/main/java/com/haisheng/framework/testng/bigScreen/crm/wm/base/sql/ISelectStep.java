@@ -2,7 +2,7 @@ package com.haisheng.framework.testng.bigScreen.crm.wm.base.sql;
 
 import org.jetbrains.annotations.NotNull;
 
-public interface ISelectSelect {
+public interface ISelectStep {
 
     IFromStep from(String tableName);
 

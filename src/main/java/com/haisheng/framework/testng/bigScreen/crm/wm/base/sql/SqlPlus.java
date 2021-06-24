@@ -1,13 +1,14 @@
 package com.haisheng.framework.testng.bigScreen.crm.wm.base.sql;
 
-import com.aliyun.openservices.shade.org.apache.commons.lang3.StringUtils;
+import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.util.ContainerConstants;
+import com.haisheng.framework.util.CommonUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * sql构建类
@@ -31,7 +32,6 @@ public class SqlPlus {
         return instance;
     }
 
-    private final Map<String, Object> map = new HashMap<>();
     private final StringBuilder grammar;
     private final String tableName;
     private final StringBuilder condition;
@@ -40,7 +40,6 @@ public class SqlPlus {
         this.condition = builder.condition;
         this.tableName = builder.tableName;
         this.grammar = builder.grammar;
-        this.map.putAll(builder.map);
     }
 
     public String getSql() {
@@ -49,21 +48,28 @@ public class SqlPlus {
         return result;
     }
 
-    public static class Builder implements ISqlStep<SqlPlus>, ISelectSelect, IFromStep, IWhereStep, IOtherStep,
-            IInserterStep, IUpdateStep {
-        private final Map<String, Object> map = new HashMap<>();
+    public static class Builder implements ISqlStep<SqlPlus>, ISelectStep, IFromStep, IWhereStep, IOtherStep,
+            IInsertStep, IUpdateStep {
         private final String blank = " ";
+        private final Map<String, Object> map = new HashMap<>();
         private final StringBuilder condition = new StringBuilder();
         private final StringBuilder grammar = new StringBuilder();
         private String tableName;
 
-        public SqlPlus build() {
-            return new SqlPlus(this);
+        private void initCondition() {
+            StringBuilder keySb = new StringBuilder();
+            StringBuilder valueSb = new StringBuilder();
+            map.forEach((key, value) -> keySb.append(setSqlValue(key)).append(blank).append(",").append(blank));
+            map.forEach((key, value) -> valueSb.append(setSqlValue(value)).append(blank).append(",").append(blank));
+            this.condition.append("(").append(blank).append(keySb.toString(), 0, keySb.length() - 2)
+                    .append(")").append(blank).append("value").append(blank).append("(").append(blank)
+                    .append(valueSb.toString(), 0, valueSb.length() - 2)
+                    .append(")");
         }
 
         @Override
         public IFromStep from(String tableName) {
-            this.tableName = "from" + blank + tableName;
+            this.tableName = "from" + blank + tableName + blank;
             return this;
         }
 
@@ -73,7 +79,7 @@ public class SqlPlus {
         }
 
         @Override
-        public ISelectSelect select(String... fields) {
+        public ISelectStep select(String... fields) {
             this.grammar.append("select (");
             Arrays.stream(fields).forEach(field -> this.grammar.append(setSqlValue(field)).append(","));
             this.grammar.replace(grammar.length() - 1, grammar.length(), "");
@@ -82,7 +88,7 @@ public class SqlPlus {
         }
 
         @Override
-        public IInserterStep insert(String tableName) {
+        public IInsertStep insert(String tableName) {
             this.grammar.append("insert into").append(blank);
             this.tableName = tableName;
             return this;
@@ -96,18 +102,26 @@ public class SqlPlus {
         }
 
         @Override
-        public ISelectSelect select() {
+        public ISelectStep select() {
             this.grammar.append("select *").append(blank);
             return this;
         }
 
         @Override
         public IUpdateStep set(String field, String compareTo, Object value) {
-            return null;
+            return this;
+        }
+
+        @Override
+        public IInsertStep set(String key, Object value) {
+            Preconditions.checkNotNull(key, "key 不可为空");
+            map.put(key, value);
+            return this;
         }
 
         @Override
         public <T> IWhereStep where(String field, String compareTo, T value) {
+            Preconditions.checkArgument(!StringUtils.isEmpty(field), "where语句字段不可为空");
             this.condition.append("where").append(blank).append(field).append(blank)
                     .append(compareTo).append(blank).append(setSqlValue(value)).append(blank);
             return this;
@@ -115,60 +129,48 @@ public class SqlPlus {
 
         @Override
         public <T> IWhereStep and(String field, String compareTo, T value) {
-            return null;
+            Preconditions.checkArgument(!StringUtils.isEmpty(field), "and语句字段不可为空");
+            this.condition.append("and").append(blank).append(field).append(blank)
+                    .append(compareTo).append(blank).append(setSqlValue(value)).append(blank);
+            return this;
         }
 
         @Override
         public <T> IWhereStep or(String field, String compareTo, T value) {
-            return null;
+            Preconditions.checkArgument(!StringUtils.isEmpty(field), "or语句字段不可为空");
+            this.condition.append("or").append(blank).append(field).append(blank)
+                    .append(compareTo).append(blank).append(setSqlValue(value)).append(blank);
+            return this;
         }
 
         @Override
         public IOtherStep limit() {
-            return null;
+            return limit(200);
         }
 
         @Override
         public IOtherStep limit(Integer limit) {
-            return null;
+            this.condition.append("limit").append(blank).append("(").append(blank).append(limit).append(blank).append(")");
+            return this;
         }
 
         public SqlPlus end() {
-            if (StringUtils.isEmpty(grammar)) {
-                throw new RuntimeException("sql语句头为空");
+            Preconditions.checkNotNull(grammar, "sql语句头为空");
+            Preconditions.checkNotNull(tableName, "tableName为空");
+            if (grammar.toString().contains(ContainerConstants.INSERT)) {
+                initCondition();
             }
-            if (StringUtils.isEmpty(tableName)) {
-                throw new RuntimeException("tableName为空");
-            }
-//            if (grammar.toString().contains(ContainerConstants.INSERT)) {
-//                if (StringUtils.isEmpty(fieldList)) {
-//                    throw new RuntimeException("field为空");
-//                }
-//                if (StringUtils.isEmpty(valueList)) {
-//                    throw new RuntimeException("value为空");
-//                }
-//                if (valueList.split(", ").length != fieldList.split(", ").length) {
-//                    throw new RuntimeException("value个数与field个数不相同，请检查");
-//                }
-//            }
+            Preconditions.checkNotNull(condition, "条件语句为空");
             return new SqlPlus(this);
         }
-
-        @Override
-        public IInserterStep set(String field, Object value) {
-            map.put(field, value);
-            return null;
-        }
-
-
     }
-
 
     /**
      * 条件语句清空
      */
     private void clear() {
         this.condition.setLength(0);
+        this.grammar.setLength(0);
     }
 
     /**
@@ -185,14 +187,7 @@ public class SqlPlus {
 
     @NotNull
     private static String humpToLine(String str) {
-        Pattern humpPattern = Pattern.compile("[A-Z]");
-        Matcher matcher = humpPattern.matcher(str);
-        StringBuffer sb = new StringBuffer();
-        while (matcher.find()) {
-            matcher.appendReplacement(sb, "_" + matcher.group(0).toLowerCase());
-        }
-        matcher.appendTail(sb);
-        return sb.toString().replaceFirst("_", "");
+        return CommonUtil.humpToLine(str).replaceFirst("_", "");
     }
 
 }

@@ -40,29 +40,4 @@ public class SqlFactory {
             return new SqlFactory(this);
         }
     }
-
-    @Test
-    public void a() {
-        SqlPlus.instance().select()
-                .from("")
-                .where("", "", "")
-                .and("", "", "")
-                .or("", "", "")
-                .limit(100)
-                .end();
-
-        SqlPlus.instance().insert("")
-                .set("", "")
-                .set("", "")
-                .set("", "")
-                .end();
-
-        SqlPlus.instance().update("")
-                .set("", "", "")
-                .set("", "", "")
-                .where("", "", "")
-                .and("", "", "")
-                .end();
-
-    }
 }
