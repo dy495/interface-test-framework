@@ -57,7 +57,7 @@ public class Sql {
         private void initCondition() {
             StringBuilder keySb = new StringBuilder();
             StringBuilder valueSb = new StringBuilder();
-            map.forEach((key, value) -> keySb.append(setSqlValue(key)).append(blank).append(",").append(blank));
+            map.forEach((key, value) -> keySb.append(key).append(blank).append(",").append(blank));
             map.forEach((key, value) -> valueSb.append(setSqlValue(value)).append(blank).append(",").append(blank));
             this.condition.append("(").append(blank).append(keySb.toString(), 0, keySb.length() - 2)
                     .append(")").append(blank).append("value").append(blank).append("(").append(blank)
