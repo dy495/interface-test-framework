@@ -26,7 +26,7 @@ public class DbTable extends BaseTable {
 
     @Override
     public boolean load() {
-        String sql = getPath();
+        String sql = !StringUtils.isEmpty(getPath()) ? getPath() : String.format(ContainerConstants.DB_TABLE_DEFAULT_SQL, getKey());
         if (statement != null) {
             try {
                 if (sql.contains(ContainerConstants.UPDATE) || sql.contains(ContainerConstants.DELETE)) {
@@ -53,7 +53,6 @@ public class DbTable extends BaseTable {
                     }
                     addRow(row);
                 }
-
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();

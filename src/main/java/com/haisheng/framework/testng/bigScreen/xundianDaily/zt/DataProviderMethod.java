@@ -7,7 +7,7 @@ public class DataProviderMethod {
     @DataProvider(name = "device_id")
     public Object[] cameraId() {
         return new String[][]{
-                {"8097818264503296","uniview-云台全功能（33）"},
+                {"8097818264503296", "uniview-云台全功能（33）"},
 //                {"8304102614631424","unview-G3XXH(69)"},
 //                {"8058611994690560","uniview-68"},
 
@@ -79,12 +79,11 @@ public class DataProviderMethod {
     }
 
 
-
     @DataProvider(name = "userIdName")
     public Object[] userIdName() {
         return new String[][]{
-                {"uid_2cd5f8b4","小姐姐"},
-                {"uid_2cd5f8b4","小姐姐2"},
+                {"uid_2cd5f8b4", "小姐姐"},
+                {"uid_2cd5f8b4", "小姐姐2"},
 
         };
     }
@@ -92,8 +91,8 @@ public class DataProviderMethod {
     @DataProvider(name = "userList1")
     public Object[] userList1() {
         return new String[][]{
-                {"uid_2cd5f8b4","小姐姐","13604609869"},
-                {"uid_2cd5f8b4","小姐姐2","13604609869"},
+                {"uid_2cd5f8b4", "小姐姐", "13604609869"},
+                {"uid_2cd5f8b4", "小姐姐2", "13604609869"},
 
         };
     }
@@ -102,8 +101,8 @@ public class DataProviderMethod {
     @DataProvider(name = "userList2")
     public Object[] userList2() {
         return new String[][]{
-                {"uid_2cd5f8b4","小姐姐","13604609869","2fd55722-9109-4fa8-b084-fcb9d93a4b2f"},
-                {"uid_2cd5f8b4","小姐姐2","13604609869","2fd55722-9109-4fa8-b084-fcb9d93a4b2f"},
+                {"uid_2cd5f8b4", "小姐姐", "13604609869", "2fd55722-9109-4fa8-b084-fcb9d93a4b2f"},
+                {"uid_2cd5f8b4", "小姐姐2", "13604609869", "2fd55722-9109-4fa8-b084-fcb9d93a4b2f"},
 
         };
     }
@@ -117,7 +116,6 @@ public class DataProviderMethod {
                 "130"
         };
     }
-
 
 
     @DataProvider(name = "visitId")
@@ -148,18 +146,19 @@ public class DataProviderMethod {
     }
 
     @DataProvider(name = "FACE_URL")
-    public static Object[] face_url(){
+    public static Object[] face_url() {
         return new String[]{
                 "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/女人脸.jpg",
 
         };
     }
+
     @DataProvider(name = "floorname")
-    public static Object[] floorname(){
+    public static Object[] floorname() {
         return new String[][]{
-                {"4451","楼层L1历史数据"},
-                {"4452","楼层L2历史数据"},
-                {"4453","楼层B1历史数据"},
+                {"4451", "楼层L1历史数据"},
+                {"4452", "楼层L2历史数据"},
+                {"4453", "楼层B1历史数据"},
 
         };
     }
