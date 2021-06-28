@@ -67,7 +67,7 @@ public class MallEveryHourDataStore {
         detailMessage.setName(name);
         detailMessage.setNoReception(map.values().size());
         detailMessage.setHasReception(list.size());
-        logger.info("--------------------{}-{}跑完---------------------------", name, DateTimeUtil.stampToDate(getNowStamp()));
+        logger.info("-----------------{}-{}跑完-------------------", name, DateTimeUtil.stampToDate(getNowStamp()));
         return detailMessage;
     }
 }

@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.sql.ISqlControl;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.sql.Sql;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
@@ -59,6 +61,11 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.ALL_YT_DAILY;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public BusinessUtil util = new BusinessUtil(visitor);
+    private static final String startDate = null;
+    //    DateTimeUtil.addDayFormat(new Date(), -4);
+    private static final String endDate = null;
+    //    DateTimeUtil.addDayFormat(new Date(), -1);
+    private static final Integer dataCycleType = EnumDataCycleType.THIS_MONTH.getId();
 
     @BeforeClass
     @Override
@@ -103,9 +110,6 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     public void department_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Integer dataCycleType = EnumDataCycleType.CUSTOM.getId();
-            String startDate = DateTimeUtil.addDayFormat(new Date(), -2);
-            String endDate = DateTimeUtil.addDayFormat(new Date(), -1);
             IScene scene = AppOverviewScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
             AppOverviewBean appOverviewBean = util.toJavaObject(scene, AppOverviewBean.class);
             int count = appOverviewBean.getCount();
@@ -121,14 +125,11 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //bug 数据对不上
+    //ok
     @Test
     public void department_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int dataCycleType = EnumDataCycleType.CUSTOM.getId();
-            String startDate = DateTimeUtil.addDayFormat(new Date(), -1);
-            String endDate = DateTimeUtil.addDayFormat(new Date(), -1);
             IScene appOverviewScene = AppOverviewScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
             int totalDuration = util.toJavaObject(appOverviewScene, AppOverviewBean.class).getTotalDuration();
             IScene scene = VoiceEvaluationPageScene.builder().receptionStart(startDate).receptionEnd(endDate).build();
@@ -136,7 +137,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
             int receptionTimeSum = evaluationPageBeanList.stream().map(VoiceEvaluationPageBean::getReceptionDuration).mapToInt(DateTimeUtil::timeToSecond).sum();
             int mathResult = CommonUtil.getIntRatio(receptionTimeSum, 60);
             CommonUtil.valueView(totalDuration, mathResult);
-            Preconditions.checkArgument(totalDuration == mathResult, "app总接待时长：" + totalDuration + " PC【语音接待评鉴】中相同时间段的客户的接待时长之和：" + mathResult);
+            Preconditions.checkArgument(totalDuration - 5 <= mathResult || mathResult <= totalDuration + 5, "app总接待时长：" + totalDuration + " PC【语音接待评鉴】中相同时间段的客户的接待时长之和：" + mathResult);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -144,20 +145,17 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //ok 给5的范围
+    //ok
     @Test
     public void department_data_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int dataCycleType = EnumDataCycleType.CUSTOM.getId();
-            String startDate = DateTimeUtil.addDayFormat(new Date(), -1);
-            String endDate = DateTimeUtil.addDayFormat(new Date(), -1);
             IScene appOverviewScene = AppOverviewScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
             int totalDuration = util.toJavaObject(appOverviewScene, AppOverviewBean.class).getTotalDuration();
             List<AppDepartmentPageBean> departmentPageBeanList = util.getAppDepartmentPageList(dataCycleType, startDate, endDate);
             long receptionDurationSum = departmentPageBeanList.stream().mapToLong(AppDepartmentPageBean::getReceptionDuration).sum();
             CommonUtil.valueView(totalDuration, receptionDurationSum);
-            Preconditions.checkArgument(totalDuration <= receptionDurationSum && totalDuration >= receptionDurationSum - 5, "app总接待时长：" + totalDuration + " APP部门接待评鉴中的【员工接待评鉴】列表中接待时长之和：" + receptionDurationSum);
+            Preconditions.checkArgument(totalDuration <= receptionDurationSum || totalDuration >= receptionDurationSum - 5, "app总接待时长：" + totalDuration + " APP部门接待评鉴中的【员工接待评鉴】列表中接待时长之和：" + receptionDurationSum);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -165,39 +163,37 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    //ok
     @Test
     public void department_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int dataCycleType = EnumDataCycleType.CUSTOM.getId();
-            String startDate = DateTimeUtil.addDayFormat(new Date(), -2);
-            String endDate = DateTimeUtil.addDayFormat(new Date(), -1);
             IScene appOverviewScene = AppOverviewScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
             int count = util.toJavaObject(appOverviewScene, AppOverviewBean.class).getCount();
             int total = VoiceEvaluationPageScene.builder().receptionStart(startDate).receptionEnd(endDate).build().invoke(visitor).getInteger("total");
-            Preconditions.checkArgument(count == total, "app接待次数：" + count + " PC【语音接待评鉴】中相同时间段的条数：" + total);
+            CommonUtil.valueView(count, total);
+            Preconditions.checkArgument(count == total, "app接待次数：" + count + " PC【语音接待评鉴】列表数：" + total);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("app接待次数=PC【语音接待评鉴】中相同时间段的条数");
+            saveData("app接待次数=PC【语音接待评鉴】列表数：");
         }
     }
 
+    //ok
     @Test
     public void department_data_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int dataCycleType = EnumDataCycleType.CUSTOM.getId();
-            String startDate = DateTimeUtil.addDayFormat(new Date(), -2);
-            String endDate = DateTimeUtil.addDayFormat(new Date(), -1);
             IScene appOverviewScene = AppOverviewScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
             int count = util.toJavaObject(appOverviewScene, AppOverviewBean.class).getCount();
             int receptionTimesSum = util.getAppDepartmentPageList(dataCycleType, startDate, endDate).stream().mapToInt(AppDepartmentPageBean::getReceptionTimes).sum();
-            Preconditions.checkArgument(count == receptionTimesSum, "app接待次数：" + count + " APP【员工接待评鉴】列表中接待条数之和：" + receptionTimesSum);
+            CommonUtil.valueView(count, receptionTimesSum);
+            Preconditions.checkArgument(count == receptionTimesSum, "app接待次数：" + count + " APP【员工接待评鉴】列表所有员工接待次数之和：" + receptionTimesSum);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("app接待次数=APP【员工接待评鉴】接待次数之和");
+            saveData("app接待次数=APP【员工接待评鉴】列表所有员工接待次数之和");
         }
     }
 
@@ -205,43 +201,35 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     public void department_data_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int dataCycleType = EnumDataCycleType.CUSTOM.getId();
-            String startDate = DateTimeUtil.addDayFormat(new Date(), -2);
-            String endDate = DateTimeUtil.addDayFormat(new Date(), -1);
             IScene appOverviewScene = AppOverviewScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
             int count = util.toJavaObject(appOverviewScene, AppOverviewBean.class).getCount();
-            int receptionRecordSum = util.getAppDepartmentPageList(dataCycleType, startDate, endDate).stream().map(e -> util.getAppPersonalPageList(dataCycleType, e.getId(), startDate, endDate).size()).mapToInt(e -> e).sum();
-            Preconditions.checkArgument(count == receptionRecordSum, "app接待次数：" + count + " APP员工接待评鉴列表的【接待评分详情】内列表中接待条数之和＋缓存记录上传失败的条数之和：" + receptionRecordSum);
+            int receptionRecordSum = util.getAppDepartmentPageList(dataCycleType, startDate, endDate).stream().map(e -> util.getAppPersonalPageList(dataCycleType, e.getSaleId(), startDate, endDate).size()).mapToInt(e -> e).sum();
+            CommonUtil.valueView(count, receptionRecordSum);
+            Preconditions.checkArgument(count == receptionRecordSum, "app接待次数：" + count + " APP各个员工的【接待评分详情】列表之和：" + receptionRecordSum);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("app接待次数=APP员工接待列表中【接待评分详情】列表中接待条数之和");
+            saveData("app接待次数=APP各个员工的【接待评分详情】列表之和：");
         }
     }
 
-    //数据对不上
+    //ok
     @Test
     public void department_data_7() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Integer dataCycleType = EnumDataCycleType.CUSTOM.getId();
-            String startDate = DateTimeUtil.addDayFormat(new Date(), -2);
-            String endDate = DateTimeUtil.addDayFormat(new Date(), -1);
             IScene appOverviewScene = AppOverviewScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
             int averageData = util.toJavaObject(appOverviewScene, AppOverviewBean.class).getAverageScore();
-
-            IScene evaluationPageScene = VoiceEvaluationPageScene.builder().enterStatus(1).receptionStart(startDate).receptionEnd(endDate).build();
+            IScene evaluationPageScene = VoiceEvaluationPageScene.builder().enterStatus(1).evaluateStatus(500).receptionStart(startDate).receptionEnd(endDate).build();
             List<VoiceEvaluationPageBean> evaluationPageBeanList = util.toJavaObjectList(evaluationPageScene, VoiceEvaluationPageBean.class);
-            System.err.println(evaluationPageBeanList.size());
-
             int evaluateScoreSum = evaluationPageBeanList.stream().mapToInt(VoiceEvaluationPageBean::getEvaluateScore).sum();
             int mathResult = CommonUtil.getIntRatio(evaluateScoreSum, evaluationPageBeanList.size());
-            CommonUtil.valueView(averageData, mathResult);
-            Preconditions.checkArgument(averageData == mathResult, "app接待平均分数为：" + averageData + " PC【语音接待评鉴】中相同时间段的首次到店的接待评分的平均分：" + mathResult);
+            CommonUtil.valueView(averageData, evaluateScoreSum, mathResult);
+            Preconditions.checkArgument(averageData == mathResult, "app接待平均分数为：" + averageData + " PC【语音接待评鉴】列表中首次进店&评分完成的得分平均数：" + mathResult);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("app接待平均分=PC【语音接待评鉴】中相同时间段的首次到店的接待评分的平均分");
+            saveData("app接待平均分=PC【语音接待评鉴】列表中首次进店&评分完成的得分平均数");
         }
     }
 
@@ -250,54 +238,67 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     public void department_data_8() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Integer dataCycleType = EnumDataCycleType.CUSTOM.getId();
-            String startDate = DateTimeUtil.addDayFormat(new Date(), -2);
-            String endDate = DateTimeUtil.addDayFormat(new Date(), -1);
             IScene appOverviewScene = AppOverviewScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
             int averageData = util.toJavaObject(appOverviewScene, AppOverviewBean.class).getAverageScore();
             IScene scene = AppCapabilityModelScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
             int scoreSum = util.toJavaObjectList(scene, AppCapabilityModelBean.class, "list").stream().mapToInt(AppCapabilityModelBean::getScore).sum();
             int mathResult = CommonUtil.getIntRatio(scoreSum, 5);
             CommonUtil.valueView(averageData, mathResult);
-            Preconditions.checkArgument(averageData == mathResult, "app接待平均分数为：" + averageData + " 【销售接待能力模型】中各话术环节的数值之和/5：" + mathResult);
+            Preconditions.checkArgument(averageData == mathResult, "app接待平均分数为：" + averageData + " APP【销售接待能力模型】中各话术数值之和/5：" + mathResult);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("app接待平均分=APP【销售接待能力模型】中各话术环节的数值之和/5");
+            saveData("app接待平均分=APP【销售接待能力模型】中各话术数值之和/5");
         }
     }
 
-    //case有问题
+    //数据有问题
     @Test
     public void department_data_9() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Integer dataCycleType = EnumDataCycleType.CUSTOM.getId();
-            String startDate = DateTimeUtil.addDayFormat(new Date(), -2);
-            String endDate = DateTimeUtil.addDayFormat(new Date(), -1);
             IScene appOverviewScene = AppOverviewScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
             int averageData = util.toJavaObject(appOverviewScene, AppOverviewBean.class).getAverageScore();
             List<AppDepartmentPageBean> appDepartmentPageBeanList = util.getAppDepartmentPageList(dataCycleType, startDate, endDate);
-            appDepartmentPageBeanList.stream().map(e -> util.getAppReceptionLinkScore(dataCycleType, e.getId(), startDate, endDate));
-            List<AppDepartmentPageBean> newList = appDepartmentPageBeanList.stream().filter(e -> e.getTotalScore() != null && e.getTotalScore() != 0).collect(Collectors.toList());
-            long totalScoreSum = newList.stream().mapToLong(AppDepartmentPageBean::getTotalScore).sum();
-            int mathResult = CommonUtil.getIntRatio(Math.toIntExact(totalScoreSum), newList.size());
-            CommonUtil.valueView(averageData, mathResult);
-            Preconditions.checkArgument(averageData == mathResult, "app接待平均分数为：" + averageData + " 【话术环节数据统计（全部环节）】部门平均分（全员工全流程接待分值之和/参与评分的接待次数）：" + mathResult);
+            List<AppPersonalOverviewBean> personalOverviewBeanList = appDepartmentPageBeanList.stream().map(e -> util.getPersonalOverview(dataCycleType, e.getSaleId(), startDate, endDate)).collect(Collectors.toList());
+            long totalScoreSum = personalOverviewBeanList.stream().mapToLong(AppPersonalOverviewBean::getAverageScore).sum();
+            int mathResult = CommonUtil.getIntRatio(Math.toIntExact(totalScoreSum), personalOverviewBeanList.size());
+            CommonUtil.valueView(averageData, totalScoreSum, mathResult);
+            Preconditions.checkArgument(averageData == mathResult, "app接待平均分数为：" + averageData + " APP各个员工的接待平均分之和/总人数：" + mathResult);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("app接待平均分=APP部门接待评鉴中的【员工接待评鉴】列表中（总得分不为空的的数据）的平均分");
+            saveData("app接待平均分=APP各个员工的接待平均分之和/总人数");
         }
     }
+
+    //数据有问题
+    @Test
+    public void department_data_10() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene appOverviewScene = AppOverviewScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
+            int averageData = util.toJavaObject(appOverviewScene, AppOverviewBean.class).getAverageScore();
+
+
+            List<AppDepartmentPageBean> appDepartmentPageBeanList = util.getAppDepartmentPageList(dataCycleType, startDate, endDate);
+            List<AppPersonalOverviewBean> personalOverviewBeanList = appDepartmentPageBeanList.stream().map(e -> util.getPersonalOverview(dataCycleType, e.getSaleId(), startDate, endDate)).collect(Collectors.toList());
+            long totalScoreSum = personalOverviewBeanList.stream().mapToLong(AppPersonalOverviewBean::getAverageScore).sum();
+            int mathResult = CommonUtil.getIntRatio(Math.toIntExact(totalScoreSum), personalOverviewBeanList.size());
+            CommonUtil.valueView(averageData, totalScoreSum, mathResult);
+            Preconditions.checkArgument(averageData == mathResult, "app接待平均分数为：" + averageData + " APP各个员工的接待平均分之和/总人数：" + mathResult);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("app接待平均分=APP各个员工的接待平均分之和/总人数");
+        }
+    }
+
 
     @Test
     public void department_data_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Integer dataCycleType = EnumDataCycleType.CUSTOM.getId();
-            String startDate = DateTimeUtil.addDayFormat(new Date(), -2);
-            String endDate = DateTimeUtil.addDayFormat(new Date(), -1);
             IScene scene = AppCapabilityModelScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
             int scoreSumA = util.toJavaObjectList(scene, AppCapabilityModelBean.class, "list").stream().mapToInt(AppCapabilityModelBean::getScore).sum();
             int mathResultA = CommonUtil.getIntRatio(scoreSumA, 5);

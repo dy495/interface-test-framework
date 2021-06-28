@@ -43,6 +43,9 @@ public class AppDepartmentPageBean implements Serializable {
     @JSONField(name = "id")
     private String id;
 
+    @JSONField(name = "sale_id")
+    private String saleId;
+
     /**
      * 描述 返回的结果list
      * 版本 v1.0

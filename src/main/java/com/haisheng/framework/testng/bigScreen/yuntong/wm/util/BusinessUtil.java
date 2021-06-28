@@ -9,11 +9,13 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.util.BasicUtil;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarModel;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.customer.EnumCarStyle;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.personaldata.AppPersonalOverviewBean;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.personaldata.AppReceptionLinkScoreBean;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.voicerecord.AppDepartmentPageBean;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.voicerecord.AppDetailBean;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.voicerecord.AppPersonalPageBean;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.enumerate.EnumDataCycleType;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.personaldata.AppPersonalOverviewScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.personaldata.AppReceptionLinkScoreScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.voicerecord.AppDepartmentPageScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.voicerecord.AppDetailScene;
@@ -91,8 +93,22 @@ public class BusinessUtil extends BasicUtil {
             lastValue = response.getJSONObject("last_value");
             array = response.getJSONArray("list");
             list.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppPersonalPageBean.class)).collect(Collectors.toList()));
-        } while (array.size() == 20);
+        } while (array.size() == 10);
         return list;
+    }
+
+    /**
+     * 获取个人数据总览
+     *
+     * @param dataCycleType 时间类型
+     * @param salesId       销售id
+     * @param startDate     开始时间
+     * @param endDate       结束时间
+     * @return 数据总览
+     */
+    public AppPersonalOverviewBean getPersonalOverview(int dataCycleType, String salesId, String startDate, String endDate) {
+        IScene scene = AppPersonalOverviewScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).salesId(salesId).build();
+        return toJavaObject(scene, AppPersonalOverviewBean.class);
     }
 
     public List<AppReceptionLinkScoreBean> getAppReceptionLinkScore(int dataCycleType, String salesId, String startDate, String endDate) {
@@ -103,6 +119,7 @@ public class BusinessUtil extends BasicUtil {
     public int getAppReceptionLinkScoreAverage(int dataCycleType, String salesId, String startDate, String endDate) {
         return getAppReceptionLinkScore(dataCycleType, salesId, startDate, endDate).stream().mapToInt(AppReceptionLinkScoreBean::getPersonAverageScore).sum();
     }
+
 
     /**
      * 获取接待详情中的平均分

@@ -67,10 +67,10 @@ public class Sql {
 
         @Override
         public ISelectStep select(String... fields) {
-            this.grammar.append("select (");
-            Arrays.stream(fields).forEach(field -> this.grammar.append(setSqlValue(field)).append(","));
+            this.grammar.append("select ");
+            Arrays.stream(fields).forEach(field -> this.grammar.append(field).append(","));
             this.grammar.replace(grammar.length() - 1, grammar.length(), "");
-            this.grammar.append(")").append(blank);
+            this.grammar.append(blank);
             return this;
         }
 
