@@ -12,6 +12,7 @@ import lombok.experimental.Accessors;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 @Getter
@@ -25,7 +26,7 @@ public class DbTable extends BaseTable {
 
     @Override
     public boolean load() {
-        String sql = !StringUtils.isEmpty(getPath()) ? getPath() : String.format(ContainerConstants.DB_TABLE_DEFAULT_SQL, getKey());
+        String sql = getPath();
         if (statement != null) {
             try {
                 if (sql.contains(ContainerConstants.UPDATE) || sql.contains(ContainerConstants.DELETE)) {
@@ -52,6 +53,7 @@ public class DbTable extends BaseTable {
                     }
                     addRow(row);
                 }
+
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();

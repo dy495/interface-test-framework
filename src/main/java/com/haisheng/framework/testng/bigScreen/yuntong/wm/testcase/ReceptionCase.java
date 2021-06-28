@@ -5,8 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.sql.ISqlControl;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.sql.Sql;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
@@ -260,7 +258,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
             IScene appOverviewScene = AppOverviewScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
             int averageData = util.toJavaObject(appOverviewScene, AppOverviewBean.class).getAverageScore();
             List<AppDepartmentPageBean> appDepartmentPageBeanList = util.getAppDepartmentPageList(dataCycleType, startDate, endDate);
-            List<AppPersonalOverviewBean> personalOverviewBeanList = appDepartmentPageBeanList.stream().map(e -> util.getPersonalOverview(dataCycleType, e.getSaleId(), startDate, endDate)).collect(Collectors.toList());
+            List<AppPersonalOverviewBean> personalOverviewBeanList = appDepartmentPageBeanList.stream().map(e -> util.getAppPersonalOverview(dataCycleType, e.getSaleId(), startDate, endDate)).collect(Collectors.toList());
             long totalScoreSum = personalOverviewBeanList.stream().mapToLong(AppPersonalOverviewBean::getAverageScore).sum();
             int mathResult = CommonUtil.getIntRatio(Math.toIntExact(totalScoreSum), personalOverviewBeanList.size());
             CommonUtil.valueView(averageData, totalScoreSum, mathResult);
@@ -279,14 +277,16 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
         try {
             IScene appOverviewScene = AppOverviewScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
             int averageData = util.toJavaObject(appOverviewScene, AppOverviewBean.class).getAverageScore();
-
-
             List<AppDepartmentPageBean> appDepartmentPageBeanList = util.getAppDepartmentPageList(dataCycleType, startDate, endDate);
-            List<AppPersonalOverviewBean> personalOverviewBeanList = appDepartmentPageBeanList.stream().map(e -> util.getPersonalOverview(dataCycleType, e.getSaleId(), startDate, endDate)).collect(Collectors.toList());
-            long totalScoreSum = personalOverviewBeanList.stream().mapToLong(AppPersonalOverviewBean::getAverageScore).sum();
-            int mathResult = CommonUtil.getIntRatio(Math.toIntExact(totalScoreSum), personalOverviewBeanList.size());
-            CommonUtil.valueView(averageData, totalScoreSum, mathResult);
-            Preconditions.checkArgument(averageData == mathResult, "app接待平均分数为：" + averageData + " APP各个员工的接待平均分之和/总人数：" + mathResult);
+            List<AppDetailBean> appDetailList = new ArrayList<>();
+//            appDepartmentPageBeanList.forEach(e -> appDetailList.addAll(util.getAppPersonalPageList(dataCycleType, e.getSaleId(), startDate, endDate)
+//                    .stream().filter(personalPage -> util.getAppVoiceRecordDetail(personalPage.getId()).getEnterStatusName().equals("首次进店"))));
+
+
+//            long totalScoreSum = personalOverviewBeanList.stream().mapToLong(AppPersonalOverviewBean::getAverageScore).sum();
+//            int mathResult = CommonUtil.getIntRatio(Math.toIntExact(totalScoreSum), personalOverviewBeanList.size());
+//            CommonUtil.valueView(averageData, totalScoreSum, mathResult);
+//            Preconditions.checkArgument(averageData == mathResult, "app接待平均分数为：" + averageData + " APP各个员工的接待平均分之和/总人数：" + mathResult);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {

@@ -82,6 +82,7 @@ public class Factory implements IFactory {
         if (table == null) {
             return new IRow[0];
         }
+        table.setPath(path);
         if (!table.load()) {
             return new IRow[0];
         }

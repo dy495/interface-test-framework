@@ -4,6 +4,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.config.OTSPrima
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.property.BaseProperty;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.row.IRow;
 import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 import org.jooq.tools.StringUtils;
 
@@ -16,7 +17,8 @@ import java.util.Map;
 public abstract class BaseTable extends BaseProperty implements ITable {
     private final Map<String, IRow> rows = new LinkedHashMap<>();
     private final Map<IRow, Integer> rowsCount = new LinkedHashMap<>();
-    private final String path;
+    @Setter
+    private String path;
     private OTSPrimaryKeyBuilder otsPrimaryKeyBuilder;
 
     protected BaseTable(@NotNull BaseBuilder<?, ?> baseBuilder) {

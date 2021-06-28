@@ -11,7 +11,7 @@ public interface ITable extends IProperty {
      *
      * @return boolean
      */
-    boolean load();
+    boolean xload();
 
     /**
      * 添加一行
@@ -27,6 +27,13 @@ public interface ITable extends IProperty {
      * @return String 路径信息
      */
     String getPath();
+
+    /**
+     * 设置表的路径，由实现类赋予实际含义
+     *
+     * @param path 路径信息
+     */
+    void setPath(String path);
 
     /**
      * 获取指定的行
