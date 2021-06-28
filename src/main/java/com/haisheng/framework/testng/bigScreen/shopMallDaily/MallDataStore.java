@@ -77,7 +77,7 @@ public class MallDataStore {
         });
     }
 
-    //    @BeforeClass
+    @BeforeClass
     public void initData() {
         pvUvInfo = new PvUvInfo();
         String rulePath = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/wm/base/datacheck/rule/规则表.xlsx";
