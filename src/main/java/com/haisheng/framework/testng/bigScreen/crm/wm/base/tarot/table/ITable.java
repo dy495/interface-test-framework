@@ -11,7 +11,7 @@ public interface ITable extends IProperty {
      *
      * @return boolean
      */
-    boolean xload();
+    boolean load();
 
     /**
      * 添加一行
