@@ -154,4 +154,13 @@ public class DataProviderMethod {
 
         };
     }
+    @DataProvider(name = "floorname")
+    public static Object[] floorname(){
+        return new String[][]{
+                {"4451","楼层L1历史数据"},
+                {"4452","楼层L2历史数据"},
+                {"4453","楼层B1历史数据"},
+
+        };
+    }
 }
