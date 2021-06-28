@@ -8,11 +8,6 @@
 
     <test name="daily-rgn" preserve-order="true">
         <classes>
-            <class name="com.haisheng.framework.testng.bigScreen.shopMallDaily.MallDataStore">
-                <methods>
-                    <include name="historyData"/>
-                </methods>
-            </class>
             <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.XundianPcData"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.XundianPcCase"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.XundianAppData"></class>
