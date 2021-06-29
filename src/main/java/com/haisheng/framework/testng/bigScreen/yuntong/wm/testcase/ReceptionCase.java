@@ -14,7 +14,6 @@ import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.departmentdat
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.departmentdata.AppOverviewBean;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.departmentdata.AppReceptionAverageScoreTrendBean;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.personaldata.AppPersonalOverviewBean;
-import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.personaldata.AppReceptionLinkScoreBean;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.personaldata.AppReceptionScoreTrendBean;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.voicerecord.AppDepartmentPageBean;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.voicerecord.AppDetailBean;
@@ -39,10 +38,7 @@ import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import org.jetbrains.annotations.NotNull;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -59,11 +55,9 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.ALL_YT_DAILY;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public BusinessUtil util = new BusinessUtil(visitor);
-    private static final String startDate = null;
-    //    DateTimeUtil.addDayFormat(new Date(), -4);
-    private static final String endDate = null;
-    //    DateTimeUtil.addDayFormat(new Date(), -1);
-    private static final Integer dataCycleType = EnumDataCycleType.THIS_MONTH.getId();
+    private static final String startDate = DateTimeUtil.addDayFormat(new Date(), -4);
+    private static final String endDate = DateTimeUtil.addDayFormat(new Date(), -1);
+    private static final Integer dataCycleType = EnumDataCycleType.CUSTOM.getId();
 
     @BeforeClass
     @Override
@@ -278,63 +272,53 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
             IScene appOverviewScene = AppOverviewScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
             int averageData = util.toJavaObject(appOverviewScene, AppOverviewBean.class).getAverageScore();
             List<AppDepartmentPageBean> appDepartmentPageBeanList = util.getAppDepartmentPageList(dataCycleType, startDate, endDate);
-            List<AppDetailBean> appDetailList = new ArrayList<>();
-//            appDepartmentPageBeanList.forEach(e -> appDetailList.addAll(util.getAppPersonalPageList(dataCycleType, e.getSaleId(), startDate, endDate)
-//                    .stream().filter(personalPage -> util.getAppVoiceRecordDetail(personalPage.getId()).getEnterStatusName().equals("首次进店"))));
-
-
-//            long totalScoreSum = personalOverviewBeanList.stream().mapToLong(AppPersonalOverviewBean::getAverageScore).sum();
-//            int mathResult = CommonUtil.getIntRatio(Math.toIntExact(totalScoreSum), personalOverviewBeanList.size());
-//            CommonUtil.valueView(averageData, totalScoreSum, mathResult);
-//            Preconditions.checkArgument(averageData == mathResult, "app接待平均分数为：" + averageData + " APP各个员工的接待平均分之和/总人数：" + mathResult);
+            List<AppPersonalPageBean> personalPageList = new ArrayList<>();
+            appDepartmentPageBeanList.forEach(e -> personalPageList.addAll(util.getAppPersonalPageList(dataCycleType, e.getSaleId(), startDate, endDate)
+                    .stream().filter(personalPage -> util.getAppVoiceRecordDetail(personalPage.getId()).getEnterStatusName().equals("首次进店")).collect(Collectors.toList())));
+            int scoreSum = personalPageList.stream().mapToInt(e -> util.getAppVoiceRecordDetailScoresSum(e.getId())).sum();
+            int mathResult = CommonUtil.getIntRatio(scoreSum, personalPageList.size());
+            CommonUtil.valueView(averageData, scoreSum, mathResult);
+            Preconditions.checkArgument(averageData == mathResult, "app接待平均分数为：" + averageData + " 全员工全流程接待分值之和/参与评分的接待次数：" + mathResult);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("app接待平均分=APP各个员工的接待平均分之和/总人数");
+            saveData("app接待平均分=全员工全流程接待分值之和/参与评分的接待次数");
         }
     }
 
-
+    //ok
     @Test
     public void department_data_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            IScene appOverviewScene = AppOverviewScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
+            int averageData = util.toJavaObject(appOverviewScene, AppOverviewBean.class).getAverageScore();
             IScene scene = AppCapabilityModelScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
-            int scoreSumA = util.toJavaObjectList(scene, AppCapabilityModelBean.class, "list").stream().mapToInt(AppCapabilityModelBean::getScore).sum();
-            int mathResultA = CommonUtil.getIntRatio(scoreSumA, 5);
-            List<AppPersonalPageBean> personalPageBeanList = new ArrayList<>();
-            util.getAppDepartmentPageList(dataCycleType, startDate, endDate).stream().map(a -> util.getAppPersonalPageList(dataCycleType, a.getId(), startDate, endDate)).forEach(personalPageBeanList::addAll);
-            List<AppPersonalPageBean> newList = personalPageBeanList.stream().filter(e -> util.getAverageScoreByReceptionDetail(e.getId()) != null && util.getAverageScoreByReceptionDetail(e.getId()) != 0).collect(Collectors.toList());
-            int scoreSum = newList.stream().mapToInt(e -> util.getAverageScoreByReceptionDetail(e.getId())).sum();
-            int mathResult = CommonUtil.getIntRatio(scoreSum, newList.size());
-            Preconditions.checkArgument(mathResultA == mathResult, "app【我的能力模型】各话术环节分数相加/5：" + mathResultA + " APP【话术环节数据统计（全部环节）】部门平均分（全员工全流程接待分值之和/参与评分的接待次数）：" + mathResult);
+            int scoreSum = util.toJavaObjectList(scene, AppCapabilityModelBean.class, "list").stream().mapToInt(AppCapabilityModelBean::getScore).sum();
+            int mathResult = CommonUtil.getIntRatio(scoreSum, 5);
+            CommonUtil.valueView(averageData, mathResult);
+            Preconditions.checkArgument(averageData == mathResult, "app接待平均分数为：" + averageData + " APP【销售接待能力模型】中各话术数值之和/5：" + mathResult);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("app【我的能力模型】各话术环节分数相加/5=APP【话术环节数据统计（全部环节）】部门平均分（全员工全流程接待分值之和/参与评分的接待次数）");
+            saveData("app接待平均分=APP【销售接待能力模型】中各话术数值之和/5");
         }
     }
 
+    //平均分有误
     @Test
     public void department_data_12() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Map<Integer, Integer> map = new HashMap<>();
-            Map<Integer, Integer> sumMap = new HashMap<>();
-            Integer dataCycleType = EnumDataCycleType.CUSTOM.getId();
-            String startDate = DateTimeUtil.addDayFormat(new Date(), -2);
-            String endDate = DateTimeUtil.addDayFormat(new Date(), -1);
             IScene scene = AppCapabilityModelScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
-            util.toJavaObjectList(scene, AppCapabilityModelBean.class, "list").forEach(e -> map.put(e.getType(), e.getScore()));
-            List<AppPersonalPageBean> personalPageBeanList = new ArrayList<>();
-            util.getAppDepartmentPageList(dataCycleType, startDate, endDate).stream().map(a -> util.getAppPersonalPageList(dataCycleType, a.getId(), startDate, endDate)).forEach(personalPageBeanList::addAll);
-            List<AppPersonalPageBean> newList = personalPageBeanList.stream().filter(e -> util.getAverageScoreByReceptionDetail(e.getId()) != null && util.getAverageScoreByReceptionDetail(e.getId()) != 0).collect(Collectors.toList());
-            map.forEach((key, value) -> sumMap.put(key, newList.stream().mapToInt(e -> util.getScoreByType(e.getId(), key)).sum()));
-            sumMap.forEach((key, value) -> {
-                int score = map.entrySet().stream().filter(e -> e.getKey().equals(key)).map(Map.Entry::getValue).findFirst().orElse(0);
-                int mathResult = CommonUtil.getIntRatio(sumMap.get(key), newList.size());
-                Preconditions.checkArgument(score == mathResult, "能力模型中话术" + key + "的值为：" + score + " 全员工全流程接待分值之和/参与评分的接待次数值为：" + mathResult);
-            });
+            int scoreSum = util.toJavaObjectList(scene, AppCapabilityModelBean.class, "list").stream().mapToInt(AppCapabilityModelBean::getScore).sum();
+            int mathResult = CommonUtil.getIntRatio(scoreSum, 5);
+            List<AppDepartmentPageBean> appDepartmentPageBeanList = util.getAppDepartmentPageList(dataCycleType, startDate, endDate);
+            List<AppPersonalOverviewBean> personalOverviewList = appDepartmentPageBeanList.stream().map(e -> util.getAppPersonalOverview(dataCycleType, e.getSaleId(), startDate, endDate)).collect(Collectors.toList());
+            long totalScoreSum = personalOverviewList.stream().mapToLong(AppPersonalOverviewBean::getAverageScore).sum();
+            int mathResult2 = CommonUtil.getIntRatio(Math.toIntExact(totalScoreSum), personalOverviewList.size());
+            CommonUtil.valueView(scoreSum, mathResult, totalScoreSum, mathResult2);
+            Preconditions.checkArgument(mathResult == mathResult2, "app【我的能力模型】各话术环节分数相加/5：" + mathResult + " APP【话术环节数据统计（全部环节）】部门平均分（全员工全流程接待分值之和/参与评分的接待次数：" + mathResult2);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -342,78 +326,71 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    //ok 3天内数据一致，本月数据一致
     @Test
     public void department_data_13() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Integer dataCycleType = EnumDataCycleType.CUSTOM.getId();
-            String startDate = DateTimeUtil.addDayFormat(new Date(), -2);
-            String endDate = DateTimeUtil.addDayFormat(new Date(), -1);
-            IScene scene = AppLinkDataCarouselScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
-            List<AppLinkDataCarouselBean> dataCarouselBeanList = util.toJavaObjectList(scene, AppLinkDataCarouselBean.class, "list");
-            int qualifiedRatio = dataCarouselBeanList.stream().filter(e -> e.getType().equals(1)).map(AppLinkDataCarouselBean::getQualifiedRatio).findFirst().orElse(0);
-            List<AppPersonalPageBean> list = new ArrayList<>();
-            util.getAppDepartmentPageList(dataCycleType, startDate, endDate).stream().map(e -> util.getAppPersonalPageList(dataCycleType, e.getId(), startDate, endDate)).forEach(list::addAll);
-            List<Integer> averageScoreList = list.stream().filter(e -> util.getAverageScoreByReceptionDetail(e.getId()) != null && util.getAverageScoreByReceptionDetail(e.getId()) != 0).map(e -> util.getAverageScoreByReceptionDetail(e.getId())).collect(Collectors.toList());
-            int pass = (int) averageScoreList.stream().filter(e -> e >= 60).count();
-            int mathResult = CommonUtil.getIntRatio(pass, averageScoreList.size());
-            CommonUtil.valueView(pass, mathResult);
-            Preconditions.checkArgument(qualifiedRatio == mathResult, "接待合格率为：" + qualifiedRatio + " 员工接待分数超过60的比例为：" + mathResult);
+            IScene capabilityModelScene = AppCapabilityModelScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
+            JSONArray modelList = capabilityModelScene.invoke(visitor).getJSONArray("list");
+
+            IScene linkDataCarouselScene = AppLinkDataCarouselScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
+            JSONArray linkList = linkDataCarouselScene.invoke(visitor).getJSONArray("list");
+            modelList.stream().map(model -> (JSONObject) model).forEach(model -> linkList.stream().map(link -> (JSONObject) link)
+                    .filter(link -> link.getInteger("type").equals(model.getInteger("type")))
+                    .forEach(link -> {
+                        int score = model.getInteger("score");
+                        int averageScore = link.getInteger("average_score");
+                        CommonUtil.valueView(score, averageScore);
+                        Preconditions.checkArgument(averageScore == score, "欢迎接待中" + link.getString("type_name") + "的部门平均分：" + averageScore + " 能力模型中：" + score);
+                        CommonUtil.logger(link.getString("type_name"));
+                    }));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("【销售能力管理中】的合格率=部门接待评鉴中【员工接待评鉴】列表中的总得分大于60的员工所占的比例");
+            saveData("app【销售能力管理中】的合格率=部门接待评鉴中【员工接待评鉴】列表中的总得分大于60的员工所占的比例");
         }
     }
 
+    //ok
     @Test
     public void department_data_14() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int dataCycleType = 0;
-            String startDate = DateTimeUtil.addDayFormat(new Date(), -1);
-            String endDate = DateTimeUtil.getFormat(new Date());
-            IScene scene = AppCapabilityModelScene.builder().startDate(startDate).endDate(endDate).dataCycleType(dataCycleType).build();
-            int scoreSum = util.toJavaObjectList(scene, AppCapabilityModelBean.class).stream().mapToInt(AppCapabilityModelBean::getScore).sum();
-            int mathResult = CommonUtil.getIntRatio(scoreSum, 5);
-            List<AppPersonalPageBean> list = new ArrayList<>();
-            util.getAppDepartmentPageList(dataCycleType, startDate, endDate).stream().map(e -> util.getAppPersonalPageList(dataCycleType, e.getId(), startDate, endDate)).forEach(list::addAll);
-            List<Integer> averageScoreList = list.stream().filter(e -> util.getAverageScoreByReceptionDetail(e.getId()) != null && util.getAverageScoreByReceptionDetail(e.getId()) != 0).map(e -> util.getAverageScoreByReceptionDetail(e.getId())).collect(Collectors.toList());
-            int averageScoreSum = averageScoreList.stream().mapToInt(e -> e).sum();
-            int newMathResult = CommonUtil.getIntRatio(averageScoreSum, averageScoreList.size());
-            Preconditions.checkArgument(mathResult == newMathResult, "【我的能力模型】各话术环节分数相加/5：" + mathResult + "部门接待评鉴中【员工接待评鉴】接待详情中的首次接待平均分：" + mathResult);
+            IScene scene = AppLinkDataCarouselScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
+            scene.invoke(visitor).getJSONArray("list").stream().map(e -> (JSONObject) e).forEach(e -> Preconditions.checkArgument(e.getInteger("qualified_score") == 60, e.getString("type_name") + "的合格线为" + e.getInteger("qualified_score") + "分"));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("【我的能力模型】各话术环节分数相加/5=部门接待评鉴中【员工接待评鉴】接待详情中的首次接待平均分");
+            saveData("合格线=后台配置60分");
         }
     }
 
+    //ok
     @Test
     public void department_data_15() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Map<Integer, Integer> map = new HashMap<>();
-            int dataCycleType = 0;
-            String startDate = DateTimeUtil.addDayFormat(new Date(), -1);
-            String endDate = DateTimeUtil.getFormat(new Date());
-            IScene receptionLinkScoreScene = AppReceptionLinkScoreScene.builder().startDate(startDate).endDate(endDate).dataCycleType(dataCycleType).build();
-            util.toJavaObjectList(receptionLinkScoreScene, AppReceptionLinkScoreBean.class).forEach(e -> map.put(e.getType(), e.getDepartmentAverageScore()));
-            List<AppPersonalPageBean> list = new ArrayList<>();
-            util.getAppDepartmentPageList(dataCycleType, startDate, endDate).stream().map(e -> util.getAppPersonalPageList(dataCycleType, e.getId(), startDate, endDate)).forEach(list::addAll);
-            List<AppPersonalPageBean> newList = list.stream().filter(e -> util.getAverageScoreByReceptionDetail(e.getId()) != null && util.getAverageScoreByReceptionDetail(e.getId()) != 0).collect(Collectors.toList());
-            IScene linkDataCarouselScene = AppLinkDataCarouselScene.builder().startDate(startDate).endDate(endDate).dataCycleType(dataCycleType).build();
-            List<AppLinkDataCarouselBean> linkDataCarouselBeanList = util.toJavaObjectList(linkDataCarouselScene, AppLinkDataCarouselBean.class);
-            map.forEach((key, value) -> {
-                int averageRatio = linkDataCarouselBeanList.stream().filter(e -> e.getType().equals(key)).map(AppLinkDataCarouselBean::getAverageRatio).findFirst().orElse(0);
-                int passCount = (int) newList.stream().filter(e -> util.getScoreByType(e.getId(), key) > value).count();
-                int mathResult = CommonUtil.getIntRatio(passCount, newList.size());
-                Preconditions.checkArgument(averageRatio == mathResult, "平均分达成率：" + averageRatio + "【员工接待评鉴列表】超过部门平均分的接待次数/参与评分的总接待次数：" + mathResult);
-            });
+            IScene scene = AppLinkDataCarouselScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
+            List<AppLinkDataCarouselBean> linkDataCarouselList = util.toJavaObjectList(scene, AppLinkDataCarouselBean.class, "list");
+            int qualifiedRatio = linkDataCarouselList.stream().filter(e -> e.getTypeName().equals("全部环节")).map(AppLinkDataCarouselBean::getQualifiedRatio).findFirst().orElse(0);
+            //员工评鉴列表
+            List<AppDepartmentPageBean> departmentPageList = util.getAppDepartmentPageList(dataCycleType, startDate, endDate);
+            //员工接待列表
+            List<AppPersonalPageBean> personalPageList = new ArrayList<>();
+            departmentPageList.stream().map(e -> util.getAppPersonalPageList(dataCycleType, e.getSaleId(), startDate, endDate)).forEach(personalPageList::addAll);
+            //员工解答详情中首次接待的条数
+            List<AppDetailBean> detailList = new ArrayList<>();
+            personalPageList.stream().map(e -> util.getAppVoiceRecordDetail(e.getId())).filter(e -> e.getEnterStatusName().equals("首次进店") && e.getAverageScore() != null && e.getAverageScore() != 0).forEach(detailList::add);
+            //接待详情中分数超过60的
+            int passCount = (int) detailList.stream().filter(e -> e.getAverageScore() != null && e.getAverageScore() >= 60).count();
+            int mathResult = CommonUtil.getIntPercent(passCount, detailList.size());
+            CommonUtil.valueView(qualifiedRatio, mathResult);
+            Preconditions.checkArgument(qualifiedRatio == mathResult, "app【销售能力管理中】的合格率：" + qualifiedRatio + " APP接待分数>=60分的次数/接待详情中有得分的总接待次数：" + mathResult);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("平均分达成率=【员工接待评鉴列表】超过部门平均分的接待次数/参与评分的总接待次数*100%");
+            saveData("app【销售能力管理中】的合格率=接待分数>=60分的次数/APP接待详情中有得分的总接待次数");
         }
     }
 
@@ -421,27 +398,20 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     public void department_data_16() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Map<Integer, Integer> map = new HashMap<>();
-            Integer dataCycleType = 0;
-            String startDate = DateTimeUtil.addDayFormat(new Date(), -1);
-            String endDate = DateTimeUtil.getFormat(new Date());
-            IScene receptionLinkScoreScene = AppReceptionLinkScoreScene.builder().startDate(startDate).endDate(endDate).dataCycleType(dataCycleType).build();
-            util.toJavaObjectList(receptionLinkScoreScene, AppReceptionLinkScoreBean.class).forEach(e -> map.put(e.getType(), e.getDepartmentAverageScore()));
-            List<AppPersonalPageBean> list = new ArrayList<>();
-            util.getAppDepartmentPageList(dataCycleType, startDate, endDate).stream().map(e -> util.getAppPersonalPageList(dataCycleType, e.getId(), startDate, endDate)).forEach(list::addAll);
-            List<AppPersonalPageBean> newList = list.stream().filter(e -> util.getAverageScoreByReceptionDetail(e.getId()) != null && util.getAverageScoreByReceptionDetail(e.getId()) != 0).collect(Collectors.toList());
-            IScene linkDataCarouselScene = AppLinkDataCarouselScene.builder().startDate(startDate).endDate(endDate).dataCycleType(dataCycleType).build();
-            List<AppLinkDataCarouselBean> linkDataCarouselBeanList = util.toJavaObjectList(linkDataCarouselScene, AppLinkDataCarouselBean.class);
-            map.forEach((key, value) -> {
-                int qualifiedRatio = linkDataCarouselBeanList.stream().filter(e -> e.getType().equals(key)).map(AppLinkDataCarouselBean::getQualifiedRatio).findFirst().orElse(0);
-                int passCount = (int) newList.stream().filter(e -> util.getScoreByType(e.getId(), key) > 60).count();
-                int mathResult = CommonUtil.getIntRatio(passCount, newList.size());
-                Preconditions.checkArgument(qualifiedRatio == mathResult, "某一环节的接待合格率：" + qualifiedRatio + "【员工接待评鉴列表】超过60分的接待次数/参与评分的总接待次数：" + mathResult);
-            });
+            IScene scene = AppCapabilityModelScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
+            int scoreSum = util.toJavaObjectList(scene, AppCapabilityModelBean.class, "list").stream().mapToInt(AppCapabilityModelBean::getScore).sum();
+            int mathResult = CommonUtil.getIntRatio(scoreSum, 5);
+            List<AppDepartmentPageBean> departmentPageList = util.getAppDepartmentPageList(dataCycleType, startDate, endDate);
+            List<AppPersonalPageBean> personalPageList = new ArrayList<>();
+            departmentPageList.stream().map(e -> util.getAppPersonalPageList(dataCycleType, e.getSaleId(), startDate, endDate)).forEach(personalPageList::addAll);
+            personalPageList.stream().map(e -> util.getAppVoiceRecordDetail(e.getId()))
+                    .filter(e -> e.getEnterStatusName().equals("首次进店"))
+                    .filter(e -> e.getDepartmentAverageScore() != null)
+                    .forEach(e -> Preconditions.checkArgument(mathResult == e.getDepartmentAverageScore(), "各话术环节分数相加/5：" + mathResult + " APP接待详情中的部门平均分：" + e.getDepartmentAverageScore()));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("某一环节的接待合格率=【员工接待评鉴列表】超过60分的接待次数/参与评分的总接待次数*100%");
+            saveData("各话术环节分数相加/5=APP接待详情中的部门平均分");
         }
     }
 
@@ -449,51 +419,96 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     public void department_data_17() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Integer dataCycleType = 0;
-            String startDate = DateTimeUtil.addDayFormat(new Date(), -1);
-            String endDate = DateTimeUtil.getFormat(new Date());
-            IScene scene = AppReceptionScoreTrendScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
-            AppReceptionScoreTrendBean appReceptionScoreTrend = util.toFirstJavaObject(scene, AppReceptionScoreTrendBean.class);
-            int sum = appReceptionScoreTrend.getOne() + appReceptionScoreTrend.getTwo() + appReceptionScoreTrend.getThree() + appReceptionScoreTrend.getFour() + appReceptionScoreTrend.getFive();
-            int mathResult = CommonUtil.getIntRatio(sum, 5);
-            IScene scene1 = AppReceptionAverageScoreTrendScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
-            AppReceptionAverageScoreTrendBean appReceptionAverageScoreTrend = util.toFirstJavaObject(scene1, AppReceptionAverageScoreTrendBean.class);
-            int totalAverageScore = appReceptionAverageScoreTrend.getTotalAverageScore();
-            Preconditions.checkArgument(totalAverageScore == mathResult, "（筛选某一天）【部门总平均分趋势】分数：" + totalAverageScore + "【各环节得分趋势】各话术环节平均分之和/5：" + mathResult);
+            IScene scene = AppLinkDataCarouselScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
+            List<AppLinkDataCarouselBean> linkDataCarouselList = util.toJavaObjectList(scene, AppLinkDataCarouselBean.class, "list");
+            AppLinkDataCarouselBean linkDataCarousel = linkDataCarouselList.stream().filter(e -> e.getTypeName().equals("全部环节")).findFirst().orElse(null);
+            assert linkDataCarousel != null;
+            int averageScore = linkDataCarousel.getAverageScore() == null ? 0 : linkDataCarousel.getAverageScore();
+            int averageRatio = linkDataCarousel.getAverageRatio() == null ? 0 : linkDataCarousel.getAverageRatio();
+            //员工评鉴列表
+            List<AppDepartmentPageBean> departmentPageList = util.getAppDepartmentPageList(dataCycleType, startDate, endDate);
+            //员工接待列表
+            List<AppPersonalPageBean> personalPageList = new ArrayList<>();
+            departmentPageList.stream().map(e -> util.getAppPersonalPageList(dataCycleType, e.getSaleId(), startDate, endDate)).forEach(personalPageList::addAll);
+            //员工解答详情中首次接待的条数
+            List<AppDetailBean> detailList = new ArrayList<>();
+            personalPageList.stream().map(e -> util.getAppVoiceRecordDetail(e.getId())).filter(e -> e.getEnterStatusName().equals("首次进店") && e.getAverageScore() != null && e.getAverageScore() != 0).forEach(detailList::add);
+            //接待详情中分数超过60的
+            int passCount = (int) detailList.stream().filter(e -> e.getAverageScore() != null && e.getAverageScore() >= averageScore).count();
+            int mathResult = CommonUtil.getIntPercent(passCount, detailList.size());
+            CommonUtil.valueView(averageRatio, mathResult);
+            Preconditions.checkArgument(averageRatio == mathResult, "app【销售能力管理中】的合格率：" + averageRatio + " APP接待分数>=60分的次数/接待详情中有得分的总接待次数：" + mathResult);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("（筛选某一天）【部门总平均分趋势】分数=【各环节得分趋势】各话术环节平均分之和/5");
+            saveData("app【销售能力管理中】的合格率=APP接待分数>=60分的次数/接待详情中有得分的总接待次数");
         }
     }
 
-    @Test
-    public void department_data_18() {
+    @Test(dataProvider = "type", dataProviderClass = ReceptionCase.class)
+    public void department_data_18(int type) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Map<Integer, Integer> map = new HashMap<>();
-            Integer dataCycleType = 0;
-            String startDate = DateTimeUtil.addDayFormat(new Date(), -1);
-            String endDate = DateTimeUtil.getFormat(new Date());
-            IScene receptionScoreTrendScene = AppReceptionScoreTrendScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
-            AppReceptionScoreTrendBean appReceptionScoreTrend = util.toFirstJavaObject(receptionScoreTrendScene, AppReceptionScoreTrendBean.class);
-            IScene capabilityModelScene = AppCapabilityModelScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
-            List<AppCapabilityModelBean> capabilityModelBeanList = util.toJavaObjectList(capabilityModelScene, AppCapabilityModelBean.class);
-            capabilityModelBeanList.forEach(e -> map.put(e.getType(), e.getScore()));
-            Preconditions.checkArgument(appReceptionScoreTrend.getOne().equals(map.get(100)), "【我的能力模型】各环节得分：" + map.get(100) + "【各环节得分趋势】中的各环节得分：" + appReceptionScoreTrend.getOne());
-            Preconditions.checkArgument(appReceptionScoreTrend.getTwo().equals(map.get(200)), "【我的能力模型】各环节得分：" + map.get(200) + "【各环节得分趋势】中的各环节得分：" + appReceptionScoreTrend.getTwo());
-            Preconditions.checkArgument(appReceptionScoreTrend.getThree().equals(map.get(300)), "【我的能力模型】各环节得分：" + map.get(300) + "【各环节得分趋势】中的各环节得分：" + appReceptionScoreTrend.getThree());
-            Preconditions.checkArgument(appReceptionScoreTrend.getFour().equals(map.get(400)), "【我的能力模型】各环节得分：" + map.get(400) + "【各环节得分趋势】中的各环节得分：" + appReceptionScoreTrend.getFour());
-            Preconditions.checkArgument(appReceptionScoreTrend.getFive().equals(map.get(500)), "【我的能力模型】各环节得分：" + map.get(500) + "【各环节得分趋势】中的各环节得分：" + appReceptionScoreTrend.getFive());
+            IScene scene = AppLinkDataCarouselScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
+            List<AppLinkDataCarouselBean> linkDataCarouselList = util.toJavaObjectList(scene, AppLinkDataCarouselBean.class, "list");
+            int qualifiedRatio = linkDataCarouselList.stream().filter(e -> e.getType().equals(type)).map(AppLinkDataCarouselBean::getQualifiedRatio).findFirst().orElse(0);
+            //员工评鉴列表
+            List<AppDepartmentPageBean> departmentPageList = util.getAppDepartmentPageList(dataCycleType, startDate, endDate);
+            //员工接待列表
+            List<AppPersonalPageBean> personalPageList = new ArrayList<>();
+            departmentPageList.stream().map(e -> util.getAppPersonalPageList(dataCycleType, e.getSaleId(), startDate, endDate)).forEach(personalPageList::addAll);
+            //员工解答详情中首次接待的条数
+            List<AppDetailBean> detailList = new ArrayList<>();
+            personalPageList.stream().map(e -> util.getAppVoiceRecordDetail(e.getId())).filter(e -> e.getEnterStatusName().equals("首次进店")).forEach(detailList::add);
+            List<Integer> scoreList = new ArrayList<>();
+            detailList.forEach(e -> e.getScores().stream()
+                    .map(object -> (JSONObject) object)
+                    .filter(object -> object.getInteger("type").equals(type))
+                    .filter(object -> object.getInteger("score") != null)
+                    .filter(object -> object.getInteger("score") != 0)
+                    .forEach(object -> scoreList.add(object.getInteger("score"))));
+            int scoreSum = scoreList.stream().mapToInt(e -> e).sum();
+            int mathResult = CommonUtil.getIntRatio(scoreSum, scoreList.size());
+            CommonUtil.valueView(qualifiedRatio, mathResult);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("（筛选为某一天）【各环节得分趋势】中的各环节得分=【我的能力模型】各环节得分");
+            saveData("某一环节的接待合格率=【员工接待评鉴列表】超过60分的接待次数/参与评分的总接待次数*100%");
         }
+    }
+
+    @DataProvider(name = "type")
+    public Object[] getType() {
+        return new Integer[]{
+                100, 200, 300, 400, 500
+        };
     }
 
     @Test
     public void department_data_19() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Integer dataCycleType = EnumDataCycleType.CUSTOM.getId();
+            String startDate = "2021-06-26";
+            String endDate = "2021-06-26";
+            IScene receptionAverageScoreTrendScene = AppReceptionAverageScoreTrendScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
+            AppReceptionAverageScoreTrendBean receptionAverageScoreTrend = util.toFirstJavaObject(receptionAverageScoreTrendScene, AppReceptionAverageScoreTrendBean.class);
+            int totalAverageScore = receptionAverageScoreTrend.getTotalAverageScore();
+            IScene receptionScoreTrendScene = AppReceptionScoreTrendScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
+            AppReceptionScoreTrendBean receptionScoreTrend = util.toFirstJavaObject(receptionScoreTrendScene, AppReceptionScoreTrendBean.class);
+            int scoreSum = receptionScoreTrend.getOne() + receptionScoreTrend.getTwo() + receptionScoreTrend.getThree() + receptionScoreTrend.getFour() + receptionScoreTrend.getFive();
+            int mathResult = CommonUtil.getIntRatio(scoreSum, 5);
+            CommonUtil.valueView(totalAverageScore, mathResult);
+            Preconditions.checkArgument(mathResult >= totalAverageScore + 1 || mathResult <= totalAverageScore - 1, "筛选某一天）【部门总平均分趋势】分数：" + totalAverageScore + " 【各环节得分趋势】各话术环节平均分之和/5：" + mathResult);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("筛选某一天）【部门总平均分趋势】分数=【各环节得分趋势】各话术环节平均分之和/5");
+        }
+    }
+
+    @Test
+    public void department_data_20() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Map<Integer, Integer> map = new HashMap<>();
@@ -524,7 +539,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test
-    public void department_data_20() {
+    public void department_data_21() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Integer dataCycleType = 0;
@@ -545,7 +560,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test
-    public void department_data_21() {
+    public void department_data_22() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Integer dataCycleType = 0;
@@ -568,7 +583,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test
-    public void department_data_22() {
+    public void department_data_23() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Integer dataCycleType = 0;
@@ -589,7 +604,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test
-    public void department_data_23() {
+    public void department_data_24() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Integer dataCycleType = 0;

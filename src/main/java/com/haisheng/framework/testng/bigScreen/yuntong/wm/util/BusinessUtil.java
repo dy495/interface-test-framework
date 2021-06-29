@@ -118,6 +118,15 @@ public class BusinessUtil extends BasicUtil {
         return toJavaObject(scene, AppDetailBean.class);
     }
 
+    /**
+     * 获取接待详情的接待总得分
+     *
+     * @param receptionId 接待id
+     * @return 接待总得分
+     */
+    public int getAppVoiceRecordDetailScoresSum(long receptionId) {
+        return getAppVoiceRecordDetail(receptionId).getScores() == null ? 0 : getAppVoiceRecordDetail(receptionId).getScores().stream().map(e -> (JSONObject) e).mapToInt(e -> e.getInteger("score")).sum();
+    }
 
     public List<AppReceptionLinkScoreBean> getAppReceptionLinkScore(int dataCycleType, String salesId, String startDate, String endDate) {
         JSONObject response = AppReceptionLinkScoreScene.builder().dataCycleType(dataCycleType).salesId(salesId).startDate(startDate).endDate(endDate).build().invoke(visitor);

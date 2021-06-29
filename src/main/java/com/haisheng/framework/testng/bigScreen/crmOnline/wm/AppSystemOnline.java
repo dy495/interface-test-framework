@@ -439,7 +439,7 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
             CommonUtil.valueView(taskStatusName);
             Preconditions.checkArgument(taskStatusName != null && taskStatusName.equals(isComplete), "完成回访后,是否完成状态为" + taskStatusName);
         } else {
-            CommonUtil.warning("没有回访任务");
+            CommonUtil.valueView("没有回访任务");
         }
     }
 
@@ -500,7 +500,7 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(taskStatusName != null, "回访战败之后，任务没有变为已完成，任务id" + taskId);
             Preconditions.checkArgument(taskStatusName.equals("已完成"), "完成回访后,是否完成状态为" + taskStatusName);
         } else {
-            CommonUtil.warning("没有回访任务");
+            CommonUtil.valueView("没有回访任务");
         }
         String customerPhone = (String) map.get("customerPhone");
         CommonUtil.valueView(customerPhone);
@@ -574,7 +574,7 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
             if (list.getJSONObject(i).getString("task_status_name").equals("未完成")
                     && !list.getJSONObject(i).getString("customer_level_name").equals("O")
                     && !list.getJSONObject(i).getString("customer_level_name").equals("D")
-                    && CommonUtil.isContainStr(list.getJSONObject(i).getString("customer_phone"), strs)) {
+                    && Arrays.asList(strs).contains(list.getJSONObject(i).getString("customer_phone"))) {
                 int taskId = list.getJSONObject(i).getInteger("task_id");
                 String customerPhone = list.getJSONObject(i).getString("customer_phone");
                 map.put("taskId", taskId);
@@ -738,7 +738,7 @@ public class AppSystemOnline extends TestCaseCommon implements TestCaseStd {
                     Preconditions.checkArgument(taskStatusName.equals("未完成"), "未完成中包含" + taskStatusName + "任务id为：" + taskId);
                 }
             } else {
-                CommonUtil.warning("不存在未完成的回访任务");
+                CommonUtil.valueView("不存在未完成的回访任务");
             }
         } catch (Exception | AssertionError e) {
             e.printStackTrace();

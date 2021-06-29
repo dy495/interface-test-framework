@@ -2,6 +2,9 @@ package com.haisheng.framework.testng.bigScreen.crm.wm.base.datacheck.data;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.sql.IFromStep;
+import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.field.IField;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.row.IRow;
 import lombok.Data;
 import lombok.Setter;
@@ -53,9 +56,14 @@ public class OTSTableData implements Serializable {
     public OTSTableData initOTSRowData() {
         List<OTSRowData> list = new LinkedList<>();
         Arrays.stream(rows).forEach(iRow -> {
-            String region = iRow.getField("region").getValue();
+            Preconditions.checkArgument(iRow != null, "行数据为空");
+            IField regionField = iRow.getField("region");
+            Preconditions.checkArgument(regionField != null, "字段region为空");
+            IField startTimeField = iRow.getField("start_time");
+            Preconditions.checkArgument(startTimeField != null, "字段start_time为空");
+            String region = regionField.getValue();
+            String startTime = startTimeField.getValue();
             String userId = iRow.getField("user_id") == null ? "N" : iRow.getField("user_id").getValue();
-            String startTime = iRow.getField("start_time").getValue();
             JSONArray regions = JSONArray.parseArray(region);
             for (int i = 0; i < regions.size(); i++) {
                 JSONObject jsonObject = regions.getJSONObject(i);

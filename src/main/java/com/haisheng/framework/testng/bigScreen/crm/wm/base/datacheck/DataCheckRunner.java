@@ -163,8 +163,7 @@ public class DataCheckRunner {
      */
     private String scopeKeyGen(String scope, String date) {
         String builder = "record" + SystemConstant.DB_SPLIT_STR +
-                scope + SystemConstant.DB_SPLIT_STR +
-                date;
+                scope + SystemConstant.DB_SPLIT_STR + date;
         String prefix = Md5Utility.getMD5String(builder).substring(0, 4);
         return prefix + SystemConstant.DB_SPLIT_STR + builder;
     }

@@ -960,7 +960,6 @@ public class Crm_AfterSale extends TestCaseCommon implements TestCaseStd {
         for (int i = 0; i < list.size(); i++) {
             if (list.getJSONObject(i).getString("reception_status_name").equals("维修中")
                     && !list.getJSONObject(i).getBoolean("service_complete")) {
-                CommonUtil.warning("存在未完成接待的维修任务");
                 haveTask = true;
                 break;
             }

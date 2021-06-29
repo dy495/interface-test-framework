@@ -65,22 +65,6 @@ public class CommonUtil {
     }
 
     /**
-     * 判断数组中是否包含一个数
-     *
-     * @param str  一个数
-     * @param strs 一个数组
-     * @return boolean 结果
-     */
-    public static boolean isContainStr(String str, String[] strs) {
-        for (String s : strs) {
-            if (s.equals(str)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
      * 结果展示
      *
      * @param value value
@@ -89,17 +73,6 @@ public class CommonUtil {
     @SafeVarargs
     public static <T> void valueView(T... value) {
         Arrays.stream(value).forEach(e -> logger.info("value:{}", e));
-    }
-
-    /**
-     * 错误提示
-     *
-     * @param w 警告
-     */
-    public static void warning(String w) {
-        System.err.println();
-        System.err.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" + w + ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-        System.err.println();
     }
 
     /**
@@ -167,7 +140,6 @@ public class CommonUtil {
      *
      * @param numerator   分子
      * @param denominator 分母
-     * @param scale       保留小数点后位数
      * @return 取整结果
      */
     public static int getIntRatio(int numerator, int denominator) {
@@ -175,13 +147,8 @@ public class CommonUtil {
         return (int) Math.ceil(c);
     }
 
-    public static void main(String[] args) {
-        int s = getIntRatio(17, 5);
-        System.err.println(s);
-    }
-
     /**
-     * 计算比值
+     * 计算比值四舍五入
      *
      * @param numerator   分子
      * @param denominator 分母
@@ -190,6 +157,17 @@ public class CommonUtil {
      */
     public static double getDoubleRatio(double numerator, double denominator, int scale) {
         return new BigDecimal(numerator / denominator).setScale(scale, BigDecimal.ROUND_HALF_UP).doubleValue();
+    }
+
+    /**
+     * 计算整数百分比
+     *
+     * @param numerator   分子
+     * @param denominator 分母
+     * @return 百分比
+     */
+    public static int getIntPercent(double numerator, double denominator) {
+        return numerator == 0 || denominator == 0 ? 0 : (int) Math.ceil(numerator / denominator * 100);
     }
 
     /**
