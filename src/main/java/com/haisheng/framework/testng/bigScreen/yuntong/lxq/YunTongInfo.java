@@ -5,6 +5,8 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.brand.AddScene;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.brand.CarStyleAddScene;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.brand.CarStylePageScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.file.UploadScene;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
@@ -72,6 +74,20 @@ public class YunTongInfo {
         Long id = AddScene.builder().name(name).logoPath(getLogo()).build().invoke(visitor).getLong("id");;
 
         return id;
+    }
+    //创建某品牌下的车系，返回车系id
+    public final long getCarStyleID(long id, int n) {
+        //创建车系
+        String manufacturer = "自动化" + System.currentTimeMillis();
+        String name = "" + Integer.toString((int) (Math.random() * Math.pow(10,n)));
+        String online_time = dt.getHistoryDate(0);
+        CarStyleAddScene.builder().brandId(id).manufacturer(manufacturer).name(name).onlineTime(online_time).build().invoke(visitor);
+
+        //获取车系id
+
+        Long carStyleId = CarStylePageScene.builder().brandId(id).name(name).page(1).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+
+        return carStyleId;
     }
 
 

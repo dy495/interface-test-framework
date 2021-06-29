@@ -1,6 +1,5 @@
 package com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.brand;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
@@ -70,6 +69,6 @@ public class CarStyleCarModelEditScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/brand/car-style/car-model/edit";
+        return "/car-platform/pc/brand/car-style/car-model/edit";
     }
 }

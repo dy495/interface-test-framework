@@ -60,7 +60,8 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.roleId = ALL_AUTHORITY.getRoleId();
         beforeClassInit(commonConfig);
         businessUtil.loginPc(ALL_AUTHORITY);
-        visitor.setProduct(EnumTestProduce.YT_DAILY_ZT);
+
+        visitor.setProduct(EnumTestProduce.YT_DAILY_ZT);  //展厅接待模块
     }
 
     @AfterClass
@@ -84,10 +85,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
-//            businessUtil.loginPc(ALL_AUTHORITY);
 
-
-            visitor.setProduct(EnumTestProduce.YT_DAILY_ZT);
 
 
             int bef = PreSaleCustomerPageScene.builder().page(1).size(1).build().invoke(visitor).getInteger("total");
@@ -136,9 +134,6 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
-
-
-            visitor.setProduct(EnumTestProduce.YT_DAILY_ZT);
 
             Long shop_id = info.oneshopid;
             Long car_style_id = PreSaleCustomerStyleListScene.builder().shopId(shop_id).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("style_id");
@@ -282,7 +277,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     public void addBrand_name1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            visitor.setProduct(EnumTestProduce.YT_DAILY_ZT);
+
 
             int code = AddScene.builder().name(info.stringone).logoPath(info.getLogo()).build().invoke(visitor,false).getInteger("code");
 
@@ -308,7 +303,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            visitor.setProduct(EnumTestProduce.YT_DAILY_ZT);
+
 
             int code = AddScene.builder().name(info.stringten).logoPath(info.getLogo()).build().invoke(visitor,false).getInteger("code");
 
@@ -373,7 +368,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     public void addBrand_nameerr() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            visitor.setProduct(EnumTestProduce.YT_DAILY_ZT);
+
 
             String name = "12345aA啊！@1";
             int code = AddScene.builder().name(name).logoPath(info.getLogo()).build().invoke(visitor,false).getInteger("code");
@@ -396,7 +391,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     public void addCarStyle(String manufacturer, String name, String online_time) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            visitor.setProduct(EnumTestProduce.YT_DAILY_ZT);
+
             int code = CarStyleAddScene.builder().brandId(info.BrandID).manufacturer(manufacturer).name(name).onlineTime(online_time).build().invoke(visitor,false).getInteger("code");
             Preconditions.checkArgument(code == 1000, "创建车系：生产商 " + manufacturer + ", 车系 " + name + ", 上线日期" + online_time + "状态码" + code);
 
@@ -426,8 +421,6 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     public void editCarStyle() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-
-            visitor.setProduct(EnumTestProduce.YT_DAILY_ZT);
 
             //创建车系
             String manufacturer = "旧生产商"+Integer.toString((int)((Math.random()*9+1)*100));
@@ -638,169 +631,175 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         };
     }
 
-//    @Test
-//    public void editCarModel() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//
-//            //创建车型
-//            String name1 = "旧车型名称" + System.currentTimeMillis();
-//            String year1 = "2000年";
-//            String status1 = "ENABLE";
-//            jc.addCarModel(info.BrandID, info.CarStyleID, name1, year1, status1);
-//            //获取车系id
-//            int size = jc.carModelPage(1, 1, info.BrandID, info.CarStyleID, name1, "", "").getInteger("total");
-//            Long id = jc.carModelPage(1, size, info.BrandID, info.CarStyleID, name1, "", "").getJSONArray("list").getJSONObject(size - 1).getLong("id");
-//            System.out.println(id + "---------");
-//            //修改车型
-//            String name2 = "新车型名称" + System.currentTimeMillis();
-//            String year2 = "2020年";
-//            String status2 = "DISABLE";
-//            jc.editCarModel(id, info.BrandID, info.CarStyleID, name2, year2, status2);
-//            //查看修改结果
-//            String search_name2 = "";
-//            String search_year2 = "";
-//            String search_status2 = "";
-//            int size1 = jc.carModelPage(1, 1, info.BrandID, info.CarStyleID, "", "", "").getInteger("total");
-//            JSONArray arr = jc.carModelPage(1, size1, info.BrandID, info.CarStyleID, "", "", "").getJSONArray("list");
-//            for (int i = size1 - 1; i > 0; i--) {
-//                JSONObject obj = arr.getJSONObject(i);
-//                System.out.println(obj + "-----------------");
-//                if (obj.getLong("id").longValue() == id.longValue()) {
-//
-//                    search_name2 = obj.getString("name");
-//                    search_year2 = obj.getString("year");
-//                    search_status2 = obj.getString("status");
-//                }
-//            }
-//
-//
-//            Preconditions.checkArgument(search_name2.equals(name2), "修改前车型名称=" + name1 + "，期望修改为" + name2 + "，实际修改后为" + search_name2);
-//            Preconditions.checkArgument(search_year2.equals(year2), "修改前年款=" + year1 + "，期望修改为" + year2 + "，实际修改后为" + search_year2);
-//            Preconditions.checkArgument(search_status2.equals(status2), "修改前状态=" + status1 + "，期望修改为" + status2 + "，实际修改后为" + search_status2);
-//
-//            //删除品牌车系车型
-//            jc.delCarModel(id);
-//
-//
-//        } catch (AssertionError e) {
-//            appendFailReason(e.toString());
-//        } catch (Exception e) {
-//            appendFailReason(e.toString());
-//        } finally {
-//            saveData("PC【品牌管理】，修改车型");
-//        }
-//    }
-//
-//    //品牌车系车型 --异常
-//    @Test
-//    public void addCarModel_err() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//
-//            String year = "1998年";
-//            String status = "ENABLE";
-//            JSONObject obj = jc.addCarModelNotChk(info.BrandID, info.CarStyleID, info.stringfifty1, year, status);
-//            int code = obj.getInteger("code");
-//            String message = obj.getString("message");
-//            Preconditions.checkArgument(code == 1001, "期待状态码1001，实际" + code + "， 提示语：" + message);
-//
-//        } catch (AssertionError e) {
-//            appendFailReason(e.toString());
-//        } catch (Exception e) {
-//            appendFailReason(e.toString());
-//        } finally {
-//            saveData("PC【品牌管理】，创建车型， 名称51字");
-//        }
-//    }
-//
-//    //品牌车系车型 --异常
-//    @Test
-//    public void addCarModel_err3() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//
-//            String year = "12345啊啊啊啊啊！@#qweQWERQ";
-//            String status = "ENABLE";
-//            JSONObject obj = jc.addCarModelNotChk(info.BrandID, info.CarStyleID, info.stringsix, year, status);
-//            int code = obj.getInteger("code");
-//            String message = obj.getString("message");
-//            Preconditions.checkArgument(code == 1001, "期待状态码1001，实际" + code + "， 提示语：" + message);
-//
-//        } catch (AssertionError e) {
-//            appendFailReason(e.toString());
-//        } catch (Exception e) {
-//            appendFailReason(e.toString());
-//        } finally {
-//            saveData("PC【品牌管理】，创建车型， 年款21个字");
-//        }
-//    }
-//
-//    @Test
-//    public void addCarModel_err1() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//
-//            //新建品牌
-//            Long brandid = info.getBrandID(7);
-//            //新建车系
-//            Long carStyleId = info.getCarStyleID(brandid, 5);
-//
-//            //删除车系
-//            jc.delCarStyle(carStyleId);
-//
-//            //新建车型
-//            String name1 = "自动化" + System.currentTimeMillis();
-//            String year1 = "2019年";
-//            String status1 = "ENABLE";
-//            JSONObject obj = jc.addCarModelNotChk(brandid, carStyleId, name1, year1, status1);
-//
-//            //删除品牌
-//            jc.delBrand(brandid);
-//
-//            int code = obj.getInteger("code");
-//            String message = obj.getString("message");
-//            Preconditions.checkArgument(code == 1001, "状态码为" + code + ", 提示语" + message);
-//
-//        } catch (AssertionError e) {
-//            appendFailReason(e.toString());
-//        } catch (Exception e) {
-//            appendFailReason(e.toString());
-//        } finally {
-//            saveData("PC【品牌管理】，创建车型时车系被删除， 期待失败");
-//        }
-//    }
-//
-//    @Test
-//    public void addCarModel_err2() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//
-//            //新建品牌
-//            Long brandid = info.getBrandID(7);
-//            //新建车系
-//            Long carStyleId = info.getCarStyleID(brandid, 5);
-//
-//            //删除品牌
-//            jc.delBrand(brandid);
-//            //新建车型
-//            String name1 = "自动化" + System.currentTimeMillis();
-//            String year1 = "1009年";
-//            String status1 = "ENABLE";
-//            JSONObject obj = jc.addCarModelNotChk(brandid, carStyleId, name1, year1, status1);
-//
-//            int code = obj.getInteger("code");
-//            String message = obj.getString("message");
-//            Preconditions.checkArgument(code == 1001, "状态码为" + code + ", 提示语" + message);
-//
-//        } catch (AssertionError e) {
-//            appendFailReason(e.toString());
-//        } catch (Exception e) {
-//            appendFailReason(e.toString());
-//        } finally {
-//            saveData("PC【品牌管理】，创建车型时品牌被删除， 期待失败");
-//        }
-//    }
+    @Test
+    public void editCarModel() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            //创建车型
+            String name1 = "旧车型名称" + System.currentTimeMillis();
+            String year1 = "2000年";
+            String status1 = "ENABLE";
+            CarStyleCarModelAddScene.builder().brandId(info.BrandID).styleId(info.CarStyleID).name(name1).year(year1).status(status1).build().invoke(visitor);
+
+            //获取车系id
+            int size = CarStyleCarModelPageScene.builder().brandId(info.BrandID).styleId(info.CarStyleID).name(name1).page(1).size(1).build().invoke(visitor).getInteger("total");
+
+            Long id = CarStyleCarModelPageScene.builder().brandId(info.BrandID).styleId(info.CarStyleID).name(name1).page(1).size(size).build().invoke(visitor).getJSONArray("list").getJSONObject(size - 1).getLong("id");
+
+            //修改车型
+            String name2 = "新车型名称" + System.currentTimeMillis();
+            String year2 = "2020年";
+            String status2 = "DISABLE";
+            CarStyleCarModelEditScene.builder().brandId(info.BrandID).styleId(info.CarStyleID).id(id).name(name2).year(year2).status(status2).build().invoke(visitor);
+
+            //查看修改结果
+            String search_name2 = "";
+            String search_year2 = "";
+            String search_status2 = "";
+            int size1 = CarStyleCarModelPageScene.builder().brandId(info.BrandID).styleId(info.CarStyleID).page(1).size(1).build().invoke(visitor).getInteger("total");
+            JSONArray arr = CarStyleCarModelPageScene.builder().brandId(info.BrandID).styleId(info.CarStyleID).page(1).size(size1).build().invoke(visitor).getJSONArray("list");
+
+            for (int i = size1 - 1; i > 0; i--) {
+                JSONObject obj = arr.getJSONObject(i);
+                System.out.println(obj + "-----------------");
+                if (obj.getLong("id").longValue() == id.longValue()) {
+
+                    search_name2 = obj.getString("name");
+                    search_year2 = obj.getString("year");
+                    search_status2 = obj.getString("status");
+                }
+            }
+
+
+            Preconditions.checkArgument(search_name2.equals(name2), "修改前车型名称=" + name1 + "，期望修改为" + name2 + "，实际修改后为" + search_name2);
+            Preconditions.checkArgument(search_year2.equals(year2), "修改前年款=" + year1 + "，期望修改为" + year2 + "，实际修改后为" + search_year2);
+            Preconditions.checkArgument(search_status2.equals(status2), "修改前状态=" + status1 + "，期望修改为" + status2 + "，实际修改后为" + search_status2);
+
+            //删除品牌车系车型
+            CarStyleCarModelDeleteScene.builder().id(id).build().invoke(visitor);
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【品牌管理】，修改车型");
+        }
+    }
+
+    //品牌车系车型 --异常
+    @Test
+    public void addCarModel_err() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            String year = "1998年";
+            String status = "ENABLE";
+            JSONObject obj = CarStyleCarModelAddScene.builder().brandId(info.BrandID).styleId(info.CarStyleID).name(info.stringfifty1).year(year).status(status).build().invoke(visitor,false);
+            int code = obj.getInteger("code");
+            String message = obj.getString("message");
+            Preconditions.checkArgument(code == 1001, "期待状态码1001，实际" + code + "， 提示语：" + message);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【品牌管理】，创建车型， 名称51字");
+        }
+    }
+
+    //品牌车系车型 --异常
+    @Test
+    public void addCarModel_err3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            String year = "12345啊啊啊啊啊！@#qweQWERQ";
+            String status = "ENABLE";
+            JSONObject obj = CarStyleCarModelAddScene.builder().brandId(info.BrandID).styleId(info.CarStyleID).name(info.stringsix).year(year).status(status).build().invoke(visitor,false);
+            int code = obj.getInteger("code");
+            String message = obj.getString("message");
+            Preconditions.checkArgument(code == 1001, "期待状态码1001，实际" + code + "， 提示语：" + message);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【品牌管理】，创建车型， 年款21个字");
+        }
+    }
+
+    @Test
+    public void addCarModel_err1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            //新建品牌
+            Long brandid = info.getBrandID(7);
+            //新建车系
+            Long carStyleId = info.getCarStyleID(brandid, 5);
+
+            //删除车系
+            CarStyleDeleteScene.builder().id(carStyleId).build().invoke(visitor);
+
+            //新建车型
+            String name1 = "自动化" + System.currentTimeMillis();
+            String year1 = "2019年";
+            String status1 = "ENABLE";
+            JSONObject obj = CarStyleCarModelAddScene.builder().brandId(brandid).styleId(carStyleId).name(name1).year(year1).status(status1).build().invoke(visitor,false);
+
+
+            //删除品牌
+            DeleteScene.builder().id(brandid).build().invoke(visitor);
+
+            int code = obj.getInteger("code");
+            String message = obj.getString("message");
+            Preconditions.checkArgument(code == 1001, "状态码为" + code + ", 提示语" + message);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【品牌管理】，创建车型时车系被删除， 期待失败");
+        }
+    }
+
+    @Test
+    public void addCarModel_err2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            //新建品牌
+            Long brandid = info.getBrandID(7);
+            //新建车系
+            Long carStyleId = info.getCarStyleID(brandid, 5);
+
+            //删除品牌
+            DeleteScene.builder().id(brandid).build().invoke(visitor);
+            //新建车型
+            String name1 = "自动化" + System.currentTimeMillis();
+            String year1 = "1009年";
+            String status1 = "ENABLE";
+            JSONObject obj = CarStyleCarModelAddScene.builder().brandId(brandid).styleId(carStyleId).name(name1).year(year1).status(status1).build().invoke(visitor,false);
+
+
+            int code = obj.getInteger("code");
+            String message = obj.getString("message");
+            Preconditions.checkArgument(code == 1001, "状态码为" + code + ", 提示语" + message);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【品牌管理】，创建车型时品牌被删除， 期待失败");
+        }
+    }
 
 
 }
