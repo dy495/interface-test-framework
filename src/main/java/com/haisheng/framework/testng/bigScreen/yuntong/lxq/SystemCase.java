@@ -105,8 +105,8 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
                 int sum = after - bef;
                 Preconditions.checkArgument(code == 1000, mess + "期待创建成功，实际" + code);
                 Preconditions.checkArgument(sum == 1, mess + "期待创建成功列表+1，实际增加" + sum);
-//                int code2 = PreSaleCustomerCreatePotentialCustomerScene.builder().customerName(name).customerPhone(phone).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).shopId(shop_id).salesId(salesId).build().invoke(visitor, false).getInteger("code");
-//                Preconditions.checkArgument(code2 == 1001, "使用列表中存在的手机号期待创建失败，实际" + code);
+                int code2 = PreSaleCustomerCreatePotentialCustomerScene.builder().customerName(name).customerPhone(phone).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).shopId(shop_id).salesId(salesId).build().invoke(visitor, false).getInteger("code");
+                Preconditions.checkArgument(code2 == 1001, "使用列表中存在的手机号期待创建失败，实际" + code);
             }
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -179,9 +179,9 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(code5 == 1001, "不填写所属门店期待失败，实际" + code);
 
             //不填写所属销售 bug 9609
-//            int code6 = PreSaleCustomerCreatePotentialCustomerScene.builder().customerName(name).customerPhone(phone).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).shopId(shop_id).build().invoke(visitor, false).getInteger("code");
-//
-//            Preconditions.checkArgument(code6 == 1001, "不填写所属销售期待失败，实际" + code6);
+            int code6 = PreSaleCustomerCreatePotentialCustomerScene.builder().customerName(name).customerPhone(phone).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).shopId(shop_id).build().invoke(visitor, false).getInteger("code");
+
+            Preconditions.checkArgument(code6 == 1001, "不填写所属销售期待失败，实际" + code6);
 
 
         } catch (AssertionError e) {
@@ -420,46 +420,51 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
                 {info.stringsix, info.stringsix, dt.getHistoryDate(1)},
         };
     }
-//
-//    @Test
-//    public void editCarStyle() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//
-//            //创建车系
-//            String manufacturer = "旧生产商";
-//            String name = "旧车系";
-//            String online_time = dt.getHistoryDate(0);
-//            jc.addCarStyle(info.BrandID, manufacturer, name, online_time);
-//            //获取车系id
-//            Long id = jc.carStylePage(1, 1, info.BrandID, name).getJSONArray("list").getJSONObject(0).getLong("id");
-//            //修改车系
-//            String manufacturer1 = "新生产商";
-//            String name1 = "新车系";
-//            String online_time1 = dt.getHistoryDate(-2);
-//            jc.editCarStyle(id, info.BrandID, manufacturer1, name1, online_time1);
-//            //查看修改结果
-//            JSONObject obj = jc.carStylePage(1, 30, info.BrandID, "").getJSONArray("list").getJSONObject(0);
-//            String search_manufacturer1 = obj.getString("manufacturer");
-//            String search_name1 = obj.getString("name");
-//            String search_online_time1 = obj.getString("online_time");
-//
-//            Preconditions.checkArgument(search_manufacturer1.equals(manufacturer1), "修改前生产商=" + manufacturer + "，期望修改为" + manufacturer1 + "，实际修改后为" + search_manufacturer1);
-//            Preconditions.checkArgument(search_name1.equals(name1), "修改前车系=" + name + "，期望修改为" + name1 + "，实际修改后为" + search_name1);
-//            Preconditions.checkArgument(search_online_time1.equals(online_time1), "修改前上线时间=" + online_time + "，期望修改为" + online_time1 + "，实际修改后为" + search_online_time1);
-//
-//
-//            //删除品牌车系
-//            jc.delCarStyle(id);
-//
-//        } catch (AssertionError e) {
-//            appendFailReason(e.toString());
-//        } catch (Exception e) {
-//            appendFailReason(e.toString());
-//        } finally {
-//            saveData("PC【品牌管理】，修改车系");
-//        }
-//    }
+
+    @Test
+    public void editCarStyle() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            visitor.setProduct(EnumTestProduce.YT_DAILY_ZT);
+
+            //创建车系
+            String manufacturer = "旧生产商";
+            String name = "旧车系";
+            String online_time = dt.getHistoryDate(0);
+            CarStyleAddScene.builder().brandId(info.BrandID).manufacturer(manufacturer).name(name).onlineTime(online_time).build().invoke(visitor);
+
+            //获取车系id
+            Long id = CarStylePageScene.builder().brandId(info.BrandID).page(1).size(1).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            //修改车系
+            String manufacturer1 = "新生产商";
+            String name1 = "新车系";
+            String online_time1 = dt.getHistoryDate(-2);
+
+            CarStyleEditScene.builder().brandId(info.BrandID).manufacturer(manufacturer1).name(name1).onlineTime(online_time1).build().invoke(visitor);
+
+            //查看修改结果
+            JSONObject obj = CarStylePageScene.builder().brandId(info.BrandID).page(1).size(30).build().invoke(visitor).getJSONArray("list").getJSONObject(0);
+            String search_manufacturer1 = obj.getString("manufacturer");
+            String search_name1 = obj.getString("name");
+            String search_online_time1 = obj.getString("online_time");
+
+            Preconditions.checkArgument(search_manufacturer1.equals(manufacturer1), "修改前生产商=" + manufacturer + "，期望修改为" + manufacturer1 + "，实际修改后为" + search_manufacturer1);
+            Preconditions.checkArgument(search_name1.equals(name1), "修改前车系=" + name + "，期望修改为" + name1 + "，实际修改后为" + search_name1);
+            Preconditions.checkArgument(search_online_time1.equals(online_time1), "修改前上线时间=" + online_time + "，期望修改为" + online_time1 + "，实际修改后为" + search_online_time1);
+
+
+            //删除品牌车系
+//            CarStyleDeleteScene.builder().id(id).build().invoke(visitor);
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【品牌管理】，修改车系");
+        }
+    }
 //
 //    @Test
 //    public void addOneCarStyleinTwoModel() {
