@@ -80,6 +80,14 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    /**
+     * -------------------------------销售业务管理 - 销售客户管理 - 展厅客户 ------------------------------------
+     */
+
+    /**
+     *     展厅客户-创建 正常&异常
+     */
+
     @Test(dataProvider = "CSTMINFO") //bug 9608
     public void newPotentialCustomer(String name, String phone, String type, String sex, String mess, String chk) {
 
@@ -189,6 +197,252 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    /**
+     *     展厅客户-筛选
+     */
+    @Test
+    public void PotentialCustomerFilter1() {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            JSONObject obj = PreSaleCustomerPageScene.builder().page(1).size(1).build().invoke(visitor).getJSONArray("list").getJSONObject(0);
+            String customer_name = obj.getString("customer_name"); //客户姓名
+            String customer_phone = obj.getString("customer_phone"); //客户手机号
+            String date = obj.getString("create_date").substring(0,10); // 创建日期
+            String sale_name = obj.getString("sale_name"); //销售顾问
+            String subject_type = obj.getString("subject_type"); //客户类型
+
+            //已有姓名
+            JSONArray namelist = PreSaleCustomerPageScene.builder().page(1).size(30).customerName(customer_name).build().invoke(visitor).getJSONArray("list");
+            int nametotal = namelist.size();
+            Preconditions.checkArgument(nametotal>0,"搜索列表中存在的姓名"+customer_name+",结果无数据");
+            for (int i= 0 ; i < nametotal;i++){
+                JSONObject obj1 = namelist.getJSONObject(i);
+                Preconditions.checkArgument(obj1.getString("customer_name").contains(customer_name),"搜索"+customer_name+" ,结果包含"+obj1.getString("customer_name"));
+            }
+
+            //已有手机号
+            JSONArray phonelist = PreSaleCustomerPageScene.builder().page(1).size(30).customerPhone(customer_phone).build().invoke(visitor).getJSONArray("list");
+            int phonetotal = phonelist.size();
+            Preconditions.checkArgument(phonetotal>0,"搜索列表中存在的手机号"+customer_phone+",结果无数据");
+            for (int i= 0 ; i < phonetotal;i++){
+                JSONObject obj1 = phonelist.getJSONObject(i);
+                Preconditions.checkArgument(obj1.getString("customer_phone").contains(customer_phone),"搜索"+customer_phone+" ,结果包含"+obj1.getString("customer_phone"));
+            }
+
+            //已有日期
+            JSONArray datelist = PreSaleCustomerPageScene.builder().page(1).size(30).startTime(date).endTime(date).build().invoke(visitor).getJSONArray("list");
+            int datetotal = datelist.size();
+            Preconditions.checkArgument(datetotal>0,"搜索列表中存在的时间"+date+",结果无数据");
+            for (int i= 0 ; i < datetotal;i++){
+                JSONObject obj1 = datelist.getJSONObject(i);
+                Preconditions.checkArgument(obj1.getString("create_date").contains(date),"搜索"+date+" ,结果包含"+obj1.getString("create_date"));
+            }
+
+            //已有销售顾问
+            JSONArray salelist = PreSaleCustomerPageScene.builder().page(1).size(30).saleName(sale_name).build().invoke(visitor).getJSONArray("list");
+            int saletotal = salelist.size();
+            Preconditions.checkArgument(saletotal>0,"搜索列表中存在的销售顾问"+sale_name+",结果无数据");
+            for (int i= 0 ; i < saletotal;i++){
+                JSONObject obj1 = salelist.getJSONObject(i);
+                Preconditions.checkArgument(obj1.getString("sale_name").contains(sale_name),"搜索"+sale_name+" ,结果包含"+obj1.getString("sale_name"));
+            }
+
+            //已有客户类型
+            JSONArray subjectlist = PreSaleCustomerPageScene.builder().page(1).size(30).customerType(subject_type).build().invoke(visitor).getJSONArray("list");
+            int subjecttotal = subjectlist.size();
+            Preconditions.checkArgument(subjecttotal>0,"搜索列表中存在的客户类型"+subject_type+",结果无数据");
+            for (int i= 0 ; i < subjecttotal;i++){
+                JSONObject obj1 = subjectlist.getJSONObject(i);
+                Preconditions.checkArgument(obj1.getString("subject_type").contains(subject_type),"搜索"+subject_type+" ,结果包含"+obj1.getString("subject_type"));
+            }
+
+
+
+
+
+
+
+            } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("展厅客户根据已有信息筛选");
+        }
+    }
+
+    @Test(dataProvider = "FILTER", dataProviderClass = YunTongInfo.class)
+    public void PotentialCustomerFilter2(String search) {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //姓名
+            JSONArray namelist = PreSaleCustomerPageScene.builder().page(1).size(30).customerName(search).build().invoke(visitor).getJSONArray("list");
+            if (namelist.size()>0){
+                for (int i= 0 ; i < namelist.size();i++){
+                    JSONObject obj1 = namelist.getJSONObject(i);
+                    Preconditions.checkArgument(obj1.getString("customer_name").toUpperCase().contains(search),"搜索"+search+" ,结果包含"+obj1.getString("customer_name"));
+                }
+            }
+
+            //手机号
+            JSONArray phonelist = PreSaleCustomerPageScene.builder().page(1).size(30).customerPhone(search).build().invoke(visitor).getJSONArray("list");
+            if (phonelist.size()>0){
+                for (int i= 0 ; i < phonelist.size();i++){
+                    JSONObject obj1 = phonelist.getJSONObject(i);
+                    Preconditions.checkArgument(obj1.getString("customer_phone").contains(search),"搜索"+search+" ,结果包含"+obj1.getString("customer_phone"));
+                }
+            }
+
+
+            //销售顾问
+            JSONArray salelist = PreSaleCustomerPageScene.builder().page(1).size(30).saleName(search).build().invoke(visitor).getJSONArray("list");
+            if (salelist.size()>0){
+                for (int i= 0 ; i < salelist.size();i++){
+                    JSONObject obj1 = salelist.getJSONObject(i);
+                    Preconditions.checkArgument(obj1.getString("sale_name").toUpperCase().contains(search),"搜索"+search+" ,结果包含"+obj1.getString("sale_name"));
+                }
+            }
+
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("展厅客户根据已有信息筛选");
+        }
+    }
+
+    /**
+     *     展厅客户-详情-编辑资料
+     */
+    @Test
+    public void cstmEdit() {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            //正常编辑
+            Long custID = info.newPotentialCstm();
+
+            String name = "修改后"+dt.getHistoryDate(0)+Integer.toString((int)((Math.random()*9+1)*100));
+            String phone = "138"+Integer.toString((int)((Math.random()*9+1)*1000))+"7788";
+            String type = "PERSON";
+            int sex = 1;
+            Long car_style_id = PreSaleCustomerStyleListScene.builder().shopId(info.oneshopid).build().invoke(visitor).getJSONArray("list").getJSONObject(1).getLong("style_id");
+            Long car_model_id = PreSaleCustomerModelListScene.builder().styleId(car_style_id).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("model_id");
+            JSONObject obj = PreSaleCustomerEditScene.builder().customerId(custID).customerName(name).customerPhone(phone).subjectType(type).sex(sex).carStyleId(car_style_id).intentionCarModelId(car_model_id).shopId(info.oneshopid).build().invoke(visitor,false);
+            int code = obj.getInteger("code");
+            if (code!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(code==1000,"编辑客户信息提示"+message);
+            }
+
+            //姓名51字
+            //手机号12位
+            //手机号10位
+            //不填写必填项
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("展厅客户编辑资料");
+        }
+    }
+
+    @Test // bug 9686
+    public void cstmEditErr() {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+//            Long custID = info.newPotentialCstm();
+            Long custID = 310318L;
+
+            String name = "修改后"+dt.getHistoryDate(0)+Integer.toString((int)((Math.random()*9+1)*100));
+            String phone = "138"+Integer.toString((int)((Math.random()*9+1)*1000))+"7788";
+            String type = "PERSON";
+            int sex = 1;
+            Long car_style_id = PreSaleCustomerStyleListScene.builder().shopId(info.oneshopid).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("style_id");
+            Long car_model_id = PreSaleCustomerModelListScene.builder().styleId(car_style_id).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("model_id");
+
+
+//            //姓名51字
+//            JSONObject obj = PreSaleCustomerEditScene.builder().customerId(custID).customerName(info.stringfifty1).customerPhone(phone).subjectType(type).sex(sex).carStyleId(car_style_id).intentionCarModelId(car_model_id).shopId(info.oneshopid).build().invoke(visitor,false);
+//            int code = obj.getInteger("code");
+//            Preconditions.checkArgument(code==1001,"编辑客户姓名51字，期待失败，实际"+code);
+
+//            //手机号12位
+//            JSONObject obj2 = PreSaleCustomerEditScene.builder().customerId(custID).customerName(name).customerPhone(phone+"1").subjectType(type).sex(sex).carStyleId(car_style_id).intentionCarModelId(car_model_id).shopId(info.oneshopid).build().invoke(visitor,false);
+//            int code1 = obj2.getInteger("code");
+//            Preconditions.checkArgument(code1==1001,"编辑客户手机号12位，期待失败，实际"+code1);
+
+//            //手机号10位
+//            JSONObject obj3 = PreSaleCustomerEditScene.builder().customerId(custID).customerName(name).customerPhone("1340000000").subjectType(type).sex(sex).carStyleId(car_style_id).intentionCarModelId(car_model_id).shopId(info.oneshopid).build().invoke(visitor,false);
+//            int code3 = obj3.getInteger("code");
+//            Preconditions.checkArgument(code3==1001,"编辑客户手机号10位，期待失败，实际"+code3);
+
+            //不填写必填项
+            int code4 = PreSaleCustomerEditScene.builder().customerId(custID).customerPhone(phone).subjectType(type).sex(sex).carStyleId(car_style_id).intentionCarModelId(car_model_id).shopId(info.oneshopid).build().invoke(visitor,false).getInteger("code");
+            Preconditions.checkArgument(code4==1001,"编辑客户不填写 姓名，期待失败，实际"+code4);
+
+            int code5 = PreSaleCustomerEditScene.builder().customerId(custID).customerName(name).subjectType(type).sex(sex).carStyleId(car_style_id).intentionCarModelId(car_model_id).shopId(info.oneshopid).build().invoke(visitor,false).getInteger("code");
+            Preconditions.checkArgument(code5==1001,"编辑客户不填写 手机号，期待失败，实际"+code5);
+
+            int code6 = PreSaleCustomerEditScene.builder().customerId(custID).customerName(name).customerPhone(phone).subjectType(type).carStyleId(car_style_id).intentionCarModelId(car_model_id).shopId(info.oneshopid).build().invoke(visitor,false).getInteger("code");
+            Preconditions.checkArgument(code6==1001,"编辑客户不填写 性别，期待失败，实际"+code6);
+
+            int code7 = PreSaleCustomerEditScene.builder().customerId(custID).customerName(name).customerPhone(phone).sex(sex).carStyleId(car_style_id).intentionCarModelId(car_model_id).shopId(info.oneshopid).build().invoke(visitor,false).getInteger("code");
+            Preconditions.checkArgument(code7==1001,"编辑客户不填写车主类型 ，期待失败，实际"+code7);
+
+            int code8 = PreSaleCustomerEditScene.builder().customerId(custID).customerName(name).customerPhone(phone).subjectType(type).sex(sex).intentionCarModelId(car_model_id).shopId(info.oneshopid).build().invoke(visitor,false).getInteger("code");
+            Preconditions.checkArgument(code8==1001,"编辑客户不填写 意向车系，期待失败，实际"+code8);
+
+            int code9 = PreSaleCustomerEditScene.builder().customerId(custID).customerName(name).customerPhone(phone).subjectType(type).sex(sex).carStyleId(car_style_id).shopId(info.oneshopid).build().invoke(visitor,false).getInteger("code");
+            Preconditions.checkArgument(code9==1001,"编辑客户不填写 意向车型，期待失败，实际"+code9);
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("展厅客户编辑资料");
+        }
+    }
+
+
+    /**
+     *     展厅客户-详情-备注记录
+     */
+
+    /**
+     *     展厅客户-详情-购车记录
+     */
+
+    /**
+     *     展厅客户-详情-接待记录
+     */
+
+    /**
+     *     展厅客户-变更所属销售
+     */
+
+
+    /**
+     * -------------------------------销售业务管理 - 销售客户管理 - 成交记录 ------------------------------------
+     */
+
+    /**
+     *     展厅客户-创建 正常&异常
+     */
     @Test(dataProvider = "CSTMINFO")
     public void newCstmRecord(String name, String phone, String type, String sex, String mess, String chk) {
 
@@ -265,7 +519,28 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * -------------------------------系统配置------------------------------------
+     *     成交记录-筛选
+     */
+
+
+    /**
+     * -------------------------------销售业务管理 - 销售接待记录 -----------------------------------------
+     */
+
+    /**
+     *     销售接待记录-筛选
+     */
+
+    /**
+     *     销售接待记录-列表操作 备注、确认购车、变更接待、完成接待
+     */
+
+
+
+
+
+    /**
+     * -------------------------------系统配置  品牌管理------------------------------------
      */
     /**
      * PC 品牌管理-系统测试

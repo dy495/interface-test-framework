@@ -1,6 +1,5 @@
 package com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.customermanage;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
@@ -73,19 +72,19 @@ public class PreSaleCustomerEditScene extends BaseScene {
     @Override
     protected JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
-        object.put("shopId", shopId);
-        object.put("customerId", customerId);
-        object.put("subjectType", subjectType);
-        object.put("customerName", customerName);
-        object.put("customerPhone", customerPhone);
-        object.put("sex", sex);
+        object.put("shop_id", shopId);
+        object.put("customer_id", customerId);
+        object.put("subject_type", subjectType);
+        object.put("customer_name", customerName);
+        object.put("customer_phone", customerPhone);
+        object.put("sex_id", sex);
         object.put("intention_car_model_id", intentionCarModelId);
-        object.put("carStyleId", carStyleId);
+        object.put("intention_car_style_id", carStyleId);
         return object;
     }
 
     @Override
     public String getPath() {
-        return "/yt/pc/customer-manage/pre-sale-customer/edit";
+        return "/car-platform/pc/customer-manage/pre-sale-customer/edit";
     }
 }

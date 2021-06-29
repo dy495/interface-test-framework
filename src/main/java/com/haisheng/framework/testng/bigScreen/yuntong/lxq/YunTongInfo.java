@@ -7,6 +7,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccoun
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.brand.AddScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.brand.CarStyleAddScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.brand.CarStylePageScene;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.customermanage.*;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.file.UploadScene;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
@@ -90,13 +91,25 @@ public class YunTongInfo {
         return carStyleId;
     }
 
+    //创建展厅客户，返回客户id
+    public final long newPotentialCstm(){
+        Long shop_id = oneshopid;
+        String name = "自动化"+dt.getHistoryDate(0)+Integer.toString((int)((Math.random()*9+1)*100));
+        String phone = "138"+Integer.toString((int)((Math.random()*9+1)*1000))+"7777";
+        String type = "CORPORATION";
+        String sex = "0";
+        Long car_style_id = PreSaleCustomerStyleListScene.builder().shopId(shop_id).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("style_id");
+        Long car_model_id = PreSaleCustomerModelListScene.builder().styleId(car_style_id).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("model_id");
+        String salesId = PreSaleCustomerSalesListScene.builder().shopId(shop_id).type("PRE").build().invoke(visitor).getJSONArray("list").getJSONObject(0).getString("sales_id");
+        PreSaleCustomerCreatePotentialCustomerScene.builder().customerName(name).customerPhone(phone).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).shopId(shop_id).salesId(salesId).build().invoke(visitor);
 
-
-
-
-    public static void main(String[] args) {
+        return PreSaleCustomerPageScene.builder().page(1).size(1).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("customer_id");
 
     }
+
+
+
+
 
 
     /**
