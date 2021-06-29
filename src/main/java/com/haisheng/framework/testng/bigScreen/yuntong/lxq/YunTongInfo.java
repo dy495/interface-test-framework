@@ -4,6 +4,7 @@ import com.aliyun.openservices.shade.org.apache.commons.codec.binary.Base64;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.brand.AddScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.file.UploadScene;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
@@ -30,7 +31,8 @@ public class YunTongInfo {
     public final String string200 = "自动化自动化自动化自动化自动化自动化自动化AAAAAAA12345AAAAAA次sssssss!@#$%^&*自动化自动化自动化自动化自动化自动化自动化AAAAAAA12345AAAAAA次sssssss!@#$%^&*自动化自动化自动化自动化自动化自动化自动化AAAAAAA12345AAAAAA次sssssss!@#$%^&*自动化自动化自动化自动化自动化自动化自动化AAAAAAA12345AA";
 
 
-    public final Long BrandID = 1526L;
+    public final Long BrandID = 1526L; //自动化用的品牌id
+    public final long CarStyleID = 1584L;//自动化用的车系id
 
     public  long toMinute(String time){
         long mintue = 0L;
@@ -62,6 +64,14 @@ public class YunTongInfo {
         String logo = UploadScene.builder().pic(new ImageUtil().getImageBinary(filePath)).build().invoke(visitor).getString("pic_path");
 
         return logo;
+    }
+
+    //创建品牌，返回品牌id
+    public final long getBrandID(int n) {
+        String name = "" + Integer.toString((int) (Math.random() * Math.pow(10,n)));
+        Long id = AddScene.builder().name(name).logoPath(getLogo()).build().invoke(visitor).getLong("id");;
+
+        return id;
     }
 
 

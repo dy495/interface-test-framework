@@ -5,9 +5,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterators;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.jiaoChenInfo;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
@@ -238,26 +238,33 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         try {
 
             //创建车系
-            String manufacturer = "旧生产商";
-            String name = "旧车系";
+            String manufacturer = "旧生产商"+Integer.toString((int)((Math.random()*9+1)*100));
+            String name = "旧车系"+Integer.toString((int)((Math.random()*9+1)*100));
             String online_time = dt.getHistoryDate(0);
             jc.addCarStyle(info.BrandID, manufacturer, name, online_time);
             //获取车系id
             Long id = jc.carStylePage(1, 1, info.BrandID, name).getJSONArray("list").getJSONObject(0).getLong("id");
             //修改车系
-            String manufacturer1 = "新生产商";
-            String name1 = "新车系";
+            String manufacturer1 = "新生产商"+Integer.toString((int)((Math.random()*9+1)*100));
+            String name1 = "新车系"+Integer.toString((int)((Math.random()*9+1)*100));
             String online_time1 = dt.getHistoryDate(-2);
             jc.editCarStyle(id, info.BrandID, manufacturer1, name1, online_time1);
             //查看修改结果
-            JSONObject obj = jc.carStylePage(1, 30, info.BrandID, "").getJSONArray("list").getJSONObject(0);
-            String search_manufacturer1 = obj.getString("manufacturer");
-            String search_name1 = obj.getString("name");
-            String search_online_time1 = obj.getString("online_time");
 
-            Preconditions.checkArgument(search_manufacturer1.equals(manufacturer1), "修改前生产商=" + manufacturer + "，期望修改为" + manufacturer1 + "，实际修改后为" + search_manufacturer1);
-            Preconditions.checkArgument(search_name1.equals(name1), "修改前车系=" + name + "，期望修改为" + name1 + "，实际修改后为" + search_name1);
-            Preconditions.checkArgument(search_online_time1.equals(online_time1), "修改前上线时间=" + online_time + "，期望修改为" + online_time1 + "，实际修改后为" + search_online_time1);
+            JSONArray arr = jc.carStylePage(1, 30, info.BrandID, "").getJSONArray("list");
+            for (int i = 0 ; i < arr.size();i++){
+                JSONObject obj = arr.getJSONObject(i);
+                if (obj.getLong("id").longValue() == id){
+                    String search_manufacturer1 = obj.getString("manufacturer");
+                    String search_name1 = obj.getString("name");
+                    String search_online_time1 = obj.getString("online_time");
+
+                    Preconditions.checkArgument(search_manufacturer1.equals(manufacturer1), "修改前生产商=" + manufacturer + "，期望修改为" + manufacturer1 + "，实际修改后为" + search_manufacturer1);
+                    Preconditions.checkArgument(search_name1.equals(name1), "修改前车系=" + name + "，期望修改为" + name1 + "，实际修改后为" + search_name1);
+                    Preconditions.checkArgument(search_online_time1.equals(online_time1), "修改前上线时间=" + online_time + "，期望修改为" + online_time1 + "，实际修改后为" + search_online_time1);
+
+                }
+            }
 
 
             //删除品牌车系
