@@ -3,7 +3,7 @@ package com.haisheng.framework.testng.bigScreen.xundian.casedaily.hqq.fucPackage
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.arronlong.httpclientutil.HttpClientUtil;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.StoreScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.xundian.util.StoreScenarioUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 
 import java.security.InvalidKeyException;

@@ -10,25 +10,25 @@
         <classes>
             <class name="com.haisheng.framework.testng.bigScreen.xundian.caseonline.wm.ShopManagerCase"/>
 
-            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.testShop.StorePcCaseOnline"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.bgy.StoreDataConsistentcyBgy"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.testShop.StoreDataCenter"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.zdf.SurveillanceForZDF"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.ddc.StoreDataConsistentcyDdc"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.jkqs.StoreDataConsistentcyLz"></class>
-            <!--            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.xtc.StoreDataForXtc"></class>-->
-            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.testShop.XundianAppData"></class>
-            <!--            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.testShop.XundianCaseOnline"></class>-->
-            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.dzy.StoreDataForDzy"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.heyShop.StoreDataForHS"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.lxq.XundianAppDataOnline"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.lxq.XundianAppSystemOnline"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.lxq.XundianPCSystemOnline"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.zt.StorePcCase"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.zt.StorePcData"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.zt.XundianAppData"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.zt.XundianPcCase"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.zt.InsPcCase"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundian.caseonline.testShop.StorePcCaseOnline"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundian.caseonline.bgy.StoreDataConsistentcyBgy"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundian.caseonline.testShop.StoreDataCenter"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundian.caseonline.zdf.SurveillanceForZDF"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundian.caseonline.ddc.StoreDataConsistentcyDdc"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundian.caseonline.jkqs.StoreDataConsistentcyLz"></class>
+            <!--            <class name="com.haisheng.framework.testng.bigScreen.xundian.caseonline.xtc.StoreDataForXtc"></class>-->
+            <class name="com.haisheng.framework.testng.bigScreen.xundian.caseonline.testShop.XundianAppData"></class>
+            <!--            <class name="com.haisheng.framework.testng.bigScreen.xundian.caseonline.testShop.XundianCaseOnline"></class>-->
+            <class name="com.haisheng.framework.testng.bigScreen.xundian.caseonline.dzy.StoreDataForDzy"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundian.caseonline.heyShop.StoreDataForHS"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundian.caseonline.lxq.XundianAppDataOnline"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundian.caseonline.lxq.XundianAppSystemOnline"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundian.caseonline.lxq.XundianPCSystemOnline"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundian.caseonline.zt.StorePcCase"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundian.caseonline.zt.StorePcData"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundian.caseonline.zt.XundianAppData"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundian.caseonline.zt.XundianPcCase"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundian.caseonline.zt.InsPcCase"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundian.caseonline.wm.GoodsMarkingCaseOnline"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundian.caseonline.wm.VoucherManagerCaseOnline">
 

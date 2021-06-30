@@ -16,15 +16,15 @@
             <class name="com.haisheng.framework.testng.bigScreen.xundian.casedaily.hqq.StoreDataCenter"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundian.casedaily.hqq.StorePcAndAppData"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundian.casedaily.hqq.XundianAppCase"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.lxq.XundianAppData"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.lxq.XundianAppSystem"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.lxq.XundianPCSystem"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.zt.XundianAppData"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.zt.StorePcCase"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.zt.StorePcData"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.zt.XundianPcCase"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.zt.InsPcCase"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.zt.InsPcData"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundian.casedaily.lxq.XundianAppData"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundian.casedaily.lxq.XundianAppSystem"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundian.casedaily.lxq.XundianPCSystem"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundian.casedaily.zt.XundianAppData"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundian.casedaily.zt.StorePcCase"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundian.casedaily.zt.StorePcData"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundian.casedaily.zt.XundianPcCase"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundian.casedaily.zt.InsPcCase"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundian.casedaily.zt.InsPcData"></class>
 
             <class name="com.haisheng.framework.testng.bigScreen.xundian.casedaily.wm.GoodsMarkingCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.xundian.casedaily.wm.IntegralCenterCase"/>

@@ -7,7 +7,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumChec
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.StoreScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.xundian.util.StoreScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.enumerator.EnumAppPageType;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.enumerator.EnumCycleType;
 import com.haisheng.framework.testng.bigScreen.xundian.casedaily.hqq.sence.app.*;
