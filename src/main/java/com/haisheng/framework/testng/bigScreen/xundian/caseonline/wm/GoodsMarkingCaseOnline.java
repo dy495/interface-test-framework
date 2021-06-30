@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.xundian.dailycase.wm;
+package com.haisheng.framework.testng.bigScreen.xundian.caseonline.wm;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -15,7 +15,6 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.IntegralCategoryTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.commodity.CommodityStatusEnum;
 import com.haisheng.framework.testng.bigScreen.xundian.enumerator.AccountEnum;
-//import com.haisheng.framework.testng.bigScreen.xundian.scene.pc.integralmall.*;
 import com.haisheng.framework.testng.bigScreen.xundian.scene.pc.integralmall.*;
 import com.haisheng.framework.testng.bigScreen.xundian.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.xundian.util.UserUtil;
@@ -40,9 +39,9 @@ import java.util.stream.Collectors;
  * @author wangmin
  * @date 2020/11/24
  */
-
-public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
-    private final static EnumTestProduce PRODUCE = EnumTestProduce.INS_DAILY;
+public class GoodsMarkingCaseOnline extends TestCaseCommon implements TestCaseStd {
+    private final static EnumTestProduce PRODUCE = EnumTestProduce.INS_ONLINE;
+    private static final AccountEnum ALL_AUTHORITY = AccountEnum.YUE_XIU_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public UserUtil user = new UserUtil(visitor);
     public SupporterUtil util = new SupporterUtil(visitor);
@@ -56,12 +55,13 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("before classs initial");
         CommonConfig commonConfig = new CommonConfig();
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_XUNDIAN_DAILY_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_MENDIAN_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.XUNDIAN_DAILY_TEST.getJobName());
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.XUNDIAN_ONLINE_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
-        commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
+        commonConfig.dingHook = DingWebhook.ONLINE_STORE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.product = PRODUCE.getAbbreviation();
+        commonConfig.pushRd = new String[]{"15898182672", "18513118484", "18810332354", "15084928847"};
         beforeClassInit(commonConfig);
     }
 
@@ -75,12 +75,12 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
     @Override
     public void createFreshCase(Method method) {
         logger.debug("beforeMethod");
-        user.loginPc(AccountEnum.YUE_XIU_DAILY);
+        user.loginPc(ALL_AUTHORITY);
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
     }
 
-    @Test(description = "商品品牌-创建品牌，名称1个字与10个字")
+    @Test()
     public void integralMall_system_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -104,8 +104,7 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    //ok
-    @Test(description = "商品品牌-创建品牌，修改品牌")
+    @Test()
     public void integralMall_system_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -127,7 +126,7 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "商品品牌-创建品牌，名称异常")
+    @Test()
     public void integralMall_system_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

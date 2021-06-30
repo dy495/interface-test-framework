@@ -8,7 +8,7 @@
 
     <test name="online-monitor" preserve-order="true">
         <classes>
-            <class name="com.haisheng.framework.testng.bigScreen.xundian.onlinecase.wm.ShopManagerCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.xundian.caseonline.wm.ShopManagerCase"/>
 
             <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.testShop.StorePcCaseOnline"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.bgy.StoreDataConsistentcyBgy"></class>
@@ -29,8 +29,8 @@
             <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.zt.XundianAppData"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.zt.XundianPcCase"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundianOnline.zt.InsPcCase"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.xundian.onlinecase.wm.GoodsMarkingCaseOnline"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.xundian.onlinecase.wm.VoucherManagerCaseOnline">
+            <class name="com.haisheng.framework.testng.bigScreen.xundian.caseonline.wm.GoodsMarkingCaseOnline"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundian.caseonline.wm.VoucherManagerCaseOnline">
 
                 <methods>
                     <exclude name="myReportFilter1"/>

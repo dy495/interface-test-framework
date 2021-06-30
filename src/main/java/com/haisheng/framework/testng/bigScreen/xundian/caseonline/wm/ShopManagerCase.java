@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.xundian.onlinecase.wm;
+package com.haisheng.framework.testng.bigScreen.xundian.caseonline.wm;
 
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumChecklistUser;

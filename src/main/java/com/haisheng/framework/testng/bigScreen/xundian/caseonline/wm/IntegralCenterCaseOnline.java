@@ -1,11 +1,14 @@
-package com.haisheng.framework.testng.bigScreen.xundian.dailycase.wm;
+package com.haisheng.framework.testng.bigScreen.xundian.caseonline.wm;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumChecklistUser;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
+import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletExchangeRecord;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletIntegralRecord;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.AppletShippingAddress;
@@ -22,8 +25,6 @@ import com.haisheng.framework.testng.bigScreen.xundian.enumerator.AccountEnum;
 import com.haisheng.framework.testng.bigScreen.xundian.enumerator.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.xundian.generator.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.bigScreen.xundian.scene.applet.granted.*;
-//import com.haisheng.framework.testng.bigScreen.xundian.scene.pc.integralcenter.*;
-//import com.haisheng.framework.testng.bigScreen.xundian.scene.pc.integralmall.GoodsManagePageScene;
 import com.haisheng.framework.testng.bigScreen.xundian.scene.pc.integralcenter.*;
 import com.haisheng.framework.testng.bigScreen.xundian.scene.pc.integralmall.GoodsManagePageScene;
 import com.haisheng.framework.testng.bigScreen.xundian.util.SupporterUtil;
@@ -44,6 +45,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
@@ -52,9 +54,9 @@ import java.util.stream.Collectors;
  * @author wangmin
  * @date 2021/1/29 11:17
  */
-public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduce PRODUCE = EnumTestProduce.INS_DAILY;
-    private static final AccountEnum ALL_AUTHORITY = AccountEnum.YUE_XIU_DAILY;
+public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCaseStd {
+    private static final EnumTestProduce PRODUCE = EnumTestProduce.INS_ONLINE;
+    private static final AccountEnum ALL_AUTHORITY = AccountEnum.YUE_XIU_ONLINE;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.INS_WM_DAILY;
     private static final Integer SIZE = 100;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
@@ -64,16 +66,16 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     @BeforeClass
     @Override
     public void initial() {
-        logger.debug("before class initial");
+        logger.debug("before classs initial");
         CommonConfig commonConfig = new CommonConfig();
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_XUNDIAN_DAILY_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_MENDIAN_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.XUNDIAN_DAILY_TEST.getJobName());
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.XUNDIAN_ONLINE_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
-        commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
+        commonConfig.dingHook = DingWebhook.ONLINE_STORE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.product = PRODUCE.getAbbreviation();
-        commonConfig.referer = PRODUCE.getReferer();
+        commonConfig.pushRd = new String[]{"15898182672", "18513118484", "18810332354", "15084928847"};
         beforeClassInit(commonConfig);
     }
 
@@ -215,37 +217,37 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
-//    @Test(description = "积分兑换--库存详情--当前库存=兑换品库存明细加和")
-//    public void integralExchange_data_1() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            //上线日期，之前得数据不做校验
-//            long time = Long.parseLong(DateTimeUtil.dateToStamp("2021-02-25", "yyyy-MM-dd"));
-//            IScene exchangePageScene = ExchangePageScene.builder().build();
-//            List<JSONObject> exchangePageList = util.collectBean(exchangePageScene, JSONObject.class);
-//            exchangePageList.stream().filter(e -> Long.parseLong(DateTimeUtil.dateToStamp(e.getString("begin_use_time"))) >= time).forEach(e -> {
-//                int id = e.getInteger("id");
-//                AtomicInteger s = new AtomicInteger();
-//                IScene exchangeStockScene = ExchangeGoodsStockScene.builder().id((long) id).build();
-//                JSONObject response = visitor.invokeApi(exchangeStockScene);
-//                String goodsName = response.getString("goods_name");
-//                int goodsStock = response.getInteger("goods_stock");
-//                IScene exchangeStockPageScene = ExchangeStockPageScene.builder().id((long) id).build();
-//                List<JSONObject> exchangeStockPageList = util.collectBean(exchangeStockPageScene, JSONObject.class);
-//                exchangeStockPageList.forEach(a -> {
-//                    String exchangeType = a.getString("exchange_type");
-//                    int stockDetail = a.getInteger("stock_detail");
-//                    s.set(exchangeType.equals("ADD") ? s.addAndGet(stockDetail) : s.addAndGet(-stockDetail));
-//                });
-//                CommonUtil.checkResultPlus(goodsName + " 兑换品库存明细加和", s.get(), "当前库存", goodsStock);
-//                CommonUtil.logger(goodsName);
-//            });
-//        } catch (Exception | AssertionError e) {
-//            collectMessage(e);
-//        } finally {
-//            saveData("积分兑换--库存详情--当前库存=兑换品库存明细加和");
-//        }
-//    }
+    @Test(description = "积分兑换--库存详情--当前库存=兑换品库存明细加和")
+    public void integralExchange_data_1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //上线日期，之前得数据不做校验
+            long time = Long.parseLong(DateTimeUtil.dateToStamp("2021-02-25", "yyyy-MM-dd"));
+            IScene exchangePageScene = ExchangePageScene.builder().build();
+            List<JSONObject> exchangePageList = util.toJavaObjectList(exchangePageScene, JSONObject.class);
+            exchangePageList.stream().filter(e -> Long.parseLong(DateTimeUtil.dateToStamp(e.getString("begin_use_time"))) >= time).forEach(e -> {
+                int id = e.getInteger("id");
+                AtomicInteger s = new AtomicInteger();
+                IScene exchangeStockScene = ExchangeGoodsStockScene.builder().id((long) id).build();
+                JSONObject response = visitor.invokeApi(exchangeStockScene);
+                String goodsName = response.getString("goods_name");
+                int goodsStock = response.getInteger("goods_stock");
+                IScene exchangeStockPageScene = ExchangeStockPageScene.builder().id((long) id).build();
+                List<JSONObject> exchangeStockPageList = util.toJavaObjectList(exchangeStockPageScene, JSONObject.class);
+                exchangeStockPageList.forEach(a -> {
+                    String exchangeType = a.getString("exchange_type");
+                    int stockDetail = a.getInteger("stock_detail");
+                    s.set(exchangeType.equals("ADD") ? s.addAndGet(stockDetail) : s.addAndGet(-stockDetail));
+                });
+                CommonUtil.checkResultPlus(goodsName + " 兑换品库存明细加和", s.get(), "当前库存", goodsStock);
+                CommonUtil.logger(goodsName);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("积分兑换--库存详情--当前库存=兑换品库存明细加和");
+        }
+    }
 
     //ok
     @Test(description = "积分明细--创建实物积分兑换，积分兑换列表+1")
