@@ -4079,6 +4079,24 @@ public class StoreScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
+    /**
+     * @description :门店触发告警列表查询
+     * @date :2021/6/29
+     **/
+    public JSONObject tasksListPage( Long shopId,String page, String size, String param, String result) {
+        String url = "/patrol/check-risk/tasks/list";
+        JSONObject json = new JSONObject();
+        json.put("page", page);
+        json.put("size", size);
+        json.put("shop_id", shopId);
+        if (param != null) {
+            json.put(param, result);
+        }
+        return invokeApi(url, json);
+    }
+
+
 }
 
 
