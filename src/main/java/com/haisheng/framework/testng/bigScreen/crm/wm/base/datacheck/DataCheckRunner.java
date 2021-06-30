@@ -71,7 +71,7 @@ public class DataCheckRunner {
                     otsTableData.setInstanceName(dataSource.getInstancePath());
                     otsTableData.setTableName(dataSource.getTablePath());
                     otsTableData.setRows(otsRows);
-                    otsTableData.setName(dataSource.getName());
+                    otsTableData.setSource(dataSource.getName());
                 });
                 //每张数据源表等于一个tableStoreData:包含实例名、表名、所有行数据
                 list.add(otsTableData);

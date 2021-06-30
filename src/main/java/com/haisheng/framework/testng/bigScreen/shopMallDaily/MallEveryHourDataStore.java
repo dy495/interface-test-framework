@@ -54,7 +54,7 @@ public class MallEveryHourDataStore {
 
     public DetailMessage getDetailMessage(String name, String regionId) {
         List<OTSRowData> otsRowDataList = new LinkedList<>();
-        otsTableDataList.stream().filter(e -> e.getName().contains(name)).map(OTSTableData::initOTSRowData)
+        otsTableDataList.stream().filter(e -> e.getSource().contains(name)).map(OTSTableData::initOTSRowData)
                 .forEach(e -> otsRowDataList.addAll(e.getRowDataList().stream().filter(this::compareTime)
                         .collect(Collectors.toCollection(LinkedList::new))));
         Map<String, OTSRowData> map = new LinkedHashMap<>();

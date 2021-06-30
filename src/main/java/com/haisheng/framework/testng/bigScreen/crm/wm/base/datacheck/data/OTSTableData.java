@@ -42,7 +42,7 @@ public class OTSTableData implements Serializable {
     /**
      * 数据源
      */
-    String name;
+    String source;
 
     /**
      * 行数据

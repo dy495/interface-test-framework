@@ -8,7 +8,6 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.datacheck.data.OTSTab
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.datacheck.data.RuleDataSource;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.sql.Sql;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.entity.Factory;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.entity.IEntity;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.enumerator.EnumContainer;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.row.IRow;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.datacheck.data.OTSRowData;
@@ -72,11 +71,11 @@ public class MallDataStore {
         DataCheckRunner dataCheckRunner = new DataCheckRunner.Builder().rulePath(rulePath).queryPrimaryKeyName("scope_date").shopId("33467").build();
         ITable[] fieldRuleTables = dataCheckRunner.getFieldRuleTables();
         //所有表的结果
-        List<DetailMessage> detailMessages = new ArrayList<>();
+        List<DetailMessage> detailMessages = new LinkedList<>();
         dataCheckRunner.getOtsTableDataList().stream().map(OTSTableData::initOTSRowData).forEach(otsTableData -> {
             List<OTSRowData> otsRowDataList = otsTableData.getRowDataList();
             Preconditions.checkNotNull(otsRowDataList);
-            Arrays.stream(fieldRuleTables).filter(iTable -> iTable.getKey().contains(otsTableData.getName())).forEach(iTable -> {
+            Arrays.stream(fieldRuleTables).filter(iTable -> iTable.getKey().contains(otsTableData.getSource())).forEach(iTable -> {
                 iTable.load();
                 IRow[] fieldRuleRows = iTable.getRows();
                 String[] regionIds = RuleDataSource.parse(getRowByField(fieldRuleRows, "region_id").getField(Constants.RULE_COLUMN_RANGE).getValue());
@@ -95,11 +94,11 @@ public class MallDataStore {
                 logger.info("去重结果：{}", map.values().size());
                 logger.info("不去重结果：{}", list.size());
                 DetailMessage detailMessage = new DetailMessage();
-                detailMessage.setName(otsTableData.getName());
+                detailMessage.setName(otsTableData.getSource());
                 detailMessage.setNoReception(map.values().size());
                 detailMessage.setHasReception(list.size());
                 detailMessages.add(detailMessage);
-                logger.info("--------------------{}跑完---------------------------", otsTableData.getName());
+                logger.info("--------------------{}跑完---------------------------", otsTableData.getSource());
             });
         });
         pvUvInfo.setShopId("33467");
