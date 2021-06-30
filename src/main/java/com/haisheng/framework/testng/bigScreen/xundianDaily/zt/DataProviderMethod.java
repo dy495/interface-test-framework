@@ -153,12 +153,21 @@ public class DataProviderMethod {
         };
     }
 
-    @DataProvider(name = "floorname")
-    public static Object[] floorname() {
+    @DataProvider(name = "floorHistory")
+    public static Object[] floorHistory(){
         return new String[][]{
-                {"4451", "楼层L1历史数据"},
-                {"4452", "楼层L2历史数据"},
-                {"4453", "楼层B1历史数据"},
+                {"4451","楼层L1历史数据"},
+                {"4452","楼层L2历史数据"},
+                {"4453","楼层B1历史数据"},
+        };
+    }
+
+    @DataProvider(name = "floorRealtime")
+    public static Object[] floorRealtime(){
+        return new String[][]{
+                {"4451","楼层L1实时数据","L1实时离场人数"},
+                {"4452","楼层L2实时数据","L2实时离场人数"},
+                {"4453","楼层B1实时数据","B1实时离场人数"},
 
         };
     }
