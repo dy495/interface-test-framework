@@ -1,9 +1,9 @@
-package com.haisheng.framework.testng.bigScreen.xundianDaily.enumerator;
+package com.haisheng.framework.testng.bigScreen.itemXundian.enumerator;
 
 /**
  * 查询周期
  */
-public enum EnumCycleType {
+public enum CycleTypeEnum {
     /**
      * 最近7天
      */
@@ -22,7 +22,7 @@ public enum EnumCycleType {
     RECENT_SIXTY,
     ;
 
-    EnumCycleType() {
+    CycleTypeEnum() {
 
     }
 }

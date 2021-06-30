@@ -40,7 +40,7 @@ public class XundianCaseOnline extends TestCaseCommon implements TestCaseStd {
     int size =50;
     public String adminName = "salesdemo@winsense.ai";
     public String adminPasswd = "c216d5045fbeb18bcca830c235e7f3c8";
-    public String filepath="src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/64.txt";  //巡店不合格图片base64
+    public String filepath="src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/64.txt";  //巡店不合格图片base64
 
 
     //读取文件内容

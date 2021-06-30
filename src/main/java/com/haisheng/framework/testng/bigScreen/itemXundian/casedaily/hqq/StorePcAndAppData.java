@@ -14,8 +14,8 @@ import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.Enu
 import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.enumerator.EnumAppPageType;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.enumerator.EnumCycleType;
+import com.haisheng.framework.testng.bigScreen.itemXundian.enumerator.AppPageTypeEnum;
+import com.haisheng.framework.testng.bigScreen.itemXundian.enumerator.CycleTypeEnum;
 import com.haisheng.framework.testng.bigScreen.itemXundian.scene.mapp.*;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -84,7 +84,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
     public void homePage_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene scene = AppCardListScene.builder().pageType(EnumAppPageType.HOME_BELOW.name()).build();
+            IScene scene = AppCardListScene.builder().pageType(AppPageTypeEnum.HOME_BELOW.name()).build();
             JSONObject total = md.invokeApi(scene).getJSONArray("list").getJSONObject(0).getJSONObject("result");
             int todayUv = total.getJSONObject("total_number").getInteger("today_uv");
             JSONArray trendList = total.getJSONArray("trend_list");
@@ -102,7 +102,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
     public void homePage_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene scene = AppCardListScene.builder().pageType(EnumAppPageType.HOME_BELOW.name()).build();
+            IScene scene = AppCardListScene.builder().pageType(AppPageTypeEnum.HOME_BELOW.name()).build();
             JSONObject total = md.invokeApi(scene).getJSONArray("list").getJSONObject(0).getJSONObject("result");
             int todayPv = total.getJSONObject("total_number").getInteger("today_pv");
             JSONArray trendList = total.getJSONArray("trend_list");
@@ -120,7 +120,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
     public void homePage_data_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene scene = AppCardListScene.builder().pageType(EnumAppPageType.HOME_BELOW.name()).build();
+            IScene scene = AppCardListScene.builder().pageType(AppPageTypeEnum.HOME_BELOW.name()).build();
             JSONObject total = md.invokeApi(scene).getJSONArray("list").getJSONObject(0).getJSONObject("result");
             int yesterdayUv = total.getJSONObject("total_number").getInteger("yesterday_uv");
             JSONArray trendList = total.getJSONArray("trend_list");
@@ -138,7 +138,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
     public void homePage_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene scene = AppCardListScene.builder().pageType(EnumAppPageType.HOME_BELOW.name()).build();
+            IScene scene = AppCardListScene.builder().pageType(AppPageTypeEnum.HOME_BELOW.name()).build();
 
             JSONObject total = md.invokeApi(scene).getJSONArray("list").getJSONObject(0).getJSONObject("result");
             int yesterdayPv = total.getJSONObject("total_number").getInteger("yesterday_pv");
@@ -158,7 +158,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String date = DateTimeUtil.addDayFormat(new Date(), -1);
-            IScene scene = AppCardListScene.builder().pageType(EnumAppPageType.HOME_BELOW.name()).build();
+            IScene scene = AppCardListScene.builder().pageType(AppPageTypeEnum.HOME_BELOW.name()).build();
             JSONObject totalNumber = md.invokeApi(scene).getJSONArray("list").getJSONObject(0).getJSONObject("result").getJSONObject("total_number");
             //首页-昨日到访总人数
             int yesterdayPv = totalNumber.getInteger("yesterday_uv");
@@ -186,7 +186,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String date = DateTimeUtil.addDayFormat(new Date(), -1);
-            IScene scene = AppCardListScene.builder().pageType(EnumAppPageType.HOME_BELOW.name()).build();
+            IScene scene = AppCardListScene.builder().pageType(AppPageTypeEnum.HOME_BELOW.name()).build();
             JSONObject totalNumber = md.invokeApi(scene).getJSONArray("list").getJSONObject(0).getJSONObject("result").getJSONObject("total_number");
             //首页-昨日到访总人次
             int yesterdayPv = totalNumber.getInteger("yesterday_pv");
@@ -213,7 +213,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
     public void homePage_data_7() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene scene = AppCardListScene.builder().pageType(EnumAppPageType.HOME_BELOW.name()).build();
+            IScene scene = AppCardListScene.builder().pageType(AppPageTypeEnum.HOME_BELOW.name()).build();
             JSONObject totalNumber = md.invokeApi(scene).getJSONArray("list").getJSONObject(0).getJSONObject("result").getJSONObject("total_number");
             //首页-今日到访总人数
             int todayUv = totalNumber.getInteger("today_uv");
@@ -233,7 +233,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
     public void homePage_data_8() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene scene = AppCardListScene.builder().pageType(EnumAppPageType.HOME_BELOW.name()).build();
+            IScene scene = AppCardListScene.builder().pageType(AppPageTypeEnum.HOME_BELOW.name()).build();
             JSONObject totalNumber = md.invokeApi(scene).getJSONArray("list").getJSONObject(0).getJSONObject("result").getJSONObject("total_number");
             //首页-今日到访总人次
             int todayPv = totalNumber.getInteger("today_pv");
@@ -503,16 +503,16 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
     public void passengerFlow_data_16() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Arrays.stream(EnumCycleType.values()).forEach(enumCycleType -> {
+            Arrays.stream(CycleTypeEnum.values()).forEach(cycleTypeEnum -> {
                 List<String> shopIds = getAppShopIds();
                 shopIds.forEach(shopId -> {
-                    IScene scene = AppAgeGenderDistributionScene.builder().shopId(shopId).cycleType(enumCycleType.name()).build();
+                    IScene scene = AppAgeGenderDistributionScene.builder().shopId(shopId).cycleType(cycleTypeEnum.name()).build();
                     double percent = getTypeSum(scene, "gender", "gender_ratio_number");
                     CommonUtil.valueView(percent);
-                    Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, shopId + " " + enumCycleType.name() + "占比和=" + percent);
+                    Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, shopId + " " + cycleTypeEnum.name() + "占比和=" + percent);
                     CommonUtil.logger(shopId);
                 });
-                CommonUtil.logger(enumCycleType.name());
+                CommonUtil.logger(cycleTypeEnum.name());
             });
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -525,16 +525,16 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
     public void passengerFlow_data_17() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Arrays.stream(EnumCycleType.values()).forEach(enumCycleType -> {
+            Arrays.stream(CycleTypeEnum.values()).forEach(cycleTypeEnum -> {
                 List<String> shopIds = getAppShopIds();
                 shopIds.forEach(shopId -> {
-                    IScene scene = AppAgeGenderDistributionScene.builder().shopId(shopId).cycleType(enumCycleType.name()).build();
+                    IScene scene = AppAgeGenderDistributionScene.builder().shopId(shopId).cycleType(cycleTypeEnum.name()).build();
                     double percent = getTypeSum(scene, "age", "age_ratio_number");
                     CommonUtil.valueView(percent);
-                    Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, shopId + " " + enumCycleType.name() + "占比和=" + percent);
+                    Preconditions.checkArgument(percent == (double) 100 || percent == (double) 0, shopId + " " + cycleTypeEnum.name() + "占比和=" + percent);
                     CommonUtil.logger(shopId);
                 });
-                CommonUtil.logger(enumCycleType.name());
+                CommonUtil.logger(cycleTypeEnum.name());
             });
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -792,20 +792,20 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
     public void passengerFlow_data_33() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Arrays.stream(EnumCycleType.values()).forEach(enumCycleType -> {
+            Arrays.stream(CycleTypeEnum.values()).forEach(cycleTypeEnum -> {
                 List<String> shopIds = getPcShopIds();
 
                 shopIds.forEach(shopId -> {
-                    IScene appScene = AppAgeGenderDistributionScene.builder().shopId(shopId).cycleType(enumCycleType.name()).build();
+                    IScene appScene = AppAgeGenderDistributionScene.builder().shopId(shopId).cycleType(cycleTypeEnum.name()).build();
                     JSONArray gender = md.invokeApi(appScene).getJSONArray("gender");
                     double appPercent = gender.getJSONObject(0).getDouble("gender_ratio_number");
 
-                    IScene pcScene = AgeGenderDistributionScene.builder().cycleType(enumCycleType.name()).shopId(shopId).build();
+                    IScene pcScene = AgeGenderDistributionScene.builder().cycleType(cycleTypeEnum.name()).shopId(shopId).build();
                     JSONArray list = md.invokeApi(pcScene).getJSONObject("enter").getJSONArray("list");
                     double pcPercent = getTypeSum(list, "male_percent");
                     CommonUtil.valueView(appPercent, pcPercent);
                     Preconditions.checkArgument(pcPercent == appPercent, shopId + " app" + appPercent + "， pc" + pcPercent);
-                    CommonUtil.logger(shopId + enumCycleType.name());
+                    CommonUtil.logger(shopId + cycleTypeEnum.name());
                 });
             });
         } catch (Exception | AssertionError e) {
@@ -821,20 +821,20 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            Arrays.stream(EnumCycleType.values()).forEach(enumCycleType -> {
+            Arrays.stream(CycleTypeEnum.values()).forEach(cycleTypeEnum -> {
                 List<String> shopIds = getPcShopIds();
 
                 shopIds.forEach(shopId -> {
-                    IScene appScene = AppAgeGenderDistributionScene.builder().shopId(shopId).cycleType(enumCycleType.name()).build();
+                    IScene appScene = AppAgeGenderDistributionScene.builder().shopId(shopId).cycleType(cycleTypeEnum.name()).build();
                     JSONArray gender = md.invokeApi(appScene).getJSONArray("gender");
                     double appPercent = gender.getJSONObject(0).getDouble("gender_ratio_number");
 
-                    IScene pcScene = AgeGenderDistributionScene.builder().cycleType(enumCycleType.name()).shopId(shopId).build();
+                    IScene pcScene = AgeGenderDistributionScene.builder().cycleType(cycleTypeEnum.name()).shopId(shopId).build();
                     JSONArray list = md.invokeApi(pcScene).getJSONObject("enter").getJSONArray("list");
                     double pcPercent = getTypeSum(list, "female_percent");
                     CommonUtil.valueView(appPercent, pcPercent);
                     Preconditions.checkArgument(pcPercent == appPercent, shopId + " app" + appPercent + "， pc" + pcPercent);
-                    CommonUtil.logger(shopId + enumCycleType.name());
+                    CommonUtil.logger(shopId + cycleTypeEnum.name());
                 });
             });
         } catch (Exception | AssertionError e) {
@@ -849,24 +849,24 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
     public void passengerFlow_data_35() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Arrays.stream(EnumCycleType.values()).forEach(enumCycleType -> {
+            Arrays.stream(CycleTypeEnum.values()).forEach(cycleTypeEnum -> {
                 List<String> shopIds = getPcShopIds();
 
                 shopIds.forEach(shopId -> {
-                    IScene appScene = AppAgeGenderDistributionScene.builder().shopId(shopId).cycleType(enumCycleType.name()).build();
+                    IScene appScene = AppAgeGenderDistributionScene.builder().shopId(shopId).cycleType(cycleTypeEnum.name()).build();
                     JSONArray age = md.invokeApi(appScene).getJSONArray("age");
                     List<Double> appPercentList = new ArrayList<>();
                     for (int i = 0; i < age.size(); i++) {
                         appPercentList.add(age.getJSONObject(i).getDouble("age_ratio_number"));
                     }
 
-                    IScene pcScene = AgeGenderDistributionScene.builder().cycleType(enumCycleType.name()).shopId(shopId).build();
+                    IScene pcScene = AgeGenderDistributionScene.builder().cycleType(cycleTypeEnum.name()).shopId(shopId).build();
                     JSONArray list = md.invokeApi(pcScene).getJSONObject("enter").getJSONArray("list");
                     List<Double> pcPercentList = list.stream().map(e -> (JSONObject) e).map(object -> percentToDouble(object.getString("age_group_percent"))).collect(Collectors.toList());
                     CommonUtil.valueView(pcPercentList);
                     CommonUtil.valueView(appPercentList, pcPercentList);
                     Preconditions.checkArgument(appPercentList.equals(pcPercentList), "app" + appPercentList + "， pc" + pcPercentList);
-                    CommonUtil.logger(shopId + " " + enumCycleType.name());
+                    CommonUtil.logger(shopId + " " + cycleTypeEnum.name());
                 });
             });
         } catch (Exception | AssertionError e) {
@@ -931,7 +931,7 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         List<String> shopIds = new ArrayList<>();
         JSONArray list;
         do {
-            IScene scene = AppCardListScene.builder().pageType(EnumAppPageType.DATA_LIST_PAGE.name()).lastValue(lastValue).size(20).build();
+            IScene scene = AppCardListScene.builder().pageType(AppPageTypeEnum.DATA_LIST_PAGE.name()).lastValue(lastValue).size(20).build();
             JSONObject response = md.invokeApi(scene);
             lastValue = response.getInteger("last_value");
             list = response.getJSONArray("list");

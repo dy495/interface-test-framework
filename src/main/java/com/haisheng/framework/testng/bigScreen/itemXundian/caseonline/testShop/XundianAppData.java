@@ -30,7 +30,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
     int page = 1;
     int size = 50;
     String comment = "自动化在进行处理，闲人走开";
-    public String filepath = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/卡券图.jpg"; //巡店不合格图片base64
+    public String filepath = "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/卡券图.jpg"; //巡店不合格图片base64
 
 //    //读取文件内容
 //    public String texFile(String fileName) throws IOException {

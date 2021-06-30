@@ -307,7 +307,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             double latitude = 17.22;
             String tripartite_shop_id = "4321";
             int recommended = 70;
-            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
+            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/INS.jpg";
             String base64 = MendianInfoOnline.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
             String result = md.createShop(path, shopName, label, openingTime, closingTime, managerName, managerPhone, city, address, longitude, latitude, tripartite_shop_id, recommended).getString("result");
@@ -342,7 +342,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             double latitude = 17.22;
             String tripartite_shop_id = "4321";
             int recommended = 70;
-            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
+            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/INS.jpg";
             String base64 = MendianInfoOnline.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
             md.createShop(path, shopName, label, openingTime, closingTime, managerName, phone, city, address, longitude, latitude, tripartite_shop_id, recommended);
@@ -383,7 +383,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             String tripartite_shop_id = "4321";
             int recommended = 70;
             String phone = "13666666666";
-            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
+            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/INS.jpg";
             String base64 = MendianInfoOnline.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
             //不传图片
@@ -665,7 +665,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
     public void create_level() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
+            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/INS.jpg";
             String base64 = MendianInfoOnline.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
             int code = md.member_level_add0("等级", path, 10, "嗷嗷", "aa", 10, 10, 10, false).getInteger("code");
@@ -691,7 +691,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String level_name = "等级";
-            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
+            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/INS.jpg";
             String base64 = MendianInfoOnline.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
             md.member_level_add0(level_name, path, 10, "嗷嗷", "aa", 4, 10, 10, true);
@@ -725,7 +725,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //等级名称超过20个字,后台没有校验
-            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
+            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/INS.jpg";
             String base64 = MendianInfoOnline.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
 
@@ -1000,7 +1000,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
+            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/INS.jpg";
             String base64 = MendianInfoOnline.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
             JSONArray piclist = new JSONArray();
@@ -1025,7 +1025,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
+            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/INS.jpg";
             String base64 = MendianInfoOnline.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
             JSONArray piclist = new JSONArray();
@@ -1052,7 +1052,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
+            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/INS.jpg";
             String base64 = MendianInfoOnline.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
             JSONArray piclist = new JSONArray();
@@ -1077,7 +1077,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
+            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/INS.jpg";
             String base64 = MendianInfoOnline.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
             JSONArray piclist = new JSONArray();
@@ -1130,7 +1130,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
+            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/INS.jpg";
             String base64 = MendianInfoOnline.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
 //            JSONArray piclist = new JSONArray();
@@ -1156,7 +1156,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
+            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/INS.jpg";
             String base64 = MendianInfoOnline.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
 //            JSONArray piclist = new JSONArray();
@@ -1191,7 +1191,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
+            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/INS.jpg";
             String base64 = MendianInfoOnline.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
             String name = "芒果";
@@ -1221,7 +1221,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
+            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/INS.jpg";
             String base64 = MendianInfoOnline.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
             JSONArray piclist = new JSONArray();

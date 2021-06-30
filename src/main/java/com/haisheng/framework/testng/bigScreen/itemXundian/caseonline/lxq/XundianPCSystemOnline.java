@@ -29,7 +29,7 @@ public class XundianPCSystemOnline extends TestCaseCommon implements TestCaseStd
     XundianScenarioUtilOnline xd = XundianScenarioUtilOnline.getInstance();
     StoreScenarioUtilOnline md = StoreScenarioUtilOnline.getInstance();
     MendianInfoOnline info = new MendianInfoOnline();
-    public String filepath="src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/64.txt";  //巡店不合格图片base64
+    public String filepath="src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/64.txt";  //巡店不合格图片base64
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name

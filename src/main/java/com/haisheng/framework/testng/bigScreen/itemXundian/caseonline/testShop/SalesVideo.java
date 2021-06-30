@@ -30,7 +30,7 @@ public class SalesVideo extends TestCaseCommon implements TestCaseStd {
     XdPackageData xds = XdPackageData.getInstance();
     Long shop_id = 13260l;
     String comment = "自动化在进行处理，闲人走开";
-    public String filepath = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/卡券图.jpg"; //巡店不合格图片base64
+    public String filepath = "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/卡券图.jpg"; //巡店不合格图片base64
 
 
 

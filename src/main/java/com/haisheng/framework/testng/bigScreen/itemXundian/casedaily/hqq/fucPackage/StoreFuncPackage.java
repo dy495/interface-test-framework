@@ -41,7 +41,7 @@ public class StoreFuncPackage extends TestCaseCommon {
      */
     public String IpPort = "http://123.57.148.247";
     StoreScenarioUtil md = StoreScenarioUtil.getInstance();
-    public String filepath="src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/64.txt";  //巡店不合格图片base64
+    public String filepath="src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/64.txt";  //巡店不合格图片base64
 
     /**
      * @description:登录

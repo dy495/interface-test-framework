@@ -1,10 +1,10 @@
-package com.haisheng.framework.testng.bigScreen.xundianDaily.enumerator;
+package com.haisheng.framework.testng.bigScreen.itemXundian.enumerator;
 
 import org.apache.commons.lang.StringUtils;
 
 import java.util.Arrays;
 
-public enum EnumAppPageType {
+public enum AppPageTypeEnum {
     /**
      * 首页上面
      **/
@@ -31,14 +31,14 @@ public enum EnumAppPageType {
     PATROL_CENTER_PAGE,
     ;
 
-    EnumAppPageType() {
+    AppPageTypeEnum() {
     }
 
-    public static EnumAppPageType getByType(String dataType) {
+    public static AppPageTypeEnum getByType(String dataType) {
         if (StringUtils.isEmpty(dataType)) {
             return null;
         }
-        return Arrays.stream(EnumAppPageType.values()).filter(appPageTypeEnum ->
+        return Arrays.stream(AppPageTypeEnum.values()).filter(appPageTypeEnum ->
                 appPageTypeEnum.name().equals(dataType)).findAny().orElse(null);
     }
 }

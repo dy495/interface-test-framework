@@ -101,7 +101,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             double latitude = 17.22;
             String tripartite_shop_id = "4321";
             int recommended = 70;
-            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
+            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/INS.jpg";
             String base64 = MendianInfo.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
             //获得初始的门店数量
@@ -185,7 +185,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             int wechatsize = wechatlist.size();
 
             xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
-            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
+            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/INS.jpg";
             String base64 = MendianInfo.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
             int pctotal = md.member_level_page(null, 1, 100).getInteger("total");
@@ -400,7 +400,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             JSONArray sortlist = wx.tasteSort(null).getJSONArray("list");
             int sortnum = sortlist.size();
             xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
-            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/INS.jpg";
+            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/INS.jpg";
             String base64 = MendianInfo.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
             //创建前pc口味数量
@@ -558,7 +558,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
 //            int n = newProduct0.size();
 //
 //            //新增评论
-//            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/正脸.jpg";
+//            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/正脸.jpg";
 //            List<String> pathList = new ArrayList<String>();
 //            pathList.add(path);
 //            String result = md.taste_add_comment(id,path,"王路飞","王路飞觉得很赞",4,true,pathList).getString("result");

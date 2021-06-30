@@ -169,7 +169,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
             String member_ID = "11223344";
             String member_name = "测试会员11@@aaa";
             String birthday = "1998-10-01";
-            String base64 = MendianInfo.getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/pic/女人脸.jpg");
+            String base64 = MendianInfo.getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/女人脸.jpg");
             String path = md.checkPic(base64).getString("pic_path");
             md.RegisterMember(null,path,member_ID,member_name,phone,birthday,null,130);
             JSONArray list0 = md.MemberList(page,size,null,null,null,null,null).getJSONArray("list");

@@ -31,7 +31,7 @@ public class XundianPcData extends TestCaseCommon implements TestCaseStd {
     int page=1;
     int size=50;
     String cycle_type = "RECENT_THIRTY";
-    String filepath = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/64.txt";
+    String filepath = "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/64.txt";
 
     public String texFile(String fileName) throws IOException {
         BufferedReader in = new BufferedReader(new FileReader(fileName));
