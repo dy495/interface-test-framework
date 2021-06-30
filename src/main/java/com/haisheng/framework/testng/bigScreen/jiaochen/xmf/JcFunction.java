@@ -2,9 +2,9 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.xmf;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.proxy.VisitorProxy;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.util.BasicUtil;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.util.BasicUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.registerListVariable;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.AppAdmitScene;

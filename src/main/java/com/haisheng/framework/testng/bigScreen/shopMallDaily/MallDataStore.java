@@ -2,16 +2,16 @@ package com.haisheng.framework.testng.bigScreen.shopMallDaily;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.datacheck.Constants;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.datacheck.DataCheckRunner;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.datacheck.data.OTSTableData;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.datacheck.data.RuleDataSource;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.sql.Sql;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.tarot.entity.Factory;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.tarot.enumerator.EnumContainer;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.tarot.row.IRow;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.datacheck.data.OTSRowData;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.tarot.table.ITable;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.datacheck.Constants;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.datacheck.DataCheckRunner;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.datacheck.data.OTSTableData;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.datacheck.data.RuleDataSource;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.sql.Sql;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.tarot.entity.Factory;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.tarot.enumerator.EnumContainer;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.tarot.row.IRow;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.datacheck.data.OTSRowData;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.tarot.table.ITable;
 import com.haisheng.framework.testng.bigScreen.itemXundian.bean.DetailMessage;
 import com.haisheng.framework.testng.bigScreen.itemXundian.bean.PvUvInfo;
 import com.haisheng.framework.util.DateTimeUtil;
@@ -67,7 +67,7 @@ public class MallDataStore {
     @BeforeClass
     public void initData() {
         pvUvInfo = new PvUvInfo();
-        String rulePath = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/wm/base/datacheck/rule/规则表.xlsx";
+        String rulePath = "src/main/resources/excel/规则表.xlsx";
         DataCheckRunner dataCheckRunner = new DataCheckRunner.Builder().rulePath(rulePath).queryPrimaryKeyName("scope_date").shopId("33467").build();
         ITable[] fieldRuleTables = dataCheckRunner.getFieldRuleTables();
         //所有表的结果

@@ -14,7 +14,7 @@ import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.customer.E
 import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.sale.EnumFailureCause;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.sale.EnumReturnVisitResult;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.scene.app.CustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.scene.app.ReturnVisitTaskExecuteScene;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.scene.app.ReturnVisitTaskPageScene;

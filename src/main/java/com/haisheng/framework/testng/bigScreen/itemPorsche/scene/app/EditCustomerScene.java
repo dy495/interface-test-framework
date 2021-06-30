@@ -3,7 +3,7 @@ package com.haisheng.framework.testng.bigScreen.itemPorsche.scene.app;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.aliyun.openservices.shade.org.apache.commons.lang3.StringUtils;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.scene.BaseScene;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.scene.BaseScene;
 import lombok.Builder;
 
 /**

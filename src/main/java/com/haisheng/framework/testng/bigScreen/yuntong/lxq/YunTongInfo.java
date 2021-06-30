@@ -1,7 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.yuntong.lxq;
 
 import com.aliyun.openservices.shade.org.apache.commons.codec.binary.Base64;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.brand.AddScene;

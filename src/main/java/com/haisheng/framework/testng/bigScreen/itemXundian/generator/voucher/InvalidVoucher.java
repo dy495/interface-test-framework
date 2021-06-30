@@ -1,7 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.itemXundian.generator.voucher;
 
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.proxy.VisitorProxy;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.enumerator.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.itemXundian.scene.pc.vouchermanage.InvalidVoucherScene;
 

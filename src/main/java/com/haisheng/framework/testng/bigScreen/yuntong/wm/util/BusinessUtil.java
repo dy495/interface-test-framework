@@ -2,9 +2,9 @@ package com.haisheng.framework.testng.bigScreen.yuntong.wm.util;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.proxy.VisitorProxy;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.util.BasicUtil;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.util.BasicUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.personaldata.AppPersonalOverviewBean;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.personaldata.AppReceptionLinkScoreBean;

@@ -1,10 +1,10 @@
 package com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.zt;
 
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.sql.Sql;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.tarot.entity.Factory;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.tarot.entity.IEntity;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.tarot.enumerator.EnumContainer;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.sql.Sql;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.tarot.entity.Factory;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.tarot.entity.IEntity;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.tarot.enumerator.EnumContainer;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;

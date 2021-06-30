@@ -1,7 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.sensitivewords;
 
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.scene.BaseScene;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.scene.BaseScene;
 import lombok.Builder;
 
 /**

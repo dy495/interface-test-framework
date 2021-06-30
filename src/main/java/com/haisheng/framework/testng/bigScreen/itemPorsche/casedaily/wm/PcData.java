@@ -8,7 +8,7 @@ import com.haisheng.framework.testng.bigScreen.itemPorsche.util.commonDs.PublicM
 import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.customer.*;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.sale.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.scene.app.AppCustomerCreateScene;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.scene.app.CustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.util.UserUtil;

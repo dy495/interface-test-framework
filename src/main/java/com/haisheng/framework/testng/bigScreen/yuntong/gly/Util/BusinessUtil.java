@@ -1,8 +1,8 @@
 package com.haisheng.framework.testng.bigScreen.yuntong.gly.Util;
 
 import com.alibaba.fastjson.JSONArray;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.proxy.VisitorProxy;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.customermanage.PreSaleCustomerPageScene;
 import com.haisheng.framework.util.DateTimeUtil;

@@ -10,7 +10,7 @@ import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.customer.E
 import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.customer.EnumCustomerInfo;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.other.EnumOperation;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.sale.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.scene.app.*;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.scene.pc.OrderMaintainPageScene;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.scene.pc.OrderRepairPageScene;

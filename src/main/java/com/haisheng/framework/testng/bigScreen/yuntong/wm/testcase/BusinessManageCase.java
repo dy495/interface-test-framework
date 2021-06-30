@@ -1,6 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.yuntong.wm.testcase;
 
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumJobName;

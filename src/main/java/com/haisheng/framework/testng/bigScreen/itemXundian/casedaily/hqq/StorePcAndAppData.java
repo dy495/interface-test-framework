@@ -13,7 +13,7 @@ import com.haisheng.framework.testng.bigScreen.itemXundian.util.StoreScenarioUti
 import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.enumerator.AppPageTypeEnum;
 import com.haisheng.framework.testng.bigScreen.itemXundian.enumerator.CycleTypeEnum;
 import com.haisheng.framework.testng.bigScreen.itemXundian.scene.mapp.*;

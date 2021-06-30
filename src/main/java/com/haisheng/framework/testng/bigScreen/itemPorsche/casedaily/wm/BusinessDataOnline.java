@@ -2,7 +2,7 @@ package com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.sql.Sql;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.sql.Sql;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.bean.SaleInfo;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.bean.TPorscheDeliverInfo;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.bean.TPorscheOrderInfo;
@@ -10,15 +10,15 @@ import com.haisheng.framework.testng.bigScreen.itemPorsche.bean.TPorscheReceptio
 import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.customer.EnumCarStyle;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.sale.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.scene.app.CustomerMyReceptionListScene;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.scene.pc.OrderInfoPageScene;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.util.DingPushUtil;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.util.UserUtil;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.util.CrmScenarioUtilOnline;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.util.commonDsOnline.PublicMethodOnline;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.tarot.entity.Factory;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.tarot.enumerator.EnumContainer;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.tarot.entity.Factory;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.tarot.enumerator.EnumContainer;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;

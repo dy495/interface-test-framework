@@ -3,7 +3,7 @@ package com.haisheng.framework.testng.bigScreen.yuntong.lxq;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumChecklistAppId;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumChecklistConfId;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumJobName;

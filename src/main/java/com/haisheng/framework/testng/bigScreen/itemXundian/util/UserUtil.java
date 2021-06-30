@@ -1,7 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.itemXundian.util;
 
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.proxy.VisitorProxy;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.enumerator.AccountEnum;
 import com.haisheng.framework.testng.bigScreen.itemXundian.scene.pc.PatrolLoginScene;
 import com.haisheng.framework.util.MD5Util;

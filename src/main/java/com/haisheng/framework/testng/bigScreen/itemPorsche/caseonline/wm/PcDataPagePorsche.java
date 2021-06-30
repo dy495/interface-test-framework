@@ -5,7 +5,7 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.other.EnumFindType;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.sale.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.scene.pc.Analysis2ShopReceptTimeScene;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.util.UserUtil;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.util.CrmScenarioUtilOnline;

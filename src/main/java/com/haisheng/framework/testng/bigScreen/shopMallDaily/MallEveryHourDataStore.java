@@ -1,11 +1,11 @@
 package com.haisheng.framework.testng.bigScreen.shopMallDaily;
 
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.datacheck.DataCheckRunner;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.datacheck.data.OTSRowData;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.datacheck.data.OTSTableData;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.sql.Sql;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.tarot.entity.Factory;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.tarot.enumerator.EnumContainer;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.datacheck.DataCheckRunner;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.datacheck.data.OTSRowData;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.datacheck.data.OTSTableData;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.sql.Sql;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.tarot.entity.Factory;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.tarot.enumerator.EnumContainer;
 import com.haisheng.framework.testng.bigScreen.itemXundian.bean.DetailMessage;
 import com.haisheng.framework.util.DateTimeUtil;
 import org.slf4j.Logger;
@@ -22,7 +22,7 @@ public class MallEveryHourDataStore {
 
     @BeforeClass
     public void initOTStable() {
-        String rulePath = "src/main/java/com/haisheng/framework/testng/bigScreen/crm/wm/base/datacheck/rule/规则表.xlsx";
+        String rulePath = "src/main/resources/excel/规则表.xlsx";
         DataCheckRunner dataCheckRunner = new DataCheckRunner.Builder().rulePath(rulePath).queryPrimaryKeyName("scope_date").shopId("33467").build();
         otsTableDataList = dataCheckRunner.getOtsTableDataList();
     }

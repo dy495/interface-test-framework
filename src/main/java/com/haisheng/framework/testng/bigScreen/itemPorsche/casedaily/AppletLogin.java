@@ -2,7 +2,7 @@ package com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.bean.Response;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.scene.applet.AppletPorscheAMessageListScene;
