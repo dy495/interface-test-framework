@@ -12,8 +12,8 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.enumerator.Enum
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.row.IRow;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.datacheck.data.OTSRowData;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.table.ITable;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.bean.DetailMessage;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.bean.PvUvInfo;
+import com.haisheng.framework.testng.bigScreen.xundian.bean.DetailMessage;
+import com.haisheng.framework.testng.bigScreen.xundian.bean.PvUvInfo;
 import com.haisheng.framework.util.DateTimeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,10 +40,10 @@ public class MallDataStore {
     public void realTimeData() {
         List<DetailMessage> detailMessageList = pvUvInfo.getDetailMessages();
         detailMessageList.forEach(e -> {
-            if (e.getName().contains("实时")) {
+            if (e.getSourceName().contains("实时")) {
                 String date = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
                 Sql sql = Sql.instance().insert("t_mall_realtime_data")
-                        .set("shop_id", "33467").set("source", e.getName()).set("map_value", e.getNoReception())
+                        .set("shop_id", "33467").set("source", e.getSourceName()).set("map_value", e.getNoReception())
                         .set("list_value", e.getHasReception()).set("data", date).set("environment", "online").end();
                 new Factory.Builder().container(EnumContainer.DB_ONE_PIECE.getContainer()).build().create(sql.getSql());
             }
@@ -54,10 +54,10 @@ public class MallDataStore {
     public void historyData() {
         List<DetailMessage> detailMessageList = pvUvInfo.getDetailMessages();
         detailMessageList.forEach(e -> {
-            if (!e.getName().contains("实时")) {
+            if (!e.getSourceName().contains("实时")) {
                 String date = DateTimeUtil.addDayFormat(new Date(), -1, "yyyy-MM-dd");
                 Sql sql = Sql.instance().insert("t_mall_history_data")
-                        .set("shop_id", "33467").set("source", e.getName()).set("map_value", e.getNoReception())
+                        .set("shop_id", "33467").set("source", e.getSourceName()).set("map_value", e.getNoReception())
                         .set("list_value", e.getHasReception()).set("data", date).set("environment", "online").end();
                 new Factory.Builder().container(EnumContainer.DB_ONE_PIECE.getContainer()).build().create(sql.getSql());
             }
@@ -75,7 +75,7 @@ public class MallDataStore {
         dataCheckRunner.getOtsTableDataList().stream().map(OTSTableData::initOTSRowData).forEach(otsTableData -> {
             List<OTSRowData> otsRowDataList = otsTableData.getRowDataList();
             Preconditions.checkNotNull(otsRowDataList);
-            Arrays.stream(fieldRuleTables).filter(iTable -> iTable.getKey().contains(otsTableData.getSource())).forEach(iTable -> {
+            Arrays.stream(fieldRuleTables).filter(iTable -> iTable.getKey().contains(otsTableData.getSourceName())).forEach(iTable -> {
                 iTable.load();
                 IRow[] fieldRuleRows = iTable.getRows();
                 String[] regionIds = RuleDataSource.parse(getRowByField(fieldRuleRows, "region_id").getField(Constants.RULE_COLUMN_RANGE).getValue());
@@ -94,11 +94,11 @@ public class MallDataStore {
                 logger.info("去重结果：{}", map.values().size());
                 logger.info("不去重结果：{}", list.size());
                 DetailMessage detailMessage = new DetailMessage();
-                detailMessage.setName(otsTableData.getSource());
+                detailMessage.setSourceName(otsTableData.getSourceName());
                 detailMessage.setNoReception(map.values().size());
                 detailMessage.setHasReception(list.size());
                 detailMessages.add(detailMessage);
-                logger.info("--------------------{}跑完---------------------------", otsTableData.getSource());
+                logger.info("--------------------{}跑完---------------------------", otsTableData.getSourceName());
             });
         });
         pvUvInfo.setShopId("33467");

@@ -7,7 +7,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.bean.Response;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
 import com.haisheng.framework.testng.bigScreen.crm.wm.scene.applet.AppletPorscheAMessageListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletVoucherListScene;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.applet.granted.AppletIntegralRecordScene;
+import com.haisheng.framework.testng.bigScreen.xundian.scene.applet.granted.AppletIntegralRecordScene;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;

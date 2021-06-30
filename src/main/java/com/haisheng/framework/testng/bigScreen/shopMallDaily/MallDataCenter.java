@@ -3,33 +3,16 @@ package com.haisheng.framework.testng.bigScreen.shopMallDaily;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.entity.Factory;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.entity.IEntity;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.enumerator.EnumContainer;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.integralmall.BrandPageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.StoreScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.fucPackage.StoreFuncPackage;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.integralmall.BrandPageScene;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.integralmall.CreateBrandScene;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.scene.pc.integralmall.DeleteBrandScene;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import com.haisheng.framework.util.CommonUtil;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 ;import static com.google.common.base.Preconditions.checkArgument;
 

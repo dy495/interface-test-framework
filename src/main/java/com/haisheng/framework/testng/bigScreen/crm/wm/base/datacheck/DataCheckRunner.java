@@ -56,22 +56,22 @@ public class DataCheckRunner {
             //遍历数据源表
             Arrays.stream(dataSourceTable.getRows()).forEach(dataSourceRow -> {
                 OTSTableData otsTableData = new OTSTableData();
-                RuleDataSource dataSource = new RuleDataSource();
-                dataSource.initDataSource(dataSourceRow);
-                IContainer otsContainer = initOTSContainer(config, dataSource);
+                RuleDataSource ruleDataSource = new RuleDataSource();
+                ruleDataSource.initDataSource(dataSourceRow);
+                IContainer otsContainer = initOTSContainer(config, ruleDataSource);
                 //其实只有一张表
                 ITable[] otsTables = otsContainer.getTables();
                 //如果是实时表获取当前日期
-                date = dataSource.getName().contains("实时") ? DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd")
+                date = ruleDataSource.getSourceName().contains("实时") ? DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd")
                         : DateTimeUtil.addDayFormat(new Date(), -1, "yyyy-MM-dd");
                 //遍历ots表获取所有行
                 Arrays.stream(otsTables).forEach(otsTable -> {
-                    loadTable(otsTable, dataSource.getPrimaryKeys());
+                    loadTable(otsTable, ruleDataSource.getPrimaryKeys());
                     IRow[] otsRows = otsTable.getRows();
-                    otsTableData.setInstanceName(dataSource.getInstancePath());
-                    otsTableData.setTableName(dataSource.getTablePath());
+                    otsTableData.setInstanceName(ruleDataSource.getInstancePath());
+                    otsTableData.setTableName(ruleDataSource.getTablePath());
+                    otsTableData.setSourceName(ruleDataSource.getSourceName());
                     otsTableData.setRows(otsRows);
-                    otsTableData.setSource(dataSource.getName());
                 });
                 //每张数据源表等于一个tableStoreData:包含实例名、表名、所有行数据
                 list.add(otsTableData);

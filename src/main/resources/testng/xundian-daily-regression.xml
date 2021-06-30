@@ -26,9 +26,9 @@
             <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.zt.InsPcCase"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.zt.InsPcData"></class>
 
-            <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.wm.testcase.GoodsMarkingCase"/>
-            <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.wm.testcase.IntegralCenterCase"/>
-            <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.wm.testcase.VoucherManagerCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.xundian.dailycase.wm.GoodsMarkingCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.xundian.dailycase.wm.IntegralCenterCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.xundian.dailycase.wm.VoucherManagerCase"/>
         </classes>
     </test>
 </suite>

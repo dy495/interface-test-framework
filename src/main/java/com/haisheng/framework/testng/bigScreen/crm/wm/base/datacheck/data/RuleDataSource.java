@@ -2,7 +2,6 @@ package com.haisheng.framework.testng.bigScreen.crm.wm.base.datacheck.data;
 
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.datacheck.Constants;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.row.IRow;
-import lombok.Data;
 import lombok.Getter;
 
 import java.io.Serializable;
@@ -16,7 +15,7 @@ import java.io.Serializable;
 @Getter
 public class RuleDataSource implements Serializable {
 
-    private String name;
+    private String sourceName;
     private String instancePath;
     private String tablePath;
     private String container;
@@ -30,7 +29,7 @@ public class RuleDataSource implements Serializable {
      */
     public RuleDataSource initDataSource(IRow row) {
         this.primaryKeys = parse(row.getField(Constants.DATA_SOURCE_COLUMN_KEY).getValue());
-        this.name = row.getField(Constants.DATA_SOURCE_COLUMN_NAME).getValue();
+        this.sourceName = row.getField(Constants.DATA_SOURCE_COLUMN_NAME).getValue();
         String path = row.getField(Constants.DATA_SOURCE_COLUMN_PATH).getValue();
         String[] paths = path.split("/");
         this.instancePath = paths[0];

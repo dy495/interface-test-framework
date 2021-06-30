@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
@@ -15,7 +14,7 @@ import com.haisheng.framework.testng.bigScreen.xundianOnline.XundianScenarioUtil
 
 import com.haisheng.framework.testng.bigScreen.xundianOnline.WechatScenarioUtilOnline;
 
-import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.util.SupporterUtil;
+import com.haisheng.framework.testng.bigScreen.xundian.util.SupporterUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;

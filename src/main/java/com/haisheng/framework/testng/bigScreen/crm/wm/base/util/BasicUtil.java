@@ -95,8 +95,8 @@ public class BasicUtil {
     }
 
     public <T> T toFirstJavaObject(@NotNull IScene scene, Class<T> tClass) {
-        JSONObject object = scene.invoke(visitor).getJSONArray("list").getJSONObject(0);
-        return toJavaObject(object, tClass);
+        JSONArray array = scene.invoke(visitor).getJSONArray("list");
+        return array.size() == 0 ? null : toJavaObject(scene.invoke(visitor).getJSONArray("list").getJSONObject(0), tClass);
     }
 
     public <K, V, T> V getValueByKey(@NotNull Map<K, V> map, T key) {

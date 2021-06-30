@@ -6,7 +6,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.datacheck.data.OTSTab
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.sql.Sql;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.entity.Factory;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.tarot.enumerator.EnumContainer;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.wm.bean.DetailMessage;
+import com.haisheng.framework.testng.bigScreen.xundian.bean.DetailMessage;
 import com.haisheng.framework.util.DateTimeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +37,7 @@ public class MallEveryHourDataStore {
         String date = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
         detailMessages.forEach(e -> {
             Sql sql = Sql.instance().insert("t_mall_moment_data")
-                    .set("shop_id", "33467").set("source", e.getName()).set("map_value", e.getNoReception())
+                    .set("shop_id", "33467").set("source", e.getSourceName()).set("map_value", e.getNoReception())
                     .set("list_value", e.getHasReception()).set("data", date).set("environment", "online").end();
             new Factory.Builder().container(EnumContainer.DB_ONE_PIECE.getContainer()).build().create(sql.getSql());
         });
@@ -54,7 +54,7 @@ public class MallEveryHourDataStore {
 
     public DetailMessage getDetailMessage(String name, String regionId) {
         List<OTSRowData> otsRowDataList = new LinkedList<>();
-        otsTableDataList.stream().filter(e -> e.getSource().contains(name)).map(OTSTableData::initOTSRowData)
+        otsTableDataList.stream().filter(e -> e.getSourceName().contains(name)).map(OTSTableData::initOTSRowData)
                 .forEach(e -> otsRowDataList.addAll(e.getRowDataList().stream().filter(this::compareTime)
                         .collect(Collectors.toCollection(LinkedList::new))));
         Map<String, OTSRowData> map = new LinkedHashMap<>();
@@ -64,7 +64,7 @@ public class MallEveryHourDataStore {
         logger.info("去重结果：{}", map.values().size());
         logger.info("不去重结果：{}", list.size());
         DetailMessage detailMessage = new DetailMessage();
-        detailMessage.setName(name);
+        detailMessage.setSourceName(name);
         detailMessage.setNoReception(map.values().size());
         detailMessage.setHasReception(list.size());
         logger.info("-----------------{}-{}跑完-------------------", name, DateTimeUtil.stampToDate(getNowStamp()));
