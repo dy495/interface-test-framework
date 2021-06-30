@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.xundianDaily.hqq;
+package com.haisheng.framework.testng.bigScreen.xundian.casedaily.hqq;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -8,7 +8,7 @@ import com.arronlong.httpclientutil.builder.HCB;
 import com.arronlong.httpclientutil.common.HttpConfig;
 import com.arronlong.httpclientutil.common.HttpHeader;
 import com.arronlong.httpclientutil.exception.HttpProcessException;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.fucPackage.StoreFuncPackage;
+import com.haisheng.framework.testng.bigScreen.xundian.casedaily.hqq.fucPackage.StoreFuncPackage;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.StoreScenarioUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -24,9 +24,7 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Base64;
-import java.util.List;
 import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkArgument;

@@ -1,14 +1,11 @@
-package com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.sence.pc;
+package com.haisheng.framework.testng.bigScreen.xundian.casedaily.hqq.sence.pc;
 
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
-/**
- *
- */
 @Builder
-public class RealTimeShopPvUv extends BaseScene {
+public class RealTimeShopTotal extends BaseScene {
     private final String shopId;
 
     @Override
@@ -20,6 +17,6 @@ public class RealTimeShopPvUv extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/patrol/real-time/shop/pv-uv";
+        return "/patrol/real-time/shop/total";
     }
 }

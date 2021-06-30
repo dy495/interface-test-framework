@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.sence.app;
+package com.haisheng.framework.testng.bigScreen.xundian.casedaily.hqq.sence.app;
 
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;

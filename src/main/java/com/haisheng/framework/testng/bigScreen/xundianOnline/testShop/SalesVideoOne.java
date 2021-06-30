@@ -3,7 +3,7 @@ package com.haisheng.framework.testng.bigScreen.xundianOnline.testShop;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.fucPackage.XdPackageData;
+import com.haisheng.framework.testng.bigScreen.xundian.casedaily.hqq.fucPackage.XdPackageData;
 import com.haisheng.framework.testng.bigScreen.xundianOnline.StoreScenarioUtilOnline;
 import com.haisheng.framework.testng.bigScreen.xundianOnline.XdPackageDataOnline;
 import com.haisheng.framework.testng.bigScreen.xundianOnline.XundianScenarioUtilOnline;

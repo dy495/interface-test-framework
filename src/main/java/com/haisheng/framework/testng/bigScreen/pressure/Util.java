@@ -3,8 +3,7 @@ package com.haisheng.framework.testng.bigScreen.pressure;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.arronlong.httpclientutil.HttpClientUtil;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.fucPackage.StoreFuncPackage;
+import com.haisheng.framework.testng.bigScreen.xundian.casedaily.hqq.fucPackage.StoreFuncPackage;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;

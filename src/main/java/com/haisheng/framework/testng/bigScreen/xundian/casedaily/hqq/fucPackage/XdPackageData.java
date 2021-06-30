@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.fucPackage;
+package com.haisheng.framework.testng.bigScreen.xundian.casedaily.hqq.fucPackage;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;

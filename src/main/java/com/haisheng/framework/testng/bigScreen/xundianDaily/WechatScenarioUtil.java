@@ -4,15 +4,10 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.arronlong.httpclientutil.HttpClientUtil;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.fucPackage.StoreFuncPackage;
+import com.haisheng.framework.testng.bigScreen.xundian.casedaily.hqq.fucPackage.StoreFuncPackage;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import org.springframework.util.StringUtils;
-import org.testng.annotations.DataProvider;
 
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.util.List;
 import java.util.Map;
 
 public class WechatScenarioUtil extends TestCaseCommon {

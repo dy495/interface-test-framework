@@ -2,31 +2,16 @@ package com.haisheng.framework.testng.bigScreen.pressure;
 
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.arronlong.httpclientutil.HttpClientUtil;
-import com.arronlong.httpclientutil.builder.HCB;
-import com.arronlong.httpclientutil.common.HttpConfig;
-import com.arronlong.httpclientutil.common.HttpHeader;
-import com.arronlong.httpclientutil.exception.HttpProcessException;
-import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.fucPackage.StoreFuncPackage;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.StoreScenarioUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import com.haisheng.framework.util.CommonUtil;
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.Header;
-import org.apache.http.client.HttpClient;
 import org.testng.annotations.*;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 import java.lang.reflect.Method;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static com.google.common.base.Preconditions.checkArgument;

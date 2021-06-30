@@ -1,25 +1,26 @@
-package com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.sence.app;
+package com.haisheng.framework.testng.bigScreen.xundian.casedaily.hqq.sence.pc;
 
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
-/**
- * 门店详情-实时客流-总数
- */
 @Builder
-public class RealHourTotal extends BaseScene {
+public class HistoryShopAgeGenderDistribution extends BaseScene {
     private final String shopId;
+    private final String cycleType;
+    private final String month;
 
     @Override
     public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("shop_id", shopId);
+        object.put("cycle_type", cycleType);
+        object.put("month", month);
         return object;
     }
 
     @Override
     public String getPath() {
-        return "/store/m-app/auth/shop/real-hour/total";
+        return "/patrol/history/shop/age-gender/distribution";
     }
 }

@@ -8,7 +8,7 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTest
 import com.haisheng.framework.testng.bigScreen.xundianDaily.MendianInfo;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.StoreScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.XundianScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.StorePcAndAppData;
+import com.haisheng.framework.testng.bigScreen.xundian.casedaily.hqq.StorePcAndAppData;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;

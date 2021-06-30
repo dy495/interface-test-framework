@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.xundianDaily.hqq;
+package com.haisheng.framework.testng.bigScreen.xundian.casedaily.hqq;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -8,9 +8,8 @@ import com.arronlong.httpclientutil.builder.HCB;
 import com.arronlong.httpclientutil.common.HttpConfig;
 import com.arronlong.httpclientutil.common.HttpHeader;
 import com.arronlong.httpclientutil.exception.HttpProcessException;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.fucPackage.StoreFuncPackage;
+import com.haisheng.framework.testng.bigScreen.xundian.casedaily.hqq.fucPackage.StoreFuncPackage;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.StoreScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.xundianOnline.StoreScenarioUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;

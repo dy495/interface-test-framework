@@ -3,30 +3,24 @@ package com.haisheng.framework.testng.bigScreen.xundianDaily.zt;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.MendianInfo;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.StoreScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.XundianScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.StorePcAndAppData;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.fucPackage.StoreFuncPackage;
+import com.haisheng.framework.testng.bigScreen.xundian.casedaily.hqq.StorePcAndAppData;
+import com.haisheng.framework.testng.bigScreen.xundian.casedaily.hqq.fucPackage.StoreFuncPackage;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.CommonUtil;
-import com.haisheng.framework.util.DateTimeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.*;
 
-import java.awt.*;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
 

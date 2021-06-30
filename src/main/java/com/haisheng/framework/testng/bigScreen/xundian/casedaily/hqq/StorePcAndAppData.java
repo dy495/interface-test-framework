@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.xundianDaily.hqq;
+package com.haisheng.framework.testng.bigScreen.xundian.casedaily.hqq;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -10,8 +10,8 @@ import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.StoreScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.enumerator.EnumAppPageType;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.enumerator.EnumCycleType;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.sence.app.*;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.sence.pc.*;
+import com.haisheng.framework.testng.bigScreen.xundian.casedaily.hqq.sence.app.*;
+import com.haisheng.framework.testng.bigScreen.xundian.casedaily.hqq.sence.pc.*;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;

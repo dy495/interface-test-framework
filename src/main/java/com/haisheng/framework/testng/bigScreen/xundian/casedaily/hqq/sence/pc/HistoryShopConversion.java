@@ -1,31 +1,26 @@
-package com.haisheng.framework.testng.bigScreen.xundianDaily.hqq.sence.app;
+package com.haisheng.framework.testng.bigScreen.xundian.casedaily.hqq.sence.pc;
 
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
 import lombok.Builder;
 
-/**
- * 门店详情-历史客流-用户画像
- */
 @Builder
-public class HistoryAgeGenderDistribution extends BaseScene {
+public class HistoryShopConversion extends BaseScene {
     private final String shopId;
-    private final String month;
-    private final String day;
     private final String cycleType;
+    private final String month;
 
     @Override
     public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("shop_id", shopId);
-        object.put("month", month);
-        object.put("day", day);
         object.put("cycle_type", cycleType);
+        object.put("month", month);
         return object;
     }
 
     @Override
     public String getPath() {
-        return "/store/m-app/auth/shop/history/age-gender/distribution";
+        return "/patrol/history/shop/conversion";
     }
 }

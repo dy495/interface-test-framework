@@ -1,10 +1,9 @@
-package com.haisheng.framework.testng.bigScreen.xundianDaily.hqq;
+package com.haisheng.framework.testng.bigScreen.xundian.casedaily.hqq;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.xundianDaily.XundianScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.xundianOnline.StoreScenarioUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -20,8 +19,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import static com.google.common.base.Preconditions.checkArgument;
