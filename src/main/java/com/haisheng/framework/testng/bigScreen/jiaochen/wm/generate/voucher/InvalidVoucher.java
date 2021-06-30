@@ -1,7 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher;
 
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.InvalidVoucherScene;
 

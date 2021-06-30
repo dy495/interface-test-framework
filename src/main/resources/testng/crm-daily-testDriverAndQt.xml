@@ -10,9 +10,9 @@
     <test name="daily-rgn" preserve-order="true">
         <classes>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.wm.testcase.AppletManagerCase"/>
-<!--            <class name="com.haisheng.framework.testng.bigScreen.crm.xmf.CrmQt"></class>-->
-<!--            <class name="com.haisheng.framework.testng.bigScreen.crm.xmf.TestDriverCase"></class>-->
-<!--            <class name="com.haisheng.framework.testng.bigScreen.crm.xmf.AppointmentLimit"></class>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.xmf.CrmQt"></class>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.xmf.TestDriverCase"></class>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.xmf.AppointmentLimit"></class>-->
         </classes>
     </test>
 </suite>

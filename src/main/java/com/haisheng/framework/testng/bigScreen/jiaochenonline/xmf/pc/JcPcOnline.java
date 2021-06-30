@@ -3,10 +3,10 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.pc;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.commonDs.JsonPathUtil;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.util.commonDs.JsonPathUtil;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumJobName;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Constant;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.manage.AppointmentMaintainConfigDetailBean;
@@ -16,8 +16,6 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.role.PageSce
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shopstylemodel.ManageModelEditScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shopstylemodel.ManageModelPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.DataAbnormal;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.SelectReception;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.pcAppointmentConfig;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.JcFunctionOnline;
@@ -33,7 +31,6 @@ import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;

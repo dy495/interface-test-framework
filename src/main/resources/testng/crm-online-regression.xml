@@ -9,16 +9,16 @@
 
     <test name="daily-rgn" preserve-order="true">
         <classes>
-            <class name="com.haisheng.framework.testng.bigScreen.crmOnline.lxq.ThreeDataPage"/>
-            <class name="com.haisheng.framework.testng.bigScreen.crmOnline.lxq.CrmCase"/>
-            <class name="com.haisheng.framework.testng.bigScreen.crmOnline.gly.CrmAPPOnline"/>
-            <class name="com.haisheng.framework.testng.bigScreen.crmOnline.wm.PcDataOnline"/>
-            <class name="com.haisheng.framework.testng.bigScreen.crmOnline.wm.PcSystemOnline"/>
-            <class name="com.haisheng.framework.testng.bigScreen.crmOnline.wm.AppDataOnline"/>
-            <class name="com.haisheng.framework.testng.bigScreen.crmOnline.wm.AppSystemOnline"/>
-            <class name="com.haisheng.framework.testng.bigScreen.crmOnline.wm.PcDataPageOnline"/>
-            <class name="com.haisheng.framework.testng.bigScreen.crmOnline.wm.AfterSaleOnline"/>
-            <class name="com.haisheng.framework.testng.bigScreen.crmOnline.wm.PcDataPagePorsche"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemPorsche.caseonline.lxq.ThreeDataPage"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemPorsche.caseonline.lxq.CrmCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemPorsche.caseonline.gly.CrmAPPOnline"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemPorsche.caseonline.wm.PcDataOnline"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemPorsche.caseonline.wm.PcSystemOnline"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemPorsche.caseonline.wm.AppDataOnline"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemPorsche.caseonline.wm.AppSystemOnline"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemPorsche.caseonline.wm.PcDataPageOnline"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemPorsche.caseonline.wm.AfterSaleOnline"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemPorsche.caseonline.wm.PcDataPagePorsche"/>
         </classes>
     </test>
 </suite>

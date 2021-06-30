@@ -63,7 +63,7 @@ C  [ntdll.dll+0x68914]
 
 JavaThread 0x00f2e400 (nid = 28328) was being processed
 Java frames: (J=compiled Java code, j=interpreted, Vv=VM code)
-j  com.haisheng.framework.testng.bigScreen.xundian.casedaily.hqq.StoreDataCenter.cust_rate_day()V+306
+j  com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.hqq.StoreDataCenter.cust_rate_day()V+306
 v  ~StubRoutines::call_stub
 j  sun.reflect.NativeMethodAccessorImpl.invoke0(Ljava/lang/reflect/Method;Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+0
 j  sun.reflect.NativeMethodAccessorImpl.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+100
@@ -249,12 +249,12 @@ Deoptimization events (0 events):
 No events
 
 Classes redefined (6 events):
-Event: 117.405 Thread 0x02d1cc00 redefined class name=com.haisheng.framework.testng.bigScreen.xundian.casedaily.hqq.StoreDataCenter, count=1
-Event: 184.206 Thread 0x02d1cc00 redefined class name=com.haisheng.framework.testng.bigScreen.xundian.casedaily.hqq.StoreDataCenter, count=2
+Event: 117.405 Thread 0x02d1cc00 redefined class name=com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.hqq.StoreDataCenter, count=1
+Event: 184.206 Thread 0x02d1cc00 redefined class name=com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.hqq.StoreDataCenter, count=2
 Event: 50188.560 Thread 0x02d1cc00 redefined class name=com.haisheng.framework.testng.commonDataStructure.CommonConfig, count=1
 Event: 50188.565 Thread 0x02d1cc00 redefined class name=com.haisheng.framework.testng.commonCase.TestCaseCommon, count=1
-Event: 51198.057 Thread 0x02d1cc00 redefined class name=com.haisheng.framework.testng.bigScreen.xundian.casedaily.hqq.StoreDataCenter, count=4
-Event: 51255.390 Thread 0x02d1cc00 redefined class name=com.haisheng.framework.testng.bigScreen.xundian.casedaily.hqq.StoreDataCenter, count=5
+Event: 51198.057 Thread 0x02d1cc00 redefined class name=com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.hqq.StoreDataCenter, count=4
+Event: 51255.390 Thread 0x02d1cc00 redefined class name=com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.hqq.StoreDataCenter, count=5
 
 Internal exceptions (10 events):
 Event: 2.928 Thread 0x00f2e400 Exception <a 'java/lang/ClassNotFoundException': org/apache/log4j/LayoutCustomizer> (0x0526aaa0) thrown at [C:\jenkins\workspace\8-2-build-windows-i586-cygwin\jdk8u251\737\hotspot\src\share\vm\classfile\systemDictionary.cpp, line 210]

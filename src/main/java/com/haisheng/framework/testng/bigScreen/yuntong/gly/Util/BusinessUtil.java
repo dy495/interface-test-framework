@@ -1,18 +1,13 @@
 package com.haisheng.framework.testng.bigScreen.yuntong.gly.Util;
 
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.google.inject.internal.util.$ObjectArrays;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.customermanage.PreSaleCustomerPageScene;
 import com.haisheng.framework.util.DateTimeUtil;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.stream.Stream;
 
 public class BusinessUtil {
     private static EnumTestProduce product=null;

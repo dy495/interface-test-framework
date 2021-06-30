@@ -3,9 +3,9 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline.gly;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.*;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.*;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.util.PublicParameter;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
@@ -22,9 +22,6 @@ import org.testng.annotations.Test;
 
 import java.io.File;
 import java.lang.reflect.Method;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 
 import static com.aliyun.openservices.shade.com.alibaba.rocketmq.common.UtilAll.deleteFile;
 

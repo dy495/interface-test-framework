@@ -3,14 +3,10 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.app;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.google.inject.internal.cglib.reflect.$FastClass;
-import com.haisheng.framework.testng.bigScreen.crm.commonDs.JsonPathUtil;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.util.commonDs.JsonPathUtil;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.DataAbnormal;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.SelectReception;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appointmentRecodeSelect;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.JcFunctionOnline;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.PublicParmOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -22,7 +18,6 @@ import com.haisheng.framework.util.DateTimeUtil;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
-import java.util.*;
 
 public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
 

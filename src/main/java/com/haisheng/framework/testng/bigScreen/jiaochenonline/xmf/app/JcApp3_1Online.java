@@ -3,20 +3,17 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.app;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.commonDs.JsonPathUtil;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.util.commonDs.JsonPathUtil;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumJobName;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletConsultAfterServiceSubmitScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletConsultOnlineExpertsSubmitScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletConsultPreServiceSubmitScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.consultmanagement.ResponseRuleEditScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.followType;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.roleList;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.JcFunctionOnline;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.PublicParmOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -29,9 +26,6 @@ import com.haisheng.framework.util.QADbUtil;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
 

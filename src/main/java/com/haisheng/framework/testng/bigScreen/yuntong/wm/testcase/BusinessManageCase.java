@@ -1,10 +1,10 @@
 package com.haisheng.framework.testng.bigScreen.yuntong.wm.testcase;
 
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumAppletToken;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumChecklistUser;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumAppletToken;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumChecklistUser;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumJobName;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.util.BusinessUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;

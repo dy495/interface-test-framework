@@ -54,7 +54,7 @@ C  [ntdll.dll+0x68914]
 
 JavaThread 0x02cfe400 (nid = 36592) was being processed
 Java frames: (J=compiled Java code, j=interpreted, Vv=VM code)
-j  com.haisheng.framework.testng.bigScreen.xundian.casedaily.hqq.StoreDataCenter.rate_omni()V+363
+j  com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.hqq.StoreDataCenter.rate_omni()V+363
 v  ~StubRoutines::call_stub
 j  sun.reflect.NativeMethodAccessorImpl.invoke0(Ljava/lang/reflect/Method;Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+0
 j  sun.reflect.NativeMethodAccessorImpl.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+100
@@ -240,9 +240,9 @@ Deoptimization events (0 events):
 No events
 
 Classes redefined (3 events):
-Event: 174.518 Thread 0x0324cc00 redefined class name=com.haisheng.framework.testng.bigScreen.xundian.util.StoreScenarioUtil, count=1
-Event: 381.487 Thread 0x0324cc00 redefined class name=com.haisheng.framework.testng.bigScreen.xundian.casedaily.hqq.StoreDataCenter, count=1
-Event: 3218.478 Thread 0x0324cc00 redefined class name=com.haisheng.framework.testng.bigScreen.xundian.casedaily.hqq.StoreDataCenter, count=2
+Event: 174.518 Thread 0x0324cc00 redefined class name=com.haisheng.framework.testng.bigScreen.itemXundian.util.StoreScenarioUtil, count=1
+Event: 381.487 Thread 0x0324cc00 redefined class name=com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.hqq.StoreDataCenter, count=1
+Event: 3218.478 Thread 0x0324cc00 redefined class name=com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.hqq.StoreDataCenter, count=2
 
 Internal exceptions (10 events):
 Event: 2.824 Thread 0x02cfe400 Exception <a 'java/lang/ClassNotFoundException': org/apache/log4j/LayoutCustomizer> (0x0599dad8) thrown at [C:\jenkins\workspace\8-2-build-windows-i586-cygwin\jdk8u251\737\hotspot\src\share\vm\classfile\systemDictionary.cpp, line 210]

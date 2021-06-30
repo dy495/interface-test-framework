@@ -2,10 +2,8 @@ package com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.BaseScene;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.scene.BaseScene;
 import lombok.Builder;
-
-import java.util.List;
 
 /**
  * 6.5. 风控事件处理

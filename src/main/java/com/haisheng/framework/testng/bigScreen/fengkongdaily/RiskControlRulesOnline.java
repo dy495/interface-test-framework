@@ -3,17 +3,15 @@ package com.haisheng.framework.testng.bigScreen.fengkongdaily;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.aliyun.openservices.shade.org.apache.commons.lang3.StringUtils;
 import com.arronlong.httpclientutil.HttpClientUtil;
 import com.arronlong.httpclientutil.builder.HCB;
 import com.arronlong.httpclientutil.common.HttpConfig;
 import com.arronlong.httpclientutil.common.HttpHeader;
 import com.arronlong.httpclientutil.exception.HttpProcessException;
 import com.google.common.base.Preconditions;
-import com.google.inject.internal.cglib.reflect.$FastClass;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.riskControlEnum.routerEnum;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventHandleScene;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.util.CommonUsedUtil;
@@ -224,11 +222,11 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
 //                        "}";
 
 //                JSONObject jsonObject = JSON.parseObject(str);
-//                String face=file.getImgStr( "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/xia.png");
+//                String face=file.getImgStr( "src/main/java/com/haisheng/framework/testng/bigScreen/itemPorsche/casedaily/xmf/xia.png");
 //                //夏明凤的脸  是否在职 0否  1是
 //                JSONObject jsonObject=staffObject("uid_edfe23f0","夏明凤","uid_edfe23f0",0,face);
 //
-                String face=file.getImgStr( "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/guoliya.jpg");
+                String face=file.getImgStr( "com/haisheng/framework/testng/bigScreen/itemPorsche/casedaily/xmf/guoliya.jpg");
                 //夏明凤的脸  是否在职 0否  1是
                 JSONObject jsonObject=staffObject("uid_6b41fd04","郭丽雅","uid_6b41fd04",0,face);  //uid_6b41fd04	郭丽雅	uid_6b41fd04
 

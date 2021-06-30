@@ -9,9 +9,9 @@ import com.arronlong.httpclientutil.common.HttpConfig;
 import com.arronlong.httpclientutil.common.HttpHeader;
 import com.arronlong.httpclientutil.exception.HttpProcessException;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.proxy.VisitorProxy;
-import com.haisheng.framework.testng.bigScreen.crm.wm.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.crm.wm.enumerator.config.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.wm.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.riskControlEnum.routerEnum;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventHandleScene;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.util.CommonUsedUtil;
@@ -259,13 +259,13 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
 
 //                JSONObject jsonObject = JSON.parseObject(str);
                 //  是否在职 0否 1是
-//                 String face=file.getImgStr( "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/杨航.jpg");
+//                 String face=file.getImgStr( "src/main/java/com/haisheng/framework/testng/bigScreen/itemPorsche/casedaily/xmf/杨航.jpg");
 //                JSONObject jsonObject=staffObject("uid_663ad666","杨航","",0,face);
 //
-                String face = file.getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/xia.png");
+                String face = file.getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/itemPorsche/casedaily/xmf/xia.png");
                 JSONObject jsonObject = staffObject("uid_663ad653", "店员1", "uid_663ad653", 1, face);
 //
-//             String face=file.getImgStr( "src/main/java/com/haisheng/framework/testng/bigScreen/crm/xmf/lv.jpg");
+//             String face=file.getImgStr( "src/main/java/com/haisheng/framework/testng/bigScreen/itemPorsche/casedaily/xmf/lv.jpg");
 //                JSONObject jsonObject=staffObject("uid_91cc8031","吕雪晴","uid_91cc8031",1,face);
 
                 logger.info("request:" + jsonObject.toJSONString());

@@ -9,7 +9,7 @@
 
     <test name="daily-rgn" preserve-order="true">
         <classes>
-            <class name="com.haisheng.framework.testng.bigScreen.crm.lxq.GetData"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.lxq.GetData"></class>
 
         </classes>
     </test>
