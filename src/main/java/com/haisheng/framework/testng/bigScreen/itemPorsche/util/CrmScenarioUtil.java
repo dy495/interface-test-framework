@@ -1681,7 +1681,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //预约保养
-    public JSONObject appointmentMaintain(Long my_car_id, String customer_name, String customer_phone_number ,Long time_range_id)  {
+    public JSONObject appointmentMaintain(Long my_car_id, String customer_name, String customer_phone_number, Long time_range_id) {
         String url = "/WeChat-applet/porsche/a/appointment/maintain";
         JSONObject json1 = new JSONObject();
         json1.put("my_car_id", my_car_id);
@@ -3944,10 +3944,8 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     public String outportC() throws Exception {
-        String url = "/porsche/administration/reception/export?sale_type=PRE_SALES&name=&phone=";
-        JSONObject json = new JSONObject();
-        String result = httpGet(url, JSON.toJSONString(json), IpPort);
-        return result;
+        String url = IpPort + "/porsche/administration/reception/export?sale_type=PRE_SALES&name=&phone=";
+        return httpGet(url);
     }
 
     /**
@@ -4842,9 +4840,8 @@ public class CrmScenarioUtil extends TestCaseCommon {
     //接待列表导出
 
     public String receptionExport() throws Exception {
-        String url = "/porsche/administration/reception/export?sale_type=PRE_SALES&name=&phone=";
-        JSONObject json = new JSONObject();
-        return httpGet(url, JSON.toJSONString(json), IpPort);
+        String url = IpPort + "/porsche/administration/reception/export?sale_type=PRE_SALES&name=&phone=";
+        return httpGet(url);
     }
 
     /**

@@ -94,15 +94,6 @@ public class ScenarioUtil extends TestCaseCommon {
         logger.info("applet authorization is:{}", authorization);
     }
 
-    public void aa() throws Exception {
-        String path = "/business-car-platform/dev/export_file/BUY_PACKAGE_RECORD/";
-        Map<String, Object> map = new HashMap<>();
-        map.put("Expires", "1618630251");
-        map.put("OSSAccessKeyId", "LTAI4G4xNBGMWuAV9dBwkZya");
-        map.put("Signature", "qv2bUL3jz2Q+O8RfWPmxTsfVWMA=");
-        httpGet(path, map, "http://retail-huabei2.oss-cn-beijing.aliyuncs.com/");
-    }
-
     //pc门店列表
     public JSONObject pcShopList() {
         String path = "/jiaochen/pc/login-user/shop-list";

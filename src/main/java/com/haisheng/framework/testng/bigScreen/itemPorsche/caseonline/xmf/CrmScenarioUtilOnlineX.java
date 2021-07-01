@@ -4005,17 +4005,10 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
 //        String result = httpPostFile(url, file, type, IpPort);
         HttpExecutorUtil httpExecutorUtil = new HttpExecutorUtil();
         Map<String, String> headers = new ConcurrentReferenceHashMap<>();
-        headers.put("Authorization", super.authorization);
+        headers.put("Authorization", authorization);
         headers.put("shop_id", "22728");
         httpExecutorUtil.uploadFile(IpPort + url, file, headers, type);
         return JSON.parseObject(httpExecutorUtil.getResponse());
-    }
-
-    public String outportC() throws Exception {
-        String url = "/porsche/administration/reception/export?sale_type=PRE_SALES&name=&phone=";
-        JSONObject json = new JSONObject();
-        String result = httpGet(url, JSON.toJSONString(json), IpPort);
-        return result;
     }
 
     /**
@@ -4685,15 +4678,6 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
             throw e;
         }
         return JSON.parseObject(JSON.toJSONString(apiResponse));
-    }
-
-    //接待列表导出
-
-    public String receptionExport() throws Exception {
-        String url = "/porsche/administration/reception/export?sale_type=PRE_SALES&name=&phone=";
-        JSONObject json = new JSONObject();
-        String result = httpGet(url, JSON.toJSONString(json), IpPort);
-        return result;
     }
 
     /**

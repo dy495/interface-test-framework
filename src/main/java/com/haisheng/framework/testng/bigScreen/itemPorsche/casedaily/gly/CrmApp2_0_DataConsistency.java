@@ -26,10 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author : guoliya
@@ -968,7 +965,16 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
     @Test(description = "接待列表导出")
     public void receptionExport() {
         try {
-            crm.receptionExport();
+            Map<String, Object> map = new HashMap<>();
+            map.put("sale_type", "PRE_SALES");
+            map.put("name", null);
+            map.put("phone", null);
+            String port = "http://dev.porsche.dealer-ydauto.winsenseos.cn";
+            String path = "/porsche/administration/reception/export";
+            String response = httpGet(port, path, map);
+            System.err.println(response);
+
+//            crm.receptionExport();
         } catch (Exception | AssertionError e) {
             appendFailReason(e.toString());
         } finally {

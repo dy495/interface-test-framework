@@ -2166,7 +2166,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
      * @description :导出
      * @date :2020/8/17 21:04
      **/
-//    @Test
+    @Test
     public void outportCustomer() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

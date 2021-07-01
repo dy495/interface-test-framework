@@ -5,13 +5,13 @@ import com.haisheng.framework.testng.bigScreen.itemPorsche.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 2.4. 接待分值趋势（谢）
+ * 2.2. 能力模型（谢）
  *
  * @author wangmin
  * @date 2021-05-07 19:22:48
  */
 @Builder
-public class AppReceptionScoreTrendScene extends BaseScene {
+public class AppPersonalCapabilityModelScene extends BaseScene {
     /**
      * 描述 查询数据周期 取值见字典表《数据查询周期》
      * 是否必填 true
@@ -53,6 +53,6 @@ public class AppReceptionScoreTrendScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/intelligent-control/app/personal-data/reception-score-trend";
+        return "/intelligent-control/app/personal-data/capability-model";
     }
 }

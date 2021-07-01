@@ -480,6 +480,7 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
     }
 
 //---------------------------------------------------分界线-----------------------------------
+
     /**
      * 巡检门店
      */
@@ -495,6 +496,7 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     //门店详情
     public JSONObject taskDetail() throws Exception {
         String url = "/patrol/m/task/detail";
@@ -502,6 +504,7 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     /**
      * 巡检员列表
      *
@@ -529,7 +532,7 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
     }
 
     //适用于现场巡店
-    public JSONObject checkStartapp(Long shop_id, String check_type, Integer reset,boolean is_personalized_check_list) throws Exception {
+    public JSONObject checkStartapp(Long shop_id, String check_type, Integer reset, boolean is_personalized_check_list) throws Exception {
         String url = "/store/m-app/auth/shop/checks/start";
         JSONObject json = new JSONObject();
         json.put("shop_id", shop_id);
@@ -539,6 +542,7 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     /**
      * @description :新增清单
      * @date :2020/6/20 16:42
@@ -572,7 +576,6 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
     }
 
 
-
     /**
      * @description :新建定检任务
      * @date :2020/6/21 9:58
@@ -596,7 +599,6 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
-
 
 
     /**
@@ -843,7 +845,7 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
      * @description :截屏留痕+限时整改时间
      * @date :2020/6/25 13:56
      **/
-    public JSONObject problemMarkTime(String responsor_id, Long list_id, Long item_id, JSONArray pic_list,int shop_id,String audit_comment,int limit_time) throws Exception {
+    public JSONObject problemMarkTime(String responsor_id, Long list_id, Long item_id, JSONArray pic_list, int shop_id, String audit_comment, int limit_time) throws Exception {
         String url = "/patrol/shop/problem/mark";
         JSONObject json = new JSONObject();
         json.put("responsor_id", responsor_id);
@@ -865,7 +867,7 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
     public JSONObject problemesponsors() throws Exception {
         String url = "/patrol/shop/problem/responsors";
         JSONObject json = new JSONObject();
-        json.put("shop_id",  getXunDianShopOnline1());
+        json.put("shop_id", "14630");
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -877,7 +879,7 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
     public JSONObject problemeItems() throws Exception {
         String url = "/patrol/shop/problem/items";
         JSONObject json = new JSONObject();
-        json.put("shop_id",  getXunDianShopOnline1());
+        json.put("shop_id", "14630");
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -887,7 +889,7 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
      * @author zhoutao
      * @description 3.13 获取门店巡检员列表（V1.1）
      */
-    public JSONObject authShopInspectors(Long shop_id)throws Exception {
+    public JSONObject authShopInspectors(Long shop_id) throws Exception {
         String url = "/patrol/m-app/auth/shop/inspectors";
         JSONObject json = new JSONObject();
         json.put("shop_id", shop_id);
@@ -978,7 +980,7 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject xd_analysis_indeicators(String cycle_type,String month) throws Exception {
+    public JSONObject xd_analysis_indeicators(String cycle_type, String month) throws Exception {
         String url = "/patrol/patrol-analysis-data/core-indicators";
         String json =
                 "{" +
@@ -996,7 +998,7 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject xd_analysis_uncheckTotal(String cycle_type,String month) throws Exception {
+    public JSONObject xd_analysis_uncheckTotal(String cycle_type, String month) throws Exception {
         String url = "/patrol/patrol-analysis-data/unqualified-check-total";
         String json =
                 "{" +
@@ -1014,7 +1016,7 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject xd_analysis_question(String cycle_type,String month) throws Exception {
+    public JSONObject xd_analysis_question(String cycle_type, String month) throws Exception {
         String url = "/patrol/patrol-analysis-data/problem";
         String json =
                 "{" +
@@ -1032,7 +1034,7 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject xd_analysis_pictrue(String cycle_type,String month,String day) throws Exception {
+    public JSONObject xd_analysis_pictrue(String cycle_type, String month, String day) throws Exception {
         String url = "/patrol/patrol-analysis-data/abnormal-picture";
         String json =
                 "{" +
@@ -1056,7 +1058,7 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject xd_report_list(String patrol_person,String shop_name,String report_status,String deal_status,Integer sort_event_type_order,Integer page,Integer size) throws Exception {
+    public JSONObject xd_report_list(String patrol_person, String shop_name, String report_status, String deal_status, Integer sort_event_type_order, Integer page, Integer size) throws Exception {
         String url = "/patrol/patrol-report/report-list";
 
         JSONObject json = new JSONObject();
@@ -1106,12 +1108,13 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     /**
      * @description:3.2 巡店-直播流
      * @author: qingqing
      * @time:
      */
-    public JSONObject device_live(String device_id,Long shop_id) throws Exception {
+    public JSONObject device_live(String device_id, Long shop_id) throws Exception {
         String url = "/store/m-app/auth/patrol/device-live";
         JSONObject json = new JSONObject();
         json.put("device_id", device_id);
@@ -1120,12 +1123,13 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res);
     }
+
     /**
      * @description:3.3 获取设备重播流
      * @author: qingqing
      * @time:
      */
-    public JSONObject device_replay(String device_id,long shop_id,String date,String time ) throws Exception {
+    public JSONObject device_replay(String device_id, long shop_id, String date, String time) throws Exception {
         String url = "/store/m-app/auth/shop/device/replay";
 
         JSONObject json = new JSONObject();
@@ -1143,7 +1147,7 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject task_list(Integer page,Integer size,Integer type,Long last_value) throws Exception {
+    public JSONObject task_list(Integer page, Integer size, Integer type, Long last_value) throws Exception {
         String url = "/store/m-app/auth/patrol/task/list";
         JSONObject json = new JSONObject();
         json.put("page", page);
@@ -1154,12 +1158,13 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     /**
      * @description:3.6 待办/已办列表详情（V1.1）
      * @author: qingqing
      * @time:
      */
-    public JSONObject task_detail(Long id,Integer type) throws Exception {
+    public JSONObject task_detail(Long id, Integer type) throws Exception {
         String url = "/store/m-app/auth/patrol/task/detail";
         String json =
                 "{" +
@@ -1176,7 +1181,7 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject task_step_submit(Long shop_id,Long id,JSONArray pic_list,Integer recheck_result,String comment)  {
+    public JSONObject task_step_submit(Long shop_id, Long id, JSONArray pic_list, Integer recheck_result, String comment) {
         String url = "/store/m-app/auth/patrol/task/step/submit";
         JSONObject object = new JSONObject();
         object.put("shop_id", shop_id);
@@ -1184,9 +1189,10 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
         object.put("pic_list", pic_list);
         object.put("recheck_result", recheck_result);
         object.put("comment", comment);
-        return invokeApi(url, object,false);
+        return invokeApi(url, object, false);
         //  return JSON.parseObject(res);
     }
+
     /**
      * http请求方法调用
      *
@@ -1213,12 +1219,13 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
             return JSON.parseObject(result);
         }
     }
+
     /**
      * @description:3.8 开始或继续巡店(V1.1)
      * @author: qingqing
      * @time:
      */
-    public JSONObject shopChecks_start(Long shop_id,String check_type,Integer reset,Long task_id) throws Exception {
+    public JSONObject shopChecks_start(Long shop_id, String check_type, Integer reset, Long task_id) throws Exception {
         String url = "/store/m-app/auth/shop/checks/start";
 
         JSONObject json = new JSONObject();
@@ -1236,7 +1243,7 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject checks_item_submit(Long shop_id,Long patrol_id,Long list_id,Long item_id,Integer check_result,String audit_comment,JSONArray pic_list) throws Exception {
+    public JSONObject checks_item_submit(Long shop_id, Long patrol_id, Long list_id, Long item_id, Integer check_result, String audit_comment, JSONArray pic_list) throws Exception {
         String url = "/store/m-app/auth/shop/checks/item/submit";
 
         JSONObject json = new JSONObject();
@@ -1251,12 +1258,13 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res);
     }
+
     /**
      * @description:3.10 提交巡检结果（V1.1）
      * @author: qingqing
      * @time:
      */
-    public JSONObject checks_submit(Long shop_id,Long id,String comment) throws Exception {
+    public JSONObject checks_submit(Long shop_id, Long id, String comment) throws Exception {
         String url = "/store/m-app/auth/shop/checks/submit";
 
         JSONObject json = new JSONObject();
@@ -1268,7 +1276,7 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
         return JSON.parseObject(res);
     }
 
-    public JSONObject checks_submitNotChk(Long shop_id,Long patrol_id,String comment) throws Exception {
+    public JSONObject checks_submitNotChk(Long shop_id, Long patrol_id, String comment) throws Exception {
         String url = "/store/m-app/auth/shop/checks/submit";
         JSONObject json = new JSONObject();
         json.put("shop_id", shop_id);
@@ -1297,7 +1305,7 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject problem_items(Long shop_id,Long patrol_id,Long list_id,Long item_id,Integer check_result,String audit_comment,JSONArray pic_list) throws Exception {
+    public JSONObject problem_items(Long shop_id, Long patrol_id, Long list_id, Long item_id, Integer check_result, String audit_comment, JSONArray pic_list) throws Exception {
         String url = "/store/m-app/auth/shop/problem/mark";
 
         JSONObject json = new JSONObject();
@@ -1337,42 +1345,44 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
     /**
      * app checks submit 3.15 获取门店巡店记录列表（V1.1）
      */
-    public JSONObject schedule_pic_list(Long shop_id,String device_id,String date) throws Exception {
+    public JSONObject schedule_pic_list(Long shop_id, String device_id, String date) throws Exception {
         String url = "/store/m-app/auth/patrol/task/schedule-pic/list";
         JSONObject json = new JSONObject();
         json.put("shop_id", shop_id);
-        json.put("device_id",device_id);
+        json.put("device_id", device_id);
         json.put("date", date);
         String res = httpPost(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     /**
      * app checks submit 3.15 获取门店巡店记录列表（V1.1）
      */
-    public JSONObject getShopChecksPage(Long shop_id, Integer check_result,Integer handle_status,String inspector_name,String inspector_id,String order_rule,Integer size,Long last_value) throws Exception {
+    public JSONObject getShopChecksPage(Long shop_id, Integer check_result, Integer handle_status, String inspector_name, String inspector_id, String order_rule, Integer size, Long last_value) throws Exception {
         String url = "/store/m-app/auth/shop/checks/page";
         JSONObject json = new JSONObject();
         json.put("shop_id", shop_id);
-        json.put("check_result",check_result);
+        json.put("check_result", check_result);
         json.put("handle_status", handle_status);
-        json.put("inspector_name",inspector_name);
-        json.put("inspector_id",inspector_id);
-        json.put("order_rule",order_rule);
-        json.put("size",size);
-        json.put("last_value",last_value);
+        json.put("inspector_name", inspector_name);
+        json.put("inspector_id", inspector_id);
+        json.put("order_rule", order_rule);
+        json.put("size", size);
+        json.put("last_value", last_value);
         String res = httpPost(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     /**
      * app checks submit 3.16获取门店巡店记录详情（V1.1）
      */
-    public JSONObject getShopChecksDetail(Long id,Long shop_id,Long check_list_id,Long check_result) throws Exception {
+    public JSONObject getShopChecksDetail(Long id, Long shop_id, Long check_list_id, Long check_result) throws Exception {
         String url = "/store/m-app/auth/shop/checks/detail";
         JSONObject json = new JSONObject();
-        json.put("id",id);
+        json.put("id", id);
         json.put("shop_id", shop_id);
-        json.put("check_list_id",check_list_id);
-        json.put("check_result",check_result);
+        json.put("check_list_id", check_list_id);
+        json.put("check_result", check_result);
         String res = httpPost(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -1389,6 +1399,7 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     /**
      * @author zhoutao
      * @description 3.19 巡店记录巡店结果下拉列表（V1.1）
@@ -1407,7 +1418,7 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
      * @author zhoutao
      * @description 3.20 巡店报告详情执行项结果下拉列表（V1.1）
      */
-    public JSONObject checkResultList()throws Exception{
+    public JSONObject checkResultList() throws Exception {
         String url = "/store/m-app/auth/shop/check_result/list";
         String json =
                 "{}";
@@ -1415,14 +1426,15 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     /**
      * @author qingqing
      * @description 3.21 摄像头云台控制（V1.1）
      */
-    public JSONObject device_control(String device_id,String command) throws Exception {
+    public JSONObject device_control(String device_id, String command) throws Exception {
         String url = "/store/m-app/auth/shop/device/control";
         JSONObject json = new JSONObject();
-        json.put("device_id",device_id);
+        json.put("device_id", device_id);
         json.put("command", command);
         String res = httpPost(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
@@ -1432,20 +1444,21 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
      * @author qingqing
      * @description 3.22 移动端base64图片上传（V1.1）
      */
-    public JSONObject upload_pic(String pic_data,Long shop_id,Integer type) throws Exception {
+    public JSONObject upload_pic(String pic_data, Long shop_id, Integer type) throws Exception {
         String url = "/store/m-app/auth/pic/base64/upload";
         JSONObject json = new JSONObject();
-        json.put("pic_data",pic_data);
+        json.put("pic_data", pic_data);
         json.put("shop_id", shop_id);
         json.put("type", type);
         String res = httpPost(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     /**
      * @author qingqing
      * @description 3.26 获取当前巡店记录详情清单列表（V1.1）
      */
-    public JSONObject patrol_detail(Long shop_id,Long id) throws Exception {
+    public JSONObject patrol_detail(Long shop_id, Long id) throws Exception {
         String url = "/store/m-app/auth/shop/problem/patrol-detail-items";
         JSONObject json = new JSONObject();
         json.put("shop_id", shop_id);
@@ -1458,7 +1471,7 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
      * @author qingqing
      * @description 3.26 获取当前巡店记录详情清单列表（V1.1）
      */
-    public JSONObject patrol_pic(String patrol_type,String start_time,String end_time,String shop_name,Integer is_abnormal,Integer page,Integer size) throws Exception {
+    public JSONObject patrol_pic(String patrol_type, String start_time, String end_time, String shop_name, Integer is_abnormal, Integer page, Integer size) throws Exception {
         String url = "/patrol/shop/remark/picture/page";
         JSONObject json = new JSONObject();
         json.put("patrol_type", patrol_type);
@@ -1473,7 +1486,6 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
     }
 
 
-
     /**---------------------------------------------------四、账号相关app1.1----------------------------------------------------**/
     /**
      * @author qingqing
@@ -1482,7 +1494,7 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
     public JSONObject getCode(String phone) throws Exception {
         String url = "/store/m-app/login-verification-code";
         JSONObject json = new JSONObject();
-        json.put("phone",phone);
+        json.put("phone", phone);
         String res = httpPost(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -1491,14 +1503,15 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
      * @author qingqing
      * @description 1.2 登录（V1.1）
      */
-    public JSONObject loginWay(String phone,String verification_code) throws Exception {
+    public JSONObject loginWay(String phone, String verification_code) throws Exception {
         String url = "/store/m-app/login";
         JSONObject json = new JSONObject();
-        json.put("phone",phone);
-        json.put("verification_code",verification_code);
+        json.put("phone", phone);
+        json.put("verification_code", verification_code);
         String res = httpPost(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     /**
      * @author qingqing
      * @description 1.3 通过token获取用户信息（V1.1）
@@ -1528,8 +1541,8 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
     public JSONObject face_check(String image_base64) {
         String url = "/store/m-app/auth/login-user/face-check";
         JSONObject json = new JSONObject();
-        json.put("image_base64",image_base64);
-        return invokeApi(url, json,false);
+        json.put("image_base64", image_base64);
+        return invokeApi(url, json, false);
         // String res = httpPost(url, json.toJSONString(), IpPort);
         // return JSON.parseObject(res);
     }
@@ -1541,7 +1554,7 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
     public JSONObject face_unload(String face_url) throws Exception {
         String url = "/store/m-app/auth/login-user/face-upload";
         JSONObject json = new JSONObject();
-        json.put("face_url",face_url);
+        json.put("face_url", face_url);
         String res = httpPost(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -1561,12 +1574,12 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
      * @author zt
      * @description 1.7 个人中心(V1.1新增字段)（V1.1） 消息中心列表
      */
-    public JSONObject user_message_center(Boolean is_read,Integer last_value,int size) throws Exception {
+    public JSONObject user_message_center(Boolean is_read, Integer last_value, int size) throws Exception {
         String url = "/store/m-app/auth/user/message-center";
         JSONObject json = new JSONObject();
-        json.put("is_read",is_read);
-        json.put("last_value",last_value);
-        json.put("size",size);
+        json.put("is_read", is_read);
+        json.put("last_value", last_value);
+        json.put("size", size);
         String res = httpPost(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -1578,7 +1591,7 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
     public JSONObject user_message_center_detail(int id) throws Exception {
         String url = "/store/m-app/auth/user/message-center-detail";
         JSONObject json = new JSONObject();
-        json.put("id",id);
+        json.put("id", id);
         String res = httpPost(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -1606,15 +1619,15 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
     }
 
     //我的报表-列表
-    public JSONObject reportList(int page,int size, String report_name, String report_type,String report_time_dimension,String shop_name) throws Exception {
+    public JSONObject reportList(int page, int size, String report_name, String report_type, String report_time_dimension, String shop_name) throws Exception {
         String url = "/patrol/download-center/my-report";
         JSONObject json = new JSONObject();
-        json.put("page",page);
-        json.put("size",size);
-        json.put("report_name",report_name);
-        json.put("report_type",report_type);
-        json.put("report_time_dimension",report_time_dimension);
-        json.put("shop_name",shop_name);
+        json.put("page", page);
+        json.put("size", size);
+        json.put("report_name", report_name);
+        json.put("report_type", report_type);
+        json.put("report_time_dimension", report_time_dimension);
+        json.put("shop_name", shop_name);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
 
         return JSON.parseObject(res).getJSONObject("data");
@@ -1624,23 +1637,23 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
     public JSONObject reportExport(Integer id) throws Exception {
         String url = "/patrol/download-center/report-export";
         JSONObject json = new JSONObject();
-        json.put("id",id);
+        json.put("id", id);
         String res = httpPost(url, json.toJSONString(), IpPort);
 
         return JSON.parseObject(res);
     }
 
     //我的报表-自定义导出
-    public JSONObject customizeReportExport(Integer id,String report_type,String report_time_dimension,JSONArray shop_id_List,String start_time,String end_time,String data_dimension) throws Exception {
+    public JSONObject customizeReportExport(Integer id, String report_type, String report_time_dimension, JSONArray shop_id_List, String start_time, String end_time, String data_dimension) throws Exception {
         String url = "/patrol/download-center/report-export";
         JSONObject json = new JSONObject();
-        json.put("id",id);
-        json.put("report_type",report_type);
-        json.put("report_time_dimension",report_time_dimension);
-        json.put("shop_id_List",shop_id_List);
-        json.put("start_time",start_time);
-        json.put("end_time",end_time);
-        json.put("data_dimension",data_dimension);
+        json.put("id", id);
+        json.put("report_type", report_type);
+        json.put("report_time_dimension", report_time_dimension);
+        json.put("shop_id_List", shop_id_List);
+        json.put("start_time", start_time);
+        json.put("end_time", end_time);
+        json.put("data_dimension", data_dimension);
 //        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
 //        return JSON.parseObject(res).getJSONObject("data");
         return invokeApi(url, JSONObject.parseObject(json.toJSONString()), false);
@@ -1655,15 +1668,15 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
     }
 
     //下载任务-列表
-    public JSONObject downldPage(int page,int size, String task_name,String task_type ,String shop_name,String applicant) throws Exception {
+    public JSONObject downldPage(int page, int size, String task_name, String task_type, String shop_name, String applicant) throws Exception {
         String url = "/patrol/download-center/download-page";
         JSONObject json = new JSONObject();
-        json.put("page",page);
-        json.put("size",size);
-        json.put("task_name",task_name);
-        json.put("task_type",task_type);
-        json.put("shop_name",shop_name);
-        json.put("applicant",applicant);
+        json.put("page", page);
+        json.put("size", size);
+        json.put("task_name", task_name);
+        json.put("task_type", task_type);
+        json.put("shop_name", shop_name);
+        json.put("applicant", applicant);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }

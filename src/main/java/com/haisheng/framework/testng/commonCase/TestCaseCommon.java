@@ -13,6 +13,7 @@ import com.arronlong.httpclientutil.common.HttpConfig;
 import com.arronlong.httpclientutil.common.HttpHeader;
 import com.arronlong.httpclientutil.exception.HttpProcessException;
 import com.haisheng.framework.model.bean.Case;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.base.scene.Api;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
@@ -28,6 +29,7 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import org.testng.Assert;
@@ -333,68 +335,20 @@ public class TestCaseCommon {
         return res;
     }
 
-    public String httpGet(String path, Map<String, Object> paramMap, String IpPort) throws Exception {
-        initHttpConfig();
+    public String httpGet(String port, String path, Map<String, Object> paramMap) throws HttpProcessException {
         StringBuilder sb = new StringBuilder();
-        String queryUrl = IpPort + path + "?";
+        String queryUrl = port + path + "?";
         paramMap.forEach((key, value) -> sb.append("&").append(key).append("=").append(value));
         String param = sb.toString().replaceFirst("&", "");
-        config.url(queryUrl + param);
-        logger.info("{} json param: {}", path.replace("?", ""), param);
-        long start = System.currentTimeMillis();
-        response = HttpClientUtil.get(config);
-        logger.info("response: {}", response);
-        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
-        caseResult.setResponse(response);
-        return response;
+        String url = queryUrl + param;
+        return httpGet(url);
     }
 
-    public String httpGet(String path, String json, String IpPort) throws Exception {
-        initHttpConfig();
-        String queryUrl = IpPort + path;
-        config.url(queryUrl).json(json);
-        logger.info("{} json param: {}", path, json);
+    public String httpGet(String url) throws HttpProcessException {
+        Api api = new Api.Builder().method("GET").url(url).build();
         long start = System.currentTimeMillis();
-
-        response = HttpClientUtil.get(config);
-
-        logger.info("response: {}", response);
-
-        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
-        caseResult.setResponse(response);
-        return response;
-    }
-
-    /**
-     * @param dns         域名
-     * @param path        地址
-     * @param requestBody 请求体
-     * @param checkCode   是否校验code
-     * @param hasToken    是否获取token
-     * @return response
-     */
-    public String httpRequest(String dns, String path, String requestBody, boolean checkCode, boolean hasToken) {
-        initHttpConfig();
-        String url = dns + path;
-        logger.info("url: {}", url);
-        logger.info("body: {}", requestBody);
-        config.url(url).json(requestBody);
-        long start = System.currentTimeMillis();
-        try {
-            response = HttpClientUtil.post(config);
-            logger.info("response: {}", response);
-            if (checkCode) {
-                checkCode(response, StatusCode.SUCCESS, path);
-            }
-            if (hasToken) {
-                authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
-                logger.info("authorization:" + authorization);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            appendFailReason(e.toString());
-        }
-        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
+        initResponse(api);
+        logger.info("{} time used {} ms", url, System.currentTimeMillis() - start);
         caseResult.setResponse(response);
         return response;
     }
@@ -409,6 +363,43 @@ public class TestCaseCommon {
 
     public String httpPost(String path, String json, String IpPort) throws Exception {
         return httpRequest(IpPort, path, json, false, false);
+    }
+
+    private String httpRequest(String port, String path, String requestBody, boolean checkCode, boolean hasToken) {
+        String url = port + path;
+        Api api = new Api.Builder().method("POST").url(url).requestBody(requestBody).build();
+        long start = System.currentTimeMillis();
+        try {
+            initResponse(api);
+            if (checkCode) {
+                checkCode(response, StatusCode.SUCCESS, path);
+            }
+            if (hasToken) {
+                authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
+                logger.info("authorization:" + authorization);
+            }
+        } catch (Exception e) {
+            collectMessage(e);
+        }
+        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
+        caseResult.setResponse(response);
+        return response;
+    }
+
+    private void initResponse(@NotNull Api api) throws HttpProcessException {
+        initHttpConfig();
+        logger.info("url: {}", api.getUrl());
+        logger.info("body: {}", api.getRequestBody());
+        if (api.getMethod().equals("POST")) {
+            config.url(api.getUrl()).json(api.getRequestBody());
+            response = HttpClientUtil.post(config);
+        } else if (api.getMethod().equals("GET")) {
+            config.url(api.getUrl());
+            response = HttpClientUtil.get(config);
+        } else {
+            throw new RuntimeException("未指定请求方式");
+        }
+        logger.info("response：{}", response);
     }
 
     public void initHttpConfig() {
@@ -448,10 +439,6 @@ public class TestCaseCommon {
 
     public String getXunDianShopOnline() {
         return "13260";
-    }
-
-    public String getXunDianShopOnline1() {
-        return "14630";
     }
 
     private void dingPushFinal(boolean isFAIL) {

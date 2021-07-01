@@ -14,7 +14,7 @@ import java.io.Serializable;
  * @date 2021-06-02 17:56:15
  */
 @Data
-public class AppCapabilityModelBean implements Serializable {
+public class AppPersonalCapabilityModelBean implements Serializable {
     /**
      * 描述 数据列表
      * 版本 v1.0

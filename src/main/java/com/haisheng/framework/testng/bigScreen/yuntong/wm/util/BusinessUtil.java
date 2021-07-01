@@ -11,6 +11,7 @@ import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.personaldata.
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.voicerecord.AppDepartmentPageBean;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.voicerecord.AppDetailBean;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.voicerecord.AppPersonalPageBean;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.pc.manage.VoiceDetailBean;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.personaldata.AppPersonalOverviewScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.personaldata.AppReceptionLinkScoreScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.voicerecord.AppDepartmentPageScene;
@@ -18,6 +19,7 @@ import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.voicerecord.
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.voicerecord.AppPersonalPageScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.loginuser.LoginApp;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.loginuser.LoginPc;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.manage.VoiceDetailScene;
 import com.haisheng.framework.util.CommonUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -128,23 +130,13 @@ public class BusinessUtil extends BasicUtil {
         return getAppVoiceRecordDetail(receptionId).getScores() == null ? 0 : getAppVoiceRecordDetail(receptionId).getScores().stream().map(e -> (JSONObject) e).mapToInt(e -> e.getInteger("score")).sum();
     }
 
-    public List<AppReceptionLinkScoreBean> getAppReceptionLinkScore(int dataCycleType, String salesId, String startDate, String endDate) {
-        JSONObject response = AppReceptionLinkScoreScene.builder().dataCycleType(dataCycleType).salesId(salesId).startDate(startDate).endDate(endDate).build().invoke(visitor);
-        return response.getJSONArray("list").stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppReceptionLinkScoreBean.class)).collect(Collectors.toList());
-    }
-
-    public int getAppReceptionLinkScoreAverage(int dataCycleType, String salesId, String startDate, String endDate) {
-        return getAppReceptionLinkScore(dataCycleType, salesId, startDate, endDate).stream().mapToInt(AppReceptionLinkScoreBean::getPersonAverageScore).sum();
-    }
-
-
     /**
      * 获取接待详情中的平均分
      *
      * @param receptionId 接待id
      * @return 平均分
      */
-    public Integer getAverageScoreByReceptionDetail(Long receptionId) {
+    public Integer getAppAverageScoreByReceptionDetail(Long receptionId) {
         IScene scene = AppDetailScene.builder().id(receptionId).build();
         JSONArray scores = toJavaObject(scene, AppDetailBean.class).getScores();
         if (scores == null) {
@@ -154,21 +146,6 @@ public class BusinessUtil extends BasicUtil {
         return CommonUtil.getIntRatio(scoreSum, 5);
     }
 
-    /**
-     * 获取接待话术得分
-     *
-     * @param receptionId 接待id
-     * @param type        话术id
-     * @return 分数
-     */
-    public Integer getScoreByType(Long receptionId, Integer type) {
-        IScene scene = AppDetailScene.builder().id(receptionId).build();
-        JSONArray scores = toJavaObject(scene, AppDetailBean.class).getScores();
-        if (scores == null) {
-            return null;
-        }
-        return scores.stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("type").equals(type)).map(e -> e.getInteger("score")).findFirst().orElse(0);
-    }
 
     /**
      * 获取总分
@@ -176,11 +153,20 @@ public class BusinessUtil extends BasicUtil {
      * @param receptionId 接待id
      * @return 总分
      */
-    public Integer getScoreSum(Long receptionId) {
+    public Integer getAppDetailScoreSum(Long receptionId) {
         IScene scene = AppDetailScene.builder().id(receptionId).build();
         JSONArray scores = toJavaObject(scene, AppDetailBean.class).getScores();
         return scores == null ? 0 : scores.stream().map(e -> (JSONObject) e).mapToInt(e -> e.getInteger("score")).sum();
     }
 
-
+    /**
+     * 获取pc接待详情
+     *
+     * @param receptionId 接待id
+     * @return 接待详情
+     */
+    public JSONObject getVoiceDetail(Long receptionId) {
+        IScene scene = VoiceDetailScene.builder().id(receptionId).build();
+        return scene.invoke(visitor);
+    }
 }
