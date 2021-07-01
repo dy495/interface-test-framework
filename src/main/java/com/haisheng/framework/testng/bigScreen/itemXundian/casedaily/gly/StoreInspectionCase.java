@@ -195,21 +195,21 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     *门店巡店记录列表-筛选栏校验（触发时间筛选）  系统异常，已提bug
+     *门店巡店记录列表-筛选栏校验（触发时间筛选）
      */
     @Test()
     public void storeSystemCase5(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            String startTime = dt.getHistoryDate(-30);
-            String endTime = dt.getHistoryDate(30);
+            String startTime = dt.getHistoryDate(-10)+" 00";
+            String endTime = dt.getHistoryDate(10)+" 23";
             JSONObject respond = su.tasksListTimePage(shopId, "1", "10", startTime, endTime);
             int pages = respond.getInteger("pages") > 10 ? 10 : respond.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
                 JSONArray list = su.tasksListTimePage(shopId, String.valueOf(page), "10", startTime, endTime).getJSONArray("list");
-                System.err.println(list);
                 for (int i = 0; i < list.size(); i++) {
-                    String triggerTime = list.getJSONObject(i).containsKey("trigger_time") ? list.getJSONObject(i).getString("trigger_time").substring(0, 10) : startTime;
+                    String triggerTime = list.getJSONObject(i).containsKey("trigger_time") ? list.getJSONObject(i).getString("trigger_time").substring(0, 13) : startTime;
+                    System.out.println("开始时间：" + startTime + " 结束时间：" + endTime + "列表中的有效的开始时间:" + triggerTime);
                     Preconditions.checkArgument(triggerTime.compareTo(startTime) >= 0 && triggerTime.compareTo(endTime) <= 0, "开始时间：" + startTime + " 结束时间：" + endTime + "列表中的有效的开始时间:" + triggerTime);
                 }
             }
@@ -384,19 +384,53 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * 单人触发口罩事件
+     * 单人触发口罩事件--巡店测试门店1(可更门店的shopId更改门店)
      */
     @Test(description = "单人触发口罩事件")
-    public void storeEventCase(){
+    public void storeEventCase1(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            JSONObject response=su.maskEvent(false,"customerFalse",true);
+            JSONObject response=su.maskEvent("28758",false,"customerFalse",true);
             System.err.println(response);
 
         }catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("单人触发口罩事件");
+        }
+    }
+
+    /**
+     * 单人触发制服事件--巡店测试门店1(可更门店的shopId更改门店)
+     */
+    @Test(description = "单人触发制服事件")
+    public void storeEventCase2(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONObject response=su.maskEvent("28758",true,"customer",true);
+            System.err.println(response);
+
+        }catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("单人触发制服事件");
+        }
+    }
+
+    /**
+     * 单人触发帽子事件--巡店测试门店1(可更门店的shopId更改门店)
+     */
+    @Test(description = "单人触发帽子事件")
+    public void storeEventCase3(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONObject response=su.maskEvent("28758",true,"customer1",false);
+            System.err.println(response);
+
+        }catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("单人触发帽子事件");
         }
     }
 
