@@ -4117,7 +4117,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * @param customer *:不触发制服事件 customer：触发制服事件
      * @param hat true:不触发帽子事件 false：帽子口罩事件
      */
-    public JSONObject maskEvent(String shopId,Boolean mask,String customer,Boolean hat){
+    public JSONObject maskEvent(Long shopId,Boolean mask,String customer,Boolean hat){
         String url = "/risk-control-engine/test/auto-patrol-event/simulate";
         JSONObject object=new JSONObject();
         JSONArray algResults=new JSONArray();
@@ -4163,7 +4163,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
         algResults.add(uniformEventObject);
         object.put("alg_results",algResults);
 
-        return invokeApi(url, object);
+        return invokeApi(url, object,false);
 
     }
 
