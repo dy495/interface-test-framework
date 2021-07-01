@@ -992,7 +992,7 @@ public class StoreDataForLNB extends TestCaseCommon implements TestCaseStd {
             String yestDate = trend_list.getJSONObject(6).getString("date");
 
             Preconditions.checkArgument(yestPv < 800 && yestPv >15 ,"雷诺表"+shop_id+"昨日"+yestDate+"到店人次超过800或低于了15，pv="+yestPv+"需线上确认数据是否有异常");
-            Preconditions.checkArgument(yestUv < 600 && yestUv >5 ,"雷诺表"+shop_id+"昨日"+yestDate+"到店人次超过600或低于了5，pv="+yestUv+"需线上确认数据是否有异常");
+            Preconditions.checkArgument(yestUv < 600 && yestUv >5 ,"雷诺表"+shop_id+"昨日"+yestDate+"到店人次超过600或低于了5，uv="+yestUv+"需线上确认数据是否有异常");
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
