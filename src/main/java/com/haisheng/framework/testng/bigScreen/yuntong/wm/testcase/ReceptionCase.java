@@ -27,6 +27,7 @@ import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.departmentda
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.personaldata.AppPersonalCapabilityModelScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.personaldata.AppReceptionLinkScoreScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.voicerecord.AppDetailScene;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.voicerecord.AppPersonalPageScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.manage.VoiceDetailScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.manage.VoiceEvaluationPageScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.util.BusinessUtil;
@@ -796,6 +797,72 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
             saveData("（筛选为某一天）【各环节得分趋势】中的各环节得分=【各环节得分】各环节平均分");
         }
     }
+
+    @Test
+    public void personal_data_8() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            List<AppDepartmentPageBean> departmentPageList = util.getAppDepartmentPageList(dataCycleType, startDate, endDate);
+            departmentPageList.forEach(e -> {
+                List<AppPersonalPageBean> personalPageList = util.getAppPersonalPageList(dataCycleType, e.getSaleId(), startDate, endDate);
+                personalPageList.forEach(personalPage -> {
+                    JSONObject response = VoiceDetailScene.builder().id(personalPage.getId()).build().invoke(visitor);
+                    if (!response.getString("enter_status_name").equals("再次进店")) {
+                        int averageScore = response.getInteger("average_score");
+                        int scoreSum = response.getJSONArray("scores").stream().map(object -> (JSONObject) object)
+                                .filter(object -> object.getInteger("score") != null)
+                                .mapToInt(object -> object.getInteger("score")).sum();
+                        int mathResult = CommonUtil.getIntRatio(scoreSum, 5);
+                        CommonUtil.valueView(e.getName(), averageScore, mathResult);
+                        Preconditions.checkArgument(averageScore <= mathResult + 1 || averageScore >= mathResult - 1, e.getName() + "本次接待得分：" + averageScore + " 各环节的接待得分之和/5：" + mathResult);
+                    }
+                });
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("本次接待得分=各环节的接待得分之和/5");
+        }
+    }
+
+    //ok
+    @Test(dataProvider = "type")
+    public void personal_data_9(Integer type) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            List<AppDepartmentPageBean> departmentPageList = util.getAppDepartmentPageList(dataCycleType, startDate, endDate);
+            departmentPageList.forEach(e -> {
+                List<Integer> appScoreList = new LinkedList<>();
+                List<AppPersonalPageBean> personalPageList = util.getAppPersonalPageList(dataCycleType, e.getSaleId(), startDate, endDate);
+                personalPageList.stream().filter(Objects::nonNull).map(personalPage -> AppDetailScene.builder().id(personalPage.getId()).build().invoke(visitor))
+                        .filter(response -> !response.getString("enter_status_name").equals("再次进店"))
+                        .filter(response -> response.getInteger("average_score") != 0)
+                        .forEach(response -> response.getJSONArray("scores")
+                                .stream().map(object -> (JSONObject) object)
+                                .filter(object -> object.getInteger("type").equals(type))
+                                .map(object -> object.getInteger("score"))
+                                .forEach(appScoreList::add));
+                List<Integer> pcScoreList = new ArrayList<>();
+                IScene evaluationPageScene = VoiceEvaluationPageScene.builder().receptorName(e.getName()).receptionStart(startDate).receptionEnd(endDate).evaluateStatus(500).enterStatus(1).build();
+                List<VoiceEvaluationPageBean> voiceEvaluationPageList = util.toJavaObjectList(evaluationPageScene, VoiceEvaluationPageBean.class);
+                voiceEvaluationPageList.stream().filter(Objects::nonNull).map(voiceRecord -> VoiceDetailScene.builder().id(voiceRecord.getId()).build().invoke(visitor))
+                        .filter(object -> object.getInteger("average_score") != null)
+                        .filter(object -> object.getInteger("average_score") != 0)
+                        .map(response -> response.getJSONArray("scores"))
+                        .forEach(scores -> scores.stream().map(object -> (JSONObject) object).filter(object -> object.getInteger("type").equals(type))
+                                .map(object -> object.getInteger("score")).forEach(pcScoreList::add));
+                CommonUtil.valueView(e.getName(), appScoreList, pcScoreList);
+                Preconditions.checkArgument(appScoreList.size() == pcScoreList.size(), e.getName() + "APP【接待详情】中平均分不为0的次数：" + appScoreList.size() + "PC【语音接待评鉴详情】中各平均分分不为0的次数：" + pcScoreList.size());
+                Preconditions.checkArgument(appScoreList.equals(pcScoreList), e.getName() + "APP【接待详情】中" + type + "得分：" + appScoreList + "PC【语音接待评鉴详情】中各环节得分：" + pcScoreList);
+
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("本次接待得分=各环节的接待得分之和/5");
+        }
+    }
+
 
     @Test
     public void personal_data_25() {
