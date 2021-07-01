@@ -36,6 +36,11 @@
             <!-- 风控代码-->
             <class name="com.haisheng.framework.testng.bigScreen.fengkongdaily.RiskControlCaseDataDaily"/>
             <class name="com.haisheng.framework.testng.bigScreen.fengkongdaily.RiskControlCaseSystemDaily"/>
+            <!-- 运通-->
+            <class name="com.haisheng.framework.testng.bigScreen.yuntong.lxq.HuiTing_DataCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.yuntong.lxq.HuiTing_SystemCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.yuntong.lxq.SystemCase"/>
+
         </classes>
     </test>
 </suite>

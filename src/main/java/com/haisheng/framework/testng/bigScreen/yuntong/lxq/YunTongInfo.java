@@ -131,8 +131,9 @@ public class YunTongInfo {
                 {dt.getHistoryDate(-34),dt.getHistoryDate(-1),"开始时间<结束时间 && 结束时间<今天","true"},
                 {dt.getHistoryDate(-1),dt.getHistoryDate(-1),"开始时间=结束时间 && 结束时间<今天","true"},
 
-                {dt.getHistoryDate(-1),dt.getHistoryDate(0),"开始时间<结束时间 && 结束时间=今天","false"},
-                {dt.getHistoryDate(-1),dt.getHistoryDate(-2),"开始时间>结束时间 ","false"},
+                //前端限制 注释掉
+//                {dt.getHistoryDate(-1),dt.getHistoryDate(0),"开始时间<结束时间 && 结束时间=今天","false"},
+//                {dt.getHistoryDate(-1),dt.getHistoryDate(-2),"开始时间>结束时间 ","false"},
 
 
         };

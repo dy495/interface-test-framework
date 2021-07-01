@@ -4,16 +4,18 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.base.proxy.VisitorProxy;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.*;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumChecklistAppId;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumChecklistConfId;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumJobName;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.general.EnumValueListScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.manage.VoiceDetailScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.manage.VoiceEvaluationPageScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.sensitivewords.LabelListScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.sensitivewords.SensitiveBehaviorDetailScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.sensitivewords.SensitiveBehaviorPageScene;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.util.BusinessUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -35,15 +37,12 @@ import java.util.List;
  * @date 2021/1/29 11:17
  */
 public class HuiTing_DataCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduce PRODUCE = EnumTestProduce.JC_DAILY;
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.ALL_AUTHORITY_DAILY_LXQ;
-    private static final EnumAccount ALL_AUTHORITY_DAILY = EnumAccount.ALL_AUTHORITY_DAILY;
-    private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_LXQ_DAILY;
-    public VisitorProxy visitor = new VisitorProxy(PRODUCE);
-    public UserUtil user = new UserUtil(visitor);
-    public SupporterUtil util = new SupporterUtil(visitor);
-    YunTongInfo info = new YunTongInfo();
+    EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_ZH;
+    EnumAccount ALL_AUTHORITY = EnumAccount.ALL_YT_DAILY;
+    VisitorProxy visitor = new VisitorProxy(PRODUCE);
+    BusinessUtil businessUtil = new BusinessUtil(visitor);
 
+    YunTongInfo info = new YunTongInfo();
 
     CommonConfig commonConfig = new CommonConfig();
 
@@ -68,7 +67,12 @@ public class HuiTing_DataCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.shopId = PRODUCE.getShopId();
         commonConfig.roleId = ALL_AUTHORITY.getRoleId();
         beforeClassInit(commonConfig);
+        businessUtil.loginPc(ALL_AUTHORITY);
+
+        visitor.setProduct(EnumTestProduce.YT_DAILY_HT);  //会听模块
     }
+
+
 
     @AfterClass
     @Override
@@ -79,7 +83,7 @@ public class HuiTing_DataCase extends TestCaseCommon implements TestCaseStd {
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-        user.loginApplet(APPLET_USER_ONE);
+
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
@@ -96,12 +100,12 @@ public class HuiTing_DataCase extends TestCaseCommon implements TestCaseStd {
 
         logger.logCaseStart(caseResult.getCaseName());
         try {//这个枚举0 要改
-            JSONArray arr1 = VoiceEvaluationPageScene.builder().page(1).size(50).evaluateStatus(0).build().invoke(visitor).getJSONArray("list");
+            JSONArray arr1 = VoiceEvaluationPageScene.builder().page(1).size(50).build().invoke(visitor).getJSONArray("list");
             if (arr1.size() > 0) {
                 JSONObject obj = arr1.getJSONObject(0);
                 String list_receptor_name = obj.getString("receptor_name");
-                String list_reception_time = obj.getString("reception_time");
-                String list_reception_duration = obj.getString("reception_duration");
+                String list_reception_time = obj.getString("reception_time").substring(0,10);
+//                String list_reception_duration = obj.getString("reception_duration");
                 String list_customer_name = obj.getString("customer_name");
                 String list_customer_phone = obj.getString("customer_phone");
                 Long id = obj.getLong("id");
@@ -109,13 +113,13 @@ public class HuiTing_DataCase extends TestCaseCommon implements TestCaseStd {
                 JSONObject detailObj = VoiceDetailScene.builder().id(id).build().invoke(visitor);
                 String detail_receptor_name = detailObj.getString("receptor_name");
                 String detail_reception_time = detailObj.getString("start_time").substring(0, 10);
-                String detail_reception_duration = detailObj.getString("reception_duration");
-                String detail_customer_name = detailObj.getString("customer_name");
-                String detail_customer_phone = detailObj.getString("customer_phone");
+//                String detail_reception_duration = detailObj.getString("reception_duration");
+                String detail_customer_name = detailObj.getString("name");
+                String detail_customer_phone = detailObj.getString("phone");
 
                 Preconditions.checkArgument(list_receptor_name.equals(detail_receptor_name), "列表中接待顾问姓名=" + list_receptor_name + " ,详情中接待顾问姓名=" + detail_receptor_name);
                 Preconditions.checkArgument(list_reception_time.equals(detail_reception_time), "列表中接待日期=" + list_reception_time + " ,详情中接待日期=" + detail_reception_time);
-                Preconditions.checkArgument(list_reception_duration.equals(detail_reception_duration), "列表中接待时长=" + list_reception_duration + " ,详情中接待时长=" + detail_reception_duration);
+//                Preconditions.checkArgument(list_reception_duration.equals(detail_reception_duration), "列表中接待时长=" + list_reception_duration + " ,详情中接待时长=" + detail_reception_duration);
                 Preconditions.checkArgument(list_customer_name.equals(detail_customer_name), "列表中客户姓名=" + list_customer_name + " ,详情中客户姓名=" + detail_customer_name);
                 Preconditions.checkArgument(list_customer_phone.equals(detail_customer_phone), "列表中客户电话=" + list_customer_phone + " ,详情中客户电话=" + detail_customer_phone);
             }
@@ -134,7 +138,7 @@ public class HuiTing_DataCase extends TestCaseCommon implements TestCaseStd {
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray arr1 = VoiceEvaluationPageScene.builder().page(1).size(20).evaluateStatus(0).build().invoke(visitor).getJSONArray("list");
+            JSONArray arr1 = VoiceEvaluationPageScene.builder().page(1).size(20).evaluateStatus(500).build().invoke(visitor).getJSONArray("list");
             if (arr1.size() > 0) {
                 for (int i = 0; i < arr1.size(); i++) {
                     JSONObject obj = arr1.getJSONObject(i);
@@ -147,7 +151,7 @@ public class HuiTing_DataCase extends TestCaseCommon implements TestCaseStd {
                         score = score + scores.getJSONObject(j).getInteger("score");
                     }
                     int jisuan = Math.round(score / 5);
-                    Preconditions.checkArgument(average_score == jisuan, "接待平均分" + average_score + " != 环节计算结果" + jisuan);
+                    Preconditions.checkArgument(average_score <= jisuan+1 &&average_score >= jisuan-1 , "接待平均分" + average_score + " != 环节计算结果" + jisuan);
                 }
             }
 
@@ -165,7 +169,7 @@ public class HuiTing_DataCase extends TestCaseCommon implements TestCaseStd {
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray arr1 = VoiceEvaluationPageScene.builder().page(1).size(20).evaluateStatus(0).build().invoke(visitor).getJSONArray("list");
+            JSONArray arr1 = VoiceEvaluationPageScene.builder().page(1).size(20).evaluateStatus(500).build().invoke(visitor).getJSONArray("list");
             if (arr1.size() > 0) {
                 for (int i = 0; i < arr1.size(); i++) {
                     JSONObject obj = arr1.getJSONObject(i);
@@ -197,12 +201,12 @@ public class HuiTing_DataCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
+    //@Test
     public void voiceEvaluationDetailIn3() {
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray arr1 = VoiceEvaluationPageScene.builder().page(1).size(20).evaluateStatus(0).build().invoke(visitor).getJSONArray("list");
+            JSONArray arr1 = VoiceEvaluationPageScene.builder().page(1).size(20).evaluateStatus(500).build().invoke(visitor).getJSONArray("list");
             if (arr1.size() > 0) {
                 for (int i = 0; i < arr1.size(); i++) {
                     JSONObject obj = arr1.getJSONObject(i);
@@ -249,7 +253,8 @@ public class HuiTing_DataCase extends TestCaseCommon implements TestCaseStd {
      * --------------------------------- 敏感词风控 ---------------------------------
      */
 
-    @Test
+    //@Test
+    //todo 要改的
     public void sensitiveIn1() {
 
         logger.logCaseStart(caseResult.getCaseName());
@@ -267,15 +272,15 @@ public class HuiTing_DataCase extends TestCaseCommon implements TestCaseStd {
 
                 int listcount = 0; //列表中每个记录涉及到敏感词的数量
                 int total = SensitiveBehaviorPageScene.builder().page(1).size(1).sensitiveWordsType(evaluate_status).build().invoke(visitor).getInteger("total");
-                if (total <= 200) {
-                    JSONArray listarray = SensitiveBehaviorPageScene.builder().page(1).size(200).sensitiveWordsType(evaluate_status).build().invoke(visitor).getJSONArray("list");
+                if (total <= 100) {
+                    JSONArray listarray = SensitiveBehaviorPageScene.builder().page(1).size(100).sensitiveWordsType(evaluate_status).build().invoke(visitor).getJSONArray("list");
                     for (int k = 0; k < listarray.size(); k++) {
                         Long id = listarray.getJSONObject(k).getLong("id");
                         listcount += SensitiveBehaviorDetailScene.builder().id(id).build().invoke(visitor).getJSONArray("sensitive_words").size();
                     }
                 } else {
-                    for (int j = 1; j < total / 200 + 1; j++) {
-                        JSONArray listarray = SensitiveBehaviorPageScene.builder().page(j).size(200).sensitiveWordsType(evaluate_status).build().invoke(visitor).getJSONArray("list");
+                    for (int j = 1; j < total / 100 + 1; j++) {
+                        JSONArray listarray = SensitiveBehaviorPageScene.builder().page(j).size(100).sensitiveWordsType(evaluate_status).build().invoke(visitor).getJSONArray("list");
                         for (int k = 0; k < listarray.size(); k++) {
                             Long id = listarray.getJSONObject(k).getLong("id");
                             listcount += SensitiveBehaviorDetailScene.builder().id(id).build().invoke(visitor).getJSONArray("sensitive_words").size();
