@@ -9,7 +9,6 @@ import com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.hqq.fucPack
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import org.springframework.util.StringUtils;
 import org.testng.annotations.DataProvider;
-
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -24,7 +23,8 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
     private static volatile StoreScenarioUtil instance = null;
 
-    private StoreScenarioUtil() {
+    public StoreScenarioUtil() {
+
     }
 
     public static StoreScenarioUtil getInstance() {
@@ -182,7 +182,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
     public static Object[] area_code() {
 
         return new String[]{
-                "110000"
+                "11000"
         };
     }
 
@@ -4094,6 +4094,69 @@ public class StoreScenarioUtil extends TestCaseCommon {
         }
         return invokeApi(url, json);
     }
+
+    /**
+     * @description :门店触发告警列表查询
+     * @date :2021/6/29
+     **/
+    public JSONObject tasksListTimePage( Long shopId,String page, String size, String startTime, String endTime) {
+        String url = "/patrol/check-risk/tasks/list";
+        JSONObject json = new JSONObject();
+        json.put("page", page);
+        json.put("size", size);
+        json.put("shop_id", shopId);
+        json.put("start_time", startTime);
+        json.put("end_time", endTime);
+
+        return invokeApi(url, json);
+    }
+
+    /**
+     *触发口罩事件
+     */
+    public JSONObject maskEvent(Boolean mask,String customer,Boolean hat){
+        String url = "/risk-control-engine/test/auto-patrol-event/simulate";
+        JSONObject object=new JSONObject();
+        JSONArray algResults=new JSONArray();
+        JSONObject maskEventObject=new JSONObject();
+        JSONObject maskObject=new JSONObject();
+        JSONArray maskArray=new JSONArray();
+        JSONObject uniformEventObject=new JSONObject();
+        JSONArray uniformArray=new JSONArray();
+        JSONObject uniformObject=new JSONObject();
+
+        object.put("time","1625042994310");
+        object.put("master_uid","uid_ef6d2de5");
+        object.put("app_id","49998b971ea0");
+        object.put("brand_id","19");
+        object.put("pic_url","https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic41.nipic.com%2F20140525%2F18845929_233338467162_2.jpg&refer=http%3A%2F%2Fpic41.nipic.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1627474279&t=85524e63d714fadd19380afcac6292d0");
+        object.put("shop_id","28758");
+        object.put("device_id","7543492143055872");
+        object.put("request_id","367af258-e310-41e4-9b01-4ec6e720");
+        //口罩的参数
+        maskObject.put("face_axis","[711,7,758,63]");
+        maskObject.put("mask",mask);
+        maskArray.add(maskObject);
+        maskEventObject.put("name","mask_detect");
+        maskEventObject.put("result",maskArray);
+        //帽子制服的参数
+        uniformObject.put("body_axis","[1368,545,1644,1175]");
+        uniformObject.put("identify",customer);
+        uniformObject.put("hat",hat);
+        uniformArray.add(uniformObject);
+        uniformEventObject.put("name","uniform_classify");
+        uniformEventObject.put("result",uniformArray);
+        algResults.add(maskEventObject);
+        algResults.add(uniformEventObject);
+        object.put("alg_results",algResults);
+
+        return invokeApi(url, object);
+
+    }
+
+
+
+
 
 
 }

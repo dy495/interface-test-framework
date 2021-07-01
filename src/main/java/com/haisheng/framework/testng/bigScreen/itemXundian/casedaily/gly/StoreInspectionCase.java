@@ -26,29 +26,32 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import javax.rmi.PortableRemoteObject;
 import java.lang.reflect.Method;
 
 public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
-    private final static EnumTestProduce PRODUCE = EnumTestProduce.INS_DAILY;
-    public VisitorProxy visitor = new VisitorProxy(PRODUCE);
+    private final  EnumTestProduce product = EnumTestProduce.INS_DAILY;
+    public VisitorProxy visitor = new VisitorProxy(product);
     public UserUtil user = new UserUtil(visitor);
     public SupporterUtil util = new SupporterUtil(visitor);
     StoreScenarioUtil su=StoreScenarioUtil.getInstance();
     public Long shopId=43072L;
     public String shopName="AI-Test(门店订单录像)";
+    CommonConfig commonConfig = new CommonConfig();
 
     @BeforeClass
     @Override
     public void initial() {
         logger.debug("before class initial");
-        CommonConfig commonConfig = new CommonConfig();
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_XUNDIAN_DAILY_SERVICE;
         commonConfig.checklistQaOwner = EnumChecklistUser.GLY.getName();
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.XUNDIAN_DAILY_TEST.getJobName());
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
         commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.product = PRODUCE.getAbbreviation();
+        commonConfig.product = product.getAbbreviation();
+        commonConfig.shopId="43072";
+        commonConfig.referer=product.getReferer();
         beforeClassInit(commonConfig);
     }
 
@@ -192,10 +195,36 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
+     *门店巡店记录列表-筛选栏校验（触发时间筛选）  系统异常，已提bug
+     */
+    @Test()
+    public void storeSystemCase5(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            String startTime = dt.getHistoryDate(-30);
+            String endTime = dt.getHistoryDate(30);
+            JSONObject respond = su.tasksListTimePage(shopId, "1", "10", startTime, endTime);
+            int pages = respond.getInteger("pages") > 10 ? 10 : respond.getInteger("pages");
+            for (int page = 1; page <= pages; page++) {
+                JSONArray list = su.tasksListTimePage(shopId, String.valueOf(page), "10", startTime, endTime).getJSONArray("list");
+                System.err.println(list);
+                for (int i = 0; i < list.size(); i++) {
+                    String triggerTime = list.getJSONObject(i).containsKey("trigger_time") ? list.getJSONObject(i).getString("trigger_time").substring(0, 10) : startTime;
+                    Preconditions.checkArgument(triggerTime.compareTo(startTime) >= 0 && triggerTime.compareTo(endTime) <= 0, "开始时间：" + startTime + " 结束时间：" + endTime + "列表中的有效的开始时间:" + triggerTime);
+                }
+            }
+        }catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("门店巡店记录列表-筛选栏校验（触发时间筛选）");
+        }
+    }
+
+    /**
      *巡店告警详情-门店告警列表与详情数据对比      ok
      */
     @Test(description = "巡店告警详情-门店告警列表与详情数据对比")
-    public void storeSystemCase5(){
+    public void storeSystemCase6(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             //获取门店告警列表第一行的参数
@@ -234,8 +263,14 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
+
+
+
+
+
+
     /**
-     * 数据一致性：触发事件数==此门店触发事件数之合&待确认事件==此门店待确认事件数之合&待确认紧急事件==此门店待确认紧急事件之合&已确认事件==此门店已确认事件之合
+     * 数据一致性：触发事件数==此门店触发事件数之合&待确认事件==此门店待确认事件数之合&待确认紧急事件==此门店待确认紧急事件之合&已确认事件==此门店已确认事件之合       ok
      */
     @Test(description = "触发事件数==此门店触发事件数之合&待确认事件==此门店待确认事件数之合&待确认紧急事件==此门店待确认紧急事件之合&已确认事件==此门店已确认事件之合")
     public void storeDateCase1(){
@@ -249,32 +284,33 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
                 JSONArray list=EventTotalScene.builder().page(page).size(10).build().invoke(visitor,true).getJSONArray("list");
                 for(int i=0;i<list.size();i++){
                     Long shopId1=list.getJSONObject(i).getLong("shop_id");
-                    if(shopId1.equals(shopId)){
-                        //触发事件数
-                        int eventTotal=list.getJSONObject(i).getInteger("event_total");
-                        //已确认事件数
-                        int processedTotal=list.getJSONObject(i).getInteger("processed_total");
-                        //待确认事件数
-                        int pendingTotal=list.getJSONObject(i).getInteger("pending_total");
-                        //紧急事件数
-                        int urgentTotal=list.getJSONObject(i).getInteger("urgent_total");
+                    //触发事件数
+                    int eventTotal=list.getJSONObject(i).getInteger("event_total");
+                    //已确认事件数
+                    int processedTotal=list.getJSONObject(i).getInteger("processed_total");
+                    //待确认事件数
+                    int pendingTotal=list.getJSONObject(i).getInteger("pending_total");
+                    //紧急事件数
+                    int urgentTotal=list.getJSONObject(i).getInteger("urgent_total");
 
-                        //进入对应的门店的告警事件页面
-                        JSONObject response1=ListScene.builder().page(1).size(10).shopId(shopId1).build().invoke(visitor,true);
-                        //触发事件数
-                        int total=response1.getInteger("total");
-                        //已确认的事件数
-                        int processed=ListScene.builder().page(1).size(10).eventState("ALARM_CONFIRMED").shopId(shopId1).build().invoke(visitor,true).getInteger("total");
-                        //待确认事件数
-                        int pending=ListScene.builder().page(1).size(10).eventState("WAITING_ALARM_CONFIRM").shopId(shopId1).build().invoke(visitor,true).getInteger("total");
-                        //紧急事件数--规则为口罩的事件数
-                        int urgent=ListScene.builder().page(1).size(10).triggerRule("MASK_MONITOR").shopId(shopId1).build().invoke(visitor,true).getInteger("total");
+                    //进入对应的门店的告警事件页面
+                    JSONObject response1=ListScene.builder().page(1).size(10).shopId(shopId1).build().invoke(visitor,true);
+                    //触发事件数
+                    int total=response1.getInteger("total");
+                    //已确认的事件数
+                    int processed=ListScene.builder().page(1).size(10).eventState("ALARM_CONFIRMED").shopId(shopId1).build().invoke(visitor,true).getInteger("total");
+                    //无需处理事件
+                    int noNeed=ListScene.builder().page(1).size(10).eventState("NO_NEED_HANDLE").shopId(shopId1).build().invoke(visitor,true).getInteger("total");
+                    //待确认事件数
+                    int pending=ListScene.builder().page(1).size(10).eventState("WAITING_ALARM_CONFIRM").shopId(shopId1).build().invoke(visitor,true).getInteger("total");
+                    //紧急事件数--规则为口罩的事件数
+                    int urgent=ListScene.builder().page(1).size(10).triggerRule("MASK_MONITOR").eventState("WAITING_ALARM_CONFIRM").shopId(shopId1).build().invoke(visitor,true).getInteger("total");
 
-                        Preconditions.checkArgument(eventTotal==total,"门店列表触发的事件数："+eventTotal+" 门店告警列表中触发事件数为： "+total);
-                        Preconditions.checkArgument(processed==processedTotal,"门店列表已处理事件数："+processedTotal+" 门店告警列表中已处理事件数为： "+processed);
-                        Preconditions.checkArgument(pendingTotal==pending,"门店列表待处理事件数："+pendingTotal+" 门店告警列表中待处理事件数为： "+pending);
-                        Preconditions.checkArgument(urgent==urgentTotal,"门店列表待紧急处理事件数："+urgentTotal+" 门店告警列表中待紧急处理事件数为： "+urgent);
-                    }
+                    Preconditions.checkArgument(eventTotal==total,"门店列表触发的事件数："+eventTotal+" 门店告警列表中触发事件数为： "+total);
+                    Preconditions.checkArgument(processed+noNeed==processedTotal,"门店列表已处理事件数："+processedTotal+" 门店告警列表中已处理事件数为： "+processed);
+                    Preconditions.checkArgument(pendingTotal==pending,"门店列表待处理事件数："+pendingTotal+" 门店告警列表中待处理事件数为： "+pending);
+                    Preconditions.checkArgument(urgent==urgentTotal,"门店列表待紧急处理事件数："+urgentTotal+" 门店告警列表中待紧急处理事件数为： "+urgent);
+
                 }
             }
 
@@ -283,6 +319,84 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             saveData("触发事件数==此门店触发事件数之合&待确认事件==此门店待确认事件数之合&待确认紧急事件==此门店待确认紧急事件之合&已确认事件==此门店已确认事件之合");
+        }
+    }
+
+    /**
+     * 数据一致性：触发事件数=待确认事件+已确认事件     ok
+     */
+    @Test(description = "触发事件数=待确认事件+已确认事件")
+    public void storeDateCase2(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            //智慧巡店页面
+            IScene scene= EventTotalScene.builder().page(1).size(10).build();
+            JSONObject response=visitor.invokeApi(scene,true);
+            int pages=response.getInteger("pages");
+            for(int page=1;page<=pages;page++){
+                JSONArray list=EventTotalScene.builder().page(page).size(10).build().invoke(visitor,true).getJSONArray("list");
+                for(int i=0;i<list.size();i++){
+                    //触发事件数
+                    int eventTotal=list.getJSONObject(i).getInteger("event_total");
+                    //已确认事件数
+                    int processedTotal=list.getJSONObject(i).getInteger("processed_total");
+                    //待确认事件数
+                    int pendingTotal=list.getJSONObject(i).getInteger("pending_total");
+
+                    Preconditions.checkArgument(eventTotal==processedTotal+pendingTotal,"触发的总事件为："+eventTotal+" 已确认的事件为："+processedTotal+" 待确认的事件为："+pendingTotal);
+
+                }
+            }
+        }catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("触发事件数=待确认事件+已确认事件");
+        }
+    }
+
+    /**
+     * 数据一致性：待确认事件>=待确认紧急事件     ok
+     */
+    @Test(description = "待确认事件>=待确认紧急事件")
+    public void storeDateCase3(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            //智慧巡店页面
+            IScene scene= EventTotalScene.builder().page(1).size(10).build();
+            JSONObject response=visitor.invokeApi(scene,true);
+            int pages=response.getInteger("pages");
+            for(int page=1;page<=pages;page++){
+                JSONArray list=EventTotalScene.builder().page(page).size(10).build().invoke(visitor,true).getJSONArray("list");
+                for(int i=0;i<list.size();i++){
+                    //待确认事件数
+                    int pendingTotal=list.getJSONObject(i).getInteger("pending_total");
+                    //紧急事件数
+                    int urgentTotal=list.getJSONObject(i).getInteger("urgent_total");
+
+                    Preconditions.checkArgument(pendingTotal>=urgentTotal,"待确认事件数为："+pendingTotal+" 紧急事件数为："+urgentTotal);
+                }
+            }
+        }catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("待确认事件>=待确认紧急事件");
+        }
+    }
+
+    /**
+     * 单人触发口罩事件
+     */
+    @Test(description = "单人触发口罩事件")
+    public void storeEventCase(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONObject response=su.maskEvent(false,"customerFalse",true);
+            System.err.println(response);
+
+        }catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("单人触发口罩事件");
         }
     }
 
