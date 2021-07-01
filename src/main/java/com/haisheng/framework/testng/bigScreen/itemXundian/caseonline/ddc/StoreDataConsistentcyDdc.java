@@ -125,7 +125,7 @@ public class StoreDataConsistentcyDdc extends TestCaseCommon implements TestCase
             appendFailReason(e.toString());
         } finally {
 
-            saveData("今日到访人数<=今天各个时间段内到访人数的累计");
+            saveData("ddc今日到访人数<=今天各个时间段内到访人数的累计");
         }
 
     }
@@ -164,7 +164,7 @@ public class StoreDataConsistentcyDdc extends TestCaseCommon implements TestCase
             appendFailReason(e.toString());
         } finally {
 
-            saveData("过店客群总人次==各个门的过店人次+兴趣客群人次|过店客群总人数==各个门的过店人数+兴趣客群人数");
+            saveData("ddc过店客群总人次==各个门的过店人次+兴趣客群人次|过店客群总人数==各个门的过店人数+兴趣客群人数");
         }
 
     }
@@ -228,7 +228,7 @@ public class StoreDataConsistentcyDdc extends TestCaseCommon implements TestCase
             appendFailReason(e.toString());
         } finally {
 
-            saveData("进店客群总人次==各个门的进店人次之和");
+            saveData("ddc进店客群总人次==各个门的进店人次之和");
         }
 
     }
@@ -265,7 +265,7 @@ public class StoreDataConsistentcyDdc extends TestCaseCommon implements TestCase
             appendFailReason(e.toString());
         } finally {
 
-            saveData("兴趣客群总人次==各个门的兴趣人次之和 + 进店客群的总人次|兴趣客群总人数==各个门的兴趣人数之和 + 进店客群的总人数");
+            saveData("ddc兴趣客群总人次==各个门的兴趣人次之和 + 进店客群的总人次|兴趣客群总人数==各个门的兴趣人数之和 + 进店客群的总人数");
         }
 
     }
@@ -293,7 +293,7 @@ public class StoreDataConsistentcyDdc extends TestCaseCommon implements TestCase
             appendFailReason(e.toString());
         } finally {
 
-            saveData("交易客群总人次==会员+非会员的交易pv之和");
+            saveData("ddc交易客群总人次==会员+非会员的交易pv之和");
         }
 
     }
@@ -365,7 +365,7 @@ public class StoreDataConsistentcyDdc extends TestCaseCommon implements TestCase
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("消费者到店趋势中各天pv累计==到店客群总人次"+"。报错门店的shopId="+shop_ids);
+            saveData("ddc消费者到店趋势中各天pv累计==到店客群总人次"+"。报错门店的shopId="+shop_ids);
 
         }
 
@@ -446,7 +446,7 @@ public class StoreDataConsistentcyDdc extends TestCaseCommon implements TestCase
             appendFailReason(e.toString());
         } finally {
 
-            saveData("各个客群总人次==到店时段分布中各个客群各个时段pv累计"+"。报错门店的shopId="+shop_ids);
+            saveData("ddc各个客群总人次==到店时段分布中各个客群各个时段pv累计"+"。报错门店的shopId="+shop_ids);
 
         }
 
@@ -503,7 +503,7 @@ public class StoreDataConsistentcyDdc extends TestCaseCommon implements TestCase
             appendFailReason(e.toString());
         } finally {
 
-            saveData("吸引率==兴趣客群pv/过店客群pv");
+            saveData("ddc吸引率==兴趣客群pv/过店客群pv");
         }
     }
 
@@ -540,7 +540,7 @@ public class StoreDataConsistentcyDdc extends TestCaseCommon implements TestCase
             appendFailReason(e.toString());
         } finally {
 
-            saveData("日均客流==所选时间段内的日均客流uv");
+            saveData("ddc日均客流==所选时间段内的日均客流uv");
         }
 
     }
@@ -608,7 +608,7 @@ public class StoreDataConsistentcyDdc extends TestCaseCommon implements TestCase
             appendFailReason(e.toString());
         } finally {
 
-            saveData("各个年龄段的男性比例累计和==男性总比例|各个年龄段的女性比例累计和==女性总比例|男性比例+女性比例==100|某一年龄段的比例==该年龄段男性比例+该年龄段女性比例");
+            saveData("ddc各个年龄段的男性比例累计和==男性总比例|各个年龄段的女性比例累计和==女性总比例|男性比例+女性比例==100|某一年龄段的比例==该年龄段男性比例+该年龄段女性比例");
         }
 
     }
@@ -637,7 +637,7 @@ public class StoreDataConsistentcyDdc extends TestCaseCommon implements TestCase
             appendFailReason(e.toString());
         } finally {
 
-            saveData("监控百果园昨日pv/uv是否异常");
+            saveData("监控ddc昨日pv/uv是否异常");
         }
 
     }
@@ -684,7 +684,7 @@ public class StoreDataConsistentcyDdc extends TestCaseCommon implements TestCase
             appendFailReason(e.toString());
         } finally {
 
-            saveData("历史客流-选择自然月5月的数据是否正常");
+            saveData("ddc历史客流-选择自然月5月的数据是否正常");
         }
 
     }
@@ -728,7 +728,7 @@ public class StoreDataConsistentcyDdc extends TestCaseCommon implements TestCase
             appendFailReason(e.toString());
         } finally {
 
-            saveData("历史客流-选择最近7天的数据是否正常");
+            saveData("ddc历史客流-选择最近7天的数据是否正常");
         }
 
     }
@@ -774,7 +774,7 @@ public class StoreDataConsistentcyDdc extends TestCaseCommon implements TestCase
             appendFailReason(e.toString());
         } finally {
 
-            saveData("历史客流-选择最近14天的数据是否正常");
+            saveData("ddc历史客流-选择最近14天的数据是否正常");
         }
 
     }
@@ -821,7 +821,7 @@ public class StoreDataConsistentcyDdc extends TestCaseCommon implements TestCase
             appendFailReason(e.toString());
         } finally {
 
-            saveData("历史客流-选择最近30天的数据是否正常");
+            saveData("ddc历史客流-选择最近30天的数据是否正常");
         }
 
     }
@@ -868,7 +868,7 @@ public class StoreDataConsistentcyDdc extends TestCaseCommon implements TestCase
             appendFailReason(e.toString());
         } finally {
 
-            saveData("选择最近60天的数据是否正常");
+            saveData("ddc选择最近60天的数据是否正常");
         }
 
     }

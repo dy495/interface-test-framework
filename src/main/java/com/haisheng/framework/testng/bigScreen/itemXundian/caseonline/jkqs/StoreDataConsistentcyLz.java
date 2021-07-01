@@ -97,17 +97,17 @@ public class StoreDataConsistentcyLz extends TestCaseCommon implements TestCaseS
      *
      * ====================今日到访人数<=今天各个时间段内到访人数的累计======================
      * */
-    @Test()
-    public void realTimeTotal( ) {
+    @Test(dataProvider = "LJshop_IDS",dataProviderClass = StoreScenarioUtilOnline.class)
+    public void realTimeTotal(long shop_ids) {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
             //获取今日实时得到访人数uv
-            JSONArray iPvlist = md.realTimeShopTotalV3((long) shop_id).getJSONArray("list");
+            JSONArray iPvlist = md.realTimeShopTotalV3((long) shop_ids).getJSONArray("list");
             Integer uv = iPvlist.getJSONObject(1).getInteger("value");
 
             //获取今日各个时间段内到访得人数且相加
-            JSONArray eTlist = md.realTimeShopPvV3((long)shop_id).getJSONArray("list");
+            JSONArray eTlist = md.realTimeShopPvV3((long)shop_ids).getJSONArray("list");
             int count = 0;
             for(int i=0;i<eTlist.size();i++){
                 Integer todayUv = eTlist.getJSONObject(i).getInteger("today_uv");
@@ -115,7 +115,7 @@ public class StoreDataConsistentcyLz extends TestCaseCommon implements TestCaseS
                 count += todayUv;
 
             }
-            Preconditions.checkArgument(uv <= count,"今日到访人数=" + uv + "今天各个时间段内到访人数的累计=" + count+"。报错门店的shopId="+shop_id);
+            Preconditions.checkArgument(uv <= count,"今日到访人数=" + uv + "今天各个时间段内到访人数的累计=" + count+"。报错门店的shopId="+shop_ids);
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -170,15 +170,15 @@ public class StoreDataConsistentcyLz extends TestCaseCommon implements TestCaseS
      *
      * ====================日均客流==所选时间段内的日均客流uv======================
      * */
-    @Test()
-    public void averageFlowTotal() {
+    @Test(dataProvider = "LJshop_IDS",dataProviderClass = StoreScenarioUtilOnline.class)
+    public void averageFlowTotal(long shop_ids) {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
             int values = 0;
             int values1= 0;//值不为Null的个数，求平均值时用
-            int averageFlow = md.historyShopTrendsV3(cycle_type,month,shop_id).getInteger("average_daily_passenger_flow");//获取每天得日均客流
-            JSONArray  trendList =  md.historyShopTrendsV3(cycle_type,month,shop_id).getJSONArray("trend_list");
+            int averageFlow = md.historyShopTrendsV3(cycle_type,month,shop_ids).getInteger("average_daily_passenger_flow");//获取每天得日均客流
+            JSONArray  trendList =  md.historyShopTrendsV3(cycle_type,month,shop_ids).getJSONArray("trend_list");
             for(int i=0;i<trendList.size();i++){
                 Integer value = trendList.getJSONObject(i).getInteger("uv");
                 if(value != null && value != 0){
@@ -190,7 +190,7 @@ public class StoreDataConsistentcyLz extends TestCaseCommon implements TestCaseS
             }
             int values2 = values/values1;
             int result = Math.abs(averageFlow-values2);
-            Preconditions.checkArgument(result <= 1,"日均客流=" + averageFlow + "所选时间段内的日均客流uv=" + values2+"。报错门店的shopId="+shop_id);
+            Preconditions.checkArgument(result <= 1,"日均客流=" + averageFlow + "所选时间段内的日均客流uv=" + values2+"。报错门店的shopId="+shop_ids);
 
 
         } catch (AssertionError e) {
@@ -211,18 +211,18 @@ public class StoreDataConsistentcyLz extends TestCaseCommon implements TestCaseS
      //     *
      //     * ====================百果园线上昨日客流监控======================
      * */
-    @Test()
-    public void  surveDataTrend(){
+    @Test(dataProvider = "LJshop_IDS",dataProviderClass = StoreScenarioUtilOnline.class)
+    public void  surveDataTrend(long shop_ids){
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
-             JSONArray trend_list =  md.historyShopTrendV3("RECENT_SEVEN","",shop_id).getJSONArray("trend_list");
+             JSONArray trend_list =  md.historyShopTrendV3("RECENT_SEVEN","",shop_ids).getJSONArray("trend_list");
              int yestPv = trend_list.getJSONObject(6).getInteger("pv");
              int yestUv = trend_list.getJSONObject(6).getInteger("uv");
              String yestDate = trend_list.getJSONObject(6).getString("date");
 
-             Preconditions.checkArgument(yestPv < 800 && yestPv >10 ,"杰克琼斯门店ID:"+shop_id+"在"+yestDate+"到店人次超过800或低于了10，pv="+yestPv+"需线上确认数据是否有异常");
-             Preconditions.checkArgument(yestUv < 700 && yestUv >5 ,"杰克琼斯门店ID:"+shop_id+"在"+yestDate+"到店人次超过700或低于了5，pv="+yestUv+"需线上确认数据是否有异常");
+             Preconditions.checkArgument(yestPv < 800 && yestPv >10 ,"杰克琼斯门店ID:"+shop_ids+"在"+yestDate+"到店人次超过800或低于了10，pv="+yestPv+"需线上确认数据是否有异常");
+             Preconditions.checkArgument(yestUv < 700 && yestUv >5 ,"杰克琼斯门店ID:"+shop_ids+"在"+yestDate+"到店人次超过700或低于了5，pv="+yestUv+"需线上确认数据是否有异常");
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -238,14 +238,14 @@ public class StoreDataConsistentcyLz extends TestCaseCommon implements TestCaseS
      *
      * ====================选择自然月的数据展示是否正常========================
      * */
-    @Test()
-    public void dataSurveillanceForMo() {
+    @Test(dataProvider = "LJshop_IDS",dataProviderClass = StoreScenarioUtilOnline.class)
+    public void dataSurveillanceForMo(long shop_ids) {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
             String cycle_type = "";
             String month = "2021-05";
-            JSONArray trend_list = md.historyShopTrendV3(cycle_type,month,shop_id).getJSONArray("trend_list");
+            JSONArray trend_list = md.historyShopTrendV3(cycle_type,month,shop_ids).getJSONArray("trend_list");
             int uv_Sum = 0;
             Integer uv =0;
             for(int i=0;i<trend_list.size();i++){
@@ -255,7 +255,7 @@ public class StoreDataConsistentcyLz extends TestCaseCommon implements TestCaseS
                 }
             }
 
-            Preconditions.checkArgument(( uv_Sum != 0),"历史客流-自然月5月的数据相加等于"+uv_Sum+"。报错门店的shopId="+shop_id+"请线上确认自然月5月的数据为0是否为正常，");
+            Preconditions.checkArgument(( uv_Sum != 0),"历史客流-自然月5月的数据相加等于"+uv_Sum+"。报错门店的shopId="+shop_ids+"请线上确认自然月5月的数据为0是否为正常，");
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -271,12 +271,12 @@ public class StoreDataConsistentcyLz extends TestCaseCommon implements TestCaseS
      *
      * ====================选择最近7天的数据展示是否正常========================
      * */
-    @Test()
-    public void dataSurveillanceForS() {
+    @Test(dataProvider = "LJshop_IDS",dataProviderClass = StoreScenarioUtilOnline.class)
+    public void dataSurveillanceForS(long shop_ids) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String cycle_type = "RECENT_SEVEN";
-            JSONArray trend_list = md.historyShopTrendV3(cycle_type,month,shop_id).getJSONArray("trend_list");
+            JSONArray trend_list = md.historyShopTrendV3(cycle_type,month,shop_ids).getJSONArray("trend_list");
             int uv_Sum = 0;
             Integer uv =0;
             for(int i=0;i<trend_list.size();i++){
@@ -285,7 +285,7 @@ public class StoreDataConsistentcyLz extends TestCaseCommon implements TestCaseS
                     uv_Sum += uv;
                 }
             }
-            Preconditions.checkArgument(( uv_Sum != 0),"历史客流-最近7天的数据相加等于"+uv_Sum+"。报错门店的shopId="+shop_id+"请线上确认最近7天数据为0是否为正常，");
+            Preconditions.checkArgument(( uv_Sum != 0),"历史客流-最近7天的数据相加等于"+uv_Sum+"。报错门店的shopId="+shop_ids+"请线上确认最近7天数据为0是否为正常，");
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -300,13 +300,13 @@ public class StoreDataConsistentcyLz extends TestCaseCommon implements TestCaseS
      *
      * ====================选择最近14天的数据展示是否正常========================
      * */
-    @Test()
-    public void dataSurveillanceForF() {
+    @Test(dataProvider = "LJshop_IDS",dataProviderClass = StoreScenarioUtilOnline.class)
+    public void dataSurveillanceForF(long shop_ids) {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
             String cycle_type = "RECENT_FOURTEEN";
-            JSONArray trend_list = md.historyShopTrendV3(cycle_type,month,shop_id).getJSONArray("trend_list");
+            JSONArray trend_list = md.historyShopTrendV3(cycle_type,month,shop_ids).getJSONArray("trend_list");
             int uv_Sum = 0;
             Integer uv =0;
             for(int i=0;i<trend_list.size();i++){
@@ -317,7 +317,7 @@ public class StoreDataConsistentcyLz extends TestCaseCommon implements TestCaseS
 
             }
 
-            Preconditions.checkArgument(( uv_Sum != 0),"历史客流-最近14天的数据相加等于"+uv_Sum+"。报错门店的shopId="+shop_id+"请线上确认最近14天数据为0是否为正常，");
+            Preconditions.checkArgument(( uv_Sum != 0),"历史客流-最近14天的数据相加等于"+uv_Sum+"。报错门店的shopId="+shop_ids+"请线上确认最近14天数据为0是否为正常，");
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -333,13 +333,13 @@ public class StoreDataConsistentcyLz extends TestCaseCommon implements TestCaseS
      *
      * ====================选择最近30天的数据展示是否正常========================
      * */
-    @Test()
-    public void dataSurveillanceForT() {
+    @Test(dataProvider = "LJshop_IDS",dataProviderClass = StoreScenarioUtilOnline.class)
+    public void dataSurveillanceForT(long shop_ids) {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
             String cycle_type = "RECENT_THIRTY";
-            JSONArray trend_list = md.historyShopTrendV3(cycle_type,month,shop_id).getJSONArray("trend_list");
+            JSONArray trend_list = md.historyShopTrendV3(cycle_type,month,shop_ids).getJSONArray("trend_list");
             int uv_Sum = 0;
             Integer uv =0;
             for(int i=0;i<trend_list.size();i++){
@@ -349,7 +349,7 @@ public class StoreDataConsistentcyLz extends TestCaseCommon implements TestCaseS
                 }
 
             }
-            Preconditions.checkArgument(( uv_Sum != 0),"历史客流-最近30天的数据相加等于"+uv_Sum+"。报错门店的shopId="+shop_id+"请线上确认最近30天数据为0是否为正常，");
+            Preconditions.checkArgument(( uv_Sum != 0),"历史客流-最近30天的数据相加等于"+uv_Sum+"。报错门店的shopId="+shop_ids+"请线上确认最近30天数据为0是否为正常，");
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -364,13 +364,13 @@ public class StoreDataConsistentcyLz extends TestCaseCommon implements TestCaseS
      *
      * ====================选择最近60天的数据展示是否正常========================
      * */
-    @Test()
-    public void dataSurveillanceForSix() {
+    @Test(dataProvider = "LJshop_IDS",dataProviderClass = StoreScenarioUtilOnline.class)
+    public void dataSurveillanceForSix(long shop_ids) {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
             String cycle_type = "RECENT_SIXTY";
-            JSONArray trend_list = md.historyShopTrendV3(cycle_type,month,shop_id).getJSONArray("trend_list");
+            JSONArray trend_list = md.historyShopTrendV3(cycle_type,month,shop_ids).getJSONArray("trend_list");
             int uv_Sum = 0;
             Integer uv =0;
             for(int i=0;i<trend_list.size();i++){
@@ -381,7 +381,7 @@ public class StoreDataConsistentcyLz extends TestCaseCommon implements TestCaseS
 
             }
 
-            Preconditions.checkArgument(( uv_Sum != 0),"历史客流-最近60天的数据相加等于"+uv_Sum+"。报错门店的shopId="+shop_id+"请线上确认最近60天数据为0是否为正常，");
+            Preconditions.checkArgument(( uv_Sum != 0),"历史客流-最近60天的数据相加等于"+uv_Sum+"。报错门店的shopId="+shop_ids+"请线上确认最近60天数据为0是否为正常，");
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());

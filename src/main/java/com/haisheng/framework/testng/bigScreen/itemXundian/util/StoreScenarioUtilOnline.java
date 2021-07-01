@@ -138,6 +138,20 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
                 30895l
         };
     }
+
+    @DataProvider(name = "LJshop_IDS")
+    public static Object[] LJshop_IDS() {
+
+        return new Long[]{
+                28647l,
+                33965l,
+                33961l,
+                33963l,
+                33959l,
+
+        };
+    }
+
     @DataProvider(name = "SHOP_ID_T")
     public static Object[] shop_id_t() {
 
