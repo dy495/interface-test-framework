@@ -11,16 +11,17 @@
             <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.wm.ShopManagerCase"/>
 
             <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.testShop.StorePcCaseOnline"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.bgy.StoreDataConsistentcyBgy"></class>
+<!--            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.bgy.StoreDataConsistentcyBgy"></class>-->
             <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.testShop.StoreDataCenter"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.zdf.SurveillanceForZDF"></class>
+<!--            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.zdf.SurveillanceForZDF"></class>-->
             <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.ddc.StoreDataConsistentcyDdc"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.lnb.StoreDataForLNB"></class>
             <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.jkqs.StoreDataConsistentcyLz"></class>
             <!--            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.xtc.StoreDataForXtc"></class>-->
             <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.testShop.XundianAppData"></class>
             <!--            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.testShop.XundianCaseOnline"></class>-->
-            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.dzy.StoreDataForDzy"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.heyShop.StoreDataForHS"></class>
+<!--            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.dzy.StoreDataForDzy"></class>-->
+<!--            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.heyShop.StoreDataForHS"></class>-->
             <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.lxq.XundianAppDataOnline"></class>
             <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.lxq.XundianAppSystemOnline"></class>
             <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.lxq.XundianPCSystemOnline"></class>
