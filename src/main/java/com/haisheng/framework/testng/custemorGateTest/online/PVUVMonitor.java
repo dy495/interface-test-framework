@@ -47,7 +47,8 @@ public class PVUVMonitor {
     //18600514081 段
     //15724725274 蔡彪
     final String AT_USERS = "请 @18210113587 @15898182672 @18810332354 @18600514081 @15724725274 关注";
-    final String[] USER_LIST = {"18210113587", "15898182672", "18810332354", "18600514081", "15724725274"};
+    final String[] USER_LIST = {"18210113587", "15898182672", "18810332354", "18600514081"};
+    final String dingSmallStr = "\n###### ";
 
     String HOUR   = "all";
     boolean FAIL  = false;
@@ -172,9 +173,9 @@ public class PVUVMonitor {
     }
 
     /**
-     * 百果园
+     * 百果园，项目停止，监控取消
      * */
-    @Test(dataProvider = "baiguoyuan")
+//    @Test(dataProvider = "baiguoyuan")
     public void getHistoryDataBaiguoyuanOnline(String shopId) {
         //String shopId = "246";
         String appId  = "2cf019f4c443";
@@ -200,7 +201,7 @@ public class PVUVMonitor {
     }
 
     /**
-     * 德众赢、雷诺表、heyshop
+     * 德众赢、雷诺表、heyshop、电车、绫致
      * */
     @Test(dataProvider = "pocShop")
     public void getHistoryDataOnline(String appId, String shopId, String shopName) {
@@ -261,8 +262,32 @@ public class PVUVMonitor {
         return new String[][] {
 //                {"0ce5748b33a5", "18356", "七匹狼"},
 //                {"b6509d0ad3d8", "4614", "heyshop"},
-                {"d55c19a4937b", "18176", "雷诺表"},
-                {"60b00a8a9acb", "15694", "德众赢"}
+                {"d55c19a4937b", "18176", "雷诺表-广州领展广场店"},
+                {"d55c19a4937b", "25271", "雷诺表-福州金融街万达店"},
+                {"60b00a8a9acb", "15694", "德众赢"},
+                {"58e74ee6ca07", "28647", "绫致-北京花乡奥莱"},
+                {"58e74ee6ca07", "33965", "绫致-天津佛罗伦萨小镇"},
+                {"58e74ee6ca07", "33961", "绫致-上海百联奥特莱斯"},
+                {"58e74ee6ca07", "33963", "绫致-武汉首创奥特莱斯"},
+                {"58e74ee6ca07", "33959", "绫致-苏州时尚舞台奥特莱斯"},
+                {"911d09d725a2", "29921", "电车-成都大悦城"},
+                {"911d09d725a2", "29923", "电车-双目摄像头-吾悦新城"},
+                {"911d09d725a2", "29925", "电车-乐青特斯拉"},
+                {"911d09d725a2", "29927", "电车-深圳竹子林TC"},
+                {"911d09d725a2", "29929", "电车-双目摄像头-润材智能"},
+                {"911d09d725a2", "30036", "电车-弘阳广场TSL"},
+                {"911d09d725a2", "30038", "电车-义乌北苑TSL"},
+                {"911d09d725a2", "30734", "电车-海口TSL中心"},
+                {"911d09d725a2", "30742", "电车-滨江龙湖"},
+                {"911d09d725a2", "30744", "电车-金凤工业区"},
+                {"911d09d725a2", "30895", "电车-徐州鼓楼TSL"},
+                {"911d09d725a2", "32081", "电车-武汉东西湖TSL"},
+                {"911d09d725a2", "32083", "电车-上海松江科创云廊"},
+                {"911d09d725a2", "32085", "电车-宝安会展中心"},
+                {"911d09d725a2", "33456", "电车-杭州富阳万达"},
+                {"911d09d725a2", "33458", "电车-顺德TSL中心"},
+                {"911d09d725a2", "33516", "电车-成都犀浦服务中心"},
+                {"911d09d725a2", "34769", "电车-上海南桥百联"}
         };
     }
 
@@ -439,8 +464,8 @@ public class PVUVMonitor {
             //数据库中无数据，则初始化历史数据
             history = new OnlinePvuvCheck();
         }
-        String dingMsg = checkDiff(com, hour, "uv_enter", current.getUvEnter(), history.getUvEnter(), diffData.uvEnterDiff);
-        dingMsg += checkDiff(com, hour, "pv_enter", current.getPvEnter(), history.getPvEnter(), diffData.pvEnterDiff);
+        String dingMsg = checkDiff(com, hour, "pv_enter", current.getPvEnter(), history.getPvEnter(), diffData.pvEnterDiff);
+        //dingMsg += checkDiff(com, hour, "uv_enter", current.getUvEnter(), history.getUvEnter(), diffData.uvEnterDiff);
 
         //checkDiff(com, hour, "uv_leave", current.getPvEnter(), history.getPvEnter(), diffData.uvLeaveDiff);
         //checkDiff(com, hour, "pv_leave", current.getPvEnter(), history.getPvEnter(), diffData.pvLeaveDiff);
@@ -485,9 +510,8 @@ public class PVUVMonitor {
 
         if (0 == current) {
             //数据为0，直接报警
-            dingMsg = com + "-数据异常: " + type + "过去【" + hourRange + "】数据量为 0, "
-                    + RISK_MAX
-                    + ", " + AT_USERS;
+            dingMsg = "\n" + com + "-数据异常: " + type + "过去【" + hourRange + "】数据量为 0, "
+                    + RISK_MAX;
             //数据缩水100%
             diffDataUnit.diffRange = -1;
         } else {
@@ -514,18 +538,18 @@ public class PVUVMonitor {
             String percent = df.format(diffRate*100) + "%";
             if (diff > 0) {
                 if (hour.equals("all")) {
-                    dingMsg = com + "-数据异常: " + type + "昨日较上周同日【全天数据量】扩大 " + percent;
+                    dingMsg = "\n" + com + "-数据异常" + dingSmallStr + type + "昨日较上周同日【全天数据量】扩大 " + percent;
                 } else {
                     if (diffRate > HOUR_DIFF_RANGE_MAX) {
-                        dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】【" + hourRange + "】数据量扩大 " + percent;
+                        dingMsg = "\n" + com + "-数据异常" + dingSmallStr + type + "较【上周今日同时段】【" + hourRange + "】数据量扩大 " + percent;
                     }
                 }
             } else if (diff < 0) {
                 if (hour.equals("all")) {
-                    dingMsg = com + "-数据异常: " + type + "昨日较上周同日【全天数据量】缩小 " + percent;
+                    dingMsg = "\n" + com + "-数据异常" + dingSmallStr + type + "昨日较上周同日【全天数据量】缩小 " + percent;
                 } else {
                     if (diffRate > HOUR_DIFF_RANGE_MAX) {
-                        dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】【" + hourRange + "】数据量缩小 " + percent;
+                        dingMsg = "\n" + com + "-数据异常" + dingSmallStr + type + "较【上周今日同时段】【" + hourRange + "】数据量缩小 " + percent;
                     }
                 }
             }
@@ -549,10 +573,10 @@ public class PVUVMonitor {
         }
 
         if (! StringUtils.isEmpty(dingMsg)) {
-            dingMsg += "\n\n"
-                    + "current: " + current + "\n"
-                    + "history: " + history + "\n"
-                    + "diff: " + diff + "\n\n\n\n";
+            dingMsg += dingSmallStr
+                    + "current: " + current + ", "
+                    + "history: " + history + ", "
+                    + "diff: " + diff;
             diffDataUnit.alarm = 1;
         }
         return dingMsg;
@@ -625,11 +649,7 @@ public class PVUVMonitor {
             alarmPush.setDingWebhook(DingWebhook.PV_UV_ACCURACY_GRP);
         }
 
-        if (msg.contains(RISK_MAX) && !DEBUG) {
-            alarmPush.onlineMonitorPvuvAlarm(msg, USER_LIST);
-        } else {
-            alarmPush.onlineMonitorPvuvAlarm(msg);
-        }
+        alarmPush.onlineMonitorPvuvAlarm(msg);
         this.FAIL = true;
         Assert.assertTrue(false);
 
@@ -637,7 +657,9 @@ public class PVUVMonitor {
 
     private void multipleShopAlarm(AlarmPush alarmPush, String key) {
         ArrayList<String> recordList = ALARM_STACK.get(key);
-        String summary = key + "有" + recordList.size() + "个店铺报警";
+//        店铺总数与下面店铺数据重复，取消
+//        String summary = key + "有" + recordList.size() + "个店铺报警";
+        String summary = "";
         int zeroSize = 0;
         String zeroComDetail = "";
         int diffSize = 0;
@@ -649,15 +671,15 @@ public class PVUVMonitor {
             String record = recordList.get(i);
             if (record.contains("数据量为 0")) {
                 zeroSize++;
-                zeroComDetail += record.substring(record.indexOf(key+"-")+indexBegin, record.indexOf("-数据异常")) + "  ";
+                zeroComDetail += dingSmallStr + record.substring(record.indexOf(key+"-")+indexBegin, record.indexOf("-数据异常")) ;
             } else {
                 diffSize++;
-                diffComDetail += record.substring(record.indexOf(key+"-")+indexBegin, record.indexOf("-数据异常")) + "  ";
+                diffComDetail += dingSmallStr + record.substring(record.indexOf(key+"-")+indexBegin, record.indexOf("-数据异常")) ;
             }
         }
 
         if (zeroSize > 0) {
-            summary += "\n以下" + zeroSize + "个店铺【" + hourRange + "】时段数据量为0\n\n" + zeroComDetail;
+            summary += "\n#### " + key + " 以下" + zeroSize + "个店铺【" + hourRange + "】时段数据量为0\n\n" + zeroComDetail;
 
             if (key.contains("百果园")) {
                 //百果园数据为0且只在10点时段，单独发到【百果园盒子准备】群
@@ -674,7 +696,7 @@ public class PVUVMonitor {
             }
         }
         if (diffSize > 0) {
-            summary += "\n以下" + diffSize + "个店铺【" + hourRange + "】时段数据量波动过大\n\n" + diffComDetail;
+            summary += "\n#### " + key + " 以下"  + diffSize + "个店铺【" + hourRange + "】时段数据量波动过大\n\n" + diffComDetail;
         }
 
         alarmPush.onlineMonitorPvuvAlarm(summary);
@@ -698,7 +720,7 @@ public class PVUVMonitor {
             if (ALARM_STACK.size() > 0) {
                 for(String key : ALARM_STACK.keySet()) {
 
-                    if (key.contains("百果园") || key.contains("小天才") || key.contains("雷诺表")) {
+                    if (key.contains("百果园") || key.contains("小天才") || key.contains("雷诺表") || key.contains("电车") || key.contains("绫致")) {
                         multipleShopAlarm(alarmPush, key);
                     } else {
                         oneShopAlarm(alarmPush, key);
@@ -719,8 +741,8 @@ public class PVUVMonitor {
             //18611684769 杨立新
             //15037286013 夏明凤
             //15724725274 蔡彪
-            String[] rd = {"13436941018", "15084928847", "13581630214", "15898182672", "18513118484", "17319042091", "18611684769", "15037286013", "15724725274"};
-            alarmPush.alarmToRd(rd);
+//            String[] rd = {"13436941018", "15084928847", "13581630214", "15898182672", "18513118484", "17319042091", "18611684769", "15037286013", "15724725274"};
+//            alarmPush.alarmToRd(rd);
         }
     }
 
@@ -735,11 +757,12 @@ public class PVUVMonitor {
         qaDbUtil.closeConnection();
 
         if (this.FAIL) {
-            logger.info("trigger device request monitor");
-            OnlineRequestMonitor onlineRequestMonitor = new OnlineRequestMonitor();
-            onlineRequestMonitor.initial();
-            onlineRequestMonitor.requestNumberMonitor();
-            onlineRequestMonitor.clean();
+            logger.info("trigger dingding monitor");
+//            不再调用设备报警，成裕已经做了设备报警
+//            OnlineRequestMonitor onlineRequestMonitor = new OnlineRequestMonitor();
+//            onlineRequestMonitor.initial();
+//            onlineRequestMonitor.requestNumberMonitor();
+//            onlineRequestMonitor.clean();
             dingPushFinal();
         } else {
             logger.info("do NOT trigger device request monitor");
