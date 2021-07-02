@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import java.rmi.ServerError;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -43,20 +44,20 @@ public class MallEveryHourDataStore {
         });
     }
 
-    public String getNowStamp() {
+    private String getNowStamp() {
         String format = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd H") + ":00:00";
         return DateTimeUtil.dateToStamp(format);
     }
 
-    public boolean compareTime(OTSRowData otsRowData) {
+    private boolean compareTime(OTSRowData otsRowData) {
         return otsRowData.getStartTime().compareTo(getNowStamp()) < 0 && otsRowData.getStartTime().compareTo(String.valueOf(Long.parseLong(getNowStamp()) - 1000 * 60 * 60)) > 0;
     }
 
     public DetailMessage getDetailMessage(String name, String regionId) {
         List<OTSRowData> otsRowDataList = new LinkedList<>();
         otsTableDataList.stream().filter(e -> e.getSourceName().contains(name)).map(OTSTableData::initOTSRowData)
-                .forEach(e -> otsRowDataList.addAll(e.getRowDataList().stream().filter(this::compareTime)
-                        .collect(Collectors.toCollection(LinkedList::new))));
+                .map(OTSTableData::getRowDataList).forEach(otsRowData -> otsRowData.stream().filter(this::compareTime)
+                .forEach(otsRowDataList::add));
         Map<String, OTSRowData> map = new LinkedHashMap<>();
         List<OTSRowData> list = otsRowDataList.stream().filter(e -> e.getStatus().equals("ENTER"))
                 .filter(e -> e.getRegionId().equals(regionId)).filter(e -> !e.getUserId().equals("N"))

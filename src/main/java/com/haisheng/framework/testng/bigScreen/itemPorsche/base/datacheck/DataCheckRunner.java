@@ -49,7 +49,7 @@ public class DataCheckRunner {
         dataContainerTable.load();
         Arrays.stream(dataContainerTable.getRows()).forEach(sheetOne -> {
             AliyunConfig config = new AliyunConfig();
-            config.getConfig(sheetOne.getField(Constants.CONTAINER_COLUMN_PATH).getValue());
+            config.initConfig(sheetOne.getField(Constants.CONTAINER_COLUMN_PATH).getValue());
             ITable dataSourceTable = ruleContainer.getTable(Constants.SHEET_TITLE_DATA_SOURCE);
             dataSourceTable.load();
             List<OTSTableData> list = new ArrayList<>();
@@ -73,7 +73,7 @@ public class DataCheckRunner {
                     otsTableData.setSourceName(ruleDataSource.getSourceName());
                     otsTableData.setRows(otsRows);
                 });
-                //每张数据源表等于一个tableStoreData:包含实例名、表名、所有行数据
+                //每张数据源表等于一个otsTableData:包含实例名、表名、所有行数据
                 list.add(otsTableData);
             });
             otsTableDataList = list;

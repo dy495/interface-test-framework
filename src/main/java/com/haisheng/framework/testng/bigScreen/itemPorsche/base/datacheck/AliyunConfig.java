@@ -28,7 +28,7 @@ public class AliyunConfig implements Serializable {
     private String endPoint;
 
 
-    public AliyunConfig getConfig(String path) {
+    public AliyunConfig initConfig(String path) {
         JSONObject jsonObject = JSONObject.parseObject(path);
         this.accessKeyId = jsonObject.getString("accessKeyId");
         this.accessKeySecret = jsonObject.getString("accessKeySecret");

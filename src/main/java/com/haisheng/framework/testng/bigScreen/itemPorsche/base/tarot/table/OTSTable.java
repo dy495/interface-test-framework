@@ -65,13 +65,13 @@ public class OTSTable extends BaseTable {
         OTSPrimaryKey inclusiveStartPrimaryKey = otsPrimaryKeyBuilder.getInclusiveStartPrimaryKey();
         inclusiveStartPrimaryKey.getOtsPrimaryKey().forEach(builder::addPrimaryKeyColumn);
         rangeIteratorParameter.setInclusiveStartPrimaryKey(builder.build());
-        logger.info(rangeIteratorParameter.getInclusiveStartPrimaryKey().toString());
+        logger.info("StartPrimaryKey:{}", rangeIteratorParameter.getInclusiveStartPrimaryKey().toString());
 
         builder = PrimaryKeyBuilder.createPrimaryKeyBuilder();
         OTSPrimaryKey otsPrimaryKey = otsPrimaryKeyBuilder.getExclusiveEndPrimaryKey();
         otsPrimaryKey.getOtsPrimaryKey().forEach(builder::addPrimaryKeyColumn);
         rangeIteratorParameter.setExclusiveEndPrimaryKey(builder.build());
-        logger.info(rangeIteratorParameter.getExclusiveEndPrimaryKey().toString());
+        logger.info("EndPrimaryKey:{}", rangeIteratorParameter.getExclusiveEndPrimaryKey().toString());
 
         rangeIteratorParameter.setMaxVersions(1);
     }
