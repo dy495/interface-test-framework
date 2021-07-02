@@ -693,6 +693,12 @@ public class PVUVMonitor {
                 if (dt.getCurrentHour().contains("10")) {
                     alarmPush.pocZeroAlarm(summary);
                 }
+            } else if (key.contains("电车")) {
+                String token = "https://oapi.dingtalk.com/robot/send?access_token=b7ed25558bd7986ec1521a621f31fe3f933a3a8a09a9f47b3f25e97fa83d1472";
+                alarmPush.pmZeroAlarm(token, summary);
+            } else if (key.contains("绫致")) {
+                String token = "https://oapi.dingtalk.com/robot/send?access_token=0c44527bb52cb49beb1a8a95d572f07817136d43210ed9bb9a81c4e47bb9f4ce";
+                alarmPush.pmZeroAlarm(token, summary);
             }
         }
         if (diffSize > 0) {

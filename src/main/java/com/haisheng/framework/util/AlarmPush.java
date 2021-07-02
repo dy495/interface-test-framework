@@ -322,6 +322,17 @@ public class AlarmPush {
         DingChatbot.sendMarkdown(msg);
     }
 
+    public void pmZeroAlarm(String token, String content) {
+        DingChatbot.WEBHOOK_TOKEN = token;
+        DateTimeUtil dt = new DateTimeUtil();
+
+        String msg = "### " + "线上巡检发现异常，请及时查看" + "\n";
+        msg += "\n\n#### " + dt.getHistoryDate(0) + " " + dt.getCurrentHourMinutesSec() +"\n";
+        msg += "\n\n#### " + content + "\n";
+
+        DingChatbot.sendMarkdown(msg);
+    }
+
     public void onlineMonitorPvuvAlarm(String content) {
         DingChatbot.WEBHOOK_TOKEN = this.dingWebhook;
         DateTimeUtil dt = new DateTimeUtil();
