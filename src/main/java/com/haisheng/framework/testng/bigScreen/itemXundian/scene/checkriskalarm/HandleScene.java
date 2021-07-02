@@ -32,7 +32,7 @@ public class HandleScene extends BaseScene {
      * 版本 -
      */
     private final Long eventId;
-
+    private final String eventStatus;
 
     @Override
     protected JSONObject getRequestBody() {
@@ -40,6 +40,7 @@ public class HandleScene extends BaseScene {
         object.put("referer", referer);
         object.put("appId", appId);
         object.put("event_id", eventId);
+        object.put("event_status", eventStatus);
         return object;
     }
 

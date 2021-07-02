@@ -1,8 +1,5 @@
 package com.haisheng.framework.testng.bigScreen.itemXundian.enumerator;
 
-
-import lombok.Getter;
-
 public enum EventStateEnum {
     WAITING_ALARM_CONFIRM("WAITING_ALARM_CONFIRM","待告警处理"),
     ALARM_CONFIRMED("ALARM_CONFIRMED","告警已处理"),
