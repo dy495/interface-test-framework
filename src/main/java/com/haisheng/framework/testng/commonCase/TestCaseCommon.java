@@ -337,42 +337,40 @@ public class TestCaseCommon {
 
     public String httpGet(String port, String path, Map<String, Object> paramMap) throws HttpProcessException {
         StringBuilder sb = new StringBuilder();
-        String queryUrl = port + path + "?";
         paramMap.forEach((key, value) -> sb.append("&").append(key).append("=").append(value));
         String param = sb.toString().replaceFirst("&", "");
-        String url = queryUrl + param;
-        return httpGet(url);
+        path = path + "?" + param;
+        return httpGet(port, path);
     }
 
-    public String httpGet(String url) throws HttpProcessException {
-        Api api = new Api.Builder().method("GET").url(url).build();
-        long start = System.currentTimeMillis();
-        initResponse(api);
-        logger.info("{} time used {} ms", url, System.currentTimeMillis() - start);
-        caseResult.setResponse(response);
-        return response;
+    public String httpGet(String ipPort, String path) throws HttpProcessException {
+        Api api = new Api.Builder().method("GET").ipPort(ipPort).path(path).build();
+        return execute(api, false, false);
     }
 
     public String httpPostWithCheckCode(String path, String json, String IpPort) {
-        return httpRequest(IpPort, path, json, true, false);
+        return httpPost(IpPort, path, json, true, false);
     }
 
     public void httpPost(String path, JSONObject object, String IpPort) {
-        httpRequest(IpPort, path, JSONObject.toJSONString(object), true, true);
+        httpPost(IpPort, path, JSONObject.toJSONString(object), true, true);
     }
 
     public String httpPost(String path, String json, String IpPort) throws Exception {
-        return httpRequest(IpPort, path, json, false, false);
+        return httpPost(IpPort, path, json, false, false);
     }
 
-    private String httpRequest(String port, String path, String requestBody, boolean checkCode, boolean hasToken) {
-        String url = port + path;
-        Api api = new Api.Builder().method("POST").url(url).requestBody(requestBody).build();
+    public String httpPost(String port, String path, String requestBody, boolean checkCode, boolean hasToken) {
+        Api api = new Api.Builder().method("POST").ipPort(port).path(path).requestBody(requestBody).build();
+        return execute(api, checkCode, hasToken);
+    }
+
+    public String execute(Api api, boolean checkCode, boolean hasToken) {
         long start = System.currentTimeMillis();
         try {
-            initResponse(api);
+            getResponse(api);
             if (checkCode) {
-                checkCode(response, StatusCode.SUCCESS, path);
+                checkCode(response, StatusCode.SUCCESS, api.getPath());
             }
             if (hasToken) {
                 authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
@@ -381,12 +379,12 @@ public class TestCaseCommon {
         } catch (Exception e) {
             collectMessage(e);
         }
-        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
+        logger.info("{} time used {} ms", api.getPath(), System.currentTimeMillis() - start);
         caseResult.setResponse(response);
         return response;
     }
 
-    private void initResponse(@NotNull Api api) throws HttpProcessException {
+    public void getResponse(@NotNull Api api) throws HttpProcessException {
         initHttpConfig();
         logger.info("url: {}", api.getUrl());
         logger.info("body: {}", api.getRequestBody());

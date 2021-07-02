@@ -9,27 +9,23 @@ import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.Enu
 import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.departmentdata.AppCapabilityModelBean;
-import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.departmentdata.AppLinkDataCarouselBean;
-import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.departmentdata.AppOverviewBean;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.departmentdata.*;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.departmentdata.AppReceptionAverageScoreTrendBean;
-import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.personaldata.AppPersonalCapabilityModelBean;
-import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.personaldata.AppPersonalOverviewBean;
-import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.personaldata.AppReceptionLinkScoreBean;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.personaldata.*;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.personaldata.AppReceptionScoreTrendBean;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.voicerecord.AppDepartmentPageBean;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.voicerecord.AppDetailBean;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.voicerecord.AppPersonalPageBean;
-import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.pc.manage.VoiceDetailBean;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.pc.manage.VoiceEvaluationPageBean;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.enumerate.EnumDataCycleType;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.departmentdata.*;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.personaldata.AppPersonalCapabilityModelScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.personaldata.AppReceptionLinkScoreScene;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.speechtechnique.AppStandardListScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.voicerecord.AppDetailScene;
-import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.voicerecord.AppPersonalPageScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.manage.VoiceDetailScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.manage.VoiceEvaluationPageScene;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.speechtechnique.SpeechPageScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.util.BusinessUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -697,7 +693,6 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-
     //ok
     @Test()
     public void personal_data_2() {
@@ -798,6 +793,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    //ok
     @Test
     public void personal_data_8() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -852,8 +848,8 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
                         .forEach(scores -> scores.stream().map(object -> (JSONObject) object).filter(object -> object.getInteger("type").equals(type))
                                 .map(object -> object.getInteger("score")).forEach(pcScoreList::add));
                 CommonUtil.valueView(e.getName(), appScoreList, pcScoreList);
-                Preconditions.checkArgument(appScoreList.size() == pcScoreList.size(), e.getName() + "APP【接待详情】中平均分不为0的次数：" + appScoreList.size() + "PC【语音接待评鉴详情】中各平均分分不为0的次数：" + pcScoreList.size());
-                Preconditions.checkArgument(appScoreList.equals(pcScoreList), e.getName() + "APP【接待详情】中" + type + "得分：" + appScoreList + "PC【语音接待评鉴详情】中各环节得分：" + pcScoreList);
+                Preconditions.checkArgument(appScoreList.size() == pcScoreList.size(), e.getName() + "APP【接待详情】中平均分不为0的次数：" + appScoreList.size() + " PC【语音接待评鉴详情】中各平均分分不为0的次数：" + pcScoreList.size());
+                Preconditions.checkArgument(appScoreList.equals(pcScoreList), e.getName() + "APP【接待详情】中" + type + "得分：" + appScoreList + " PC【语音接待评鉴详情】中各环节得分：" + pcScoreList);
 
             });
         } catch (Exception | AssertionError e) {
@@ -863,6 +859,80 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    //ok
+    @Test()
+    public void personal_data_10() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            List<AppDepartmentPageBean> departmentPageList = util.getAppDepartmentPageList(dataCycleType, startDate, endDate);
+            departmentPageList.forEach(e -> {
+                Map<Long, Integer> map = new HashMap<>();
+                List<AppPersonalPageBean> personalPageList = util.getAppPersonalPageList(dataCycleType, e.getSaleId(), startDate, endDate);
+                personalPageList.stream().filter(Objects::nonNull).forEach(personalPage -> {
+                    JSONObject response = AppDetailScene.builder().id(personalPage.getId()).build().invoke(visitor);
+                    if (!response.getString("enter_status_name").equals("再次进店") && response.getInteger("average_score") != null) {
+                        map.put(personalPage.getId(), response.getInteger("average_score"));
+                    }
+                });
+                IScene evaluationPageScene = VoiceEvaluationPageScene.builder().receptorName(e.getName()).receptionStart(startDate).receptionEnd(endDate).enterStatus(1).build();
+                List<VoiceEvaluationPageBean> voiceEvaluationPageList = util.toJavaObjectList(evaluationPageScene, VoiceEvaluationPageBean.class);
+                voiceEvaluationPageList.stream().filter(Objects::nonNull).forEach(voiceRecord -> {
+                    for (Map.Entry<Long, Integer> entry : map.entrySet()) {
+                        if (entry.getKey().equals(voiceRecord.getId())) {
+                            JSONObject response = VoiceDetailScene.builder().id(voiceRecord.getId()).build().invoke(visitor);
+                            if (response.getInteger("average_score") != null) {
+                                int pcAverageScore = response.getInteger("average_score");
+                                int appAverageScore = entry.getValue();
+                                CommonUtil.valueView(e.getName(), appAverageScore, pcAverageScore);
+                                Preconditions.checkArgument(appAverageScore <= pcAverageScore + 1 || appAverageScore >= pcAverageScore - 1, e.getName() + "APP【接待详情】中的接待得分：" + appAverageScore + " PC中【语音接待评鉴】详情中的接待得分：" + pcAverageScore);
+                            }
+                        }
+                    }
+                });
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("首次到店的客户A的【接待详情】中的接待的得分中的本次接待得分=PC中【语音接待评鉴】客户A的详情中的接待得分");
+        }
+    }
+
+    //ok
+    @Test()
+    public void personal_data_11() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            Map<String, AppSpeechTechniqueAdviceBean> map = new HashMap<>();
+            IScene scene = AppStandardListScene.builder().build();
+            JSONArray list = scene.invoke(visitor).getJSONArray("list");
+            list.stream().map(object -> (JSONObject) object).forEach(object -> {
+                String type = object.getString("type");
+                JSONArray array = object.getJSONArray("techniques");
+                array.stream().map(e -> (JSONObject) e).forEach(e -> {
+                    AppSpeechTechniqueAdviceBean speechTechniqueAdvice = new AppSpeechTechniqueAdviceBean();
+                    speechTechniqueAdvice.setTerms(e.getString("terms"));
+                    speechTechniqueAdvice.setTitle(e.getString("title"));
+                    map.put(type, speechTechniqueAdvice);
+                });
+            });
+            IScene speechPageScene = SpeechPageScene.builder().build();
+            JSONArray array = speechPageScene.invoke(visitor).getJSONArray("list");
+            array.stream().map(e -> (JSONObject) e).forEach(e -> {
+                for (Map.Entry<String, AppSpeechTechniqueAdviceBean> entry : map.entrySet()) {
+                    if (e.getString("link_name").equals(entry.getKey()) && e.getString("label").equals(entry.getValue().getTitle())) {
+                        String terms = entry.getValue().getTerms();
+                        String advice = e.getString("advice");
+                        CommonUtil.valueView(e.getString("link_name") + e.getString("label"), terms, advice);
+                        Preconditions.checkArgument(terms.equals(advice), e.getString("link_name") + e.getString("label") + "APP【接待详情】中的话术提高项：" + terms + " PC【语音接待评鉴】中给您一些小建议：" + advice);
+                    }
+                }
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("首次到店的客户A的【接待详情】中的接待的得分中的本次接待得分=PC中【语音接待评鉴】客户A的详情中的接待得分");
+        }
+    }
 
     @Test
     public void personal_data_25() {

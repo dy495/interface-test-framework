@@ -3944,8 +3944,8 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     public String outportC() throws Exception {
-        String url = IpPort + "/porsche/administration/reception/export?sale_type=PRE_SALES&name=&phone=";
-        return httpGet(url);
+        String url = "/porsche/administration/reception/export?sale_type=PRE_SALES&name=&phone=";
+        return httpGet(IpPort, url);
     }
 
     /**
@@ -4840,8 +4840,8 @@ public class CrmScenarioUtil extends TestCaseCommon {
     //接待列表导出
 
     public String receptionExport() throws Exception {
-        String url = IpPort + "/porsche/administration/reception/export?sale_type=PRE_SALES&name=&phone=";
-        return httpGet(url);
+        String url = "/porsche/administration/reception/export?sale_type=PRE_SALES&name=&phone=";
+        return httpGet(IpPort, url);
     }
 
     /**

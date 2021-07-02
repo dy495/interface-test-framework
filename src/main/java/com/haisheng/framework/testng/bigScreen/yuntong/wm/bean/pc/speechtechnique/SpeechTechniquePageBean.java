@@ -14,48 +14,7 @@ import java.io.Serializable;
  * @date 2021-06-02 17:56:15
  */
 @Data
-public class PageBean implements Serializable {
-    /**
-     * 描述 当前页
-     * 版本 v1.0
-     */
-    @JSONField(name = "page")
-    private Integer page;
-
-    /**
-     * 描述 当前页的数量
-     * 版本 v1.0
-     */
-    @JSONField(name = "size")
-    private Integer size;
-
-    /**
-     * 描述 每页的数量
-     * 版本 v1.0
-     */
-    @JSONField(name = " page_size")
-    private Integer  pageSize;
-
-    /**
-     * 描述 总数
-     * 版本 v1.0
-     */
-    @JSONField(name = "total")
-    private Long total;
-
-    /**
-     * 描述 总页数
-     * 版本 v1.0
-     */
-    @JSONField(name = "pages")
-    private Integer pages;
-
-    /**
-     * 描述 详细数据列表
-     * 版本 v1.0
-     */
-    @JSONField(name = "list")
-    private JSONArray list;
+public class SpeechTechniquePageBean implements Serializable {
 
     /**
      * 描述 记录id
