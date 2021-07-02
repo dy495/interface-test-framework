@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.yuntong.lxq;
+package com.haisheng.framework.testng.bigScreen.yuntongOnline.lxq;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -9,6 +9,7 @@ import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.Enu
 import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.yuntong.lxq.YunTongInfo;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.general.EnumValueListScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.manage.VoiceEvaluationPageScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.sensitivewords.AppSensitiveBehaviorApprovalScene;
@@ -34,12 +35,12 @@ import java.lang.reflect.Method;
  * @date 2021/1/29 11:17
  */
 public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
-    EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_ZH;
-    EnumAccount ALL_AUTHORITY = EnumAccount.ALL_YT_DAILY;
+    EnumTestProduce PRODUCE = EnumTestProduce.YT_ONLINE_ZH;
+    EnumAccount ALL_AUTHORITY = EnumAccount.ALL_YT_ONLINE;
     VisitorProxy visitor = new VisitorProxy(PRODUCE);
     BusinessUtil businessUtil = new BusinessUtil(visitor);
 
-    YunTongInfo info = new YunTongInfo();
+    YunTongInfoOnline info = new YunTongInfoOnline();
 
     CommonConfig commonConfig = new CommonConfig();
 
@@ -51,13 +52,13 @@ public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
 
         //替换checklist的相关信息
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
-        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_DAILY_SERVICE.getId();
+        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
         commonConfig.checklistQaOwner = "吕雪晴";
         //替换jenkins-job的相关信息
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.YUNTONG_DAILY_TEST.getJobName());
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.YUNTONG_ONLINE_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
         //替换钉钉推送
-        commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
+        commonConfig.dingHook = DingWebhook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //放入shopId
         commonConfig.product = PRODUCE.getAbbreviation();
         commonConfig.referer = PRODUCE.getReferer();
@@ -66,7 +67,7 @@ public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
         beforeClassInit(commonConfig);
         businessUtil.loginPc(ALL_AUTHORITY);
 
-        visitor.setProduct(EnumTestProduce.YT_DAILY_HT);  //会听模块
+        visitor.setProduct(EnumTestProduce.YT_ONLINE_HT);  //会听模块
     }
 
     @AfterClass
@@ -95,7 +96,7 @@ public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            JSONArray arr = VoiceEvaluationPageScene.builder().page(1).size(50).build().invoke(visitor).getJSONArray("list");
+            JSONArray arr = VoiceEvaluationPageScene.builder().page(1).size(30).build().invoke(visitor).getJSONArray("list");
             for (int i = 0; i < arr.size(); i++) {
                 JSONObject obj = arr.getJSONObject(i);
                 Preconditions.checkArgument(obj.containsKey("id"), "没有");

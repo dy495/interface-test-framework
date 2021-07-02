@@ -21,6 +21,8 @@ public enum EnumAccount {
 
     ALL_YT_DAILY_ONE("18989494435", "000000", "全部角色", true, "江远", "7881", "-1"),
 
+    ALL_YT_ONLINE("13700000002", "000000", "超级管理员", true, "运通（赢识测试）", "5505", "-1"),
+
     ;
 
     EnumAccount(String phone, String password, String role, boolean isDaily, String name, String roleId, String receptionShopId) {
