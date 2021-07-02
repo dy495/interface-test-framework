@@ -32,7 +32,7 @@ public class OTSTableData implements Serializable {
     String tableName;
 
     /**
-     * 表中行数据
+     * 表中所有行
      */
     IRow[] rows;
 
@@ -42,7 +42,7 @@ public class OTSTableData implements Serializable {
     String sourceName;
 
     /**
-     * 行数据
+     * 行数数转为数据对象
      */
     List<OTSRowData> rowDataList;
 
@@ -54,8 +54,10 @@ public class OTSTableData implements Serializable {
         List<OTSRowData> list = new LinkedList<>();
         Arrays.stream(rows).forEach(iRow -> {
             Preconditions.checkArgument(iRow != null, "行数据为空");
+            //关键字不可为空
             IField regionField = iRow.getField("region");
             Preconditions.checkArgument(regionField != null, "字段region为空");
+            //关键字不可为空
             IField startTimeField = iRow.getField("start_time");
             Preconditions.checkArgument(startTimeField != null, "字段start_time为空");
             String region = regionField.getValue();

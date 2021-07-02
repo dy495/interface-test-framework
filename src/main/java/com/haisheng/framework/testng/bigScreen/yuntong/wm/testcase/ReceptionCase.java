@@ -859,7 +859,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("本次接待得分=各环节的接待得分之和/5");
+            saveData("同一客户的语音接待记录在APP【接待详情】中和PC【语音接待评鉴详情】中各环节得分一致");
         }
     }
 

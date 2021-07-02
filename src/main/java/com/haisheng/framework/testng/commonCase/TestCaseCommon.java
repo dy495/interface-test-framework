@@ -463,7 +463,7 @@ public class TestCaseCommon {
             alarmPush.alarmToRd(commonConfig.pushQa);
         }
         this.FAIL = true;
-        System.out.println(caseResult.getFailReason());
+        logger.info("failReason:{}", caseResult.getFailReason());
         Assert.assertNull(caseResult.getFailReason());
     }
 

@@ -3,11 +3,11 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.xmf.pc;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.util.commonDs.JsonPathUtil;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.util.commonDs.JsonPathUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Constant;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.manage.AppointmentMaintainConfigDetailBean;
@@ -26,7 +26,6 @@ import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.DateTimeUtil;
-import org.jooq.tools.StringUtils;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
@@ -1156,7 +1155,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             pcLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
-            System.out.println(type1 + ":" + messageName);
+//            System.out.println(type1 + ":" + messageName);
             Integer type = Integer.parseInt(type1);
 
             Calendar calendar = Calendar.getInstance();
@@ -1167,6 +1166,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             } else {
                 points = 2;
             }
+
             //修改配置，评价，积分数，卡券数
             IScene evaluateConfig = EvaluateConfigSubmitScene.builder().evaluateReward(true)
                     .defaultFavourableCycle(3)
@@ -1174,16 +1174,16 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
                     .type(type).vouchersId(pp.voucherIdevluate).build();
             jc.invokeApi(evaluateConfig);
 
+            int voucherTotal = pf.getVoucherTotal("13436941018");
             jc.appletLoginToken(pp.appletTocken);
-            String id[] = pf.getMessageId(messageName);
-            if (StringUtils.isEmpty(id[0])) {
-                throw new Exception("没有待评价的消息，检查接待case 是否失败");
-            }
-            System.out.println("messageId" + id[0]);
+////            String id[] = pf.getMessageId(messageName);
+//            if (StringUtils.isEmpty(id[0])) {
+//                throw new Exception("没有待评价的消息，检查接待case 是否失败");
+//            }
+//            System.out.println("messageId" + id[0]);
             //评价前的积分和卡券数
-            Integer voucherTotal = pf.getVoucherTotal();
-            Integer appletScore = jc.appletUserInfoDetail().getInteger("score");
 
+            Integer appletScore = jc.appletUserInfoDetail().getInteger("score");
 
             JSONObject evaluateConfigDescribe = jc.AppletEvaluateConfigScene(type, Long.parseLong(pp.shopIdZ));
             String describe = evaluateConfigDescribe.getJSONArray("list").getJSONObject(2).getString("describe");
@@ -1191,16 +1191,18 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
 
             //评价
             IScene evaluatesubmit = AppletEvaluateSubmitScene.builder()
-                    .describe(describe).labels(label).id(Long.valueOf(id[1]))
+                    .describe(describe).labels(label).id(pf.getMessDetailId())
                     .isAnonymous(true)
                     .score(2)
                     .shopId(Long.parseLong(pp.shopIdZ)).suggestion("自动评价").type(type)
                     .build();
             jc.invokeApi(evaluatesubmit);
 
-            //评价前的积分和卡券数
-            Integer voucherTotalAfter = pf.getVoucherTotal();
+            //评价后的积分和卡券数
             Integer appletScoreAfter = jc.appletUserInfoDetail().getInteger("score");
+            pcLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
+            int voucherTotalAfter = pf.getVoucherTotal("13436941018");
+
 
             Preconditions.checkArgument(voucherTotalAfter - voucherTotal == 1, "评价完成后，卡券没+1");
             Preconditions.checkArgument(appletScoreAfter - appletScore == points, "评价完成后，积分奖励没发");

@@ -25,6 +25,8 @@
             <class name="com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.zt.XundianPcCase"></class>
             <class name="com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.zt.InsPcCase"></class>
             <class name="com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.zt.InsPcData"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.zt.ShopMallHistorySql"/>
+
 
             <class name="com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.wm.GoodsMarkingCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.wm.IntegralCenterCase"/>
