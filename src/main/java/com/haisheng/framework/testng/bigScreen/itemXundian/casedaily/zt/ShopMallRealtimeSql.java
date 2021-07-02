@@ -314,14 +314,14 @@ public class ShopMallRealtimeSql extends TestCaseCommon implements TestCaseStd {
                     "\t) tAll ON tBase.title = tAll.title";
             IEntity<?, ?>[] entities = new Factory.Builder().container(EnumContainer.MALL_ONLINE.getContainer()).build().create(sql);
             double uvListValue = entities[0].getDoubleField("numValue");
-            System.err.println("数据sql的pv值" + uvListValue);
+            System.err.println("数据sql的uv值" + uvListValue);
 
             Sql sql0 = Sql.instance().select("map_value", "list_value")
                     .from("t_mall_realtime_data").where("data", "like", DateTimeUtil.getFormat(new Date(),"yyyy-MM-dd HH") + "%")
                     .and("environment", "=", "online").and("source", "=", "UV实时数据").end();
             IEntity<?, ?>[] entities0 = new Factory.Builder().container(EnumContainer.DB_ONE_PIECE.getContainer()).build().create(sql0);
             int uvListValue0 = entities0[0].getIntField("map_value");
-            System.err.println("数据sql的pv值" + uvListValue0 );
+            System.err.println("数据sql的uv值" + uvListValue0 );
             Preconditions.checkArgument(uvListValue == uvListValue0, !("数据sql查询=" + uvListValue).equals("自建sql查询" + uvListValue0));
 
         } catch (AssertionError | Exception e) {
@@ -335,8 +335,8 @@ public class ShopMallRealtimeSql extends TestCaseCommon implements TestCaseStd {
     public void floorRealtimeUv(String lId,String floorName,String levalName) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String startDay = dt.getHistoryDate(-1);
-            String endDay = dt.getHistoryDate(-1);
+            String startDay = dt.getHistoryDate(-0);
+            String endDay = dt.getHistoryDate(-0);
             String shopId = "33467";
             String sql =
                             "SELECT IFNULL(SUM(tBase.uv), 0) AS uvEnter,\n" +
@@ -604,21 +604,21 @@ public class ShopMallRealtimeSql extends TestCaseCommon implements TestCaseStd {
                             "    ) tPrecycleMoreFloor ON tBase.region_id = tMoreFloor.region_id";
             IEntity<?, ?>[] entities = new Factory.Builder().container(EnumContainer.MALL_ONLINE.getContainer()).build().create(sql);
             int uvFloorValue = entities[0].getIntField("uv");
-            System.err.println("数据sql的pv值" + uvFloorValue);
+            System.err.println("数据sql的uv值" + uvFloorValue);
 
             Sql sql0 = Sql.instance().select("map_value", "list_value")
                     .from("t_mall_realtime_data").where("data", "like", DateTimeUtil.getFormat(new Date(),"yyyy-MM-dd HH") + "%")
                     .and("environment", "=", "online").and("source", "=", floorName).end();
             IEntity<?, ?>[] entities0 = new Factory.Builder().container(EnumContainer.DB_ONE_PIECE.getContainer()).build().create(sql0);
             int uvEnterValue = entities0[0].getIntField("map_value");
-            System.err.println("数据sql的v值" + uvEnterValue );
+            System.err.println("数据sql的uv值" + uvEnterValue );
 
             Sql sql1 = Sql.instance().select("map_value", "list_value")
                     .from("t_mall_realtime_data").where("data", "like", DateTimeUtil.getFormat(new Date(),"yyyy-MM-dd HH") + "%")
                     .and("environment", "=", "online").and("source", "=", levalName).end();
             IEntity<?, ?>[] entities1 = new Factory.Builder().container(EnumContainer.DB_ONE_PIECE.getContainer()).build().create(sql1);
             int uvLevalValue = entities1[0].getIntField("map_value");
-            System.err.println("数据sql的v值" + uvLevalValue );
+            System.err.println("自建sql的uv值" + uvLevalValue );
 
             int floorUv = uvEnterValue - uvLevalValue;
             System.err.println("离场uv值" + uvLevalValue );
