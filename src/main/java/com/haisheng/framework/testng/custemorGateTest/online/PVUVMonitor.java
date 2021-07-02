@@ -187,9 +187,9 @@ public class PVUVMonitor {
     }
 
     /**
-     * 小天才
+     * 小天才，设备回收，取消监控
      * */
-    @Test(dataProvider = "xiaotiancai")
+//    @Test(dataProvider = "xiaotiancai")
     public void getHistoryDataXiaotiancaiOnline(String shopId) {
         //String shopId = "15617";
         String appId  = "4f4dc399f4ed";
