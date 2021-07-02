@@ -7,9 +7,12 @@ import com.haisheng.framework.testng.bigScreen.itemPorsche.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.base.util.BasicUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.registerListVariable;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletMessageDetailScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletMessageListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.AppAdmitScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.AppStartReceptionScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.record.ImportPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appStartReception;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appletAppointment;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.pccreateActile;
@@ -129,6 +132,16 @@ public class JcFunction extends BasicUtil {
 
     }
 
+    public int getVoucherTotal(String phone) {
+        int total = VoucherListScene.builder().transferPhone(phone).build().invoke(visitor).getJSONArray("list").size();
+        return total;
+    }
+
+    public Long getMessDetailId() {
+        Long listid = AppletMessageListScene.builder().build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+        Long detailid = AppletMessageDetailScene.builder().id(listid).build().invoke(visitor).getJSONObject("evaluate_info").getLong("id");
+        return detailid;
+    }
 
     public JSONArray getroleLlist(){
         //shopList
