@@ -38,6 +38,7 @@ import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
+import org.jetbrains.annotations.NotNull;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -61,6 +62,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
     private static final AccountEnum ALL_AUTHORITY = AccountEnum.YUE_XIU_DAILY;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.INS_WM_DAILY;
     private static final EnumAppletToken APPLET_USER_TWO = EnumAppletToken.INS_ZT_DAILY;
+    public final static Integer SIZE = 50;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public UserUtil user = new UserUtil(visitor);
     public SupporterUtil util = new SupporterUtil(visitor);
@@ -1111,8 +1113,9 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
     public void voucherApply_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+
             IScene applyPageScene = ApplyPageScene.builder().build();
-            List<ApplyPageBean> applyPageList = util.toJavaObjectListSize50(applyPageScene, ApplyPageBean.class);
+            List<ApplyPageBean> applyPageList = toJavaObjectList(applyPageScene, ApplyPageBean.class);
             System.err.println(applyPageList.size());
             applyPageList.forEach(applyPage -> {
                 String voucherName = applyPage.getName();
@@ -1200,5 +1203,22 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
                 });
             }
         });
+    }
+
+    public <T> List<T> toJavaObjectList(@NotNull IScene scene, Class<T> tClass) {
+        int total = scene.invoke(visitor).getInteger("total");
+        return toJavaObjectList(scene, tClass, total);
+    }
+
+    public <T> List<T> toJavaObjectList(IScene scene, Class<T> tClass, Integer size) {
+        List<T> list = new ArrayList<>();
+        int s = CommonUtil.getTurningPage(size, SIZE);
+        for (int i = 1; i < s; i++) {
+            scene.setPage(i);
+            scene.setSize(SIZE);
+            JSONArray array = scene.invoke(visitor).getJSONArray("list");
+            list.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, tClass)).collect(Collectors.toList()));
+        }
+        return list;
     }
 }
