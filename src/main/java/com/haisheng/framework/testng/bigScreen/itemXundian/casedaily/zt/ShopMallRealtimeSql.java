@@ -812,7 +812,7 @@ public class ShopMallRealtimeSql extends TestCaseCommon implements TestCaseStd {
 
     //ok
     @Test(dataProvider = "floorRealtime",dataProviderClass = DataProviderMethod.class)
-    public void floorHourUv(String lId,String floorName) {
+    public void floorHourUv(String lId,String floorName,String levName) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String startDay = dt.getHistoryDate(-0);

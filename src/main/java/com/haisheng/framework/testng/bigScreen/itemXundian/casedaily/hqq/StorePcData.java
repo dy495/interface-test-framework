@@ -37,7 +37,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
     Integer size = 50;
 
     String name = "是青青的";
-    String email = "1667009257@qq.com";
+    String email = "131212121@qq.com";
     String phone = "15084928847";
 
 
