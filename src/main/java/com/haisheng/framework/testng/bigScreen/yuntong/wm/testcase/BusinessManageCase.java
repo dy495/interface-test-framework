@@ -8,7 +8,6 @@ import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.Enu
 import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.presalesreception.AppFinishReceptionScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.presalesreception.AppPreSalesReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.voicerecord.AppVoiceRecordSubmitScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.util.BusinessUtil;
@@ -55,7 +54,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
         //放入shopId
         commonConfig.product = PRODUCE.getAbbreviation();
         commonConfig.referer = PRODUCE.getReferer();
-        commonConfig.shopId = PRODUCE.getShopId();
+        commonConfig.shopId = ALL_AUTHORITY.getReceptionShopId();
         commonConfig.roleId = ALL_AUTHORITY.getRoleId();
         beforeClassInit(commonConfig);
     }
@@ -80,7 +79,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
     public void test() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/yuntong/wm/resources/voice/试驾录音.m4a";
+            String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/yuntong/wm/resources/voice/试驾录音.mp3";
             String testDriverBase64 = Base64Util.encodeBase64File(filePath);
             IScene scene = AppPreSalesReceptionPageScene.builder().lastValue(null).size(10).build();
             JSONObject jsonObject = scene.invoke(visitor).getJSONArray("list").getJSONObject(0);
@@ -97,7 +96,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
             object.put("type", type);
             object.put("start_time", testDriverTime);
             receptionNodes.add(object);
-            CommonUtil.valueView(startTime, endTime, recordName, receptionNodes);
+            CommonUtil.valueView(startTime, endTime, recordName, receptionNodes, testDriverBase64);
             util.appCustomerEditV4(receptionId, customerId);
             //提交
             visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);

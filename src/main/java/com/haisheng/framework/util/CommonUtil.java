@@ -136,15 +136,28 @@ public class CommonUtil {
     }
 
     /**
-     * 四舍五入取整
+     * 计算比值向上取整
      *
      * @param numerator   分子
      * @param denominator 分母
      * @return 取整结果
      */
-    public static int getIntRatio(int numerator, int denominator) {
+    public static int getCeilIntRatio(int numerator, int denominator) {
         double c = (double) numerator / denominator;
         return (int) Math.ceil(c);
+    }
+
+    /**
+     * 计算比值四舍五入取整
+     *
+     * @param numerator   分子
+     * @param denominator 分母
+     * @param scale       保留小数点后位数
+     * @return 比值
+     */
+    public static int getIntRatio(int numerator, int denominator) {
+        double a = (double) numerator / denominator;
+        return (int) Math.round(a);
     }
 
     /**

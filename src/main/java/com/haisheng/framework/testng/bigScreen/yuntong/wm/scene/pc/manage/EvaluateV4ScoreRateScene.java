@@ -47,6 +47,8 @@ public class EvaluateV4ScoreRateScene extends BaseScene {
      */
     private final String receptionEnd;
 
+    private final Integer evaluateType;
+
 
     @Override
     protected JSONObject getRequestBody() {
@@ -56,6 +58,7 @@ public class EvaluateV4ScoreRateScene extends BaseScene {
         object.put("link_type", linkType);
         object.put("reception_start", receptionStart);
         object.put("reception_end", receptionEnd);
+        object.put("evaluate_type", evaluateType);
         return object;
     }
 

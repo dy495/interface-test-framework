@@ -143,7 +143,7 @@ public class BusinessUtil extends BasicUtil {
             return null;
         }
         int scoreSum = scores.stream().map(e -> (JSONObject) e).mapToInt(e -> e.getInteger("score")).sum();
-        return CommonUtil.getIntRatio(scoreSum, 5);
+        return CommonUtil.getCeilIntRatio(scoreSum, 5);
     }
 
     /**
