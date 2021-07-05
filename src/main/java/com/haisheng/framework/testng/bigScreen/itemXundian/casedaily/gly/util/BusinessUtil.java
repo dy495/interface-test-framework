@@ -59,9 +59,9 @@ public class BusinessUtil {
     }
 
     /**
-     * 获取待处理的规则
+     * 获取待处理的规则--日常
      */
-    public List<Long> waitingAlarmConfirm(){
+    public List<Long> waitingAlarmConfirm(Long shopId){
         List<Long> ids = new ArrayList<>();
         IScene scene= ListScene.builder().page(1).size(10).shopId(shopId).eventState(EventStateEnum.WAITING_ALARM_CONFIRM.getEventState()).build();
         JSONObject response=visitor.invokeApi(scene,true);
@@ -92,9 +92,42 @@ public class BusinessUtil {
     }
 
     /**
+     * 获取待处理的规则--日常
+     */
+    public List<Long> waitingAlarmConfirmOnline(Long shopId){
+        List<Long> ids = new ArrayList<>();
+        IScene scene= ListScene.builder().page(1).size(10).shopId(shopId).eventState(EventStateEnum.WAITING_ALARM_CONFIRM.getEventState()).build();
+        JSONObject response=visitor.invokeApi(scene,true);
+        int total=response.getInteger("total");
+        if(total>0){
+            System.out.println("--当前列表有待处理的事件："+total);
+            int pages=response.getInteger("pages");
+            for(int page=1;page<=pages;page++){
+                IScene scene1=ListScene.builder().page(1).size(10).shopId(shopId).eventState(EventStateEnum.WAITING_ALARM_CONFIRM.getEventState()).build();
+                JSONArray list=visitor.invokeApi(scene1).getJSONArray("list");
+                for(int i=0;i<list.size();i++){
+                    Long id=list.getJSONObject(i).getLong("id");
+                    ids.add(id);
+                }
+            }
+        }else{
+            System.out.println("--当前列表没有待处理的事件，正在新建中");
+            //触发口罩事件
+            su.maskEventOnline(shopId,false,"customerFalse",true);
+            //获取当前列表的第一个的规则的id
+            IScene scene2= ListScene.builder().page(1).size(10).shopId(shopId).eventState(EventStateEnum.WAITING_ALARM_CONFIRM.getEventState()).build();
+            JSONObject response2=visitor.invokeApi(scene2,true);
+            Long id=response2.getJSONArray("list").getJSONObject(0).getLong("id");
+            ids.add(id);
+        }
+        return ids;
+
+    }
+
+    /**
      * 获取紧急待处理的规则
      */
-    public List<Long> waitingUrgentAlarmConfirm(){
+    public List<Long> waitingUrgentAlarmConfirm(Long shopId){
         List<Long> ids = new ArrayList<>();
         IScene scene= ListScene.builder().page(1).size(10).shopId(shopId).eventState(EventStateEnum.WAITING_ALARM_CONFIRM.getEventState()).build();
         JSONObject response=visitor.invokeApi(scene,true);
@@ -113,10 +146,50 @@ public class BusinessUtil {
                     }
                 }
             }
-        }else{
+        }
+
+        if(ids.size()==0){
             System.out.println("--当前列表没有待处理的事件，正在新建中");
             //触发口罩事件
-            su.maskEvent(shopId,false,"customerFalse",true);
+            su.maskEventOnline(shopId,false,"customerFalse",true);
+            //获取当前列表的第一个的规则的id
+            IScene scene2= ListScene.builder().page(1).size(10).shopId(shopId).eventState(EventStateEnum.WAITING_ALARM_CONFIRM.getEventState()).build();
+            JSONObject response2=visitor.invokeApi(scene2,true);
+            Long id=response2.getJSONArray("list").getJSONObject(0).getLong("id");
+            ids.add(id);
+        }
+        return ids;
+
+    }
+
+    /**
+     * 获取紧急待处理的规则
+     */
+    public List<Long> waitingUrgentAlarmConfirmOnline(Long shopId){
+        List<Long> ids = new ArrayList<>();
+        IScene scene= ListScene.builder().page(1).size(10).shopId(shopId).eventState(EventStateEnum.WAITING_ALARM_CONFIRM.getEventState()).build();
+        JSONObject response=visitor.invokeApi(scene,true);
+        int total=response.getInteger("total");
+        if(total>0){
+            System.out.println("--当前列表有待处理的事件："+total);
+            int pages=response.getInteger("pages");
+            for(int page=1;page<=pages;page++){
+                IScene scene1=ListScene.builder().page(1).size(10).shopId(shopId).eventState(EventStateEnum.WAITING_ALARM_CONFIRM.getEventState()).build();
+                JSONArray list=visitor.invokeApi(scene1).getJSONArray("list");
+                for(int i=0;i<list.size();i++){
+                    Boolean isUrgent=list.getJSONObject(i).getBoolean("is_urgent");
+                    if(isUrgent){
+                        Long id=list.getJSONObject(i).getLong("id");
+                        ids.add(id);
+                    }
+                }
+            }
+        }
+
+        if(ids.size()==0){
+            System.out.println("--当前列表没有待处理的事件，正在新建中");
+            //触发口罩事件
+            su.maskEventOnline(shopId,false,"customerFalse",true);
             //获取当前列表的第一个的规则的id
             IScene scene2= ListScene.builder().page(1).size(10).shopId(shopId).eventState(EventStateEnum.WAITING_ALARM_CONFIRM.getEventState()).build();
             JSONObject response2=visitor.invokeApi(scene2,true);

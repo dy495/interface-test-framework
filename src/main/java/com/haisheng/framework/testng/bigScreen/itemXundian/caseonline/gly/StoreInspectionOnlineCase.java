@@ -1,22 +1,23 @@
-package com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.gly;
+package com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.gly;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.gly.util.BusinessUtil;
-import com.haisheng.framework.testng.bigScreen.itemXundian.enumerator.EventStateEnum;
-import com.haisheng.framework.testng.bigScreen.itemXundian.enumerator.TriggerRuleEnum;
-import com.haisheng.framework.testng.bigScreen.itemXundian.enumerator.handleStatus;
-import com.haisheng.framework.testng.bigScreen.itemXundian.util.StoreScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.gly.util.BusinessUtil;
+import com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.gly.util.Constant;
+import com.haisheng.framework.testng.bigScreen.itemXundian.enumerator.AccountEnum;
+import com.haisheng.framework.testng.bigScreen.itemXundian.enumerator.EventStateEnum;
+import com.haisheng.framework.testng.bigScreen.itemXundian.enumerator.TriggerRuleEnum;
+import com.haisheng.framework.testng.bigScreen.itemXundian.enumerator.handleStatus;
 import com.haisheng.framework.testng.bigScreen.itemXundian.scene.checkrisk.EventTotalScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.scene.checkrisk.tasks.ListScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.scene.checkriskalarm.AlarmDetailScene;
-import com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.gly.util.Constant;
+import com.haisheng.framework.testng.bigScreen.itemXundian.util.StoreScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.itemXundian.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.itemXundian.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -28,31 +29,33 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
 import java.lang.reflect.Method;
 
-public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
-    private final  EnumTestProduce product = EnumTestProduce.INS_DAILY;
+public class StoreInspectionOnlineCase extends TestCaseCommon implements TestCaseStd {
+    private final  EnumTestProduce product = EnumTestProduce.INS_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(product);
     public UserUtil user = new UserUtil(visitor);
     public SupporterUtil util = new SupporterUtil(visitor);
     BusinessUtil businessUtil=new BusinessUtil(visitor);
     StoreScenarioUtil su=StoreScenarioUtil.getInstance();
-    public Long shopId=28758L;
-    public String shopName="巡店测试门店1";
+    public Long shopId=14630L;
+    public String shopName="中关村1号店";
     CommonConfig commonConfig = new CommonConfig();
 
     @BeforeClass
     @Override
     public void initial() {
         logger.debug("before class initial");
+        su.exChangeIpPort();
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_XUNDIAN_DAILY_SERVICE;
         commonConfig.checklistQaOwner = EnumChecklistUser.GLY.getName();
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.XUNDIAN_DAILY_TEST.getJobName());
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.XUNDIAN_ONLINE_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
         commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.product = product.getAbbreviation();
-        commonConfig.shopId="43072";
+        commonConfig.shopId="13260";
         commonConfig.referer=product.getReferer();
         beforeClassInit(commonConfig);
     }
@@ -67,10 +70,9 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
     @Override
     public void createFreshCase(Method method) {
         logger.debug("beforeMethod");
-//        user.loginPc(AccountEnum.YUE_XIU_DAILY);
+        su.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
-        su.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
     }
 
     /**
@@ -693,6 +695,7 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
                     String eventState=list.getJSONObject(i).getString("event_state");
                     //获取系统当前时间
                     String time=String.valueOf(dt.currentDateToTimestamp()).substring(0,13);
+//                    System.err.println(triggerTime+"    "+ time);
                     //判断当前门店的列表中是当前小时是否有待处理的口罩事件
                     if(time.equals(triggerTime)&&triggerRule.equals(TriggerRuleEnum.HAT_MONITOR.getTriggerRule())&&eventState.equals(EventStateEnum.WAITING_ALARM_CONFIRM.getEventState())){
                         flag=false;
@@ -749,7 +752,7 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try{
             //获取待处理的规则
-            long eventId=businessUtil.waitingAlarmConfirm(shopId).get(0);
+            long eventId=businessUtil.waitingAlarmConfirmOnline(shopId).get(0);
             sleep(3);
             //门店列表页面-确认规则之前
             IScene sceneShopBefore= EventTotalScene.builder().page(1).size(10).shopName(shopName).build();
@@ -784,7 +787,7 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try{
             //获取待处理的规则
-            long eventId=businessUtil.waitingUrgentAlarmConfirm(shopId).get(0);
+            long eventId=businessUtil.waitingUrgentAlarmConfirmOnline(shopId).get(0);
             sleep(3);
             //门店列表页面-确认规则之前
             IScene sceneShopBefore= EventTotalScene.builder().page(1).size(10).shopName(shopName).build();
@@ -822,7 +825,7 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try{
             //获取待处理的规则
-            long eventId=businessUtil.waitingAlarmConfirm(shopId).get(0);
+            long eventId=businessUtil.waitingAlarmConfirmOnline(shopId).get(0);
             sleep(3);
             //门店列表页面-确认规则之前
             IScene sceneShopBefore= EventTotalScene.builder().page(1).size(10).shopName(shopName).build();
@@ -858,7 +861,7 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try{
             //获取待处理的规则
-            long eventId=businessUtil.waitingUrgentAlarmConfirm(shopId).get(0);
+            long eventId=businessUtil.waitingUrgentAlarmConfirmOnline(shopId).get(0);
             sleep(3);
             //门店列表页面-确认规则之前
             IScene sceneShopBefore= EventTotalScene.builder().page(1).size(10).shopName(shopName).build();
@@ -906,7 +909,7 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
     public void storeEventCase1(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            JSONObject response=su.maskEvent(shopId,false,"customerFalse",true);
+            JSONObject response=su.maskEventOnline(shopId,false,"customerFalse",true);
             int code=response.getInteger("code");
             Preconditions.checkArgument(code==1000,"口罩事件触发失败，code的返回值为："+code);
 
@@ -924,7 +927,7 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
     public void storeEventCase2(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            JSONObject response=su.maskEvent(shopId,true,"customer",true);
+            JSONObject response=su.maskEventOnline(shopId,true,"customer",true);
             int code=response.getInteger("code");
             Preconditions.checkArgument(code==1000,"制服事件触发失败，code的返回值为："+code);
 
@@ -942,7 +945,7 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
     public void storeEventCase3(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            JSONObject response=su.maskEvent(shopId,true,"customer1",false);
+            JSONObject response=su.maskEventOnline(shopId,true,"customer1",false);
             int code=response.getInteger("code");
             Preconditions.checkArgument(code==1000,"帽子事件触发失败，code的返回值为："+code);
         }catch (AssertionError | Exception e) {

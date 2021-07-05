@@ -4167,6 +4167,70 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
     }
 
+    /**
+     *触发事件
+     * @param mask true:不触发口罩事件 false：触发口罩事件
+     * @param customer *:不触发制服事件 customer：触发制服事件
+     * @param hat true:不触发帽子事件 false：帽子口罩事件
+     */
+    public JSONObject maskEventOnline(Long shopId,Boolean mask,String customer,Boolean hat){
+        String url = "/risk-control-engine/test/auto-patrol-event/simulate";
+        JSONObject object=new JSONObject();
+        JSONArray algResults=new JSONArray();
+        JSONObject maskEventObject=new JSONObject();
+        JSONObject maskObject=new JSONObject();
+        JSONArray maskArray=new JSONArray();
+        JSONObject uniformEventObject=new JSONObject();
+        JSONArray uniformArray=new JSONArray();
+        JSONObject uniformObject=new JSONObject();
+
+        object.put("time",System.currentTimeMillis());
+        object.put("master_uid","uid_ef6d2de5");
+        object.put("app_id","49998b971ea0");
+        object.put("brand_id","19");
+        object.put("pic_url","https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic41.nipic.com%2F20140525%2F18845929_233338467162_2.jpg&refer=http%3A%2F%2Fpic41.nipic.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1627474279&t=85524e63d714fadd19380afcac6292d0");
+        object.put("shop_id",shopId);
+        object.put("device_id","7698197825586176");
+        object.put("request_id","367af258-e310-41e4-9b01-4ec6e720");
+        //口罩的参数
+        JSONArray faceAxis=new JSONArray();
+        faceAxis.add(711);
+        faceAxis.add(7);
+        faceAxis.add(758);
+        faceAxis.add(63);
+        maskObject.put("face_axis",faceAxis);
+        maskObject.put("mask",mask);
+        maskArray.add(maskObject);
+        maskEventObject.put("name","mask_detect");
+        maskEventObject.put("result",maskArray);
+        //帽子制服的参数
+        JSONArray bodyAxis=new JSONArray();
+        faceAxis.add(1368);
+        faceAxis.add(545);
+        faceAxis.add(1644);
+        faceAxis.add(1175);
+        uniformObject.put("body_axis",bodyAxis);
+        uniformObject.put("identify",customer);
+        uniformObject.put("hat",hat);
+        uniformArray.add(uniformObject);
+        uniformEventObject.put("name","uniform_classify");
+        uniformEventObject.put("result",uniformArray);
+        algResults.add(maskEventObject);
+        algResults.add(uniformEventObject);
+        object.put("alg_results",algResults);
+
+        return invokeApi(url, object,false);
+
+    }
+
+
+    /**
+     * 转线上IpPort
+     */
+    public void exChangeIpPort(){
+        this.IpPort="http://inspect.store.winsenseos.com";
+    }
+
 
 
 

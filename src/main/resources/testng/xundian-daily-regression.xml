@@ -31,6 +31,9 @@
             <class name="com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.wm.GoodsMarkingCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.wm.IntegralCenterCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.wm.VoucherManagerCase"/>
+
+
+            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.gly.StoreInspectionCase"/>
         </classes>
     </test>
 </suite>
