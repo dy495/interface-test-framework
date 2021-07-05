@@ -1112,7 +1112,8 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene applyPageScene = ApplyPageScene.builder().build();
-            List<ApplyPageBean> applyPageList = util.toJavaObjectList(applyPageScene, ApplyPageBean.class);
+            List<ApplyPageBean> applyPageList = util.toJavaObjectListSize50(applyPageScene, ApplyPageBean.class);
+            System.err.println(applyPageList.size());
             applyPageList.forEach(applyPage -> {
                 String voucherName = applyPage.getName();
                 Integer num = applyPage.getNum();
