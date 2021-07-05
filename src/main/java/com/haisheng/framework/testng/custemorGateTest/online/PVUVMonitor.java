@@ -268,7 +268,8 @@ public class PVUVMonitor {
                 {"58e74ee6ca07", "28647", "绫致-北京花乡奥莱"},
                 {"58e74ee6ca07", "33965", "绫致-天津佛罗伦萨小镇"},
                 {"58e74ee6ca07", "33961", "绫致-上海百联奥特莱斯"},
-                {"58e74ee6ca07", "33963", "绫致-武汉首创奥特莱斯"},
+//                武汉网络欠费且装修，移除监控，2021.07.05
+//                {"58e74ee6ca07", "33963", "绫致-武汉首创奥特莱斯"},
                 {"58e74ee6ca07", "33959", "绫致-苏州时尚舞台奥特莱斯"},
                 {"911d09d725a2", "29921", "电车-成都大悦城"},
                 {"911d09d725a2", "29923", "电车-双目摄像头-吾悦新城"},
@@ -560,10 +561,10 @@ public class PVUVMonitor {
         if (com.contains("赢识") && !DEBUG) {
             return "";
         }
-        //过滤掉8点前的数据，商场8点前人少，波动较剧烈
+        //过滤掉9:00点前的数据，商场9点前人少，波动较剧烈
         if (!hour.equals("all")) {
             int intHour = Integer.parseInt(hour);
-            if (intHour < 9 || intHour == 24) {
+            if (intHour < 10 || intHour == 24) {
                 //凌晨时段人数变动小于100人，则变动服务削峰为0，放置该时段干扰指标大盘其他时段数据展示
                 if (diffDataUnit.diffValue < 100) {
                     diffDataUnit.diffRange = 0f;
