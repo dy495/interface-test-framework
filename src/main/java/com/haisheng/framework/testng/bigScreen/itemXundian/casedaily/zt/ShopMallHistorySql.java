@@ -374,7 +374,8 @@ public class ShopMallHistorySql extends TestCaseCommon implements TestCaseStd {
                             "            )\n" +
                             "    ) tPrecycleMoreFloor ON tBase.region_id = tMoreFloor.region_id";
             IEntity<?, ?> entity = new Factory.Builder().container(EnumContainer.MALL_ONLINE.getContainer()).build().create(sql)[0];
-            int uv = entity.getIntField("uv");
+
+            int uv = entity.getIntFieldIfNullReturnZero("uv");
             logger.info("数据sql的uv值：{}", uv);
             Sql sql0 = Sql.instance().select("map_value", "list_value")
                     .from("t_mall_history_data").where("data", "like", dt.getHistoryDate(-1) + "%")

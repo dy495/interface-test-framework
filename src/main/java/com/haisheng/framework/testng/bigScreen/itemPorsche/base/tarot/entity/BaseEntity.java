@@ -74,6 +74,14 @@ public abstract class BaseEntity<S, F> implements IEntity<S, F> {
         return -1;
     }
 
+    @Override
+    public int getIntFieldIfNullReturnZero(String fieldName) {
+        if (!StringUtils.isEmpty(getFieldValue(fieldName))) {
+            return Integer.parseInt(getFieldValue(fieldName));
+        }
+        return 0;
+    }
+
     /**
      * 将字段值以单浮点型返回
      *
