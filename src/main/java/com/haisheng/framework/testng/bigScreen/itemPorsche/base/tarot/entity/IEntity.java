@@ -55,8 +55,6 @@ public interface IEntity<S, F> {
 
     int getIntField(String fieldName);
 
-    int getIntFieldIfNullReturnZero(String fieldName);
-
     float getFloatField(String fieldName);
 
     double getDoubleField(String fieldName);
