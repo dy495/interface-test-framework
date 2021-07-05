@@ -26,7 +26,7 @@ import java.lang.reflect.Method;
  */
 public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
-    EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_ZH;
+    EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_SSO;
     EnumAccount ALL_AUTHORITY = EnumAccount.ALL_YT_DAILY;
     VisitorProxy visitor = new VisitorProxy(PRODUCE);
     BusinessUtil businessUtil = new BusinessUtil(visitor);
@@ -61,7 +61,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         beforeClassInit(commonConfig);
         businessUtil.loginPc(ALL_AUTHORITY);
 
-        visitor.setProduct(EnumTestProduce.YT_DAILY_ZT);  //展厅接待模块
+        visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);  //展厅接待模块
     }
 
     @AfterClass
@@ -449,7 +449,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            visitor.setProduct(EnumTestProduce.YT_DAILY_ZT);
+            visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
 
             Long shop_id = info.oneshopid;
             Long car_style_id = PreSaleCustomerStyleListScene.builder().shopId(shop_id).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("style_id");
@@ -480,7 +480,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            visitor.setProduct(EnumTestProduce.YT_DAILY_ZT);
+            visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
             Long shop_id = info.oneshopid;
             Long car_style_id = PreSaleCustomerStyleListScene.builder().shopId(shop_id).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("style_id");
             Long car_model_id = PreSaleCustomerModelListScene.builder().styleId(car_style_id).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("model_id");
@@ -604,7 +604,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            visitor.setProduct(EnumTestProduce.YT_DAILY_ZT);
+            visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
 
             //创建一个品牌
             String name1 = info.stringsix;

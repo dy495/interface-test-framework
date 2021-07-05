@@ -34,7 +34,7 @@ import java.lang.reflect.Method;
  * @date 2021/1/29 11:17
  */
 public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
-    EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_ZH;
+    EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_SSO;
     EnumAccount ALL_AUTHORITY = EnumAccount.ALL_YT_DAILY;
     VisitorProxy visitor = new VisitorProxy(PRODUCE);
     BusinessUtil businessUtil = new BusinessUtil(visitor);
@@ -66,7 +66,7 @@ public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
         beforeClassInit(commonConfig);
         businessUtil.loginPc(ALL_AUTHORITY);
 
-        visitor.setProduct(EnumTestProduce.YT_DAILY_HT);  //会听模块
+        visitor.setProduct(EnumTestProduce.YT_DAILY_CONTROL);  //会听模块
     }
 
     @AfterClass

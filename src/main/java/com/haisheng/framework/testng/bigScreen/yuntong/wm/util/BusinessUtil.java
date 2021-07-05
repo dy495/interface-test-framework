@@ -7,13 +7,13 @@ import com.haisheng.framework.testng.bigScreen.itemPorsche.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.base.util.BasicUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.personaldata.AppPersonalOverviewBean;
-import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.personaldata.AppReceptionLinkScoreBean;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.voicerecord.AppDepartmentPageBean;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.voicerecord.AppDetailBean;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.app.voicerecord.AppPersonalPageBean;
-import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.pc.manage.VoiceDetailBean;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.carmodel.AppCarModelTreeScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.personaldata.AppPersonalOverviewScene;
-import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.personaldata.AppReceptionLinkScoreScene;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.presalesreception.AppCustomerDetailV4Scene;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.presalesreception.AppCustomerEditV4Scene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.voicerecord.AppDepartmentPageScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.voicerecord.AppDetailScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.voicerecord.AppPersonalPageScene;
@@ -146,7 +146,6 @@ public class BusinessUtil extends BasicUtil {
         return CommonUtil.getIntRatio(scoreSum, 5);
     }
 
-
     /**
      * 获取总分
      *
@@ -168,5 +167,40 @@ public class BusinessUtil extends BasicUtil {
     public JSONObject getVoiceDetail(Long receptionId) {
         IScene scene = VoiceDetailScene.builder().id(receptionId).build();
         return scene.invoke(visitor);
+    }
+
+    /**
+     * app接待时编辑个人资料
+     *
+     * @param receptionId 接待id
+     * @param customerId  客户id
+     */
+    public void appCustomerEditV4(String receptionId, String customerId) {
+        String shopId = getReceptionShopId();
+        int carModelId = getCarModelId(shopId);
+        JSONObject response = AppCustomerDetailV4Scene.builder().id(receptionId).customerId(customerId).shopId(shopId).build().invoke(visitor);
+        String customerName = response.getString("customer_name");
+        int gender = response.getInteger("customer_gender");
+        String customerPhone = response.getString("customer_phone");
+        String estimateBuyCarDate = "2100-01-01";
+        AppCustomerEditV4Scene.builder().shopId(shopId).id(receptionId).customerId(customerId)
+                .customerName(customerName).customerPhone(customerPhone).intentionCarModelId(String.valueOf(carModelId))
+                .estimateBuyCarDate(estimateBuyCarDate).sexId(gender).build().invoke(visitor);
+    }
+
+    public String getReceptionShopId() {
+        return visitor.isDaily() ? "56666" : "";
+    }
+
+    /**
+     * 获取车型id
+     *
+     * @param shopId 店铺id
+     * @return 车型id
+     */
+    public Integer getCarModelId(String shopId) {
+        IScene carModelTreeScene = AppCarModelTreeScene.builder().shopId(shopId).build();
+        return carModelTreeScene.invoke(visitor).getJSONArray("children").getJSONObject(0).getJSONArray("children")
+                .getJSONObject(0).getJSONArray("children").getJSONObject(0).getInteger("value");
     }
 }

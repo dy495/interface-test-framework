@@ -43,6 +43,18 @@ public class BasicUtil {
         return toJavaObjectList(scene, tClass, total);
     }
 
+    public <T> List<T> toJavaObjectList(@NotNull IScene scene, Integer size, Class<T> tClass) {
+        List<T> list = new ArrayList<>();
+        int total = scene.invoke(visitor).getInteger("total");
+        int s = CommonUtil.getTurningPage(total, size);
+        for (int i = 1; i < s; i++) {
+            scene.setPage(i);
+            scene.setSize(size);
+            JSONArray array = scene.invoke(visitor).getJSONArray("list");
+            list.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, tClass)).collect(Collectors.toList()));
+        }
+        return list;
+    }
 
     public <T> List<T> toJavaObjectList(IScene scene, Class<T> tClass, Integer size) {
         List<T> list = new ArrayList<>();
@@ -55,7 +67,6 @@ public class BasicUtil {
         }
         return list;
     }
-
 
     public <T> List<T> toJavaObjectList(@NotNull IScene scene, Class<T> bean, String key, Object value) {
         List<T> list = new ArrayList<>();

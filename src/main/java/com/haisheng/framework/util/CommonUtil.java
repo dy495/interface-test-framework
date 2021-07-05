@@ -276,14 +276,9 @@ public class CommonUtil {
      * @return a
      */
     public static int getTurningPage(double listSize, double pageSize) {
-        if (listSize < 0) {
-            throw new RuntimeException("listSize不可为负数");
-        }
-        if (pageSize < 0) {
-            throw new RuntimeException("pageSize不可为负数");
-        }
-        double a;
-        a = listSize > pageSize ? listSize % pageSize == 0 ? listSize / pageSize : Math.ceil(listSize / pageSize) + 1 : 2;
+        Preconditions.checkArgument(listSize >= 0, "listSize不可为负数");
+        Preconditions.checkArgument(pageSize > 0, "pageSize不可为负数");
+        double a = listSize > pageSize ? listSize % pageSize == 0 ? listSize / pageSize : Math.ceil(listSize / pageSize) + 1 : 2;
         return (int) a;
     }
 

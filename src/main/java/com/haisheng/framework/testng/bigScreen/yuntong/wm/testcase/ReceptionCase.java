@@ -47,7 +47,7 @@ import java.util.stream.Collectors;
  * @date 2021/1/29 11:17
  */
 public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_HT;
+    private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_CONTROL;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.ALL_YT_DAILY;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public BusinessUtil util = new BusinessUtil(visitor);
@@ -85,16 +85,16 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-        visitor.setProduct(EnumTestProduce.YT_DAILY_ZH);
+        visitor.setProduct(EnumTestProduce.YT_DAILY_SSO);
         util.loginApp(ALL_AUTHORITY);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
-        visitor.setProduct(EnumTestProduce.YT_DAILY_HT);
+        visitor.setProduct(EnumTestProduce.YT_DAILY_CONTROL);
     }
 
     //ok
-    @Test
+    @Test(description = "app平均接待时长=APP总接待时长/接待次数")
     public void department_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -114,7 +114,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
-    @Test
+    @Test(description = "app总接待时长=PC【语音接待评鉴】所有接待时长之和")
     public void department_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -134,7 +134,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
-    @Test
+    @Test(description = "app总接待时长=APP部门接待评鉴中的【员工接待评鉴】列表中接待时长之和")
     public void department_data_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -152,7 +152,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
-    @Test
+    @Test(description = "app接待次数=PC【语音接待评鉴】列表数")
     public void department_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -164,12 +164,12 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("app接待次数=PC【语音接待评鉴】列表数：");
+            saveData("app接待次数=PC【语音接待评鉴】列表数");
         }
     }
 
     //ok
-    @Test
+    @Test(description = "app接待次数=APP【员工接待评鉴】列表所有员工接待次数之和")
     public void department_data_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -185,7 +185,8 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
+    //ok
+    @Test(description = "app接待次数=APP各个员工的【接待评分详情】列表之和")
     public void department_data_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -197,12 +198,12 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("app接待次数=APP各个员工的【接待评分详情】列表之和：");
+            saveData("app接待次数=APP各个员工的【接待评分详情】列表之和");
         }
     }
 
     //ok
-    @Test
+    @Test(description = "app接待平均分=PC【语音接待评鉴】列表中首次进店&评分完成的得分平均数")
     public void department_data_7() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -222,7 +223,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
-    @Test
+    @Test(description = "app接待平均分=APP【销售接待能力模型】中各话术数值之和/5")
     public void department_data_8() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -241,7 +242,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //数据有问题
-    @Test
+    @Test(description = "app接待平均分=APP各个员工的接待平均分之和/总人数")
     public void department_data_9() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -261,7 +262,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //数据有问题
-    @Test
+    @Test(description = "app接待平均分=全员工全流程接待分值之和/参与评分的接待次数")
     public void department_data_10() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -283,7 +284,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
-    @Test
+    @Test(description = "app接待平均分=APP【销售接待能力模型】中各话术数值之和/5")
     public void department_data_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -302,7 +303,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //平均分有误
-    @Test
+    @Test(description = "app【我的能力模型】各话术环节分数相加/5=APP【话术环节数据统计（全部环节）】部门平均分（全员工全流程接待分值之和/参与评分的接待次数")
     public void department_data_12() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -323,7 +324,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok 3天内数据一致，本月数据一致
-    @Test
+    @Test(description = "app【销售能力管理中】的合格率=部门接待评鉴中【员工接待评鉴】列表中的总得分大于60的员工所占的比例")
     public void department_data_13() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -349,7 +350,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
-    @Test
+    @Test(description = "合格线=后台配置60分")
     public void department_data_14() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -363,7 +364,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
-    @Test
+    @Test(description = "app【销售能力管理中】的合格率=接待分数>=60分的次数/APP接待详情中有得分的总接待次数")
     public void department_data_15() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -391,7 +392,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //有问题
-    @Test
+    @Test(description = "各话术环节分数相加/5=APP接待详情中的部门平均分")
     public void department_data_16() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -413,7 +414,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //有问题
-    @Test
+    @Test(description = "app【销售能力管理中】的合格率=APP接待分数>=60分的次数/接待详情中有得分的总接待次数")
     public void department_data_17() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -444,7 +445,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //有问题
-    @Test(dataProvider = "type")
+    @Test(dataProvider = "type", description = "某一环节的接待合格率=【员工接待评鉴列表】超过60分的接待次数/参与评分的总接待次数*100%")
     public void department_data_18(int type) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -484,7 +485,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
-    @Test
+    @Test(description = "（筛选为某一天）【部门总平均分趋势】分数=【各环节得分趋势】各话术环节平均分之和/5")
     public void department_data_19() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -500,11 +501,12 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("筛选某一天）【部门总平均分趋势】分数=【各环节得分趋势】各话术环节平均分之和/5");
+            saveData("（筛选为某一天）【部门总平均分趋势】分数=【各环节得分趋势】各话术环节平均分之和/5");
         }
     }
 
-    @Test(dataProvider = "type")
+    //ok
+    @Test(dataProvider = "type", description = "（筛选为某一天）【各环节得分趋势】中的各环节得分＝【我的能力模型】各环节得分")
     public void department_data_20(int type) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -524,7 +526,8 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(dataProvider = "type")
+    //ok
+    @Test(dataProvider = "type", description = "（筛选为某一天）【各环节得分趋势】中的各环节得分=PC【语音接待评鉴】中相同时间段的首次到店的的接待详情中的各环节的平均分")
     public void department_data_21(int type) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -546,7 +549,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
-    @Test
+    @Test(description = "（筛选某一天）【部门总平均分趋势】平均分＝【我的能力模型】各话术环节平均分之和/5")
     public void department_data_22() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -567,7 +570,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
-    @Test
+    @Test(description = "（筛选某一天）【部门总平均分趋势】分数=【部门接待评鉴】中的接待平均分")
     public void department_data_23() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -589,7 +592,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
-    @Test
+    @Test(description = "（同一个员工）【员工接待评鉴】中的平均接待时长＝【部门接待评鉴】中的接待平均分")
     public void department_data_24() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -610,7 +613,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
-    @Test
+    @Test(description = "【部门接待评鉴】中的接待次数=各接待销售记录中的【接待评分详情】中的列表条数之和")
     public void department_data_25() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -631,7 +634,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
-    @Test
+    @Test(description = "【员工接待评鉴】每个员工的接待次数=【员工接待评鉴】【接待评分详情中】的列表数")
     public void department_data_26() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -651,7 +654,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
-    @Test
+    @Test(description = "（同一个员工）【员工接待评鉴】中的平均接待时长＝【员工接待评鉴】中的接待时长/接待次数")
     public void department_data_27() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -672,7 +675,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
-    @Test
+    @Test(description = "每个员工的接待平均分=【我的能力模型】各话术环节分数相加/5")
     public void personal_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -694,7 +697,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
-    @Test()
+    @Test(description = "接待平均分=【各环节得分】个人总平均分之和/5")
     public void personal_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -717,7 +720,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
-    @Test(dataProvider = "type")
+    @Test(dataProvider = "type", description = "【我的能力模型】各话术环节的分值＝【各环节得分】平均分的分值")
     public void personal_data_3(int type) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -740,7 +743,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
-    @Test(dataProvider = "type")
+    @Test(dataProvider = "type", description = "【我的能力模型】各话术环节的分值＝PC【语音接待评鉴】接待详情中的各环节的平均分")
     public void personal_data_5(int type) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -794,7 +797,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
-    @Test
+    @Test(description = "本次接待得分=各环节的接待得分之和/5")
     public void personal_data_8() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -822,7 +825,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
-    @Test(dataProvider = "type")
+    @Test(dataProvider = "type", description = "同一客户的语音接待记录在APP【接待详情】中和PC【语音接待评鉴详情】中各环节得分一致")
     public void personal_data_9(Integer type) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -860,7 +863,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
-    @Test()
+    @Test(description = "首次到店的客户A的【接待详情】中的接待的得分中的本次接待得分=PC中【语音接待评鉴】客户A的详情中的接待得分")
     public void personal_data_10() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -898,7 +901,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //ok
-    @Test()
+    @Test(description = "首次到店的客户A的【接待详情】中的接待的得分中的本次接待得分=PC中【语音接待评鉴】客户A的详情中的接待得分")
     public void personal_data_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -931,6 +934,75 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
             collectMessage(e);
         } finally {
             saveData("首次到店的客户A的【接待详情】中的接待的得分中的本次接待得分=PC中【语音接待评鉴】客户A的详情中的接待得分");
+        }
+    }
+
+    //ok
+    @Test(description = "【接待详情】中的录音记录的时长＝PC【语音接待评鉴】中同一客户的接待详情中的录音时长")
+    public void personal_data_12() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            List<AppDepartmentPageBean> departmentPageList = util.getAppDepartmentPageList(dataCycleType, startDate, endDate);
+            departmentPageList.forEach(e -> {
+                Map<Long, String> map = new HashMap<>();
+                List<AppPersonalPageBean> personalPageList = util.getAppPersonalPageList(dataCycleType, e.getSaleId(), startDate, endDate);
+                personalPageList.stream().filter(Objects::nonNull).forEach(personalPage -> {
+                    JSONObject response = AppDetailScene.builder().id(personalPage.getId()).build().invoke(visitor);
+                    if (!response.getString("enter_status_name").equals("再次进店") && response.getString("voice_record") != null) {
+                        map.put(personalPage.getId(), response.getString("voice_record"));
+                    }
+                });
+                IScene evaluationPageScene = VoiceEvaluationPageScene.builder().receptorName(e.getName()).receptionStart(startDate).receptionEnd(endDate).enterStatus(1).build();
+                List<VoiceEvaluationPageBean> voiceEvaluationPageList = util.toJavaObjectList(evaluationPageScene, VoiceEvaluationPageBean.class);
+                voiceEvaluationPageList.stream().filter(Objects::nonNull).forEach(voiceRecord -> {
+                    for (Map.Entry<Long, String> entry : map.entrySet()) {
+                        if (entry.getKey().equals(voiceRecord.getId())) {
+                            JSONObject response = VoiceDetailScene.builder().id(voiceRecord.getId()).build().invoke(visitor);
+                            if (response.getString("voice_record") != null) {
+                                String pcVoiceRecord = response.getString("voice_record");
+                                String appVoiceRecord = entry.getValue();
+                                CommonUtil.valueView(e.getName(), appVoiceRecord, pcVoiceRecord);
+                                Preconditions.checkArgument(appVoiceRecord.equals(pcVoiceRecord), e.getName() + "APP【接待详情】中的接待时长：" + appVoiceRecord + " PC中【语音接待评鉴】详情中的接待时长：" + pcVoiceRecord);
+                            }
+                        }
+                    }
+                });
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("【接待详情】中的录音记录的时长＝PC【语音接待评鉴】中同一客户的接待详情中的录音时长");
+        }
+    }
+
+    //ok
+    @Test(description = "【接待详情】中的录音记录的时长＝PC【语音接待评鉴】中同一客户的接待详情中的录音时长")
+    public void personal_data_13() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene overviewScene = AppOverviewScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
+            AppOverviewBean overview = util.toJavaObject(overviewScene, AppOverviewBean.class);
+            int averageScore = overview.getAverageScore();
+            Map<Long, JSONArray> map = new HashMap<>();
+            List<AppDepartmentPageBean> departmentPageList = util.getAppDepartmentPageList(dataCycleType, startDate, endDate);
+            departmentPageList.forEach(e -> {
+                List<AppPersonalPageBean> personalPageList = util.getAppPersonalPageList(dataCycleType, e.getSaleId(), startDate, endDate);
+                personalPageList.stream().filter(Objects::nonNull).forEach(personalPage -> {
+                    JSONObject response = AppDetailScene.builder().id(personalPage.getId()).build().invoke(visitor);
+                    if (!response.getString("enter_status_name").equals("再次进店")
+                            && response.getJSONArray("scores").size() != 0) {
+                        map.put(personalPage.getId(), response.getJSONArray("scores"));
+                    }
+                });
+            });
+            int i = map.values().stream().mapToInt(array -> array.stream().map(object -> (JSONObject) object).mapToInt(object -> object.getInteger("score")).sum()).sum();
+            int mathResult = CommonUtil.getIntRatio(i, map.size() * 5);
+            CommonUtil.valueView(averageScore, mathResult);
+            Preconditions.checkArgument(averageScore <= mathResult + 1 || averageScore >= mathResult - 1, "APP部门平均分：" + averageScore + " 此部门的全部员工全流程接待分值之和/参与评分的接待次数*5：" + mathResult);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("部门平均分=此部门的全部员工全流程接待分值之和/参与评分的接待次数*5");
         }
     }
 
