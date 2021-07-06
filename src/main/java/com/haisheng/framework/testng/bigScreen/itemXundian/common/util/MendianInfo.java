@@ -5,9 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.aliyun.openservices.shade.org.apache.commons.codec.binary.Base64;
 import com.haisheng.framework.util.DateTimeUtil;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 public class MendianInfo {
     DateTimeUtil dt = new DateTimeUtil();
@@ -156,5 +154,23 @@ public class MendianInfo {
         return new String(Base64.encodeBase64(data));
     }
 
+    public final void getPy(String path,String picpath) throws Exception {
+        // TODO Auto-generated method stub
+        Process proc;
+        try {
+            String[] args1 = new String[]{"python", path, picpath};
+            proc = Runtime.getRuntime().exec(args1);
+            //用输入输出流来截取结果
+            BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+            String line = null;
+            while ((line = in.readLine()) != null) {
+                System.out.println(line);
+            }
+            in.close();
+            proc.waitFor();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
 }
