@@ -240,7 +240,7 @@ Deoptimization events (0 events):
 No events
 
 Classes redefined (3 events):
-Event: 174.518 Thread 0x0324cc00 redefined class name=com.haisheng.framework.testng.bigScreen.itemXundian.util.StoreScenarioUtil, count=1
+Event: 174.518 Thread 0x0324cc00 redefined class name=com.haisheng.framework.testng.bigScreen.itemXundian.common.util.StoreScenarioUtil, count=1
 Event: 381.487 Thread 0x0324cc00 redefined class name=com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.hqq.StoreDataCenter, count=1
 Event: 3218.478 Thread 0x0324cc00 redefined class name=com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.hqq.StoreDataCenter, count=2
 

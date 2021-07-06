@@ -9,9 +9,9 @@ import com.arronlong.httpclientutil.common.HttpConfig;
 import com.arronlong.httpclientutil.common.HttpHeader;
 import com.arronlong.httpclientutil.exception.HttpProcessException;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.base.proxy.VisitorProxy;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.riskControlEnum.routerEnum;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventHandleScene;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.util.CommonUsedUtil;
@@ -81,7 +81,7 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
         commonConfig.roleId = product.getRoleId();
         beforeClassInit(commonConfig);
         logger.debug("FK: " + cu);
-        System.out.println(product.getAddress());
+        System.out.println(product.getPort());
         pclogin("salesdemo@winsense.ai","c216d5045fbeb18bcca830c235e7f3c8");
     }
 
@@ -96,7 +96,7 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
         data.put("username",name);
         data.put("password",password);
         data.put("type",0);
-        httpPost(url,data,product.getAddress());
+        httpPost(url,data,product.getPort());
     }
 
     /**
@@ -641,7 +641,7 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
                 "\"size\" :" + size + "\n" +
                 "} ";
 
-        String res = httpPostWithCheckCode(url, json, EnumTestProduce.FK_ONLINE.getAddress());
+        String res = httpPostWithCheckCode(url, json, EnumTestProduce.FK_ONLINE.getPort());
 
         return JSON.parseObject(res).getJSONObject("data");
     }

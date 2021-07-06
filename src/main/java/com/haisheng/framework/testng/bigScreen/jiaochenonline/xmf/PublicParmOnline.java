@@ -2,7 +2,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumAppletToken;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAppletToken;
 
 public class PublicParmOnline {
 

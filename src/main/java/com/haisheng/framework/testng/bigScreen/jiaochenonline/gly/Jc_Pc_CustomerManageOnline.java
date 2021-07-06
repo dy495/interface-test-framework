@@ -3,7 +3,10 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline.gly;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.*;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistAppId;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistConfId;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumDingTalkWebHook;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.CommonPram;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -30,7 +33,7 @@ public class Jc_Pc_CustomerManageOnline extends TestCaseCommon implements TestCa
     @Override
     public void initial() {
         logger.debug("before class initial");
-        jc.changeIpPort(EnumTestProduce.JC_ONLINE.getAddress());
+        jc.changeIpPort(EnumTestProduce.JC_ONLINE.getPort());
         //替换checklist的相关信息
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
         commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();

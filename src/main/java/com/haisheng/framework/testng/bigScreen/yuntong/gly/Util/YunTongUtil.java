@@ -2,9 +2,9 @@ package com.haisheng.framework.testng.bigScreen.yuntong.gly.Util;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.base.proxy.VisitorProxy;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import org.springframework.util.StringUtils;
 
@@ -31,9 +31,9 @@ public class YunTongUtil extends TestCaseCommon {
 //        }
 //        return instance;
 //    }
-     public YunTongUtil(EnumTestProduce product) {
+     public  YunTongUtil(EnumTestProduce product) {
         this.product = product;
-        this.IpPort = product.getAddress();
+        this.IpPort = product.getPort();
         this.visitor = new VisitorProxy(product);
     }
 

@@ -1,9 +1,9 @@
 package com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.lxq;
 
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.util.CrmScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.util.commonDs.CustomerInfo;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.CrmScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.commonDs.CustomerInfo;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;

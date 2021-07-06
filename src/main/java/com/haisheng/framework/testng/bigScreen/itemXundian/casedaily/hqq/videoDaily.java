@@ -3,8 +3,8 @@ package com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.hqq;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.itemXundian.util.StoreScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.itemXundian.util.XundianScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.StoreScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.XundianScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.hqq.fucPackage.XdPackageData;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -29,7 +29,7 @@ public class videoDaily extends TestCaseCommon implements TestCaseStd {
     StoreScenarioUtil md = StoreScenarioUtil.getInstance();
     Long shop_id = 43072l;
     String comment = "自动化在进行处理，闲人走开";
-    public String filepath = "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/卡券图.jpg"; //巡店不合格图片base64
+    public String filepath = "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/common/multimedia/picture/卡券图.jpg"; //巡店不合格图片base64
 
 
     /**

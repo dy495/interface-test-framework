@@ -1,6 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher;
 
-import com.haisheng.framework.testng.bigScreen.itemPorsche.base.generator.IGenerator;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.generator.IGenerator;
 
 /**
  * 卡券生成器

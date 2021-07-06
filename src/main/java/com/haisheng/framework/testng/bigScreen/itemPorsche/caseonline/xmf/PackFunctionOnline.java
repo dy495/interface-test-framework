@@ -2,8 +2,8 @@ package com.haisheng.framework.testng.bigScreen.itemPorsche.caseonline.xmf;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumAppletToken;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.util.PublicParmOnline;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAppletToken;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.PublicParmOnline;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.caseonline.xmf.interfaceOnline.FinishReceptionOnline;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.FileUtil;

@@ -1,7 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.xmf.interfaceDemo;
 
 import com.alibaba.fastjson.JSONArray;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.util.commonDs.PublicParm;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.commonDs.PublicParm;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.FileUtil;
 

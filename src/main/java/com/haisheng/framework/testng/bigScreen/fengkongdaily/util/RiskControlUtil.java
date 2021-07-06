@@ -3,9 +3,9 @@ package com.haisheng.framework.testng.bigScreen.fengkongdaily.util;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.base.proxy.VisitorProxy;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.LoginPcScene;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import org.springframework.util.StringUtils;
@@ -27,11 +27,11 @@ public class RiskControlUtil extends TestCaseCommon {
     public static synchronized RiskControlUtil getInstance(EnumTestProduce product) {
         if (instance == null) {
             instance = new RiskControlUtil(product);
-            IpPort = product.getAddress();
+            IpPort = product.getPort();
         } else {
             if (RiskControlUtil.product != product) {
                 instance = new RiskControlUtil(product);
-                IpPort = product.getAddress();
+                IpPort = product.getPort();
             }
         }
         return instance;

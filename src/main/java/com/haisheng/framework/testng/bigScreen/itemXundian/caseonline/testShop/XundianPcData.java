@@ -3,7 +3,7 @@ package com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.testShop;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.itemXundian.util.XundianScenarioUtilOnline;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.XundianScenarioUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -37,7 +37,7 @@ public class XundianPcData extends TestCaseCommon implements TestCaseStd {
     String cycle_type = "RECENT_THIRTY";
     public String adminName = "salesdemo@winsense.ai";
     public String adminPasswd = "c216d5045fbeb18bcca830c235e7f3c8";
-    String filepath = "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/64.txt";
+    String filepath = "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/common/multimedia/picture/64.txt";
 
     public String texFile(String fileName) throws IOException {
         BufferedReader in = new BufferedReader(new FileReader(fileName));

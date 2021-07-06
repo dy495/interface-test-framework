@@ -1,19 +1,18 @@
 package com.haisheng.framework.testng.bigScreen.shopMallDaily;
 
-import com.haisheng.framework.testng.bigScreen.itemPorsche.base.datacheck.DataCheckRunner;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.base.datacheck.data.OTSRowData;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.base.datacheck.data.OTSTableData;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.base.sql.Sql;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.base.tarot.entity.Factory;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.base.tarot.enumerator.EnumContainer;
-import com.haisheng.framework.testng.bigScreen.itemXundian.bean.DetailMessage;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.datacheck.DataCheckRunner;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.datacheck.data.OTSRowData;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.datacheck.data.OTSTableData;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.sql.Sql;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.tarot.entity.Factory;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.tarot.enumerator.EnumContainer;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.bean.DetailMessage;
 import com.haisheng.framework.util.DateTimeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.rmi.ServerError;
 import java.util.*;
 import java.util.stream.Collectors;
 

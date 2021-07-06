@@ -1,9 +1,9 @@
 package com.haisheng.framework.testng.bigScreen.itemPorsche.caseonline.xmf;
 
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumAppletToken;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.util.PublicParmOnline;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAppletToken;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.PublicParmOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;

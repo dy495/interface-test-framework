@@ -1,10 +1,10 @@
 package com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.xmf;
 
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.util.CrmScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.util.commonDs.PackFunction;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.util.commonDs.PublicParm;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.CrmScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.commonDs.PackFunction;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.commonDs.PublicParm;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.xmf.interfaceDemo.FinishReception;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;

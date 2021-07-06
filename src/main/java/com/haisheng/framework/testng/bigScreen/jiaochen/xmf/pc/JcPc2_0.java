@@ -3,12 +3,12 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.xmf.pc;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.util.commonDs.JsonPathUtil;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.util.commonDs.PoiUtils;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.base.proxy.VisitorProxy;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.commonDs.JsonPathUtil;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.commonDs.PoiUtils;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanage.LossCustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanage.PreSaleCustomerPageScene;
@@ -53,7 +53,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
     private QADbProxy qaDbProxy = QADbProxy.getInstance();
     public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
     CommonConfig commonConfig = new CommonConfig();
-    public String IpPort = EnumTestProduce.JC_DAILY.getAddress();
+    public String IpPort = EnumTestProduce.JC_DAILY.getPort();
 
 
     /**
@@ -106,7 +106,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         object.put("phone", username);
         object.put("verification_code", password);
         commonConfig.roleId = roleId;
-        httpPost(path, object, EnumTestProduce.JC_DAILY.getAddress());
+        httpPost(path, object, EnumTestProduce.JC_DAILY.getPort());
     }
 
     //pc登录
@@ -116,7 +116,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         object.put("phone", phone);
         object.put("verification_code", verificationCode);
         commonConfig.roleId = roleId;
-        httpPost(path, object, EnumTestProduce.JC_DAILY.getAddress());
+        httpPost(path, object, EnumTestProduce.JC_DAILY.getPort());
     }
 
     @AfterClass

@@ -3,7 +3,7 @@ package com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.ddc;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.itemXundian.util.StoreScenarioUtilOnline;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.StoreScenarioUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;

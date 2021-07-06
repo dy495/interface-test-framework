@@ -1,8 +1,8 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.xmf;
 
 import com.haisheng.framework.model.bean.AppletCustomer;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;

@@ -2,15 +2,15 @@ package com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.zt;
 
 import com.alibaba.fastjson.JSONArray;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.base.proxy.VisitorProxy;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumAppletToken;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAppletToken;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
-import com.haisheng.framework.testng.bigScreen.itemXundian.util.MendianInfo;
-import com.haisheng.framework.testng.bigScreen.itemXundian.util.StoreScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.itemXundian.util.WechatScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.itemXundian.util.XundianScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.MendianInfo;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.StoreScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.WechatScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.XundianScenarioUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -101,7 +101,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             double latitude = 17.22;
             String tripartite_shop_id = "4321";
             int recommended = 70;
-            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/INS.jpg";
+            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/common/multimedia/picture/INS.jpg";
             String base64 = MendianInfo.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
             //获得初始的门店数量
@@ -185,7 +185,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             int wechatsize = wechatlist.size();
 
             xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
-            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/INS.jpg";
+            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/common/multimedia/picture/INS.jpg";
             String base64 = MendianInfo.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
             int pctotal = md.member_level_page(null, 1, 100).getInteger("total");
@@ -400,7 +400,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             JSONArray sortlist = wx.tasteSort(null).getJSONArray("list");
             int sortnum = sortlist.size();
             xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
-            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/INS.jpg";
+            String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/common/multimedia/picture/INS.jpg";
             String base64 = MendianInfo.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
             //创建前pc口味数量
@@ -558,7 +558,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
 //            int n = newProduct0.size();
 //
 //            //新增评论
-//            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/正脸.jpg";
+//            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/common/multimedia/picture/正脸.jpg";
 //            List<String> pathList = new ArrayList<String>();
 //            pathList.add(path);
 //            String result = md.taste_add_comment(id,path,"王路飞","王路飞觉得很赞",4,true,pathList).getString("result");

@@ -3,10 +3,10 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.pc;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.util.commonDs.JsonPathUtil;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.commonDs.JsonPathUtil;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Constant;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.manage.AppointmentMaintainConfigDetailBean;
@@ -59,7 +59,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
     @Override
     public void initial() {
         logger.debug("before classs initial");
-        jc.changeIpPort(EnumTestProduce.JC_ONLINE.getAddress());
+        jc.changeIpPort(EnumTestProduce.JC_ONLINE.getPort());
 
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
@@ -101,7 +101,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
         object.put("phone", username);
         object.put("verification_code", password);
         commonConfig.roleId=roleId;
-        httpPost(path, object, EnumTestProduce.JC_ONLINE.getAddress());
+        httpPost(path, object, EnumTestProduce.JC_ONLINE.getPort());
     }
 
     //pc登录
@@ -111,7 +111,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
         object.put("phone", phone);
         object.put("verification_code", verificationCode);
         commonConfig.roleId=roleId;
-        httpPost(path, object, EnumTestProduce.JC_ONLINE.getAddress());
+        httpPost(path, object, EnumTestProduce.JC_ONLINE.getPort());
     }
 
 

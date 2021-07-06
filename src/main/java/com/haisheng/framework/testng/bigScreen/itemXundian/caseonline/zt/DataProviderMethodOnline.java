@@ -149,7 +149,7 @@ public class DataProviderMethodOnline {
     @DataProvider(name = "FACE_URL")
     public static Object[] face_url(){
         return new String[]{
-                "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/女人脸.jpg",
+                "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/common/multimedia/picture/女人脸.jpg",
 
         };
     }

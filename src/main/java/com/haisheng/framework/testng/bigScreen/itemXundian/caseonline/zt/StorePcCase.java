@@ -5,9 +5,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.hqq.StorePcAndAppData;
 import com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.zt.DataProviderMethod;
-import com.haisheng.framework.testng.bigScreen.itemXundian.util.MendianInfoOnline;
-import com.haisheng.framework.testng.bigScreen.itemXundian.util.StoreScenarioUtilOnline;
-import com.haisheng.framework.testng.bigScreen.itemXundian.util.XundianScenarioUtilOnline;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.MendianInfoOnline;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.StoreScenarioUtilOnline;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.XundianScenarioUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -364,7 +364,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd{
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //注册会员时会员id重复也成功
-            String base64 = MendianInfoOnline.getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/女人脸.jpg");
+            String base64 = MendianInfoOnline.getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/common/multimedia/picture/女人脸.jpg");
             String path = md.checkPic(base64).getString("pic_path");
             JSONObject res0 = md.RegisterMember1(null,path,"uid_2cd5f8b4","qq11啊","13656788899","1998-10-01",null,130);
             Preconditions.checkArgument(res0.getString("message").equals("当前会员ID已经存在！"), "注册会员重复会员id也成功了message"+res0.getString("message"));

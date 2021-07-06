@@ -3,8 +3,8 @@ package com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.hqq;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.itemXundian.util.MendianInfo;
-import com.haisheng.framework.testng.bigScreen.itemXundian.util.XundianScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.MendianInfo;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.XundianScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.hqq.fucPackage.XdPackageData;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -39,7 +39,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
     String comment = "自动化在进行处理，闲人走开";
     Long shop_id = 43072L;
     String comment1 = "我们班有些同bai学一听到写作文头就大，但是我不一样，习作对于我来说简直就是一种乐趣。一般我都是越往下写我就越想写，也就觉得越有意思，还可以增加我对写作的喜爱。可为什么我们班同学就那么不喜欢写作文呢哈哈哈哈";
-    public String filepath = "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/卡券图.jpg";  //巡店不合格图片base64
+    public String filepath = "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/common/multimedia/picture/卡券图.jpg";  //巡店不合格图片base64
 
 
     //读取文件内容

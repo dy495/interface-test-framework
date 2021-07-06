@@ -2,12 +2,12 @@ package com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.base.proxy.VisitorProxy;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.bean.Response;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.*;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.scene.applet.AppletPorscheAMessageListScene;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.*;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.common.bean.Response;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.common.scene.applet.AppletPorscheAMessageListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletVoucherListScene;
-import com.haisheng.framework.testng.bigScreen.itemXundian.scene.applet.granted.AppletIntegralRecordScene;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.applet.granted.AppletIntegralRecordScene;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;

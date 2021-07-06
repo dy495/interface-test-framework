@@ -5,9 +5,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.hqq.StorePcAndAppData;
 import com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.zt.DataProviderMethod;
-import com.haisheng.framework.testng.bigScreen.itemXundian.util.MendianInfoOnline;
-import com.haisheng.framework.testng.bigScreen.itemXundian.util.StoreScenarioUtilOnline;
-import com.haisheng.framework.testng.bigScreen.itemXundian.util.XundianScenarioUtilOnline;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.MendianInfoOnline;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.StoreScenarioUtilOnline;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.XundianScenarioUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -141,7 +141,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
             String member_ID = "11223344";
             String member_name = "测试会员11@@aaa";
             String birthday = "1998-10-01";
-            String base64 = MendianInfoOnline.getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/女人脸.jpg");
+            String base64 = MendianInfoOnline.getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/common/multimedia/picture/女人脸.jpg");
             String path = md.checkPic(base64).getString("pic_path");
             md.RegisterMember(null,path,member_ID,member_name,phone,birthday,null,130);
 

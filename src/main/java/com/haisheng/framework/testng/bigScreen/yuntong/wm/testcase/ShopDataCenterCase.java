@@ -2,13 +2,13 @@ package com.haisheng.framework.testng.bigScreen.yuntong.wm.testcase;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.base.proxy.VisitorProxy;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumChecklistUser;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumTestProduce;
+import com.google.common.util.concurrent.AtomicDouble;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistUser;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.yuntong.wm.enumerate.EnumDataCycleType;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.manage.*;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.util.BusinessUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -21,7 +21,6 @@ import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 会听数据
@@ -36,7 +35,6 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
     public BusinessUtil util = new BusinessUtil(visitor);
     private static final String startDate = "2021-06-23";
     private static final String endDate = "2021-06-23";
-    private static final Integer dataCycleType = EnumDataCycleType.CUSTOM.getId();
 
     @BeforeClass
     @Override
@@ -154,6 +152,7 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    //bug
     @Test(description = "【星级比例】欢迎接待中的x星级比例=【星级评分详情】欢迎接待中x星级条数/列表条数", dataProvider = "starType")
     public void data_4(String type, Integer scoreValue, String name) {
         logger.logCaseStart(caseResult.getCaseName());
@@ -230,6 +229,56 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
             collectMessage(e);
         } finally {
             saveData("【星级评分趋势】星级=【星级评分详情】总分的星级=【星级比例】全部环节中为100%的星级");
+        }
+    }
+
+    @Test(description = "各个环节中各星级比例相加为100％")
+    public void data_7() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String[] strings = {"全部环节", "欢迎接待", "新车推荐", "试乘试驾", "车辆提案", "个性需求"};
+            Arrays.stream(strings).forEach(string -> {
+                AtomicDouble rateScore = new AtomicDouble();
+                IScene evaluateV4ScoreRateScene = EvaluateV4ScoreRateScene.builder().receptionStart(startDate).receptionEnd(endDate).evaluateType(5).build();
+                List<JSONObject> rateList = util.toJavaObjectList(evaluateV4ScoreRateScene, JSONObject.class, "list");
+                rateList.stream().filter(e -> e.getString("type_name").equals(string)).forEach(e -> {
+                    double a = Integer.parseInt(e.getString("one").replace("%", ""));
+                    double b = Integer.parseInt(e.getString("two").replace("%", ""));
+                    double c = Integer.parseInt(e.getString("three").replace("%", ""));
+                    double d = Integer.parseInt(e.getString("four").replace("%", ""));
+                    double f = Integer.parseInt(e.getString("five").replace("%", ""));
+                    rateScore.addAndGet(a + b + c + d + f);
+                });
+                CommonUtil.valueView(rateScore);
+                Preconditions.checkArgument(rateScore.get() == 100, string + "环节中各星级比例相加为100％:" + rateScore);
+            });
+
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("各个环节中各星级比例相加为100％");
+        }
+    }
+
+    @Test(description = "各个环节中各星级比例相加为100％")
+    public void data_8() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene evaluateV4PageScene = EvaluateV4PageScene.builder().receptionStart(startDate).evaluateEnd(endDate).evaluateType(5).build();
+            List<JSONObject> evaluateV4PageList = util.toJavaObjectList(evaluateV4PageScene, JSONObject.class);
+            evaluateV4PageList.forEach(evaluateV4Page -> {
+                int total = evaluateV4Page.getInteger("total");
+                long id = evaluateV4Page.getLong("id");
+                IScene evaluateV4DetailScene = EvaluateV4DetailScene.builder().id(id).build();
+                List<JSONObject> evaluateV4DetailList = util.toJavaObjectList(evaluateV4DetailScene, JSONObject.class, "info");
+                int scoreSum = evaluateV4DetailList.stream().mapToInt(e -> e.getInteger("score")).sum();
+                int mathResult = CommonUtil.getIntRatio(scoreSum, evaluateV4DetailList.size());
+                CommonUtil.valueView(total, mathResult);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("各个环节中各星级比例相加为100％");
         }
     }
 }

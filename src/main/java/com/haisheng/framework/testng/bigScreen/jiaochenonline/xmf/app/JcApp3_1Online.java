@@ -3,10 +3,10 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.app;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.util.commonDs.JsonPathUtil;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.commonDs.JsonPathUtil;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletConsultAfterServiceSubmitScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletConsultOnlineExpertsSubmitScene;
@@ -58,7 +58,7 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistQaOwner = "夏明凤";
         commonConfig.referer = EnumTestProduce.JC_ONLINE.getReferer();
         commonConfig.product=EnumTestProduce.JC_ONLINE.getAbbreviation();
-        jc.changeIpPort(EnumTestProduce.JC_ONLINE.getAddress());
+        jc.changeIpPort(EnumTestProduce.JC_ONLINE.getPort());
 
         //replace backend gateway url
         //commonConfig.gateway = "";
@@ -92,7 +92,7 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
         object.put("phone", username);
         object.put("verification_code", password);
         commonConfig.roleId = roleId;
-        httpPost(path, object, EnumTestProduce.JC_ONLINE.getAddress());
+        httpPost(path, object, EnumTestProduce.JC_ONLINE.getPort());
     }
 
     //pc登录
@@ -102,7 +102,7 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
         object.put("phone", phone);
         object.put("verification_code", verificationCode);
         commonConfig.roleId = roleId;
-        httpPost(path, object, EnumTestProduce.JC_ONLINE.getAddress());
+        httpPost(path, object, EnumTestProduce.JC_ONLINE.getPort());
     }
 
     public void startReception(){

@@ -3,9 +3,9 @@ package com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.lxq;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.itemXundian.util.MendianInfoOnline;
-import com.haisheng.framework.testng.bigScreen.itemXundian.util.StoreScenarioUtilOnline;
-import com.haisheng.framework.testng.bigScreen.itemXundian.util.XundianScenarioUtilOnline;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.MendianInfoOnline;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.StoreScenarioUtilOnline;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.XundianScenarioUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -29,7 +29,7 @@ public class XundianPCSystemOnline extends TestCaseCommon implements TestCaseStd
     XundianScenarioUtilOnline xd = XundianScenarioUtilOnline.getInstance();
     StoreScenarioUtilOnline md = StoreScenarioUtilOnline.getInstance();
     MendianInfoOnline info = new MendianInfoOnline();
-    public String filepath="src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/64.txt";  //巡店不合格图片base64
+    public String filepath="src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/common/multimedia/picture/64.txt";  //巡店不合格图片base64
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name

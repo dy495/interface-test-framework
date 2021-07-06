@@ -2,8 +2,8 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf;
 
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.bean.DataTemp;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -40,7 +40,7 @@ public class JcCancleAppointmentOnLine extends TestCaseCommon implements TestCas
     public void initial1() {
         logger.debug("before classs initial");
         CommonConfig commonConfig = new CommonConfig();
-        jc.changeIpPort(EnumTestProduce.JC_ONLINE.getAddress());
+        jc.changeIpPort(EnumTestProduce.JC_ONLINE.getPort());
 
 
         //replace checklist app id and conf id

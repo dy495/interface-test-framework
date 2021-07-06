@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.arronlong.httpclientutil.HttpClientUtil;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.itemXundian.util.MendianInfo;
-import com.haisheng.framework.testng.bigScreen.itemXundian.util.XundianScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.MendianInfo;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.XundianScenarioUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.util.ImageUtil;
 import org.testng.annotations.DataProvider;
@@ -44,7 +44,7 @@ public class XdPackageData extends TestCaseCommon {
      */
     public String IpPort = "http://123.57.148.247";
     XundianScenarioUtil xd = XundianScenarioUtil.getInstance();
-    public String filepath = "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/卡券图.jpg";  //巡店不合格图片base64
+    public String filepath = "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/common/multimedia/picture/卡券图.jpg";  //巡店不合格图片base64
     MendianInfo info = new MendianInfo();
     /**
      * @description:登录
@@ -75,23 +75,23 @@ public class XdPackageData extends TestCaseCommon {
     @DataProvider(name = "FACE_URL")
     public static Object[] face_url(){
         return new String[]{
-                "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/正脸.jpg"
+                "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/common/multimedia/picture/正脸.jpg"
         };
     }
     @DataProvider(name = "FACE_URL1")
     public static Object[] face_url1(){
         return new String[]{
-                "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/倒过来的脸.jpg",
-                "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/三分之一脸.jpg",
-                "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/三分之二脸.jpg",
-                "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/侧脸.jpg",
-                "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/光线暗淡脸.jpg",
-                "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/动漫正脸图.jpg",
-                "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/动物图.jpg",
-                "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/化妆人脸.jpg",
-                "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/多张人脸.jpg",
-                "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/模糊不清正脸.jpg",
-                "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/multimedia/picture/鬼脸.jpg",
+                "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/common/multimedia/picture/倒过来的脸.jpg",
+                "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/common/multimedia/picture/三分之一脸.jpg",
+                "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/common/multimedia/picture/三分之二脸.jpg",
+                "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/common/multimedia/picture/侧脸.jpg",
+                "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/common/multimedia/picture/光线暗淡脸.jpg",
+                "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/common/multimedia/picture/动漫正脸图.jpg",
+                "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/common/multimedia/picture/动物图.jpg",
+                "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/common/multimedia/picture/化妆人脸.jpg",
+                "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/common/multimedia/picture/多张人脸.jpg",
+                "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/common/multimedia/picture/模糊不清正脸.jpg",
+                "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/common/multimedia/picture/鬼脸.jpg",
         };
     }
 

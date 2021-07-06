@@ -2,13 +2,12 @@ package com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.gly.util;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.base.proxy.VisitorProxy;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.gly.StoreInspectionCase;
-import com.haisheng.framework.testng.bigScreen.itemXundian.enumerator.EventStateEnum;
-import com.haisheng.framework.testng.bigScreen.itemXundian.scene.checkrisk.tasks.ListScene;
-import com.haisheng.framework.testng.bigScreen.itemXundian.scene.checkriskalarm.HandleScene;
-import com.haisheng.framework.testng.bigScreen.itemXundian.util.StoreScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.enumerator.EventStateEnum;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.checkrisk.tasks.ListScene;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.checkriskalarm.HandleScene;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.StoreScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 
 import java.util.ArrayList;

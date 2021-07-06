@@ -8,9 +8,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.arronlong.httpclientutil.HttpClientUtil;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.config.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.xmf.interfaceDemo.*;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.util.commonDsOnline.CustomerInfoOnline;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.commonDsOnline.CustomerInfoOnline;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.caseonline.xmf.interfaceOnline.FinishReceptionOnline;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.caseonline.xmf.interfaceOnline.OrderCarOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -62,7 +62,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
     /***
      * 方法区，不同产品的测试场景各不相同，自行更改
      */
-    public String IpPort = EnumTestProduce.PORSCHE_ONLINE.getAddress();
+    public String IpPort = EnumTestProduce.PORSCHE_ONLINE.getPort();
 
     //----------------------登陆--------------------
     public void login(String userName, String password) {
@@ -3662,13 +3662,13 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
 
     /**
      * @param comment             回访记录
-     * @param failureCause        战败原因 {@link com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.sale.EnumFailureCause}
+     * @param failureCause        战败原因 {@link com.haisheng.framework.testng.bigScreen.itemPorsche.common.enumerator.sale.EnumFailureCause}
      * @param failureCauseRemark  战败备注
      * @param ifSystemRecommend   是否系统推荐
      * @param nextReturnVisitDate 下次回访日期
-     * @param otherStoreCarType   他店购车车型 {@link com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.customer.EnumCarModel}
+     * @param otherStoreCarType   他店购车车型 {@link com.haisheng.framework.testng.bigScreen.itemPorsche.common.enumerator.customer.EnumCarModel}
      * @param preBuyCarTime       预计购车时间
-     * @param returnVisitResult   回访结果 {@link com.haisheng.framework.testng.bigScreen.itemPorsche.enumerator.sale.EnumReturnVisitResult}
+     * @param returnVisitResult   回访结果 {@link com.haisheng.framework.testng.bigScreen.itemPorsche.common.enumerator.sale.EnumReturnVisitResult}
      * @param taskId              任务id
      * @param returnVisitPic      回访图片
      */
