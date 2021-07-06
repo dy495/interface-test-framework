@@ -12,7 +12,7 @@
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.lxq.SystemCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.lxq.DataCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.lxq.SystemCaseV3"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.emunListCheckNotNull"/>
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochen.EnumListCheckNotNull"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.pc.JcPc"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.pc.JcPc2_0"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochen.xmf.app.JcApp"/>

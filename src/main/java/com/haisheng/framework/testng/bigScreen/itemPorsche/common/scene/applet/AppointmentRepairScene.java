@@ -34,8 +34,5 @@ public class AppointmentRepairScene extends BaseScene {
         return "/WeChat-applet/porsche/a/appointment/repair";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

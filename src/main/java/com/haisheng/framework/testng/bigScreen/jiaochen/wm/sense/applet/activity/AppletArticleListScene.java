@@ -25,8 +25,5 @@ public class AppletArticleListScene extends BaseScene {
         return "/jiaochen/applet/article/page";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

@@ -1,6 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer;
 
-public class appletInfoEdit {
+public class AppletInfoEdit {
     public String name;
     public String contact;
     public String gender;

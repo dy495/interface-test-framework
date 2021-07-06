@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterators;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.pcCreateGoods;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.PcCreateGoods;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -1755,7 +1755,7 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
     public void goodEdit1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            pcCreateGoods er=new pcCreateGoods();
+            PcCreateGoods er=new PcCreateGoods();
             er.checkcode=false;
             er.id=9999L;
 

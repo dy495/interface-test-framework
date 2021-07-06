@@ -1,7 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer;
 
 
-public class pccreateStoreSales {
+public class PcCreateStoreSales {
     public String sales_phone;
     public String sales_name;
     public String shop_id;

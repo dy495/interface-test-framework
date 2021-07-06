@@ -25,8 +25,5 @@ public class DetailAfterSaleCustomerScene extends BaseScene {
         return "/porsche/app/after_sale/detail_after_sale_customer";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

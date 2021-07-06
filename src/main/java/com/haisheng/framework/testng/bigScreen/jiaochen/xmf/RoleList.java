@@ -3,7 +3,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.xmf;
 import java.util.Arrays;
 import java.util.Optional;
 
-public enum roleList {
+public enum RoleList {
     DateAccess0("全部",136),
     DateAccess1("个人",142),
     DateAccess2("导出",193),
@@ -90,13 +90,13 @@ public enum roleList {
         return lable;
     }
 
-    roleList(String lable,int value){
+    RoleList(String lable, int value){
             this.lable=lable;
             this.value=value;
 
     }
-    public static roleList findByLable(String lable){
-        Optional <roleList> any= Arrays.stream(values()).filter(f->f.getLable().equals(lable)).findAny();
+    public static RoleList findByLable(String lable){
+        Optional <RoleList> any= Arrays.stream(values()).filter(f->f.getLable().equals(lable)).findAny();
 
         return any.get();
     }

@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.shopMallDaily;
+package com.haisheng.framework.testng.bigScreen.itemMall.common.datastore;
 
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.datacheck.DataCheckRunner;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.datacheck.data.OTSRowData;

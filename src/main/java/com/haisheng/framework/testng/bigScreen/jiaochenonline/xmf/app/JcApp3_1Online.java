@@ -13,7 +13,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletConsultPreServiceSubmitScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.consultmanagement.ResponseRuleEditScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.followType;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.FollowType;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.JcFunctionOnline;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.PublicParmOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -365,7 +365,7 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
             JSONObject data=jc.invokeApi(onlineExpert);
 
             //跟进列表 获取id
-            JSONObject followList=jc.AppPageV3Scene(10,null, followType.ONLINE_EXPERTS.getName());
+            JSONObject followList=jc.AppPageV3Scene(10,null, FollowType.ONLINE_EXPERTS.getName());
             int total=followList.getInteger("total");
             Long id=followList.getJSONArray("list").getJSONObject(0).getLong("id");
 
@@ -380,7 +380,7 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
             JSONObject lastvalue=null;
             int size=10;
             while(size<10){
-                JSONObject followPageAfter=jc.AppPageV3Scene(10,lastvalue, followType.ONLINE_EXPERTS.getName());
+                JSONObject followPageAfter=jc.AppPageV3Scene(10,lastvalue, FollowType.ONLINE_EXPERTS.getName());
                 JSONArray followListAfter=followPageAfter.getJSONArray("list");
                 size=followListAfter.size();
                 lastvalue=followPageAfter.getJSONObject("last_value");
@@ -408,7 +408,7 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
     public void follow_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject followListBefore=jc.AppPageV3Scene(10,null, followType.ONLINE_EXPERTS.getName());
+            JSONObject followListBefore=jc.AppPageV3Scene(10,null, FollowType.ONLINE_EXPERTS.getName());
             int totalBefore=followListBefore.getInteger("total");
             IScene onlineExpert = AppletConsultAfterServiceSubmitScene.builder()
                     .shopId(Long.valueOf(pp.shopIdZ))
@@ -421,7 +421,7 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
             JSONObject data=jc.invokeApi(onlineExpert);
 
             //跟进列表 获取id
-            JSONObject followList=jc.AppPageV3Scene(10,null, followType.ONLINE_EXPERTS.getName());
+            JSONObject followList=jc.AppPageV3Scene(10,null, FollowType.ONLINE_EXPERTS.getName());
             int total=followList.getInteger("total");
             Long id=followList.getJSONArray("list").getJSONObject(0).getLong("id");
 
@@ -437,7 +437,7 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
             JSONObject lastvalue=null;
             int size=10;
             while(size<10){
-                JSONObject followPageAfter=jc.AppPageV3Scene(10,lastvalue, followType.ONLINE_EXPERTS.getName());
+                JSONObject followPageAfter=jc.AppPageV3Scene(10,lastvalue, FollowType.ONLINE_EXPERTS.getName());
                 JSONArray followListAfter=followPageAfter.getJSONArray("list");
                 size=followListAfter.size();
                 lastvalue=followPageAfter.getJSONObject("last_value");
@@ -622,8 +622,8 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
     @DataProvider(name = "onlineExpertrInfo")
     public static Object[] onlineExpertrInfo(){
         return new String[]{
-                followType.ONLINE_EXPERTS.getType(),
-                followType.SALES.getType(),
+                FollowType.ONLINE_EXPERTS.getType(),
+                FollowType.SALES.getType(),
         };
     }
 
@@ -657,8 +657,8 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
     @DataProvider(name = "repairreply")
     public static Object[] repairreply(){
         return new String[]{
-                followType.MAINTAIN_EVALUATE.getType(),
-                followType.REPAIR_EVALUATE.getType(),
+                FollowType.MAINTAIN_EVALUATE.getType(),
+                FollowType.REPAIR_EVALUATE.getType(),
         };
     }
 

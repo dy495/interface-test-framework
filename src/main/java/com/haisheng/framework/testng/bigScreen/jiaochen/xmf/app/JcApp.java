@@ -13,7 +13,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.DataAbnormal;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.SelectReception;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appointmentRecodeSelect;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.AppointmentRecodeSelect;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -228,7 +228,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
 
             //pc登录  预约记录页该顾问今日数据
             pcLogin(pp.jdgw, pp.gwpassword, pp.roleidJdgw);
-            IScene scene = appointmentRecodeSelect.builder().page("1")
+            IScene scene = AppointmentRecodeSelect.builder().page("1")
                     .size("100").service_sale_id(pp.userid)
                     .shop_id(pp.shopIdZ)
                     .create_end(dt.getHistoryDate(0))
@@ -236,7 +236,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
 
             int appointmentTotal1 = jc.invokeApi(scene).getInteger("total");
 
-            IScene scene2 = appointmentRecodeSelect.builder().page("1")
+            IScene scene2 = AppointmentRecodeSelect.builder().page("1")
                     .size("10").service_sale_id(pp.userid)
                     .shop_id(pp.shopIdZ)
                     .appointment_status("20")
@@ -281,7 +281,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
 
             //pc登录  预约记录页该顾问今日数据
             pcLogin(pp.dzphone, pp.dzcode, pp.dzroleId);
-            IScene scene = appointmentRecodeSelect.builder().page("1")
+            IScene scene = AppointmentRecodeSelect.builder().page("1")
                     .size("10")
                     .shop_id(pp.shopIdZ)
                     .create_end(dt.getHistoryDate(0))
@@ -289,7 +289,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
 
             int appointmentTotal1 = jc.invokeApi(scene).getInteger("total");
 
-            IScene scene2 = appointmentRecodeSelect.builder().page("1")
+            IScene scene2 = AppointmentRecodeSelect.builder().page("1")
                     .size("10")
                     .shop_id(pp.shopIdZ)
                     .appointment_status("20")
@@ -333,14 +333,14 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
 
             //pc登录  预约记录页该顾问今日数据
             pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
-            IScene scene = appointmentRecodeSelect.builder().page("1")
+            IScene scene = AppointmentRecodeSelect.builder().page("1")
                     .size("10")
                     .create_end(dt.getHistoryDate(0))
                     .create_start(dt.getHistoryDate(0)).build();
 
             int appointmentTotal1 = jc.invokeApi(scene).getInteger("total");
 
-            IScene scene2 = appointmentRecodeSelect.builder().page("1")
+            IScene scene2 = AppointmentRecodeSelect.builder().page("1")
                     .size("10")
                     .appointment_status("20")
                     .create_end(dt.getHistoryDate(0))

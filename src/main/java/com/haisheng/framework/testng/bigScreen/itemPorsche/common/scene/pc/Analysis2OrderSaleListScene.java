@@ -30,8 +30,5 @@ public class Analysis2OrderSaleListScene extends BaseScene {
         return "/porsche/analysis2/order/sale-list";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

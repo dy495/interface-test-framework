@@ -51,8 +51,5 @@ public class PurchaseFixedPackageScene extends BaseScene {
         return "/jiaochen/pc/package-manage/purchase-fixed-package";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

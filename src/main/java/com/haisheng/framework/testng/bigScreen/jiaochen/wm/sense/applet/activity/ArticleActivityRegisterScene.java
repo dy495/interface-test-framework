@@ -26,8 +26,5 @@ public class ArticleActivityRegisterScene extends BaseScene {
         return "/jiaochen/applet/granted/article/activity/register";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

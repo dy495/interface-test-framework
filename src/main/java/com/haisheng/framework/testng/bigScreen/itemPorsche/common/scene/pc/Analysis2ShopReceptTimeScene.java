@@ -29,8 +29,5 @@ public class Analysis2ShopReceptTimeScene extends BaseScene {
         return "/porsche/analysis2/shop/recept-time";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

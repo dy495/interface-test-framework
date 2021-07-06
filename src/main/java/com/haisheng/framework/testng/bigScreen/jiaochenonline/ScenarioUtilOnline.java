@@ -1098,7 +1098,7 @@ public class ScenarioUtilOnline extends TestCaseCommon {
      * @date :2020/11/24 19:28
      **/
 
-    public JSONObject StartReception(appStartReception sr) {
+    public JSONObject StartReception(AppStartReception sr) {
         String url = "/jiaochen/m-app/task/reception/start-reception";
         JSONObject json = new JSONObject();
         json.put("id", sr.id);
@@ -1141,7 +1141,7 @@ public class ScenarioUtilOnline extends TestCaseCommon {
      * @description :小程序预约xmf
      * @date :2020/11/25 17:01
      **/
-    public JSONObject appletAppointment(appletAppointment pm) {
+    public JSONObject appletAppointment(AppletAppointment pm) {
         String url = "/jiaochen/m-app/task/reception/cancel-reception";
         JSONObject json1 = new JSONObject();
         json1.put("shop_id", pm.shop_id);
@@ -1227,7 +1227,7 @@ public class ScenarioUtilOnline extends TestCaseCommon {
      * @description :活动报名xmf
      * @date :2020/11/28 12:20
      **/
-    public JSONObject appletactivityRegister(appletActivityRegister pm) {
+    public JSONObject appletactivityRegister(AppletActivityRegister pm) {
         String url = "/jiaochen/applet/granted/article/activity/register";
         JSONObject json1 = new JSONObject();
         json1.put("id", pm.id);
@@ -3923,7 +3923,7 @@ public class ScenarioUtilOnline extends TestCaseCommon {
      * @date :2021/1/22 17:07
      **/
 
-    public JSONObject editGoodMethod(pcCreateGoods er) {
+    public JSONObject editGoodMethod(PcCreateGoods er) {
         String url = "/jiaochen/pc/integral-mall/edit-goods";
         JSONObject json1 = new JSONObject();
         json1.put("id", er.id);

@@ -8,13 +8,13 @@
 
     <test name="daily-rgn" preserve-order="true">
         <classes>
-            <class name="com.haisheng.framework.testng.bigScreen.shopMallDaily.MallDataStore">
+            <class name="com.haisheng.framework.testng.bigScreen.itemMall.common.datastore.MallDataStore">
                 <methods>
                     <include name="realTimeData"/>
                 </methods>
             </class>
-            <class name="com.haisheng.framework.testng.bigScreen.shopMallDaily.MallEveryHourDataStore"/>
-            <class name="com.haisheng.framework.testng.bigScreen.shopMallDaily.MallDataCenter"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemMall.common.datastore.MallEveryHourDataStore"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemMall.casedaily.MallDataCenter"/>
         </classes>
     </test>
 </suite>

@@ -34,8 +34,5 @@ public class Analysis2BatchListScene extends BaseScene {
         return "/porsche/analysis2/batch/list";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

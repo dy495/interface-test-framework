@@ -21,8 +21,5 @@ public class ShopQrcodeScene extends BaseScene {
         return "/porsche/app/shop/qrcode";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

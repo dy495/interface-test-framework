@@ -35,8 +35,5 @@ public class AppointmentTestDriverScene extends BaseScene {
         return "/WeChat-applet/porsche/a/appointment/test-drive";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

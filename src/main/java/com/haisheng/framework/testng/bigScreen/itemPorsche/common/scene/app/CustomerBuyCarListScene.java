@@ -25,8 +25,5 @@ public class CustomerBuyCarListScene extends BaseScene {
         return "/porsche/app/customer/buy-car-list";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

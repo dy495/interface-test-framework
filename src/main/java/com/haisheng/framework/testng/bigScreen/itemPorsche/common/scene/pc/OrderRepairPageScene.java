@@ -33,8 +33,5 @@ public class OrderRepairPageScene extends BaseScene {
         return "/porsche/order-manage/order/repair/page";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

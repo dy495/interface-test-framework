@@ -30,8 +30,5 @@ public class Analysis2DealWholeCountryScene extends BaseScene {
         return "/porsche/analysis2/deal/whole-country";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

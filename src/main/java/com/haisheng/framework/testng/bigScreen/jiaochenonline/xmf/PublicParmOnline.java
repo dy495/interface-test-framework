@@ -21,7 +21,7 @@ public class PublicParmOnline {
     public String reception_sale_id="接待顾问x";
     public String name="";
     public String customerPhone = "15037286013";
-    public String filepath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/intefer/jcBase64.txt";
+    public String filepath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/jcBase64.txt";
 
     public String shichang="";
     public String shichangPassword="";

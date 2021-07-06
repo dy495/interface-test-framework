@@ -25,8 +25,5 @@ public class SendPickUpNewsScene extends BaseScene {
         return "/porsche/app/after_sale/send-pick-up-news";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

@@ -31,8 +31,5 @@ public class CarStyleChangeListScene extends BaseScene {
         return "/porsche/analysis2/region/car-style-change-list";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

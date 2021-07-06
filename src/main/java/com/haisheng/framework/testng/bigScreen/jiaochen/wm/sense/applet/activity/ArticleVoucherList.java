@@ -23,8 +23,5 @@ public class ArticleVoucherList extends BaseScene {
         return "/jiaochen/applet/granted/article/voucher/list";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

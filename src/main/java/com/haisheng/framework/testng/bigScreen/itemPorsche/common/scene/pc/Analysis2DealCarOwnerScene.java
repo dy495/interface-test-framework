@@ -30,8 +30,5 @@ public class Analysis2DealCarOwnerScene extends BaseScene {
         return "/porsche/analysis2/deal/car-owner";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

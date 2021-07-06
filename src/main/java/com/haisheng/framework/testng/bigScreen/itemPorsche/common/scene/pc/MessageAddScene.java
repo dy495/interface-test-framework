@@ -42,8 +42,5 @@ public class MessageAddScene extends BaseScene {
         return "/porsche/message/add";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

@@ -90,8 +90,5 @@ public class EditAfterSaleCustomerScene extends BaseScene {
         return "/porsche/app/after_sale/edit_after_sale_customer";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

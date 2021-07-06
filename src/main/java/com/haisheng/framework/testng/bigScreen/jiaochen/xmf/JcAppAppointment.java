@@ -6,7 +6,7 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appletAppointment;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.AppletAppointment;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -142,7 +142,7 @@ public class JcAppAppointment extends TestCaseCommon implements TestCaseStd {
 
             jc.appletLoginToken(pp.appletTocken);
             //小程序预约
-            appletAppointment pm = new appletAppointment();
+            AppletAppointment pm = new AppletAppointment();
             pm.car_id = pp.car_idA;
             pm.appointment_name = "自动夏";
             pm.shop_id = Long.parseLong(pp.shopIdZ);
@@ -178,7 +178,7 @@ public class JcAppAppointment extends TestCaseCommon implements TestCaseStd {
             jc.appletLoginToken(pp.appletTocken);
             int total = jc.appletAppointmentList("MAINTAIN", "20", null).getInteger("total");
             //预约
-            appletAppointment pm = new appletAppointment();
+            AppletAppointment pm = new AppletAppointment();
             pm.car_id = pp.car_idA;
             pm.appointment_name = "自动夏";
             pm.shop_id = Long.parseLong(pp.shopIdZ);

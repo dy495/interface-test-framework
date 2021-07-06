@@ -29,8 +29,5 @@ public class Analysis2ShopSaleFunnelScene extends BaseScene {
         return "/porsche/analysis2/shop/sale-funnel";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

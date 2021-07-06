@@ -9,11 +9,11 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAppletTo
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.jiaoChenInfo;
+import com.haisheng.framework.testng.bigScreen.jiaochen.JiaoChenInfo;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.pcCreateGoods;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.PcCreateGoods;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -37,7 +37,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
 
     ScenarioUtil jc = ScenarioUtil.getInstance();
-    jiaoChenInfo info = new jiaoChenInfo();
+    JiaoChenInfo info = new JiaoChenInfo();
     PublicParm pp = new PublicParm();
     String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
     CommonConfig commonConfig = new CommonConfig();
@@ -2004,7 +2004,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     public void goodEdit1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            pcCreateGoods er = new pcCreateGoods();
+            PcCreateGoods er = new PcCreateGoods();
             er.checkcode = false;
             er.id = 9999L;
 
@@ -2053,7 +2053,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             //新建商品
 
 
-            pcCreateGoods good = new pcCreateGoods();
+            PcCreateGoods good = new PcCreateGoods();
             good.first_category = Long.parseLong(idone);
             good.second_category = Long.parseLong(idtwo);
             good.third_category = Long.parseLong(idthree);
@@ -2167,7 +2167,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
             //新建商品
 
-            pcCreateGoods good = new pcCreateGoods();
+            PcCreateGoods good = new PcCreateGoods();
             good.first_category = Long.parseLong(idone);
             good.second_category = Long.parseLong(idtwo);
             good.third_category = Long.parseLong(idthree);

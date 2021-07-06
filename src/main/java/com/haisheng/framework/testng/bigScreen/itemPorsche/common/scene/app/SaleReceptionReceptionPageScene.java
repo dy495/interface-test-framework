@@ -35,8 +35,5 @@ public class SaleReceptionReceptionPageScene extends BaseScene {
         return "/porsche/app/sale-reception/reception-page";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

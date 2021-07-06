@@ -29,7 +29,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
-public class jiaoChenInfo {
+public class JiaoChenInfo {
     DateTimeUtil dt = new DateTimeUtil();
     PublicParm pp = new PublicParm();
     ScenarioUtil jc = ScenarioUtil.getInstance();

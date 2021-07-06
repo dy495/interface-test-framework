@@ -45,8 +45,5 @@ public class ReturnVisitTaskExecuteScene extends BaseScene {
         return "/porsche/app/return-visit-task/execute";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

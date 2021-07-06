@@ -7,7 +7,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.jiaoChenInfo;
+import com.haisheng.framework.testng.bigScreen.jiaochen.JiaoChenInfo;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.model.AppletModeListScene;
@@ -47,7 +47,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public UserUtil user = new UserUtil(visitor);
     public SupporterUtil util = new SupporterUtil(visitor);
-    jiaoChenInfo info = new jiaoChenInfo();
+    JiaoChenInfo info = new JiaoChenInfo();
     ScenarioUtil jc = ScenarioUtil.getInstance();
 
     PublicParm pp = new PublicParm();

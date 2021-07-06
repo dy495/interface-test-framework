@@ -35,8 +35,5 @@ public class Analysis2ShopPanelScene extends BaseScene {
         return "/porsche/analysis2/shop/pannel";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

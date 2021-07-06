@@ -2,7 +2,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer;
 
 import com.alibaba.fastjson.JSONArray;
 
-public class pccreateActile {
+public class PcCreateActile {
     public String title;
     public String pic_type;
     public JSONArray pic_list;

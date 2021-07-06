@@ -1,6 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer;
 
-public class appStartReception {
+public class AppStartReception {
     public String id;
     public String is_new;
     public String plate_number;

@@ -19,7 +19,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.DataAbnormal;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.SelectReception;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.pcAppointmentConfig;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.PcAppointmentConfig;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -957,7 +957,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             pcLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
             JSONArray voucher = new JSONArray();
             voucher.add("77");
-            pcAppointmentConfig er = new pcAppointmentConfig();
+            PcAppointmentConfig er = new PcAppointmentConfig();
             er.type = type;
             er.remind_time = "720";
             er.replay_time_limit = "720";
@@ -996,7 +996,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             jc.pcLogin(pp.jdgw, pp.jdgwpassword);
             JSONArray voucher = new JSONArray();
             voucher.add("77");
-            pcAppointmentConfig er = new pcAppointmentConfig();
+            PcAppointmentConfig er = new PcAppointmentConfig();
             er.checkcode = false;
             er.type = "MAINTAIN";
             er.remind_time = "30";
@@ -1024,7 +1024,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             jc.pcLogin(pp.jdgw, pp.jdgwpassword);
             JSONArray voucher = new JSONArray();
             voucher.add("77");
-            pcAppointmentConfig er = new pcAppointmentConfig();
+            PcAppointmentConfig er = new PcAppointmentConfig();
             er.checkcode = false;
             er.type = "MAINTAIN";
             er.remind_time = "721";

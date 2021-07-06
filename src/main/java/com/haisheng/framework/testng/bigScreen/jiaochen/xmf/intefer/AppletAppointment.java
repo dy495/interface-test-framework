@@ -1,6 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer;
 
-public class appletAppointment {
+public class AppletAppointment {
     public Long shop_id;
     public String staff_id;
     public Long time_id;

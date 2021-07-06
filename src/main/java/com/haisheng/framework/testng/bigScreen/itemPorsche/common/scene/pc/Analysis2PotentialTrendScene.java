@@ -31,8 +31,5 @@ public class Analysis2PotentialTrendScene extends BaseScene {
         return "/porsche/analysis2/potential/trend";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

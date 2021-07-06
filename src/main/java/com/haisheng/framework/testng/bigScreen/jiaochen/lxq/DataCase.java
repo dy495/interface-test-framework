@@ -8,7 +8,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAppletTo
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.jiaoChenInfo;
+import com.haisheng.framework.testng.bigScreen.jiaochen.JiaoChenInfo;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shop.EditScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
@@ -40,7 +40,7 @@ public class DataCase extends TestCaseCommon implements TestCaseStd {
     public UserUtil user = new UserUtil(visitor);
 
     ScenarioUtil jc = ScenarioUtil.getInstance();
-    jiaoChenInfo info = new jiaoChenInfo();
+    JiaoChenInfo info = new JiaoChenInfo();
     PublicParm pp = new PublicParm();
 
     /**

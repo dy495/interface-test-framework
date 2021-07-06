@@ -25,8 +25,5 @@ public class Analysis2SkuRankScene extends BaseScene {
         return "/porsche/analysis2/sku/rank";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

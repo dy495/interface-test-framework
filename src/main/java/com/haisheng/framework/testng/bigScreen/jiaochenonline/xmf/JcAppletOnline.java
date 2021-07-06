@@ -7,7 +7,7 @@ import com.google.inject.internal.util.$Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appletActivityRegister;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.AppletActivityRegister;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -305,7 +305,7 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
             Long activity_id = aid[1];
             jc.pcLogin(pp.shichang, pp.shichangPassword);
             int num[] = pf.jsonActivityNUm(activity_id.toString());
-            appletActivityRegister ar = new appletActivityRegister();
+            AppletActivityRegister ar = new AppletActivityRegister();
 
             jc.appletLoginToken(pp.appletTocken);
             JSONObject data = jc.appletactivityRegister(ar);
@@ -345,7 +345,7 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
             Long activity_id = aid[1];
 
             int num[] = pf.appletActivityDetail(activity_id.toString());
-            appletActivityRegister ar = new appletActivityRegister();
+            AppletActivityRegister ar = new AppletActivityRegister();
             //活动报名
             JSONObject data = jc.appletactivityRegister(ar);
             String appointment_id = data.getString("appointment_id");
@@ -385,7 +385,7 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
             Long activity_id = aid[1];
 
             int num[] = pf.appletActivityDetail(activity_id.toString());
-            appletActivityRegister ar = new appletActivityRegister();
+            AppletActivityRegister ar = new AppletActivityRegister();
             //活动报名
             jc.appletactivityRegister(ar);
 

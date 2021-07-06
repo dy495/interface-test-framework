@@ -13,9 +13,9 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesre
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.AppStartReceptionScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.record.ImportPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherListScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appStartReception;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appletAppointment;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.pccreateActile;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.AppStartReception;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.AppletAppointment;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.PcCreateActile;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.FileUtil;
 import com.jayway.jsonpath.JsonPath;
@@ -258,7 +258,7 @@ public class JcFunction extends BasicUtil {
     //app开始接待，并返回接待id
     public Long[] startReception(String carPlate) throws Exception {
 
-        appStartReception sr = new appStartReception();
+        AppStartReception sr = new AppStartReception();
         JSONObject data = jc.appReceptionAdmit(carPlate).getJSONArray("customers").getJSONObject(0);
         Long result[] = new Long[2];
         sr.id = data.getString("customer_id");
@@ -282,7 +282,7 @@ public class JcFunction extends BasicUtil {
     //pc开始接待，并返回接待id
     public Long pcstartReception(String carPlate) throws Exception {
         jc.pcLogin(pp.jdgw, pp.jdgwpassword);
-        appStartReception sr = new appStartReception();
+        AppStartReception sr = new AppStartReception();
         JSONObject data = jc.pcManageReception(carPlate, true).getJSONArray("customers").getJSONObject(0);
 
         sr.id = data.getString("customer_id");
@@ -443,7 +443,7 @@ public class JcFunction extends BasicUtil {
     public Long appletAppointment(int num) {
         //小程序预约
         jc.appletLoginToken(pp.appletTocken);
-        appletAppointment pm = new appletAppointment();
+        AppletAppointment pm = new AppletAppointment();
         pm.car_id = pp.car_idA;
         pm.appointment_name = "自动吕";
         pm.appointment_phone="13436941018";
@@ -463,7 +463,7 @@ public class JcFunction extends BasicUtil {
         JSONArray picList = new JSONArray();
         picList.add(path);
 
-        pccreateActile er = new pccreateActile();
+        PcCreateActile er = new PcCreateActile();
         er.title = "1234" + dt.getHHmm(0);
         er.pic_type = "ONE_BIG";
 //        er.content="\"<p>890089008900890089008900</p><div class=\"media-wrap image-wrap\"><img src=\"http://retail-huabei2.oss-cn-beijing.aliyuncs.com/business-porsche/dev/general_temp/fac4bd9d-f898-4f97-8926-73812bd20667?Expires=4730163216&OSSAccessKeyId=LTAI4G4xNBGMWuAV9dBwkZya&Signature=hInQW6TDZijOmenWksfDC%2BPUOR8%3D\"/></div><p></p>";
@@ -497,7 +497,7 @@ public class JcFunction extends BasicUtil {
         String path = jc.pcFileUpload(article_bg_pic, true, 1.5).getString("pic_path");
         JSONArray picList = new JSONArray();
         picList.add(path);
-        pccreateActile er = new pccreateActile();
+        PcCreateActile er = new PcCreateActile();
         er.title = "1234" + dt.getHHmm(0);
         er.pic_type = "ONE_BIG";
         er.content = "\"<p>890089008900890089008900</p>";

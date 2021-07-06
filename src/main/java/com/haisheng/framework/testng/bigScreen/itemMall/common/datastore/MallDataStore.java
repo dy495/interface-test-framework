@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.shopMallDaily;
+package com.haisheng.framework.testng.bigScreen.itemMall.common.datastore;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;

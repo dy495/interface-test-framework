@@ -6,7 +6,7 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.jiaoChenInfo;
+import com.haisheng.framework.testng.bigScreen.jiaochen.JiaoChenInfo;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -27,7 +27,7 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
 
 
     ScenarioUtil jc = ScenarioUtil.getInstance();
-    jiaoChenInfo info = new  jiaoChenInfo();
+    JiaoChenInfo info = new JiaoChenInfo();
     PublicParm pp = new PublicParm();
     String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
 

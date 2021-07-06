@@ -2,7 +2,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer;
 
 import com.alibaba.fastjson.JSONArray;
 
-public class pccreateRemind {
+public class PcCreateRemind {
     public String item;
     public String id;
     public String content;

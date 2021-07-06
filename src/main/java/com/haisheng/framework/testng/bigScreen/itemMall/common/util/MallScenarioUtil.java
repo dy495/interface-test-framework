@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.shopMallDaily;
+package com.haisheng.framework.testng.bigScreen.itemMall.common.util;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;

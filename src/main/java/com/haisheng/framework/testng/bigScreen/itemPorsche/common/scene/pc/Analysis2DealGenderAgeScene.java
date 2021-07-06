@@ -30,8 +30,5 @@ public class Analysis2DealGenderAgeScene extends BaseScene {
         return "/porsche/analysis2/deal/gender-age";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

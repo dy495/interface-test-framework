@@ -12,9 +12,9 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanage.LossCustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanage.PreSaleCustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.DataAbnormal;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.pcCreateStoreCommodity;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.pccreateRemind;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.pccreateStoreSales;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.PcCreateStoreCommodity;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.PcCreateRemind;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.PcCreateStoreSales;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.JcFunctionOnline;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.PublicParmOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -139,7 +139,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
     public void CreateSale() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            pccreateStoreSales er=new pccreateStoreSales();
+            PcCreateStoreSales er=new PcCreateStoreSales();
             er.sales_phone=pf.genPhoneNum();
             er.sales_name=String.valueOf(System.currentTimeMillis());
             er.shop_id=pp.shopIdZ;
@@ -156,7 +156,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
     public void CreateSale2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            pccreateStoreSales er=new pccreateStoreSales();
+            PcCreateStoreSales er=new PcCreateStoreSales();
             er.sales_phone=pf.genPhoneNum();
             er.shop_id=pp.shopIdZ;
             jc.SalesCreate(er);
@@ -170,7 +170,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
     public void CreateSaleAb0() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            pccreateStoreSales er=new pccreateStoreSales();
+            PcCreateStoreSales er=new PcCreateStoreSales();
             er.sales_phone=pf.genPhoneNum();
             er.checkcode=false;
             int code=jc.SalesCreate(er).getInteger("code");
@@ -189,7 +189,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
     public void CreateSaleAb1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            pccreateStoreSales er=new pccreateStoreSales();
+            PcCreateStoreSales er=new PcCreateStoreSales();
             er.sales_phone=pf.genPhoneNum();
             er.sales_name=String.valueOf(System.currentTimeMillis());
             er.shop_id=pp.shopIdZ;
@@ -219,7 +219,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
     public void CreateSaleAb2(String phone) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            pccreateStoreSales er=new pccreateStoreSales();
+            PcCreateStoreSales er=new PcCreateStoreSales();
             er.sales_phone=pf.genPhoneNum();
             er.sales_name=String.valueOf(System.currentTimeMillis());
             er.shop_id=pp.shopIdZ;
@@ -267,7 +267,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
     public void CreateCommodity() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            pcCreateStoreCommodity er=new pcCreateStoreCommodity();
+            PcCreateStoreCommodity er=new PcCreateStoreCommodity();
             er.commodity_name="保温杯"+random.nextInt(10);
             er.commodity_specification="颜色:红色";    //规格
             er.price=0.1;       //单价
@@ -288,7 +288,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
     public void CreateCommodityAB() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            pcCreateStoreCommodity er=new pcCreateStoreCommodity();
+            PcCreateStoreCommodity er=new PcCreateStoreCommodity();
             er.commodity_name="一二三四五六七八九十一二三四五六七八九十保温杯"+random.nextInt(10);
             er.commodity_specification="颜色:红色";    //规格
             er.price=89.99;       //单价
@@ -397,7 +397,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
     public void CreateRemindAB() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            pccreateRemind er=new pccreateRemind();
+            PcCreateRemind er=new PcCreateRemind();
             er.item=pp.String_20+"提醒标题";
             er.content="提醒内容";
             er.vouchers=pp.vouchers;    //卡券
@@ -423,7 +423,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
     public void CreateRemind() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            pccreateRemind er=new pccreateRemind();
+            PcCreateRemind er=new PcCreateRemind();
             er.item="提醒标题";
             er.content="提醒内容";
             er.vouchers=pp.vouchers2;    //卡券
@@ -476,7 +476,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             int totalAfter2=pf.getVoucherTotal();
             //新建下一个智能提醒
             pcLogin(pp.jdgw,pp.jdgwpassword,pp.roleidJdgw);
-            pccreateRemind er=new pccreateRemind();
+            PcCreateRemind er=new PcCreateRemind();
             er.item="提醒标题";
             er.content="提醒内容";
             er.vouchers=pp.vouchers2;    //卡券

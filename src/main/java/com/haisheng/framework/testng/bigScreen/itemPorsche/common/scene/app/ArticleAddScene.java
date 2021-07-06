@@ -58,8 +58,5 @@ public class ArticleAddScene extends BaseScene {
         return "/porsche/article/add";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

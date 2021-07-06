@@ -2,7 +2,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer;
 
 import com.alibaba.fastjson.JSONArray;
 
-public class pcAppointmentConfig {
+public class PcAppointmentConfig {
     public String type;
     public String remind_time;
     public String replay_time_limit;

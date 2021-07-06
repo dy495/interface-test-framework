@@ -37,8 +37,5 @@ public class CustomerDccListScene extends BaseScene {
         return "/porsche/app/customer/dcc-list";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

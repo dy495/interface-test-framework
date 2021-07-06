@@ -35,8 +35,5 @@ public class ReceptionAfterCustomerListScene extends BaseScene {
         return "/porsche/app/after_sale/reception_after_customer_list";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

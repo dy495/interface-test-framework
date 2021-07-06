@@ -14,8 +14,8 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccoun
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.SendRecordScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appletActivityRegister;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.appletInfoEdit;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.AppletActivityRegister;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.AppletInfoEdit;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -334,7 +334,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
             Long activity_id = aid[1];
             jc.pcLogin(pp.shichang, pp.shichangPassword);
             int num[] = pf.jsonActivityNUm(activity_id.toString());
-            appletActivityRegister ar = new appletActivityRegister();
+            AppletActivityRegister ar = new AppletActivityRegister();
 
             jc.appletLoginToken(pp.appletTocken);
             JSONObject data = jc.appletactivityRegister(ar);
@@ -374,7 +374,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
             Long activity_id = aid[1];
 
             int num[] = pf.appletActivityDetail(activity_id.toString());
-            appletActivityRegister ar = new appletActivityRegister();
+            AppletActivityRegister ar = new AppletActivityRegister();
             //活动报名
             JSONObject data = jc.appletactivityRegister(ar);
             String appointment_id = data.getString("appointment_id");
@@ -414,7 +414,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
             Long activity_id = aid[1];
 
             int num[] = pf.appletActivityDetail(activity_id.toString());
-            appletActivityRegister ar = new appletActivityRegister();
+            AppletActivityRegister ar = new AppletActivityRegister();
             //活动报名
             jc.appletactivityRegister(ar);
 
@@ -449,7 +449,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //修改用户信息
-            appletInfoEdit er = new appletInfoEdit();
+            AppletInfoEdit er = new AppletInfoEdit();
             er.birthday = "1996-02-19";
             er.gender = "FEMALE";
             er.name = "自动";
@@ -474,7 +474,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //修改用户信息
-            appletInfoEdit er = new appletInfoEdit();
+            AppletInfoEdit er = new AppletInfoEdit();
             er.birthday = "1996-02-19";
             er.gender = "FEMALE";
             er.name = "@@@";
@@ -496,7 +496,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //修改用户信息
-            appletInfoEdit er = new appletInfoEdit();
+            AppletInfoEdit er = new AppletInfoEdit();
             er.birthday = "1996-02-19";
             er.gender = "FEMALE";
             er.name = "@@@";
@@ -582,7 +582,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
             //报名
 //            Long id=3921L;
 
-            appletActivityRegister ar = new appletActivityRegister();
+            AppletActivityRegister ar = new AppletActivityRegister();
             ar.id = id.toString();
             ar.name = "@@@";
             ar.num = 1;

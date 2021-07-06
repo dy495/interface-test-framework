@@ -2,7 +2,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.xmf;
 
 import lombok.Getter;
 //跟进任务类型
-public enum followType {
+public enum FollowType {
     RENEWAL_INSURANCE("续保咨询", "renew_insurance") ,
     SALES("专属服务咨询(专属销售顾问)", "SALES") ,
     AFTER_SALES("专属服务咨询(专属售后顾问)", "after_sales") ,
@@ -19,7 +19,7 @@ public enum followType {
     private final String type;
 
 
-    followType(String name, String type){
+    FollowType(String name, String type){
         this.name=name;
         this.type = type;
     }

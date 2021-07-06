@@ -32,8 +32,5 @@ public class Analysis2DealCityScene extends BaseScene {
         return "/porsche/analysis2/deal/city";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

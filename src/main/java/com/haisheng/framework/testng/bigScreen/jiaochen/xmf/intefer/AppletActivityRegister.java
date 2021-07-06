@@ -1,6 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer;
 
-public class appletActivityRegister {
+public class AppletActivityRegister {
     public String id;
     public String name;
     public int num;

@@ -39,8 +39,5 @@ public class CustomerPageScene extends BaseScene {
         return "/porsche/app/customer/page";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

@@ -17,7 +17,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shopstylemod
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shopstylemodel.ManageModelPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.DataAbnormal;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.SelectReception;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.pcAppointmentConfig;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.PcAppointmentConfig;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.JcFunctionOnline;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.PublicParmOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -956,7 +956,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
            pcLogin(pp.jdgw,pp.jdgwpassword,pp.roleidJdgw);
             JSONArray voucher=new JSONArray();
             voucher.add("77");
-            pcAppointmentConfig er=new pcAppointmentConfig();
+            PcAppointmentConfig er=new PcAppointmentConfig();
             er.type=type;
             er.remind_time="720";
             er.replay_time_limit="720";
@@ -995,7 +995,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             jc.pcLogin(pp.jdgw,pp.jdgwpassword);
             JSONArray voucher=new JSONArray();
             voucher.add("77");
-            pcAppointmentConfig er=new pcAppointmentConfig();
+            PcAppointmentConfig er=new PcAppointmentConfig();
             er.checkcode=false;
             er.type="MAINTAIN";
             er.remind_time="30";
@@ -1023,7 +1023,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             jc.pcLogin(pp.jdgw,pp.jdgwpassword);
             JSONArray voucher=new JSONArray();
             voucher.add("77");
-            pcAppointmentConfig er=new pcAppointmentConfig();
+            PcAppointmentConfig er=new PcAppointmentConfig();
             er.checkcode=false;
             er.type="MAINTAIN";
             er.remind_time="721";

@@ -25,8 +25,5 @@ public class CustomerFaceLabelScene extends BaseScene {
         return "/porsche/app/customer/face-label";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

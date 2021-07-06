@@ -62,8 +62,5 @@ public class DccEditScene extends BaseScene {
         return "/porsche/customer/dcc-edit";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

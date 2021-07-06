@@ -25,8 +25,5 @@ public class ConfirmCarScene extends BaseScene {
         return "/porsche/app/after_sale/confirm-car";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

@@ -25,8 +25,5 @@ public class AppointmentActivityListScene extends BaseScene {
         return "/jiaochen/applet/granted/appointment/activity/list";
     }
 
-    @Override
-    public String getIpPort() {
-        return null;
-    }
+
 }

@@ -27,7 +27,7 @@ import java.util.List;
  **/
 
 
-public class emunListCheckNotNull extends TestCaseCommon implements TestCaseStd {
+public class EnumListCheckNotNull extends TestCaseCommon implements TestCaseStd {
 
     ScenarioUtil jc = new ScenarioUtil();
     JsonPathUtil jpu = new JsonPathUtil();

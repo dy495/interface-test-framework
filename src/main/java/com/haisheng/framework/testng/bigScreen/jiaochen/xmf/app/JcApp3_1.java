@@ -15,8 +15,8 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesre
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.consultmanagement.ResponseRuleEditScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.followType;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.roleList;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.FollowType;
+import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.RoleList;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -367,7 +367,7 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
             JSONObject data = jc.invokeApi(onlineExpert);
 
             //跟进列表 获取id
-            JSONObject followList = jc.AppPageV3Scene(10, null, followType.ONLINE_EXPERTS.getName());
+            JSONObject followList = jc.AppPageV3Scene(10, null, FollowType.ONLINE_EXPERTS.getName());
             int total = followList.getInteger("total");
             Long id = followList.getJSONArray("list").getJSONObject(0).getLong("id");
 
@@ -382,7 +382,7 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
             JSONObject lastvalue = null;
             int size = 10;
             while (size < 10) {
-                JSONObject followPageAfter = jc.AppPageV3Scene(10, lastvalue, followType.ONLINE_EXPERTS.getName());
+                JSONObject followPageAfter = jc.AppPageV3Scene(10, lastvalue, FollowType.ONLINE_EXPERTS.getName());
                 JSONArray followListAfter = followPageAfter.getJSONArray("list");
                 size = followListAfter.size();
                 lastvalue = followPageAfter.getJSONObject("last_value");
@@ -410,7 +410,7 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
     public void follow_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject followListBefore = jc.AppPageV3Scene(10, null, followType.ONLINE_EXPERTS.getName());
+            JSONObject followListBefore = jc.AppPageV3Scene(10, null, FollowType.ONLINE_EXPERTS.getName());
             int totalBefore = followListBefore.getInteger("total");
             IScene onlineExpert = AppletConsultAfterServiceSubmitScene.builder()
                     .shopId(Long.valueOf(pp.shopIdZ))
@@ -423,7 +423,7 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
             JSONObject data = jc.invokeApi(onlineExpert);
 
             //跟进列表 获取id
-            JSONObject followList = jc.AppPageV3Scene(10, null, followType.ONLINE_EXPERTS.getName());
+            JSONObject followList = jc.AppPageV3Scene(10, null, FollowType.ONLINE_EXPERTS.getName());
             int total = followList.getInteger("total");
             Long id = followList.getJSONArray("list").getJSONObject(0).getLong("id");
 
@@ -439,7 +439,7 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
             JSONObject lastvalue = null;
             int size = 10;
             while (size < 10) {
-                JSONObject followPageAfter = jc.AppPageV3Scene(10, lastvalue, followType.ONLINE_EXPERTS.getName());
+                JSONObject followPageAfter = jc.AppPageV3Scene(10, lastvalue, FollowType.ONLINE_EXPERTS.getName());
                 JSONArray followListAfter = followPageAfter.getJSONArray("list");
                 size = followListAfter.size();
                 lastvalue = followPageAfter.getJSONObject("last_value");
@@ -468,14 +468,14 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
 
             //账户登录  修改角色的权限
             JSONArray roleList1 = new JSONArray();
-            roleList1.add(roleList.findByLable("个人").getValue());
-            roleList1.add(roleList.findByLable("门店").getValue());
+            roleList1.add(RoleList.findByLable("个人").getValue());
+            roleList1.add(RoleList.findByLable("门店").getValue());
             //预约保养分配
             jc.organizationRoleEdit(Long.parseLong(pp.userroleId), "临时用户", "随时修改用户权限", roleList1);
             jc.appletLoginToken(pp.appletTocken);
             int staffTotalBefore = jc.AppletAppointmentStaffListScene("MAINTAIN", Long.valueOf(pp.shopIdZ)).getJSONArray("list").size();
 
-            roleList1.add(roleList.findByLable("预约保养分配").getValue());
+            roleList1.add(RoleList.findByLable("预约保养分配").getValue());
             //            appLogin(pp.user,pp.userpassword,pp.userroleId);
             pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
             jc.organizationRoleEdit(Long.parseLong(pp.userroleId), "临时用户", "随时修改用户权限", roleList1);
@@ -615,8 +615,8 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
     @DataProvider(name = "onlineExpertInfo")
     public static Object[] onlineExpertInfo() {
         return new String[]{
-                followType.ONLINE_EXPERTS.getType(),
-                followType.SALES.getType(),
+                FollowType.ONLINE_EXPERTS.getType(),
+                FollowType.SALES.getType(),
         };
     }
 
@@ -648,8 +648,8 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
     @DataProvider(name = "repairreply")
     public static Object[] repairreply() {
         return new String[]{
-                followType.MAINTAIN_EVALUATE.getType(),
-                followType.REPAIR_EVALUATE.getType(),
+                FollowType.MAINTAIN_EVALUATE.getType(),
+                FollowType.REPAIR_EVALUATE.getType(),
         };
     }
 
