@@ -1,14 +1,14 @@
-package com.haisheng.framework.testng.bigScreen.itemXundian.generator.voucher;
+package com.haisheng.framework.testng.bigScreen.itemXundian.common.generator.voucher;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherPage;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.base.generator.BaseGenerator;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.generator.BaseGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.IVoucher;
-import com.haisheng.framework.testng.bigScreen.itemXundian.enumerator.VoucherStatusEnum;
-import com.haisheng.framework.testng.bigScreen.itemXundian.scene.pc.vouchermanage.VoucherFormVoucherPageScene;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.enumerator.VoucherStatusEnum;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.pc.vouchermanage.VoucherFormVoucherPageScene;
 import com.haisheng.framework.util.CommonUtil;
 
 import java.util.List;

@@ -1,7 +1,7 @@
-package com.haisheng.framework.testng.bigScreen.itemPorsche.base.marker.marker;
+package com.haisheng.framework.testng.bigScreen.itemBasic.base.marker.marker;
 
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.base.marker.enumerator.FileFormatEnum;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.marker.enumerator.FileFormatEnum;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import lombok.Getter;

@@ -1,7 +1,7 @@
-package com.haisheng.framework.testng.bigScreen.itemXundian.scene.patrolanalysisdata;
+package com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.patrolanalysisdata;
 
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.base.scene.BaseScene;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.BaseScene;
 import lombok.Builder;
 
 /**

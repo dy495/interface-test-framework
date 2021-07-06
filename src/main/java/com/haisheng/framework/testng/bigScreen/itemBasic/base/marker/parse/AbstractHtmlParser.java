@@ -1,8 +1,8 @@
-package com.haisheng.framework.testng.bigScreen.itemPorsche.base.marker.parse;
+package com.haisheng.framework.testng.bigScreen.itemBasic.base.marker.parse;
 
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.base.marker.attribute.ApiAttribute;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.base.marker.attribute.SceneAttribute;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.marker.attribute.ApiAttribute;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.marker.attribute.SceneAttribute;
 import lombok.Setter;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
