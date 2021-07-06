@@ -25,7 +25,7 @@ import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.speechtechni
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.voicerecord.AppDetailScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.manage.VoiceDetailScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.manage.VoiceEvaluationPageScene;
-import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.speechtechnique.SpeechPageScene;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.speechtechnique.SpeechTechniquePageScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.util.BusinessUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -918,7 +918,7 @@ public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
                     map.put(type, speechTechniqueAdvice);
                 });
             });
-            IScene speechPageScene = SpeechPageScene.builder().build();
+            IScene speechPageScene = SpeechTechniquePageScene.builder().build();
             JSONArray array = speechPageScene.invoke(visitor).getJSONArray("list");
             array.stream().map(e -> (JSONObject) e).forEach(e -> {
                 for (Map.Entry<String, AppSpeechTechniqueAdviceBean> entry : map.entrySet()) {

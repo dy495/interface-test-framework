@@ -44,12 +44,12 @@ public class SpeechTechniquePageBean implements Serializable {
     @JSONField(name = "label")
     private String label;
 
-    /**
-     * 描述 适用品牌列表
-     * 版本 v1.0
-     */
-    @JSONField(name = "brands")
-    private JSONArray brands;
+//    /**
+//     * 描述 适用品牌列表
+//     * 版本 v1.0
+//     */
+//    @JSONField(name = "brands")
+//    private JSONArray brands;
 
     /**
      * 描述 适用环节

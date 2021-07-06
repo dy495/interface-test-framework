@@ -11,7 +11,7 @@ import lombok.Builder;
  * @date 2021-05-31 16:28:11
  */
 @Builder
-public class SpeechPageScene extends BaseScene {
+public class SpeechTechniquePageScene extends BaseScene {
     /**
      * 描述 页码 大于0
      * 是否必填 true

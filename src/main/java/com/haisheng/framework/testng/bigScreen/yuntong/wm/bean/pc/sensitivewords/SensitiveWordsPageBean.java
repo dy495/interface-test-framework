@@ -14,7 +14,7 @@ import java.io.Serializable;
  * @date 2021-06-02 17:56:15
  */
 @Data
-public class PageBean implements Serializable {
+public class SensitiveWordsPageBean implements Serializable {
     /**
      * 描述 当前页
      * 版本 v1.0

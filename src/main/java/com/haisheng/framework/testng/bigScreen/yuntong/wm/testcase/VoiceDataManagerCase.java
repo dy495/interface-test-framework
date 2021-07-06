@@ -1,0 +1,303 @@
+package com.haisheng.framework.testng.bigScreen.yuntong.wm.testcase;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistUser;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.pc.manage.VoiceEvaluationPageBean;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.pc.sensitivewords.LabelListBean;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.pc.speechtechnique.SpeechTechniquePageBean;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.manage.*;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.presalesreception.PreSalesReceptionPageScene;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.sensitivewords.LabelListScene;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.sensitivewords.SensitiveBehaviorPageScene;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.sensitivewords.SensitiveWordsPageScene;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.specialaudio.SpecialAudioPageScene;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.speechtechnique.SpeechTechniquePageScene;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.util.BusinessUtil;
+import com.haisheng.framework.testng.commonCase.TestCaseCommon;
+import com.haisheng.framework.testng.commonCase.TestCaseStd;
+import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
+import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
+import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
+import com.haisheng.framework.util.CommonUtil;
+import com.haisheng.framework.util.DateTimeUtil;
+import org.testng.annotations.*;
+
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+/**
+ * 会听数据管理case
+ *
+ * @author wangmin
+ * @date 2021/1/29 11:17
+ */
+public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd {
+    private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_SSO;
+    private static final EnumAccount ALL_AUTHORITY = EnumAccount.ALL_YT_DAILY;
+    public VisitorProxy visitor = new VisitorProxy(PRODUCE);
+    public BusinessUtil util = new BusinessUtil(visitor);
+
+    @BeforeClass
+    @Override
+    public void initial() {
+        logger.debug("before class initial");
+        //替换checklist的相关信息
+        CommonConfig commonConfig = new CommonConfig();
+        commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
+        commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
+        commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
+        //替换jenkins-job的相关信息
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
+        //放入shopId
+        commonConfig.product = PRODUCE.getAbbreviation();
+        commonConfig.referer = PRODUCE.getReferer();
+        commonConfig.shopId = ALL_AUTHORITY.getReceptionShopId();
+        commonConfig.roleId = ALL_AUTHORITY.getRoleId();
+        beforeClassInit(commonConfig);
+        util.loginApp(ALL_AUTHORITY);
+        visitor.setProduct(EnumTestProduce.YT_DAILY_CONTROL);
+    }
+
+    @AfterClass
+    @Override
+    public void clean() {
+        afterClassClean();
+    }
+
+    @BeforeMethod
+    @Override
+    public void createFreshCase(Method method) {
+        logger.debug("beforeMethod");
+        caseResult = getFreshCaseResult(method);
+        logger.debug("case: " + caseResult);
+    }
+
+    @Test(description = "进店情况=再次进店， 接待评分=空， 评分状态=无需评分")
+    public void voiceEvaluation_data_1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene voiceEvaluationPageScene = VoiceEvaluationPageScene.builder().enterStatus(2).build();
+            List<VoiceEvaluationPageBean> list = util.toJavaObjectList(voiceEvaluationPageScene, VoiceEvaluationPageBean.class);
+            list.stream().filter(e -> compareTime("2021-06-24", e.getReceptionTime())).forEach(e -> {
+                int evaluateScore = e.getEvaluateScore();
+                String evaluateStatusName = e.getEvaluateStatusName();
+                String customerName = e.getCustomerName();
+                CommonUtil.valueView(evaluateScore, evaluateStatusName, customerName);
+                Preconditions.checkArgument(evaluateScore == 0, customerName + " 接待评分为：" + evaluateScore);
+                Preconditions.checkArgument(evaluateStatusName.equals("无需评分"), customerName + " 评分状态为：" + evaluateStatusName);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("进店情况=再次进店， 接待评分=空， 评分状态=无需评分");
+        }
+    }
+
+    public static boolean compareTime(String compareTime, String receptionTime) {
+        long a = Long.parseLong(DateTimeUtil.dateToStamp(receptionTime, "yyyy-MM-dd HH:mm:ss"));
+        long b = Long.parseLong(DateTimeUtil.dateToStamp(compareTime, "yyyy-MM-dd"));
+        return a > b;
+    }
+
+    @Test(description = "语音评鉴列表信息与客户详情页信息一致")
+    public void voiceEvaluation_data_2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene voiceEvaluationPageScene = VoiceEvaluationPageScene.builder().build();
+            long evaluationTotal = voiceEvaluationPageScene.invoke(visitor).getLong("total");
+            visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
+            IScene preSalesReceptionPageScene = PreSalesReceptionPageScene.builder().build();
+            long receptionTotal = preSalesReceptionPageScene.invoke(visitor).getLong("total");
+            CommonUtil.valueView(evaluationTotal, receptionTotal);
+            Preconditions.checkArgument(evaluationTotal <= receptionTotal, "语音评鉴列表数：" + evaluationTotal + " 销售接待页列表数：" + receptionTotal);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("语音评鉴列表数<=销售接待页列表数");
+        }
+    }
+
+    @Test(description = "语音评鉴列表详情接待得分 = 5个环节分数之和 / 5， 四舍五入取整")
+    public void voiceEvaluation_data_3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene voiceEvaluationPageScene = VoiceEvaluationPageScene.builder().enterStatus(1).build();
+            List<VoiceEvaluationPageBean> voiceEvaluationPageList = util.toJavaObjectList(voiceEvaluationPageScene, VoiceEvaluationPageBean.class);
+            voiceEvaluationPageList.stream().filter(e -> e.getEvaluateScore() != null).filter(e -> e.getEvaluateScore() != 0)
+                    .map(e -> VoiceDetailScene.builder().id(e.getId()).build().invoke(visitor)).forEach(object -> {
+                int averageScore = object.getInteger("average_score");
+                int scoreSum = object.getJSONArray("scores").stream().map(e -> (JSONObject) e).mapToInt(e -> e.getInteger("score")).sum();
+                int mathResult = CommonUtil.getIntRatio(scoreSum, 5);
+                CommonUtil.valueView(averageScore, mathResult);
+                Preconditions.checkArgument(averageScore == mathResult, "语音评鉴列表详情接待得分：" + averageScore + " 5个环节分数之和 / 5， 四舍五入取整：" + mathResult);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("语音评鉴列表详情接待得分 = 5个环节分数之和 / 5， 四舍五入取整");
+        }
+    }
+
+    @Test(description = "建议中的环节内容 是 各环节得分标签中置灰 的子集")
+    public void voiceEvaluation_data_4() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene voiceEvaluationPageScene = VoiceEvaluationPageScene.builder().enterStatus(1).build();
+            List<VoiceEvaluationPageBean> voiceEvaluationPageList = util.toJavaObjectList(voiceEvaluationPageScene, VoiceEvaluationPageBean.class);
+            voiceEvaluationPageList.stream().filter(e -> e.getEvaluateScore() != null).filter(e -> e.getEvaluateScore() != 0)
+                    .map(e -> VoiceDetailScene.builder().id(e.getId()).build().invoke(visitor)).forEach(object -> {
+                int adviceListSize = object.getJSONArray("advice_list").size();
+                int count = (int) object.getJSONArray("link_label_list").stream().map(link -> (JSONObject) link)
+                        .mapToLong(link -> link.getJSONArray("labels").stream().map(label -> (JSONObject) label)
+                                .filter(label -> !label.getBoolean("is_hit")).count()).sum();
+                CommonUtil.valueView(adviceListSize, count);
+                Preconditions.checkArgument(adviceListSize <= count, "建议中的环节内容条数：" + adviceListSize + " 各环节得分标签置灰的个数：" + count);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("建议中的环节内容 是 各环节得分标签中 置灰环节 的子集");
+        }
+    }
+
+    @Test(description = "各环节得分 约等于 该环节的 高亮标签数/总标签数 * 100", dataProvider = "getTypeName", enabled = false)
+    public void voiceEvaluation_data_5(String typeName, Integer type) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene voiceEvaluationPageScene = VoiceEvaluationPageScene.builder().enterStatus(1).build();
+            List<VoiceEvaluationPageBean> voiceEvaluationPageList = util.toJavaObjectList(voiceEvaluationPageScene, VoiceEvaluationPageBean.class);
+            voiceEvaluationPageList.stream().filter(e -> e.getEvaluateScore() != null).filter(e -> e.getEvaluateScore() != 0)
+                    .map(e -> VoiceDetailScene.builder().id(e.getId()).build().invoke(visitor)).forEach(object -> {
+                JSONArray linkLabelList = object.getJSONArray("link_label_list");
+                JSONArray labels = linkLabelList.stream().map(e -> (JSONObject) e).filter(e -> e.getString("type_name").equals(typeName)).map(e -> e.getJSONArray("labels")).findFirst().orElse(null);
+                Preconditions.checkNotNull(labels, object.getString("name") + " " + typeName + "标签为空");
+                int isHitCount = (int) labels.stream().map(e -> (JSONObject) e).filter(e -> e.getBoolean("is_hit")).count();
+                CommonUtil.valueView(isHitCount, labels.size());
+                int mathResult = (int) Math.round(((double) isHitCount / (double) labels.size()) * 100);
+                int score = object.getJSONArray("scores").stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("type").equals(type)).map(e -> e.getInteger("score")).findFirst().orElse(0);
+                CommonUtil.valueView(mathResult, score);
+                Preconditions.checkArgument(mathResult == score, object.getString("name") + " " + typeName + "得分：" + score + " 标签计算结果：" + mathResult);
+            });
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("各环节得分 约等于 该环节的 高亮标签数/总标签数 * 100");
+        }
+    }
+
+    @DataProvider(name = "typeName")
+    public Object[] getTypeName() {
+        return new Object[][]{
+                {"欢迎接待", 100},
+                {"个性需求", 200},
+                {"新车推荐", 300},
+                {"试乘试驾", 400},
+                {"车辆提案", 500},
+        };
+    }
+
+    @Test(description = "柱状图总 各标签数量 = 列表中该标签数量之和", dataProvider = "word")
+    public void voiceEvaluation_data_6(String word) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene labelListScene = LabelListScene.builder().build();
+            List<LabelListBean> labelList = util.toJavaObjectList(labelListScene, LabelListBean.class, "list");
+            int labelCount = labelList.stream().filter(e -> e.getWords().equals(word)).map(LabelListBean::getCount).findFirst().orElse(0);
+            IScene sensitiveBehaviorPageScene = SensitiveBehaviorPageScene.builder().build();
+            List<JSONObject> list = util.toJavaObjectList(sensitiveBehaviorPageScene, JSONObject.class);
+            int count = (int) list.stream().filter(e -> e.getString("words").equals(word)).count();
+            CommonUtil.valueView(labelCount, count);
+            Preconditions.checkArgument(labelCount == count, word + " 在敏感词标签中数量：" + labelCount + " 在行为记录中数量：" + count);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("柱状图总 各标签数量 = 列表中该标签数量之和");
+        }
+    }
+
+    @DataProvider(name = "word")
+    public Object[] getWord() {
+        return new String[]{
+                "不卖裸车/不允许跨区域",
+                "服务费/验车上牌费/手续费/现金/微信转",
+                "必须上保险/一定上保险/强制上保险/必须",
+        };
+    }
+
+    @Test(description = "柱状图数量之和 = 行为记录列表数")
+    public void voiceEvaluation_data_7() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene labelListScene = LabelListScene.builder().build();
+            List<LabelListBean> labelList = util.toJavaObjectList(labelListScene, LabelListBean.class, "list");
+            int countSum = labelList.stream().mapToInt(LabelListBean::getCount).sum();
+            int total = SensitiveBehaviorPageScene.builder().build().invoke(visitor).getInteger("total");
+            CommonUtil.valueView(countSum, total);
+            Preconditions.checkArgument(countSum == total, "柱状图数量之和" + countSum + " 行为记录列表数：" + total);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("柱状图数量之和 = 行为记录列表数");
+        }
+    }
+
+    @Test(description = "行为记录列表中的 敏感词 和敏感词风控 均为 【敏感词设置】中的子集")
+    public void voiceEvaluation_data_8() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene sensitiveWordsPageScene = SensitiveWordsPageScene.builder().build();
+            List<JSONObject> sensitiveWordsPageList = util.toJavaObjectList(sensitiveWordsPageScene, JSONObject.class);
+            List<String> wordList = sensitiveWordsPageList.stream().map(e -> e.getString("words")).collect(Collectors.toList());
+            IScene sensitiveBehaviorPageScene = SensitiveBehaviorPageScene.builder().build();
+            List<JSONObject> list = util.toJavaObjectList(sensitiveBehaviorPageScene, JSONObject.class);
+            list.forEach(e -> Preconditions.checkArgument(wordList.contains(e.getString("words")), "敏感词设置中不包含敏感词：" + e.getString("words")));
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("行为记录列表中的 敏感词 和敏感词风控 均为 【敏感词设置】中的子集");
+        }
+    }
+
+    @Test(description = "特殊音频审核列表数量<=语音评鉴列表数")
+    public void voiceEvaluation_data_9() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int voiceEvaluationPageTotal = VoiceEvaluationPageScene.builder().build().invoke(visitor).getInteger("total");
+            int specialAudioPageSceneTotal = SpecialAudioPageScene.builder().build().invoke(visitor).getInteger("total");
+            Preconditions.checkArgument(voiceEvaluationPageTotal >= specialAudioPageSceneTotal, "特殊音频审核列表数量：" + specialAudioPageSceneTotal + " 语音评鉴列表数：" + voiceEvaluationPageTotal);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("特殊音频审核列表数量<=语音评鉴列表数");
+        }
+    }
+
+    @Test(description = "话术考核设置--筛选全部列表条数=筛选各话术环节的列表条数之和")
+    public void voiceEvaluation_data_10() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int total = SpeechTechniquePageScene.builder().build().invoke(visitor).getInteger("total");
+            int[] ints = {100, 200, 300, 400, 500};
+            int sum = Arrays.stream(ints).mapToObj(type -> SpeechTechniquePageScene.builder().type(type).build()).map(speechTechniquePageScene -> util.toJavaObjectList(speechTechniquePageScene, JSONObject.class)).mapToInt(List::size).sum();
+            CommonUtil.valueView(total, sum);
+            Preconditions.checkArgument(total == sum, "筛选全部列表条数：" + total + "筛选各话术环节的列表条数之和：" + sum);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("话术考核设置--筛选全部列表条数=筛选各话术环节的列表条数之和");
+        }
+    }
+
+
+}

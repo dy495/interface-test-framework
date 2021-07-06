@@ -14,8 +14,8 @@ import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.general.EnumV
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.manage.VoiceEvaluationPageScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.sensitivewords.AppSensitiveBehaviorApprovalScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.sensitivewords.SensitiveBehaviorPageScene;
-import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.specialaudio.PageScene;
-import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.speechtechnique.SpeechPageScene;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.specialaudio.SpecialAudioPageScene;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.speechtechnique.SpeechTechniquePageScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.util.BusinessUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -543,7 +543,7 @@ public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray arrlist = PageScene.builder().page(1).size(3).build().invoke(visitor).getJSONArray("list");
+            JSONArray arrlist = SpecialAudioPageScene.builder().page(1).size(3).build().invoke(visitor).getJSONArray("list");
             for (int j = 0; j < arrlist.size(); j++) {
                 Preconditions.checkArgument(arrlist.getJSONObject(j).containsKey("receptor_name"), "记录" + arrlist.getJSONObject(j).getString("id") + "没展示接待顾问");
                 Preconditions.checkArgument(arrlist.getJSONObject(j).containsKey("audio_duration"), "记录" + arrlist.getJSONObject(j).getString("id") + "没展示音频时长");
@@ -569,12 +569,12 @@ public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
         try {
             String receptor_name = "";
 
-            JSONArray arr = PageScene.builder().page(1).size(50).build().invoke(visitor).getJSONArray("list");
+            JSONArray arr = SpecialAudioPageScene.builder().page(1).size(50).build().invoke(visitor).getJSONArray("list");
             if (arr.size() > 0) {
                 JSONObject obj = arr.getJSONObject(0);
                 receptor_name = obj.getString("receptor_name");
 
-                JSONArray arr1 = PageScene.builder().page(1).size(50).receptorName(receptor_name).build().invoke(visitor).getJSONArray("list");
+                JSONArray arr1 = SpecialAudioPageScene.builder().page(1).size(50).receptorName(receptor_name).build().invoke(visitor).getJSONArray("list");
                 for (int i = 0; i < arr1.size(); i++) {
                     JSONObject obj1 = arr1.getJSONObject(i);
                     String search_receptor_name = obj1.getString("receptor_name");
@@ -597,7 +597,7 @@ public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            JSONArray arr1 = PageScene.builder().page(1).size(50).receptorName(search).build().invoke(visitor).getJSONArray("list");
+            JSONArray arr1 = SpecialAudioPageScene.builder().page(1).size(50).receptorName(search).build().invoke(visitor).getJSONArray("list");
             for (int i = 0; i < arr1.size(); i++) {
                 JSONObject obj1 = arr1.getJSONObject(i);
                 String search_receptor_name = obj1.getString("receptor_name").toUpperCase();
@@ -619,10 +619,10 @@ public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            JSONObject obj = PageScene.builder().page(1).size(50).receptionStart(start).receptionEnd(end).build().invoke(visitor, false);
+            JSONObject obj = SpecialAudioPageScene.builder().page(1).size(50).receptionStart(start).receptionEnd(end).build().invoke(visitor, false);
             int code = obj.getInteger("code");
             if (bool.equals("true")) {
-                JSONArray arr1 = PageScene.builder().page(1).size(50).receptionStart(start).receptionEnd(end).build().invoke(visitor).getJSONArray("list");
+                JSONArray arr1 = SpecialAudioPageScene.builder().page(1).size(50).receptionStart(start).receptionEnd(end).build().invoke(visitor).getJSONArray("list");
                 for (int i = 0; i < arr1.size(); i++) {
                     JSONObject obj1 = arr1.getJSONObject(i);
                     String search_reception_time = obj1.getString("reception_time") + " 00:00:00:000";
@@ -653,7 +653,7 @@ public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
             String start = dt.getHistoryDate(-369);
             String end = dt.getHistoryDate(-1);
 
-            JSONObject obj = PageScene.builder().page(1).size(50).receptionStart(start).receptionEnd(end).build().invoke(visitor, false);
+            JSONObject obj = SpecialAudioPageScene.builder().page(1).size(50).receptionStart(start).receptionEnd(end).build().invoke(visitor, false);
             int code = obj.getInteger("code");
             Preconditions.checkArgument(code == 1001, "时间跨度大于1年，期待失败，实际提示" + obj.getString("message"));
 
@@ -676,7 +676,7 @@ public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
             for (int i = 0; i < arr.size(); i++) {
                 int evaluate_status = arr.getJSONObject(i).getInteger("key");
                 String evaluate_status_name = arr.getJSONObject(i).getString("value");
-                JSONArray arr1 = PageScene.builder().page(1).size(50).approvalStatus(evaluate_status).build().invoke(visitor).getJSONArray("list");
+                JSONArray arr1 = SpecialAudioPageScene.builder().page(1).size(50).approvalStatus(evaluate_status).build().invoke(visitor).getJSONArray("list");
                 for (int j = 0; j < arr1.size(); j++) {
                     String search = arr1.getJSONObject(j).getString("approval_status_name");
                     Preconditions.checkArgument(search.equals(evaluate_status_name), "搜索审核状态=" + evaluate_status_name + " ,结果包含" + search);
@@ -703,7 +703,7 @@ public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
             for (int i = 0; i < arr.size(); i++) {
                 int evaluate_status = arr.getJSONObject(i).getInteger("key");
                 String evaluate_status_name = arr.getJSONObject(i).getString("value");
-                JSONArray arr1 = SpeechPageScene.builder().page(1).size(50).type(evaluate_status).build().invoke(visitor).getJSONArray("list");
+                JSONArray arr1 = SpeechTechniquePageScene.builder().page(1).size(50).type(evaluate_status).build().invoke(visitor).getJSONArray("list");
 
                 for (int j = 0; j < arr1.size(); j++) {
                     String search = arr1.getJSONObject(j).getString("link_name");

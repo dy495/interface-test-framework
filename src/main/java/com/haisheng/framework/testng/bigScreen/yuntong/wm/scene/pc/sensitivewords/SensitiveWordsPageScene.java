@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.sensitivewor
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.BaseScene;
 import lombok.Builder;
+import lombok.Data;
 
 /**
  * 3.6. 敏感词分页（谢）
@@ -11,20 +12,22 @@ import lombok.Builder;
  * @date 2021-05-31 16:28:11
  */
 @Builder
-public class PageScene extends BaseScene {
+public class SensitiveWordsPageScene extends BaseScene {
     /**
      * 描述 页码 大于0
      * 是否必填 true
      * 版本 v1.0
      */
-    private final Integer page;
+    @Builder.Default
+    private Integer page = 1;
 
     /**
      * 描述 页大小 范围为[1,100]
      * 是否必填 true
      * 版本 v1.0
      */
-    private final Integer size;
+    @Builder.Default
+    private Integer size = 10;
 
     /**
      * 描述 敏感词类别 使用"获取指定枚举值列表"接口获取 enum_type为 SENSITIVE_WORDS_TYPES
@@ -70,5 +73,15 @@ public class PageScene extends BaseScene {
     @Override
     public String getPath() {
         return "/intelligent-control/pc/sensitive-words/page";
+    }
+
+    @Override
+    public void setPage(Integer page) {
+        this.page = page;
+    }
+
+    @Override
+    public void setSize(Integer size) {
+        this.size = size;
     }
 }

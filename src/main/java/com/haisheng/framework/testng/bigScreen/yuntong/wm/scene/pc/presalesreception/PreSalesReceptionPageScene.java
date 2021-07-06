@@ -11,20 +11,22 @@ import lombok.Builder;
  * @date 2021-05-18 17:04:35
  */
 @Builder
-public class PageScene extends BaseScene {
+public class PreSalesReceptionPageScene extends BaseScene {
     /**
      * 描述 页码 大于0
      * 是否必填 true
      * 版本 v1.0
      */
-    private final Integer page;
+    @Builder.Default
+    private Integer page = 1;
 
     /**
      * 描述 页大小 范围为[1,100]
      * 是否必填 true
      * 版本 v1.0
      */
-    private final Integer size;
+    @Builder.Default
+    private final Integer size = 100;
 
     /**
      * 描述 门店Id
@@ -109,6 +111,16 @@ public class PageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/pre-sales-reception/page";
+        return "/car-platform/pc/pre-sales-reception/page";
+    }
+
+    @Override
+    public void setPage(Integer page) {
+        this.page = page;
+    }
+
+    @Override
+    public void setSize(Integer size) {
+        super.setSize(size);
     }
 }

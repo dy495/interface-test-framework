@@ -17,14 +17,16 @@ public class SensitiveBehaviorPageScene extends BaseScene {
      * 是否必填 true
      * 版本 v1.0
      */
-    private final Integer page;
+    @Builder.Default
+    private Integer page = 1;
 
     /**
      * 描述 页大小 范围为[1,100]
      * 是否必填 true
      * 版本 v1.0
      */
-    private final Integer size;
+    @Builder.Default
+    private Integer size = 10;
 
     /**
      * 描述 接待顾问姓名
@@ -78,5 +80,15 @@ public class SensitiveBehaviorPageScene extends BaseScene {
     @Override
     public String getPath() {
         return "/intelligent-control/pc/sensitive-words/sensitive-behavior/page";
+    }
+
+    @Override
+    public void setPage(Integer page) {
+        this.page = page;
+    }
+
+    @Override
+    public void setSize(Integer size) {
+        this.size = size;
     }
 }
