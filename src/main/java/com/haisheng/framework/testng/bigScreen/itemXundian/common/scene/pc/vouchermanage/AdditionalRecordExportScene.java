@@ -1,8 +1,8 @@
-package com.haisheng.framework.testng.bigScreen.itemXundian.scene.pc.vouchermanage;
+package com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.pc.vouchermanage;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.base.scene.BaseScene;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.BaseScene;
 import lombok.Builder;
 
 /**

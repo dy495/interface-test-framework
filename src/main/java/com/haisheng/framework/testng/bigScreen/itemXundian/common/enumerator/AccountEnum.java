@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.itemXundian.enumerator;
+package com.haisheng.framework.testng.bigScreen.itemXundian.common.enumerator;
 
 import lombok.Getter;
 

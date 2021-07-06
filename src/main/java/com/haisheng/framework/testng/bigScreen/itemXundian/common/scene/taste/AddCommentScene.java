@@ -1,8 +1,8 @@
-package com.haisheng.framework.testng.bigScreen.itemXundian.scene.taste;
+package com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.taste;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.base.scene.BaseScene;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
