@@ -16,6 +16,7 @@ import com.haisheng.framework.testng.bigScreen.itemXundian.common.enumerator.han
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.checkrisk.EventTotalScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.checkrisk.tasks.ListScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.checkriskalarm.AlarmDetailScene;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.MendianInfo;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.StoreScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.UserUtil;
@@ -41,6 +42,7 @@ public class StoreInspectionOnlineCase extends TestCaseCommon implements TestCas
     public Long shopId=14630L;
     public String shopName="中关村1号店";
     CommonConfig commonConfig = new CommonConfig();
+    MendianInfo mi=new MendianInfo();
 
     @BeforeClass
     @Override
@@ -605,9 +607,8 @@ public class StoreInspectionOnlineCase extends TestCaseCommon implements TestCas
                     }
                 }
             }
-            //触发帽子规则
-            storeEventCase1();
-            storeEventCase2();
+            //触发口罩+制服事件
+            storeEventCase4();
             sleep(3);
             //门店列表页面-触发规则之后
             IScene sceneShopAfter= EventTotalScene.builder().page(1).size(10).shopName(shopName).build();
@@ -894,23 +895,21 @@ public class StoreInspectionOnlineCase extends TestCaseCommon implements TestCas
 
 
 
-
-
-
-
-
-
-
     /**
-     * 单人触发口罩事件--巡店测试门店1(可更门店的shopId更改门店)
+     * 单人触发口罩事件--中关村1号店(可更门店的shopId更改门店)-验证数据层的逻辑-图片触发不带口罩的规则
      */
     @Test(description = "单人触发口罩事件")
     public void storeEventCase1(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            JSONObject response=su.maskEventOnline(shopId,false,"customerFalse",true);
-            int code=response.getInteger("code");
-            Preconditions.checkArgument(code==1000,"口罩事件触发失败，code的返回值为："+code);
+            //上传不带口罩的图片，触发口罩事件
+            String path="src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\itemXundian\\caseonline\\zt\\mainOnline.py";
+            String picPath="src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\itemXundian\\common\\multimedia\\picture\\没有戴口罩.jpg";
+            mi.getPy(path,picPath);
+
+//            JSONObject response=su.maskEventOnline(shopId,false,"customerFalse",true);
+//            int code=response.getInteger("code");
+//            Preconditions.checkArgument(code==1000,"口罩事件触发失败，code的返回值为："+code);
 
         }catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -926,9 +925,14 @@ public class StoreInspectionOnlineCase extends TestCaseCommon implements TestCas
     public void storeEventCase2(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            JSONObject response=su.maskEventOnline(shopId,true,"customer",true);
-            int code=response.getInteger("code");
-            Preconditions.checkArgument(code==1000,"制服事件触发失败，code的返回值为："+code);
+            //上传不穿制服的图片，触发口罩事件
+            String path="src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\itemXundian\\caseonline\\zt\\mainOnline.py";
+            String picPath="src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\itemXundian\\common\\multimedia\\picture\\多人戴口罩没有穿制服.jpg";
+            mi.getPy(path,picPath);
+
+//            JSONObject response=su.maskEventOnline(shopId,true,"customer",true);
+//            int code=response.getInteger("code");
+//            Preconditions.checkArgument(code==1000,"制服事件触发失败，code的返回值为："+code);
 
         }catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -936,6 +940,7 @@ public class StoreInspectionOnlineCase extends TestCaseCommon implements TestCas
             saveData("单人触发制服事件");
         }
     }
+
 
     /**
      * 单人触发帽子事件--巡店测试门店1(可更门店的shopId更改门店)
@@ -953,6 +958,30 @@ public class StoreInspectionOnlineCase extends TestCaseCommon implements TestCas
             saveData("单人触发帽子事件");
         }
     }
+
+    /**
+     * 同时触发制服和口罩事件--(可更门店的shopId更改门店)
+     */
+    @Test(description = "同时触发制服和口罩事件")
+    public void storeEventCase4(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            //上传不带口罩不穿制服的图片，触发口罩制服两个事件
+            String path="src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\itemXundian\\caseonline\\zt\\mainOnline.py";
+            String picPath="src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\itemXundian\\common\\multimedia\\picture\\口罩帽子同时触发.jpg";
+            mi.getPy(path,picPath);
+
+//            JSONObject response=su.maskEventOnline(shopId,true,"customer",true);
+//            int code=response.getInteger("code");
+//            Preconditions.checkArgument(code==1000,"制服事件触发失败，code的返回值为："+code);
+
+        }catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("同时触发制服和口罩事件");
+        }
+    }
+
 
 
 

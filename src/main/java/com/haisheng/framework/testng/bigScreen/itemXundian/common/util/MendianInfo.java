@@ -154,11 +154,11 @@ public class MendianInfo {
         return new String(Base64.encodeBase64(data));
     }
 
-    public final void getPy(String path,String picpath) throws Exception {
+    public final void getPy(String path,String picPath) throws Exception {
         // TODO Auto-generated method stub
         Process proc;
         try {
-            String[] args1 = new String[]{"python", path, picpath};
+            String[] args1 = new String[]{"python", path, picPath};
             proc = Runtime.getRuntime().exec(args1);
             //用输入输出流来截取结果
             BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream()));

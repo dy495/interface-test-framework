@@ -4186,8 +4186,8 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
         object.put("time",System.currentTimeMillis());
         object.put("master_uid","uid_ef6d2de5");
-        object.put("app_id","49998b971ea0");
-        object.put("brand_id","19");
+        object.put("app_id","c30dcafc59c8");
+        object.put("brand_id","13259");
         object.put("pic_url","https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic41.nipic.com%2F20140525%2F18845929_233338467162_2.jpg&refer=http%3A%2F%2Fpic41.nipic.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1627474279&t=85524e63d714fadd19380afcac6292d0");
         object.put("shop_id",shopId);
         object.put("device_id","7698197825586176");
