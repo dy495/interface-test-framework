@@ -11,8 +11,8 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProd
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.pc.manage.VoiceEvaluationPageBean;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.pc.sensitivewords.LabelListBean;
-import com.haisheng.framework.testng.bigScreen.yuntong.wm.bean.pc.speechtechnique.SpeechTechniquePageBean;
-import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.manage.*;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.manage.VoiceDetailScene;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.manage.VoiceEvaluationPageScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.presalesreception.PreSalesReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.sensitivewords.LabelListScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.sensitivewords.SensitiveBehaviorPageScene;
@@ -298,6 +298,4 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
             saveData("话术考核设置--筛选全部列表条数=筛选各话术环节的列表条数之和");
         }
     }
-
-
 }

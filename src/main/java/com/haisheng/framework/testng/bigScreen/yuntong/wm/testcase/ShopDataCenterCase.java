@@ -152,7 +152,6 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //bug
     @Test(description = "【星级比例】欢迎接待中的x星级比例=【星级评分详情】欢迎接待中x星级条数/列表条数", dataProvider = "starType")
     public void evaluate_data_4(String type, Integer scoreValue, String name) {
         logger.logCaseStart(caseResult.getCaseName());
