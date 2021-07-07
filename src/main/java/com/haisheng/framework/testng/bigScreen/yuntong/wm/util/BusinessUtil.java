@@ -1,7 +1,9 @@
 package com.haisheng.framework.testng.bigScreen.yuntong.wm.util;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.util.BasicUtil;
@@ -17,14 +19,23 @@ import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.presalesrece
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.voicerecord.AppDepartmentPageScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.voicerecord.AppDetailScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.app.voicerecord.AppPersonalPageScene;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.AuthTreeScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.loginuser.LoginApp;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.loginuser.LoginPc;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.loginuser.ShopListScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.manage.VoiceDetailScene;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.role.RoleAddScene;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.role.RoleDeleteScene;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.role.RoleListScene;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.role.RolePageScene;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.staff.StaffDeleteScene;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.staff.StaffPageScene;
 import com.haisheng.framework.util.CommonUtil;
+import com.haisheng.framework.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jooq.tools.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class BusinessUtil extends BasicUtil {
@@ -202,5 +213,76 @@ public class BusinessUtil extends BasicUtil {
         IScene carModelTreeScene = AppCarModelTreeScene.builder().shopId(shopId).build();
         return carModelTreeScene.invoke(visitor).getJSONArray("children").getJSONObject(0).getJSONArray("children")
                 .getJSONObject(0).getJSONArray("children").getJSONObject(0).getInteger("value");
+    }
+
+    /**
+     * 获取指定父权限可选择的权限
+     *
+     * @param parentRole 父权限
+     * @return 权限map
+     */
+    public Map<Integer, String> getAuthRoleMap(int parentRole) {
+        Map<Integer, String> map = new HashMap<>();
+        IScene scene = AuthTreeScene.builder().parentRole(parentRole).build();
+        JSONArray children = scene.invoke(visitor).getJSONArray("children");
+        children.stream().map(e -> (JSONObject) e).forEach(e -> {
+            JSONArray array = e.getJSONArray("children");
+            array.stream().map(a -> (JSONObject) a).forEach(a -> map.put(a.getInteger("value"), a.getString("label")));
+        });
+        return map;
+    }
+
+    /**
+     * 获取任意一个权限map
+     *
+     * @return map
+     */
+    public Map<Integer, String> getRandomRoleMap() {
+        Map<Integer, String> map = new HashMap<>();
+        IScene scene = RoleListScene.builder().build();
+        List<JSONObject> list = toJavaObjectList(scene, JSONObject.class, "list");
+        JSONObject response = list.stream().filter(e -> !e.getString("name").equals("超级管理员")).findFirst().orElse(null);
+        Preconditions.checkArgument(response != null, "角色为空");
+        int roleId = response.getInteger("id");
+        String roleName = response.getString("name");
+        map.put(roleId, roleName);
+        return map;
+    }
+
+    /**
+     * 获取门店列表map
+     *
+     * @return map
+     */
+    public JSONArray getShopIdArray() {
+        return ShopListScene.builder().build().invoke(visitor).getJSONArray("list");
+    }
+
+    /**
+     * 删除工作人员
+     *
+     * @param phone 电话号
+     */
+    public void deleteStaff(String phone) {
+        IScene scene = StaffPageScene.builder().phone(phone).build();
+        JSONObject response = toFirstJavaObject(scene, JSONObject.class);
+        String id = response.getString("id");
+        StaffDeleteScene.builder().id(id).build().invoke(visitor);
+    }
+
+    public void addRole(int parentRoleId) {
+        List<Integer> authList = new ArrayList<>(getAuthRoleMap(parentRoleId).keySet());
+        RoleAddScene.builder().name("自动化创建全部权限").description("这是一个最大权限的角色").parentRoleId(parentRoleId).authList(authList).build().invoke(visitor);
+    }
+
+    public void deleteRole(String... roleName) {
+        Arrays.stream(roleName).forEach(e -> deleteRole(e = e == null ? "自动化创建全部权限" : e));
+    }
+
+    public void deleteRole(String roleName) {
+        IScene scene = RolePageScene.builder().name(roleName).build();
+        JSONObject object = toJavaObject(scene, JSONObject.class, "name", roleName);
+        int id = object.getInteger("id");
+        RoleDeleteScene.builder().id(id).build().invoke(visitor);
     }
 }

@@ -13,6 +13,6 @@ public class ShopListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/login-user/shop-list";
+        return "/account-platform/auth/shop/list";
     }
 }

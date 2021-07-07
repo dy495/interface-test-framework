@@ -8,7 +8,7 @@ import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.brand.AddScen
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.brand.CarStyleAddScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.brand.CarStylePageScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.customermanage.*;
-import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.file.UploadScene;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.file.FileUploadScene;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
 import org.testng.annotations.DataProvider;
@@ -64,7 +64,7 @@ public class YunTongInfo {
     public String getLogo() {
         String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
 
-        String logo = UploadScene.builder().pic(new ImageUtil().getImageBinary(filePath)).build().invoke(visitor).getString("pic_path");
+        String logo = FileUploadScene.builder().pic(new ImageUtil().getImageBinary(filePath)).build().invoke(visitor).getString("pic_path");
 
         return logo;
     }
