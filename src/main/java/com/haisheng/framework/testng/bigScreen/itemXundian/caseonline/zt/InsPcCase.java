@@ -995,7 +995,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //新建内容一张大图
-    @Test()
+//    @Test()
     public void create_message() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1020,7 +1020,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //新建内容三张小图
-    @Test()
+//    @Test()
     public void create_message1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1047,7 +1047,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //新建内容左一图
-    @Test()
+//    @Test()
     public void create_message2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
