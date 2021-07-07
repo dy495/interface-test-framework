@@ -50,10 +50,10 @@ public class StoreInspectionOnlineCase extends TestCaseCommon implements TestCas
         logger.debug("before class initial");
         su.exChangeIpPort();
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_XUNDIAN_DAILY_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_MENDIAN_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = EnumChecklistUser.GLY.getName();
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.XUNDIAN_ONLINE_TEST.getJobName());
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "门店-线上" + commonConfig.checklistQaOwner);
         commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.product = product.getAbbreviation();
         commonConfig.shopId="13260";
@@ -433,11 +433,13 @@ public class StoreInspectionOnlineCase extends TestCaseCommon implements TestCas
                     String eventState=list.getJSONObject(i).getString("event_state");
                     //获取系统当前时间
                     String time=String.valueOf(dt.currentDateToTimestamp()).substring(0,13);
+                    System.out.println(time+"    "+triggerTime);
                     //判断当前门店的列表中是当前小时是否有待处理的口罩事件
                     if(time.equals(triggerTime)&&triggerRule.equals(TriggerRuleEnum.MASK_MONITOR.getTriggerRule())&&eventState.equals(EventStateEnum.WAITING_ALARM_CONFIRM.getEventState())){
                         flag=false;
                         leaveMarkBeforeNum=list.getJSONObject(i).getInteger("leave_mark_num");
                         id=list.getJSONObject(i).getInteger("id");
+                        System.err.println("id:"+id);
                     }
                 }
             }
@@ -668,7 +670,7 @@ public class StoreInspectionOnlineCase extends TestCaseCommon implements TestCas
     /**
      * 构建场景--人员A触发帽子规则，触发事件数+1，待确认事件数+1，待确认紧急待确认事件+1,此规则留痕数量、图片+1
      */
-    @Test(description = "人员A触发帽子规则，触发事件数+1，待确认事件数+1，待确认紧急待确认事件+1,此规则留痕数量、图片+1")
+    @Test(description = "人员A触发帽子规则，触发事件数+1，待确认事件数+1，待确认紧急待确认事件+1,此规则留痕数量、图片+1",enabled = false)
     public void storeDateCase7(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -962,7 +964,7 @@ public class StoreInspectionOnlineCase extends TestCaseCommon implements TestCas
     /**
      * 同时触发制服和口罩事件--(可更门店的shopId更改门店)
      */
-    @Test(description = "同时触发制服和口罩事件")
+    @Test(description = "同时触发制服和口罩事件",enabled = false)
     public void storeEventCase4(){
         logger.logCaseStart(caseResult.getCaseName());
         try{

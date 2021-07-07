@@ -39,8 +39,9 @@ public class BusinessUtil {
                 if(eventId==id){
                     leaveMarkBeforeNum=list.getJSONObject(i).getInteger("leave_mark_num");
                     System.out.println();
-                }else if(eventId==0){
+                }else if(eventId==0&&page==1&&i==0){
                     leaveMarkBeforeNum=list.getJSONObject(0).getInteger("leave_mark_num");
+                    System.out.println(list.getJSONObject(0).getInteger("id"));
                 }
             }
         }

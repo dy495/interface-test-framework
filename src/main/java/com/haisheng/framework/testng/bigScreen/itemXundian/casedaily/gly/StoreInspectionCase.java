@@ -49,7 +49,7 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_XUNDIAN_DAILY_SERVICE;
         commonConfig.checklistQaOwner = EnumChecklistUser.GLY.getName();
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.XUNDIAN_DAILY_TEST.getJobName());
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT,"门店-日常" + commonConfig.checklistQaOwner);
         commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.product = product.getAbbreviation();
         commonConfig.shopId="43072";

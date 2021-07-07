@@ -39,6 +39,7 @@
             </class>
 
             <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.gly.StoreInspectionOnlineCase"></class>
+
         </classes>
     </test>
 </suite>
