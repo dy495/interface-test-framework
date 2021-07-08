@@ -16,6 +16,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.tarot.util.Md5Util
 import com.haisheng.framework.util.DateTimeUtil;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,32 +53,59 @@ public class DataCheckRunner {
             config.initConfig(sheetOne.getField(Constants.CONTAINER_COLUMN_PATH).getValue());
             ITable dataSourceTable = ruleContainer.getTable(Constants.SHEET_TITLE_DATA_SOURCE);
             dataSourceTable.load();
-            List<OTSTableData> list = new ArrayList<>();
             //遍历数据源表
-            Arrays.stream(dataSourceTable.getRows()).forEach(dataSourceRow -> {
-                OTSTableData otsTableData = new OTSTableData();
-                RuleDataSource ruleDataSource = new RuleDataSource();
-                ruleDataSource.initDataSource(dataSourceRow);
-                IContainer otsContainer = initOTSContainer(config, ruleDataSource);
-                //其实只有一张表
-                ITable[] otsTables = otsContainer.getTables();
-                //如果是实时表获取当前日期
-                date = ruleDataSource.getSourceName().contains("实时") ? DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd")
-                        : DateTimeUtil.addDayFormat(new Date(), -1, "yyyy-MM-dd");
-                //遍历ots表获取所有行
-                Arrays.stream(otsTables).forEach(otsTable -> {
-                    loadTable(otsTable, ruleDataSource.getPrimaryKeys());
-                    IRow[] otsRows = otsTable.getRows();
-                    otsTableData.setInstanceName(ruleDataSource.getInstancePath());
-                    otsTableData.setTableName(ruleDataSource.getTablePath());
-                    otsTableData.setSourceName(ruleDataSource.getSourceName());
-                    otsTableData.setRows(otsRows);
-                });
-                //每张数据源表等于一个otsTableData:包含实例名、表名、所有行数据
-                list.add(otsTableData);
-            });
+            List<OTSTableData> list = new ArrayList<>();
+            IRow[] dataSourceRows = dataSourceTable.getRows();
+            RuleDataSource ruleDataSource = new RuleDataSource();
+            Arrays.stream(dataSourceRows).map(ruleDataSource::initDataSource)
+                    .map(newRuleDataSource -> initOTSContainer(config, newRuleDataSource)).map(IContainer::getTables)
+                    .forEach(iTables -> Arrays.stream(iTables).map(otsTable -> initOTSTableData(otsTable, ruleDataSource)).forEach(list::add));
             otsTableDataList = list;
         });
+    }
+
+    /**
+     * 初始化OTSTableData数据
+     * 通过拿到的阿里云数据与规则表得到OTSTableData
+     *
+     * @param otsTable       阿里云读取的ots表
+     * @param ruleDataSource 规则文件数据
+     * @return OTSTableData
+     */
+    private OTSTableData initOTSTableData(ITable otsTable, RuleDataSource ruleDataSource) {
+        initDate(ruleDataSource);
+        OTSTableData otsTableData = new OTSTableData();
+        loadTable(otsTable, ruleDataSource.getPrimaryKeys());
+        IRow[] otsRows = otsTable.getRows();
+        otsTableData.setInstanceName(ruleDataSource.getInstancePath());
+        otsTableData.setTableName(ruleDataSource.getTablePath());
+        otsTableData.setSourceName(ruleDataSource.getSourceName());
+        otsTableData.setRows(otsRows);
+        return otsTableData;
+    }
+
+    /**
+     * 初始化时间
+     * 根据规则文件判断获取阿里云数据的时间
+     *
+     * @param ruleDataSource 规则文件数据
+     */
+    private void initDate(@NotNull RuleDataSource ruleDataSource) {
+        date = ruleDataSource.getSourceName().contains("实时") ? DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd")
+                : DateTimeUtil.addDayFormat(new Date(), -1, "yyyy-MM-dd");
+    }
+
+    /**
+     * 加载表
+     *
+     * @param table       表对象
+     * @param primaryKeys 主键
+     */
+    private void loadTable(@NotNull ITable table, String[] primaryKeys) {
+        //此处不设置主键无法执行
+        OTSPrimaryKeyBuilder primaryKeyBuilder = initOTSPrimaryKeyBuilder(primaryKeys, queryPrimaryKeyName, shopId, date);
+        table.setOTSPrimaryKeyBuilder(primaryKeyBuilder);
+        table.load();
     }
 
     /**
@@ -91,7 +119,7 @@ public class DataCheckRunner {
     }
 
     /**
-     * 获取字段规则表集合
+     * 获取对外提供的字段规则表集合
      *
      * @return 规则表集合
      */
@@ -109,30 +137,19 @@ public class DataCheckRunner {
     }
 
     /**
-     * 初始化ots的容器
+     * 初始化ots容器
      *
-     * @param config     容器配置
-     * @param dataSource 数据源
+     * @param config         容器配置
+     * @param ruleDataSource 数据源
      * @return ots容器
      */
-    private IContainer initOTSContainer(AliyunConfig config, RuleDataSource dataSource) {
+    @NotNull
+    private IContainer initOTSContainer(@NotNull AliyunConfig config, @NotNull RuleDataSource ruleDataSource) {
         IContainer otsContainer = new OTSContainer.Builder().endPoint(config.getEndPoint())
                 .accessKeyId(config.getAccessKeyId()).accessKeySecret(config.getAccessKeySecret())
-                .instanceName(dataSource.getInstancePath()).path(dataSource.getTablePath()).build();
+                .instanceName(ruleDataSource.getInstancePath()).path(ruleDataSource.getTablePath()).build();
         otsContainer.init();
         return otsContainer;
-    }
-
-    /**
-     * 加载表
-     *
-     * @param table       表对象
-     * @param primaryKeys 主键
-     */
-    private void loadTable(ITable table, String[] primaryKeys) {
-        //此处不设置主键无法执行
-        table.setOTSPrimaryKeyBuilder(initOTSPrimaryKeyBuilder(primaryKeys, queryPrimaryKeyName, shopId, date));
-        table.load();
     }
 
     /**
@@ -161,6 +178,7 @@ public class DataCheckRunner {
      * @param date  日期
      * @return 加密后数据
      */
+    @NotNull
     private String scopeKeyGen(String scope, String date) {
         String builder = "record" + SystemConstant.DB_SPLIT_STR +
                 scope + SystemConstant.DB_SPLIT_STR + date;

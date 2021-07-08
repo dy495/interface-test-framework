@@ -224,11 +224,9 @@ public class BusinessUtil extends BasicUtil {
     public Map<Integer, String> getAuthRoleMap(int parentRole) {
         Map<Integer, String> map = new HashMap<>();
         IScene scene = AuthTreeScene.builder().parentRole(parentRole).build();
-        JSONArray children = scene.invoke(visitor).getJSONArray("children");
-        children.stream().map(e -> (JSONObject) e).forEach(e -> {
-            JSONArray array = e.getJSONArray("children");
-            array.stream().map(a -> (JSONObject) a).forEach(a -> map.put(a.getInteger("value"), a.getString("label")));
-        });
+        scene.invoke(visitor).getJSONArray("children").stream().map(e -> (JSONObject) e)
+                .forEach(e -> e.getJSONArray("children").stream().map(a -> (JSONObject) a)
+                        .forEach(a -> map.put(a.getInteger("value"), a.getString("label"))));
         return map;
     }
 
@@ -243,9 +241,7 @@ public class BusinessUtil extends BasicUtil {
         List<JSONObject> list = toJavaObjectList(scene, JSONObject.class, "list");
         JSONObject response = list.stream().filter(e -> !e.getString("name").equals("超级管理员")).findFirst().orElse(null);
         Preconditions.checkArgument(response != null, "角色为空");
-        int roleId = response.getInteger("id");
-        String roleName = response.getString("name");
-        map.put(roleId, roleName);
+        map.put(response.getInteger("id"), response.getString("name"));
         return map;
     }
 

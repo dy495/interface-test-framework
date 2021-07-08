@@ -57,6 +57,7 @@ public interface ITable extends IProperty {
 
     /**
      * 设置主键，仅供ots使用
+     * todo 后期改为所有表类型的主键  OTSPrimaryKeyBuilder改为T，不同主键构造器不同的实现
      *
      * @param otsPrimaryKeyBuilder 主键构造器
      */

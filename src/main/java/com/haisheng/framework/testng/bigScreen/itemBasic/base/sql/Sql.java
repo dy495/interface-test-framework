@@ -20,6 +20,7 @@ public class Sql {
 
     private static volatile Sql.Builder instance = null;
 
+    //双重🔒
     public static Sql.Builder instance() {
         if (instance == null) {
             synchronized (Sql.class) {
