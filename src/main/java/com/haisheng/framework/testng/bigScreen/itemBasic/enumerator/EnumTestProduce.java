@@ -22,7 +22,7 @@ public enum EnumTestProduce {
 
     XD_DAILY("门店 日常 ", "https://servicewechat.com/wx937d85ff683db555/0/page-frame.html", "http://dev.inspect.store.winsenseos.cn", "43072", "MD", "", true),
 
-    XD_OLINE("门店 线上 ", "http://inspect.store.winsenseos.com/authpage/login", "http://inspect.store.winsenseos.com", "14630", "MD", "", true),
+    XD_ONLINE("门店 线上 ", "http://inspect.store.winsenseos.com/authpage/login", "http://inspect.store.winsenseos.com", "14630", "MD", "", false),
 
     INS_DAILY("门店-INS 日常 ", "https://servicewechat.com/wx937d85ff683db555/0/page-frame.html", "http://dev.inspect.store.winsenseos.cn", "", "INS", "", true),
 
