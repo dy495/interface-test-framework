@@ -37,6 +37,6 @@ public class CommodityUpOrDownScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/store/commodity/up-or-down";
+        return "/account-platform/auth/store/commodity/up-or-down";
     }
 }

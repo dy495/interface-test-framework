@@ -29,6 +29,6 @@ public class OrderDetailScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/store/order/detail";
+        return "/account-platform/auth/store/order/detail";
     }
 }

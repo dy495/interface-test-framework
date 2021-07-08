@@ -29,6 +29,6 @@ public class MakeTopScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/integral-center/make-top";
+        return "/account-platform/auth/integral-center/make-top";
     }
 }

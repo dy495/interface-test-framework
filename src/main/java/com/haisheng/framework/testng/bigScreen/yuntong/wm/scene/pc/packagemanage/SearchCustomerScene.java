@@ -29,6 +29,6 @@ public class SearchCustomerScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/package-manage/search-customer";
+        return "/account-platform/auth/package-manage/search-customer";
     }
 }

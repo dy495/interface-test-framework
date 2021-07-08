@@ -37,6 +37,6 @@ public class PackageFormSwitchPackageStatusScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/package-manage/package-form/switch-package-status";
+        return "/account-platform/auth/package-manage/package-form/switch-package-status";
     }
 }

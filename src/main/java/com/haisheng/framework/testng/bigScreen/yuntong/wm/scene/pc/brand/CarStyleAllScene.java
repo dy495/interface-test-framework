@@ -53,6 +53,6 @@ public class CarStyleAllScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/brand/car-style/all";
+        return "/account-platform/auth/brand/car-style/all";
     }
 }

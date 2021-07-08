@@ -85,6 +85,6 @@ public class MessageFormPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/message-manage/message-form/page";
+        return "/account-platform/auth/message-manage/message-form/page";
     }
 }

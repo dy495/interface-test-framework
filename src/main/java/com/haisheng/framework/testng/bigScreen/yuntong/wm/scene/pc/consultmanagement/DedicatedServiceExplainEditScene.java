@@ -29,6 +29,6 @@ public class DedicatedServiceExplainEditScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/consult-management/dedicated-service/explain-edit";
+        return "/account-platform/auth/consult-management/dedicated-service/explain-edit";
     }
 }

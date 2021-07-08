@@ -110,6 +110,6 @@ public class ManageExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/activity/manage/export";
+        return "/account-platform/auth/activity/manage/export";
     }
 }

@@ -94,6 +94,6 @@ public class ArticleExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/operation/article/export";
+        return "/account-platform/auth/operation/article/export";
     }
 }

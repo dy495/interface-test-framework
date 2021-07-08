@@ -29,6 +29,6 @@ public class ArticleDeleteScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/operation/article/delete";
+        return "/account-platform/auth/operation/article/delete";
     }
 }

@@ -94,6 +94,6 @@ public class EvaluateConfigSubmitScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/manage/evaluate/config/submit";
+        return "/account-platform/auth/manage/evaluate/config/submit";
     }
 }

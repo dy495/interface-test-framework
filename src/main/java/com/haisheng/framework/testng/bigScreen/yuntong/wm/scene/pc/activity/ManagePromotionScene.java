@@ -29,6 +29,6 @@ public class ManagePromotionScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/activity/manage/promotion";
+        return "/account-platform/auth/activity/manage/promotion";
     }
 }

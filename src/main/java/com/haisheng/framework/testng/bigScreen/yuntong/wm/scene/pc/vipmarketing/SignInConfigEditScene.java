@@ -53,6 +53,6 @@ public class SignInConfigEditScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/vip-marketing/sign_in_config/edit";
+        return "/account-platform/auth/vip-marketing/sign_in_config/edit";
     }
 }

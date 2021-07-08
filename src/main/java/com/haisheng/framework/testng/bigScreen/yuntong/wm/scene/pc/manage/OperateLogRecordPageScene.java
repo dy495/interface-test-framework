@@ -61,6 +61,6 @@ public class OperateLogRecordPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/manage/operate-log/record-page";
+        return "/account-platform/auth/manage/operate-log/record-page";
     }
 }

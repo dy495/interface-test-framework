@@ -93,6 +93,6 @@ public class ManagePageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/activity/manage/page";
+        return "/account-platform/auth/activity/manage/page";
     }
 }

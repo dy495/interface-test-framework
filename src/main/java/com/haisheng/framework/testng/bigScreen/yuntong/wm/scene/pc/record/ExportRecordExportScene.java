@@ -94,6 +94,6 @@ public class ExportRecordExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/record/export-record/export";
+        return "/account-platform/auth/record/export-record/export";
     }
 }

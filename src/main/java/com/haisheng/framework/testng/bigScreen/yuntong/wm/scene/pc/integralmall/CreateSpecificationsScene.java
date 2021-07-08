@@ -54,6 +54,6 @@ public class CreateSpecificationsScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/integral-mall/create-specifications";
+        return "/account-platform/auth/integral-mall/create-specifications";
     }
 }

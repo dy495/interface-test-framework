@@ -133,6 +133,6 @@ public class CreateCustomerScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/insurance-management/create-customer";
+        return "/account-platform/auth/insurance-management/create-customer";
     }
 }

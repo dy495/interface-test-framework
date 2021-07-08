@@ -53,6 +53,6 @@ public class IntegralRuleSetScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/integral-center/integral-rule-set";
+        return "/account-platform/auth/integral-center/integral-rule-set";
     }
 }

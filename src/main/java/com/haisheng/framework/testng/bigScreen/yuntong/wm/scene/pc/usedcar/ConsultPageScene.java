@@ -77,6 +77,6 @@ public class ConsultPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/used-car/consult/page";
+        return "/account-platform/auth/used-car/consult/page";
     }
 }

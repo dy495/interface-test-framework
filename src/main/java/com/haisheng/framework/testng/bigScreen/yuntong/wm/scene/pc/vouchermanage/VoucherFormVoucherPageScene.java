@@ -85,6 +85,6 @@ public class VoucherFormVoucherPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/voucher-manage/voucher-form/voucher-page";
+        return "/account-platform/auth/voucher-manage/voucher-form/voucher-page";
     }
 }

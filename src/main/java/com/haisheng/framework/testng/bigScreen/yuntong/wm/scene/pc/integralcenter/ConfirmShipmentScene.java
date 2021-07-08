@@ -37,6 +37,6 @@ public class ConfirmShipmentScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/integral-center/confirm_shipment";
+        return "/account-platform/auth/integral-center/confirm_shipment";
     }
 }

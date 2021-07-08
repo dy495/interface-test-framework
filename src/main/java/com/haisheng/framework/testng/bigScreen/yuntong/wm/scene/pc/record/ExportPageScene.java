@@ -77,6 +77,6 @@ public class ExportPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/record/export/page";
+        return "/account-platform/auth/record/export/page";
     }
 }

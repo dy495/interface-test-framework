@@ -70,6 +70,6 @@ public class SalesPageExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/store/sales/page/export";
+        return "/account-platform/auth/store/sales/page/export";
     }
 }

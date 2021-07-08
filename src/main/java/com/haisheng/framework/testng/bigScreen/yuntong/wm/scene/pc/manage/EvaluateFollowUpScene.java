@@ -45,6 +45,6 @@ public class EvaluateFollowUpScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/manage/evaluate/follow-up";
+        return "/account-platform/auth/manage/evaluate/follow-up";
     }
 }

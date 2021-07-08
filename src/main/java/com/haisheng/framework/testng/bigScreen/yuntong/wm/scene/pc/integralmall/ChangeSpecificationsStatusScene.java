@@ -37,6 +37,6 @@ public class ChangeSpecificationsStatusScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/integral-mall/change-specifications-status";
+        return "/account-platform/auth/integral-mall/change-specifications-status";
     }
 }

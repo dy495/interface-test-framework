@@ -102,6 +102,6 @@ public class GoodsManageExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/integral-mall/goods-manage/export";
+        return "/account-platform/auth/integral-mall/goods-manage/export";
     }
 }

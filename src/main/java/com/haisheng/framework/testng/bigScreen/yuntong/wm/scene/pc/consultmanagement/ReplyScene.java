@@ -37,6 +37,6 @@ public class ReplyScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/consult-management/reply";
+        return "/account-platform/auth/consult-management/reply";
     }
 }

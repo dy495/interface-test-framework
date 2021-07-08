@@ -53,6 +53,6 @@ public class AfterSaleCustomerChangeBelongSaleScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/customer-manage/after-sale-customer/change-belong-sale";
+        return "/account-platform/auth/customer-manage/after-sale-customer/change-belong-sale";
     }
 }

@@ -29,6 +29,6 @@ public class WashCarManagerEditEquityScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/vip-marketing/wash-car-manager/edit-equity";
+        return "/account-platform/auth/vip-marketing/wash-car-manager/edit-equity";
     }
 }

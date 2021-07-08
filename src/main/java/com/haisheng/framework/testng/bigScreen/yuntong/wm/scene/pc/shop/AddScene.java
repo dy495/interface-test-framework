@@ -118,6 +118,6 @@ public class AddScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/shop/add";
+        return "/account-platform/auth/shop/add";
     }
 }

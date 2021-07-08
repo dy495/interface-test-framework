@@ -37,6 +37,6 @@ public class ChangeSwitchStatusScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/integral-center/change-switch-status";
+        return "/account-platform/auth/integral-center/change-switch-status";
     }
 }

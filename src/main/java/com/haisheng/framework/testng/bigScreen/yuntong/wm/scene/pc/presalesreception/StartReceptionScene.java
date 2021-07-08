@@ -37,6 +37,6 @@ public class StartReceptionScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/pre-sales-reception/start-reception";
+        return "/account-platform/auth/pre-sales-reception/start-reception";
     }
 }

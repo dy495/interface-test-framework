@@ -29,6 +29,6 @@ public class ShowShopExtensionScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/shop/show-shop-extension";
+        return "/account-platform/auth/shop/show-shop-extension";
     }
 }

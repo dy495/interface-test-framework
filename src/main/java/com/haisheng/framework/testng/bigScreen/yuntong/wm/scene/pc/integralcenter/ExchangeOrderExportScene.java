@@ -110,6 +110,6 @@ public class ExchangeOrderExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/integral-center/exchange-order/export";
+        return "/account-platform/auth/integral-center/exchange-order/export";
     }
 }

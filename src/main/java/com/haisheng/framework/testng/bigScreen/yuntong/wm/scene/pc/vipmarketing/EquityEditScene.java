@@ -45,6 +45,6 @@ public class EquityEditScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/vip-marketing/equity/edit";
+        return "/account-platform/auth/vip-marketing/equity/edit";
     }
 }

@@ -117,6 +117,6 @@ public class ExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/pre-sales-reception/export";
+        return "/account-platform/auth/pre-sales-reception/export";
     }
 }

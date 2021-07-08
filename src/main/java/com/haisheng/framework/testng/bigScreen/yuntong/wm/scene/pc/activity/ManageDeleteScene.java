@@ -29,6 +29,6 @@ public class ManageDeleteScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/activity/manage/delete";
+        return "/account-platform/auth/activity/manage/delete";
     }
 }

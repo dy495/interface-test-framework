@@ -29,6 +29,6 @@ public class ShareManagerExplainEditScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/vip-marketing/share-manager/explain_edit";
+        return "/account-platform/auth/vip-marketing/share-manager/explain_edit";
     }
 }

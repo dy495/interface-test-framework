@@ -94,6 +94,6 @@ public class OrderPageExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/store/order/page/export";
+        return "/account-platform/auth/store/order/page/export";
     }
 }

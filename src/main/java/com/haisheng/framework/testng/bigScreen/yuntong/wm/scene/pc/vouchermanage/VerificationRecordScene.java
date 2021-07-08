@@ -157,6 +157,6 @@ public class VerificationRecordScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/voucher-manage/verification-record";
+        return "/account-platform/auth/voucher-manage/verification-record";
     }
 }

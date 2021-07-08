@@ -182,6 +182,6 @@ public class EditVoucherScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/voucher-manage/edit-voucher";
+        return "/account-platform/auth/voucher-manage/edit-voucher";
     }
 }

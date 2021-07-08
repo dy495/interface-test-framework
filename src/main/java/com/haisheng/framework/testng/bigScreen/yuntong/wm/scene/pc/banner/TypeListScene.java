@@ -38,6 +38,6 @@ public class TypeListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/banner/type-list";
+        return "/account-platform/auth/banner/type-list";
     }
 }

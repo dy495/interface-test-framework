@@ -29,6 +29,6 @@ public class OrderVolumeCancelScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/store/order/volume-cancel";
+        return "/account-platform/auth/store/order/volume-cancel";
     }
 }

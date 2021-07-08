@@ -38,6 +38,6 @@ public class EvaluateConfigSubmitV4Scene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/manage/evaluate/config/submit-v4";
+        return "/account-platform/auth/manage/evaluate/config/submit-v4";
     }
 }

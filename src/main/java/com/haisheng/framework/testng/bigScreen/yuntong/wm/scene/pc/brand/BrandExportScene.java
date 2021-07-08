@@ -70,6 +70,6 @@ public class BrandExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/brand/export";
+        return "/account-platform/auth/brand/export";
     }
 }

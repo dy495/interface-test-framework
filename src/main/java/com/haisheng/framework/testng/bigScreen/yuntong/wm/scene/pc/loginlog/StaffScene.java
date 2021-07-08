@@ -69,6 +69,6 @@ public class StaffScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/login-log/staff";
+        return "/account-platform/auth/login-log/staff";
     }
 }

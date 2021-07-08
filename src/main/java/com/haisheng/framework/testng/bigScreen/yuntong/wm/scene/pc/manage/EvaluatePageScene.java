@@ -141,6 +141,6 @@ public class EvaluatePageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/manage/evaluate/page";
+        return "/account-platform/auth/manage/evaluate/page";
     }
 }

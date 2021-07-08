@@ -37,6 +37,6 @@ public class ChangeBrandStatusScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/integral-mall/change-brand-status";
+        return "/account-platform/auth/integral-mall/change-brand-status";
     }
 }

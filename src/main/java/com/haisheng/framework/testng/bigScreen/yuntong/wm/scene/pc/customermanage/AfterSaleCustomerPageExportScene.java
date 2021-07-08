@@ -166,6 +166,6 @@ public class AfterSaleCustomerPageExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/customer-manage/after-sale-customer/page/export";
+        return "/account-platform/auth/customer-manage/after-sale-customer/page/export";
     }
 }

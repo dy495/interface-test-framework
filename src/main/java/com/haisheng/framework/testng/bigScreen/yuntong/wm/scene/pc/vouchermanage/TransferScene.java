@@ -54,6 +54,6 @@ public class TransferScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/voucher-manage/transfer";
+        return "/account-platform/auth/voucher-manage/transfer";
     }
 }

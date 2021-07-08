@@ -133,6 +133,6 @@ public class CustomerPageListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/insurance-management/customer-page-list";
+        return "/account-platform/auth/insurance-management/customer-page-list";
     }
 }

@@ -29,6 +29,6 @@ public class TemplateScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/import/template";
+        return "/account-platform/auth/import/template";
     }
 }

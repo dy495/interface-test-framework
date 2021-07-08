@@ -29,6 +29,6 @@ public class EvaluateConfigDetailScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/manage/evaluate/config/detail";
+        return "/account-platform/auth/manage/evaluate/config/detail";
     }
 }

@@ -37,6 +37,6 @@ public class ManageStyleEditScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/shop-style-model/manage/style/edit";
+        return "/account-platform/auth/shop-style-model/manage/style/edit";
     }
 }

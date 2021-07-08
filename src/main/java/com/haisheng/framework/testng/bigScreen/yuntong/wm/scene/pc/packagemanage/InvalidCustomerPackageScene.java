@@ -37,6 +37,6 @@ public class InvalidCustomerPackageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/package-manage/invalid-customer-package";
+        return "/account-platform/auth/package-manage/invalid-customer-package";
     }
 }

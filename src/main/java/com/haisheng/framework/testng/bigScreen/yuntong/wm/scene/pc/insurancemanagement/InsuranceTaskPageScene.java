@@ -109,6 +109,6 @@ public class InsuranceTaskPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/insurance-management/insurance-task-page";
+        return "/account-platform/auth/insurance-management/insurance-task-page";
     }
 }

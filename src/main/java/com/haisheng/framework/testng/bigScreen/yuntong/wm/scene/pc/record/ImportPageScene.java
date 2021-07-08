@@ -69,6 +69,6 @@ public class ImportPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/record/import/page";
+        return "/account-platform/auth/record/import/page";
     }
 }

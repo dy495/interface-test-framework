@@ -69,6 +69,6 @@ public class SalesCreateScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/store/sales/create";
+        return "/account-platform/auth/store/sales/create";
     }
 }

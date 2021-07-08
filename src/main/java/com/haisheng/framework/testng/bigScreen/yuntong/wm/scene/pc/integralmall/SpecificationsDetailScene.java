@@ -29,6 +29,6 @@ public class SpecificationsDetailScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/integral-mall/specifications-detail";
+        return "/account-platform/auth/integral-mall/specifications-detail";
     }
 }

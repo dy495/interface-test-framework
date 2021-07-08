@@ -45,6 +45,6 @@ public class PageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/shop/page";
+        return "/account-platform/auth/shop/page";
     }
 }

@@ -37,6 +37,6 @@ public class InsuranceCompanyEditScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/insurance-management/insurance-company-edit";
+        return "/account-platform/auth/insurance-management/insurance-company-edit";
     }
 }

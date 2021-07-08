@@ -45,6 +45,6 @@ public class BuyInsuranceScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/insurance-management/buy-insurance";
+        return "/account-platform/auth/insurance-management/buy-insurance";
     }
 }

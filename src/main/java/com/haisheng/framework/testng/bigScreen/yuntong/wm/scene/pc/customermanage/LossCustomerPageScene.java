@@ -125,6 +125,6 @@ public class LossCustomerPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/customer-manage/loss-customer/page";
+        return "/account-platform/auth/customer-manage/loss-customer/page";
     }
 }

@@ -117,6 +117,6 @@ public class UsedCarPageListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/consult-management/used-car-page-list";
+        return "/account-platform/auth/consult-management/used-car-page-list";
     }
 }

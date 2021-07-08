@@ -45,6 +45,6 @@ public class CustomerPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/integral-center/customer/page";
+        return "/account-platform/auth/integral-center/customer/page";
     }
 }

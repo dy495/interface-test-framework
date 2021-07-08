@@ -62,6 +62,6 @@ public class ExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/shop/export";
+        return "/account-platform/auth/shop/export";
     }
 }

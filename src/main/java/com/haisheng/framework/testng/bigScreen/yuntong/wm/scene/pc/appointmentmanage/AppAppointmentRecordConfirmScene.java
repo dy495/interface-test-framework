@@ -45,6 +45,6 @@ public class AppAppointmentRecordConfirmScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/appointment-manage/appointment-record/confirm";
+        return "/account-platform/auth/appointment-manage/appointment-record/confirm";
     }
 }

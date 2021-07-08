@@ -29,6 +29,6 @@ public class ManageTopScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/activity/manage/top";
+        return "/account-platform/auth/activity/manage/top";
     }
 }

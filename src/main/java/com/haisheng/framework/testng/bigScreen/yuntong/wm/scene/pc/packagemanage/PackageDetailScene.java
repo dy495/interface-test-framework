@@ -29,6 +29,6 @@ public class PackageDetailScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/package-manage/package-detail";
+        return "/account-platform/auth/package-manage/package-detail";
     }
 }

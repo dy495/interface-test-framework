@@ -94,6 +94,6 @@ public class AppApplyExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/voucher/apply/export";
+        return "/account-platform/auth/voucher/apply/export";
     }
 }

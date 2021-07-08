@@ -109,6 +109,6 @@ public class ShareManagerEditScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/vip-marketing/share-manager/edit";
+        return "/account-platform/auth/vip-marketing/share-manager/edit";
     }
 }

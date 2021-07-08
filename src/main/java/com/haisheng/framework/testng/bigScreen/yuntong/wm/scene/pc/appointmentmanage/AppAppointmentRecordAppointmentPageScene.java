@@ -189,6 +189,6 @@ public class AppAppointmentRecordAppointmentPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/appointment-manage/appointment-record/appointment-page";
+        return "/account-platform/auth/appointment-manage/appointment-record/appointment-page";
     }
 }

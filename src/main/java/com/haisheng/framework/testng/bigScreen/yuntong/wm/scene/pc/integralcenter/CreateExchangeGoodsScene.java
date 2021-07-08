@@ -134,6 +134,6 @@ public class CreateExchangeGoodsScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/integral-center/create-exchange-goods";
+        return "/account-platform/auth/integral-center/create-exchange-goods";
     }
 }

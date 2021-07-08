@@ -102,6 +102,6 @@ public class RescueExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/manage/rescue/export";
+        return "/account-platform/auth/manage/rescue/export";
     }
 }

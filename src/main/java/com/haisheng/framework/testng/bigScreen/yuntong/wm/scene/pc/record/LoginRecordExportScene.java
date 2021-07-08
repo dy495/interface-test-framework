@@ -78,6 +78,6 @@ public class LoginRecordExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/record/login-record/export";
+        return "/account-platform/auth/record/login-record/export";
     }
 }

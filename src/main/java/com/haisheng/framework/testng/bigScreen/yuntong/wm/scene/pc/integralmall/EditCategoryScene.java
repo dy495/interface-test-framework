@@ -61,6 +61,6 @@ public class EditCategoryScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/integral-mall/edit-category";
+        return "/account-platform/auth/integral-mall/edit-category";
     }
 }

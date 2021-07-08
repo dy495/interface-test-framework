@@ -45,6 +45,6 @@ public class ArticleEditScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/operation/article/edit";
+        return "/account-platform/auth/operation/article/edit";
     }
 }

@@ -29,6 +29,6 @@ public class DeleteVoucherScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/voucher-manage/delete-voucher";
+        return "/account-platform/auth/voucher-manage/delete-voucher";
     }
 }

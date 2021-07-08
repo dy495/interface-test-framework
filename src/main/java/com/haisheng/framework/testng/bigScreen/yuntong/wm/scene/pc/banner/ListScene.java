@@ -38,6 +38,6 @@ public class ListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/banner/list";
+        return "/account-platform/auth/banner/list";
     }
 }

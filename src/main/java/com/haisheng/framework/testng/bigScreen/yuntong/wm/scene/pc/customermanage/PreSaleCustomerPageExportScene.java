@@ -110,6 +110,6 @@ public class PreSaleCustomerPageExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/customer-manage/pre-sale-customer/page/export";
+        return "/account-platform/auth/customer-manage/pre-sale-customer/page/export";
     }
 }

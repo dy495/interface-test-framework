@@ -77,6 +77,6 @@ public class PackageFormPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/package-manage/package-form/page";
+        return "/account-platform/auth/package-manage/package-form/page";
     }
 }

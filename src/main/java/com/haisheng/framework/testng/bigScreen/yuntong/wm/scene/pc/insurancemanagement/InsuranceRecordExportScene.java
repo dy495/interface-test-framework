@@ -150,6 +150,6 @@ public class InsuranceRecordExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/insurance-management/insurance-record/export";
+        return "/account-platform/auth/insurance-management/insurance-record/export";
     }
 }

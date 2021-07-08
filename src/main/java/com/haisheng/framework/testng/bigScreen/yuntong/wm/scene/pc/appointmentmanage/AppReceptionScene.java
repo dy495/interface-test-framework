@@ -37,6 +37,6 @@ public class AppReceptionScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/appointment-manage/reception";
+        return "/account-platform/auth/appointment-manage/reception";
     }
 }

@@ -29,6 +29,6 @@ public class AdmitScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/pre-sales-reception/admit";
+        return "/account-platform/auth/pre-sales-reception/admit";
     }
 }

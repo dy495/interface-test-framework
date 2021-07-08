@@ -37,6 +37,6 @@ public class DetailScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/pre-sales-reception/detail";
+        return "/account-platform/auth/pre-sales-reception/detail";
     }
 }

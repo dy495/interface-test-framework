@@ -29,6 +29,6 @@ public class ArticleDetailScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/operation/article/detail";
+        return "/account-platform/auth/operation/article/detail";
     }
 }

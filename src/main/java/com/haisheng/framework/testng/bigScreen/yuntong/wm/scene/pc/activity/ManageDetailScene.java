@@ -29,6 +29,6 @@ public class ManageDetailScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/activity/manage/detail";
+        return "/account-platform/auth/activity/manage/detail";
     }
 }

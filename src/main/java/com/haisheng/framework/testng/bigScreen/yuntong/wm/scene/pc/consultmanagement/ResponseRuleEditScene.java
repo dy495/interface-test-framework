@@ -61,6 +61,6 @@ public class ResponseRuleEditScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/consult-management/response-rule-edit";
+        return "/account-platform/auth/consult-management/response-rule-edit";
     }
 }

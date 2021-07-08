@@ -37,6 +37,6 @@ public class SignInConfigPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/vip-marketing/sign_in_config/page";
+        return "/account-platform/auth/vip-marketing/sign_in_config/page";
     }
 }

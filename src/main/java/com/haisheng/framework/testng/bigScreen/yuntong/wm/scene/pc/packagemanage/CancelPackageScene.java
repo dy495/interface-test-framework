@@ -29,6 +29,6 @@ public class CancelPackageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/package-manage/cancel-package";
+        return "/account-platform/auth/package-manage/cancel-package";
     }
 }

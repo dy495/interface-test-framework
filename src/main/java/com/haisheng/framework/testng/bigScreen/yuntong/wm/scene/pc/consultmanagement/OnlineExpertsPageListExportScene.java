@@ -142,6 +142,6 @@ public class OnlineExpertsPageListExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/consult-management/online-experts-page-list-export";
+        return "/account-platform/auth/consult-management/online-experts-page-list-export";
     }
 }

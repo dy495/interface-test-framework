@@ -86,6 +86,6 @@ public class SearchCustomerPhoneScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/message-manage/search-customer-phone";
+        return "/account-platform/auth/message-manage/search-customer-phone";
     }
 }

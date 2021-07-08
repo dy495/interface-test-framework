@@ -206,6 +206,6 @@ public class AppRecordExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/appointment-manage/record/export";
+        return "/account-platform/auth/appointment-manage/record/export";
     }
 }

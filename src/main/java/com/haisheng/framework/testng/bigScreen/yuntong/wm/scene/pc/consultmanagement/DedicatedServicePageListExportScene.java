@@ -142,6 +142,6 @@ public class DedicatedServicePageListExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/consult-management/dedicated-service-page-list-export";
+        return "/account-platform/auth/consult-management/dedicated-service-page-list-export";
     }
 }

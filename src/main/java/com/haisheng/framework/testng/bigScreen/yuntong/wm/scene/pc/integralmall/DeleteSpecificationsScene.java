@@ -29,6 +29,6 @@ public class DeleteSpecificationsScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/integral-mall/delete-specifications";
+        return "/account-platform/auth/integral-mall/delete-specifications";
     }
 }

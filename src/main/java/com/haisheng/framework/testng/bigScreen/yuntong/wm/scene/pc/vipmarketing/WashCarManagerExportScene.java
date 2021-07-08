@@ -102,6 +102,6 @@ public class WashCarManagerExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/vip-marketing/wash-car-manager/export";
+        return "/account-platform/auth/vip-marketing/wash-car-manager/export";
     }
 }

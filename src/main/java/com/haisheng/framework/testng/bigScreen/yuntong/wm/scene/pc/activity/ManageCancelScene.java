@@ -29,6 +29,6 @@ public class ManageCancelScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/activity/manage/cancel";
+        return "/account-platform/auth/activity/manage/cancel";
     }
 }

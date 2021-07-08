@@ -94,6 +94,6 @@ public class CommodityCreateScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/store/commodity/create";
+        return "/account-platform/auth/store/commodity/create";
     }
 }

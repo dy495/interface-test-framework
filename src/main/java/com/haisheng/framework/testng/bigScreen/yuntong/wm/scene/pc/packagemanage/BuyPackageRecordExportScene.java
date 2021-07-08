@@ -102,6 +102,6 @@ public class BuyPackageRecordExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/package-manage/buy-package-record/export";
+        return "/account-platform/auth/package-manage/buy-package-record/export";
     }
 }

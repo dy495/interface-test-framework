@@ -182,6 +182,6 @@ public class ManageFissionVoucherEditScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/activity/manage/fission-voucher/edit";
+        return "/account-platform/auth/activity/manage/fission-voucher/edit";
     }
 }

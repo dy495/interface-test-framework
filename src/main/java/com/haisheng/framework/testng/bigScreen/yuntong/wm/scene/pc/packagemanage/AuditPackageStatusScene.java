@@ -45,6 +45,6 @@ public class AuditPackageStatusScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/package-manage/audit-package-status";
+        return "/account-platform/auth/package-manage/audit-package-status";
     }
 }

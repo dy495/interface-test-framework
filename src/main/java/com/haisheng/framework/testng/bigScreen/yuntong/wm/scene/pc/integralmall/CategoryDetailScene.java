@@ -29,6 +29,6 @@ public class CategoryDetailScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/integral-mall/category-detail";
+        return "/account-platform/auth/integral-mall/category-detail";
     }
 }

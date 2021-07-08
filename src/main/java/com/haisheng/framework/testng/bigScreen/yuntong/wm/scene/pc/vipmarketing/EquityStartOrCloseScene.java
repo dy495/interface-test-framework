@@ -37,6 +37,6 @@ public class EquityStartOrCloseScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/vip-marketing/equity/start-or-close";
+        return "/account-platform/auth/vip-marketing/equity/start-or-close";
     }
 }

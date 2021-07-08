@@ -125,6 +125,6 @@ public class OnlineExpertsPageListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/consult-management/online-experts-page-list";
+        return "/account-platform/auth/consult-management/online-experts-page-list";
     }
 }

@@ -69,6 +69,6 @@ public class ExchangePageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/integral-center/exchange-page";
+        return "/account-platform/auth/integral-center/exchange-page";
     }
 }

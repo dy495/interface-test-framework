@@ -54,6 +54,6 @@ public class EditSpecificationsScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/integral-mall/edit-specifications";
+        return "/account-platform/auth/integral-mall/edit-specifications";
     }
 }

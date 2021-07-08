@@ -85,6 +85,6 @@ public class RescuePageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/manage/rescue/page";
+        return "/account-platform/auth/manage/rescue/page";
     }
 }

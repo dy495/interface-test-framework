@@ -70,6 +70,6 @@ public class IntelligentRemindAddScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/manage/intelligent-remind/add";
+        return "/account-platform/auth/manage/intelligent-remind/add";
     }
 }

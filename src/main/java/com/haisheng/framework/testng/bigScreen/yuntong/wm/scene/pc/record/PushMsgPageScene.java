@@ -77,6 +77,6 @@ public class PushMsgPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/record/push-msg/page";
+        return "/account-platform/auth/record/push-msg/page";
     }
 }

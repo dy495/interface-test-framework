@@ -182,6 +182,6 @@ public class CreateScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/voucher-manage/create";
+        return "/account-platform/auth/voucher-manage/create";
     }
 }

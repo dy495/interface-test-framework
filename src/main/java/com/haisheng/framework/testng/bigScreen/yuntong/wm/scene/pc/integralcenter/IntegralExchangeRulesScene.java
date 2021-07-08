@@ -37,6 +37,6 @@ public class IntegralExchangeRulesScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/integral-center/integral-exchange-rules";
+        return "/account-platform/auth/integral-center/integral-exchange-rules";
     }
 }

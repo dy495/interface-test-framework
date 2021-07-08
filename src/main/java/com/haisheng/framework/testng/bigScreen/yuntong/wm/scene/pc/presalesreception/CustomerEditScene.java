@@ -93,6 +93,6 @@ public class CustomerEditScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/pre-sales-reception/customer/edit";
+        return "/account-platform/auth/pre-sales-reception/customer/edit";
     }
 }

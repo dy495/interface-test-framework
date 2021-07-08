@@ -29,6 +29,6 @@ public class ReceptionScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/reception-manage/reception";
+        return "/account-platform/auth/reception-manage/reception";
     }
 }

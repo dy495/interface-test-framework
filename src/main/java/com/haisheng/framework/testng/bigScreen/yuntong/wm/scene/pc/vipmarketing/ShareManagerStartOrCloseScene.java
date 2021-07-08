@@ -37,6 +37,6 @@ public class ShareManagerStartOrCloseScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/vip-marketing/share-manager/start-or-close";
+        return "/account-platform/auth/vip-marketing/share-manager/start-or-close";
     }
 }

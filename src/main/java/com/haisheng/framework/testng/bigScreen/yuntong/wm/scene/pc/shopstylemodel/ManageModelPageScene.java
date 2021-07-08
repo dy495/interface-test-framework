@@ -85,6 +85,6 @@ public class ManageModelPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/shop-style-model/manage/model/page";
+        return "/account-platform/auth/shop-style-model/manage/model/page";
     }
 }

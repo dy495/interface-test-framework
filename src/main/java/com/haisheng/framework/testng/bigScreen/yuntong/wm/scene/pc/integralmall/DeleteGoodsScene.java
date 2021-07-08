@@ -29,6 +29,6 @@ public class DeleteGoodsScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/integral-mall/delete-goods";
+        return "/account-platform/auth/integral-mall/delete-goods";
     }
 }

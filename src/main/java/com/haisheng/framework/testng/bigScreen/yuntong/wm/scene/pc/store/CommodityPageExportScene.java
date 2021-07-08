@@ -78,6 +78,6 @@ public class CommodityPageExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/store/commodity/page/export";
+        return "/account-platform/auth/store/commodity/page/export";
     }
 }

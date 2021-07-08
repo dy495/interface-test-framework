@@ -29,6 +29,6 @@ public class BrandDetailScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/brand/detail";
+        return "/account-platform/auth/brand/detail";
     }
 }

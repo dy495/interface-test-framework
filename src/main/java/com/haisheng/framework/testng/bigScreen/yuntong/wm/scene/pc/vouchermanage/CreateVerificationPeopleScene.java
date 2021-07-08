@@ -101,6 +101,6 @@ public class CreateVerificationPeopleScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/voucher-manage/create-verification-people";
+        return "/account-platform/auth/voucher-manage/create-verification-people";
     }
 }

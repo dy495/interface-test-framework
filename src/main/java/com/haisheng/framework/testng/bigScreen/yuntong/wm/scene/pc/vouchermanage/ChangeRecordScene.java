@@ -45,6 +45,6 @@ public class ChangeRecordScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/voucher-manage/change-record";
+        return "/account-platform/auth/voucher-manage/change-record";
     }
 }

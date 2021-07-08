@@ -29,6 +29,6 @@ public class ChangeOrderScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/integral-center/change-order";
+        return "/account-platform/auth/integral-center/change-order";
     }
 }

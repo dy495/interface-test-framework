@@ -37,6 +37,6 @@ public class FinishReceptionScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/reception-manage/finish-reception";
+        return "/account-platform/auth/reception-manage/finish-reception";
     }
 }

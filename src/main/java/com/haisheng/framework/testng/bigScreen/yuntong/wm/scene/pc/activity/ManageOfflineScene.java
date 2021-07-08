@@ -29,6 +29,6 @@ public class ManageOfflineScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/activity/manage/offline";
+        return "/account-platform/auth/activity/manage/offline";
     }
 }

@@ -1,6 +1,5 @@
 package com.haisheng.framework.testng.bigScreen.yuntong.wm.util;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
@@ -28,12 +27,12 @@ import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.role.RoleAddS
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.role.RoleDeleteScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.role.RoleListScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.role.RolePageScene;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.staff.StaffDetailScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.staff.StaffDeleteScene;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.staff.StaffEditScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.staff.StaffPageScene;
 import com.haisheng.framework.util.CommonUtil;
-import com.haisheng.framework.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
-import org.jooq.tools.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -271,14 +270,38 @@ public class BusinessUtil extends BasicUtil {
         RoleAddScene.builder().name("自动化创建全部权限").description("这是一个最大权限的角色").parentRoleId(parentRoleId).authList(authList).build().invoke(visitor);
     }
 
+    /**
+     * 批量删除角色
+     *
+     * @param roleName 角色名称
+     */
     public void deleteRole(String... roleName) {
         Arrays.stream(roleName).forEach(e -> deleteRole(e = e == null ? "自动化创建全部权限" : e));
     }
 
+    /**
+     * 删除一个角色
+     *
+     * @param roleName 角色名称
+     */
     public void deleteRole(String roleName) {
         IScene scene = RolePageScene.builder().name(roleName).build();
         JSONObject object = toJavaObject(scene, JSONObject.class, "name", roleName);
         int id = object.getInteger("id");
         RoleDeleteScene.builder().id(id).build().invoke(visitor);
+    }
+
+    /**
+     * 编辑一个账号
+     *
+     * @param id 账号id
+     */
+    public void editStaff(String id) {
+        JSONObject response = StaffDetailScene.builder().id(id).build().invoke(visitor);
+//        JSONArray shopList = response.getJSONArray("shop_list");
+        JSONArray roleList = response.getJSONArray("role_list");
+        String name = response.getString("name");
+        String phone = response.getString("phone");
+        StaffEditScene.builder().roleList(roleList).name(name).phone(phone).id(id).build().invoke(visitor);
     }
 }

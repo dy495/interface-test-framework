@@ -38,6 +38,6 @@ public class EditScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/banner/edit";
+        return "/account-platform/auth/banner/edit";
     }
 }

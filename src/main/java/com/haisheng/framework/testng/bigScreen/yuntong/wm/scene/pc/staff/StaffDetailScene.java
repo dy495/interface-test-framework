@@ -11,7 +11,7 @@ import lombok.Builder;
  * @date 2021-05-18 17:04:35
  */
 @Builder
-public class DetailScene extends BaseScene {
+public class StaffDetailScene extends BaseScene {
     /**
      * 描述 账号id
      * 是否必填 true
@@ -29,6 +29,6 @@ public class DetailScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/staff/detail";
+        return "/account-platform/auth/staff/detail";
     }
 }

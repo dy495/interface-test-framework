@@ -53,6 +53,6 @@ public class MaintainCarModelEditScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/manage/maintain/car-model/edit";
+        return "/account-platform/auth/manage/maintain/car-model/edit";
     }
 }

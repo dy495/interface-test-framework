@@ -29,6 +29,6 @@ public class ReceptorListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/pre-sales-reception/receptor/list";
+        return "/account-platform/auth/pre-sales-reception/receptor/list";
     }
 }

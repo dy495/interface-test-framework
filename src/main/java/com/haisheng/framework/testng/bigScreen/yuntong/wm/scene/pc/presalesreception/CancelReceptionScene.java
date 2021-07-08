@@ -37,6 +37,6 @@ public class CancelReceptionScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/pre-sales-reception/cancel-reception";
+        return "/account-platform/auth/pre-sales-reception/cancel-reception";
     }
 }

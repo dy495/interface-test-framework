@@ -134,6 +134,6 @@ public class PurchaseFixedPackageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/reception-manage/purchase-fixed-package";
+        return "/account-platform/auth/reception-manage/purchase-fixed-package";
     }
 }

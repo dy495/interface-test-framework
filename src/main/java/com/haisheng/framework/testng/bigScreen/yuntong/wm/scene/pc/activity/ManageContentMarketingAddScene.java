@@ -142,6 +142,6 @@ public class ManageContentMarketingAddScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/activity/manage/content-marketing/add";
+        return "/account-platform/auth/activity/manage/content-marketing/add";
     }
 }

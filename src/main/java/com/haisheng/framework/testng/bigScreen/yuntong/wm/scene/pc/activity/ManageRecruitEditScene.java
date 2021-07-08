@@ -230,6 +230,6 @@ public class ManageRecruitEditScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/activity/manage/recruit/edit";
+        return "/account-platform/auth/activity/manage/recruit/edit";
     }
 }

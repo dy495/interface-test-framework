@@ -77,6 +77,6 @@ public class AppApplyPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/voucher/apply/page";
+        return "/account-platform/auth/voucher/apply/page";
     }
 }

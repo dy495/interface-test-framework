@@ -12,7 +12,7 @@ import lombok.Builder;
  * @date 2021-05-18 17:04:35
  */
 @Builder
-public class EditScene extends BaseScene {
+public class StaffEditScene extends BaseScene {
     /**
      * 描述 姓名
      * 是否必填 true
@@ -70,6 +70,6 @@ public class EditScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/staff/edit";
+        return "/account-platform/auth/staff/edit";
     }
 }

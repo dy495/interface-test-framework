@@ -38,6 +38,6 @@ public class AppManageApprovalScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/activity/manage/approval";
+        return "/account-platform/auth/activity/manage/approval";
     }
 }

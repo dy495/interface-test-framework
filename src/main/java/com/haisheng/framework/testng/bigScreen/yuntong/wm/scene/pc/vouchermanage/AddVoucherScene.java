@@ -46,6 +46,6 @@ public class AddVoucherScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/voucher-manage/add-voucher";
+        return "/account-platform/auth/voucher-manage/add-voucher";
     }
 }

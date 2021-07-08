@@ -86,6 +86,6 @@ public class CommodityEditScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/store/commodity/edit";
+        return "/account-platform/auth/store/commodity/edit";
     }
 }

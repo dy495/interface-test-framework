@@ -29,6 +29,6 @@ public class ExchangeCommoditySpecificationsListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/integral-center/exchange-commodity-specifications-list";
+        return "/account-platform/auth/integral-center/exchange-commodity-specifications-list";
     }
 }

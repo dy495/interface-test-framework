@@ -78,6 +78,6 @@ public class BrandAllScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/brand/all";
+        return "/account-platform/auth/brand/all";
     }
 }

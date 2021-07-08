@@ -46,6 +46,6 @@ public class GroupTotalScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/message-manage/group-total";
+        return "/account-platform/auth/message-manage/group-total";
     }
 }

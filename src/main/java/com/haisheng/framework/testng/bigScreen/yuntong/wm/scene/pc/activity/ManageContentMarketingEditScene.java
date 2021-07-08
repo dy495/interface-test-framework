@@ -150,6 +150,6 @@ public class ManageContentMarketingEditScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/activity/manage/content-marketing/edit";
+        return "/account-platform/auth/activity/manage/content-marketing/edit";
     }
 }

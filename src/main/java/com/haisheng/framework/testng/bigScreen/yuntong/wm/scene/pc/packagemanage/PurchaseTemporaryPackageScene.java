@@ -166,6 +166,6 @@ public class PurchaseTemporaryPackageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/package-manage/purchase-temporary-package";
+        return "/account-platform/auth/package-manage/purchase-temporary-package";
     }
 }

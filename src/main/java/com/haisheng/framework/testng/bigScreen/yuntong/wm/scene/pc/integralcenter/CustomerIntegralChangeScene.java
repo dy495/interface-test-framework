@@ -53,6 +53,6 @@ public class CustomerIntegralChangeScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/integral-center/customer-integral/change";
+        return "/account-platform/auth/integral-center/customer-integral/change";
     }
 }

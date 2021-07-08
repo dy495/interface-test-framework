@@ -117,6 +117,6 @@ public class AfterSaleCustomerEditScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/customer-manage/after-sale-customer/edit";
+        return "/account-platform/auth/customer-manage/after-sale-customer/edit";
     }
 }

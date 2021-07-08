@@ -45,6 +45,6 @@ public class ManageChangeRecordPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/activity/manage/change/record/page";
+        return "/account-platform/auth/activity/manage/change/record/page";
     }
 }

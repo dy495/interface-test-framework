@@ -158,6 +158,6 @@ public class EvaluateExportV4Scene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/manage/evaluate/export-v4";
+        return "/account-platform/auth/manage/evaluate/export-v4";
     }
 }

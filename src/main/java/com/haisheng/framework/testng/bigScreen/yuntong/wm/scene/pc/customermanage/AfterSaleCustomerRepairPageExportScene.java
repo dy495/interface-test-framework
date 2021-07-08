@@ -70,6 +70,6 @@ public class AfterSaleCustomerRepairPageExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/customer-manage/after-sale-customer/repair-page/export";
+        return "/account-platform/auth/customer-manage/after-sale-customer/repair-page/export";
     }
 }

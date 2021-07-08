@@ -29,6 +29,6 @@ public class ArticleTopScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/operation/article/top";
+        return "/account-platform/auth/operation/article/top";
     }
 }

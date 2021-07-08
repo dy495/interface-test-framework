@@ -45,6 +45,6 @@ public class AfterSaleCustomerInfoScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/customer-manage/after-sale-customer/info";
+        return "/account-platform/auth/customer-manage/after-sale-customer/info";
     }
 }

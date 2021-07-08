@@ -61,6 +61,6 @@ public class LoginRecordPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/record/login-record/page";
+        return "/account-platform/auth/record/login-record/page";
     }
 }

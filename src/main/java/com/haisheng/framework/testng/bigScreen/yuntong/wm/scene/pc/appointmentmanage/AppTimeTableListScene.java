@@ -37,6 +37,6 @@ public class AppTimeTableListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/appointment-manage/time-table/list";
+        return "/account-platform/auth/appointment-manage/time-table/list";
     }
 }

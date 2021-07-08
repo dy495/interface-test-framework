@@ -37,6 +37,6 @@ public class RemarkScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/consult-management/remark";
+        return "/account-platform/auth/consult-management/remark";
     }
 }

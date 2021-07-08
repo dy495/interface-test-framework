@@ -45,6 +45,6 @@ public class AppMaintainTimeListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/appointment-manage/maintain/time/list";
+        return "/account-platform/auth/appointment-manage/maintain/time/list";
     }
 }

@@ -77,6 +77,6 @@ public class WechatCustomerPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/customer-manage/wechat-customer/page";
+        return "/account-platform/auth/customer-manage/wechat-customer/page";
     }
 }

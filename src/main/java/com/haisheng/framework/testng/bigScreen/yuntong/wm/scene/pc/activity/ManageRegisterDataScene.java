@@ -29,6 +29,6 @@ public class ManageRegisterDataScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/activity/manage/register/data";
+        return "/account-platform/auth/activity/manage/register/data";
     }
 }

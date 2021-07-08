@@ -29,6 +29,6 @@ public class ManageRevokeScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/activity/manage/revoke";
+        return "/account-platform/auth/activity/manage/revoke";
     }
 }

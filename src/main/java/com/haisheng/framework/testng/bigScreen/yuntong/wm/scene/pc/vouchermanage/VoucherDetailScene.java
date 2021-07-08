@@ -29,6 +29,6 @@ public class VoucherDetailScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/voucher-manage/voucher-detail";
+        return "/account-platform/auth/voucher-manage/voucher-detail";
     }
 }

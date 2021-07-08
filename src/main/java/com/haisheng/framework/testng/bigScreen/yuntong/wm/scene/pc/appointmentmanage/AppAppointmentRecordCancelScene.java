@@ -45,6 +45,6 @@ public class AppAppointmentRecordCancelScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/appointment-manage/appointment-record/cancel";
+        return "/account-platform/auth/appointment-manage/appointment-record/cancel";
     }
 }

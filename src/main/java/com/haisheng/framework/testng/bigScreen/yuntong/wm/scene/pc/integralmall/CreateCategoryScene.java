@@ -61,6 +61,6 @@ public class CreateCategoryScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/integral-mall/create-category";
+        return "/account-platform/auth/integral-mall/create-category";
     }
 }

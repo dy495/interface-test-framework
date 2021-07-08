@@ -29,6 +29,6 @@ public class ExtensionPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/voucher-manage/extension-page";
+        return "/account-platform/auth/voucher-manage/extension-page";
     }
 }

@@ -29,6 +29,6 @@ public class DetailScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/use-range/detail";
+        return "/account-platform/auth/use-range/detail";
     }
 }

@@ -126,6 +126,6 @@ public class EditScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/shop/edit";
+        return "/account-platform/auth/shop/edit";
     }
 }

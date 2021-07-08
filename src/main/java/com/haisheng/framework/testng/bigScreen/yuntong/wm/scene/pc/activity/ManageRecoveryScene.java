@@ -29,6 +29,6 @@ public class ManageRecoveryScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/activity/manage/recovery";
+        return "/account-platform/auth/activity/manage/recovery";
     }
 }

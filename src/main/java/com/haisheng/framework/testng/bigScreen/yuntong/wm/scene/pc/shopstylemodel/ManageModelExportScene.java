@@ -102,6 +102,6 @@ public class ManageModelExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/shop-style-model/manage/model/export";
+        return "/account-platform/auth/shop-style-model/manage/model/export";
     }
 }

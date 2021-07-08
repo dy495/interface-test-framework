@@ -61,6 +61,6 @@ public class CommodityPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/store/commodity/page";
+        return "/account-platform/auth/store/commodity/page";
     }
 }

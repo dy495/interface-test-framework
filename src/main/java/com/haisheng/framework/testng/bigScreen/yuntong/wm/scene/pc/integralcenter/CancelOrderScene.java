@@ -29,6 +29,6 @@ public class CancelOrderScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/integral-center/cancel-order";
+        return "/account-platform/auth/integral-center/cancel-order";
     }
 }

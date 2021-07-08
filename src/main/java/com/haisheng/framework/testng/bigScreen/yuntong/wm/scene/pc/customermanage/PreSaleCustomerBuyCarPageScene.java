@@ -117,6 +117,6 @@ public class PreSaleCustomerBuyCarPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/customer-manage/pre-sale-customer/buy-car/page";
+        return "/account-platform/auth/customer-manage/pre-sale-customer/buy-car/page";
     }
 }

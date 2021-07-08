@@ -16,6 +16,7 @@ import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.role.RoleList
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.role.RolePageScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.staff.StaffAddScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.staff.StaffPageScene;
+import com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.staff.StatusChangeScene;
 import com.haisheng.framework.testng.bigScreen.yuntong.wm.util.BusinessUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -186,6 +187,42 @@ public class SystemConfigCase extends TestCaseCommon implements TestCaseStd {
             collectMessage(e);
         } finally {
             saveData("删除一个账户，账号管理列表-1");
+        }
+    }
+
+    @Test(description = "编辑一个账号提交以后，列表数量不变")
+    public void staffManage_data_3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene staffPageScene = StaffPageScene.builder().build();
+            int total = staffPageScene.invoke(visitor).getInteger("total");
+            String id = util.toFirstJavaObject(staffPageScene, JSONObject.class).getString("id");
+            util.editStaff(id);
+            int newTotal = staffPageScene.invoke(visitor).getInteger("total");
+            Preconditions.checkArgument(newTotal == total, "编辑前列表数量：" + total + " 编辑后列表数量：" + newTotal);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("禁用一个账号，列表数量不变");
+        }
+    }
+
+    @Test(description = "禁用一个账号，列表数量不变")
+    public void staffManage_data_4() {
+        logger.logCaseStart(caseResult.getCaseName());
+        String id = null;
+        try {
+            IScene staffPageScene = StaffPageScene.builder().build();
+            int total = staffPageScene.invoke(visitor).getInteger("total");
+            id = util.toFirstJavaObject(staffPageScene, JSONObject.class).getString("id");
+            StatusChangeScene.builder().id(id).status("DISABLE").build().invoke(visitor);
+            int newTotal = staffPageScene.invoke(visitor).getInteger("total");
+            Preconditions.checkArgument(newTotal == total, "禁用前列表数量：" + total + " 禁用后列表数量：" + newTotal);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            StatusChangeScene.builder().id(id).status("ENABLE").build().invoke(visitor);
+            saveData("禁用一个账号，列表数量不变");
         }
     }
 }

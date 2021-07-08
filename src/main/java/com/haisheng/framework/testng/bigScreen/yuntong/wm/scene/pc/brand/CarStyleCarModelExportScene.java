@@ -86,6 +86,6 @@ public class CarStyleCarModelExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/brand/car-style/car-model/export";
+        return "/account-platform/auth/brand/car-style/car-model/export";
     }
 }

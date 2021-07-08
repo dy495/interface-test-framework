@@ -85,6 +85,6 @@ public class WashCarManagerAdjustNumberRecordScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/vip-marketing/wash-car-manager/adjust-number/record";
+        return "/account-platform/auth/vip-marketing/wash-car-manager/adjust-number/record";
     }
 }

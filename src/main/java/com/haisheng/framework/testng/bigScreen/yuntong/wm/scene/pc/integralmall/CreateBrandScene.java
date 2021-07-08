@@ -53,6 +53,6 @@ public class CreateBrandScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/integral-mall/create-brand";
+        return "/account-platform/auth/integral-mall/create-brand";
     }
 }

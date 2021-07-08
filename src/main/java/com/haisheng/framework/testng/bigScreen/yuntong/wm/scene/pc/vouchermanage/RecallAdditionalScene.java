@@ -29,6 +29,6 @@ public class RecallAdditionalScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/voucher-manage/recall-additional";
+        return "/account-platform/auth/voucher-manage/recall-additional";
     }
 }

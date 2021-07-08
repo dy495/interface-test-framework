@@ -126,6 +126,6 @@ public class CreatePackageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/package-manage/create-package";
+        return "/account-platform/auth/package-manage/create-package";
     }
 }

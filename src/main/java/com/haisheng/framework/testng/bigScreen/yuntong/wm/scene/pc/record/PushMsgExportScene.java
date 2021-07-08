@@ -94,6 +94,6 @@ public class PushMsgExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/record/push-msg/export";
+        return "/account-platform/auth/record/push-msg/export";
     }
 }

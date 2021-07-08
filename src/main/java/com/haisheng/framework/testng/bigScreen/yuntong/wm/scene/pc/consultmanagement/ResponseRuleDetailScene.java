@@ -29,6 +29,6 @@ public class ResponseRuleDetailScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/consult-management/response-rule-detail";
+        return "/account-platform/auth/consult-management/response-rule-detail";
     }
 }

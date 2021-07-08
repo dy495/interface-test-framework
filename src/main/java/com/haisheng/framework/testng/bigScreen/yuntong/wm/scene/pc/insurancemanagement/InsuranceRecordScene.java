@@ -125,6 +125,6 @@ public class InsuranceRecordScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/insurance-management/insurance-record";
+        return "/account-platform/auth/insurance-management/insurance-record";
     }
 }

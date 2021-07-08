@@ -29,6 +29,6 @@ public class ManageOnlineScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/activity/manage/online";
+        return "/account-platform/auth/activity/manage/online";
     }
 }

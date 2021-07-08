@@ -29,6 +29,6 @@ public class AppAppointmentMaintainConfigDetailScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/manage/appointment/maintain-config/detail";
+        return "/account-platform/auth/manage/appointment/maintain-config/detail";
     }
 }

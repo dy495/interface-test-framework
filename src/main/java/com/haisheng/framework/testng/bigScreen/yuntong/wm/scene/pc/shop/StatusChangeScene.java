@@ -45,6 +45,6 @@ public class StatusChangeScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/shop/status/change";
+        return "/account-platform/auth/shop/status/change";
     }
 }

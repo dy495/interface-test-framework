@@ -133,6 +133,6 @@ public class PageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/reception-manage/page";
+        return "/account-platform/auth/reception-manage/page";
     }
 }

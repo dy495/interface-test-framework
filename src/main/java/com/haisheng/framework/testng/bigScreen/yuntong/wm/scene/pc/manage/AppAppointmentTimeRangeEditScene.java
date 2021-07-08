@@ -53,6 +53,6 @@ public class AppAppointmentTimeRangeEditScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/manage/appointment/time-range/edit";
+        return "/account-platform/auth/manage/appointment/time-range/edit";
     }
 }

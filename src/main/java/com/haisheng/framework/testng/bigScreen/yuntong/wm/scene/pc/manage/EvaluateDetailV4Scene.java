@@ -29,6 +29,6 @@ public class EvaluateDetailV4Scene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/manage/evaluate/detail-v4";
+        return "/account-platform/auth/manage/evaluate/detail-v4";
     }
 }

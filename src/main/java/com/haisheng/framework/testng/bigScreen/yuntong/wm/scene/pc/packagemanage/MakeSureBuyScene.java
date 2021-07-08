@@ -45,6 +45,6 @@ public class MakeSureBuyScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/package-manage/make-sure-buy";
+        return "/account-platform/auth/package-manage/make-sure-buy";
     }
 }

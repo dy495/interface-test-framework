@@ -29,6 +29,6 @@ public class CommodityDeleteScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/store/commodity/delete";
+        return "/account-platform/auth/store/commodity/delete";
     }
 }

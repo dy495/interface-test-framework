@@ -29,6 +29,6 @@ public class DeleteCategoryScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/integral-mall/delete-category";
+        return "/account-platform/auth/integral-mall/delete-category";
     }
 }

@@ -29,6 +29,6 @@ public class EnumValueListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/yt/pc/enum-value-list";
+        return "/account-platform/auth/enum-value-list";
     }
 }
