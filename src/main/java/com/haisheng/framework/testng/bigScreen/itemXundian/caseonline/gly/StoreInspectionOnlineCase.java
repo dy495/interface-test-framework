@@ -33,13 +33,13 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 
 public class StoreInspectionOnlineCase extends TestCaseCommon implements TestCaseStd {
-    private final  EnumTestProduce product = EnumTestProduce.INS_ONLINE;
+    private final  EnumTestProduce product = EnumTestProduce.XD_OLINE;
     public VisitorProxy visitor = new VisitorProxy(product);
     public UserUtil user = new UserUtil(visitor);
     public SupporterUtil util = new SupporterUtil(visitor);
     BusinessUtil businessUtil=new BusinessUtil(visitor);
     StoreScenarioUtil su=StoreScenarioUtil.getInstance();
-    public Long shopId=14630L;
+    public Long shopId= 14630L;
     public String shopName="中关村1号店";
     CommonConfig commonConfig = new CommonConfig();
     MendianInfo mi=new MendianInfo();
@@ -53,10 +53,10 @@ public class StoreInspectionOnlineCase extends TestCaseCommon implements TestCas
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_MENDIAN_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = EnumChecklistUser.GLY.getName();
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.XUNDIAN_ONLINE_TEST.getJobName());
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "门店-线上" + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
         commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.product = product.getAbbreviation();
-        commonConfig.shopId="13260";
+        commonConfig.product = "14630";
+        commonConfig.shopId=product.getShopId();
         commonConfig.referer=product.getReferer();
         beforeClassInit(commonConfig);
     }

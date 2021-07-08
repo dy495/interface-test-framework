@@ -20,7 +20,9 @@ public enum EnumTestProduce {
 
     JC_ONLINE("汽车-轿辰 赢识线上 ", "https://servicewechat.com/wxbd41de85739a00c7/0/page-frame.html", "http://www.4001000574.com", "-1", "JC", "395", false),
 
-    XD_DAILY("门店 日常 ", "", "", "4116", "XD", "", true),
+    XD_DAILY("门店 日常 ", "https://servicewechat.com/wx937d85ff683db555/0/page-frame.html", "http://dev.inspect.store.winsenseos.cn", "43072", "MD", "", true),
+
+    XD_OLINE("门店 线上 ", "http://inspect.store.winsenseos.com/authpage/login", "http://inspect.store.winsenseos.com", "14630", "MD", "", true),
 
     INS_DAILY("门店-INS 日常 ", "https://servicewechat.com/wx937d85ff683db555/0/page-frame.html", "http://dev.inspect.store.winsenseos.cn", "", "INS", "", true),
 
