@@ -11,7 +11,7 @@ import lombok.Builder;
  * @date 2021-05-18 17:04:36
  */
 @Builder
-public class EditScene extends BaseScene {
+public class BrandEditScene extends BaseScene {
     /**
      * 描述 品牌名称
      * 是否必填 true

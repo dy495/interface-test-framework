@@ -12,7 +12,7 @@ import lombok.Builder;
  * @date 2021-05-18 17:04:36
  */
 @Builder
-public class AllScene extends BaseScene {
+public class BrandAllScene extends BaseScene {
     /**
      * 描述 No comments found.
      * 是否必填 false

@@ -5,30 +5,38 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 31.4. 品牌详情（谢）
+ * 31.5. 新建品牌（谢）
  *
  * @author wangmin
  * @date 2021-05-18 17:04:36
  */
 @Builder
-public class DetailScene extends BaseScene {
+public class BrandAddScene extends BaseScene {
     /**
-     * 描述 品牌id
+     * 描述 品牌名称
      * 是否必填 true
      * 版本 v1.0
      */
-    private final Long id;
+    private final String name;
+
+    /**
+     * 描述 品牌logo oss路径
+     * 是否必填 true
+     * 版本 v1.0
+     */
+    private final String logoPath;
 
 
     @Override
     protected JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
-        object.put("id", id);
+        object.put("name", name);
+        object.put("logoPath", logoPath);
         return object;
     }
 
     @Override
     public String getPath() {
-        return "/yt/pc/brand/detail";
+        return "/car-platform/pc/brand/add";
     }
 }

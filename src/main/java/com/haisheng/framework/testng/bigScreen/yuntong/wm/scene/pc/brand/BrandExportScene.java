@@ -1,17 +1,18 @@
 package com.haisheng.framework.testng.bigScreen.yuntong.wm.scene.pc.brand;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 31.1. 品牌列表分页 （谢）
+ * 31.2. 品牌导出 （华成裕）（2020-12-24）
  *
  * @author wangmin
  * @date 2021-05-18 17:04:36
  */
 @Builder
-public class PageScene extends BaseScene {
+public class BrandExportScene extends BaseScene {
     /**
      * 描述 页码 大于0
      * 是否必填 true
@@ -40,6 +41,20 @@ public class PageScene extends BaseScene {
      */
     private final String firstLetter;
 
+    /**
+     * 描述 导出数据id列表，特定数据时必填
+     * 是否必填 false
+     * 版本 v2.0
+     */
+    private final JSONArray ids;
+
+    /**
+     * 描述 导出类型 ALL：导出全部，CURRENT_PAGE：导出当前页，SPECIFIED_DATA：导出特定数据
+     * 是否必填 true
+     * 版本 v2.0
+     */
+    private final String exportType;
+
 
     @Override
     protected JSONObject getRequestBody() {
@@ -48,11 +63,13 @@ public class PageScene extends BaseScene {
         object.put("size", size);
         object.put("name", name);
         object.put("first_letter", firstLetter);
+        object.put("ids", ids);
+        object.put("export_type", exportType);
         return object;
     }
 
     @Override
     public String getPath() {
-        return "/car-platform/pc/brand/page";
+        return "/yt/pc/brand/export";
     }
 }

@@ -555,14 +555,14 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
         try {
 
 
-            int code = AddScene.builder().name(info.stringone).logoPath(info.getLogo()).build().invoke(visitor,false).getInteger("code");
+            int code = BrandAddScene.builder().name(info.stringone).logoPath(info.getLogo()).build().invoke(visitor,false).getInteger("code");
 
             Preconditions.checkArgument(code == 1000, "状态码期待1000，实际" + code);
 
             //删除品牌
-            Long id = PageScene.builder().page(1).size(10).name(info.stringone).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            Long id = BrandPageScene.builder().page(1).size(10).name(info.stringone).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
 
-            DeleteScene.builder().id(id).build().invoke(visitor);
+            BrandDeleteScene.builder().id(id).build().invoke(visitor);
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -581,14 +581,14 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
 
 
 
-            int code = AddScene.builder().name(info.stringten).logoPath(info.getLogo()).build().invoke(visitor,false).getInteger("code");
+            int code = BrandAddScene.builder().name(info.stringten).logoPath(info.getLogo()).build().invoke(visitor,false).getInteger("code");
 
             Preconditions.checkArgument(code == 1000, "状态码期待1000，实际" + code);
 
             //删除品牌
-            Long id = PageScene.builder().page(1).size(10).name(info.stringten).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            Long id = BrandPageScene.builder().page(1).size(10).name(info.stringten).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
 
-            DeleteScene.builder().id(id).build().invoke(visitor);
+            BrandDeleteScene.builder().id(id).build().invoke(visitor);
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -610,14 +610,14 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
             //创建一个品牌
             String name1 = info.stringsix;
             String name2 = info.stringsix + "aaa";
-            AddScene.builder().name(name1).logoPath(info.getLogo()).build().invoke(visitor);
+            BrandAddScene.builder().name(name1).logoPath(info.getLogo()).build().invoke(visitor);
             //获取创建的品牌id
-            Long id = PageScene.builder().page(1).size(10).name(name1).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            Long id = BrandPageScene.builder().page(1).size(10).name(name1).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
 
             //修改这个品牌的名字
-            EditScene.builder().id(id).name(name2).logoPath(info.getLogo()).build().invoke(visitor);
+            BrandEditScene.builder().id(id).name(name2).logoPath(info.getLogo()).build().invoke(visitor);
             //根据id查询，名字为name2
-            JSONArray arr = PageScene.builder().page(1).size(10).build().invoke(visitor).getJSONArray("list");
+            JSONArray arr = BrandPageScene.builder().page(1).size(10).build().invoke(visitor).getJSONArray("list");
 
             for (int i = 0; i < arr.size(); i++) {
                 JSONObject obj = arr.getJSONObject(i);
@@ -627,7 +627,7 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
             }
 
             //删除品牌
-            DeleteScene.builder().id(id).build().invoke(visitor);
+            BrandDeleteScene.builder().id(id).build().invoke(visitor);
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -647,7 +647,7 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
 
 
             String name = "12345aA啊！@1";
-            int code = AddScene.builder().name(name).logoPath(info.getLogo()).build().invoke(visitor,false).getInteger("code");
+            int code = BrandAddScene.builder().name(name).logoPath(info.getLogo()).build().invoke(visitor,false).getInteger("code");
 
             Preconditions.checkArgument(code == 1001, "状态码期待1001，实际" + code);
 
@@ -764,8 +764,8 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(code == 1000, "期待状态码1000，实际" + code);
 
             //删除品牌
-            DeleteScene.builder().id(brandid1).build().invoke(visitor);
-            DeleteScene.builder().id(brandid2).build().invoke(visitor);
+            BrandDeleteScene.builder().id(brandid1).build().invoke(visitor);
+            BrandDeleteScene.builder().id(brandid2).build().invoke(visitor);
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -831,7 +831,7 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
 
 
             //删除品牌
-            DeleteScene.builder().id(brandid1).build().invoke(visitor);
+            BrandDeleteScene.builder().id(brandid1).build().invoke(visitor);
 
 
         } catch (AssertionError e) {
@@ -852,7 +852,7 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
             Long brandid1 = info.getBrandID(5);
 
             //删除品牌
-            DeleteScene.builder().id(brandid1).build().invoke(visitor);
+            BrandDeleteScene.builder().id(brandid1).build().invoke(visitor);
 
             //添加车系
             String manufacturer = "自动化" + System.currentTimeMillis();
@@ -1030,7 +1030,7 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
 
 
             //删除品牌
-            DeleteScene.builder().id(brandid).build().invoke(visitor);
+            BrandDeleteScene.builder().id(brandid).build().invoke(visitor);
 
             int code = obj.getInteger("code");
             String message = obj.getString("message");
@@ -1056,7 +1056,7 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
             Long carStyleId = info.getCarStyleID(brandid, 5);
 
             //删除品牌
-            DeleteScene.builder().id(brandid).build().invoke(visitor);
+            BrandDeleteScene.builder().id(brandid).build().invoke(visitor);
             //新建车型
             String name1 = "自动化" + System.currentTimeMillis();
             String year1 = "1009年";
