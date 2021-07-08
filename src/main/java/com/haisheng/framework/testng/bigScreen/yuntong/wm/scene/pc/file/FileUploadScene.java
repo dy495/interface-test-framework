@@ -24,7 +24,8 @@ public class FileUploadScene extends BaseScene {
      * 是否必填 true
      * 版本 v2.0
      */
-    private final Integer permanentPicType;
+    @Builder.Default
+    private final Integer permanentPicType = 7;
 
     /**
      * 描述 校验长宽比 不传则不校验
