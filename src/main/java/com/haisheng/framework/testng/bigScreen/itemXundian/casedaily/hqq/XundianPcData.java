@@ -64,7 +64,7 @@ public class XundianPcData extends TestCaseCommon implements TestCaseStd {
         //18672733045 高凯
         //15898182672 华成裕
         //18810332354 刘峤
-        commonConfig.shopId = getXundianShop(); //要改！！！
+//        commonConfig.shopId = getXundianShop(); //要改！！！
         beforeClassInit(commonConfig);
         logger.debug("xundian " + xd);
         xd.login("yuexiu@test.com","f5b3e737510f31b88eb2d4b5d0cd2fb4");

@@ -66,7 +66,7 @@ public class MallDataCenter extends TestCaseCommon implements TestCaseStd {
         //18672733045 高凯
         //15898182672 华成裕
         //18810332354 刘峤
-        commonConfig.shopId = getXundianShop(); //要改！！！
+//        commonConfig.shopId = getXundianShop(); //要改！！！
         beforeClassInit(commonConfig);
 
         logger.debug("store " + mall);

@@ -70,7 +70,7 @@ public class StoreDataCenter extends TestCaseCommon implements TestCaseStd {
         commonConfig.pushRd = new String[]{"15898182672", "18513118484", "18810332354", "13604609869","13373166806"};
 
 
-        commonConfig.shopId = getXundianShop(); //要改！！！
+//        commonConfig.shopId = getXundianShop(); //要改！！！
         beforeClassInit(commonConfig);
 
         logger.debug("store " + md);

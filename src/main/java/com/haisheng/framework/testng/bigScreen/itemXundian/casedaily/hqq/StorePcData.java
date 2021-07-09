@@ -79,7 +79,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
         //18810332354 刘峤
 
 
-        commonConfig.shopId = getXundianShop(); //要改！！！
+//        commonConfig.shopId = getXundianShop(); //要改！！！
         beforeClassInit(commonConfig);
 
         logger.debug("store " + md);
