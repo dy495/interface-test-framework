@@ -158,17 +158,11 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
             String categoryName = util.getCategoryName(id);
             IScene scene = CategoryPageScene.builder().firstCategory(id).build();
             List<CategoryPageBean> categoryPageBeanList = util.toJavaObjectList(scene, CategoryPageBean.class);
-            categoryPageBeanList.forEach(e -> {
-                if (e.getCategoryLevel().equals(IntegralCategoryTypeEnum.SECOND_CATEGORY.getDesc())) {
-                    CommonUtil.checkResult(e.getCategoryName() + "的父级品类", categoryName, e.getParentCategory());
-                    categoryNameList.add(e.getCategoryName());
-                }
+            categoryPageBeanList.stream().filter(e -> e.getCategoryLevel().equals(IntegralCategoryTypeEnum.SECOND_CATEGORY.getDesc())).forEach(e -> {
+                CommonUtil.checkResult(e.getCategoryName() + "的父级品类", categoryName, e.getParentCategory());
+                categoryNameList.add(e.getCategoryName());
             });
-            categoryPageBeanList.forEach(e -> {
-                if (e.getCategoryLevel().equals(IntegralCategoryTypeEnum.THIRD_CATEGORY.getDesc())) {
-                    Preconditions.checkArgument(categoryNameList.contains(e.getParentCategory()), e.getCategoryName() + "的父级品类在" + categoryNameList + "不存在");
-                }
-            });
+            categoryPageBeanList.stream().filter(e -> e.getCategoryLevel().equals(IntegralCategoryTypeEnum.THIRD_CATEGORY.getDesc())).forEach(e -> Preconditions.checkArgument(categoryNameList.contains(e.getParentCategory()), e.getCategoryName() + "的父级品类在" + categoryNameList + "不存在"));
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
@@ -181,22 +175,13 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
     public void goodsCategory_system_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            List<Long> categoryIdList = new ArrayList<>();
             Long id = util.getCategoryByLevel(IntegralCategoryTypeEnum.FIRST_CATEGORY);
             IScene scene = CategoryPageScene.builder().firstCategory(id).build();
             List<CategoryPageBean> categoryPageBeanList = util.toJavaObjectList(scene, CategoryPageBean.class);
-            categoryPageBeanList.forEach(e -> {
-                if (e.getCategoryLevel().equals(IntegralCategoryTypeEnum.SECOND_CATEGORY.getDesc())) {
-                    categoryIdList.add(e.getId());
-                }
-            });
+            List<Long> categoryIdList = categoryPageBeanList.stream().filter(e -> e.getCategoryLevel().equals(IntegralCategoryTypeEnum.SECOND_CATEGORY.getDesc())).map(CategoryPageBean::getId).collect(Collectors.toList());
             IScene newScene = CategoryPageScene.builder().firstCategory(id).secondCategory(categoryIdList.get(0)).build();
             List<CategoryPageBean> newCategoryPageBeanList = util.toJavaObjectList(newScene, CategoryPageBean.class);
-            newCategoryPageBeanList.forEach(e -> {
-                if (e.getCategoryLevel().equals(IntegralCategoryTypeEnum.THIRD_CATEGORY.getDesc())) {
-                    CommonUtil.checkResult(e.getCategoryName() + "的父级品类", util.getCategoryName(categoryIdList.get(0)), e.getParentCategory());
-                }
-            });
+            newCategoryPageBeanList.stream().filter(e -> e.getCategoryLevel().equals(IntegralCategoryTypeEnum.THIRD_CATEGORY.getDesc())).forEach(e -> CommonUtil.checkResult(e.getCategoryName() + "的父级品类", util.getCategoryName(categoryIdList.get(0)), e.getParentCategory()));
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
@@ -1049,133 +1034,4 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-//    @Test
-//    public void goodAddMore() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            //新建一个一二三级品类
-//            String name = "品类";
-//            JSONObject obj = info.newFirstCategory(name + Integer.toString((int) ((Math.random() * 9 + 1) * 10000)));
-//            String idone = obj.getString("id");
-//            JSONObject objtwo = info.newSecondCategory(name + Integer.toString((int) ((Math.random() * 9 + 1) * 10000)), idone);
-//            String idtwo = objtwo.getString("id");
-//            JSONObject objthree = info.newThirdCategory(name + Integer.toString((int) ((Math.random() * 9 + 1) * 10000)), idtwo);
-//            String idthree = objthree.getString("id");
-//
-//
-//            //新建品牌
-//            String brandid = info.newGoodBrand("pp" + System.currentTimeMillis(), "pp说明" + System.currentTimeMillis()).getString("id");
-//
-//            //新建规格
-//            String spename1 = "1规格" + Integer.toString((int) ((Math.random() * 9 + 1) * 10000));
-//            String spename2 = "2规格" + Integer.toString((int) ((Math.random() * 9 + 1) * 10000));
-//
-//            Long speId = ins.specificationsCreate(spename1, Long.parseLong(idone), null, null, true).getLong("id"); //第一个规格 有10个参数
-//            Long speId2 = ins.specificationsCreate(spename2, Long.parseLong(idone), null, null, true).getLong("id"); //第二个规格 有1个参数
-//            //新建规格1的10个参数
-//            JSONArray spearray = new JSONArray();
-//            for (int i = 1; i < 11; i++) {
-//                JSONObject objItem = new JSONObject();
-//                objItem.put("specifications_item", "speItemName" + i);
-//                spearray.add(objItem);
-//            }
-//
-//            ins.specificationsEdit(spename1, Long.parseLong(idone), spearray, speId, true);
-//            Long speItemId = ins.specificationsDetail(speId, 1, 10).getJSONArray("specifications_list").getJSONObject(0).getLong("specifications_id");
-//
-//            //新建规格2的一个参数
-//            JSONObject objItem1 = new JSONObject();
-//            objItem1.put("specifications_item", "speItemName11");
-//            JSONArray spearray2 = new JSONArray();
-//            spearray2.add(objItem1);
-//            ins.specificationsEdit(spename2, Long.parseLong(idone), spearray2, speId2, true);
-//            Long speItemId2 = ins.specificationsDetail(speId2, 1, 10).getJSONArray("specifications_list").getJSONObject(0).getLong("specifications_id");
-//
-//            //新建商品
-//
-//            pcCreateGoods good = new pcCreateGoods();
-//            good.first_category = Long.parseLong(idone);
-//            good.second_category = Long.parseLong(idtwo);
-//            good.third_category = Long.parseLong(idthree);
-//            good.goods_brand = Long.parseLong(brandid);
-//
-//            //新建商品
-//
-//            JSONArray select_specifications = new JSONArray();
-//
-//            JSONObject spe1obj = new JSONObject();
-//            spe1obj.put("specifications_id", speId);
-//            spe1obj.put("specifications_name", spename1);
-//            //规格1的信息
-//            JSONArray spe1list = new JSONArray();
-//            for (int i = 0; i < 10; i++) {
-//                JSONObject speclistobj = ins.specificationsDetail(speId, 1, 10).getJSONArray("specifications_list").getJSONObject(i);
-//                Long specifications_id = speclistobj.getLong("specifications_id");
-//                String specifications_item = speclistobj.getString("specifications_item");
-//                JSONObject everyspeclist = new JSONObject();
-//                everyspeclist.put("specifications_detail_id", specifications_id);
-//                everyspeclist.put("specifications_detail_name", specifications_item);
-//                spe1list.add(everyspeclist);
-//            }
-//            spe1obj.put("specifications_list", spe1list);
-//            //规格2的信息
-//            JSONObject spe2obj = new JSONObject();
-//            spe2obj.put("specifications_id", speId2);
-//            spe2obj.put("specifications_name", spename2);
-//
-//            JSONArray spe2list = new JSONArray();
-//            JSONObject everyspeclist = new JSONObject();
-//            everyspeclist.put("specifications_detail_id", speItemId2);
-//            everyspeclist.put("specifications_detail_name", "speItemName11");
-//            spe2list.add(everyspeclist);
-//            spe2obj.put("specifications_list", spe2list);
-//
-//            select_specifications.add(spe1obj);
-//            select_specifications.add(spe2obj);
-//
-//
-//            //参数组合
-//            JSONArray goods_specifications_list = new JSONArray();
-//            for (int j = 0; j < 10; j++) {
-//                JSONObject speclistobj = ins.specificationsDetail(speId, 1, 10).getJSONArray("specifications_list").getJSONObject(j);
-//                Long specifications_id = speclistobj.getLong("specifications_id");
-//                String specifications_item = speclistobj.getString("specifications_item");
-//                JSONObject everygoodspeclist = new JSONObject();
-//                everygoodspeclist.put("first_specifications", specifications_id);
-//                everygoodspeclist.put("first_specifications_name", specifications_item);
-//                everygoodspeclist.put("second_specifications", speItemId2);
-//                everygoodspeclist.put("second_specifications_name", "speItemName11");
-//                goods_specifications_list.add(everygoodspeclist);
-//            }
-//
-//
-//            good.select_specifications = select_specifications;
-//            good.goods_specifications_list = goods_specifications_list;
-//            good.checkcode = false;
-//
-//            JSONObject objnew = ins.createGoodMethod(good);
-//            int code = objnew.getInteger("code");
-//            Preconditions.checkArgument(code == 1000, "状态码" + code);
-//            Long goodid = objnew.getJSONObject("data").getLong("id");
-//
-//
-//            //删除商品
-//            ins.deleteGoodMethod(goodid);
-//            //关闭->删除规格
-//            ins.specificationsChgStatus(speId, false);
-//            ins.specificationsDel(speId);
-//            ins.specificationsChgStatus(speId2, false);
-//            ins.specificationsDel(speId2);
-//            //删除品类
-//            ins.categoryDel(Long.parseLong(idthree), true);
-//            ins.categoryDel(Long.parseLong(idtwo), true);
-//            ins.categoryDel(Long.parseLong(idone), true);
-//
-//
-//        } catch (AssertionError | Exception e) {
-//            collectMessage(e);
-//        } finally {
-//            saveData("PC【商品管理】创建商品,多个规格多参数");
-//        }
-//    }
 }

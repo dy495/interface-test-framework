@@ -35,8 +35,8 @@
             <class name="com.haisheng.framework.testng.bigScreen.fengkongonline.RiskControlCaseSystemOnline"/>
             <class name="com.haisheng.framework.testng.bigScreen.fengkongdaily.RiskControlRulesOnline"/>
             <!--运通代码-->
-            <class name="com.haisheng.framework.testng.bigScreen.yuntongOnline.lxq.HuiTing_SystemCase"/>
-            <class name="com.haisheng.framework.testng.bigScreen.yuntongOnline.lxq.SystemCaseOnline"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.caseonline.lxq.HuiTing_SystemCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.caseonline.lxq.SystemCaseOnline"/>
 
 
         </classes>

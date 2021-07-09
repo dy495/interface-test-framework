@@ -1203,20 +1203,4 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
         });
     }
 
-//    public <T> List<T> toJavaObjectList(@NotNull IScene scene, Class<T> tClass) {
-//        int total = scene.invoke(visitor).getInteger("total");
-//        return toJavaObjectList(scene, tClass, total);
-//    }
-//
-//    public <T> List<T> toJavaObjectList(IScene scene, Class<T> tClass, Integer size) {
-//        List<T> list = new ArrayList<>();
-//        int s = CommonUtil.getTurningPage(size, SIZE);
-//        for (int i = 1; i < s; i++) {
-//            scene.setPage(i);
-//            scene.setSize(SIZE);
-//            JSONArray array = scene.invoke(visitor).getJSONArray("list");
-//            list.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, tClass)).collect(Collectors.toList()));
-//        }
-//        return list;
-//    }
 }
