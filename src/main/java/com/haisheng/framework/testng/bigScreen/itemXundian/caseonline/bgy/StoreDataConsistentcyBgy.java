@@ -69,7 +69,6 @@ public class StoreDataConsistentcyBgy extends TestCaseCommon implements TestCase
         commonConfig.dingHook = DingWebhook.ONLINE_STORE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.pushRd = new String[]{"15898182672","18513118484", "18810332354", "15084928847"};
 
-        commonConfig.shopId = getXundianShop(); //要改！！！
         beforeClassInit(commonConfig);
 
         logger.debug("store " + md);

@@ -44,7 +44,7 @@ public class LogicCase extends TestCaseCommon implements TestCaseStd {
         // commonConfig.dingHook = DingWebhook.APP_DATA_LAYER_ALARM_GRP;
         commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.pushRd = new String[]{"18810332354", "15084928847"};
-        commonConfig.shopId = getXundianShop(); //要改！！！
+//        commonConfig.shopId = getXundianShop(); //要改！！！
         beforeClassInit(commonConfig);
         logger.debug("dataCenter " + logic);
     }

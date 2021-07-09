@@ -89,7 +89,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = getXundianShop(); //要改！！！
+//        commonConfig.shopId = getXundianShop(); //要改！！！
 //        commonConfig.shopId = "43072"; //要改！！！
         beforeClassInit(commonConfig);
 

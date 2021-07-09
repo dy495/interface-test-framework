@@ -37,7 +37,9 @@ public class XundianScenarioUtilOnline extends TestCaseCommon {
         return instance;
     }
 
-
+    public String getXunDianShop() {
+        return "4116";
+    }
     /***
      * 方法区，不同产品的测试场景各不相同，自行更改
      */

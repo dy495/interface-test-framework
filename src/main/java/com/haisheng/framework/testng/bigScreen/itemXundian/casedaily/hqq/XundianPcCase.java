@@ -60,6 +60,9 @@ public class XundianPcCase extends TestCaseCommon implements TestCaseStd {
         return pic_list0;
     }
 
+    public String getXunDianShop() {
+        return "4116";
+    }
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
@@ -78,7 +81,7 @@ public class XundianPcCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "巡店 日常");
         commonConfig.pushRd = new String[]{ "13604609869","13373166806"};
 
-        commonConfig.shopId = getXundianShop(); //要改！！！
+//        commonConfig.shopId = getXundianShop(); //要改！！！
         beforeClassInit(commonConfig);
 
         logger.debug("xundian " + xd);

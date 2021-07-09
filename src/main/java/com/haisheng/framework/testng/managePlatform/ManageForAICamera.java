@@ -44,8 +44,8 @@ public class ManageForAICamera extends TestCaseCommon implements TestCaseStd {
 
         commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.pushRd = new String[]{"13581630214","15084928847"};
-
-        commonConfig.shopId = getXundianShop(); //要改！！！
+//
+//        commonConfig.shopId = getXundianShop(); //要改！！！
         beforeClassInit(commonConfig);
 
         logger.debug("store " + Md);

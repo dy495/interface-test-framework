@@ -53,7 +53,7 @@ public class XundianAppSystemOnline extends TestCaseCommon implements TestCaseSt
         commonConfig.dingHook = DingWebhook.ONLINE_STORE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.pushRd = new String[]{"13604609869", "15084928847"};
 
-        commonConfig.shopId = getXunDianShopOnline(); //要改！！！
+//        commonConfig.shopId = getXunDianShopOnline(); //要改！！！
         beforeClassInit(commonConfig);
 
         logger.debug("xundian " + xd);

@@ -58,7 +58,7 @@ public class SurveillanceForZDF extends TestCaseCommon implements TestCaseStd {
 
 
         //set shop id
-        commonConfig.shopId = getXundianShop(); //要改！！！
+//        commonConfig.shopId = getXundianShop(); //要改！！！
         beforeClassInit(commonConfig);
 
         logger.debug("store " + md);
