@@ -434,18 +434,6 @@ public class TestCaseCommon {
                 .client(client);
     }
 
-//    public String getXundianShop() {
-//        return "4116";
-//    }
-//
-//    public String getXunDianShop() {
-//        return "4116";
-//    }
-
-//    public String getXunDianShopOnline() {
-//        return "13260";
-//    }
-
     private void dingPushFinal(boolean isFAIL) {
         if (DEBUG.trim().equalsIgnoreCase("false") && isFAIL) {
             AlarmPush alarmPush = new AlarmPush();
