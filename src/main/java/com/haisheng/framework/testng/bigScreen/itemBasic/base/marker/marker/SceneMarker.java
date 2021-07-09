@@ -42,7 +42,7 @@ public class SceneMarker extends AbstractMarker {
     }
 
     @Override
-    public void init() {
+    public void load() {
         if (this.urlPath != null && this.apiAttributeList != null) {
             initial();
             dataMap.put("attrs", apiAttributeList);

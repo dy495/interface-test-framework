@@ -45,6 +45,27 @@ public class DataCheckRunner {
         initRuleContainer();
     }
 
+    /**
+     * 对外提供
+     * 获取结果集合
+     *
+     * @return 结果集合
+     */
+    public List<OTSTableData> getOtsTableDataList() {
+        this.load();
+        return this.otsTableDataList;
+    }
+
+    /**
+     * 对外提供
+     * 获取字段规则表集合
+     *
+     * @return 规则表集合
+     */
+    public ITable[] getFieldRuleTables() {
+        return ruleContainer.findTables(Constants.RULE_COLUMN_FIELD);
+    }
+
     private void load() {
         ITable dataContainerTable = ruleContainer.getTable(Constants.SHEET_TITLE_CONTAINER);
         dataContainerTable.load();
@@ -53,7 +74,6 @@ public class DataCheckRunner {
             config.initConfig(sheetOne.getField(Constants.CONTAINER_COLUMN_PATH).getValue());
             ITable dataSourceTable = ruleContainer.getTable(Constants.SHEET_TITLE_DATA_SOURCE);
             dataSourceTable.load();
-            //遍历数据源表
             List<OTSTableData> list = new ArrayList<>();
             IRow[] dataSourceRows = dataSourceTable.getRows();
             RuleDataSource ruleDataSource = new RuleDataSource();
@@ -106,25 +126,6 @@ public class DataCheckRunner {
         OTSPrimaryKeyBuilder primaryKeyBuilder = initOTSPrimaryKeyBuilder(primaryKeys, queryPrimaryKeyName, shopId, date);
         table.setOTSPrimaryKeyBuilder(primaryKeyBuilder);
         table.load();
-    }
-
-    /**
-     * 获取对外提供的结果集合
-     *
-     * @return 结果集合
-     */
-    public List<OTSTableData> getOtsTableDataList() {
-        this.load();
-        return this.otsTableDataList;
-    }
-
-    /**
-     * 获取对外提供的字段规则表集合
-     *
-     * @return 规则表集合
-     */
-    public ITable[] getFieldRuleTables() {
-        return ruleContainer.findTables(Constants.RULE_COLUMN_FIELD);
     }
 
     /**

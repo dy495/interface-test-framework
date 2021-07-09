@@ -49,6 +49,7 @@ public class OTSTableData implements Serializable {
     /**
      * 如果想要行数据需执行此方法
      * 将所有行数据插入OTSRowData
+     * 此处只拿了几个字段的数据，可以将所有字段组成json映射到OTSRowData，这样只用维护OTSRowData即可拿到想要的数据
      */
     public OTSTableData initOTSRowData() {
         List<OTSRowData> list = new LinkedList<>();

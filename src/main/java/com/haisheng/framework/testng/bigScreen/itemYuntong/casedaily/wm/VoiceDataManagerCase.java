@@ -329,36 +329,4 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
             saveData("话术考核设置--筛选全部列表条数=筛选各话术环节的列表条数之和");
         }
     }
-
-    @Test(description = "")
-    public void voiceEvaluation_data_12() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            IScene specialAudioPageScene = SpecialAudioPageScene.builder().build();
-            List<SpecialAudioPageBean> list = util.toJavaObjectList(specialAudioPageScene, SpecialAudioPageBean.class);
-            list.forEach(e -> {
-                long id = e.getId();
-                String receptorName = e.getReceptorName();
-                String receptionTime = e.getReceptionTime();
-                int score = e.getScore();
-                IScene voiceEvaluationPageScene = VoiceEvaluationPageScene.builder().build();
-                List<VoiceEvaluationPageBean> voiceEvaluationPageList = util.toJavaObjectList(voiceEvaluationPageScene, VoiceEvaluationPageBean.class);
-                voiceEvaluationPageList.stream().filter(a -> a.getId().equals(id)).forEach(a -> {
-                    String name = a.getReceptorName();
-                    String time = a.getReceptionTime();
-                    int evaluateScore = a.getEvaluateScore();
-                    CommonUtil.valueView(receptorName, receptionTime, score, name, time, evaluateScore);
-                    Preconditions.checkArgument(receptorName.equals(name), "特殊音频审核接待顾问：" + receptorName, " 语音评鉴接待顾问：" + name);
-                    Preconditions.checkArgument(time.contains(receptionTime), "特殊音频审核接待日期：" + receptionTime, " 语音评鉴接待日期：" + time);
-                    Preconditions.checkArgument(score == evaluateScore, "特殊音频审核接待分数：" + evaluateScore, " 语音评鉴接待分数：" + score);
-                });
-            });
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("");
-        }
-    }
-
-
 }

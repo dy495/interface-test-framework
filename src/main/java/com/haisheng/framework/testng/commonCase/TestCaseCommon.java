@@ -352,6 +352,13 @@ public class TestCaseCommon {
         return httpPost(IpPort, path, json, true, false);
     }
 
+    /**
+     * 登录使用
+     *
+     * @param path   路径
+     * @param object 请求体
+     * @param IpPort 域名
+     */
     public void httpPost(String path, JSONObject object, String IpPort) {
         httpPost(IpPort, path, JSONObject.toJSONString(object), true, true);
     }

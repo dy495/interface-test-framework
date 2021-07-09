@@ -39,7 +39,7 @@ public abstract class AbstractMarker implements IMarker {
 
     @Override
     public void execute() {
-        init();
+        load();
         // step1 创建freeMarker配置实例
         Configuration configuration = new Configuration();
         Writer out = null;
@@ -88,7 +88,7 @@ public abstract class AbstractMarker implements IMarker {
 
     @Override
     public void execute2() {
-        init();
+        load();
         // step1 创建freeMarker配置实例
         Configuration configuration = new Configuration();
         Writer out = null;
@@ -134,8 +134,8 @@ public abstract class AbstractMarker implements IMarker {
 
     public static boolean checkName(File file, String name) throws Exception {
         BufferedReader read = new BufferedReader(new FileReader(file));
-        String a ;
-        while ((a=read.readLine()) != null ) {
+        String a;
+        while ((a = read.readLine()) != null) {
             System.out.println(a);
             if (a.contains(name)) {
                 return true;
@@ -147,9 +147,9 @@ public abstract class AbstractMarker implements IMarker {
 
     /**
      * 子类继承
-     * 赋值初始化
+     * 初始加载
      */
-    public abstract void init();
+    public abstract void load();
 
     public abstract static class AbstractBuilder<T extends AbstractBuilder<?>> {
         private String templatePath;

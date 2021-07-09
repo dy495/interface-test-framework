@@ -8,6 +8,7 @@ import java.util.List;
 /**
  * 场景接口
  * 提供一些处理方法
+ * 应接入Api类，使用api内的参数进行接口调用
  *
  * @author wangmin
  * @date 2020/9/27

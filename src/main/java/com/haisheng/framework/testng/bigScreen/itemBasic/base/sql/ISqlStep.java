@@ -4,8 +4,6 @@ import org.jetbrains.annotations.NotNull;
 
 public interface ISqlStep {
 
-    ISelectStep select();
-
     ISelectStep select(String... fields);
 
     IInsertStep insert(String tableName);

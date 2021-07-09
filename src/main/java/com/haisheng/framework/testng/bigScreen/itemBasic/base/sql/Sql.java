@@ -12,6 +12,7 @@ import java.util.Map;
 
 /**
  * sql构建类
+ * 提供基础的sql构建
  *
  * @author wangmin
  * @date 2021/1/11 13:36
@@ -68,16 +69,14 @@ public class Sql {
 
         @Override
         public ISelectStep select(String... fields) {
-            this.grammar.append("select ");
-            Arrays.stream(fields).forEach(field -> this.grammar.append(field).append(","));
-            this.grammar.replace(grammar.length() - 1, grammar.length(), "");
-            this.grammar.append(blank);
-            return this;
-        }
-
-        @Override
-        public ISelectStep select() {
-            this.grammar.append("select *").append(blank);
+            if (fields.length == 0) {
+                this.grammar.append("select *").append(blank);
+            } else {
+                this.grammar.append("select ");
+                Arrays.stream(fields).forEach(field -> this.grammar.append(field).append(","));
+                this.grammar.replace(grammar.length() - 1, grammar.length(), "");
+                this.grammar.append(blank);
+            }
             return this;
         }
 
@@ -191,6 +190,12 @@ public class Sql {
                 value : "'" + value.toString().replaceAll("'", "\\\\'") + "'";
     }
 
+    /**
+     * 驼峰转下划线
+     *
+     * @param str str
+     * @return result
+     */
     @NotNull
     private static String humpToLine(String str) {
         return CommonUtil.humpToLine(str).replaceFirst("_", "");

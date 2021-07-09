@@ -5,9 +5,6 @@ import org.jetbrains.annotations.NotNull;
 public interface ISqlControl extends ISqlStep, ISelectStep, IFromStep, IWhereStep, IOtherStep, IInsertStep, IUpdateStep {
 
     @Override
-    ISelectStep select();
-
-    @Override
     ISelectStep select(String... fields);
 
     @Override
