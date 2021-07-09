@@ -46,7 +46,7 @@ import java.util.stream.Collectors;
  * @author wangmin
  * @date 2021/1/29 11:17
  */
-public class ReceptionCase extends TestCaseCommon implements TestCaseStd {
+public class VoiceCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_CONTROL;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.ALL_YT_DAILY;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);

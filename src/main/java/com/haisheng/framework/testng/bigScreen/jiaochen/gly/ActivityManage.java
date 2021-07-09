@@ -3,7 +3,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.gly;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.itemBasic.base.mapper.CustomerPageEnum;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.mapper.EnumCustomerPage;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
@@ -5466,7 +5466,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
     @Test(enabled = false)
     public void test(){
         IScene scene= PreSaleCustomerPageScene.builder().customerName("我").customerType("PERSON").build();
-        supporterUtil.compareResponseAndParam(scene, CustomerPageEnum.values());
+        supporterUtil.compareResponseAndParam(scene, EnumCustomerPage.values());
 
     }
 

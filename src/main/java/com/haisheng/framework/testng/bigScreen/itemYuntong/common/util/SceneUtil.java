@@ -6,6 +6,7 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.util.BasicUtil;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanage.PreSaleCustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.personaldata.AppPersonalOverviewBean;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.voicerecord.AppDepartmentPageBean;
@@ -33,6 +34,7 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.staff
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.staff.StaffPageScene;
 import com.haisheng.framework.util.CommonUtil;
 import org.jetbrains.annotations.NotNull;
+import org.testng.annotations.Test;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -298,10 +300,46 @@ public class SceneUtil extends BasicUtil {
      */
     public void editStaff(String id) {
         JSONObject response = StaffDetailScene.builder().id(id).build().invoke(visitor);
-//        JSONArray shopList = response.getJSONArray("shop_list");
         JSONArray roleList = response.getJSONArray("role_list");
         String name = response.getString("name");
         String phone = response.getString("phone");
         StaffEditScene.builder().roleList(roleList).name(name).phone(phone).id(id).build().invoke(visitor);
     }
+
+    public JSONArray getSubmitLink(boolean addItem) {
+        String str = "{\"links\":[{\"type\":100,\"type_name\":\"欢迎接待\",\"items\":[{\"answer_number\":2,\"answers\":[{\"score\":5,\"content\":\"A\"},{\"score\":1,\"content\":\"B\"}],\"title\":\"欢迎接待题目1\"}]},{\"type\":200,\"type_name\":\"个性需求\",\"items\":[{\"answer_number\":3,\"answers\":[{\"score\":5,\"content\":\"A\"},{\"score\":3,\"content\":\"B\"},{\"score\":1,\"content\":\"C\"}],\"title\":\"个性需求题目1\"}]},{\"type\":300,\"type_name\":\"新车推荐\",\"items\":[{\"answer_number\":5,\"answers\":[{\"score\":5,\"content\":\"A\"},{\"score\":4,\"content\":\"B\"},{\"score\":3,\"content\":\"C\"},{\"score\":2,\"content\":\"D\"},{\"score\":1,\"content\":\"E\"}],\"title\":\"新车推荐题目1\"}]},{\"type\":400,\"type_name\":\"试乘试驾\",\"items\":[{\"answer_number\":3,\"answers\":[{\"score\":5,\"content\":\"A\"},{\"score\":3,\"content\":\"B\"},{\"score\":1,\"content\":\"C\"}],\"title\":\"试乘试驾题目1\"}]},{\"type\":500,\"type_name\":\"车辆提案\",\"items\":[{\"answer_number\":2,\"answers\":[{\"score\":5,\"content\":\"A\"},{\"score\":1,\"content\":\"B\"}],\"title\":\"车辆提案题目1\"}]}]}";
+        JSONObject jsonObject = JSONObject.parseObject(str);
+        JSONArray links = jsonObject.getJSONArray("links");
+        String newItem = "{\"title\":\"欢迎接待题目2\",\"answer_number\":3,\"answers\":[{\"score\":5,\"content\":\"1\"},{\"score\":3,\"content\":\"2\"},{\"score\":1,\"content\":\"3\"}]}";
+        if (addItem) {
+            links.stream().map(e -> (JSONObject) e).filter(e -> e.getString("type_name").equals("欢迎接待")).forEach(e -> e.getJSONArray("items").add(JSONObject.parseObject(newItem)));
+        }
+        return links;
+    }
+
+    public String getEvaluateV4ConfigShopId() {
+        //有设备的门店
+        return visitor.isDaily() ? "56666" : "";
+    }
+
+    public String getSaleId() {
+        return visitor.isDaily() ? "uid_fe84d99" : "";
+    }
+
+    public String getNotReceptionPhone() {
+        String phone = "153" + CommonUtil.getRandom(8);
+        int total = PreSaleCustomerPageScene.builder().customerPhone(phone).build().invoke(visitor).getInteger("total");
+        return total == 0 ? phone : getNotReceptionPhone();
+    }
+
+    public Object[][] getType() {
+        return new Object[][]{
+                {"欢迎接待", 100},
+                {"个性需求", 200},
+                {"新车推荐", 300},
+                {"试乘试驾", 400},
+                {"车辆提案", 500}
+        };
+    }
+
 }

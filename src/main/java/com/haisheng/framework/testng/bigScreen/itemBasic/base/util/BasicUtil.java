@@ -76,9 +76,8 @@ public class BasicUtil {
             scene.setPage(i);
             scene.setSize(SIZE);
             JSONArray array = scene.invoke(visitor).getJSONArray("list");
-            T clazz = array.stream().map(e -> (JSONObject) e).filter(e -> e.getObject(key, value.getClass()).equals(value))
-                    .findFirst().map(e -> JSONObject.toJavaObject(e, bean)).orElse(null);
-            list.add(clazz);
+            array.stream().map(e -> (JSONObject) e).filter(e -> e.getObject(key, value.getClass()).equals(value))
+                    .map(e -> JSONObject.toJavaObject(e, bean)).forEach(list::add);
         }
         return list;
     }
@@ -131,7 +130,7 @@ public class BasicUtil {
         List<JSONObject> list = toJavaObjectList(scene, JSONObject.class);
         scene.getBody().entrySet().stream().filter(body -> body.getValue() != null && !body.getKey().equals("page") && !body.getKey().equals("size"))
                 .forEach(body -> list.forEach(jsonObject -> jsonObject.entrySet().stream().filter(e -> e.getKey().equals(getHeader(iEnums, body.getKey())))
-                        .forEach(e -> CommonUtil.checkResult(e.getKey(), (String) body.getValue(), (String) e.getValue()))));
+                        .forEach(e -> CommonUtil.checkResult(e.getKey(), String.valueOf(body.getValue()), String.valueOf(e.getValue())))));
     }
 
     private String getHeader(IEnum[] iEnums, String key) {

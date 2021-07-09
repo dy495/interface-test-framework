@@ -40,11 +40,12 @@
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.lxq.HuiTing_DataCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.lxq.HuiTing_SystemCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.lxq.SystemCase"/>
-            <!--            <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.wm.BusinessManageCase"/>-->
-            <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.wm.ReceptionCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.wm.VoiceCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.wm.ShopDataCenterCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.wm.SystemConfigCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.wm.VoiceDataManagerCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.wm.BusinessManageCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.wm.SeverManageCase"/>
         </classes>
     </test>
 </suite>

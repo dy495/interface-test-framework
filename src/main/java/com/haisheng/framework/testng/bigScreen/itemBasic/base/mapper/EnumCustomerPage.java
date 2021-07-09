@@ -4,14 +4,14 @@ import lombok.Getter;
 
 import java.util.Arrays;
 
-public enum CustomerPageEnum implements IEnum {
+public enum EnumCustomerPage implements IEnum {
 
     CUSTOMER_TYPE("customer_type", "subject_type"),
 
 //    CUSTOMER_NAME("customer_name", "customer_name"),
     ;
 
-    CustomerPageEnum(String requestParam, String responseHeader) {
+    EnumCustomerPage(String requestParam, String responseHeader) {
         this.requestParam = requestParam;
         this.responseHeader = responseHeader;
     }
@@ -23,6 +23,6 @@ public enum CustomerPageEnum implements IEnum {
 
     @Override
     public String findAttributeByKey(String key) {
-        return Arrays.stream(CustomerPageEnum.values()).filter(e -> e.getRequestParam().equals(key)).map(CustomerPageEnum::getResponseHeader).findFirst().orElse(key);
+        return Arrays.stream(EnumCustomerPage.values()).filter(e -> e.getRequestParam().equals(key)).map(EnumCustomerPage::getResponseHeader).findFirst().orElse(key);
     }
 }

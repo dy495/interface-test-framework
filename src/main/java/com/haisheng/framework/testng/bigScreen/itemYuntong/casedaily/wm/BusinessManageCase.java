@@ -2,11 +2,14 @@ package com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.wm;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanage.PreSaleCustomerCreatePotentialCustomerScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanage.PreSaleCustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.AppPreSalesReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.voicerecord.AppVoiceRecordSubmitScene;
@@ -34,7 +37,7 @@ import java.lang.reflect.Method;
  */
 public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_SSO;
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.ALL_YT_DAILY_ONE;
+    private static final EnumAccount ALL_AUTHORITY = EnumAccount.ALL_YT_DAILY;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public SceneUtil util = new SceneUtil(visitor);
 
@@ -54,7 +57,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
         //放入shopId
         commonConfig.product = PRODUCE.getAbbreviation();
         commonConfig.referer = PRODUCE.getReferer();
-        commonConfig.shopId = ALL_AUTHORITY.getReceptionShopId();
+        commonConfig.shopId = PRODUCE.getShopId();
         commonConfig.roleId = ALL_AUTHORITY.getRoleId();
         beforeClassInit(commonConfig);
     }
@@ -75,7 +78,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
         visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
     }
 
-    @Test(description = "接待人")
+    @Test(description = "接待人", enabled = false)
     public void test() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -107,6 +110,49 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
 //            AppFinishReceptionScene.builder().shopId(util.getReceptionShopId()).id(receptionId).build().invoke(visitor);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
+        }
+    }
+
+    @Test(description = "创建一个潜客，销售客户列表中手机号不存在，销售客户列表+1&客户类型为【潜客】")
+    public void saleCustomerManager_data_1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene scene = PreSaleCustomerPageScene.builder().build();
+            int total = scene.invoke(visitor).getInteger("total");
+            String phone = util.getNotReceptionPhone();
+            PreSaleCustomerCreatePotentialCustomerScene.builder().customerType("PERSON").customerName("燕小六")
+                    .customerPhone(phone).sex("0").salesId(util.getSaleId()).shopId(Long.parseLong(util.getEvaluateV4ConfigShopId()))
+                    .carStyleId(1470L).carModelId(719L).build().invoke(visitor);
+            JSONObject response = scene.invoke(visitor);
+            int newTotal = response.getInteger("total");
+            String customerTypeName = response.getJSONArray("list").getJSONObject(0).getString("customer_type_name");
+            Preconditions.checkArgument(newTotal == total + 1, "创建潜客之前为：" + total + "创建潜客之后：" + newTotal);
+            Preconditions.checkArgument(customerTypeName.equals("潜在客户"), "客户类型为：" + customerTypeName);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("创建一个潜客，销售客户列表中手机号不存在，销售客户列表+1&客户类型为【潜客】");
+        }
+    }
+
+    @Test(description = "创建一个潜客，销售客户列表中手机号存在，销售客户列表+0")
+    public void saleCustomerManager_data_2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene scene = PreSaleCustomerPageScene.builder().build();
+            JSONObject response = scene.invoke(visitor);
+            int total = response.getInteger("total");
+            String phone = response.getJSONArray("list").getJSONObject(0).getString("customer_phone");
+            PreSaleCustomerCreatePotentialCustomerScene.builder().customerType("PERSON").customerName("燕小六")
+                    .customerPhone(phone).sex("0").salesId(util.getSaleId()).shopId(Long.parseLong(util.getEvaluateV4ConfigShopId()))
+                    .carStyleId(1470L).carModelId(719L).build().invoke(visitor, false);
+            JSONObject response1 = scene.invoke(visitor);
+            int newTotal = response1.getInteger("total");
+            Preconditions.checkArgument(newTotal == total, "创建潜客之前为：" + total + "创建潜客之后：" + newTotal);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("创建一个潜客，销售客户列表中手机号存在，销售客户列表+0");
         }
     }
 }
