@@ -36,13 +36,13 @@ public class InvokeAlgorithmForHuangxin {
     private void algorithmCallForHuangxin() throws Exception {
         //调用统计接口查看当前数据,将结果以日志的方式输出
         String logName = "log-after-upload-edge-json.log";
-        invokeStatisticPostMethodAndSaveLog("http://47.95.71.16/statistic?scope=1922", logName);
+        invokeStatisticPostMethodAndSaveLog("http://47.95.69.163:9084/statistic?scope=1922", logName);
 
         //调用fullMerge接口
         logger.info("");
         logger.info("");
         logger.info("调用fullMerge接口");
-        sendRequestPost("http://47.95.69.163/gate/manage/fullMerge");
+        sendRequestPost("http://47.95.69.163:9082/gate/manage/fullMerge");
 
         //sleep(10分钟)
         logger.info("sleep 10m");
@@ -50,13 +50,13 @@ public class InvokeAlgorithmForHuangxin {
 
         //调用统计接口查看当前数据,将结果以日志的方式输出
         logName = "log-after-fullMerge.log";
-        invokeStatisticPostMethodAndSaveLog("http://47.95.71.16/statistic?scope=1922", logName);
+        invokeStatisticPostMethodAndSaveLog("http://47.95.69.163:9084/statistic?scope=1922", logName);
 
         //调用simplifyImages接口
         logger.info("");
         logger.info("");
         logger.info("调用simplifyImages接口");
-        sendRequestPost("http://47.95.69.163/gate/manage/simplifyImages");
+        sendRequestPost("http://47.95.69.163:9082/gate/manage/simplifyImages");
 
         //sleep(10分钟)
         logger.info("sleep 10m");
@@ -64,7 +64,7 @@ public class InvokeAlgorithmForHuangxin {
 
         //调用统计接口查看当前数据,将结果以日志的方式输出
         logName = "log-after-simplifyImages.log";
-        invokeStatisticPostMethodAndSaveLog("http://47.95.71.16/statistic?scope=1922", logName);
+        invokeStatisticPostMethodAndSaveLog("http://47.95.69.163:9084/statistic?scope=1922", logName);
     }
 
 

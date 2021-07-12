@@ -190,7 +190,7 @@ public class MultiPickBinding {
     private String analysisPersonSync(long startTime,long endTime,JSONArray faces,String person) throws Exception {
         logger.info("\n");
         logger.info("------------ANALYSIS_PERSON_SYNC!-----------------------");
-        String url = "http://60.205.83.160/scenario/who/ANALYSIS_PERSON_SYNC/v1.0";
+        String url = "http://47.95.69.163:9087/scenario/who/ANALYSIS_PERSON_SYNC/v1.0";
         String message = "";
         String resStr;
 

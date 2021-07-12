@@ -31,7 +31,7 @@ public class PVUVMonitor {
     DateTimeUtil dt = new DateTimeUtil();
 
 
-    final String LOCAL_DEBUG_HOST  = "http://39.105.225.20";
+    final String LOCAL_DEBUG_HOST  = "http://47.95.69.163:9083";
     final String DAILY_LB          = "http://10.0.15.226";
     final String ONLINE_LB         = "http://10.0.16.17";
 

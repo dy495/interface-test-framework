@@ -43,8 +43,8 @@ public class LogicLayerUtil extends TestCaseCommon {
     /***
      * 方法区，不同产品的测试场景各不相同，自行更改
      */
-    public String IpPort = "http://47.95.69.163";
-    public String IpPort2 = "http://47.95.71.16";
+    public String IpPort = "http://47.95.69.163:9082";
+    public String IpPort2 = "http://47.95.69.163:9084";
     public String httpGet1(String path, String json1,String json2,String json3, String IpPort) throws Exception {
         initHttpConfig();
         String queryUrl = IpPort + path+"?"+"appKey="+json1+"&groupName="+json2+"&request_id="+json3;

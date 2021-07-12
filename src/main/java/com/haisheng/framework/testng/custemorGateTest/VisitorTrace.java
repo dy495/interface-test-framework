@@ -33,9 +33,9 @@ public class VisitorTrace {
     String deviceId = "6840208903439360";
     String grpName = "vipGrp";
 
-    private String updateCustomerUrl = "http://47.95.69.163/gate/manage/updateCustomer";
-    private String updateImageUrl = "http://47.95.69.163/gate/manage/updateCustomerImageOne";
-    private String queryCustomerUrl = "http://47.95.69.163/gate/manage/queryCustomer";
+    private String updateCustomerUrl = "http://47.95.69.163:9082/gate/manage/updateCustomer";
+    private String updateImageUrl = "http://47.95.69.163:9082/gate/manage/updateCustomerImageOne";
+    private String queryCustomerUrl = "http://47.95.69.163:9082/gate/manage/queryCustomer";
     private String genAuthURL = "http://39.106.253.190/administrator/login";
 
     private String strangerPerfix = "STRANGER@@";
@@ -1580,7 +1580,7 @@ public class VisitorTrace {
         try {
 
             GateVisitorRegisterResponse registerResponse = ScenarioGateClient
-                    .getVisitorRegisterClient("47.95.69.163")
+                    .getVisitorRegisterClient("47.95.69.163:9082")
                     .setRequestId(UUID.randomUUID().toString())
                     .setVisitor(visitor)
                     .setImage(image)

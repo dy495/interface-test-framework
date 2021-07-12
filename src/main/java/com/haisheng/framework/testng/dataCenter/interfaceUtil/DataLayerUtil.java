@@ -58,8 +58,8 @@ public class DataLayerUtil extends TestCaseCommon {
      * 方法区，不同产品的测试场景各不相同，自行更改
      */
     public String IpPort1 = "http://dev.api.winsenseos.com/retail/api/data/biz";
-    public String IpPort = "http://39.105.226.180";
-    public  String IpPort2 ="http://39.105.225.20";
+    public String IpPort = "http://47.95.69.163:9086";
+    public  String IpPort2 ="http://47.95.69.163:9083";
     public JSONObject http(String requestUrl ,Object requestJson,String router) throws NoSuchAlgorithmException, InvalidKeyException {
         final String NUMBER = ".";
         final String ALGORITHM = "HmacSHA256";
