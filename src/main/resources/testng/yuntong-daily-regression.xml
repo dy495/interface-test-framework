@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="test" data-provider-thread-count="1" parallel="tests" thread-count="1">
+
+
+    <listeners>
+        <listener class-name="com.haisheng.framework.testng.service.TestFilterListener"/>
+        <listener class-name="com.haisheng.framework.testng.service.RePrioritizingListener"/>
+    </listeners>
+
+    <test name="daily-rgn" preserve-order="true">
+        <classes>
+            <!-- 运通-->
+            <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.lxq.HuiTing_DataCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.lxq.HuiTing_SystemCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.lxq.SystemCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.wm.VoiceCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.wm.ShopDataCenterCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.wm.SystemConfigCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.wm.VoiceDataManagerCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.wm.BusinessManageCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.wm.SeverManageCase"/>
+        </classes>
+    </test>
+</suite>
+
+
+
