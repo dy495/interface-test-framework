@@ -51,7 +51,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
-        commonConfig.checklistQaOwner = "xmf";
+        commonConfig.checklistQaOwner = "夏明凤";
         commonConfig.referer = EnumTestProduce.JC_ONLINE.getReferer();
         commonConfig.product = EnumTestProduce.JC_ONLINE.getAbbreviation();
 
@@ -126,7 +126,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("轿辰-新增角色");
+            saveData("新增角色");
         }
 
 
@@ -167,7 +167,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("轿辰-新增删改查角色");
+            saveData("新增删改查角色");
         }
 
     }
@@ -203,7 +203,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("轿辰-新增角色(名称校验)-正常");
+            saveData("新增角色(名称校验)-正常");
         }
     }
 
@@ -229,7 +229,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("轿辰-新增角色(名称异常校验)");
+            saveData("新增角色(名称异常校验)");
         }
 
     }
@@ -283,7 +283,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("轿辰-新增1个账号，列表+1；删除1个账号，列表-1；修改账号信息以后与列表是否一致");
+            saveData("新增1个账号，列表+1；删除1个账号，列表-1；修改账号信息以后与列表是否一致");
         }
 
     }
@@ -352,7 +352,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("轿辰-编辑账号信息以后，创建者和创建时间是否发生改变");
+            saveData("编辑账号信息以后，创建者和创建时间是否发生改变");
         }
 
     }
@@ -390,7 +390,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("轿辰-禁用账户登录失败，开启登录成功");
+            saveData("禁用账户登录失败，开启登录成功");
         }
     }
 
@@ -502,7 +502,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("JC_pc修改预约配置验证");
+            saveData("pc修改预约配置验证");
         }
     }
 
@@ -559,7 +559,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             jc.pcLogin(pp.gwphone,pp.gwpassword);
-            saveData("JC_pc修改工位，工作日和休息日不同步变更");
+            saveData("pc修改工位，工作日和休息日不同步变更");
         }
     }
 
@@ -589,7 +589,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             jc.pcLogin(pp.gwphone,pp.gwpassword);
-            saveData("JC_pc修改预约配置验证");
+            saveData("pc修改预约配置验证");
         }
     }
 
@@ -622,7 +622,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             jc.pcLogin(pp.gwphone,pp.gwpassword);
-            saveData("JC_pc修改预约配置验证");
+            saveData("pc修改预约配置验证");
         }
     }
 
@@ -659,7 +659,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("JC_pc门店按钮修改关联验证");
+            saveData("pc门店按钮修改关联验证");
         }
     }
 

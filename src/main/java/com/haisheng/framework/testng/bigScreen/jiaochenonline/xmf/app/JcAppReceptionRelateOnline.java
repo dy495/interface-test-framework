@@ -46,7 +46,7 @@ public class JcAppReceptionRelateOnline extends TestCaseCommon implements TestCa
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
-        commonConfig.checklistQaOwner = "xmf";
+        commonConfig.checklistQaOwner = "夏明凤";
         commonConfig.referer = EnumTestProduce.JC_ONLINE.getReferer();
         commonConfig.product = EnumTestProduce.JC_ONLINE.getAbbreviation();
 
@@ -237,7 +237,7 @@ public class JcAppReceptionRelateOnline extends TestCaseCommon implements TestCa
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("轿辰-今日任务数=今日数据各列数据之和");
+            saveData("今日任务数=今日数据各列数据之和");
         }
     }
 

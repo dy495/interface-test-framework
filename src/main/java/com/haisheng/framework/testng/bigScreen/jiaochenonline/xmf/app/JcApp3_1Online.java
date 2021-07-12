@@ -676,7 +676,7 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             appLogin(pp.jdgw, pp.jdgwpassword,pp.roleidJdgw);
-            saveData("轿辰-app接待,今日数据待处理接待+1,完成接待，待处理接待-1");
+            saveData("app接待,今日数据待处理接待+1,完成接待，待处理接待-1");
         }
     }
 

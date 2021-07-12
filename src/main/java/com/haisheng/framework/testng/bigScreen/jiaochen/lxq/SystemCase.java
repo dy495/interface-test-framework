@@ -58,7 +58,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
 
         commonConfig.referer = EnumTestProduce.JC_DAILY.getReferer();
-        commonConfig.product = EnumTestProduce.JC_DAILY.name();
+        commonConfig.product = EnumTestProduce.JC_DAILY.getAbbreviation();
 
         //replace backend gateway url
         //commonConfig.gateway = "";
@@ -238,23 +238,23 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         try {
 
             //创建车系
-            String manufacturer = "旧生产商"+Integer.toString((int)((Math.random()*9+1)*100));
-            String name = "旧车系"+Integer.toString((int)((Math.random()*9+1)*100));
+            String manufacturer = "旧生产商" + Integer.toString((int) ((Math.random() * 9 + 1) * 100));
+            String name = "旧车系" + Integer.toString((int) ((Math.random() * 9 + 1) * 100));
             String online_time = dt.getHistoryDate(0);
             jc.addCarStyle(info.BrandID, manufacturer, name, online_time);
             //获取车系id
             Long id = jc.carStylePage(1, 1, info.BrandID, name).getJSONArray("list").getJSONObject(0).getLong("id");
             //修改车系
-            String manufacturer1 = "新生产商"+Integer.toString((int)((Math.random()*9+1)*100));
-            String name1 = "新车系"+Integer.toString((int)((Math.random()*9+1)*100));
+            String manufacturer1 = "新生产商" + Integer.toString((int) ((Math.random() * 9 + 1) * 100));
+            String name1 = "新车系" + Integer.toString((int) ((Math.random() * 9 + 1) * 100));
             String online_time1 = dt.getHistoryDate(-2);
             jc.editCarStyle(id, info.BrandID, manufacturer1, name1, online_time1);
             //查看修改结果
 
             JSONArray arr = jc.carStylePage(1, 30, info.BrandID, "").getJSONArray("list");
-            for (int i = 0 ; i < arr.size();i++){
+            for (int i = 0; i < arr.size(); i++) {
                 JSONObject obj = arr.getJSONObject(i);
-                if (obj.getLong("id").longValue() == id){
+                if (obj.getLong("id").longValue() == id) {
                     String search_manufacturer1 = obj.getString("manufacturer");
                     String search_name1 = obj.getString("name");
                     String search_online_time1 = obj.getString("online_time");

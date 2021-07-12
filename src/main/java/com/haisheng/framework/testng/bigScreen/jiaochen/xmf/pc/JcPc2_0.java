@@ -45,7 +45,6 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
 
     ScenarioUtil jc = ScenarioUtil.getInstance();
     DateTimeUtil dt = new DateTimeUtil();
-    JsonPathUtil jpu = new JsonPathUtil();
     PublicParm pp = new PublicParm();
     JcFunction pf = new JcFunction(visitor, pp);
     FileUtil file = new FileUtil();
@@ -68,9 +67,9 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
-        commonConfig.checklistQaOwner = "xmf";
+        commonConfig.checklistQaOwner = "夏明凤";
         commonConfig.referer = EnumTestProduce.JC_DAILY.getReferer();
-        commonConfig.product = EnumTestProduce.JC_DAILY.name();
+        commonConfig.product = EnumTestProduce.JC_DAILY.getAbbreviation();
 
         //replace backend gateway url
         //commonConfig.gateway = "";
@@ -254,7 +253,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject data = jc.SalesList("1", "10", null, null);
-            jpu.spiltString(data.toJSONString(), "$.list[*].sales_phone&&$.list[*].shop_name");
+            JsonPathUtil.spiltString(data.toJSONString(), "$.list[*].sales_phone&&$.list[*].shop_name");
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -268,7 +267,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         try {
             JSONObject data = jc.StoreCommodityList("1", "10", null);
             System.out.println(IpPort);
-            jpu.spiltString(data.toJSONString(), "$.list[*].id&&$.list[*].commodity_name&&$.list[*].commodity_specification&&$.list[*].distribution_manner&&$.list[*].volume_name&&$.list[*].period_of_validity&&$.list[*].commodity_amount&&$.list[*].affiliation&&$.list[*].price&&$.list[*].commission&&$.list[*].invitation_payment&&$.list[*].status&&$.list[*].status_name&&$.list[*].create_date");
+            JsonPathUtil.spiltString(data.toJSONString(), "$.list[*].id&&$.list[*].commodity_name&&$.list[*].commodity_specification&&$.list[*].distribution_manner&&$.list[*].volume_name&&$.list[*].period_of_validity&&$.list[*].commodity_amount&&$.list[*].affiliation&&$.list[*].price&&$.list[*].commission&&$.list[*].invitation_payment&&$.list[*].status&&$.list[*].status_name&&$.list[*].create_date");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -329,7 +328,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject data = jc.storeCommodityPage("", "1", "10", "", "");
-            jpu.spiltString(data.toJSONString(), "$.list[*].commodity_name&&$.list[*].commission&&$.list[*].id&&$.list[*].invitation_payment&&$.list[*].price&&$.list[*].status_name&&$.list[*].subject_type_name");
+            JsonPathUtil.spiltString(data.toJSONString(), "$.list[*].commodity_name&&$.list[*].commission&&$.list[*].id&&$.list[*].invitation_payment&&$.list[*].price&&$.list[*].status_name&&$.list[*].subject_type_name");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());

@@ -45,7 +45,7 @@ public class JcPcAffirmReceptionOnLine extends TestCaseCommon implements TestCas
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
-        commonConfig.checklistQaOwner = "xmf";
+        commonConfig.checklistQaOwner = "夏明凤";
         commonConfig.referer = EnumTestProduce.JC_ONLINE.getReferer();
         commonConfig.product = EnumTestProduce.JC_ONLINE.getAbbreviation();
 

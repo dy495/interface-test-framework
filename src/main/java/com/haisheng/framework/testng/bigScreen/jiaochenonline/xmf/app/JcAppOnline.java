@@ -166,7 +166,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("轿辰-今日任务数=今日数据各列数据之和");
+            saveData("今日任务数=今日数据各列数据之和");
         }
     }
 //
@@ -187,7 +187,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
 //        } catch (AssertionError | Exception e) {
 //            appendFailReason(e.toString());
 //        } finally {
-//            saveData("轿辰-今日任务未完成接待数（分子）==【任务-接待】列表条数");
+//            saveData("今日任务未完成接待数（分子）==【任务-接待】列表条数");
 //        }
 //    }
 //
@@ -240,7 +240,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
 //            appendFailReason(e.toString());
 //        } finally {
 //            appLogin(pp.gwphone, pp.gwpassword, pp.roleId);
-//            saveData("轿辰-今日任务接待（预约）总数（分母）==pc【】列表条数");
+//            saveData("今日任务接待（预约）总数（分母）==pc【】列表条数");
 //        }
 //    }
 //
@@ -291,7 +291,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
 //            appendFailReason(e.toString());
 //        } finally {
 //            appLogin(pp.gwphone, pp.gwpassword, pp.roleId);
-//            saveData("轿辰-今日任务接待（预约）总数（分母）==pc【】列表条数");
+//            saveData("今日任务接待（预约）总数（分母）==pc【】列表条数");
 //        }
 //    }
 //
@@ -341,7 +341,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
 //        } finally {
 //            appLogin(pp.gwphone, pp.gwpassword, pp.roleId);
 //            commonConfig.shopId = pp.shopIdZ;
-//            saveData("轿辰-今日任务接待（预约）总数（分母）==pc【】列表条数");
+//            saveData("今日任务接待（预约）总数（分母）==pc【】列表条数");
 //        }
 //    }
 
@@ -517,7 +517,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("轿辰-appapp变更接待,接待任务变更");
+            saveData("appapp变更接待,接待任务变更");
         }
     }
 
@@ -548,7 +548,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("轿辰-app取消接待,接待任务-1,今日任务-1");
+            saveData("app取消接待,接待任务-1,今日任务-1");
         }
     }
 

@@ -61,9 +61,9 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
-        commonConfig.checklistQaOwner = "xmf";
+        commonConfig.checklistQaOwner = "夏明凤";
         commonConfig.referer = EnumTestProduce.JC_ONLINE.getReferer();
-        commonConfig.product = EnumTestProduce.JC_ONLINE.name();
+        commonConfig.product = EnumTestProduce.JC_ONLINE.getAbbreviation();
         jc.changeIpPort(EnumTestProduce.JC_ONLINE.getPort());
 
         //replace backend gateway url

@@ -67,10 +67,9 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
-        commonConfig.checklistQaOwner = "xmf";
+        commonConfig.checklistQaOwner = "夏明凤";
         commonConfig.referer = EnumTestProduce.JC_DAILY.getReferer();
-        commonConfig.product = EnumTestProduce.JC_DAILY.name();
-
+        commonConfig.product = EnumTestProduce.JC_DAILY.getAbbreviation();
         //replace backend gateway url
         //commonConfig.gateway = "";
 

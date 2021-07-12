@@ -64,9 +64,9 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
-        commonConfig.checklistQaOwner = "xmf";
+        commonConfig.checklistQaOwner = "夏明凤";
         commonConfig.referer = EnumTestProduce.JC_ONLINE.getReferer();
-        commonConfig.product = EnumTestProduce.JC_ONLINE.name();
+        commonConfig.product = EnumTestProduce.JC_ONLINE.getAbbreviation();
 
         //replace backend gateway url
         //commonConfig.gateway = "";
@@ -159,7 +159,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("轿辰-新增角色");
+            saveData("新增角色");
         }
 
 
@@ -199,7 +199,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("轿辰-新增删改查角色");
+            saveData("新增删改查角色");
         }
 
     }
@@ -236,7 +236,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("轿辰-新增角色(名称校验)-正常");
+            saveData("新增角色(名称校验)-正常");
         }
     }
 
@@ -263,7 +263,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("轿辰-新增角色(名称异常校验)");
+            saveData("新增角色(名称异常校验)");
         }
 
     }
@@ -312,7 +312,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("轿辰-新增1个账号，列表+1；删除1个账号，列表-1；修改账号信息以后与列表是否一致");
+            saveData("新增1个账号，列表+1；删除1个账号，列表-1；修改账号信息以后与列表是否一致");
         }
 
     }
@@ -333,7 +333,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("轿辰-新增1个账号，列表+1；删除1个账号，列表-1；修改账号信息以后与列表是否一致");
+            saveData("新增1个账号，列表+1；删除1个账号，列表-1；修改账号信息以后与列表是否一致");
         }
     }
 
@@ -351,7 +351,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("轿辰-新增1个账号，列表+1；删除1个账号，列表-1；修改账号信息以后与列表是否一致");
+            saveData("新增1个账号，列表+1；删除1个账号，列表-1；修改账号信息以后与列表是否一致");
         }
     }
 
@@ -370,7 +370,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("轿辰-新增1个账号，列表+1；删除1个账号，列表-1；修改账号信息以后与列表是否一致");
+            saveData("新增1个账号，列表+1；删除1个账号，列表-1；修改账号信息以后与列表是否一致");
         }
 
     }
@@ -401,7 +401,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("轿辰-新增1个账号电话号码重复异常验证");
+            saveData("新增1个账号电话号码重复异常验证");
         }
 
     }
@@ -436,7 +436,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("轿辰-新增1个账号角色5个");
+            saveData("新增1个账号角色5个");
         }
     }
 
@@ -465,7 +465,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("轿辰-创建账号必填项不填");
+            saveData("创建账号必填项不填");
         }
 
     }
@@ -530,7 +530,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("轿辰-编辑账号信息以后，创建者和创建时间是否发生改变");
+            saveData("编辑账号信息以后，创建者和创建时间是否发生改变");
         }
 
     }
@@ -569,7 +569,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("轿辰-禁用账户登录失败，开启登录成功");
+            saveData("禁用账户登录失败，开启登录成功");
         }
     }
 
@@ -597,7 +597,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("轿辰-接待管理查询，结果校验");
+            saveData("接待管理查询，结果校验");
         }
     }
 
@@ -622,7 +622,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("轿辰-接待管理列表查询全填，结果校验");
+            saveData("接待管理列表查询全填，结果校验");
         }
     }
 
@@ -769,7 +769,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             jc.pcLogin(pp.gwphone,pp.gwpassword);
-            saveData("JC_pc修改预约配置验证");
+            saveData("pc修改预约配置验证");
         }
     }
     @Test(dataProvider = "APPOINTMENTTYPE")  //pc修改车预约价格，价格格式异常判断
@@ -787,7 +787,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
 
-            saveData("JC_pc修改预约配置价格格式验证");
+            saveData("pc修改预约配置价格格式验证");
         }
     }
 
@@ -812,7 +812,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("JC_pc修改预约配置价格，列表验证");
+            saveData("pc修改预约配置价格，列表验证");
         }
     }
 
@@ -843,7 +843,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             jc.pcLogin(pp.gwphone,pp.gwpassword);
-            saveData("JC_pc修改预约配置验证");
+            saveData("pc修改预约配置验证");
         }
     }
 
@@ -875,7 +875,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             jc.pcLogin(pp.gwphone,pp.gwpassword);
-            saveData("JC_pc开关预约配置按钮，预约配置列表数量有无变化");
+            saveData("pc开关预约配置按钮，预约配置列表数量有无变化");
         }
     }
     //***********pc预约配置************************
@@ -945,7 +945,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             jc.pcLogin(pp.gwphone,pp.gwpassword);
-            saveData("JC_pc修改工位，工作日和休息日不同步变更");
+            saveData("pc修改工位，工作日和休息日不同步变更");
         }
     }
 
@@ -984,7 +984,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             jc.pcLogin(pp.gwphone,pp.gwpassword);
-            saveData("JC_pc修改预约配置，正常");
+            saveData("pc修改预约配置，正常");
         }
     }
 
@@ -1012,7 +1012,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             jc.pcLogin(pp.gwphone,pp.gwpassword);
-            saveData("JC_pc修改预约配置卡券限制使用时间2000天验证");
+            saveData("pc修改预约配置卡券限制使用时间2000天验证");
         }
     }
 
@@ -1053,7 +1053,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             jc.pcLogin(pp.gwphone,pp.gwpassword);
-            saveData("JC_pc修改预约配置，异常");
+            saveData("pc修改预约配置，异常");
         }
     }
 
@@ -1098,7 +1098,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             jc.pcLogin(pp.gwphone,pp.gwpassword);
-            saveData("JC_pc修改预约配置验证");
+            saveData("pc修改预约配置验证");
         }
     }
 
@@ -1136,7 +1136,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("JC_pc门店按钮修改关联验证");
+            saveData("pc门店按钮修改关联验证");
         }
     }
 
