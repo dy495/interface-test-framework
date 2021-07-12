@@ -1292,7 +1292,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                         for (int i = 0; i < list.size(); i++) {
                             String Flag = list.getJSONObject(i).getString(output);
                             System.out.println("核销记录管理按" + result + "查询，结果错误" + Flag);
-                            Preconditions.checkArgument(Flag.equalsIgnoreCase(result), "核销记录管理按" + result + "查询，结果错误" + Flag);
+                            Preconditions.checkArgument(Flag.contains(result), "核销记录管理按" + result + "查询，结果错误" + Flag);
                         }
                     }
                 }
@@ -5039,7 +5039,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                         for (int page = 1; page <= pages; page++) {
                             JSONArray list = jc.lossCustomerPage(String.valueOf(page), "10", pram, result1).getJSONArray("list");
                             for (int i = 0; i < list.size(); i++) {
-                                String Flag = list.getJSONObject(i).getString(output);
+                                String Flag = list.getJSONObject(i).containsKey(output)?list.getJSONObject(i).getString(output):"否";
                                 System.out.println("V3.1流失客户接待列表按" + result + "查询，结果错误" + Flag);
                                 Preconditions.checkArgument(Flag.contains(result), "V3.1流失客户接待列表按" + result + "查询，结果错误" + Flag);
                             }
