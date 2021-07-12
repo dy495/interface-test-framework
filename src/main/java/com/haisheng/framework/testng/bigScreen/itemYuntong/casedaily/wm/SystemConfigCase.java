@@ -170,6 +170,7 @@ public class SystemConfigCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
+            util.deleteStaff("15555555555");
             saveData("新增一个账户，账号管理列表+1，新增账号的信息与列表该账号的信息一致");
         }
     }
