@@ -146,7 +146,7 @@ public class SystemConfigCase extends TestCaseCommon implements TestCaseStd {
             int total = StaffPageScene.builder().build().invoke(visitor).getInteger("total");
             util.getRandomRoleMap().forEach((roleId, roleName) -> {
                 JSONArray shopList = util.getShopIdArray();
-                String pic = new ImageUtil().getImageBinary("src/main/java/com/haisheng/framework/testng/bigScreen/yuntong/wm/resources/picture/touxing.jpg");
+                String pic = new ImageUtil().getImageBinary("src/main/java/com/haisheng/framework/testng/bigScreen/itemYuntong/common/resources/picture/touxiang.jpg");
                 String picPath = FileUploadScene.builder().pic("data:image/jpeg;base64," + pic).permanentPicType(0).ratio(1.0).ratioStr("1:1").build().invoke(visitor).getString("pic_path");
                 StaffAddScene.builder().phone(phone).name("克拉拉").shopList(shopList).roleId(roleId).roleName(roleName).picturePath(picPath).build().invoke(visitor);
                 int newTotal = StaffPageScene.builder().build().invoke(visitor).getInteger("total");
