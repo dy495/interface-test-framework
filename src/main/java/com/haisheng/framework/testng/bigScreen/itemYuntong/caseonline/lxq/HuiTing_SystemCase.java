@@ -36,7 +36,7 @@ import java.lang.reflect.Method;
  */
 public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
     EnumTestProduce PRODUCE = EnumTestProduce.YT_ONLINE_ZH;
-    EnumAccount ALL_AUTHORITY = EnumAccount.ALL_YT_ONLINE;
+    EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_ONLINE;
     VisitorProxy visitor = new VisitorProxy(PRODUCE);
     SceneUtil businessUtil = new SceneUtil(visitor);
 

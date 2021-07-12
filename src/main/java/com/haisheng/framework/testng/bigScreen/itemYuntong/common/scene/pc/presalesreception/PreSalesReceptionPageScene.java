@@ -26,7 +26,7 @@ public class PreSalesReceptionPageScene extends BaseScene {
      * 版本 v1.0
      */
     @Builder.Default
-    private final Integer size = 100;
+    private Integer size = 10;
 
     /**
      * 描述 门店Id
@@ -34,6 +34,8 @@ public class PreSalesReceptionPageScene extends BaseScene {
      * 版本 v3.0
      */
     private final Long shopId;
+
+    private final String customerId;
 
     /**
      * 描述 客户名称
@@ -106,6 +108,7 @@ public class PreSalesReceptionPageScene extends BaseScene {
         object.put("reception_start", receptionStart);
         object.put("reception_end", receptionEnd);
         object.put("receptionEndLong", receptionEndLong);
+        object.put("customer_id", customerId);
         return object;
     }
 
@@ -121,6 +124,6 @@ public class PreSalesReceptionPageScene extends BaseScene {
 
     @Override
     public void setSize(Integer size) {
-        super.setSize(size);
+        this.size = size;
     }
 }

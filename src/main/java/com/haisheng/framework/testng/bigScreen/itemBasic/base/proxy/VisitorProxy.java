@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.util.StringUtils;
 
@@ -15,6 +16,7 @@ import org.springframework.util.StringUtils;
  * @date 2021/1/20 13:36
  */
 public class VisitorProxy extends TestCaseCommon {
+    @Getter
     private EnumTestProduce product;
 
     /**
@@ -24,6 +26,10 @@ public class VisitorProxy extends TestCaseCommon {
      */
     public VisitorProxy(EnumTestProduce product) {
         this.product = product;
+    }
+
+    public void showIp() {
+        logger.info("ip is:{}", this.product.getPort());
     }
 
     /**

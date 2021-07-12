@@ -31,7 +31,7 @@ import java.util.List;
 public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
     ScenarioUtil jc = new ScenarioUtil();
     private static final EnumTestProduce product = EnumTestProduce.JC_ONLINE;
-    private static final EnumAccount ADMINISTRATOR = EnumAccount.ALL_JC_ONLINE;
+    private static final EnumAccount ADMINISTRATOR = EnumAccount.JC_ALL_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(product);
     //    BusinessUtil businessUtil = new BusinessUtil(visitor);
     BusinessUtilOnline businessUtil = new BusinessUtilOnline(visitor);

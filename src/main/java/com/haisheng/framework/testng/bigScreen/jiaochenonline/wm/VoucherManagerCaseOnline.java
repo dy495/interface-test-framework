@@ -52,7 +52,7 @@ import java.util.stream.Collectors;
 
 public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce PRODUCE = EnumTestProduce.JC_ONLINE;
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.ALL_AUTHORITY_ONLINE;
+    private static final EnumAccount ALL_AUTHORITY = EnumAccount.JC_ALL_AUTHORITY_ONLINE;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_ONLINE;
     private static final EnumAppletToken APPLET_USER_TWO = EnumAppletToken.JC_XMF_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);

@@ -30,7 +30,7 @@ import java.util.*;
  */
 public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_CONTROL;
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.ALL_YT_DAILY;
+    private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_DAILY;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public SceneUtil util = new SceneUtil(visitor);
     private static final String startDate = "2021-06-23";

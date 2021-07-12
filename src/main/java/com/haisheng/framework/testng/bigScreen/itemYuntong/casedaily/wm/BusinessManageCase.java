@@ -1,6 +1,5 @@
 package com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.wm;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
@@ -11,17 +10,12 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProd
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanage.PreSaleCustomerCreatePotentialCustomerScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanage.PreSaleCustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.AppPreSalesReceptionPageScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.voicerecord.AppVoiceRecordSubmitScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import com.haisheng.framework.util.Base64Util;
-import com.haisheng.framework.util.CommonUtil;
-import com.haisheng.framework.util.DateTimeUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -37,7 +31,7 @@ import java.lang.reflect.Method;
  */
 public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_SSO;
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.ALL_YT_DAILY;
+    private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_DAILY;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public SceneUtil util = new SceneUtil(visitor);
 
@@ -76,41 +70,6 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
         visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
-    }
-
-    @Test(description = "接待人", enabled = false)
-    public void test() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/yuntong/wm/resources/voice/试驾录音.mp3";
-            String testDriverBase64 = Base64Util.encodeBase64File(filePath);
-            IScene scene = AppPreSalesReceptionPageScene.builder().lastValue(null).size(10).build();
-            JSONObject jsonObject = scene.invoke(visitor).getJSONArray("list").getJSONObject(0);
-            String customerId = jsonObject.getString("customer_id");
-            String receptionId = jsonObject.getString("id");
-            String receptionTime = jsonObject.getString("reception_time");
-            String startTime = DateTimeUtil.dateToStamp(receptionTime, "yyyy-MM-dd HH:mm:ss");
-            String endTime = String.valueOf(Long.parseLong(startTime) + 2 * 60 * 1000);
-            String recordName = receptionId + "_" + startTime + ".aac";
-            String type = "100";
-            String testDriverTime = String.valueOf(Long.parseLong(startTime) + 30 * 1000);
-            JSONArray receptionNodes = new JSONArray();
-            JSONObject object = new JSONObject();
-            object.put("type", type);
-            object.put("start_time", testDriverTime);
-            receptionNodes.add(object);
-            CommonUtil.valueView(startTime, endTime, recordName, receptionNodes, testDriverBase64);
-            util.appCustomerEditV4(receptionId, customerId);
-            //提交
-            visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
-            AppVoiceRecordSubmitScene.builder().receptionId(receptionId)
-                    .base64(testDriverBase64).recordName(recordName).startTime(startTime).endTime(endTime)
-                    .receptionNodes(receptionNodes).build().invoke(visitor);
-            //完成接待
-//            AppFinishReceptionScene.builder().shopId(util.getReceptionShopId()).id(receptionId).build().invoke(visitor);
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        }
     }
 
     @Test(description = "创建一个潜客，销售客户列表中手机号不存在，销售客户列表+1&客户类型为【潜客】")

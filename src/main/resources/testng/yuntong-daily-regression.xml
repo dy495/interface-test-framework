@@ -19,6 +19,7 @@
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.wm.VoiceDataManagerCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.wm.BusinessManageCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.wm.SeverManageCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.wm.AppReceptionCase"/>
         </classes>
     </test>
 </suite>

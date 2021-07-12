@@ -19,7 +19,7 @@ import java.io.InputStream;
 
 public class YunTongInfo {
     EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_CAR;
-    EnumAccount ALL_AUTHORITY = EnumAccount.ALL_YT_DAILY;
+    EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_DAILY;
     VisitorProxy visitor = new VisitorProxy(PRODUCE);
     DateTimeUtil dt = new DateTimeUtil();
 //    public final String donephone = "";//成交客户手机号

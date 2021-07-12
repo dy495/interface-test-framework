@@ -37,7 +37,7 @@ import java.util.List;
  */
 public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce PRODUCE = EnumTestProduce.JC_ONLINE;
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.ALL_JC_ONLINE;
+    private static final EnumAccount ALL_AUTHORITY = EnumAccount.JC_ALL_ONLINE;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_LXQ_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public UserUtil user = new UserUtil(visitor);

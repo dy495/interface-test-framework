@@ -39,7 +39,7 @@ import java.util.List;
  */
 public class HuiTing_DataCase extends TestCaseCommon implements TestCaseStd {
     EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_SSO;
-    EnumAccount ALL_AUTHORITY = EnumAccount.ALL_YT_DAILY;
+    EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_DAILY;
     VisitorProxy visitor = new VisitorProxy(PRODUCE);
     SceneUtil businessUtil = new SceneUtil(visitor);
 

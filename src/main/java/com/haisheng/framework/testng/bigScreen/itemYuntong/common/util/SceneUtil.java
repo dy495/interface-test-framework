@@ -6,6 +6,7 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.util.BasicUtil;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanage.PreSaleCustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.personaldata.AppPersonalOverviewBean;
@@ -34,7 +35,6 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.staff
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.staff.StaffPageScene;
 import com.haisheng.framework.util.CommonUtil;
 import org.jetbrains.annotations.NotNull;
-import org.testng.annotations.Test;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -54,7 +54,7 @@ public class SceneUtil extends BasicUtil {
      */
     public void loginPc(@NotNull EnumAccount enumAccount) {
         IScene scene = LoginPc.builder().phone(enumAccount.getPhone()).verificationCode(enumAccount.getPassword()).build();
-        visitor.login(scene);
+        login(scene);
     }
 
     /**
@@ -64,7 +64,20 @@ public class SceneUtil extends BasicUtil {
      */
     public void loginApp(@NotNull EnumAccount enumAccount) {
         IScene scene = LoginApp.builder().phone(enumAccount.getPhone()).verificationCode(enumAccount.getPassword()).build();
+        login(scene);
+    }
+
+    /**
+     * 为满足来回切换域名设计
+     *
+     * @param scene 登录接口
+     */
+    public void login(IScene scene) {
+        EnumTestProduce oldProduce = visitor.getProduct();
+        EnumTestProduce newProduce = visitor.isDaily() ? EnumTestProduce.YT_DAILY_SSO : EnumTestProduce.YT_ONLINE_ZH;
+        visitor.setProduct(newProduce);
         visitor.login(scene);
+        visitor.setProduct(oldProduce);
     }
 
     /**
@@ -340,6 +353,10 @@ public class SceneUtil extends BasicUtil {
                 {"试乘试驾", 400},
                 {"车辆提案", 500}
         };
+    }
+
+    public String getCarModelId() {
+        return visitor.isDaily() ? "676" : "";
     }
 
 }

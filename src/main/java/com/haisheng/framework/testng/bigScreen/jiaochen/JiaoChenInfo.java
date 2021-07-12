@@ -60,7 +60,7 @@ public class JiaoChenInfo {
     private static final EnumTestProduce PRODUCE = EnumTestProduce.JC_DAILY;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_LXQ_DAILY;
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.ALL_AUTHORITY_DAILY_LXQ;
+    private static final EnumAccount ALL_AUTHORITY = EnumAccount.JC_ALL_AUTHORITY_DAILY_LXQ;
     public UserUtil user = new UserUtil(visitor);
     //日常
     public final long BrandID = 61L;//自动化用的品牌id
