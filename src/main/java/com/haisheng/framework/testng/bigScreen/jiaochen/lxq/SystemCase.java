@@ -172,7 +172,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             JSONArray arr = jc.brandPage(1, 100, "", "").getJSONArray("list");
             for (int i = 0; i < arr.size(); i++) {
                 JSONObject obj = arr.getJSONObject(i);
-                if (obj.getLong("id") == id) {
+                if (obj.getLong("id").equals(id)) {
                     Preconditions.checkArgument(obj.getString("name").equals(name2), "修改前名字是" + name1 + "，期望修改为" + name2 + "，实际修改后为" + obj.getString("name"));
                 }
             }
@@ -180,9 +180,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             //删除品牌
             jc.delBrand(id);
 
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("PC【品牌管理】，创建品牌后进行修改");
@@ -404,9 +402,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(code == 1001, "实际状态码" + code + ", 提示语为：" + message);
 
 
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("PC【品牌管理】，在某品牌下创建车系时，品牌被删除，期待失败");

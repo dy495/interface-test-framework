@@ -482,19 +482,15 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             commonConfig.shopId = "-1";
             pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
             System.out.println(commonConfig.shopId);
-
             JSONArray list = jc.staffListFilterManage("", "1", "10", "", "").getJSONArray("list");
-
             for (int i = 1; i < list.size(); i++) {
                 String role_name = list.getJSONObject(i).getJSONArray("role_list").getJSONObject(0).getString("role_name");
                 JSONArray list1 = jc.organizationRolePage(role_name, 1, 100).getJSONArray("list");
                 int account_num = list1.getJSONObject(0).getInteger("num");
                 String id = list1.getJSONObject(0).getString("id");
-
                 Integer Total = jc.staffListFilterManage("", "1", "10", "role_id", id).getInteger("total");
                 Preconditions.checkArgument(account_num == Total, "角色名为:" + role_name + "的使用账户数量：" + account_num + "！=【账户列表】中该角色的账户数量：" + Total);
             }
-
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -687,11 +683,11 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test(enabled = true, description = "导入潜客,参数全填正常")
+    @Test(description = "导入潜客,参数全填正常")
     public void importPotentialCustomer() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String[] parm = {
+            String[] strings = {
                     "中关村店(简称)",
                     "个人",
                     "潜客" + CommonUtil.getRandom(2),
@@ -702,15 +698,12 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
                     dt.getHistoryDate1(0) + " " + dt.getHHmm(0, "HH:mm:ss"),
                     "自动化专用账号",
                     "13402050050"};
-
-            PoiUtils.importPotentialCustomer(parm);
+            PoiUtils.importPotentialCustomer(strings);
             //导入工单
             jc.pcPotentialCustomer(pp.importFilepath3);      //导入工单文件的路径=新建excel 路径
             sleep(10);
-            int sueecssNum = pf.importCheck(pp.jdgwName);
-            Preconditions.checkArgument(sueecssNum == 1, "导入潜客失败");
-
-
+            int successNum = pf.importCheck(pp.jdgwName);
+            Preconditions.checkArgument(successNum == 1, "导入潜客失败");
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {

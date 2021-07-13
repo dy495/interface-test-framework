@@ -172,16 +172,13 @@ public class jiaoChenInfoOnline {
 
     public Long newSpecificition() {
         //新建规格
-        String spename = "规格" + Integer.toString((int) ((Math.random() * 9 + 1) * 10000));
-        Long speId = jc.specificationsCreate(spename, first_category, null, null, true).getLong("id");
-        return speId;
+        String spename = "规格" + (int) ((Math.random() * 9 + 1) * 10000);
+        return jc.specificationsCreate(spename, first_category, null, null, true).getLong("id");
     }
 
     public String getLogo() {
         String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
-        String base64 = new ImageUtil().getImageBinary(filePath);
-        String logo = jc.pcFileUploadNew(new ImageUtil().getImageBinary(filePath)).getString("pic_path");
-        return logo;
+        return jc.pcFileUploadNew(new ImageUtil().getImageBinary(filePath)).getString("pic_path");
     }
 
     public JSONObject newArtical() throws Exception {
