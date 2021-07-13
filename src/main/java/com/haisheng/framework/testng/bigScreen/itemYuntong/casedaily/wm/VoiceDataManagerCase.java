@@ -125,6 +125,7 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
+            visitor.setProduct(EnumTestProduce.YT_DAILY_CONTROL);
             saveData("语音评鉴列表数<=销售接待页列表数");
         }
     }
