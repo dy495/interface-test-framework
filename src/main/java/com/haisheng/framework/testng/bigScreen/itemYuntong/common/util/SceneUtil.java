@@ -7,10 +7,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.util.BasicUtil;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.presalesreception.AppPreSalesReceptionPageBean;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.AppPreSalesReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanage.PreSaleCustomerPageScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanagev4.PreSaleCustomerInfoBuyCarRecordScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.personaldata.AppPersonalOverviewBean;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.voicerecord.AppDepartmentPageBean;
@@ -198,25 +195,6 @@ public class SceneUtil extends BasicUtil {
     }
 
     /**
-     * 获取app接待列表
-     *
-     * @return 接待列表
-     */
-    public List<AppPreSalesReceptionPageBean> getAppAppPreSalesReceptionPageList() {
-        List<AppPreSalesReceptionPageBean> list = new ArrayList<>();
-        Integer lastValue = null;
-        JSONArray array;
-        do {
-            IScene scene = AppPreSalesReceptionPageScene.builder().size(10).lastValue(lastValue).build();
-            JSONObject response = scene.invoke(visitor);
-            lastValue = response.getInteger("last_value");
-            array = response.getJSONArray("list");
-            list.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppPreSalesReceptionPageBean.class)).collect(Collectors.toList()));
-        } while (array.size() == 10);
-        return list;
-    }
-
-    /**
      * app接待时编辑个人资料
      *
      * @param receptionId 接待id
@@ -400,6 +378,23 @@ public class SceneUtil extends BasicUtil {
         return visitor.isDaily() ? "676" : "";
     }
 
+    /**
+     * @description : 导出通用所有的页面（固定导出当前页）
+     * 参数：path ：导出页面path
+     * @date :2021/7/13 12:48
+     **/
+
+    public JSONObject carPageExport(String path){
+        JSONObject thisPage = new JSONObject();
+        if("/car-platform/pc/manage/evaluate/v4/export".equals(path)){ // 销售接待线下评价页面需要附加参数
+            thisPage.put("evaluate_type",5); }
+        if("/car-platform/pc/brand/car-style/export".equals(path)){thisPage.put("brand_id","1526");}
+        if("/car-platform/pc/brand/car-style/car-model/export".equals(path)){thisPage.put("style_id","1584");}
+        thisPage.put("page",1);
+        thisPage.put("size",10);
+        thisPage.put("export_type","CURRENT_PAGE"); // 当前页  ALL为所有
+        return visitor.invokeApi(path,thisPage,false);
+    }
     public String getCarStyleId() {
         return visitor.isDaily() ? "1398" : "";
     }
