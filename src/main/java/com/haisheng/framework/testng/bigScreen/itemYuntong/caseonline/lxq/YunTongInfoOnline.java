@@ -70,7 +70,7 @@ public class YunTongInfoOnline {
         visitor.setProduct(EnumTestProduce.YT_ONLINE_ZT);
         String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
 
-        String logo = FileUploadScene.builder().pic(new ImageUtil().getImageBinary(filePath)).build().invoke(visitor).getString("pic_path");
+        String logo = FileUploadScene.builder().pic(new ImageUtil().getImageBinary(filePath)).permanentPicType(0).build().invoke(visitor).getString("pic_path");
 
         return logo;
     }

@@ -64,9 +64,7 @@ public class YunTongInfo {
     public String getLogo() {
         String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
 
-        String logo = FileUploadScene.builder().pic(new ImageUtil().getImageBinary(filePath)).permanentPicType(7).build().invoke(visitor).getString("pic_path");
-
-        return logo;
+        return FileUploadScene.builder().pic(new ImageUtil().getImageBinary(filePath)).permanentPicType(0).build().invoke(visitor).getString("pic_path");
     }
 
     //创建品牌，返回品牌id

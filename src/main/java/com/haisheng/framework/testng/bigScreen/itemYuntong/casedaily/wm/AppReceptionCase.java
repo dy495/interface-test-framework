@@ -125,5 +125,17 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @Test
+    public void saleCustomerManager_data_3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("");
+        }
+    }
+
 
 }
