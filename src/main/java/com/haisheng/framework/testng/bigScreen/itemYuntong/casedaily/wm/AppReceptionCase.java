@@ -107,7 +107,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "app接待时产生新的节点，节点名称为销售创建")
+    @Test(description = "app接待时填写备注，备注记录+1")
     public void saleCustomerManager_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -124,7 +124,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("app接待时产生新的节点，节点名称为销售创建");
+            saveData("app接待时填写备注，备注记录+1");
         }
     }
 
@@ -150,7 +150,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "app接待时购买车辆，购车记录+1")
+    @Test(description = "pc新建成交记录，购车记录+1")
     public void saleCustomerManager_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
