@@ -75,12 +75,9 @@ public class ExportCasesTest extends TestCaseCommon implements TestCaseStd {
             visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
             JSONObject res1 = ExportHistoryPageScene.builder().size(10).page(1).build().invoke(visitor, true); //查询接口
             Integer total1 = res1.getInteger("total");//检查导出操作前的总记录
-            System.err.println("control".equals(product));
             if ("control".equals(product)) {visitor.setProduct(EnumTestProduce.YT_DAILY_CONTROL);}
             if ("car".equals(product)) {visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);}
-            System.err.println("post====="+visitor.getProduct().getPort());
             JSONObject obj = util.carPageExport(path); //在对应页面中导出
-            System.err.println(obj);
             visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
             JSONObject res2 = ExportHistoryPageScene.builder().size(10).page(1).build().invoke(visitor, true);//查询接口
             Integer total2 = res2.getInteger("total"); // 检查导出操作后的总记录
@@ -111,6 +108,8 @@ public class ExportCasesTest extends TestCaseCommon implements TestCaseStd {
                 {"car", "/car-platform/pc/record/login-record/export", "登录记录"},
                 {"car", "/car-platform/pc/shop/export", "门店管理"},
                 {"car", "/car-platform/pc/brand/export", "品牌管理"},
+                {"car", "/car-platform/pc/brand/car-style/export", "车系列表"},
+                {"car", "/car-platform/pc/brand/car-style/car-model/export", "车型列表"},
                 {"control", "/intelligent-control/pc/manage/voice/evaluation/export", "语音评鉴记录"}
         };
     }

@@ -368,8 +368,9 @@ public class SceneUtil extends BasicUtil {
     public JSONObject carPageExport(String path){
         JSONObject thisPage = new JSONObject();
         if("/car-platform/pc/manage/evaluate/v4/export".equals(path)){ // 销售接待线下评价页面需要附加参数
-            thisPage.put("evaluate_type",5);
-        }
+            thisPage.put("evaluate_type",5); }
+        if("/car-platform/pc/brand/car-style/export".equals(path)){thisPage.put("brand_id","1526");}
+        if("/car-platform/pc/brand/car-style/car-model/export".equals(path)){thisPage.put("style_id","1584");}
         thisPage.put("page",1);
         thisPage.put("size",10);
         thisPage.put("export_type","CURRENT_PAGE"); // 当前页  ALL为所有
