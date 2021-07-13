@@ -359,4 +359,20 @@ public class SceneUtil extends BasicUtil {
         return visitor.isDaily() ? "676" : "";
     }
 
+    /**
+     * @description : 导出通用所有的页面（固定导出当前页）
+     * 参数：path ：导出页面path
+     * @date :2021/7/13 12:48
+     **/
+
+    public JSONObject carPageExport(String path){
+        JSONObject thisPage = new JSONObject();
+        if("/car-platform/pc/manage/evaluate/v4/export".equals(path)){ // 销售接待线下评价页面需要附加参数
+            thisPage.put("evaluate_type",5);
+        }
+        thisPage.put("page",1);
+        thisPage.put("size",10);
+        thisPage.put("export_type","CURRENT_PAGE"); // 当前页  ALL为所有
+        return visitor.invokeApi(path,thisPage,false);
+    }
 }
