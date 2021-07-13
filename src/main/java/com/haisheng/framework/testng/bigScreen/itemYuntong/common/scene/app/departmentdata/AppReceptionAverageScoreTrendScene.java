@@ -33,6 +33,8 @@ public class AppReceptionAverageScoreTrendScene extends BaseScene {
      */
     private final String endDate;
 
+    private final String salesId;
+
 
     @Override
     protected JSONObject getRequestBody() {
@@ -40,6 +42,7 @@ public class AppReceptionAverageScoreTrendScene extends BaseScene {
         object.put("data_cycle_type", dataCycleType);
         object.put("start_date", startDate);
         object.put("end_date", endDate);
+        object.put("sales_id", salesId);
         return object;
     }
 

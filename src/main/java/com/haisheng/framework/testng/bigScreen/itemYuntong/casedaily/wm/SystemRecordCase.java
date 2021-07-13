@@ -1,6 +1,5 @@
 package com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.wm;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
@@ -8,8 +7,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.EvaluateV4ConfigDetailScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.EvaluateV4ConfigSubmitScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.record.ImportPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -17,21 +15,19 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 /**
- * 服务管理测试用例
+ * 系统记录case
  *
  * @author wangmin
  * @date 2021/1/29 11:17
  */
-public class SeverManageCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_SSO;
+public class SystemRecordCase extends TestCaseCommon implements TestCaseStd {
+    private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_CAR;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_DAILY;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public SceneUtil util = new SceneUtil(visitor);
@@ -40,8 +36,8 @@ public class SeverManageCase extends TestCaseCommon implements TestCaseStd {
     @Override
     public void initial() {
         logger.debug("before class initial");
-        CommonConfig commonConfig = new CommonConfig();
         //替换checklist的相关信息
+        CommonConfig commonConfig = new CommonConfig();
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
@@ -52,11 +48,10 @@ public class SeverManageCase extends TestCaseCommon implements TestCaseStd {
         //放入shopId
         commonConfig.product = PRODUCE.getAbbreviation();
         commonConfig.referer = PRODUCE.getReferer();
-        commonConfig.shopId = util.getReceptionShopId();
+        commonConfig.shopId = PRODUCE.getShopId();
         commonConfig.roleId = ALL_AUTHORITY.getRoleId();
         beforeClassInit(commonConfig);
         util.loginPc(ALL_AUTHORITY);
-        visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
     }
 
     @AfterClass
@@ -73,42 +68,45 @@ public class SeverManageCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
     }
 
-    @Test(description = "创建一个题目，大类下题目+1")
-    public void evaluateManager_data_1() {
+    @Test(description = "导入成功条数=导入条数-失败条数")
+    public void importRecord_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene scene = EvaluateV4ConfigDetailScene.builder().build();
-            int itemCount = scene.invoke(visitor).getJSONArray("list").stream().map(e -> (JSONObject) e)
-                    .mapToInt(e -> e.getJSONArray("items").size()).sum();
-            JSONArray links = util.getSubmitLink(true);
-            EvaluateV4ConfigSubmitScene.builder().links(links).build().invoke(visitor);
-            int newItemCount = scene.invoke(visitor).getJSONArray("list").stream().map(e -> (JSONObject) e)
-                    .mapToInt(e -> e.getJSONArray("items").size()).sum();
-            Preconditions.checkArgument(newItemCount == itemCount + 1, "增加题目之前题目数量：" + itemCount + " 增加题目之后题目数量：" + newItemCount);
+            IScene scene = ImportPageScene.builder().build();
+            List<JSONObject> list = util.toJavaObjectList(scene, JSONObject.class);
+            list.forEach(e -> Preconditions.checkArgument(e.getInteger("import_num") == e.getInteger("success_num") + e.getInteger("failure_num"), "导入条数：" + e.getInteger("import_num") + " 成功+失败条数：" + e.getInteger("success_num") + e.getInteger("failure_num")));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-
-            saveData("创建一个题目，大类下题目+1");
+            saveData("导入成功条数=导入条数-失败条数");
         }
     }
 
-    @Test(description = "删除一个题目，大类下题目-1", dependsOnMethods = "evaluateManager_data_1")
-    public void evaluateManager_data_2() {
+    @Test(description = "导入成功条数<=导入条数")
+    public void importRecord_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene scene = EvaluateV4ConfigDetailScene.builder().build();
-            int itemCount = scene.invoke(visitor).getJSONArray("list").stream().map(e -> (JSONObject) e)
-                    .mapToInt(e -> e.getJSONArray("items").size()).sum();
-            JSONArray links = util.getSubmitLink(false);
-            EvaluateV4ConfigSubmitScene.builder().links(links).build().invoke(visitor);
-            int newItemCount = scene.invoke(visitor).getJSONArray("list").stream().map(e -> (JSONObject) e)
-                    .mapToInt(e -> e.getJSONArray("items").size()).sum();
-            Preconditions.checkArgument(newItemCount == itemCount - 1, "删除题目之前题目数量：" + itemCount + " 删除题目之后题目数量：" + newItemCount);
+            IScene scene = ImportPageScene.builder().build();
+            List<JSONObject> list = util.toJavaObjectList(scene, JSONObject.class);
+            list.forEach(e -> Preconditions.checkArgument(e.getInteger("success_num") <= e.getInteger("import_num"), "导入成功条数：" + e.getInteger("success_num") + " 一共导入条数：" + e.getInteger("import_num")));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("删除一个题目，大类下题目-1");
+            saveData("导入成功条数<=导入条数");
+        }
+    }
+
+    @Test(description = "导入失败条数<=导入条数")
+    public void importRecord_data_3() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene scene = ImportPageScene.builder().build();
+            List<JSONObject> list = util.toJavaObjectList(scene, JSONObject.class);
+            list.forEach(e -> Preconditions.checkArgument(e.getInteger("failure_num") <= e.getInteger("import_num"), "导入失败条数：" + e.getInteger("failure_num") + " 一共导入条数：" + e.getInteger("import_num")));
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("导入失败条数<=导入条数");
         }
     }
 }

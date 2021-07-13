@@ -235,10 +235,6 @@ public class SceneUtil extends BasicUtil {
                 .estimateBuyCarDate(estimateBuyCarDate).sexId(gender).build().invoke(visitor);
     }
 
-    public String getReceptionShopId() {
-        return visitor.isDaily() ? "56666" : "";
-    }
-
     /**
      * 获取车型id
      *
@@ -380,20 +376,15 @@ public class SceneUtil extends BasicUtil {
         List<String> vehicleChassisCodeList = new ArrayList<>();
         list.stream().map(e -> e.getLong("customer_id")).map(e -> PreSaleCustomerInfoBuyCarRecordScene.builder().customerId(e).build())
                 .map(e -> toJavaObjectList(e, JSONObject.class)).forEach(e -> e.stream().map(a -> a.getString("vehicle_chassis_code")).forEach(vehicleChassisCodeList::add));
-        if (!vehicleChassisCodeList.contains(vin)) {
-            return vin;
-        }
-        return createVin();
+        return !vehicleChassisCodeList.contains(vin) ? vin : createVin();
     }
 
+    public String getReceptionShopId() {
+        return visitor.isDaily() ? "56666" : "";
+    }
 
     public String getSaleId() {
         return visitor.isDaily() ? "uid_23562d04" : "";
-    }
-
-    public String getEvaluateV4ConfigShopId() {
-        //有设备的门店
-        return visitor.isDaily() ? "56666" : "";
     }
 
     public String getCarModelId() {

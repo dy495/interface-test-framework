@@ -11,7 +11,7 @@ import lombok.Builder;
  * @date 2021-05-08 20:23:15
  */
 @Builder
-public class AppReceptionAverageScoreTrendScene extends BaseScene {
+public class AppPersonDataReceptionAverageScoreTrendScene extends BaseScene {
     /**
      * 描述 查询数据周期 取值见字典表《数据查询周期》
      * 是否必填 true
