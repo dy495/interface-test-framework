@@ -33,6 +33,9 @@ public class BuyCarScene extends BaseScene {
      */
     private final Long carModel;
 
+
+    private final Long carStyle;
+
     /**
      * 描述 车辆底盘号
      * 是否必填 false
@@ -47,12 +50,13 @@ public class BuyCarScene extends BaseScene {
         object.put("id", id);
         object.put("shop_id", shopId);
         object.put("car_model", carModel);
+        object.put("car_style", carStyle);
         object.put("vin", vin);
         return object;
     }
 
     @Override
     public String getPath() {
-        return "/account-platform/auth/pre-sales-reception/buy-car";
+        return "/car-platform/pc/pre-sales-reception/buy-car";
     }
 }

@@ -7,7 +7,10 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.util.BasicUtil;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.presalesreception.AppPreSalesReceptionPageBean;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.AppPreSalesReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanage.PreSaleCustomerPageScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanagev4.PreSaleCustomerInfoBuyCarRecordScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.personaldata.AppPersonalOverviewBean;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.voicerecord.AppDepartmentPageBean;
@@ -195,6 +198,25 @@ public class SceneUtil extends BasicUtil {
     }
 
     /**
+     * 获取app接待列表
+     *
+     * @return 接待列表
+     */
+    public List<AppPreSalesReceptionPageBean> getAppAppPreSalesReceptionPageList() {
+        List<AppPreSalesReceptionPageBean> list = new ArrayList<>();
+        Integer lastValue = null;
+        JSONArray array;
+        do {
+            IScene scene = AppPreSalesReceptionPageScene.builder().size(10).lastValue(lastValue).build();
+            JSONObject response = scene.invoke(visitor);
+            lastValue = response.getInteger("last_value");
+            array = response.getJSONArray("list");
+            list.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppPreSalesReceptionPageBean.class)).collect(Collectors.toList()));
+        } while (array.size() == 10);
+        return list;
+    }
+
+    /**
      * app接待时编辑个人资料
      *
      * @param receptionId 接待id
@@ -330,15 +352,6 @@ public class SceneUtil extends BasicUtil {
         return links;
     }
 
-    public String getEvaluateV4ConfigShopId() {
-        //有设备的门店
-        return visitor.isDaily() ? "56666" : "";
-    }
-
-    public String getSaleId() {
-        return visitor.isDaily() ? "uid_fe84d99" : "";
-    }
-
     public String getNotReceptionPhone() {
         String phone = "153" + CommonUtil.getRandom(8);
         int total = PreSaleCustomerPageScene.builder().customerPhone(phone).build().invoke(visitor).getInteger("total");
@@ -355,8 +368,40 @@ public class SceneUtil extends BasicUtil {
         };
     }
 
+    /**
+     * 创建底盘号
+     *
+     * @return 底盘号
+     */
+    public String createVin() {
+        String vin = "AAASSDFD" + CommonUtil.getRandom(9);
+        IScene scene = PreSaleCustomerPageScene.builder().build();
+        List<JSONObject> list = toJavaObjectList(scene, JSONObject.class, "customer_type_name", "成交客户");
+        List<String> vehicleChassisCodeList = new ArrayList<>();
+        list.stream().map(e -> e.getLong("customer_id")).map(e -> PreSaleCustomerInfoBuyCarRecordScene.builder().customerId(e).build())
+                .map(e -> toJavaObjectList(e, JSONObject.class)).forEach(e -> e.stream().map(a -> a.getString("vehicle_chassis_code")).forEach(vehicleChassisCodeList::add));
+        if (!vehicleChassisCodeList.contains(vin)) {
+            return vin;
+        }
+        return createVin();
+    }
+
+
+    public String getSaleId() {
+        return visitor.isDaily() ? "uid_23562d04" : "";
+    }
+
+    public String getEvaluateV4ConfigShopId() {
+        //有设备的门店
+        return visitor.isDaily() ? "56666" : "";
+    }
+
     public String getCarModelId() {
         return visitor.isDaily() ? "676" : "";
+    }
+
+    public String getCarStyleId() {
+        return visitor.isDaily() ? "1398" : "";
     }
 
 }

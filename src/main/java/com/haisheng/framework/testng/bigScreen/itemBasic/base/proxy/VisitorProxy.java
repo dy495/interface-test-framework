@@ -11,6 +11,7 @@ import org.springframework.util.StringUtils;
 
 /**
  * 调用http请求的代理
+ * 主要作用换ip
  *
  * @author wangmin
  * @date 2021/1/20 13:36
@@ -116,7 +117,7 @@ public class VisitorProxy extends TestCaseCommon {
      *
      * @return true/false
      */
-    public Boolean isEmpty() {
+    public boolean isEmpty() {
         return product == null;
     }
 
@@ -125,7 +126,7 @@ public class VisitorProxy extends TestCaseCommon {
      *
      * @return boolean
      */
-    public Boolean isDaily() {
+    public boolean isDaily() {
         return product.getIsDaily();
     }
 
