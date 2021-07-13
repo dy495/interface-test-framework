@@ -7,7 +7,9 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklis
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistConfId;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.scenes.ExportHistoryPageScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.systemHistory.DeleteHistortScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.systemHistory.ExportHistoryPageScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.systemHistory.LoginHistoryScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -72,14 +74,12 @@ public class ExportCasesTest extends TestCaseCommon implements TestCaseStd {
     @Test(dataProvider = "CarExportPages")
     public void testExportPage(String product, String path, String type) {
         try {
-            visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
-            JSONObject res1 = ExportHistoryPageScene.builder().size(10).page(1).build().invoke(visitor, true); //查询接口
+            JSONObject res1 = util.checkExport(); //查询接口
             Integer total1 = res1.getInteger("total");//检查导出操作前的总记录
             if ("control".equals(product)) {visitor.setProduct(EnumTestProduce.YT_DAILY_CONTROL);}
             if ("car".equals(product)) {visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);}
-            JSONObject obj = util.carPageExport(path); //在对应页面中导出
-            visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
-            JSONObject res2 = ExportHistoryPageScene.builder().size(10).page(1).build().invoke(visitor, true);//查询接口
+            util.carPageExport(path); //在对应页面中导出
+            JSONObject res2 = util.checkExport();//查询接口
             Integer total2 = res2.getInteger("total"); // 检查导出操作后的总记录
             String typeName = res2.getJSONArray("list").getJSONObject(0).getString("type_name"); //获取导出的页面字段
             Preconditions.checkArgument(total2 == total1 + 1, type + "页面导出结果导出记录中没有+1");  //判断记录是否+1
@@ -114,5 +114,12 @@ public class ExportCasesTest extends TestCaseCommon implements TestCaseStd {
         };
     }
 
+
+//    @Test
+//    public void test(){
+//        visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
+//        JSONObject res = LoginHistoryScene.builder().page(1).size(10).build().invoke(visitor);
+//        DeleteHistortScene.builder().page(1).size(10).build().invoke(visitor);
+//    }
 
 }

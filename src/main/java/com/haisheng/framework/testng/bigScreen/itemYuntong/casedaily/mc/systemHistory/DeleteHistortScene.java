@@ -1,11 +1,11 @@
-package com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.scenes;
+package com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.systemHistory;
 
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.BaseScene;
 import lombok.Builder;
 
 @Builder
-public class ImportHistoryPageScene extends BaseScene {
+public class DeleteHistortScene extends BaseScene {
     private final int page;
     private final int size;
 
@@ -19,6 +19,6 @@ public class ImportHistoryPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/car-platform/pc/record/import/page";
+        return "/car-platform/pc/manage/operate-log/record-page";
     }
 }

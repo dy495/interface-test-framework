@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.scenes;
+package com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.systemHistory;
 
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.BaseScene;
