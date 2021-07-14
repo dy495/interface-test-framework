@@ -7,14 +7,14 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.util.BasicUtil;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.systemHistory.DeleteHistortScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.systemHistory.ExportHistoryPageScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.systemHistory.ImportHistoryPageScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.systemHistory.LoginHistoryScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherScene.DeleteRecordPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.presalesreception.AppPreSalesReceptionPageBean;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.AppPreSalesReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanage.PreSaleCustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanagev4.PreSaleCustomerInfoBuyCarRecordScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.record.ExportPageScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.record.ImportPageScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.record.LoginRecordPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.personaldata.AppPersonalOverviewBean;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.voicerecord.AppDepartmentPageBean;
@@ -430,33 +430,37 @@ public class SceneUtil extends BasicUtil {
         thisPage.put("export_type", "CURRENT_PAGE"); // 当前页  ALL为所有
         return visitor.invokeApi(path, thisPage, false);
     }
+
     /**
      * @description : 导出记录页面查询校验
      **/
-    public JSONObject checkExport(){
+    public JSONObject checkExport() {
         visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
-        return ExportHistoryPageScene.builder().page(1).size(1).build().invoke(visitor,true);
+        return ExportPageScene.builder().page(1).size(10).build().invoke(visitor, true);
     }
+
     /**
      * @description : 导入记录页面查询校验
      **/
-    public JSONObject checkImport(){
+    public JSONObject checkImport() {
         visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
-        return ImportHistoryPageScene.builder().page(1).size(10).build().invoke(visitor,true);
+        return ImportPageScene.builder().page(1).size(10).build().invoke(visitor, true);
     }
+
     /**
      * @description : 删除记录页面查询校验
      **/
-    public JSONObject checkDelete(){
+    public JSONObject checkDelete() {
         visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
-        return DeleteHistortScene.builder().page(1).size(10).build().invoke(visitor,true);
+        return DeleteRecordPageScene.builder().page(1).size(10).build().invoke(visitor, true);
     }
+
     /**
      * @description : 登陆记录页面查询校验
      **/
-    public JSONObject checkLogin(){
+    public JSONObject checkLogin() {
         visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
-        return LoginHistoryScene.builder().page(1).size(10).build().invoke(visitor,true);
+        return LoginRecordPageScene.builder().page(1).size(10).build().invoke(visitor, true);
     }
 
 }

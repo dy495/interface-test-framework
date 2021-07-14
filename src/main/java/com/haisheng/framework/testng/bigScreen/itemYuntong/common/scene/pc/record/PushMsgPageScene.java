@@ -77,6 +77,6 @@ public class PushMsgPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/account-platform/auth/record/push-msg/page";
+        return "/car-platform/pc/record/push-msg/page";
     }
 }

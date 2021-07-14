@@ -7,15 +7,17 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklis
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistConfId;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.systemHistory.DeleteHistortScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.systemHistory.ExportHistoryPageScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.systemHistory.LoginHistoryScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.brand.BrandAddScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.brand.BrandPageScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.file.FileUploadScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.YunTongInfo;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
+import com.haisheng.framework.util.ImageUtil;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
@@ -114,12 +116,34 @@ public class ExportCasesTest extends TestCaseCommon implements TestCaseStd {
         };
     }
 
+//
+//    @Test
+//    public void deleteRecord(){
+//        visitor.setProduct(EnumTestProduce.YT_DAILY_SSO);
+////        String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
+////        String picture = FileUploadScene.builder().permanentPicType(0).pic(new ImageUtil().getImageBinary(filePath)).build().invoke(visitor).getString("pic_path");
+////        visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
+////        BrandAddScene.builder().name("测试删除记录").logoPath(picture).build().invoke(visitor);
+//        String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
+//
+//        String logo = FileUploadScene.builder().pic(new ImageUtil().getImageBinary(filePath)).permanentPicType(0).build().invoke(visitor).getString("pic_path");
+//        visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
+//        String name = "测试删除记录";
+//        BrandAddScene.builder().name(name).logoPath(logo).build().invoke(visitor);
+//        //获取创建的品牌id
+//        Long id = BrandPageScene.builder().page(1).size(10).name(name).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+//
+//
+//
+//    }
+
 
 //    @Test
 //    public void test(){
 //        visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
-//        JSONObject res = LoginHistoryScene.builder().page(1).size(10).build().invoke(visitor);
-//        DeleteHistortScene.builder().page(1).size(10).build().invoke(visitor);
+//        util.checkDelete();
+//        util.checkLogin();
+//        util.checkImport();
 //    }
 
 }
