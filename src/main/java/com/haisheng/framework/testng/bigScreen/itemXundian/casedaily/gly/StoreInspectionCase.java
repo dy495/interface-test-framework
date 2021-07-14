@@ -558,9 +558,11 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * 构建场景--人员A触发口罩+工服，触发事件数+2，待确认事件数+2，待确认紧急待确认事件+1,此规则留痕数量、图片+1
+     * 构建场景--人员A触发口罩+工服，列表中不存在小时内未处理的：触发事件数+2，待确认事件数+2，待确认紧急待确认事件+1,此规则留痕数量、图片各加1
+     *                          列表中两个事件小时内都未处理的：触发事件数+0，待确认事件数+0，待确认紧急待确认事件+0,此规则留痕数量、图片各+1
+     *                          列表中两个事件小时内未处理一个的：触发事件数+1，待确认事件数+1，待确认紧急待确认事件+1,此规则留痕数量、图片各+1
      */
-    @Test(description = "人员A触发口罩+工服，触发事件数+2，待确认事件数+2，待确认紧急待确认事件+1,此规则留痕数量、图片+1")
+    @Test(description = "人员A触发口罩+工服，触发事件数+2，待确认事件数+2，待确认紧急待确认事件+1,此规则留痕数量、图片各+1（四种情况）")
     public void storeDateCase6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -658,7 +660,7 @@ public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("人员A触发口罩+工服，触发事件数+2，待确认事件数+2，待确认紧急待确认事件+1,此规则留痕数量、图片+1");
+            saveData("人员A触发口罩+工服，触发事件数+2，待确认事件数+2，待确认紧急待确认事件+1,此规则留痕数量、图片各+1（四种情况）");
         }
     }
 
