@@ -8,6 +8,8 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.homepagev4.AppTodayDataBean;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.homepagev4.AppTodayDataScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.personaldata.AppPersonDataReceptionAverageScoreTrendScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.personaldata.AppPersonalReceptionScoreTrendScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
@@ -1006,6 +1008,30 @@ public class AppVoiceDataCase extends TestCaseCommon implements TestCaseStd {
             collectMessage(e);
         } finally {
             saveData("APP部门平均分=此部门的全部员工全流程接待分值之和/参与评分的接待次数*5");
+        }
+    }
+
+    @Test
+    public void taskFollowUp_data_1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
+        try {
+            List<AppTodayDataBean> todayDataList = util.getAppTodayDataList();
+            List<Integer> receptionList = new ArrayList<>();
+            List<Integer> finishList = new ArrayList<>();
+            todayDataList.stream().map(AppTodayDataBean::getPrePendingReception).filter(Objects::nonNull)
+                    .map(e -> e.split("/")).forEach(strings -> {
+                receptionList.add(Integer.parseInt(strings[0]));
+                finishList.add(Integer.parseInt(strings[1]));
+            });
+            int receptionSum = receptionList.stream().mapToInt(e -> e).sum();
+            int finishSum = finishList.stream().mapToInt(e -> e).sum();
+            CommonUtil.valueView(receptionSum, finishSum);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            visitor.setProduct(EnumTestProduce.YT_DAILY_CONTROL);
+            saveData("");
         }
     }
 }

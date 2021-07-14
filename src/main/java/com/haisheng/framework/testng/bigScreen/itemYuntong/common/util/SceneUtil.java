@@ -7,7 +7,9 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.util.BasicUtil;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.homepagev4.AppTodayDataBean;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.presalesreception.AppPreSalesReceptionPageBean;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.homepagev4.AppTodayDataScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.AppPreSalesReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanage.PreSaleCustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanagev4.PreSaleCustomerInfoBuyCarRecordScene;
@@ -98,7 +100,7 @@ public class SceneUtil extends BasicUtil {
             JSONObject response = AppDepartmentPageScene.builder().orderColumn(0).isReverse(false).dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).lastValue(lastValue).size(10).build().invoke(visitor);
             lastValue = response.getJSONObject("last_value");
             array = response.getJSONArray("list");
-            list.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppDepartmentPageBean.class)).collect(Collectors.toList()));
+            array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppDepartmentPageBean.class)).forEach(list::add);
         } while (array.size() == 10);
         return list;
     }
@@ -118,8 +120,26 @@ public class SceneUtil extends BasicUtil {
             JSONObject response = AppPersonalPageScene.builder().orderColumn(100).isReverse(false).dataCycleType(dataCycleType).salesId(salesId).startDate(startDate).endDate(endDate).lastValue(lastValue).size(10).build().invoke(visitor);
             lastValue = response.getJSONObject("last_value");
             array = response.getJSONArray("list");
-            list.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppPersonalPageBean.class)).collect(Collectors.toList()));
+            array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppPersonalPageBean.class)).forEach(list::add);
         } while (array.size() == 10);
+        return list;
+    }
+
+    /**
+     * 获取今日数据信息集合
+     *
+     * @return 今日数据集合
+     */
+    public List<AppTodayDataBean> getAppTodayDataList() {
+        List<AppTodayDataBean> list = new ArrayList<>();
+        JSONObject lastValue = null;
+        JSONArray array;
+        do {
+            JSONObject response = AppTodayDataScene.builder().type("all").lastValue(lastValue).size(20).build().invoke(visitor);
+            lastValue = response.getJSONObject("last_value") == null ? null : response.getJSONObject("last_value");
+            array = response.getJSONArray("list");
+            array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppTodayDataBean.class)).forEach(list::add);
+        } while (array.size() == 20);
         return list;
     }
 
@@ -211,7 +231,7 @@ public class SceneUtil extends BasicUtil {
             JSONObject response = scene.invoke(visitor);
             lastValue = response.getInteger("last_value");
             array = response.getJSONArray("list");
-            list.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppPreSalesReceptionPageBean.class)).collect(Collectors.toList()));
+            array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppPreSalesReceptionPageBean.class)).forEach(list::add);
         } while (array.size() == 10);
         return list;
     }
