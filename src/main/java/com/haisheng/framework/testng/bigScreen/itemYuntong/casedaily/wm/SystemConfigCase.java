@@ -33,6 +33,9 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 import java.util.*;
 
+/**
+ * 系统配置case
+ */
 public class SystemConfigCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_SSO;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_DAILY;

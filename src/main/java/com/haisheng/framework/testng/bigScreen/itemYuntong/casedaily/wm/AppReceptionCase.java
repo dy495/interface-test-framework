@@ -10,11 +10,13 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProd
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.presalesreception.AppPreSalesReceptionPageBean;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.AppCustomerRemarkV4Scene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.AppPreSalesReceptionCreateScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanage.PreSaleCustomerBuyCarPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanage.PreSaleCustomerCreateCustomerScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanagev4.PreSaleCustomerInfoBuyCarRecordScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanagev4.PreSaleCustomerInfoRemarkRecordScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanagev4.PreSaleCustomerInfoScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.BuyCarScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.FinishReceptionScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.PreSalesReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
@@ -87,7 +89,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
         preSalesReceptionPage = util.getAppAppPreSalesReceptionPageList().stream().filter(e -> e.getCustomerName().equals("自动化创建的接待人")).findFirst().orElse(null);
         if (preSalesReceptionPage == null) {
             logger.info("不存在接待人，需要创建");
-            AppPreSalesReceptionCreateScene.builder().customerName("自动化创建的接待人").customerPhone("15321527989").sexId("1").intentionCarModelId(util.getCarModelId()).estimateBuyCarTime("2100-07-12").build().invoke(visitor);
+            AppPreSalesReceptionCreateScene.builder().customerName("自动化创建的接待人").customerPhone("15321527988").sexId("1").intentionCarModelId(util.getCarModelId()).estimateBuyCarTime("2100-07-12").build().invoke(visitor);
             preSalesReceptionPage = util.getAppAppPreSalesReceptionPageList().stream().filter(e -> e.getCustomerName().equals("自动化创建的接待人")).findFirst().orElse(null);
         }
     }
@@ -132,17 +134,21 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
     public void saleCustomerManager_data_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene scene = PreSaleCustomerInfoBuyCarRecordScene.builder().customerId(preSalesReceptionPage.getCustomerId()).build();
-            int total = scene.invoke(visitor).getInteger("total");
+            IScene preSaleCustomerBuyCarPageScene = PreSaleCustomerBuyCarPageScene.builder().build();
+            int buyCarTotal = preSaleCustomerBuyCarPageScene.invoke(visitor).getInteger("total");
+            IScene preSaleCustomerInfoBuyCarRecordScene = PreSaleCustomerInfoBuyCarRecordScene.builder().customerId(preSalesReceptionPage.getCustomerId()).build();
+            int total = preSaleCustomerInfoBuyCarRecordScene.invoke(visitor).getInteger("total");
             String vin = util.createVin();
             //买车
             BuyCarScene.builder().carModel(Long.parseLong(util.getCarModelId())).carStyle(Long.parseLong(util.getCarStyleId())).vin(vin)
                     .id(preSalesReceptionPage.getId()).shopId(Long.parseLong(util.getReceptionShopId())).build().invoke(visitor);
-            JSONObject response = scene.invoke(visitor);
+            JSONObject response = preSaleCustomerInfoBuyCarRecordScene.invoke(visitor);
             int newTotal = response.getInteger("total");
+            int newBuyCarTotal = preSaleCustomerBuyCarPageScene.invoke(visitor).getInteger("total");
             String vehicleChassisCode = response.getJSONArray("list").getJSONObject(0).getString("vehicle_chassis_code");
             Preconditions.checkArgument(newTotal == total + 1, "app接待时购买车辆后，购车记录预期为：" + (total + 1) + " 实际为：" + newTotal);
             Preconditions.checkArgument(vehicleChassisCode.equals(vin), "app接待时购买车辆后，底盘号预期为：" + vin + " 实际为：" + vehicleChassisCode);
+            Preconditions.checkArgument(newBuyCarTotal == buyCarTotal + 1, "app接待时购买车辆后，成交记录页预期为：" + (buyCarTotal + 1) + " 实际为：" + newBuyCarTotal);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -186,6 +192,23 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
             collectMessage(e);
         } finally {
             saveData("接待客户一次，更新最近到店时间为当前接待时间");
+        }
+    }
+
+    @AfterClass(description = "完成此条接待记录")
+    @Test(description = "完成接待，更新接待时间")
+    public void saleCustomerManager_data_6() {
+        logger.info(caseResult.getCaseName());
+        try {
+            String date = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm");
+            FinishReceptionScene.builder().id(preSalesReceptionPage.getId()).shopId(Long.parseLong(util.getReceptionShopId())).build().invoke(visitor);
+            IScene scene = PreSalesReceptionPageScene.builder().phone(preSalesReceptionPage.getCustomerPhone()).build();
+            JSONObject response = util.toFirstJavaObject(scene, JSONObject.class);
+            Preconditions.checkArgument(response.getString("reception_end_time").contains(date), "预期完成接待时间：" + date + " 实际完成接待时间：" + response.getString("reception_end_time"));
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("完成接待，更新接待时间");
         }
     }
 }

@@ -1,17 +1,17 @@
-package com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.departmentdata;
+package com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.personaldata;
 
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 4.5. 接待总平均分值趋势（谢）
+ * 2.5. 接待总平均分值趋势（谢）
  *
  * @author wangmin
- * @date 2021-05-08 20:23:16
+ * @date 2021-05-08 20:23:15
  */
 @Builder
-public class AppReceptionAverageScoreTrendScene extends BaseScene {
+public class AppPersonDataReceptionAverageScoreTrendScene extends BaseScene {
     /**
      * 描述 查询数据周期 取值见字典表《数据查询周期》
      * 是否必填 true
@@ -33,6 +33,11 @@ public class AppReceptionAverageScoreTrendScene extends BaseScene {
      */
     private final String endDate;
 
+    /**
+     * 描述 员工id 为空则默认为登录账号uid
+     * 是否必填 false
+     * 版本 v1.0
+     */
     private final String salesId;
 
 
@@ -42,12 +47,12 @@ public class AppReceptionAverageScoreTrendScene extends BaseScene {
         object.put("data_cycle_type", dataCycleType);
         object.put("start_date", startDate);
         object.put("end_date", endDate);
-        object.put("sales_id", salesId);
+        object.put("salesId", salesId);
         return object;
     }
 
     @Override
     public String getPath() {
-        return "/intelligent-control/app/department-data/reception-average-score-trend";
+        return "/intelligent-control/app/personal-data/reception-average-score-trend";
     }
 }

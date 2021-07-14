@@ -56,7 +56,7 @@ public class StoreInspectionOnlineCase extends TestCaseCommon implements TestCas
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
         commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.product = product.getAbbreviation();
-        commonConfig.shopId = product.getShopId();
+        commonConfig.shopId = "14630";
         commonConfig.referer = product.getReferer();
         beforeClassInit(commonConfig);
     }

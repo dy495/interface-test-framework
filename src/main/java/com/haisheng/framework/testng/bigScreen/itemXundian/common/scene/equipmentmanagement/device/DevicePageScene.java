@@ -11,7 +11,7 @@ import lombok.Builder;
  * @date 2021-06-29 14:11:44
  */
 @Builder
-public class PageScene extends BaseScene {
+public class DevicePageScene extends BaseScene {
     /**
      * 描述 No comments found.
      * 是否必填 false

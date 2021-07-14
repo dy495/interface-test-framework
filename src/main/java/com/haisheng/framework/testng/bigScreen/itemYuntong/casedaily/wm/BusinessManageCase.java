@@ -80,7 +80,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
             int total = scene.invoke(visitor).getInteger("total");
             String phone = util.getNotReceptionPhone();
             PreSaleCustomerCreatePotentialCustomerScene.builder().customerType("PERSON").customerName("燕小六")
-                    .customerPhone(phone).sex("0").salesId(util.getSaleId()).shopId(Long.parseLong(util.getEvaluateV4ConfigShopId()))
+                    .customerPhone(phone).sex("0").salesId(util.getSaleId()).shopId(Long.parseLong(util.getReceptionShopId()))
                     .carStyleId(1470L).carModelId(719L).build().invoke(visitor);
             JSONObject response = scene.invoke(visitor);
             int newTotal = response.getInteger("total");
@@ -103,7 +103,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
             int total = response.getInteger("total");
             String phone = response.getJSONArray("list").getJSONObject(0).getString("customer_phone");
             PreSaleCustomerCreatePotentialCustomerScene.builder().customerType("PERSON").customerName("燕小六")
-                    .customerPhone(phone).sex("0").salesId(util.getSaleId()).shopId(Long.parseLong(util.getEvaluateV4ConfigShopId()))
+                    .customerPhone(phone).sex("0").salesId(util.getSaleId()).shopId(Long.parseLong(util.getReceptionShopId()))
                     .carStyleId(1470L).carModelId(719L).build().invoke(visitor, false);
             JSONObject response1 = scene.invoke(visitor);
             int newTotal = response1.getInteger("total");

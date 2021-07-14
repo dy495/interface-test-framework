@@ -8,6 +8,10 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.homepagev4.AppTodayDataBean;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.homepagev4.AppTodayDataScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.personaldata.AppPersonDataReceptionAverageScoreTrendScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.personaldata.AppPersonalReceptionScoreTrendScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.departmentdata.*;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.departmentdata.AppReceptionAverageScoreTrendBean;
@@ -46,7 +50,7 @@ import java.util.stream.Collectors;
  * @author wangmin
  * @date 2021/1/29 11:17
  */
-public class VoiceCase extends TestCaseCommon implements TestCaseStd {
+public class AppVoiceDataCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_CONTROL;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_DAILY;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
@@ -770,29 +774,30 @@ public class VoiceCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
+    @Test(description = "（筛选为某一天）【个人总平均分趋势】中分数=【各环节得分】各环节总平均分相加/5")
     public void personal_data_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-
-
+            String date = DateTimeUtil.addDayFormat(new Date(), -1);
+            List<AppDepartmentPageBean> list = util.getAppDepartmentPageList(dataCycleType, date, date);
+            list.forEach(e -> {
+                JSONObject response = AppPersonDataReceptionAverageScoreTrendScene.builder().dataCycleType(dataCycleType).startDate(date).endDate(date).salesId(e.getSaleId()).build().invoke(visitor);
+                int totalAverageScore = response.getJSONArray("list").size() == 0 ? 0 : response.getJSONArray("list").getJSONObject(0).getInteger("total_average_score");
+                IScene scene = AppPersonalReceptionScoreTrendScene.builder().dataCycleType(dataCycleType).startDate(date).endDate(date).salesId(e.getSaleId()).build();
+                JSONObject object = scene.invoke(visitor).getJSONArray("list").getJSONObject(0);
+                int a = object.getInteger("100");
+                int b = object.getInteger("200");
+                int c = object.getInteger("300");
+                int d = object.getInteger("400");
+                int f = object.getInteger("500");
+                int mathResult = CommonUtil.getIntRatio(a + b + c + d + f, 5);
+                CommonUtil.valueView(totalAverageScore, mathResult);
+                Preconditions.checkArgument(totalAverageScore == mathResult, e.getName() + "【个人总平均分趋势】分数：" + totalAverageScore + " 【各环节得分】各环节总平均分相加/5：" + mathResult);
+            });
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
             saveData("（筛选为某一天）【个人总平均分趋势】中分数=【各环节得分】各环节总平均分相加/5");
-        }
-    }
-
-    @Test
-    public void personal_data_7() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-
-
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            saveData("（筛选为某一天）【各环节得分趋势】中的各环节得分=【各环节得分】各环节平均分");
         }
     }
 
@@ -1003,6 +1008,30 @@ public class VoiceCase extends TestCaseCommon implements TestCaseStd {
             collectMessage(e);
         } finally {
             saveData("APP部门平均分=此部门的全部员工全流程接待分值之和/参与评分的接待次数*5");
+        }
+    }
+
+    @Test
+    public void taskFollowUp_data_1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
+        try {
+            List<AppTodayDataBean> todayDataList = util.getAppTodayDataList();
+            List<Integer> receptionList = new ArrayList<>();
+            List<Integer> finishList = new ArrayList<>();
+            todayDataList.stream().map(AppTodayDataBean::getPrePendingReception).filter(Objects::nonNull)
+                    .map(e -> e.split("/")).forEach(strings -> {
+                receptionList.add(Integer.parseInt(strings[0]));
+                finishList.add(Integer.parseInt(strings[1]));
+            });
+            int receptionSum = receptionList.stream().mapToInt(e -> e).sum();
+            int finishSum = finishList.stream().mapToInt(e -> e).sum();
+            CommonUtil.valueView(receptionSum, finishSum);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            visitor.setProduct(EnumTestProduce.YT_DAILY_CONTROL);
+            saveData("");
         }
     }
 }

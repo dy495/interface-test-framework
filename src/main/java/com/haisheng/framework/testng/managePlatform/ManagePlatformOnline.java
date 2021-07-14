@@ -6014,8 +6014,8 @@ public class ManagePlatformOnline {
 
         String json =
                 "{\n" +
-                        "  \"email\": \"huangqingqing@winsense.ai\"," +
-                        "  \"password\": \"1a972efae9dba34da19d48fc94fe008c\"" +
+                        "  \"email\": \"zhoutao@winsense.ai\"," +
+                        "  \"password\": \"5bb5cc5a92a99042cd281d33c93541e4\"" +
                         "}";
         try {
             String response = postRequest(genAuthURL, json, header);

@@ -66,7 +66,7 @@ public class TestUtil {
             Arrays.stream(sceneAttributeList).forEach(sceneAttribute -> new SceneMarker.Builder()
                     .templatePath("src\\main\\resources\\template")
                     .templateName("sceneTemplate.ftl")
-                    .parentPath("src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/gly/scene")
+                    .parentPath("src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/common/scene")
                     .sceneAttribute(sceneAttribute)
                     .buildMarker()
                     .execute());
