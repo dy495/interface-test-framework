@@ -323,9 +323,9 @@ public class VideoSurveillanceOnlineCase extends TestCaseCommon implements TestC
     }
 
     /**
-     * 门店设备总数=门店设备不可用数+设备运行中数量--ok
+     * 门店总数=运行中门店+不可用的门店--ok
      */
-    @Test(description = "门店设备总数=门店设备不可用数+设备运行中数量")
+    @Test(description = "门店总数=运行中门店+不可用的门店")
     public void videoSurveillanceData8(){
         try{
             int allNum=0;
@@ -355,7 +355,7 @@ public class VideoSurveillanceOnlineCase extends TestCaseCommon implements TestC
         }catch(AssertionError|Exception e){
             appendFailReason(e.toString());
         }finally{
-            saveData("门店设备总数=门店设备不可用数+设备运行中数量");
+            saveData("门店总数=运行中门店+不可用的门店");
         }
     }
 
@@ -384,6 +384,40 @@ public class VideoSurveillanceOnlineCase extends TestCaseCommon implements TestC
             appendFailReason(e.toString());
         }finally{
             saveData("收藏的门店数量<=全部门店的数量");
+        }
+    }
+
+    /**
+     * 门店设备总数=门店设备不可用数+设备运行中数量--ok
+     */
+    @Test(description = "门店设备总数=门店设备不可用数+设备运行中数量")
+    public void videoSurveillanceData10(){
+        try{
+            int allNum=0;
+            int runningNum=0;
+            int notRunNum=0;
+            //获取门店的列表,计算总设备的数量
+            IScene scene= AllDeviceListScene.builder().build();
+            JSONObject response=visitor.invokeApi(scene,true);
+            JSONArray list=response.getJSONArray("list");
+            for(int i=0;i<list.size();i++){
+                JSONArray deviceList=list.getJSONObject(i).getJSONArray("device_list");
+                allNum+=deviceList.size();
+                for(int j=0;j<deviceList.size();j++){
+                    String deviceStatus=deviceList.getJSONObject(j).getString("device_status");
+                    if(deviceStatus.equals("RUNNING")){
+                        runningNum++;
+                    }else{
+                        notRunNum++;
+                    }
+                }
+                System.out.println("视频监控的设备上的总数是："+allNum+"  视频监控中的运行中的数量为："+runningNum+"  设备管理中的不可运行数："+notRunNum);
+                Preconditions.checkArgument(allNum==runningNum+notRunNum,"视频监控的设备上的总数是："+allNum+"  视频监控中的运行中的数量为："+runningNum+"  设备管理中的不可运行数："+notRunNum);
+            }
+        }catch(AssertionError|Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("门店设备总数=门店设备不可用数+设备运行中数量");
         }
     }
 
