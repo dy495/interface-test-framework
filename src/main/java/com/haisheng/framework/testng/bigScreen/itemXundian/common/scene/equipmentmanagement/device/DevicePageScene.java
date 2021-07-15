@@ -66,7 +66,7 @@ public class DevicePageScene extends BaseScene {
      * 是否必填 false
      * 版本 -
      */
-    private final String status;
+    private final String deviceStatus;
 
     /**
      * 描述 设备类型CAMERA -("摄像头") SERVER -("服务器")
@@ -86,7 +86,7 @@ public class DevicePageScene extends BaseScene {
         object.put("device_name", deviceName);
         object.put("shop_name", shopName);
         object.put("device_id", deviceId);
-        object.put("status", status);
+        object.put("device_status", deviceStatus);
         object.put("type", type);
         return object;
     }

@@ -10,7 +10,6 @@ public enum handleStatus {
         }
 
         private  String handleState;
-
         private  String handleStateName;
 
         public String getHandleState(){
