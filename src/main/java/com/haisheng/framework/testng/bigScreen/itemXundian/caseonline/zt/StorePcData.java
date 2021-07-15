@@ -3,11 +3,16 @@ package com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.zt;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.hqq.StorePcAndAppData;
 import com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.zt.DataProviderMethod;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.MendianInfoOnline;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.StoreScenarioUtilOnline;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.XundianScenarioUtilOnline;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.equipmentmanagement.auth.AllDeviceListScene;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.shop.collection.AddScene;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.shop.collection.CancelScene;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.shop.collection.ShopDeviceListScene;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.shop.device.LiveScene;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.*;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -26,8 +31,10 @@ import java.lang.reflect.Method;
 import static com.google.common.base.Preconditions.checkArgument;
 
 public class StorePcData extends TestCaseCommon implements TestCaseStd {
-
-    public static final Logger log = LoggerFactory.getLogger(StorePcAndAppData.class);
+    private final EnumTestProduce product = EnumTestProduce.XD_ONLINE;
+    public VisitorProxy visitor = new VisitorProxy(product);
+    public UserUtil user = new UserUtil(visitor);
+    public SupporterUtil util = new SupporterUtil(visitor);
     public static final int page = 1;
     public static final int size = 100;
     XundianScenarioUtilOnline xd = XundianScenarioUtilOnline.getInstance();

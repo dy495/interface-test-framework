@@ -2,10 +2,10 @@ package com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.zt;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.hqq.StorePcAndAppData;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.MendianInfoOnline;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.StoreScenarioUtilOnline;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.XundianScenarioUtilOnline;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.*;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -20,8 +20,10 @@ import java.lang.reflect.Method;
 import static com.google.common.base.Preconditions.checkArgument;
 
 public class XundianPcCase extends TestCaseCommon implements TestCaseStd {
-
-    public static final Logger log = LoggerFactory.getLogger(StorePcAndAppData.class);
+    private final EnumTestProduce product = EnumTestProduce.XD_ONLINE;
+    public VisitorProxy visitor = new VisitorProxy(product);
+    public UserUtil user = new UserUtil(visitor);
+    public SupporterUtil util = new SupporterUtil(visitor);
     public static final int size = 100;
     XundianScenarioUtilOnline xd = XundianScenarioUtilOnline.getInstance();
     StoreScenarioUtilOnline md = StoreScenarioUtilOnline.getInstance();
