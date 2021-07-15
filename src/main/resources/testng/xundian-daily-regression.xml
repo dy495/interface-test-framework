@@ -33,6 +33,7 @@
 
 
             <class name="com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.gly.StoreInspectionCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.gly.VideoSurveillanceCase"/>
         </classes>
     </test>
 </suite>
