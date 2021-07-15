@@ -9,7 +9,7 @@ import lombok.Builder;
  * 5.3. 获取门店收藏列表对应设备列表的树状结构
  *
  * @author wangmin
- * @date 2021-07-14 14:30:21
+ * @date 2021-07-15 11:24:11
  */
 @Builder
 public class ShopDeviceListScene extends BaseScene {

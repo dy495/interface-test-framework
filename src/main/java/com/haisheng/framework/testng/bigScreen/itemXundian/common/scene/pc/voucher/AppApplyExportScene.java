@@ -9,7 +9,7 @@ import lombok.Builder;
  * 26.2. 卡券审批申请导出 （华成裕） （2020-12-24）
  *
  * @author wangmin
- * @date 2021-07-14 14:30:21
+ * @date 2021-07-15 11:24:11
  */
 @Builder
 public class AppApplyExportScene extends BaseScene {

@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.checkrisk.events;
+package com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.equipmentmanagement.device;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -6,13 +6,13 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 45.2. 事件处理
+ * 30.1. 设备列表
  *
  * @author wangmin
  * @date 2021-07-15 11:24:11
  */
 @Builder
-public class HandEventScene extends BaseScene {
+public class PageScene extends BaseScene {
     /**
      * 描述 No comments found.
      * 是否必填 false
@@ -28,18 +28,32 @@ public class HandEventScene extends BaseScene {
     private final String appId;
 
     /**
-     * 描述 触发规则名称
-     * 是否必填 false
+     * 描述 当前页
+     * 是否必填 true
      * 版本 -
      */
-    private final String triggerRule;
+    private final Integer page;
 
     /**
-     * 描述 门店id
+     * 描述 当前页的数量
+     * 是否必填 true
+     * 版本 -
+     */
+    private final Integer size;
+
+    /**
+     * 描述 设备名称
      * 是否必填 false
      * 版本 -
      */
-    private final Long shopId;
+    private final String deviceName;
+
+    /**
+     * 描述 所属门店
+     * 是否必填 false
+     * 版本 -
+     */
+    private final String shopName;
 
     /**
      * 描述 设备id
@@ -49,25 +63,18 @@ public class HandEventScene extends BaseScene {
     private final String deviceId;
 
     /**
-     * 描述 照片url
+     * 描述 状态
      * 是否必填 false
      * 版本 -
      */
-    private final String picUrl;
+    private final String status;
 
     /**
-     * 描述 触发时间
-     * 是否必填 false
+     * 描述 设备类型CAMERA -("摄像头") SERVER -("服务器")
+     * 是否必填 true
      * 版本 -
      */
-    private final Long time;
-
-    /**
-     * 描述 事件状态
-     * 是否必填 false
-     * 版本 -
-     */
-    private final String eventStatus;
+    private final String type;
 
 
     @Override
@@ -75,17 +82,18 @@ public class HandEventScene extends BaseScene {
         JSONObject object = new JSONObject();
         object.put("referer", referer);
         object.put("appId", appId);
-        object.put("trigger_rule", triggerRule);
-        object.put("shop_id", shopId);
+        object.put("page", page);
+        object.put("size", size);
+        object.put("device_name", deviceName);
+        object.put("shop_name", shopName);
         object.put("device_id", deviceId);
-        object.put("pic_url", picUrl);
-        object.put("time", time);
-        object.put("event_status", eventStatus);
+        object.put("status", status);
+        object.put("type", type);
         return object;
     }
 
     @Override
     public String getPath() {
-        return "/patrol/check-risk/events/hand-event";
+        return "/patrol/equipment-management/device/page";
     }
 }

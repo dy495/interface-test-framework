@@ -3,19 +3,19 @@ package com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.zt;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.MendianInfo;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.StoreScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.XundianScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.equipmentmanagement.auth.AllDeviceListScene;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.equipmentmanagement.device.DevicePageScene;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.*;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.hqq.StorePcAndAppData;
-import com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.hqq.fucPackage.StoreFuncPackage;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.CommonUtil;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.*;
@@ -25,16 +25,18 @@ import java.lang.reflect.Method;
 import static com.google.common.base.Preconditions.checkArgument;
 
 public class StorePcData extends TestCaseCommon implements TestCaseStd {
-    public static final Logger log = LoggerFactory.getLogger(StorePcAndAppData.class);
+    private final EnumTestProduce product = EnumTestProduce.XD_DAILY;
+    public VisitorProxy visitor = new VisitorProxy(product);
+    public UserUtil user = new UserUtil(visitor);
+    public SupporterUtil util = new SupporterUtil(visitor);
     public static final int page = 1;
     public static final int size = 100;
     XundianScenarioUtil xd = XundianScenarioUtil.getInstance();
     StoreScenarioUtil md = StoreScenarioUtil.getInstance();
-    StoreFuncPackage mds = StoreFuncPackage.getInstance();
-    MendianInfo info = new MendianInfo();
     String name = "zdh";
     String phone = "13614534511";
     String email = "334411@qq.com";
+
     @BeforeClass
     @Override
     public void initial() {
@@ -55,6 +57,7 @@ public class StorePcData extends TestCaseCommon implements TestCaseStd {
         xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
 
     }
+
 
     @AfterClass
     @Override

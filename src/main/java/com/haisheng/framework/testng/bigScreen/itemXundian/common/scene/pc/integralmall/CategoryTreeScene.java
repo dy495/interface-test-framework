@@ -9,7 +9,7 @@ import lombok.Builder;
  * 56.23. 商品管理 - 品类树
  *
  * @author wangmin
- * @date 2021-07-14 14:30:22
+ * @date 2021-07-15 11:24:11
  */
 @Builder
 public class CategoryTreeScene extends BaseScene {

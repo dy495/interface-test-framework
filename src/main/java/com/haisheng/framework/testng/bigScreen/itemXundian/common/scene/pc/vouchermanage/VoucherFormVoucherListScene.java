@@ -9,7 +9,7 @@ import lombok.Builder;
  * 25.1. 卡券表单List
  *
  * @author wangmin
- * @date 2021-07-14 14:30:21
+ * @date 2021-07-15 11:24:11
  */
 @Builder
 public class VoucherFormVoucherListScene extends BaseScene {

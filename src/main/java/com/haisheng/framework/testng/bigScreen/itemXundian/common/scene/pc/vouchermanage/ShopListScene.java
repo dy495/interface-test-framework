@@ -9,7 +9,7 @@ import lombok.Builder;
  * 25.32. 门店列表（给创建优惠券接口用的 这个接口想仅展示配置了三方门店的 门店id）
  *
  * @author wangmin
- * @date 2021-07-14 14:30:21
+ * @date 2021-07-15 11:24:11
  */
 @Builder
 public class ShopListScene extends BaseScene {

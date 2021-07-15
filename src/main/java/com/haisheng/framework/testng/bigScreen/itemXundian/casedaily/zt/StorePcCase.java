@@ -3,9 +3,15 @@ package com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.zt;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.MendianInfo;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.StoreScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.XundianScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.equipmentmanagement.auth.AllDeviceListScene;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.equipmentmanagement.device.DevicePageScene;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.shop.collection.AddScene;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.shop.collection.CancelScene;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.shop.collection.ShopDeviceListScene;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.shop.device.LiveScene;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.*;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.hqq.StorePcAndAppData;
@@ -26,7 +32,10 @@ import java.util.Date;
 import static com.google.common.base.Preconditions.checkArgument;
 
 public class StorePcCase extends TestCaseCommon implements TestCaseStd {
-    public static final Logger log = LoggerFactory.getLogger(StorePcAndAppData.class);
+    private final EnumTestProduce product = EnumTestProduce.XD_DAILY;
+    public VisitorProxy visitor = new VisitorProxy(product);
+    public UserUtil user = new UserUtil(visitor);
+    public SupporterUtil util = new SupporterUtil(visitor);
     public static final int page = 1;
     public static final int size = 100;
     XundianScenarioUtil xd = XundianScenarioUtil.getInstance();
@@ -826,7 +835,141 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @Test(description = "[视频监控]运行中状态下展示的设备全部都是可用的,1")
+    public void videoAvailable1(){
+        try{
+            //获取视频监控中进行中设备列表
+            JSONArray list = AllDeviceListScene.builder().available(1).build().invoke(visitor,true).getJSONArray("list");
+            for(int i = 0; i<list.size() ; i++){
+                JSONArray device_list = list.getJSONObject(i).getJSONArray("device_list");
+                if(device_list.size()>0){
+                    for (int j = 0; j<device_list.size(); j++){
+                        int available = device_list.getJSONObject(j).getInteger("available");
+                        String device_name = device_list.getJSONObject(j).getString("device_name");
+                        Preconditions.checkArgument(available==1,"视频监控中的选择运行中状态:"+available+" 列表中设备:"+device_name+"不是运行中状态");
+                    }
+                }
+            }
+        }catch(AssertionError|Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("[视频监控]运行中状态下展示的设备全部都是可用的,1");
+        }
+    }
 
+    @Test(description = "[视频监控]不可用状态下展示的设备全部都是不可用的,0")
+    public void videoAvailable0(){
+        try{
+            //获取视频监控中进行中设备列表
+            JSONArray list = AllDeviceListScene.builder().available(0).build().invoke(visitor,true).getJSONArray("list");
+            for(int i = 0; i<list.size() ; i++){
+                JSONArray device_list = list.getJSONObject(i).getJSONArray("device_list");
+                if(device_list.size()>0){
+                    for (int j = 0; j<device_list.size(); j++){
+                        int available = device_list.getJSONObject(j).getInteger("available");
+                        String device_name = device_list.getJSONObject(j).getString("device_name");
+                        Preconditions.checkArgument(available==0,"视频监控中的选择运行中状态:"+available+" 列表中设备:"+device_name+"不是运行中状态");
+                    }
+                }
+            }
+        }catch(AssertionError|Exception e){
+            appendFailReason(e.toString());
+        }finally{
+            saveData("[视频监控]不可用状态下展示的设备全部都是不可用的,0");
+        }
+    }
+
+    @Test(description = "[视频监控]收藏栏下的门店全部都是以收藏的")
+    public void collectionShop(){
+        try{
+        JSONArray list = ShopDeviceListScene.builder().build().invoke(visitor,true).getJSONArray("list");
+        for (int i = 0; i<list.size(); i++){
+            boolean collected = list.getJSONObject(i).getBoolean("collected");
+            String subject_name = list.getJSONObject(i).getString("subject_name");
+            Preconditions.checkArgument(collected,"收藏门店列表下此门店"+subject_name+"不是收藏门店");
+        }
+        }catch (AssertionError|Exception e){
+            appendFailReason(e.toString());
+        }finally {
+            saveData("[视频监控]收藏栏下的门店全部都是以收藏的");
+        }
+    }
+    @Test(description = "[视频监控]收藏门店")
+    public void addCollectedShop(){
+        try{
+            JSONArray list = AllDeviceListScene.builder().build().invoke(visitor,true).getJSONArray("list");
+            for(int i = 0; i<list.size(); i++){
+                boolean collected = list.getJSONObject(i).getBoolean("collected");
+                if(!collected){
+                    Long subject_id = list.getJSONObject(i).getLong("subject_id");
+                    String subject_name = list.getJSONObject(i).getString("subject_name");
+                    String message = AddScene.builder().id(subject_id).build().invoke(visitor,false).getString("message");
+                    Preconditions.checkArgument(message.equals("success"),"收藏门店失败,门店名称"+subject_name);
+                }
+            }
+        }catch (AssertionError|Exception e){
+            appendFailReason(e.toString());
+        }finally {
+            saveData("[视频监控]收藏门店");
+        }
+    }
+
+    @Test(description = "[视频监控]取消收藏门店")
+    public void cancelCollectionShop(){
+        try{
+            JSONArray list = ShopDeviceListScene.builder().build().invoke(visitor,true).getJSONArray("list");
+            for(int i = 0; i<list.size(); i++){
+                Long subject_id = list.getJSONObject(i).getLong("subject_id");
+                String subject_name = list.getJSONObject(i).getString("subject_name");
+                String message = CancelScene.builder().id(subject_id).build().invoke(visitor,false).getString("message");
+                Preconditions.checkArgument(message.equals("success"),"取消收藏门店失败，门店名称"+subject_name);
+            }
+        }catch (AssertionError|Exception e){
+            appendFailReason(e.toString());
+        }
+        saveData("[视频监控]取消收藏门店");
+    }
+
+    @Test(description = "[视频监控]门店名称筛选框")
+    public void authAllDeviceList(){
+        try{
+            JSONArray list = AllDeviceListScene.builder().build().invoke(visitor,true).getJSONArray("list");
+            for (int i=0; i<list.size() ; i++){
+                String subject_name = list.getJSONObject(i).getString("subject_name");
+                JSONArray shop_list = AllDeviceListScene.builder().shopName(subject_name).build().invoke(visitor,true).getJSONArray("list");
+                for (int j=0; j<shop_list.size() ; j++){
+                    String shop_name = shop_list.getJSONObject(j).getString("subject_name");
+                    Preconditions.checkArgument(shop_name.equals(subject_name),"筛选框输入门店名称"+subject_name+"列表展示出的门店名称"+shop_name);
+                }
+            }
+        }catch (AssertionError|Exception e){
+            appendFailReason(e.toString());
+        }
+        saveData("[视频监控]门店名称筛选框");
+    }
+
+    @Test(description = "[视频监控]播放视频")
+    public void deviceLive(){
+        try {
+            JSONArray list = AllDeviceListScene.builder().build().invoke(visitor,true).getJSONArray("list");
+            for (int i = 0; i<list.size() ; i++){
+                JSONArray device_list = list.getJSONObject(i).getJSONArray("device_list");
+                Long shopId = list.getJSONObject(i).getLong("subject_id");
+                String shopName = list.getJSONObject(i).getString("subject_name");
+                for(int j = 0;j<device_list.size();j++){
+                    int available = device_list.getJSONObject(j).getInteger("available");
+                    String device_id = device_list.getJSONObject(j).getString("device_id");
+                    if(available==1){
+                        String message = LiveScene.builder().deviceId(device_id).shopId(shopId).build().invoke(visitor,false).getString("message");
+                        Preconditions.checkArgument(message.equals("success"),"播放视频失败，设备id"+device_id+"门店名称"+shopName);
+                    }
+                }
+            }
+        }catch (AssertionError|Exception e){
+            appendFailReason(e.toString());
+        }
+        saveData("[视频监控]播放视频");
+    }
 //    //会员信息列表通过会员id和会员姓名+联系电话+人物id+会员身份筛选
 //    @Test()
 //    public void searchMember8() throws Exception{

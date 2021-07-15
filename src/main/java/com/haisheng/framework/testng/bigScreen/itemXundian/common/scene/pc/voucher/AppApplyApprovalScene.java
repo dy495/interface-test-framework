@@ -9,7 +9,7 @@ import lombok.Builder;
  * 26.3. 卡券审批 （张小龙）
  *
  * @author wangmin
- * @date 2021-07-14 14:30:21
+ * @date 2021-07-15 11:24:11
  */
 @Builder
 public class AppApplyApprovalScene extends BaseScene {

@@ -9,7 +9,7 @@ import lombok.Builder;
  * 27.1. 实名顾客优惠卷发放回显
  *
  * @author wangmin
- * @date 2021-07-14 14:30:21
+ * @date 2021-07-15 11:24:11
  */
 @Builder
 public class VoucherFormLastNewNustomerVoucherScene extends BaseScene {
