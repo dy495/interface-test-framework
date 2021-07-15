@@ -32,19 +32,13 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_DAILY;
     VisitorProxy visitor = new VisitorProxy(PRODUCE);
     SceneUtil businessUtil = new SceneUtil(visitor);
-
-
     YunTongInfo info = new YunTongInfo();
-
-
-    CommonConfig commonConfig = new CommonConfig();
-
 
     @BeforeClass
     @Override
     public void initial() {
         logger.debug("before class initial");
-
+        CommonConfig commonConfig = new CommonConfig();
         //替换checklist的相关信息
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
         commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_DAILY_SERVICE.getId();
@@ -631,7 +625,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
             for (int i = 0; i < arr.size(); i++) {
                 JSONObject obj = arr.getJSONObject(i);
-                if (obj.getLong("id") == id) {
+                if (obj.getLong("id").equals(id)) {
                     Preconditions.checkArgument(obj.getString("name").equals(name2), "修改前名字是" + name1 + "，期望修改为" + name2 + "，实际修改后为" + obj.getString("name"));
                 }
             }

@@ -159,8 +159,6 @@ public class ScenarioUtil extends TestCaseCommon {
         JSONObject object = new JSONObject();
         object.put("permanent_pic_type", 7);
         object.put("pic", pic);
-
-
         return invokeApi(path, object);
     }
 

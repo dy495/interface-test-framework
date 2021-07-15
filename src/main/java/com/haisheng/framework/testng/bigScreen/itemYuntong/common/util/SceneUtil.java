@@ -17,7 +17,6 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.custo
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.record.ExportPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.record.ImportPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.record.LoginRecordPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.personaldata.AppPersonalOverviewBean;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.voicerecord.AppDepartmentPageBean;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.voicerecord.AppDetailBean;
@@ -42,11 +41,11 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.staff
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.staff.StaffDeleteScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.staff.StaffEditScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.staff.StaffPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.util.CommonUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class SceneUtil extends BasicUtil {
     private final VisitorProxy visitor;
@@ -83,7 +82,7 @@ public class SceneUtil extends BasicUtil {
      */
     public void login(IScene scene) {
         EnumTestProduce oldProduce = visitor.getProduct();
-        EnumTestProduce newProduce = visitor.isDaily() ? EnumTestProduce.YT_DAILY_SSO : EnumTestProduce.YT_ONLINE_ZH;
+        EnumTestProduce newProduce = visitor.isDaily() ? EnumTestProduce.YT_DAILY_SSO : EnumTestProduce.YT_ONLINE_SSO;
         visitor.setProduct(newProduce);
         visitor.login(scene);
         visitor.setProduct(oldProduce);
@@ -136,11 +135,11 @@ public class SceneUtil extends BasicUtil {
      */
     public List<AppTodayDataBean> getAppTodayDataList() {
         List<AppTodayDataBean> list = new ArrayList<>();
-        JSONObject lastValue = null;
+        String lastValue = null;
         JSONArray array;
         do {
             JSONObject response = AppTodayDataScene.builder().type("all").lastValue(lastValue).size(20).build().invoke(visitor);
-            lastValue = response.getJSONObject("last_value") == null ? null : response.getJSONObject("last_value");
+            lastValue = response.getString("last_value") == null ? null : response.getString("last_value");
             array = response.getJSONArray("list");
             array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppTodayDataBean.class)).forEach(list::add);
         } while (array.size() == 20);
@@ -404,19 +403,19 @@ public class SceneUtil extends BasicUtil {
     }
 
     public String getReceptionShopId() {
-        return visitor.isDaily() ? "56666" : "";
+        return visitor.isDaily() ? "56666" : "34691";
     }
 
     public String getSaleId() {
-        return visitor.isDaily() ? "uid_23562d04" : "";
+        return visitor.isDaily() ? "uid_23562d04" : "uid_a024b8b5";
     }
 
     public String getCarModelId() {
-        return visitor.isDaily() ? "676" : "";
+        return visitor.isDaily() ? "676" : "20882";
     }
 
     public String getCarStyleId() {
-        return visitor.isDaily() ? "1398" : "";
+        return visitor.isDaily() ? "1398" : "2513";
     }
 
     /**
@@ -447,7 +446,7 @@ public class SceneUtil extends BasicUtil {
      **/
     public JSONObject checkExport() {
         visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
-        return ExportPageScene.builder().page(1).size(10).build().invoke(visitor, true);
+        return ExportPageScene.builder().build().invoke(visitor);
     }
 
     /**
@@ -455,7 +454,7 @@ public class SceneUtil extends BasicUtil {
      **/
     public JSONObject checkImport() {
         visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
-        return ImportPageScene.builder().page(1).size(10).build().invoke(visitor, true);
+        return ImportPageScene.builder().build().invoke(visitor);
     }
 
     /**
@@ -463,7 +462,7 @@ public class SceneUtil extends BasicUtil {
      **/
     public JSONObject checkDelete() {
         visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
-        return DeleteRecordPageScene.builder().page(1).size(10).build().invoke(visitor, true);
+        return DeleteRecordPageScene.builder().page(1).size(10).build().invoke(visitor);
     }
 
     /**
@@ -471,7 +470,7 @@ public class SceneUtil extends BasicUtil {
      **/
     public JSONObject checkLogin() {
         visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
-        return LoginRecordPageScene.builder().page(1).size(10).build().invoke(visitor, true);
+        return LoginRecordPageScene.builder().build().invoke(visitor);
     }
 
 }

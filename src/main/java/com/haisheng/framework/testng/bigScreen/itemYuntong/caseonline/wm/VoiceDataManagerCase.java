@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.wm;
+package com.haisheng.framework.testng.bigScreen.itemYuntong.caseonline.wm;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -8,7 +8,6 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.pc.manage.VoiceEvaluationPageBean;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.pc.sensitivewords.LabelListBean;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.pc.specialaudio.SpecialAudioPageBean;
@@ -21,6 +20,7 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.sensi
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.specialaudio.SpecialAudioPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.speechtechnique.SpeechTechniquePageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -42,8 +42,8 @@ import java.util.stream.Collectors;
  * @date 2021/1/29 11:17
  */
 public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_SSO;
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_DAILY;
+    private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_ONLINE_SSO;
+    private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public SceneUtil util = new SceneUtil(visitor);
 
@@ -55,10 +55,10 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
         CommonConfig commonConfig = new CommonConfig();
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
         //替换jenkins-job的相关信息
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.YUNTONG_DAILY_TEST.getJobName());
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.YUNTONG_ONLINE_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
         //放入shopId
         commonConfig.product = PRODUCE.getAbbreviation();
@@ -67,7 +67,7 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
         commonConfig.roleId = ALL_AUTHORITY.getRoleId();
         beforeClassInit(commonConfig);
         util.loginApp(ALL_AUTHORITY);
-        visitor.setProduct(EnumTestProduce.YT_DAILY_CONTROL);
+        visitor.setProduct(EnumTestProduce.YT_ONLINE_CONTROL);
     }
 
     @AfterClass
@@ -117,7 +117,7 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
         try {
             IScene voiceEvaluationPageScene = VoiceEvaluationPageScene.builder().build();
             long evaluationTotal = voiceEvaluationPageScene.invoke(visitor).getLong("total");
-            visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
+            visitor.setProduct(EnumTestProduce.YT_ONLINE_CAR);
             IScene preSalesReceptionPageScene = PreSalesReceptionPageScene.builder().build();
             long receptionTotal = preSalesReceptionPageScene.invoke(visitor).getLong("total");
             CommonUtil.valueView(evaluationTotal, receptionTotal);
@@ -125,7 +125,7 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            visitor.setProduct(EnumTestProduce.YT_DAILY_CONTROL);
+            visitor.setProduct(EnumTestProduce.YT_ONLINE_CONTROL);
             saveData("语音评鉴列表数<=销售接待页列表数");
         }
     }

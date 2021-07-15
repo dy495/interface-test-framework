@@ -27,7 +27,7 @@ import java.lang.reflect.Method;
  */
 public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
 
-    EnumTestProduce PRODUCE = EnumTestProduce.YT_ONLINE_ZH;
+    EnumTestProduce PRODUCE = EnumTestProduce.YT_ONLINE_SSO;
     EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_ONLINE;
     VisitorProxy visitor = new VisitorProxy(PRODUCE);
     SceneUtil businessUtil = new SceneUtil(visitor);
@@ -62,7 +62,7 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
         beforeClassInit(commonConfig);
         businessUtil.loginPc(ALL_AUTHORITY);
 
-        visitor.setProduct(EnumTestProduce.YT_ONLINE_ZT);  //展厅接待模块
+        visitor.setProduct(EnumTestProduce.YT_ONLINE_CAR);  //展厅接待模块
     }
 
     @AfterClass

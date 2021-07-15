@@ -21,7 +21,7 @@ public class AppTodayDataBean implements Serializable {
     private String prePendingReception;
 
     @JSONField(name = "pre_pending_follow")
-    private JSONObject prePendingFollow;
+    private String prePendingFollow;
 
     @JSONField(name = "name")
     private String name;

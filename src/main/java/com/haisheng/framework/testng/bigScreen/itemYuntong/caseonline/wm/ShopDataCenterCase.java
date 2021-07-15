@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.wm;
+package com.haisheng.framework.testng.bigScreen.itemYuntong.caseonline.wm;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
@@ -8,19 +8,26 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.*;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.EvaluateV4DetailScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.EvaluateV4PageScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.EvaluateV4ScoreRateScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.EvaluateV4ScoreTrendScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.CommonUtil;
+import com.haisheng.framework.util.DateTimeUtil;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 门店数据中心case
@@ -29,12 +36,12 @@ import java.util.*;
  * @date 2021/1/29 11:17
  */
 public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_CONTROL;
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_DAILY;
+    private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_ONLINE_CONTROL;
+    private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public SceneUtil util = new SceneUtil(visitor);
-    private static final String startDate = "2021-06-23";
-    private static final String endDate = "2021-06-23";
+    private static final String startDate = DateTimeUtil.addDayFormat(new Date(), -1);
+    private static final String endDate = DateTimeUtil.addDayFormat(new Date(), -1);
 
     @BeforeClass
     @Override
@@ -44,10 +51,10 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
         CommonConfig commonConfig = new CommonConfig();
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
         //替换jenkins-job的相关信息
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.YUNTONG_DAILY_TEST.getJobName());
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.YUNTONG_ONLINE_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
         //放入shopId
         commonConfig.product = PRODUCE.getAbbreviation();
@@ -66,12 +73,12 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-        visitor.setProduct(EnumTestProduce.YT_DAILY_SSO);
+        visitor.setProduct(EnumTestProduce.YT_ONLINE_SSO);
         util.loginApp(ALL_AUTHORITY);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
-        visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
+        visitor.setProduct(EnumTestProduce.YT_ONLINE_CAR);
     }
 
     @Test(description = "【星级评分趋势】中的星级=【星级评分详情】中各话术环节各星级相加/（列表条数＊５）")
@@ -79,7 +86,8 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene evaluateV4ScoreTrendScene = EvaluateV4ScoreTrendScene.builder().receptionStart(startDate).receptionEnd(endDate).evaluateType(5).build();
-            int score = evaluateV4ScoreTrendScene.invoke(visitor).getJSONArray("list").getJSONObject(0).getInteger("score");
+            Integer integer = evaluateV4ScoreTrendScene.invoke(visitor).getJSONArray("list").getJSONObject(0).getInteger("integer");
+            int score = integer == null ? 0 : integer;
             IScene evaluateV4PageScene = EvaluateV4PageScene.builder().receptionStart(startDate).receptionEnd(endDate).evaluateType(5).build();
             List<JSONObject> list = util.toJavaObjectList(evaluateV4PageScene, JSONObject.class);
             List<Integer> scoreList = new ArrayList<>();
@@ -210,20 +218,8 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
             List<JSONObject> pageList = util.toJavaObjectList(evaluateV4PageScene, JSONObject.class);
             int scoreTotal = pageList.stream().mapToInt(e -> e.getInteger("total")).sum();
             int mathResult = CommonUtil.getIntRatio(scoreTotal, pageList.size());
-//            AtomicInteger rateScore = new AtomicInteger();
-//            IScene evaluateV4ScoreRateScene = EvaluateV4ScoreRateScene.builder().receptionStart(startDate).receptionEnd(endDate).evaluateType(5).build();
-//            List<JSONObject> rateList = util.toJavaObjectList(evaluateV4ScoreRateScene, JSONObject.class, "list");
-//            rateList.stream().filter(e -> e.getString("type_name").equals("全部环节")).forEach(e -> {
-//                double a = (double) Integer.parseInt(e.getString("one").replace("%", "")) / 100;
-//                double b = (double) 2 * Integer.parseInt(e.getString("two").replace("%", "")) / 100;
-//                double c = (double) 3 * Integer.parseInt(e.getString("three").replace("%", "")) / 100;
-//                double d = (double) 4 * Integer.parseInt(e.getString("four").replace("%", "")) / 100;
-//                double f = (double) 5 * Integer.parseInt(e.getString("five").replace("%", "")) / 100;
-//                rateScore.addAndGet((int) (a + b + c + d + f));
-//            });
             CommonUtil.valueView(score, mathResult);
             Preconditions.checkArgument(score == mathResult, "【星级评分趋势】星级：" + score, " 【星级评分详情】总分的平均分：" + mathResult);
-
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {

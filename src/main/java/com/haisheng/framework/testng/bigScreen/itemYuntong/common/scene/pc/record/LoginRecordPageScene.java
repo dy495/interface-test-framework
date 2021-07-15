@@ -17,14 +17,16 @@ public class LoginRecordPageScene extends BaseScene {
      * 是否必填 true
      * 版本 v1.0
      */
-    private final Integer page;
+    @Builder.Default
+    private Integer page = 1;
 
     /**
      * 描述 页大小 范围为[1,100]
      * 是否必填 true
      * 版本 v1.0
      */
-    private final Integer size;
+    @Builder.Default
+    private Integer size = 10;
 
     /**
      * 描述 登陆开始日期
@@ -62,5 +64,15 @@ public class LoginRecordPageScene extends BaseScene {
     @Override
     public String getPath() {
         return "/car-platform/pc/record/login-record/page";
+    }
+
+    @Override
+    public void setSize(Integer size) {
+        this.size = size;
+    }
+
+    @Override
+    public void setPage(Integer page) {
+        this.page = page;
     }
 }

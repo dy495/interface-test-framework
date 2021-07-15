@@ -21,7 +21,7 @@ public class YunTongInfoOnline {
 
 
 
-    EnumTestProduce PRODUCE = EnumTestProduce.YT_ONLINE_ZH;
+    EnumTestProduce PRODUCE = EnumTestProduce.YT_ONLINE_SSO;
     EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_ONLINE;
     VisitorProxy visitor = new VisitorProxy(PRODUCE);
 
@@ -67,7 +67,7 @@ public class YunTongInfoOnline {
     }
 
     public String getLogo() {
-        visitor.setProduct(EnumTestProduce.YT_ONLINE_ZT);
+        visitor.setProduct(EnumTestProduce.YT_ONLINE_CAR);
         String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
 
         String logo = FileUploadScene.builder().pic(new ImageUtil().getImageBinary(filePath)).permanentPicType(0).build().invoke(visitor).getString("pic_path");

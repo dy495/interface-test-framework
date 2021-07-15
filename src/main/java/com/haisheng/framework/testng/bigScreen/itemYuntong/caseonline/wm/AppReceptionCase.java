@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.wm;
+package com.haisheng.framework.testng.bigScreen.itemYuntong.caseonline.wm;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
@@ -27,7 +27,10 @@ import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.DateTimeUtil;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 import java.util.Date;
@@ -39,8 +42,8 @@ import java.util.Date;
  * @date 2021/1/29 11:17
  */
 public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_SSO;
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_RECEPTION_DAILY;
+    private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_ONLINE_SSO;
+    private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_ONLINE;
     private static AppPreSalesReceptionPageBean preSalesReceptionPage;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public SceneUtil util = new SceneUtil(visitor);
@@ -51,12 +54,12 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("before class initial");
         CommonConfig commonConfig = new CommonConfig();
         //替换checklist的相关信息
-        commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
+        commonConfig.dingHook = DingWebhook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
         //替换jenkins-job的相关信息
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.YUNTONG_ONLINE_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
         //放入shopId
         commonConfig.product = PRODUCE.getAbbreviation();
@@ -80,12 +83,12 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
         initAppPreSalesReceptionPageBean();
         util.loginPc(ALL_AUTHORITY);
-        visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
+        visitor.setProduct(EnumTestProduce.YT_ONLINE_CAR);
     }
 
     private void initAppPreSalesReceptionPageBean() {
         util.loginApp(ALL_AUTHORITY);
-        visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
+        visitor.setProduct(EnumTestProduce.YT_ONLINE_CAR);
         preSalesReceptionPage = util.getAppAppPreSalesReceptionPageList().stream().filter(e -> e.getCustomerName().equals("自动化创建的接待人")).findFirst().orElse(null);
         if (preSalesReceptionPage == null) {
             logger.info("不存在接待人，需要创建");

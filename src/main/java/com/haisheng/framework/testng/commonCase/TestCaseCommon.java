@@ -426,6 +426,7 @@ public class TestCaseCommon {
                 .referer(commonConfig.referer)
                 .authorization(authorization);
         //有的业务线不存在shopId和roleId时传入空会失败，在此加个判断
+
         httpHeader = commonConfig.shopId != null ? httpHeader.other("shop_id", commonConfig.shopId) : httpHeader;
         httpHeader = commonConfig.roleId != null ? httpHeader.other("role_id", commonConfig.roleId) : httpHeader;
         headers = httpHeader.build();

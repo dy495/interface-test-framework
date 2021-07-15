@@ -33,7 +33,6 @@ public class ChecklistDbInfo {
     public static final int DB_SERVICE_ID_MENDIAN_DAILY_SERVICE = 24;
     public static final int DB_SERVICE_ID_MENDIAN_ONLINE_SERVICE = 25;
     public static final int DB_SERVICE_ID_CRM_ONLINE_SERVICE = 26;
-    public static final int DB_SERVICE_ID_JIAOCHEN_DAILY_SERVICE = 21;
     public static final int DB_SERVICE_ID_SHOPMALL_DAILY_SERVICE = 27;
 
     public static final String QA_SEP = "{qa-var-qa}";

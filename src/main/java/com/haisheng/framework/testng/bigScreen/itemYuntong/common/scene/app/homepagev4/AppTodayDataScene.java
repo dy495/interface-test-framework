@@ -24,7 +24,7 @@ public class AppTodayDataScene extends BaseScene {
      * 是否必填 false
      * 版本 v1.0
      */
-    private final JSONObject lastValue;
+    private final String lastValue;
 
     /**
      * 描述 自定义查询结束日期，周期类型为自定义时必填

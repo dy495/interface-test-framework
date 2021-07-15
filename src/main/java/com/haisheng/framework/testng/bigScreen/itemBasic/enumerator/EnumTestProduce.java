@@ -41,9 +41,9 @@ public enum EnumTestProduce {
     YT_DAILY_CONTROL("汽车-运通 日常 ", "http://dev.control.yuntong.winsenseos.cn/", "http://dev.control.yuntong.winsenseos.cn", "-1", "YT", null, true),
     YT_DAILY_SSO("汽车-运通 日常 ", "http://dev.sso.yuntong.winsenseos.cn/", "http://dev.sso.yuntong.winsenseos.cn", "-1", "YT", null, true),
 
-    YT_ONLINE_ZT("汽车-运通 线上 ", "http://jiedai.auto.winsenseos.com", "http://jiedai.auto.winsenseos.com", "-1", "YT", null, false),
-    YT_ONLINE_HT("汽车-运通 线上 ", "http://huiting.auto.winsenseos.com", "http://huiting.auto.winsenseos.com", "-1", "YT", null, false),
-    YT_ONLINE_ZH("汽车-运通 线上 ", "http://zhanghao.auto.winsenseos.com", "http://zhanghao.auto.winsenseos.com", "-1", "YT", null, false),
+    YT_ONLINE_CAR("汽车-运通 线上 ", "http://jiedai.auto.winsenseos.com", "http://jiedai.auto.winsenseos.com", "-1", "YT", null, false),
+    YT_ONLINE_CONTROL("汽车-运通 线上 ", "http://huiting.auto.winsenseos.com", "http://huiting.auto.winsenseos.com", "-1", "YT", null, false),
+    YT_ONLINE_SSO("汽车-运通 线上 ", "http://zhanghao.auto.winsenseos.com", "http://zhanghao.auto.winsenseos.com", "-1", "YT", null, false),
 
 
     ;
