@@ -846,7 +846,7 @@ public class AppVoiceDataCase extends TestCaseCommon implements TestCaseStd {
                                 .filter(object -> object.getInteger("type").equals(type))
                                 .map(object -> object.getInteger("score"))
                                 .forEach(appScoreList::add));
-                List<Integer> pcScoreList = new ArrayList<>();
+                List<Integer> pcScoreList = new LinkedList<>();
                 IScene evaluationPageScene = VoiceEvaluationPageScene.builder().receptorName(e.getName()).receptionStart(startDate).receptionEnd(endDate).evaluateStatus(500).enterStatus(1).build();
                 List<VoiceEvaluationPageBean> voiceEvaluationPageList = util.toJavaObjectList(evaluationPageScene, VoiceEvaluationPageBean.class);
                 voiceEvaluationPageList.stream().filter(Objects::nonNull).map(voiceRecord -> VoiceDetailScene.builder().id(voiceRecord.getId()).build().invoke(visitor))
@@ -857,7 +857,7 @@ public class AppVoiceDataCase extends TestCaseCommon implements TestCaseStd {
                                 .map(object -> object.getInteger("score")).forEach(pcScoreList::add));
                 CommonUtil.valueView(e.getName(), appScoreList, pcScoreList);
                 Preconditions.checkArgument(appScoreList.size() == pcScoreList.size(), e.getName() + "APP【接待详情】中平均分不为0的次数：" + appScoreList.size() + " PC【语音接待评鉴详情】中各平均分分不为0的次数：" + pcScoreList.size());
-                Preconditions.checkArgument(appScoreList.equals(pcScoreList), e.getName() + "APP【接待详情】中" + type + "得分：" + appScoreList + " PC【语音接待评鉴详情】中各环节得分：" + pcScoreList);
+                Preconditions.checkArgument(appScoreList.equals(pcScoreList), e.getName() + " APP【接待详情】中" + type + " 得分：" + appScoreList + " PC【语音接待评鉴详情】中各环节得分：" + pcScoreList);
 
             });
         } catch (Exception | AssertionError e) {

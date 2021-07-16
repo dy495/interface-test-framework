@@ -115,7 +115,7 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
         try {
             IScene evaluateV4ScoreTrendScene = EvaluateV4ScoreRateScene.builder().receptionStart(startDate).receptionEnd(endDate).evaluateType(5).build();
             List<JSONObject> evaluateV4ScoreRateList = util.toJavaObjectList(evaluateV4ScoreTrendScene, JSONObject.class, "list");
-            String percent = evaluateV4ScoreRateList.stream().filter(e -> e.getString("type_name").equals("全部环节")).map(e -> e.getString(type)).findFirst().orElse("0%");
+            String percent = evaluateV4ScoreRateList.stream().filter(e -> e.getString("type_name").equals("全部环节")).findFirst().map(e -> e.getString(type)).orElse("0%");
             IScene evaluateV4PageScene = EvaluateV4PageScene.builder().receptionStart(startDate).receptionEnd(endDate).evaluateType(5).build();
             List<JSONObject> list = util.toJavaObjectList(evaluateV4PageScene, JSONObject.class);
             int count = (int) list.stream().filter(e -> e.getInteger("score").equals(scoreValue)).count();
@@ -146,7 +146,7 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
         try {
             IScene evaluateV4ScoreTrendScene = EvaluateV4ScoreRateScene.builder().receptionStart(startDate).receptionEnd(endDate).evaluateType(5).build();
             List<JSONObject> evaluateV4ScoreRateList = util.toJavaObjectList(evaluateV4ScoreTrendScene, JSONObject.class, "list");
-            String percent = evaluateV4ScoreRateList.stream().filter(e -> e.getString("type_name").equals("欢迎接待")).map(e -> e.getString(type)).findFirst().orElse("0%");
+            String percent = evaluateV4ScoreRateList.stream().filter(e -> e.getString("type_name").equals("欢迎接待")).findFirst().map(e -> e.getString(type)).orElse("0%");
             IScene evaluateV4PageScene = EvaluateV4PageScene.builder().receptionStart(startDate).receptionEnd(endDate).evaluateType(5).build();
             List<JSONObject> list = util.toJavaObjectList(evaluateV4PageScene, JSONObject.class);
             int count = (int) list.stream().filter(e -> e.getInteger("link1").equals(scoreValue)).count();
@@ -168,7 +168,7 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
             Arrays.stream(strings).forEach(string -> {
                 IScene evaluateV4ScoreTrendScene = EvaluateV4ScoreRateScene.builder().receptionStart(startDate).receptionEnd(endDate).evaluateType(5).build();
                 List<JSONObject> evaluateV4ScoreRateList = util.toJavaObjectList(evaluateV4ScoreTrendScene, JSONObject.class, "list");
-                String percent = evaluateV4ScoreRateList.stream().filter(e -> e.getString("type_name").equals(string[0])).map(e -> e.getString(type)).findFirst().orElse("0%");
+                String percent = evaluateV4ScoreRateList.stream().filter(e -> e.getString("type_name").equals(string[0])).findFirst().map(e -> e.getString(type)).orElse("0%");
                 IScene evaluateV4PageScene = EvaluateV4PageScene.builder().receptionStart(startDate).receptionEnd(endDate).evaluateType(5).build();
                 List<JSONObject> list = util.toJavaObjectList(evaluateV4PageScene, JSONObject.class);
                 int count = (int) list.stream().filter(e -> e.getInteger(string[1]).equals(scoreValue)).count();
@@ -213,7 +213,7 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
         try {
             IScene evaluateV4ScoreTrendScene = EvaluateV4ScoreTrendScene.builder().receptionStart(startDate).receptionEnd(endDate).evaluateType(5).build();
             List<JSONObject> trendList = util.toJavaObjectList(evaluateV4ScoreTrendScene, JSONObject.class, "list");
-            int score = trendList.stream().filter(e -> startDate.contains(e.getString("day"))).map(e -> e.getInteger("score")).findFirst().orElse(0);
+            int score = trendList.stream().filter(e -> startDate.contains(e.getString("day"))).findFirst().map(e -> e.getInteger("score")).orElse(0);
             IScene evaluateV4PageScene = EvaluateV4PageScene.builder().receptionStart(startDate).receptionEnd(endDate).evaluateType(5).build();
             List<JSONObject> pageList = util.toJavaObjectList(evaluateV4PageScene, JSONObject.class);
             int scoreTotal = pageList.stream().mapToInt(e -> e.getInteger("total")).sum();
@@ -227,7 +227,7 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "各个环节中各星级比例相加为100％")
+    @Test(description = "各个环节中各星级比例相加为100％或者0%")
     public void evaluate_data_7() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -237,22 +237,26 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
                 IScene evaluateV4ScoreRateScene = EvaluateV4ScoreRateScene.builder().receptionStart(startDate).receptionEnd(endDate).evaluateType(5).build();
                 List<JSONObject> rateList = util.toJavaObjectList(evaluateV4ScoreRateScene, JSONObject.class, "list");
                 rateList.stream().filter(e -> e.getString("type_name").equals(string)).forEach(e -> {
-                    double a = Integer.parseInt(e.getString("one").replace("%", ""));
-                    double b = Integer.parseInt(e.getString("two").replace("%", ""));
-                    double c = Integer.parseInt(e.getString("three").replace("%", ""));
-                    double d = Integer.parseInt(e.getString("four").replace("%", ""));
-                    double f = Integer.parseInt(e.getString("five").replace("%", ""));
+                    double a = parseScore(e.getString("one"));
+                    double b = parseScore(e.getString("two"));
+                    double c = parseScore(e.getString("three"));
+                    double d = parseScore(e.getString("four"));
+                    double f = parseScore(e.getString("five"));
                     rateScore.addAndGet(a + b + c + d + f);
                 });
                 CommonUtil.valueView(rateScore);
-                Preconditions.checkArgument(rateScore.get() == 100, string + "环节中各星级比例相加为100％:" + rateScore);
+                Preconditions.checkArgument(rateScore.get() == 100 || rateScore.get() == 0, string + " 环节中各星级比例相加为100％或者0，实际为：" + rateScore);
             });
 
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("各个环节中各星级比例相加为100％");
+            saveData("各个环节中各星级比例相加为100％或者0%");
         }
+    }
+
+    private double parseScore(String score) {
+        return score == null ? 0 : Integer.parseInt(score.replace("%", ""));
     }
 
     @Test(description = "各个环节中各星级比例相加为100％")

@@ -7,6 +7,8 @@ import com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.commonDs.
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.appointment.AppointmentTypeEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shopstylemodel.ManageModelEditScene;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -28,14 +30,13 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
     DateTimeUtil dt = new DateTimeUtil();
     PublicParmOnline pp = new PublicParmOnline();
     JcFunctionOnline pf = new JcFunctionOnline();
-    JsonPathUtil jpu = new JsonPathUtil();
 
     public int page = 1;
     public int size = 50;
     public String name = "创建角色xia";
     public String email = "";
     public String phone = "";
-
+    CommonConfig commonConfig = new CommonConfig();
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
@@ -44,10 +45,6 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
     @Override
     public void initial() {
         logger.debug("before classs initial");
-        CommonConfig commonConfig = new CommonConfig();
-
-
-
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
@@ -102,7 +99,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
 
     //创建复合权限角色
 //    @Test(dataProvider = "LIMITID", dataProviderClass = ScenarioUtil.class)
-    public void Jc_createRole(int a[]) {
+    public void createRole(int a[]) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String name = "" + a[0];
@@ -136,7 +133,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
      * ====================新增角色======================
      */
     @Test(description = "角色的CURD,数据校验")
-    public void Jc_role_add() {
+    public void role_add() {
         logger.logCaseStart(caseResult.getCaseName());
 
         try {
@@ -185,7 +182,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test(dataProvider = "ROLENAME")  //ok
-    public void Jc_role_add_work2(String name, String mess) {
+    public void role_add_work2(String name, String mess) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray moduleId = pp.roleList;
@@ -216,7 +213,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test(dataProvider = "ROLENAMEAB")  //ok
-    public void Jc_role_add_workAb(String name, String res, String mess) {
+    public void role_add_workAb(String name, String res, String mess) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray moduleId = pp.roleList;
@@ -239,9 +236,9 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
      * ====================账户管理中的一致性========================
      */
     @Test(description = "新增1个账号，列表+1；删除1个账号，列表-1；修改账号名称后与列表是否一致")    //ok
-    public void Jc_accountInfoData() {
+    public void accountInfoData() {
         try {
-            jc.pcLogin(pp.gwphone,pp.gwpassword);
+            jc.pcLogin(pp.gwphone, pp.gwpassword);
             Integer total = jc.pcStaffPage("", page, size).getInteger("total");
 
             JSONArray r_dList = new JSONArray();
@@ -264,7 +261,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
 
             //编辑账号的名称，是否与列表该账号的一致
             String reName = "自动化测编辑";
-            jc.organizationAccountEdit(account, reName,  phone, r_dList,  shop_list);
+            jc.organizationAccountEdit(account, reName, phone, r_dList, shop_list);
             JSONArray accountsList = jc.pcStaffPage(reName, page, size).getJSONArray("list");
             String name_1 = accountsList.getJSONObject(0).getString("name");
             Preconditions.checkArgument(name_1.equals(reName), "修改账号：" + account + "的名称为：" + reName + "修改后，该账号的名称为：" + name_1);
@@ -292,7 +289,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
      * ====================账户管理中的一致性========================
      */
     @Test  //编辑账号信息以后，创建者和创建时间是否发生改变
-    public void Jc_accountInfoData_1() {
+    public void accountInfoData_1() {
         logger.logCaseStart(caseResult.getCaseName());
 
         try {
@@ -305,7 +302,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             String name = "";
             String create_time = "";
 
-            JSONArray r_dList=new JSONArray();
+            JSONArray r_dList = new JSONArray();
             JSONArray shop_list = new JSONArray();
 
             for (int i = 1; i < list.size(); i++) {
@@ -314,20 +311,20 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
                     id = list.getJSONObject(i).getString("id");
                     name = list.getJSONObject(i).getString("name");
                     old_phone = list.getJSONObject(i).getString("phone");
-                    r_dList=list.getJSONObject(i).getJSONArray("role_list");
-                    shop_list=list.getJSONObject(i).getJSONArray("shop_list");
+                    r_dList = list.getJSONObject(i).getJSONArray("role_list");
+                    shop_list = list.getJSONObject(i).getJSONArray("shop_list");
                     break;
                 }
             }
-            JSONArray r_dList2=new JSONArray();
+            JSONArray r_dList2 = new JSONArray();
             JSONArray shop_list2 = new JSONArray();
 
-            for(int i=0;i<r_dList.size();i++){
-                String rid=r_dList.getJSONObject(i).getString("role_id");
+            for (int i = 0; i < r_dList.size(); i++) {
+                String rid = r_dList.getJSONObject(i).getString("role_id");
                 r_dList2.add(rid);
             }
-            for(int i=0;i<shop_list.size();i++){
-                String rid=shop_list.getJSONObject(i).getString("shop_id");
+            for (int i = 0; i < shop_list.size(); i++) {
+                String rid = shop_list.getJSONObject(i).getString("shop_id");
                 shop_list2.add(rid);
             }
             if (old_phone != "" && old_phone != null) {
@@ -359,7 +356,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
 
     //禁用账户登录失败，开启登录成功
     @Test
-    public void Jc_accountStart() {
+    public void accountStart() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray data = jc.staffListFilterManage(null, "1", "100", "name", "接待顾问2").getJSONArray("list");
@@ -369,22 +366,22 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
                 if (status.equals("ENABLE")) {
                     id = data.getJSONObject(i).getString("id");
                     break;
-                }else{
+                } else {
                     throw new Exception("账户:接待顾问2 被关闭了");
                 }
             }
 
             //禁用开启按钮
             jc.organizationAccountButtom(id, "DISABLE");
-            int codeApp=jc.appLogin2(pp.jdgw2,pp.jdgwpassword,false).getInteger("code");
-            int codePc=jc.pcTryLogin(pp.jdgw2,pp.jdgwpassword,false).getInteger("code");
+            int codeApp = jc.appLogin2(pp.jdgw2, pp.jdgwpassword, false).getInteger("code");
+            int codePc = jc.pcTryLogin(pp.jdgw2, pp.jdgwpassword, false).getInteger("code");
 
             jc.organizationAccountButtom(id, "ENABLE");
-            int codePcAfter=jc.pcTryLogin(pp.jdgw2,pp.jdgwpassword,false).getInteger("code");
+            int codePcAfter = jc.pcTryLogin(pp.jdgw2, pp.jdgwpassword, false).getInteger("code");
 
-            Preconditions.checkArgument(codeApp==1001,"账户禁用，app仍登录成功");
-            Preconditions.checkArgument(codePc==1001,"账户禁用，pc仍登录成功");
-            Preconditions.checkArgument(codePcAfter==1000,"账户启用，pc登录失败");
+            Preconditions.checkArgument(codeApp == 1001, "账户禁用，app仍登录成功");
+            Preconditions.checkArgument(codePc == 1001, "账户禁用，pc仍登录成功");
+            Preconditions.checkArgument(codePcAfter == 1000, "账户启用，pc登录失败");
 
 
         } catch (AssertionError | Exception e) {
@@ -400,7 +397,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
      * @date :2020/12/15 17:47
      **/
     @Test(description = "pc接待车牌号验证", dataProvider = "PLATE", dataProviderClass = ScenarioUtil.class)
-    public void Jc_pcReceiptAb(String plate) {
+    public void pcReceiptAb(String plate) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int code = jc.pcManageReception(plate, false).getInteger("code");
@@ -413,12 +410,12 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test(description = "pc接待搜索老车牌号展示项验证")
-    public void Jc_pcReceipt() {
+    public void pcReceipt() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject data = jc.pcManageReception(pp.carplate, true);
             String jsonpath = "$.arrive_times&&$.customers[*].voucher_list[*]&&$.er_code_url&&$.last_reception_sale_name&&$.last_arrive_time&&$.plate_number";
-            jpu.spiltString(data.toJSONString(), jsonpath);
+            JsonPathUtil.spiltString(data.toJSONString(), jsonpath);
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -429,7 +426,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
 
     //pc-取消接待
     @Test()
-    public void Jc_pcCancleReception() {
+    public void pcCancleReception() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             jc.appLogin(pp.jdgw, pp.jdgwpassword);
@@ -457,10 +454,12 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    @Test  //pc修改车预约价格，小程序对应变更
-    public void Jc_pcmaintainPriceEdit() {
+    @Test(enabled = false)  //pc修改车预约价格，小程序对应变更
+    public void pcmaintainPriceEdit() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            commonConfig.shopId = "20032";
+            commonConfig.roleId = "424";
             int num = 0;
             String dataType = "WEEKDAY";
             jc.pcLogin(pp.jdgw, pp.gwpassword);
@@ -472,14 +471,14 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             }
             Double price = 300.00;
             //修改预约价格
-            jc.pcCarModelPriceEdit(pp.modolIdAppointment, price, null);
+            jc.pcCarModelPriceEdit(pp.modolIdAppointment, price, "ENABLE", "MAINTAIN");
 
             //工位配置里的折扣
             JSONObject timeRangeDetail = jc.timeRangeDetail("MAINTAIN", dataType);
 
             JSONArray morning = timeRangeDetail.getJSONObject("morning").getJSONArray("list");
             JSONArray afternoon = timeRangeDetail.getJSONObject("afternoon").getJSONArray("list");
-            Double discount[] = new Double[morning.size() + afternoon.size()];
+            Double[] discount = new Double[morning.size() + afternoon.size()];
 
             for (int i = 0; i < morning.size(); i++) {
                 discount[i] = morning.getJSONObject(i).getDouble("discount");
@@ -490,7 +489,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
 
             //小程序这个车预约的价格
             jc.appletLoginToken(pp.appletTocken);
-            JSONArray appletTime = jc.appletmaintainTimeList(Long.parseLong(pp.shopIdZ), pp.car_idA, dt.getHistoryDate(num)).getJSONArray("list");
+            JSONArray appletTime = jc.appletmaintainTimeList(Long.parseLong(pp.shopIdZ), pp.car_idA, dt.getHistoryDate(num), AppointmentTypeEnum.MAINTAIN.name()).getJSONArray("list");
             Preconditions.checkArgument(discount.length == appletTime.size(), "pc配置的预约时间段与小程序展示不一致");
             for (int z = 0; z < appletTime.size(); z++) {
                 String priceApplet = appletTime.getJSONObject(z).getString("price");
@@ -502,49 +501,49 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
+            commonConfig.shopId = "-1";
             saveData("pc修改预约配置验证");
         }
     }
 
     @Test  //pc修改工位，工作日和休息日不同步变更
-    public void Jc_pcmaintainTableEdit() {
+    public void pcmaintainTableEdit() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Calendar calendar=Calendar.getInstance();
-            int day=calendar.get(Calendar.DAY_OF_WEEK);
+            Calendar calendar = Calendar.getInstance();
+            int day = calendar.get(Calendar.DAY_OF_WEEK);
 
-            jc.pcLogin(pp.jdgw,pp.gwpassword);
+            jc.pcLogin(pp.jdgw, pp.gwpassword);
             //修改配置前，工作日的配置
-            JSONObject timeDetailWeekday=jc.timeRangeDetail("MAINTAIN","WEEKDAY");
-            JSONObject afternoonBefore=timeDetailWeekday.getJSONObject("afternoon");
-            JSONObject morningBefore=timeDetailWeekday.getJSONObject("morning");
+            JSONObject timeDetailWeekday = jc.timeRangeDetail("MAINTAIN", "WEEKDAY");
+            JSONObject afternoonBefore = timeDetailWeekday.getJSONObject("afternoon");
+            JSONObject morningBefore = timeDetailWeekday.getJSONObject("morning");
 
             //修改休息日的配置
-            JSONObject timeDetailWeekend=jc.timeRangeDetail("MAINTAIN","WEEKEND");
-            JSONObject morning1=timeDetailWeekend.getJSONObject("morning");
-            JSONObject afternoon1=timeDetailWeekend.getJSONObject("afternoon");
+            JSONObject timeDetailWeekend = jc.timeRangeDetail("MAINTAIN", "WEEKEND");
+            JSONObject morning1 = timeDetailWeekend.getJSONObject("morning");
+            JSONObject afternoon1 = timeDetailWeekend.getJSONObject("afternoon");
 
-            JSONObject morning=morning1;
-            if(day%2==1){
-                morning.put("reply_start","09:00");  //奇数天 设置9：00
-            }else{
-                morning.put("reply_start","08:00");
+            if (day % 2 == 1) {
+                morning1.put("reply_start", "09:00");  //奇数天 设置9：00
+            } else {
+                morning1.put("reply_start", "08:00");
             }
 
-            timeDetailWeekend.put("morning",morning);
-            timeDetailWeekend.put("date_type","WEEKDAY");
-            timeDetailWeekend.put("type","MAINTAIN");
+            timeDetailWeekend.put("morning", morning1);
+            timeDetailWeekend.put("date_type", "WEEKDAY");
+            timeDetailWeekend.put("type", "MAINTAIN");
             //修改工作日工位配置
             jc.appointmentTimeEdit(timeDetailWeekend);
 
             //修改之后的配置,工作日
-            JSONObject timeDetailWeekdayAfter=jc.timeRangeDetail("MAINTAIN","WEEKDAY");
-            JSONObject afternoonAfter=timeDetailWeekdayAfter.getJSONObject("afternoon");
-            JSONObject morningAfter=timeDetailWeekdayAfter.getJSONObject("morning");
+            JSONObject timeDetailWeekdayAfter = jc.timeRangeDetail("MAINTAIN", "WEEKDAY");
+            JSONObject afternoonAfter = timeDetailWeekdayAfter.getJSONObject("afternoon");
+            JSONObject morningAfter = timeDetailWeekdayAfter.getJSONObject("morning");
             //休息日
-            JSONObject timeDetailWeekendAfter=jc.timeRangeDetail("MAINTAIN","WEEKEND");
-            JSONObject afternoonAfterend=timeDetailWeekendAfter.getJSONObject("afternoon");
-            JSONObject morningAfterend=timeDetailWeekendAfter.getJSONObject("morning");
+            JSONObject timeDetailWeekendAfter = jc.timeRangeDetail("MAINTAIN", "WEEKEND");
+            JSONObject afternoonAfterend = timeDetailWeekendAfter.getJSONObject("afternoon");
+            JSONObject morningAfterend = timeDetailWeekendAfter.getJSONObject("morning");
 
             //工作日
             System.out.println(afternoonAfter.equals(afternoonBefore));
@@ -554,107 +553,105 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             System.out.println(morningAfterend.equals(morning1));
 
 
-
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            jc.pcLogin(pp.gwphone,pp.gwpassword);
+            jc.pcLogin(pp.gwphone, pp.gwpassword);
             saveData("pc修改工位，工作日和休息日不同步变更");
         }
     }
 
 
-    @Test  //pc开关预约配置按钮，小程序对应变更
-    public void Jc_pcappointmentButton() {
+    @Test(enabled = false) //pc开关预约配置按钮，小程序对应变更
+    public void pcappointmentButton() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject data=jc.maintainFilterManage("","1","10","car_model",pp.carModel).getJSONArray("list").getJSONObject(0);
-            String status=data.getString("status");
-            if(!status.equals("ENABLE")){
-                throw new Exception(pp.carModel+"车型,预约配置被关闭");
+            JSONObject data = jc.maintainFilterManage("", "1", "10", "car_model", pp.carModel).getJSONArray("list").getJSONObject(0);
+            String status = data.getString("status");
+            if (!status.equals("ENABLE")) {
+                throw new Exception(pp.carModel + "车型,预约配置被关闭");
             }
-            jc.pcCarModelPriceEdit(pp.modolIdAppointment,null,"DISABLE");
-
+            jc.pcCarModelPriceEdit(pp.modolIdAppointment, null, "DISABLE", "MAINTAIN");
             jc.appletLoginToken(pp.appletTocken);
-            JSONObject isAble=jc.appletmaintainTimeList(Long.parseLong(pp.shopIdZ),pp.car_idA,dt.getHistoryDate(1),false);
-            int code= isAble.getInteger("code");
-            String message= isAble.getString("message");
+            JSONObject isAble = jc.appletmaintainTimeList(Long.parseLong(pp.shopIdZ), pp.car_idA, dt.getHistoryDate(1), AppointmentTypeEnum.MAINTAIN.name(), false);
+            int code = isAble.getInteger("code");
+            String message = isAble.getString("message");
 
-            jc.pcLogin(pp.gwphone,pp.gwpassword);
-            jc.pcCarModelPriceEdit(pp.modolIdAppointment,null,"ENABLE");
+            jc.pcLogin(pp.gwphone, pp.gwpassword);
+            jc.pcCarModelPriceEdit(pp.modolIdAppointment, null, "ENABLE", "MAINTAIN");
 
 
-            Preconditions.checkArgument(code==1001,"预约配置关闭小程序预约保养页返回"+message);
+            Preconditions.checkArgument(code == 1001, "预约配置关闭小程序预约保养页返回" + message);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            jc.pcLogin(pp.gwphone,pp.gwpassword);
+            jc.pcLogin(pp.gwphone, pp.gwpassword);
             saveData("pc修改预约配置验证");
         }
     }
 
-    @Test  //pc门店预约关闭，小程序对应变更
-    public void Jc_pcShopAppointmentButton() {
+    @Test(enabled = false)  //pc门店预约关闭，小程序对应变更
+    public void pcShopAppointmentButton() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject data=jc.shopListFilterManage("","1","10","name",pp.shopname).getJSONArray("list").getJSONObject(0);
-            String status=data.getString("appointment_status");
-            if(!status.equals("ENABLE")){
-                throw new Exception(pp.shopname+"门店,预约开关被关闭了");
+            JSONObject data = jc.shopListFilterManage("", "1", "10", "name", pp.shopname).getJSONArray("list").getJSONObject(0);
+            String status = data.getString("appointment_status");
+            if (!status.equals("ENABLE")) {
+                throw new Exception(pp.shopname + "门店,预约开关被关闭了");
             }
             //配置前预约门店配置列表
             jc.appletLoginToken(pp.appletTocken);
-            JSONArray isAble=jc.appletmaintainShopList(pp.car_idA.toString(),pp.coordinate).getJSONArray("list");
-            int total=isAble.size();
+            JSONArray isAble = jc.appletmaintainShopList(pp.car_idA.toString(), pp.coordinate).getJSONArray("list");
+            int total = isAble.size();
             //关闭门店预约配置
-            jc.pcLogin(pp.gwphone,pp.gwpassword);
-            jc.shopStatusChange(pp.shopIdZ,"APPOINTMENT","DISABLE");
+            jc.pcLogin(pp.gwphone, pp.gwpassword);
+            jc.shopStatusChange(pp.shopIdZ, "APPOINTMENT", "DISABLE");
             //小程序预约门店列表
             jc.appletLoginToken(pp.appletTocken);
-            JSONArray isAbleAfter=jc.appletmaintainShopList(pp.car_idA.toString(),pp.coordinate).getJSONArray("list");
-            int totalAfter=isAbleAfter.size();
+            JSONArray isAbleAfter = jc.appletmaintainShopList(pp.car_idA.toString(), pp.coordinate).getJSONArray("list");
+            int totalAfter = isAbleAfter.size();
 
-            jc.pcLogin(pp.gwphone,pp.gwpassword);
-            jc.shopStatusChange(pp.shopIdZ,"APPOINTMENT","ENABLE");
-            Preconditions.checkArgument(total-totalAfter==1,"关闭预约配置，小程序预约门店-1");
+            jc.pcLogin(pp.gwphone, pp.gwpassword);
+            jc.shopStatusChange(pp.shopIdZ, "APPOINTMENT", "ENABLE");
+            Preconditions.checkArgument(total - totalAfter == 1, "关闭预约配置，小程序预约门店-1");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            jc.pcLogin(pp.gwphone,pp.gwpassword);
+            jc.pcLogin(pp.gwphone, pp.gwpassword);
             saveData("pc修改预约配置验证");
         }
     }
 
     @Test  //pc门店开关关闭，预约和洗车开关自动关闭
-    public void Jc_pcShopButton() {
+    public void pcShopButton() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String statusAll="DISABLE";
-            String open="ENABLE";
-            JSONObject data=jc.shopListFilterManage("","1","10","name",pp.shopname).getJSONArray("list").getJSONObject(0);
-            String status1=data.getString("status");
-            if(!status1.equals("ENABLE")){
-                statusAll="ENABLE";
-                open="DISABLE";
+            String statusAll = "DISABLE";
+            String open = "ENABLE";
+            JSONObject data = jc.shopListFilterManage("", "1", "10", "name", pp.shopname).getJSONArray("list").getJSONObject(0);
+            String status1 = data.getString("status");
+            if (!status1.equals("ENABLE")) {
+                statusAll = "ENABLE";
+                open = "DISABLE";
             }
             //关闭门店预约配置
-            jc.pcLogin(pp.gwphone,pp.gwpassword);
-            jc.shopStatusChange(pp.shopIdZ,"SHOP",statusAll);
-            JSONObject dataAfter=jc.shopListFilterManage("","1","10","name",pp.shopname).getJSONArray("list").getJSONObject(0);
-            String status=dataAfter.getString("status");
-            String appointment_status=dataAfter.getString("appointment_status");
-            String washing_status=dataAfter.getString("washing_status");
-            Preconditions.checkArgument(appointment_status.equals(statusAll)&&washing_status.equals(statusAll)&&status.equals(statusAll),"门店开关未同步");
+            jc.pcLogin(pp.gwphone, pp.gwpassword);
+            jc.shopStatusChange(pp.shopIdZ, "SHOP", statusAll);
+            JSONObject dataAfter = jc.shopListFilterManage("", "1", "10", "name", pp.shopname).getJSONArray("list").getJSONObject(0);
+            String status = dataAfter.getString("status");
+            String appointment_status = dataAfter.getString("appointment_status");
+            String washing_status = dataAfter.getString("washing_status");
+            Preconditions.checkArgument(appointment_status.equals(statusAll) && washing_status.equals(statusAll) && status.equals(statusAll), "门店开关未同步");
 
-            jc.shopStatusChange(pp.shopIdZ,"SHOP",open);
-            JSONObject dataAfter2=jc.shopListFilterManage("","1","10","name",pp.shopname).getJSONArray("list").getJSONObject(0);
-            String status2=dataAfter2.getString("status");
-            String appointment_status2=dataAfter2.getString("appointment_status");
-            String washing_status2=dataAfter2.getString("washing_status");
-            Preconditions.checkArgument(appointment_status2.equals(statusAll)&&washing_status2.equals(statusAll)&&status2.equals(open),"门店开关未同步2");
-            jc.shopStatusChange(pp.shopIdZ,"WASHING",open);
-            jc.shopStatusChange(pp.shopIdZ,"APPOINTMENT",open);
+            jc.shopStatusChange(pp.shopIdZ, "SHOP", open);
+            JSONObject dataAfter2 = jc.shopListFilterManage("", "1", "10", "name", pp.shopname).getJSONArray("list").getJSONObject(0);
+            String status2 = dataAfter2.getString("status");
+            String appointment_status2 = dataAfter2.getString("appointment_status");
+            String washing_status2 = dataAfter2.getString("washing_status");
+            Preconditions.checkArgument(appointment_status2.equals(statusAll) && washing_status2.equals(statusAll) && status2.equals(open), "门店开关未同步2");
+            jc.shopStatusChange(pp.shopIdZ, "WASHING", open);
+            jc.shopStatusChange(pp.shopIdZ, "APPOINTMENT", open);
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -662,7 +659,6 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             saveData("pc门店按钮修改关联验证");
         }
     }
-
 
 
 }
