@@ -552,25 +552,32 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "新建接待系统存在的手机号", dependsOnMethods = "saleReception_data_1")
+    @Test(description = "完成接待系统存在的手机号", dependsOnMethods = "saleReception_data_1")
     public void saleReception_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            int receptionPageCount = util.getAppPreSalesReceptionPageList().size();
             IScene todayTaskScene = AppTodayTaskScene.builder().build();
             String[] preReceptions = todayTaskScene.invoke(visitor).getString("pre_reception").split("/");
+            String[] prePendingReceptions = util.getAppTodayDataList().stream().filter(e -> e.getId().equals(util.getSaleId())).findFirst().map(AppTodayDataBean::getPrePendingReception).orElse("0/0").split("/");
             //获取第一个完成接待
             AppPreSalesReceptionPageBean preSalesReceptionPage = util.getAppPreSalesReceptionPageList().stream().filter(e -> e.getCustomerName().equals("自动接待新客")).findFirst().orElse(null);
             Preconditions.checkArgument(preSalesReceptionPage != null, "不存在【自动接待新客】的客户");
             FinishReceptionScene.builder().shopId(Long.parseLong(util.getReceptionShopId())).id(preSalesReceptionPage.getId()).build().invoke(visitor);
+            int newReceptionPageCount = util.getAppPreSalesReceptionPageList().size();
             String[] newPreReceptions = todayTaskScene.invoke(visitor).getString("pre_reception").split("/");
+            String[] newPrePendingReceptions = util.getAppTodayDataList().stream().filter(e -> e.getId().equals(util.getSaleId())).findFirst().map(AppTodayDataBean::getPrePendingReception).orElse("0/0").split("/");
             //preReceptions[0]为为接待完成数，preReceptions[1]为今日接待数，完成一个preReceptions[0]-1，preReceptions[1]不变
-            CommonUtil.valueView(preReceptions, newPreReceptions);
+            Preconditions.checkArgument(receptionPageCount - 1 == newReceptionPageCount, "完成接待新客户前APP【销售接待】列表：" + receptionPageCount + " 完成接待新客户后APP【销售接待】列表：" + newReceptionPageCount);
+            CommonUtil.valueView(receptionPageCount, newReceptionPageCount, preReceptions, newPreReceptions, prePendingReceptions, newPrePendingReceptions);
             Preconditions.checkArgument(Integer.parseInt(preReceptions[0]) - 1 == Integer.parseInt(newPreReceptions[0]) && Integer.parseInt(preReceptions[1]) == Integer.parseInt(newPreReceptions[1]),
                     "完成接待新客前APP今日任务数：" + Arrays.toString(preReceptions) + " 完成接待新客后APP今日任务数：" + Arrays.toString(newPreReceptions));
+            Preconditions.checkArgument(Integer.parseInt(prePendingReceptions[0]) - 1 == Integer.parseInt(newPrePendingReceptions[0]) && Integer.parseInt(prePendingReceptions[1]) == Integer.parseInt(newPrePendingReceptions[1]),
+                    "完成接待新客户前APP该销售的今日数据：" + Arrays.toString(prePendingReceptions) + " 完成接待新客户后APP该销售的今日数据：" + Arrays.toString(newPrePendingReceptions));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("新建接待系统存在的手机号");
+            saveData("完成接待系统存在的手机号");
         }
     }
 
@@ -600,7 +607,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(historyReceptionRecordTotal + 1 == newHistoryReceptionRecordTotal, phone + "的接待次数预期为：" + historyReceptionRecordTotal + 1 + " 实际为：" + newHistoryReceptionRecordTotal);
             Preconditions.checkArgument(preCustomerTotal == newPreCustomerTotal, "接待老客户前APP销售客户管理数量：" + preCustomerTotal + " 接待老客户后销售客户管理数量：" + preCustomerTotal);
             Preconditions.checkArgument(salesReceptionPageTotal + 1 == newSalesReceptionPageTotal, "接待老客户前PC【销售接待管理】接待记录：" + salesReceptionPageTotal + " 接待老客户后PC【销售接待管理】接待记录：" + newSalesReceptionPageTotal);
-            Preconditions.checkArgument(receptionPageCount + 1 == newReceptionPageCount, "接待新客户前APP【销售接待】列表：" + receptionPageCount + " 接待老客户后APP【销售接待】列表：" + newReceptionPageCount);
+            Preconditions.checkArgument(receptionPageCount + 1 == newReceptionPageCount, "接待老客户前APP【销售接待】列表：" + receptionPageCount + " 接待老客户后APP【销售接待】列表：" + newReceptionPageCount);
             Preconditions.checkArgument(Integer.parseInt(preReceptions[0]) + 1 == Integer.parseInt(newPreReceptions[0]) && Integer.parseInt(preReceptions[1]) + 1 == Integer.parseInt(newPreReceptions[1]),
                     "接待老客户前APP今日任务数：" + Arrays.toString(preReceptions) + " 接待老客户后APP今日任务数：" + Arrays.toString(newPreReceptions));
             Preconditions.checkArgument(Integer.parseInt(prePendingReceptions[0]) + 1 == Integer.parseInt(newPrePendingReceptions[0]) && Integer.parseInt(prePendingReceptions[1]) + 1 == Integer.parseInt(newPrePendingReceptions[1]),
@@ -612,25 +619,32 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "接待完成系统存在的手机号", dependsOnMethods = "saleReception_data_3")
+    @Test(description = "完成接待系统存在的手机号", dependsOnMethods = "saleReception_data_3")
     public void saleReception_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            int receptionPageCount = util.getAppPreSalesReceptionPageList().size();
             IScene todayTaskScene = AppTodayTaskScene.builder().build();
             String[] preReceptions = todayTaskScene.invoke(visitor).getString("pre_reception").split("/");
+            String[] prePendingReceptions = util.getAppTodayDataList().stream().filter(e -> e.getId().equals(util.getSaleId())).findFirst().map(AppTodayDataBean::getPrePendingReception).orElse("0/0").split("/");
             //获取第一个完成接待
             AppPreSalesReceptionPageBean preSalesReceptionPage = util.getAppPreSalesReceptionPageList().stream().filter(e -> e.getCustomerName().equals("自动接待老客")).findFirst().orElse(null);
             Preconditions.checkArgument(preSalesReceptionPage != null, "不存在【自动接待老客】的客户");
             FinishReceptionScene.builder().shopId(Long.parseLong(util.getReceptionShopId())).id(preSalesReceptionPage.getId()).build().invoke(visitor);
+            int newReceptionPageCount = util.getAppPreSalesReceptionPageList().size();
             String[] newPreReceptions = todayTaskScene.invoke(visitor).getString("pre_reception").split("/");
+            String[] newPrePendingReceptions = util.getAppTodayDataList().stream().filter(e -> e.getId().equals(util.getSaleId())).findFirst().map(AppTodayDataBean::getPrePendingReception).orElse("0/0").split("/");
             //preReceptions[0]为为接待完成数，preReceptions[1]为今日接待数，完成一个preReceptions[0]-1，preReceptions[1]不变
-            CommonUtil.valueView(preReceptions, newPreReceptions);
+            CommonUtil.valueView(receptionPageCount, newReceptionPageCount, preReceptions, newPreReceptions, prePendingReceptions, newPrePendingReceptions);
+            Preconditions.checkArgument(receptionPageCount - 1 == newReceptionPageCount, "完成接待老客户前APP【销售接待】列表：" + receptionPageCount + " 完成接待老客户后APP【销售接待】列表：" + newReceptionPageCount);
             Preconditions.checkArgument(Integer.parseInt(preReceptions[0]) - 1 == Integer.parseInt(newPreReceptions[0]) && Integer.parseInt(preReceptions[1]) == Integer.parseInt(newPreReceptions[1]),
                     "完成接待老客前APP今日任务数：" + Arrays.toString(preReceptions) + " 完成接待老客后APP今日任务数：" + Arrays.toString(newPreReceptions));
+            Preconditions.checkArgument(Integer.parseInt(prePendingReceptions[0]) - 1 == Integer.parseInt(newPrePendingReceptions[0]) && Integer.parseInt(prePendingReceptions[1]) == Integer.parseInt(newPrePendingReceptions[1]),
+                    "完成接待老客户前APP该销售的今日数据：" + Arrays.toString(prePendingReceptions) + "完成接待老客户后APP该销售的今日数据：" + Arrays.toString(newPrePendingReceptions));
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("接待完成系统存在的手机号");
+            saveData("完成接待系统存在的手机号");
         }
     }
 
