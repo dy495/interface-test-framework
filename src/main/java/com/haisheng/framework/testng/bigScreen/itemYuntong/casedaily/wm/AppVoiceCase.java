@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.itemYuntong.caseonline.wm;
+package com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.wm;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -8,11 +8,12 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.personaldata.AppPersonDataReceptionAverageScoreTrendScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.personaldata.AppPersonalReceptionScoreTrendScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.departmentdata.*;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.homepagev4.AppTodayDataBean;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.personaldata.AppPersonalCapabilityModelBean;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.personaldata.AppPersonalOverviewBean;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.personaldata.AppReceptionLinkScoreBean;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.departmentdata.AppReceptionAverageScoreTrendBean;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.personaldata.*;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.personaldata.AppReceptionScoreTrendBean;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.voicerecord.AppDepartmentPageBean;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.voicerecord.AppDetailBean;
@@ -20,10 +21,7 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.voice
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.pc.manage.VoiceEvaluationPageBean;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.enumerate.EnumDataCycleType;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.departmentdata.*;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.homepagev4.AppTodayTaskScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.personaldata.AppPersonDataReceptionAverageScoreTrendScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.personaldata.AppPersonalCapabilityModelScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.personaldata.AppPersonalReceptionScoreTrendScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.personaldata.AppReceptionLinkScoreScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.speechtechnique.AppStandardListScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.voicerecord.AppDetailScene;
@@ -31,7 +29,6 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manag
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.VoiceEvaluationPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.speechtechnique.SpeechTechniquePageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -51,9 +48,9 @@ import java.util.stream.Collectors;
  * @author wangmin
  * @date 2021/1/29 11:17
  */
-public class AppVoiceDataCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_ONLINE_CONTROL;
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_ONLINE;
+public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
+    private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_CONTROL;
+    private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_DAILY;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public SceneUtil util = new SceneUtil(visitor);
     private static final String startDate = DateTimeUtil.addDayFormat(new Date(), -4);
@@ -68,10 +65,10 @@ public class AppVoiceDataCase extends TestCaseCommon implements TestCaseStd {
         CommonConfig commonConfig = new CommonConfig();
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
         //替换jenkins-job的相关信息
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.YUNTONG_ONLINE_TEST.getJobName());
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
         //放入shopId
         commonConfig.product = PRODUCE.getAbbreviation();
@@ -90,12 +87,12 @@ public class AppVoiceDataCase extends TestCaseCommon implements TestCaseStd {
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-        visitor.setProduct(EnumTestProduce.YT_ONLINE_SSO);
+        visitor.setProduct(EnumTestProduce.YT_DAILY_SSO);
         util.loginApp(ALL_AUTHORITY);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
-        visitor.setProduct(EnumTestProduce.YT_ONLINE_CONTROL);
+        visitor.setProduct(EnumTestProduce.YT_DAILY_CONTROL);
     }
 
     //ok
@@ -1009,34 +1006,6 @@ public class AppVoiceDataCase extends TestCaseCommon implements TestCaseStd {
             collectMessage(e);
         } finally {
             saveData("APP部门平均分=此部门的全部员工全流程接待分值之和/参与评分的接待次数*5");
-        }
-    }
-
-    @Test(description = "【今日任务】预约数=【今日数据】待处理预约，【今日任务】接待数=【今日数据】待处理接待")
-    public void taskFollowUp_data_1() {
-        logger.logCaseStart(caseResult.getCaseName());
-        visitor.setProduct(EnumTestProduce.YT_ONLINE_CAR);
-        try {
-            List<AppTodayDataBean> todayDataList = util.getAppTodayDataList();
-            List<Integer> receptionList = new ArrayList<>();
-            List<Integer> finishList = new ArrayList<>();
-            todayDataList.stream().map(AppTodayDataBean::getPrePendingReception).filter(Objects::nonNull)
-                    .map(e -> e.split("/")).forEach(strings -> {
-                receptionList.add(Integer.parseInt(strings[0]));
-                finishList.add(Integer.parseInt(strings[1]));
-            });
-            int receptionSum = receptionList.stream().mapToInt(e -> e).sum();
-            int finishSum = finishList.stream().mapToInt(e -> e).sum();
-            CommonUtil.valueView(receptionSum, finishSum);
-            String preReception = AppTodayTaskScene.builder().build().invoke(visitor).getString("pre_reception");
-            String[] strings = preReception.split("/");
-            Preconditions.checkArgument(Integer.parseInt(strings[1]) == finishSum, "今日任务已完成数" + Integer.parseInt(strings[1]) + " 今日数据销售接待已完成数之和：" + finishSum);
-            Preconditions.checkArgument(Integer.parseInt(strings[0]) == receptionSum, "今日任务已接待数：" + Integer.parseInt(strings[0]) + " 今日数据销售接待已接待数之和：" + receptionSum);
-        } catch (Exception | AssertionError e) {
-            collectMessage(e);
-        } finally {
-            visitor.setProduct(EnumTestProduce.YT_ONLINE_CONTROL);
-            saveData("【今日任务】预约数=【今日数据】待处理预约，【今日任务】接待数=【今日数据】待处理接待");
         }
     }
 }

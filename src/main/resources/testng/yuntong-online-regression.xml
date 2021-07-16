@@ -12,7 +12,7 @@
             <!--运通代码-->
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.caseonline.lxq.HuiTing_SystemCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.caseonline.lxq.SystemCaseOnline"/>
-            <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.caseonline.wm.AppVoiceDataCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.caseonline.wm.AppVoiceCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.caseonline.wm.ShopDataCenterCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.caseonline.wm.SystemConfigCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.caseonline.wm.VoiceDataManagerCase"/>

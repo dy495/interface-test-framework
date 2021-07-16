@@ -225,7 +225,7 @@ public class SceneUtil extends BasicUtil {
      *
      * @return 接待列表
      */
-    public List<AppPreSalesReceptionPageBean> getAppAppPreSalesReceptionPageList() {
+    public List<AppPreSalesReceptionPageBean> getAppPreSalesReceptionPageList() {
         List<AppPreSalesReceptionPageBean> list = new ArrayList<>();
         Integer lastValue = null;
         JSONArray array;
@@ -416,6 +416,10 @@ public class SceneUtil extends BasicUtil {
 
     public String getCarStyleId() {
         return visitor.isDaily() ? "1398" : "2513";
+    }
+
+    public String getRoleId() {
+        return visitor.isDaily() ? "9872" : "";
     }
 
     /**
