@@ -8,7 +8,6 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklis
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherScene.CarFileUploadScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherScene.DeleteRecordPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.brand.BrandAddScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.brand.BrandDeleteScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.brand.BrandPageScene;
@@ -20,16 +19,13 @@ import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.ImageUtil;
 import org.testng.annotations.*;
-
 import java.lang.reflect.Method;
-import java.net.Inet4Address;
 
 
 /**
- * @description :导出记录
- * @date :2021/7/13 10:34
+ * @description :系统记录
  **/
-public class ExportCasesTest extends TestCaseCommon implements TestCaseStd {
+public class RecordCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_SSO; // 管理页—-首页
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_DAILY; // 全部权限账号 【运通】
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);   // 产品类放到代理类中（通过代理类发请求）
@@ -73,7 +69,6 @@ public class ExportCasesTest extends TestCaseCommon implements TestCaseStd {
 
     /**
      * @description :导出页-->导出当前页-->导出记录增加一条“导出记录”处的信息
-     * @date :2021/7/13 11:51
      **/
     @Test(dataProvider = "CarExportPages")
     public void testExportPage(String product, String path, String type) {
