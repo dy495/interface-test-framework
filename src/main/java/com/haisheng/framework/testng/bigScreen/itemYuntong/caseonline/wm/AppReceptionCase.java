@@ -92,7 +92,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
         preSalesReceptionPage = util.getAppPreSalesReceptionPageList().stream().filter(e -> e.getCustomerName().equals("自动化创建的接待人")).findFirst().orElse(null);
         if (preSalesReceptionPage == null) {
             logger.info("不存在接待人，需要创建");
-            AppPreSalesReceptionCreateScene.builder().customerName("自动化创建的接待人").customerPhone("15366666666").sexId("1").intentionCarModelId(util.getCarModelId()).estimateBuyCarTime("2100-07-12").build().invoke(visitor);
+            AppPreSalesReceptionCreateScene.builder().customerName("自动化创建的接待人").customerPhone("15321527989").sexId("1").intentionCarModelId(util.getCarModelId()).estimateBuyCarTime("2100-07-12").build().invoke(visitor);
             preSalesReceptionPage = util.getAppPreSalesReceptionPageList().stream().filter(e -> e.getCustomerName().equals("自动化创建的接待人")).findFirst().orElse(null);
         }
     }

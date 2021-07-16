@@ -371,10 +371,24 @@ public class SceneUtil extends BasicUtil {
         return links;
     }
 
-    public String getNotReceptionPhone() {
+    /**
+     * 获取不重复的电话号
+     *
+     * @return 电话号
+     */
+    public String getNotExistPhone() {
         String phone = "153" + CommonUtil.getRandom(8);
         int total = PreSaleCustomerPageScene.builder().customerPhone(phone).build().invoke(visitor).getInteger("total");
-        return total == 0 ? phone : getNotReceptionPhone();
+        return total == 0 ? phone : getNotExistPhone();
+    }
+
+    /**
+     * 获取存在的电话号
+     *
+     * @return 电话号
+     */
+    public String getExistPhone() {
+        return PreSaleCustomerPageScene.builder().build().invoke(visitor).getJSONArray("list").getJSONObject(9).getString("customer_phone");
     }
 
     public Object[][] getType() {

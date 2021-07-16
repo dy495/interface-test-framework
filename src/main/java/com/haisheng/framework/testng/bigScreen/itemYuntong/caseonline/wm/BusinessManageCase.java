@@ -78,7 +78,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
         try {
             IScene scene = PreSaleCustomerPageScene.builder().build();
             int total = scene.invoke(visitor).getInteger("total");
-            String phone = util.getNotReceptionPhone();
+            String phone = util.getNotExistPhone();
             PreSaleCustomerCreatePotentialCustomerScene.builder().customerType("PERSON").customerName("燕小六")
                     .customerPhone(phone).sex("0").salesId(util.getSaleId()).shopId(Long.parseLong(util.getReceptionShopId()))
                     .carStyleId(Long.parseLong(util.getCarStyleId())).carModelId(Long.parseLong(util.getCarModelId())).build().invoke(visitor);

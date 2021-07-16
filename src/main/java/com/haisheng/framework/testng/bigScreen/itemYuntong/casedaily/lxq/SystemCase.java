@@ -131,7 +131,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
     public String getPhone() {
-        return businessUtil.getNotReceptionPhone();
+        return businessUtil.getNotExistPhone();
     }
 
     @Test
