@@ -596,9 +596,9 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     }
 
     /**
-     * 收银追溯-小票详情内容校验
+     * 收银追溯-小票详情内容校验--是否为空的内容待确认
      */
-    @Test(description = "收银追溯-小票详情内容校验")
+    @Test(description = "收银追溯-小票详情内容校验",enabled = false)
     public void authCashierPageSystem4() {
         try {
             //收银风控列表第一条的shopId
@@ -644,9 +644,9 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     }
 
     /**
-     * 收银风控事件-小票详情内容校验--ok
+     * 收银风控事件-小票详情内容校验--是否为空待确认
      */
-    @Test(description = "收银风控事件-小票详情内容校验")
+    @Test(description = "收银风控事件-小票详情内容校验",enabled = false)
     public void authCashierPageSystem() {
         try {
             //收银风控列表第一条的shopId
