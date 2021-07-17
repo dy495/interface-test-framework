@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.bigScreen.itemYuntong.caseonline.lxq;
 import com.aliyun.openservices.shade.org.apache.commons.codec.binary.Base64;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherScene.CarFileUploadScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.brand.BrandAddScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.brand.CarStyleAddScene;
@@ -70,14 +71,12 @@ public class YunTongInfoOnline {
         visitor.setProduct(EnumTestProduce.YT_ONLINE_CAR);
         String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
 
-        String logo = FileUploadScene.builder().pic(new ImageUtil().getImageBinary(filePath)).permanentPicType(0).build().invoke(visitor).getString("pic_path");
-
-        return logo;
+        return CarFileUploadScene.builder().pic(new ImageUtil().getImageBinary(filePath)).permanentPicType(0).build().invoke(visitor).getString("pic_path");
     }
 
     //创建品牌，返回品牌id
     public final long getBrandID(int n) {
-        String name = "" + Integer.toString((int) (Math.random() * Math.pow(10,n)));
+        String name = "" + (int) (Math.random() * Math.pow(10, n));
         Long id = BrandAddScene.builder().name(name).logoPath(getLogo()).build().invoke(visitor).getLong("id");;
 
         return id;
