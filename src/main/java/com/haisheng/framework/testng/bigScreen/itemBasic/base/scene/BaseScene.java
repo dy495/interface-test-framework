@@ -105,6 +105,16 @@ public abstract class BaseScene implements IScene {
     }
 
     /**
+     * 获取值非空的键集合
+     *
+     * @return key的集合
+     */
+    public List<String> getKeyList() {
+        return getBody().entrySet().stream().filter(e -> e.getValue() != null)
+                .map(Map.Entry::getKey).collect(Collectors.toCollection(LinkedList::new));
+    }
+
+    /**
      * 去掉某些参数
      *
      * @param keys 键的集合
@@ -118,12 +128,16 @@ public abstract class BaseScene implements IScene {
     }
 
     /**
-     * 获取值非空的键集合
+     * 修改某个key的值
      *
-     * @return key的集合
+     * @param key   key
+     * @param value value
+     * @param <T>   T
+     * @return this
      */
-    public List<String> getKeyList() {
-        return getBody().entrySet().stream().filter(e -> e.getValue() != null)
-                .map(Map.Entry::getKey).collect(Collectors.toCollection(LinkedList::new));
+    public <T> IScene modify(String key, T value) {
+        body = getRequestBody();
+        body.put(key, value);
+        return this;
     }
 }

@@ -12,6 +12,7 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.homep
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.presalesreception.AppPreSalesReceptionPageBean;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.homepagev4.AppTodayDataScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.AppPreSalesReceptionPageScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanage.PreSaleCustomerBuyCarPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanage.PreSaleCustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanagev4.PreSaleCustomerInfoBuyCarRecordScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.record.ExportPageScene;
@@ -391,29 +392,29 @@ public class SceneUtil extends BasicUtil {
         return PreSaleCustomerPageScene.builder().build().invoke(visitor).getJSONArray("list").getJSONObject(9).getString("customer_phone");
     }
 
-    public Object[][] getType() {
-        return new Object[][]{
-                {"欢迎接待", 100},
-                {"个性需求", 200},
-                {"新车推荐", 300},
-                {"试乘试驾", 400},
-                {"车辆提案", 500}
-        };
+    /**
+     * 获取存在的底盘号
+     *
+     * @return 地盘号
+     */
+    public String getExistVin() {
+        IScene scene = PreSaleCustomerBuyCarPageScene.builder().build();
+        return toFirstJavaObject(scene, JSONObject.class).getString("vehicle_chassis_code");
     }
 
     /**
-     * 创建底盘号
+     * 获取不存在的底盘号
      *
      * @return 底盘号
      */
-    public String createVin() {
+    public String getNoExistVin() {
         String vin = "AAASSDFD" + CommonUtil.getRandom(9);
         IScene scene = PreSaleCustomerPageScene.builder().build();
         List<JSONObject> list = toJavaObjectList(scene, JSONObject.class, "customer_type_name", "成交客户");
         List<String> vehicleChassisCodeList = new ArrayList<>();
         list.stream().map(e -> e.getLong("customer_id")).map(e -> PreSaleCustomerInfoBuyCarRecordScene.builder().customerId(e).build())
                 .map(e -> toJavaObjectList(e, JSONObject.class)).forEach(e -> e.stream().map(a -> a.getString("vehicle_chassis_code")).forEach(vehicleChassisCodeList::add));
-        return !vehicleChassisCodeList.contains(vin) ? vin : createVin();
+        return !vehicleChassisCodeList.contains(vin) ? vin : getNoExistVin();
     }
 
     public String getReceptionShopId() {

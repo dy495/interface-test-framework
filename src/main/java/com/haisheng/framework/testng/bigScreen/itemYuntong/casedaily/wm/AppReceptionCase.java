@@ -45,7 +45,7 @@ import java.util.*;
  * @date 2021/1/29 11:17
  */
 public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_SSO;
+    private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_CAR;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_RECEPTION_DAILY;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public SceneUtil util = new SceneUtil(visitor);
@@ -70,6 +70,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.shopId = ALL_AUTHORITY.getReceptionShopId();
         commonConfig.roleId = ALL_AUTHORITY.getRoleId();
         beforeClassInit(commonConfig);
+
     }
 
     @AfterClass
@@ -84,8 +85,6 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
-        util.loginPc(ALL_AUTHORITY);
-        visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
     }
 
     private void initAppPreSalesReceptionPageBean() {
@@ -93,9 +92,10 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
         preSalesReceptionPage = util.getAppPreSalesReceptionPageList().stream().filter(e -> e.getCustomerName().equals("自动化创建的接待人")).findFirst().orElse(null);
         if (preSalesReceptionPage == null) {
             logger.info("不存在接待人，需要创建");
-            AppPreSalesReceptionCreateScene.builder().customerName("自动化创建的接待人").customerPhone("15366666666").sexId("1").intentionCarModelId(util.getCarModelId()).estimateBuyCarTime("2100-07-12").build().invoke(visitor);
+            AppPreSalesReceptionCreateScene.builder().customerName("自动化创建的接待人").customerPhone("15321527989").sexId("1").intentionCarModelId(util.getCarModelId()).estimateBuyCarTime("2100-07-12").build().invoke(visitor);
             preSalesReceptionPage = util.getAppPreSalesReceptionPageList().stream().filter(e -> e.getCustomerName().equals("自动化创建的接待人")).findFirst().orElse(null);
         }
+        util.loginPc(ALL_AUTHORITY);
     }
 
     @Test(description = "app接待时产生新的节点，节点名称为销售创建")
@@ -122,8 +122,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
             IScene scene = PreSaleCustomerInfoRemarkRecordScene.builder().customerId(String.valueOf(preSalesReceptionPage.getCustomerId())).build();
             int total = scene.invoke(visitor).getInteger("total");
             util.loginApp(ALL_AUTHORITY);
-            AppCustomerRemarkV4Scene.builder().id(String.valueOf(preSalesReceptionPage.getId())).customerId(String.valueOf(preSalesReceptionPage.getCustomerId())).remark(EnumDesc.DESC_BETWEEN_200_300.getDesc())
-                    .shopId(util.getReceptionShopId()).build().invoke(visitor);
+            AppCustomerRemarkV4Scene.builder().id(String.valueOf(preSalesReceptionPage.getId())).customerId(String.valueOf(preSalesReceptionPage.getCustomerId())).remark(EnumDesc.DESC_BETWEEN_200_300.getDesc()).shopId(util.getReceptionShopId()).build().invoke(visitor);
             util.loginPc(ALL_AUTHORITY);
             int newTotal = scene.invoke(visitor).getInteger("total");
             String remarkContent = util.toFirstJavaObject(scene, JSONObject.class).getString("remark_content");
@@ -145,7 +144,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
             int buyCarTotal = preSaleCustomerBuyCarPageScene.invoke(visitor).getInteger("total");
             IScene preSaleCustomerInfoBuyCarRecordScene = PreSaleCustomerInfoBuyCarRecordScene.builder().customerId(preSalesReceptionPage.getCustomerId()).build();
             int total = preSaleCustomerInfoBuyCarRecordScene.invoke(visitor).getInteger("total");
-            String vin = util.createVin();
+            String vin = util.getNoExistVin();
             //买车
             BuyCarScene.builder().carModel(Long.parseLong(util.getCarModelId())).carStyle(Long.parseLong(util.getCarStyleId())).vin(vin)
                     .id(preSalesReceptionPage.getId()).shopId(Long.parseLong(util.getReceptionShopId())).build().invoke(visitor);
@@ -170,7 +169,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
             initAppPreSalesReceptionPageBean();
             IScene scene = PreSaleCustomerInfoBuyCarRecordScene.builder().customerId(preSalesReceptionPage.getCustomerId()).build();
             int total = scene.invoke(visitor).getInteger("total");
-            String vin = util.createVin();
+            String vin = util.getNoExistVin();
             //新建成交记录
             PreSaleCustomerCreateCustomerScene.builder().customerPhone(preSalesReceptionPage.getCustomerPhone()).customerName(preSalesReceptionPage.getCustomerName())
                     .sex("1").customerType("PERSON").shopId(Long.parseLong(util.getReceptionShopId()))
@@ -647,5 +646,4 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
             saveData("完成接待系统存在的手机号");
         }
     }
-
 }

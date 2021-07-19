@@ -11,6 +11,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProd
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.pc.manage.VoiceEvaluationPageBean;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.pc.sensitivewords.LabelListBean;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.pc.specialaudio.SpecialAudioPageBean;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.dataprovider.DataClass;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.VoiceDetailScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.VoiceEvaluationPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.PreSalesReceptionPageScene;
@@ -42,7 +43,7 @@ import java.util.stream.Collectors;
  * @date 2021/1/29 11:17
  */
 public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_ONLINE_SSO;
+    private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_ONLINE_CONTROL;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public SceneUtil util = new SceneUtil(visitor);
@@ -67,7 +68,6 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
         commonConfig.roleId = ALL_AUTHORITY.getRoleId();
         beforeClassInit(commonConfig);
         util.loginApp(ALL_AUTHORITY);
-        visitor.setProduct(EnumTestProduce.YT_ONLINE_CONTROL);
     }
 
     @AfterClass
@@ -117,7 +117,7 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
         try {
             IScene voiceEvaluationPageScene = VoiceEvaluationPageScene.builder().build();
             long evaluationTotal = voiceEvaluationPageScene.invoke(visitor).getLong("total");
-            visitor.setProduct(EnumTestProduce.YT_ONLINE_CAR);
+            visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
             IScene preSalesReceptionPageScene = PreSalesReceptionPageScene.builder().build();
             long receptionTotal = preSalesReceptionPageScene.invoke(visitor).getLong("total");
             CommonUtil.valueView(evaluationTotal, receptionTotal);
@@ -125,7 +125,7 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            visitor.setProduct(EnumTestProduce.YT_ONLINE_CONTROL);
+            visitor.setProduct(EnumTestProduce.YT_DAILY_CONTROL);
             saveData("语音评鉴列表数<=销售接待页列表数");
         }
     }
@@ -173,8 +173,8 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
         }
     }
 
-    @Test(description = "各环节得分 约等于 该环节的 高亮标签数/总标签数 * 100", dataProvider = "getTypeName", enabled = false)
-    public void voiceEvaluation_data_5(String typeName, Integer type) {
+    @Test(description = "各环节得分 约等于 该环节的 高亮标签数/总标签数 * 100", dataProvider = "receptionType", dataProviderClass = DataClass.class, enabled = false)
+    public void voiceEvaluation_data_5(String typeName, int type) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene voiceEvaluationPageScene = VoiceEvaluationPageScene.builder().enterStatus(1).build();
@@ -198,18 +198,7 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
         }
     }
 
-    @DataProvider(name = "typeName")
-    public Object[] getTypeName() {
-        return new Object[][]{
-                {"欢迎接待", 100},
-                {"个性需求", 200},
-                {"新车推荐", 300},
-                {"试乘试驾", 400},
-                {"车辆提案", 500},
-        };
-    }
-
-    @Test(description = "柱状图总 各标签数量 = 列表中该标签数量之和", dataProvider = "word")
+    @Test(description = "柱状图总 各标签数量 = 列表中该标签数量之和", dataProvider = "receptionWord", dataProviderClass = DataClass.class)
     public void voiceEvaluation_data_6(String word) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -226,15 +215,6 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
         } finally {
             saveData("柱状图总 各标签数量 = 列表中该标签数量之和");
         }
-    }
-
-    @DataProvider(name = "word")
-    public Object[] getWord() {
-        return new String[]{
-                "不卖裸车/不允许跨区域",
-                "服务费/验车上牌费/手续费/现金/微信转",
-                "必须上保险/一定上保险/强制上保险/必须",
-        };
     }
 
     @Test(description = "柱状图数量之和 = 行为记录列表数")

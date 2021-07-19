@@ -8,6 +8,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.dataprovider.DataClass;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.EvaluateV4DetailScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.EvaluateV4PageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.EvaluateV4ScoreRateScene;
@@ -36,7 +37,7 @@ import java.util.List;
  * @date 2021/1/29 11:17
  */
 public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_ONLINE_CONTROL;
+    private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_ONLINE_CAR;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public SceneUtil util = new SceneUtil(visitor);
@@ -62,6 +63,7 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.shopId = PRODUCE.getShopId();
         commonConfig.roleId = ALL_AUTHORITY.getRoleId();
         beforeClassInit(commonConfig);
+        util.loginApp(ALL_AUTHORITY);
     }
 
     @AfterClass
@@ -73,12 +75,9 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-        visitor.setProduct(EnumTestProduce.YT_ONLINE_SSO);
-        util.loginApp(ALL_AUTHORITY);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
-        visitor.setProduct(EnumTestProduce.YT_ONLINE_CAR);
     }
 
     @Test(description = "【星级评分趋势】中的星级=【星级评分详情】中各话术环节各星级相加/（列表条数＊５）")
@@ -86,8 +85,7 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene evaluateV4ScoreTrendScene = EvaluateV4ScoreTrendScene.builder().receptionStart(startDate).receptionEnd(endDate).evaluateType(5).build();
-            Integer integer = evaluateV4ScoreTrendScene.invoke(visitor).getJSONArray("list").getJSONObject(0).getInteger("integer");
-            int score = integer == null ? 0 : integer;
+            int score = evaluateV4ScoreTrendScene.invoke(visitor).getJSONArray("list").getJSONObject(0).getInteger("score");
             IScene evaluateV4PageScene = EvaluateV4PageScene.builder().receptionStart(startDate).receptionEnd(endDate).evaluateType(5).build();
             List<JSONObject> list = util.toJavaObjectList(evaluateV4PageScene, JSONObject.class);
             List<Integer> scoreList = new ArrayList<>();
@@ -109,13 +107,13 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "【星级比例】全部环节中的x星级比例=【星级评分详情】总分中x星级条数/列表条数", dataProvider = "starType")
+    @Test(description = "【星级比例】全部环节中的x星级比例=【星级评分详情】总分中x星级条数/列表条数", dataProvider = "starType", dataProviderClass = DataClass.class)
     public void evaluate_data_2(String type, Integer scoreValue, String name) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene evaluateV4ScoreTrendScene = EvaluateV4ScoreRateScene.builder().receptionStart(startDate).receptionEnd(endDate).evaluateType(5).build();
             List<JSONObject> evaluateV4ScoreRateList = util.toJavaObjectList(evaluateV4ScoreTrendScene, JSONObject.class, "list");
-            String percent = evaluateV4ScoreRateList.stream().filter(e -> e.getString("type_name").equals("全部环节")).findFirst().map(e -> e.getString(type)).orElse("0%");
+            String percent = evaluateV4ScoreRateList.stream().filter(e -> e.getString("type_name").equals("全部环节")).map(e -> e.getString(type)).findFirst().orElse("0%");
             IScene evaluateV4PageScene = EvaluateV4PageScene.builder().receptionStart(startDate).receptionEnd(endDate).evaluateType(5).build();
             List<JSONObject> list = util.toJavaObjectList(evaluateV4PageScene, JSONObject.class);
             int count = (int) list.stream().filter(e -> e.getInteger("score").equals(scoreValue)).count();
@@ -129,24 +127,13 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @DataProvider(name = "starType")
-    public Object[] getStarData() {
-        return new Object[][]{
-                {"one", 1, "一星"},
-                {"two", 2, "二星"},
-                {"three", 3, "三星"},
-                {"four", 4, "四星"},
-                {"five", 5, "五星"}
-        };
-    }
-
-    @Test(description = "【星级比例】欢迎接待中的x星级比例=【星级评分详情】欢迎接待中x星级条数/列表条数", dataProvider = "starType")
+    @Test(description = "【星级比例】欢迎接待中的x星级比例=【星级评分详情】欢迎接待中x星级条数/列表条数", dataProvider = "starType", dataProviderClass = DataClass.class)
     public void evaluate_data_3(String type, Integer scoreValue, String name) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene evaluateV4ScoreTrendScene = EvaluateV4ScoreRateScene.builder().receptionStart(startDate).receptionEnd(endDate).evaluateType(5).build();
             List<JSONObject> evaluateV4ScoreRateList = util.toJavaObjectList(evaluateV4ScoreTrendScene, JSONObject.class, "list");
-            String percent = evaluateV4ScoreRateList.stream().filter(e -> e.getString("type_name").equals("欢迎接待")).findFirst().map(e -> e.getString(type)).orElse("0%");
+            String percent = evaluateV4ScoreRateList.stream().filter(e -> e.getString("type_name").equals("欢迎接待")).map(e -> e.getString(type)).findFirst().orElse("0%");
             IScene evaluateV4PageScene = EvaluateV4PageScene.builder().receptionStart(startDate).receptionEnd(endDate).evaluateType(5).build();
             List<JSONObject> list = util.toJavaObjectList(evaluateV4PageScene, JSONObject.class);
             int count = (int) list.stream().filter(e -> e.getInteger("link1").equals(scoreValue)).count();
@@ -160,7 +147,7 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "【星级比例】欢迎接待中的x星级比例=【星级评分详情】欢迎接待中x星级条数/列表条数", dataProvider = "starType")
+    @Test(description = "【星级比例】欢迎接待中的x星级比例=【星级评分详情】欢迎接待中x星级条数/列表条数", dataProvider = "starType", dataProviderClass = DataClass.class)
     public void evaluate_data_4(String type, Integer scoreValue, String name) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -168,7 +155,7 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
             Arrays.stream(strings).forEach(string -> {
                 IScene evaluateV4ScoreTrendScene = EvaluateV4ScoreRateScene.builder().receptionStart(startDate).receptionEnd(endDate).evaluateType(5).build();
                 List<JSONObject> evaluateV4ScoreRateList = util.toJavaObjectList(evaluateV4ScoreTrendScene, JSONObject.class, "list");
-                String percent = evaluateV4ScoreRateList.stream().filter(e -> e.getString("type_name").equals(string[0])).findFirst().map(e -> e.getString(type)).orElse("0%");
+                String percent = evaluateV4ScoreRateList.stream().filter(e -> e.getString("type_name").equals(string[0])).map(e -> e.getString(type)).findFirst().orElse("0%");
                 IScene evaluateV4PageScene = EvaluateV4PageScene.builder().receptionStart(startDate).receptionEnd(endDate).evaluateType(5).build();
                 List<JSONObject> list = util.toJavaObjectList(evaluateV4PageScene, JSONObject.class);
                 int count = (int) list.stream().filter(e -> e.getInteger(string[1]).equals(scoreValue)).count();

@@ -42,7 +42,7 @@ import java.util.Date;
  * @date 2021/1/29 11:17
  */
 public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_ONLINE_SSO;
+    private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_ONLINE_CAR;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_ONLINE;
     private static AppPreSalesReceptionPageBean preSalesReceptionPage;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
@@ -81,26 +81,24 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
-        initAppPreSalesReceptionPageBean();
-        util.loginPc(ALL_AUTHORITY);
-        visitor.setProduct(EnumTestProduce.YT_ONLINE_CAR);
     }
 
     private void initAppPreSalesReceptionPageBean() {
         util.loginApp(ALL_AUTHORITY);
-        visitor.setProduct(EnumTestProduce.YT_ONLINE_CAR);
         preSalesReceptionPage = util.getAppPreSalesReceptionPageList().stream().filter(e -> e.getCustomerName().equals("自动化创建的接待人")).findFirst().orElse(null);
         if (preSalesReceptionPage == null) {
             logger.info("不存在接待人，需要创建");
             AppPreSalesReceptionCreateScene.builder().customerName("自动化创建的接待人").customerPhone("15321527989").sexId("1").intentionCarModelId(util.getCarModelId()).estimateBuyCarTime("2100-07-12").build().invoke(visitor);
             preSalesReceptionPage = util.getAppPreSalesReceptionPageList().stream().filter(e -> e.getCustomerName().equals("自动化创建的接待人")).findFirst().orElse(null);
         }
+        util.loginPc(ALL_AUTHORITY);
     }
 
     @Test(description = "app接待时产生新的节点，节点名称为销售创建")
     public void saleCustomerManager_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            initAppPreSalesReceptionPageBean();
             IScene preSalesReceptionPageScene = PreSalesReceptionPageScene.builder().customerId(String.valueOf(preSalesReceptionPage.getCustomerId())).build();
             JSONObject response = util.toFirstJavaObject(preSalesReceptionPageScene, JSONObject.class);
             String receptionTypeName = response.getString("reception_type_name");
@@ -116,6 +114,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
     public void saleCustomerManager_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            initAppPreSalesReceptionPageBean();
             IScene scene = PreSaleCustomerInfoRemarkRecordScene.builder().customerId(String.valueOf(preSalesReceptionPage.getCustomerId())).build();
             int total = scene.invoke(visitor).getInteger("total");
             util.loginApp(ALL_AUTHORITY);
@@ -137,14 +136,14 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
     public void saleCustomerManager_data_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            initAppPreSalesReceptionPageBean();
             IScene preSaleCustomerBuyCarPageScene = PreSaleCustomerBuyCarPageScene.builder().build();
             int buyCarTotal = preSaleCustomerBuyCarPageScene.invoke(visitor).getInteger("total");
             IScene preSaleCustomerInfoBuyCarRecordScene = PreSaleCustomerInfoBuyCarRecordScene.builder().customerId(preSalesReceptionPage.getCustomerId()).build();
             int total = preSaleCustomerInfoBuyCarRecordScene.invoke(visitor).getInteger("total");
-            String vin = util.createVin();
+            String vin = util.getNoExistVin();
             //买车
-            BuyCarScene.builder().carModel(Long.parseLong(util.getCarModelId())).carStyle(Long.parseLong(util.getCarStyleId())).vin(vin)
-                    .id(preSalesReceptionPage.getId()).shopId(Long.parseLong(util.getReceptionShopId())).build().invoke(visitor);
+            BuyCarScene.builder().carModel(Long.parseLong(util.getCarModelId())).carStyle(Long.parseLong(util.getCarStyleId())).vin(vin).id(preSalesReceptionPage.getId()).shopId(Long.parseLong(util.getReceptionShopId())).build().invoke(visitor);
             JSONObject response = preSaleCustomerInfoBuyCarRecordScene.invoke(visitor);
             int newTotal = response.getInteger("total");
             int newBuyCarTotal = preSaleCustomerBuyCarPageScene.invoke(visitor).getInteger("total");
@@ -163,9 +162,10 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
     public void saleCustomerManager_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            initAppPreSalesReceptionPageBean();
             IScene scene = PreSaleCustomerInfoBuyCarRecordScene.builder().customerId(preSalesReceptionPage.getCustomerId()).build();
             int total = scene.invoke(visitor).getInteger("total");
-            String vin = util.createVin();
+            String vin = util.getNoExistVin();
             //新建成交记录
             PreSaleCustomerCreateCustomerScene.builder().customerPhone(preSalesReceptionPage.getCustomerPhone()).customerName(preSalesReceptionPage.getCustomerName())
                     .sex("1").customerType("PERSON").shopId(Long.parseLong(util.getReceptionShopId()))
@@ -187,6 +187,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
     public void saleCustomerManager_data_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            initAppPreSalesReceptionPageBean();
             IScene scene = PreSaleCustomerInfoScene.builder().customerId(preSalesReceptionPage.getCustomerId()).shopId(Long.parseLong(util.getReceptionShopId())).build();
             String lastToShopDate = scene.invoke(visitor).getString("last_to_shop_date");
             String date = DateTimeUtil.getFormat(new Date());
@@ -203,6 +204,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
     public void saleCustomerManager_data_6() {
         logger.info(caseResult.getCaseName());
         try {
+            initAppPreSalesReceptionPageBean();
             String date = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm");
             FinishReceptionScene.builder().id(preSalesReceptionPage.getId()).shopId(Long.parseLong(util.getReceptionShopId())).build().invoke(visitor);
             IScene scene = PreSalesReceptionPageScene.builder().phone(preSalesReceptionPage.getCustomerPhone()).build();

@@ -62,7 +62,6 @@ public class SystemConfigCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.roleId = ALL_AUTHORITY.getRoleId();
         beforeClassInit(commonConfig);
         util.loginApp(ALL_AUTHORITY);
-        visitor.setProduct(EnumTestProduce.YT_ONLINE_SSO);
     }
 
     @AfterClass

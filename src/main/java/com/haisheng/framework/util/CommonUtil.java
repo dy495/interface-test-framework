@@ -3,6 +3,7 @@ package com.haisheng.framework.util;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -72,7 +73,7 @@ public class CommonUtil {
      */
     @SafeVarargs
     public static <T> void valueView(T... value) {
-        Arrays.stream(value).forEach(e -> logger.info("value:{}", e));
+        Arrays.stream(value).forEach(e -> logger.info("value:{ {} }", e));
     }
 
     /**
@@ -152,7 +153,6 @@ public class CommonUtil {
      *
      * @param numerator   分子
      * @param denominator 分母
-     * @param scale       保留小数点后位数
      * @return 比值
      */
     public static int getIntRatio(int numerator, int denominator) {
@@ -390,12 +390,12 @@ public class CommonUtil {
         check(expect, actual, reason);
     }
 
-    public static void checkResult(String key, String bodyValue, String responseValue) {
-        valueView("参数：" + key, "输入值：" + bodyValue, "输出值：" + responseValue);
-        Preconditions.checkArgument(String.valueOf(responseValue).contains(String.valueOf(bodyValue)),
-                "参数：" + key + " 查询结果：" + responseValue + " 不包含所查参数：" + bodyValue);
-        logger(key);
-    }
+//    public static void checkRequestAndResponseResult(String key, String bodyValue, String responseValue, Integer one) {
+//        valueView("参数：" + key, "输入值：" + bodyValue, "输出值：" + responseValue);
+//        Preconditions.checkArgument(String.valueOf(responseValue).contains(String.valueOf(bodyValue)),
+//                "参数：" + key + " 查询结果：" + responseValue + " 不包含所查参数：" + bodyValue);
+//        logger(key);
+//    }
 
     public static <T> void checkResultPlus(String key1, T value1, String key2, T value2) {
         String reason = key1 + ": " + value1 + " " + key2 + ": " + value2;

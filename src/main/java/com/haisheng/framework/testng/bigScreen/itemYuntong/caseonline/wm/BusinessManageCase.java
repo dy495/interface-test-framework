@@ -7,6 +7,8 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.dataprovider.DataClass;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanage.PreSaleCustomerCreateCustomerScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanage.PreSaleCustomerCreatePotentialCustomerScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanage.PreSaleCustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
@@ -16,12 +18,15 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
+import com.haisheng.framework.util.DateTimeUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Date;
 
 /**
  * 业务管理测试用例
@@ -104,7 +109,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
             String phone = response.getJSONArray("list").getJSONObject(0).getString("customer_phone");
             PreSaleCustomerCreatePotentialCustomerScene.builder().customerType("PERSON").customerName("燕小六")
                     .customerPhone(phone).sex("0").salesId(util.getSaleId()).shopId(Long.parseLong(util.getReceptionShopId()))
-                    .carStyleId(Long.parseLong(util.getCarStyleId())).carModelId(Long.parseLong(util.getCarModelId())).build().invoke(visitor, false);
+                    .carStyleId(Long.parseLong(util.getCarStyleId())).carModelId(Long.parseLong(util.getCarModelId())).build().invoke(visitor);
             JSONObject response1 = scene.invoke(visitor);
             int newTotal = response1.getInteger("total");
             Preconditions.checkArgument(newTotal == total, "创建潜客之前为：" + total + "创建潜客之后：" + newTotal);
@@ -112,6 +117,43 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
             collectMessage(e);
         } finally {
             saveData("创建一个潜客，销售客户列表中手机号存在，销售客户列表+0");
+        }
+    }
+
+    @Test(dataProvider = "createCustomerAbnormalParam", dataProviderClass = DataClass.class, description = "创建潜客异常情况")
+    public void saleCustomerManager_system_1(String field, Object value) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            IScene scene = PreSaleCustomerCreatePotentialCustomerScene.builder().customerType("PERSON").customerName("燕小六")
+                    .customerPhone(util.getNotExistPhone()).sex("0").salesId(util.getSaleId()).shopId(Long.parseLong(util.getReceptionShopId()))
+                    .carStyleId(Long.parseLong(util.getCarStyleId())).carModelId(Long.parseLong(util.getCarModelId())).build().modify(field, value);
+            String message = util.getResponse(scene).getMessage();
+            String[] errList = {"手机号格式不正确", "客户名称不允许为空", "客户名称不能多于50个字", "客户手机不允许为空", "性别不可为空", "车系不能为空", "车型不能为空", "性别不正确", "车主类型不可为空", "客户类型不存在"};
+            Preconditions.checkArgument(Arrays.asList(errList).contains(message), "创建潜客：" + field + "=" + value + " 结果：" + message);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("创建潜客异常情况");
+        }
+    }
+
+    @Test(dataProvider = "createCustomerOrderAbnormalParam", dataProviderClass = DataClass.class, description = "创建成交客户异常情况")
+    public void saleCustomerManager_system_2(String field, Object value) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String vin = util.getExistVin();
+            IScene scene = PreSaleCustomerCreateCustomerScene.builder().customerPhone(util.getNotExistPhone()).customerName("燕小六")
+                    .sex("1").customerType("PERSON").shopId(Long.parseLong(util.getReceptionShopId()))
+                    .carStyleId(Long.parseLong(util.getCarStyleId())).carModelId(Long.parseLong(util.getCarModelId())).salesId(util.getSaleId())
+                    .purchaseCarDate(DateTimeUtil.addDayFormat(new Date(), -10)).vehicleChassisCode(vin).build().modify(field, value);
+            String message = util.getResponse(scene).getMessage();
+            String[] errList = {"手机号格式不正确", "客户名称不允许为空", "客户名称不能多于50个字", "客户手机不允许为空", "性别不可为空", "车系不能为空", "车型不能为空", "日期格式不正确",
+                    "性别不正确", "车主类型不可为空", "客户类型不存在", "底盘号不能为空", "门店id不能为空", "底盘号格式不正确", "购车日期必须小于等于当前日期并且大于等于2006-01-08", "销售不存在"};
+            Preconditions.checkArgument(Arrays.asList(errList).contains(message), "创建成交客户：" + field + "=" + value + " 结果：" + message);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("创建成交客户异常情况");
         }
     }
 }

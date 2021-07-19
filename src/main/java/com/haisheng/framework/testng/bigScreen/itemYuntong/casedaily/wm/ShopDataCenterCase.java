@@ -8,6 +8,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.dataprovider.DataClass;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.*;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
@@ -23,13 +24,13 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 /**
- * 门店数据中心case
+ * 门店数据中心测试用例
  *
  * @author wangmin
  * @date 2021/1/29 11:17
  */
 public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_CONTROL;
+    private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_CAR;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_DAILY;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public SceneUtil util = new SceneUtil(visitor);
@@ -55,6 +56,7 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.shopId = PRODUCE.getShopId();
         commonConfig.roleId = ALL_AUTHORITY.getRoleId();
         beforeClassInit(commonConfig);
+        util.loginApp(ALL_AUTHORITY);
     }
 
     @AfterClass
@@ -66,12 +68,9 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-        visitor.setProduct(EnumTestProduce.YT_DAILY_SSO);
-        util.loginApp(ALL_AUTHORITY);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
-        visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
     }
 
     @Test(description = "【星级评分趋势】中的星级=【星级评分详情】中各话术环节各星级相加/（列表条数＊５）")
@@ -101,7 +100,7 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "【星级比例】全部环节中的x星级比例=【星级评分详情】总分中x星级条数/列表条数", dataProvider = "starType")
+    @Test(description = "【星级比例】全部环节中的x星级比例=【星级评分详情】总分中x星级条数/列表条数", dataProvider = "starType", dataProviderClass = DataClass.class)
     public void evaluate_data_2(String type, Integer scoreValue, String name) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -121,18 +120,7 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @DataProvider(name = "starType")
-    public Object[] getStarData() {
-        return new Object[][]{
-                {"one", 1, "一星"},
-                {"two", 2, "二星"},
-                {"three", 3, "三星"},
-                {"four", 4, "四星"},
-                {"five", 5, "五星"}
-        };
-    }
-
-    @Test(description = "【星级比例】欢迎接待中的x星级比例=【星级评分详情】欢迎接待中x星级条数/列表条数", dataProvider = "starType")
+    @Test(description = "【星级比例】欢迎接待中的x星级比例=【星级评分详情】欢迎接待中x星级条数/列表条数", dataProvider = "starType", dataProviderClass = DataClass.class)
     public void evaluate_data_3(String type, Integer scoreValue, String name) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -152,7 +140,7 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "【星级比例】欢迎接待中的x星级比例=【星级评分详情】欢迎接待中x星级条数/列表条数", dataProvider = "starType")
+    @Test(description = "【星级比例】欢迎接待中的x星级比例=【星级评分详情】欢迎接待中x星级条数/列表条数", dataProvider = "starType", dataProviderClass = DataClass.class)
     public void evaluate_data_4(String type, Integer scoreValue, String name) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -205,25 +193,13 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
         try {
             IScene evaluateV4ScoreTrendScene = EvaluateV4ScoreTrendScene.builder().receptionStart(startDate).receptionEnd(endDate).evaluateType(5).build();
             List<JSONObject> trendList = util.toJavaObjectList(evaluateV4ScoreTrendScene, JSONObject.class, "list");
-            int score = trendList.stream().filter(e -> startDate.contains(e.getString("day"))).map(e -> e.getInteger("score")).findFirst().orElse(0);
+            int score = trendList.stream().filter(e -> startDate.contains(e.getString("day"))).findFirst().map(e -> e.getInteger("score")).orElse(0);
             IScene evaluateV4PageScene = EvaluateV4PageScene.builder().receptionStart(startDate).receptionEnd(endDate).evaluateType(5).build();
             List<JSONObject> pageList = util.toJavaObjectList(evaluateV4PageScene, JSONObject.class);
             int scoreTotal = pageList.stream().mapToInt(e -> e.getInteger("total")).sum();
             int mathResult = CommonUtil.getIntRatio(scoreTotal, pageList.size());
-//            AtomicInteger rateScore = new AtomicInteger();
-//            IScene evaluateV4ScoreRateScene = EvaluateV4ScoreRateScene.builder().receptionStart(startDate).receptionEnd(endDate).evaluateType(5).build();
-//            List<JSONObject> rateList = util.toJavaObjectList(evaluateV4ScoreRateScene, JSONObject.class, "list");
-//            rateList.stream().filter(e -> e.getString("type_name").equals("全部环节")).forEach(e -> {
-//                double a = (double) Integer.parseInt(e.getString("one").replace("%", "")) / 100;
-//                double b = (double) 2 * Integer.parseInt(e.getString("two").replace("%", "")) / 100;
-//                double c = (double) 3 * Integer.parseInt(e.getString("three").replace("%", "")) / 100;
-//                double d = (double) 4 * Integer.parseInt(e.getString("four").replace("%", "")) / 100;
-//                double f = (double) 5 * Integer.parseInt(e.getString("five").replace("%", "")) / 100;
-//                rateScore.addAndGet((int) (a + b + c + d + f));
-//            });
             CommonUtil.valueView(score, mathResult);
             Preconditions.checkArgument(score == mathResult, "【星级评分趋势】星级：" + score, " 【星级评分详情】总分的平均分：" + mathResult);
-
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -231,7 +207,7 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "各个环节中各星级比例相加为100％")
+    @Test(description = "各个环节中各星级比例相加为100％或者0%")
     public void evaluate_data_7() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -241,22 +217,26 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
                 IScene evaluateV4ScoreRateScene = EvaluateV4ScoreRateScene.builder().receptionStart(startDate).receptionEnd(endDate).evaluateType(5).build();
                 List<JSONObject> rateList = util.toJavaObjectList(evaluateV4ScoreRateScene, JSONObject.class, "list");
                 rateList.stream().filter(e -> e.getString("type_name").equals(string)).forEach(e -> {
-                    double a = Integer.parseInt(e.getString("one").replace("%", ""));
-                    double b = Integer.parseInt(e.getString("two").replace("%", ""));
-                    double c = Integer.parseInt(e.getString("three").replace("%", ""));
-                    double d = Integer.parseInt(e.getString("four").replace("%", ""));
-                    double f = Integer.parseInt(e.getString("five").replace("%", ""));
+                    double a = parseScore(e.getString("one"));
+                    double b = parseScore(e.getString("two"));
+                    double c = parseScore(e.getString("three"));
+                    double d = parseScore(e.getString("four"));
+                    double f = parseScore(e.getString("five"));
                     rateScore.addAndGet(a + b + c + d + f);
                 });
                 CommonUtil.valueView(rateScore);
-                Preconditions.checkArgument(rateScore.get() == 100, string + "环节中各星级比例相加为100％:" + rateScore);
+                Preconditions.checkArgument(rateScore.get() == 100 || rateScore.get() == 0, string + " 环节中各星级比例相加为100％或者0，实际为：" + rateScore);
             });
 
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("各个环节中各星级比例相加为100％");
+            saveData("各个环节中各星级比例相加为100％或者0%");
         }
+    }
+
+    private double parseScore(String score) {
+        return score == null ? 0 : Integer.parseInt(score.replace("%", ""));
     }
 
     @Test(description = "各个环节中各星级比例相加为100％")

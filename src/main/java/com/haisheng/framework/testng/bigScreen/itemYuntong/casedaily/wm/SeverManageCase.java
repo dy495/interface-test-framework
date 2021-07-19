@@ -31,7 +31,7 @@ import java.lang.reflect.Method;
  * @date 2021/1/29 11:17
  */
 public class SeverManageCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_SSO;
+    private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_CAR;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_DAILY;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public SceneUtil util = new SceneUtil(visitor);
@@ -56,7 +56,6 @@ public class SeverManageCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.roleId = ALL_AUTHORITY.getRoleId();
         beforeClassInit(commonConfig);
         util.loginPc(ALL_AUTHORITY);
-        visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
     }
 
     @AfterClass
