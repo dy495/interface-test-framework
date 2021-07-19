@@ -8,6 +8,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklis
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistConfId;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.specialaudio.AppApprovalScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.YunTongInfo;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.general.EnumValueListScene;
@@ -691,7 +692,75 @@ public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //todo 特殊音频-审核
+    @Test
+    public void specialAudioApproval1() {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            Long id;
+            //这个要去待审核的状态
+            JSONArray arrlist = SpecialAudioPageScene.builder().page(1).size(50).approvalStatus(100).build().invoke(visitor).getJSONArray("list");
+            if (arrlist.size() > 0) {
+                id = arrlist.getJSONObject(0).getLong("id");
+                //审核前审核通过数量
+                int bef = SpecialAudioPageScene.builder().page(1).size(50).approvalStatus(200).build().invoke(visitor).getInteger("total");
+
+                //审核通过
+                JSONObject obj = AppApprovalScene.builder().id(id).approvalStatus(200).build().invoke(visitor, false);
+                Preconditions.checkArgument(obj.getInteger("code") == 1000, "审核失败,提示" + obj.getString("message"));
+
+                //审核后审核通过数量
+                int after = SpecialAudioPageScene.builder().page(1).size(50).approvalStatus(200).build().invoke(visitor).getInteger("total");
+                Preconditions.checkArgument(after - bef == 1, "审核通过后，审核通过记录未+1");
+
+            } else {
+                Preconditions.checkArgument(false == true, "无待审核记录，case跳过");
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("特殊音频审核通过");
+        }
+    }
+
+    @Test
+    public void specialAudioApproval2() {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            Long id;
+
+            JSONArray arrlist = SpecialAudioPageScene.builder().page(1).size(50).approvalStatus(100).build().invoke(visitor).getJSONArray("list");
+            if (arrlist.size() > 0) {
+                id = arrlist.getJSONObject(0).getLong("id");
+                //审核前审核通过数量
+                int bef = SpecialAudioPageScene.builder().page(1).size(50).approvalStatus(300).build().invoke(visitor).getInteger("total");
+
+                //审核通过
+                JSONObject obj = AppApprovalScene.builder().id(id).approvalStatus(300).build().invoke(visitor, false);
+                Preconditions.checkArgument(obj.getInteger("code") == 1000, "审核失败,提示" + obj.getString("message"));
+
+                //审核后审核通过数量
+                int after = SpecialAudioPageScene.builder().page(1).size(50).approvalStatus(300).build().invoke(visitor).getInteger("total");
+                Preconditions.checkArgument(after - bef == 1, "审核不通过后，审核不通过记录未+1");
+
+            } else {
+                Preconditions.checkArgument(false == true, "无待审核记录，case跳过");
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("特殊音频审核不通过");
+        }
+    }
 
 
     @Test
