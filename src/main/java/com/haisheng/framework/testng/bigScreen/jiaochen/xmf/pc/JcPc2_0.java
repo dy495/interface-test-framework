@@ -779,7 +779,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test(enabled = false, description = "导入潜客,参数全填正常")
-    public void importPotentialCustomer5000() {
+    public void  importPotentialCustomer5000() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String[] parm = {
