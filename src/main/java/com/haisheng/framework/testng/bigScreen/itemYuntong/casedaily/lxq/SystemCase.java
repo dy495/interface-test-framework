@@ -464,16 +464,25 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
                 JSONObject object1 = businessUtil.toJavaObject(preSaleCustomerPageScene, JSONObject.class, "customer_type_name", "潜在客户");
                 PreSaleCustomerCreateCustomerScene.builder().customerName(name).customerPhone(object1.getString("customer_phone")).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).salesId(salesId).shopId(Long.parseLong(object1.getString("shop_id"))).vehicleChassisCode("ASDFUGGDSF02" + (int) ((Math.random() * 9 + 1) * 10000)).purchaseCarDate(dt.getHistoryDate(-1)).build().invoke(visitor);
                 JSONObject object2 = businessUtil.toJavaObject(preSaleCustomerPageScene, JSONObject.class, "id", object1.getString("id"));
-                Preconditions.checkArgument(object2.getString("customer_type_name").equals("成交客户"), "创建潜客的成交记录，客户类型变为：" + object2.getString("customer_type_name"));
+                Preconditions.checkArgument(object2.getString("customer_type_name").equals("成交客户"), "创建潜客户的成交记录，客户类型变为：" + object2.getString("customer_type_name"));
+                Preconditions.checkArgument(object2.getString("subject_type").equals(type), "创建潜客户的成交记录，车主类型变为：" + object2.getString("subject_type"));
+                Preconditions.checkArgument(object2.getString("customer_name").equals(name), "创建潜客户的成交记录，客户姓名变为：" + object2.getString("customer_name"));
+//                Preconditions.checkArgument(object2.getString("customer_phone").equals(phone), "创建潜客户的成交记录，客户联系方式变为：" + object2.getString("customer_phone"));
+                Preconditions.checkArgument(object2.getString("sex_id").equals(sex), "创建潜客户的成交记录，客户性别id变为：" + object2.getString("sex_id"));
                 int secondTotal = preSaleCustomerPageScene.invoke(visitor).getInteger("total");
-                Preconditions.checkArgument(secondTotal == oneTotal, "创建潜客成交记前客户列表总数：" + oneTotal + " 创建潜客成交记后客户列表总数：" + secondTotal);
+                Preconditions.checkArgument(secondTotal == oneTotal, "创建潜客户的成交记前客户列表总数：" + oneTotal + " 创建潜客户的成交记后客户列表总数：" + secondTotal);
                 //找一个成交客户创建成交记录
                 JSONObject object3 = businessUtil.toJavaObject(preSaleCustomerPageScene, JSONObject.class, "customer_type_name", "成交客户");
                 PreSaleCustomerCreateCustomerScene.builder().customerName(name).customerPhone(object3.getString("customer_phone")).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).salesId(salesId).shopId(Long.parseLong(object3.getString("shop_id"))).vehicleChassisCode("ASDFUGGDSF02" + (int) ((Math.random() * 9 + 1) * 10000)).purchaseCarDate(dt.getHistoryDate(-1)).build().invoke(visitor);
                 JSONObject object4 = businessUtil.toJavaObject(preSaleCustomerPageScene, JSONObject.class, "id", object3.getString("id"));
                 Preconditions.checkArgument(object4.getString("customer_type_name").equals("成交客户"), "创建成交客户的成交记录，客户类型变为：" + object4.getString("customer_type_name"));
+                Preconditions.checkArgument(object4.getString("customer_type_name").equals("成交客户"), "创建成交客户的成交记录，客户类型变为：" + object2.getString("customer_type_name"));
+                Preconditions.checkArgument(object4.getString("subject_type").equals(type), "创建成交客户的成交记录，车主类型变为：" + object2.getString("subject_type"));
+                Preconditions.checkArgument(object4.getString("customer_name").equals(name), "创建成交客户的成交记录，客户姓名变为：" + object2.getString("customer_name"));
+//                Preconditions.checkArgument(object4.getString("customer_phone").equals(phone), "创建成交客户的成交记录，客户联系方式变为：" + object2.getString("customer_phone"));
+                Preconditions.checkArgument(object4.getString("sex_id").equals(sex), "创建成交客户的成交记录，客户性别id变为：" + object2.getString("sex_id"));
                 int thirdTotal = preSaleCustomerPageScene.invoke(visitor).getInteger("total");
-                Preconditions.checkArgument(thirdTotal == secondTotal, "创建潜客成交记前客户列表总数：" + secondTotal + " 创建潜客成交记后客户列表总数：" + thirdTotal);
+                Preconditions.checkArgument(thirdTotal == secondTotal, "创建成交客户的成交记前客户列表总数：" + secondTotal + " 创建成交客户的成交记后客户列表总数：" + thirdTotal);
             }
 
         } catch (AssertionError | Exception e) {

@@ -98,7 +98,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
         util.loginPc(ALL_AUTHORITY);
     }
 
-    @Test(description = "app接待时产生新的节点，节点名称为销售创建")
+    @Test(description = "APP接待时产生新的节点，节点名称为销售创建")
     public void saleCustomerManager_data_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -106,15 +106,15 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
             IScene preSalesReceptionPageScene = PreSalesReceptionPageScene.builder().customerId(String.valueOf(preSalesReceptionPage.getCustomerId())).build();
             JSONObject response = util.toFirstJavaObject(preSalesReceptionPageScene, JSONObject.class);
             String receptionTypeName = response.getString("reception_type_name");
-            Preconditions.checkArgument(receptionTypeName.equals("销售创建"), "app接待时产生新的节点，节点名称为：" + receptionTypeName);
+            Preconditions.checkArgument(receptionTypeName.equals("销售创建"), "APP接待时产生新的节点，节点名称为：" + receptionTypeName);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("app接待时产生新的节点，节点名称为销售创建");
+            saveData("APP接待时产生新的节点，节点名称为销售创建");
         }
     }
 
-    @Test(description = "app接待时填写备注，备注记录+1")
+    @Test(description = "APP接待时填写备注，备注记录+1")
     public void saleCustomerManager_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -126,16 +126,16 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
             util.loginPc(ALL_AUTHORITY);
             int newTotal = scene.invoke(visitor).getInteger("total");
             String remarkContent = util.toFirstJavaObject(scene, JSONObject.class).getString("remark_content");
-            Preconditions.checkArgument(newTotal == total + 1, "app接待时填写备注前pc备注条数：" + total + " 填写备注后pc备注条数：" + newTotal);
-            Preconditions.checkArgument(EnumDesc.DESC_BETWEEN_200_300.getDesc().equals(remarkContent), "app接待时填写备注后pc备注内容预期为：" + EnumDesc.DESC_BETWEEN_200_300.getDesc() + " 实际为：" + remarkContent);
+            Preconditions.checkArgument(newTotal == total + 1, "APP接待时填写备注前pc备注条数：" + total + " 填写备注后pc备注条数：" + newTotal);
+            Preconditions.checkArgument(EnumDesc.DESC_BETWEEN_200_300.getDesc().equals(remarkContent), "APP接待时填写备注后pc备注内容预期为：" + EnumDesc.DESC_BETWEEN_200_300.getDesc() + " 实际为：" + remarkContent);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("app接待时填写备注，备注记录+1");
+            saveData("APP接待时填写备注，备注记录+1");
         }
     }
 
-    @Test(description = "app接待时购买车辆，购车记录+1")
+    @Test(description = "APP接待时购买车辆，购车记录+1")
     public void saleCustomerManager_data_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -144,7 +144,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
             int buyCarTotal = preSaleCustomerBuyCarPageScene.invoke(visitor).getInteger("total");
             IScene preSaleCustomerInfoBuyCarRecordScene = PreSaleCustomerInfoBuyCarRecordScene.builder().customerId(preSalesReceptionPage.getCustomerId()).build();
             int total = preSaleCustomerInfoBuyCarRecordScene.invoke(visitor).getInteger("total");
-            String vin = util.getNoExistVin();
+            String vin = util.getNotExistVin();
             //买车
             BuyCarScene.builder().carModel(Long.parseLong(util.getCarModelId())).carStyle(Long.parseLong(util.getCarStyleId())).vin(vin)
                     .id(preSalesReceptionPage.getId()).shopId(Long.parseLong(util.getReceptionShopId())).build().invoke(visitor);
@@ -152,24 +152,24 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
             int newTotal = response.getInteger("total");
             int newBuyCarTotal = preSaleCustomerBuyCarPageScene.invoke(visitor).getInteger("total");
             String vehicleChassisCode = response.getJSONArray("list").getJSONObject(0).getString("vehicle_chassis_code");
-            Preconditions.checkArgument(newTotal == total + 1, "app接待时购买车辆后，购车记录预期为：" + (total + 1) + " 实际为：" + newTotal);
-            Preconditions.checkArgument(vehicleChassisCode.equals(vin), "app接待时购买车辆后，底盘号预期为：" + vin + " 实际为：" + vehicleChassisCode);
-            Preconditions.checkArgument(newBuyCarTotal == buyCarTotal + 1, "app接待时购买车辆后，成交记录页预期为：" + (buyCarTotal + 1) + " 实际为：" + newBuyCarTotal);
+            Preconditions.checkArgument(newTotal == total + 1, "APP接待时购买车辆后，购车记录预期为：" + (total + 1) + " 实际为：" + newTotal);
+            Preconditions.checkArgument(vehicleChassisCode.equals(vin), "APP接待时购买车辆后，底盘号预期为：" + vin + " 实际为：" + vehicleChassisCode);
+            Preconditions.checkArgument(newBuyCarTotal == buyCarTotal + 1, "APP接待时购买车辆后，成交记录页预期为：" + (buyCarTotal + 1) + " 实际为：" + newBuyCarTotal);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("app接待时购买车辆，购车记录+1");
+            saveData("APP接待时购买车辆，购车记录+1");
         }
     }
 
-    @Test(description = "pc新建成交记录，购车记录+1")
+    @Test(description = "PC新建成交记录，购车记录+1")
     public void saleCustomerManager_data_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             initAppPreSalesReceptionPageBean();
             IScene scene = PreSaleCustomerInfoBuyCarRecordScene.builder().customerId(preSalesReceptionPage.getCustomerId()).build();
             int total = scene.invoke(visitor).getInteger("total");
-            String vin = util.getNoExistVin();
+            String vin = util.getNotExistVin();
             //新建成交记录
             PreSaleCustomerCreateCustomerScene.builder().customerPhone(preSalesReceptionPage.getCustomerPhone()).customerName(preSalesReceptionPage.getCustomerName())
                     .sex("1").customerType("PERSON").shopId(Long.parseLong(util.getReceptionShopId()))
@@ -183,7 +183,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            saveData("pc新建成交记录，购车记录+1");
+            saveData("PC新建成交记录，购车记录+1");
         }
     }
 
@@ -203,7 +203,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //    @AfterClass(description = "完成此条接待记录")
+    @AfterClass(description = "完成此条接待记录")
     @Test(description = "完成接待，更新接待时间")
     public void saleCustomerManager_data_6() {
         logger.info(caseResult.getCaseName());

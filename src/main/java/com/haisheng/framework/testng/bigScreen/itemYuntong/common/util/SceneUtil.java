@@ -407,14 +407,14 @@ public class SceneUtil extends BasicUtil {
      *
      * @return 底盘号
      */
-    public String getNoExistVin() {
+    public String getNotExistVin() {
         String vin = "AAASSDFD" + CommonUtil.getRandom(9);
         IScene scene = PreSaleCustomerPageScene.builder().build();
         List<JSONObject> list = toJavaObjectList(scene, JSONObject.class, "customer_type_name", "成交客户");
         List<String> vehicleChassisCodeList = new ArrayList<>();
         list.stream().map(e -> e.getLong("customer_id")).map(e -> PreSaleCustomerInfoBuyCarRecordScene.builder().customerId(e).build())
                 .map(e -> toJavaObjectList(e, JSONObject.class)).forEach(e -> e.stream().map(a -> a.getString("vehicle_chassis_code")).forEach(vehicleChassisCodeList::add));
-        return !vehicleChassisCodeList.contains(vin) ? vin : getNoExistVin();
+        return !vehicleChassisCodeList.contains(vin) ? vin : getNotExistVin();
     }
 
     public String getReceptionShopId() {
