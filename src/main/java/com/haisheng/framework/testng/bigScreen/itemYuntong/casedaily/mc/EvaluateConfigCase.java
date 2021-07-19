@@ -23,12 +23,14 @@ import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class EvaluateConfigCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_SSO; // 管理页—-首页
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_DAILY; // 全部权限账号 【运通】
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);   // 产品类放到代理类中（通过代理类发请求）
-    public TopicUtil util = new TopicUtil(visitor);    //场景工具类中放入代理类，类中封装接口方法直接调用
+    public SceneUtil util = new TopicUtil(visitor);    //场景工具类中放入代理类，类中封装接口方法直接调用
     CommonConfig commonConfig = new CommonConfig();    // 配置类初始化
 
     @BeforeClass
@@ -66,40 +68,68 @@ public class EvaluateConfigCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
     }
 
-    @Test(dataProvider = "titleCheck")
-    public void addATopic1(String description,String expect,String title,String... answer){
+    @Test(dataProvider = "contentCheck")
+    public void addATopic1(String description, String expect, String title, String... answer) {
         visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
-        try{
-            JSONArray links = util.checkContents(title,answer);
-            String code = EvaluateV4ConfigSubmitScene.builder().links(links).build().invoke(visitor, false).getString("code");;
-            Preconditions.checkArgument(expect.equals(code),description+",结果code="+code);
-        }catch (AssertionError e) {
+        try {
+            if (util instanceof TopicUtil) {
+                TopicUtil topicUtil = (TopicUtil) util;
+                JSONArray links = topicUtil.checkContents(title, answer);
+                String code = EvaluateV4ConfigSubmitScene.builder().links(links).build().invoke(visitor, false).getString("code");
+                Preconditions.checkArgument(expect.equals(code), description + ",期待:" + expect + ", 结果code=" + code);
+            }
+        } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("评价配置");
+            saveData("评价配置：内容校验");
         }
 
     }
-    @DataProvider(name = "titleCheck")
+
+    @DataProvider(name = "contentCheck")
     public Object[] exportPages() {
         return new String[][]{
-                {"标题长度3，答案两个，答案长度1","1000","一二三","一","二"},
-                {"标题长度40，答案两个，答案长度1","1000","一二三1414&djhfa昂发开发!@#$%^&*(){}[]?\"\"|?/\\NM","一","二"},
-                {"标题长度41，答案两个，答案长度1","1001","一二三1414&djhfa昂发开发!@#$%^&*(){}[]?\"\"|?/\\NM2","一","二"}
+                {"标题长度3，答案两个，答案长度1", "1000", "一二三", "一", "二"},
+                {"标题长度40，答案两个，答案长度1", "1000", "一二三1414&djhfa昂发开发!@#$%^&*(){}[]?\"\"|?/\\NM", "一", "二"},
+                {"标题长度41，答案两个，答案长度1", "1001", "一二三1414&djhfa昂发开发!@#$%^&*(){}[]?\"\"|?/\\NM2", "一", "二"},
+                {"标题长度3，答案两个，答案长度20", "1000", "一二三", "&*(%:LJ：“发LJ*^(%$# $", "UHuh是"},
+                {"标题长度3，答案两个，答案长度21", "1001", "一二三", "一二三四五六四五六四五六四五六四五六四五六", "二44444"},
         };
     }
 
+    @Test(dataProvider = "topicNum")
+    public void addATopic2(String description, List<Integer> topicList, String expectCode, String... answer) {
+        visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
+        try {
+            if (util instanceof TopicUtil) {
+                TopicUtil topicUtil = (TopicUtil) util;
+                JSONArray links = topicUtil.checkTopicNum(topicList, answer);
+                String code = EvaluateV4ConfigSubmitScene.builder().links(links).build().invoke(visitor, false).getString("code");
+                Preconditions.checkArgument(expectCode.equals(code), description + ",期待:" + expectCode + ", 结果code=" + code);
+            }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("评价配置：题目数量");
+        }
 
 
+    }
 
+    @DataProvider(name = "topicNum")
+    public Object[] exports() {
+        return new Object[][]{
+                {"1道题,5个答案", Arrays.asList(1, 1, 1, 1, 1), "1000", "选项1", "选项2", "选项3", "选项4", "选项5"},
+                {"10道题,5个答案", Arrays.asList(10, 10, 10, 10, 10), "1000", "选项1", "选项2", "选项3", "选项4", "选项5"},
+                {"11道题,5个答案", Arrays.asList(11, 10, 10, 10, 10), "1001", "选项1", "选项2", "选项3", "选项4", "选项5"},
+                {"有0道题,5个答案", Arrays.asList(10, 10, 10, 10, 0), "1001", "选项1", "选项2", "选项3", "选项4", "选项5"},
 
-
-
-
-
-
+        };
+    }
 
 
 }
