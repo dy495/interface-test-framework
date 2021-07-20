@@ -2,7 +2,6 @@ package com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.MyUtil;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.google.inject.internal.util.$SourceProvider;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
 import org.jetbrains.annotations.NotNull;

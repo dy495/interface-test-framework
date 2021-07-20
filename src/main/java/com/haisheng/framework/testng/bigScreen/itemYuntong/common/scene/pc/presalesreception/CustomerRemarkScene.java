@@ -45,6 +45,6 @@ public class CustomerRemarkScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/account-platform/auth/pre-sales-reception/customer/remark";
+        return "/car-platform/pc/pre-sales-reception/customer/remark";
     }
 }
