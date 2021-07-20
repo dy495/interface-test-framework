@@ -73,7 +73,7 @@ public class CommonUtil {
      */
     @SafeVarargs
     public static <T> void valueView(T... value) {
-        Arrays.stream(value).forEach(e -> logger.info("value:{ {} }", e));
+        Arrays.stream(value).forEach(e -> logger.info("value:【 {} 】", e));
     }
 
     /**
@@ -155,7 +155,7 @@ public class CommonUtil {
      * @param denominator 分母
      * @return 比值
      */
-    public static int getIntRatio(int numerator, int denominator) {
+    public static int getRoundIntRatio(int numerator, int denominator) {
         double a = (double) numerator / denominator;
         return (int) Math.round(a);
     }

@@ -90,7 +90,7 @@ public class BasicUtil {
         return JSONObject.toJavaObject(object, tClass);
     }
 
-    public <T> T toJavaObject(@NotNull IScene scene, Class<T> bean, String key, Object value) {
+    public <T> T toJavaObject(@NotNull IScene scene, Class<T> tClass, String key, Object value) {
         int total = scene.invoke(visitor).getInteger("total");
         int s = CommonUtil.getTurningPage(total, SIZE);
         for (int i = 1; i < s; i++) {
@@ -98,7 +98,23 @@ public class BasicUtil {
             scene.setSize(SIZE);
             JSONArray array = scene.invoke(visitor).getJSONArray("list");
             T clazz = array.stream().map(e -> (JSONObject) e).filter(e -> e.getObject(key, value.getClass())
-                    .equals(value)).findFirst().map(e -> JSONObject.toJavaObject(e, bean)).orElse(null);
+                    .equals(value)).findFirst().map(e -> JSONObject.toJavaObject(e, tClass)).orElse(null);
+            if (clazz != null) {
+                return clazz;
+            }
+        }
+        return null;
+    }
+
+    public <T> T toJavaObject(@NotNull IScene scene, Integer size, Class<T> tClass, String key, Object value) {
+        int total = scene.invoke(visitor).getInteger("total");
+        int s = CommonUtil.getTurningPage(total, size);
+        for (int i = 1; i < s; i++) {
+            scene.setPage(i);
+            scene.setSize(size);
+            JSONArray array = scene.invoke(visitor).getJSONArray("list");
+            T clazz = array.stream().map(e -> (JSONObject) e).filter(e -> e.getObject(key, value.getClass())
+                    .equals(value)).findFirst().map(e -> JSONObject.toJavaObject(e, tClass)).orElse(null);
             if (clazz != null) {
                 return clazz;
             }

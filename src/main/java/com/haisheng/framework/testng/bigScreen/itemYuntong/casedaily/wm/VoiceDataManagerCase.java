@@ -140,7 +140,7 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
                     .map(e -> VoiceDetailScene.builder().id(e.getId()).build().invoke(visitor)).forEach(object -> {
                 int averageScore = object.getInteger("average_score");
                 int scoreSum = object.getJSONArray("scores").stream().map(e -> (JSONObject) e).mapToInt(e -> e.getInteger("score")).sum();
-                int mathResult = CommonUtil.getIntRatio(scoreSum, 5);
+                int mathResult = CommonUtil.getRoundIntRatio(scoreSum, 5);
                 CommonUtil.valueView(averageScore, mathResult);
                 Preconditions.checkArgument(averageScore == mathResult, "语音评鉴列表详情接待得分：" + averageScore + " 5个环节分数之和 / 5， 四舍五入取整：" + mathResult);
             });

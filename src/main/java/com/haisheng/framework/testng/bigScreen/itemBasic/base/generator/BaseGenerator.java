@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanage.PackageFormPageScene;
 import com.haisheng.framework.util.CommonUtil;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -93,10 +94,11 @@ public abstract class BaseGenerator implements IGenerator {
      */
     public <T> T findBeanByField(IScene scene, Class<T> bean, String key, Object value) {
         int total = scene.invoke(visitor).getInteger("total");
-        int s = CommonUtil.getTurningPage(total, SIZE);
+        int size = scene instanceof PackageFormPageScene ? 50 : SIZE;
+        int s = CommonUtil.getTurningPage(total, size);
         for (int i = 1; i < s; i++) {
             scene.setPage(i);
-            scene.setSize(SIZE);
+            scene.setSize(size);
             JSONArray array = scene.invoke(visitor).getJSONArray("list");
             T clazz = array.stream().map(e -> (JSONObject) e).filter(e -> e.getObject(key, value.getClass())
                     .equals(value)).findFirst().map(e -> JSONObject.toJavaObject(e, bean)).orElse(null);

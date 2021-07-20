@@ -117,7 +117,7 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
         try {
             IScene voiceEvaluationPageScene = VoiceEvaluationPageScene.builder().build();
             long evaluationTotal = voiceEvaluationPageScene.invoke(visitor).getLong("total");
-            visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
+            visitor.setProduct(EnumTestProduce.YT_ONLINE_CAR);
             IScene preSalesReceptionPageScene = PreSalesReceptionPageScene.builder().build();
             long receptionTotal = preSalesReceptionPageScene.invoke(visitor).getLong("total");
             CommonUtil.valueView(evaluationTotal, receptionTotal);
@@ -125,7 +125,7 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            visitor.setProduct(EnumTestProduce.YT_DAILY_CONTROL);
+            visitor.setProduct(EnumTestProduce.YT_ONLINE_CONTROL);
             saveData("语音评鉴列表数<=销售接待页列表数");
         }
     }
@@ -140,7 +140,7 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
                     .map(e -> VoiceDetailScene.builder().id(e.getId()).build().invoke(visitor)).forEach(object -> {
                 int averageScore = object.getInteger("average_score");
                 int scoreSum = object.getJSONArray("scores").stream().map(e -> (JSONObject) e).mapToInt(e -> e.getInteger("score")).sum();
-                int mathResult = CommonUtil.getIntRatio(scoreSum, 5);
+                int mathResult = CommonUtil.getRoundIntRatio(scoreSum, 5);
                 CommonUtil.valueView(averageScore, mathResult);
                 Preconditions.checkArgument(averageScore == mathResult, "语音评鉴列表详情接待得分：" + averageScore + " 5个环节分数之和 / 5， 四舍五入取整：" + mathResult);
             });

@@ -179,7 +179,8 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
             VoucherPage voucherPage = util.getVoucherPage(voucherId);
             IScene buyPackageRecordScene = BuyPackageRecordScene.builder().build();
             int buyPackageRecordTotal = buyPackageRecordScene.invoke(visitor).getInteger("total");
-            int soldNumber = util.getPackagePage(packageId).getSoldNumber();
+            List<PackagePage> packagePageList = util.getPackagePageList(packageName);
+            int soldNumber = packagePageList.stream().filter(e -> e.getPackageId().equals(packageId)).map(PackagePage::getSoldNumber).findFirst().orElse(0);
             IScene voucherInfoScene = VoucherInfoScene.builder().id(voucherId).build();
             int totalSend = voucherInfoScene.invoke(visitor).getInteger("total_send");
             user.loginApplet(APPLET_USER_ONE);

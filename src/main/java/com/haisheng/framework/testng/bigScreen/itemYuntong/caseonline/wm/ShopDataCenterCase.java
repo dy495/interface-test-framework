@@ -183,7 +183,7 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
                 int link3 = e.getInteger("link3");
                 int link4 = e.getInteger("link4");
                 int link5 = e.getInteger("link5");
-                int mathResult = CommonUtil.getIntRatio(link1 + link2 + link3 + link4 + link5, 5);
+                int mathResult = CommonUtil.getRoundIntRatio(link1 + link2 + link3 + link4 + link5, 5);
                 CommonUtil.valueView(total, mathResult);
                 Preconditions.checkArgument(total == mathResult, "【星级评分详情】总分：" + total + " 各环节星级相加/5：" + mathResult);
             });
@@ -204,7 +204,7 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
             IScene evaluateV4PageScene = EvaluateV4PageScene.builder().receptionStart(startDate).receptionEnd(endDate).evaluateType(5).build();
             List<JSONObject> pageList = util.toJavaObjectList(evaluateV4PageScene, JSONObject.class);
             int scoreTotal = pageList.stream().mapToInt(e -> e.getInteger("total")).sum();
-            int mathResult = CommonUtil.getIntRatio(scoreTotal, pageList.size());
+            int mathResult = CommonUtil.getRoundIntRatio(scoreTotal, pageList.size());
             CommonUtil.valueView(score, mathResult);
             Preconditions.checkArgument(score == mathResult, "【星级评分趋势】星级：" + score, " 【星级评分详情】总分的平均分：" + mathResult);
         } catch (Exception | AssertionError e) {
@@ -258,7 +258,7 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
                 IScene evaluateV4DetailScene = EvaluateV4DetailScene.builder().id(id).build();
                 List<JSONObject> evaluateV4DetailList = util.toJavaObjectList(evaluateV4DetailScene, JSONObject.class, "info");
                 int scoreSum = evaluateV4DetailList.stream().mapToInt(e -> e.getInteger("score")).sum();
-                int mathResult = CommonUtil.getIntRatio(scoreSum, evaluateV4DetailList.size());
+                int mathResult = CommonUtil.getRoundIntRatio(scoreSum, evaluateV4DetailList.size());
                 CommonUtil.valueView(total, mathResult);
             });
         } catch (Exception | AssertionError e) {

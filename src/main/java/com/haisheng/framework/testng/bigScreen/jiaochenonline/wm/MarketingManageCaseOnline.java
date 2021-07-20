@@ -156,14 +156,14 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             int newTotal = packageFormPageScene.invoke(visitor).getInteger("total");
             CommonUtil.checkResult("创建套餐后套餐列表数", total + 1, newTotal);
             //列表内容校验
-            PackagePage packagePage = util.toJavaObjectList(PackageFormPageScene.builder().packageName(packageName).build(), PackagePage.class).get(0);
+            PackagePage packagePage = util.toJavaObjectList(PackageFormPageScene.builder().packageName(packageName).build(), 50, PackagePage.class).get(0);
             CommonUtil.checkResult(packageName + " 套餐价格", "49.99", packagePage.getPrice());
             CommonUtil.checkResult(packageName + " 套餐内含卡券数", 10, packagePage.getVoucherNumber());
             CommonUtil.checkResult(packageName + " 客户有效期", "10天", packagePage.getCustomerUseValidity());
             CommonUtil.checkResult(packageName + " 审核状态", AuditStatusEnum.AUDITING.getName(), packagePage.getAuditStatusName());
             //审核通过
             AuditPackageStatusScene.builder().id(packageId).status(AuditStatusEnum.AGREE.name()).build().invoke(visitor);
-            PackagePage newPackagePage = util.toJavaObjectList(PackageFormPageScene.builder().packageName(packageName).build(), PackagePage.class).get(0);
+            PackagePage newPackagePage = util.toJavaObjectList(PackageFormPageScene.builder().packageName(packageName).build(), 50, PackagePage.class).get(0);
             CommonUtil.checkResult(packageName + " 审核状态", AuditStatusEnum.AGREE.getName(), newPackagePage.getAuditStatusName());
         } catch (Exception | AssertionError e) {
             collectMessage(e);

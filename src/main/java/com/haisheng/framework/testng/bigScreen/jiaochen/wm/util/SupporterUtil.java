@@ -566,14 +566,25 @@ public class SupporterUtil extends BasicUtil {
     }
 
     /**
+     * 获取套餐信息集合
+     *
+     * @param packageName 套餐名
+     * @return 套餐信息集合
+     */
+    public PackagePage getPackagePage(String packageName) {
+        IScene scene = PackageFormPageScene.builder().packageName(packageName).build();
+        return toJavaObject(scene, 50, PackagePage.class, "package_name", packageName);
+    }
+
+    /**
      * 获取套餐信息
      *
      * @param packageName 套餐名
      * @return 套餐信息
      */
-    public PackagePage getPackagePage(String packageName) {
+    public List<PackagePage> getPackagePageList(String packageName) {
         IScene scene = PackageFormPageScene.builder().packageName(packageName).build();
-        return toJavaObject(scene, PackagePage.class, "package_name", packageName);
+        return toJavaObjectList(scene, 50, PackagePage.class);
     }
 
     /**
@@ -584,7 +595,7 @@ public class SupporterUtil extends BasicUtil {
      */
     public PackagePage getPackagePage(Long packageId) {
         IScene scene = PackageFormPageScene.builder().build();
-        return toJavaObject(scene, PackagePage.class, "id", packageId);
+        return toJavaObject(scene, 50, PackagePage.class, "id", packageId);
     }
 
     /**
