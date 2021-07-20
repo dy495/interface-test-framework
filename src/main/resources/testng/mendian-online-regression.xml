@@ -31,15 +31,15 @@
             <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.zt.XundianPcCase"></class>
             <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.zt.InsPcCase"></class>
             <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.wm.GoodsMarkingCaseOnline"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.wm.VoucherManagerCaseOnline">
-
+            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.wm.VoucherManagerCaseOnline"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.gly.StoreInspectionOnlineCase"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.gly.VideoSurveillanceOnlineCase">
                 <methods>
                     <exclude name="myReportFilter1"/>
                 </methods>
             </class>
 
-            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.gly.StoreInspectionOnlineCase"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.gly.VideoSurveillanceOnlineCase"></class>
+
 
         </classes>
     </test>
