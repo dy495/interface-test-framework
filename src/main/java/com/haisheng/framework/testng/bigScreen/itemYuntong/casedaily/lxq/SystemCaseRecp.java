@@ -7,7 +7,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklis
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.AppPreSalesReceptionCreateScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.voiceSubmit;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.voicerecord.AppVoiceRecordSubmitScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanage.PreSaleCustomerModelListScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanage.PreSaleCustomerStyleListScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.FinishReceptionScene;
@@ -136,13 +136,11 @@ public class SystemCaseRecp extends TestCaseCommon implements TestCaseStd {
 //            saveData("接待后评价");
 //        }
 //    }
+    @Test
+    public void voice() {
+        logger.logCaseStart(caseResult.getCaseName());
 
-
-        @Test
-        public void voice() {
-            logger.logCaseStart(caseResult.getCaseName());
-
-            try {
+        try {
 
 
             String base1 = encodeBase64File("src/main/java/com/haisheng/framework/testng/bigScreen/itemYuntong/casedaily/lxq/费用.aac");
@@ -151,59 +149,59 @@ public class SystemCaseRecp extends TestCaseCommon implements TestCaseStd {
 
 
             //销售接待
-                Long starttime = System.currentTimeMillis();
-                String record_name = "9999_"+starttime+".acc";
-                JSONArray reception_nodes = new JSONArray();
+            Long starttime = System.currentTimeMillis();
+            String record_name = "9999_" + starttime + ".acc";
+            JSONArray reception_nodes = new JSONArray();
 
-                String phone1 = "1380110" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000));//手机号
-                String phone2 = "1380220" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000));//手机号
-                String phone3 = "1380330" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000));//手机号
-                Long car_style_id = PreSaleCustomerStyleListScene.builder().shopId(info.oneshopid).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("style_id");
-                Long car_model_id = PreSaleCustomerModelListScene.builder().styleId(car_style_id).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("model_id");
+            String phone1 = "1380110" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000));//手机号
+            String phone2 = "1380220" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000));//手机号
+            String phone3 = "1380330" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000));//手机号
+            Long car_style_id = PreSaleCustomerStyleListScene.builder().shopId(info.oneshopid).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("style_id");
+            Long car_model_id = PreSaleCustomerModelListScene.builder().styleId(car_style_id).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("model_id");
 
-                //第一个接待
-                AppPreSalesReceptionCreateScene.builder().customerName("自自").customerPhone(phone1).sexId("1").intentionCarModelId(Long.toString(car_model_id)).estimateBuyCarTime("2100-07-12").build().invoke(visitor);
-                //获取接待id
-                Long recId1 = PreSalesReceptionPageScene.builder().phone(phone1).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            //第一个接待
+            AppPreSalesReceptionCreateScene.builder().customerName("自自").customerPhone(phone1).sexId("1").intentionCarModelId(Long.toString(car_model_id)).estimateBuyCarTime("2100-07-12").build().invoke(visitor);
+            //获取接待id
+            Long recId1 = PreSalesReceptionPageScene.builder().phone(phone1).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
 
-                //第二个接待
-                AppPreSalesReceptionCreateScene.builder().customerName("动动").customerPhone(phone2).sexId("0").intentionCarModelId(Long.toString(car_model_id)).estimateBuyCarTime("2100-07-12").build().invoke(visitor);
-                //获取接待id
-                Long recId2 = PreSalesReceptionPageScene.builder().phone(phone2).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            //第二个接待
+            AppPreSalesReceptionCreateScene.builder().customerName("动动").customerPhone(phone2).sexId("0").intentionCarModelId(Long.toString(car_model_id)).estimateBuyCarTime("2100-07-12").build().invoke(visitor);
+            //获取接待id
+            Long recId2 = PreSalesReceptionPageScene.builder().phone(phone2).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
 
-                //第三个接待
-                AppPreSalesReceptionCreateScene.builder().customerName("化化").customerPhone(phone3).sexId("1").intentionCarModelId(Long.toString(car_model_id)).estimateBuyCarTime("2100-07-12").build().invoke(visitor);
-                //获取接待id
-                Long recId3 = PreSalesReceptionPageScene.builder().phone(phone3).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
-
-
-
-                Thread.sleep(301000);
-                Long endtime = System.currentTimeMillis();
-                visitor.setProduct(EnumTestProduce.YT_DAILY_CONTROL);
-                voiceSubmit.builder().base64(base1).record_name(record_name).start_time(starttime).end_time(endtime).reception_id(recId1).reception_nodes(reception_nodes).build().invoke(visitor);
-                voiceSubmit.builder().base64(base2).record_name(record_name).start_time(starttime).end_time(endtime).reception_id(recId2).reception_nodes(reception_nodes).build().invoke(visitor);
-                voiceSubmit.builder().base64(base3).record_name(record_name).start_time(starttime).end_time(endtime).reception_id(recId3).reception_nodes(reception_nodes).build().invoke(visitor);
+            //第三个接待
+            AppPreSalesReceptionCreateScene.builder().customerName("化化").customerPhone(phone3).sexId("1").intentionCarModelId(Long.toString(car_model_id)).estimateBuyCarTime("2100-07-12").build().invoke(visitor);
+            //获取接待id
+            Long recId3 = PreSalesReceptionPageScene.builder().phone(phone3).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
 
 
+            Thread.sleep(301000);
+            Long endtime = System.currentTimeMillis();
+            visitor.setProduct(EnumTestProduce.YT_DAILY_CONTROL);
+            AppVoiceRecordSubmitScene.builder().base64(base1).recordName(record_name).startTime(starttime).endTime(endtime).receptionId(recId1).receptionNodes(reception_nodes).build().invoke(visitor);
+            AppVoiceRecordSubmitScene.builder().base64(base2).recordName(record_name).startTime(starttime).endTime(endtime).receptionId(recId2).receptionNodes(reception_nodes).build().invoke(visitor);
+            AppVoiceRecordSubmitScene.builder().base64(base3).recordName(record_name).startTime(starttime).endTime(endtime).receptionId(recId3).receptionNodes(reception_nodes).build().invoke(visitor);
+//            voiceSubmit.builder().base64(base1).record_name(record_name).start_time(starttime).end_time(endtime).reception_id(recId1).reception_nodes(reception_nodes).build().invoke(visitor);
+//            voiceSubmit.builder().base64(base2).record_name(record_name).start_time(starttime).end_time(endtime).reception_id(recId2).reception_nodes(reception_nodes).build().invoke(visitor);
+//            voiceSubmit.builder().base64(base3).record_name(record_name).start_time(starttime).end_time(endtime).reception_id(recId3).reception_nodes(reception_nodes).build().invoke(visitor);
 
-                visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
-                //完成接待
-                FinishReceptionScene.builder().id(recId1).shopId(info.oneshopid).build().invoke(visitor);
-                FinishReceptionScene.builder().id(recId2).shopId(info.oneshopid).build().invoke(visitor);
-                FinishReceptionScene.builder().id(recId3).shopId(info.oneshopid).build().invoke(visitor);
+
+            visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
+            //完成接待
+            FinishReceptionScene.builder().id(recId1).shopId(info.oneshopid).build().invoke(visitor);
+            FinishReceptionScene.builder().id(recId2).shopId(info.oneshopid).build().invoke(visitor);
+            FinishReceptionScene.builder().id(recId3).shopId(info.oneshopid).build().invoke(visitor);
 
 
-            } catch (AssertionError e) {
-                appendFailReason(e.toString());
-            } catch (Exception e) {
-                appendFailReason(e.toString());
-            } finally {
-                saveData("接待带语音");
-            }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("接待带语音");
+        }
 
     }
-
 
 
     public static String encodeBase64File(String path) throws Exception {
@@ -214,8 +212,6 @@ public class SystemCaseRecp extends TestCaseCommon implements TestCaseStd {
         inputFile.close();
         return new BASE64Encoder().encode(buffer);
     }
-
-
 
 
 }

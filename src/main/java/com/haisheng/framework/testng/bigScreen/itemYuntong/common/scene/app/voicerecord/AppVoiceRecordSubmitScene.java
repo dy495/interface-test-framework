@@ -18,7 +18,7 @@ public class AppVoiceRecordSubmitScene extends BaseScene {
      * 是否必填 true
      * 版本 v1.0
      */
-    private final String receptionId;
+    private final Long receptionId;
 
     /**
      * 描述 语音压缩文件base64
@@ -29,9 +29,9 @@ public class AppVoiceRecordSubmitScene extends BaseScene {
 
     private final String recordName;
 
-    private final String startTime;
+    private final Long startTime;
 
-    private final String endTime;
+    private final Long endTime;
 
     /**
      * 描述 语音记录

@@ -1,5 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.itemYuntong.caseonline.wm;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.AtomicDouble;
@@ -85,7 +86,8 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene evaluateV4ScoreTrendScene = EvaluateV4ScoreTrendScene.builder().receptionStart(startDate).receptionEnd(endDate).evaluateType(5).build();
-            int score = evaluateV4ScoreTrendScene.invoke(visitor).getJSONArray("list").getJSONObject(0).getInteger("score");
+            JSONObject obj = evaluateV4ScoreTrendScene.invoke(visitor).getJSONArray("list").getJSONObject(0);
+            int score = obj.getInteger("score") == null ? 0 : obj.getInteger("score");
             IScene evaluateV4PageScene = EvaluateV4PageScene.builder().receptionStart(startDate).receptionEnd(endDate).evaluateType(5).build();
             List<JSONObject> list = util.toJavaObjectList(evaluateV4PageScene, JSONObject.class);
             List<Integer> scoreList = new ArrayList<>();
@@ -113,7 +115,7 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
         try {
             IScene evaluateV4ScoreTrendScene = EvaluateV4ScoreRateScene.builder().receptionStart(startDate).receptionEnd(endDate).evaluateType(5).build();
             List<JSONObject> evaluateV4ScoreRateList = util.toJavaObjectList(evaluateV4ScoreTrendScene, JSONObject.class, "list");
-            String percent = evaluateV4ScoreRateList.stream().filter(e -> e.getString("type_name").equals("全部环节")).map(e -> e.getString(type)).findFirst().orElse("0%");
+            String percent = evaluateV4ScoreRateList.stream().filter(e -> e.getString("type_name").equals("全部环节")).findFirst().map(e -> e.getString(type)).orElse("0%");
             IScene evaluateV4PageScene = EvaluateV4PageScene.builder().receptionStart(startDate).receptionEnd(endDate).evaluateType(5).build();
             List<JSONObject> list = util.toJavaObjectList(evaluateV4PageScene, JSONObject.class);
             int count = (int) list.stream().filter(e -> e.getInteger("score").equals(scoreValue)).count();
@@ -133,7 +135,7 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
         try {
             IScene evaluateV4ScoreTrendScene = EvaluateV4ScoreRateScene.builder().receptionStart(startDate).receptionEnd(endDate).evaluateType(5).build();
             List<JSONObject> evaluateV4ScoreRateList = util.toJavaObjectList(evaluateV4ScoreTrendScene, JSONObject.class, "list");
-            String percent = evaluateV4ScoreRateList.stream().filter(e -> e.getString("type_name").equals("欢迎接待")).map(e -> e.getString(type)).findFirst().orElse("0%");
+            String percent = evaluateV4ScoreRateList.stream().filter(e -> e.getString("type_name").equals("欢迎接待")).findFirst().map(e -> e.getString(type)).orElse("0%");
             IScene evaluateV4PageScene = EvaluateV4PageScene.builder().receptionStart(startDate).receptionEnd(endDate).evaluateType(5).build();
             List<JSONObject> list = util.toJavaObjectList(evaluateV4PageScene, JSONObject.class);
             int count = (int) list.stream().filter(e -> e.getInteger("link1").equals(scoreValue)).count();
@@ -155,7 +157,7 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
             Arrays.stream(strings).forEach(string -> {
                 IScene evaluateV4ScoreTrendScene = EvaluateV4ScoreRateScene.builder().receptionStart(startDate).receptionEnd(endDate).evaluateType(5).build();
                 List<JSONObject> evaluateV4ScoreRateList = util.toJavaObjectList(evaluateV4ScoreTrendScene, JSONObject.class, "list");
-                String percent = evaluateV4ScoreRateList.stream().filter(e -> e.getString("type_name").equals(string[0])).map(e -> e.getString(type)).findFirst().orElse("0%");
+                String percent = evaluateV4ScoreRateList.stream().filter(e -> e.getString("type_name").equals(string[0])).findFirst().map(e -> e.getString(type)).orElse("0%");
                 IScene evaluateV4PageScene = EvaluateV4PageScene.builder().receptionStart(startDate).receptionEnd(endDate).evaluateType(5).build();
                 List<JSONObject> list = util.toJavaObjectList(evaluateV4PageScene, JSONObject.class);
                 int count = (int) list.stream().filter(e -> e.getInteger(string[1]).equals(scoreValue)).count();

@@ -7,7 +7,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklis
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.AppPreSalesReceptionCreateScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.voiceSubmit;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.voicerecord.AppVoiceRecordSubmitScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanage.PreSaleCustomerModelListScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanage.PreSaleCustomerStyleListScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.FinishReceptionScene;
@@ -187,9 +187,9 @@ public class SystemCaseRecpOnline extends TestCaseCommon implements TestCaseStd 
                 Thread.sleep(301000);
                 Long endtime = System.currentTimeMillis();
                 visitor.setProduct(EnumTestProduce.YT_ONLINE_CONTROL);
-                voiceSubmit.builder().base64(base1).record_name(record_name).start_time(starttime).end_time(endtime).reception_id(recId1).reception_nodes(reception_nodes).build().invoke(visitor);
-                voiceSubmit.builder().base64(base2).record_name(record_name).start_time(starttime).end_time(endtime).reception_id(recId2).reception_nodes(reception_nodes).build().invoke(visitor);
-                voiceSubmit.builder().base64(base3).record_name(record_name).start_time(starttime).end_time(endtime).reception_id(recId3).reception_nodes(reception_nodes).build().invoke(visitor);
+                AppVoiceRecordSubmitScene.builder().base64(base1).recordName(record_name).startTime(starttime).endTime(endtime).receptionId(recId1).receptionNodes(reception_nodes).build().invoke(visitor);
+                AppVoiceRecordSubmitScene.builder().base64(base2).recordName(record_name).startTime(starttime).endTime(endtime).receptionId(recId2).receptionNodes(reception_nodes).build().invoke(visitor);
+                AppVoiceRecordSubmitScene.builder().base64(base3).recordName(record_name).startTime(starttime).endTime(endtime).receptionId(recId3).receptionNodes(reception_nodes).build().invoke(visitor);
 
 
 
