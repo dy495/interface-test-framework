@@ -7,6 +7,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.enumerator.EventStateEnum;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.checkrisk.tasks.ListScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.checkriskalarm.HandleScene;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.MendianInfo;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.StoreScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 
@@ -18,6 +19,7 @@ public class BusinessUtil {
     private final UserUtil user;
     public Long shopId=28758L;
     public String shopName="巡店测试门店1";
+    MendianInfo mi = new MendianInfo();
     public BusinessUtil(VisitorProxy visitor) {
         this.visitor = visitor;
         this.user = new UserUtil(visitor);
@@ -92,9 +94,9 @@ public class BusinessUtil {
     }
 
     /**
-     * 获取待处理的规则--日常
+     * 获取待处理的规则--线上
      */
-    public List<Long> waitingAlarmConfirmOnline(Long shopId){
+    public List<Long> waitingAlarmConfirmOnline(Long shopId) throws Exception {
         List<Long> ids = new ArrayList<>();
         IScene scene= ListScene.builder().page(1).size(10).shopId(shopId).eventState(EventStateEnum.WAITING_ALARM_CONFIRM.getEventState()).build();
         JSONObject response=visitor.invokeApi(scene,true);
@@ -113,7 +115,10 @@ public class BusinessUtil {
         }else{
             System.out.println("--当前列表没有待处理的事件，正在新建中");
             //触发口罩事件
-            su.maskEventOnline(shopId,false,"customerFalse",true);
+//            su.maskEventOnline(shopId,false,"customerFalse",true);
+            String path = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\itemXundian\\caseonline\\zt\\mainOnline.py";
+            String picPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\itemXundian\\common\\multimedia\\picture\\没有戴口罩.jpg";
+            mi.getPy(path,picPath);
             //获取当前列表的第一个的规则的id
             IScene scene2= ListScene.builder().page(1).size(10).shopId(shopId).eventState(EventStateEnum.WAITING_ALARM_CONFIRM.getEventState()).build();
             JSONObject response2=visitor.invokeApi(scene2,true);
@@ -151,7 +156,7 @@ public class BusinessUtil {
         if(ids.size()==0){
             System.out.println("--当前列表没有待处理的事件，正在新建中");
             //触发口罩事件
-            su.maskEventOnline(shopId,false,"customerFalse",true);
+            su.maskEvent(shopId,false,"customerFalse",true);
             //获取当前列表的第一个的规则的id
             IScene scene2= ListScene.builder().page(1).size(10).shopId(shopId).eventState(EventStateEnum.WAITING_ALARM_CONFIRM.getEventState()).build();
             JSONObject response2=visitor.invokeApi(scene2,true);
@@ -163,9 +168,9 @@ public class BusinessUtil {
     }
 
     /**
-     * 获取紧急待处理的规则
+     * 获取紧急待处理的规则--线上
      */
-    public List<Long> waitingUrgentAlarmConfirmOnline(Long shopId){
+    public List<Long> waitingUrgentAlarmConfirmOnline(Long shopId) throws Exception {
         List<Long> ids = new ArrayList<>();
         IScene scene= ListScene.builder().page(1).size(10).shopId(shopId).eventState(EventStateEnum.WAITING_ALARM_CONFIRM.getEventState()).build();
         JSONObject response=visitor.invokeApi(scene,true);
@@ -189,7 +194,10 @@ public class BusinessUtil {
         if(ids.size()==0){
             System.out.println("--当前列表没有待处理的事件，正在新建中");
             //触发口罩事件
-            su.maskEventOnline(shopId,false,"customerFalse",true);
+//            su.maskEventOnline(shopId,false,"customerFalse",true);
+            String path = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\itemXundian\\caseonline\\zt\\mainOnline.py";
+            String picPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\itemXundian\\common\\multimedia\\picture\\没有戴口罩.jpg";
+            mi.getPy(path, picPath);
             //获取当前列表的第一个的规则的id
             IScene scene2= ListScene.builder().page(1).size(10).shopId(shopId).eventState(EventStateEnum.WAITING_ALARM_CONFIRM.getEventState()).build();
             JSONObject response2=visitor.invokeApi(scene2,true);
