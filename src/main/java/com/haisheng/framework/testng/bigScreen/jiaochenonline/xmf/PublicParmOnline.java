@@ -74,7 +74,7 @@ public class PublicParmOnline {
     public int ordeId=10; // 订单Id
     public String filepath11="src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/1_1.jpg";
     //---------2.0---------
-    public String appletTocken= EnumAppletToken.JC_LXQ_DAILY.getToken();
+    public String appletTocken= EnumAppletToken.JC_LXQ_ONLINE.getToken();
     public JSONArray coordinate = getCoordinate();
     public Long voucherId = 81L;  //经纬度
 

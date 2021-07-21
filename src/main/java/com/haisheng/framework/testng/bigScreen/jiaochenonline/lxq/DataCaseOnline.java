@@ -114,7 +114,7 @@ public class DataCaseOnline extends TestCaseCommon implements TestCaseStd {
             int num = after - bef;
 
 
-            JSONObject obj = jc.shopPage(1, 1, name).getJSONArray("list").getJSONObject(0);
+            JSONObject obj = jc.shopPage(1, 1, simple_name).getJSONArray("list").getJSONObject(0);
             String simple_name1 = obj.getString("simple_name");
             String name1 = obj.getString("name");
             String district_code1 = obj.getString("district_code");
