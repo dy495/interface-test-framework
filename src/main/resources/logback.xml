@@ -12,7 +12,7 @@
     <property name="FILE_LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %5p ${PID:- } --- [%t] %-40.40logger{39} : %m%n%wex"/>
 
     <!--<property name="LOG_HOME" value="${HOME}/logs" />-->
-    <property name="LOG_HOME" value="${HOME}/logs" />
+    <property name="LOG_HOME" value="logs" />
     <!--输出到控制台-->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
