@@ -32,6 +32,7 @@ public class EvaluateFollowUpScene extends BaseScene {
      * 版本 v2.0
      */
     private final String remark;
+    private final Integer evaluate_type;
 
 
     @Override
@@ -40,11 +41,12 @@ public class EvaluateFollowUpScene extends BaseScene {
         object.put("id", id);
         object.put("shop_id", shopId);
         object.put("remark", remark);
+        object.put("evaluate_type", evaluate_type);
         return object;
     }
 
     @Override
     public String getPath() {
-        return "/account-platform/auth/manage/evaluate/follow-up";
+        return "/car-platform/pc/manage/evaluate/follow-up";
     }
 }

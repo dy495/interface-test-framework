@@ -201,7 +201,7 @@ public class YunTongInfoOnline {
     public Object[] type(){
         return new String[]{
                 "high",
-                "low",
+//                "low",
                 "mid",
         };
     }
