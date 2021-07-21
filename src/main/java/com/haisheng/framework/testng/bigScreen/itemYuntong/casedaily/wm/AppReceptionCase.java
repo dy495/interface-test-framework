@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
@@ -92,7 +93,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
         preSalesReceptionPage = util.getAppPreSalesReceptionPageList().stream().filter(e -> e.getCustomerName().equals("自动化创建的接待人")).findFirst().orElse(null);
         if (preSalesReceptionPage == null) {
             logger.info("不存在接待人，需要创建");
-            AppPreSalesReceptionCreateScene.builder().customerName("自动化创建的接待人").customerPhone("15321527989").sexId("1").intentionCarModelId(util.getCarModelId()).estimateBuyCarTime("2100-07-12").build().invoke(visitor);
+            AppPreSalesReceptionCreateScene.builder().customerName("自动化创建的接待人").customerPhone(EnumAppletToken.JC_GLY_DAILY.getPhone()).sexId("1").intentionCarModelId(util.getCarModelId()).estimateBuyCarTime("2100-07-12").build().invoke(visitor);
             preSalesReceptionPage = util.getAppPreSalesReceptionPageList().stream().filter(e -> e.getCustomerName().equals("自动化创建的接待人")).findFirst().orElse(null);
         }
         util.loginPc(ALL_AUTHORITY);
@@ -146,8 +147,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
             int total = preSaleCustomerInfoBuyCarRecordScene.invoke(visitor).getInteger("total");
             String vin = util.getNotExistVin();
             //买车
-            BuyCarScene.builder().carModel(Long.parseLong(util.getCarModelId())).carStyle(Long.parseLong(util.getCarStyleId())).vin(vin)
-                    .id(preSalesReceptionPage.getId()).shopId(Long.parseLong(util.getReceptionShopId())).build().invoke(visitor);
+            BuyCarScene.builder().carModel(Long.parseLong(util.getCarModelId())).carStyle(Long.parseLong(util.getCarStyleId())).vin(vin).id(preSalesReceptionPage.getId()).shopId(Long.parseLong(util.getReceptionShopId())).build().invoke(visitor);
             JSONObject response = preSaleCustomerInfoBuyCarRecordScene.invoke(visitor);
             int newTotal = response.getInteger("total");
             int newBuyCarTotal = preSaleCustomerBuyCarPageScene.invoke(visitor).getInteger("total");
