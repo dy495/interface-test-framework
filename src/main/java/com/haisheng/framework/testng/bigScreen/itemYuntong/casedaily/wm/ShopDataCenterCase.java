@@ -18,6 +18,7 @@ import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.CommonUtil;
+import com.haisheng.framework.util.DateTimeUtil;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
@@ -34,8 +35,8 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_DAILY;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public SceneUtil util = new SceneUtil(visitor);
-    private static final String startDate = "2021-06-23";
-    private static final String endDate = "2021-06-23";
+    private static final String startDate = DateTimeUtil.addDayFormat(new Date(), -2);
+    private static final String endDate = DateTimeUtil.addDayFormat(new Date(), -2);
 
     @BeforeClass
     @Override

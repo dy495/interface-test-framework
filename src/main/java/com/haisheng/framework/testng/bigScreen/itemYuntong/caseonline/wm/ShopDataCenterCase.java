@@ -42,8 +42,8 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public SceneUtil util = new SceneUtil(visitor);
-    private static final String startDate = DateTimeUtil.addDayFormat(new Date(), -1);
-    private static final String endDate = DateTimeUtil.addDayFormat(new Date(), -1);
+    private static final String startDate = DateTimeUtil.addDayFormat(new Date(), -2);
+    private static final String endDate = DateTimeUtil.addDayFormat(new Date(), -2);
 
     @BeforeClass
     @Override

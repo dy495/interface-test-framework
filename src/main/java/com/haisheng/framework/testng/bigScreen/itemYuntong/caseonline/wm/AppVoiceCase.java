@@ -581,7 +581,7 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
             int evaluateScoreSum = list.stream().mapToInt(VoiceEvaluationPageBean::getEvaluateScore).sum();
             int mathResult = CommonUtil.getCeilIntRatio(evaluateScoreSum, list.size());
             CommonUtil.valueView(totalAverageScore, mathResult);
-            Preconditions.checkArgument(totalAverageScore <= mathResult + 1 && totalAverageScore >= mathResult - 1, "APP【部门总平均分趋势】分数：" + totalAverageScore + " APP【部门接待评鉴】中的接待平均分：" + mathResult);
+            Preconditions.checkArgument(totalAverageScore <= mathResult + 2 && totalAverageScore >= mathResult - 2, "APP【部门总平均分趋势】分数：" + totalAverageScore + " APP【部门接待评鉴】中的接待平均分：" + mathResult);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -601,7 +601,7 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
             AppOverviewBean overview = util.toJavaObject(scene, AppOverviewBean.class);
             int averageScore = overview.getAverageScore();
             CommonUtil.valueView(totalAverageScore, averageScore);
-            Preconditions.checkArgument(totalAverageScore <= averageScore + 1 && totalAverageScore >= averageScore - 1, "APP【员工接待评鉴】中的接待平均分：" + totalAverageScore + " APP【个人总平均分值趋势】中的总平均分：" + averageScore);
+            Preconditions.checkArgument(totalAverageScore <= averageScore + 2 && totalAverageScore >= averageScore - 2, "APP【员工接待评鉴】中的接待平均分：" + totalAverageScore + " APP【个人总平均分值趋势】中的总平均分：" + averageScore);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -829,29 +829,37 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
         try {
             List<AppDepartmentPageBean> departmentPageList = util.getAppDepartmentPageList(dataCycleType, startDate, endDate);
             departmentPageList.forEach(e -> {
-                List<Integer> appScoreList = new LinkedList<>();
+                Map<Long, Integer> appScoreMap = new HashMap<>();
                 List<AppPersonalPageBean> personalPageList = util.getAppPersonalPageList(dataCycleType, e.getSaleId(), startDate, endDate);
-                personalPageList.stream().filter(Objects::nonNull).map(personalPage -> AppDetailScene.builder().id(personalPage.getId()).build().invoke(visitor))
-                        .filter(response -> !response.getString("enter_status_name").equals("再次进店"))
-                        .filter(response -> response.getInteger("average_score") != 0)
-                        .forEach(response -> response.getJSONArray("scores")
-                                .stream().map(object -> (JSONObject) object)
-                                .filter(object -> object.getInteger("type").equals(type))
-                                .map(object -> object.getInteger("score"))
-                                .forEach(appScoreList::add));
-                List<Integer> pcScoreList = new LinkedList<>();
+                personalPageList.stream().filter(Objects::nonNull).forEach(personalPage -> {
+                    JSONObject detail = AppDetailScene.builder().id(personalPage.getId()).build().invoke(visitor);
+                    if (!detail.getString("enter_status_name").equals("再次进店") && detail.getInteger("average_score") != 0) {
+                        JSONArray array = detail.getJSONArray("scores");
+                        array.stream().map(obj -> (JSONObject) obj)
+                                .filter(obj -> obj.getInteger("type").equals(type))
+                                .forEach(obj -> appScoreMap.put(personalPage.getId(), obj.getInteger("score")));
+                    }
+                });
+                Map<Long, Integer> pcScoreMap = new HashMap<>();
                 IScene evaluationPageScene = VoiceEvaluationPageScene.builder().receptorName(e.getName()).receptionStart(startDate).receptionEnd(endDate).evaluateStatus(500).enterStatus(1).build();
                 List<VoiceEvaluationPageBean> voiceEvaluationPageList = util.toJavaObjectList(evaluationPageScene, VoiceEvaluationPageBean.class);
-                voiceEvaluationPageList.stream().filter(Objects::nonNull).map(voiceRecord -> VoiceDetailScene.builder().id(voiceRecord.getId()).build().invoke(visitor))
-                        .filter(object -> object.getInteger("average_score") != null)
-                        .filter(object -> object.getInteger("average_score") != 0)
-                        .map(response -> response.getJSONArray("scores"))
-                        .forEach(scores -> scores.stream().map(object -> (JSONObject) object).filter(object -> object.getInteger("type").equals(type))
-                                .map(object -> object.getInteger("score")).forEach(pcScoreList::add));
-                CommonUtil.valueView(e.getName(), appScoreList, pcScoreList);
-                Preconditions.checkArgument(appScoreList.size() == pcScoreList.size(), e.getName() + "APP【接待详情】中平均分不为0的次数：" + appScoreList.size() + " PC【语音接待评鉴详情】中各平均分分不为0的次数：" + pcScoreList.size());
-                Preconditions.checkArgument(appScoreList.equals(pcScoreList), e.getName() + " APP【接待详情】中" + name + "环节得分：" + appScoreList + " PC【语音接待评鉴详情】中" + name + "环节得分：" + pcScoreList);
+                voiceEvaluationPageList.stream().filter(Objects::nonNull).forEach(voiceEvaluationPage -> {
+                    JSONObject detail = VoiceDetailScene.builder().id(voiceEvaluationPage.getId()).build().invoke(visitor);
+                    if (detail.getInteger("average_score") != null && detail.getInteger("average_score") != 0) {
+                        JSONArray array = detail.getJSONArray("scores");
+                        array.stream().map(obj -> (JSONObject) obj)
+                                .filter(obj -> obj.getInteger("type").equals(type))
+                                .forEach(obj -> pcScoreMap.put(voiceEvaluationPage.getId(), obj.getInteger("score")));
+                    }
+                });
+                CommonUtil.valueView(e.getName(), appScoreMap, pcScoreMap);
+                Preconditions.checkArgument(appScoreMap.size() == pcScoreMap.size(), e.getName() + "APP【接待详情】中平均分不为0的次数：" + appScoreMap.size() + " PC【语音接待评鉴详情】中各平均分分不为0的次数：" + pcScoreMap.size());
+                appScoreMap.forEach((appKey, appValue) -> pcScoreMap.forEach((pcKey, pcValue) -> {
+                    if (pcKey.equals(appKey)) {
+                        Preconditions.checkArgument(pcValue.equals(appValue), " APP【接待详情】中" + name + "环节得分：" + appValue + " PC【语音接待评鉴详情】中" + name + "环节得分：" + pcValue);
 
+                    }
+                }));
             });
         } catch (Exception | AssertionError e) {
             collectMessage(e);
