@@ -1,15 +1,20 @@
 package com.haisheng.framework.testng.bigScreen.itemYuntong.common.util;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.aliyun.openservices.shade.org.apache.commons.codec.binary.Base64;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherScene.CarFileUploadScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.AppPreSalesReceptionCreateScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.brand.BrandAddScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.brand.CarStyleAddScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.brand.CarStylePageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanage.*;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.file.FileUploadScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.FinishReceptionScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.PreSalesReceptionPageScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.PreSalesRecpEvaluateOpt;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
 import org.testng.annotations.DataProvider;
@@ -106,6 +111,55 @@ public class YunTongInfo {
 
     }
 
+    //接待之后评价"： 评价满分high/最低分low/中间分数mid
+    public final JSONArray evaluateInfo(Long recId, String type){
+        JSONArray evaluate_info_list = new JSONArray();
+        JSONArray optarr = PreSalesRecpEvaluateOpt.builder().reception_id(recId).build().invoke(visitor).getJSONArray("list");
+        for (int i = 0; i < optarr.size(); i++) {
+            JSONObject asubmit = new JSONObject();
+            int score = 0;
+            Long id = optarr.getJSONObject(i).getLong("id");
+
+            JSONArray aopt = optarr.getJSONObject(i).getJSONArray("answer_list");
+            if (type.equals("high")){
+                score = aopt.getJSONObject(0).getInteger("score");
+            }
+            if (type.equals("low")){
+                score = aopt.getJSONObject(aopt.size()-1).getInteger("score");
+            }
+            if (type.equals("mid")){
+                if (i % 2 == 0) {
+                    score = aopt.getJSONObject(aopt.size()-1).getInteger("score");
+                } else {
+                    score = aopt.getJSONObject(0).getInteger("score");
+                }
+            }
+            asubmit.put("id", id);
+            asubmit.put("score", score);
+            evaluate_info_list.add(asubmit);
+
+        }
+        return evaluate_info_list;
+    }
+
+    public final Long startrecption(Boolean done){
+        //销售接待
+        String phone = "1380110" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000));//手机号
+        String name = "小紫"+dt.getHistoryDate(0);
+        Long car_style_id = PreSaleCustomerStyleListScene.builder().shopId(oneshopid).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("style_id");
+        Long car_model_id = PreSaleCustomerModelListScene.builder().styleId(car_style_id).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("model_id");
+        AppPreSalesReceptionCreateScene.builder().customerName(name).customerPhone(phone).sexId("1").intentionCarModelId(Long.toString(car_model_id)).estimateBuyCarTime("2100-07-12").build().invoke(visitor);
+        //获取接待id
+        Long recId = PreSalesReceptionPageScene.builder().phone(phone).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+        if (done == true){
+            //完成接待
+            FinishReceptionScene.builder().id(recId).shopId(oneshopid).build().invoke(visitor);
+
+        }
+        else {}
+        return recId;
+    }
+
 
 
 
@@ -135,6 +189,15 @@ public class YunTongInfo {
 //                {dt.getHistoryDate(-1),dt.getHistoryDate(-2),"开始时间>结束时间 ","false"},
 
 
+        };
+    }
+
+    @DataProvider(name = "TYPE")
+    public Object[] type(){
+        return new String[]{
+                "high",
+                "low",
+                "mid",
         };
     }
 
