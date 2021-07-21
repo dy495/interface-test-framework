@@ -9,9 +9,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklis
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.MyUtil.TopicUtil;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.AppCustomerDetailV4Scene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.AppPreSalesReceptionCreateScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.AppPreSalesReceptionPageScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.*;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanagev4.PreSaleCustomerInfoBuyCarRecordScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.BuyCarScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.CustomerRemarkScene;
@@ -31,7 +29,7 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-public class ReceivingRecordCase extends TestCaseCommon implements TestCaseStd {
+public class ReceivingRecordSystemCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_SSO; // 管理页—-首页
     private static final EnumAccount YT_RECEPTION_DAILY = EnumAccount.YT_RECEPTION_DAILY; // 全部权限账号 【运通】
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);   // 产品类放到代理类中（通过代理类发请求）
@@ -102,12 +100,6 @@ public class ReceivingRecordCase extends TestCaseCommon implements TestCaseStd {
 //        customer.put("shopId",shopId);
 //        return customer;
 //    }
-
-    @Test
-    public void testtest(){
-
-    }
-
     @Test
     public void test01CustomerConfig() {
         visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
@@ -122,6 +114,7 @@ public class ReceivingRecordCase extends TestCaseCommon implements TestCaseStd {
             this.newId = id;
             this.newShopId = shopId;
             this.newCustomerId = customerId;
+
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -133,7 +126,7 @@ public class ReceivingRecordCase extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test(dataProvider = "remarkContent")
-    public void test02ReceiveRemark(String description, String expect, String remark) {
+    public void test02PcRemark(String description, String expect, String remark) {
         try {
             AppCustomerDetailV4Scene detail = AppCustomerDetailV4Scene.builder().shopId(newShopId.toString()).customerId(newCustomerId.toString()).id(newId.toString()).build();
 //            int beforeSum = detail.invoke(visitor, true).getJSONArray("remarks").size();
@@ -142,8 +135,8 @@ public class ReceivingRecordCase extends TestCaseCommon implements TestCaseStd {
 //            int afterSum = remarks.size();
             String addedRemark = remarks.getJSONObject(0).getString("remark");
             Preconditions.checkArgument(Objects.equals(code,expect), description + ",预期:" + expect + ",实际结果:" + code);
-            if(Objects.equals("1000",expect)) {
-                Preconditions.checkArgument(remark.equals(addedRemark), "备注内容不一致，输入的备注内容" + remark + ",app接待详情中备注记录:" + addedRemark);
+            if(Objects.equals("1000",code)) {
+                Preconditions.checkArgument(Objects.equals(addedRemark,remark), "备注内容不一致，pc输入的备注内容" + remark + ",app接待详情中备注记录:" + addedRemark);
             }
         } catch (AssertionError e) {
         appendFailReason(e.toString());
@@ -169,7 +162,7 @@ public class ReceivingRecordCase extends TestCaseCommon implements TestCaseStd {
         try {
             String code = BuyCarScene.builder().carModel(676L).carStyle(1398L).id(newId).shopId(newShopId).vin(vin).build().invoke(visitor, false).getString("code");
             Preconditions.checkArgument(Objects.equals(code,expect),description+",预期code:"+expect+"实际code="+code);
-            if(expect.equals(code)){
+            if(Objects.equals(expect,"1000") && vin.length() != 0){
                 String chassisCode = PreSaleCustomerInfoBuyCarRecordScene.builder().customerId(newCustomerId).shopId(newShopId).build().invoke(visitor, true).getJSONArray("list").getJSONObject(0).getString("vehicle_chassis_code");
                 Preconditions.checkArgument(Objects.equals(chassisCode,vin.toUpperCase()),"详情中底盘号不一致,输入:"+vin+"实际:"+chassisCode);
             }
@@ -184,12 +177,83 @@ public class ReceivingRecordCase extends TestCaseCommon implements TestCaseStd {
     @DataProvider(name = "chassisCode")
     public Object[] chassisCode(){
         return new String[][]{
-                {"底盘号17位英文+数字","1000","aaaabbbc"+numRandom(9)}
+                {"底盘号17位英文+数字","1000","aaaabbbc"+numRandom(9)},
+                {"底盘号16位英文+数字","1001","aaaabbbc"+numRandom(8)},
+                {"底盘号18位英文+数字","1001","aaaabbbc"+numRandom(10)},
+                {"底盘号为空","1000",""},
+                {"系统存在的底盘号","1001","ABC12345678901234"}
         };
     }
 
+    @Test(dataProvider = "remarkContent")
+    public void test04AppRemark(String description,String expect,String remark){
+        try {
+            String code = AppCustomerRemarkV4Scene.builder().id(newId.toString()).shopId(newShopId.toString()).customerId(newCustomerId.toString()).remark(remark).build().invoke(visitor, false).getString("code");
+            String addedRemark = AppCustomerDetailV4Scene.builder().shopId(newShopId.toString()).customerId(newCustomerId.toString()).id(newId.toString()).build().invoke(visitor, true).getJSONArray("remarks").getJSONObject(0).getString("remark");
+            Preconditions.checkArgument(Objects.equals(code,expect), description + ",预期:" + expect + ",实际结果:" + code);
+            if(Objects.equals("1000",code)) {
+                Preconditions.checkArgument(Objects.equals(addedRemark,remark), "备注内容不一致，app输入的备注内容" + remark + ",app接待详情中备注记录:" + addedRemark);
+            }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("app接待中备注");
+        }
+    }
+//     没有相关接口
+//    @Test
+//    public void test05AddCar(){
+//        try {
+//
+//
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("app接待中添加车牌号");
+//        }
+//    }
+//    @Test
+//    public void test06ChangeChassisCode(){
+//        try {
+//
+//
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("app接待中修改底盘号");
+//        }
+//    }
+
+    @Test(dataProvider = "userInfo")
+    public void test07ChangeUserInfo(String description,String expect,String name, String phone,Integer sex){
+        try {
+            String code = AppCustomerEditV4Scene.builder().id(newId.toString()).customerId(newCustomerId.toString()).shopId(newShopId.toString()).customerName(name).customerPhone(phone).sexId(sex).build().invoke(visitor, false).getString("code");
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("app接待中编辑资料,只填写必填项");
+        }
+    }
+
+    @DataProvider(name = "userInfo")
+    public Object[] userInfo(){
+        return new Object[][]{
+                {"用户姓名1位","1000","1","18"+numRandom(9),1},
+        };
+    }
+
+
     @Test
-    public void test04Complete(){
+    public void test08PcComplete(){
         try{
             FinishReceptionScene.builder().id(newId).shopId(newShopId).build().invoke(visitor);
             Boolean isFinish = PreSalesReceptionPageScene.builder().build().invoke(visitor, true).getJSONArray("list").getJSONObject(0).getBoolean("is_finish");
@@ -199,7 +263,7 @@ public class ReceivingRecordCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("完成接待");
+            saveData("Pc完成接待");
         }
     }
 //    @Test
@@ -214,6 +278,12 @@ public class ReceivingRecordCase extends TestCaseCommon implements TestCaseStd {
 //    } finally {
 //        saveData("接待完成，备注");
 //    }
+//    }
+
+
+//    @Test
+//    public void test(){
+//        String realLevel = AppCustomerDetailV4Scene.builder().shopId(newShopId.toString()).id(newId.toString()).customerId(newCustomerId.toString()).build().invoke(visitor, true).getString("customer_level_name");
 //    }
 
 }

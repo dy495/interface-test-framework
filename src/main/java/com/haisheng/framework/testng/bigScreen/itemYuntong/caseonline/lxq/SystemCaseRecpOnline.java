@@ -10,6 +10,8 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.pres
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.voicerecord.AppVoiceRecordSubmitScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanage.PreSaleCustomerModelListScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanage.PreSaleCustomerStyleListScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.EvaluateFollowUpScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.EvaluatePageV4Scene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.FinishReceptionScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.PreSalesReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.PreSalesRecpEvaluateSubmit;
@@ -113,6 +115,16 @@ public class SystemCaseRecpOnline extends TestCaseCommon implements TestCaseStd 
 
             //提交评价
             PreSalesRecpEvaluateSubmit.builder().reception_id(recId).evaluate_info_list(evaluate_info_list).build().invoke(visitor);
+
+            //PC跟进
+            if (type.equals("mid")){
+                commonConfig.shopId = PRODUCE.getShopId();
+                commonConfig.roleId = ALL_AUTHORITY.getRoleId();
+                Long id = EvaluatePageV4Scene.builder().page(1).size(1).evaluateType(5).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+                EvaluateFollowUpScene.builder().id(id).evaluate_type(5).shopId(info.oneshopid).remark("祝他发财吧！！！祝他发财吧！！！祝他发财吧！！！").build().invoke(visitor);
+
+            }
+
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());

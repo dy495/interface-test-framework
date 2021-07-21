@@ -20,6 +20,7 @@ import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.ImageUtil;
 import org.testng.annotations.*;
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 
 /**
@@ -75,10 +76,10 @@ public class RecordCase extends TestCaseCommon implements TestCaseStd {
         try {
             JSONObject res1 = util.checkExport(); //查询接口
             Integer total1 = res1.getInteger("total");//检查导出操作前的总记录
-            if ("control".equals(product)) {
+            if (Objects.equals(product,"control")) {
                 visitor.setProduct(EnumTestProduce.YT_DAILY_CONTROL);
             }
-            if ("car".equals(product)) {
+            if (Objects.equals(product,"car")) {
                 visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
             }
             util.carPageExport(path); //在对应页面中导出
@@ -87,7 +88,7 @@ public class RecordCase extends TestCaseCommon implements TestCaseStd {
             String typeName = res2.getJSONArray("list").getJSONObject(0).getString("type_name"); //获取导出的页面字段
             Preconditions.checkArgument(total2 == total1 + 1, type + "页面导出结果导出记录中没有+1");  //判断记录是否+1
             if (total2 == total1 + 1) {
-                Preconditions.checkArgument(type.equals(typeName), "导出记录中的第一条不是" + type); // 如果结果+1 ，判断第一条是不是相应的位置
+                Preconditions.checkArgument(Objects.equals(typeName,type), "导出记录中的第一条不是" + type); // 如果结果+1 ，判断第一条是不是相应的位置
             }
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -140,7 +141,7 @@ public class RecordCase extends TestCaseCommon implements TestCaseStd {
             String type = res2.getJSONArray("list").getJSONObject(0).getString("operation_content");  //删除的品牌名
             Preconditions.checkArgument(total2 == total1 + 1, "删除记录没有增加1");
             if (total2 == total1 + 1) {
-                Preconditions.checkArgument(name.equals(type), "删除的不是新创建的:" + type + "!=" + name);
+                Preconditions.checkArgument(Objects.equals(type,name), "删除的不是新创建的:" + type + "!=" + name);
             }
 
         } catch (AssertionError | Exception e) {

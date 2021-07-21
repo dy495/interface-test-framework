@@ -141,6 +141,6 @@ public class EvaluatePageV4Scene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/account-platform/auth/manage/evaluate/page-v4";
+        return "/car-platform/pc/manage/evaluate/v4/page";
     }
 }

@@ -25,6 +25,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class EvaluateConfigCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_SSO; // 管理页—-首页
@@ -76,7 +77,7 @@ public class EvaluateConfigCase extends TestCaseCommon implements TestCaseStd {
                 TopicUtil topicUtil = (TopicUtil) util;
                 JSONArray links = topicUtil.checkContents(title, answer);
                 String code = EvaluateV4ConfigSubmitScene.builder().links(links).build().invoke(visitor, false).getString("code");
-                Preconditions.checkArgument(expect.equals(code), description + ",期待:" + expect + ", 结果code=" + code);
+                Preconditions.checkArgument(Objects.equals(code,expect), description + ",期待:" + expect + ", 结果code=" + code);
             }
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -110,7 +111,7 @@ public class EvaluateConfigCase extends TestCaseCommon implements TestCaseStd {
                 TopicUtil topicUtil = (TopicUtil) util;
                 JSONArray links = topicUtil.checkTopicNum(topicList, answer);
                 String code = EvaluateV4ConfigSubmitScene.builder().links(links).build().invoke(visitor, false).getString("code");
-                Preconditions.checkArgument(expectCode.equals(code), description + ",期待:" + expectCode + ", 结果code=" + code);
+                Preconditions.checkArgument(Objects.equals(code,expectCode), description + ",期待:" + expectCode + ", 结果code=" + code);
             }
         } catch (AssertionError e) {
             appendFailReason(e.toString());
