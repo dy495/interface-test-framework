@@ -38,7 +38,6 @@ public class ShopManagerCase extends TestCaseCommon implements TestCaseStd {
     public UserUtil user = new UserUtil(visitor);
     public SupporterUtil util = new SupporterUtil(visitor);
 
-
     @BeforeClass
     @Override
     public void initial() {
@@ -69,11 +68,11 @@ public class ShopManagerCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
     }
 
-    @Test
-    public void test() {
+    @Test(dataProvider = "account")
+    public void test(AccountEnum account) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.loginPc(AccountEnum.ZD);
+            user.loginPc(account);
             List<ShopInfo> shopInfos = new LinkedList<>();
             List<PassengerFlowBean> passengerFlowBeanList = util.toJavaObjectList(PassengerFlowScene.builder().build(), PassengerFlowBean.class, "list");
             passengerFlowBeanList.forEach(e -> {
@@ -90,26 +89,11 @@ public class ShopManagerCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
-    public void test2() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            user.loginPc(AccountEnum.JKQS);
-            List<ShopInfo> shopInfos = new LinkedList<>();
-            List<PassengerFlowBean> passengerFlowBeanList = util.toJavaObjectList(PassengerFlowScene.builder().build(), PassengerFlowBean.class, "list");
-            passengerFlowBeanList.forEach(e -> {
-                ShopInfo shopInfo = new ShopInfo();
-                List<RealTimeShopPvUvBean> realTimeShopPvUvBeanList = util.toJavaObjectList(PvUvScene.builder().shopId(String.valueOf(e.getId())).build(), RealTimeShopPvUvBean.class, "list")
-                        .stream().filter(b -> b.getTime().compareTo("08:00") >= 0 && b.getTime().compareTo("22:00") <= 0).collect(Collectors.toList());
-                shopInfo.setShopName(e.getName());
-                shopInfo.setRealTimeShopPvUvBeanList(realTimeShopPvUvBeanList);
-                shopInfos.add(shopInfo);
-            });
-            DingPushUtil.sendMessage(shopInfos);
-        } catch (Exception e) {
-            collectMessage(e);
-        }
+    @DataProvider(name = "account")
+    public Object[] getAccount() {
+        return new Object[]{
+                AccountEnum.ZD,
+                AccountEnum.JKQS
+        };
     }
-
-
 }

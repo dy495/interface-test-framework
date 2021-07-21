@@ -55,7 +55,7 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_DAILY;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public SceneUtil util = new SceneUtil(visitor);
-    private static final String startDate = DateTimeUtil.addDayFormat(new Date(), -4);
+    private static final String startDate = DateTimeUtil.addDayFormat(new Date(), -1);
     private static final String endDate = DateTimeUtil.addDayFormat(new Date(), -1);
     private static final Integer dataCycleType = EnumDataCycleType.CUSTOM.getId();
 
@@ -508,7 +508,7 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     public void department_data_20(String name, int type) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene receptionScoreTrendScene = AppReceptionScoreTrendScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(startDate).build();
+            IScene receptionScoreTrendScene = AppReceptionScoreTrendScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
             JSONArray array = receptionScoreTrendScene.invoke(visitor).getJSONArray("list");
             int trendScore = array.size() == 0 ? 0 : array.getJSONObject(0).getInteger(String.valueOf(type));
             IScene capabilityModelScene = AppCapabilityModelScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
@@ -528,10 +528,10 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     public void department_data_21(String name, int type) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene receptionScoreTrendScene = AppReceptionScoreTrendScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(startDate).build();
+            IScene receptionScoreTrendScene = AppReceptionScoreTrendScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
             JSONArray array = receptionScoreTrendScene.invoke(visitor).getJSONArray("list");
             int trendScore = array.size() == 0 ? 0 : array.getJSONObject(0).getInteger(String.valueOf(type));
-            IScene voiceEvaluationPageScene = VoiceEvaluationPageScene.builder().enterStatus(1).evaluateStatus(500).receptionStart(startDate).receptionEnd(startDate).build();
+            IScene voiceEvaluationPageScene = VoiceEvaluationPageScene.builder().enterStatus(1).evaluateStatus(500).receptionStart(startDate).receptionEnd(endDate).build();
             List<JSONObject> list = new ArrayList<>();
             util.toJavaObjectList(voiceEvaluationPageScene, VoiceEvaluationPageBean.class).stream()
                     .map(e -> VoiceDetailScene.builder().id(e.getId()).build().invoke(visitor).getJSONArray("scores"))
@@ -559,7 +559,7 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
             int scoreSum = util.toJavaObjectList(scene, AppCapabilityModelBean.class, "list").stream().mapToInt(AppCapabilityModelBean::getScore).sum();
             int mathResult = CommonUtil.getCeilIntRatio(scoreSum, 5);
             CommonUtil.valueView(totalAverageScore, mathResult);
-            Preconditions.checkArgument(scoreSum <= mathResult + 1 || scoreSum >= mathResult - 1, "APP【部门总平均分趋势】平均分：" + scoreSum + " APP【销售接待能力模型】各话术环节平均分之和/5：" + mathResult);
+            Preconditions.checkArgument(scoreSum <= mathResult + 1 && scoreSum >= mathResult - 1, "APP【部门总平均分趋势】平均分：" + scoreSum + " APP【销售接待能力模型】各话术环节平均分之和/5：" + mathResult);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -1010,4 +1010,39 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
             saveData("APP部门平均分=此部门的全部员工全流程接待分值之和/参与评分的接待次数*5");
         }
     }
+
+//    @Test(description = "APP部门平均分=此部门的全部员工全流程接待分值之和/参与评分的接待次数*5")
+//    public void a() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            String ip = "http://10.10.12.155:8080";
+//            String path = "/pc/login";
+//            JSONObject object = new JSONObject();
+//            object.put("account", "liubei");
+//            object.put("password", "liubei");
+//            String response = httpPost(path, JSONObject.toJSONString(object), ip);
+//            System.err.println(response);
+//        } catch (Exception | AssertionError e) {
+//            collectMessage(e);
+//        } finally {
+//            saveData("APP部门平均分=此部门的全部员工全流程接待分值之和/参与评分的接待次数*5");
+//        }
+//    }
+//
+//    @Test(description = "APP部门平均分=此部门的全部员工全流程接待分值之和/参与评分的接待次数*5")
+//    public void b() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            String ip = "http://10.10.12.155:8080";
+//            String path = "/pc/register";
+//            JSONObject object = new JSONObject();
+//            object.put("account", "");
+//            object.put("password", "");
+//            httpPost(path, JSONObject.toJSONString(object), ip);
+//        } catch (Exception | AssertionError e) {
+//            collectMessage(e);
+//        } finally {
+//            saveData("APP部门平均分=此部门的全部员工全流程接待分值之和/参与评分的接待次数*5");
+//        }
+//    }
 }

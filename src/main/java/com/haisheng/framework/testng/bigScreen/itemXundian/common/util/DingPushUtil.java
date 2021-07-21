@@ -26,7 +26,7 @@ import java.util.Map;
 public class DingPushUtil {
     private static boolean isAt;
     public static final Logger logger = LoggerFactory.getLogger(com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.DingPushUtil.class);
-    private static final String WEBHOOK_TOKEN = "https://oapi.dingtalk.com/robot/send?access_token=30334438d6943ac6a34ed2708a9ef16b15be3e502e5591ffc95224bdcacf1ac2";
+    private static final String WEBHOOK_TOKEN = "https://oapi.dingtalk.com/robot/send?access_token=3d0c06f5a6780a25aabf3cd99f2574ea161172a39167b10b33548f9c492e9b26";
 
     public static void sendMessage(List<ShopInfo> shopInfos) {
         StringBuilder sb = new StringBuilder();
@@ -50,7 +50,6 @@ public class DingPushUtil {
         sb.append("\n").append("### **").append("门店：").append(pvUvInfo.getShopId()).append("**").append("\n");
         detailMessages.forEach(detailMessage -> sb.append("\n").append("##### **").append("数据：").append(detailMessage.getSourceName()).append("**").append("\n")
                 .append("###### 去重数据：").append(detailMessage.getHasReception()).append("      不去重数据：").append(detailMessage.getNoReception()).append("\n"));
-//        System.err.println(sb);
         send(sb.toString());
     }
 

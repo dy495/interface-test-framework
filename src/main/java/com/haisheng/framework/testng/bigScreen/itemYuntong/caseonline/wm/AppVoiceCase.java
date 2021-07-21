@@ -509,7 +509,7 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     public void department_data_20(String name, int type) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene receptionScoreTrendScene = AppReceptionScoreTrendScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(startDate).build();
+            IScene receptionScoreTrendScene = AppReceptionScoreTrendScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
             JSONArray array = receptionScoreTrendScene.invoke(visitor).getJSONArray("list");
             int trendScore = array.size() == 0 ? 0 : array.getJSONObject(0).getInteger(String.valueOf(type));
             IScene capabilityModelScene = AppCapabilityModelScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
@@ -529,10 +529,10 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     public void department_data_21(String name, int type) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene receptionScoreTrendScene = AppReceptionScoreTrendScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(startDate).build();
+            IScene receptionScoreTrendScene = AppReceptionScoreTrendScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
             JSONArray array = receptionScoreTrendScene.invoke(visitor).getJSONArray("list");
             int trendScore = array.size() == 0 ? 0 : array.getJSONObject(0).getInteger(String.valueOf(type));
-            IScene voiceEvaluationPageScene = VoiceEvaluationPageScene.builder().enterStatus(1).evaluateStatus(500).receptionStart(startDate).receptionEnd(startDate).build();
+            IScene voiceEvaluationPageScene = VoiceEvaluationPageScene.builder().enterStatus(1).evaluateStatus(500).receptionStart(startDate).receptionEnd(endDate).build();
             List<JSONObject> list = new ArrayList<>();
             util.toJavaObjectList(voiceEvaluationPageScene, VoiceEvaluationPageBean.class).stream()
                     .map(e -> VoiceDetailScene.builder().id(e.getId()).build().invoke(visitor).getJSONArray("scores"))
@@ -553,14 +553,14 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     public void department_data_22() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene receptionAverageScoreTrendScene = AppReceptionAverageScoreTrendScene.builder().startDate(startDate).endDate(startDate).dataCycleType(dataCycleType).build();
+            IScene receptionAverageScoreTrendScene = AppReceptionAverageScoreTrendScene.builder().startDate(startDate).endDate(endDate).dataCycleType(dataCycleType).build();
             AppReceptionAverageScoreTrendBean receptionAverageScoreTrend = util.toFirstJavaObject(receptionAverageScoreTrendScene, AppReceptionAverageScoreTrendBean.class);
             int totalAverageScore = receptionAverageScoreTrend == null ? 0 : receptionAverageScoreTrend.getTotalAverageScore();
             IScene scene = AppCapabilityModelScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
             int scoreSum = util.toJavaObjectList(scene, AppCapabilityModelBean.class, "list").stream().mapToInt(AppCapabilityModelBean::getScore).sum();
             int mathResult = CommonUtil.getCeilIntRatio(scoreSum, 5);
             CommonUtil.valueView(totalAverageScore, mathResult);
-            Preconditions.checkArgument(scoreSum <= mathResult + 1 || scoreSum >= mathResult - 1, "APP【部门总平均分趋势】平均分：" + scoreSum + " APP【销售接待能力模型】各话术环节平均分之和/5：" + mathResult);
+            Preconditions.checkArgument(scoreSum <= mathResult + 1 && scoreSum >= mathResult - 1, "APP【部门总平均分趋势】平均分：" + scoreSum + " APP【销售接待能力模型】各话术环节平均分之和/5：" + mathResult);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -573,10 +573,10 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     public void department_data_23() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene receptionAverageScoreTrendScene = AppReceptionAverageScoreTrendScene.builder().startDate(startDate).endDate(startDate).dataCycleType(dataCycleType).build();
+            IScene receptionAverageScoreTrendScene = AppReceptionAverageScoreTrendScene.builder().startDate(startDate).endDate(endDate).dataCycleType(dataCycleType).build();
             AppReceptionAverageScoreTrendBean receptionAverageScoreTrend = util.toFirstJavaObject(receptionAverageScoreTrendScene, AppReceptionAverageScoreTrendBean.class);
             int totalAverageScore = receptionAverageScoreTrend == null ? 0 : receptionAverageScoreTrend.getTotalAverageScore();
-            IScene voiceEvaluationPageScene = VoiceEvaluationPageScene.builder().receptionStart(startDate).receptionEnd(startDate).evaluateStatus(500).enterStatus(1).build();
+            IScene voiceEvaluationPageScene = VoiceEvaluationPageScene.builder().receptionStart(startDate).receptionEnd(endDate).evaluateStatus(500).enterStatus(1).build();
             List<VoiceEvaluationPageBean> list = util.toJavaObjectList(voiceEvaluationPageScene, VoiceEvaluationPageBean.class);
             int evaluateScoreSum = list.stream().mapToInt(VoiceEvaluationPageBean::getEvaluateScore).sum();
             int mathResult = CommonUtil.getCeilIntRatio(evaluateScoreSum, list.size());
@@ -594,7 +594,7 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     public void department_data_24() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene receptionAverageScoreTrendScene = AppReceptionAverageScoreTrendScene.builder().startDate(startDate).endDate(startDate).dataCycleType(dataCycleType).build();
+            IScene receptionAverageScoreTrendScene = AppReceptionAverageScoreTrendScene.builder().startDate(startDate).endDate(endDate).dataCycleType(dataCycleType).build();
             AppReceptionAverageScoreTrendBean receptionAverageScoreTrend = util.toFirstJavaObject(receptionAverageScoreTrendScene, AppReceptionAverageScoreTrendBean.class);
             int totalAverageScore = receptionAverageScoreTrend == null ? 0 : receptionAverageScoreTrend.getTotalAverageScore();
             IScene scene = AppOverviewScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
@@ -772,11 +772,11 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     public void personal_data_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            List<AppDepartmentPageBean> list = util.getAppDepartmentPageList(dataCycleType, startDate, startDate);
+            List<AppDepartmentPageBean> list = util.getAppDepartmentPageList(dataCycleType, startDate, endDate);
             list.forEach(e -> {
-                JSONObject response = AppPersonDataReceptionAverageScoreTrendScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(startDate).salesId(e.getSaleId()).build().invoke(visitor);
+                JSONObject response = AppPersonDataReceptionAverageScoreTrendScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).salesId(e.getSaleId()).build().invoke(visitor);
                 int totalAverageScore = response.getJSONArray("list").size() == 0 ? 0 : response.getJSONArray("list").getJSONObject(0).getInteger("total_average_score");
-                IScene scene = AppPersonalReceptionScoreTrendScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(startDate).salesId(e.getSaleId()).build();
+                IScene scene = AppPersonalReceptionScoreTrendScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).salesId(e.getSaleId()).build();
                 JSONObject object = scene.invoke(visitor).getJSONArray("list").getJSONObject(0);
                 int a = object.getInteger("100");
                 int b = object.getInteger("200");
