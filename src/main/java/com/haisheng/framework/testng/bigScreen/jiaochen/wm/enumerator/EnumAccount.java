@@ -25,6 +25,8 @@ public enum EnumAccount {
 
     YT_ALL_ONLINE_LXQ("13406250004", "000000", "全部权限", true, "四号演员", "5511", "-1"),
 
+    YT_RECEPTION_ONLINE_5("13406250005", "000000", "全部权限", false, "五号", "5511", "-1"),
+
     ;
 
     EnumAccount(String phone, String password, String role, boolean isDaily, String name, String roleId, String receptionShopId) {

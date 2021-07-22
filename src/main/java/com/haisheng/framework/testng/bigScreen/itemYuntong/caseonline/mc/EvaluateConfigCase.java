@@ -1,17 +1,13 @@
-package com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc;
+package com.haisheng.framework.testng.bigScreen.itemYuntong.caseonline.mc;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.google.gson.JsonArray;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistAppId;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistConfId;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.MyUtil.TopicUtil;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.EvaluateV4ConfigDetailScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.EvaluateV4ConfigSubmitScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
@@ -22,14 +18,13 @@ import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 public class EvaluateConfigCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_SSO; // 管理页—-首页
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_DAILY; // 全部权限账号 【运通】
+    private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_ONLINE_SSO; // 管理页—-首页
+    private static final EnumAccount AUTHORITY = EnumAccount.YT_RECEPTION_ONLINE_5; // 全部权限账号 【运通】
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);   // 产品类放到代理类中（通过代理类发请求）
     public SceneUtil util = new TopicUtil(visitor);    //场景工具类中放入代理类，类中封装接口方法直接调用
     CommonConfig commonConfig = new CommonConfig();    // 配置类初始化
@@ -40,19 +35,19 @@ public class EvaluateConfigCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("before class initial");
         //替换checklist的相关信息
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
-        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_DAILY_SERVICE.getId();
+        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
         commonConfig.checklistQaOwner = "孟辰";
         //替换jenkins-job的相关信息
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.YUNTONG_DAILY_TEST.getJobName());
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.YUNTONG_ONLINE_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         commonConfig.product = PRODUCE.getAbbreviation(); // 产品代号 -- YT
         commonConfig.referer = PRODUCE.getReferer();
-        commonConfig.shopId = "57279";  //请求头放入shopId
-        commonConfig.roleId = ALL_AUTHORITY.getRoleId(); //请求头放入roleId
+        commonConfig.shopId = "35827";  //请求头放入shopId
+        commonConfig.roleId = AUTHORITY.getRoleId(); //请求头放入roleId
         beforeClassInit(commonConfig);  // 配置请求头
-        util.loginPc(ALL_AUTHORITY);   //登录
+        util.loginPc(AUTHORITY);   //登录
     }
 
     @AfterClass
@@ -71,7 +66,7 @@ public class EvaluateConfigCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(dataProvider = "contentCheck")
     public void addATopic1(String description, String expect, String title, String... answer) {
-        visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
+        visitor.setProduct(EnumTestProduce.YT_ONLINE_CAR);
         try {
             if (util instanceof TopicUtil) {
                 TopicUtil topicUtil = (TopicUtil) util;
@@ -105,7 +100,7 @@ public class EvaluateConfigCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(dataProvider = "topicNum")
     public void addATopic2(String description, List<Integer> topicList, String expectCode, String... answer) {
-        visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
+        visitor.setProduct(EnumTestProduce.YT_ONLINE_CAR);
         try {
             if (util instanceof TopicUtil) {
                 TopicUtil topicUtil = (TopicUtil) util;

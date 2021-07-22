@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc;
+package com.haisheng.framework.testng.bigScreen.itemYuntong.caseonline.mc;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -15,13 +15,13 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presa
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.CustomerRemarkScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.FinishReceptionScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.PreSalesReceptionPageScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.YunTongInfo;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import com.haisheng.framework.util.DateTimeUtil;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
@@ -31,10 +31,10 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 public class ReceivingSystemCase1 extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_SSO; // 管理页—-首页
-    private static final EnumAccount YT_RECEPTION_DAILY = EnumAccount.YT_RECEPTION_DAILY; // 全部权限账号 【运通】
+    private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_ONLINE_SSO; // 管理页—-首页
+    private static final EnumAccount YT_RECEPTION_ACCOUNT = EnumAccount.YT_RECEPTION_ONLINE_5; // 全部权限账号 【运通】
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);   // 产品类放到代理类中（通过代理类发请求）
-   // public SceneUtil util = new SceneUtil(visitor);
+    public SceneUtil util = new SceneUtil(visitor);
     public YunTongInfo info = new YunTongInfo();
     CommonConfig commonConfig = new CommonConfig();    // 配置类初始化
     public Long newId; // 本次创建的接待id
@@ -47,21 +47,21 @@ public class ReceivingSystemCase1 extends TestCaseCommon implements TestCaseStd 
         logger.debug("before class initial");
         //替换checklist的相关信息
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
-        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_DAILY_SERVICE.getId();
+        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
         commonConfig.checklistQaOwner = "孟辰";
         //替换jenkins-job的相关信息
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.YUNTONG_DAILY_TEST.getJobName());
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.YUNTONG_ONLINE_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         commonConfig.product = PRODUCE.getAbbreviation(); // 产品代号 -- YT
         commonConfig.referer = PRODUCE.getReferer();
-        commonConfig.shopId = "57279";  //请求头放入shopId
-        commonConfig.roleId = "10322"; //请求头放入roleId
+        commonConfig.shopId = "35827";  //请求头放入shopId
+        commonConfig.roleId = YT_RECEPTION_ACCOUNT.getRoleId(); //请求头放入roleId
         beforeClassInit(commonConfig);  // 配置请求头
-        //util.loginPc(YT_RECEPTION_DAILY);   //登录
-        LoginPc loginScene = LoginPc.builder().phone("13402050043").verificationCode("000000").build();
-        httpPost(loginScene.getPath(),loginScene.getBody(),PRODUCE.getPort());
+        util.loginPc(YT_RECEPTION_ACCOUNT);   //登录
+        //LoginPc loginScene = LoginPc.builder().phone("13402050043").verificationCode("000000").build();
+        //httpPost(loginScene.getPath(),loginScene.getBody(),PRODUCE.getPort());
     }
 
     @AfterClass
@@ -105,10 +105,10 @@ public class ReceivingSystemCase1 extends TestCaseCommon implements TestCaseStd 
 //    }
     @Test
     public void test01CustomerConfig() {
-        visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
+        visitor.setProduct(EnumTestProduce.YT_ONLINE_CAR);
         try {
             String phone = "15" + numRandom(9);
-            AppPreSalesReceptionCreateScene.builder().customerName("mc自动化创建使用").customerPhone(phone).sexId("1").intentionCarModelId("775").estimateBuyCarTime("2035-07-12").build().invoke(visitor);//创建销售接待
+            AppPreSalesReceptionCreateScene.builder().customerName("mc自动化创建使用").customerPhone(phone).sexId("1").intentionCarModelId("20895").estimateBuyCarTime("2035-07-12").build().invoke(visitor);//创建销售接待
             JSONObject pageInfo = AppPreSalesReceptionPageScene.builder().build().invoke(visitor, true);
             List<JSONObject> newCustomer = pageInfo.getJSONArray("list").stream().map(ele -> (JSONObject) ele).filter(obj -> phone.equals(obj.getString("customer_phone"))).collect(Collectors.toList());
             Long id = newCustomer.get(0).getLong("id");
@@ -166,7 +166,7 @@ public class ReceivingSystemCase1 extends TestCaseCommon implements TestCaseStd 
     public void test03BuyCar(String description, String expect, String vin) {
         try {
             if(newId != null && newCustomerId != null) {
-                String code = BuyCarScene.builder().carModel(676L).carStyle(1398L).id(newId).shopId(newShopId).vin(vin).build().invoke(visitor, false).getString("code");
+                String code = BuyCarScene.builder().carModel(20895L).carStyle(2527L).id(newId).shopId(newShopId).vin(vin).build().invoke(visitor, false).getString("code");
                 Preconditions.checkArgument(Objects.equals(code, expect), description + ",预期code:" + expect + "实际code=" + code);
                 if (Objects.equals(expect, "1000") && vin.length() != 0) {
                     String chassisCode = PreSaleCustomerInfoBuyCarRecordScene.builder().customerId(newCustomerId).shopId(newShopId).build().invoke(visitor, true).getJSONArray("list").getJSONObject(0).getString("vehicle_chassis_code");
@@ -244,7 +244,7 @@ public class ReceivingSystemCase1 extends TestCaseCommon implements TestCaseStd 
     public void test07ChangeUserInfo(String description,String expect,String name, String phone,Integer sex){
         try {
             if(newId != null && newCustomerId != null) {
-                String code = AppCustomerEditV4Scene.builder().id(newId.toString()).customerId(newCustomerId.toString()).shopId(newShopId.toString()).customerName(name).customerPhone(phone).sexId(sex).intentionCarModelId("775").estimateBuyCarDate("2035-12-20").build().invoke(visitor, false).getString("code");
+                String code = AppCustomerEditV4Scene.builder().id(newId.toString()).customerId(newCustomerId.toString()).shopId(newShopId.toString()).customerName(name).customerPhone(phone).sexId(sex).intentionCarModelId("20895").estimateBuyCarDate("2035-12-20").build().invoke(visitor, false).getString("code");
                 Preconditions.checkArgument(Objects.equals(code, expect), description + "，期待结果code=" + expect + "实际结果code=" + code);
                 sleep(3);
             }
