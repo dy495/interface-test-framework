@@ -21,7 +21,7 @@ public class VisitorProxy extends TestCaseCommon {
     private EnumTestProduce product;
 
     /**
-     * 构造函数，私有
+     * 构造函数
      *
      * @param product 调用产品
      */

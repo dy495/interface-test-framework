@@ -47,11 +47,11 @@ public class Md5Utility {
         return bufferToHex(md.digest());
     }
 
-    private static String bufferToHex(byte bytes[]) {
+    private static String bufferToHex(byte[] bytes) {
         return bufferToHex(bytes, 0, bytes.length);
     }
 
-    private static String bufferToHex(byte bytes[], int m, int n) {
+    private static String bufferToHex(byte[] bytes, int m, int n) {
         StringBuffer stringbuffer = new StringBuffer(2 * n);
         int k = m + n;
         for (int l = m; l < k; l++) {
