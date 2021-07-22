@@ -10,11 +10,12 @@ import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.checkris
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.MendianInfo;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.StoreScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
+import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BusinessUtil {
+public class BusinessUtil extends TestCaseCommon {
     private final VisitorProxy visitor;
     private final UserUtil user;
     public Long shopId=28758L;
@@ -119,6 +120,7 @@ public class BusinessUtil {
             String path = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\itemXundian\\caseonline\\zt\\mainOnline.py";
             String picPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\itemXundian\\common\\multimedia\\picture\\没有戴口罩.jpg";
             mi.getPy(path,picPath);
+            sleep(3);
             //获取当前列表的第一个的规则的id
             IScene scene2= ListScene.builder().page(1).size(10).shopId(shopId).eventState(EventStateEnum.WAITING_ALARM_CONFIRM.getEventState()).build();
             JSONObject response2=visitor.invokeApi(scene2,true);
@@ -190,6 +192,7 @@ public class BusinessUtil {
                 }
             }
         }
+        System.err.println(ids.size());
 
         if(ids.size()==0){
             System.out.println("--当前列表没有待处理的事件，正在新建中");
@@ -198,6 +201,7 @@ public class BusinessUtil {
             String path = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\itemXundian\\caseonline\\zt\\mainOnline.py";
             String picPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\itemXundian\\common\\multimedia\\picture\\没有戴口罩.jpg";
             mi.getPy(path, picPath);
+            sleep(3);
             //获取当前列表的第一个的规则的id
             IScene scene2= ListScene.builder().page(1).size(10).shopId(shopId).eventState(EventStateEnum.WAITING_ALARM_CONFIRM.getEventState()).build();
             JSONObject response2=visitor.invokeApi(scene2,true);

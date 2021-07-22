@@ -788,7 +788,6 @@ public class StoreInspectionOnlineCase extends TestCaseCommon implements TestCas
         try {
             //获取待处理的规则
             long eventId = businessUtil.waitingUrgentAlarmConfirmOnline(shopId).get(0);
-            sleep(3);
             //门店列表页面-确认规则之前
             IScene sceneShopBefore = EventTotalScene.builder().page(1).size(10).shopName(shopName).build();
             JSONArray shopBeforeList = visitor.invokeApi(sceneShopBefore, true).getJSONArray("list");
