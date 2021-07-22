@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.xmf.pc;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.commonDs.JsonPathUtil;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.commonDs.PoiUtils;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
@@ -455,7 +456,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             int day = calendar.get(Calendar.DAY_OF_WEEK);
             if (day % 2 == 0 && day != Calendar.SUNDAY) {  //如果是星期数数是基数且不是周日
                 //查询小程序卡券数量
-                jc.appletLoginToken(pp.getAppletTockenOther);
+                jc.appletLoginToken(EnumAppletToken.JC_WM_DAILY.getToken());
                 int totalAfter = pf.getVoucherTotal();
                 int historyData = qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum", "Applet");  //取数据库存好的数
                 //接待该客户

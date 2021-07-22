@@ -60,7 +60,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         commonConfig.pushRd = null;
     }
 
-    @Test(dataProvider = "BSJ_APPLET_TOKENS_DAILY", dataProviderClass = AppletLogin.class, enabled = false)
+    @Test(dataProvider = "BSJ_APPLET_TOKENS_DAILY", enabled = false)
     public void BSJ_applet_daily(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -80,7 +80,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(dataProvider = "BSJ_APPLET_TOKENS_ONLINE", dataProviderClass = AppletLogin.class, enabled = false)
+    @Test(dataProvider = "BSJ_APPLET_TOKENS_ONLINE", enabled = false)
     public void BSJ_applet_online(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -100,7 +100,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(dataProvider = "JC_APPLET_TOKENS_DAILY", dataProviderClass = AppletLogin.class)
+    @Test(dataProvider = "JC_APPLET_TOKENS_DAILY")
     public void JC_applet_daily(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -120,7 +120,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(dataProvider = "JC_APPLET_TOKENS_ONLINE", dataProviderClass = AppletLogin.class)
+    @Test(dataProvider = "JC_APPLET_TOKENS_ONLINE")
     public void JC_applet_online(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -140,7 +140,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(dataProvider = "INS_APPLET_TOKENS_DAILY", dataProviderClass = AppletLogin.class)
+    @Test(dataProvider = "INS_APPLET_TOKENS_DAILY", enabled = false)
     public void INS_applet_daily(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -159,7 +159,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(dataProvider = "INS_APPLET_TOKENS_ONLINE", dataProviderClass = AppletLogin.class)
+    @Test(dataProvider = "INS_APPLET_TOKENS_ONLINE", enabled = false)
     public void INS_applet_online(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -219,7 +219,6 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
     public static Object[] jc_appletTokens_daily() {
         return new String[]{
                 EnumAppletToken.JC_WM_DAILY.getToken(),
-                EnumAppletToken.JC_XMF_DAILY.getToken(),
                 EnumAppletToken.JC_GLY_DAILY.getToken(),
                 EnumAppletToken.JC_LXQ_DAILY.getToken(),
         };
@@ -230,7 +229,6 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         return new String[]{
                 EnumAppletToken.JC_WM_ONLINE.getToken(),
                 EnumAppletToken.JC_LXQ_ONLINE.getToken(),
-                EnumAppletToken.JC_XMF_ONLINE.getToken(),
                 EnumAppletToken.JC_GLY_ONLINE.getToken()
         };
     }

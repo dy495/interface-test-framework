@@ -68,7 +68,6 @@ public class PublicParm {
     public String importFilepath2="src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/importfile2.xlsx";   //导入工单文件路径
     public String importFilepath3="src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/importPotentialCustomerfile.xlsx";   //导入工单文件路径
     //其他小程序用户tocken和车牌号信息
-    public String getAppletTockenOther=EnumAppletToken.JC_XMF_DAILY.getToken();
     public  String CarplateOther="豫GBBA11";
     public String userid="uid_0216a935"; //xx的userId;
     public String userid2="uid_5eabfb9c"; //店长的userId;
