@@ -898,14 +898,14 @@ public class StoreInspectionOnlineCase extends TestCaseCommon implements TestCas
     public void storeEventCase1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            //上传不带口罩的图片，触发口罩事件
-            String path = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\itemXundian\\caseonline\\zt\\mainOnline.py";
-            String picPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\itemXundian\\common\\multimedia\\picture\\没有戴口罩.jpg";
-            mi.getPy(path, picPath);
+//            //上传不带口罩的图片，触发口罩事件
+//            String path = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\itemXundian\\caseonline\\zt\\mainOnline.py";
+//            String picPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\itemXundian\\common\\multimedia\\picture\\没有戴口罩.jpg";
+//            mi.getPy(path, picPath);
 
-//            JSONObject response=su.maskEventOnline(shopId,false,"customerFalse",true);
-//            int code=response.getInteger("code");
-//            Preconditions.checkArgument(code==1000,"口罩事件触发失败，code的返回值为："+code);
+            JSONObject response=su.maskEventOnline(shopId,false,"customerFalse",true);
+            int code=response.getInteger("code");
+            Preconditions.checkArgument(code==1000,"口罩事件触发失败，code的返回值为："+code);
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -922,13 +922,13 @@ public class StoreInspectionOnlineCase extends TestCaseCommon implements TestCas
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //上传不穿制服的图片，触发口罩事件
-            String path = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\itemXundian\\caseonline\\zt\\mainOnline.py";
-            String picPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\itemXundian\\common\\multimedia\\picture\\多人戴口罩没有穿制服.jpg";
-            mi.getPy(path, picPath);
+//            String path = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\itemXundian\\caseonline\\zt\\mainOnline.py";
+//            String picPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\itemXundian\\common\\multimedia\\picture\\多人戴口罩没有穿制服.jpg";
+//            mi.getPy(path, picPath);
 
-//            JSONObject response=su.maskEventOnline(shopId,true,"customer",true);
-//            int code=response.getInteger("code");
-//            Preconditions.checkArgument(code==1000,"制服事件触发失败，code的返回值为："+code);
+            JSONObject response=su.maskEventOnline(shopId,true,"customer",true);
+            int code=response.getInteger("code");
+            Preconditions.checkArgument(code==1000,"制服事件触发失败，code的返回值为："+code);
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());

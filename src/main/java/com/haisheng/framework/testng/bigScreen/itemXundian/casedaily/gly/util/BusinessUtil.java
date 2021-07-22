@@ -116,11 +116,11 @@ public class BusinessUtil extends TestCaseCommon {
         }else{
             System.out.println("--当前列表没有待处理的事件，正在新建中");
             //触发口罩事件
-//            su.maskEventOnline(shopId,false,"customerFalse",true);
-            String path = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\itemXundian\\caseonline\\zt\\mainOnline.py";
-            String picPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\itemXundian\\common\\multimedia\\picture\\没有戴口罩.jpg";
-            mi.getPy(path,picPath);
+            su.maskEventOnline(shopId,false,"customerFalse",true);
             sleep(3);
+//            String path = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\itemXundian\\caseonline\\zt\\mainOnline.py";
+//            String picPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\itemXundian\\common\\multimedia\\picture\\没有戴口罩.jpg";
+//            mi.getPy(path,picPath);
             //获取当前列表的第一个的规则的id
             IScene scene2= ListScene.builder().page(1).size(10).shopId(shopId).eventState(EventStateEnum.WAITING_ALARM_CONFIRM.getEventState()).build();
             JSONObject response2=visitor.invokeApi(scene2,true);
@@ -197,10 +197,11 @@ public class BusinessUtil extends TestCaseCommon {
         if(ids.size()==0){
             System.out.println("--当前列表没有待处理的事件，正在新建中");
             //触发口罩事件
-//            su.maskEventOnline(shopId,false,"customerFalse",true);
-            String path = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\itemXundian\\caseonline\\zt\\mainOnline.py";
-            String picPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\itemXundian\\common\\multimedia\\picture\\没有戴口罩.jpg";
-            mi.getPy(path, picPath);
+            su.maskEventOnline(shopId,false,"customerFalse",true);
+            sleep(3);
+//            String path = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\itemXundian\\caseonline\\zt\\mainOnline.py";
+//            String picPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\itemXundian\\common\\multimedia\\picture\\没有戴口罩.jpg";
+//            mi.getPy(path, picPath);
             sleep(3);
             //获取当前列表的第一个的规则的id
             IScene scene2= ListScene.builder().page(1).size(10).shopId(shopId).eventState(EventStateEnum.WAITING_ALARM_CONFIRM.getEventState()).build();
