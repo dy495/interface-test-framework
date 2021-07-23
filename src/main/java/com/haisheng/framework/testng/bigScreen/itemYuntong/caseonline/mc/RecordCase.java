@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc;
+package com.haisheng.framework.testng.bigScreen.itemYuntong.caseonline.mc;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
@@ -19,6 +19,7 @@ import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.ImageUtil;
 import org.testng.annotations.*;
+
 import java.lang.reflect.Method;
 import java.util.Objects;
 
@@ -27,8 +28,8 @@ import java.util.Objects;
  * @description :系统记录
  **/
 public class RecordCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_SSO; // 管理页—-首页
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_DAILY; // 全部权限账号 【运通】
+    private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_ONLINE_SSO; // 管理页—-首页
+    private static final EnumAccount AUTHORITY = EnumAccount.YT_RECEPTION_ONLINE_5; // 全部权限账号 【运通】
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);   // 产品类放到代理类中（通过代理类发请求）
     public SceneUtil util = new SceneUtil(visitor);    //场景工具类中放入代理类，类中封装接口方法直接调用
     CommonConfig commonConfig = new CommonConfig();    // 配置类初始化
@@ -36,21 +37,21 @@ public class RecordCase extends TestCaseCommon implements TestCaseStd {
     @BeforeClass
     @Override
     public void initial() {
-        logger.debug("before class initial");
-        //替换checklist的相关信息
-        commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
-        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_DAILY_SERVICE.getId();
-        commonConfig.checklistQaOwner = "孟辰";
-        //替换jenkins-job的相关信息
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.YUNTONG_DAILY_TEST.getJobName());
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
-        //替换钉钉推送
-        commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.product = PRODUCE.getAbbreviation(); // 产品代号 -- YT
+//        logger.debug("before class initial");
+//        //替换checklist的相关信息
+//        commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
+//        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
+//        commonConfig.checklistQaOwner = "孟辰";
+//        //替换jenkins-job的相关信息
+//        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.YUNTONG_ONLINE_TEST.getJobName());
+//        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
+//        //替换钉钉推送
+//        commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
+//        commonConfig.product = PRODUCE.getAbbreviation(); // 产品代号 -- YT
         commonConfig.shopId = PRODUCE.getShopId();  //请求头放入shopId
-        commonConfig.roleId = ALL_AUTHORITY.getRoleId(); //请求头放入roleId
+        commonConfig.roleId = AUTHORITY.getRoleId(); //请求头放入roleId
         beforeClassInit(commonConfig);  // 配置请求头
-        util.loginPc(ALL_AUTHORITY);   //登录
+        util.loginPc(AUTHORITY);   //登录
     }
 
     @AfterClass
@@ -74,17 +75,17 @@ public class RecordCase extends TestCaseCommon implements TestCaseStd {
     @Test(dataProvider = "CarExportPages")
     public void testExportPage(String product, String path, String type) {
         try {
-            visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
+            visitor.setProduct(EnumTestProduce.YT_ONLINE_CAR);
             JSONObject res1 = util.checkExport(); //查询接口
             Integer total1 = res1.getInteger("total");//检查导出操作前的总记录
             if (Objects.equals(product,"control")) {
-                visitor.setProduct(EnumTestProduce.YT_DAILY_CONTROL);
+                visitor.setProduct(EnumTestProduce.YT_ONLINE_CONTROL);
             }
             if (Objects.equals(product,"car")) {
-                visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
+                visitor.setProduct(EnumTestProduce.YT_ONLINE_CAR);
             }
             util.carPageExport(path); //在对应页面中导出
-            visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
+            visitor.setProduct(EnumTestProduce.YT_ONLINE_CAR);
             JSONObject res2 = util.checkExport();//查询接口
             Integer total2 = res2.getInteger("total"); // 检查导出操作后的总记录
             String typeName = res2.getJSONArray("list").getJSONObject(0).getString("type_name"); //获取导出的页面字段
@@ -127,7 +128,7 @@ public class RecordCase extends TestCaseCommon implements TestCaseStd {
 
     @Test
     public void deleteRecord() {
-        visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
+        visitor.setProduct(EnumTestProduce.YT_ONLINE_CAR);
         try {
             JSONObject res1 = util.checkDelete(); //删除之前校验
             Integer total1 = res1.getInteger("total");  //之前总删除条数

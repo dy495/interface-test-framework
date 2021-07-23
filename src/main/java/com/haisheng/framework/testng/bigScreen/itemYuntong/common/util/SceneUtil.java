@@ -449,10 +449,10 @@ public class SceneUtil extends BasicUtil {
             thisPage.put("evaluate_type", 5);
         }
         if ("/car-platform/pc/brand/car-style/export".equals(path)) {
-            thisPage.put("brand_id", "1526");
+            thisPage.put("brand_id", visitor.isDaily() ? "1526" : "1342");
         }
         if ("/car-platform/pc/brand/car-style/car-model/export".equals(path)) {
-            thisPage.put("style_id", "1584");
+            thisPage.put("style_id", visitor.isDaily() ? "1584" : "2527");
         }
         thisPage.put("page", 1);
         thisPage.put("size", 10);
@@ -464,7 +464,6 @@ public class SceneUtil extends BasicUtil {
      * @description : 导出记录页面查询校验
      **/
     public JSONObject checkExport() {
-        visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
         return ExportPageScene.builder().build().invoke(visitor);
     }
 
@@ -472,7 +471,6 @@ public class SceneUtil extends BasicUtil {
      * @description : 导入记录页面查询校验
      **/
     public JSONObject checkImport() {
-        visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
         return ImportPageScene.builder().build().invoke(visitor);
     }
 
@@ -480,7 +478,6 @@ public class SceneUtil extends BasicUtil {
      * @description : 删除记录页面查询校验
      **/
     public JSONObject checkDelete() {
-        visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
         return DeleteRecordPageScene.builder().page(1).size(10).build().invoke(visitor);
     }
 
@@ -488,7 +485,6 @@ public class SceneUtil extends BasicUtil {
      * @description : 登陆记录页面查询校验
      **/
     public JSONObject checkLogin() {
-        visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
         return LoginRecordPageScene.builder().build().invoke(visitor);
     }
 
