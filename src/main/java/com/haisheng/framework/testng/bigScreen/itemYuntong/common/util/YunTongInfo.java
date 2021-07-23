@@ -202,6 +202,13 @@ public class YunTongInfo {
         };
     }
 
+    @DataProvider(name = "WORDNUM")
+    public Object[] wordNum(){
+        return new String[]{
+                "123456789",
+        };
+    }
+
 
 
 }

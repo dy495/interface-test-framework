@@ -9,11 +9,11 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklis
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistConfId;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.YunTongInfo;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.brand.*;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanage.*;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.YunTongInfo;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -1236,6 +1236,32 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             saveData("PC【品牌管理】，创建车型时品牌被删除， 期待失败");
         }
     }
+
+//    //评价跟进
+//    @Test(dataProvider = "WORDNUM", dataProviderClass = YunTongInfo.class)
+//    public void doEvaluate_num(String contnet) {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        try {
+//            Long id =-1L;
+//            JSONArray arr = EvaluatePageV4Scene.builder().page(1).size(20).isFollowUp(false).evaluateType(5).build().invoke(visitor).getJSONArray("list");
+//            for (int i = 0 ; i< arr.size();i++){
+//                JSONObject obj = arr.getJSONObject(i);
+//                if (obj.getInteger("score")<5){
+//                    id = obj.getLong("id");
+//                }
+//            }
+//            EvaluateFollowUpScene.builder().id(id).evaluate_type(5).shopId(info.oneshopid).remark(contnet).build().invoke(visitor);
+//
+//
+//
+//        } catch (AssertionError e) {
+//            appendFailReason(e.toString());
+//        } catch (Exception e) {
+//            appendFailReason(e.toString());
+//        } finally {
+//            saveData("PC【评价管理】，跟进字数校验");
+//        }
+//    }
 
 
 }
