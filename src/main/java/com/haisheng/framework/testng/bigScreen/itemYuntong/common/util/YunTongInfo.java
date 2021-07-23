@@ -172,6 +172,7 @@ public class YunTongInfo {
     public Object[] filter(){
         return new String[]{
                 "1",
+                "啊",
                 "A"
         };
     }

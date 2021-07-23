@@ -333,10 +333,6 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(code == 1000, "编辑客户信息提示" + message);
             }
 
-            //姓名51字
-            //手机号12位
-            //手机号10位
-            //不填写必填项
 
 
         } catch (AssertionError e) {
@@ -432,7 +428,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
      */
 
     /**
-     * 展厅客户-创建 正常&异常
+     * 成交记录-创建 正常&异常
      */
     @Test(dataProvider = "CSTMINFO")
     public void newCstmRecord(String name, String phone, String type, String sex, String mess, String chk) {
@@ -539,6 +535,156 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     /**
      *     成交记录-筛选
      */
+
+    @Test
+    public void buyCarPage_Filter1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray pagelist = PreSaleCustomerBuyCarPageScene.builder().build().invoke(visitor).getJSONArray("list");
+            if (pagelist.size()>0){
+                JSONObject one = pagelist.getJSONObject(0);
+                String customer_name = one.getString("customer_name").toUpperCase();
+                String customer_phone = one.getString("customer_phone").toUpperCase();
+                String pre_sale_name = one.getString("pre_sale_name").toUpperCase();
+                String pre_sale_account = one.getString("pre_sale_account").toUpperCase();
+//                String vehicle_chassis_code = one.getString("vehicle_chassis_code").toUpperCase();
+                String buy_car_date = one.getString("buy_car_date").toUpperCase();
+
+                //姓名
+                JSONArray searchlist = PreSaleCustomerBuyCarPageScene.builder().page(1).size(20).customerName(customer_name).build().invoke(visitor).getJSONArray("list");
+                Preconditions.checkArgument(searchlist.size()>0,"搜索无结果");
+                for (int i = 0;i < searchlist.size();i++){
+                    String searchname = searchlist.getJSONObject(i).getString("customer_name").toUpperCase();
+                    Preconditions.checkArgument(searchname.contains(customer_name),"搜索"+customer_name+" ，结果包含"+searchname);
+                }
+
+                //手机号
+                JSONArray searchlist1 = PreSaleCustomerBuyCarPageScene.builder().page(1).size(20).phone(customer_phone).build().invoke(visitor).getJSONArray("list");
+                Preconditions.checkArgument(searchlist1.size()>0,"搜索无结果");
+                for (int i = 0;i < searchlist1.size();i++){
+                    String searchphone = searchlist1.getJSONObject(i).getString("customer_phone").toUpperCase();
+                    Preconditions.checkArgument(searchphone.contains(customer_phone),"搜索"+customer_phone+" ，结果包含"+searchphone);
+                }
+                //销售顾问
+                JSONArray searchlist2 = PreSaleCustomerBuyCarPageScene.builder().page(1).size(20).preSaleName(pre_sale_name).build().invoke(visitor).getJSONArray("list");
+                Preconditions.checkArgument(searchlist2.size()>0,"搜索无结果");
+                for (int i = 0;i < searchlist2.size();i++){
+                    String searchpre_sale_name = searchlist2.getJSONObject(i).getString("pre_sale_name").toUpperCase();
+                    Preconditions.checkArgument(searchpre_sale_name.contains(pre_sale_name),"搜索"+customer_phone+" ，结果包含"+searchpre_sale_name);
+                }
+
+                //销售账号
+                JSONArray searchlist3 = PreSaleCustomerBuyCarPageScene.builder().page(1).size(20).preSaleAccount(pre_sale_account).build().invoke(visitor).getJSONArray("list");
+                Preconditions.checkArgument(searchlist3.size()>0,"搜索无结果");
+                for (int i = 0;i < searchlist3.size();i++){
+                    String searchpre_sale_account = searchlist3.getJSONObject(i).getString("pre_sale_account").toUpperCase();
+                    Preconditions.checkArgument(searchpre_sale_account.contains(pre_sale_account),"搜索"+customer_phone+" ，结果包含"+searchpre_sale_account);
+                }
+
+                //购车日期
+                JSONArray searchlist4 = PreSaleCustomerBuyCarPageScene.builder().page(1).size(20).buyCarTimeStart(buy_car_date).buyCarTimeEnd(buy_car_date).build().invoke(visitor).getJSONArray("list");
+                Preconditions.checkArgument(searchlist4.size()>0,"搜索无结果");
+                for (int i = 0;i < searchlist4.size();i++){
+                    String searchdate = searchlist4.getJSONObject(i).getString("buy_car_date").toUpperCase();
+                    Preconditions.checkArgument(searchdate.equals(buy_car_date),"搜索"+buy_car_date+" ，结果包含"+searchdate);
+                }
+
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【成交记录】，根据存在的信息进行筛选");
+        }
+
+    }
+
+    @Test
+    public void buyCarPage_Filter2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            //所属门店
+            String shopname = "自动化门店简称";
+            JSONArray searchlist = PreSaleCustomerBuyCarPageScene.builder().page(1).size(20).shopId(info.oneshopid).build().invoke(visitor).getJSONArray("list");
+            Preconditions.checkArgument(searchlist.size()>0,"搜索无结果");
+            for (int i = 0;i < searchlist.size();i++){
+                String search = searchlist.getJSONObject(i).getString("shop_name");
+                Preconditions.checkArgument(search.equals(shopname),"搜索"+shopname+" ，结果包含"+search);
+            }
+
+            //购买车系
+            Long car_style_id = 1470L;
+            String intention_car_style_name = "Model";
+            JSONArray searchlist1 = PreSaleCustomerBuyCarPageScene.builder().page(1).size(20).carStyleId(car_style_id).build().invoke(visitor).getJSONArray("list");
+            Preconditions.checkArgument(searchlist1.size()>0,"搜索无结果");
+            for (int i = 0;i < searchlist1.size();i++){
+                String search = searchlist1.getJSONObject(i).getString("intention_car_style_name");
+                Preconditions.checkArgument(search.contains(intention_car_style_name),"搜索"+intention_car_style_name+" ，结果包含"+search);
+            }
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【成交记录】，根据存在的信息进行筛选");
+        }
+
+    }
+
+    @Test(dataProvider = "FILTER", dataProviderClass = YunTongInfo.class)
+    public void buyCarPage_Filter3(String content) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+                String customer_name = content.toUpperCase();
+                String customer_phone = content.toUpperCase();
+                String pre_sale_name = content.toUpperCase();
+                String pre_sale_account = content.toUpperCase();
+
+
+                //姓名
+                JSONArray searchlist = PreSaleCustomerBuyCarPageScene.builder().page(1).size(20).customerName(customer_name).build().invoke(visitor).getJSONArray("list");
+                for (int i = 0;i < searchlist.size();i++){
+                    String searchname = searchlist.getJSONObject(i).getString("customer_name").toUpperCase();
+                    Preconditions.checkArgument(searchname.contains(customer_name),"搜索姓名="+customer_name+" ，结果包含"+searchname);
+                }
+
+                //手机号
+                JSONArray searchlist1 = PreSaleCustomerBuyCarPageScene.builder().page(1).size(20).phone(customer_phone).build().invoke(visitor).getJSONArray("list");
+                for (int i = 0;i < searchlist1.size();i++){
+                    String searchphone = searchlist1.getJSONObject(i).getString("customer_phone").toUpperCase();
+                    Preconditions.checkArgument(searchphone.contains(customer_phone),"搜索手机号="+customer_phone+" ，结果包含"+searchphone);
+                }
+                //销售顾问
+                JSONArray searchlist2 = PreSaleCustomerBuyCarPageScene.builder().page(1).size(20).preSaleName(pre_sale_name).build().invoke(visitor).getJSONArray("list");
+                for (int i = 0;i < searchlist2.size();i++){
+                    String searchpre_sale_name = searchlist2.getJSONObject(i).getString("pre_sale_name").toUpperCase();
+                    Preconditions.checkArgument(searchpre_sale_name.contains(pre_sale_name),"搜索销售顾问="+customer_phone+" ，结果包含"+searchpre_sale_name);
+                }
+
+                //销售账号
+                JSONArray searchlist3 = PreSaleCustomerBuyCarPageScene.builder().page(1).size(20).preSaleAccount(pre_sale_account).build().invoke(visitor).getJSONArray("list");
+                for (int i = 0;i < searchlist3.size();i++){
+                    String searchpre_sale_account = searchlist3.getJSONObject(i).getString("pre_sale_account").toUpperCase();
+                    Preconditions.checkArgument(searchpre_sale_account.contains(pre_sale_account),"搜索销售账号="+customer_phone+" ，结果包含"+searchpre_sale_account);
+                }
+
+
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("PC【成交记录】，根据特殊字符进行筛选");
+        }
+
+    }
 
 
     /**
