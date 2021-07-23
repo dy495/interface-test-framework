@@ -25,7 +25,7 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ReceivingSystemCase2 extends TestCaseCommon implements TestCaseStd {
+public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_ONLINE_SSO; // 管理页—-首页
     private static final EnumAccount YT_RECEPTION_ACCOUNT = EnumAccount.YT_RECEPTION_ONLINE_5; // 全部权限账号 【运通】
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);   // 产品类放到代理类中（通过代理类发请求）

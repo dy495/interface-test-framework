@@ -37,17 +37,17 @@ public class RecordCase extends TestCaseCommon implements TestCaseStd {
     @BeforeClass
     @Override
     public void initial() {
-//        logger.debug("before class initial");
-//        //替换checklist的相关信息
-//        commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
-//        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
-//        commonConfig.checklistQaOwner = "孟辰";
-//        //替换jenkins-job的相关信息
-//        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.YUNTONG_ONLINE_TEST.getJobName());
-//        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
-//        //替换钉钉推送
-//        commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
-//        commonConfig.product = PRODUCE.getAbbreviation(); // 产品代号 -- YT
+        logger.debug("before class initial");
+        //替换checklist的相关信息
+        commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
+        commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
+        commonConfig.checklistQaOwner = "孟辰";
+        //替换jenkins-job的相关信息
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.YUNTONG_ONLINE_TEST.getJobName());
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
+        //替换钉钉推送
+        commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
+        commonConfig.product = PRODUCE.getAbbreviation(); // 产品代号 -- YT
         commonConfig.shopId = PRODUCE.getShopId();  //请求头放入shopId
         commonConfig.roleId = AUTHORITY.getRoleId(); //请求头放入roleId
         beforeClassInit(commonConfig);  // 配置请求头

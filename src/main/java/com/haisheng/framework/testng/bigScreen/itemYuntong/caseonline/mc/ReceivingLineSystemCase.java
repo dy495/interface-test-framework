@@ -11,10 +11,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProd
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.*;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanagev4.PreSaleCustomerInfoBuyCarRecordScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.loginuser.LoginPc;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.BuyCarScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.CustomerRemarkScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.FinishReceptionScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.PreSalesReceptionPageScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.*;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.YunTongInfo;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
@@ -30,7 +27,7 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-public class ReceivingSystemCase1 extends TestCaseCommon implements TestCaseStd {
+public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_ONLINE_SSO; // 管理页—-首页
     private static final EnumAccount YT_RECEPTION_ACCOUNT = EnumAccount.YT_RECEPTION_ONLINE_5; // 全部权限账号 【运通】
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);   // 产品类放到代理类中（通过代理类发请求）
@@ -229,7 +226,7 @@ public class ReceivingSystemCase1 extends TestCaseCommon implements TestCaseStd 
 //    @Test
 //    public void test06ChangeChassisCode(){
 //        try {
-//
+//            VehicleEditScene.builder().carModel()
 //
 //        } catch (AssertionError e) {
 //            appendFailReason(e.toString());

@@ -11,10 +11,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProd
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.*;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanagev4.PreSaleCustomerInfoBuyCarRecordScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.loginuser.LoginPc;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.BuyCarScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.CustomerRemarkScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.FinishReceptionScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.PreSalesReceptionPageScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.*;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.YunTongInfo;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -30,7 +27,7 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-public class ReceivingSystemCase1 extends TestCaseCommon implements TestCaseStd {
+public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_SSO; // 管理页—-首页
     private static final EnumAccount YT_RECEPTION_DAILY = EnumAccount.YT_RECEPTION_DAILY; // 全部权限账号 【运通】
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);   // 产品类放到代理类中（通过代理类发请求）
@@ -225,12 +222,18 @@ public class ReceivingSystemCase1 extends TestCaseCommon implements TestCaseStd 
 //            saveData("app接待中添加车牌号");
 //        }
 //    }
-    //     没有相关接口
-//    @Test
-//    public void test06ChangeChassisCode(){
+    //     失败
+//    @Test(dataProvider = "chassisCode")
+//    public void test06ChangeChassisCode(String description, String expect, String vin){
 //        try {
-//
-//
+//            if(newId != null && newCustomerId != null) {
+//                String code = VehicleEditScene.builder().carModel(676L).id(newId).vin(vin).build().invoke(visitor, false).getString("code");
+//                Preconditions.checkArgument(Objects.equals(code, expect), description + ",预期code:" + expect + "实际code=" + code);
+//                if (Objects.equals(expect, "1000") && vin.length() != 0) {
+//                    String chassisCode = PreSaleCustomerInfoBuyCarRecordScene.builder().customerId(newCustomerId).shopId(newShopId).build().invoke(visitor, true).getJSONArray("list").getJSONObject(0).getString("vehicle_chassis_code");
+//                    Preconditions.checkArgument(Objects.equals(chassisCode, vin.toUpperCase()), "详情中底盘号不一致,输入:" + vin + "实际:" + chassisCode);
+//                }
+//            }
 //        } catch (AssertionError e) {
 //            appendFailReason(e.toString());
 //        } catch (Exception e) {
