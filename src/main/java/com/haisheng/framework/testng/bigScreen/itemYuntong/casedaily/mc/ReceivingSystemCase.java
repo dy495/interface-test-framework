@@ -16,6 +16,7 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presa
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.CustomerRemarkScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.FinishReceptionScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.PreSalesReceptionPageScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.YunTongInfo;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -30,14 +31,11 @@ import java.util.stream.Collectors;
 
 public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_SSO; // 管理页—-首页
-    private static final EnumAccount YT_RECEPTION_DAILY = EnumAccount.YT_RECEPTION_DAILY; // 全部权限账号 【运通】
+    private static final EnumAccount YT_RECEPTION_DAILY = EnumAccount.YT_RECEPTION_DAILY_M; // 全部权限账号 【运通】
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);   // 产品类放到代理类中（通过代理类发请求）
-   // public SceneUtil util = new SceneUtil(visitor);
+    public SceneUtil util = new SceneUtil(visitor);
     public YunTongInfo info = new YunTongInfo();
     CommonConfig commonConfig = new CommonConfig();    // 配置类初始化
-    public Long newId; // 本次创建的接待id
-    public Long newShopId; // 本次接待门店的shopId
-    public Long newCustomerId;
 
     @BeforeClass
     @Override
@@ -54,12 +52,12 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         commonConfig.product = PRODUCE.getAbbreviation(); // 产品代号 -- YT
         commonConfig.referer = PRODUCE.getReferer();
-        commonConfig.shopId = "57279";  //请求头放入shopId
-        commonConfig.roleId = "10322"; //请求头放入roleId
+        commonConfig.shopId = YT_RECEPTION_DAILY.getReceptionShopId();  //请求头放入shopId
+        commonConfig.roleId = YT_RECEPTION_DAILY.getRoleId(); //请求头放入roleId
         beforeClassInit(commonConfig);  // 配置请求头
-        //util.loginPc(YT_RECEPTION_DAILY);   //登录
-        LoginPc loginScene = LoginPc.builder().phone("13402050043").verificationCode("000000").build();
-        httpPost(loginScene.getPath(),loginScene.getBody(),PRODUCE.getPort());
+        util.loginPc(YT_RECEPTION_DAILY);   //登录
+//        LoginPc loginScene = LoginPc.builder().phone("13402050043").verificationCode("000000").build();
+//        httpPost(loginScene.getPath(),loginScene.getBody(),PRODUCE.getPort());
     }
 
     @AfterClass
@@ -157,7 +155,7 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
             AppFinishReceptionScene.builder().id(second.get("id")).shopId(second.get("shopId")).build().invoke(visitor);
             String message = AppPreSalesReceptionCreateScene.builder().customerName("三次接待").customerPhone(phone).sexId("1").intentionCarModelId("775").estimateBuyCarTime("2035-12-20").build().invoke(visitor, false).getString("message");
             //Boolean isFinish = PreSalesReceptionPageScene.builder().build().invoke(visitor, true).getJSONArray("list").getJSONObject(0).getBoolean("is_finish");
-            Preconditions.checkArgument(Objects.equals("该客户当天已接待2次！不能再进行接待！",message), "同一个手机号当天接待三次成功");
+            Preconditions.checkArgument(Objects.equals("该客户当天已接待2次！不能再进行接待！",message), "同一个手机号当天接待三次,message:"+message);
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());

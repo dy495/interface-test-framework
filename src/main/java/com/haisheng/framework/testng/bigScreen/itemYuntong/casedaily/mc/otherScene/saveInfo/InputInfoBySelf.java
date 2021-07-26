@@ -20,14 +20,14 @@ public class InputInfoBySelf extends BaseScene {
      * 车牌记录ID
      * Required : false
      **/
-    private final int plate_number_record_id;
+    private final int plateNumberRecordId;
 
     @Override
     protected JSONObject getRequestBody() {
         JSONObject obj = new JSONObject();
         obj.put("name",name);
         obj.put("phone",phone);
-        obj.put("plate_number_record_id",plate_number_record_id);
+        obj.put("plate_number_record_id",plateNumberRecordId);
         return obj;
     }
 

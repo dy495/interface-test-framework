@@ -12,6 +12,7 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherSce
 import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherScene.H5.GetQRCode;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherScene.saveInfo.GetBeforeQRCode;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherScene.saveInfo.GetUsableCarId;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherScene.saveInfo.InputInfoBySelf;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.brand.BrandAddScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.brand.BrandDeleteScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.brand.BrandPageScene;
@@ -79,10 +80,10 @@ public class CustomerQRCodeCreateCase extends TestCaseCommon implements TestCase
         logger.debug("case: " + caseResult);
     }
     @Test
-    public void customerInfo(){
+    public void customerInfo() {
         visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
         String id = GetQRCode.builder().build().invoke(visitor, true).getString("qr_code_url");
-
+//        GetBeforeQRCode.builder().build().invoke(visitor);
+//        InputInfoBySelf.builder().name("111").build().invoke(visitor);
     }
-
 }

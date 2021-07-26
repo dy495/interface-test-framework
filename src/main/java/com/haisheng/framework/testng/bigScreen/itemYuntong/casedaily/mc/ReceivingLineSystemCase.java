@@ -10,8 +10,8 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.*;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanagev4.PreSaleCustomerInfoBuyCarRecordScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.loginuser.LoginPc;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.*;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.YunTongInfo;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -29,13 +29,13 @@ import java.util.stream.Collectors;
 
 public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_SSO; // 管理页—-首页
-    private static final EnumAccount YT_RECEPTION_DAILY = EnumAccount.YT_RECEPTION_DAILY; // 全部权限账号 【运通】
+    private static final EnumAccount YT_RECEPTION_DAILY = EnumAccount.YT_RECEPTION_DAILY_M; // 全部权限账号 【运通】
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);   // 产品类放到代理类中（通过代理类发请求）
-   // public SceneUtil util = new SceneUtil(visitor);
+    public SceneUtil util = new SceneUtil(visitor);
     public YunTongInfo info = new YunTongInfo();
     CommonConfig commonConfig = new CommonConfig();    // 配置类初始化
     public Long newId; // 本次创建的接待id
-    public Long newShopId; // 本次接待门店的shopId
+    public String newShopId = YT_RECEPTION_DAILY.getReceptionShopId(); // 本次接待门店的shopId
     public Long newCustomerId;
 
     @BeforeClass
@@ -53,12 +53,12 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         commonConfig.product = PRODUCE.getAbbreviation(); // 产品代号 -- YT
         commonConfig.referer = PRODUCE.getReferer();
-        commonConfig.shopId = "57279";  //请求头放入shopId
-        commonConfig.roleId = "10322"; //请求头放入roleId
+        commonConfig.shopId = YT_RECEPTION_DAILY.getReceptionShopId();  //请求头放入shopId
+        commonConfig.roleId = YT_RECEPTION_DAILY.getRoleId(); //请求头放入roleId
         beforeClassInit(commonConfig);  // 配置请求头
-        //util.loginPc(YT_RECEPTION_DAILY);   //登录
-        LoginPc loginScene = LoginPc.builder().phone("13402050043").verificationCode("000000").build();
-        httpPost(loginScene.getPath(),loginScene.getBody(),PRODUCE.getPort());
+        util.loginPc(YT_RECEPTION_DAILY);   //登录
+//        LoginPc loginScene = LoginPc.builder().phone("13402050043").verificationCode("000000").build();
+//        httpPost(loginScene.getPath(),loginScene.getBody(),PRODUCE.getPort());
     }
 
     @AfterClass
@@ -85,21 +85,6 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
         return numStr;
     }
 
-    // 创建一个接待，
-    //return：接待id 和 shop_id
-//    private void createCustomer() {
-//        visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
-//        HashMap<String,Long> customer = new HashMap<>();
-//        String phone = "15" + phoneRandom(9);
-//        AppPreSalesReceptionCreateScene.builder().customerName("自动化创建测试使用mc").customerPhone(phone).sexId("1").intentionCarModelId("676").estimateBuyCarTime("2035-07-12").build().invoke(visitor);//创建销售接待
-//        JSONObject pageInfo = PreSalesReceptionPageScene.builder().build().invoke(visitor, true);
-//        List<JSONObject> newCustomer = pageInfo.getJSONArray("list").stream().map(ele -> (JSONObject) ele).filter(obj -> phone.equals(obj.getString("customer_phone"))).collect(Collectors.toList());
-//        Long id = newCustomer.get(0).getLong("id");
-//        Long shopId = pageInfo.getJSONArray("list").getJSONObject(0).getLong("shop_id");
-//        customer.put("id",id);
-//        customer.put("shopId",shopId);
-//        return customer;
-//    }
     @Test
     public void test01CustomerConfig() {
         visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
@@ -109,10 +94,10 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
             JSONObject pageInfo = AppPreSalesReceptionPageScene.builder().build().invoke(visitor, true);
             List<JSONObject> newCustomer = pageInfo.getJSONArray("list").stream().map(ele -> (JSONObject) ele).filter(obj -> phone.equals(obj.getString("customer_phone"))).collect(Collectors.toList());
             Long id = newCustomer.get(0).getLong("id");
-            Long shopId = newCustomer.get(0).getLong("shop_id");
+//            Long shopId = newCustomer.get(0).getLong("shop_id");
             Long customerId = newCustomer.get(0).getLong("customer_id");
             this.newId = id;
-            this.newShopId = shopId;
+//            this.newShopId = shopId;
             this.newCustomerId = customerId;
 
         } catch (AssertionError e) {
@@ -129,9 +114,9 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
     public void test02PcRemark(String description, String expect, String remark) {
         try {
             if(newId != null && newCustomerId != null) {
-                AppCustomerDetailV4Scene detail = AppCustomerDetailV4Scene.builder().shopId(newShopId.toString()).customerId(newCustomerId.toString()).id(newId.toString()).build();
+                AppCustomerDetailV4Scene detail = AppCustomerDetailV4Scene.builder().shopId(newShopId).customerId(newCustomerId.toString()).id(newId.toString()).build();
                 //            int beforeSum = detail.invoke(visitor, true).getJSONArray("remarks").size();
-                String code = CustomerRemarkScene.builder().id(newId).shopId(newShopId).remark(remark).build().invoke(visitor, false).getString("code");
+                String code = CustomerRemarkScene.builder().id(newId).shopId(Long.parseLong(newShopId)).remark(remark).build().invoke(visitor, false).getString("code");
                 JSONArray remarks = detail.invoke(visitor, true).getJSONArray("remarks");
                 //            int afterSum = remarks.size();
                 String addedRemark = remarks.getJSONObject(0).getString("remark");
@@ -163,10 +148,10 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
     public void test03BuyCar(String description, String expect, String vin) {
         try {
             if(newId != null && newCustomerId != null) {
-                String code = BuyCarScene.builder().carModel(676L).carStyle(1398L).id(newId).shopId(newShopId).vin(vin).build().invoke(visitor, false).getString("code");
+                String code = BuyCarScene.builder().carModel(676L).carStyle(1398L).id(newId).shopId(Long.parseLong(newShopId)).vin(vin).build().invoke(visitor, false).getString("code");
                 Preconditions.checkArgument(Objects.equals(code, expect), description + ",预期code:" + expect + "实际code=" + code);
                 if (Objects.equals(expect, "1000") && vin.length() != 0) {
-                    String chassisCode = PreSaleCustomerInfoBuyCarRecordScene.builder().customerId(newCustomerId).shopId(newShopId).build().invoke(visitor, true).getJSONArray("list").getJSONObject(0).getString("vehicle_chassis_code");
+                    String chassisCode = PreSaleCustomerInfoBuyCarRecordScene.builder().customerId(newCustomerId).shopId(Long.parseLong(newShopId)).build().invoke(visitor, true).getJSONArray("list").getJSONObject(0).getString("vehicle_chassis_code");
                     Preconditions.checkArgument(Objects.equals(chassisCode, vin.toUpperCase()), "详情中底盘号不一致,输入:" + vin + "实际:" + chassisCode);
                 }
             }
@@ -305,7 +290,7 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
     public void test09PcComplete(){
         try{
             if(newId != null && newCustomerId != null) {
-                FinishReceptionScene.builder().id(newId).shopId(newShopId).build().invoke(visitor);
+                FinishReceptionScene.builder().id(newId).shopId(Long.parseLong(newShopId)).build().invoke(visitor);
                 Boolean isFinish = PreSalesReceptionPageScene.builder().build().invoke(visitor, true).getJSONArray("list").getJSONObject(0).getBoolean("is_finish");
                 Preconditions.checkArgument(isFinish, "完成接待操作失败，接待id=" + newId);
             }
