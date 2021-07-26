@@ -90,7 +90,7 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
         visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
         try {
             String phone = "15" + numRandom(9);
-            AppPreSalesReceptionCreateScene.builder().customerName("mc自动化创建使用").customerPhone(phone).sexId("1").intentionCarModelId("775").estimateBuyCarTime("2035-07-12").build().invoke(visitor);//创建销售接待
+            AppPreSalesReceptionCreateScene.builder().customerName("mc自动化创建使用").customerPhone(phone).sexId("1").intentionCarModelId(util.mcCarId()).estimateBuyCarTime("2035-07-12").build().invoke(visitor);//创建销售接待
             JSONObject pageInfo = AppPreSalesReceptionPageScene.builder().build().invoke(visitor, true);
             List<JSONObject> newCustomer = pageInfo.getJSONArray("list").stream().map(ele -> (JSONObject) ele).filter(obj -> phone.equals(obj.getString("customer_phone"))).collect(Collectors.toList());
             Long id = newCustomer.get(0).getLong("id");

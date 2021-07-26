@@ -1,5 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.itemYuntong.caseonline.mc;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
@@ -8,10 +9,14 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklis
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistConfId;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherScene.AppFlowUp.AppFlowUpPageScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherScene.AppFlowUp.AppFlowUpRemarkScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.AppFinishReceptionScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.AppPreSalesReceptionCreateScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.loginuser.LoginPc;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.PreSalesReceptionPageScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.PreSalesRecpEvaluateOpt;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.PreSalesRecpEvaluateSubmit;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.YunTongInfo;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
@@ -19,6 +24,7 @@ import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
+import com.haisheng.framework.util.CommonUtil;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
@@ -51,7 +57,7 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         commonConfig.product = PRODUCE.getAbbreviation(); // 产品代号 -- YT
         commonConfig.referer = PRODUCE.getReferer();
-        commonConfig.shopId = "35827";  //请求头放入shopId
+        commonConfig.shopId = YT_RECEPTION_ACCOUNT.getReceptionShopId();  //请求头放入shopId YT_RECEPTION_ACCOUNT.getReceptionShopId();
         commonConfig.roleId = YT_RECEPTION_ACCOUNT.getRoleId(); //请求头放入roleId
         beforeClassInit(commonConfig);  // 配置请求头
         util.loginPc(YT_RECEPTION_ACCOUNT);   //登录
@@ -149,15 +155,15 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
     public void test02samePhone(){
         try{
             String phone = "15"+numRandom(9);
-            Map<String, String> first = createCustomerCommon("一次接待", "1", phone, "20895", "2066-12-21");
+            Map<String, String> first = createCustomerCommon("一次接待", "1", phone, util.mcCarId(), "2066-12-21");
             AppFinishReceptionScene.builder().id(first.get("id")).shopId(first.get("shopId")).build().invoke(visitor);
-            Map<String, String> second = createCustomerCommon("二次接待", "1", phone, "20895", "2066-12-21");
+            Map<String, String> second = createCustomerCommon("二次接待", "1", phone, util.mcCarId(), "2066-12-21");
             AppFinishReceptionScene.builder().id(second.get("id")).shopId(second.get("shopId")).build().invoke(visitor);
-            JSONObject third = AppPreSalesReceptionCreateScene.builder().customerName("三次接待").customerPhone(phone).sexId("1").intentionCarModelId("20895").estimateBuyCarTime("2035-12-20").build().invoke(visitor, false);
+            JSONObject third = AppPreSalesReceptionCreateScene.builder().customerName("三次接待").customerPhone(phone).sexId("1").intentionCarModelId(util.mcCarId()).estimateBuyCarTime("2035-12-20").build().invoke(visitor, false);
             String message =third.getString("message");
             String code = third.getString("code");
             //Boolean isFinish = PreSalesReceptionPageScene.builder().build().invoke(visitor, true).getJSONArray("list").getJSONObject(0).getBoolean("is_finish");
-            Preconditions.checkArgument(!Objects.equals(code,"1000")||Objects.equals("该客户当天已接待2次！不能再进行接待！",message), "同一个手机号当天接待三次成功");
+            Preconditions.checkArgument(!Objects.equals(code,"1000")||Objects.equals("该客户当天已接待2次！不能再进行接待！",message), "同一个手机号当天接待三次message="+message);
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -167,6 +173,49 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
             saveData("手机号接待次数：同一个手机号当天接待最多两次");
         }
     }
+    @Test(dataProvider = "remarkContent")
+    public void flowUpContent(String description, String expect, String remark){
+        visitor.setProduct(EnumTestProduce.YT_ONLINE_CAR);
+        try{
+            Map<String, String> customer = util.createCustomerCommon("自动创建差评跟进", "1", "150" + CommonUtil.getRandom(8), util.mcCarId(), "2033-12-20");
+            AppFinishReceptionScene.builder().id(customer.get("id")).shopId(customer.get("shopId")).build().invoke(visitor);
+            commonConfig.shopId = null;
+            commonConfig.roleId = null;
+            JSONArray evaluateInfoList = new JSONArray();
+            PreSalesRecpEvaluateOpt.builder().reception_id(Long.parseLong(customer.get("id"))).build().invoke(visitor, true).getJSONArray("list").stream().map(j -> (JSONObject) j).map(json -> json.getInteger("id")).forEach(e-> evaluateInfoList.add(lowEvaluate(e)));
+            String message = PreSalesRecpEvaluateSubmit.builder().evaluate_info_list(evaluateInfoList).reception_id(Long.parseLong(customer.get("id"))).build().invoke(visitor, false).getString("message");
+            commonConfig.shopId = YT_RECEPTION_ACCOUNT.getReceptionShopId();
+            commonConfig.roleId = YT_RECEPTION_ACCOUNT.getRoleId();
+            if (Objects.equals(message,"success")){
+                Integer flowUpId = AppFlowUpPageScene.builder().size(10).build().invoke(visitor, true).getJSONArray("list").getJSONObject(0).getInteger("id");
+                String code = AppFlowUpRemarkScene.builder().followId(flowUpId).remark(remark).build().invoke(visitor, false).getString("code");
+                Preconditions.checkArgument(Objects.equals(expect,code),description+",预期结果code="+expect+",实际结果code="+code);
+            }
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("销售接待差评,跟进内容校验");
+        }
+    }
+    private JSONObject lowEvaluate(int id){
+        JSONObject o = new JSONObject();
+        o.put("id",id);
+        o.put("score",1);
+        return o;
+    }
+
+    @DataProvider(name = "remarkContent")
+    private Object[] remark() {
+        return new Object[][]{
+                {"备注长度10个字符", "1000", "@%^#*?><jh"},
+                //{"备注长度9个字符", "1001", "zsdfghyjh"},   //success
+                {"备注长度0个字符", "1001", ""},
+                {"符合长度限制的字符组合", "1000", "!_=-][/?ASF你        我他slj,.  l;'\nffflllai"},
+        };
+    }
+
 
 
 }

@@ -11,10 +11,12 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherSce
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.homepagev4.AppTodayDataBean;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.presalesreception.AppPreSalesReceptionPageBean;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.homepagev4.AppTodayDataScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.AppPreSalesReceptionCreateScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.AppPreSalesReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanage.PreSaleCustomerBuyCarPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanage.PreSaleCustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanagev4.PreSaleCustomerInfoBuyCarRecordScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.PreSalesReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.record.ExportPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.record.ImportPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.record.LoginRecordPageScene;
@@ -47,6 +49,7 @@ import com.haisheng.framework.util.CommonUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class SceneUtil extends BasicUtil {
     private final VisitorProxy visitor;
@@ -487,5 +490,24 @@ public class SceneUtil extends BasicUtil {
     public JSONObject checkLogin() {
         return LoginRecordPageScene.builder().build().invoke(visitor);
     }
+
+    /**
+     * @description :创建一个接待，
+     * @return :{"id":接待id, "shopId": shopId, "customerId":customerId}
+     **/
+    public Map<String, String> createCustomerCommon(String name,String sex, String phone,String carId,String buyTime) {
+        Map<String,String> customer = new HashMap<>();
+        AppPreSalesReceptionCreateScene.builder().customerName(name).customerPhone(phone).sexId(sex).intentionCarModelId(carId).estimateBuyCarTime(buyTime).build().invoke(visitor);//创建销售接待
+        JSONObject pageInfo = PreSalesReceptionPageScene.builder().build().invoke(visitor, true);
+        List<JSONObject> newCustomer = pageInfo.getJSONArray("list").stream().map(ele -> (JSONObject) ele).filter(obj -> Objects.equals(phone,obj.getString("customer_phone"))).collect(Collectors.toList());
+        String id = newCustomer.get(0).getString("id");
+        String shopId = pageInfo.getJSONArray("list").getJSONObject(0).getString("shop_id");
+        String customerId = newCustomer.get(0).getString("customer_id");
+        customer.put("id",id);
+        customer.put("shopId",shopId);
+        customer.put("customerId",customerId);
+        return customer;
+    }
+    public String mcCarId(){return visitor.isDaily() ? "775":"20895";}
 
 }

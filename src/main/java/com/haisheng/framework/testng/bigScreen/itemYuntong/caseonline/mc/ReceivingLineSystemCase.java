@@ -85,27 +85,12 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
         return numStr;
     }
 
-    // 创建一个接待，
-    //return：接待id 和 shop_id
-//    private void createCustomer() {
-//        visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
-//        HashMap<String,Long> customer = new HashMap<>();
-//        String phone = "15" + phoneRandom(9);
-//        AppPreSalesReceptionCreateScene.builder().customerName("自动化创建测试使用mc").customerPhone(phone).sexId("1").intentionCarModelId("676").estimateBuyCarTime("2035-07-12").build().invoke(visitor);//创建销售接待
-//        JSONObject pageInfo = PreSalesReceptionPageScene.builder().build().invoke(visitor, true);
-//        List<JSONObject> newCustomer = pageInfo.getJSONArray("list").stream().map(ele -> (JSONObject) ele).filter(obj -> phone.equals(obj.getString("customer_phone"))).collect(Collectors.toList());
-//        Long id = newCustomer.get(0).getLong("id");
-//        Long shopId = pageInfo.getJSONArray("list").getJSONObject(0).getLong("shop_id");
-//        customer.put("id",id);
-//        customer.put("shopId",shopId);
-//        return customer;
-//    }
     @Test
     public void test01CustomerConfig() {
         visitor.setProduct(EnumTestProduce.YT_ONLINE_CAR);
         try {
             String phone = "15" + numRandom(9);
-            AppPreSalesReceptionCreateScene.builder().customerName("mc自动化创建使用").customerPhone(phone).sexId("1").intentionCarModelId("20895").estimateBuyCarTime("2035-07-12").build().invoke(visitor);//创建销售接待
+            AppPreSalesReceptionCreateScene.builder().customerName("mc自动化创建使用").customerPhone(phone).sexId("1").intentionCarModelId(util.mcCarId()).estimateBuyCarTime("2035-07-12").build().invoke(visitor);//创建销售接待
             JSONObject pageInfo = AppPreSalesReceptionPageScene.builder().build().invoke(visitor, true);
             List<JSONObject> newCustomer = pageInfo.getJSONArray("list").stream().map(ele -> (JSONObject) ele).filter(obj -> phone.equals(obj.getString("customer_phone"))).collect(Collectors.toList());
             Long id = newCustomer.get(0).getLong("id");
