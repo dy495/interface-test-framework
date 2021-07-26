@@ -985,22 +985,22 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-//    @Test(description = "APP部门平均分=此部门的全部员工全流程接待分值之和/参与评分的接待次数*5", threadPoolSize = 4, invocationCount = 4)
-//    public void a() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            String ip = "http://10.10.12.155:8080";
-//            String path = "/pc/register";
-//            JSONObject object = new JSONObject();
-//            object.put("account", "关羽");
-//            object.put("password", "123456");
-//            httpPost(path, JSONObject.toJSONString(object), ip);
-//        } catch (Exception | AssertionError e) {
-//            collectMessage(e);
-//        } finally {
-//            saveData("APP部门平均分=此部门的全部员工全流程接待分值之和/参与评分的接待次数*5");
-//        }
-//    }
+    @Test(description = "APP部门平均分=此部门的全部员工全流程接待分值之和/参与评分的接待次数*5", threadPoolSize = 4, invocationCount = 4)
+    public void a() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String ip = "http://10.10.12.155:8080";
+            String path = "/pc/register";
+            JSONObject object = new JSONObject();
+            object.put("account", "关羽");
+            object.put("password", "123456");
+            httpPost(path, JSONObject.toJSONString(object), ip);
+        } catch (Exception | AssertionError e) {
+            collectMessage(e);
+        } finally {
+            saveData("APP部门平均分=此部门的全部员工全流程接待分值之和/参与评分的接待次数*5");
+        }
+    }
 //
 //    @Test(description = "APP部门平均分=此部门的全部员工全流程接待分值之和/参与评分的接待次数*5")
 //    public void b() {

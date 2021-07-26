@@ -8,10 +8,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.marker.enumerator.
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 场景接口类Marker
@@ -38,15 +35,12 @@ public class SceneMarker extends AbstractMarker {
         this.urlPath = builder.sceneAttribute.getUrl();
         this.pathDesc = builder.sceneAttribute.getPathDesc();
         this.apiAttributeList = builder.sceneAttribute.getApiAttributeList();
-
     }
 
     @Override
     public void load() {
         if (this.urlPath != null && this.apiAttributeList != null) {
             initial();
-            dataMap.put("attrs", apiAttributeList);
-            dataMap.put("date", date);
             logger.info("dataMap :{}", dataMap);
             logger.info("outputPath :{}", outputPath);
             logger.info("className :{}", className);
@@ -58,32 +52,27 @@ public class SceneMarker extends AbstractMarker {
     }
 
     /**
-     * 初始赋值，需要优化，逻辑太多
+     * 按照一定规则生成接口相关属性
      */
     public void initial() {
         StringBuilder sb = new StringBuilder();
         String[] urlPathList = urlPathParse(urlPath);
-        for (int i = 0; i < urlPathList.length; i++) {
-            String s = KeywordEnum.transferKeyword(urlPathList[i]);
-            urlPathList[i] = s;
+        urlPathList = Arrays.stream(urlPathList).map(KeywordEnum::transferKeyword).toArray(String[]::new);
+        int length = urlPathList.length;
+        for (int i = length <= 1 ? length - 1 : length - 2; i < length; i++) {
+            sb.append(urlPathList[i]).append("-");
         }
-        int index = urlPathList.length <= 3 ? urlPathList.length - 1 : 4 - 1;
-        for (int i = index; i < urlPathList.length; i++) {
-            if (i < urlPathList.length - 1) {
-                sb.append(urlPathList[i]).append("_");
-            } else {
-                sb.append(urlPathList[i]);
-            }
-        }
-        className = CommonUtil.lineToHump(sb.toString(), true) + suffix;
-        className = urlPath.contains("app") ? "App" + className : urlPath.contains("applet") ? "Applet" + className : className;
+        String cm = CommonUtil.lineToHump(sb.toString(), true) + suffix;
+        cm = urlPath.contains("app") ? cm.contains("App") ? cm : "App" + cm : urlPath.contains("applet") ? cm.contains("Applet") ? cm : "Applet" + cm : cm;
+        className = cm.replace("-", "");
         sb.setLength(0);
-        for (int i = 1; i < index; i++) {
+        int x = length > 3 ? 3 : length - 1;
+        for (int i = length <= 1 ? 0 : 1; i < x; i++) {
             sb.append(urlPathList[i]).append("/");
         }
         outputPath = parentPath + "/" + sb.toString().replaceAll("-|_", "");
         sb.setLength(0);
-        String[] parentPathList = parentPath.split("/");
+        String[] parentPathList = outputPath.split("/");
         int s = 0;
         for (int i = 0; i < parentPathList.length; i++) {
             s = parentPathList[i].equals("java") ? i + 1 : s;
@@ -91,21 +80,13 @@ public class SceneMarker extends AbstractMarker {
         for (int i = s; i < parentPathList.length; i++) {
             sb.append(parentPathList[i]).append(".");
         }
-        if (index <= 1) {
-            sb.replace(sb.length() - 1, sb.length(), "");
-        }
-        for (int i = 1; i < index; i++) {
-            if (i < index - 1) {
-                sb.append(urlPathList[i].replaceAll("-|_", "")).append(".");
-            } else {
-                sb.append(urlPathList[i].replaceAll("-|_", ""));
-            }
-        }
-        String packageName = sb.toString();
+        String packageName = sb.replace(sb.length() - 1, sb.length(), "").toString();
         dataMap.put("packageName", packageName);
         dataMap.put("className", className);
         dataMap.put("path", urlExcludeIpPort(urlPath));
         dataMap.put("pathDesc", pathDesc);
+        dataMap.put("attrs", apiAttributeList);
+        dataMap.put("date", date);
     }
 
     public static class Builder extends AbstractMarker.AbstractBuilder<Builder> {

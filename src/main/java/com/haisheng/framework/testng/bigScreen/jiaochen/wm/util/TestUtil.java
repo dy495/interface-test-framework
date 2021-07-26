@@ -40,8 +40,8 @@ public class TestUtil {
     @Test
     public void createScene() {
         String[] htmlPaths = {
-                "http://192.168.50.3/api-doc/intelligent-control/pc/index.html",
-                "http://192.168.50.3/api-doc/intelligent-control/app/index.html",
+//                "http://192.168.50.3/api-doc/intelligent-control/pc/index.html",
+//                "http://192.168.50.3/api-doc/intelligent-control/app/index.html",
                 "http://192.168.50.3/api-doc/yt/pc/index.html"
         };
         Arrays.stream(htmlPaths).forEach(htmlPath -> {
@@ -49,7 +49,7 @@ public class TestUtil {
             Arrays.stream(sceneAttributeList).forEach(sceneAttribute -> new SceneMarker.Builder()
                     .templatePath("src\\main\\resources\\template")
                     .templateName("sceneTemplate.ftl")
-                    .parentPath("src/main/java/com/haisheng/framework/testng/bigScreen/yuntong/wm/scene")
+                    .parentPath("src/main/java/com/haisheng/framework/testng/bigScreen/itemMall/xxx")
                     .sceneAttribute(sceneAttribute)
                     .buildMarker()
                     .execute());
@@ -66,7 +66,7 @@ public class TestUtil {
             Arrays.stream(sceneAttributeList).forEach(sceneAttribute -> new SceneMarker.Builder()
                     .templatePath("src\\main\\resources\\template")
                     .templateName("sceneTemplate.ftl")
-                    .parentPath("src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/common/scene")
+                    .parentPath("src/main/java/com/haisheng/framework/testng/bigScreen/itemMall/xxx")
                     .sceneAttribute(sceneAttribute)
                     .buildMarker()
                     .execute());
@@ -110,9 +110,9 @@ public class TestUtil {
     public void createScene2() {
         String[] htmlPaths = {
                 "http://192.168.50.3/api-doc/yt/app/index.html",
-//                "https://192.168.50.3/api-doc-v2.3/business-jiaochen/app/index.html",
-//                "https://192.168.50.3/api-doc/business-jiaochen/applet/index.html",
-//                "https://192.168.50.3/api-doc/business-jiaochen/pc/index.html",
+                "https://192.168.50.3/api-doc-v2.3/business-jiaochen/app/index.html",
+                "https://192.168.50.3/api-doc/business-jiaochen/applet/index.html",
+                "https://192.168.50.3/api-doc/business-jiaochen/pc/index.html",
         };
         Arrays.stream(htmlPaths).forEach(htmlPath -> {
             SceneAttribute[] sceneAttributeList = new SceneParser.Builder().htmlUrl(htmlPath).build().getAttributes();
