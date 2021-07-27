@@ -9,11 +9,11 @@
 
     <test name="daily-rgn" preserve-order="true">
         <classes>
-<!--            <class name="com.haisheng.framework.testng.bigScreen.itemPorsche.caseonline.xmf.testDriverCaseOnline"></class>-->
-<!--            <class name="com.haisheng.framework.testng.bigScreen.itemPorsche.caseonline.xmf.CrmQtOnline"></class>-->
-<!--            <class name="com.haisheng.framework.testng.bigScreen.itemPorsche.caseonline.xmf.CrmQtOnlineWarm"></class>-->
-<!--            <class name="com.haisheng.framework.testng.bigScreen.itemPorsche.caseonline.xmf.AppointLimitOnline"></class>-->
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.AppletManagerCaseOnline"/>
+            <!--            <class name="com.haisheng.framework.testng.bigScreen.itemPorsche.caseonline.xmf.testDriverCaseOnline"></class>-->
+            <!--            <class name="com.haisheng.framework.testng.bigScreen.itemPorsche.caseonline.xmf.CrmQtOnline"></class>-->
+            <!--            <class name="com.haisheng.framework.testng.bigScreen.itemPorsche.caseonline.xmf.CrmQtOnlineWarm"></class>-->
+            <!--            <class name="com.haisheng.framework.testng.bigScreen.itemPorsche.caseonline.xmf.AppointLimitOnline"></class>-->
+
         </classes>
     </test>
 </suite>

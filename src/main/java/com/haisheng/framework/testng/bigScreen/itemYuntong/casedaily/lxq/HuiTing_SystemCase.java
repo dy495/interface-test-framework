@@ -8,7 +8,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklis
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistConfId;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.general.EnumValueListScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.general.GeneralEnumValueListScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.VoiceEvaluationPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.sensitivewords.AppSensitiveBehaviorApprovalScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.sensitivewords.SensitiveBehaviorPageScene;
@@ -241,7 +241,7 @@ public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray arr = EnumValueListScene.builder().enumType("ENTER_STORE_STATUS_LIST").build().invoke(visitor).getJSONArray("list");
+            JSONArray arr = GeneralEnumValueListScene.builder().enumType("ENTER_STORE_STATUS_LIST").build().invoke(visitor).getJSONArray("list");
             for (int i = 0; i < arr.size(); i++) {
                 int enter_status = arr.getJSONObject(i).getInteger("key");
                 String enter_status_name = arr.getJSONObject(i).getString("value");
@@ -265,7 +265,7 @@ public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray arr = EnumValueListScene.builder().enumType("VOICE_EVALUATE_STATUS_LIST").build().invoke(visitor).getJSONArray("list");
+            JSONArray arr = GeneralEnumValueListScene.builder().enumType("VOICE_EVALUATE_STATUS_LIST").build().invoke(visitor).getJSONArray("list");
             for (int i = 0; i < arr.size(); i++) {
                 int evaluate_status = arr.getJSONObject(i).getInteger("key");
                 String evaluate_status_name = arr.getJSONObject(i).getString("value");
@@ -388,7 +388,7 @@ public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray arr = EnumValueListScene.builder().enumType("SENSITIVE_WORDS_TYPES").build().invoke(visitor).getJSONArray("list");
+            JSONArray arr = GeneralEnumValueListScene.builder().enumType("SENSITIVE_WORDS_TYPES").build().invoke(visitor).getJSONArray("list");
             for (int i = 0; i < arr.size(); i++) {
                 int evaluate_status = arr.getJSONObject(i).getInteger("key");
                 String evaluate_status_name = arr.getJSONObject(i).getString("value");
@@ -413,7 +413,7 @@ public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray arr = EnumValueListScene.builder().enumType("APPROVAL_STATUSES").build().invoke(visitor).getJSONArray("list");
+            JSONArray arr = GeneralEnumValueListScene.builder().enumType("APPROVAL_STATUSES").build().invoke(visitor).getJSONArray("list");
             for (int i = 0; i < arr.size(); i++) {
                 int evaluate_status = arr.getJSONObject(i).getInteger("key");
                 String evaluate_status_name = arr.getJSONObject(i).getString("value");
@@ -673,7 +673,7 @@ public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray arr = EnumValueListScene.builder().enumType("APPROVAL_STATUSES").build().invoke(visitor).getJSONArray("list");
+            JSONArray arr = GeneralEnumValueListScene.builder().enumType("APPROVAL_STATUSES").build().invoke(visitor).getJSONArray("list");
             for (int i = 0; i < arr.size(); i++) {
                 int evaluate_status = arr.getJSONObject(i).getInteger("key");
                 String evaluate_status_name = arr.getJSONObject(i).getString("value");
@@ -769,7 +769,7 @@ public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray arr = EnumValueListScene.builder().enumType("RECEPTION_LINKS").build().invoke(visitor).getJSONArray("list");
+            JSONArray arr = GeneralEnumValueListScene.builder().enumType("RECEPTION_LINKS").build().invoke(visitor).getJSONArray("list");
             for (int i = 0; i < arr.size(); i++) {
                 int evaluate_status = arr.getJSONObject(i).getInteger("key");
                 String evaluate_status_name = arr.getJSONObject(i).getString("value");

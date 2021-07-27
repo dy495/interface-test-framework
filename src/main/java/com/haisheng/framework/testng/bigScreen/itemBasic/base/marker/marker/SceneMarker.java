@@ -63,7 +63,7 @@ public class SceneMarker extends AbstractMarker {
             sb.append(urlPathList[i]).append("-");
         }
         String cm = CommonUtil.lineToHump(sb.toString(), true) + suffix;
-        cm = urlPath.contains("app") ? cm.contains("App") ? cm : "App" + cm : urlPath.contains("applet") ? cm.contains("Applet") ? cm : "Applet" + cm : cm;
+        cm = urlPath.contains("app") && !urlPath.contains("pc") ? cm.contains("App") ? cm : "App" + cm : urlPath.contains("applet") ? cm.contains("Applet") ? cm : "Applet" + cm : cm;
         className = cm.replace("-", "");
         sb.setLength(0);
         int x = length > 3 ? 3 : length - 1;
