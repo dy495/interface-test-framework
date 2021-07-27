@@ -5,13 +5,13 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 4.2. 特殊音频详情（谢）
+ * 4.4. 特殊音频翻译（谢）
  *
  * @author wangmin
  * @date 2021-05-31 16:28:11
  */
 @Builder
-public class DetailScene extends BaseScene {
+public class SpecialAudioTranslateScene extends BaseScene {
     /**
      * 描述 id
      * 是否必填 true
@@ -29,6 +29,6 @@ public class DetailScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/intelligent-control/pc/special-audio/detail";
+        return "/intelligent-control/pc/special-audio/translate";
     }
 }

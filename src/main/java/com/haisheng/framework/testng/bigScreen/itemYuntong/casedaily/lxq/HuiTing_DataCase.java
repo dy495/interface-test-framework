@@ -13,7 +13,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccoun
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.general.GeneralEnumValueListScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.VoiceDetailScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.VoiceEvaluationPageScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.sensitivewords.LabelListScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.sensitivewords.SensitiveWordsLabelListScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.sensitivewords.SensitiveBehaviorDetailScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.sensitivewords.SensitiveBehaviorPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
@@ -266,7 +266,7 @@ public class HuiTing_DataCase extends TestCaseCommon implements TestCaseStd {
                 String evaluate_status_name = arr.getJSONObject(i).getString("value"); //各敏感词类别
 
                 int lablecount = 0; // 标签数量
-                JSONArray lablearray = LabelListScene.builder().sensitiveWordsType(evaluate_status).build().invoke(visitor).getJSONArray("list");
+                JSONArray lablearray = SensitiveWordsLabelListScene.builder().sensitiveWordsType(evaluate_status).build().invoke(visitor).getJSONArray("list");
                 for (int j = 0; j < lablearray.size(); j++) {
                     lablecount += lablearray.getJSONObject(j).getInteger("count");
                 }

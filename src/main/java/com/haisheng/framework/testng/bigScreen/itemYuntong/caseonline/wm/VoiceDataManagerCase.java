@@ -15,7 +15,7 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.common.dataprovider.D
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.VoiceDetailScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.VoiceEvaluationPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.PreSalesReceptionPageScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.sensitivewords.LabelListScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.sensitivewords.SensitiveWordsLabelListScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.sensitivewords.SensitiveBehaviorPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.sensitivewords.SensitiveWordsPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.specialaudio.SpecialAudioPageScene;
@@ -202,7 +202,7 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
     public void voiceEvaluation_data_6(String word) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene labelListScene = LabelListScene.builder().build();
+            IScene labelListScene = SensitiveWordsLabelListScene.builder().build();
             List<LabelListBean> labelList = util.toJavaObjectList(labelListScene, LabelListBean.class, "list");
             int labelCount = labelList.stream().filter(e -> e.getWords().equals(word)).map(LabelListBean::getCount).findFirst().orElse(0);
             IScene sensitiveBehaviorPageScene = SensitiveBehaviorPageScene.builder().build();
@@ -221,7 +221,7 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
     public void voiceEvaluation_data_7() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene labelListScene = LabelListScene.builder().build();
+            IScene labelListScene = SensitiveWordsLabelListScene.builder().build();
             List<LabelListBean> labelList = util.toJavaObjectList(labelListScene, LabelListBean.class, "list");
             int countSum = labelList.stream().mapToInt(LabelListBean::getCount).sum();
             int total = SensitiveBehaviorPageScene.builder().build().invoke(visitor).getInteger("total");

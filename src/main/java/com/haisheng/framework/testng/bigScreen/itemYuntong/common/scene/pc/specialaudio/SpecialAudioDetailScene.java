@@ -1,23 +1,23 @@
-package com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.role;
+package com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.specialaudio;
 
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 34.6. 角色详情 （杨航）
+ * 4.2. 特殊音频详情（谢）
  *
  * @author wangmin
- * @date 2021-05-18 17:04:36
+ * @date 2021-05-31 16:28:11
  */
 @Builder
-public class DetailScene extends BaseScene {
+public class SpecialAudioDetailScene extends BaseScene {
     /**
-     * 描述 角色id
+     * 描述 id
      * 是否必填 true
      * 版本 v1.0
      */
-    private final Integer id;
+    private final Long id;
 
 
     @Override
@@ -29,6 +29,6 @@ public class DetailScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/account-platform/auth/role/detail";
+        return "/intelligent-control/pc/special-audio/detail";
     }
 }

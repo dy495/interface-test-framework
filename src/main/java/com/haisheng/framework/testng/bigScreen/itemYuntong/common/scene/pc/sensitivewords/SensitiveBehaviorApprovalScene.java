@@ -11,7 +11,7 @@ import lombok.Builder;
  * @date 2021-05-31 16:28:11
  */
 @Builder
-public class AppSensitiveBehaviorApprovalScene extends BaseScene {
+public class SensitiveBehaviorApprovalScene extends BaseScene {
     /**
      * 描述 id
      * 是否必填 true

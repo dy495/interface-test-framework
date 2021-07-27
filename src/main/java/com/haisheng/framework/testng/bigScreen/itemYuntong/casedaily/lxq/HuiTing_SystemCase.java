@@ -10,9 +10,9 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.general.GeneralEnumValueListScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.VoiceEvaluationPageScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.sensitivewords.AppSensitiveBehaviorApprovalScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.sensitivewords.SensitiveBehaviorApprovalScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.sensitivewords.SensitiveBehaviorPageScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.specialaudio.AppApprovalScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.specialaudio.SpecialAudioApprovalScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.specialaudio.SpecialAudioPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.speechtechnique.SpeechTechniquePageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
@@ -480,7 +480,7 @@ public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
                 int bef = SensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(200).build().invoke(visitor).getInteger("total");
 
                 //审核通过 10 随便写的 要改
-                JSONObject obj = AppSensitiveBehaviorApprovalScene.builder().id(id).approvalStatus(200).build().invoke(visitor, false);
+                JSONObject obj = SensitiveBehaviorApprovalScene.builder().id(id).approvalStatus(200).build().invoke(visitor, false);
                 Preconditions.checkArgument(obj.getInteger("code") == 1000, "审核失败,提示" + obj.getString("message"));
 
                 //审核后审核通过数量
@@ -515,7 +515,7 @@ public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
                 int bef = SensitiveBehaviorPageScene.builder().page(1).size(50).approvalStatus(300).build().invoke(visitor).getInteger("total");
 
                 //审核通过
-                JSONObject obj = AppSensitiveBehaviorApprovalScene.builder().id(id).approvalStatus(300).build().invoke(visitor, false);
+                JSONObject obj = SensitiveBehaviorApprovalScene.builder().id(id).approvalStatus(300).build().invoke(visitor, false);
                 Preconditions.checkArgument(obj.getInteger("code") == 1000, "审核失败,提示" + obj.getString("message"));
 
                 //审核后审核通过数量
@@ -707,7 +707,7 @@ public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
                 int bef = SpecialAudioPageScene.builder().page(1).size(50).approvalStatus(200).build().invoke(visitor).getInteger("total");
 
                 //审核通过
-                JSONObject obj = AppApprovalScene.builder().id(id).approvalStatus(200).build().invoke(visitor, false);
+                JSONObject obj = SpecialAudioApprovalScene.builder().id(id).approvalStatus(200).build().invoke(visitor, false);
                 Preconditions.checkArgument(obj.getInteger("code") == 1000, "审核失败,提示" + obj.getString("message"));
 
                 //审核后审核通过数量
@@ -742,7 +742,7 @@ public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
                 int bef = SpecialAudioPageScene.builder().page(1).size(50).approvalStatus(300).build().invoke(visitor).getInteger("total");
 
                 //审核通过
-                JSONObject obj = AppApprovalScene.builder().id(id).approvalStatus(300).build().invoke(visitor, false);
+                JSONObject obj = SpecialAudioApprovalScene.builder().id(id).approvalStatus(300).build().invoke(visitor, false);
                 Preconditions.checkArgument(obj.getInteger("code") == 1000, "审核失败,提示" + obj.getString("message"));
 
                 //审核后审核通过数量

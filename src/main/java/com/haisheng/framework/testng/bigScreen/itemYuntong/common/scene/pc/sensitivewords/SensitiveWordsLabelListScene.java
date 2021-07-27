@@ -11,7 +11,7 @@ import lombok.Builder;
  * @date 2021-05-31 16:28:11
  */
 @Builder
-public class LabelListScene extends BaseScene {
+public class SensitiveWordsLabelListScene extends BaseScene {
     /**
      * 描述 接待顾问姓名
      * 是否必填 false
