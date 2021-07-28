@@ -36,7 +36,6 @@ public enum EnumTestProduce {
 
     YT_DAILY("汽车-运通 日常 ", "http://inspect.store.winsenseos.com/", "http://inspect.store.winsenseos.com", null, "YT", null, true),
 
-
     YT_DAILY_CAR("汽车-运通 日常 ", "http://dev.car.yuntong.winsenseos.cn/", "http://dev.car.yuntong.winsenseos.cn", "-1", "YT", null, true),
     YT_DAILY_CONTROL("汽车-运通 日常 ", "http://dev.control.yuntong.winsenseos.cn/", "http://dev.control.yuntong.winsenseos.cn", "-1", "YT", null, true),
     YT_DAILY_SSO("汽车-运通 日常 ", "http://dev.sso.yuntong.winsenseos.cn/", "http://dev.sso.yuntong.winsenseos.cn", "-1", "YT", null, true),
@@ -44,6 +43,9 @@ public enum EnumTestProduce {
     YT_ONLINE_CAR("汽车-运通 线上 ", "http://jiedai.auto.winsenseos.com", "http://jiedai.auto.winsenseos.com", "-1", "YT", null, false),
     YT_ONLINE_CONTROL("汽车-运通 线上 ", "http://huiting.auto.winsenseos.com", "http://huiting.auto.winsenseos.com", "-1", "YT", null, false),
     YT_ONLINE_SSO("汽车-运通 线上 ", "http://zhanghao.auto.winsenseos.com", "http://zhanghao.auto.winsenseos.com", "-1", "YT", null, false),
+
+    MALL_DAILY("购物中心-日常","","http://dev.mall.store.winsenseos.cn","","MALL",null, false),
+    MALL_ONLINE("购物中心-线上","","http://mall.store.winsenseos.cn","","MALL",null, false),
 
 
     ;
