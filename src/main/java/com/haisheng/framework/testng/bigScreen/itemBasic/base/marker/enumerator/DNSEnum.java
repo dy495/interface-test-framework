@@ -34,6 +34,8 @@ public enum DNSEnum {
     YUNTONG_DAILY_2("待定"),
 
     YUNTONG_DAILY_3("http://dev.car.winsenseos.cn"),
+
+    MALLCENTER(" http://dev.mall.store.winsenseos.cn")
     ;
 
     DNSEnum(String ipPort) {

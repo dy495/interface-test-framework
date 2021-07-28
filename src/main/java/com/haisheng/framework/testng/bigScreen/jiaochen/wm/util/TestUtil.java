@@ -71,6 +71,23 @@ public class TestUtil {
         });
     }
 
+    @Test(description = "生成购物中心的接口")
+    public void createMallScene() {
+        String[] htmlPaths = {
+                "http://192.168.50.3/api-doc/business-mall/pc/index.html"
+        };
+        Arrays.stream(htmlPaths).forEach(htmlPath -> {
+            SceneAttribute[] sceneAttributeList = new SceneParser.Builder().htmlUrl(htmlPath).build().getAttributes();
+            Arrays.stream(sceneAttributeList).forEach(sceneAttribute -> new SceneMarker.Builder()
+                    .templatePath("src\\main\\resources\\template")
+                    .templateName("sceneTemplate.ftl")
+                    .parentPath("src/main/java/com/haisheng/framework/testng/bigScreen/itemMall/common/scene")
+                    .sceneAttribute(sceneAttribute)
+                    .buildMarker()
+                    .execute());
+        });
+    }
+
     @Test
     public void createBean() {
         String[] htmlPaths = {
