@@ -27,7 +27,10 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 public class A extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduce product = EnumTestProduce.CMS_DAILY;
@@ -120,13 +123,7 @@ public class A extends TestCaseCommon implements TestCaseStd {
             DataLayoutScene.builder().name(tableName).description(tableName).subjectId(subjectId).floorId(floorId).build().invoke(visitor);
             long layoutId = getLayoutId(subjectId, floorId);
             IRow[] rows = table.getRows();
-            Arrays.stream(rows).forEach(row -> {
-                //创建设备并将设备关联进楼层
-                String deviceId = createDeviceAndGetDeviceId(subjectId, row);
-                if (deviceId != null) {
-                    DataLayoutDeviceScene.builder().deviceId(deviceId).layoutId(layoutId).build().invoke(visitor);
-                }
-            });
+            Arrays.stream(rows).map(row -> createDeviceAndGetDeviceIdList(subjectId, row)).forEach(list -> list.stream().filter(Objects::nonNull).forEach(deviceId -> DataLayoutDeviceScene.builder().deviceId(deviceId).layoutId(layoutId).build().invoke(visitor)));
 //        } else if (tableName.equals("店铺")) {
 //            IRow[] rows = table.getRows();
 //            Arrays.stream(rows).forEach(row -> {
@@ -157,16 +154,12 @@ public class A extends TestCaseCommon implements TestCaseStd {
      * @param subjectId 主体id
      * @param row       行数据
      */
-    public String createDeviceAndGetDeviceId(Long subjectId, IRow row) {
-        String name;
+    public List<String> createDeviceAndGetDeviceIdList(Long subjectId, IRow row) {
         IField shopName = row.getField("店铺名");
-        if (shopName != null) {
-            String floor = row.getField("楼层").getValue();
-            name = floor + shopName.getValue();
-        } else {
-            name = row.getField("点位名称").getValue();
-        }
-        return createDeviceAndGetDeviceId(subjectId, row, name);
+        IField floor = row.getField("楼层");
+        IField pointName = row.getField("点位名称");
+        String name = shopName != null ? floor.getValue() + shopName.getValue() : pointName.getValue();
+        return createDeviceAndGetDeviceIdList(subjectId, row, name);
     }
 
     /**
@@ -176,20 +169,35 @@ public class A extends TestCaseCommon implements TestCaseStd {
      * @param row       行数据
      * @param name      设备名称
      */
-    public String createDeviceAndGetDeviceId(Long subjectId, IRow row, String name) {
+    public List<String> createDeviceAndGetDeviceIdList(Long subjectId, IRow row, String name) {
+        List<String> list = new ArrayList<>();
         String pointOne = row.getField("点位1").getValue();
         String pointTwo = row.getField("点位2").getValue();
         if (!StringUtils.isEmpty(pointOne)) {
             name = name + "-点位1";
-            createDevice(subjectId, name, pointOne);
-            return getDeviceId(name);
+            list.add(createDeviceAndGetDeviceId(subjectId, name, pointOne));
         }
         if (!StringUtils.isEmpty(pointTwo)) {
             name = name + "-点位2";
-            createDevice(subjectId, name, pointTwo);
-            return getDeviceId(name);
+            list.add(createDeviceAndGetDeviceId(subjectId, name, pointTwo));
         }
-        return null;
+        return list;
+    }
+
+
+    /**
+     * 创建设备并且获取设备id
+     *
+     * @param subjectId 主体id
+     * @param name      设备名称
+     * @param url       视频流地址
+     */
+    public String createDeviceAndGetDeviceId(Long subjectId, String name, String url) {
+        DataDeviceScene.builder().name(name).deviceType(EnumDeviceType.WEB_CAMERA.name()).url(url)
+                .subjectId(String.valueOf(subjectId)).manufacturer(EnumManufacturer.HIKVISION.getName())
+                .deploymentGroupId(util.getDeploymentGroupId()).deploymentId(util.getDeploymentId())
+                .cloudSceneType(util.getCloudSceneType()).build().invoke(visitor);
+        return getDeviceIdByDeviceName(name);
     }
 
     /**
@@ -198,39 +206,8 @@ public class A extends TestCaseCommon implements TestCaseStd {
      * @param deviceName 设备名称
      * @return 设备id
      */
-    public String getDeviceId(String deviceName) {
+    public String getDeviceIdByDeviceName(String deviceName) {
         IScene scene = DeviceListScene.builder().name(deviceName).build();
         return util.toJavaObject(scene, JSONObject.class, "name", deviceName).getString("device_id");
-    }
-
-    /**
-     * 创建设备
-     *
-     * @param subjectId 主体id
-     * @param name      设备名称
-     * @param url       视频流地址
-     */
-    public void createDevice(Long subjectId, String name, String url) {
-        DataDeviceScene.builder().name(name).deviceType(EnumDeviceType.WEB_CAMERA.name()).url(url)
-                .subjectId(String.valueOf(subjectId)).manufacturer(EnumManufacturer.HIKVISION.getName())
-                .deploymentGroupId(util.getDeploymentGroupId())
-                .deploymentId(util.getDeploymentId())
-                .cloudSceneType(util.getCloudSceneType()).build().invoke(visitor);
-    }
-
-    @Test
-    public void testA() {
-//        IContainer container = new ExcelContainer.Builder().path("src/main/java/com/haisheng/framework/testng/bigScreen/itemcms/出入口.xlsx").build();
-//        container.init();
-//        ITable[] tables = container.getTables();
-//        Arrays.stream(tables).forEach(table -> {
-//            table.load();
-//            logger.info("表名：{}", table.getKey());
-//            IRow[] rows = table.getRows();
-//            Arrays.stream(rows).forEach(row -> createDevice(57814L, row));
-//        });
-        String path = DataLayoutDeviceScene.builder().deviceId("8709281125434368").layoutId(7450L).build().getPath();
-        System.err.println(path);
-
     }
 }
