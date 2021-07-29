@@ -12,7 +12,7 @@ import lombok.Builder;
  * @date 2021-07-28 16:58:57
  */
 @Builder
-public class FullCourtTrendScene extends BaseScene {
+public class FullCourtTrendHistoryScene extends BaseScene {
     /**
      * 描述 No comments found.
      * 是否必填 false
