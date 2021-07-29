@@ -11,7 +11,7 @@ import org.springframework.util.StringUtils;
 
 /**
  * 调用http请求的代理
- * 主要作用换ip
+ * 主要作用换ip，以后有其他工作再加
  *
  * @author wangmin
  * @date 2021/1/20 13:36

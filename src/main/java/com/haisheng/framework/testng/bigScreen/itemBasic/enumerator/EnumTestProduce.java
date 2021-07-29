@@ -48,6 +48,10 @@ public enum EnumTestProduce {
     MALL_ONLINE("购物中心-线上","","http://mall.store.winsenseos.cn","","MALL",null, false),
 
 
+    CMS_DAILY("管理后台 日常", "", "http://39.106.253.190", "", "CMS", "", true),
+
+    CMS_ONLINE("管理后台 线上", "", "", "", "CMS", "", false),
+
     ;
 
     EnumTestProduce(String desc, String referer, String port, String shopId, String abbreviation, String roleId, Boolean isDaily) {

@@ -87,6 +87,11 @@ public abstract class BaseRow extends BaseProperty implements IRow {
     }
 
     @Override
+    public boolean containsKey(String keyName) {
+        return fields.containsKey(keyName);
+    }
+
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("SimpleRow [fields=");
