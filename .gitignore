@@ -8,3 +8,4 @@ mvnw.cmd
 HOME_IS_UNDEFINED/
 picDir
 logs/
+*.log
