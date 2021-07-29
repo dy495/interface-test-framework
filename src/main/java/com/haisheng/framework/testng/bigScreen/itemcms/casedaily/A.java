@@ -70,7 +70,6 @@ public class A extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
     }
 
-
 //    public void createFloat(ITable table, IRow iRow) {
 //        IRow[] rows = table.getRows();
 //        Arrays.stream(rows).forEach(row -> {
@@ -118,10 +117,7 @@ public class A extends TestCaseCommon implements TestCaseStd {
         String tableName = table.getKey();
         table.load();
         if (Arrays.stream(EnumDataLayout.values()).anyMatch(e -> e.name().equals(tableName))) {
-            //创建平面
-            int floorId = EnumDataLayout.finEnumByName(tableName).getFloorId();
-            DataLayoutScene.builder().name(tableName).description(tableName).subjectId(subjectId).floorId(floorId).build().invoke(visitor);
-            long layoutId = getLayoutId(subjectId, floorId);
+            long layoutId = createLayoutAndGetLayoutId(subjectId, tableName);
             IRow[] rows = table.getRows();
             Arrays.stream(rows).map(row -> createDeviceAndGetDeviceIdList(subjectId, row)).forEach(list -> list.stream().filter(Objects::nonNull).forEach(deviceId -> DataLayoutDeviceScene.builder().deviceId(deviceId).layoutId(layoutId).build().invoke(visitor)));
 //        } else if (tableName.equals("店铺")) {
@@ -137,22 +133,24 @@ public class A extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * 获取楼层id
+     * 创建平面并获取平面id获取楼层id
      *
      * @param subjectId 主体id
-     * @param floorId   楼层id
-     * @return 创建好楼层后的id
+     * @return 创建好的平面id
      */
-    public Long getLayoutId(long subjectId, int floorId) {
+    public Long createLayoutAndGetLayoutId(long subjectId, String tableName) {
+        int floorId = EnumDataLayout.finEnumByName(tableName).getFloorId();
+        DataLayoutScene.builder().name(tableName).description(tableName).subjectId(subjectId).floorId(floorId).build().invoke(visitor);
         IScene scene = LayoutListScene.builder().subjectId(String.valueOf(subjectId)).build();
         return util.toJavaObject(scene, JSONObject.class, "floor_id", floorId).getLong("layout_id");
     }
 
     /**
-     * 创建设备并获取设备id
+     * 创建设备并获取每个点的设备id集合
      *
      * @param subjectId 主体id
      * @param row       行数据
+     * @return 每个点的设备id集合
      */
     public List<String> createDeviceAndGetDeviceIdList(Long subjectId, IRow row) {
         IField shopName = row.getField("店铺名");
@@ -163,11 +161,12 @@ public class A extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * 创建设备并获取设备id
+     * 创建设备并获取每个点的设备id集合
      *
      * @param subjectId 主体id
      * @param row       行数据
      * @param name      设备名称
+     * @return 每个点的设备id集合
      */
     public List<String> createDeviceAndGetDeviceIdList(Long subjectId, IRow row, String name) {
         List<String> list = new ArrayList<>();
@@ -191,6 +190,7 @@ public class A extends TestCaseCommon implements TestCaseStd {
      * @param subjectId 主体id
      * @param name      设备名称
      * @param url       视频流地址
+     * @return 设备id
      */
     public String createDeviceAndGetDeviceId(Long subjectId, String name, String url) {
         DataDeviceScene.builder().name(name).deviceType(EnumDeviceType.WEB_CAMERA.name()).url(url)
@@ -201,7 +201,7 @@ public class A extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * 获取设备id
+     * 通过设备名称获取设备id
      *
      * @param deviceName 设备名称
      * @return 设备id
