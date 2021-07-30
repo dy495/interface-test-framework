@@ -11,6 +11,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.tarot.row.IRow;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.tarot.enumerator.EnumContainer;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.util.BasicUtil;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAppletToken;
+import com.haisheng.framework.testng.bigScreen.itemPorsche.common.enumerator.customer.EnumAppointmentType;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.*;
@@ -971,15 +972,11 @@ public class SupporterUtil extends BasicUtil {
      * @return id 预约id
      */
     public Long appointment(AppointmentTypeEnum type, String date) {
-        AppletAppointmentSubmitScene.AppletAppointmentSubmitSceneBuilder builder = AppletAppointmentSubmitScene.builder().type(type.name()).carId(getCarId())
-                .shopId(getShopId()).staffId(getStaffId()).timeId(getTimeId(date)).appointmentName("隔壁小王").appointmentPhone("15321527989");
-        if (type.equals(AppointmentTypeEnum.REPAIR)) {
-            builder.faultDescription(EnumDesc.DESC_BETWEEN_15_20.getDesc());
-        }
-        if (type.equals(AppointmentTypeEnum.TEST_DRIVE)) {
-            String staffId = visitor.isDaily() ? "uid_df9293ba" : "uid_35a1d271";
-            builder.carStyleId(getCarStyleId()).staffId(staffId).build().remove("car_id");
-        }
+        AppletAppointmentSubmitScene.AppletAppointmentSubmitSceneBuilder builder = AppletAppointmentSubmitScene.builder().type(type.name())
+                .shopId(getShopId()).staffId(getStaffId()).appointmentName("隔壁小王").appointmentPhone("15321527989");
+        builder = type.equals(AppointmentTypeEnum.REPAIR) ? builder.faultDescription(EnumDesc.DESC_BETWEEN_15_20.getDesc()).timeId(getTimeId(date, EnumAppointmentType.REPAIR.name())).carId(getCarId())
+                : type.equals(AppointmentTypeEnum.TEST_DRIVE) ? builder.carStyleId(getCarStyleId()).staffId(getTestDriverStaffId()).timeId(getTimeId(date, EnumAppointmentType.TEST_DRIVE.name()))
+                : builder.timeId(getTimeId(date, EnumAppointmentType.MAINTAIN.name())).carId(getCarId());
         return builder.build().invoke(visitor).getLong("id");
     }
 
@@ -990,12 +987,18 @@ public class SupporterUtil extends BasicUtil {
         return response.getLong("id");
     }
 
+    public String getTestDriverStaffId() {
+        return visitor.isDaily() ? "uid_df9293ba" : "uid_35a1d271";
+    }
+
     /**
      * 获取预约时间id
      */
-    public Long getTimeId(String date) {
-        IScene appointmentTimeListScene = AppletAppointmentTimeListScene.builder().type(AppointmentTypeEnum.MAINTAIN.name()).carId(getCarId()).shopId(getShopId()).day(date).build();
-        JSONArray array = appointmentTimeListScene.invoke(visitor).getJSONArray("list");
+    public Long getTimeId(String date, String type) {
+        AppletAppointmentTimeListScene.AppletAppointmentTimeListSceneBuilder builder = AppletAppointmentTimeListScene.builder();
+        builder.type(type).shopId(getShopId()).day(date).build();
+        builder = type.equals(EnumAppointmentType.TEST_DRIVE.name()) ? builder.carStyleId(getCarStyleId()) : builder.carId(getCarId());
+        JSONArray array = builder.build().invoke(visitor).getJSONArray("list");
         List<AppletAppointmentTimeList> timeList = array.stream().map(object -> (JSONObject) object).map(object -> JSONObject.toJavaObject(object, AppletAppointmentTimeList.class)).collect(Collectors.toList());
         return timeList.stream().filter(e -> !e.getIsFull()).map(AppletAppointmentTimeList::getId).findFirst().orElse(null);
     }
