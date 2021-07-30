@@ -144,19 +144,19 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     public void packageManager_data_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            VoucherPage voucherPage = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherPage();
             //创建套餐前列表数量
             IScene packageFormPageScene = PackageFormPageScene.builder().build();
             int total = packageFormPageScene.invoke(visitor).getInteger("total");
             //创建套餐
-            JSONArray voucherArray = util.getVoucherArray(voucherId, 10);
-            String packageName = util.createPackage(voucherArray, UseRangeEnum.CURRENT);
-            Long packageId = util.getPackageId(packageName);
+            JSONArray voucherArray = util.getVoucherArray(voucherPage, 10);
+            PackagePage packagePage = util.createPackage(voucherArray, UseRangeEnum.CURRENT);
+            Long packageId = packagePage.getPackageId();
+            String packageName = packagePage.getPackageName();
             //创建套餐后列表数量
             int newTotal = packageFormPageScene.invoke(visitor).getInteger("total");
             CommonUtil.checkResult("创建套餐后套餐列表数", total + 1, newTotal);
             //列表内容校验
-            PackagePage packagePage = util.toJavaObjectList(PackageFormPageScene.builder().packageName(packageName).build(), 50, PackagePage.class).get(0);
             CommonUtil.checkResult(packageName + " 套餐价格", "49.99", packagePage.getPrice());
             CommonUtil.checkResult(packageName + " 套餐内含卡券数", 10, packagePage.getVoucherNumber());
             CommonUtil.checkResult(packageName + " 客户有效期", "10天", packagePage.getCustomerUseValidity());
@@ -279,26 +279,26 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     public void packageManager_data_9() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+            VoucherPage voucherPage = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherPage();
             //创建套餐前列表数量
             IScene packageFormPageScene = PackageFormPageScene.builder().build();
             int total = packageFormPageScene.invoke(visitor).getInteger("total");
             //创建套餐
-            JSONArray voucherArray = util.getVoucherArray(voucherId, 10);
-            String packageName = util.createPackage(voucherArray, UseRangeEnum.CURRENT);
-            Long packageId = util.getPackageId(packageName);
+            JSONArray voucherArray = util.getVoucherArray(voucherPage, 10);
+            PackagePage packagePage = util.createPackage(voucherArray, UseRangeEnum.CURRENT);
+            Long packageId = packagePage.getPackageId();
+            String packageName = packagePage.getPackageName();
             //创建套餐后列表数量
             int newTotal = packageFormPageScene.invoke(visitor).getInteger("total");
             CommonUtil.checkResult("创建套餐后套餐列表数", total + 1, newTotal);
             //列表内容校验
-            PackagePage packagePage = util.toJavaObjectList(PackageFormPageScene.builder().packageName(packageName).build(), PackagePage.class).get(0);
             CommonUtil.checkResult(packageName + " 套餐价格", "49.99", packagePage.getPrice());
             CommonUtil.checkResult(packageName + " 套餐内含卡券数", 10, packagePage.getVoucherNumber());
             CommonUtil.checkResult(packageName + " 客户有效期", "10天", packagePage.getCustomerUseValidity());
             CommonUtil.checkResult(packageName + " 审核状态", AuditStatusEnum.AUDITING.getName(), packagePage.getAuditStatusName());
             //审核不通过
             AuditPackageStatusScene.builder().id(packageId).status(AuditStatusEnum.REFUSAL.name()).build().invoke(visitor);
-            PackagePage newPackagePage = util.toJavaObjectList(PackageFormPageScene.builder().packageName(packageName).build(), PackagePage.class).get(0);
+            PackagePage newPackagePage = util.toFirstJavaObject(PackageFormPageScene.builder().packageName(packageName).build(), PackagePage.class);
             CommonUtil.checkResult(packageName + " 审核状态", AuditStatusEnum.REFUSAL.getName(), newPackagePage.getAuditStatusName());
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -312,10 +312,10 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     public void packageManage_data_19() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-            String voucherName = util.getVoucherName(voucherId);
+            VoucherPage voucherPage = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherPage();
+            Long voucherId = voucherPage.getVoucherId();
+            String voucherName = voucherPage.getVoucherName();
             //购买前数据
-            VoucherPage voucherPage = util.getVoucherPage(voucherId);
             IScene buyPackageRecordScene = BuyPackageRecordScene.builder().build();
             int buyPackageRecordTotal = buyPackageRecordScene.invoke(visitor).getInteger("total");
             IScene voucherInfoScene = VoucherInfoScene.builder().id(voucherId).build();
@@ -325,7 +325,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             int appletPackageNum = util.getAppletPackageNum();
             //购买临时套餐
             user.loginPc(ALL_AUTHORITY);
-            JSONArray voucherList = util.getVoucherArray(voucherId, 1);
+            JSONArray voucherList = util.getVoucherArray(voucherPage, 1);
             util.buyTemporaryPackage(voucherList, 1);
             VoucherPage secondPackagePage = util.getVoucherPage(voucherName);
             CommonUtil.checkResult(voucherName + " 购买后可用库存", voucherPage.getAllowUseInventory() - 1, secondPackagePage.getAllowUseInventory());
@@ -334,14 +334,15 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             util.makeSureBuyPackage("临时套餐");
             //确认支付后数据
             CommonUtil.checkResult("套餐管理--套餐购买记录", buyPackageRecordTotal + 1, buyPackageRecordScene.invoke(visitor).getInteger("total"));
-            VoucherSendRecord voucherSendRecord = util.getVoucherSendRecordList(voucherName).get(0);
+            IScene scene = SendRecordScene.builder().voucherId(voucherId).build();
+            VoucherSendRecord voucherSendRecord = util.toFirstJavaObject(scene, VoucherSendRecord.class);
             CommonUtil.checkResult(voucherName + " 领取记录卡券使用状态", VoucherUseStatusEnum.NEAR_EXPIRE.name(), voucherSendRecord.getVoucherUseStatus());
             CommonUtil.checkResult(voucherName + " 领取记录卡券使用状态", VoucherUseStatusEnum.NEAR_EXPIRE.getName(), voucherSendRecord.getVoucherUseStatusName());
             CommonUtil.checkResult(voucherName + " 领取人电话", APPLET_USER_ONE.getPhone(), voucherSendRecord.getCustomerPhone());
             CommonUtil.checkResult(voucherName + " 领取记录卡券发出渠道", VoucherSourceEnum.PURCHASE.getName(), voucherSendRecord.getSendChannelName());
             Preconditions.checkArgument(voucherSendRecord.getCustomerLabelName().contains(CustomerLabelTypeEnum.VIP.getTypeName()), "领取人标签" + voucherSendRecord.getCustomerLabelName());
             Preconditions.checkArgument(voucherSendRecord.getCustomerLabelName().contains(CustomerLabelTypeEnum.APPLET.getTypeName()), "领取人标签" + voucherSendRecord.getCustomerLabelName());
-            VoucherPage thirdPackagePage = util.getVoucherPage(voucherId);
+            VoucherPage thirdPackagePage = util.getVoucherPage(voucherName);
             CommonUtil.checkResult(voucherName + " 确认支付后可用库存", secondPackagePage.getAllowUseInventory(), thirdPackagePage.getAllowUseInventory());
             CommonUtil.checkResult(voucherName + " 确认支付后剩余库存", secondPackagePage.getSurplusInventory() - 1, thirdPackagePage.getSurplusInventory());
             CommonUtil.checkResult(voucherName + " 共领取数", totalSend + 1, voucherInfoScene.invoke(visitor).getInteger("total_send"));
@@ -360,14 +361,15 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     public void packageManage_data_20() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-            String voucherName = util.getVoucherName(voucherId);
-            JSONArray voucherList = util.getVoucherArray(voucherId, 1);
-            String packageName = util.editPackage(voucherList);
-            Long packageId = util.getPackageId(packageName);
+            VoucherPage voucherPage = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherPage();
+            Long voucherId = voucherPage.getVoucherId();
+            String voucherName = voucherPage.getVoucherName();
+            JSONArray voucherList = util.getVoucherArray(voucherPage, 1);
+            PackagePage packagePage = util.editPackage(voucherList);
+            String packageName = packagePage.getPackageName();
+            Long packageId = packagePage.getPackageId();
             PackageFormSwitchPackageStatusScene.builder().id(packageId).status(true).build().invoke(visitor);
             //购买前数据
-            VoucherPage voucherPage = util.getVoucherPage(voucherId);
             IScene buyPackageRecordScene = BuyPackageRecordScene.builder().build();
             int buyPackageRecordTotal = buyPackageRecordScene.invoke(visitor).getInteger("total");
             int soldNumber = util.getPackagePage(packageName).getSoldNumber();
@@ -387,14 +389,15 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             //确认支付后数据
             CommonUtil.checkResult("套餐购买列表数", buyPackageRecordTotal + 1, buyPackageRecordScene.invoke(visitor).getInteger("total"));
             CommonUtil.checkResult(packageName + " 售出（套）", soldNumber + 1, util.getPackagePage(packageName).getSoldNumber());
-            VoucherSendRecord voucherSendRecord = util.getVoucherSendRecordList(voucherName).get(0);
+            IScene scene = SendRecordScene.builder().voucherId(voucherId).build();
+            VoucherSendRecord voucherSendRecord = util.toFirstJavaObject(scene, VoucherSendRecord.class);
             CommonUtil.checkResult(voucherName + " 领取记录卡券使用状态", VoucherUseStatusEnum.NEAR_EXPIRE.name(), voucherSendRecord.getVoucherUseStatus());
             CommonUtil.checkResult(voucherName + " 领取记录卡券使用状态", VoucherUseStatusEnum.NEAR_EXPIRE.getName(), voucherSendRecord.getVoucherUseStatusName());
             CommonUtil.checkResult(voucherName + " 领取人电话", APPLET_USER_ONE.getPhone(), voucherSendRecord.getCustomerPhone());
             CommonUtil.checkResult(voucherName + " 领取记录卡券发出渠道", VoucherSourceEnum.PURCHASE.getName(), voucherSendRecord.getSendChannelName());
             Preconditions.checkArgument(voucherSendRecord.getCustomerLabelName().contains(CustomerLabelTypeEnum.VIP.getTypeName()), "领取人标签" + voucherSendRecord.getCustomerLabelName());
             Preconditions.checkArgument(voucherSendRecord.getCustomerLabelName().contains(CustomerLabelTypeEnum.APPLET.getTypeName()), "领取人标签" + voucherSendRecord.getCustomerLabelName());
-            VoucherPage thirdPackagePage = util.getVoucherPage(voucherId);
+            VoucherPage thirdPackagePage = util.getVoucherPage(voucherName);
             CommonUtil.checkResult(voucherName + " 确认支付后可用库存", secondPackagePage.getAllowUseInventory(), thirdPackagePage.getAllowUseInventory());
             CommonUtil.checkResult(voucherName + " 确认支付后剩余库存", secondPackagePage.getSurplusInventory() - 1, thirdPackagePage.getSurplusInventory());
             CommonUtil.checkResult(voucherName + " 共领取数", totalSend + 1, voucherInfoScene.invoke(visitor).getInteger("total_send"));
@@ -413,10 +416,10 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     public void packageManage_data_21() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-            String voucherName = util.getVoucherName(voucherId);
+            VoucherPage voucherPage = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherPage();
+            Long voucherId = voucherPage.getVoucherId();
+            String voucherName = voucherPage.getVoucherName();
             //赠送前数据
-            VoucherPage voucherPage = util.getVoucherPage(voucherId);
             IScene voucherInfoScene = VoucherInfoScene.builder().id(voucherId).build();
             int totalSend = voucherInfoScene.invoke(visitor).getInteger("total_send");
             IScene buyPackageRecordScene = BuyPackageRecordScene.builder().build();
@@ -426,7 +429,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             int appletPackageNum = util.getAppletPackageNum();
             //临时套餐
             user.loginPc(ALL_AUTHORITY);
-            JSONArray voucherList = util.getVoucherArray(voucherId, 1);
+            JSONArray voucherList = util.getVoucherArray(voucherPage, 1);
             util.buyTemporaryPackage(voucherList, 0);
             VoucherPage secondPackagePage = util.getVoucherPage(voucherName);
             CommonUtil.checkResult(voucherName + " 赠送后可用库存", voucherPage.getAllowUseInventory() - 1, secondPackagePage.getAllowUseInventory());
@@ -435,14 +438,15 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             util.makeSureBuyPackage("临时套餐");
             //确认支付后数据
             CommonUtil.checkResult("套餐购买列表数", buyPackageRecordTotal + 1, buyPackageRecordScene.invoke(visitor).getInteger("total"));
-            VoucherSendRecord voucherSendRecord = util.getVoucherSendRecordList(voucherName).get(0);
+
+            VoucherSendRecord voucherSendRecord = util.getVoucherSendRecord(voucherId);
             CommonUtil.checkResult(voucherName + " 领取记录卡券使用状态", VoucherUseStatusEnum.NEAR_EXPIRE.name(), voucherSendRecord.getVoucherUseStatus());
             CommonUtil.checkResult(voucherName + " 领取记录卡券使用状态", VoucherUseStatusEnum.NEAR_EXPIRE.getName(), voucherSendRecord.getVoucherUseStatusName());
             CommonUtil.checkResult(voucherName + " 领取人电话", APPLET_USER_ONE.getPhone(), voucherSendRecord.getCustomerPhone());
             CommonUtil.checkResult(voucherName + " 领取记录卡券发出渠道", VoucherSourceEnum.PURCHASE.getName(), voucherSendRecord.getSendChannelName());
             Preconditions.checkArgument(voucherSendRecord.getCustomerLabelName().contains(CustomerLabelTypeEnum.VIP.getTypeName()), "领取人标签" + voucherSendRecord.getCustomerLabelName());
             Preconditions.checkArgument(voucherSendRecord.getCustomerLabelName().contains(CustomerLabelTypeEnum.APPLET.getTypeName()), "领取人标签" + voucherSendRecord.getCustomerLabelName());
-            VoucherPage thirdPackagePage = util.getVoucherPage(voucherId);
+            VoucherPage thirdPackagePage = util.getVoucherPage(voucherName);
             CommonUtil.checkResult(voucherName + " 确认支付后可用库存", secondPackagePage.getAllowUseInventory(), thirdPackagePage.getAllowUseInventory());
             CommonUtil.checkResult(voucherName + " 确认支付后剩余库存", secondPackagePage.getSurplusInventory() - 1, thirdPackagePage.getSurplusInventory());
             CommonUtil.checkResult(voucherName + " 共领取数", totalSend + 1, voucherInfoScene.invoke(visitor).getInteger("total_send"));
@@ -461,17 +465,18 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     public void packageManage_data_22() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-            String voucherName = util.getVoucherName(voucherId);
-            JSONArray voucherList = util.getVoucherArray(voucherId, 1);
-            String packageName = util.editPackage(voucherList);
-            Long packageId = util.getPackageId(packageName);
+            VoucherPage voucherPage = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherPage();
+            String voucherName = voucherPage.getVoucherName();
+            Long voucherId = voucherPage.getVoucherId();
+            JSONArray voucherList = util.getVoucherArray(voucherPage, 1);
+            PackagePage packagePage = util.editPackage(voucherList);
+            Long packageId = packagePage.getPackageId();
+            String packageName = packagePage.getPackageName();
             //赠送前数据
-            VoucherPage voucherPage = util.getVoucherPage(voucherId);
             IScene buyPackageRecordScene = BuyPackageRecordScene.builder().build();
-            int buyPackageRecordTotal = visitor.invokeApi(buyPackageRecordScene).getInteger("total");
+            int buyPackageRecordTotal = buyPackageRecordScene.invoke(visitor).getInteger("total");
             IScene voucherInfoScene = VoucherInfoScene.builder().id(voucherId).build();
-            int totalSend = visitor.invokeApi(voucherInfoScene).getInteger("total_send");
+            int totalSend = voucherInfoScene.invoke(visitor).getInteger("total_send");
             user.loginApplet(APPLET_USER_ONE);
             int appletVoucherNum = util.getAppletVoucherNum();
             int appletPackageNum = util.getAppletPackageNum();
@@ -485,17 +490,17 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             util.makeSureBuyPackage(packageName);
             //赠送后数据
             CommonUtil.checkResult("套餐购买列表数", buyPackageRecordTotal + 1, visitor.invokeApi(buyPackageRecordScene).getInteger("total"));
-            VoucherSendRecord voucherSendRecord = util.getVoucherSendRecordList(voucherName).get(0);
+            VoucherSendRecord voucherSendRecord = util.getVoucherSendRecord(voucherId);
             CommonUtil.checkResult(voucherName + " 领取记录卡券使用状态", VoucherUseStatusEnum.NEAR_EXPIRE.name(), voucherSendRecord.getVoucherUseStatus());
             CommonUtil.checkResult(voucherName + " 领取记录卡券使用状态", VoucherUseStatusEnum.NEAR_EXPIRE.getName(), voucherSendRecord.getVoucherUseStatusName());
             CommonUtil.checkResult(voucherName + " 领取人电话", APPLET_USER_ONE.getPhone(), voucherSendRecord.getCustomerPhone());
             CommonUtil.checkResult(voucherName + " 领取记录卡券发出渠道", VoucherSourceEnum.PURCHASE.getName(), voucherSendRecord.getSendChannelName());
             Preconditions.checkArgument(voucherSendRecord.getCustomerLabelName().contains(CustomerLabelTypeEnum.VIP.getTypeName()), "领取人标签：" + voucherSendRecord.getCustomerLabelName());
             Preconditions.checkArgument(voucherSendRecord.getCustomerLabelName().contains(CustomerLabelTypeEnum.APPLET.getTypeName()), "领取人标签：" + voucherSendRecord.getCustomerLabelName());
-            VoucherPage thirdPackagePage = util.getVoucherPage(voucherId);
+            VoucherPage thirdPackagePage = util.getVoucherPage(voucherName);
             CommonUtil.checkResult(voucherName + " 确认支付后可用库存", secondPackagePage.getAllowUseInventory(), thirdPackagePage.getAllowUseInventory());
             CommonUtil.checkResult(voucherName + " 确认支付后剩余库存", secondPackagePage.getSurplusInventory() - 1, thirdPackagePage.getSurplusInventory());
-            CommonUtil.checkResult(voucherName + " 共领取数", totalSend + 1, visitor.invokeApi(voucherInfoScene).getInteger("total_send"));
+            CommonUtil.checkResult(voucherName + " 共领取数", totalSend + 1, voucherInfoScene.invoke(visitor).getInteger("total_send"));
             user.loginApplet(APPLET_USER_ONE);
             CommonUtil.checkResult("小程序我的卡券数", appletVoucherNum, util.getAppletVoucherNum());
             CommonUtil.checkResult("小程序我的套餐数", appletPackageNum + 1, util.getAppletPackageNum());
@@ -512,8 +517,8 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String[] strings = {EnumDesc.DESC_BETWEEN_20_30.getDesc(), "1", null, ""};
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-            JSONArray voucherList = util.getVoucherArray(voucherId, 1);
+            VoucherPage voucherPage = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherPage();
+            JSONArray voucherList = util.getVoucherArray(voucherPage, 1);
             Arrays.stream(strings).forEach(name -> {
                 IScene scene = CreatePackageScene.builder().packageName(name).packageDescription(util.getDesc())
                         .subjectType(util.getSubjectType()).subjectId(util.getSubjectDesc(util.getSubjectType())).expireType(2).expiryDate(10)
@@ -536,8 +541,8 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String[] strings = {null, "", EnumDesc.DESC_BETWEEN_200_300.getDesc()};
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-            JSONArray voucherList = util.getVoucherArray(voucherId, 1);
+            VoucherPage voucherPage = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherPage();
+            JSONArray voucherList = util.getVoucherArray(voucherPage, 1);
             Arrays.stream(strings).forEach(desc -> {
                 IScene scene = CreatePackageScene.builder().packageName(util.createPackageName(UseRangeEnum.BRAND)).packageDescription(desc)
                         .subjectType(util.getSubjectType()).subjectId(util.getSubjectDesc(util.getSubjectType())).expireType(2).expiryDate(10)
@@ -560,8 +565,8 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String[] strings = {"全部权限", null, ""};
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-            JSONArray voucherList = util.getVoucherArray(voucherId, 1);
+            VoucherPage voucherPage = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherPage();
+            JSONArray voucherList = util.getVoucherArray(voucherPage, 1);
             Arrays.stream(strings).forEach(subjectType -> {
                 IScene scene = CreatePackageScene.builder().packageName(util.createPackageName(UseRangeEnum.BRAND)).packageDescription(util.getDesc())
                         .subjectType(subjectType).subjectId(util.getSubjectDesc(util.getSubjectType())).voucherList(voucherList)
@@ -583,8 +588,8 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     public void packageManager_system_5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-            JSONArray voucherList = util.getVoucherArray(voucherId, 1);
+            VoucherPage voucherPage = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherPage();
+            JSONArray voucherList = util.getVoucherArray(voucherPage, 1);
             IScene scene = CreatePackageScene.builder().packageName(util.createPackageName(UseRangeEnum.BRAND)).packageDescription(util.getDesc())
                     .subjectType(UseRangeEnum.STORE.name()).voucherList(voucherList).packagePrice("5000.00").expireType(2)
                     .expiryDate(10).shopIds(util.getShopIdList()).status(true).build();
@@ -622,8 +627,8 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String[] doubles = {null, "100000000.01", "-3.55"};
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-            JSONArray voucherList = util.getVoucherArray(voucherId, 1);
+            VoucherPage voucherPage = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherPage();
+            JSONArray voucherList = util.getVoucherArray(voucherPage, 1);
             Arrays.stream(doubles).forEach(packagePrice -> {
                 IScene scene = CreatePackageScene.builder().packageName(util.createPackageName(UseRangeEnum.BRAND))
                         .packageDescription(util.getDesc()).subjectType(UseRangeEnum.STORE.name()).packagePrice(packagePrice)
@@ -645,8 +650,8 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     public void packageManager_system_8() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-            JSONArray voucherList = util.getVoucherArray(voucherId, 1);
+            VoucherPage voucherPage = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherPage();
+            JSONArray voucherList = util.getVoucherArray(voucherPage, 1);
             IScene scene = CreatePackageScene.builder().packageName(util.createPackageName(UseRangeEnum.BRAND))
                     .packageDescription(util.getDesc()).subjectType(UseRangeEnum.STORE.name()).packagePrice("499.99")
                     .voucherList(voucherList).expireType(2).expiryDate(10).status(true).build();
@@ -900,7 +905,8 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
         try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.SELL_OUT).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
-            Long packageId = util.editPackage(voucherId, 1);
+            PackagePage packagePage = util.editPackage(voucherId, 1);
+            Long packageId = packagePage.getPackageId();
             //购买固定套餐
             IScene purchaseFixedPackageScene = PurchaseFixedPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
                     .carType(PackageUseTypeEnum.ALL_CAR.name()).packageId(packageId).expiryDate("1").remark(EnumDesc.DESC_BETWEEN_20_30.getDesc())
@@ -1219,8 +1225,9 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
             voucherId = voucherId == null ? util.createVoucherId(1, VoucherTypeEnum.CUSTOM) : voucherId;
             int allowUseInventory = Math.toIntExact(util.getVoucherPage(voucherId).getAllowUseInventory());
             String voucherName = util.getVoucherName(voucherId);
-            Long packageId = util.editPackage(voucherId, allowUseInventory + 1);
-            String packageName = util.getPackageName(packageId);
+            PackagePage packagePage = util.editPackage(voucherId, allowUseInventory + 1);
+            String packageName = packagePage.getPackageName();
+            long packageId = packagePage.getPackageId();
             String subjectType = util.getSubjectType();
             Long subjectId = util.getSubjectDesc(subjectType);
             //购买套餐
@@ -1631,9 +1638,10 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     public void messageManager_system_14() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.SELL_OUT).buildVoucher().getVoucherId();
-            Long packageId = util.editPackage(voucherId, 1);
-            String voucherName = util.getVoucherName(voucherId);
+            VoucherPage voucherPage = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.SELL_OUT).buildVoucher().getVoucherPage();
+            Long voucherId = voucherPage.getVoucherId();
+            String voucherName = voucherPage.getVoucherName();
+            Long packageId = util.editPackage(voucherId, 1).getPackageId();
             //发消息
             String message = util.pushCustomMessage(1, true, false, packageId).getString("message");
             String err = util.getPackageName(packageId) + ":卡券【" + voucherName + "】可用库存不足！";

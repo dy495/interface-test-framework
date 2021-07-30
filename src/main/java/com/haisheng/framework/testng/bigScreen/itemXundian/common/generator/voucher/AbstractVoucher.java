@@ -32,6 +32,16 @@ public abstract class AbstractVoucher extends BaseGenerator implements IVoucher 
 
     @Override
     public Long getVoucherId() {
+        VoucherPage voucherPage = getVoucher();
+        return voucherPage == null ? null : voucherPage.getVoucherId();
+    }
+
+    @Override
+    public VoucherPage getVoucherPage() {
+        return getVoucher();
+    }
+
+    private VoucherPage getVoucher() {
         try {
             VoucherStatusEnum.findById(status.getId());
             Preconditions.checkArgument(!isEmpty(), "visitor is null");
@@ -42,17 +52,18 @@ public abstract class AbstractVoucher extends BaseGenerator implements IVoucher 
                 logger("FIND " + status.name() + " FINISH");
                 logger("voucherId is：" + voucherPage.getVoucherId());
                 logger("voucherName is：" + voucherPage.getVoucherName());
-                return voucherPage.getVoucherId();
+                return voucherPage;
             }
             logger(status.name() + " DIDN'T FIND ");
             status.getVoucherBuilder().buildVoucher().execute(visitor, scene);
-            return getVoucherId();
+            return getVoucherPage();
         } catch (Exception e) {
             e.printStackTrace();
             errorMsg.append(e);
         }
         return null;
     }
+
 
     public static abstract class AbstractBuilder extends BaseBuilder<AbstractBuilder, IVoucher> {
         private VoucherStatusEnum status;

@@ -383,23 +383,22 @@ public class SupporterUtil extends BasicUtil {
     /**
      * 获取卡券领取记录
      *
-     * @param voucherId 卡券id
+     * @param voucherPage 卡券页
      * @return 领取记录列表
      */
-    public List<VoucherSendRecord> getVoucherSendRecordList(Long voucherId) {
-        IScene scene = SendRecordScene.builder().voucherId(voucherId).build();
-        return toJavaObjectList(scene, VoucherSendRecord.class);
+    public VoucherSendRecord getVoucherSendRecord(VoucherPage voucherPage) {
+        return getVoucherSendRecord(voucherPage.getVoucherId());
     }
 
     /**
      * 获取卡券领取记录
      *
-     * @param voucherName 卡券名称
+     * @param voucherId 卡券id
      * @return 领取记录列表
      */
-    public List<VoucherSendRecord> getVoucherSendRecordList(String voucherName) {
-        Long voucherId = getVoucherId(voucherName);
-        return getVoucherSendRecordList(voucherId);
+    public VoucherSendRecord getVoucherSendRecord(Long voucherId) {
+        IScene scene = SendRecordScene.builder().voucherId(voucherId).build();
+        return toFirstJavaObject(scene, VoucherSendRecord.class);
     }
 
     /**
@@ -446,6 +445,17 @@ public class SupporterUtil extends BasicUtil {
     }
 
     /**
+     * 刷新当前页
+     *
+     * @param voucherPage 卡券页
+     * @return 卡券页信息
+     */
+    public VoucherPage flushVoucherPage(VoucherPage voucherPage) {
+        IScene scene = VoucherFormVoucherPageScene.builder().voucherName(voucherPage.getVoucherName()).build();
+        return toJavaObject(scene, VoucherPage.class, "voucher_id", voucherPage.getVoucherId());
+    }
+
+    /**
      * 获取卡券详情
      *
      * @param voucherId 卡券id
@@ -479,6 +489,23 @@ public class SupporterUtil extends BasicUtil {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("voucher_id", voucherId);
         jsonObject.put("voucher_name", voucherName);
+        jsonObject.put("voucher_count", voucherCount);
+        array.add(jsonObject);
+        return array;
+    }
+
+    /**
+     * 获取卡券集合
+     *
+     * @param voucherPage  卡券页
+     * @param voucherCount 卡券数量
+     * @return 卡券集合
+     */
+    public JSONArray getVoucherArray(VoucherPage voucherPage, Integer voucherCount) {
+        JSONArray array = new JSONArray();
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("voucher_id", voucherPage.getVoucherId());
+        jsonObject.put("voucher_name", voucherPage.getVoucherName());
         jsonObject.put("voucher_count", voucherCount);
         array.add(jsonObject);
         return array;
@@ -591,6 +618,17 @@ public class SupporterUtil extends BasicUtil {
     /**
      * 获取套餐信息
      *
+     * @param packageName 套餐名
+     * @return 套餐信息
+     */
+    public PackagePage getPackagePage(String packageName, Long packageId) {
+        IScene scene = PackageFormPageScene.builder().packageName(packageName).build();
+        return toJavaObject(scene, PackagePage.class, "package_id", packageId);
+    }
+
+    /**
+     * 获取套餐信息
+     *
      * @param packageId 套餐id
      * @return 套餐信息
      */
@@ -651,16 +689,8 @@ public class SupporterUtil extends BasicUtil {
         int num = CommonUtil.getRandom(1, 1000000);
         String packageName = useRangeEnum.getName() + "套餐" + num;
         IScene scene = PackageFormPageScene.builder().packageName(packageName).build();
-        List<PackagePage> packagePages = toJavaObjectList(scene, PackagePage.class);
-        if (packagePages.isEmpty()) {
-            return packageName;
-        }
-        for (PackagePage packagePage : packagePages) {
-            if (!packagePage.getPackageName().equals(packageName)) {
-                return packageName;
-            }
-        }
-        return createPackageName(useRangeEnum);
+        List<PackagePage> packagePages = toJavaObjectList(scene, PackagePage.class, "package_name", packageName);
+        return packagePages.isEmpty() ? packageName : createPackageName(useRangeEnum);
     }
 
     /**
@@ -669,12 +699,12 @@ public class SupporterUtil extends BasicUtil {
      * @param voucherList 套餐所含卡券信息
      * @return 套餐名
      */
-    public String createPackage(JSONArray voucherList, UseRangeEnum anEnum) {
+    public PackagePage createPackage(JSONArray voucherList, UseRangeEnum anEnum) {
         String packageName = createPackageName(anEnum);
         CreatePackageScene.builder().packageName(packageName).packageDescription(getDesc()).subjectType(getSubjectType())
                 .subjectId(getSubjectDesc(getSubjectType())).voucherList(voucherList).packagePrice("49.99").status(true)
                 .shopIds(getShopIdList(3)).expireType(2).expiryDate(10).build().invoke(visitor);
-        return packageName;
+        return getPackagePage(packageName);
     }
 
     public PackageDetailBean getPackageDetail(Long packageId) {
@@ -716,16 +746,18 @@ public class SupporterUtil extends BasicUtil {
      * @param voucherList 套餐包含的卡券
      * @return 套餐名
      */
-    public String editPackage(JSONArray voucherList) {
+    public PackagePage editPackage(JSONArray voucherList) {
         IScene packageFormPageScene = PackageFormPageScene.builder().build();
-        List<PackagePage> packagePages = toJavaObjectList(packageFormPageScene, PackagePage.class);
-        Long packageId = packagePages.stream().filter(e -> !EnumVP.isContains(e.getPackageName())).map(PackagePage::getPackageId).findFirst().orElse(null);
-        String packageName = getPackageName(packageId);
+        List<PackagePage> packagePages = toJavaObjectList(packageFormPageScene, PackagePage.class, 50);
+        PackagePage packagePage = packagePages.stream().filter(e -> !EnumVP.isContains(e.getPackageName())).findFirst().orElse(null);
+        Preconditions.checkArgument(packagePage != null, "套餐为空");
+        Long packageId = packagePage.getPackageId();
+        String packageName = packagePage.getPackageName();
         EditPackageScene.builder().packageName(packageName).packageDescription(EnumDesc.DESC_BETWEEN_20_30.getDesc())
                 .subjectType(getSubjectType()).subjectId(getSubjectDesc(getSubjectType()))
                 .voucherList(voucherList).packagePrice("1.11").status(true).shopIds(getShopIdList(3))
                 .id(String.valueOf(packageId)).expireType(2).expiryDate(12).build().invoke(visitor);
-        return packageName;
+        return packagePage;
     }
 
     /**
@@ -735,10 +767,9 @@ public class SupporterUtil extends BasicUtil {
      * @param voucherCount 卡券数量
      * @return 套餐名
      */
-    public Long editPackage(Long voucherId, int voucherCount) {
+    public PackagePage editPackage(Long voucherId, int voucherCount) {
         JSONArray voucherList = getVoucherArray(voucherId, voucherCount);
-        String packageName = editPackage(voucherList);
-        return getPackageId(packageName);
+        return editPackage(voucherList);
     }
 
     /**
@@ -1565,7 +1596,7 @@ public class SupporterUtil extends BasicUtil {
         CreateExchangeGoodsScene.builder().exchangeGoodsType(CommodityTypeEnum.FICTITIOUS.name()).goodsId(voucherId)
                 .exchangePrice("1").isLimit(true).exchangePeopleNum("10").exchangeStartTime(exchangeStartTime)
                 .exchangeEndTime(exchangeEndTime).expireType(2).useDays("10").exchangeNum(String.valueOf(exchangeNum)).build().invoke(visitor);
-        return toJavaObjectList(ExchangePageScene.builder().build(), ExchangePage.class).get(0);
+        return toFirstJavaObject(ExchangePageScene.builder().build(), ExchangePage.class);
     }
 
 

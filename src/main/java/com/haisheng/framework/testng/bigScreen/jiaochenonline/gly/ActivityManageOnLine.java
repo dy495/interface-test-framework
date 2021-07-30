@@ -194,8 +194,8 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             List<Long> ids = businessUtil.RegisterAppletIds(activityId);
             businessUtil.getRegisterApprovalPassed(activityId, ids.get(0));
             //获取卡券码
-            List<VoucherSendRecord> vList = supporterUtil.getVoucherSendRecordList(voucherId);
-            String voucherCode = vList.get(0).getVoucherCode();
+            VoucherSendRecord voucherSendRecord = supporterUtil.getVoucherSendRecord(voucherId);
+            String voucherCode = voucherSendRecord.getVoucherCode();
             System.err.println("-----获取卡券码-----" + voucherCode);
             //登录小程序
             user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
@@ -655,7 +655,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
      * 报名列表-审批不通过1条，报名失败
      */
     @Test
-    public void activityRegisterDate10(){
+    public void activityRegisterDate10() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             List<Long> ids = new ArrayList<>();
@@ -3871,8 +3871,8 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             //报名审批通过
             businessUtil.getRegisterApprovalPassed(activityId, registerId);
 //            //获取卡券码
-            List<VoucherSendRecord> vList = supporterUtil.getVoucherSendRecordList(voucherId);
-            String voucherCode = vList.get(0).getVoucherCode();
+            VoucherSendRecord voucherSendRecord = supporterUtil.getVoucherSendRecord(voucherId);
+            String voucherCode = voucherSendRecord.getVoucherCode();
             //登录小程序
             user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
             //查看小程序中此活动对应的小喇叭中的卡券的状态
@@ -3981,8 +3981,8 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             //登录PC
             jc.pcLogin(pp.phone, pp.password);
             //获取卡券码
-            List<VoucherSendRecord> vList = supporterUtil.getVoucherSendRecordList(voucherId);
-            String voucherCode = vList.get(0).getVoucherCode();
+            VoucherSendRecord voucherSendRecord = supporterUtil.getVoucherSendRecord(voucherId);
+            String voucherCode = voucherSendRecord.getVoucherCode();
             //登录小程序
             user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
             //查询是否获得此卡券(通过卡券码查询，看看能否有此卡券的返回值)

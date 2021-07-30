@@ -1151,9 +1151,9 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
             IScene voucherInfoScene = VoucherInfoScene.builder().id(voucherId).build();
             int totalInvalid = visitor.invokeApi(voucherInfoScene).getInteger("total_invalid");
             //作废
-            List<VoucherSendRecord> voucherSendRecords = util.getVoucherSendRecordList(voucherId);
-            Long recordId = voucherSendRecords.get(0).getId();
-            String voucherCode = voucherSendRecords.get(0).getVoucherCode();
+            VoucherSendRecord voucherSendRecord = util.getVoucherSendRecord(voucherId);
+            Long recordId = voucherSendRecord.getId();
+            String voucherCode = voucherSendRecord.getVoucherCode();
             IScene scene = InvalidCustomerVoucherScene.builder().id(recordId).invalidReason(EnumDesc.DESC_BETWEEN_10_15.getDesc()).build();
             visitor.invokeApi(scene);
             //作废后数据

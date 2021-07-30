@@ -37,6 +37,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -193,8 +194,8 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             List<Long> ids = businessUtil.RegisterAppletIds(activityId);
             businessUtil.getRegisterApprovalPassed(activityId, ids.get(0));
             //获取卡券码
-            List<VoucherSendRecord> vList = supporterUtil.getVoucherSendRecordList(voucherId);
-            String voucherCode = vList.get(0).getVoucherCode();
+            VoucherSendRecord voucherSendRecord = supporterUtil.getVoucherSendRecord(voucherId);
+            String voucherCode = voucherSendRecord.getVoucherCode();
             System.err.println("-----获取卡券码-----" + voucherCode);
             //登录小程序
             user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
@@ -3805,8 +3806,8 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             //报名审批通过
             businessUtil.getRegisterApprovalPassed(activityId, registerId);
             //获取卡券码
-            List<VoucherSendRecord> vList = supporterUtil.getVoucherSendRecordList(voucherId);
-            String voucherCode = vList.get(0).getVoucherCode();
+            VoucherSendRecord voucherSendRecord = supporterUtil.getVoucherSendRecord(voucherId);
+            String voucherCode = voucherSendRecord.getVoucherCode();
             //登录小程序
             user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             //查看小程序中此活动对应的小喇叭中的卡券的状态
@@ -3917,8 +3918,8 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             System.out.println(isReceivedAfter + "--------" + message);
             jc.pcLogin(pp.phone1, pp.password);
             //获取卡券码
-            List<VoucherSendRecord> vList = supporterUtil.getVoucherSendRecordList(voucherId);
-            String voucherCode = vList.get(0).getVoucherCode();
+            VoucherSendRecord voucherSendRecord = supporterUtil.getVoucherSendRecord(voucherId);
+            String voucherCode = voucherSendRecord.getVoucherCode();
             System.err.println("-----获取卡券码-----" + voucherCode);
             //登录小程序
             user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
@@ -5464,8 +5465,8 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test(enabled = false)
-    public void test(){
-        IScene scene= PreSaleCustomerPageScene.builder().customerName("我").customerType("PERSON").build();
+    public void test() {
+        IScene scene = PreSaleCustomerPageScene.builder().customerName("我").customerType("PERSON").build();
         supporterUtil.compareResponseAndParam(scene, EnumCustomerPage.values());
 
     }

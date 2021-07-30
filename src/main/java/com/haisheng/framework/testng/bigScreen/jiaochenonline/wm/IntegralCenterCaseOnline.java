@@ -998,25 +998,26 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         Long id = null;
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-            String voucherName = util.getVoucherName(voucherId);
+            VoucherPage voucherPage = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherPage();
+            Long voucherId = voucherPage.getVoucherId();
+            String voucherName = voucherPage.getVoucherName();
             AddVoucherScene.builder().addNumber(1).id(voucherId).build().invoke(visitor);
             util.applyVoucher(voucherName, "1");
-            VoucherPage voucherPage = util.getVoucherPage(voucherId);
+            voucherPage = util.flushVoucherPage(voucherPage);
             Long exchangeNum = voucherPage.getAllowUseInventory() - 1;
             //创建积分兑换，库存=可用库存-1
             ExchangePage exchangePage = util.createExchangeFictitiousGoods(voucherId, exchangeNum);
             id = exchangePage.getId();
-            VoucherPage secondVoucherPage = util.getVoucherPage(voucherId);
+            VoucherPage secondVoucherPage = util.flushVoucherPage(voucherPage);
             CommonUtil.checkResult("创建积分兑换后 " + voucherPage.getVoucherName() + " 的可用库存", voucherPage.getAllowUseInventory() - exchangeNum, secondVoucherPage.getAllowUseInventory());
             //关闭积分兑换还库存
             ChangeSwitchStatusScene.builder().id(id).status(false).build().invoke(visitor);
-            VoucherPage thirdVoucherPage = util.getVoucherPage(voucherId);
+            VoucherPage thirdVoucherPage = util.flushVoucherPage(secondVoucherPage);
             CommonUtil.checkResult("关闭积分兑换后 " + voucherPage.getVoucherName() + " 的可用库存", voucherPage.getAllowUseInventory(), thirdVoucherPage.getAllowUseInventory());
             //占用两个卡券
-            JSONArray voucherArray = util.getVoucherArray(voucherId, 2);
+            JSONArray voucherArray = util.getVoucherArray(voucherPage, 2);
             util.buyTemporaryPackage(voucherArray, 1);
-            VoucherPage fourVoucherPage = util.getVoucherPage(voucherId);
+            VoucherPage fourVoucherPage = util.flushVoucherPage(thirdVoucherPage);
             CommonUtil.checkResult("占用卡券后 " + voucherPage.getVoucherName() + " 的可用库存", voucherPage.getAllowUseInventory() - 2, fourVoucherPage.getAllowUseInventory());
             //再开启积分兑换
             String message = ChangeSwitchStatusScene.builder().id(id).status(true).build().invoke(visitor, false).getString("message");

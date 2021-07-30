@@ -1,6 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher;
 
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.generator.IGenerator;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherPage;
 
 /**
  * 卡券生成器
@@ -16,4 +17,11 @@ public interface IVoucher extends IGenerator {
      * @return voucherId
      */
     Long getVoucherId();
+
+    /**
+     * 获取卡券页
+     *
+     * @return 卡券页
+     */
+    VoucherPage getVoucherPage();
 }

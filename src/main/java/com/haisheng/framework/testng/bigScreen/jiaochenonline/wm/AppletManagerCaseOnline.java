@@ -699,7 +699,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
             VoucherPage newVoucherPage = util.getVoucherPage(voucherId);
             CommonUtil.checkResult(voucherPage.getVoucherName() + "剩余库存", voucherPage.getSurplusInventory() - 1, newVoucherPage.getSurplusInventory());
             CommonUtil.checkResult(voucherPage.getVoucherName() + "已领取", voucherPage.getCumulativeDelivery() + 1, newVoucherPage.getCumulativeDelivery());
-            VoucherSendRecord voucherSendRecord = util.getVoucherSendRecordList(voucherId).get(0);
+            VoucherSendRecord voucherSendRecord = util.getVoucherSendRecord(voucherId);
             CommonUtil.checkResult(voucherPage.getVoucherName() + "领取记录领取渠道", VoucherSourceEnum.INTEGRAL_PURCHASE.getName(), voucherSendRecord.getSendChannelName());
             CommonUtil.checkResult(voucherPage.getVoucherName() + "领取人手机号", APPLET_USER_ONE.getPhone(), voucherSendRecord.getCustomerPhone());
         } catch (Exception | AssertionError e) {
