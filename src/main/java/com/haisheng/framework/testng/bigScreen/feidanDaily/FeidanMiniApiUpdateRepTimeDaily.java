@@ -75,7 +75,8 @@ public class FeidanMiniApiUpdateRepTimeDaily {
     //long firstAppearTime = 1583900897877L;
     //long firstAppearTime = 1584936946964L;
     //long firstAppearTime = 1603353621624L;
-    long firstAppearTime = 1609733247344L;
+    //long firstAppearTime = 1609733247344L;
+    long firstAppearTime = 1620798267708L;
 
     String defaultRuleId = "837";
     String ahead1hRuleId = "996";

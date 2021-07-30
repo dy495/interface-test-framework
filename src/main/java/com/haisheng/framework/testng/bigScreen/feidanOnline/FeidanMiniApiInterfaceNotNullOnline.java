@@ -1599,7 +1599,7 @@ public class FeidanMiniApiInterfaceNotNullOnline {
         return new Object[]{
                 "[list]-channel_id",
                 "[list]-channel_name",
-                "[list]-owner_principal",
+//                "[list]-owner_principal",
                 "[list]-phone",
                 "[list]-register_time",
         };
@@ -1657,7 +1657,7 @@ public class FeidanMiniApiInterfaceNotNullOnline {
         return new Object[]{
                 "[list]-channel_id",
                 "[list]-channel_name",
-                "[list]-owner_principal",
+//                "[list]-owner_principal",
                 "[list]-total_customers",
                 "[list]-register_time",
                 "[list]-rule_id",
