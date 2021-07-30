@@ -65,7 +65,9 @@ public interface IScene {
      * @param visitor 产品
      * @return 接口返回值
      */
-    JSONObject invoke(VisitorProxy visitor);
+    default JSONObject invoke(VisitorProxy visitor) {
+        return invoke(visitor, true);
+    }
 
     /**
      * 上传文件

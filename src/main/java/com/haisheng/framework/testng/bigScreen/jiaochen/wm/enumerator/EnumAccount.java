@@ -29,6 +29,10 @@ public enum EnumAccount {
 
     YT_RECEPTION_ONLINE_5("13406250005", "000000", "全部权限", false, "五号", "5511", "35827"),
 
+    CMS_DAILY("wangmin@winsense.ai", "wangmin", "", true, "wangmin", "", ""),
+
+    CMS_ONLINE("wangmin@winsense.ai", "wangmin", "", true, "wangmin", "", ""),
+
     ;
 
     EnumAccount(String phone, String password, String role, boolean isDaily, String name, String roleId, String receptionShopId) {

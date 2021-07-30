@@ -57,4 +57,12 @@ public interface IRow extends IProperty {
      */
     IField[] findFields(String name);
 
+    /**
+     * 判断行数据是否包含指定键
+     *
+     * @param keyName 键名
+     * @return boolean
+     */
+    boolean containsKey(String keyName);
+
 }

@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
  * @author wangmin
  * @date 2020/9/27
  */
+
 public abstract class BaseScene implements IScene {
     private final static Logger logger = LoggerFactory.getLogger(BaseScene.class);
     @Setter
@@ -73,17 +74,6 @@ public abstract class BaseScene implements IScene {
     @Override
     public JSONObject invoke(@NotNull VisitorProxy visitor, boolean checkCode) {
         return visitor.invokeApi(getPath(), getBody(), checkCode);
-    }
-
-    /**
-     * 提供调用接口的能力
-     *
-     * @param visitor 要执行的产品
-     * @return 接口返回值
-     */
-    @Override
-    public JSONObject invoke(@NotNull VisitorProxy visitor) {
-        return invoke(visitor, true);
     }
 
     /**
