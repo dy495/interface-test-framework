@@ -2768,7 +2768,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                         .quota(10)
                         .subjectType(supporterUtil.getSubjectType())
                         .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                        .label("BARGAIN")
+                        .label("CAR_KNOWLEDGE")
                         .picList(picList)
                         .rule(pp.rule)
                         .registerInformationList(registerInformationList)
@@ -2846,7 +2846,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                         .quota(10)
                         .subjectType(supporterUtil.getSubjectType())
                         .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                        .label("BARGAIN")
+                        .label("CAR_KNOWLEDGE")
                         .picList(picList)
                         .rule(pp.rule)
                         .registerInformationList(registerInformationList)
@@ -2922,7 +2922,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                     .quota(10000)
                     .subjectType(supporterUtil.getSubjectType())
                     .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                    .label("BARGAIN")
+                    .label("CAR_KNOWLEDGE")
                     .picList(picList)
                     .rule(pp.rule)
                     .registerInformationList(registerInformationList)
@@ -2999,7 +2999,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                         .quota(5)
                         .subjectType(supporterUtil.getSubjectType())
                         .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                        .label("BARGAIN")
+                        .label("CAR_KNOWLEDGE")
                         .picList(picList)
                         .rule(rule[i])
                         .registerInformationList(registerInformationList)
@@ -3079,7 +3079,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                         .quota(5)
                         .subjectType(supporterUtil.getSubjectType())
                         .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                        .label("BARGAIN")
+                        .label("CAR_KNOWLEDGE")
                         .picList(picList)
                         .rule(pp.rule)
                         .registerInformationList(registerInformationList)
@@ -3156,7 +3156,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                     .quota(5)
                     .subjectType(supporterUtil.getSubjectType())
                     .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                    .label("BARGAIN")
+                    .label("CAR_KNOWLEDGE")
                     .picList(picList)
                     .rule(pp.rule)
                     .registerInformationList(registerInformationList)
@@ -3228,7 +3228,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                     .quota(10)
                     .subjectType(supporterUtil.getSubjectType())
                     .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                    .label("BARGAIN")
+                    .label("CAR_KNOWLEDGE")
                     .picList(picList)
                     .rule(pp.rule)
                     .registerInformationList(registerInformationList)
@@ -3299,7 +3299,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                     .quota(10)
                     .subjectType(supporterUtil.getSubjectType())
                     .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                    .label("BARGAIN")
+                    .label("CAR_KNOWLEDGE")
                     .picList(picList)
                     .rule(pp.rule)
                     .registerInformationList(registerInformationList)
@@ -3370,7 +3370,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                     .quota(10)
                     .subjectType(supporterUtil.getSubjectType())
                     .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                    .label("BARGAIN")
+                    .label("CAR_KNOWLEDGE")
                     .picList(picList)
                     .rule(pp.rule)
                     .registerInformationList(registerInformationList)
@@ -3498,7 +3498,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                     .quota(10)
                     .subjectType(supporterUtil.getSubjectType())
                     .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                    .label("BARGAIN")
+                    .label("CAR_KNOWLEDGE")
                     .picList(picList)
                     .rule(pp.rule)
                     .registerInformationList(registerInformationList)
@@ -3534,7 +3534,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             chooseLabels.add(100);
             chooseLabels.add(2000);
             chooseLabels.add(3000);
-            String[][] label = {{"PREFERENTIAL", "优惠"}, {"BARGAIN", "特价"}, {"WELFARE", "福利"}, {"RED_PAPER", "红包"}, {"GIFT", "礼品"}, {"SELL_WELL", "热销"}, {"RECOMMEND", "推荐"}};
+            String[][] label = {{"CAR_WELFARE", "车福利"}, {"CAR_INFORMATION", "车资讯"}, {"CAR_LIFE", "车生活"}, {"CAR_ACVITITY", "车活动"}, {"CAR_KNOWLEDGE", "车知识"}};
             for (int i = 0; i < label.length; i++) {
                 System.err.println(label.length + "-------" + 1);
                 SupporterUtil supporterUtil = new SupporterUtil(visitor);
@@ -3626,7 +3626,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                     .quota(10)
                     .subjectType(supporterUtil.getSubjectType())
                     .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                    .label("BARGAIN")
+                    .label("CAR_KNOWLEDGE")
                     .picList(picList)
                     .rule(pp.rule)
                     .registerInformationList(registerInformationList)
@@ -3699,7 +3699,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                     .quota(10)
                     .subjectType(supporterUtil.getSubjectType())
                     .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                    .label("BARGAIN")
+                    .label("CAR_KNOWLEDGE")
                     .picList(picList)
                     .rule(pp.rule)
                     .registerInformationList(registerInformationList)
@@ -3781,7 +3781,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                     .quota(10)
                     .subjectType(supporterUtil.getSubjectType())
                     .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                    .label("BARGAIN")
+                    .label("CAR_KNOWLEDGE")
                     .picList(picList)
                     .rule(pp.rule)
                     .registerInformationList(registerInformationList)
@@ -3875,7 +3875,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                     .quota(10)
                     .subjectType(supporterUtil.getSubjectType())
                     .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                    .label("BARGAIN")
+                    .label("CAR_KNOWLEDGE")
                     .picList(picList)
                     .rule(pp.rule)
                     .registerInformationList(registerInformationList)
@@ -3986,7 +3986,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                     .quota(10)
                     .subjectType(supporterUtil.getSubjectType())
                     .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                    .label("BARGAIN")
+                    .label("CAR_KNOWLEDGE")
                     .picList(picList)
                     .rule(pp.rule)
                     .registerInformationList(registerInformationList)
@@ -4083,7 +4083,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                     .quota(10)
                     .subjectType(supporterUtil.getSubjectType())
                     .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                    .label("BARGAIN")
+                    .label("CAR_KNOWLEDGE")
                     .picList(picList)
                     .rule(pp.rule)
                     .registerInformationList(registerInformationList)
@@ -4145,7 +4145,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             SupporterUtil supporterUtil = new SupporterUtil(visitor);
             List<String> picList = new ArrayList<>();
             picList.add(0, businessUtil.getPicPath());
-            String[][] label = {{"PREFERENTIAL", "优惠"}, {"BARGAIN", "特价"}, {"WELFARE", "福利"}, {"RED_PAPER", "红包"}, {"GIFT", "礼品"}, {"SELL_WELL", "热销"}, {"RECOMMEND", "推荐"}};
+            String[][] label = {{"CAR_WELFARE", "车福利"}, {"CAR_INFORMATION", "车资讯"}, {"CAR_LIFE", "车生活"}, {"CAR_ACVITITY", "车活动"}, {"CAR_KNOWLEDGE", "车知识"}};
             String flag[] = {"012345678901234567891", ""};
             for (int i = 0; i < flag.length; i++) {
                 if (flag[i].equals("012345678901234567891")) {
@@ -4341,7 +4341,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             //编辑已撤销的活动
             List<String> picList = new ArrayList<>();
             picList.add(0, businessUtil.getPicPath());
-            String[][] label = {{"PREFERENTIAL", "优惠"}, {"BARGAIN", "特价"}, {"WELFARE", "福利"}, {"RED_PAPER", "红包"}, {"GIFT", "礼品"}, {"SELL_WELL", "热销"}, {"RECOMMEND", "推荐"}};
+            String[][] label = {{"CAR_WELFARE", "车福利"}, {"CAR_INFORMATION", "车资讯"}, {"CAR_LIFE", "车生活"}, {"CAR_ACVITITY", "车活动"}, {"CAR_KNOWLEDGE", "车知识"}};
             IScene scene = ManageContentMarketingEditScene.builder()
                     .id(ids.get(0))
                     .type(3)
@@ -4465,7 +4465,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             //编辑审核未通过的活动
             List<String> picList = new ArrayList<>();
             picList.add(0, businessUtil.getPicPath());
-            String[][] label = {{"PREFERENTIAL", "优惠"}, {"BARGAIN", "特价"}, {"WELFARE", "福利"}, {"RED_PAPER", "红包"}, {"GIFT", "礼品"}, {"SELL_WELL", "热销"}, {"RECOMMEND", "推荐"}};
+            String[][] label = {{"CAR_WELFARE", "车福利"}, {"CAR_INFORMATION", "车资讯"}, {"CAR_LIFE", "车生活"}, {"CAR_ACVITITY", "车活动"}, {"CAR_KNOWLEDGE", "车知识"}};
             IScene scene = ManageContentMarketingEditScene.builder()
                     .id(ids.get(0))
                     .type(3)

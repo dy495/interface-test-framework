@@ -725,11 +725,11 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     @DataProvider(name = "ARTICLE") //要补充
     public Object[] article() {
         return new String[][]{
-                {"1234", "ONE_BIG", info.stringone, "RED_PAPER"},
-                {info.stringten, "ONE_BIG", info.stringfifty, "PREFERENTIAL"},
-                {info.string20, "ONE_LEFT", info.stringten, "BARGAIN"},
-                {info.stringten, "ONE_LEFT", info.stringlong, "WELFARE"},
-                {info.stringsix, "ONE_LEFT", info.stringlong, "GIFT"},
+                {"1234", "ONE_BIG", info.stringone, "CAR_WELFARE"},
+                {info.stringten, "ONE_BIG", info.stringfifty, "CAR_INFORMATION"},
+                {info.string20, "ONE_LEFT", info.stringten, "CAR_LIFE"},
+                {info.stringten, "ONE_LEFT", info.stringlong, "CAR_ACVITITY"},
+                {info.stringsix, "ONE_LEFT", info.stringlong, "CAR_KNOWLEDGE"},
 
         };
     }
