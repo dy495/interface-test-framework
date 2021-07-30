@@ -478,7 +478,7 @@ public class BusinessUtilOnline {
                     .quota(10)
                     .subjectType(supporterUtil.getSubjectType())
                     .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                    .label("BARGAIN")
+                    .label("CAR_WELFARE")
                     .picList(picList)
                     .rule(pp.rule)
                     .registerInformationList(registerInformationList)
@@ -514,7 +514,7 @@ public class BusinessUtilOnline {
                     .quota(10)
                     .subjectType(supporterUtil.getSubjectType())
                     .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                    .label("BARGAIN")
+                    .label("CAR_WELFARE")
                     .picList(picList)
                     .rule(pp.rule)
                     .registerInformationList(registerInformationList)
@@ -579,7 +579,7 @@ public class BusinessUtilOnline {
                 .quota(10)
                 .subjectType(supporterUtil.getSubjectType())
                 .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                .label("BARGAIN")
+                .label("CAR_WELFARE")
                 .picList(picList)
                 .rule(pp.rule)
                 .registerInformationList(registerInformationList)
@@ -642,7 +642,7 @@ public class BusinessUtilOnline {
                 .quota(10)
                 .subjectType(supporterUtil.getSubjectType())
                 .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                .label("BARGAIN")
+                .label("CAR_WELFARE")
                 .picList(picList)
                 .rule(pp.rule)
                 .registerInformationList(registerInformationList)
@@ -2398,7 +2398,7 @@ public class BusinessUtilOnline {
         SupporterUtil supporterUtil = new SupporterUtil(visitor);
         List<String> picList = new ArrayList<>();
         picList.add(0, getPicPath());
-        String[][] label = {{"PREFERENTIAL", "优惠"}, {"BARGAIN", "特价"}, {"WELFARE", "福利"}, {"RED_PAPER", "红包"}, {"GIFT", "礼品"}, {"SELL_WELL", "热销"}, {"RECOMMEND", "推荐"}};
+        String[][] label = {{"CAR_WELFARE", "车福利"}, {"CAR_INFORMATION", "车资讯"}, {"CAR_LIFE", "车生活"}, {"CAR_ACVITITY", "车活动"}, {"CAR_KNOWLEDGE", "车知识"}};
         IScene scene =ManageContentMarketingAddScene.builder()
                 .type(3)
                 .participationLimitType(participationType)
@@ -2423,7 +2423,7 @@ public class BusinessUtilOnline {
         SupporterUtil supporterUtil = new SupporterUtil(visitor);
         List<String> picList = new ArrayList<>();
         picList.add(0, getPicPath());
-        String[][] label = {{"PREFERENTIAL", "优惠"}, {"BARGAIN", "特价"}, {"WELFARE", "福利"}, {"RED_PAPER", "红包"}, {"GIFT", "礼品"}, {"SELL_WELL", "热销"}, {"RECOMMEND", "推荐"}};
+        String[][] label = {{"CAR_WELFARE", "车福利"}, {"CAR_INFORMATION", "车资讯"}, {"CAR_LIFE", "车生活"}, {"CAR_ACVITITY", "车活动"}, {"CAR_KNOWLEDGE", "车知识"}};
         IScene scene =ManageContentMarketingAddScene.builder()
                 .type(3)
                 .participationLimitType(0)
@@ -2447,7 +2447,7 @@ public class BusinessUtilOnline {
         SupporterUtil supporterUtil = new SupporterUtil(visitor);
         List<String> picList = new ArrayList<>();
         picList.add(0, getPicPath());
-        String[][] label = {{"PREFERENTIAL", "优惠"}, {"BARGAIN", "特价"}, {"WELFARE", "福利"}, {"RED_PAPER", "红包"}, {"GIFT", "礼品"}, {"SELL_WELL", "热销"}, {"RECOMMEND", "推荐"}};
+        String[][] label = {{"CAR_WELFARE", "车福利"}, {"CAR_INFORMATION", "车资讯"}, {"CAR_LIFE", "车生活"}, {"CAR_ACVITITY", "车活动"}, {"CAR_KNOWLEDGE", "车知识"}};
         IScene scene =ManageContentMarketingAddScene.builder()
                 .type(3)
                 .participationLimitType(0)
@@ -2632,7 +2632,7 @@ public class BusinessUtilOnline {
         SupporterUtil supporterUtil = new SupporterUtil(visitor);
         List<String> picList = new ArrayList<>();
         picList.add(0, getPicPath());
-        String[][] label = {{"PREFERENTIAL", "优惠"}, {"BARGAIN", "特价"}, {"WELFARE", "福利"}, {"RED_PAPER", "红包"}, {"GIFT", "礼品"}, {"SELL_WELL", "热销"}, {"RECOMMEND", "推荐"}};
+        String[][] label = {{"CAR_WELFARE", "车福利"}, {"CAR_INFORMATION", "车资讯"}, {"CAR_LIFE", "车生活"}, {"CAR_ACVITITY", "车活动"}, {"CAR_KNOWLEDGE", "车知识"}};
         IScene scene =ManageContentMarketingEditScene.builder()
                 .id(id)
                 .type(3)
