@@ -3,10 +3,16 @@ package com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.zt;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.google.gson.JsonArray;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.equipmentmanagement.auth.AllDeviceListScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.equipmentmanagement.device.DevicePageScene;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.pc.integralmall.BrandPageScene;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.pc.integralmall.CreateBrandScene;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.pc.integralmall.DeleteBrandScene;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.pc.vouchermanage.VoucherFormVoucherPageScene;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.punchclockandsignrule.PunchClockAndSignRuleUpdateScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.shop.collection.AddScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.shop.collection.CancelScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.shop.collection.ShopDeviceListScene;
@@ -15,6 +21,10 @@ import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.*;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
 import com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.hqq.StorePcAndAppData;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.vouchermanage.VoucherManageVoucherDetailScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.vouchermanage.VoucherManageVoucherListScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.integralmall.BrandPageBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -27,7 +37,9 @@ import org.slf4j.LoggerFactory;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.Random;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -38,6 +50,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
     public SupporterUtil util = new SupporterUtil(visitor);
     public static final int page = 1;
     public static final int size = 100;
+    public static final int s =(int) (Math.random() * 10000);
     XundianScenarioUtil xd = XundianScenarioUtil.getInstance();
     StoreScenarioUtil md = StoreScenarioUtil.getInstance();
     MendianInfo info = new MendianInfo();
@@ -837,6 +850,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "[视频监控]运行中状态下展示的设备全部都是可用的,1")
     public void videoAvailable1(){
+        logger.logCaseStart(caseResult.getCaseName());
         try{
             //获取视频监控中进行中设备列表
             JSONArray list = AllDeviceListScene.builder().available(1).build().invoke(visitor,true).getJSONArray("list");
@@ -859,6 +873,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "[视频监控]不可用状态下展示的设备全部都是不可用的,0")
     public void videoAvailable0(){
+        logger.logCaseStart(caseResult.getCaseName());
         try{
             //获取视频监控中进行中设备列表
             JSONArray list = AllDeviceListScene.builder().available(0).build().invoke(visitor,true).getJSONArray("list");
@@ -881,6 +896,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "[视频监控]收藏栏下的门店全部都是以收藏的")
     public void collectionShop(){
+        logger.logCaseStart(caseResult.getCaseName());
         try{
         JSONArray list = ShopDeviceListScene.builder().build().invoke(visitor,true).getJSONArray("list");
         for (int i = 0; i<list.size(); i++){
@@ -896,6 +912,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
     }
     @Test(description = "[视频监控]收藏门店")
     public void addCollectedShop(){
+        logger.logCaseStart(caseResult.getCaseName());
         try{
             JSONArray list = AllDeviceListScene.builder().build().invoke(visitor,true).getJSONArray("list");
             for(int i = 0; i<list.size(); i++){
@@ -916,6 +933,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "[视频监控]取消收藏门店")
     public void cancelCollectionShop(){
+        logger.logCaseStart(caseResult.getCaseName());
         try{
             JSONArray list = ShopDeviceListScene.builder().build().invoke(visitor,true).getJSONArray("list");
             for(int i = 0; i<list.size(); i++){
@@ -932,6 +950,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "[视频监控]门店名称筛选框")
     public void authAllDeviceList(){
+        logger.logCaseStart(caseResult.getCaseName());
         try{
             JSONArray list = AllDeviceListScene.builder().build().invoke(visitor,true).getJSONArray("list");
             for (int i=0; i<list.size() ; i++){
@@ -950,6 +969,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "[视频监控]播放视频")
     public void deviceLive(){
+        logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray list = AllDeviceListScene.builder().build().invoke(visitor,true).getJSONArray("list");
             for (int i = 0; i<list.size() ; i++){
@@ -969,6 +989,167 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         }
         saveData("[视频监控]播放视频");
+    }
+
+    @Test(dataProvider = "updatetype" , dataProviderClass = DataProviderMethod.class,description = "签到-打卡-自然月、自然周，累计天数和连续天数初始配置")
+    public void punchclockandsignrule(String date,String punch){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray voucher_list = VoucherFormVoucherPageScene.builder()
+                    .voucherStatus("WORKING").build().invoke(visitor, true).getJSONArray("list");
+                long voucher_id = voucher_list.getJSONObject(0).getLong("id");
+                String[] types = {"TOTAL","CONTINUE"};
+                Arrays.stream(types).forEach(type -> {
+                    JSONObject res = PunchClockAndSignRuleUpdateScene.builder()
+                            .cycleType(date)
+                            .initIntegral(s)
+                            .punchOrSignType(punch)
+                            .type(type)
+                            .initCouponId(voucher_id)
+                            .build()
+                            .invoke(visitor, false);
+                    Preconditions.checkArgument(res.getInteger("code").equals(1000), "新建初始奖励失败，失败原因" + res.getString("message"));
+                });
+        }catch (AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }
+        saveData("签到-打卡-自然月、自然周，累计天数和连续天数初始配置");
+    }
+
+
+    @Test(dataProvider = "updatetype" , dataProviderClass = DataProviderMethod.class,description = "签到-打卡-天数设置")
+    public void punchclockandsignrule1(String date,String punch){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray voucher_list = VoucherFormVoucherPageScene.builder()
+                    .voucherStatus("WORKING").build().invoke(visitor, true).getJSONArray("list");
+            long voucher_id = voucher_list.getJSONObject(0).getLong("id");
+            String[] types = {"TOTAL","CONTINUE"};
+            Arrays.stream(types).forEach(type -> {
+                JSONObject res = PunchClockAndSignRuleUpdateScene.builder()
+                        .cycleType(date)
+                        .initIntegral(s)
+                        .punchOrSignType(punch)
+                        .type(type)
+                        .ruleDaysList(util.getRuledays())
+                        .initCouponId(voucher_id)
+                        .build()
+                        .invoke(visitor, false);
+                Preconditions.checkArgument(res.getInteger("code").equals(1000), "新建初始奖励失败，失败原因" + res.getString("message"));
+            });
+        }catch (AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }
+        saveData("签到-打卡-天数设置");
+    }
+
+    @Test(dataProvider = "updatetype" , dataProviderClass = DataProviderMethod.class,description = "签到-打卡-固定周期")
+    public void punchclockandsignrule2(String date,String punch){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray voucher_list = VoucherFormVoucherPageScene.builder()
+                    .voucherStatus("WORKING").build().invoke(visitor, true).getJSONArray("list");
+            long voucher_id = voucher_list.getJSONObject(0).getLong("id");
+            String[] types = {"TOTAL","CONTINUE"};
+            Arrays.stream(types).forEach(type -> {
+                JSONObject res = PunchClockAndSignRuleUpdateScene.builder()
+                        .cycleType(date)
+                        .initIntegral(s)
+                        .punchOrSignType(punch)
+                        .type(type)
+                        .ruleDaysList(util.getRuledays())
+                        .anniversaryList(util.fixed())
+                        .initCouponId(voucher_id)
+                        .build()
+                        .invoke(visitor, false);
+                Preconditions.checkArgument(res.getInteger("code").equals(1000), "新建初始奖励失败，失败原因" + res.getString("message"));
+            });
+        }catch (AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }
+        saveData("签到-打卡-固定周期");
+    }
+
+    @Test(dataProvider = "updatetype" , dataProviderClass = DataProviderMethod.class,description = "签到-打卡-动态周期")
+    public void punchclockandsignrule3(String date,String punch){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray voucher_list = VoucherFormVoucherPageScene.builder()
+                    .voucherStatus("WORKING").build().invoke(visitor, true).getJSONArray("list");
+            long voucher_id = voucher_list.getJSONObject(0).getLong("id");
+            String[] types = {"TOTAL","CONTINUE"};
+            Arrays.stream(types).forEach(type -> {
+                JSONObject res = PunchClockAndSignRuleUpdateScene.builder()
+                        .cycleType(date)
+                        .initIntegral(s)
+                        .punchOrSignType(punch)
+                        .type(type)
+                        .ruleDaysList(util.getRuledays())
+                        .anniversaryList(util.dynamic())
+                        .initCouponId(voucher_id)
+                        .build()
+                        .invoke(visitor, false);
+                Preconditions.checkArgument(res.getInteger("code").equals(1000), "新建初始奖励失败，失败原因" + res.getString("message"));
+            });
+        }catch (AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }
+        saveData("签到-打卡-动态周期");
+    }
+
+    @Test(dataProvider = "updatetype" , dataProviderClass = DataProviderMethod.class,description = "签到-打卡-周期日期-月")
+    public void punchclockandsignrule4(String date,String punch){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray voucher_list = VoucherFormVoucherPageScene.builder()
+                    .voucherStatus("WORKING").build().invoke(visitor, true).getJSONArray("list");
+            long voucher_id = voucher_list.getJSONObject(0).getLong("id");
+            String[] types = {"TOTAL","CONTINUE"};
+            Arrays.stream(types).forEach(type -> {
+                JSONObject res = PunchClockAndSignRuleUpdateScene.builder()
+                        .cycleType(date)
+                        .initIntegral(s)
+                        .punchOrSignType(punch)
+                        .type(type)
+                        .ruleDaysList(util.getRuledays())
+                        .anniversaryList(util.cyclemonth())
+                        .initCouponId(voucher_id)
+                        .build()
+                        .invoke(visitor, false);
+                Preconditions.checkArgument(res.getInteger("code").equals(1000), "新建初始奖励失败，失败原因" + res.getString("message"));
+            });
+        }catch (AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }
+        saveData("签到-打卡-周期日期-月");
+    }
+
+    @Test(dataProvider = "updatetype" , dataProviderClass = DataProviderMethod.class,description = "签到-打卡-周期日期-周")
+    public void punchclockandsignrule5(String date,String punch){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray voucher_list = VoucherFormVoucherPageScene.builder()
+                    .voucherStatus("WORKING").build().invoke(visitor, true).getJSONArray("list");
+            long voucher_id = voucher_list.getJSONObject(0).getLong("id");
+            String[] types = {"TOTAL","CONTINUE"};
+            Arrays.stream(types).forEach(type -> {
+                JSONObject res = PunchClockAndSignRuleUpdateScene.builder()
+                        .cycleType(date)
+                        .initIntegral(s)
+                        .punchOrSignType(punch)
+                        .type(type)
+                        .ruleDaysList(util.getRuledays())
+                        .anniversaryList(util.cycleweek())
+                        .initCouponId(voucher_id)
+                        .build()
+                        .invoke(visitor, false);
+                Preconditions.checkArgument(res.getInteger("code").equals(1000), "新建初始奖励失败，失败原因" + res.getString("message"))
+                ;
+            });
+        }catch (AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }
+        saveData("签到-打卡-周期日期-周");
     }
 //    //会员信息列表通过会员id和会员姓名+联系电话+人物id+会员身份筛选
 //    @Test()

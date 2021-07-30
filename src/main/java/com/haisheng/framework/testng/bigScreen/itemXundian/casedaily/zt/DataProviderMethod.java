@@ -171,4 +171,14 @@ public class DataProviderMethod {
 
         };
     }
+
+    @DataProvider(name = "updatetype")
+    public static Object[] updatetype(){
+        return new String[][]{
+                {"WEEK","PUNCH_CLOCK"},
+                {"MONTH","PUNCH_CLOCK"},
+                {"WEEK","SIGN_IN"},
+                {"MONTH","SIGN_IN"},
+        };
+    }
 }

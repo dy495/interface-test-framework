@@ -958,6 +958,94 @@ public class SupporterUtil extends BasicUtil {
     }
 
 
+    public JSONArray getRuledays() {
+        JSONArray voucher_list = VoucherFormVoucherPageScene.builder()
+                .voucherStatus("WORKING").build().invoke(visitor, true).getJSONArray("list");
+        long voucher_id = voucher_list.getJSONObject(0).getLong("id");
+        JSONArray RuleDaysList = new JSONArray();
+        JSONObject Rule1= new JSONObject();
+        Rule1.put("days", "1");
+        Rule1.put("coupon_id", voucher_id);
+        Rule1.put("integral", "100");
+        JSONObject Rule2= new JSONObject();
+        Rule2.put("days", "2");
+        Rule2.put("coupon_id", voucher_id);
+        Rule2.put("integral", "200");
+        JSONObject Rule3= new JSONObject();
+        Rule3.put("days", "3");
+        Rule3.put("coupon_id", voucher_id);
+        Rule3.put("integral", "300");
+        JSONObject Rule4= new JSONObject();
+        Rule4.put("days", "7");
+        Rule4.put("coupon_id", voucher_id);
+        Rule4.put("integral", "700");
+        RuleDaysList.add(Rule1);
+        RuleDaysList.add(Rule2);
+        RuleDaysList.add(Rule3);
+        RuleDaysList.add(Rule4);
+        return RuleDaysList;
+    }
+    public JSONArray fixed() {
+        JSONArray voucher_list = VoucherFormVoucherPageScene.builder()
+                .voucherStatus("WORKING").build().invoke(visitor, true).getJSONArray("list");
+        long voucher_id = voucher_list.getJSONObject(0).getLong("id");
+        JSONArray RuleDaysList = new JSONArray();
+        JSONObject Rule = new JSONObject();
+        Rule.put("coupon_id", voucher_id);
+        Rule.put("date",DateTimeUtil.getFormat(new Date(),"yyyy-MM-dd"));
+        Rule.put("integral","200");
+        Rule.put("name","自动化创建固定日期");
+        Rule.put("type","FIXED");
+        RuleDaysList.add(Rule);
+        return RuleDaysList;
+    }
+
+    public JSONArray dynamic() {
+        JSONArray voucher_list = VoucherFormVoucherPageScene.builder()
+                .voucherStatus("WORKING").build().invoke(visitor, true).getJSONArray("list");
+        long voucher_id = voucher_list.getJSONObject(0).getLong("id");
+        JSONArray RuleDaysList = new JSONArray();
+        JSONObject Rule = new JSONObject();
+        Rule.put("coupon_id", voucher_id);
+        Rule.put("integral","200");
+        Rule.put("name","自动化创建生日日期");
+        Rule.put("type","DYNAMIC");
+        Rule.put("dynamic_type","BIRTHDAY");
+        RuleDaysList.add(Rule);
+        return RuleDaysList;
+    }
+    public JSONArray cyclemonth() {
+        JSONArray voucher_list = VoucherFormVoucherPageScene.builder()
+                .voucherStatus("WORKING").build().invoke(visitor, true).getJSONArray("list");
+        long voucher_id = voucher_list.getJSONObject(0).getLong("id");
+        JSONArray RuleDaysList = new JSONArray();
+        JSONObject Rule = new JSONObject();
+        Rule.put("coupon_id", voucher_id);
+        Rule.put("cycle_type","MONTH");
+        Rule.put("date","1");
+        Rule.put("integral","200");
+        Rule.put("name","自动化周期日期按月");
+        Rule.put("type","CYCLE");
+        RuleDaysList.add(Rule);
+        return RuleDaysList;
+    }
+
+    public JSONArray cycleweek() {
+        JSONArray voucher_list = VoucherFormVoucherPageScene.builder()
+                .voucherStatus("WORKING").build().invoke(visitor, true).getJSONArray("list");
+        long voucher_id = voucher_list.getJSONObject(0).getLong("id");
+        JSONArray RuleDaysList = new JSONArray();
+        JSONObject Rule = new JSONObject();
+        Rule.put("coupon_id", voucher_id);
+        Rule.put("cycle_type","WEEK");
+        Rule.put("date","MONDAY");
+        Rule.put("integral","200");
+        Rule.put("name","自动化周期日期按周");
+        Rule.put("type","CYCLE");
+        RuleDaysList.add(Rule);
+        return RuleDaysList;
+    }
+
     //--------------------------------------------------banner----------------------------------------------------
 
     /**
