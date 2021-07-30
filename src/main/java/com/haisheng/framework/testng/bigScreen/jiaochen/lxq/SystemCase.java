@@ -746,7 +746,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             jc.topArticle(id);
             //登陆小程序查看
             jc.appletLoginToken(EnumAppletToken.JC_LXQ_DAILY.getToken());
-            Long search_list = jc.appletArticleList(null, null).getJSONArray("list").getJSONObject(0).getLong("list");
+            Long search_list = jc.appletArticleList(null, null,"CAR_WELFARE").getJSONArray("list").getJSONObject(0).getLong("list");
 
             Preconditions.checkArgument(id == search_list, "置顶后不在小程序首位");
         } catch (AssertionError e) {
@@ -2334,11 +2334,11 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     public void exchangeDetailFilter1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String name = jc.exchangeDetail(1, 1, null, null, null, null, null).getJSONArray("list").getJSONObject(0).getString("exchange_customer_name");
+            String name = jc.exchangeDetail(1, 1, null, null, null, null, null).getJSONArray("list").getJSONObject(0).getString("exchange_customer_name").toUpperCase();
             JSONArray list = jc.exchangeDetail(1, 50, null, name, null, null, null).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 JSONObject obj = list.getJSONObject(i);
-                String searchname = obj.getString("exchange_customer_name");
+                String searchname = obj.getString("exchange_customer_name").toUpperCase();
                 Preconditions.checkArgument(searchname.contains(name), "搜索结果包含" + searchname);
             }
         } catch (AssertionError e) {

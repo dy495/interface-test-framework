@@ -23,10 +23,7 @@ import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
@@ -607,22 +604,34 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :首页文章10个
+     * @description :首页文章20个
      * @date :2020/12/16 19:47
      **/
-    @Test()
-    public void appletArticleList() {
+    @Test(dataProvider = "TYPE")
+    public void appletArticleList(String lable, String mess) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             jc.appletLoginToken(pp.appletTocken);
-            JSONArray list = jc.appletArticleList("10", null).getJSONArray("list");
-            Preconditions.checkArgument(list.size() <= 10, "首页文章超过了10");
+            JSONArray list = jc.appletArticleList("20", null,lable).getJSONArray("list");
+            Preconditions.checkArgument(list.size() <= 10, "首页"+mess+"文章超过了10");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("小程序活动首页最多10个");
+            saveData("小程序活动首页最多20个");
         }
+    }
+
+    @DataProvider(name = "TYPE")
+    public Object[] type() {
+        return new Object[][]{
+                {"CAR_WELFARE", "车福利"},
+                {"CAR_INFORMATION", "车资讯"},
+                {"CAR_LIFE", "车生活"},
+                {"CAR_ACVITITY", "车活动"},
+                {"CAR_KNOWLEDGE", "车知识"}
+
+        };
     }
 
     @Test(description = "自主核销异常验证")

@@ -1111,7 +1111,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                     .endDate(businessUtil.getEndDate())
                     .subjectType(subject)
                     .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                    .label("RED_PAPER")
+                    .label("CAR_WELFARE")
                     .picList(picList)
                     .applyStart(businessUtil.getStartDate())
                     .applyEnd(businessUtil.getEndDate())
@@ -1152,7 +1152,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(participationLimitType.equals("0") && quota.equals("2"), "已撤销的活动编辑失败2");
             Preconditions.checkArgument(startDate.equals(businessUtil.getStartDate()) && endDate.equals(businessUtil.getEndDate()), "已撤销的活动编辑失败3");
             Preconditions.checkArgument(applyStart.equals(businessUtil.getStartDate()) && applyEnd.equals(businessUtil.getEndDate()), "已撤销的活动编辑失败4");
-            Preconditions.checkArgument(subjectType.equals(subject) && label.equals("RED_PAPER"), "已撤销的活动编辑失败5");
+            Preconditions.checkArgument(subjectType.equals(subject) && label.equals("CAR_WELFARE"), "已撤销的活动编辑失败5");
 //            Preconditions.checkArgument(picName.contains("活动.jpeg"), "已撤销的活动编辑失败");
             Preconditions.checkArgument(address.equals("呀呀呀呀呀呀呀呀呀呀地址") && id.equals(voucherId) && approval.equals("true"), "已撤销的活动编辑失败6");
             Preconditions.checkArgument(content.equals("编辑活动"), "变更记录中的变更事项没有更新");
@@ -1283,7 +1283,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                     .endDate(businessUtil.getEndDate())
                     .subjectType(subject)
                     .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                    .label("RED_PAPER")
+                    .label("CAR_WELFARE")
                     .picList(picList)
                     .applyStart(businessUtil.getStartDate())
                     .applyEnd(businessUtil.getEndDate())
@@ -1325,7 +1325,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(participationLimitType.equals("0") && quota.equals("2"), "审核未通过的活动编辑失败2");
             Preconditions.checkArgument(startDate.equals(businessUtil.getStartDate()) && endDate.equals(businessUtil.getEndDate()), "审核未通过的活动编辑失败3");
             Preconditions.checkArgument(applyStart.equals(businessUtil.getStartDate()) && applyEnd.equals(businessUtil.getEndDate()), "审核未通过的活动编辑失败4");
-            Preconditions.checkArgument(subjectType.equals(subject) && label.equals("RED_PAPER"), "审核未通过的活动编辑失败5");
+            Preconditions.checkArgument(subjectType.equals(subject) && label.equals("CAR_WELFARE"), "审核未通过的活动编辑失败5");
 //            Preconditions.checkArgument(picName.contains("活动.jpeg"), "审核未通过的活动编辑失败");
             Preconditions.checkArgument(address.equals("呀呀呀呀呀呀呀呀呀呀地址") && id.equals(voucherId) && approval.equals("true"), "审核未通过的活动编辑失败6");
             Preconditions.checkArgument(content.equals("编辑活动"), "变更记录中的变更事项没有更新");
@@ -1862,7 +1862,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                     .endDate(endTime)
                     .subjectType(subject)
                     .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                    .label("RED_PAPER")
+                    .label("CAR_WELFARE")
                     .picList(picList)
                     .shareNum("2")
                     .shareVoucher(shareVoucher)
@@ -1892,7 +1892,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(message.equals("success") && title.contains("编辑过的裂变活动") && rule.equals(pp.EditFissionRule), "已撤销的活动编辑失败1");
             Preconditions.checkArgument(participationLimitType.equals("0") && receiveLimitType.equals("0"), "已撤销的活动编辑失败2");
             Preconditions.checkArgument(startDate.equals(startTime) && endDate.equals(endTime), "已撤销的活动编辑失败3" + startDate + "   " + startTime + "   " + endDate + "   " + endTime);
-            Preconditions.checkArgument(shareNum.equals("2") && subjectType.equals(subject) && label.equals("RED_PAPER"), "已撤销的活动编辑失败4");
+            Preconditions.checkArgument(shareNum.equals("2") && subjectType.equals(subject) && label.equals("CAR_WELFARE"), "已撤销的活动编辑失败4");
 //            Preconditions.checkArgument(picName.contains("活动.jpeg"), "已撤销的活动编辑失败");
             Preconditions.checkArgument(voucherId.equals(invitedVoucherId) && shareVoucherId.equals(voucherId), "已撤销的活动编辑失败5  " + voucherId + "   " + voucherId + "    " + shareVoucherId);
             Preconditions.checkArgument(content.equals("编辑活动"), "变更记录中的变更事项没有更新");
@@ -2006,7 +2006,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                     .endDate(endTime)
                     .subjectType(subject)
                     .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                    .label("RED_PAPER")
+                    .label("CAR_WELFARE")
                     .picList(picList)
                     .shareNum("2")
                     .shareVoucher(shareVoucher)
@@ -2036,7 +2036,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(message.equals("success") && title.contains("编辑过的裂变活动") && rule.equals(pp.EditFissionRule), "已撤销的活动编辑失败1");
             Preconditions.checkArgument(participationLimitType.equals("0") && receiveLimitType.equals("0"), "已撤销的活动编辑失败2");
             Preconditions.checkArgument(startDate.equals(startTime) && endDate.equals(endTime), "已撤销的活动编辑失败3" + startDate + "   " + startTime + "   " + endDate + "   " + endTime);
-            Preconditions.checkArgument(shareNum.equals("2") && subjectType.equals(subject) && label.equals("RED_PAPER"), "已撤销的活动编辑失败4");
+            Preconditions.checkArgument(shareNum.equals("2") && subjectType.equals(subject) && label.equals("CAR_WELFARE"), "已撤销的活动编辑失败4");
 //            Preconditions.checkArgument(picName.contains("活动.jpeg"), "已撤销的活动编辑失败");
             Preconditions.checkArgument(voucherId.equals(invitedVoucherId) && shareVoucherId.equals(voucherId), "已撤销的活动编辑失败5  " + voucherId + "   " + voucherId + "    " + shareVoucherId);
             Preconditions.checkArgument(content.equals("编辑活动"), "变更记录中的变更事项没有更新");
@@ -2428,7 +2428,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                             .endDate(businessUtil.getEndDate())
                             .subjectType(supporterUtil.getSubjectType())
                             .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                            .label("RED_PAPER")
+                            .label("CAR_WELFARE")
                             .picList(picList)
                             .shareNum("3")
                             .shareVoucher(shareVoucher)
@@ -2473,7 +2473,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                         .endDate(businessUtil.getEndDate())
                         .subjectType(supporterUtil.getSubjectType())
                         .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                        .label("RED_PAPER")
+                        .label("CAR_WELFARE")
                         .picList(picList)
                         .shareNum("3")
                         .shareVoucher(shareVoucher)
@@ -2517,7 +2517,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                         .endDate(businessUtil.getEndDate())
                         .subjectType(supporterUtil.getSubjectType())
                         .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                        .label("RED_PAPER")
+                        .label("CAR_WELFARE")
                         .picList(picList)
                         .shareNum(shareNum[i])
                         .shareVoucher(shareVoucher)
@@ -2561,7 +2561,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                         .endDate(businessUtil.getEndDate())
                         .subjectType(supporterUtil.getSubjectType())
                         .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                        .label("RED_PAPER")
+                        .label("CAR_WELFARE")
                         .picList(picList)
                         .shareNum("3")
                         .shareVoucher(shareVoucher)
@@ -2602,7 +2602,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                     .endDate(businessUtil.getEndDate())
                     .subjectType(supporterUtil.getSubjectType())
                     .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                    .label("RED_PAPER")
+                    .label("CAR_WELFARE")
                     .picList(picList)
                     .shareNum("3")
                     .shareVoucher(shareVoucher)
@@ -2669,7 +2669,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                         .endDate(businessUtil.getEndDate())
                         .subjectType(supporterUtil.getSubjectType())
                         .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                        .label("RED_PAPER")
+                        .label("CAR_WELFARE")
                         .picList(picList)
                         .shareNum("3")
                         .shareVoucher(shareVoucher)
@@ -2715,7 +2715,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                         .endDate(businessUtil.getEndDate())
                         .subjectType(supporterUtil.getSubjectType())
                         .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                        .label("RED_PAPER")
+                        .label("CAR_WELFARE")
                         .picList(picList)
                         .shareNum("3")
                         .shareVoucher(shareVoucher)
@@ -2780,7 +2780,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                     .quota(10)
                     .subjectType(supporterUtil.getSubjectType())
                     .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                    .label("BARGAIN")
+                    .label("CAR_INFORMATION")
                     .picList(picList)
                     .rule(pp.rule)
                     .registerInformationList(registerInformationList)
@@ -2829,7 +2829,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                     .endDate(businessUtil.getEndDate())
                     .subjectType(supporterUtil.getSubjectType())
                     .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                    .label("RED_PAPER")
+                    .label("CAR_WELFARE")
                     .picList(picList)
                     .shareNum("3")
                     .shareVoucher(shareVoucher)
@@ -2906,7 +2906,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                         .quota(10)
                         .subjectType(supporterUtil.getSubjectType())
                         .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                        .label("BARGAIN")
+                        .label("CAR_INFORMATION")
                         .picList(picList)
                         .rule(pp.rule)
                         .registerInformationList(registerInformationList)
@@ -2983,7 +2983,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                         .quota(10)
                         .subjectType(supporterUtil.getSubjectType())
                         .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                        .label("BARGAIN")
+                        .label("CAR_INFORMATION")
                         .picList(picList)
                         .rule(pp.rule)
                         .registerInformationList(registerInformationList)
@@ -3059,7 +3059,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                     .quota(10000)
                     .subjectType(supporterUtil.getSubjectType())
                     .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                    .label("BARGAIN")
+                    .label("CAR_INFORMATION")
                     .picList(picList)
                     .rule(pp.rule)
                     .registerInformationList(registerInformationList)
@@ -3136,7 +3136,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                         .quota(5)
                         .subjectType(supporterUtil.getSubjectType())
                         .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                        .label("BARGAIN")
+                        .label("CAR_INFORMATION")
                         .picList(picList)
                         .rule(rule[i])
                         .registerInformationList(registerInformationList)
@@ -3216,7 +3216,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                         .quota(5)
                         .subjectType(supporterUtil.getSubjectType())
                         .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                        .label("BARGAIN")
+                        .label("CAR_INFORMATION")
                         .picList(picList)
                         .rule(pp.rule)
                         .registerInformationList(registerInformationList)
@@ -3293,7 +3293,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                     .quota(5)
                     .subjectType(supporterUtil.getSubjectType())
                     .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                    .label("BARGAIN")
+                    .label("CAR_INFORMATION")
                     .picList(picList)
                     .rule(pp.rule)
                     .registerInformationList(registerInformationList)
@@ -3365,7 +3365,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                     .quota(10)
                     .subjectType(supporterUtil.getSubjectType())
                     .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                    .label("BARGAIN")
+                    .label("CAR_INFORMATION")
                     .picList(picList)
                     .rule(pp.rule)
                     .registerInformationList(registerInformationList)
@@ -3436,7 +3436,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                     .quota(10)
                     .subjectType(supporterUtil.getSubjectType())
                     .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                    .label("BARGAIN")
+                    .label("CAR_INFORMATION")
                     .picList(picList)
                     .rule(pp.rule)
                     .registerInformationList(registerInformationList)
@@ -3491,7 +3491,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                     .endDate(businessUtil.getEndDate())
                     .subjectType(supporterUtil.getSubjectType())
                     .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                    .label("RED_PAPER")
+                    .label("CAR_WELFARE")
                     .picList(picList)
                     .shareNum("3")
                     .shareVoucher(shareVoucher)
@@ -3560,7 +3560,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                     .quota(10)
                     .subjectType(supporterUtil.getSubjectType())
                     .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                    .label("BARGAIN")
+                    .label("CAR_INFORMATION")
                     .picList(picList)
                     .rule(pp.rule)
                     .registerInformationList(registerInformationList)
@@ -3596,7 +3596,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             chooseLabels.add(100);
             chooseLabels.add(2000);
             chooseLabels.add(3000);
-            String[][] label = {{"PREFERENTIAL", "优惠"}, {"BARGAIN", "特价"}, {"WELFARE", "福利"}, {"RED_PAPER", "红包"}, {"GIFT", "礼品"}, {"SELL_WELL", "热销"}, {"RECOMMEND", "推荐"}};
+            String[][] label = {{"CAR_WELFARE", "车福利"}, {"CAR_INFORMATION", "车资讯"}, {"CAR_LIFE", "车生活"}, {"CAR_ACVITITY", "车活动"}, {"CAR_KNOWLEDGE", "车知识"}};
             for (int i = 0; i < label.length; i++) {
                 System.err.println(label.length + "-------" + 1);
                 SupporterUtil supporterUtil = new SupporterUtil(visitor);
@@ -3688,7 +3688,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                     .quota(10)
                     .subjectType(supporterUtil.getSubjectType())
                     .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                    .label("BARGAIN")
+                    .label("CAR_INFORMATION")
                     .picList(picList)
                     .rule(pp.rule)
                     .registerInformationList(registerInformationList)
@@ -3763,7 +3763,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                     .quota(10)
                     .subjectType(supporterUtil.getSubjectType())
                     .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                    .label("BARGAIN")
+                    .label("CAR_INFORMATION")
                     .picList(picList)
                     .rule(pp.rule)
                     .registerInformationList(registerInformationList)
@@ -3846,7 +3846,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                     .quota(10)
                     .subjectType(supporterUtil.getSubjectType())
                     .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                    .label("BARGAIN")
+                    .label("CAR_INFORMATION")
                     .picList(picList)
                     .rule(pp.rule)
                     .registerInformationList(registerInformationList)
@@ -3944,7 +3944,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                     .quota(10)
                     .subjectType(supporterUtil.getSubjectType())
                     .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                    .label("BARGAIN")
+                    .label("CAR_INFORMATION")
                     .picList(picList)
                     .rule(pp.rule)
                     .registerInformationList(registerInformationList)
@@ -4051,7 +4051,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                     .quota(10)
                     .subjectType(supporterUtil.getSubjectType())
                     .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                    .label("BARGAIN")
+                    .label("CAR_INFORMATION")
                     .picList(picList)
                     .rule(pp.rule)
                     .registerInformationList(registerInformationList)
@@ -4150,7 +4150,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                     .quota(10)
                     .subjectType(supporterUtil.getSubjectType())
                     .subjectId(supporterUtil.getSubjectDesc(supporterUtil.getSubjectType()))
-                    .label("BARGAIN")
+                    .label("CAR_INFORMATION")
                     .picList(picList)
                     .rule(pp.rule)
                     .registerInformationList(registerInformationList)
@@ -4350,7 +4350,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             //编辑已撤销的活动
             List<String> picList = new ArrayList<>();
             picList.add(0, businessUtil.getPicPath());
-            String[][] label = {{"PREFERENTIAL", "优惠"}, {"BARGAIN", "特价"}, {"WELFARE", "福利"}, {"RED_PAPER", "红包"}, {"GIFT", "礼品"}, {"SELL_WELL", "热销"}, {"RECOMMEND", "推荐"}};
+            String[][] label = {{"CAR_WELFARE", "车福利"}, {"CAR_INFORMATION", "车资讯"}, {"CAR_LIFE", "车生活"}, {"CAR_ACVITITY", "车活动"}, {"CAR_KNOWLEDGE", "车知识"}};
             IScene scene = ManageContentMarketingEditScene.builder()
                     .id(ids.get(0))
                     .type(3)
@@ -4474,7 +4474,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             //编辑审核未通过的活动
             List<String> picList = new ArrayList<>();
             picList.add(0, businessUtil.getPicPath());
-            String[][] label = {{"PREFERENTIAL", "优惠"}, {"BARGAIN", "特价"}, {"WELFARE", "福利"}, {"RED_PAPER", "红包"}, {"GIFT", "礼品"}, {"SELL_WELL", "热销"}, {"RECOMMEND", "推荐"}};
+            String[][] label = {{"CAR_WELFARE", "车福利"}, {"CAR_INFORMATION", "车资讯"}, {"CAR_LIFE", "车生活"}, {"CAR_ACVITITY", "车活动"}, {"CAR_KNOWLEDGE", "车知识"}};
             IScene scene = ManageContentMarketingEditScene.builder()
                     .id(ids.get(0))
                     .type(3)

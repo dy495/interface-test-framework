@@ -189,7 +189,7 @@ public class jiaoChenInfoOnline {
         pic_list2.add(getLogo());
         pic_list2.add(getLogo());
         pic_list2.add(getLogo());
-        JSONObject obj = jc.addArticleNotChk("" + System.currentTimeMillis(), "ONE_BIG", pic_list1, "content", "RED_PAPER", "ARTICEL", null, null, null,
+        JSONObject obj = jc.addArticleNotChk("" + System.currentTimeMillis(), "ONE_BIG", pic_list1, "content", "CAR_WELFARE", "ARTICEL", null, null, null,
                 null, null, null, null, null, null,
                 null, null, null, null);
         int code = obj.getInteger("code");

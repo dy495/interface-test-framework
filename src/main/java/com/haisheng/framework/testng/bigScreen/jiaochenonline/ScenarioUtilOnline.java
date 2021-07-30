@@ -1182,11 +1182,12 @@ public class ScenarioUtilOnline extends TestCaseCommon {
      * @description :文章列表xmf
      * @date :2020/11/28 12:14
      **/
-    public JSONObject appletArticleList(String size, String last_value) {
+    public JSONObject appletArticleList(String size, String last_value,String label) {
         String url = "/jiaochen/applet/article/list";
         JSONObject json1 = new JSONObject();
         json1.put("size", size);
         json1.put("last_value", last_value);
+        json1.put("label", label);
         return invokeApi(url, json1);
     }
 
