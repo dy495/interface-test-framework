@@ -13,6 +13,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherSendRe
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityApprovalStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityStatusEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.MarkingTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
@@ -29,10 +30,7 @@ import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.util.ImageUtil;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -454,14 +452,14 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         try {
             //获取【进行中】的招募活动ID
             List<Long> ids = businessUtil.getRecruitActivityWorking();
-            for (int j = 0; j < ids.size(); j++) {
-                System.err.println("------" + ids.get(j));
+            for (Long id : ids) {
+                System.err.println("------" + id);
                 int registerPassedNum = 0;
                 //报名列表的返回值
-                JSONObject pageRes = businessUtil.getRegisterPage(ids.get(j));
+                JSONObject pageRes = businessUtil.getRegisterPage(id);
                 int pages = pageRes.getInteger("pages") > 20 ? 20 : pageRes.getInteger("pages");
                 for (int page = 1; page <= pages; page++) {
-                    IScene scene = ManageRegisterPageScene.builder().page(page).size(10).activityId(ids.get(j)).build();
+                    IScene scene = ManageRegisterPageScene.builder().page(page).size(10).activityId(id).build();
                     JSONArray list = visitor.invokeApi(scene).getJSONArray("list");
                     for (int i = 0; i < list.size(); i++) {
                         String statusName = list.getJSONObject(i).getString("status_name");
@@ -473,7 +471,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                     }
                 }
                 //报名数据的返回值
-                JSONObject dataRes = businessUtil.getRegisterData(ids.get(j));
+                JSONObject dataRes = businessUtil.getRegisterData(id);
                 //活动名额
                 int quota = dataRes.containsKey("quota") ? dataRes.getInteger("quota") : 50;
                 //报名总人数（已报名）
@@ -505,13 +503,13 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         try {
             //获取【进行中】的招募活动ID
             List<Long> ids = businessUtil.getRecruitActivityWorking();
-            for (int j = 0; j < ids.size(); j++) {
+            for (Long id : ids) {
                 int registerNum = 0;
                 //报名列表的返回值
-                JSONObject pageRes = businessUtil.getRegisterPage(ids.get(j));
+                JSONObject pageRes = businessUtil.getRegisterPage(id);
                 int pages = pageRes.getInteger("pages") > 20 ? 20 : pageRes.getInteger("pages");
                 for (int page = 1; page <= pages; page++) {
-                    IScene scene = ManageRegisterPageScene.builder().page(page).size(10).activityId(ids.get(j)).build();
+                    IScene scene = ManageRegisterPageScene.builder().page(page).size(10).activityId(id).build();
                     JSONArray list = visitor.invokeApi(scene).getJSONArray("list");
                     for (int i = 0; i < list.size(); i++) {
                         String statusName = list.getJSONObject(i).getString("status_name");
@@ -522,7 +520,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                     }
                 }
                 //报名数据的返回值
-                JSONObject dataRes = businessUtil.getRegisterData(ids.get(j));
+                JSONObject dataRes = businessUtil.getRegisterData(id);
                 //活动名额
                 int quota = dataRes.containsKey("quota") ? dataRes.getInteger("quota") : 50;
                 //报名总人数
@@ -5480,5 +5478,8 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         }
     }
 
-
+    @DataProvider(name = "marking_type")
+    public Object[] getMarkingType() {
+        return Arrays.stream(MarkingTypeEnum.values()).toArray();
+    }
 }
