@@ -12,7 +12,7 @@ import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.shop.pag
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.StoreScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.enumerator.AppPageTypeEnum;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.enumerator.CycleTypeEnum;
@@ -55,10 +55,10 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistQaOwner = EnumChecklistUser.QQ.getName();
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.XUNDIAN_DAILY_TEST.getJobName());
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.XD_DAILY.getDesc());
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.XD_DAILY.getDesc());
         commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.pushRd = new String[]{"15898182672", "18513118484", "18810332354", "13604609869", "13373166806"};
-        commonConfig.shopId = EnumTestProduce.XD_DAILY.getShopId();
+        commonConfig.shopId = EnumTestProduct.XD_DAILY.getShopId();
         commonConfig.checklistQaOwner = "青青";
         beforeClassInit(commonConfig);
         logger.debug("store " + md);

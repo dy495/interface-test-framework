@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.AppletAppointment;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -18,7 +18,7 @@ import org.testng.annotations.*;
 import java.lang.reflect.Method;
 
 public class JcAppAppointment extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduce product = EnumTestProduce.JC_DAILY;
+    private static final EnumTestProduct product = EnumTestProduct.JC_DAILY;
     private final VisitorProxy visitor = new VisitorProxy(product);
     ScenarioUtil jc = new ScenarioUtil();
 
@@ -40,10 +40,10 @@ public class JcAppAppointment extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.referer = EnumTestProduce.JC_DAILY.getReferer();
+        commonConfig.referer = EnumTestProduct.JC_DAILY.getReferer();
 //        commonConfig.referer=getJcReferdaily();
 
-        commonConfig.product = EnumTestProduce.JC_DAILY.getAbbreviation();
+        commonConfig.product = EnumTestProduct.JC_DAILY.getAbbreviation();
 
 
         //replace backend gateway url
@@ -53,7 +53,7 @@ public class JcAppAppointment extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-daily-test");
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JC_DAILY.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.JC_DAILY.getDesc() + commonConfig.checklistQaOwner);
 
         //replace ding f
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;

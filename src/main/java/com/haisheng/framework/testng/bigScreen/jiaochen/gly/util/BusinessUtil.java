@@ -2486,7 +2486,7 @@ public class BusinessUtil {
      * 构建招募活动
      * 标签的状态:0-优惠,1-特价,2-福利,3-红包,4-礼品,5-礼品,6-热销,7-推荐
      */
-    public IScene getContentMarketingAddScene(int participationType, List<String> chooseLabels,int labelNum,int actionPoint){
+    public IScene getContentMarketingAddScene(int participationType, List<String> chooseLabels, int labelNum, int actionPoint){
         SupporterUtil supporterUtil = new SupporterUtil(visitor);
         List<String> picList = new ArrayList<>();
         picList.add(0, getPicPath());

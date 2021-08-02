@@ -288,7 +288,7 @@ public class CommonUsedUtilOnline {
      * @param ruleIdList：风控规则ID集合
      * @param acceptRoleIdList：接收者Id结合
      */
-    public IScene getAlarmRuleAdd(Boolean realTime,Long silentTime,String type,List<Long> ruleIdList,List<Long> acceptRoleIdList,String name){
+    public IScene getAlarmRuleAdd(Boolean realTime, Long silentTime, String type, List<Long> ruleIdList, List<Long> acceptRoleIdList, String name){
         IScene scene= com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.alarmrule.AddScene.builder()
                 .name(name)
                 .type(type)
@@ -334,7 +334,7 @@ public class CommonUsedUtilOnline {
      * @param ruleIdList：风控规则ID集合
      * @param acceptRoleIdList：接收者Id结合
      */
-    public IScene getAlarmRuleEdit(Long id,Boolean realTime,Long silentTime,String type,List<Long> ruleIdList,List<Long> acceptRoleIdList){
+    public IScene getAlarmRuleEdit(Long id, Boolean realTime, Long silentTime, String type, List<Long> ruleIdList, List<Long> acceptRoleIdList){
         IScene scene= com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.alarmrule.EditScene.builder()
                 .id(id)
                 .name(pp.AlarmEditName)

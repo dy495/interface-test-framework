@@ -11,7 +11,7 @@ import com.arronlong.httpclientutil.exception.HttpProcessException;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.riskControlEnum.routerEnum;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.RiskEventHandleScene;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.util.CommonUsedUtil;
@@ -43,7 +43,7 @@ import java.util.Random;
 import java.util.UUID;
 
 public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduce product = EnumTestProduce.FK_ONLINE;
+    private static final EnumTestProduct product = EnumTestProduct.FK_ONLINE;
 
     private static final routerEnum router = routerEnum.SHOPONLINE;
 
@@ -641,7 +641,7 @@ public class RiskControlRulesOnline extends TestCaseCommon implements TestCaseSt
                 "\"size\" :" + size + "\n" +
                 "} ";
 
-        String res = httpPostWithCheckCode(url, json, EnumTestProduce.FK_ONLINE.getPort());
+        String res = httpPostWithCheckCode(url, json, EnumTestProduct.FK_ONLINE.getPort());
 
         return JSON.parseObject(res).getJSONObject("data");
     }

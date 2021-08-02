@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.commonDs.JsonPathUtil;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.DataAbnormal;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.JcFunctionOnline;
@@ -38,13 +38,13 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
     public void initial() {
         logger.debug("before classs initial");
 
-        jc.changeIpPort(EnumTestProduce.JC_ONLINE.getPort());
+        jc.changeIpPort(EnumTestProduct.JC_ONLINE.getPort());
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.referer = EnumTestProduce.JC_ONLINE.getReferer();
-        commonConfig.product = EnumTestProduce.JC_ONLINE.getAbbreviation();
+        commonConfig.referer = EnumTestProduct.JC_ONLINE.getReferer();
+        commonConfig.product = EnumTestProduct.JC_ONLINE.getAbbreviation();
 
 //        commonConfig.referer=getJcReferOnline();
 
@@ -56,7 +56,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-daily-test");
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JC_ONLINE.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.JC_ONLINE.getDesc() + commonConfig.checklistQaOwner);
 
         //replace ding f
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
@@ -80,7 +80,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
         object.put("phone", username);
         object.put("verification_code", password);
         commonConfig.roleId = roleId;
-        httpPost(path, object, EnumTestProduce.JC_ONLINE.getPort());
+        httpPost(path, object, EnumTestProduct.JC_ONLINE.getPort());
     }
 
     //pc登录
@@ -90,7 +90,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
         object.put("phone", phone);
         object.put("verification_code", verificationCode);
         commonConfig.roleId = roleId;
-        httpPost(path, object, EnumTestProduce.JC_ONLINE.getPort());
+        httpPost(path, object, EnumTestProduct.JC_ONLINE.getPort());
     }
 
     @AfterClass
@@ -125,7 +125,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
     public void taskEquelDate(String name, String code, String names, String roleId) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            System.out.println(EnumTestProduce.JC_DAILY.getPort());
+            System.out.println(EnumTestProduct.JC_DAILY.getPort());
             appLogin(name, code, roleId);
             String type = "all";   //home \all
             //获取今日任务数

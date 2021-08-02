@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.sql.Sql;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.common.bean.SaleInfo;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.common.bean.TPorscheTodayData;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.common.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.DingPushUtil;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.UserUtil;
@@ -30,7 +30,7 @@ public class EverydayDataOnline extends TestCaseCommon implements TestCaseStd {
     PublicMethodOnline method = new PublicMethodOnline();
     CrmScenarioUtilOnline crm = CrmScenarioUtilOnline.getInstance();
     private static final EnumAccount zjl = EnumAccount.ZJL_ONLINE;
-    private static final String shopId = EnumTestProduce.PORSCHE_ONLINE.getShopId();
+    private static final String shopId = EnumTestProduct.PORSCHE_ONLINE.getShopId();
 
     @BeforeClass
     @Override

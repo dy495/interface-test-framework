@@ -9,7 +9,7 @@ import com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.commonDs.
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanage.LossCustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermanage.PreSaleCustomerPageScene;
@@ -41,7 +41,7 @@ import java.util.Random;
 
 public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
 
-    private static final EnumTestProduce product = EnumTestProduce.JC_DAILY;
+    private static final EnumTestProduct product = EnumTestProduct.JC_DAILY;
     private VisitorProxy visitor = new VisitorProxy(product);
 
     ScenarioUtil jc = ScenarioUtil.getInstance();
@@ -53,7 +53,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
     private QADbProxy qaDbProxy = QADbProxy.getInstance();
     public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
     CommonConfig commonConfig = new CommonConfig();
-    public String IpPort = EnumTestProduce.JC_DAILY.getPort();
+    public String IpPort = EnumTestProduct.JC_DAILY.getPort();
 
 
     /**
@@ -69,8 +69,8 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.referer = EnumTestProduce.JC_DAILY.getReferer();
-        commonConfig.product = EnumTestProduce.JC_DAILY.getAbbreviation();
+        commonConfig.referer = EnumTestProduct.JC_DAILY.getReferer();
+        commonConfig.product = EnumTestProduct.JC_DAILY.getAbbreviation();
 
         //replace backend gateway url
         //commonConfig.gateway = "";
@@ -79,7 +79,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JC_DAILY.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.JC_DAILY.getDesc() + commonConfig.checklistQaOwner);
 
 
         //replace ding push conf
@@ -106,7 +106,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         object.put("phone", username);
         object.put("verification_code", password);
         commonConfig.roleId = roleId;
-        httpPost(path, object, EnumTestProduce.JC_DAILY.getPort());
+        httpPost(path, object, EnumTestProduct.JC_DAILY.getPort());
     }
 
     //pc登录
@@ -116,7 +116,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         object.put("phone", phone);
         object.put("verification_code", verificationCode);
         commonConfig.roleId = roleId;
-        httpPost(path, object, EnumTestProduce.JC_DAILY.getPort());
+        httpPost(path, object, EnumTestProduct.JC_DAILY.getPort());
     }
 
     @AfterClass

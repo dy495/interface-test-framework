@@ -8,12 +8,11 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistAppId;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistConfId;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherScene.AppFlowUp.AppFlowUpPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherScene.AppFlowUp.AppFlowUpRemarkScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.AppFinishReceptionScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.AppPreSalesReceptionCreateScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.loginuser.LoginPc;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.PreSalesReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.PreSalesRecpEvaluateOpt;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.PreSalesRecpEvaluateSubmit;
@@ -32,7 +31,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_ONLINE_SSO; // 管理页—-首页
+    private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_SSO; // 管理页—-首页
     private static final EnumAccount YT_RECEPTION_ACCOUNT = EnumAccount.YT_RECEPTION_ONLINE_5; // 全部权限账号 【运通】
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);   // 产品类放到代理类中（通过代理类发请求）
     public SceneUtil util = new SceneUtil(visitor);
@@ -93,7 +92,7 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
     // 创建一个接待，
     //return：接待id 和 shop_id
     private Map<String, String> createCustomerCommon(String name,String sex, String phone,String carId,String buyTime) {
-        visitor.setProduct(EnumTestProduce.YT_ONLINE_CAR);
+        visitor.setProduct(EnumTestProduct.YT_ONLINE_CAR);
         Map<String,String> customer = new HashMap<>();
         AppPreSalesReceptionCreateScene.builder().customerName(name).customerPhone(phone).sexId(sex).intentionCarModelId(carId).estimateBuyCarTime(buyTime).build().invoke(visitor);//创建销售接待
         JSONObject pageInfo = PreSalesReceptionPageScene.builder().build().invoke(visitor, true);
@@ -109,7 +108,7 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(dataProvider = "errorInfo")
     public void test01createCustomer_system_err(String description,String point,String content,String expect) {
-        visitor.setProduct(EnumTestProduce.YT_ONLINE_CAR);
+        visitor.setProduct(EnumTestProduct.YT_ONLINE_CAR);
         try {
             IScene scene = AppPreSalesReceptionCreateScene.builder().customerName("正常名字").customerPhone("18" + numRandom(9)).sexId("1").intentionCarModelId("20895").estimateBuyCarTime("2035-12-20").build().modify(point, content);
             String code = scene.invoke(visitor,false).getString("code");
@@ -175,7 +174,7 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
     }
     @Test(dataProvider = "remarkContent")
     public void flowUpContent(String description, String expect, String remark){
-        visitor.setProduct(EnumTestProduce.YT_ONLINE_CAR);
+        visitor.setProduct(EnumTestProduct.YT_ONLINE_CAR);
         try{
             Map<String, String> customer = util.createCustomerCommon("自动创建差评跟进", "1", "150" + CommonUtil.getRandom(8), util.mcCarId(), "2033-12-20");
             AppFinishReceptionScene.builder().id(customer.get("id")).shopId(customer.get("shopId")).build().invoke(visitor);

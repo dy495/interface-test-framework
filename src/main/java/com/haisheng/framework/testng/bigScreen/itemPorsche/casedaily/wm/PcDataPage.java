@@ -45,7 +45,7 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
     PublicMethod method = new PublicMethod();
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     private static final EnumAccount zjl = EnumAccount.ZJL_DAILY;
-    private static final String shopId = EnumTestProduce.PORSCHE_DAILY.getShopId();
+    private static final String shopId = EnumTestProduct.PORSCHE_DAILY.getShopId();
     private static final int size = 100;
 
     @BeforeClass
@@ -57,15 +57,15 @@ public class PcDataPage extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
         commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_DAILY_SERVICE.getId();
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
-        commonConfig.product = EnumTestProduce.PORSCHE_DAILY.getAbbreviation();
-        commonConfig.referer = EnumTestProduce.PORSCHE_DAILY.getReferer();
+        commonConfig.product = EnumTestProduct.PORSCHE_DAILY.getAbbreviation();
+        commonConfig.referer = EnumTestProduct.PORSCHE_DAILY.getReferer();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.CRM_DAILY_TEST.getJobName());
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.PORSCHE_DAILY.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.PORSCHE_DAILY.getDesc() + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = EnumDingTalkWebHook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
-        commonConfig.shopId = EnumTestProduce.PORSCHE_DAILY.getShopId();
+        commonConfig.shopId = EnumTestProduct.PORSCHE_DAILY.getShopId();
         beforeClassInit(commonConfig);
         logger.debug("crm: " + crm);
         UserUtil.login(zjl);

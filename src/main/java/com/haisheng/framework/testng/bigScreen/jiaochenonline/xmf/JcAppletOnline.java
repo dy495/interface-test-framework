@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.google.inject.internal.util.$Preconditions;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.AppletActivityRegister;
@@ -45,8 +45,8 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.product = EnumTestProduce.JC_ONLINE.getAbbreviation();
-        jc.changeIpPort(EnumTestProduce.JC_ONLINE.getPort());
+        commonConfig.product = EnumTestProduct.JC_ONLINE.getAbbreviation();
+        jc.changeIpPort(EnumTestProduct.JC_ONLINE.getPort());
 
 
         //replace backend gateway url
@@ -56,13 +56,13 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "Jjiaochen-online-test");
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JC_ONLINE.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.JC_ONLINE.getDesc() + commonConfig.checklistQaOwner);
 
         //replace ding push conf
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
         commonConfig.dingHook = DingWebhook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
 
-        commonConfig.referer = EnumTestProduce.JC_ONLINE.getReferer();
+        commonConfig.referer = EnumTestProduct.JC_ONLINE.getReferer();
 
 //        commonConfig.referer=getJcReferOnline();
 
@@ -417,7 +417,7 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
         try {
             System.out.println(commonConfig.referer);
             jc.appletLoginToken(pp.appletTocken);
-            System.out.println(EnumTestProduce.JC_DAILY.getPort());
+            System.out.println(EnumTestProduct.JC_DAILY.getPort());
             System.out.println("卡券数量" + pf.getVoucherTotal());
 //            System.out.println("套餐数量"+pf.getpackgeTotal());
 

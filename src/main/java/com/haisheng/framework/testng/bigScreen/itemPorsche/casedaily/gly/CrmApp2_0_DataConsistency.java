@@ -6,7 +6,7 @@ import com.aliyun.openservices.shade.org.apache.commons.codec.binary.Base64;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.CrmScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAppletToken;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.common.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -71,9 +71,9 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         //commonConfig.gateway = "";
         //replace jenkins job name
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-daily-test");
-        commonConfig.product = EnumTestProduce.PORSCHE_DAILY.getAbbreviation();
+        commonConfig.product = EnumTestProduct.PORSCHE_DAILY.getAbbreviation();
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.PORSCHE_DAILY.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.PORSCHE_DAILY.getDesc() + commonConfig.checklistQaOwner);
         //replace ding push conf
         //commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
@@ -81,7 +81,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = EnumTestProduce.PORSCHE_DAILY.getShopId();
+        commonConfig.shopId = EnumTestProduct.PORSCHE_DAILY.getShopId();
         beforeClassInit(commonConfig);
 
         logger.debug("crm: " + crm);

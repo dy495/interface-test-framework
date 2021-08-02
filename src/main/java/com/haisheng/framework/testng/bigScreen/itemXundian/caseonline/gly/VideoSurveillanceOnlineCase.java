@@ -7,7 +7,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.gly.util.BusinessUtil;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.enumerator.CameraStatusEnum;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.equipmentmanagement.auth.AllDeviceListScene;
@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 
 public class VideoSurveillanceOnlineCase extends TestCaseCommon implements TestCaseStd {
-    private final EnumTestProduce product = EnumTestProduce.XD_ONLINE;
+    private final EnumTestProduct product = EnumTestProduct.XD_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(product);
     public UserUtil user = new UserUtil(visitor);
     public SupporterUtil util = new SupporterUtil(visitor);

@@ -6,7 +6,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistAppId;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistConfId;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.MyUtil.TopicUtil;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.EvaluateV4ConfigSubmitScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class EvaluateConfigCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_ONLINE_SSO; // 管理页—-首页
+    private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_SSO; // 管理页—-首页
     private static final EnumAccount AUTHORITY = EnumAccount.YT_RECEPTION_ONLINE_5; // 全部权限账号 【运通】
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);   // 产品类放到代理类中（通过代理类发请求）
     public SceneUtil util = new TopicUtil(visitor);    //场景工具类中放入代理类，类中封装接口方法直接调用
@@ -66,7 +66,7 @@ public class EvaluateConfigCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(dataProvider = "contentCheck")
     public void addATopic1(String description, String expect, String title, String... answer) {
-        visitor.setProduct(EnumTestProduce.YT_ONLINE_CAR);
+        visitor.setProduct(EnumTestProduct.YT_ONLINE_CAR);
         try {
             if (util instanceof TopicUtil) {
                 TopicUtil topicUtil = (TopicUtil) util;
@@ -100,7 +100,7 @@ public class EvaluateConfigCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(dataProvider = "topicNum")
     public void addATopic2(String description, List<Integer> topicList, String expectCode, String... answer) {
-        visitor.setProduct(EnumTestProduce.YT_ONLINE_CAR);
+        visitor.setProduct(EnumTestProduct.YT_ONLINE_CAR);
         try {
             if (util instanceof TopicUtil) {
                 TopicUtil topicUtil = (TopicUtil) util;

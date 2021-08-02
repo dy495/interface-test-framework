@@ -8,7 +8,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistAppId;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistConfId;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.brand.*;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanage.*;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
@@ -28,7 +28,7 @@ import java.lang.reflect.Method;
  */
 public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
-    EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_SSO;
+    EnumTestProduct PRODUCE = EnumTestProduct.YT_DAILY_SSO;
     EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_DAILY;
     VisitorProxy visitor = new VisitorProxy(PRODUCE);
     SceneUtil businessUtil = new SceneUtil(visitor);
@@ -56,7 +56,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         beforeClassInit(commonConfig);
         businessUtil.loginPc(ALL_AUTHORITY);
 
-        visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);  //展厅接待模块
+        visitor.setProduct(EnumTestProduct.YT_DAILY_CAR);  //展厅接待模块
     }
 
     @AfterClass
@@ -435,7 +435,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
+            visitor.setProduct(EnumTestProduct.YT_DAILY_CAR);
             Long shop_id = info.oneshopid;
             Long car_style_id = PreSaleCustomerStyleListScene.builder().shopId(shop_id).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("style_id");
             Long car_model_id = PreSaleCustomerModelListScene.builder().styleId(car_style_id).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("model_id");
@@ -494,7 +494,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
+            visitor.setProduct(EnumTestProduct.YT_DAILY_CAR);
             Long shop_id = info.oneshopid;
             Long car_style_id = PreSaleCustomerStyleListScene.builder().shopId(shop_id).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("style_id");
             Long car_model_id = PreSaleCustomerModelListScene.builder().styleId(car_style_id).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("model_id");
@@ -764,7 +764,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
+            visitor.setProduct(EnumTestProduct.YT_DAILY_CAR);
 
             //创建一个品牌
             String name1 = info.stringsix;

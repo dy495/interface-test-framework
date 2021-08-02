@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.riskControlEnum.RuleEnum;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.riskControlEnum.routerEnum;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.alarmrule.DetailScene;
@@ -29,7 +29,7 @@ import java.util.Date;
 import java.util.List;
 
 public class RiskControlCaseDataDaily extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduce product = EnumTestProduce.FK_DAILY;
+    private static final EnumTestProduct product = EnumTestProduct.FK_DAILY;
     public VisitorProxy visitor = new VisitorProxy(product);
     private static final routerEnum router = routerEnum.SHOPDAILY;
     PublicParam pp = new PublicParam();

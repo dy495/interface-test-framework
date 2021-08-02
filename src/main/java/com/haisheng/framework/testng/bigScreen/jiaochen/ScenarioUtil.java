@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.lxq.create.pcCreateExchangeGoods;
 import com.haisheng.framework.testng.bigScreen.jiaochen.lxq.create.submitOrder;
@@ -21,8 +21,8 @@ import java.util.List;
  */
 public class ScenarioUtil extends TestCaseCommon {
     private static volatile ScenarioUtil instance = null;
-    private static String IpPort = EnumTestProduce.JC_DAILY.getPort();
-    private static final String shopId = EnumTestProduce.JC_DAILY.getShopId();
+    private static String IpPort = EnumTestProduct.JC_DAILY.getPort();
+    private static final String shopId = EnumTestProduct.JC_DAILY.getShopId();
 
     /**
      * 单例

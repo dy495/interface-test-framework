@@ -9,7 +9,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.commonDs.CustomerInfo;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.commonDs.Driver;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.casedaily.xmf.interfaceDemo.*;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -57,10 +57,10 @@ public class CrmScenarioUtil extends TestCaseCommon {
     /***
      * 方法区，不同产品的测试场景各不相同，自行更改
      */
-    public String IpPort = EnumTestProduce.PORSCHE_DAILY.getPort();
+    public String IpPort = EnumTestProduct.PORSCHE_DAILY.getPort();
 
     public String getPorscheShop() {
-        return EnumTestProduce.PORSCHE_DAILY.getShopId();
+        return EnumTestProduct.PORSCHE_DAILY.getShopId();
     }
 
     //----------------------登陆--------------------
@@ -2976,7 +2976,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String url = "/porsche/customer/edit";
         JSONObject object = new JSONObject();
         object.put("customer_id", customerId);
-        object.put("shop_id", EnumTestProduce.PORSCHE_DAILY.getShopId());
+        object.put("shop_id", EnumTestProduct.PORSCHE_DAILY.getShopId());
         object.put("customer_name", customerName);
         object.put("customer_phone", customerPhone);
         object.put("customer_level", customerLevel);

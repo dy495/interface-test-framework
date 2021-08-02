@@ -3,14 +3,8 @@ package com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.zt;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.google.gson.JsonArray;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
-import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.equipmentmanagement.auth.AllDeviceListScene;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.equipmentmanagement.device.DevicePageScene;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.pc.integralmall.BrandPageScene;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.pc.integralmall.CreateBrandScene;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.pc.integralmall.DeleteBrandScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.pc.vouchermanage.VoucherFormVoucherPageScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.punchclockandsignrule.PunchClockAndSignRuleUpdateScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.shop.collection.AddScene;
@@ -19,12 +13,7 @@ import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.shop.col
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.shop.device.LiveScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.*;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.hqq.StorePcAndAppData;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.vouchermanage.VoucherManageVoucherDetailScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.vouchermanage.VoucherManageVoucherListScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.integralmall.BrandPageBean;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -32,19 +21,16 @@ import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Random;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
 public class StorePcCase extends TestCaseCommon implements TestCaseStd {
-    private final EnumTestProduce product = EnumTestProduce.XD_DAILY;
+    private final EnumTestProduct product = EnumTestProduct.XD_DAILY;
     public VisitorProxy visitor = new VisitorProxy(product);
     public UserUtil user = new UserUtil(visitor);
     public SupporterUtil util = new SupporterUtil(visitor);
@@ -68,10 +54,10 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistQaOwner = "周涛";
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.XUNDIAN_DAILY_TEST.getJobName());
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.XD_DAILY.getDesc());
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.XD_DAILY.getDesc());
         commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.pushRd = new String[]{"15898182672", "18513118484", "18810332354", "15084928847"};
-        commonConfig.shopId = EnumTestProduce.XD_DAILY.getShopId();
+        commonConfig.shopId = EnumTestProduct.XD_DAILY.getShopId();
         beforeClassInit(commonConfig);
         logger.debug("xundian " + xd);
         xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");

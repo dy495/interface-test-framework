@@ -29,7 +29,7 @@ public class JcPc_SystemLogOnline extends TestCaseCommon implements TestCaseStd 
     public String shopId = "-1";
     public String appletToken = EnumAppletToken.JC_GLY_ONLINE.getToken();
     CommonConfig commonConfig = new CommonConfig();
-    private static final EnumTestProduce product = EnumTestProduce.JC_ONLINE;
+    private static final EnumTestProduct product = EnumTestProduct.JC_ONLINE;
     PublicParameter pp = new PublicParameter();
     public VisitorProxy visitor = new VisitorProxy(product);
     SupporterUtil su = new SupporterUtil(visitor);
@@ -41,19 +41,19 @@ public class JcPc_SystemLogOnline extends TestCaseCommon implements TestCaseStd 
     @Override
     public void initial() {
         logger.debug("before class initial");
-        jc.changeIpPort(EnumTestProduce.JC_ONLINE.getPort());
+        jc.changeIpPort(EnumTestProduct.JC_ONLINE.getPort());
         //替换checklist的相关信息
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
         commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
         commonConfig.checklistQaOwner = "郭丽雅";
-        commonConfig.product = EnumTestProduce.JC_DAILY.getAbbreviation();
+        commonConfig.product = EnumTestProduct.JC_DAILY.getAbbreviation();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "jc-onLine-test");
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JC_ONLINE.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.JC_ONLINE.getDesc() + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = EnumDingTalkWebHook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
-        commonConfig.shopId = EnumTestProduce.JC_ONLINE.getShopId();
+        commonConfig.shopId = EnumTestProduct.JC_ONLINE.getShopId();
         commonConfig.referer = product.getReferer();
         commonConfig.roleId = "395";
         beforeClassInit(commonConfig);

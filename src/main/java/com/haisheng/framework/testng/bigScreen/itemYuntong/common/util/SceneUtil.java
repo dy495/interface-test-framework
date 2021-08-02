@@ -6,7 +6,7 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.util.BasicUtil;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherScene.DeleteRecordPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.homepagev4.AppTodayDataBean;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.presalesreception.AppPreSalesReceptionPageBean;
@@ -85,8 +85,8 @@ public class SceneUtil extends BasicUtil {
      * @param scene 登录接口
      */
     public void login(IScene scene) {
-        EnumTestProduce oldProduce = visitor.getProduct();
-        EnumTestProduce newProduce = visitor.isDaily() ? EnumTestProduce.YT_DAILY_SSO : EnumTestProduce.YT_ONLINE_SSO;
+        EnumTestProduct oldProduce = visitor.getProduct();
+        EnumTestProduct newProduce = visitor.isDaily() ? EnumTestProduct.YT_DAILY_SSO : EnumTestProduct.YT_ONLINE_SSO;
         visitor.setProduct(newProduce);
         visitor.login(scene);
         visitor.setProduct(oldProduce);

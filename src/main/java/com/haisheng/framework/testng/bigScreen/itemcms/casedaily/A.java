@@ -10,7 +10,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.tarot.row.IRow;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.tarot.table.ITable;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemcms.common.enumerator.*;
 import com.haisheng.framework.testng.bigScreen.itemcms.common.scene.*;
 import com.haisheng.framework.testng.bigScreen.itemcms.common.util.ScenarioUtil;
@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class A extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduce product = EnumTestProduce.CMS_DAILY;
+    private static final EnumTestProduct product = EnumTestProduct.CMS_DAILY;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.CMS_DAILY;
     public VisitorProxy visitor = new VisitorProxy(product);
     public ScenarioUtil util = new ScenarioUtil(visitor);

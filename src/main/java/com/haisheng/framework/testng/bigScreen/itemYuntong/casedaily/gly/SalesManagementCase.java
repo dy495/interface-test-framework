@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.BusinessUtil;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.Constant;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.YunTongUtil;
@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 
 public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduce product = EnumTestProduce.YT_DAILY;
+    private static final EnumTestProduct product = EnumTestProduct.YT_DAILY;
     YunTongUtil yt=new YunTongUtil(product);
     public VisitorProxy visitor = new VisitorProxy(product);
     BusinessUtil businessUtil=new BusinessUtil(product);

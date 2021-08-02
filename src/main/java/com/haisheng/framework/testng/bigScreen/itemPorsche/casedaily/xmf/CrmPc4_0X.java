@@ -6,7 +6,7 @@ import com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.CrmScenar
 import com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.commonDs.PackFunction;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.commonDs.PublicParm;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAppletToken;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -42,8 +42,8 @@ public class CrmPc4_0X extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.product = EnumTestProduce.PORSCHE_DAILY.getAbbreviation();
-        commonConfig.referer = EnumTestProduce.PORSCHE_DAILY.getReferer();
+        commonConfig.product = EnumTestProduct.PORSCHE_DAILY.getAbbreviation();
+        commonConfig.referer = EnumTestProduct.PORSCHE_DAILY.getReferer();
 
         //replace backend gateway url
         //commonConfig.gateway = "";
@@ -52,7 +52,7 @@ public class CrmPc4_0X extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-daily-test");
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.PORSCHE_DAILY.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.PORSCHE_DAILY.getDesc() + commonConfig.checklistQaOwner);
 
         //replace ding push conf
         commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
@@ -61,7 +61,7 @@ public class CrmPc4_0X extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = EnumTestProduce.PORSCHE_DAILY.getShopId();
+        commonConfig.shopId = EnumTestProduct.PORSCHE_DAILY.getShopId();
         beforeClassInit(commonConfig);
 
         logger.debug("crm: " + crm);

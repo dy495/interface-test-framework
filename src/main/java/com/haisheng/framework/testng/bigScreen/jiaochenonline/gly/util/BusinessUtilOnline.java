@@ -539,7 +539,7 @@ public class BusinessUtilOnline {
      * @param rewardReceiveType 奖励领取方式 0：自动发放，1：主动领取
      * @param isNeedApproval    报名后是否需要审批
      */
-    public IScene createRecruitActivityScene(Long voucherId, boolean successReward, int rewardReceiveType, boolean isNeedApproval,String startTime,String endTime) {
+    public IScene createRecruitActivityScene(Long voucherId, boolean successReward, int rewardReceiveType, boolean isNeedApproval, String startTime, String endTime) {
         List<String> picList = new ArrayList<>();
         SupporterUtil supporterUtil = new SupporterUtil(visitor);
         PublicParameter pp = new PublicParameter();
@@ -602,7 +602,7 @@ public class BusinessUtilOnline {
      * @param rewardReceiveType 奖励领取方式 0：自动发放，1：主动领取
      * @param isNeedApproval    报名后是否需要审批
      */
-    public IScene createRecruitActivityScene(Long voucherId, boolean successReward, int rewardReceiveType, boolean isNeedApproval,Boolean type) {
+    public IScene createRecruitActivityScene(Long voucherId, boolean successReward, int rewardReceiveType, boolean isNeedApproval, Boolean type) {
         List<String> picList = new ArrayList<>();
         SupporterUtil supporterUtil = new SupporterUtil(visitor);
         PublicParameter pp = new PublicParameter();
@@ -2394,7 +2394,7 @@ public class BusinessUtilOnline {
      * 构建招募活动
      * 标签的状态:0-优惠,1-特价,2-福利,3-红包,4-礼品,5-礼品,6-热销,7-推荐
      */
-    public IScene getContentMarketingAddScene(int participationType, List<String> chooseLabels,int labelNum,int actionPoint){
+    public IScene getContentMarketingAddScene(int participationType, List<String> chooseLabels, int labelNum, int actionPoint){
         SupporterUtil supporterUtil = new SupporterUtil(visitor);
         List<String> picList = new ArrayList<>();
         picList.add(0, getPicPath());

@@ -1,7 +1,7 @@
 package com.haisheng.framework.testng.bigScreen.itemPorsche.caseonline.xmf;
 
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.PublicParmOnline;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.caseonline.xmf.interfaceOnline.FinishReceptionOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -44,7 +44,7 @@ public class Crm2_1AppXOnline23_receipt extends TestCaseCommon implements TestCa
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.product=EnumTestProduce.PORSCHE_ONLINE.getAbbreviation();
+        commonConfig.product= EnumTestProduct.PORSCHE_ONLINE.getAbbreviation();
 
 
         //replace backend gateway url
@@ -54,7 +54,7 @@ public class Crm2_1AppXOnline23_receipt extends TestCaseCommon implements TestCa
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-online-test");
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.PORSCHE_ONLINE.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.PORSCHE_ONLINE.getDesc() + commonConfig.checklistQaOwner);
 
         //replace ding push conf
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
@@ -63,7 +63,7 @@ public class Crm2_1AppXOnline23_receipt extends TestCaseCommon implements TestCa
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = EnumTestProduce.PORSCHE_ONLINE.getShopId();
+        commonConfig.shopId = EnumTestProduct.PORSCHE_ONLINE.getShopId();
         beforeClassInit(commonConfig);
 
         logger.debug("crm: " + crm);

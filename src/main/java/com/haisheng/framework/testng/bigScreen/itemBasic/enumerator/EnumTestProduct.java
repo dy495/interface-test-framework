@@ -8,7 +8,7 @@ import lombok.Getter;
  * @author wangmin
  * @date 2020/7/24 15:11
  */
-public enum EnumTestProduce {
+public enum EnumTestProduct {
 
     PORSCHE_DAILY("汽车-保时捷 日常 ", "https://servicewechat.com/wx5102264595be8c23/0/page-frame.html", "http://dev.porsche.dealer-ydauto.winsenseos.cn", "22728", "BSJ", "", true),
 
@@ -54,7 +54,7 @@ public enum EnumTestProduce {
 
     ;
 
-    EnumTestProduce(String desc, String referer, String port, String shopId, String abbreviation, String roleId, Boolean isDaily) {
+    EnumTestProduct(String desc, String referer, String port, String shopId, String abbreviation, String roleId, Boolean isDaily) {
         this.desc = desc;
         this.referer = referer;
         this.port = port;

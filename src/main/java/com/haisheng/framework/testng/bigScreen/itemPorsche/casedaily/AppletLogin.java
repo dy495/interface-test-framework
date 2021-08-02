@@ -53,7 +53,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
     @AfterMethod
     public void restoreProductInMsg() {
         //还原message
-        for (EnumTestProduce item : EnumTestProduce.values()) {
+        for (EnumTestProduct item : EnumTestProduct.values()) {
             commonConfig.message = commonConfig.message.replace(item.getDesc(), commonConfig.TEST_PRODUCT);
         }
         commonConfig.pushQa = null;
@@ -64,7 +64,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
     public void BSJ_applet_daily(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            EnumTestProduce produce = EnumTestProduce.PORSCHE_DAILY;
+            EnumTestProduct produce = EnumTestProduct.PORSCHE_DAILY;
             commonConfig.shopId = produce.getShopId();
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, produce.getDesc());
             commonConfig.referer = produce.getReferer();
@@ -84,7 +84,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
     public void BSJ_applet_online(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            EnumTestProduce produce = EnumTestProduce.PORSCHE_ONLINE;
+            EnumTestProduct produce = EnumTestProduct.PORSCHE_ONLINE;
             commonConfig.shopId = produce.getShopId();
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, produce.getDesc());
             commonConfig.referer = produce.getReferer();
@@ -104,7 +104,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
     public void JC_applet_daily(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            EnumTestProduce produce = EnumTestProduce.JC_DAILY;
+            EnumTestProduct produce = EnumTestProduct.JC_DAILY;
             commonConfig.shopId = produce.getShopId();
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, produce.getDesc());
             commonConfig.referer = produce.getReferer();
@@ -124,7 +124,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
     public void JC_applet_online(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            EnumTestProduce produce = EnumTestProduce.JC_ONLINE;
+            EnumTestProduct produce = EnumTestProduct.JC_ONLINE;
             commonConfig.shopId = produce.getShopId();
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, produce.getDesc());
             commonConfig.referer = produce.getReferer();
@@ -144,7 +144,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
     public void INS_applet_daily(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            EnumTestProduce produce = EnumTestProduce.INS_DAILY;
+            EnumTestProduct produce = EnumTestProduct.INS_DAILY;
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, produce.getDesc());
             commonConfig.referer = produce.getReferer();
             commonConfig.pushQa = new String[]{EnumAppletToken.getPhoneByToken(token)};
@@ -163,7 +163,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
     public void INS_applet_online(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            EnumTestProduce produce = EnumTestProduce.INS_ONLINE;
+            EnumTestProduct produce = EnumTestProduct.INS_ONLINE;
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, produce.getDesc());
             commonConfig.referer = produce.getReferer();
             commonConfig.pushQa = new String[]{EnumAppletToken.getPhoneByToken(token)};
