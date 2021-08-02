@@ -92,4 +92,7 @@ public interface IScene {
      */
     List<String> getKeyList();
 
+
+    Response getResponse(VisitorProxy visitor);
+
 }

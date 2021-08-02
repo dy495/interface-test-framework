@@ -747,8 +747,8 @@ public class SupporterUtil extends BasicUtil {
      * @return 套餐名
      */
     public PackagePage editPackage(JSONArray voucherList) {
-        IScene packageFormPageScene = PackageFormPageScene.builder().build();
-        List<PackagePage> packagePages = toJavaObjectList(packageFormPageScene, PackagePage.class, 50);
+        IScene scene = PackageFormPageScene.builder().build();
+        List<PackagePage> packagePages = toJavaObjectList(scene, PackagePage.class, 50);
         PackagePage packagePage = packagePages.stream().filter(e -> !EnumVP.isContains(e.getPackageName())).findFirst().orElse(null);
         Preconditions.checkArgument(packagePage != null, "套餐为空");
         Long packageId = packagePage.getPackageId();

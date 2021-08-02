@@ -6,6 +6,7 @@ import com.aliyun.openservices.shade.org.apache.commons.lang3.StringUtils;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.Response;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
@@ -604,10 +605,9 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
     public void packageManager_system_6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            IScene scene = CreatePackageScene.builder().packageName(util.createPackageName(UseRangeEnum.BRAND))
+            String message = CreatePackageScene.builder().packageName(util.createPackageName(UseRangeEnum.BRAND)).expireType(2)
                     .packageDescription(util.getDesc()).subjectType(UseRangeEnum.CURRENT.name()).packagePrice("5000.00")
-                    .expireType(2).expiryDate(10).shopIds(util.getShopIdList()).status(true).build();
-            String message = visitor.invokeApi(scene, false).getString("message");
+                    .expiryDate(10).shopIds(util.getShopIdList()).status(true).build().getResponse(visitor).getMessage();
             String err = "所选卡券不能为空";
             CommonUtil.checkResult("包含卡券为：" + null, err, message);
         } catch (Exception | AssertionError e) {
@@ -667,15 +667,14 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String[] phones = {null, "", "1532152798", "13654973499", "010-8888888"};
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-            JSONArray voucherList = util.getVoucherArray(voucherId, 10);
+            VoucherPage voucherPage = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherPage();
+            JSONArray voucherList = util.getVoucherArray(voucherPage, 10);
             Arrays.stream(phones).forEach(phone -> {
-                IScene purchaseTemporaryPackageScene = PurchaseTemporaryPackageScene.builder().customerPhone(phone)
+                String message = PurchaseTemporaryPackageScene.builder().customerPhone(phone)
                         .carType(PackageUseTypeEnum.ALL_CAR.name()).voucherList(voucherList)
                         .expiryDate("1").remark(EnumDesc.DESC_BETWEEN_20_30.getDesc()).subjectType(util.getSubjectType())
                         .subjectId(util.getSubjectDesc(util.getSubjectType())).extendedInsuranceYear("1")
-                        .extendedInsuranceCopies("1").type(1).build();
-                String message = visitor.invokeApi(purchaseTemporaryPackageScene, false).getString("message");
+                        .extendedInsuranceCopies("1").type(1).build().getResponse(visitor).getMessage();
                 String err = StringUtils.isEmpty(phone) ? "客户手机号不能为空" : "客户不存在";
                 CommonUtil.checkResult("联系方式为" + phone, err, message);
                 CommonUtil.logger(phone);
@@ -693,15 +692,14 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String[] plateNumbers = {null, "", "京A444", "岗A88776"};
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-            JSONArray voucherList = util.getVoucherArray(voucherId, 10);
+            VoucherPage voucherPage = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherPage();
+            JSONArray voucherList = util.getVoucherArray(voucherPage, 10);
             Arrays.stream(plateNumbers).forEach(plateNumber -> {
-                IScene purchaseTemporaryPackageScene = PurchaseTemporaryPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
+                String message = PurchaseTemporaryPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
                         .carType(PackageUseTypeEnum.RECEPTION_CAR.name()).plateNumber(plateNumber).voucherList(voucherList)
                         .expiryDate("1").remark(EnumDesc.DESC_BETWEEN_20_30.getDesc()).subjectType(util.getSubjectType())
                         .subjectId(util.getSubjectDesc(util.getSubjectType())).extendedInsuranceYear("1")
-                        .extendedInsuranceCopies("1").type(1).build();
-                String message = visitor.invokeApi(purchaseTemporaryPackageScene, false).getString("message");
+                        .extendedInsuranceCopies("1").type(1).build().getResponse(visitor).getMessage();
                 String err = StringUtils.isEmpty(plateNumber) ? "车牌号不可为空" : "车牌号格式不正确";
                 CommonUtil.checkResult("车牌号" + plateNumber, err, message);
                 CommonUtil.logger(plateNumber);
@@ -718,13 +716,12 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
     public void packageManager_system_11() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-            JSONArray voucherList = util.getVoucherArray(voucherId, 101);
-            IScene purchaseTemporaryPackageScene = PurchaseTemporaryPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
+            VoucherPage voucherPage = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherPage();
+            JSONArray voucherList = util.getVoucherArray(voucherPage, 101);
+            String message = PurchaseTemporaryPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
                     .carType(PackageUseTypeEnum.ALL_CAR.name()).voucherList(voucherList).expiryDate("1").remark(EnumDesc.DESC_BETWEEN_20_30.getDesc())
                     .subjectType(util.getSubjectType()).subjectId(util.getSubjectDesc(util.getSubjectType())).extendedInsuranceYear("1")
-                    .extendedInsuranceCopies("1").type(1).build();
-            String message = visitor.invokeApi(purchaseTemporaryPackageScene, false).getString("message");
+                    .extendedInsuranceCopies("1").type(1).build().getResponse(visitor).getMessage();
             String err = voucherList == null ? "卡券列表不能为空" : "卡券数量不能超过100张";
             CommonUtil.checkResult("卡券数量为" + voucherList, err, message);
         } catch (Exception | AssertionError e) {
@@ -742,11 +739,10 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             Long packageId = util.getPackagePage(PackageStatusEnum.AGREE).getPackageId();
             String[] packagePrices = {"100000001"};
             Arrays.stream(packagePrices).forEach(packagePrice -> {
-                IScene purchaseFixedPackageScene = PurchaseFixedPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
+                String message = PurchaseFixedPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
                         .carType(PackageUseTypeEnum.ALL_CAR.name()).packageId(packageId).packagePrice(packagePrice).expiryDate("1")
                         .remark(EnumDesc.DESC_BETWEEN_20_30.getDesc()).subjectType(util.getSubjectType()).subjectId(util.getSubjectDesc(util.getSubjectType()))
-                        .extendedInsuranceYear(10).extendedInsuranceCopies(10).type(1).build();
-                String message = visitor.invokeApi(purchaseFixedPackageScene, false).getString("message");
+                        .extendedInsuranceYear(10).extendedInsuranceCopies(10).type(1).build().getResponse(visitor).getMessage();
                 String err = "套餐购买价格不能超过100000000元";
                 CommonUtil.checkResult("套餐价格为" + packagePrice, err, message);
             });
@@ -766,11 +762,10 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             //购买固定套餐
             String[] remarks = {EnumDesc.DESC_BETWEEN_200_300.getDesc()};
             Arrays.stream(remarks).forEach(remark -> {
-                IScene purchaseFixedPackageScene = PurchaseFixedPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
+                String message = PurchaseFixedPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
                         .carType(PackageUseTypeEnum.ALL_CAR.name()).packageId(packageId).packagePrice("49.99").expiryDate("1").expiryDate("10")
                         .remark(EnumDesc.DESC_BETWEEN_20_30.getDesc()).subjectType(util.getSubjectType()).subjectId(util.getSubjectDesc(util.getSubjectType()))
-                        .extendedInsuranceYear(10).extendedInsuranceCopies(10).type(1).remark(remark).build();
-                String message = visitor.invokeApi(purchaseFixedPackageScene, false).getString("message");
+                        .extendedInsuranceYear(10).extendedInsuranceCopies(10).type(1).remark(remark).build().getResponse(visitor).getMessage();
                 String err = "备注不能超过200字";
                 CommonUtil.checkResult("套餐说明为" + remark, err, message);
             });
@@ -790,11 +785,10 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             //购买固定套餐
             String[] subjectTypes = {"全部权限", null, ""};
             Arrays.stream(subjectTypes).forEach(subjectType -> {
-                IScene purchaseFixedPackageScene = PurchaseFixedPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
+                String message = PurchaseFixedPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
                         .carType(PackageUseTypeEnum.ALL_CAR.name()).packageId(packageId).packagePrice("49.99").expiryDate("1").expiryDate("10")
                         .remark(EnumDesc.DESC_BETWEEN_20_30.getDesc()).subjectType(subjectType).subjectId(util.getSubjectDesc(subjectType))
-                        .extendedInsuranceYear(10).extendedInsuranceCopies(10).type(1).build();
-                String message = visitor.invokeApi(purchaseFixedPackageScene, false).getString("message");
+                        .extendedInsuranceYear(10).extendedInsuranceCopies(10).type(1).build().getResponse(visitor).getMessage();
                 String err = "主体类型不存在";
                 CommonUtil.checkResult("主体类型为" + subjectType, err, message);
                 CommonUtil.logger(subjectType);
@@ -813,11 +807,11 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         try {
             Long packageId = util.getPackagePage(PackageStatusEnum.AGREE).getPackageId();
             //购买固定套餐
-            IScene purchaseFixedPackageScene = PurchaseFixedPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
+            Response response = PurchaseFixedPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
                     .carType(PackageUseTypeEnum.ALL_CAR.name()).packageId(packageId).packagePrice("49.99").expiryDate("1").expiryDate("10")
                     .remark(EnumDesc.DESC_BETWEEN_20_30.getDesc()).subjectType(UseRangeEnum.STORE.getName())
-                    .extendedInsuranceYear(10).extendedInsuranceCopies(10).type(1).build();
-            String message = visitor.invokeApi(purchaseFixedPackageScene, false).getString("message");
+                    .extendedInsuranceYear(10).extendedInsuranceCopies(10).type(1).build().getResponse(visitor);
+            String message = response.getMessage();
             String err = "主体类型不存在";
             CommonUtil.checkResult("主体类型为" + null, err, message);
         } catch (Exception | AssertionError e) {
@@ -835,11 +829,11 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             Long[] packageIds = {null};
             Arrays.stream(packageIds).forEach(packageId -> {
                 //购买固定套餐
-                IScene purchaseFixedPackageScene = PurchaseFixedPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
+                Response response = PurchaseFixedPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
                         .carType(PackageUseTypeEnum.ALL_CAR.name()).packageId(packageId).packagePrice("49.99").expiryDate("1").expiryDate("10")
                         .remark(EnumDesc.DESC_BETWEEN_20_30.getDesc()).subjectType(util.getSubjectType()).subjectId(util.getSubjectDesc(util.getSubjectType()))
-                        .extendedInsuranceYear(10).extendedInsuranceCopies(10).type(1).build();
-                String message = visitor.invokeApi(purchaseFixedPackageScene, false).getString("message");
+                        .extendedInsuranceYear(10).extendedInsuranceCopies(10).type(1).build().getResponse(visitor);
+                String message = response.getMessage();
                 String err = packageId == null ? "套餐列表不能为空" : "";
                 CommonUtil.checkResult("选择套餐", packageId, err, message);
             });
@@ -854,15 +848,15 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
     @Test(description = "套餐管理--临时套餐购买已售罄的卡券，确认提示：卡券【XXXX】已售罄")
     public void packageManager_system_18() {
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.SELL_OUT).buildVoucher().getVoucherId();
-            String voucherName = util.getVoucherName(voucherId);
-            JSONArray voucherList = util.getVoucherArray(voucherId, 2);
+            VoucherPage voucherPage = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.SELL_OUT).buildVoucher().getVoucherPage();
+            String voucherName = voucherPage.getVoucherName();
+            JSONArray voucherList = util.getVoucherArray(voucherPage, 2);
             //购买临时套餐
             IScene temporaryScene = PurchaseTemporaryPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
                     .carType(PackageUseTypeEnum.ALL_CAR.name()).voucherList(voucherList).expiryDate("1").remark(EnumDesc.DESC_BETWEEN_20_30.getDesc())
                     .subjectType(util.getSubjectType()).subjectId(util.getSubjectDesc(util.getSubjectType()))
                     .extendedInsuranceYear("1").extendedInsuranceCopies("1").type(1).build();
-            String message = visitor.invokeApi(temporaryScene, false).getString("message");
+            String message = util.getResponse(temporaryScene).getMessage();
             String err = "卡券【" + voucherName + "】已售罄";
             CommonUtil.checkResult("购买无库存卡券" + voucherName, err, message);
         } catch (Exception | AssertionError e) {
@@ -876,15 +870,15 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
     @Test(description = "套餐管理--临时套餐购买已作废卡券，确认时会有提示：卡券【XXX】已被作废，请重新选择！")
     public void packageManager_system_19() {
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.INVALIDED).buildVoucher().getVoucherId();
-            String voucherName = util.getVoucherName(voucherId);
-            JSONArray voucherList = util.getVoucherArray(voucherId, 2);
+            VoucherPage voucherPage = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.INVALIDED).buildVoucher().getVoucherPage();
+            String voucherName = voucherPage.getVoucherName();
+            JSONArray voucherList = util.getVoucherArray(voucherPage, 2);
             //购买临时套餐
             IScene temporaryScene = PurchaseTemporaryPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
                     .carType(PackageUseTypeEnum.ALL_CAR.name()).voucherList(voucherList).expiryDate("1").remark(EnumDesc.DESC_BETWEEN_20_30.getDesc())
                     .subjectType(util.getSubjectType()).subjectId(util.getSubjectDesc(util.getSubjectType()))
                     .extendedInsuranceYear("1").extendedInsuranceCopies("1").type(1).build();
-            String message = visitor.invokeApi(temporaryScene, false).getString("message");
+            String message = util.getResponse(temporaryScene).getMessage();
             String err = "卡券【" + voucherName + "】已被作废，请重新选择！";
             CommonUtil.checkResult("购买已作废的卡券" + voucherName, err, message);
         } catch (Exception | AssertionError e) {
@@ -899,8 +893,9 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
     public void packageManager_system_20() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.SELL_OUT).buildVoucher().getVoucherId();
-            String voucherName = util.getVoucherName(voucherId);
+            VoucherPage voucherPage = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.SELL_OUT).buildVoucher().getVoucherPage();
+            String voucherName = voucherPage.getVoucherName();
+            Long voucherId = voucherPage.getVoucherId();
             PackagePage packagePage = util.editPackage(voucherId, 1);
             Long packageId = packagePage.getPackageId();
             //购买固定套餐
@@ -908,7 +903,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
                     .carType(PackageUseTypeEnum.ALL_CAR.name()).packageId(packageId).expiryDate("1").remark(EnumDesc.DESC_BETWEEN_20_30.getDesc())
                     .subjectType(util.getSubjectType()).subjectId(util.getSubjectDesc(util.getSubjectType())).packagePrice("49.99")
                     .extendedInsuranceYear(1).extendedInsuranceCopies(1).type(1).build();
-            String message = visitor.invokeApi(purchaseFixedPackageScene, false).getString("message");
+            String message = util.getResponse(purchaseFixedPackageScene).getMessage();
             String err = "卡券【" + voucherName + "】已售罄";
             CommonUtil.checkResult("购买包含已售罄卡券的套餐", err, message);
         } catch (Exception | AssertionError e) {

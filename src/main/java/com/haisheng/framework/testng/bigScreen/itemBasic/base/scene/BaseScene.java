@@ -130,4 +130,10 @@ public abstract class BaseScene implements IScene {
         body.put(key, value);
         return this;
     }
+
+    @Override
+    public Response getResponse(VisitorProxy visitor) {
+        JSONObject object = visitor.invokeApi(getPath(), getBody(), false);
+        return JSONObject.toJavaObject(object, Response.class);
+    }
 }

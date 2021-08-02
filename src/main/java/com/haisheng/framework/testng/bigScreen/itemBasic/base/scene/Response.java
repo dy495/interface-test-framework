@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.itemPorsche.common.bean;
+package com.haisheng.framework.testng.bigScreen.itemBasic.base.scene;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
