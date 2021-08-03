@@ -12,6 +12,8 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProd
 import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherScene.AppFlowUp.AppFlowUpPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherScene.AppFlowUp.AppFlowUpRemarkScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.*;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.EvaluateDetailV4Scene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.EvaluatePageV4Scene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.PreSalesReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.PreSalesRecpEvaluateOpt;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.PreSalesRecpEvaluateSubmit;
@@ -58,6 +60,7 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
         util.loginPc(YT_RECEPTION_DAILY);   //登录
 //        LoginPc loginScene = LoginPc.builder().phone("13402050043").verificationCode("000000").build();
 //        httpPost(loginScene.getPath(),loginScene.getBody(),PRODUCE.getPort());
+        visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
     }
 
     @AfterClass
@@ -158,14 +161,20 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
             commonConfig.roleId = null;
             JSONArray evaluateInfoList = new JSONArray();
             PreSalesRecpEvaluateOpt.builder().reception_id(Long.parseLong(customer.get("id"))).build().invoke(visitor, true).getJSONArray("list").stream().map(j -> (JSONObject) j).map(json -> json.getInteger("id")).forEach(e-> evaluateInfoList.add(lowEvaluate(e)));
-            String message = PreSalesRecpEvaluateSubmit.builder().evaluate_info_list(evaluateInfoList).reception_id(Long.parseLong(customer.get("id"))).build().invoke(visitor, false).getString("message");
+            PreSalesRecpEvaluateSubmit.builder().evaluate_info_list(evaluateInfoList).reception_id(Long.parseLong(customer.get("id"))).build().invoke(visitor, false);
             commonConfig.shopId = YT_RECEPTION_DAILY.getReceptionShopId();
             commonConfig.roleId = YT_RECEPTION_DAILY.getRoleId();
-            if (Objects.equals(message,"success")){
-                Integer flowUpId = AppFlowUpPageScene.builder().size(10).build().invoke(visitor, true).getJSONArray("list").getJSONObject(0).getInteger("id");
-                String code = AppFlowUpRemarkScene.builder().followId(flowUpId).remark(remark).build().invoke(visitor, false).getString("code");
-                Preconditions.checkArgument(Objects.equals(expect,code),description+",预期结果code="+expect+",实际结果code="+code);
+            JSONObject firstFlow = AppFlowUpPageScene.builder().size(10).build().invoke(visitor, true).getJSONArray("list").getJSONObject(0);
+            Integer flowUpId = firstFlow.getInteger("id");
+            String phone = firstFlow.getJSONObject("pre_reception_offline_evaluate").getString("customer_phone");
+            String code = AppFlowUpRemarkScene.builder().followId(flowUpId).remark(remark).build().invoke(visitor, false).getString("code");
+            Integer id = EvaluatePageV4Scene.builder().page(1).size(10).evaluateType(4).customerPhone(phone).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getInteger("id");
+            String remarkContent = EvaluateDetailV4Scene.builder().id(id).build().invoke(visitor, true).getString("remark_content");
+            Preconditions.checkArgument(Objects.equals(expect,code),description+",预期结果code="+expect+",实际结果code="+code);
+            if(Objects.equals(expect,"1000")) {
+                Preconditions.checkArgument(Objects.equals(remark,remarkContent),"跟进内容不一致。APP填写跟进内容:"+remark+";PC跟进内容:"+remarkContent);
             }
+
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -185,7 +194,7 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
     private Object[] remark() {
         return new Object[][]{
                 {"备注长度10个字符", "1000", "@%^#*?><jh"},
-                //{"备注长度9个字符", "1001", "zsdfghyjh"},
+                //{"备注长度9个字符", "1001", "zsdfghyjh"},   //success
                 {"备注长度0个字符", "1001", ""},
                 {"符合长度限制的字符组合", "1000", "!_=-][/?ASF你        我他slj,.  l;'\nffflllai"},
         };
