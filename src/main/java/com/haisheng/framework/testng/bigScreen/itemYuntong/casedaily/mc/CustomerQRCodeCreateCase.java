@@ -1,39 +1,21 @@
 package com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc;
 
-import com.alibaba.fastjson.JSONObject;
-import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistAppId;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistConfId;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherScene.CarFileUploadScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherScene.H5.CustomerInputInfo;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherScene.H5.GetQRCode;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherScene.saveInfo.GetBeforeQRCode;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherScene.saveInfo.GetUsableCarId;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherScene.saveInfo.InputInfoBySelf;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.brand.BrandAddScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.brand.BrandDeleteScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.brand.BrandPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.loginuser.LoginPc;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.YunTongInfo;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
-import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import com.haisheng.framework.util.ImageUtil;
-import org.apache.commons.lang3.builder.ToStringExclude;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
-import java.util.Objects;
 
 
 public class CustomerQRCodeCreateCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_SSO; // 管理页—-首页
+    private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_DAILY_SSO; // 管理页—-首页
     private static final EnumAccount YT_RECEPTION_DAILY = EnumAccount.YT_RECEPTION_DAILY; // 全部权限账号 【运通】
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);   // 产品类放到代理类中（通过代理类发请求）
     // public SceneUtil util = new SceneUtil(visitor);
@@ -81,7 +63,7 @@ public class CustomerQRCodeCreateCase extends TestCaseCommon implements TestCase
     }
     @Test
     public void customerInfo() {
-        visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
+        visitor.setProduct(EnumTestProduct.YT_DAILY_CAR);
         String id = GetQRCode.builder().build().invoke(visitor, true).getString("qr_code_url");
 //        GetBeforeQRCode.builder().build().invoke(visitor);
 //        InputInfoBySelf.builder().name("111").build().invoke(visitor);

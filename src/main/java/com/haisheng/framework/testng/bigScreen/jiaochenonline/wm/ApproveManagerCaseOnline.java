@@ -7,8 +7,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherPage;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.voucher.ApplyApprovalInfoBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.voucher.ApplyPageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherDetailBean;
@@ -51,7 +50,7 @@ import java.util.stream.Collectors;
  * 审批管理
  */
 public class ApproveManagerCaseOnline extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduce PRODUCE = EnumTestProduce.JC_ONLINE;
+    private static final EnumTestProduct PRODUCE = EnumTestProduct.JC_ONLINE;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.JC_ALL_AUTHORITY_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public UserUtil user = new UserUtil(visitor);
@@ -125,7 +124,7 @@ public class ApproveManagerCaseOnline extends TestCaseCommon implements TestCase
         try {
             //卡券列表
             IScene voucherPageScene = VoucherFormVoucherPageScene.builder().build();
-            List<VoucherFormVoucherPageBean> voucherPageList = util.toJavaObjectList(voucherPageScene, VoucherFormVoucherPageBean.class, SupporterUtil.SIZE);
+            List<com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherFormVoucherPageBean> voucherPageList = util.toJavaObjectList(voucherPageScene, com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherFormVoucherPageBean.class, SupporterUtil.SIZE);
             voucherPageList.forEach(voucherPage -> {
                 VoucherDetailBean voucherDetail = util.getVoucherDetail(voucherPage.getVoucherId());
                 String voucherName = voucherPage.getVoucherName();
@@ -149,7 +148,7 @@ public class ApproveManagerCaseOnline extends TestCaseCommon implements TestCase
         try {
             //卡券列表
             IScene voucherPageScene = VoucherFormVoucherPageScene.builder().build();
-            List<VoucherPage> voucherPageList = util.toJavaObjectList(voucherPageScene, VoucherPage.class, SupporterUtil.SIZE);
+            List<VoucherFormVoucherPageBean> voucherPageList = util.toJavaObjectList(voucherPageScene, VoucherFormVoucherPageBean.class, SupporterUtil.SIZE);
             voucherPageList.forEach(voucherPage -> {
                 CommonUtil.valueView(voucherPage.getVoucherName());
                 VoucherDetailBean voucherDetail = util.getVoucherDetail(voucherPage.getVoucherId());
@@ -254,7 +253,7 @@ public class ApproveManagerCaseOnline extends TestCaseCommon implements TestCase
         try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
-            VoucherPage voucherPage = util.getVoucherPage(voucherId);
+            VoucherFormVoucherPageBean voucherPage = util.getVoucherPage(voucherId);
             IScene additionalRecordScene = AdditionalRecordScene.builder().voucherId(voucherId).build();
             int addTotal = additionalRecordScene.invoke(visitor).getInteger("total");
             //增发卡券
@@ -272,7 +271,7 @@ public class ApproveManagerCaseOnline extends TestCaseCommon implements TestCase
             CommonUtil.checkResult(voucherName + " 增发记录状态", AdditionalRecordStatusEnum.AUDITING.getName(), statusName);
             //审批拒绝卡券剩余库存+0
             util.applyVoucher(voucherName, "2");
-            VoucherPage newVoucherPage = util.getVoucherPage(voucherId);
+            VoucherFormVoucherPageBean newVoucherPage = util.getVoucherPage(voucherId);
             CommonUtil.checkResult(voucherName + " 剩余库存", voucherPage.getSurplusInventory(), newVoucherPage.getSurplusInventory());
             CommonUtil.checkResult(voucherName + " 可用库存", voucherPage.getAllowUseInventory(), newVoucherPage.getAllowUseInventory());
             //增发记录状态=已拒绝
@@ -310,7 +309,7 @@ public class ApproveManagerCaseOnline extends TestCaseCommon implements TestCase
             //卡券状态
             IScene scene = VoucherFormVoucherPageScene.builder().build();
             voucherIdList.forEach(voucherId -> {
-                VoucherFormVoucherPageBean voucherFormVoucherPageBean = util.toJavaObject(scene, VoucherFormVoucherPageBean.class, "voucher_id", voucherId);
+                com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherFormVoucherPageBean voucherFormVoucherPageBean = util.toJavaObject(scene, com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherFormVoucherPageBean.class, "voucher_id", voucherId);
                 CommonUtil.checkResult("卡券" + voucherFormVoucherPageBean.getVoucherName() + "的状态", VoucherStatusEnum.WORKING.getName(), voucherFormVoucherPageBean.getVoucherStatusName());
                 CommonUtil.checkResult("卡券" + voucherFormVoucherPageBean.getVoucherName() + "的状态", VoucherStatusEnum.WORKING.name(), voucherFormVoucherPageBean.getVoucherStatus());
             });
@@ -350,7 +349,7 @@ public class ApproveManagerCaseOnline extends TestCaseCommon implements TestCase
             //卡券状态
             IScene scene = VoucherFormVoucherPageScene.builder().build();
             voucherIdList.forEach(voucherId -> {
-                VoucherFormVoucherPageBean voucherFormVoucherPageBean = util.toJavaObject(scene, VoucherFormVoucherPageBean.class, "voucher_id", voucherId);
+                com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherFormVoucherPageBean voucherFormVoucherPageBean = util.toJavaObject(scene, com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherFormVoucherPageBean.class, "voucher_id", voucherId);
                 CommonUtil.checkResult("卡券" + voucherFormVoucherPageBean.getVoucherName() + "的状态", VoucherStatusEnum.REJECT.getName(), voucherFormVoucherPageBean.getVoucherStatusName());
                 CommonUtil.checkResult("卡券" + voucherFormVoucherPageBean.getVoucherName() + "的状态", VoucherStatusEnum.REJECT.name(), voucherFormVoucherPageBean.getVoucherStatus());
             });

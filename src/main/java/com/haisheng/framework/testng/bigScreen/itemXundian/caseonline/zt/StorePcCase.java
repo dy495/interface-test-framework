@@ -4,8 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
-import com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.hqq.StorePcAndAppData;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.zt.DataProviderMethod;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.equipmentmanagement.auth.AllDeviceListScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.shop.collection.AddScene;
@@ -20,8 +19,6 @@ import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -33,7 +30,7 @@ import java.util.Date;
 import static com.google.common.base.Preconditions.checkArgument;
 
 public class StorePcCase extends TestCaseCommon implements TestCaseStd{
-    private final EnumTestProduce product = EnumTestProduce.XD_ONLINE;
+    private final EnumTestProduct product = EnumTestProduct.XD_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(product);
     public UserUtil user = new UserUtil(visitor);
     public SupporterUtil util = new SupporterUtil(visitor);
@@ -375,7 +372,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd{
             Preconditions.checkArgument(res0.getString("message").equals("当前会员ID已经存在！"), "注册会员重复会员id也成功了message"+res0.getString("message"));
 
             //注册会员时会员电话重复
-            JSONObject res1 = md.RegisterMember1(null,path,"212","这是一个二","13604609869","1998-10-01",null,130);
+            JSONObject res1 = md.RegisterMember1(null,path,"212","这是一个二","13222222222","1998-10-01",null,130);
             Preconditions.checkArgument(res1.getString("message").equals("当前手机号已经存在！"), "注册会员时电话重复也注册成功了返回的message"+res1.getString("message"));
 //
             //注册会员时会员名称过长

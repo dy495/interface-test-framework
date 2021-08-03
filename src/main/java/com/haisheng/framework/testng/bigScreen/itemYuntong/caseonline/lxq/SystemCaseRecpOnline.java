@@ -5,7 +5,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistAppId;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistConfId;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.AppPreSalesReceptionCreateScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.voicerecord.AppVoiceRecordSubmitScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanage.PreSaleCustomerModelListScene;
@@ -39,7 +39,7 @@ public class SystemCaseRecpOnline extends TestCaseCommon implements TestCaseStd 
 
 
 
-    EnumTestProduce PRODUCE = EnumTestProduce.YT_ONLINE_SSO;
+    EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_SSO;
     EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_ONLINE_LXQ;
     VisitorProxy visitor = new VisitorProxy(PRODUCE);
     SceneUtil businessUtil = new SceneUtil(visitor);
@@ -72,7 +72,7 @@ public class SystemCaseRecpOnline extends TestCaseCommon implements TestCaseStd 
         beforeClassInit(commonConfig);
         businessUtil.loginPc(ALL_AUTHORITY);
 
-        visitor.setProduct(EnumTestProduce.YT_ONLINE_CAR);  //展厅接待模块
+        visitor.setProduct(EnumTestProduct.YT_ONLINE_CAR);  //展厅接待模块
 
     }
 
@@ -108,7 +108,7 @@ public class SystemCaseRecpOnline extends TestCaseCommon implements TestCaseStd 
             Long recId = info.startrecption(true);
 
             //获取评价选项
-             visitor.setProduct(EnumTestProduce.YT_ONLINE_CAR);
+             visitor.setProduct(EnumTestProduct.YT_ONLINE_CAR);
              commonConfig.shopId = null;
              commonConfig.roleId = null;
             JSONArray evaluate_info_list = info.evaluateInfo(recId,type);
@@ -184,14 +184,14 @@ public class SystemCaseRecpOnline extends TestCaseCommon implements TestCaseStd 
 
                 Thread.sleep(301000);
                 Long endtime = System.currentTimeMillis();
-                visitor.setProduct(EnumTestProduce.YT_ONLINE_CONTROL);
+                visitor.setProduct(EnumTestProduct.YT_ONLINE_CONTROL);
                 AppVoiceRecordSubmitScene.builder().base64(base1).recordName(record_name).startTime(starttime).endTime(endtime).receptionId(recId1).receptionNodes(reception_nodes).build().invoke(visitor);
                 AppVoiceRecordSubmitScene.builder().base64(base2).recordName(record_name).startTime(starttime).endTime(endtime).receptionId(recId2).receptionNodes(reception_nodes).build().invoke(visitor);
                 AppVoiceRecordSubmitScene.builder().base64(base3).recordName(record_name).startTime(starttime).endTime(endtime).receptionId(recId3).receptionNodes(reception_nodes).build().invoke(visitor);
 
 
 
-                visitor.setProduct(EnumTestProduce.YT_ONLINE_CAR);
+                visitor.setProduct(EnumTestProduct.YT_ONLINE_CAR);
                 //完成接待
                 FinishReceptionScene.builder().id(recId1).shopId(info.oneshopid).build().invoke(visitor);
                 FinishReceptionScene.builder().id(recId2).shopId(info.oneshopid).build().invoke(visitor);

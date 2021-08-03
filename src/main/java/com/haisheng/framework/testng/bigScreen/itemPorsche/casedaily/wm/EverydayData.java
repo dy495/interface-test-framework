@@ -6,7 +6,7 @@ import com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.commonDs.
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.sql.Sql;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.common.bean.SaleInfo;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.common.bean.TPorscheTodayData;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.common.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.DingPushUtil;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.UserUtil;
@@ -30,7 +30,7 @@ public class EverydayData extends TestCaseCommon implements TestCaseStd {
     PublicMethod method = new PublicMethod();
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     private static final EnumAccount zjl = EnumAccount.ZJL_DAILY;
-    private static final String shopId = EnumTestProduce.PORSCHE_DAILY.getShopId();
+    private static final String shopId = EnumTestProduct.PORSCHE_DAILY.getShopId();
 
     @BeforeClass
     @Override

@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.aliyun.openservices.shade.org.apache.commons.codec.binary.Base64;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherScene.CarFileUploadScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.AppPreSalesReceptionCreateScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.brand.BrandAddScene;
@@ -27,7 +27,7 @@ public class YunTongInfoOnline {
 
 
 
-    EnumTestProduce PRODUCE = EnumTestProduce.YT_ONLINE_SSO;
+    EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_SSO;
     EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_ONLINE;
     VisitorProxy visitor = new VisitorProxy(PRODUCE);
 
@@ -73,7 +73,7 @@ public class YunTongInfoOnline {
     }
 
     public String getLogo() {
-        visitor.setProduct(EnumTestProduce.YT_ONLINE_CAR);
+        visitor.setProduct(EnumTestProduct.YT_ONLINE_CAR);
         String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
 
         return CarFileUploadScene.builder().pic(new ImageUtil().getImageBinary(filePath)).permanentPicType(0).build().invoke(visitor).getString("pic_path");
@@ -151,7 +151,7 @@ public class YunTongInfoOnline {
 
     public final Long startrecption(Boolean done){
         //销售接待
-        visitor.setProduct(EnumTestProduce.YT_ONLINE_CAR);
+        visitor.setProduct(EnumTestProduct.YT_ONLINE_CAR);
         String phone = "1380110" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000));//手机号
         String name = "小紫"+dt.getHistoryDate(0);
         Long car_style_id = PreSaleCustomerStyleListScene.builder().shopId(oneshopid).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("style_id");

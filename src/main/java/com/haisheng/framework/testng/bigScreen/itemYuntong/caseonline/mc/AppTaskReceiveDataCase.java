@@ -7,7 +7,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistAppId;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistConfId;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherScene.AppFlowUp.AppFlowUpPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherScene.AppFlowUp.AppFlowUpRemarkScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.homepagev4.AppTodayTaskScene;
@@ -33,7 +33,7 @@ import java.util.Objects;
 
 
 public class AppTaskReceiveDataCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_ONLINE_SSO; // 管理页—-首页
+    private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_SSO; // 管理页—-首页
     private static final EnumAccount YT_RECEPTION = EnumAccount.YT_RECEPTION_ONLINE_5; // 全部权限账号 【运通】
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);   // 产品类放到代理类中（通过代理类发请求）
     public SceneUtil util = new SceneUtil(visitor);
@@ -59,7 +59,7 @@ public class AppTaskReceiveDataCase extends TestCaseCommon implements TestCaseSt
         commonConfig.roleId = YT_RECEPTION.getRoleId(); //请求头放入roleId
         beforeClassInit(commonConfig);  // 配置请求头
         util.loginPc(YT_RECEPTION);   //登录
-        visitor.setProduct(EnumTestProduce.YT_ONLINE_CAR);
+        visitor.setProduct(EnumTestProduct.YT_ONLINE_CAR);
     }
 
 

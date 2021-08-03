@@ -3,7 +3,7 @@ package com.haisheng.framework.testng.bigScreen.itemXundian.common.generator.vou
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.voucher.ApplyPageBean;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherPage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherFormVoucherPageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.ApplyStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherTypeEnum;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.pc.voucher.ApplyApprovalScene;
@@ -30,7 +30,7 @@ public class SellOutVoucher extends AbstractVoucher {
         String voucherName = supporterUtil.createVoucher(1, VoucherTypeEnum.COMMODITY_EXCHANGE);
         applyVoucher(voucherName);
         IScene voucherPageScene = VoucherFormVoucherPageScene.builder().voucherName(voucherName).build();
-        VoucherPage voucherPage = findBeanByField(voucherPageScene, VoucherPage.class, "voucher_name", voucherName);
+        VoucherFormVoucherPageBean voucherPage = findBeanByField(voucherPageScene, VoucherFormVoucherPageBean.class, "voucher_name", voucherName);
         supporterUtil.pushMessage(0, true, voucherPage.getVoucherId());
         logger("CREATE SELL OUT FINISH");
     }

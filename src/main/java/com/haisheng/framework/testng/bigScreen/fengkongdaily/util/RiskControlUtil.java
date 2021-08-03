@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.LoginPcScene;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import org.springframework.util.StringUtils;
@@ -16,7 +16,7 @@ public class RiskControlUtil extends TestCaseCommon {
 
     private static volatile RiskControlUtil instance = null;
     private static String IpPort;
-    private static EnumTestProduce product;
+    private static EnumTestProduct product;
     private final VisitorProxy visitor;
 
     /**
@@ -24,7 +24,7 @@ public class RiskControlUtil extends TestCaseCommon {
      *
      * @return ScenarioUtil
      */
-    public static synchronized RiskControlUtil getInstance(EnumTestProduce product) {
+    public static synchronized RiskControlUtil getInstance(EnumTestProduct product) {
         if (instance == null) {
             instance = new RiskControlUtil(product);
             IpPort = product.getPort();
@@ -37,7 +37,7 @@ public class RiskControlUtil extends TestCaseCommon {
         return instance;
     }
 
-    private RiskControlUtil(EnumTestProduce product) {
+    private RiskControlUtil(EnumTestProduct product) {
         RiskControlUtil.product = product;
         visitor = new VisitorProxy(product);
     }
@@ -70,7 +70,7 @@ public class RiskControlUtil extends TestCaseCommon {
     }
 
     //更换域名
-    public void changeIpPort(String ipPort, EnumTestProduce product1) {
+    public void changeIpPort(String ipPort, EnumTestProduct product1) {
         IpPort = ipPort;
         product = product1;
     }

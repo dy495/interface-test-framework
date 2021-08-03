@@ -12,7 +12,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.checkrisk.EventTotalScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.checkrisk.tasks.ListScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.checkriskalarm.AlarmDetailScene;
@@ -32,7 +32,7 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 
 public class StoreInspectionCase extends TestCaseCommon implements TestCaseStd {
-    private final EnumTestProduce product = EnumTestProduce.XD_DAILY;
+    private final EnumTestProduct product = EnumTestProduct.XD_DAILY;
     public VisitorProxy visitor = new VisitorProxy(product);
     public UserUtil user = new UserUtil(visitor);
     public SupporterUtil util = new SupporterUtil(visitor);

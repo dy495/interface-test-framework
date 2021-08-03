@@ -8,7 +8,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistAppId;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistConfId;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherScene.AppFlowUp.AppFlowUpPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherScene.AppFlowUp.AppFlowUpRemarkScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.*;
@@ -29,10 +29,9 @@ import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_DAILY_SSO; // 管理页—-首页
+    private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_DAILY_SSO; // 管理页—-首页
     private static final EnumAccount YT_RECEPTION_DAILY = EnumAccount.YT_RECEPTION_DAILY_M; // 全部权限账号 【运通】
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);   // 产品类放到代理类中（通过代理类发请求）
     public SceneUtil util = new SceneUtil(visitor);
@@ -60,7 +59,7 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
         util.loginPc(YT_RECEPTION_DAILY);   //登录
 //        LoginPc loginScene = LoginPc.builder().phone("13402050043").verificationCode("000000").build();
 //        httpPost(loginScene.getPath(),loginScene.getBody(),PRODUCE.getPort());
-        visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
+        visitor.setProduct(EnumTestProduct.YT_DAILY_CAR);
     }
 
     @AfterClass
@@ -89,7 +88,7 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(dataProvider = "errorInfo")
     public void test01createCustomer_system_err(String description,String point,String content,String expect) {
-        visitor.setProduct(EnumTestProduce.YT_DAILY_CAR);
+        visitor.setProduct(EnumTestProduct.YT_DAILY_CAR);
         try {
             IScene scene = AppPreSalesReceptionCreateScene.builder().customerName("正常名字").customerPhone("18" + numRandom(9)).sexId("1").intentionCarModelId(util.mcCarId()).estimateBuyCarTime("2035-12-20").build().modify(point, content);
             String code = scene.invoke(visitor,false).getString("code");

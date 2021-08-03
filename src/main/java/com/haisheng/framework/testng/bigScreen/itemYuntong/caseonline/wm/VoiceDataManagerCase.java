@@ -7,7 +7,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.pc.manage.VoiceEvaluationPageBean;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.pc.sensitivewords.LabelListBean;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.pc.specialaudio.SpecialAudioPageBean;
@@ -43,7 +43,7 @@ import java.util.stream.Collectors;
  * @date 2021/1/29 11:17
  */
 public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduce PRODUCE = EnumTestProduce.YT_ONLINE_CONTROL;
+    private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_CONTROL;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public SceneUtil util = new SceneUtil(visitor);
@@ -117,7 +117,7 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
         try {
             IScene voiceEvaluationPageScene = VoiceEvaluationPageScene.builder().build();
             long evaluationTotal = voiceEvaluationPageScene.invoke(visitor).getLong("total");
-            visitor.setProduct(EnumTestProduce.YT_ONLINE_CAR);
+            visitor.setProduct(EnumTestProduct.YT_ONLINE_CAR);
             IScene preSalesReceptionPageScene = PreSalesReceptionPageScene.builder().build();
             long receptionTotal = preSalesReceptionPageScene.invoke(visitor).getLong("total");
             CommonUtil.valueView(evaluationTotal, receptionTotal);
@@ -125,7 +125,7 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            visitor.setProduct(EnumTestProduce.YT_ONLINE_CONTROL);
+            visitor.setProduct(EnumTestProduct.YT_ONLINE_CONTROL);
             saveData("语音评鉴列表数<=销售接待页列表数");
         }
     }

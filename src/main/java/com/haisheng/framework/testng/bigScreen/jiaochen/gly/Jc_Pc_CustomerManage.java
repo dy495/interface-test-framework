@@ -3,7 +3,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.gly;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
@@ -27,7 +27,7 @@ public class Jc_Pc_CustomerManage extends TestCaseCommon implements TestCaseStd 
     CommonPram cp = new CommonPram();
     public String appletTocken = EnumAppletToken.JC_GLY_DAILY.getToken();
     CommonConfig commonConfig = new CommonConfig();
-    private static final EnumTestProduce product = EnumTestProduce.JC_DAILY;
+    private static final EnumTestProduct product = EnumTestProduct.JC_DAILY;
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
      */

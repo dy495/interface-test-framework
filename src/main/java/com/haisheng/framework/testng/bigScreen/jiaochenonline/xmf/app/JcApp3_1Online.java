@@ -6,7 +6,7 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.commonDs.JsonPathUtil;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletConsultAfterServiceSubmitScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletConsultOnlineExpertsSubmitScene;
@@ -56,9 +56,9 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.referer = EnumTestProduce.JC_ONLINE.getReferer();
-        commonConfig.product=EnumTestProduce.JC_ONLINE.getAbbreviation();
-        jc.changeIpPort(EnumTestProduce.JC_ONLINE.getPort());
+        commonConfig.referer = EnumTestProduct.JC_ONLINE.getReferer();
+        commonConfig.product= EnumTestProduct.JC_ONLINE.getAbbreviation();
+        jc.changeIpPort(EnumTestProduct.JC_ONLINE.getPort());
 
         //replace backend gateway url
         //commonConfig.gateway = "";
@@ -67,7 +67,7 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_ONLINE_TEST.getJobName());
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.JC_ONLINE.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.JC_ONLINE.getDesc() + commonConfig.checklistQaOwner);
 
         //replace ding f
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
@@ -92,7 +92,7 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
         object.put("phone", username);
         object.put("verification_code", password);
         commonConfig.roleId = roleId;
-        httpPost(path, object, EnumTestProduce.JC_ONLINE.getPort());
+        httpPost(path, object, EnumTestProduct.JC_ONLINE.getPort());
     }
 
     //pc登录
@@ -102,7 +102,7 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
         object.put("phone", phone);
         object.put("verification_code", verificationCode);
         commonConfig.roleId = roleId;
-        httpPost(path, object, EnumTestProduce.JC_ONLINE.getPort());
+        httpPost(path, object, EnumTestProduct.JC_ONLINE.getPort());
     }
 
     public void startReception(){

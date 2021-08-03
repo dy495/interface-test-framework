@@ -6,7 +6,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemMall.casedaily.gly.Util.MallBusinessUtil;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.enumerator.RegionTypeEnum;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.enumerator.TimeTypeEnum;
@@ -33,7 +33,7 @@ import java.lang.reflect.Method;
 
 public class MallSystemCase extends TestCaseCommon implements TestCaseStd {
 
-    private final EnumTestProduce product = EnumTestProduce.MALL_DAILY;
+    private final EnumTestProduct product = EnumTestProduct.MALL_DAILY;
     public VisitorProxy visitor = new VisitorProxy(product);
     public UserUtil user = new UserUtil(visitor);
     public SupporterUtil util = new SupporterUtil(visitor);

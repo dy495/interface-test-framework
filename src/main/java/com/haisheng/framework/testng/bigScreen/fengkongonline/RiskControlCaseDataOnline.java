@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.riskControlEnum.RuleEnum;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.riskControlEnum.routerEnum;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.alarmrule.DetailScene;
@@ -30,7 +30,7 @@ import java.util.Date;
 import java.util.List;
 
 public class RiskControlCaseDataOnline extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduce product = EnumTestProduce.FK_ONLINE;
+    private static final EnumTestProduct product = EnumTestProduct.FK_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(product);
     private static final routerEnum router = routerEnum.SHOPDAILY;
     PublicParam pp = new PublicParam();
@@ -42,7 +42,7 @@ public class RiskControlCaseDataOnline extends TestCaseCommon implements TestCas
     @Override
     public void initial() {
         logger.debug("before class initial");
-        ru.changeIpPort(EnumTestProduce.FK_ONLINE.getPort(), EnumTestProduce.FK_ONLINE);
+        ru.changeIpPort(EnumTestProduct.FK_ONLINE.getPort(), EnumTestProduct.FK_ONLINE);
         CommonConfig commonConfig = new CommonConfig();
         //替换checklist的相关信息
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;

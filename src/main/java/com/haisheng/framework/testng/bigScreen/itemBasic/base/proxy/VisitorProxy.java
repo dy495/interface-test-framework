@@ -3,7 +3,7 @@ package com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -18,14 +18,14 @@ import org.springframework.util.StringUtils;
  */
 public class VisitorProxy extends TestCaseCommon {
     @Getter
-    private EnumTestProduce product;
+    private EnumTestProduct product;
 
     /**
      * 构造函数
      *
      * @param product 调用产品
      */
-    public VisitorProxy(EnumTestProduce product) {
+    public VisitorProxy(EnumTestProduct product) {
         this.product = product;
     }
 
@@ -136,7 +136,7 @@ public class VisitorProxy extends TestCaseCommon {
      *
      * @param product 新域名
      */
-    public void setProduct(EnumTestProduce product) {
+    public void setProduct(EnumTestProduct product) {
         this.product = product;
     }
 }

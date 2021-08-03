@@ -5,7 +5,7 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.MendianInfo;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.MendianInfoOnline;
@@ -30,7 +30,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
     //    public static final Logger log = LoggerFactory.getLogger(StorePcAndAppData.class);
     public static final int page = 1;
     public static final int size = 100;
-    private static final EnumTestProduce PRODUCE = EnumTestProduce.INS_ONLINE;
+    private static final EnumTestProduct PRODUCE = EnumTestProduct.INS_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     XundianScenarioUtilOnline xd = XundianScenarioUtilOnline.getInstance();
     StoreScenarioUtilOnline md = StoreScenarioUtilOnline.getInstance();
@@ -49,7 +49,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistQaOwner = "周涛";
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.XUNDIAN_ONLINE_TEST.getJobName());
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduce.INS_ONLINE.getDesc());
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.INS_ONLINE.getDesc());
         commonConfig.dingHook = DingWebhook.ONLINE_STORE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.pushRd = new String[]{"13604609869", "15084928847"};
 //        commonConfig.shopId = EnumTestProduce. INS_DAILY.getShopId();

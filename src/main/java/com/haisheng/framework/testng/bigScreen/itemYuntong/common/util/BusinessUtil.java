@@ -3,19 +3,19 @@ package com.haisheng.framework.testng.bigScreen.itemYuntong.common.util;
 import com.alibaba.fastjson.JSONArray;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanage.PreSaleCustomerPageScene;
 import com.haisheng.framework.util.DateTimeUtil;
 
 import java.util.Date;
 
 public class BusinessUtil {
-    private static EnumTestProduce product=null;
+    private static EnumTestProduct product=null;
     public VisitorProxy visitor = new VisitorProxy(product);
     YunTongUtil yt=new YunTongUtil(product);
 
 
-    public BusinessUtil(EnumTestProduce product){
+    public BusinessUtil(EnumTestProduct product){
         this.product=product;
     }
 

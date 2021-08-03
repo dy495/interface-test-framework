@@ -65,4 +65,7 @@ public interface IRow extends IProperty {
      */
     boolean containsKey(String keyName);
 
+
+    int getIndex();
+
 }

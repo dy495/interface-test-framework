@@ -7,7 +7,7 @@ import com.haisheng.framework.testng.bigScreen.itemPorsche.common.bean.SaleInfo;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.common.bean.TPorscheDeliverInfo;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.common.bean.TPorscheOrderInfo;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.common.bean.TPorscheReceptionData;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.common.enumerator.customer.EnumCarStyle;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.common.enumerator.sale.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class BusinessDataOnline extends TestCaseCommon implements TestCaseStd {
-    private static final String shopId = EnumTestProduce.PORSCHE_ONLINE.getShopId();
+    private static final String shopId = EnumTestProduct.PORSCHE_ONLINE.getShopId();
     private static final EnumAccount zjl = EnumAccount.ZJL_ONLINE;
     private static final int day = -1;
     private static final int size = 100;

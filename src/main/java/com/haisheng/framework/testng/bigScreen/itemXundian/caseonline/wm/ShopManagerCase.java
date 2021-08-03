@@ -3,7 +3,7 @@ package com.haisheng.framework.testng.bigScreen.itemXundian.caseonline.wm;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduce;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.shop.page.PassengerFlowScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.bean.PassengerFlowBean;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.bean.RealTimeShopPvUvBean;
@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
  */
 
 public class ShopManagerCase extends TestCaseCommon implements TestCaseStd {
-    private final static EnumTestProduce PRODUCE = EnumTestProduce.MD_ONLINE;
+    private final static EnumTestProduct PRODUCE = EnumTestProduct.MD_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public UserUtil user = new UserUtil(visitor);
     public SupporterUtil util = new SupporterUtil(visitor);
