@@ -372,7 +372,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd{
             Preconditions.checkArgument(res0.getString("message").equals("当前会员ID已经存在！"), "注册会员重复会员id也成功了message"+res0.getString("message"));
 
             //注册会员时会员电话重复
-            JSONObject res1 = md.RegisterMember1(null,path,"212","这是一个二","13604609869","1998-10-01",null,130);
+            JSONObject res1 = md.RegisterMember1(null,path,"212","这是一个二","13222222222","1998-10-01",null,130);
             Preconditions.checkArgument(res1.getString("message").equals("当前手机号已经存在！"), "注册会员时电话重复也注册成功了返回的message"+res1.getString("message"));
 //
             //注册会员时会员名称过长

@@ -5,7 +5,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.equipmentmanagement.auth.AllDeviceListScene;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.pc.vouchermanage.VoucherFormVoucherListScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.pc.vouchermanage.VoucherFormVoucherPageScene;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.punchclockandsignrule.PunchClockAndSignRuleDetailScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.punchclockandsignrule.PunchClockAndSignRuleUpdateScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.shop.collection.AddScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.shop.collection.CancelScene;
@@ -977,7 +979,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
         saveData("[视频监控]播放视频");
     }
 
-    @Test(dataProvider = "updatetype" , dataProviderClass = DataProviderMethod.class,description = "签到-打卡-自然月、自然周，累计天数和连续天数初始配置")
+    @Test(dataProvider = "updatetype" , dataProviderClass = DataProviderMethod.class,description = "签到-打卡-自然月、自然周，累计天数和连续天数初始配置")//ok
     public void punchclockandsignrule(String date,String punch){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -1002,8 +1004,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
         saveData("签到-打卡-自然月、自然周，累计天数和连续天数初始配置");
     }
 
-
-    @Test(dataProvider = "updatetype" , dataProviderClass = DataProviderMethod.class,description = "签到-打卡-天数设置")
+    @Test(dataProvider = "updatetype" , dataProviderClass = DataProviderMethod.class,description = "签到-打卡-天数设置")//ok
     public void punchclockandsignrule1(String date,String punch){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -1029,7 +1030,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
         saveData("签到-打卡-天数设置");
     }
 
-    @Test(dataProvider = "updatetype" , dataProviderClass = DataProviderMethod.class,description = "签到-打卡-固定周期")
+    @Test(dataProvider = "updatetype" , dataProviderClass = DataProviderMethod.class,description = "签到-打卡-固定周期")//ok
     public void punchclockandsignrule2(String date,String punch){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -1056,7 +1057,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
         saveData("签到-打卡-固定周期");
     }
 
-    @Test(dataProvider = "updatetype" , dataProviderClass = DataProviderMethod.class,description = "签到-打卡-动态周期")
+    @Test(dataProvider = "updatetype" , dataProviderClass = DataProviderMethod.class,description = "签到-打卡-动态周期")//ok
     public void punchclockandsignrule3(String date,String punch){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -1083,7 +1084,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
         saveData("签到-打卡-动态周期");
     }
 
-    @Test(dataProvider = "updatetype" , dataProviderClass = DataProviderMethod.class,description = "签到-打卡-周期日期-月")
+    @Test(dataProvider = "updatetype" , dataProviderClass = DataProviderMethod.class,description = "签到-打卡-周期日期-月")//ok
     public void punchclockandsignrule4(String date,String punch){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -1110,7 +1111,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
         saveData("签到-打卡-周期日期-月");
     }
 
-    @Test(dataProvider = "updatetype" , dataProviderClass = DataProviderMethod.class,description = "签到-打卡-周期日期-周")
+    @Test(dataProvider = "updatetype" , dataProviderClass = DataProviderMethod.class,description = "签到-打卡-周期日期-周")//ok
     public void punchclockandsignrule5(String date,String punch){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -1137,6 +1138,807 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
         }
         saveData("签到-打卡-周期日期-周");
     }
+
+    @Test(dataProvider = "updatetype" , dataProviderClass = DataProviderMethod.class,description = "签到-打卡-异常情况-初始奖励都为空")//ok
+    public void punchsinginSystemError(String date,String punch){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            String[] types = {"TOTAL","CONTINUE"};
+            Arrays.stream(types).forEach(type -> {
+                JSONObject res = PunchClockAndSignRuleUpdateScene.builder()
+                        .cycleType(date)
+                        .punchOrSignType(punch)
+                        .type(type)
+                        .build()
+                        .invoke(visitor, false);
+                Preconditions.checkArgument(res.getString("message").equals("初始积分和初始优惠券不能都为空！"), "初始奖励为空，也新建成功" + res.getInteger("code"));
+            });
+        }catch (AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }
+        saveData("签到-打卡-异常情况-初始奖励都为空");
+    }
+
+    @Test(dataProvider = "updatetype" , dataProviderClass = DataProviderMethod.class,description = "签到-打卡-异常情况-初始奖励-积分大于20001")//ok
+    public void punchsinginSystemError1(String date,String punch){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            String[] types = {"TOTAL","CONTINUE"};
+            Arrays.stream(types).forEach(type -> {
+                JSONObject res = PunchClockAndSignRuleUpdateScene.builder()
+                        .cycleType(date)
+                        .initIntegral(20001)
+                        .punchOrSignType(punch)
+                        .type(type)
+                        .build()
+                        .invoke(visitor, false);
+                Preconditions.checkArgument(res.getString("message").equals("初始奖励积分不应大于20000"), "初始奖励-积分大于20000，也新建成功" + res.getInteger("code"));
+            });
+        }catch (AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }
+        saveData("签到-打卡-异常情况-初始奖励-积分大于20001也创建成功了");
+    }
+
+    @Test(dataProvider = "updatetype" , dataProviderClass = DataProviderMethod.class,description = "签到-打卡-异常情况-天数设置-天数为空")//ok
+    public void  punchsinginSystemError2(String date,String punch){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray RuleDaysList = new JSONArray();
+            JSONObject Rule1= new JSONObject();
+            Rule1.put("days","1");
+            RuleDaysList.add(Rule1);
+            String[] types = {"TOTAL","CONTINUE"};
+            Arrays.stream(types).forEach(type -> {
+                JSONObject res = PunchClockAndSignRuleUpdateScene.builder()
+                        .cycleType(date)
+                        .initIntegral(20000)
+                        .punchOrSignType(punch)
+                        .type(type)
+                        .ruleDaysList(RuleDaysList)
+                        .build()
+                        .invoke(visitor, false);
+                Preconditions.checkArgument(res.getString("message").equals("天数设置的积分和优惠券不能都为空！"), "天数设置-积分和优惠券都为空，也新建成功" + res.getString("message"));
+            });
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }
+        saveData("签到-打卡-异常情况-天数设置-优惠券和积分都为空");
+    }
+
+    @Test(dataProvider = "updatetype" , dataProviderClass = DataProviderMethod.class,description = "签到-打卡-异常情况-天数设置-天数重复")//ok
+    public void  punchsinginSystemError3(String date,String punch){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray RuleDaysList = new JSONArray();
+            JSONObject Rule1= new JSONObject();
+            Rule1.put("days", "1");
+            Rule1.put("integral", "100");
+            JSONObject Rule2= new JSONObject();
+            Rule2.put("days", "1");
+            Rule2.put("integral", "200");
+            RuleDaysList.add(Rule1);
+            RuleDaysList.add(Rule2);
+            String[] types = {"TOTAL","CONTINUE"};
+            Arrays.stream(types).forEach(type -> {
+                JSONObject res = PunchClockAndSignRuleUpdateScene.builder()
+                        .cycleType(date)
+                        .initIntegral(20000)
+                        .punchOrSignType(punch)
+                        .type(type)
+                        .ruleDaysList(RuleDaysList)
+                        .build()
+                        .invoke(visitor, false);
+                Preconditions.checkArgument(res.getString("message").equals("天数设置不能相同！"), "天数设置-天数重复，也新建成功" + res.getString("message"));
+            });
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }
+        saveData("签到-打卡-异常情况-天数设置-天数重复");
+    }
+
+    @Test(dataProvider = "updatetype" , dataProviderClass = DataProviderMethod.class,description = "签到-打卡-异常情况-天数设置-积分大于20000")//ok
+    public void  punchsinginSystemError4(String date,String punch){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray RuleDaysList = new JSONArray();
+            JSONObject Rule1= new JSONObject();
+            Rule1.put("days", "1");
+            Rule1.put("integral", "1000000");
+            RuleDaysList.add(Rule1);
+            String[] types = {"TOTAL","CONTINUE"};
+            Arrays.stream(types).forEach(type -> {
+                JSONObject res = PunchClockAndSignRuleUpdateScene.builder()
+                        .cycleType(date)
+                        .initIntegral(20000)
+                        .punchOrSignType(punch)
+                        .type(type)
+                        .ruleDaysList(RuleDaysList)
+                        .build()
+                        .invoke(visitor, false);
+                Preconditions.checkArgument(res.getString("message").equals("天数设置积分不应大于20000"), "天数设置-积分大于20000，也新建成功" + res.getString("message"));
+            });
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }
+        saveData("签到-打卡-异常情况-天数设置积分大于20000");
+    }
+
+//    @Test(dataProvider = "updatetype" , dataProviderClass = DataProviderMethod.class,description = "签到-打卡-异常情况-关键纪念日设置-天数为空")
+    public void  punchsinginSystemError5(String date,String punch){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray RuleDaysList = new JSONArray();
+            JSONObject Rule = new JSONObject();
+            Rule.put("date",DateTimeUtil.getFormat(new Date(),"yyyy-MM-dd"));
+            Rule.put("integral","200");
+            RuleDaysList.add(Rule);
+            String[] types = {"TOTAL","CONTINUE"};
+            Arrays.stream(types).forEach(type -> {
+                JSONObject res = PunchClockAndSignRuleUpdateScene.builder()
+                        .cycleType(date)
+                        .initIntegral(20000)
+                        .punchOrSignType(punch)
+                        .type(type)
+                        .anniversaryList(RuleDaysList)
+                        .build()
+                        .invoke(visitor, false);
+                Preconditions.checkArgument(res.getString("message").equals("天数设置的积分和优惠券不能都为空！"), "关键纪念日设置-名称和日期都为空，也新建成功" + res.getString("message"));
+            });
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }
+        saveData("签到-打卡-异常情况-纪念日-名称和日期为空");
+    }
+
+//    @Test(dataProvider = "updatetype" , dataProviderClass = DataProviderMethod.class,description = "签到-打卡-异常情况-关键纪念日设置-天数重复")
+    public void  punchsinginSystemError6(String date,String punch){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray RuleDaysList = new JSONArray();
+            JSONObject Rule = new JSONObject();
+            Rule.put("date",DateTimeUtil.getFormat(new Date(),"yyyy-MM-dd"));
+            Rule.put("integral","200");
+            RuleDaysList.add(Rule);
+            String[] types = {"TOTAL","CONTINUE"};
+            Arrays.stream(types).forEach(type -> {
+                JSONObject res = PunchClockAndSignRuleUpdateScene.builder()
+                        .cycleType(date)
+                        .initIntegral(20000)
+                        .punchOrSignType(punch)
+                        .type(type)
+                        .anniversaryList(RuleDaysList)
+                        .build()
+                        .invoke(visitor, false);
+                Preconditions.checkArgument(res.getString("message").equals("天数设置的积分和优惠券不能都为空！"), "关键纪念日设置-名称和日期都为空，也新建成功" + res.getString("message"));
+            });
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }
+        saveData("签到-打卡-异常情况-纪念日-名称和日期为空");
+    }
+
+    @Test(dataProvider = "updatetype" , dataProviderClass = DataProviderMethod.class,description = "签到-打卡-异常情况-纪念日积分大于20000")//ok
+    public void  punchsinginSystemError7(String date,String punch){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray RuleDaysList = new JSONArray();
+            JSONObject Rule = new JSONObject();
+            Rule.put("date",DateTimeUtil.getFormat(new Date(),"yyyy-MM-dd"));
+            Rule.put("integral","2000000");
+            Rule.put("name","自动化创建固定日期");
+            Rule.put("type","FIXED");
+            RuleDaysList.add(Rule);
+            String[] types = {"TOTAL","CONTINUE"};
+            Arrays.stream(types).forEach(type -> {
+                JSONObject res = PunchClockAndSignRuleUpdateScene.builder()
+                        .cycleType(date)
+                        .initIntegral(20000)
+                        .punchOrSignType(punch)
+                        .type(type)
+                        .anniversaryList(RuleDaysList)
+                        .build()
+                        .invoke(visitor, false);
+                Preconditions.checkArgument(res.getString("message").equals("纪念日积分不应大于20000"), "纪念日积分大于20000，也新建成功" + res.getString("message"));
+            });
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }
+        saveData("签到-打卡-异常情况-天数设置-固定周期积分大于20000");
+    }
+
+    @Test(dataProvider = "updatetype" , dataProviderClass = DataProviderMethod.class,description = "签到-打卡-异常情况-纪念日积分大于20000")//ok
+    public void  punchsinginSystemError8(String date,String punch){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray RuleDaysList = new JSONArray();
+            JSONObject Rule = new JSONObject();
+            Rule.put("integral","2000000");
+            Rule.put("name","自动化创建生日日期");
+            Rule.put("type","DYNAMIC");
+            Rule.put("dynamic_type","BIRTHDAY");
+            RuleDaysList.add(Rule);
+            String[] types = {"TOTAL","CONTINUE"};
+            Arrays.stream(types).forEach(type -> {
+                JSONObject res = PunchClockAndSignRuleUpdateScene.builder()
+                        .cycleType(date)
+                        .initIntegral(20000)
+                        .punchOrSignType(punch)
+                        .type(type)
+                        .anniversaryList(RuleDaysList)
+                        .build()
+                        .invoke(visitor, false);
+                Preconditions.checkArgument(res.getString("message").equals("纪念日积分不应大于20000"), "纪念日积分大于20000，也新建成功" + res.getString("message"));
+            });
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }
+        saveData("签到-打卡-异常情况-天数设置-生日周期-积分大于20000");
+    }
+
+    @Test(dataProvider = "updatetype" , dataProviderClass = DataProviderMethod.class,description = "签到-打卡-异常情况-纪念日积分大于20000")//ok
+    public void  punchsinginSystemError9(String date,String punch){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray RuleDaysList = new JSONArray();
+            JSONObject Rule = new JSONObject();
+            Rule.put("cycle_type","MONTH");
+            Rule.put("date","1");
+            Rule.put("integral","20000000");
+            Rule.put("name","自动化周期日期按月");
+            Rule.put("type","CYCLE");
+            RuleDaysList.add(Rule);
+            String[] types = {"TOTAL","CONTINUE"};
+            Arrays.stream(types).forEach(type -> {
+                JSONObject res = PunchClockAndSignRuleUpdateScene.builder()
+                        .cycleType(date)
+                        .initIntegral(20000)
+                        .punchOrSignType(punch)
+                        .type(type)
+                        .anniversaryList(RuleDaysList)
+                        .build()
+                        .invoke(visitor, false);
+                Preconditions.checkArgument(res.getString("message").equals("纪念日积分不应大于20000"), "纪念日积分大于20000，也新建成功" + res.getString("message"));
+            });
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }
+        saveData("签到-打卡-异常情况-天数设置-周期日期按月-积分大于20000");
+    }
+
+    @Test(dataProvider = "updatetype" , dataProviderClass = DataProviderMethod.class,description = "签到-打卡-异常情况-纪念日积分大于20000")//ok
+    public void  punchsinginSystemError10(String date,String punch){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray RuleDaysList = new JSONArray();
+            JSONObject Rule = new JSONObject();
+            Rule.put("cycle_type","WEEK");
+            Rule.put("date","1");
+            Rule.put("integral","20000000");
+            Rule.put("name","自动化周期日期按周");
+            Rule.put("type","CYCLE");
+            RuleDaysList.add(Rule);
+            String[] types = {"TOTAL","CONTINUE"};
+            Arrays.stream(types).forEach(type -> {
+                JSONObject res = PunchClockAndSignRuleUpdateScene.builder()
+                        .cycleType(date)
+                        .initIntegral(20000)
+                        .punchOrSignType(punch)
+                        .type(type)
+                        .anniversaryList(RuleDaysList)
+                        .build()
+                        .invoke(visitor, false);
+                Preconditions.checkArgument(res.getString("message").equals("纪念日积分不应大于20000"), "纪念日积分大于20000，也新建成功" + res.getString("message"));
+            });
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }
+        saveData("签到-打卡-异常情况-天数设置-周期日期按周-积分大于20000");
+    }
+
+//    @Test(dataProvider = "updatetype" , dataProviderClass = DataProviderMethod.class,description = "签到-打卡-异常情况-纪念日-积分优惠券都为空")//
+    public void  punchsinginSystemError11(String date,String punch){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray RuleDaysList = new JSONArray();
+            JSONObject Rule = new JSONObject();
+            Rule.put("date",DateTimeUtil.getFormat(new Date(),"yyyy-MM-dd"));
+            Rule.put("name","自动化创建固定日期");
+            Rule.put("type","FIXED");
+            RuleDaysList.add(Rule);
+            String[] types = {"TOTAL","CONTINUE"};
+            Arrays.stream(types).forEach(type -> {
+                JSONObject res = PunchClockAndSignRuleUpdateScene.builder()
+                        .cycleType(date)
+                        .initIntegral(20000)
+                        .punchOrSignType(punch)
+                        .type(type)
+                        .anniversaryList(RuleDaysList)
+                        .build()
+                        .invoke(visitor, false);
+                Preconditions.checkArgument(res.getString("message").equals("纪念日积分不应大于20000"), "纪念日积分大于20000，也新建成功" + res.getString("message"));
+            });
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }
+        saveData("签到-打卡-异常情况-纪念日-积分优惠券都为空");
+    }
+
+    @Test(dataProvider = "updatetype" , dataProviderClass = DataProviderMethod.class,description = "签到-打卡-异常情况-纪念日设置-天数重复")//ok
+    public void  punchsinginSystemError15(String date,String punch){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray RuleDaysList = new JSONArray();
+            JSONObject Rule = new JSONObject();
+            JSONObject Rule1 = new JSONObject();
+            Rule.put("date",DateTimeUtil.getFormat(new Date(),"yyyy-MM-dd"));
+            Rule.put("name","自动化创建固定日期");
+            Rule.put("type","FIXED");
+
+            Rule1.put("date",DateTimeUtil.getFormat(new Date(),"yyyy-MM-dd"));
+            Rule1.put("name","自动化创建固定日期");
+            Rule1.put("type","FIXED");
+            RuleDaysList.add(Rule);
+            RuleDaysList.add(Rule1);
+            String[] types = {"TOTAL","CONTINUE"};
+            Arrays.stream(types).forEach(type -> {
+                JSONObject res = PunchClockAndSignRuleUpdateScene.builder()
+                        .cycleType(date)
+                        .initIntegral(20000)
+                        .punchOrSignType(punch)
+                        .type(type)
+                        .ruleDaysList(RuleDaysList)
+                        .build()
+                        .invoke(visitor, false);
+                Preconditions.checkArgument(res.getString("message").equals("天数设置不能相同！"), "天数设置-天数重复，也新建成功" + res.getString("message"));
+            });
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }
+        saveData("签到-打卡-异常情况-纪念日设置-天数重复");
+    }
+
+    @Test(description = "签到-天数设置-添加删除列表+1-1")//ok
+    public void  punchsinginDateCase(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray RuleDaysList = new JSONArray();
+            JSONObject Rule = new JSONObject();
+            Rule.put("days", "1");
+            Rule.put("integral", "100");
+            RuleDaysList.add(Rule);
+            JSONArray RuleDaysList1 = new JSONArray();
+
+            JSONArray anniversary_list = PunchClockAndSignRuleDetailScene.builder().punchOrSignType("PUNCH_CLOCK").build().invoke(visitor, true).getJSONArray("rule_days_list");
+            PunchClockAndSignRuleUpdateScene.builder()
+                    .cycleType("MONTH")
+                    .initIntegral(20000)
+                    .punchOrSignType("PUNCH_CLOCK")
+                    .type("TOTAL")
+                    .ruleDaysList(RuleDaysList)
+                    .build()
+                    .invoke(visitor, false);
+            JSONArray anniversary_list0 = PunchClockAndSignRuleDetailScene.builder().punchOrSignType("PUNCH_CLOCK").build().invoke(visitor, true).getJSONArray("rule_days_list");
+            int a = anniversary_list0.size() - anniversary_list.size();
+            int b = a-RuleDaysList.size();
+            Preconditions.checkArgument(a==RuleDaysList.size(), "签到添加后列表实际增加"+b);
+
+            PunchClockAndSignRuleUpdateScene.builder()
+                    .cycleType("MONTH")
+                    .initIntegral(20000)
+                    .punchOrSignType("PUNCH_CLOCK")
+                    .type("TOTAL")
+                    .ruleDaysList(RuleDaysList1)
+                    .build()
+                    .invoke(visitor, false);
+                JSONArray anniversary_list3 = PunchClockAndSignRuleDetailScene.builder().punchOrSignType("PUNCH_CLOCK").build().invoke(visitor, true).getJSONArray("rule_days_list");
+                int c = a - anniversary_list3.size();
+                Preconditions.checkArgument(c==1, "签到删除后列表实际减少"+c);
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }
+        saveData("签到-天数设置-添加删除列表+1-1");
+    }
+
+    @Test(description = "打卡-天数设置-添加删除列表+1-1")//ok
+    public void  punchsinginDateCase1(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray RuleDaysList = new JSONArray();
+            JSONObject Rule = new JSONObject();
+            Rule.put("days", "1");
+            Rule.put("integral", "100");
+            RuleDaysList.add(Rule);
+            JSONArray RuleDaysList1 = new JSONArray();
+
+            JSONArray anniversary_list = PunchClockAndSignRuleDetailScene.builder().punchOrSignType("SIGN_IN").build().invoke(visitor, true).getJSONArray("rule_days_list");
+            PunchClockAndSignRuleUpdateScene.builder()
+                    .cycleType("MONTH")
+                    .initIntegral(20000)
+                    .punchOrSignType("SIGN_IN")
+                    .type("TOTAL")
+                    .ruleDaysList(RuleDaysList)
+                    .build()
+                    .invoke(visitor, false);
+            JSONArray anniversary_list0 = PunchClockAndSignRuleDetailScene.builder().punchOrSignType("SIGN_IN").build().invoke(visitor, true).getJSONArray("rule_days_list");
+            int a = anniversary_list0.size() - anniversary_list.size();
+            int b = a-RuleDaysList.size();
+            Preconditions.checkArgument(a==RuleDaysList.size(), "打卡添加后列表实际增加"+b);
+
+            PunchClockAndSignRuleUpdateScene.builder()
+                    .cycleType("MONTH")
+                    .initIntegral(20000)
+                    .punchOrSignType("SIGN_IN")
+                    .type("TOTAL")
+                    .ruleDaysList(RuleDaysList1)
+                    .build()
+                    .invoke(visitor, false);
+            JSONArray anniversary_list3 = PunchClockAndSignRuleDetailScene.builder().punchOrSignType("SIGN_IN").build().invoke(visitor, true).getJSONArray("rule_days_list");
+            int c = a - anniversary_list3.size();
+            Preconditions.checkArgument(c==1, "打卡删除后列表实际减少"+c);
+//                });
+//            });
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }
+        saveData("打卡-天数设置-添加删除列表+1-1");
+    }
+
+    @Test(description = "打卡-关键纪念日-固定周期-添加删除列表+1-1")//ok
+    public void  punchsinginDateCase2(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray RuleDaysList = new JSONArray();
+            JSONObject Rule = new JSONObject();
+            Rule.put("date",DateTimeUtil.getFormat(new Date(),"yyyy-MM-dd"));
+            Rule.put("integral","200");
+            Rule.put("name","自动化创建固定日期");
+            Rule.put("type","FIXED");
+            RuleDaysList.add(Rule);
+            JSONArray RuleDaysList1 = new JSONArray();
+            JSONArray anniversary_list = PunchClockAndSignRuleDetailScene.builder().punchOrSignType("SIGN_IN").build().invoke(visitor, true).getJSONArray("anniversary_list");
+            PunchClockAndSignRuleUpdateScene.builder()
+                    .cycleType("MONTH")
+                    .initIntegral(20000)
+                    .punchOrSignType("SIGN_IN")
+                    .type("TOTAL")
+                    .anniversaryList(RuleDaysList)
+                    .build()
+                    .invoke(visitor, false);
+            JSONArray anniversary_list0 = PunchClockAndSignRuleDetailScene.builder().punchOrSignType("SIGN_IN").build().invoke(visitor, true).getJSONArray("anniversary_list");
+            int a = anniversary_list0.size() - anniversary_list.size();
+            int b = a-RuleDaysList.size();
+            Preconditions.checkArgument(a==RuleDaysList.size(), "打卡-关键纪念日-固定周期-添加后列表实际增加"+b);
+            PunchClockAndSignRuleUpdateScene.builder()
+                    .cycleType("MONTH")
+                    .initIntegral(20000)
+                    .punchOrSignType("SIGN_IN")
+                    .type("TOTAL")
+                    .anniversaryList(RuleDaysList1)
+                    .build()
+                    .invoke(visitor, false);
+            JSONArray anniversary_list3 = PunchClockAndSignRuleDetailScene.builder().punchOrSignType("SIGN_IN").build().invoke(visitor, true).getJSONArray("anniversary_list");
+            int c = a - anniversary_list3.size();
+            Preconditions.checkArgument(c==1, "打卡-关键纪念日-固定周期-删除后列表实际减少"+c);
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }
+        saveData("打卡-关键纪念日-固定周期-添加删除列表+1-1");
+    }
+
+    @Test(description = "打卡-关键纪念日-动态周期-添加删除列表+1-1")//ok
+    public void  punchsinginDateCase3(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray RuleDaysList = new JSONArray();
+            JSONObject Rule = new JSONObject();
+            Rule.put("integral","200");
+            Rule.put("name","自动化创建生日日期");
+            Rule.put("type","DYNAMIC");
+            Rule.put("dynamic_type","BIRTHDAY");
+            RuleDaysList.add(Rule);
+            JSONArray RuleDaysList1 = new JSONArray();
+            JSONArray anniversary_list = PunchClockAndSignRuleDetailScene.builder().punchOrSignType("SIGN_IN").build().invoke(visitor, true).getJSONArray("anniversary_list");
+            PunchClockAndSignRuleUpdateScene.builder()
+                    .cycleType("MONTH")
+                    .initIntegral(20000)
+                    .punchOrSignType("SIGN_IN")
+                    .type("TOTAL")
+                    .anniversaryList(RuleDaysList)
+                    .build()
+                    .invoke(visitor, false);
+            JSONArray anniversary_list0 = PunchClockAndSignRuleDetailScene.builder().punchOrSignType("SIGN_IN").build().invoke(visitor, true).getJSONArray("anniversary_list");
+            int a = anniversary_list0.size() - anniversary_list.size();
+            int b = a-RuleDaysList.size();
+            Preconditions.checkArgument(a==RuleDaysList.size(), "打卡-关键纪念日-动态周期-添加后列表实际增加"+b);
+            PunchClockAndSignRuleUpdateScene.builder()
+                    .cycleType("MONTH")
+                    .initIntegral(20000)
+                    .punchOrSignType("SIGN_IN")
+                    .type("TOTAL")
+                    .anniversaryList(RuleDaysList1)
+                    .build()
+                    .invoke(visitor, false);
+            JSONArray anniversary_list3 = PunchClockAndSignRuleDetailScene.builder().punchOrSignType("SIGN_IN").build().invoke(visitor, true).getJSONArray("anniversary_list");
+            int c = a - anniversary_list3.size();
+            Preconditions.checkArgument(c==1, "打卡-关键纪念日-动态周期-删除后列表实际减少"+c);
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }
+        saveData("打卡-关键纪念日-动态周期-添加删除列表+1-1");
+    }
+
+    @Test(description = "打卡-关键纪念日-周期日期按月-添加删除列表+1-1")//ok
+    public void  punchsinginDateCase4(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray RuleDaysList = new JSONArray();
+            JSONObject Rule = new JSONObject();
+            Rule.put("cycle_type","MONTH");
+            Rule.put("date","1");
+            Rule.put("integral","200");
+            Rule.put("name","自动化周期日期按月");
+            Rule.put("type","CYCLE");
+            RuleDaysList.add(Rule);
+            JSONArray RuleDaysList1 = new JSONArray();
+            JSONArray anniversary_list = PunchClockAndSignRuleDetailScene.builder().punchOrSignType("SIGN_IN").build().invoke(visitor, true).getJSONArray("anniversary_list");
+            PunchClockAndSignRuleUpdateScene.builder()
+                    .cycleType("MONTH")
+                    .initIntegral(20000)
+                    .punchOrSignType("SIGN_IN")
+                    .type("TOTAL")
+                    .anniversaryList(RuleDaysList)
+                    .build()
+                    .invoke(visitor, false);
+            JSONArray anniversary_list0 = PunchClockAndSignRuleDetailScene.builder().punchOrSignType("SIGN_IN").build().invoke(visitor, true).getJSONArray("anniversary_list");
+            int a = anniversary_list0.size() - anniversary_list.size();
+            int b = a-RuleDaysList.size();
+            Preconditions.checkArgument(a==RuleDaysList.size(), "打卡-关键纪念日-周期日期按月-添加后列表实际增加"+b);
+            PunchClockAndSignRuleUpdateScene.builder()
+                    .cycleType("MONTH")
+                    .initIntegral(20000)
+                    .punchOrSignType("SIGN_IN")
+                    .type("TOTAL")
+                    .anniversaryList(RuleDaysList1)
+                    .build()
+                    .invoke(visitor, false);
+            JSONArray anniversary_list3 = PunchClockAndSignRuleDetailScene.builder().punchOrSignType("SIGN_IN").build().invoke(visitor, true).getJSONArray("anniversary_list");
+            int c = a - anniversary_list3.size();
+            Preconditions.checkArgument(c==1, "打卡-关键纪念日-周期日期按月-删除后列表实际减少"+c);
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }
+        saveData("打卡-关键纪念日-周期日期按月-添加删除列表+1-1");
+    }
+
+    @Test(description = "打卡-关键纪念日-周期日期按周-添加删除列表+1-1")//ok
+    public void  punchsinginDateCase5(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray RuleDaysList = new JSONArray();
+            JSONObject Rule = new JSONObject();
+            Rule.put("cycle_type","WEEK");
+            Rule.put("date","MONDAY");
+            Rule.put("integral","200");
+            Rule.put("name","自动化周期日期按周");
+            Rule.put("type","CYCLE");
+            RuleDaysList.add(Rule);
+            JSONArray RuleDaysList1 = new JSONArray();
+            JSONArray anniversary_list = PunchClockAndSignRuleDetailScene.builder().punchOrSignType("SIGN_IN").build().invoke(visitor, true).getJSONArray("anniversary_list");
+            PunchClockAndSignRuleUpdateScene.builder()
+                    .cycleType("MONTH")
+                    .initIntegral(20000)
+                    .punchOrSignType("SIGN_IN")
+                    .type("TOTAL")
+                    .anniversaryList(RuleDaysList)
+                    .build()
+                    .invoke(visitor, false);
+            JSONArray anniversary_list0 = PunchClockAndSignRuleDetailScene.builder().punchOrSignType("SIGN_IN").build().invoke(visitor, true).getJSONArray("anniversary_list");
+            int a = anniversary_list0.size() - anniversary_list.size();
+            int b = a-RuleDaysList.size();
+            Preconditions.checkArgument(a==RuleDaysList.size(), "打卡-关键纪念日-周期日期按周-添加后列表实际增加"+b);
+            PunchClockAndSignRuleUpdateScene.builder()
+                    .cycleType("MONTH")
+                    .initIntegral(20000)
+                    .punchOrSignType("SIGN_IN")
+                    .type("TOTAL")
+                    .anniversaryList(RuleDaysList1)
+                    .build()
+                    .invoke(visitor, false);
+            JSONArray anniversary_list3 = PunchClockAndSignRuleDetailScene.builder().punchOrSignType("SIGN_IN").build().invoke(visitor, true).getJSONArray("anniversary_list");
+            int c = a - anniversary_list3.size();
+            Preconditions.checkArgument(c==1, "打卡-关键纪念日-周期日期按周-删除后列表实际减少"+c);
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }
+        saveData("打卡-关键纪念日-周期日期按周-添加删除列表+1-1");
+    }
+
+    @Test(description = "签到-关键纪念日-固定周期-添加删除列表+1-1")//ok
+    public void  punchsinginDateCase6(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray RuleDaysList = new JSONArray();
+            JSONObject Rule = new JSONObject();
+            Rule.put("date",DateTimeUtil.getFormat(new Date(),"yyyy-MM-dd"));
+            Rule.put("integral","200");
+            Rule.put("name","自动化创建固定日期");
+            Rule.put("type","FIXED");
+            RuleDaysList.add(Rule);
+            JSONArray RuleDaysList1 = new JSONArray();
+            JSONArray anniversary_list = PunchClockAndSignRuleDetailScene.builder().punchOrSignType("PUNCH_CLOCK").build().invoke(visitor, true).getJSONArray("anniversary_list");
+            PunchClockAndSignRuleUpdateScene.builder()
+                    .cycleType("MONTH")
+                    .initIntegral(20000)
+                    .punchOrSignType("PUNCH_CLOCK")
+                    .type("TOTAL")
+                    .anniversaryList(RuleDaysList)
+                    .build()
+                    .invoke(visitor, false);
+            JSONArray anniversary_list0 = PunchClockAndSignRuleDetailScene.builder().punchOrSignType("PUNCH_CLOCK").build().invoke(visitor, true).getJSONArray("anniversary_list");
+            int a = anniversary_list0.size() - anniversary_list.size();
+            int b = a-RuleDaysList.size();
+            Preconditions.checkArgument(a==RuleDaysList.size(), "签到-关键纪念日-固定周期-添加后列表实际增加"+b);
+            PunchClockAndSignRuleUpdateScene.builder()
+                    .cycleType("MONTH")
+                    .initIntegral(20000)
+                    .punchOrSignType("PUNCH_CLOCK")
+                    .type("TOTAL")
+                    .anniversaryList(RuleDaysList1)
+                    .build()
+                    .invoke(visitor, false);
+            JSONArray anniversary_list3 = PunchClockAndSignRuleDetailScene.builder().punchOrSignType("PUNCH_CLOCK").build().invoke(visitor, true).getJSONArray("anniversary_list");
+            int c = a - anniversary_list3.size();
+            Preconditions.checkArgument(c==1, "签到-关键纪念日-固定周期-删除后列表实际减少"+c);
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }
+        saveData("签到-关键纪念日-固定周期-添加删除列表+1-1");
+    }
+
+    @Test(description = "签到-关键纪念日-动态周期-添加删除列表+1-1")//ok
+    public void  punchsinginDateCase7(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray RuleDaysList = new JSONArray();
+            JSONObject Rule = new JSONObject();
+            Rule.put("integral","200");
+            Rule.put("name","自动化创建生日日期");
+            Rule.put("type","DYNAMIC");
+            Rule.put("dynamic_type","BIRTHDAY");
+            RuleDaysList.add(Rule);
+            JSONArray RuleDaysList1 = new JSONArray();
+            JSONArray anniversary_list = PunchClockAndSignRuleDetailScene.builder().punchOrSignType("PUNCH_CLOCK").build().invoke(visitor, true).getJSONArray("anniversary_list");
+            PunchClockAndSignRuleUpdateScene.builder()
+                    .cycleType("MONTH")
+                    .initIntegral(20000)
+                    .punchOrSignType("PUNCH_CLOCK")
+                    .type("TOTAL")
+                    .anniversaryList(RuleDaysList)
+                    .build()
+                    .invoke(visitor, false);
+            JSONArray anniversary_list0 = PunchClockAndSignRuleDetailScene.builder().punchOrSignType("PUNCH_CLOCK").build().invoke(visitor, true).getJSONArray("anniversary_list");
+            int a = anniversary_list0.size() - anniversary_list.size();
+            int b = a-RuleDaysList.size();
+            Preconditions.checkArgument(a==RuleDaysList.size(), "签到-关键纪念日-动态周期-添加后列表实际增加"+b);
+            PunchClockAndSignRuleUpdateScene.builder()
+                    .cycleType("MONTH")
+                    .initIntegral(20000)
+                    .punchOrSignType("PUNCH_CLOCK")
+                    .type("TOTAL")
+                    .anniversaryList(RuleDaysList1)
+                    .build()
+                    .invoke(visitor, false);
+            JSONArray anniversary_list3 = PunchClockAndSignRuleDetailScene.builder().punchOrSignType("PUNCH_CLOCK").build().invoke(visitor, true).getJSONArray("anniversary_list");
+            int c = a - anniversary_list3.size();
+            Preconditions.checkArgument(c==1, "签到-关键纪念日-动态周期-删除后列表实际减少"+c);
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }
+        saveData("签到-关键纪念日-动态周期-添加删除列表+1-1");
+    }
+
+    @Test(description = "签到-关键纪念日-周期日期按月-添加删除列表+1-1")//ok
+    public void  punchsinginDateCase8(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray RuleDaysList = new JSONArray();
+            JSONObject Rule = new JSONObject();
+            Rule.put("cycle_type","MONTH");
+            Rule.put("date","1");
+            Rule.put("integral","200");
+            Rule.put("name","自动化周期日期按月");
+            Rule.put("type","CYCLE");
+            RuleDaysList.add(Rule);
+            JSONArray RuleDaysList1 = new JSONArray();
+            JSONArray anniversary_list = PunchClockAndSignRuleDetailScene.builder().punchOrSignType("PUNCH_CLOCK").build().invoke(visitor, true).getJSONArray("anniversary_list");
+            PunchClockAndSignRuleUpdateScene.builder()
+                    .cycleType("MONTH")
+                    .initIntegral(20000)
+                    .punchOrSignType("PUNCH_CLOCK")
+                    .type("TOTAL")
+                    .anniversaryList(RuleDaysList)
+                    .build()
+                    .invoke(visitor, false);
+            JSONArray anniversary_list0 = PunchClockAndSignRuleDetailScene.builder().punchOrSignType("PUNCH_CLOCK").build().invoke(visitor, true).getJSONArray("anniversary_list");
+            int a = anniversary_list0.size() - anniversary_list.size();
+            int b = a-RuleDaysList.size();
+            Preconditions.checkArgument(a==RuleDaysList.size(), "签到-关键纪念日-周期日期按月-添加后列表实际增加"+b);
+            PunchClockAndSignRuleUpdateScene.builder()
+                    .cycleType("MONTH")
+                    .initIntegral(20000)
+                    .punchOrSignType("PUNCH_CLOCK")
+                    .type("TOTAL")
+                    .anniversaryList(RuleDaysList1)
+                    .build()
+                    .invoke(visitor, false);
+            JSONArray anniversary_list3 = PunchClockAndSignRuleDetailScene.builder().punchOrSignType("SIGN_IN").build().invoke(visitor, true).getJSONArray("anniversary_list");
+            int c = a - anniversary_list3.size();
+            Preconditions.checkArgument(c==1, "签到-关键纪念日-周期日期按月-删除后列表实际减少"+c);
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }
+        saveData("签到-关键纪念日-周期日期按月-添加删除列表+1-1");
+    }
+
+    @Test(description = "签到-关键纪念日-周期日期按周-添加删除列表+1-1")//ok
+    public void  punchsinginDateCase9(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray RuleDaysList = new JSONArray();
+            JSONObject Rule = new JSONObject();
+            Rule.put("cycle_type","WEEK");
+            Rule.put("date","MONDAY");
+            Rule.put("integral","200");
+            Rule.put("name","自动化周期日期按周");
+            Rule.put("type","CYCLE");
+            RuleDaysList.add(Rule);
+            JSONArray RuleDaysList1 = new JSONArray();
+            JSONArray anniversary_list = PunchClockAndSignRuleDetailScene.builder().punchOrSignType("PUNCH_CLOCK").build().invoke(visitor, true).getJSONArray("anniversary_list");
+            PunchClockAndSignRuleUpdateScene.builder()
+                    .cycleType("MONTH")
+                    .initIntegral(20000)
+                    .punchOrSignType("PUNCH_CLOCK")
+                    .type("TOTAL")
+                    .anniversaryList(RuleDaysList)
+                    .build()
+                    .invoke(visitor, false);
+            JSONArray anniversary_list0 = PunchClockAndSignRuleDetailScene.builder().punchOrSignType("PUNCH_CLOCK").build().invoke(visitor, true).getJSONArray("anniversary_list");
+            int a = anniversary_list0.size() - anniversary_list.size();
+            int b = a-RuleDaysList.size();
+            Preconditions.checkArgument(a==RuleDaysList.size(), "签到-关键纪念日-周期日期按周-添加后列表实际增加"+b);
+            PunchClockAndSignRuleUpdateScene.builder()
+                    .cycleType("MONTH")
+                    .initIntegral(20000)
+                    .punchOrSignType("PUNCH_CLOCK")
+                    .type("TOTAL")
+                    .anniversaryList(RuleDaysList1)
+                    .build()
+                    .invoke(visitor, false);
+            JSONArray anniversary_list3 = PunchClockAndSignRuleDetailScene.builder().punchOrSignType("SIGN_IN").build().invoke(visitor, true).getJSONArray("anniversary_list");
+            int c = a - anniversary_list3.size();
+            Preconditions.checkArgument(c==1, "签到-关键纪念日-周期日期按周-删除后列表实际减少"+c);
+        }catch(AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }
+        saveData("签到-关键纪念日-周期日期按周-添加删除列表+1-1");
+    }
+
+    @Test(description = "签到-打卡-卡券数量==优惠券管理中状态为进行中的数量")//ok
+    public void punchsingDateCase10(){
+        logger.logCase(caseResult.getCaseName());
+        try {
+            int total = VoucherFormVoucherPageScene.builder()
+                    .voucherStatus("WORKING").build().invoke(visitor, true).getInteger("total");
+            JSONArray list = VoucherFormVoucherListScene.builder().voucherStatus("WORKING").build().invoke(visitor,true).getJSONArray("list");
+            int list_total = list.size();
+            Preconditions.checkArgument(total==list_total, "打卡-签到-优惠券数量！=优惠券管理中运行中的数量，实际是"+list_total);
+        }catch (Exception | AssertionError e){
+            appendFailReason(e.toString());
+        }
+        saveData("签到-打卡-卡券数量==优惠券管理中状态为进行中的数量");
+    }
+
 //    //会员信息列表通过会员id和会员姓名+联系电话+人物id+会员身份筛选
 //    @Test()
 //    public void searchMember8() throws Exception{
