@@ -9,7 +9,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.registerListVariable;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherPage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherFormVoucherPageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.SendRecordScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
@@ -526,9 +526,9 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
             //登录门店查询数据
             commonConfig.shopId = "-1";
             String voucherName = util.getVoucherName(pp.voucherId);
-            VoucherPage voucher = util.getVoucherPage(voucherName);
+            VoucherFormVoucherPageBean voucher = util.getVoucherPage(voucherName);
             //累计发出数
-            Long cumulativeDelivery = voucher.getCumulativeDelivery();
+            int cumulativeDelivery = voucher.getCumulativeDelivery();
             //发卡记录数
             int sendRecordTotal = jc.invokeApi(SendRecordScene.builder().build()).getInteger("total");
             //登回
@@ -545,8 +545,8 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
             //查询新数据
             commonConfig.shopId = "-1";
             //累计发出数
-            VoucherPage newVoucher = util.getVoucherPage(voucherName);
-            Long newCumulativeDelivery = newVoucher.getCumulativeDelivery();
+            VoucherFormVoucherPageBean newVoucher = util.getVoucherPage(voucherName);
+            int newCumulativeDelivery = newVoucher.getCumulativeDelivery();
             //发卡记录数
             int newSendRecordTotal = jc.invokeApi(SendRecordScene.builder().build()).getInteger("total");
             CommonUtil.valueView(cumulativeDelivery, newCumulativeDelivery, sendRecordTotal, newSendRecordTotal);

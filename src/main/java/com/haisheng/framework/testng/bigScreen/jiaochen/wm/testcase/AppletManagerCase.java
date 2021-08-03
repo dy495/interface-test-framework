@@ -17,6 +17,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.appointmentmanage.AppointmentRecordAppointmentPageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.manage.EvaluatePageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.presalesreception.PreSalesReceptionPageBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherFormVoucherPageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.ChangeStockTypeEnum;
@@ -683,7 +684,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             }
             //编辑为不限兑换次数
             util.modifyExchangeGoodsLimit(exchangePage.getId(), exchangePage.getExchangeType(), false);
-            VoucherPage voucherPage = util.getVoucherPage(voucherId);
+            VoucherFormVoucherPageBean voucherPage = util.getVoucherPage(voucherId);
             user.loginApplet(APPLET_USER_ONE);
             int appletVoucherNum = util.getAppletVoucherNum();
             //兑换积分
@@ -692,7 +693,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             int newAppletVoucherNum = util.getAppletVoucherNum();
             CommonUtil.checkResult(voucherPage.getVoucherName() + "兑换后我的卡券列表数量", appletVoucherNum + 1, newAppletVoucherNum);
             user.loginPc(ALL_AUTHORITY);
-            VoucherPage newVoucherPage = util.getVoucherPage(voucherId);
+            VoucherFormVoucherPageBean newVoucherPage = util.getVoucherPage(voucherId);
             CommonUtil.checkResult(voucherPage.getVoucherName() + "剩余库存", voucherPage.getSurplusInventory() - 1, newVoucherPage.getSurplusInventory());
             CommonUtil.checkResult(voucherPage.getVoucherName() + "已领取", voucherPage.getCumulativeDelivery() + 1, newVoucherPage.getCumulativeDelivery());
             VoucherSendRecord voucherSendRecord = util.getVoucherSendRecord(voucherId);

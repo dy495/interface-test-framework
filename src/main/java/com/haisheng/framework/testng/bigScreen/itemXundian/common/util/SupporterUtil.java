@@ -12,6 +12,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.integralcente
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.integralcenter.ExchangePageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.integralmall.CategoryPageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.voucher.ApplyPageBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherFormVoucherPageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherInvalidPageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.CommodityTypeEnum;
@@ -140,11 +141,11 @@ public class SupporterUtil extends BasicUtil {
         int num = CommonUtil.getRandom(1, 100000);
         String voucherName = typeEnum.getDesc() + num;
         IScene scene = VoucherFormVoucherPageScene.builder().voucherName(voucherName).build();
-        List<VoucherPage> vouchers = toJavaObjectList(scene, VoucherPage.class);
+        List<VoucherFormVoucherPageBean> vouchers = toJavaObjectList(scene, VoucherFormVoucherPageBean.class);
         if (vouchers.isEmpty()) {
             return voucherName;
         }
-        for (VoucherPage voucher : vouchers) {
+        for (VoucherFormVoucherPageBean voucher : vouchers) {
             if (!voucher.getVoucherName().equals(voucherName)) {
                 return voucherName;
             }
@@ -259,9 +260,9 @@ public class SupporterUtil extends BasicUtil {
      * @param voucherName 卡券名称
      * @return 卡券页信息
      */
-    public VoucherPage getVoucherPage(String voucherName) {
+    public VoucherFormVoucherPageBean getVoucherPage(String voucherName) {
         IScene scene = VoucherFormVoucherPageScene.builder().voucherName(voucherName).build();
-        return toJavaObject(scene, VoucherPage.class, "voucher_name", voucherName);
+        return toJavaObject(scene, VoucherFormVoucherPageBean.class, "voucher_name", voucherName);
     }
 
     /**
@@ -270,9 +271,9 @@ public class SupporterUtil extends BasicUtil {
      * @param voucherId 卡券id
      * @return 卡券页信息
      */
-    public VoucherPage getVoucherPage(Long voucherId) {
+    public VoucherFormVoucherPageBean getVoucherPage(Long voucherId) {
         IScene scene = VoucherFormVoucherPageScene.builder().build();
-        return toJavaObject(scene, VoucherPage.class, "voucher_id", voucherId);
+        return toJavaObject(scene, VoucherFormVoucherPageBean.class, "voucher_id", voucherId);
     }
 
     /**
@@ -735,7 +736,7 @@ public class SupporterUtil extends BasicUtil {
      * @param id 兑换商品id
      * @return 卡券信息
      */
-    public VoucherPage getExchangeGoodsContainVoucher(Long id) {
+    public VoucherFormVoucherPageBean getExchangeGoodsContainVoucher(Long id) {
         String voucherName = ExchangeGoodsStockScene.builder().id(id).build().invoke(visitor).getString("goods_name");
         return getVoucherPage(voucherName);
     }

@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.VoucherPage;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherFormVoucherPageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.generator.BaseGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherFormVoucherPageScene;
@@ -31,22 +31,22 @@ public abstract class AbstractVoucher extends BaseGenerator implements IVoucher 
 
     @Override
     public Long getVoucherId() {
-        VoucherPage voucherPage = getVoucher();
+        VoucherFormVoucherPageBean voucherPage = getVoucher();
         return voucherPage == null ? null : voucherPage.getVoucherId();
     }
 
     @Override
-    public VoucherPage getVoucherPage() {
+    public VoucherFormVoucherPageBean getVoucherPage() {
         return getVoucher();
     }
 
-    private VoucherPage getVoucher() {
+    private VoucherFormVoucherPageBean getVoucher() {
         try {
             VoucherStatusEnum.findById(status.getId());
             Preconditions.checkArgument(!isEmpty(), "visitor is null");
             logger("FIND " + status.name() + " START");
             Preconditions.checkArgument(counter(status) < 4, status.getName() + " 状态执行次数大于3次，强行停止，请检查此状态生成");
-            VoucherPage voucherPage = getPageDaily();
+            VoucherFormVoucherPageBean voucherPage = getPageDaily();
             if (voucherPage != null) {
                 logger("FIND " + status.name() + " FINISH");
                 logger("voucherId is：" + voucherPage.getVoucherId());
@@ -104,14 +104,14 @@ public abstract class AbstractVoucher extends BaseGenerator implements IVoucher 
      *
      * @return 卡券表单
      */
-    private VoucherPage getPageDaily() {
-        VoucherPage voucherPage = null;
+    private VoucherFormVoucherPageBean getPageDaily() {
+        VoucherFormVoucherPageBean voucherPage = null;
         JSONObject response = VoucherFormVoucherPageScene.builder().build().invoke(visitor);
         int total = response.getInteger("total");
         int s = CommonUtil.getTurningPage(total, SIZE);
         for (int i = 1; i < s; i++) {
             JSONArray array = VoucherFormVoucherPageScene.builder().page(i).size(SIZE).build().invoke(visitor).getJSONArray("list");
-            List<VoucherPage> voucherPageList = array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, VoucherPage.class)).collect(Collectors.toList());
+            List<VoucherFormVoucherPageBean> voucherPageList = array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, VoucherFormVoucherPageBean.class)).collect(Collectors.toList());
             voucherPage = status.name().equals(VoucherStatusEnum.WORKING.name())
                     ? voucherPageList.stream().filter(e -> e.getVoucherStatus().equals(status.name()) && e.getAllowUseInventory() > 0 && !e.getVoucherName().contains("专用")).findFirst().orElse(null)
                     : voucherPageList.stream().filter(e -> e.getVoucherStatus().equals(status.name()) && !e.getVoucherName().contains("专用")).findFirst().orElse(null);
@@ -130,7 +130,7 @@ public abstract class AbstractVoucher extends BaseGenerator implements IVoucher 
      */
     protected String getVoucherName(Long voucherId) {
         IScene scene = VoucherFormVoucherPageScene.builder().build();
-        return findBeanByField(scene, VoucherPage.class, "voucher_id", voucherId).getVoucherName();
+        return findBeanByField(scene, VoucherFormVoucherPageBean.class, "voucher_id", voucherId).getVoucherName();
     }
 
     /**
@@ -141,7 +141,7 @@ public abstract class AbstractVoucher extends BaseGenerator implements IVoucher 
      */
     protected Long getVoucherId(String voucherName) {
         IScene scene = VoucherFormVoucherPageScene.builder().voucherName(voucherName).build();
-        return findBeanByField(scene, VoucherPage.class, "voucher_name", voucherName).getVoucherId();
+        return findBeanByField(scene, VoucherFormVoucherPageBean.class, "voucher_name", voucherName).getVoucherId();
     }
 
     /**

@@ -27,10 +27,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class A extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct product = EnumTestProduct.CMS_DAILY;
@@ -101,7 +98,7 @@ public class A extends TestCaseCommon implements TestCaseStd {
 
     @Test
     public void test() {
-        IContainer container = new ExcelContainer.Builder().path("src/main/java/com/haisheng/framework/testng/bigScreen/itemcms/common/multimedia/file/楼层.xlsx").build();
+        IContainer container = new ExcelContainer.Builder().path("src/main/java/com/haisheng/framework/testng/bigScreen/itemcms/common/multimedia/file/model.xlsx").build();
         container.init();
         ITable[] tables = container.getTables();
         Arrays.stream(tables).forEach(table -> createLayoutAndAddDevice(57814L, table));
@@ -118,17 +115,28 @@ public class A extends TestCaseCommon implements TestCaseStd {
         table.load();
         if (Arrays.stream(EnumDataLayout.values()).anyMatch(e -> e.name().equals(tableName))) {
             long layoutId = createLayoutAndGetLayoutId(subjectId, tableName);
-            IRow[] rows = table.getRows();
-            Arrays.stream(rows).map(row -> createDeviceAndGetDeviceIdList(subjectId, row)).forEach(list -> list.stream().filter(Objects::nonNull).forEach(deviceId -> DataLayoutDeviceScene.builder().deviceId(deviceId).layoutId(layoutId).build().invoke(visitor)));
-//        } else if (tableName.equals("店铺")) {
-//            IRow[] rows = table.getRows();
-//            Arrays.stream(rows).forEach(row -> {
-//                String shopName = row.getField("店铺名").getValue();
-//                String floorName = row.getField("楼层").getValue().replace("层", "");
-//                IScene scene = LayoutListScene.builder().subjectId(String.valueOf(subjectId)).build();
-//                Long layoutId = StringUtils.isEmpty(floorName) ? 0L : util.toJavaObject(scene, JSONObject.class, "floor_id", EnumDataLayout.finEnumByName(floorName).getFloorId()).getLong("layout_id");
-//                DataRegionScene.builder().subjectId(String.valueOf(subjectId)).regionName(shopName).layoutId(layoutId).regionType(EnumRegionType.GENERAL.name()).build().invoke(visitor);
-//            });
+            IScene scene = RegionListScene.builder().regionName(tableName).subjectId(String.valueOf(subjectId)).build();
+            long regionId = util.toFirstJavaObject(scene, JSONObject.class).getLong("region_id");
+            Arrays.stream(table.getRows()).map(row -> createDeviceAndGetDeviceMap(subjectId, row))
+                    .forEach(map -> map.entrySet().stream().filter(e -> e.getValue() != null).forEach(e -> {
+                        DataLayoutDeviceScene.builder().deviceId(e.getValue()).layoutId(layoutId).build().invoke(visitor);
+                        createEntranceAccess(regionId, e.getKey(), "REGION");
+                    }));
+        } else if (tableName.equals("店铺")) {
+            Arrays.stream(table.getRows()).forEach(row -> {
+                String shopName = row.getField("店铺名").getValue();
+                String floorName = row.getField("楼层").getValue().replace("层", "");
+                int floorId = StringUtils.isEmpty(floorName) ? EnumDataLayout.L1.getFloorId() : EnumDataLayout.finEnumByName(floorName).getFloorId();
+                IScene scene = LayoutListScene.builder().subjectId(String.valueOf(subjectId)).build();
+                Long layoutId = util.toJavaObject(scene, JSONObject.class, "floor_id", floorId).getLong("layout_id");
+                DataRegionScene.builder().subjectId(String.valueOf(subjectId)).regionName(shopName).layoutId(layoutId).regionType(EnumRegionType.GENERAL.name()).build().invoke(visitor);
+                IScene regionListScene = RegionListScene.builder().regionName(tableName).subjectId(String.valueOf(subjectId)).build();
+                long regionId = util.toJavaObject(regionListScene, JSONObject.class, "region_name", shopName).getLong("region_id");
+                createDeviceAndGetDeviceMap(subjectId, row).forEach((key, value) -> {
+                    DataRegionDeviceScene.builder().regionId(regionId).deviceId(value).build();
+                    createEntranceAccess(regionId, key, "REGION");
+                });
+            });
         }
     }
 
@@ -152,12 +160,12 @@ public class A extends TestCaseCommon implements TestCaseStd {
      * @param row       行数据
      * @return 每个点的设备id集合
      */
-    public List<String> createDeviceAndGetDeviceIdList(Long subjectId, IRow row) {
+    public Map<String, String> createDeviceAndGetDeviceMap(Long subjectId, IRow row) {
         IField shopName = row.getField("店铺名");
         IField floor = row.getField("楼层");
         IField pointName = row.getField("点位名称");
         String name = shopName != null ? floor.getValue() + shopName.getValue() : pointName.getValue();
-        return createDeviceAndGetDeviceIdList(subjectId, row, name);
+        return createDeviceAndGetDeviceMap(subjectId, row, name);
     }
 
     /**
@@ -168,21 +176,20 @@ public class A extends TestCaseCommon implements TestCaseStd {
      * @param name      设备名称
      * @return 每个点的设备id集合
      */
-    public List<String> createDeviceAndGetDeviceIdList(Long subjectId, IRow row, String name) {
-        List<String> list = new ArrayList<>();
+    public Map<String, String> createDeviceAndGetDeviceMap(Long subjectId, IRow row, String name) {
+        Map<String, String> map = new LinkedHashMap<>();
         String pointOne = row.getField("点位1").getValue();
         String pointTwo = row.getField("点位2").getValue();
         if (!StringUtils.isEmpty(pointOne)) {
             name = name + "-点位1";
-            list.add(createDeviceAndGetDeviceId(subjectId, name, pointOne));
+            map.put(name, createDeviceAndGetDeviceId(subjectId, name, pointOne));
         }
         if (!StringUtils.isEmpty(pointTwo)) {
             name = name + "-点位2";
-            list.add(createDeviceAndGetDeviceId(subjectId, name, pointTwo));
+            map.put(name, createDeviceAndGetDeviceId(subjectId, name, pointTwo));
         }
-        return list;
+        return map;
     }
-
 
     /**
      * 创建设备并且获取设备id
@@ -209,5 +216,16 @@ public class A extends TestCaseCommon implements TestCaseStd {
     public String getDeviceIdByDeviceName(String deviceName) {
         IScene scene = DeviceListScene.builder().name(deviceName).build();
         return util.toJavaObject(scene, JSONObject.class, "name", deviceName).getString("device_id");
+    }
+
+    /**
+     * 创建出入口
+     *
+     * @param regionId     平面id
+     * @param name         出入口名称
+     * @param entranceType 出入口类型
+     */
+    public void createEntranceAccess(Long regionId, String name, String entranceType) {
+        DataEntranceScene.builder().regionId(String.valueOf(regionId)).entranceName(name).entranceType(entranceType).build().invoke(visitor);
     }
 }
