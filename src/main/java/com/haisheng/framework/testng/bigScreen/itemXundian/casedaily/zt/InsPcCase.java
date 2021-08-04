@@ -7,6 +7,9 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.activity.ActivityAddScene;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.pc.operation.ArticleAddScene;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.riskcontrol.rule.OperatePageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.MendianInfo;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.StoreScenarioUtil;
@@ -1012,13 +1015,17 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             String path = md.pcFileUpload(base64).getString("pic_path");
             JSONArray piclist = new JSONArray();
             piclist.add(path);
-            JSONObject res = md.article_export("活动活动", "ONE_BIG", "1", "PREFERENTIAL", piclist);
-            Preconditions.checkArgument(res.getInteger("code") == 1000, "状态码期待1000，实际" + res.getInteger("code"));
-            Long id = res.getJSONObject("data").getLong("id");
-            JSONObject res1 = md.article_status_change(id);
-            Preconditions.checkArgument(res1.getInteger("code") == 1000, "状态码期待1000，实际" + res1.getInteger("code"));
-            JSONObject res2 = md.article_delete(id);
-            Preconditions.checkArgument(res2.getInteger("code") == 1000, "状态码期待1000，实际" + res2.getInteger("code"));
+            ArticleAddScene.builder()
+                    .title("自动化添加活动")
+                    .authorAvatar(path)
+                    .authorNickname("自动化发帖")
+                    .content("123213212131")
+                    .label("RECOMMEND")
+                    .picList(piclist)
+                    .picType("ONE_BIG")
+                    .build().invoke(visitor,true);
+
+//            Preconditions.checkArgument(res2.getInteger("code") == 1000, "状态码期待1000，实际" + res2.getInteger("code"));
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -1039,13 +1046,22 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             piclist.add(path);
             piclist.add(path);
             piclist.add(path);
-            JSONObject res = md.article_export("活动活动", "THREE", "1", "RED_PAPER", piclist);
-            Preconditions.checkArgument(res.getInteger("code") == 1000, "状态码期待1000，实际" + res.getInteger("code"));
-            Long id = res.getJSONObject("data").getLong("id");
-            JSONObject res1 = md.article_status_change(id);
-            Preconditions.checkArgument(res1.getInteger("code") == 1000, "状态码期待1000，实际" + res1.getInteger("code"));
-            JSONObject res2 = md.article_delete(id);
-            Preconditions.checkArgument(res2.getInteger("code") == 1000, "状态码期待1000，实际" + res2.getInteger("code"));
+            ArticleAddScene.builder()
+                    .title("自动化添加活动")
+                    .authorAvatar(path)
+                    .authorNickname("自动化发帖")
+                    .content("123213212131")
+                    .label("RECOMMEND")
+                    .picList(piclist)
+                    .picType("ONE_BIG")
+                    .build().invoke(visitor,true);
+//            JSONObject res = md.article_export("活动活动", "THREE", "1", "RED_PAPER", piclist);
+//            Preconditions.checkArgument(res.getInteger("code") == 1000, "状态码期待1000，实际" + res.getInteger("code"));
+//            Long id = res.getJSONObject("data").getLong("id");
+//            JSONObject res1 = md.article_status_change(id);
+//            Preconditions.checkArgument(res1.getInteger("code") == 1000, "状态码期待1000，实际" + res1.getInteger("code"));
+//            JSONObject res2 = md.article_delete(id);
+//            Preconditions.checkArgument(res2.getInteger("code") == 1000, "状态码期待1000，实际" + res2.getInteger("code"));
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {

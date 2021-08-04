@@ -48,6 +48,13 @@ public class ArticleAddScene extends BaseScene {
      */
     private final JSONArray picList;
 
+    private final JSONArray picTempFullUrlList;
+
+    private final String authorAvatar;
+
+    private final String authorNickname;
+
+
 
     @Override
     public JSONObject getRequestBody(){
@@ -57,6 +64,9 @@ public class ArticleAddScene extends BaseScene {
         object.put("content", content);
         object.put("label", label);
         object.put("pic_list", picList);
+        object.put("picTempFullUrlList", picTempFullUrlList);
+        object.put("authorAvatar", authorAvatar);
+        object.put("authorNickname", authorNickname);
         return object;
     }
 
