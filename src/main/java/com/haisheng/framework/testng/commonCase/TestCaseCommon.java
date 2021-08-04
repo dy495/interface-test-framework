@@ -306,8 +306,8 @@ public class TestCaseCommon {
         }
     }
 
-    public String uploadFile(String filePath, String path, String IpPort) {
-        String url = IpPort + path;
+    public String uploadFile(String ipPort, String path, String filePath) {
+        String url = ipPort + path;
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(url);
         httpPost.addHeader("authorization", authorization);
@@ -359,8 +359,8 @@ public class TestCaseCommon {
      * @param object 请求体
      * @param IpPort 域名
      */
-    public void httpPost(String path, JSONObject object, String IpPort) {
-        httpPost(IpPort, path, JSONObject.toJSONString(object), true, true);
+    public void httpPost(String port, String path, JSONObject object) {
+        httpPost(port, path, JSONObject.toJSONString(object), true, true);
     }
 
     public String httpPost(String path, String json, String IpPort) throws Exception {

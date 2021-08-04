@@ -44,7 +44,7 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.staff
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.staff.StaffDeleteScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.staff.StaffEditScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.staff.StaffPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.util.CommonUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -86,9 +86,9 @@ public class SceneUtil extends BasicUtil {
      */
     public void login(IScene scene) {
         EnumTestProduct oldProduce = visitor.getProduct();
-        EnumTestProduct newProduce = visitor.isDaily() ? EnumTestProduct.YT_DAILY_SSO : EnumTestProduct.YT_ONLINE_SSO;
+        EnumTestProduct newProduce = visitor.isDaily() ? EnumTestProduct.YT_DAILY_ZH : EnumTestProduct.YT_ONLINE_SSO;
         visitor.setProduct(newProduce);
-        visitor.login(scene);
+        visitor.setToken(scene);
         visitor.setProduct(oldProduce);
     }
 
@@ -492,22 +492,25 @@ public class SceneUtil extends BasicUtil {
     }
 
     /**
-     * @description :创建一个接待，
      * @return :{"id":接待id, "shopId": shopId, "customerId":customerId}
+     * @description :创建一个接待，
      **/
-    public Map<String, String> createCustomerCommon(String name,String sex, String phone,String carId,String buyTime) {
-        Map<String,String> customer = new HashMap<>();
+    public Map<String, String> createCustomerCommon(String name, String sex, String phone, String carId, String buyTime) {
+        Map<String, String> customer = new HashMap<>();
         AppPreSalesReceptionCreateScene.builder().customerName(name).customerPhone(phone).sexId(sex).intentionCarModelId(carId).estimateBuyCarTime(buyTime).build().invoke(visitor);//创建销售接待
         JSONObject pageInfo = PreSalesReceptionPageScene.builder().build().invoke(visitor, true);
-        List<JSONObject> newCustomer = pageInfo.getJSONArray("list").stream().map(ele -> (JSONObject) ele).filter(obj -> Objects.equals(phone,obj.getString("customer_phone"))).collect(Collectors.toList());
+        List<JSONObject> newCustomer = pageInfo.getJSONArray("list").stream().map(ele -> (JSONObject) ele).filter(obj -> Objects.equals(phone, obj.getString("customer_phone"))).collect(Collectors.toList());
         String id = newCustomer.get(0).getString("id");
         String shopId = pageInfo.getJSONArray("list").getJSONObject(0).getString("shop_id");
         String customerId = newCustomer.get(0).getString("customer_id");
-        customer.put("id",id);
-        customer.put("shopId",shopId);
-        customer.put("customerId",customerId);
+        customer.put("id", id);
+        customer.put("shopId", shopId);
+        customer.put("customerId", customerId);
         return customer;
     }
-    public String mcCarId(){return visitor.isDaily() ? "775":"20895";}
+
+    public String mcCarId() {
+        return visitor.isDaily() ? "775" : "20895";
+    }
 
 }

@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.bigScreen.fengkongdaily.util;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
@@ -27,11 +28,11 @@ public class RiskControlUtil extends TestCaseCommon {
     public static synchronized RiskControlUtil getInstance(EnumTestProduct product) {
         if (instance == null) {
             instance = new RiskControlUtil(product);
-            IpPort = product.getPort();
+            IpPort = product.getIp();
         } else {
             if (RiskControlUtil.product != product) {
                 instance = new RiskControlUtil(product);
-                IpPort = product.getPort();
+                IpPort = product.getIp();
             }
         }
         return instance;
@@ -51,22 +52,10 @@ public class RiskControlUtil extends TestCaseCommon {
      * @return JSONObject response.data
      */
     public JSONObject invokeApi(String path, JSONObject requestBody, boolean checkCode) {
-        if (StringUtils.isEmpty(path)) {
-            throw new RuntimeException("path不可为空");
-        }
+        Preconditions.checkArgument(!StringUtils.isEmpty(path), "path不可为空");
         String request = JSON.toJSONString(requestBody);
-        String result = null;
-        if (checkCode) {
-            result = httpPostWithCheckCode(path, request, IpPort);
-            return JSON.parseObject(result).getJSONObject("data");
-        } else {
-            try {
-                result = httpPost(path, request, IpPort);
-            } catch (Exception e) {
-                appendFailReason(e.toString());
-            }
-            return JSON.parseObject(result);
-        }
+        String result = httpPost(IpPort, path, request, checkCode, false);
+        return JSON.parseObject(result);
     }
 
     //更换域名
@@ -82,7 +71,7 @@ public class RiskControlUtil extends TestCaseCommon {
      */
     public void pcLogin(String username, String password) {
         IScene scene = LoginPcScene.builder().type(0).username(username).password(password).build();
-        visitor.login(scene);
+        visitor.setToken(scene);
     }
 
 

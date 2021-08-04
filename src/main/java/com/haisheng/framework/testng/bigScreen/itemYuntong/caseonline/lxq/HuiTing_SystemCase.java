@@ -9,7 +9,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklis
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.specialaudio.SpecialAudioApprovalScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.YunTongInfo;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.general.GeneralEnumValueListScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.VoiceEvaluationPageScene;
@@ -36,7 +36,7 @@ import java.lang.reflect.Method;
  * @date 2021/1/29 11:17
  */
 public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
-    EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_SSO;
+    EnumTestProduct PRODUCE = EnumTestProduct.YT_DAILY_CONTROL;
     EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_ONLINE;
     VisitorProxy visitor = new VisitorProxy(PRODUCE);
     SceneUtil businessUtil = new SceneUtil(visitor);
@@ -67,8 +67,6 @@ public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.roleId = ALL_AUTHORITY.getRoleId();
         beforeClassInit(commonConfig);
         businessUtil.loginPc(ALL_AUTHORITY);
-
-        visitor.setProduct(EnumTestProduct.YT_ONLINE_CONTROL);  //会听模块
     }
 
     @AfterClass
@@ -219,8 +217,8 @@ public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
                 for (int i = 0; i < arr1.size(); i++) {
                     JSONObject obj1 = arr1.getJSONObject(i);
                     String search_reception_time = obj1.getString("reception_time") + ":000";
-                    Preconditions.checkArgument(Long.valueOf(dt.dateToTimestamp1(start+ " 00:00:00:000")) <= Long.valueOf(dt.dateToTimestamp1(search_reception_time)) &&
-                                    Long.valueOf(dt.dateToTimestamp1(search_reception_time)) <= Long.valueOf(dt.dateToTimestamp1(end+ " 23:59:59:999")),
+                    Preconditions.checkArgument(Long.valueOf(dt.dateToTimestamp1(start + " 00:00:00:000")) <= Long.valueOf(dt.dateToTimestamp1(search_reception_time)) &&
+                                    Long.valueOf(dt.dateToTimestamp1(search_reception_time)) <= Long.valueOf(dt.dateToTimestamp1(end + " 23:59:59:999")),
                             "搜索开始时间=" + start + ", 结束时间=" + end + " , 结果包含" + search_reception_time);
                 }
             } else {
@@ -447,8 +445,8 @@ public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
                 for (int i = 0; i < arr1.size(); i++) {
                     JSONObject obj1 = arr1.getJSONObject(i);
                     String search_reception_time = obj1.getString("reception_start_time") + " 00:00:00:000";
-                    Preconditions.checkArgument(Long.valueOf(dt.dateToTimestamp1(start+" 00:00:00:000")) <= Long.valueOf(dt.dateToTimestamp1(search_reception_time)) &&
-                                    Long.valueOf(dt.dateToTimestamp1(search_reception_time)) <= Long.valueOf(dt.dateToTimestamp1(end+" 23:59:59:999")),
+                    Preconditions.checkArgument(Long.valueOf(dt.dateToTimestamp1(start + " 00:00:00:000")) <= Long.valueOf(dt.dateToTimestamp1(search_reception_time)) &&
+                                    Long.valueOf(dt.dateToTimestamp1(search_reception_time)) <= Long.valueOf(dt.dateToTimestamp1(end + " 23:59:59:999")),
                             "搜索开始时间=" + start + ", 结束时间=" + end + " , 结果包含" + search_reception_time);
                 }
             } else {
@@ -627,8 +625,8 @@ public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
                 for (int i = 0; i < arr1.size(); i++) {
                     JSONObject obj1 = arr1.getJSONObject(i);
                     String search_reception_time = obj1.getString("reception_time") + " 00:00:00:000";
-                    Preconditions.checkArgument(Long.valueOf(dt.dateToTimestamp1(start +" 00:00:00:000")) <= Long.valueOf(dt.dateToTimestamp1(search_reception_time)) &&
-                                    Long.valueOf(dt.dateToTimestamp1(search_reception_time)) <= Long.valueOf(dt.dateToTimestamp1(end+" 23:59:59:999")),
+                    Preconditions.checkArgument(Long.valueOf(dt.dateToTimestamp1(start + " 00:00:00:000")) <= Long.valueOf(dt.dateToTimestamp1(search_reception_time)) &&
+                                    Long.valueOf(dt.dateToTimestamp1(search_reception_time)) <= Long.valueOf(dt.dateToTimestamp1(end + " 23:59:59:999")),
                             "搜索开始时间=" + start + ", 结束时间=" + end + " , 结果包含" + search_reception_time);
                 }
             } else {
@@ -779,7 +777,7 @@ public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
                     Preconditions.checkArgument(search.equals(evaluate_status_name), "接待环节=" + evaluate_status_name + " ,结果包含" + search);
                 }
 
-                Preconditions.checkArgument(arr1.size()>0,"搜索"+evaluate_status_name+"结果为空");
+                Preconditions.checkArgument(arr1.size() > 0, "搜索" + evaluate_status_name + "结果为空");
             }
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -789,7 +787,6 @@ public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
             saveData("话术考核设置根据接待环节进行筛选");
         }
     }
-
 
 
 }

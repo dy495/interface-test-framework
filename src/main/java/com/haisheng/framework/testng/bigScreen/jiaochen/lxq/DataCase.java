@@ -9,9 +9,9 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.JiaoChenInfo;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shop.EditScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -33,11 +33,11 @@ import java.lang.reflect.Method;
 
 public class DataCase extends TestCaseCommon implements TestCaseStd {
 
-    private static final EnumTestProduct PRODUCE = EnumTestProduct.JC_DAILY;
+    private static final EnumTestProduct PRODUCE = EnumTestProduct.JC_DAILY_ZH;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.JC_ALL_AUTHORITY_DAILY_LXQ;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_LXQ_DAILY;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
-    public UserUtil user = new UserUtil(visitor);
+    public SceneUtil user = new SceneUtil(visitor);
 
     ScenarioUtil jc = ScenarioUtil.getInstance();
     JiaoChenInfo info = new JiaoChenInfo();
@@ -58,7 +58,7 @@ public class DataCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "吕雪晴";
 
-        commonConfig.product = EnumTestProduct.JC_DAILY.getAbbreviation();
+        commonConfig.product = EnumTestProduct.JC_DAILY_ZH.getAbbreviation();
         //replace backend gateway url
         //commonConfig.gateway = "";
 
@@ -66,12 +66,12 @@ public class DataCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.JC_DAILY.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.JC_DAILY_ZH.getDesc() + commonConfig.checklistQaOwner);
 
         //replace ding push conf
         //commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.referer = EnumTestProduct.JC_DAILY.getReferer();
+        commonConfig.referer = EnumTestProduct.JC_DAILY_ZH.getReferer();
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};
 

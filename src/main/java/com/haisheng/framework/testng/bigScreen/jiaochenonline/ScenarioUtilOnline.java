@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class ScenarioUtilOnline extends TestCaseCommon {
     private static volatile ScenarioUtilOnline instance = null;
-    private static final String IpPort = EnumTestProduct.JC_ONLINE.getPort();
+    private static final String IpPort = EnumTestProduct.JC_ONLINE.getIp();
     private static final String shopId = EnumTestProduct.JC_ONLINE.getShopId();
 
     /**
@@ -47,7 +47,7 @@ public class ScenarioUtilOnline extends TestCaseCommon {
         JSONObject object = new JSONObject();
         object.put("phone", phone);
         object.put("verification_code", verificationCode);
-        httpPost(path, object, IpPort);
+        httpPost(IpPort, path, object);
     }
 
     /**
@@ -85,7 +85,7 @@ public class ScenarioUtilOnline extends TestCaseCommon {
         JSONObject object = new JSONObject();
         object.put("phone", username);
         object.put("verification_code", password);
-        httpPost(path, object, IpPort);
+        httpPost(IpPort, path, object);
     }
 
     public void appletLoginToken(String token) {
@@ -1182,7 +1182,7 @@ public class ScenarioUtilOnline extends TestCaseCommon {
      * @description :文章列表xmf
      * @date :2020/11/28 12:14
      **/
-    public JSONObject appletArticleList(String size, String last_value,String label) {
+    public JSONObject appletArticleList(String size, String last_value, String label) {
         String url = "/jiaochen/applet/article/list";
         JSONObject json1 = new JSONObject();
         json1.put("size", size);

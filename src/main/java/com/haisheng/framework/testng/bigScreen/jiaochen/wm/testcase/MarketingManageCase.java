@@ -22,7 +22,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.packagemanage
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.packagemanage.PackageFormPageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.receptionmanage.ReceptionManagerVoucherListBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherFormVoucherPageBean;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.UseStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.CustomerLabelTypeEnum;
@@ -52,8 +52,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionman
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.record.PushMsgPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vipmarketing.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -75,12 +74,11 @@ import java.util.stream.Collectors;
  * @date 2021/1/29 11:17
  */
 public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduct PRODUCE = EnumTestProduct.JC_DAILY;
+    private static final EnumTestProduct PRODUCE = EnumTestProduct.JC_DAILY_ZH;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.JC_ALL_AUTHORITY_DAILY;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_DAILY;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
-    public UserUtil user = new UserUtil(visitor);
-    public SupporterUtil util = new SupporterUtil(visitor);
+    public SceneUtil util = new SceneUtil(visitor);
     CommonConfig commonConfig = new CommonConfig();
 
     @BeforeClass
@@ -113,7 +111,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-        user.loginPc(ALL_AUTHORITY);
+        util.loginPc(ALL_AUTHORITY);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
@@ -195,7 +193,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene packageFormPageScene = PackageFormPageScene.builder().build();
-            List<PackagePage> packagePageList = util.toJavaObjectList(packageFormPageScene, PackagePage.class, SupporterUtil.SIZE);
+            List<PackagePage> packagePageList = util.toJavaObjectList(packageFormPageScene, PackagePage.class, SceneUtil.SIZE);
             packagePageList.forEach(packagePage -> {
                 PackageDetailBean packageDetail = util.getPackageDetail(packagePage.getPackageId());
                 int voucherCountSum = packageDetail.getVoucherList().stream().map(e -> (JSONObject) e).mapToInt(e -> e.getInteger("voucher_count")).sum();
@@ -234,7 +232,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene packageFormPageScene = PackageFormPageScene.builder().build();
-            List<PackagePage> packagePages = util.toJavaObjectList(packageFormPageScene, PackagePage.class, SupporterUtil.SIZE);
+            List<PackagePage> packagePages = util.toJavaObjectList(packageFormPageScene, PackagePage.class, SceneUtil.SIZE);
             packagePages.forEach(e -> {
                 String packageName = e.getPackageName();
                 int soldNumber = e.getSoldNumber();
@@ -316,11 +314,11 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             int buyPackageRecordTotal = buyPackageRecordScene.invoke(visitor).getInteger("total");
             IScene voucherInfoScene = VoucherInfoScene.builder().id(voucherId).build();
             int totalSend = voucherInfoScene.invoke(visitor).getInteger("total_send");
-            user.loginApplet(APPLET_USER_ONE);
+            util.loginApplet(APPLET_USER_ONE);
             int appletVoucherNum = util.getAppletVoucherNum();
             int appletPackageNum = util.getAppletPackageNum();
             //购买临时套餐
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
             JSONArray voucherList = util.getVoucherArray(voucherPage, 1);
             util.buyTemporaryPackage(voucherList, 1);
             VoucherFormVoucherPageBean secondPackagePage = util.getVoucherPage(voucherName);
@@ -342,7 +340,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             CommonUtil.checkResult(voucherName + " 确认支付后可用库存", secondPackagePage.getAllowUseInventory(), thirdPackagePage.getAllowUseInventory());
             CommonUtil.checkResult(voucherName + " 确认支付后剩余库存", secondPackagePage.getSurplusInventory() - 1, thirdPackagePage.getSurplusInventory());
             CommonUtil.checkResult(voucherName + " 共领取数", totalSend + 1, voucherInfoScene.invoke(visitor).getInteger("total_send"));
-            user.loginApplet(APPLET_USER_ONE);
+            util.loginApplet(APPLET_USER_ONE);
             CommonUtil.checkResult("小程序我的卡券数", appletVoucherNum + 1, util.getAppletVoucherNum());
             CommonUtil.checkResult("小程序我的套餐数", appletPackageNum, util.getAppletPackageNum());
         } catch (Exception | AssertionError e) {
@@ -371,10 +369,10 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             int soldNumber = util.getPackagePage(packageName).getSoldNumber();
             IScene voucherInfoScene = VoucherInfoScene.builder().id(voucherId).build();
             int totalSend = voucherInfoScene.invoke(visitor).getInteger("total_send");
-            user.loginApplet(APPLET_USER_ONE);
+            util.loginApplet(APPLET_USER_ONE);
             int appletVoucherNum = util.getAppletVoucherNum();
             int appletPackageNum = util.getAppletPackageNum();
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
             //购买固定套餐
             util.buyFixedPackage(packageId, 1);
             VoucherFormVoucherPageBean secondPackagePage = util.getVoucherPage(voucherName);
@@ -397,7 +395,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             CommonUtil.checkResult(voucherName + " 确认支付后可用库存", secondPackagePage.getAllowUseInventory(), thirdPackagePage.getAllowUseInventory());
             CommonUtil.checkResult(voucherName + " 确认支付后剩余库存", secondPackagePage.getSurplusInventory() - 1, thirdPackagePage.getSurplusInventory());
             CommonUtil.checkResult(voucherName + " 共领取数", totalSend + 1, voucherInfoScene.invoke(visitor).getInteger("total_send"));
-            user.loginApplet(APPLET_USER_ONE);
+            util.loginApplet(APPLET_USER_ONE);
             CommonUtil.checkResult("小程序我的卡券数", appletVoucherNum, util.getAppletVoucherNum());
             CommonUtil.checkResult("小程序我的套餐数", appletPackageNum + 1, util.getAppletPackageNum());
         } catch (Exception | AssertionError e) {
@@ -420,11 +418,11 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             int totalSend = voucherInfoScene.invoke(visitor).getInteger("total_send");
             IScene buyPackageRecordScene = BuyPackageRecordScene.builder().build();
             int buyPackageRecordTotal = buyPackageRecordScene.invoke(visitor).getInteger("total");
-            user.loginApplet(APPLET_USER_ONE);
+            util.loginApplet(APPLET_USER_ONE);
             int appletVoucherNum = util.getAppletVoucherNum();
             int appletPackageNum = util.getAppletPackageNum();
             //临时套餐
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
             JSONArray voucherList = util.getVoucherArray(voucherPage, 1);
             util.buyTemporaryPackage(voucherList, 0);
             VoucherFormVoucherPageBean secondPackagePage = util.getVoucherPage(voucherName);
@@ -446,7 +444,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             CommonUtil.checkResult(voucherName + " 确认支付后可用库存", secondPackagePage.getAllowUseInventory(), thirdPackagePage.getAllowUseInventory());
             CommonUtil.checkResult(voucherName + " 确认支付后剩余库存", secondPackagePage.getSurplusInventory() - 1, thirdPackagePage.getSurplusInventory());
             CommonUtil.checkResult(voucherName + " 共领取数", totalSend + 1, voucherInfoScene.invoke(visitor).getInteger("total_send"));
-            user.loginApplet(APPLET_USER_ONE);
+            util.loginApplet(APPLET_USER_ONE);
             CommonUtil.checkResult("小程序我的卡券数", appletVoucherNum + 1, util.getAppletVoucherNum());
             CommonUtil.checkResult("小程序我的套餐数", appletPackageNum, util.getAppletPackageNum());
         } catch (Exception | AssertionError e) {
@@ -473,10 +471,10 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             int buyPackageRecordTotal = buyPackageRecordScene.invoke(visitor).getInteger("total");
             IScene voucherInfoScene = VoucherInfoScene.builder().id(voucherId).build();
             int totalSend = voucherInfoScene.invoke(visitor).getInteger("total_send");
-            user.loginApplet(APPLET_USER_ONE);
+            util.loginApplet(APPLET_USER_ONE);
             int appletVoucherNum = util.getAppletVoucherNum();
             int appletPackageNum = util.getAppletPackageNum();
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
             //赠送固定套餐
             util.buyFixedPackage(packageId, 0);
             VoucherFormVoucherPageBean secondPackagePage = util.getVoucherPage(voucherName);
@@ -497,7 +495,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             CommonUtil.checkResult(voucherName + " 确认支付后可用库存", secondPackagePage.getAllowUseInventory(), thirdPackagePage.getAllowUseInventory());
             CommonUtil.checkResult(voucherName + " 确认支付后剩余库存", secondPackagePage.getSurplusInventory() - 1, thirdPackagePage.getSurplusInventory());
             CommonUtil.checkResult(voucherName + " 共领取数", totalSend + 1, voucherInfoScene.invoke(visitor).getInteger("total_send"));
-            user.loginApplet(APPLET_USER_ONE);
+            util.loginApplet(APPLET_USER_ONE);
             CommonUtil.checkResult("小程序我的卡券数", appletVoucherNum, util.getAppletVoucherNum());
             CommonUtil.checkResult("小程序我的套餐数", appletPackageNum + 1, util.getAppletPackageNum());
         } catch (Exception | AssertionError e) {
@@ -851,11 +849,10 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             String voucherName = voucherPage.getVoucherName();
             JSONArray voucherList = util.getVoucherArray(voucherPage, 2);
             //购买临时套餐
-            IScene temporaryScene = PurchaseTemporaryPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
+            String message = PurchaseTemporaryPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
                     .carType(PackageUseTypeEnum.ALL_CAR.name()).voucherList(voucherList).expiryDate("1").remark(EnumDesc.DESC_BETWEEN_20_30.getDesc())
                     .subjectType(util.getSubjectType()).subjectId(util.getSubjectDesc(util.getSubjectType()))
-                    .extendedInsuranceYear("1").extendedInsuranceCopies("1").type(1).build();
-            String message = util.getResponse(temporaryScene).getMessage();
+                    .extendedInsuranceYear("1").extendedInsuranceCopies("1").type(1).build().getResponse(visitor).getMessage();
             String err = "卡券【" + voucherName + "】已售罄";
             CommonUtil.checkResult("购买无库存卡券" + voucherName, err, message);
         } catch (Exception | AssertionError e) {
@@ -873,11 +870,10 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             String voucherName = voucherPage.getVoucherName();
             JSONArray voucherList = util.getVoucherArray(voucherPage, 2);
             //购买临时套餐
-            IScene temporaryScene = PurchaseTemporaryPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
+            String message = PurchaseTemporaryPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
                     .carType(PackageUseTypeEnum.ALL_CAR.name()).voucherList(voucherList).expiryDate("1").remark(EnumDesc.DESC_BETWEEN_20_30.getDesc())
                     .subjectType(util.getSubjectType()).subjectId(util.getSubjectDesc(util.getSubjectType()))
-                    .extendedInsuranceYear("1").extendedInsuranceCopies("1").type(1).build();
-            String message = util.getResponse(temporaryScene).getMessage();
+                    .extendedInsuranceYear("1").extendedInsuranceCopies("1").type(1).build().getResponse(visitor).getMessage();
             String err = "卡券【" + voucherName + "】已被作废，请重新选择！";
             CommonUtil.checkResult("购买已作废的卡券" + voucherName, err, message);
         } catch (Exception | AssertionError e) {
@@ -897,11 +893,10 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             PackagePage packagePage = util.editPackage(voucherPage, 1);
             Long packageId = packagePage.getPackageId();
             //购买固定套餐
-            IScene purchaseFixedPackageScene = PurchaseFixedPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
+            String message = PurchaseFixedPackageScene.builder().customerPhone(APPLET_USER_ONE.getPhone())
                     .carType(PackageUseTypeEnum.ALL_CAR.name()).packageId(packageId).expiryDate("1").remark(EnumDesc.DESC_BETWEEN_20_30.getDesc())
                     .subjectType(util.getSubjectType()).subjectId(util.getSubjectDesc(util.getSubjectType())).packagePrice("49.99")
-                    .extendedInsuranceYear(1).extendedInsuranceCopies(1).type(1).build();
-            String message = util.getResponse(purchaseFixedPackageScene).getMessage();
+                    .extendedInsuranceYear(1).extendedInsuranceCopies(1).type(1).build().getResponse(visitor).getMessage();
             String err = "卡券【" + voucherName + "】已售罄";
             CommonUtil.checkResult("购买包含已售罄卡券的套餐", err, message);
         } catch (Exception | AssertionError e) {
@@ -1231,10 +1226,10 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long packageId = null;
         try {
-            user.loginApplet(APPLET_USER_ONE);
+            util.loginApplet(APPLET_USER_ONE);
             int packageNum = util.getAppletPackageNum();
             int voucherNum = util.getAppletVoucherNum();
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
             PackagePage packagePage = util.getPackagePage(PackageStatusEnum.AGREE);
             packageId = packagePage.getPackageId();
             String packageName = packagePage.getPackageName();
@@ -1246,7 +1241,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             PackageFormSwitchPackageStatusScene.builder().id(packageId).status(false).build().invoke(visitor);
             //确认购买
             util.makeSureBuyPackage(packageName);
-            user.loginApplet(APPLET_USER_ONE);
+            util.loginApplet(APPLET_USER_ONE);
             int newPackageNum = util.getAppletPackageNum();
             int newVoucherNum = util.getAppletVoucherNum();
             CommonUtil.checkResult("确认支付套餐后小程序我的卡券", voucherNum, newVoucherNum);
@@ -1254,7 +1249,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
             PackageFormSwitchPackageStatusScene.builder().id(packageId).status(true).build().invoke(visitor);
             saveData("套餐管理--购买套餐，确认购买前，套餐状态改为关闭，再确认购买小程序会收到套餐/卡券");
         }
@@ -1450,7 +1445,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             util.pushCustomMessage(0, true, true, voucherId);
             //消息列表消息内容
-            user.loginApplet(APPLET_USER_ONE);
+            util.loginApplet(APPLET_USER_ONE);
             IScene appletMessageListScene = AppletMessageListScene.builder().size(20).build();
             Long id = util.toFirstJavaObject(appletMessageListScene, JSONObject.class).getLong("id");
             IScene appletMessageDetailScene = AppletMessageDetailScene.builder().id(id).build();
@@ -1520,10 +1515,10 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
     public void messageManager_system_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            visitor.login(APPLET_USER_ONE.getToken());
+            visitor.setToken(APPLET_USER_ONE.getToken());
             int appletVoucherNum = util.getAppletVoucherNum();
             int appletMessageNum = util.getAppletMessageNum();
-            user.loginApp(ALL_AUTHORITY);
+            util.loginApp(ALL_AUTHORITY);
             IScene scene = SearchCustomerPhoneScene.builder().customerType(ExportPageTypeEnum.WECHAT_CUSTOMER.name()).build();
             JSONObject data = scene.invoke(visitor);
             List<Long> customerIdList = data.getJSONArray("customer_id_list").toJavaList(Long.class);
@@ -1545,7 +1540,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             CommonUtil.checkResult("消息内容", "卡券【" + voucherName + "】一张", firstJSONObject.getString("content"));
             CommonUtil.checkResult("发送数量", sendMessageTotal, firstJSONObject.getInteger("send_count"));
             //小程序接收消息验证
-            visitor.login(APPLET_USER_ONE.getToken());
+            visitor.setToken(APPLET_USER_ONE.getToken());
             CommonUtil.checkResult("小程序我的卡券数量", appletVoucherNum + 1, util.getAppletVoucherNum());
             CommonUtil.checkResult("小程序我的消息数量", appletMessageNum + 1, util.getAppletMessageNum());
             Long messageId = AppletMessageListScene.builder().size(20).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
@@ -1651,7 +1646,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             JSONObject newEquityPageScene = getResponseByEquityPageScene(scene);
             String newDescription = newEquityPageScene.getString("description");
             CommonUtil.checkResult("pc修改过权益说明后", description, newDescription);
-            user.loginApplet(APPLET_USER_ONE);
+            util.loginApplet(APPLET_USER_ONE);
             JSONObject response = AppletMemberCenterHomePageScene.builder().build().invoke(visitor);
             JSONObject equity = response.getJSONArray("equity_list").getJSONObject(0);
             CommonUtil.checkResultPlus("pc权益服务类型", VipTypeEnum.VIP.getId(), "applet权益服务类型", response.getInteger("vip_type"));
@@ -1673,7 +1668,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             Integer equityId = response.getInteger("equity_id");
             //关闭
             EquityStartOrCloseScene.builder().equityId(equityId).equityStatus(UseStatusEnum.DISABLE.name()).build().invoke(visitor, false);
-            user.loginApplet(APPLET_USER_ONE);
+            util.loginApplet(APPLET_USER_ONE);
             IScene scene = AppletMemberCenterHomePageScene.builder().build();
             String equityStatus = scene.invoke(visitor).getJSONArray("equity_list").getJSONObject(0).getString("equity_status");
             CommonUtil.checkResult("生日积分的equity_status", UseStatusEnum.DISABLE.name(), equityStatus);
@@ -1694,7 +1689,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             Integer equityId = response.getInteger("equity_id");
             //开启
             EquityStartOrCloseScene.builder().equityId(equityId).equityStatus(UseStatusEnum.ENABLE.name()).build().invoke(visitor, false);
-            user.loginApplet(APPLET_USER_ONE);
+            util.loginApplet(APPLET_USER_ONE);
             IScene scene = AppletMemberCenterHomePageScene.builder().build();
             String equityStatus = scene.invoke(visitor).getJSONArray("equity_list").getJSONObject(0).getString("equity_status");
             CommonUtil.checkResult("生日积分的equity_status", UseStatusEnum.ENABLE.name(), equityStatus);
@@ -1777,7 +1772,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
                         .awardCardVolumeId(voucherId).takeEffectType("DAY").dayNumber("2000").businessType(businessType)
                         .day("1").build().invoke(visitor);
             }
-            user.loginApplet(APPLET_USER_ONE);
+            util.loginApplet(APPLET_USER_ONE);
             JSONArray taskList = AppletShareTaskListScene.builder().build().invoke(visitor).getJSONArray("task_list");
             String finalDescription = description;
             taskList.stream().map(e -> (JSONObject) e).forEach(e -> CommonUtil.checkResult(e.getString("task_name") + "的内容", finalDescription, e.getString("award_description")));
@@ -1828,11 +1823,11 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             IScene signInConfigEditScene = SignInConfigEditScene.builder().signInConfigId(id).awardScore(999)
                     .pictureUrl(picPath).explain(EnumDesc.DESC_BETWEEN_20_30.getDesc()).build();
             visitor.invokeApi(signInConfigEditScene);
-            user.loginApplet(APPLET_USER_ONE);
+            util.loginApplet(APPLET_USER_ONE);
             IScene messageFormPageScene = AppletSignInDetailScene.builder().build();
             Integer signInScore = visitor.invokeApi(messageFormPageScene).getInteger("sign_in_score");
             CommonUtil.checkResultPlus("pc修改后签到积分为", 999, "小程序签到可得积分为", signInScore);
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -1903,7 +1898,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             int afterNumber = response.getInteger("after_number");
             CommonUtil.checkResult("增加" + APPLET_USER_ONE.getPhone() + "洗车次数3次后调整记录列表数", washRecordTotal + 1, newWashRecordTotal);
             //小程序洗车次数
-            user.loginApplet(APPLET_USER_ONE);
+            util.loginApplet(APPLET_USER_ONE);
             String remainNumber = visitor.invokeApi(AppletCarWashRemainNumberScene.builder().build()).getString("remainNumber");
             CommonUtil.checkResult("增加" + APPLET_USER_ONE.getPhone() + "洗车次数3次后小程序洗车次数", String.valueOf(afterNumber), remainNumber);
         } catch (Exception | AssertionError e) {
@@ -1923,7 +1918,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             String ruleDetail = WashCarManagerRuleDetailScene.builder().build().invoke(visitor).getString("rule_detail");
             String detail = Arrays.stream(strings).filter(e -> !e.equals(ruleDetail)).findFirst().orElse(ruleDetail);
             WashCarManagerEditRuleScene.builder().ruleDetail(detail).build().invoke(visitor);
-            user.loginApplet(APPLET_USER_ONE);
+            util.loginApplet(APPLET_USER_ONE);
             //pc规则详情
             JSONObject jsonObject = AppletCommonRuleExplainDetailScene.builder().businessType(AppletCodeBusinessTypeEnum.WASH_CAR.getKey()).build().invoke(visitor);
             CommonUtil.checkResultPlus("pc端洗车规则说明为", detail, "applet端洗车规则说明为", jsonObject.getString("rule_explain"));
@@ -1961,7 +1956,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             String equityDetail = WashCarManagerEquityDetailScene.builder().build().invoke(visitor).getString("equity_detail");
             String detail = Arrays.stream(strings).filter(e -> !e.equals(equityDetail)).findFirst().orElse(equityDetail);
             WashCarManagerEditEquityScene.builder().equityDetail(detail).build().invoke(visitor);
-            user.loginApplet(APPLET_USER_ONE);
+            util.loginApplet(APPLET_USER_ONE);
             JSONObject jsonObject = AppletCommonRuleExplainDetailScene.builder().businessType(AppletCodeBusinessTypeEnum.WASH_CAR.getKey()).build().invoke(visitor);
             CommonUtil.checkResultPlus("pc端洗车权益为", detail, "applet端洗车权益为", jsonObject.getString("equity_explain"));
         } catch (Exception | AssertionError e) {
@@ -2059,11 +2054,10 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             ids.forEach(id -> {
                 String[] days = {"3651", "0"};
                 Arrays.stream(days).forEach(day -> {
-                    IScene shareManagerEditScene = ShareManagerEditScene.builder().id(id).dayNumber("9").day(day)
+                    String message = ShareManagerEditScene.builder().id(id).dayNumber("9").day(day)
                             .awardScore(1000).awardCustomerRule("EVERY_TIME").awardCardVolumeId(voucherId)
                             .takeEffectType(TaskEffectTypeEnum.DAY.name()).taskExplain(EnumDesc.DESC_BETWEEN_5_10.getDesc())
-                            .build();
-                    String message = util.getResponse(shareManagerEditScene).getMessage();
+                            .build().getResponse(visitor).getMessage();
                     String err = StringUtils.isEmpty(day) ? "任务有效天数不能为空" : Integer.parseInt(day) == 0 ? "任务最小1天" : "任务最大3650天";
                     CommonUtil.checkResult("任务有效期为" + day, err, message);
                 });

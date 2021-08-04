@@ -683,7 +683,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
             String voucherName = util.getVoucherName(voucherId);
             util.pushMessage(0, true, voucherId);
             //作废前数据
-            visitor.login(APPLET_USER_ONE.getToken());
+            visitor.setToken(APPLET_USER_ONE.getToken());
             int voucherCherNum = util.getAppletVoucherNum();
             user.loginPc(ALL_AUTHORITY);
             List<VoucherInvalidPageBean> voucherInvalidPages = util.getVoucherInvalidList(voucherId);
@@ -703,7 +703,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
             CommonUtil.checkResult(voucherName + " 作废后作废人电话", ALL_AUTHORITY.getPhone(), newVoucherInvalidPages.get(0).getInvalidPhone());
             CommonUtil.checkResult(voucherName + " 作废后作废说明", EnumDesc.DESC_BETWEEN_10_15.getDesc(), newVoucherInvalidPages.get(0).getInvalidDescription());
             CommonUtil.checkResult(voucherCode + " 作废后共作废数", totalInvalid + 1, visitor.invokeApi(voucherInfoScene).getInteger("total_invalid"));
-            visitor.login(APPLET_USER_ONE.getToken());
+            visitor.setToken(APPLET_USER_ONE.getToken());
             CommonUtil.checkResult(voucherName + " 作废后小程序我的卡券数量", voucherCherNum, util.getAppletVoucherNum());
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -811,19 +811,19 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
         Long id = null;
         try {
             //获取已使用的卡券列表
-            visitor.login(APPLET_USER_ONE.getToken());
+            visitor.setToken(APPLET_USER_ONE.getToken());
             int transferVoucherNum = util.getAppletVoucherNum();
             AppletVoucher appletVoucher = util.getAppletVoucher(VoucherUseStatusEnum.NEAR_EXPIRE);
             id = appletVoucher.getId();
-            visitor.login(APPLET_USER_TWO.getToken());
+            visitor.setToken(APPLET_USER_TWO.getToken());
             int receiveVoucherNum = util.getAppletVoucherNum();
             //转移
             user.loginPc(ALL_AUTHORITY);
             TransferScene.builder().transferPhone(APPLET_USER_ONE.getPhone()).receivePhone(APPLET_USER_TWO.getPhone()).voucherIds(getList(id)).build().invoke(visitor);
-            visitor.login(APPLET_USER_ONE.getToken());
+            visitor.setToken(APPLET_USER_ONE.getToken());
             int newTransferVoucherNum = util.getAppletVoucherNum();
             CommonUtil.checkResult("转移者我的卡券数", transferVoucherNum - 1, newTransferVoucherNum);
-            visitor.login(APPLET_USER_TWO.getToken());
+            visitor.setToken(APPLET_USER_TWO.getToken());
             int newReceiveVoucherNum = util.getAppletVoucherNum();
             CommonUtil.checkResult("接收者我的卡券数", receiveVoucherNum + 1, newReceiveVoucherNum);
         } catch (Exception | AssertionError e) {
@@ -967,7 +967,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取已使用的卡券列表
-            visitor.login(APPLET_USER_ONE.getToken());
+            visitor.setToken(APPLET_USER_ONE.getToken());
             AppletVoucher appletVoucher = util.getAppletVoucher(VoucherUseStatusEnum.IS_USED);
             String voucherName = appletVoucher.getTitle();
             Long voucherId = appletVoucher.getId();
@@ -990,7 +990,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取已使用的卡券列表
-            visitor.login(APPLET_USER_ONE.getToken());
+            visitor.setToken(APPLET_USER_ONE.getToken());
             AppletVoucher appletVoucher = util.getAppletVoucher(VoucherUseStatusEnum.EXPIRED);
             String voucherName = appletVoucher.getTitle();
             Long voucherId = appletVoucher.getId();
@@ -1014,7 +1014,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
         try {
             String[] phones = {"13654973499"};
             //获取已过期的卡券列表
-            visitor.login(APPLET_USER_ONE.getToken());
+            visitor.setToken(APPLET_USER_ONE.getToken());
             AppletVoucher appletVoucher = util.getAppletVoucher(VoucherUseStatusEnum.NEAR_EXPIRE);
             String voucherName = appletVoucher.getTitle();
             Long voucherId = appletVoucher.getId();
@@ -1039,7 +1039,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
         try {
             String[] phones = {"13654973499", APPLET_USER_ONE.getPhone()};
             //获取已过期的卡券列表
-            visitor.login(APPLET_USER_ONE.getToken());
+            visitor.setToken(APPLET_USER_ONE.getToken());
             AppletVoucher appletVoucher = util.getAppletVoucher(VoucherUseStatusEnum.NEAR_EXPIRE);
             String voucherName = appletVoucher.getTitle();
             Long voucherId = appletVoucher.getId();
@@ -1065,7 +1065,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
         try {
             IScene voucherListScene = VoucherListScene.builder().transferPhone(APPLET_USER_ONE.getPhone()).build();
             int voucherNum = visitor.invokeApi(voucherListScene).getJSONArray("list").size();
-            visitor.login(APPLET_USER_ONE.getToken());
+            visitor.setToken(APPLET_USER_ONE.getToken());
             int nearExpireNum = util.getAppletVoucherNum(VoucherUseStatusEnum.NEAR_EXPIRE);
             int normalNum = util.getAppletVoucherNum(VoucherUseStatusEnum.NORMAL);
             CommonUtil.valueView(nearExpireNum, normalNum);

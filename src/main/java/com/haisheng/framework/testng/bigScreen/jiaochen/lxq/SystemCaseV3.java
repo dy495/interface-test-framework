@@ -8,7 +8,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.JiaoChenInfo;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.model.AppletModeListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.followup.AppPageV3Scene;
@@ -21,8 +21,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.loginuser.Sh
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.manage.EvaluateExportScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.record.ExportPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shop.AddScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -40,13 +39,12 @@ import java.util.List;
  * @date 2021/1/29 11:17
  */
 public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduct PRODUCE = EnumTestProduct.JC_DAILY;
+    private static final EnumTestProduct PRODUCE = EnumTestProduct.JC_DAILY_ZH;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.JC_ALL_AUTHORITY_DAILY_LXQ;
     private static final EnumAccount ALL_AUTHORITY_DAILY = EnumAccount.JC_ALL_AUTHORITY_DAILY;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_LXQ_DAILY;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
-    public UserUtil user = new UserUtil(visitor);
-    public SupporterUtil util = new SupporterUtil(visitor);
+    public SceneUtil util = new SceneUtil(visitor);
     JiaoChenInfo info = new JiaoChenInfo();
     ScenarioUtil jc = ScenarioUtil.getInstance();
 
@@ -85,7 +83,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-        user.loginApplet(APPLET_USER_ONE);
+        util.loginApplet(APPLET_USER_ONE);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
@@ -101,7 +99,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
     public void onlineExpertApplet1(String customerName, String customerPhone, String content, String mess, String status) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.loginApplet(APPLET_USER_ONE);
+            util.loginApplet(APPLET_USER_ONE);
             Long brandId = info.BrandID;
             Long modelId = AppletModeListScene.builder().brandId(brandId).styleId(info.CarStyleID).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
             Long shopId = AppletCommonShopListScene.builder().carModelId(modelId).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
@@ -129,7 +127,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
     public void onlineExpertApplet2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.loginApplet(APPLET_USER_ONE);
+            util.loginApplet(APPLET_USER_ONE);
             Long brandId = info.BrandID;
             Long modelId = AppletModeListScene.builder().brandId(brandId).styleId(info.CarStyleID).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
             Long shopId = AppletCommonShopListScene.builder().carModelId(modelId).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
@@ -190,10 +188,10 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             //获取小程序消息列表数量
             int befApplet = info.getAppletmessNum();
             //获取app跟进列表数量
-            user.loginApp(ALL_AUTHORITY);
+            util.loginApp(ALL_AUTHORITY);
             int befApp = AppPageV3Scene.builder().size(10).build().invoke(visitor).getInteger("total");
             //PC【在线专家列表】
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
             int befPC = OnlineExpertsPageListScene.builder().page(1).size(10).build().invoke(visitor).getInteger("total");
 
             //小程序提交在线专家
@@ -207,10 +205,10 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             //获取小程序消息列表数量
             int afterApplet = info.getAppletmessNum();
             //获取app跟进列表数量
-            user.loginApp(ALL_AUTHORITY);
+            util.loginApp(ALL_AUTHORITY);
             int afterApp = AppPageV3Scene.builder().size(10).build().invoke(visitor).getInteger("total");
             //PC【在线专家列表】
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
             JSONObject obj = OnlineExpertsPageListScene.builder().page(1).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0);
             int afterPC = OnlineExpertsPageListScene.builder().page(1).size(10).build().invoke(visitor).getInteger("total");
 
@@ -248,7 +246,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
     public void onlineExpertPC1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
             JSONArray alllist = OnlineExpertsPageListScene.builder().page(1).size(50).build().invoke(visitor).getJSONArray("list");
             if (alllist.size() > 0) {
                 for (int i = 0; i < alllist.size(); i++) {
@@ -306,7 +304,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
     public void onlineExpertPCsearch1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
             //根据归属门店搜索
             JSONObject shopobj = ShopListScene.builder().build().invoke(visitor).getJSONArray("list").getJSONObject(0);
             Long shopId = shopobj.getLong("shop_id");
@@ -350,7 +348,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
     public void onlineExpertPCsearch2(String conditions) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
 
             //根据跟进账号搜索
             JSONArray alllist = OnlineExpertsPageListScene.builder().page(1).size(20).followLoginName(conditions).build().invoke(visitor).getJSONArray("list");
@@ -402,7 +400,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
     public void onlineExpertPCsearch3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
             // 根据跟进时间搜索
             String followdate = "";
             JSONArray alllist = OnlineExpertsPageListScene.builder().page(1).size(50).build().invoke(visitor).getJSONArray("list");
@@ -435,7 +433,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
     public void onlineExpertPCsearch4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
             // 根据咨询时间搜索
             String consult_date = "";
             JSONArray alllist = OnlineExpertsPageListScene.builder().page(1).size(50).build().invoke(visitor).getJSONArray("list");
@@ -471,7 +469,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
     public void onlineExpertPCExplain1(String content, String mess) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
 
             JSONObject obj = OnlineExpertsExplainEditScene.builder().content(content).build().invoke(visitor, false);
             int code = obj.getInteger("code");
@@ -495,7 +493,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
     public void onlineExpertPCExplain2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
 
             String content1 = "<p style=\"text-align:center;\" size=\"5\" _root=\"[object Object]\" __ownerID=\"undefined\" __hash=\"" +
                     "undefined\" __altered=\"false\">居中</p><p><span style=\"font-size:32px\">放大</span></p><p><span style=\"font-si" +
@@ -521,7 +519,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
     public void onlineExpertPCRule1(String type, String remind, String over, String work1, String work2, String work3, String work4, String week1, String week2, String week3, String week4, String mess) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
             String workStr = "{\n" +
                     "    \"forenoon_date_start\": \"" + work1 + "\",\n" +
                     "    \"forenoon_date_end\": \"" + work2 + "\",\n" +
@@ -580,7 +578,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             //小程序在线专家咨询
             info.submitonlineExpert();
             //PC在线专家回复
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
             Long id1 = OnlineExpertsPageListScene.builder().page(1).size(5).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
             JSONObject obj1 = ReplyScene.builder().id(id1).content(content).build().invoke(visitor, false);
             int code1 = obj1.getInteger("code");
@@ -588,7 +586,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             //小程序专属销售服务咨询
             info.submitPreService();
             //PC回复
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
             Long id2 = DedicatedServicePageListScene.builder().page(1).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
             JSONObject obj2 = ReplyScene.builder().id(id2).content(content).build().invoke(visitor, false);
             int code2 = obj2.getInteger("code");
@@ -596,7 +594,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             //小程序专属售后服务咨询
             info.submitAfterService();
             //PC回复
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
             Long id3 = DedicatedServicePageListScene.builder().page(1).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
             JSONObject obj3 = ReplyScene.builder().id(id3).content(content).build().invoke(visitor, false);
             int code3 = obj3.getInteger("code");
@@ -638,7 +636,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             //小程序在线专家咨询
             info.submitonlineExpert();
             //PC在线专家备注
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
             Long id1 = OnlineExpertsPageListScene.builder().page(1).size(5).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
             JSONObject obj1 = RemarkScene.builder().id(id1).remarkContent(content).build().invoke(visitor, false);
             int code1 = obj1.getInteger("code");
@@ -646,7 +644,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             //小程序专属销售服务咨询
             info.submitPreService();
             //PC备注
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
             Long id2 = DedicatedServicePageListScene.builder().page(1).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
             JSONObject obj2 = RemarkScene.builder().id(id2).remarkContent(content).build().invoke(visitor, false);
             int code2 = obj2.getInteger("code");
@@ -654,7 +652,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             //小程序专属售后服务咨询
             info.submitAfterService();
             //PC备注
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
             Long id3 = DedicatedServicePageListScene.builder().page(1).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
             JSONObject obj3 = RemarkScene.builder().id(id3).remarkContent(content).build().invoke(visitor, false);
             int code3 = obj3.getInteger("code");
@@ -696,7 +694,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             //小程序在线专家咨询
             info.submitonlineExpert();
             //PC在线专家回复
-            user.loginApp(ALL_AUTHORITY);
+            util.loginApp(ALL_AUTHORITY);
             Long id1 = AppPageV3Scene.builder().type(info.ONLINE_EXPERTS).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
             JSONObject obj1 = AppReplyV3Scene.builder().followId(id1).content(content).build().invoke(visitor, false);
             int code1 = obj1.getInteger("code");
@@ -704,7 +702,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             //小程序专属销售服务咨询
             info.submitPreService();
             //PC回复
-            user.loginApp(ALL_AUTHORITY);
+            util.loginApp(ALL_AUTHORITY);
             Long id2 = AppPageV3Scene.builder().type(info.SALES).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
             JSONObject obj2 = AppReplyV3Scene.builder().followId(id2).content(content).build().invoke(visitor, false);
             int code2 = obj2.getInteger("code");
@@ -712,7 +710,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             //小程序专属售后服务咨询
             info.submitAfterService();
             //PC回复
-            user.loginApp(ALL_AUTHORITY);
+            util.loginApp(ALL_AUTHORITY);
             Long id3 = AppPageV3Scene.builder().type(info.AFTER_SALES).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
             JSONObject obj3 = AppReplyV3Scene.builder().followId(id3).content(content).build().invoke(visitor, false);
             int code3 = obj3.getInteger("code");
@@ -754,7 +752,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             //小程序在线专家咨询
             info.submitonlineExpert();
             //PC在线专家备注
-            user.loginApp(ALL_AUTHORITY);
+            util.loginApp(ALL_AUTHORITY);
             Long id1 = AppPageV3Scene.builder().type(info.ONLINE_EXPERTS).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
             JSONObject obj1 = AppRemarkV3Scene.builder().followId(id1).remark(content).build().invoke(visitor, false);
             int code1 = obj1.getInteger("code");
@@ -762,7 +760,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             //小程序专属销售服务咨询
             info.submitPreService();
             //PC备注
-            user.loginApp(ALL_AUTHORITY);
+            util.loginApp(ALL_AUTHORITY);
             Long id2 = AppPageV3Scene.builder().type(info.SALES).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
             JSONObject obj2 = AppRemarkV3Scene.builder().followId(id2).remark(content).build().invoke(visitor, false);
             int code2 = obj2.getInteger("code");
@@ -770,7 +768,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             //小程序专属售后服务咨询
             info.submitAfterService();
             //PC备注
-            user.loginApp(ALL_AUTHORITY);
+            util.loginApp(ALL_AUTHORITY);
             Long id3 = AppPageV3Scene.builder().type(info.AFTER_SALES).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
             JSONObject obj3 = AppRemarkV3Scene.builder().followId(id3).remark(content).build().invoke(visitor, false);
             int code3 = obj3.getInteger("code");
@@ -931,10 +929,10 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             //获取小程序消息列表数量
             int befApplet = info.getAppletmessNum();
             //获取app跟进列表数量
-            user.loginApp(ALL_AUTHORITY);
+            util.loginApp(ALL_AUTHORITY);
             int befApp = AppPageV3Scene.builder().size(10).build().invoke(visitor).getInteger("total");
             //PC【专属服务列表】
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
             int befPC = DedicatedServicePageListScene.builder().page(1).size(10).build().invoke(visitor).getInteger("total");
 
             //小程序提交销售咨询
@@ -948,10 +946,10 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             //获取小程序消息列表数量
             int afterApplet = info.getAppletmessNum();
             //获取app跟进列表数量
-            user.loginApp(ALL_AUTHORITY);
+            util.loginApp(ALL_AUTHORITY);
             int afterApp = AppPageV3Scene.builder().size(10).build().invoke(visitor).getInteger("total");
             //PC【专属服务列表】
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
             JSONObject obj = DedicatedServicePageListScene.builder().page(1).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0);
             int afterPC = DedicatedServicePageListScene.builder().page(1).size(10).build().invoke(visitor).getInteger("total");
 
@@ -1083,10 +1081,10 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             //获取小程序消息列表数量
             int befApplet = info.getAppletmessNum();
             //获取app跟进列表数量
-            user.loginApp(ALL_AUTHORITY);
+            util.loginApp(ALL_AUTHORITY);
             int befApp = AppPageV3Scene.builder().size(10).build().invoke(visitor).getInteger("total");
             //PC【专属服务列表】
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
             int befPC = DedicatedServicePageListScene.builder().page(1).size(10).build().invoke(visitor).getInteger("total");
 
             //小程序提交售后咨询
@@ -1100,12 +1098,12 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
 
             Thread.sleep(1000);
             //获取app跟进列表数量
-            user.loginApp(ALL_AUTHORITY);
+            util.loginApp(ALL_AUTHORITY);
             int afterApp = AppPageV3Scene.builder().size(10).build().invoke(visitor).getInteger("total");
             //获取小程序消息列表数量
             int afterApplet = info.getAppletmessNum();
             //PC【专属服务列表】
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
 
             JSONObject obj = DedicatedServicePageListScene.builder().page(1).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0);
             int afterPC = DedicatedServicePageListScene.builder().page(1).size(10).build().invoke(visitor).getInteger("total");
@@ -1144,7 +1142,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
     public void dedicatedServicePCExplain1(String content, String mess) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
 
             JSONObject obj2 = DedicatedServiceExplainEditScene.builder().content(content).build().invoke(visitor, false);
             int code2 = obj2.getInteger("code");
@@ -1168,7 +1166,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
     public void dedicatedServicePCExplain2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
 
             String content1 = "<p style=\"text-align:center;\" size=\"5\" _root=\"[object Object]\" __ownerID=\"undefined\" __hash=\"" +
                     "undefined\" __altered=\"false\">专属服务居中</p><p><span style=\"font-size:32px\">专属服务放大</span></p><p><span style=\"font-si" +
@@ -1195,7 +1193,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
     public void dedicatedServicePCsearch1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
             //根据归属门店搜索
             JSONObject shopobj = ShopListScene.builder().build().invoke(visitor).getJSONArray("list").getJSONObject(0);
             Long shopId = shopobj.getLong("shop_id");
@@ -1251,7 +1249,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
     public void dedicatedServicePCsearch2(String conditions) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
 
             //根据跟进账号搜索
             JSONArray alllist = DedicatedServicePageListScene.builder().page(1).size(20).followLoginName(conditions).build().invoke(visitor).getJSONArray("list");
@@ -1303,7 +1301,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
     public void dedicatedServicePCsearch3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
             // 根据跟进时间搜索
             String followdate = "";
             JSONArray alllist = DedicatedServicePageListScene.builder().page(1).size(50).build().invoke(visitor).getJSONArray("list");
@@ -1336,7 +1334,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
     public void dedicatedServicePCsearch4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
             // 根据咨询时间搜索
             String consult_date = "";
             JSONArray alllist = DedicatedServicePageListScene.builder().page(1).size(50).build().invoke(visitor).getJSONArray("list");
@@ -1375,7 +1373,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
             int code = RecordExportScene.builder().type(type).page(1).size(10).exportType("CURRENT_PAGE").build().invoke(visitor, false).getInteger("code");
             Preconditions.checkArgument(code == 1000, mess + "导出状态码为" + code);
             Thread.sleep(800);
@@ -1395,7 +1393,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
             int code = EvaluateExportScene.builder().evaluateType(Integer.parseInt(type)).page(1).size(10).exportType("CURRENT_PAGE").build().invoke(visitor, false).getInteger("code");
             Preconditions.checkArgument(code == 1000, mess + "导出状态码为" + code);
             Thread.sleep(800);
@@ -1419,7 +1417,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
 //                        String longitude, String latitude, String appointment_status,String washing_status) {
 //        logger.logCaseStart(caseResult.getCaseName());
 //        try {
-//            user.loginPc(ALL_AUTHORITY);
+//            util.loginPc(ALL_AUTHORITY);
 //            JSONArray arr = new JSONArray();
 //            arr.add(info.BrandID);
 //
@@ -1443,7 +1441,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
             String sale_tel = info.sitphone1;
             String service_tel = info.phone;
 
@@ -1470,7 +1468,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
     public void evalute_Buycar1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
             //PC配置销售购车评价奖励
             int type = 3;
             String messageName = "新车评价消息";
@@ -1479,13 +1477,13 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
 
             //评价前的积分和卡券数
             int voucherTotal = info.getVoucherTotal("13436941018");
-            user.loginApplet(APPLET_USER_ONE);
+            util.loginApplet(APPLET_USER_ONE);
             Integer appletScore = jc.appletUserInfoDetail().getInteger("score");
 
             //PC购车
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
             info.newBuyCarRec();
-            user.loginApplet(APPLET_USER_ONE);
+            util.loginApplet(APPLET_USER_ONE);
             JSONObject evaluateConfigDescribe = jc.AppletEvaluateConfigScene(type, Long.parseLong(pp.shopIdZ));
             String describe = evaluateConfigDescribe.getJSONArray("list").getJSONObject(2).getString("describe");
             List label = evaluateConfigDescribe.getJSONArray("list").getJSONObject(2).getJSONArray("labels");
@@ -1504,7 +1502,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             //评价后的积分和卡券数
 
             Integer appletScoreAfter = jc.appletUserInfoDetail().getInteger("score");
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
             int voucherTotalAfter = info.getVoucherTotal("13436941018");
 
             Preconditions.checkArgument(voucherTotalAfter - voucherTotal == 1, "评价完成后，卡券没+1");
@@ -1523,7 +1521,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
 //    @Test
 //    public void evalute_reception() {
 //        logger.logCaseStart(caseResult.getCase       try {
-//            user.loginPc(ALL_AUTHORITY);
+//            util.loginPc(ALL_AUTHORITY);
 //            //PC配置销售接待评价奖励
 //            int type = 4;
 //            String messageName = "新车评价消息"; //手动阀
@@ -1532,11 +1530,11 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
 //
 //            //评价前的积分和卡券数
 //            int voucherTotal = info.getVoucherTotal("13436941018");
-//            user.loginApplet(APPLET_USER_ONE);
+//            util.loginApplet(APPLET_USER_ONE);
 //            Integer appletScore = jc.appletUserInfoDetail().getInteger("score");
 //
 //            //app接待
-//            user.loginApp(ALL_AUTHORITY_DAILY);
+//            util.loginApp(ALL_AUTHORITY_DAILY);
 ////            commonConfig.shopId=info.oneshopid.toString();
 //            commonConfig.shopId="53704";
 //            commonConfig.roleId="2942";
@@ -1550,7 +1548,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
 //
 //            jc.invokeApi(appfinishReception);
 //
-//            user.loginApplet(APPLET_USER_ONE);
+//            util.loginApplet(APPLET_USER_ONE);
 //            JSONObject evaluateConfigDescribe= jc.AppletEvaluateConfigScene(type,Long.parseLong(pp.shopIdZ));
 //            String describe=evaluateConfigDescribe.getJSONArray("list").getJSONObject(2).getString("describe");
 //            List label=evaluateConfigDescribe.getJSONArray("list").getJSONObject(2).getJSONArray("labels");
@@ -1570,7 +1568,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
 //            //评价后的积分和卡券数
 //
 //            Integer appletScoreAfter= jc.appletUserInfoDetail().getInteger("score");
-//            user.loginPc(ALL_AUTHORITY);
+//            util.loginPc(ALL_AUTHORITY);
 //            commonConfig.shopId=PRODUCE.getShopId();
 //            commonConfig.roleId=PRODUCE.getRoleId();
 //            int voucherTotalAfter = info.getVoucherTotal("13436941018");
@@ -1612,7 +1610,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-//            user.loginPc(ALL_AUTHORITY);
+//            util.loginPc(ALL_AUTHORITY);
 //
 //
 //            CustomerRemarkScene.builder().remark(info.string200).id(161L).shopId(46522L).build().invoke(visitor);
@@ -1620,7 +1618,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
 //
 
             //小程序删除无牌爱车
-            user.loginApplet(APPLET_USER_ONE);
+            util.loginApplet(APPLET_USER_ONE);
             JSONArray arr = AppletCarListScene.builder().build().invoke(visitor).getJSONArray("list");
             for (int i = 0 ; i < arr.size();i++){
                 JSONObject obj = arr.getJSONObject(i);

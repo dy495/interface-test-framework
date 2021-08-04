@@ -19,7 +19,6 @@ import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.cashier.
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.rule.AddScene;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.rule.DeleteScene;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.rule.SwitchScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import org.apache.http.Header;
@@ -36,12 +35,10 @@ public class CommonUsedUtil {
     PublicParam pp=new PublicParam();
     DateTimeUtil dt =new DateTimeUtil();
     private VisitorProxy visitor;
-    private UserUtil user;
     private final routerEnum router;
 
     public CommonUsedUtil(VisitorProxy visitor, routerEnum router) {
         this.visitor = visitor;
-        this.user=new UserUtil(visitor);
         this.router = router;
     }
 

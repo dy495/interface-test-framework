@@ -7,7 +7,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.UseRangeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -29,7 +29,7 @@ public class WaitingPackage extends AbstractPackage {
         super.visitor = visitor;
         if (scene == null) {
             VoucherFormVoucherPageBean voucherPage = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherPage();
-            SupporterUtil util = new SupporterUtil(visitor);
+            SceneUtil util = new SceneUtil(visitor);
             JSONArray voucherArray = util.getVoucherArray(voucherPage, 1);
             util.createPackage(voucherArray, UseRangeEnum.CURRENT);
         } else {

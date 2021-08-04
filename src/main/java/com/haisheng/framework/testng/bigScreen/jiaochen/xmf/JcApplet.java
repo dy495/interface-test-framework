@@ -10,10 +10,9 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProd
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.registerListVariable;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherFormVoucherPageBean;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.SendRecordScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.AppletActivityRegister;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.AppletInfoEdit;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -31,11 +30,10 @@ import java.text.SimpleDateFormat;
 import static com.google.common.base.Preconditions.checkArgument;
 
 public class JcApplet extends TestCaseCommon implements TestCaseStd {
-    VisitorProxy visitor = new VisitorProxy(EnumTestProduct.JC_DAILY);
+    VisitorProxy visitor = new VisitorProxy(EnumTestProduct.JC_DAILY_ZH);
     private static final EnumAccount administrator = EnumAccount.JC_ALL_AUTHORITY_DAILY;
     ScenarioUtil jc = new ScenarioUtil();
-    SupporterUtil util = new SupporterUtil(visitor);
-    UserUtil user = new UserUtil(visitor);
+    SceneUtil util = new SceneUtil(visitor);
     DateTimeUtil dt = new DateTimeUtil();
     PublicParm pp = new PublicParm();
     JcFunction pf = new JcFunction(visitor, pp);
@@ -54,7 +52,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.product = EnumTestProduct.JC_DAILY.getAbbreviation();
+        commonConfig.product = EnumTestProduct.JC_DAILY_ZH.getAbbreviation();
 
         //replace backend gateway url
         //commonConfig.gateway = "";
@@ -63,12 +61,12 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.JC_DAILY.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.JC_DAILY_ZH.getDesc() + commonConfig.checklistQaOwner);
 
         //replace ding push conf
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.referer = EnumTestProduct.JC_DAILY.getReferer();
+        commonConfig.referer = EnumTestProduct.JC_DAILY_ZH.getReferer();
 
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};
@@ -88,7 +86,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         object.put("phone", phone);
         object.put("verification_code", verificationCode);
         commonConfig.roleId = roleId;
-        httpPost(path, object, EnumTestProduct.JC_DAILY.getPort());
+        httpPost(EnumTestProduct.JC_DAILY_ZH.getIp(), path, object);
     }
 
     @AfterClass
@@ -541,7 +539,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
             jc.appletvoucherReceive(id.toString(), pp.voucherId.toString());   //领卡券
             Integer voucherTotalB = pf.getVoucherTotal();      //查卡券数
             Preconditions.checkArgument(voucherTotalB - voucherTotal == 1, "活动领取卡券后，卡券数量未加1");
-            user.loginPc(administrator);
+            util.loginPc(administrator);
             //查询新数据
             commonConfig.shopId = "-1";
             //累计发出数
@@ -612,8 +610,8 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             jc.appletLoginToken(pp.appletTocken);
-            JSONArray list = jc.appletArticleList("20", null,lable).getJSONArray("list");
-            Preconditions.checkArgument(list.size() <= 10, "首页"+mess+"文章超过了10");
+            JSONArray list = jc.appletArticleList("20", null, lable).getJSONArray("list");
+            Preconditions.checkArgument(list.size() <= 10, "首页" + mess + "文章超过了10");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -735,7 +733,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         return count;
     }
 
-// @Test(description = "道路救援门店数=门店管理开启的门店")   这个case 待确定，救援门店 可能时预约开启门店
+    // @Test(description = "道路救援门店数=门店管理开启的门店")   这个case 待确定，救援门店 可能时预约开启门店
     public void recuseShopList() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

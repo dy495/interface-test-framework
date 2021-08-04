@@ -49,8 +49,7 @@ public class EnumListCheckNotNull extends TestCaseCommon implements TestCaseStd 
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.product= EnumTestProduct.JC_DAILY.getAbbreviation();
-
+        commonConfig.product = EnumTestProduct.JC_DAILY_ZH.getAbbreviation();
 
 
         //replace backend gaturl
@@ -60,7 +59,7 @@ public class EnumListCheckNotNull extends TestCaseCommon implements TestCaseStd 
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.JC_DAILY.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.JC_DAILY_ZH.getDesc() + commonConfig.checklistQaOwner);
 
         //replace ding push conf
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
@@ -70,8 +69,8 @@ public class EnumListCheckNotNull extends TestCaseCommon implements TestCaseStd 
 
         //set shop id
         commonConfig.shopId = pp.shopIdZ;
-        commonConfig.roleId=pp.roleidJdgw;
-        commonConfig.referer = EnumTestProduct.JC_DAILY.getReferer();
+        commonConfig.roleId = pp.roleidJdgw;
+        commonConfig.referer = EnumTestProduct.JC_DAILY_ZH.getReferer();
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);
@@ -103,8 +102,7 @@ public class EnumListCheckNotNull extends TestCaseCommon implements TestCaseStd 
         try {
             JSONObject data = jc.appletbanner();
             String jsonpath = "$.list[*].id&&$.list[*].name&&$.list[*].address&&$.list[*].tel&&$.list[*].coordinate&&$.list[*].distance";
-            jpu.spiltString(data.toJSONString(), jsonpath);
-
+            JsonPathUtil.spiltString(data.toJSONString(), jsonpath);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -116,10 +114,9 @@ public class EnumListCheckNotNull extends TestCaseCommon implements TestCaseStd 
     public void AJc_ArticleList() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject data = jc.appletArticleList("20", null,"CAR_WELFARE");
+            JSONObject data = jc.appletArticleList("20", null, "CAR_WELFARE");
             String jsonpath = "$.list[*].id&&$.list[*].label&&$.list[*].label_name&&$.list[*].title&&$.list[*].pic_type&&$.list[*].pic_list&&$.list[*].timestamp&&$.list[*].time_str";
-            jpu.spiltString(data.toJSONString(), jsonpath);
-
+            JsonPathUtil.spiltString(data.toJSONString(), jsonpath);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -127,14 +124,13 @@ public class EnumListCheckNotNull extends TestCaseCommon implements TestCaseStd 
         }
     }
 
-//    @Test  接口不存在
+    //    @Test  接口不存在
     public void AJc_shopList() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject data = jc.appletShopInfo();
             String jsonpath = "$.id&&$.name&&$.address&&$.tel";
-            jpu.spiltString(data.toJSONString(), jsonpath);
-
+            JsonPathUtil.spiltString(data.toJSONString(), jsonpath);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -148,8 +144,7 @@ public class EnumListCheckNotNull extends TestCaseCommon implements TestCaseStd 
         try {
             JSONObject data = jc.appletBrandList();
             String jsonpath = "$.list[*].id&&$.list[*].name&&$.list[*].logo";
-            jpu.spiltString(data.toJSONString(), jsonpath);
-
+            JsonPathUtil.spiltString(data.toJSONString(), jsonpath);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -163,8 +158,7 @@ public class EnumListCheckNotNull extends TestCaseCommon implements TestCaseStd 
         try {
             JSONObject data = jc.appletName();
             String jsonpath = "$.name";
-            jpu.spiltString(data.toJSONString(), jsonpath);
-
+            JsonPathUtil.spiltString(data.toJSONString(), jsonpath);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -178,8 +172,7 @@ public class EnumListCheckNotNull extends TestCaseCommon implements TestCaseStd 
         try {
             JSONObject data = jc.appletplateNumberProvinceList();
             String jsonpath = "$.list[*].province&&$.list[*].province_name";
-            jpu.spiltString(data.toJSONString(), jsonpath);
-
+            JsonPathUtil.spiltString(data.toJSONString(), jsonpath);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -187,7 +180,7 @@ public class EnumListCheckNotNull extends TestCaseCommon implements TestCaseStd 
         }
     }
 
-//    @Test  接口变更
+    //    @Test  接口变更
     public void AJc_appletMaintainShop() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -195,10 +188,9 @@ public class EnumListCheckNotNull extends TestCaseCommon implements TestCaseStd 
             coor.add(116.29845);
             coor.add(39.95933);
 
-            JSONObject data = jc.appletmaintainShopList(pp.car_id, coor,"MAINTAIN");
+            JSONObject data = jc.appletmaintainShopList(pp.car_id, coor, "MAINTAIN");
             String jsonpath = "$.list[*].id&&$.list[*].name&&$.list[*].address&&$.list[*].distance&&$.list[*].pic_url&&$.list[*].label";
-            jpu.spiltString(data.toJSONString(), jsonpath);
-
+            JsonPathUtil.spiltString(data.toJSONString(), jsonpath);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -206,20 +198,20 @@ public class EnumListCheckNotNull extends TestCaseCommon implements TestCaseStd 
         }
     }
 
-//    @Test  接口不存在
+    //    @Test  接口不存在
     public void AJc_appletStaffList() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject data = jc.appletStaffList(pp.shopIdZ);
             String jsonpath = "$.list[*].uid&&$.list[*].name&&$.list[*].greetings&&$.list[*].pic_url&&$.list[*].label&&$.list[*].is_selected";
-            jpu.spiltString(data.toJSONString(), jsonpath);
-
+            JsonPathUtil.spiltString(data.toJSONString(), jsonpath);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("轿辰-apple保养门店服务列表为空提醒");
         }
     }
+
     //app
     @Test
     public void BAerCode() {
@@ -229,8 +221,7 @@ public class EnumListCheckNotNull extends TestCaseCommon implements TestCaseStd 
             System.out.println();
             JSONObject data = jc.apperCOde();
             String jsonpath = "$.er_code_url";
-            jpu.spiltString(data.toJSONString(), jsonpath);
-
+            JsonPathUtil.spiltString(data.toJSONString(), jsonpath);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -245,8 +236,7 @@ public class EnumListCheckNotNull extends TestCaseCommon implements TestCaseStd 
             jc.appLogin(pp.jdgw, pp.jdgwpassword);
             JSONObject data = jc.appWriteOffRecordsPage("ALL", "10", null);
             String jsonpath = "$.list[*].card_name&&$.list[*].card_number&&$.list[*].id&&$.list[*].user_name&&$.list[*].write_off_time&&$.total";
-            jpu.spiltString(data.toJSONString(), jsonpath);
-
+            JsonPathUtil.spiltString(data.toJSONString(), jsonpath);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -254,15 +244,15 @@ public class EnumListCheckNotNull extends TestCaseCommon implements TestCaseStd 
         }
     }
 
-//    2.0
+    //    2.0
     @Test(description = "跟进列表不为空校验")
     public void BJc_appfollowUpList() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            jc.appLogin(pp.jdgw,pp.jdgwpassword);
-            JSONObject data = jc.appFollowUpList("10",null);
-            JSONArray list=data.getJSONArray("list");
-            if(list.size()!=0){
+            jc.appLogin(pp.jdgw, pp.jdgwpassword);
+            JSONObject data = jc.appFollowUpList("10", null);
+            JSONArray list = data.getJSONArray("list");
+            if (list.size() != 0) {
                 String jsonpath = "$.list[*].id&&$.list[*].shop_id&&$.list[*].plate_number&&$.list[*].car_style&&$.list[*].customer_name&&$.list[*].customer_phone&&$.list[*].evaluate_time&&$.list[*].score&&$.list[*].suggestion&&$.list[*].labels";
                 jpu.spiltString(data.toJSONString(), jsonpath);
             }
@@ -272,15 +262,16 @@ public class EnumListCheckNotNull extends TestCaseCommon implements TestCaseStd 
             saveData("跟进列表不为空校验");
         }
     }
+
     @Test(description = "消息列表不为空校验")
     public void BJc_appmessageList() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             jc.appLogin(pp.jdgw, pp.jdgwpassword);
 
-            JSONObject data = jc.appmessageList("10",null);
-            JSONArray list=data.getJSONArray("list");
-            if(list.size()!=0){
+            JSONObject data = jc.appmessageList("10", null);
+            JSONArray list = data.getJSONArray("list");
+            if (list.size() != 0) {
                 String jsonpath = "$.list[*].id&&$.list[*].title&&$.list[*].time&&$.list[*].is_read&&$.list[*].type";
                 jpu.spiltString(data.toJSONString(), jsonpath);
             }
@@ -292,17 +283,17 @@ public class EnumListCheckNotNull extends TestCaseCommon implements TestCaseStd 
     }
 
     //消息  jsonpath 未校验
-    @Test(description = "消息详情不为空校验",enabled = false)
+    @Test(description = "消息详情不为空校验", enabled = false)
     public void ABappmessagedetail() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             jc.appLogin(pp.jdgw, pp.jdgwpassword);
-            JSONObject data = jc.appmessageList("10",null);
-            JSONArray list=data.getJSONArray("list");
-            if(list.size()==0){
+            JSONObject data = jc.appmessageList("10", null);
+            JSONArray list = data.getJSONArray("list");
+            if (list.size() == 0) {
                 return;
             }
-            String id=list.getJSONObject(0).getString("id");
+            String id = list.getJSONObject(0).getString("id");
             JSONObject data2 = jc.appmessagedetail(id);
             String jsonpath = "$.list[*].id&&$.list[*].title&&$.list[*].time&&$.list[*].is_read&&$.list[*].type&&$.list[*].shop_id&&$.list[*].brand_name&&$.list[*].plate_number&&$.list[*].car_style_name&&$.list[*].customer_name&&$.list[*].customer_phone&&$.list[*].is_overtime&&$.list[*].car_logo_url&&$.list[*].appointment_arrival_time&&$.list[*].type_name&&$.list[*].fault_description&&$.list[*].service_sale_name";
             jpu.spiltString(data2.toJSONString(), jsonpath);
@@ -312,7 +303,6 @@ public class EnumListCheckNotNull extends TestCaseCommon implements TestCaseStd 
             saveData("消息详情");
         }
     }
-
 
 
 }

@@ -87,7 +87,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
     public void shopAdd() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            visitor.login(EnumAppletToken.INS_ZT_ONLINE.getToken());
+            visitor.setToken(EnumAppletToken.INS_ZT_ONLINE.getToken());
             //小程序初始门店数量
             JSONArray applet = wx.nearshop(null, null, 116.29845, 39.95933).getJSONArray("list");
             int appsize = applet.size();
@@ -116,7 +116,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(add == 1, "期望数量+1实际增加了" + add);
 
             //小程序
-            visitor.login(EnumAppletToken.INS_ZT_ONLINE.getToken());
+            visitor.setToken(EnumAppletToken.INS_ZT_ONLINE.getToken());
             JSONArray applet1 = wx.nearshop(null, null, 116.29845, 39.95933).getJSONArray("list");
             int appletsize2 = applet1.size();
             int appletsize3 = appletsize2 - appsize;
@@ -129,7 +129,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             int id = md.searchShop(null, null, null, null, 1, 100).getJSONArray("list").getJSONObject(t1).getInteger("id");
             md.updateStatus(id, false);
 
-            visitor.login(EnumAppletToken.INS_ZT_ONLINE.getToken());
+            visitor.setToken(EnumAppletToken.INS_ZT_ONLINE.getToken());
             JSONArray appstatus = wx.nearshop(null, null, 116.29845, 39.95933).getJSONArray("list");
             int statusnum1 = appstatus.size();
             int statusnum2 = appletsize2 - statusnum1;
@@ -143,7 +143,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             int id0 = md.searchShop(null, null, null, null, 1, 100).getJSONArray("list").getJSONObject(t3).getInteger("id");
             md.updateStatus(id0, true);
 
-            visitor.login(EnumAppletToken.INS_ZT_ONLINE.getToken());
+            visitor.setToken(EnumAppletToken.INS_ZT_ONLINE.getToken());
             JSONArray appstatus0 = wx.nearshop(null, null, 116.29845, 39.95933).getJSONArray("list");
             int statusnum3 = appstatus0.size();
             int statusnum4 = statusnum3 - statusnum1;
@@ -158,7 +158,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             int delete = mdsum1 - mdsum3;
             Preconditions.checkArgument(delete == 1, "期望数量-1实际减少了" + delete);
             //小程序
-            visitor.login(EnumAppletToken.INS_ZT_ONLINE.getToken());
+            visitor.setToken(EnumAppletToken.INS_ZT_ONLINE.getToken());
             JSONArray appnum = wx.nearshop(null, null, 116.29845, 39.95933).getJSONArray("list");
             int appnum1 = appnum.size();
             int appnum3 = appletsize2 - appnum1;
@@ -179,7 +179,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
+            visitor.setToken(EnumAppletToken.INS_ZT_DAILY.getToken());
             JSONArray wechatlist = wx.wechatlevel(null).getJSONArray("list");
             int wechatsize = wechatlist.size();
 
@@ -197,7 +197,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             int levelnum1 = md.level_enum(null, null, 1, 10).getInteger("total");
             int lnum = levelnum1 - levelenum;
             Preconditions.checkArgument(lnum == 1, "期待增加1，实际" + lnum);
-            visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
+            visitor.setToken(EnumAppletToken.INS_ZT_DAILY.getToken());
             JSONArray wechatlist0 = wx.wechatlevel(null).getJSONArray("list");
             int wechatsize0 = wechatlist0.size();
             int wechatnum1 = wechatsize0 - wechatsize;
@@ -216,7 +216,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             int lnum2 = levelnum1 - levelnum3;
             Preconditions.checkArgument(lnum2 == 1, "期待减少1，实际" + lnum);
 
-            visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
+            visitor.setToken(EnumAppletToken.INS_ZT_DAILY.getToken());
             JSONArray wechatlist1 = wx.wechatlevel(null).getJSONArray("list");
             int wechatsize1 = wechatlist1.size();
             int wechatnum2 = wechatsize0 - wechatsize1;
@@ -234,7 +234,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             int lnum3 = levelnum4 - levelnum3;
             Preconditions.checkArgument(lnum3 == 1, "期待减少1，实际" + lnum3);
 
-            visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
+            visitor.setToken(EnumAppletToken.INS_ZT_DAILY.getToken());
             JSONArray wechatlist2 = wx.wechatlevel(null).getJSONArray("list");
             int wechatsize2 = wechatlist2.size();
             int wechatnum3 = wechatsize2 - wechatsize1;
@@ -257,7 +257,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             int lnum4 = levelnum1 - levelnum5;
             Preconditions.checkArgument(lnum4 == 1, "期待减少1，实际" + lnum4);
             //获取刚创建等级的id
-            visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
+            visitor.setToken(EnumAppletToken.INS_ZT_DAILY.getToken());
             JSONArray wechatdelete = wx.wechatlevel(null).getJSONArray("list");
             int deletenum = wechatsize0 - wechatdelete.size();
             Preconditions.checkArgument(deletenum == 1, "期待减少1，实际" + deletenum);
@@ -274,7 +274,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
     public void addFeedType() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            visitor.login(EnumAppletToken.INS_ZT_ONLINE.getToken());
+            visitor.setToken(EnumAppletToken.INS_ZT_ONLINE.getToken());
             //获取小程序所有反馈类型
             JSONArray appletlist = wx.queryAll().getJSONArray("list");
             int applistnum = appletlist.size();
@@ -294,7 +294,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             int applet0 = feednum0 - feednum;
             Preconditions.checkArgument(add0 == 1 && applet0 == 1, "添加了一个反馈类型期望+1,实际添加" + add0 + "用户反馈下拉框期望+1，实际添加了" + applet0);
 
-            visitor.login(EnumAppletToken.INS_ZT_ONLINE.getToken());
+            visitor.setToken(EnumAppletToken.INS_ZT_ONLINE.getToken());
             //获取小程序所有反馈类型
             JSONArray appletlist0 = wx.queryAll().getJSONArray("list");
             int applistnum0 = appletlist0.size();
@@ -312,7 +312,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             int delete0 = feedtotal0 - deletetotal;
             int appdelete = feednum0 - deletenum;
             Preconditions.checkArgument(delete0 == 1 && appdelete == 1, "删除了一个反馈类型期望-1,实际减少" + delete0 + "用户反馈下拉框期望-1，实际减少了" + appdelete);
-            visitor.login(EnumAppletToken.INS_ZT_ONLINE.getToken());
+            visitor.setToken(EnumAppletToken.INS_ZT_ONLINE.getToken());
             //获取小程序所有反馈类型
             JSONArray deleteletlist0 = wx.queryAll().getJSONArray("list");
             int deletelistnum0 = deleteletlist0.size();
@@ -332,7 +332,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int total = md.feedbackList(null, null, 1, 100).getInteger("total");
-            visitor.login(EnumAppletToken.INS_ZT_ONLINE.getToken());
+            visitor.setToken(EnumAppletToken.INS_ZT_ONLINE.getToken());
             JSONArray querylist = wx.queryAll().getJSONArray("list");
             int feedback_type_id = querylist.getJSONObject(1).getInteger("feedback_type_id");
             wx.submitFeedback(feedback_type_id, 5, "12321312");
@@ -343,7 +343,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(a == 1, "小程序提交了一个用户反馈，pc反馈类型数量期望+1，实际添加" + a);
 
             //添加礼品
-            visitor.login(EnumAppletToken.INS_ZT_ONLINE.getToken());
+            visitor.setToken(EnumAppletToken.INS_ZT_ONLINE.getToken());
             JSONArray giflist = wx.awardFeedback(null).getJSONArray("list");
             int gifnum = giflist.size();
             xd.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
@@ -353,7 +353,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             md.addGift(id0, "阿斯顿马丁");
             String name = md.feedbackList(null, null, 1, 100).getJSONArray("list").getJSONObject(aa0).getString("user_name");
             String feedback_gift = md.feedbackList(null, null, 1, 100).getJSONArray("list").getJSONObject(aa0).getString("feedback_gift");
-            visitor.login(EnumAppletToken.INS_ZT_ONLINE.getToken());
+            visitor.setToken(EnumAppletToken.INS_ZT_ONLINE.getToken());
             JSONArray giflist0 = wx.awardFeedback(null).getJSONArray("list");
             int gifnum0 = giflist0.size();
             //如果小程序反馈奖励已经有20条，判断最新一条是不是刚刚pc端添加的人和礼物
@@ -376,7 +376,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             int s1 = total0 - s;
             Preconditions.checkArgument(s1 == 1, "pc删除一个反馈，pc列表期望-1，实际减少" + s1);
             if (gifnum0 < 20) {
-                visitor.login(EnumAppletToken.INS_ZT_ONLINE.getToken());
+                visitor.setToken(EnumAppletToken.INS_ZT_ONLINE.getToken());
                 JSONArray giflist1 = wx.awardFeedback(null).getJSONArray("list");
                 int gifnum1 = giflist1.size();
                 int gif1 = gifnum0 - gifnum1;
@@ -394,7 +394,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
     public void tasteAdd() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            visitor.login(EnumAppletToken.INS_ZT_ONLINE.getToken());
+            visitor.setToken(EnumAppletToken.INS_ZT_ONLINE.getToken());
             //获取初始口味数量
             JSONArray sortlist = wx.tasteSort(null).getJSONArray("list");
             int sortnum = sortlist.size();
@@ -411,7 +411,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
 
             int pcsort = pctotal0 - pctotal;
             Preconditions.checkArgument(pcsort == 1, "添加一个口味，列表应该增加1，实际增加" + pcsort);
-            visitor.login(EnumAppletToken.INS_ZT_ONLINE.getToken());
+            visitor.setToken(EnumAppletToken.INS_ZT_ONLINE.getToken());
             //创建后小程序数量
             JSONArray sortlist0 = wx.tasteSort(null).getJSONArray("list");
             int sortnum0 = sortlist0.size();
@@ -425,7 +425,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             int u = update - 1;
             int id = md.taste_search(null, 1, 10).getJSONArray("list").getJSONObject(u).getInteger("id");
             md.updateRecommend(id, false);
-            visitor.login(EnumAppletToken.INS_ZT_ONLINE.getToken());
+            visitor.setToken(EnumAppletToken.INS_ZT_ONLINE.getToken());
             JSONArray sortlist1 = wx.tasteSort(null).getJSONArray("list");
             int sortnum1 = sortlist1.size();
             int appsort0 = sortnum0 - sortnum1;
@@ -433,7 +433,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             //开启口味
             xd.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
             md.updateRecommend(id, true);
-            visitor.login(EnumAppletToken.INS_ZT_ONLINE.getToken());
+            visitor.setToken(EnumAppletToken.INS_ZT_ONLINE.getToken());
             JSONArray sortlist2 = wx.tasteSort(null).getJSONArray("list");
             int sortnum2 = sortlist2.size();
             int appsort2 = sortnum2 - sortnum1;
@@ -453,7 +453,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             int comtotal0 = md.taste_search_comment(id, 1, 100, null).getInteger("total");
             int comnum = comtotal0 - comtotal;
             Preconditions.checkArgument(comnum == 1, "添加一个评论，pc增加1，实际增加" + comnum);
-            visitor.login(EnumAppletToken.INS_ZT_ONLINE.getToken());
+            visitor.setToken(EnumAppletToken.INS_ZT_ONLINE.getToken());
             JSONArray apptaste0 = wx.newProduct(id).getJSONArray("list");
             int tastesize0 = apptaste0.size();
             int tastenum = tastesize0 - tastesize;
@@ -466,7 +466,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             int t2 = t1 - 1;
             int tasteid = md.taste_search_comment(id, 1, 100, null).getJSONArray("list").getJSONObject(t2).getInteger("id");
             md.seachCommentVisible(tasteid, false);
-            visitor.login(EnumAppletToken.INS_ZT_ONLINE.getToken());
+            visitor.setToken(EnumAppletToken.INS_ZT_ONLINE.getToken());
             JSONArray apptaste1 = wx.newProduct(id).getJSONArray("list");
             int tastesize1 = apptaste1.size();
             int tastenum1 = tastesize0 - tastesize1;
@@ -475,7 +475,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             //开启一个评论
             xd.login("storedemo@winsense.ai", "b0581aa73b04d9fe6e3057a613e6f363");
             md.seachCommentVisible(tasteid, true);
-            visitor.login(EnumAppletToken.INS_ZT_ONLINE.getToken());
+            visitor.setToken(EnumAppletToken.INS_ZT_ONLINE.getToken());
             JSONArray apptaste2 = wx.newProduct(id).getJSONArray("list");
             int tastesize2 = apptaste2.size();
             int tastenum2 = tastesize2 - tastesize1;
@@ -487,7 +487,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             int comtotal2 = md.taste_search_comment(id, 1, 100, null).getInteger("total");
             int comtotal3 = comtotal0 - comtotal2;
             Preconditions.checkArgument(comtotal3 == 1, "删除一个评论，pc减少1，实际减少" + tastenum2);
-            visitor.login(EnumAppletToken.INS_ZT_ONLINE.getToken());
+            visitor.setToken(EnumAppletToken.INS_ZT_ONLINE.getToken());
             JSONArray deletetaste = wx.newProduct(id).getJSONArray("list");
             int deletetaste1 = deletetaste.size();
             int deletetaste2 = tastesize2 - deletetaste1;
@@ -499,7 +499,7 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             int delete = md.taste_search(null, 1, 100).getInteger("total");
             int dd = pctotal0 - delete;
             Preconditions.checkArgument(dd == 1, "删除一个口味，pc减少1个实际减少" + dd);
-            visitor.login(EnumAppletToken.INS_ZT_ONLINE.getToken());
+            visitor.setToken(EnumAppletToken.INS_ZT_ONLINE.getToken());
             JSONArray dlist0 = wx.tasteSort(null).getJSONArray("list");
             int num0 = dlist0.size();
             int appsd = sortnum0 - num0;

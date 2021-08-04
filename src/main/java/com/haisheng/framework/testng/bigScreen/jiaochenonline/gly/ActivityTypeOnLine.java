@@ -8,13 +8,12 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.util.PublicParameter;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.FissionVoucherAddScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.ManageRecruitAddScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.util.BusinessUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -35,9 +34,8 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
     public VisitorProxy visitor = new VisitorProxy(product);
     //    BusinessUtil businessUtil = new BusinessUtil(visitor);
     BusinessUtilOnline businessUtil = new BusinessUtilOnline(visitor);
-    SupporterUtil supporterUtil = new SupporterUtil(visitor);
+    SceneUtil supporterUtil = new SceneUtil(visitor);
     PublicParameter pp = new PublicParameter();
-    UserUtil user = new UserUtil(visitor);
     CommonConfig commonConfig = new CommonConfig();
 
     /**
@@ -47,7 +45,7 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
     @Override
     public void initial() {
         logger.debug("before class initial");
-        jc.changeIpPort(EnumTestProduct.JC_ONLINE.getPort());
+        jc.changeIpPort(EnumTestProduct.JC_ONLINE.getIp());
         //替换checklist的相关信息
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
         commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
@@ -81,7 +79,7 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
-        user.loginPc(ADMINISTRATOR);
+        supporterUtil.loginPc(ADMINISTRATOR);
     }
 
     /**
@@ -291,7 +289,7 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
             List<Integer> labels = new ArrayList<>();
             String[][] label = {{"1", "普通会员"}, {"100", "VIP会员"}, {"1000", "小程序客户"}, {"2000", "销售客户"}, {"3000", "售后客户"}};
             List<String> picList = new ArrayList<>();
-            SupporterUtil supporterUtil = new SupporterUtil(visitor);
+            SceneUtil supporterUtil = new SceneUtil(visitor);
             PublicParameter pp = new PublicParameter();
             picList.add(0, supporterUtil.getPicPath());
             //填写报名所需要信息
@@ -371,7 +369,7 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
             //客户限制
             List<Integer> labels = new ArrayList<>();
             List<String> picList = new ArrayList<>();
-            SupporterUtil supporterUtil = new SupporterUtil(visitor);
+            SceneUtil supporterUtil = new SceneUtil(visitor);
             PublicParameter pp = new PublicParameter();
             picList.add(0, supporterUtil.getPicPath());
             //填写报名所需要信息
@@ -449,7 +447,7 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
             //客户限制
             List<Integer> labels = new ArrayList<>();
             List<String> picList = new ArrayList<>();
-            SupporterUtil supporterUtil = new SupporterUtil(visitor);
+            SceneUtil supporterUtil = new SceneUtil(visitor);
             PublicParameter pp = new PublicParameter();
             picList.add(0, supporterUtil.getPicPath());
             //填写报名所需要信息
@@ -526,7 +524,7 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
             //客户限制
             List<Integer> labels = new ArrayList<>();
             List<String> picList = new ArrayList<>();
-            SupporterUtil supporterUtil = new SupporterUtil(visitor);
+            SceneUtil supporterUtil = new SceneUtil(visitor);
             PublicParameter pp = new PublicParameter();
             picList.add(0, supporterUtil.getPicPath());
             //填写报名所需要信息
@@ -603,7 +601,7 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
             //客户限制
             List<Integer> labels = new ArrayList<>();
             List<String> picList = new ArrayList<>();
-            SupporterUtil supporterUtil = new SupporterUtil(visitor);
+            SceneUtil supporterUtil = new SceneUtil(visitor);
             PublicParameter pp = new PublicParameter();
             picList.add(0, supporterUtil.getPicPath());
             //填写报名所需要信息
@@ -680,7 +678,7 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
             //客户限制
             List<Integer> labels = new ArrayList<>();
             List<String> picList = new ArrayList<>();
-            SupporterUtil supporterUtil = new SupporterUtil(visitor);
+            SceneUtil supporterUtil = new SceneUtil(visitor);
             PublicParameter pp = new PublicParameter();
             picList.add(0, supporterUtil.getPicPath());
             //填写报名所需要信息
@@ -757,7 +755,7 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
             //客户限制
             List<Integer> labels = new ArrayList<>();
             List<String> picList = new ArrayList<>();
-            SupporterUtil supporterUtil = new SupporterUtil(visitor);
+            SceneUtil supporterUtil = new SceneUtil(visitor);
             PublicParameter pp = new PublicParameter();
             picList.add(0, supporterUtil.getPicPath());
             //填写报名所需要信息
@@ -839,7 +837,7 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
             String[][] label = {{"CAR_WELFARE", "车福利"}, {"CAR_INFORMATION", "车资讯"}, {"CAR_LIFE", "车生活"}, {"CAR_ACVITITY", "车活动"}, {"CAR_KNOWLEDGE", "车知识"}};
             for (int i = 0; i < label.length; i++) {
                 System.err.println(label.length + "-------" + 1);
-                SupporterUtil supporterUtil = new SupporterUtil(visitor);
+                SceneUtil supporterUtil = new SceneUtil(visitor);
                 PublicParameter pp = new PublicParameter();
                 List<String> picList = new ArrayList<>();
                 picList.add(supporterUtil.getPicPath());
@@ -893,7 +891,7 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
             labels.add(2000);
             labels.add(3000);
             List<String> picList = new ArrayList<>();
-            SupporterUtil supporterUtil = new SupporterUtil(visitor);
+            SceneUtil supporterUtil = new SceneUtil(visitor);
             PublicParameter pp = new PublicParameter();
             picList.add(0, supporterUtil.getPicPath());
             //填写报名所需要信息
@@ -969,7 +967,7 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
             List<Integer> labels = new ArrayList<>();
             labels.add(1000);
             List<String> picList = new ArrayList<>();
-            SupporterUtil supporterUtil = new SupporterUtil(visitor);
+            SceneUtil supporterUtil = new SceneUtil(visitor);
             PublicParameter pp = new PublicParameter();
             picList.add(0, supporterUtil.getPicPath());
             //填写报名所需要信息

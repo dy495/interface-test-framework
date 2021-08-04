@@ -17,7 +17,7 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.speci
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.speechtechnique.SpeechTechniquePageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.YunTongInfo;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -36,7 +36,7 @@ import java.lang.reflect.Method;
  * @date 2021/1/29 11:17
  */
 public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
-    EnumTestProduct PRODUCE = EnumTestProduct.YT_DAILY_SSO;
+    EnumTestProduct PRODUCE = EnumTestProduct.YT_DAILY_ZH;
     EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_DAILY;
     VisitorProxy visitor = new VisitorProxy(PRODUCE);
     SceneUtil businessUtil = new SceneUtil(visitor);

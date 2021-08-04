@@ -13,7 +13,7 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.brand
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanage.*;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.YunTongInfo;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -28,7 +28,7 @@ import java.lang.reflect.Method;
  */
 public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
-    EnumTestProduct PRODUCE = EnumTestProduct.YT_DAILY_SSO;
+    EnumTestProduct PRODUCE = EnumTestProduct.YT_DAILY_ZH;
     EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_DAILY;
     VisitorProxy visitor = new VisitorProxy(PRODUCE);
     SceneUtil businessUtil = new SceneUtil(visitor);

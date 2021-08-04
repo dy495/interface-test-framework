@@ -21,8 +21,7 @@ import java.util.List;
  */
 public class ScenarioUtil extends TestCaseCommon {
     private static volatile ScenarioUtil instance = null;
-    private static String IpPort = EnumTestProduct.JC_DAILY.getPort();
-    private static final String shopId = EnumTestProduct.JC_DAILY.getShopId();
+    private static String IpPort = EnumTestProduct.JC_DAILY_JD.getIp();
 
     /**
      * 单例
@@ -40,17 +39,18 @@ public class ScenarioUtil extends TestCaseCommon {
         return instance;
     }
 
-    public void changeIpPort(String Ipport) {
-        IpPort = Ipport;
+    public void changeIpPort(String ipPort) {
+        IpPort = ipPort;
     }
 
     //pc登录
     public void pcLogin(String phone, String verificationCode) {
-        String path = "/jiaochen/login-pc";
+        String path = "/account-platform/login-pc";
         JSONObject object = new JSONObject();
         object.put("phone", phone);
         object.put("verification_code", verificationCode);
-        httpPost(path, object, IpPort);
+        object.put("type", 1);
+        httpPost(EnumTestProduct.JC_DAILY_ZH.getIp(), path, object);
     }
 
     //app登录
@@ -59,7 +59,7 @@ public class ScenarioUtil extends TestCaseCommon {
         JSONObject object = new JSONObject();
         object.put("phone", username);
         object.put("verification_code", password);
-        httpPost(path, object, IpPort);
+        httpPost(EnumTestProduct.JC_DAILY_ZH.getIp(), path, object);
     }
 
     //app登录
@@ -68,23 +68,27 @@ public class ScenarioUtil extends TestCaseCommon {
         JSONObject object = new JSONObject();
         object.put("phone", username);
         object.put("verification_code", password);
-        return invokeApi(path, object, checkCode);
+        String rs = JSONObject.toJSONString(object);
+        String response = httpPost(EnumTestProduct.JC_DAILY_ZH.getIp(), path, rs, checkCode, false);
+        return JSONObject.parseObject(response);
     }
 
     //pc登录
-    public JSONObject pcTryLogin(String phone, String verificationCode, Boolean checkcode) {
+    public JSONObject pcTryLogin(String phone, String verificationCode, Boolean checkCode) {
         String path = "/jiaochen/login-pc";
         JSONObject object = new JSONObject();
         object.put("phone", phone);
         object.put("verification_code", verificationCode);
-        return invokeApi(path, object, checkcode);
+        String rs = JSONObject.toJSONString(object);
+        String response = httpPost(EnumTestProduct.JC_DAILY_ZH.getIp(), path, rs, checkCode, false);
+        return JSONObject.parseObject(response);
     }
 
     //app登录
     public void appLoginout() {
         String path = "/jiaochen/m-app/login-user/logout";
         JSONObject object = new JSONObject();
-        httpPostWithCheckCode(path, object.toJSONString(), IpPort);
+        httpPost(EnumTestProduct.JC_DAILY_ZH.getIp(), path, object);
     }
 
     public void appletLoginToken(String token) {
@@ -126,7 +130,8 @@ public class ScenarioUtil extends TestCaseCommon {
     public JSONObject pcLogout() {
         String path = "/jiaochen/pc/logout";
         JSONObject object = new JSONObject();
-        return invokeApi(path, object, false);
+        String response = httpPost(EnumTestProduct.JC_DAILY_ZH.getIp(), path, JSONObject.toJSONString(object), false, false);
+        return JSONObject.parseObject(response);
     }
 
     //pc通用枚举接口
@@ -342,13 +347,13 @@ public class ScenarioUtil extends TestCaseCommon {
 
     public JSONObject pcWorkOrder(String filePath) {
         String path = "/jiaochen/pc/import/work_order";
-        String response = uploadFile(filePath, path, IpPort);
+        String response = uploadFile(IpPort, path, filePath);
         return JSON.parseObject(response);
     }
 
     public JSONObject pcPotentialCustomer(String filePath) {
         String path = "/jiaochen/pc/import/potential_customer";
-        String response = uploadFile(filePath, path, IpPort);
+        String response = uploadFile(IpPort, path, filePath);
         return JSON.parseObject(response);
     }
 
@@ -1258,7 +1263,7 @@ public class ScenarioUtil extends TestCaseCommon {
      **/
 
     public JSONObject appletbanner() {
-        String url = "/jiaochen/applet/banner";
+        String url = "/car-platform/applet/banner";
         JSONObject json1 = new JSONObject();
 
         return invokeApi(url, json1);
@@ -1268,7 +1273,7 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :文章列表xmf
      * @date :2020/11/28 12:14
      **/
-    public JSONObject appletArticleList(String size, String last_value,String label) {
+    public JSONObject appletArticleList(String size, String last_value, String label) {
         String url = "/jiaochen/applet/article/list";
         JSONObject json1 = new JSONObject();
         json1.put("size", size);
@@ -2449,27 +2454,6 @@ public class ScenarioUtil extends TestCaseCommon {
         json.put("size", size);
         json.put("start_time", start_time);
         json.put("end_time", end_time);
-        return invokeApi(url, json);
-    }
-
-
-    /**
-     * @description:发卡记录
-     * @author: gly
-     * @time: 2020-11-24
-     */
-    public JSONObject sendRecordFilterManage(sendRecordVariable variable) {
-        String url = "/jiaochen/pc/voucher-manage/send-record";
-        JSONObject json = new JSONObject();
-        json.put("shopId", shopId);
-        json.put("page", variable.page);
-        json.put("size", variable.size);
-        json.put("end_time", variable.end_time);
-        json.put("voucher_name", variable.voucher_name);
-        json.put("sender", variable.sender);
-        json.put("start_time", variable.start_time);
-
-
         return invokeApi(url, json);
     }
 

@@ -70,7 +70,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
             commonConfig.referer = produce.getReferer();
             commonConfig.pushQa = new String[]{EnumAppletToken.getPhoneByToken(token)};
             VisitorProxy visitor = new VisitorProxy(produce);
-            visitor.login(token);
+            visitor.setToken(token);
             Response response = invokePorsche(visitor);
             Preconditions.checkArgument(response.getCode() == 1000, token + " " + response.getMsg());
         } catch (AssertionError | Exception e) {
@@ -90,7 +90,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
             commonConfig.referer = produce.getReferer();
             commonConfig.pushQa = new String[]{EnumAppletToken.getPhoneByToken(token)};
             VisitorProxy visitor = new VisitorProxy(produce);
-            visitor.login(token);
+            visitor.setToken(token);
             Response response = invokePorsche(visitor);
             Preconditions.checkArgument(response.getCode() == 1000, token + " " + response.getMsg());
         } catch (AssertionError | Exception e) {
@@ -104,13 +104,13 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
     public void JC_applet_daily(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            EnumTestProduct produce = EnumTestProduct.JC_DAILY;
+            EnumTestProduct produce = EnumTestProduct.JC_DAILY_ZH;
             commonConfig.shopId = produce.getShopId();
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, produce.getDesc());
             commonConfig.referer = produce.getReferer();
             commonConfig.pushQa = new String[]{EnumAppletToken.getPhoneByToken(token)};
             VisitorProxy visitor = new VisitorProxy(produce);
-            visitor.login(token);
+            visitor.setToken(token);
             Response response = invokeJC(visitor);
             Preconditions.checkArgument(response.getCode() == 1000, token + " " + response.getMessage());
         } catch (Exception | AssertionError e) {
@@ -130,7 +130,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
             commonConfig.referer = produce.getReferer();
             commonConfig.pushQa = new String[]{EnumAppletToken.getPhoneByToken(token)};
             VisitorProxy visitor = new VisitorProxy(produce);
-            visitor.login(token);
+            visitor.setToken(token);
             Response response = invokeJC(visitor);
             Preconditions.checkArgument(response.getCode() == 1000, token + " " + response.getMessage());
         } catch (Exception | AssertionError e) {
@@ -149,7 +149,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
             commonConfig.referer = produce.getReferer();
             commonConfig.pushQa = new String[]{EnumAppletToken.getPhoneByToken(token)};
             VisitorProxy visitor = new VisitorProxy(produce);
-            visitor.login(token);
+            visitor.setToken(token);
             Response response = invokeIns(visitor);
             Preconditions.checkArgument(response.getCode() == 1000, token + " " + response.getMsg());
         } catch (AssertionError | Exception e) {
@@ -168,7 +168,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
             commonConfig.referer = produce.getReferer();
             commonConfig.pushQa = new String[]{EnumAppletToken.getPhoneByToken(token)};
             VisitorProxy visitor = new VisitorProxy(produce);
-            visitor.login(token);
+            visitor.setToken(token);
             Response response = invokeIns(visitor);
             Preconditions.checkArgument(response.getCode() == 1000, token + " " + response.getMsg());
         } catch (AssertionError | Exception e) {

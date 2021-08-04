@@ -38,7 +38,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
     public void initial() {
         logger.debug("before classs initial");
 
-        jc.changeIpPort(EnumTestProduct.JC_ONLINE.getPort());
+        jc.changeIpPort(EnumTestProduct.JC_ONLINE.getIp());
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
@@ -80,7 +80,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
         object.put("phone", username);
         object.put("verification_code", password);
         commonConfig.roleId = roleId;
-        httpPost(path, object, EnumTestProduct.JC_ONLINE.getPort());
+        httpPost(EnumTestProduct.JC_ONLINE.getIp(), path, object);
     }
 
     //pc登录
@@ -90,7 +90,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
         object.put("phone", phone);
         object.put("verification_code", verificationCode);
         commonConfig.roleId = roleId;
-        httpPost(path, object, EnumTestProduct.JC_ONLINE.getPort());
+        httpPost(EnumTestProduct.JC_ONLINE.getIp(), path, object);
     }
 
     @AfterClass
@@ -125,7 +125,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
     public void taskEquelDate(String name, String code, String names, String roleId) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            System.out.println(EnumTestProduct.JC_DAILY.getPort());
+            System.out.println(EnumTestProduct.JC_DAILY_ZH.getIp());
             appLogin(name, code, roleId);
             String type = "all";   //home \all
             //获取今日任务数

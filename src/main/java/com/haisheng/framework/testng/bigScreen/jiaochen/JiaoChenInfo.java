@@ -6,7 +6,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.model.AppletModeListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.AppAdmitScene;
@@ -19,7 +19,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.Appl
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.AddVoucherScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherFormVoucherPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherListScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
@@ -57,11 +57,11 @@ public class JiaoChenInfo {
     public final String SALES = "SALES"; //专属销售
     public final String AFTER_SALES = "AFTER_SALES"; //专属售后
 
-    private static final EnumTestProduct PRODUCE = EnumTestProduct.JC_DAILY;
+    private static final EnumTestProduct PRODUCE = EnumTestProduct.JC_ONLINE_JD;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
+    public SceneUtil util = new SceneUtil(visitor);
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_LXQ_DAILY;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.JC_ALL_AUTHORITY_DAILY_LXQ;
-    public UserUtil user = new UserUtil(visitor);
     //日常
     public final long BrandID = 61L;//自动化用的品牌id
     public final long CarStyleID = 48L;//自动化用的品牌车系id
@@ -465,7 +465,7 @@ public class JiaoChenInfo {
 
     //专属销售顾问提交
     public JSONObject submitPreService() throws Exception {
-        user.loginApplet(APPLET_USER_ONE);
+        util.loginApplet(APPLET_USER_ONE);
         Long brandId = BrandID;
         Long modelId = AppletModeListScene.builder().brandId(brandId).styleId(CarStyleID).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
         Long shopId = AppletCommonShopListScene.builder().carModelId(modelId).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
@@ -487,7 +487,7 @@ public class JiaoChenInfo {
 
     //专属售后顾问提交
     public JSONObject submitAfterService() throws Exception {
-        user.loginApplet(APPLET_USER_ONE);
+        util.loginApplet(APPLET_USER_ONE);
         Long brandId = BrandID;
         Long modelId = AppletModeListScene.builder().brandId(brandId).styleId(CarStyleID).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
         Long shopId = AppletCommonShopListScene.builder().carModelId(modelId).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
@@ -512,7 +512,7 @@ public class JiaoChenInfo {
 
     //在线专家咨询提交
     public JSONObject submitonlineExpert() throws Exception {
-        user.loginApplet(APPLET_USER_ONE);
+        util.loginApplet(APPLET_USER_ONE);
         Long brandId = BrandID;
         Long modelId = AppletModeListScene.builder().brandId(brandId).styleId(CarStyleID).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
 //        String str = "[39.981536865234375,116.30351257324219]";
@@ -545,14 +545,14 @@ public class JiaoChenInfo {
 
     //获取小程序消息列表数量
     public int getAppletmessNum() {
-        user.loginApplet(APPLET_USER_ONE);
+        util.loginApplet(APPLET_USER_ONE);
         int num = AppletMessageListScene.builder().size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getInteger("id");
         return num;
     }
 
     //门店id对应的门店名字
     public String shopIdForName(Long id) {
-        user.loginPc(ALL_AUTHORITY);
+        util.loginPc(ALL_AUTHORITY);
         JSONArray array = PageScene.builder().page(1).size(100).build().invoke(visitor).getJSONArray("list");
         String name = "";
         for (int i = 0; i < array.size(); i++) {
@@ -567,7 +567,7 @@ public class JiaoChenInfo {
 
     //品牌id对应的品牌名字
     public String brandIdForName(Long id) {
-        user.loginPc(ALL_AUTHORITY);
+        util.loginPc(ALL_AUTHORITY);
         JSONArray array = BrandPageScene.builder().page(1).size(100).build().invoke(visitor).getJSONArray("list");
         String name = "";
         for (int i = 0; i < array.size(); i++) {

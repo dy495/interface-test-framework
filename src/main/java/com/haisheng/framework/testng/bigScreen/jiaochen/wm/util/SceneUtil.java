@@ -3,14 +3,17 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.util;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.mapper.IEnum;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.Response;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.tarot.entity.Factory;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.tarot.entity.IEntity;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.tarot.row.IRow;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.tarot.enumerator.EnumContainer;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.util.BasicUtil;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAppletToken;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.common.enumerator.customer.EnumAppointmentType;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.app.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.applet.*;
@@ -23,7 +26,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.voucher.Apply
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherDetailBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherFormVoucherPageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherInvalidPageBean;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumVP;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.CommodityTypeEnum;
@@ -48,6 +51,8 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.appointmentm
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpload;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralmall.GoodsManagePageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.loginuser.LoginApp;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.loginuser.LoginPc;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.loginuser.ShopListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.CustomerImportScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.messagemanage.PushMessageScene;
@@ -79,12 +84,35 @@ import java.util.stream.Collectors;
  * @author wangmin
  * @date 2021/1/20 13:36
  */
-public class SupporterUtil extends BasicUtil {
+public class SceneUtil extends BasicUtil {
     private final VisitorProxy visitor;
 
-    public SupporterUtil(VisitorProxy visitor) {
+    public SceneUtil(VisitorProxy visitor) {
         super(visitor);
         this.visitor = visitor;
+    }
+
+    public void loginApp(EnumAccount enumAccount) {
+        IScene scene = LoginApp.builder().phone(enumAccount.getPhone()).verificationCode(enumAccount.getPassword()).build();
+        login(scene);
+    }
+
+
+    public void loginPc(EnumAccount enumAccount) {
+        IScene scene = LoginPc.builder().phone(enumAccount.getPhone()).verificationCode(enumAccount.getPassword()).type(1).build();
+        login(scene);
+    }
+
+    public void loginApplet(EnumAppletToken token) {
+        visitor.setToken(token.getToken());
+    }
+
+    public void login(IScene scene) {
+        EnumTestProduct oldProduce = visitor.getProduct();
+        EnumTestProduct newProduce = visitor.isDaily() ? EnumTestProduct.JC_DAILY_ZH : EnumTestProduct.JC_ONLINE_ZH;
+        visitor.setProduct(newProduce);
+        visitor.setToken(scene);
+        visitor.setProduct(oldProduce);
     }
 
     /**
@@ -1646,5 +1674,23 @@ public class SupporterUtil extends BasicUtil {
         logger.info("relativePath is {}", relativePath);
         IEntity<?, ?>[] entities = new Factory.Builder().container(EnumContainer.EXCEL.getContainer()).build().createExcel(relativePath);
         return Arrays.stream(entities).map(IEntity::getCurrent).toArray(IRow[]::new);
+    }
+
+    public void compareResponseAndParam(IScene scene, IEnum[] iEnums) {
+        List<JSONObject> list = toJavaObjectList(scene, JSONObject.class);
+        scene.getBody().entrySet().stream().filter(body -> body.getValue() != null && !body.getKey().equals("page") && !body.getKey().equals("size"))
+                .forEach(body -> list.forEach(jsonObject -> jsonObject.entrySet().stream().filter(e -> e.getKey().equals(getHeader(iEnums, body.getKey())))
+                        .forEach(e -> CommonUtil.checkResult(e.getKey(), String.valueOf(body.getValue()), String.valueOf(e.getValue())))));
+    }
+
+    private String getHeader(IEnum[] iEnums, String key) {
+        return Arrays.stream(iEnums).map(e -> e.findAttributeByKey(key)).collect(Collectors.toList()).get(0);
+    }
+
+    public String[] getMessageList(@NotNull IScene scene) {
+        List<String> list = scene.getKeyList();
+        logger.info("keyList is：{}", list);
+        return list.stream().map(e -> JSONObject.toJavaObject(scene.remove(e).invoke(visitor, false), Response.class))
+                .map(Response::getMessage).collect(Collectors.toList()).toArray(new String[list.size()]);
     }
 }

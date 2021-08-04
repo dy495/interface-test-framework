@@ -13,7 +13,7 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.custo
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.*;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.YunTongInfo;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -27,7 +27,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_DAILY_SSO; // 管理页—-首页
+    private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_DAILY_ZH; // 管理页—-首页
     private static final EnumAccount YT_RECEPTION_DAILY = EnumAccount.YT_RECEPTION_DAILY_M; // 全部权限账号 【运通】
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);   // 产品类放到代理类中（通过代理类发请求）
     public SceneUtil util = new SceneUtil(visitor);

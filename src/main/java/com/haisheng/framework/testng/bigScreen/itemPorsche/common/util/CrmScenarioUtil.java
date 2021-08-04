@@ -57,7 +57,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     /***
      * 方法区，不同产品的测试场景各不相同，自行更改
      */
-    public String IpPort = EnumTestProduct.PORSCHE_DAILY.getPort();
+    public String IpPort = EnumTestProduct.PORSCHE_DAILY.getIp();
 
     public String getPorscheShop() {
         return EnumTestProduct.PORSCHE_DAILY.getShopId();
@@ -70,7 +70,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         object.put("type", 0);
         object.put("username", username);
         object.put("password", password);
-        httpPost(path, object, IpPort);
+        httpPost(IpPort, path, object);
     }
 
     public JSONObject tryLogin(String userName, String passwd) throws Exception {

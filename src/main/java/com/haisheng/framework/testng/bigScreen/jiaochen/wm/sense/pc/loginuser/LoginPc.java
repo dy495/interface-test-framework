@@ -8,17 +8,19 @@ import lombok.Builder;
 public class LoginPc extends BaseScene {
     private final String phone;
     private final String verificationCode;
+    private final Integer type;
 
     @Override
     public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("phone", phone);
         object.put("verification_code", verificationCode);
+        object.put("type", type);
         return object;
     }
 
     @Override
     public String getPath() {
-        return "/jiaochen/login-pc";
+        return "/account-platform/login-pc";
     }
 }

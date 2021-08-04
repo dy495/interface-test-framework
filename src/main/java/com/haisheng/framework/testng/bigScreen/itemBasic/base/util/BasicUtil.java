@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * 基础工具类
+ * 基础工具类 抽象
  * 提供一些通用功能
  *
  * @author wangmin
@@ -129,27 +129,5 @@ public class BasicUtil {
 
     public <K, V, T> V getValueByKey(@NotNull Map<K, V> map, T key) {
         return map.entrySet().stream().filter(e -> e.getKey().equals(key)).map(Map.Entry::getValue).findFirst().orElse(null);
-    }
-
-    public String[] getMessageList(@NotNull IScene scene) {
-        List<String> list = scene.getKeyList();
-        logger.info("keyList is：{}", list);
-        return list.stream().map(e -> JSONObject.toJavaObject(scene.remove(e).invoke(visitor, false), Response.class))
-                .map(Response::getMessage).collect(Collectors.toList()).toArray(new String[list.size()]);
-    }
-
-    public Response getResponse(@NotNull IScene scene) {
-        return JSONObject.toJavaObject(scene.invoke(visitor, false), Response.class);
-    }
-
-    public void compareResponseAndParam(IScene scene, IEnum[] iEnums) {
-        List<JSONObject> list = toJavaObjectList(scene, JSONObject.class);
-        scene.getBody().entrySet().stream().filter(body -> body.getValue() != null && !body.getKey().equals("page") && !body.getKey().equals("size"))
-                .forEach(body -> list.forEach(jsonObject -> jsonObject.entrySet().stream().filter(e -> e.getKey().equals(getHeader(iEnums, body.getKey())))
-                        .forEach(e -> CommonUtil.checkResult(e.getKey(), String.valueOf(body.getValue()), String.valueOf(e.getValue())))));
-    }
-
-    private String getHeader(IEnum[] iEnums, String key) {
-        return Arrays.stream(iEnums).map(e -> e.findAttributeByKey(key)).collect(Collectors.toList()).get(0);
     }
 }

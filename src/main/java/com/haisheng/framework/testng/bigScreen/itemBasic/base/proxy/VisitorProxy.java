@@ -2,6 +2,7 @@ package com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -29,8 +30,11 @@ public class VisitorProxy extends TestCaseCommon {
         this.product = product;
     }
 
+    /**
+     * 展示ip
+     */
     public void showIp() {
-        logger.info("ip is:{}", this.product.getPort());
+        logger.info("ip is:{}", this.product.getIp());
     }
 
     /**
@@ -62,23 +66,10 @@ public class VisitorProxy extends TestCaseCommon {
      * @return JSONObject response.data
      */
     public JSONObject invokeApi(String path, JSONObject requestBody, boolean checkCode) {
-        String IpPort = product.getPort();
-        if (StringUtils.isEmpty(path)) {
-            throw new RuntimeException("path不可为空");
-        }
+        Preconditions.checkArgument(!StringUtils.isEmpty(path), "path不可为空");
         String request = JSON.toJSONString(requestBody);
-        String result = null;
-        if (checkCode) {
-            result = httpPostWithCheckCode(path, request, IpPort);
-            return JSON.parseObject(result).getJSONObject("data");
-        } else {
-            try {
-                result = httpPost(path, request, IpPort);
-            } catch (Exception e) {
-                collectMessage(e);
-            }
-            return JSON.parseObject(result);
-        }
+        String result = httpPost(product.getIp(), path, request, checkCode, false);
+        return JSON.parseObject(result);
     }
 
     /**
@@ -89,25 +80,25 @@ public class VisitorProxy extends TestCaseCommon {
      * @return 返回值
      */
     public JSONObject upload(String path, String filePath) {
-        String response = uploadFile(filePath, path, product.getPort());
+        String response = uploadFile(product.getIp(), path, filePath);
         return JSON.parseObject(response);
     }
 
     /**
-     * pc登录
+     * 设置token
      *
      * @param scene 场景
      */
-    public void login(@NotNull IScene scene) {
-        httpPost(scene.getPath(), scene.getBody(), product.getPort());
+    public void setToken(@NotNull IScene scene) {
+        httpPost(product.getIp(), scene.getPath(), scene.getBody());
     }
 
     /**
-     * 小程序登录
+     * 设置token
      *
      * @param token token
      */
-    public void login(String token) {
+    public void setToken(String token) {
         authorization = token;
         logger.info("applet authorization is:{}", authorization);
     }

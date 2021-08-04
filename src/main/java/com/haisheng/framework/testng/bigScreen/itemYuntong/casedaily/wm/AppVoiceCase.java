@@ -10,7 +10,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.dataprovider.DataClass;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.personaldata.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.departmentdata.*;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.departmentdata.AppReceptionAverageScoreTrendBean;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.app.personaldata.*;

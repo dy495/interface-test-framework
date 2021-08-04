@@ -9,7 +9,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAppletTo
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -29,13 +29,13 @@ import static com.aliyun.openservices.shade.com.alibaba.rocketmq.common.UtilAll.
 
 public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
     CommonConfig commonConfig = new CommonConfig();
-    private static final EnumTestProduct product = EnumTestProduct.JC_DAILY;
+    private static final EnumTestProduct product = EnumTestProduct.JC_DAILY_ZH;
     ScenarioUtil jc = new ScenarioUtil();
     PublicParm pp = new PublicParm();
     public String shopId = "-1";
     public String appletToken = EnumAppletToken.JC_GLY_DAILY.getToken();
     public VisitorProxy visitor = new VisitorProxy(product);
-    SupporterUtil su = new SupporterUtil(visitor);
+    SceneUtil su = new SceneUtil(visitor);
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name

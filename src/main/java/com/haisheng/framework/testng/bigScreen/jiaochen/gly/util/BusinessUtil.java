@@ -17,8 +17,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpload;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherDetailScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherFormVoucherPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
 
@@ -29,11 +28,11 @@ import java.util.*;
 
 public class BusinessUtil {
     private final VisitorProxy visitor;
-    private final UserUtil user;
+    private final SceneUtil user;
 
     public BusinessUtil(VisitorProxy visitor) {
         this.visitor = visitor;
-        this.user = new UserUtil(visitor);
+        this.user = new SceneUtil(visitor);
     }
 
     ScenarioUtil jc = new ScenarioUtil();
@@ -201,7 +200,7 @@ public class BusinessUtil {
      * 配置可用库存
      */
     public int getVoucherAllowUseInventory(Long voucherId) {
-        SupporterUtil su = new SupporterUtil(visitor);
+        SceneUtil su = new SceneUtil(visitor);
         int allowUseInventory = su.getVoucherPage(voucherId).getAllowUseInventory();
         return (int) Math.min((allowUseInventory == 1 ? allowUseInventory : allowUseInventory - 1), 30L);
 
@@ -211,7 +210,7 @@ public class BusinessUtil {
      * 判断可用库存
      */
     public Long getVoucherAllowUseInventoryNum(Long voucherId) {
-        SupporterUtil su = new SupporterUtil(visitor);
+        SceneUtil su = new SceneUtil(visitor);
         int allowUseInventory = su.getVoucherPage(voucherId).getAllowUseInventory();
         return (long) allowUseInventory;
 
@@ -251,7 +250,7 @@ public class BusinessUtil {
      * 获取待审批的优惠券合集
      */
     public List<Long> getVoucherIds() {
-        SupporterUtil su = new SupporterUtil(visitor);
+        SceneUtil su = new SceneUtil(visitor);
         List<Long> voucherIds = new ArrayList<>();
         IScene scene = VoucherFormVoucherPageScene.builder().page(1).size(10).build();
         JSONObject response = visitor.invokeApi(scene);
@@ -280,7 +279,7 @@ public class BusinessUtil {
      * @return IScene
      */
     public IScene createFissionActivityScene(Long voucherId) {
-        SupporterUtil supporterUtil = new SupporterUtil(visitor);
+        SceneUtil supporterUtil = new SceneUtil(visitor);
         PublicParameter pp = new PublicParameter();
         List<String> picList = new ArrayList<>();
         picList.add(getPicPath());
@@ -404,7 +403,7 @@ public class BusinessUtil {
      */
     public IScene createRecruitActivityScene(Long voucherId, boolean successReward, int rewardReceiveType, boolean isNeedApproval) {
         List<String> picList = new ArrayList<>();
-        SupporterUtil supporterUtil = new SupporterUtil(visitor);
+        SceneUtil supporterUtil = new SceneUtil(visitor);
         picList.add(0, getPicPath());
         //填写报名所需要信息
         List<Boolean> isShow = new ArrayList<>();
@@ -508,7 +507,7 @@ public class BusinessUtil {
      */
     public IScene createRecruitActivityScene(Long voucherId, boolean successReward, int rewardReceiveType, boolean isNeedApproval, String startTime, String endTime) {
         List<String> picList = new ArrayList<>();
-        SupporterUtil supporterUtil = new SupporterUtil(visitor);
+        SceneUtil supporterUtil = new SceneUtil(visitor);
         PublicParameter pp = new PublicParameter();
         picList.add(0, supporterUtil.getPicPath());
         //填写报名所需要信息
@@ -571,7 +570,7 @@ public class BusinessUtil {
      */
     public IScene createRecruitActivityScene(Long voucherId, boolean successReward, int rewardReceiveType, boolean isNeedApproval, Boolean type) {
         List<String> picList = new ArrayList<>();
-        SupporterUtil supporterUtil = new SupporterUtil(visitor);
+        SceneUtil supporterUtil = new SceneUtil(visitor);
         PublicParameter pp = new PublicParameter();
         picList.add(0, supporterUtil.getPicPath());
         //填写报名所需要信息
@@ -631,7 +630,7 @@ public class BusinessUtil {
         //获取一个卡券
         Long voucherId = getVoucherId();
         List<String> picList = new ArrayList<>();
-        SupporterUtil supporterUtil = new SupporterUtil(visitor);
+        SceneUtil supporterUtil = new SceneUtil(visitor);
         PublicParameter pp = new PublicParameter();
         picList.add(getPicturePath());
         //填写报名所需要信息
@@ -690,7 +689,7 @@ public class BusinessUtil {
      */
     public IScene fissionActivityEditScene(Long activityId) {
         Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-        SupporterUtil supporterUtil = new SupporterUtil(visitor);
+        SceneUtil supporterUtil = new SceneUtil(visitor);
         PublicParameter pp = new PublicParameter();
         List<String> picList = new ArrayList<>();
         picList.add(getPicturePath());
@@ -2489,7 +2488,7 @@ public class BusinessUtil {
      * 标签的状态:0-优惠,1-特价,2-福利,3-红包,4-礼品,5-礼品,6-热销,7-推荐
      */
     public IScene getContentMarketingAddScene(int participationType, List<String> chooseLabels, int labelNum, int actionPoint) {
-        SupporterUtil supporterUtil = new SupporterUtil(visitor);
+        SceneUtil supporterUtil = new SceneUtil(visitor);
         List<String> picList = new ArrayList<>();
         picList.add(0, getPicPath());
         String[][] label = {{"CAR_WELFARE", "车福利"}, {"CAR_INFORMATION", "车资讯"}, {"CAR_LIFE", "车生活"}, {"CAR_ACVITITY", "车活动"}, {"CAR_KNOWLEDGE", "车知识"}};
@@ -2514,7 +2513,7 @@ public class BusinessUtil {
      * 创建内容营销活动，返回活动ID
      */
     public Long getContentMarketingAdd() {
-        SupporterUtil supporterUtil = new SupporterUtil(visitor);
+        SceneUtil supporterUtil = new SceneUtil(visitor);
         List<String> picList = new ArrayList<>();
         picList.add(0, getPicPath());
         String[][] label = {{"CAR_WELFARE", "车福利"}, {"CAR_INFORMATION", "车资讯"}, {"CAR_LIFE", "车生活"}, {"CAR_ACVITITY", "车活动"}, {"CAR_KNOWLEDGE", "车知识"}};
@@ -2538,7 +2537,7 @@ public class BusinessUtil {
      * 创建【未开始】招募活动，返回活动ID
      */
     public Long getContentMarketingNotStar() {
-        SupporterUtil supporterUtil = new SupporterUtil(visitor);
+        SceneUtil supporterUtil = new SceneUtil(visitor);
         List<String> picList = new ArrayList<>();
         picList.add(0, getPicPath());
         String[][] label = {{"CAR_WELFARE", "车福利"}, {"CAR_INFORMATION", "车资讯"}, {"CAR_LIFE", "车生活"}, {"CAR_ACVITITY", "车活动"}, {"CAR_KNOWLEDGE", "车知识"}};
@@ -2723,7 +2722,7 @@ public class BusinessUtil {
      * 编辑内容营销活动，返回活动ID
      */
     public String getContentMarketingEdit(Long id, String title, String rule) {
-        SupporterUtil supporterUtil = new SupporterUtil(visitor);
+        SceneUtil supporterUtil = new SceneUtil(visitor);
         List<String> picList = new ArrayList<>();
         picList.add(0, getPicPath());
         String[][] label = {{"CAR_WELFARE", "车福利"}, {"CAR_INFORMATION", "车资讯"}, {"CAR_LIFE", "车生活"}, {"CAR_ACVITITY", "车活动"}, {"CAR_KNOWLEDGE", "车知识"}};
@@ -2929,7 +2928,7 @@ public class BusinessUtil {
      * 裂变活动-创建未开始的活动
      */
     public Long createFissionActivityWaitingStarScene(Long voucherId) {
-        SupporterUtil supporterUtil = new SupporterUtil(visitor);
+        SceneUtil supporterUtil = new SceneUtil(visitor);
         PublicParameter pp = new PublicParameter();
         List<String> picList = new ArrayList<>();
         picList.add(supporterUtil.getPicPath());

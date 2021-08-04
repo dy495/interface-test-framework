@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.arronlong.httpclientutil.HttpClientUtil;
+import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.hqq.fucPackage.StoreFuncPackage;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -46,6 +47,7 @@ public class MallScenarioUtil extends TestCaseCommon {
      * 方法区，不同产品的测试场景各不相同，自行更改
      */
     public String IpPort = "http://dev.mall.store.winsenseos.cn";
+
     public String httpGet(String path, Map<String, Object> paramMap, String IpPort) throws Exception {
         initHttpConfig();
         StringBuilder stringBuilder = new StringBuilder();
@@ -65,6 +67,7 @@ public class MallScenarioUtil extends TestCaseCommon {
         caseResult.setResponse(response);
         return response;
     }
+
     /**
      * @description:登录
      * @author: qingqing
@@ -108,7 +111,6 @@ public class MallScenarioUtil extends TestCaseCommon {
 
         System.out.println(timestamp);
     }
-
 
 
     @DataProvider(name = "CYCLE_TYPE")
@@ -595,12 +597,12 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject NewUser(String district_code,JSONArray shop_type,String shop_name,String shop_manager,String member_type,Integer member_type_order,int page,int size) throws Exception {
+    public JSONObject NewUser(String district_code, JSONArray shop_type, String shop_name, String shop_manager, String member_type, Integer member_type_order, int page, int size) throws Exception {
         String url = "/patrol/shop/page/passenger-flow";
         JSONObject json = new JSONObject();
         json.put("district_code", district_code);
         json.put("shop_type", shop_type);
-        json.put("shop_name",shop_name);
+        json.put("shop_name", shop_name);
         json.put("shop_manager", shop_manager);
         json.put("member_type", member_type);
         json.put("member_type_order", member_type_order);
@@ -611,22 +613,21 @@ public class MallScenarioUtil extends TestCaseCommon {
     }
 
 
-
     /**---------------------------------门店会员管理-------------------------**/
     /**
      * @description:会员信息列表
      * @author:
      * @time:
      */
-    public JSONObject MemberList(int page,int size,String member_id,String member_name,String phone,String user_id,String identity) throws Exception {
+    public JSONObject MemberList(int page, int size, String member_id, String member_name, String phone, String user_id, String identity) throws Exception {
         String url = "/patrol/member/list";
         JSONObject json = new JSONObject();
-        json.put("page",page);
-        json.put("size",size);
+        json.put("page", page);
+        json.put("size", size);
         json.put("member_id", member_id);
         json.put("member_name", member_name);
         json.put("phone", phone);
-        json.put("user_id",user_id);
+        json.put("user_id", user_id);
         json.put("identity", identity);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
@@ -638,30 +639,31 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject RegisterMember(Integer id,String pic_path,String member_id,String member_name,String phone,String birthday,String user_id,int identity) throws Exception {
+    public JSONObject RegisterMember(Integer id, String pic_path, String member_id, String member_name, String phone, String birthday, String user_id, int identity) throws Exception {
         String url = "/patrol/member/register";
         JSONObject json = new JSONObject();
-        json.put("id",id);
+        json.put("id", id);
         json.put("pic_path", pic_path);
         json.put("member_id", member_id);
         json.put("member_name", member_name);
         json.put("phone", phone);
-        json.put("birthday",birthday);
-        json.put("user_id",user_id);
+        json.put("birthday", birthday);
+        json.put("user_id", user_id);
         json.put("identity", identity);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
-    public JSONObject RegisterMember1(Integer id,String pic_path,String member_id,String member_name,String phone,String birthday,String user_id,int identity) throws Exception {
+
+    public JSONObject RegisterMember1(Integer id, String pic_path, String member_id, String member_name, String phone, String birthday, String user_id, int identity) throws Exception {
         String url = "/patrol/member/register";
         JSONObject json = new JSONObject();
-        json.put("id",id);
+        json.put("id", id);
         json.put("pic_path", pic_path);
         json.put("member_id", member_id);
         json.put("member_name", member_name);
         json.put("phone", phone);
-        json.put("birthday",birthday);
-        json.put("user_id",user_id);
+        json.put("birthday", birthday);
+        json.put("user_id", user_id);
         json.put("identity", identity);
 //        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return invokeApi(url, JSONObject.parseObject(json.toJSONString()), false);
@@ -675,7 +677,7 @@ public class MallScenarioUtil extends TestCaseCommon {
     public JSONObject MemberDetail(int id) throws Exception {
         String url = "/patrol/member/detail";
         JSONObject json = new JSONObject();
-        json.put("id",id);
+        json.put("id", id);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -685,17 +687,17 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject MemberUpdate(Integer id,String pic_path,String member_id,String member_name,String phone,String birthday,String user_id,int identity) throws Exception {
+    public JSONObject MemberUpdate(Integer id, String pic_path, String member_id, String member_name, String phone, String birthday, String user_id, int identity) throws Exception {
         String url = "/patrol/member/update";
         JSONObject json = new JSONObject();
-        json.put("id",id);
-        json.put("pic_path",pic_path);
-        json.put("member_id",member_id);
-        json.put("member_name",member_name);
-        json.put("phone",phone);
-        json.put("birthday",birthday);
-        json.put("user_id",user_id);
-        json.put("identity",identity);
+        json.put("id", id);
+        json.put("pic_path", pic_path);
+        json.put("member_id", member_id);
+        json.put("member_name", member_name);
+        json.put("phone", phone);
+        json.put("birthday", birthday);
+        json.put("user_id", user_id);
+        json.put("identity", identity);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -708,7 +710,7 @@ public class MallScenarioUtil extends TestCaseCommon {
     public JSONObject MemberDelete(int id) throws Exception {
         String url = "/patrol/member/delete";
         JSONObject json = new JSONObject();
-        json.put("id",id);
+        json.put("id", id);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -721,7 +723,7 @@ public class MallScenarioUtil extends TestCaseCommon {
     public JSONObject checkPic(String image) throws Exception {
         String url = "/patrol/member/upload_check";
         JSONObject json = new JSONObject();
-        json.put("image",image);
+        json.put("image", image);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -732,11 +734,11 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject MemberVisit(String user_id,String name,String shop_name) throws Exception {
+    public JSONObject MemberVisit(String user_id, String name, String shop_name) throws Exception {
         String url = "/patrol/member/visit/list";
         JSONObject json = new JSONObject();
         json.put("user_id", user_id);
-        json.put("name",name);
+        json.put("name", name);
         json.put("shop_name", shop_name);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
@@ -748,11 +750,11 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject Member(int page,int size) throws Exception {
+    public JSONObject Member(int page, int size) throws Exception {
         String url = "/patrol/member/identity/list";
         JSONObject json = new JSONObject();
-        json.put("page",page);
-        json.put("size",size);
+        json.put("page", page);
+        json.put("size", size);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -818,7 +820,7 @@ public class MallScenarioUtil extends TestCaseCommon {
         JSONObject json = new JSONObject();
         json.put("cycle_type", cycle_type);
         json.put("month", month);
-        json.put("shop_id",shop_id);
+        json.put("shop_id", shop_id);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -928,7 +930,7 @@ public class MallScenarioUtil extends TestCaseCommon {
         JSONObject json = new JSONObject();
         json.put("district_code", district_code);
         json.put("shop_type", shop_type);
-        json.put("shop_name",shop_name);
+        json.put("shop_name", shop_name);
         json.put("shop_manager", shop_manager);
         json.put("sort_type", sort_type);
         json.put("sort_type_order", sort_type_order);
@@ -1270,9 +1272,9 @@ public class MallScenarioUtil extends TestCaseCommon {
     public JSONObject historyShopConversionV3(long shop_id, String cycle_type, String month) throws Exception {
         String url = "/mall/history/shop/conversion";
         JSONObject json = new JSONObject();
-        json.put("shop_id",shop_id);
-        json.put("cycle_type",cycle_type);
-        json.put("month",month);
+        json.put("shop_id", shop_id);
+        json.put("cycle_type", cycle_type);
+        json.put("month", month);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
 
@@ -1392,23 +1394,22 @@ public class MallScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res);
     }
 
-    public JSONObject organizationAccountAddTwo(String account,String name,String number,String leader_uid,String type,String email,String phone,int status,JSONArray role_id_list,JSONArray shop_list) throws Exception {
+    public JSONObject organizationAccountAddTwo(String account, String name, String number, String leader_uid, String type, String email, String phone, int status, JSONArray role_id_list, JSONArray shop_list) throws Exception {
         String url = "/mall/organization/account/add";
         JSONObject json = new JSONObject();
-        json.put("account",account);
-        json.put("name",name);
-        json.put("number",number);
-        json.put("leader_uid",leader_uid);
-        json.put("type",type);
-        json.put("email",email);
-        json.put("phone",phone);
-        json.put("status",status);
-        json.put("role_id_list",role_id_list);
-        json.put("shop_list",shop_list);
+        json.put("account", account);
+        json.put("name", name);
+        json.put("number", number);
+        json.put("leader_uid", leader_uid);
+        json.put("type", type);
+        json.put("email", email);
+        json.put("phone", phone);
+        json.put("status", status);
+        json.put("role_id_list", role_id_list);
+        json.put("shop_list", shop_list);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res);
     }
-
 
 
     /**
@@ -1459,24 +1460,22 @@ public class MallScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res);
     }
 
-    public JSONObject organizationAccountEditTwo(String account,String name,String number,String leader_uid,String type,String email,String phone,int status,JSONArray role_id_list,JSONArray shop_list) throws Exception {
+    public JSONObject organizationAccountEditTwo(String account, String name, String number, String leader_uid, String type, String email, String phone, int status, JSONArray role_id_list, JSONArray shop_list) throws Exception {
         String url = "/mall/organization/account/edit";
         JSONObject json = new JSONObject();
-        json.put("account",account);
-        json.put("name",name);
-        json.put("number",number);
-        json.put("leader_uid",leader_uid);
-        json.put("type",type);
-        json.put("email",email);
-        json.put("phone",phone);
-        json.put("status",status);
-        json.put("role_id_list",role_id_list);
-        json.put("shop_list",shop_list);
+        json.put("account", account);
+        json.put("name", name);
+        json.put("number", number);
+        json.put("leader_uid", leader_uid);
+        json.put("type", type);
+        json.put("email", email);
+        json.put("phone", phone);
+        json.put("status", status);
+        json.put("role_id_list", role_id_list);
+        json.put("shop_list", shop_list);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res);
     }
-
-
 
 
     /**
@@ -1528,7 +1527,6 @@ public class MallScenarioUtil extends TestCaseCommon {
     }
 
 
-
     /**
      * @description:权限包列表
      * @author:
@@ -1537,7 +1535,7 @@ public class MallScenarioUtil extends TestCaseCommon {
     public JSONObject rolePackage(int superior_role_id) throws Exception {
         String url = "/patrol/organization/role-management/query-permission-map";
         JSONObject json = new JSONObject();
-        json.put("superior_role_id",superior_role_id);
+        json.put("superior_role_id", superior_role_id);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -1648,7 +1646,7 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject organizationRoleAdd(String name, int superiorRoleId,String description, JSONArray module_ids) throws Exception {
+    public JSONObject organizationRoleAdd(String name, int superiorRoleId, String description, JSONArray module_ids) throws Exception {
         String url = "/mall/organization/role/add";
         String json =
                 "{" +
@@ -1665,17 +1663,16 @@ public class MallScenarioUtil extends TestCaseCommon {
     }
 
 
-    public JSONObject organizationRoleAddTwo(String name,int superior_role_id,String description,JSONArray module_ids) throws Exception {
+    public JSONObject organizationRoleAddTwo(String name, int superior_role_id, String description, JSONArray module_ids) throws Exception {
         String url = "/mall/organization/role/add";
         JSONObject json = new JSONObject();
-        json.put("name",name);
-        json.put("superior_role_id",superior_role_id);
-        json.put("description",description);
-        json.put("module_ids",module_ids);
+        json.put("name", name);
+        json.put("superior_role_id", superior_role_id);
+        json.put("description", description);
+        json.put("module_ids", module_ids);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res);
     }
-
 
 
     /**
@@ -1718,18 +1715,17 @@ public class MallScenarioUtil extends TestCaseCommon {
     }
 
 
-    public JSONObject organizationRoleEditTwo(int role_id,int superior_role_id,String name, String description, JSONArray module_ids) throws Exception {
+    public JSONObject organizationRoleEditTwo(int role_id, int superior_role_id, String name, String description, JSONArray module_ids) throws Exception {
         String url = "/mall/organization/role/edit";
         JSONObject json = new JSONObject();
-        json.put("role_id",role_id);
-        json.put("superior_role_id",superior_role_id);
-        json.put("name",name);
-        json.put("description",description);
-        json.put("module_ids",module_ids);
+        json.put("role_id", role_id);
+        json.put("superior_role_id", superior_role_id);
+        json.put("name", name);
+        json.put("description", description);
+        json.put("module_ids", module_ids);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res);
     }
-
 
 
     /**
@@ -2144,28 +2140,29 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @author: zt
      * @time:
      */
-    public JSONObject white_black_list(Integer page,Integer size,String name,String  member_id,String customer_id,String type) throws Exception {
+    public JSONObject white_black_list(Integer page, Integer size, String name, String member_id, String customer_id, String type) throws Exception {
         String url = "/patrol/risk-control/rule/white-list/page";
         JSONObject json = new JSONObject();
-        json.put("page",page);
-        json.put("size",size);
-        json.put("name",name);
-        json.put("member_id",member_id);
-        json.put("customer_id",customer_id);
-        json.put("type",type);
+        json.put("page", page);
+        json.put("size", size);
+        json.put("name", name);
+        json.put("member_id", member_id);
+        json.put("customer_id", customer_id);
+        json.put("type", type);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     /**
      * @description: 特殊人员管理 ---黑白名单-删除黑白名单(黑白名单共用)
      * @author: zt
      * @time:
      */
-    public JSONObject white_black_delete(String customer_id,String type) throws Exception {
+    public JSONObject white_black_delete(String customer_id, String type) throws Exception {
         String url = "/patrol/risk-control/rule/black-white-list/delete";
         JSONObject json = new JSONObject();
-        json.put("customer_id",customer_id);
-        json.put("type",type);
+        json.put("customer_id", customer_id);
+        json.put("type", type);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -2175,15 +2172,15 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @author: zt
      * @time:
      */
-    public JSONObject white_black_addList(Integer page,Integer size,String name,String  member_id,String customer_id,String type) throws Exception {
+    public JSONObject white_black_addList(Integer page, Integer size, String name, String member_id, String customer_id, String type) throws Exception {
         String url = "/patrol/risk-control/rule/white-list/add/page";
         JSONObject json = new JSONObject();
-        json.put("page",page);
-        json.put("size",size);
-        json.put("name",name);
-        json.put("member_id",member_id);
-        json.put("customer_id",customer_id);
-        json.put("type",type);
+        json.put("page", page);
+        json.put("size", size);
+        json.put("name", name);
+        json.put("member_id", member_id);
+        json.put("customer_id", customer_id);
+        json.put("type", type);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -2193,11 +2190,11 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @author: zt
      * @time:
      */
-    public JSONObject white_black_addDetail(String customer_id,String type) throws Exception {
+    public JSONObject white_black_addDetail(String customer_id, String type) throws Exception {
         String url = "/patrol/risk-control/rule/black-white-list/add/detail";
         JSONObject json = new JSONObject();
-        json.put("customer_id",customer_id);
-        json.put("type",type);
+        json.put("customer_id", customer_id);
+        json.put("type", type);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -2207,14 +2204,14 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @author: zt
      * @time:
      */
-    public JSONObject white_black_add(String customer_id,String shop_id,String name,String add_reason,String type) throws Exception {
+    public JSONObject white_black_add(String customer_id, String shop_id, String name, String add_reason, String type) throws Exception {
         String url = "/patrol/risk-control/rule/black-white-list/add";
         JSONObject json = new JSONObject();
-        json.put("customer_id",customer_id);
-        json.put("shop_id",shop_id);
-        json.put("name",name);
-        json.put("add_reason",add_reason);
-        json.put("type",type);
+        json.put("customer_id", customer_id);
+        json.put("shop_id", shop_id);
+        json.put("name", name);
+        json.put("add_reason", add_reason);
+        json.put("type", type);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -2224,12 +2221,12 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @author: zt
      * @time:
      */
-    public JSONObject white_black_operate(Integer page,Integer size,String customer_id) throws Exception {
+    public JSONObject white_black_operate(Integer page, Integer size, String customer_id) throws Exception {
         String url = "/patrol/risk-control/rule/black-white-list/operate/page";
         JSONObject json = new JSONObject();
-        json.put("page",page);
-        json.put("size",size);
-        json.put("customer_id",customer_id);
+        json.put("page", page);
+        json.put("size", size);
+        json.put("customer_id", customer_id);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -2239,30 +2236,29 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @author: zt
      * @time:
      */
-    public JSONObject black_listPage(Integer page,Integer size,String customer_id) throws Exception {
+    public JSONObject black_listPage(Integer page, Integer size, String customer_id) throws Exception {
         String url = "/patrol/risk-control/rule/black-list/event/page";
         JSONObject json = new JSONObject();
-        json.put("page",page);
-        json.put("size",size);
-        json.put("customer_id",customer_id);
+        json.put("page", page);
+        json.put("size", size);
+        json.put("customer_id", customer_id);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
 
 
-
     //-------------------------------摄像头云台控制相关接口---------------------------------------
 
     /**
-     * @description:   20.1预置位/看守位列表
+     * @description: 20.1预置位/看守位列表
      * @author: zt
      * @time:
      */
-    public JSONObject cameraList(String terminal_device_id,String type) throws Exception {
+    public JSONObject cameraList(String terminal_device_id, String type) throws Exception {
         String url = "/patrol/ptz/control/preset/list";
         JSONObject json = new JSONObject();
-        json.put("terminal_device_id",terminal_device_id);
-        json.put("type",type);
+        json.put("terminal_device_id", terminal_device_id);
+        json.put("type", type);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -2272,16 +2268,15 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @author: zt
      * @time:
      */
-    public JSONObject creatPreset(String terminal_device_id,String name,int time) throws Exception {
+    public JSONObject creatPreset(String terminal_device_id, String name, int time) throws Exception {
         String url = "/patrol/ptz/control/preset/add";
         JSONObject json = new JSONObject();
-        json.put("terminal_device_id",terminal_device_id);
-        json.put("name",name);
-        json.put("time",time);
+        json.put("terminal_device_id", terminal_device_id);
+        json.put("name", name);
+        json.put("time", time);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
-
 
 
     /**
@@ -2289,12 +2284,12 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @author: zt
      * @time:
      */
-    public JSONObject gxPreset(String terminal_device_id,String name,int preset_index) throws Exception {
+    public JSONObject gxPreset(String terminal_device_id, String name, int preset_index) throws Exception {
         String url = "/patrol/ptz/control/preset/update";
         JSONObject json = new JSONObject();
-        json.put("terminal_device_id",terminal_device_id);
-        json.put("name",name);
-        json.put("preset_index",preset_index);
+        json.put("terminal_device_id", terminal_device_id);
+        json.put("name", name);
+        json.put("preset_index", preset_index);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -2304,15 +2299,14 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @author: zt
      * @time:
      */
-    public JSONObject deletePreset(String terminal_device_id,int preset_index) throws Exception {
+    public JSONObject deletePreset(String terminal_device_id, int preset_index) throws Exception {
         String url = "/patrol/ptz/control/preset/delete";
         JSONObject json = new JSONObject();
-        json.put("terminal_device_id",terminal_device_id);
-        json.put("preset_index",preset_index);
+        json.put("terminal_device_id", terminal_device_id);
+        json.put("preset_index", preset_index);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
-
 
 
     /**
@@ -2323,11 +2317,10 @@ public class MallScenarioUtil extends TestCaseCommon {
     public JSONObject deleteGuard(String terminal_device_id) throws Exception {
         String url = "/patrol/ptz/control/preset/delete";
         JSONObject json = new JSONObject();
-        json.put("terminal_device_id",terminal_device_id);
+        json.put("terminal_device_id", terminal_device_id);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
-
 
 
     /**
@@ -2335,11 +2328,11 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @author: zt
      * @time:
      */
-    public JSONObject Polling(String terminal_device_id,JSONArray preset_list) throws Exception {
+    public JSONObject Polling(String terminal_device_id, JSONArray preset_list) throws Exception {
         String url = "/patrol/ptz/control/polling";
         JSONObject json = new JSONObject();
-        json.put("terminal_device_id",terminal_device_id);
-        json.put("preset_list",preset_list);
+        json.put("terminal_device_id", terminal_device_id);
+        json.put("preset_list", preset_list);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -2353,11 +2346,10 @@ public class MallScenarioUtil extends TestCaseCommon {
     public JSONObject Guard(String terminal_device_id) throws Exception {
         String url = "/patrol/ptz/control/guard-position/add";
         JSONObject json = new JSONObject();
-        json.put("terminal_device_id",terminal_device_id);
+        json.put("terminal_device_id", terminal_device_id);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
-
 
 
     /**
@@ -2368,11 +2360,10 @@ public class MallScenarioUtil extends TestCaseCommon {
     public JSONObject dyGuard(String terminal_device_id) throws Exception {
         String url = "/patrol/ptz/control/guard-position/back";
         JSONObject json = new JSONObject();
-        json.put("terminal_device_id",terminal_device_id);
+        json.put("terminal_device_id", terminal_device_id);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
-
 
 
     /**
@@ -2380,17 +2371,14 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @author: zt
      * @time:
      */
-    public JSONObject dyPreset(String terminal_device_id,int index) throws Exception {
+    public JSONObject dyPreset(String terminal_device_id, int index) throws Exception {
         String url = "/patrol/ptz/control/preset/back";
         JSONObject json = new JSONObject();
-        json.put("terminal_device_id",terminal_device_id);
-        json.put("index",index);
+        json.put("terminal_device_id", terminal_device_id);
+        json.put("index", index);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
-
-
-
 
 
     /**
@@ -2401,23 +2389,11 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @param checkCode   是否校验code
      * @return JSONObject response.data
      */
-    public JSONObject invokeApi(String url, JSONObject requestBody, boolean checkCode) {
-        if (StringUtils.isEmpty(url)) {
-            throw new RuntimeException("url不可为空");
-        }
+    public JSONObject invokeApi(String path, JSONObject requestBody, boolean checkCode) {
+        Preconditions.checkArgument(!StringUtils.isEmpty(path), "path不可为空");
         String request = JSON.toJSONString(requestBody);
-        String result = null;
-        if (checkCode) {
-            result = httpPostWithCheckCode(url, request, IpPort);
-            return JSON.parseObject(result).getJSONObject("data");
-        } else {
-            try {
-                result = httpPost(url, request, IpPort);
-            } catch (Exception e) {
-                appendFailReason(e.toString());
-            }
-            return JSON.parseObject(result);
-        }
+        String result = httpPost(IpPort, path, request, checkCode, false);
+        return JSON.parseObject(result);
     }
 
     /**
@@ -2606,12 +2582,12 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject cardList(String page_type, Integer last_value,Integer size) throws Exception {
+    public JSONObject cardList(String page_type, Integer last_value, Integer size) throws Exception {
         String url = "/store/m-app/auth/card/card-list";
         JSONObject json = new JSONObject();
-        json.put("page_type",page_type);
-        json.put("last_value",last_value);
-        json.put("size",size);
+        json.put("page_type", page_type);
+        json.put("last_value", last_value);
+        json.put("size", size);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
 
         return JSON.parseObject(res).getJSONObject("data");
@@ -2628,14 +2604,13 @@ public class MallScenarioUtil extends TestCaseCommon {
     public JSONObject cardDetail(String card_type) throws Exception {
         String url = "/store/m-app/auth/card/card-detail";
         JSONObject json = new JSONObject();
-        json.put("card_type",card_type);
+        json.put("card_type", card_type);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
 
         return JSON.parseObject(res).getJSONObject("data");
 
 
     }
-
 
 
     /**
@@ -2940,7 +2915,7 @@ public class MallScenarioUtil extends TestCaseCommon {
 //        String res = httpGet(url, json.toJSONString(), IpPort);
 //        return JSON.parseObject(res).getJSONObject("data");
 //    }
-    public JSONObject regin_PUv(long shop_id, String dateType,String day) throws Exception {
+    public JSONObject regin_PUv(long shop_id, String dateType, String day) throws Exception {
         String path = "/mall/history/shop/day/region-pv-uv";
         String json =
                 "{" +
@@ -2966,6 +2941,7 @@ public class MallScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(path, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     /**
      * @description:7.7门店小时级别实时客流-多店
      * @author:
@@ -2986,7 +2962,7 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @time:
      */
     public JSONObject real_shopUv() throws Exception {
-        String path  = "/patrol/real-time/all/shop/uv";
+        String path = "/patrol/real-time/all/shop/uv";
         String json =
                 "{} ";
 
@@ -3014,11 +2990,11 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject history_shop_all(String cycle_type,String month) throws Exception {
+    public JSONObject history_shop_all(String cycle_type, String month) throws Exception {
         String path = "/mall/history/shop/all/conversion";
         JSONObject json = new JSONObject();
-        json.put("cycle_type",cycle_type);
-        json.put("month",month);
+        json.put("cycle_type", cycle_type);
+        json.put("month", month);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -3028,11 +3004,11 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject history_shop_hourData(String cycle_type,String month) throws Exception {
+    public JSONObject history_shop_hourData(String cycle_type, String month) throws Exception {
         String path = "/mall/history/shop/all/hour-data";
         JSONObject json = new JSONObject();
-        json.put("cycle_type",cycle_type);
-        json.put("month",month);
+        json.put("cycle_type", cycle_type);
+        json.put("month", month);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -3042,11 +3018,11 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject history_shop_ageData(String cycle_type,String month) throws Exception {
+    public JSONObject history_shop_ageData(String cycle_type, String month) throws Exception {
         String path = "/mall/history/shop/all/age-gender/distribution";
         JSONObject json = new JSONObject();
-        json.put("cycle_type",cycle_type);
-        json.put("month",month);
+        json.put("cycle_type", cycle_type);
+        json.put("month", month);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -3056,15 +3032,16 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject history_shop_arrivData(String cycle_type,String month,String day) throws Exception {
+    public JSONObject history_shop_arrivData(String cycle_type, String month, String day) throws Exception {
         String path = "/mall/history/shop/all/trend-pv-uv";
         JSONObject json = new JSONObject();
-        json.put("cycle_type",cycle_type);
-        json.put("month",month);
-        json.put("day",day);
+        json.put("cycle_type", cycle_type);
+        json.put("month", month);
+        json.put("day", day);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     /**
      * @description:5.12. 获取到店趋势数据 天级别-多店
      * @author:
@@ -3073,7 +3050,7 @@ public class MallScenarioUtil extends TestCaseCommon {
     public JSONObject history_shop_dayData(String day) throws Exception {
         String path = "/mall/history/shop/all/day/trend-pv-uv";
         JSONObject json = new JSONObject();
-        json.put("day",day);
+        json.put("day", day);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -3083,13 +3060,13 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject intention_consultation(int page,int size,String start_time,String end_time) throws Exception {
+    public JSONObject intention_consultation(int page, int size, String start_time, String end_time) throws Exception {
         String path = "/patrol/intention-consultation/page";
         JSONObject json = new JSONObject();
-        json.put("page",page);
-        json.put("size",size);
-        json.put("start_time",start_time);
-        json.put("end_time",end_time);
+        json.put("page", page);
+        json.put("size", size);
+        json.put("start_time", start_time);
+        json.put("end_time", end_time);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -3127,15 +3104,15 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject member_list(String referer,int page,int size,String register_date,String member_name,String phone) throws Exception {
+    public JSONObject member_list(String referer, int page, int size, String register_date, String member_name, String phone) throws Exception {
         String path = "/shop/member/list";
         JSONObject json = new JSONObject();
-        json.put("referer",referer);
-        json.put("page",page);
-        json.put("size",size);
-        json.put("register_date",register_date);
-        json.put("member_name",member_name);
-        json.put("phone",phone);
+        json.put("referer", referer);
+        json.put("page", page);
+        json.put("size", size);
+        json.put("register_date", register_date);
+        json.put("member_name", member_name);
+        json.put("phone", phone);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -3145,11 +3122,11 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject member_detail(String referer,String id) throws Exception {
+    public JSONObject member_detail(String referer, String id) throws Exception {
         String path = "/shop/member/detail";
         JSONObject json = new JSONObject();
-        json.put("referer",referer);
-        json.put("id",id);
+        json.put("referer", referer);
+        json.put("id", id);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -3159,11 +3136,11 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject member_level(String referer,String id) throws Exception {
+    public JSONObject member_level(String referer, String id) throws Exception {
         String path = "/shop/member/level";
         JSONObject json = new JSONObject();
-        json.put("referer",referer);
-        json.put("id",id);
+        json.put("referer", referer);
+        json.put("id", id);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -3173,12 +3150,12 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject member_updatelevel(String referer,String id,String level_id) throws Exception {
+    public JSONObject member_updatelevel(String referer, String id, String level_id) throws Exception {
         String path = "/shop/member/level";
         JSONObject json = new JSONObject();
-        json.put("referer",referer);
-        json.put("id",id);
-        json.put("level_id",level_id);
+        json.put("referer", referer);
+        json.put("id", id);
+        json.put("level_id", level_id);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -3188,19 +3165,19 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject exchange_detailed(String referer,int page,int size,String id,String exchange_customer_name,String exchange_type,String exchange_start_time,String exchange_end_time,String phone,String customer_id) throws Exception {
+    public JSONObject exchange_detailed(String referer, int page, int size, String id, String exchange_customer_name, String exchange_type, String exchange_start_time, String exchange_end_time, String phone, String customer_id) throws Exception {
         String path = "/shop/pc/integral-center/exchange-detailed";
         JSONObject json = new JSONObject();
-        json.put("referer",referer);
-        json.put("page",page);
-        json.put("size",size);
-        json.put("id",id);
-        json.put("exchange_customer_name",exchange_customer_name);
-        json.put("exchange_type",exchange_type);
-        json.put("exchange_start_time",exchange_start_time);
-        json.put("exchange_end_time",exchange_end_time);
-        json.put("phone",phone);
-        json.put("customer_id",customer_id);
+        json.put("referer", referer);
+        json.put("page", page);
+        json.put("size", size);
+        json.put("id", id);
+        json.put("exchange_customer_name", exchange_customer_name);
+        json.put("exchange_type", exchange_type);
+        json.put("exchange_start_time", exchange_start_time);
+        json.put("exchange_end_time", exchange_end_time);
+        json.put("phone", phone);
+        json.put("customer_id", customer_id);
 
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
@@ -3212,15 +3189,16 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject consumption_page(String shop_name,String member_name,String member_phone,int page,int size) throws Exception {
+    public JSONObject consumption_page(String shop_name, String member_name, String member_phone, int page, int size) throws Exception {
         String path = "/patrol/member/consumption/page";
         JSONObject json = new JSONObject();
-        json.put("shop_name",shop_name);
-        json.put("member_name",member_name);
-        json.put("member_phone",member_phone);
+        json.put("shop_name", shop_name);
+        json.put("member_name", member_name);
+        json.put("member_phone", member_phone);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     /**
      * @description:5.2. 订单详情
      * @author:
@@ -3229,7 +3207,7 @@ public class MallScenarioUtil extends TestCaseCommon {
     public JSONObject consumption_detail(String order_number) throws Exception {
         String path = "/patrol/member/consumption/detail";
         JSONObject json = new JSONObject();
-        json.put("order_number",order_number);
+        json.put("order_number", order_number);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -3239,13 +3217,13 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @author
      * @time:
      */
-    public JSONObject level_enum(String referer,String level_name,int page,int size) throws Exception {
+    public JSONObject level_enum(String referer, String level_name, int page, int size) throws Exception {
         String path = "/patrol/member/level/enum";
         JSONObject json = new JSONObject();
-        json.put("referer",referer);
-        json.put("level_name",level_name);
-        json.put("page",page);
-        json.put("size",size);
+        json.put("referer", referer);
+        json.put("level_name", level_name);
+        json.put("page", page);
+        json.put("size", size);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -3255,12 +3233,12 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @author
      * @time:
      */
-    public JSONObject member_level_page(String level_name,int page,int size) throws Exception {
+    public JSONObject member_level_page(String level_name, int page, int size) throws Exception {
         String path = "/patrol/member/level/list";
         JSONObject json = new JSONObject();
-        json.put("level_name",level_name);
-        json.put("page",page);
-        json.put("size",size);
+        json.put("level_name", level_name);
+        json.put("page", page);
+        json.put("size", size);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -3273,7 +3251,7 @@ public class MallScenarioUtil extends TestCaseCommon {
     public JSONObject member_level_detail(String id) throws Exception {
         String path = "/patrol/member/level/detail";
         JSONObject json = new JSONObject();
-        json.put("id",id);
+        json.put("id", id);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -3283,19 +3261,19 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject member_level_update(int id,String level_name,String level_icon_path,String level_condition_desc,String level_benefits_desc,int level_experience,int level_sort,int experience_exchange,int integral_exchange,Boolean is_hide) throws Exception {
+    public JSONObject member_level_update(int id, String level_name, String level_icon_path, String level_condition_desc, String level_benefits_desc, int level_experience, int level_sort, int experience_exchange, int integral_exchange, Boolean is_hide) throws Exception {
         String path = "/patrol/member/level/update";
         JSONObject json = new JSONObject();
-        json.put("id",id);
-        json.put("level_name",level_name);
-        json.put("level_icon_path",level_icon_path);
-        json.put("level_condition_desc",level_condition_desc);
-        json.put("level_benefits_desc",level_benefits_desc);
-        json.put("level_experience",level_experience);
-        json.put("level_sort",level_sort);
-        json.put("experience_exchange",experience_exchange);
-        json.put("integral_exchange",integral_exchange);
-        json.put("is_hide",is_hide);
+        json.put("id", id);
+        json.put("level_name", level_name);
+        json.put("level_icon_path", level_icon_path);
+        json.put("level_condition_desc", level_condition_desc);
+        json.put("level_benefits_desc", level_benefits_desc);
+        json.put("level_experience", level_experience);
+        json.put("level_sort", level_sort);
+        json.put("experience_exchange", experience_exchange);
+        json.put("integral_exchange", integral_exchange);
+        json.put("is_hide", is_hide);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res);
     }
@@ -3306,12 +3284,12 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject hide_update(String referer,int id,boolean is_hide) throws Exception {
+    public JSONObject hide_update(String referer, int id, boolean is_hide) throws Exception {
         String path = "/patrol/member/level/hide_update";
         JSONObject json = new JSONObject();
-        json.put("referer",referer);
-        json.put("id",id);
-        json.put("is_hide",is_hide);
+        json.put("referer", referer);
+        json.put("id", id);
+        json.put("is_hide", is_hide);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -3324,7 +3302,7 @@ public class MallScenarioUtil extends TestCaseCommon {
     public JSONObject member_level_delete(int id) throws Exception {
         String path = "/patrol/member/level/delete";
         JSONObject json = new JSONObject();
-        json.put("id",id);
+        json.put("id", id);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -3332,7 +3310,7 @@ public class MallScenarioUtil extends TestCaseCommon {
     public JSONObject member_level_delete0(int id) throws Exception {
         String path = "/patrol/member/level/delete";
         JSONObject json = new JSONObject();
-        json.put("id",id);
+        json.put("id", id);
         String res = httpPost(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res);
     }
@@ -3342,66 +3320,68 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject member_level_add(String level_name,String level_icon_path,int level_experience,String level_condition_desc,String level_benefits_desc,int level_sort,int experience_exchange,int integral_exchange,boolean is_hide) throws Exception {
+    public JSONObject member_level_add(String level_name, String level_icon_path, int level_experience, String level_condition_desc, String level_benefits_desc, int level_sort, int experience_exchange, int integral_exchange, boolean is_hide) throws Exception {
         String path = "/patrol/member/level/add";
         JSONObject json = new JSONObject();
-        json.put("level_name",level_name);
-        json.put("level_icon_path",level_icon_path);
-        json.put("level_experience",level_experience);
-        json.put("level_condition_desc",level_condition_desc);
-        json.put("level_benefits_desc",level_benefits_desc);
-        json.put("level_sort",level_sort);
-        json.put("experience_exchange",experience_exchange);
-        json.put("integral_exchange",integral_exchange);
-        json.put("is_hide",is_hide);
+        json.put("level_name", level_name);
+        json.put("level_icon_path", level_icon_path);
+        json.put("level_experience", level_experience);
+        json.put("level_condition_desc", level_condition_desc);
+        json.put("level_benefits_desc", level_benefits_desc);
+        json.put("level_sort", level_sort);
+        json.put("experience_exchange", experience_exchange);
+        json.put("integral_exchange", integral_exchange);
+        json.put("is_hide", is_hide);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    public JSONObject member_level_add0(String level_name,String level_icon_path,int level_experience,String level_condition_desc,String level_benefits_desc,Integer level_sort,Integer experience_exchange,Integer integral_exchange,boolean is_hide) throws Exception {
+    public JSONObject member_level_add0(String level_name, String level_icon_path, int level_experience, String level_condition_desc, String level_benefits_desc, Integer level_sort, Integer experience_exchange, Integer integral_exchange, boolean is_hide) throws Exception {
         String path = "/patrol/member/level/add";
         JSONObject json = new JSONObject();
-        json.put("level_name",level_name);
-        json.put("level_icon_path",level_icon_path);
-        json.put("level_experience",level_experience);
-        json.put("level_condition_desc",level_condition_desc);
-        json.put("level_benefits_desc",level_benefits_desc);
-        json.put("level_sort",level_sort);
-        json.put("experience_exchange",experience_exchange);
-        json.put("integral_exchange",integral_exchange);
-        json.put("is_hide",is_hide);
+        json.put("level_name", level_name);
+        json.put("level_icon_path", level_icon_path);
+        json.put("level_experience", level_experience);
+        json.put("level_condition_desc", level_condition_desc);
+        json.put("level_benefits_desc", level_benefits_desc);
+        json.put("level_sort", level_sort);
+        json.put("experience_exchange", experience_exchange);
+        json.put("integral_exchange", integral_exchange);
+        json.put("is_hide", is_hide);
         String res = httpPost(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res);
 //        return invokeApi(path, JSONObject.parseObject(json.toJSONString()), false);
     }
+
     /**
      * @description:6.6. 会员等级隐藏状态更新
      * @author:
      * @time:
      */
-    public JSONObject member_level_hide(Long id,boolean is_hide) throws Exception {
+    public JSONObject member_level_hide(Long id, boolean is_hide) throws Exception {
         String path = "patrol/member/level/hide_update";
         JSONObject json = new JSONObject();
-        json.put("id",id);
-        json.put("is_hide",is_hide);
+        json.put("id", id);
+        json.put("is_hide", is_hide);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     /**
      * @description:9.1. 内容运营 : 文章列表
      * @author:
      * @time:
      */
-    public JSONObject article_page(String title,String create_start,String create_end,String modify_start,String modify_end,int page,int size) throws Exception {
+    public JSONObject article_page(String title, String create_start, String create_end, String modify_start, String modify_end, int page, int size) throws Exception {
         String path = "/shop/pc/operation/article/page";
         JSONObject json = new JSONObject();
-        json.put("title",title);
-        json.put("create_start",create_start);
-        json.put("create_end",create_end);
-        json.put("modify_start",modify_start);
-        json.put("modify_end",modify_end);
-        json.put("page",page);
-        json.put("size",size);
+        json.put("title", title);
+        json.put("create_start", create_start);
+        json.put("create_end", create_end);
+        json.put("modify_start", modify_start);
+        json.put("modify_end", modify_end);
+        json.put("page", page);
+        json.put("size", size);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -3411,51 +3391,54 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject article_export(String title,String create_start,String create_end,String modify_start,String modify_end,String export_type,String ids,int page,int size) throws Exception {
+    public JSONObject article_export(String title, String create_start, String create_end, String modify_start, String modify_end, String export_type, String ids, int page, int size) throws Exception {
         String path = "/shop/pc/operation/article/export";
         JSONObject json = new JSONObject();
-        json.put("title",title);
-        json.put("create_start",create_start);
-        json.put("create_end",create_end);
-        json.put("modify_start",modify_start);
-        json.put("modify_end",modify_end);
-        json.put("export_type",export_type);
-        json.put("ids",ids);
-        json.put("page",page);
-        json.put("size",size);
+        json.put("title", title);
+        json.put("create_start", create_start);
+        json.put("create_end", create_end);
+        json.put("modify_start", modify_start);
+        json.put("modify_end", modify_end);
+        json.put("export_type", export_type);
+        json.put("ids", ids);
+        json.put("page", page);
+        json.put("size", size);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     /**
      * @description:9.3. 内容运营 : 创建文章
      * @author:
      * @time:
      */
-    public JSONObject article_export(String title,String pic_type,String content,String label,JSONArray pic_list) throws Exception {
+    public JSONObject article_export(String title, String pic_type, String content, String label, JSONArray pic_list) throws Exception {
         String path = "/shop/pc/operation/article/add";
         JSONObject json = new JSONObject();
-        json.put("title",title);
-        json.put("pic_type",pic_type);
-        json.put("content",content);
-        json.put("label",label);
-        json.put("pic_list",pic_list);
+        json.put("title", title);
+        json.put("pic_type", pic_type);
+        json.put("content", content);
+        json.put("label", label);
+        json.put("pic_list", pic_list);
 //        String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return invokeApi(path, JSONObject.parseObject(json.toJSONString()), false);
     }
+
     /**
      * @description:9.3. 内容运营 : 编辑文章
      * @author:
      * @time:
      */
-    public JSONObject article_edit(String title,Long id,String content) throws Exception {
+    public JSONObject article_edit(String title, Long id, String content) throws Exception {
         String path = "/shop/pc/operation/article/edit";
         JSONObject json = new JSONObject();
-        json.put("title",title);
-        json.put("id",id);
-        json.put("content",content);
+        json.put("title", title);
+        json.put("id", id);
+        json.put("content", content);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     /**
      * @description:9.5. 内容运营 : 删除文章
      * @author:
@@ -3464,7 +3447,7 @@ public class MallScenarioUtil extends TestCaseCommon {
     public JSONObject article_delete(Long id) throws Exception {
         String path = "/shop/pc/operation/article/delete";
         JSONObject json = new JSONObject();
-        json.put("id",id);
+        json.put("id", id);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res);
     }
@@ -3477,10 +3460,11 @@ public class MallScenarioUtil extends TestCaseCommon {
     public JSONObject article_top(Long id) throws Exception {
         String path = "/shop/pc/operation/article/top";
         JSONObject json = new JSONObject();
-        json.put("id",id);
+        json.put("id", id);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     /**
      * @description:9.7. 内容运营 : 文章详情
      * @author:
@@ -3489,10 +3473,11 @@ public class MallScenarioUtil extends TestCaseCommon {
     public JSONObject article_detail(Long id) throws Exception {
         String path = "/shop/pc/operation/article/detail";
         JSONObject json = new JSONObject();
-        json.put("id",id);
+        json.put("id", id);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     /**
      * @description:9.8. 内容运营 : 活动-开启/关闭
      * @author:
@@ -3501,7 +3486,7 @@ public class MallScenarioUtil extends TestCaseCommon {
     public JSONObject article_status_change(Long id) throws Exception {
         String path = "/shop/pc/operation/status/change";
         JSONObject json = new JSONObject();
-        json.put("id",id);
+        json.put("id", id);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res);
     }
@@ -3526,22 +3511,24 @@ public class MallScenarioUtil extends TestCaseCommon {
     public JSONObject banner_edit(JSONArray list) throws Exception {
         String path = "/patrol/pc/banner/edit";
         JSONObject json = new JSONObject();
-        json.put("list",list);
+        json.put("list", list);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     /**
-     * @description:10.2.  banner列表（id=广告位id）
+     * @description:10.2. banner列表（id=广告位id）
      * @author:
      * @time:
      */
     public JSONObject banner_list(Long id) throws Exception {
         String path = "/patrol/pc/banner/list";
         JSONObject json = new JSONObject();
-        json.put("id",id);
+        json.put("id", id);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     /**
      * @description:11.1. 广告位列表
      * @author:
@@ -3553,35 +3540,38 @@ public class MallScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     /**
      * @description:12.1. 反馈列表查询
      * @author:
      * @time:
      */
-    public JSONObject advertise_list(String user_name,String feedback_type_id,int page,int size) throws Exception {
+    public JSONObject advertise_list(String user_name, String feedback_type_id, int page, int size) throws Exception {
         String path = "/shop/pc/advertise/list";
         JSONObject json = new JSONObject();
-        json.put("user_name",user_name);
-        json.put("feedback_type_id",feedback_type_id);
-        json.put("page",page);
-        json.put("size",size);
+        json.put("user_name", user_name);
+        json.put("feedback_type_id", feedback_type_id);
+        json.put("page", page);
+        json.put("size", size);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     /**
      * @description:12.2. 新增礼品
      * @author:
      * @time:
      */
-    public JSONObject advertise_list(String feedback_gift,Boolean visible,int feedbackId) throws Exception {
+    public JSONObject advertise_list(String feedback_gift, Boolean visible, int feedbackId) throws Exception {
         String path = "/shop/pc/advertise/list";
         JSONObject json = new JSONObject();
-        json.put("feedback_gift",feedback_gift);
-        json.put("visible",visible);
-        json.put("feedbackId",feedbackId);
+        json.put("feedback_gift", feedback_gift);
+        json.put("visible", visible);
+        json.put("feedbackId", feedbackId);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     /**
      * @description:12.3. 删除反馈
      * @author:
@@ -3590,32 +3580,35 @@ public class MallScenarioUtil extends TestCaseCommon {
     public JSONObject feedback_delete(Integer feedback_id) throws Exception {
         String path = "/patrol/feedback/delete";
         JSONObject json = new JSONObject();
-        json.put("feedback_id",feedback_id);
+        json.put("feedback_id", feedback_id);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res);
     }
+
     /**
      * @description:12.4. 新增反馈类型
      * @author:
      * @time:
      */
-    public JSONObject feedback_add(String feedback_type,String feedback_message) throws Exception {
+    public JSONObject feedback_add(String feedback_type, String feedback_message) throws Exception {
         String path = "/patrol/feedback/feedback-type/add";
         JSONObject json = new JSONObject();
-        json.put("feedback_type",feedback_type);
-        json.put("feedback_message",feedback_message);
+        json.put("feedback_type", feedback_type);
+        json.put("feedback_message", feedback_message);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
 
     }
-    public JSONObject feedback_add0(String feedback_type,String feedback_message) throws Exception {
+
+    public JSONObject feedback_add0(String feedback_type, String feedback_message) throws Exception {
         String path = "/patrol/feedback/feedback-type/add";
         JSONObject json = new JSONObject();
-        json.put("feedback_type",feedback_type);
-        json.put("feedback_message",feedback_message);
+        json.put("feedback_type", feedback_type);
+        json.put("feedback_message", feedback_message);
         String res = httpPost(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res);
     }
+
     /**
      * @description:12.5. 删除反馈类型
      * @author:
@@ -3624,57 +3617,59 @@ public class MallScenarioUtil extends TestCaseCommon {
     public JSONObject feedback_type_delete(int feedback_type_id) throws Exception {
         String path = "/patrol/feedback/feedback-type/delete";
         JSONObject json = new JSONObject();
-        json.put("feedback_type_id",feedback_type_id);
+        json.put("feedback_type_id", feedback_type_id);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     /**
      * @description:21.1. 新增口味
      * @author:
      * @time:
      */
-    public JSONObject taste_add(String taste_image_path,String head_image_path,String show_image_path,String taste_name,String taste_explain,Integer users,Boolean recommend) throws Exception {
+    public JSONObject taste_add(String taste_image_path, String head_image_path, String show_image_path, String taste_name, String taste_explain, Integer users, Boolean recommend) throws Exception {
         String path = "/patrol/taste/add";
         JSONObject json = new JSONObject();
-        json.put("taste_image_path",taste_image_path);
-        json.put("head_image_path",head_image_path);
-        json.put("show_image_path",show_image_path);
-        json.put("taste_name",taste_name);
-        json.put("taste_explain",taste_explain);
-        json.put("users",users);
-        json.put("recommend",recommend);
+        json.put("taste_image_path", taste_image_path);
+        json.put("head_image_path", head_image_path);
+        json.put("show_image_path", show_image_path);
+        json.put("taste_name", taste_name);
+        json.put("taste_explain", taste_explain);
+        json.put("users", users);
+        json.put("recommend", recommend);
 //        String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
 //        return JSON.parseObject(res).getJSONObject("data");
         return invokeApi(path, JSONObject.parseObject(json.toJSONString()), false);
 //        String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
 //        return JSON.parseObject(res);
     }
+
     /**
      * @description:21.2. 口味查询
      * @author:
      * @time:
      */
-    public JSONObject taste_search(String taste_name,int page,int size) throws Exception {
+    public JSONObject taste_search(String taste_name, int page, int size) throws Exception {
         String path = "/patrol/taste/search";
         JSONObject json = new JSONObject();
 //        json.put("referer",referer);
-        json.put("taste_name",taste_name);
-        json.put("page",page);
-        json.put("size",size);
+        json.put("taste_name", taste_name);
+        json.put("page", page);
+        json.put("size", size);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
 
     /**
-     *@description: INS口味详情查询
-     *@author:
-     *@time:
+     * @description: INS口味详情查询
+     * @author:
+     * @time:
      */
     public JSONObject seachTasteInfo(Integer id) throws Exception {
         String url = "/patrol/taste/search-info";
         JSONObject json = new JSONObject();
 //        json.put("referer",referer);
-        json.put("id",id);
+        json.put("id", id);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -3688,42 +3683,42 @@ public class MallScenarioUtil extends TestCaseCommon {
         String path = "/patrol/taste/delete";
         JSONObject json = new JSONObject();
 //        json.put("referer",referer);
-        json.put("taste_id",taste_id);
+        json.put("taste_id", taste_id);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res);
     }
 
     /**
-     *@description: INS编辑口味
-     *@author:
-     *@time:
+     * @description: INS编辑口味
+     * @author:
+     * @time:
      */
-    public JSONObject updateTaste(Integer id,String taste_image_path,String head_image_path,String show_image_path,String taste_name,String taste_explain,Integer users,Boolean recommend) throws Exception {
+    public JSONObject updateTaste(Integer id, String taste_image_path, String head_image_path, String show_image_path, String taste_name, String taste_explain, Integer users, Boolean recommend) throws Exception {
         String url = "/patrol/taste/update";
         JSONObject json = new JSONObject();
 //        json.put("referer",referer);
-        json.put("id",id);
-        json.put("taste_image_path",taste_image_path);
-        json.put("head_image_path",head_image_path);
-        json.put("show_image_path",show_image_path);
-        json.put("taste_name",taste_name);
-        json.put("taste_explain",taste_explain);
-        json.put("users",users);
-        json.put("recommend",recommend);
+        json.put("id", id);
+        json.put("taste_image_path", taste_image_path);
+        json.put("head_image_path", head_image_path);
+        json.put("show_image_path", show_image_path);
+        json.put("taste_name", taste_name);
+        json.put("taste_explain", taste_explain);
+        json.put("users", users);
+        json.put("recommend", recommend);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res);
     }
 
     /**
-     *@description: INS编辑口味是否加入排行
-     *@author:
-     *@time:
+     * @description: INS编辑口味是否加入排行
+     * @author:
+     * @time:
      */
-    public JSONObject updateRecommend(Integer id,Boolean recommend) throws Exception {
+    public JSONObject updateRecommend(Integer id, Boolean recommend) throws Exception {
         String url = "/patrol/taste/update-recommend";
         JSONObject json = new JSONObject();
-        json.put("id",id);
-        json.put("recommend",recommend);
+        json.put("id", id);
+        json.put("recommend", recommend);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -3733,141 +3728,142 @@ public class MallScenarioUtil extends TestCaseCommon {
      * @author:
      * @time:
      */
-    public JSONObject taste_add_comment(int taste_id,String comment_user_image_path,String comment_user_name,String comment_message,int comment_stars,boolean visible,List comment_images_path) throws Exception {
+    public JSONObject taste_add_comment(int taste_id, String comment_user_image_path, String comment_user_name, String comment_message, int comment_stars, boolean visible, List comment_images_path) throws Exception {
         String path = "/patrol/taste/add-comment";
         JSONObject json = new JSONObject();
-        json.put("taste_id",taste_id);
-        json.put("comment_user_image_path",comment_user_image_path);
-        json.put("comment_user_name",comment_user_name);
-        json.put("comment_message",comment_message);
-        json.put("comment_stars",comment_stars);
-        json.put("visible",visible);
-        json.put("comment_images_path",comment_images_path);
+        json.put("taste_id", taste_id);
+        json.put("comment_user_image_path", comment_user_image_path);
+        json.put("comment_user_name", comment_user_name);
+        json.put("comment_message", comment_message);
+        json.put("comment_stars", comment_stars);
+        json.put("visible", visible);
+        json.put("comment_images_path", comment_images_path);
 //        String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
 //        return JSON.parseObject(res).getJSONObject("data");
         return invokeApi(path, JSONObject.parseObject(json.toJSONString()), false);
     }
+
     /**
      * @description:21.5. 搜索评论
      * @author:
      * @time:
      */
-    public JSONObject taste_search_comment(Integer taste_id,int page,int size,String taste_name) throws Exception {
+    public JSONObject taste_search_comment(Integer taste_id, int page, int size, String taste_name) throws Exception {
         String path = "/patrol/taste/search-comment";
         JSONObject json = new JSONObject();
-        json.put("taste_id",taste_id);
-        json.put("page",page);
-        json.put("size",size);
-        json.put("taste_name",taste_name);
+        json.put("taste_id", taste_id);
+        json.put("page", page);
+        json.put("size", size);
+        json.put("taste_name", taste_name);
         String res = httpPostWithCheckCode(path, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
 
     /**
-     *@description: INS搜索评论详情
-     *@author:
-     *@time:
+     * @description: INS搜索评论详情
+     * @author:
+     * @time:
      */
     public JSONObject seachCommentInfo(Integer id) throws Exception {
         String url = "/patrol/taste/search-comment-info";
         JSONObject json = new JSONObject();
-        json.put("id",id);
+        json.put("id", id);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
 
     /**
-     *@description: INS编辑评论
-     *@author:
-     *@time:
+     * @description: INS编辑评论
+     * @author:
+     * @time:
      */
-    public JSONObject updateComment(Integer id,String comment_user_image_path,String comment_user_name,String comment_message,Integer comment_stars,Boolean visible,List comment_images_path) throws Exception {
+    public JSONObject updateComment(Integer id, String comment_user_image_path, String comment_user_name, String comment_message, Integer comment_stars, Boolean visible, List comment_images_path) throws Exception {
         String url = "/patrol/taste/update-comment";
         JSONObject json = new JSONObject();
-        json.put("id",id);
-        json.put("comment_user_image_path",comment_user_image_path);
-        json.put("comment_user_name",comment_user_name);
-        json.put("comment_message",comment_message);
-        json.put("comment_stars",comment_stars);
-        json.put("visible",visible);
-        json.put("comment_images_path",comment_images_path);
+        json.put("id", id);
+        json.put("comment_user_image_path", comment_user_image_path);
+        json.put("comment_user_name", comment_user_name);
+        json.put("comment_message", comment_message);
+        json.put("comment_stars", comment_stars);
+        json.put("visible", visible);
+        json.put("comment_images_path", comment_images_path);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
 
     /**
-     *@description: INS编辑评论是否可见
-     *@author:
-     *@time:
+     * @description: INS编辑评论是否可见
+     * @author:
+     * @time:
      */
-    public JSONObject seachCommentVisible(Integer id,Boolean visible) throws Exception {
+    public JSONObject seachCommentVisible(Integer id, Boolean visible) throws Exception {
         String url = "/patrol/taste/update-comment-visible";
         JSONObject json = new JSONObject();
-        json.put("id",id);
-        json.put("visible",visible);
+        json.put("id", id);
+        json.put("visible", visible);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
 
     /**
-     *@description: INS删除评论
-     *@author:
-     *@time:
+     * @description: INS删除评论
+     * @author:
+     * @time:
      */
     public JSONObject deleteComment(Integer comment_id) throws Exception {
         String url = "/patrol/taste/delete-comment";
         JSONObject json = new JSONObject();
-        json.put("comment_id",comment_id);
+        json.put("comment_id", comment_id);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
 
     /**
-     *@description: INS新增门店
-     *@author:
-     *@time:
+     * @description: INS新增门店
+     * @author:
+     * @time:
      */
-    public JSONObject createShop(String shop_image_path,String shop_name,String label,String opening_time,String closing_time,String manager_name,String manager_phone,String district_code,String address,double longitude,double latitude,String tripartite_shop_id,Integer recommended) throws Exception {
+    public JSONObject createShop(String shop_image_path, String shop_name, String label, String opening_time, String closing_time, String manager_name, String manager_phone, String district_code, String address, double longitude, double latitude, String tripartite_shop_id, Integer recommended) throws Exception {
         String url = "/patrol/shop/create";
         JSONObject json = new JSONObject();
-        json.put("shop_image_path",shop_image_path);
-        json.put("shop_name",shop_name);
-        json.put("label",label);
-        json.put("opening_time",opening_time);
-        json.put("closing_time",closing_time);
-        json.put("manager_name",manager_name);
-        json.put("manager_phone",manager_phone);
-        json.put("district_code",district_code);
-        json.put("address",address);
-        json.put("longitude",longitude);
-        json.put("latitude",latitude);
-        json.put("tripartite_shop_id",tripartite_shop_id);
-        json.put("recommended",recommended);
+        json.put("shop_image_path", shop_image_path);
+        json.put("shop_name", shop_name);
+        json.put("label", label);
+        json.put("opening_time", opening_time);
+        json.put("closing_time", closing_time);
+        json.put("manager_name", manager_name);
+        json.put("manager_phone", manager_phone);
+        json.put("district_code", district_code);
+        json.put("address", address);
+        json.put("longitude", longitude);
+        json.put("latitude", latitude);
+        json.put("tripartite_shop_id", tripartite_shop_id);
+        json.put("recommended", recommended);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
 
     /**
-     *@description: INS新增门店
-     *@author:
-     *@time:
+     * @description: INS新增门店
+     * @author:
+     * @time:
      */
-    public JSONObject createShop0(String shop_image_path,String shop_name,String label,String opening_time,String closing_time,String manager_name,String manager_phone,String district_code,String address,double longitude,double latitude,String tripartite_shop_id,Integer recommended) throws Exception {
+    public JSONObject createShop0(String shop_image_path, String shop_name, String label, String opening_time, String closing_time, String manager_name, String manager_phone, String district_code, String address, double longitude, double latitude, String tripartite_shop_id, Integer recommended) throws Exception {
         String url = "/patrol/shop/create";
         JSONObject json = new JSONObject();
-        json.put("shop_image_path",shop_image_path);
-        json.put("shop_name",shop_name);
-        json.put("label",label);
-        json.put("opening_time",opening_time);
-        json.put("closing_time",closing_time);
-        json.put("manager_name",manager_name);
-        json.put("manager_phone",manager_phone);
-        json.put("district_code",district_code);
-        json.put("address",address);
-        json.put("longitude",longitude);
-        json.put("latitude",latitude);
-        json.put("tripartite_shop_id",tripartite_shop_id);
-        json.put("recommended",recommended);
+        json.put("shop_image_path", shop_image_path);
+        json.put("shop_name", shop_name);
+        json.put("label", label);
+        json.put("opening_time", opening_time);
+        json.put("closing_time", closing_time);
+        json.put("manager_name", manager_name);
+        json.put("manager_phone", manager_phone);
+        json.put("district_code", district_code);
+        json.put("address", address);
+        json.put("longitude", longitude);
+        json.put("latitude", latitude);
+        json.put("tripartite_shop_id", tripartite_shop_id);
+        json.put("recommended", recommended);
         String res = httpPost(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res);
     }
@@ -3880,153 +3876,154 @@ public class MallScenarioUtil extends TestCaseCommon {
         object.put("pic", pic);
         return invokeApi(path, object);
     }
+
     /**
-     *@description: INS搜索门店
-     *@author:
-     *@time:
+     * @description: INS搜索门店
+     * @author:
+     * @time:
      */
-    public JSONObject searchShop(String shop_name,String manager_name,String city,Boolean is_show,int page,int size) throws Exception {
+    public JSONObject searchShop(String shop_name, String manager_name, String city, Boolean is_show, int page, int size) throws Exception {
         String url = "/patrol/shop/search";
         JSONObject json = new JSONObject();
-        json.put("shop_name",shop_name);
-        json.put("manager_name",manager_name);
-        json.put("city",city);
-        json.put("is_show",is_show);
-        json.put("page",page);
-        json.put("size",size);
+        json.put("shop_name", shop_name);
+        json.put("manager_name", manager_name);
+        json.put("city", city);
+        json.put("is_show", is_show);
+        json.put("page", page);
+        json.put("size", size);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
 
     /**
-     *@description: INS搜索门店详情
-     *@author:
-     *@time:
+     * @description: INS搜索门店详情
+     * @author:
+     * @time:
      */
     public JSONObject searchShopInfo(Integer id) throws Exception {
         String url = "/patrol/shop/search-info";
         JSONObject json = new JSONObject();
-        json.put("id",id);
+        json.put("id", id);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
 
     /**
-     *@description: INS编辑门店
-     *@author:
-     *@time:
+     * @description: INS编辑门店
+     * @author:
+     * @time:
      */
-    public JSONObject updateShop(Integer id,String shop_image_path,String shop_name,String label,String opening_time,String closing_time,String manager_name,String manager_phone,String district_code,String address,double longitude,double latitude,String tripartite_shop_id,Integer recommended) throws Exception {
+    public JSONObject updateShop(Integer id, String shop_image_path, String shop_name, String label, String opening_time, String closing_time, String manager_name, String manager_phone, String district_code, String address, double longitude, double latitude, String tripartite_shop_id, Integer recommended) throws Exception {
         String url = "/patrol/shop/update";
         JSONObject json = new JSONObject();
-        json.put("id",id);
-        json.put("shop_image_path",shop_image_path);
-        json.put("shop_name",shop_name);
-        json.put("label",label);
-        json.put("opening_time",opening_time);
-        json.put("closing_time",closing_time);
-        json.put("manager_name",manager_name);
-        json.put("manager_phone",manager_phone);
-        json.put("district_code",district_code);
-        json.put("address",address);
-        json.put("longitude",longitude);
-        json.put("latitude",latitude);
-        json.put("tripartite_shop_id",tripartite_shop_id);
-        json.put("recommended",recommended);
+        json.put("id", id);
+        json.put("shop_image_path", shop_image_path);
+        json.put("shop_name", shop_name);
+        json.put("label", label);
+        json.put("opening_time", opening_time);
+        json.put("closing_time", closing_time);
+        json.put("manager_name", manager_name);
+        json.put("manager_phone", manager_phone);
+        json.put("district_code", district_code);
+        json.put("address", address);
+        json.put("longitude", longitude);
+        json.put("latitude", latitude);
+        json.put("tripartite_shop_id", tripartite_shop_id);
+        json.put("recommended", recommended);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
 
     /**
-     *@description: INS编辑门店状态
-     *@author:
-     *@time:
+     * @description: INS编辑门店状态
+     * @author:
+     * @time:
      */
-    public JSONObject updateStatus(Integer id,Boolean is_show) throws Exception {
+    public JSONObject updateStatus(Integer id, Boolean is_show) throws Exception {
         String url = "/patrol/shop/update-status";
         JSONObject json = new JSONObject();
-        json.put("id",id);
-        json.put("is_show",is_show);
+        json.put("id", id);
+        json.put("is_show", is_show);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
 
 
     /**
-     *@description: INS删除门店
-     *@author:
-     *@time:
+     * @description: INS删除门店
+     * @author:
+     * @time:
      */
     public JSONObject deleteShop(Integer shop_id) throws Exception {
         String url = "/patrol/shop/delete";
         JSONObject json = new JSONObject();
-        json.put("shop_id",shop_id);
+        json.put("shop_id", shop_id);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
 
     /**
-     *@description: INS反馈列表查询
-     *@author:
-     *@time:
+     * @description: INS反馈列表查询
+     * @author:
+     * @time:
      */
-    public JSONObject feedbackList(String user_name,Integer feedback_type_id,int page,int size) throws Exception {
+    public JSONObject feedbackList(String user_name, Integer feedback_type_id, int page, int size) throws Exception {
         String url = "/patrol/feedback/list";
         JSONObject json = new JSONObject();
 
-        json.put("user_name",user_name);
-        json.put("feedback_type_id",feedback_type_id);
-        json.put("page",page);
-        json.put("size",size);
+        json.put("user_name", user_name);
+        json.put("feedback_type_id", feedback_type_id);
+        json.put("page", page);
+        json.put("size", size);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
 
 
     /**
-     *@description: INS添加礼品
-     *@time:
+     * @description: INS添加礼品
+     * @time:
      */
-    public JSONObject addGift(Integer feedback_id,String feedback_gift) throws Exception {
+    public JSONObject addGift(Integer feedback_id, String feedback_gift) throws Exception {
         String url = "/patrol/feedback/add-gift";
         JSONObject json = new JSONObject();
-        json.put("feedback_id",feedback_id);
-        json.put("feedback_gift",feedback_gift);
+        json.put("feedback_id", feedback_id);
+        json.put("feedback_gift", feedback_gift);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
 
     /**
-     *@description: INS修改是否展示反馈
-     *@time:
+     * @description: INS修改是否展示反馈
+     * @time:
      */
-    public JSONObject updateVisible(Integer feedback_id,Boolean visible) throws Exception {
+    public JSONObject updateVisible(Integer feedback_id, Boolean visible) throws Exception {
         String url = "/patrol/feedback/update-visible";
         JSONObject json = new JSONObject();
-        json.put("feedback_id",feedback_id);
-        json.put("visible",visible);
+        json.put("feedback_id", feedback_id);
+        json.put("visible", visible);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
 
     /**
-     *@description: INS编辑反馈类型
-     *@time:
+     * @description: INS编辑反馈类型
+     * @time:
      */
-    public JSONObject updateFeedbackType(String feedback_type_id,String feedback_type,String feedback_message) throws Exception {
+    public JSONObject updateFeedbackType(String feedback_type_id, String feedback_type, String feedback_message) throws Exception {
         String url = "/patrol/feedback/feedback-type/update";
         JSONObject json = new JSONObject();
-        json.put("feedback_type_id",feedback_type_id);
-        json.put("feedback_type",feedback_type);
-        json.put("feedback_message",feedback_message);
+        json.put("feedback_type_id", feedback_type_id);
+        json.put("feedback_type", feedback_type);
+        json.put("feedback_message", feedback_message);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
 
     /**
-     *@description: 获取所有反馈类型
-     *@author:
-     *@time:
+     * @description: 获取所有反馈类型
+     * @author:
+     * @time:
      */
     public JSONObject feedbackTypeAll() throws Exception {
         String url = "/patrol/feedback/feedback-type/query-all";
@@ -4037,66 +4034,65 @@ public class MallScenarioUtil extends TestCaseCommon {
     }
 
     /**
-     *@description: INS反馈类型列表查询
-     *@time:
+     * @description: INS反馈类型列表查询
+     * @time:
      */
-    public JSONObject feedList(String feedback_type,int page,int size) throws Exception {
+    public JSONObject feedList(String feedback_type, int page, int size) throws Exception {
         String url = "/patrol/feedback/feedback-type/list";
         JSONObject json = new JSONObject();
-        json.put("feedback_type",feedback_type);
-        json.put("page",page);
-        json.put("size",size);
+        json.put("feedback_type", feedback_type);
+        json.put("page", page);
+        json.put("size", size);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
 
     /**
-     *@description: INS反馈类型详情查询
-     *@time:
+     * @description: INS反馈类型详情查询
+     * @time:
      */
     public JSONObject feedbackInfo(int id) throws Exception {
         String url = "/patrol/feedback/feedback-type/info";
         JSONObject json = new JSONObject();
-        json.put("id",id);
+        json.put("id", id);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
-
-
 
 
     //---------------------------------购物中心新加，通用的在上方----------------------------------
+
     /**
-     *@description: 获取到店趋势数据 天级别
-     *@time:
+     * @description: 获取到店趋势数据 天级别
+     * @time:
      */
-    public JSONObject dayTrendPvUv(String day,int shop_id) throws Exception {
+    public JSONObject dayTrendPvUv(String day, int shop_id) throws Exception {
         String url = "/mall/history/shop/day/trend-pv-uv";
         JSONObject json = new JSONObject();
-        json.put("day",day);
-        json.put("shop_id",shop_id);
+        json.put("day", day);
+        json.put("shop_id", shop_id);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
 
     /**
-     *@description: 历史数据-区域图片
-     *@time:
+     * @description: 历史数据-区域图片
+     * @time:
      */
-    public JSONObject regionMap(String day,String date_type,int shop_id) throws Exception {
+    public JSONObject regionMap(String day, String date_type, int shop_id) throws Exception {
         String url = "/mall/history/shop/day/region-map";
         JSONObject json = new JSONObject();
-        json.put("day",day);
-        json.put("date_type",date_type);
-        json.put("shop_id",shop_id);
+        json.put("day", day);
+        json.put("date_type", date_type);
+        json.put("shop_id", shop_id);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
 
 
     /**
-     *@description: 楼层列表
-     *@time:
+     * @description: 楼层列表
+     * @time:
      */
     public JSONObject floor_list() throws Exception {
         String url = "/mall/shop/floor-list";
@@ -4104,17 +4100,18 @@ public class MallScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     /**
-     *@description: 楼层导航
-     *@time:
+     * @description: 楼层导航
+     * @time:
      */
-    public JSONObject shop_list(String name,Integer floor_id,int page,int size) throws Exception {
+    public JSONObject shop_list(String name, Integer floor_id, int page, int size) throws Exception {
         String url = "/mall/shop/shop-navigation";
         JSONObject json = new JSONObject();
-        json.put("name",name);
-        json.put("floor_id",floor_id);
-        json.put("page",page);
-        json.put("size",size);
+        json.put("name", name);
+        json.put("floor_id", floor_id);
+        json.put("page", page);
+        json.put("size", size);
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }

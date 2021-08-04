@@ -41,7 +41,7 @@ import java.util.Random;
 
 public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
 
-    private static final EnumTestProduct product = EnumTestProduct.JC_DAILY;
+    private static final EnumTestProduct product = EnumTestProduct.JC_DAILY_ZH;
     private VisitorProxy visitor = new VisitorProxy(product);
 
     ScenarioUtil jc = ScenarioUtil.getInstance();
@@ -53,7 +53,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
     private QADbProxy qaDbProxy = QADbProxy.getInstance();
     public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
     CommonConfig commonConfig = new CommonConfig();
-    public String IpPort = EnumTestProduct.JC_DAILY.getPort();
+    public String IpPort = EnumTestProduct.JC_DAILY_ZH.getIp();
 
 
     /**
@@ -69,8 +69,8 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.referer = EnumTestProduct.JC_DAILY.getReferer();
-        commonConfig.product = EnumTestProduct.JC_DAILY.getAbbreviation();
+        commonConfig.referer = EnumTestProduct.JC_DAILY_ZH.getReferer();
+        commonConfig.product = EnumTestProduct.JC_DAILY_ZH.getAbbreviation();
 
         //replace backend gateway url
         //commonConfig.gateway = "";
@@ -79,7 +79,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.JC_DAILY.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.JC_DAILY_ZH.getDesc() + commonConfig.checklistQaOwner);
 
 
         //replace ding push conf
@@ -106,7 +106,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         object.put("phone", username);
         object.put("verification_code", password);
         commonConfig.roleId = roleId;
-        httpPost(path, object, EnumTestProduct.JC_DAILY.getPort());
+        httpPost(EnumTestProduct.JC_DAILY_ZH.getIp(), path, object);
     }
 
     //pc登录
@@ -116,7 +116,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         object.put("phone", phone);
         object.put("verification_code", verificationCode);
         commonConfig.roleId = roleId;
-        httpPost(path, object, EnumTestProduct.JC_DAILY.getPort());
+        httpPost(EnumTestProduct.JC_DAILY_ZH.getIp(), path, object);
     }
 
     @AfterClass
@@ -780,7 +780,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test(enabled = false, description = "导入潜客,参数全填正常")
-    public void  importPotentialCustomer5000() {
+    public void importPotentialCustomer5000() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String[] parm = {

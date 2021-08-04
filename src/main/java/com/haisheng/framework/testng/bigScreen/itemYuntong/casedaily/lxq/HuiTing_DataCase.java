@@ -9,7 +9,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklis
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.YunTongInfo;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.general.GeneralEnumValueListScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.VoiceDetailScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.VoiceEvaluationPageScene;
@@ -38,7 +38,7 @@ import java.util.List;
  * @date 2021/1/29 11:17
  */
 public class HuiTing_DataCase extends TestCaseCommon implements TestCaseStd {
-    EnumTestProduct PRODUCE = EnumTestProduct.YT_DAILY_SSO;
+    EnumTestProduct PRODUCE = EnumTestProduct.YT_DAILY_ZH;
     EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_DAILY;
     VisitorProxy visitor = new VisitorProxy(PRODUCE);
     SceneUtil businessUtil = new SceneUtil(visitor);

@@ -12,7 +12,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.voucher.Apply
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.voucher.ApplyPageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherDetailBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherFormVoucherPageBean;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityApprovalStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.financial.ApplyTypeEnum;
@@ -28,8 +28,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.Appl
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.AddVoucherScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.AdditionalRecordScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherFormVoucherPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -53,8 +52,7 @@ public class ApproveManagerCaseOnline extends TestCaseCommon implements TestCase
     private static final EnumTestProduct PRODUCE = EnumTestProduct.JC_ONLINE;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.JC_ALL_AUTHORITY_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
-    public UserUtil user = new UserUtil(visitor);
-    public SupporterUtil util = new SupporterUtil(visitor);
+    public SceneUtil util = new SceneUtil(visitor);
 
     @BeforeClass
     @Override
@@ -88,7 +86,7 @@ public class ApproveManagerCaseOnline extends TestCaseCommon implements TestCase
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-        user.loginPc(ALL_AUTHORITY);
+        util.loginPc(ALL_AUTHORITY);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
@@ -100,7 +98,7 @@ public class ApproveManagerCaseOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene applyPageScene = ApplyPageScene.builder().build();
-            List<ApplyPageBean> applyPageList = util.toJavaObjectList(applyPageScene, ApplyPageBean.class, SupporterUtil.SIZE);
+            List<ApplyPageBean> applyPageList = util.toJavaObjectList(applyPageScene, ApplyPageBean.class, SceneUtil.SIZE);
             applyPageList.forEach(applyPage -> {
                 String voucherName = applyPage.getName();
                 Integer num = applyPage.getNum();
@@ -124,7 +122,7 @@ public class ApproveManagerCaseOnline extends TestCaseCommon implements TestCase
         try {
             //卡券列表
             IScene voucherPageScene = VoucherFormVoucherPageScene.builder().build();
-            List<com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherFormVoucherPageBean> voucherPageList = util.toJavaObjectList(voucherPageScene, com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherFormVoucherPageBean.class, SupporterUtil.SIZE);
+            List<com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherFormVoucherPageBean> voucherPageList = util.toJavaObjectList(voucherPageScene, com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherFormVoucherPageBean.class, SceneUtil.SIZE);
             voucherPageList.forEach(voucherPage -> {
                 VoucherDetailBean voucherDetail = util.getVoucherDetail(voucherPage.getVoucherId());
                 String voucherName = voucherPage.getVoucherName();
@@ -148,7 +146,7 @@ public class ApproveManagerCaseOnline extends TestCaseCommon implements TestCase
         try {
             //卡券列表
             IScene voucherPageScene = VoucherFormVoucherPageScene.builder().build();
-            List<VoucherFormVoucherPageBean> voucherPageList = util.toJavaObjectList(voucherPageScene, VoucherFormVoucherPageBean.class, SupporterUtil.SIZE);
+            List<VoucherFormVoucherPageBean> voucherPageList = util.toJavaObjectList(voucherPageScene, VoucherFormVoucherPageBean.class, SceneUtil.SIZE);
             voucherPageList.forEach(voucherPage -> {
                 CommonUtil.valueView(voucherPage.getVoucherName());
                 VoucherDetailBean voucherDetail = util.getVoucherDetail(voucherPage.getVoucherId());
@@ -295,7 +293,7 @@ public class ApproveManagerCaseOnline extends TestCaseCommon implements TestCase
             //创建2个待审批数据
             Arrays.stream(VoucherTypeEnum.values()).collect(Collectors.toList()).subList(0, 2).forEach(e -> util.createVoucher(1, e));
             IScene applyPageScene = ApplyPageScene.builder().status(ApplyStatusEnum.AUDITING.getId()).build();
-            List<ApplyPageBean> applyPageBeanList = util.toJavaObjectList(applyPageScene, ApplyPageBean.class, SupporterUtil.SIZE).subList(0, 2);
+            List<ApplyPageBean> applyPageBeanList = util.toJavaObjectList(applyPageScene, ApplyPageBean.class, SceneUtil.SIZE).subList(0, 2);
             List<Long> applyIdList = applyPageBeanList.stream().map(ApplyPageBean::getId).collect(Collectors.toList());
             List<Long> voucherIdList = applyPageBeanList.stream().map(ApplyPageBean::getVoucherId).collect(Collectors.toList());
             //批量审批通过
@@ -334,7 +332,7 @@ public class ApproveManagerCaseOnline extends TestCaseCommon implements TestCase
             //创建2个待审批数据
             Arrays.stream(VoucherTypeEnum.values()).collect(Collectors.toList()).subList(0, 2).forEach(e -> util.createVoucher(1, e));
             IScene applyPageScene = ApplyPageScene.builder().status(ApplyStatusEnum.AUDITING.getId()).build();
-            List<ApplyPageBean> applyPageBeanList = util.toJavaObjectList(applyPageScene, ApplyPageBean.class, SupporterUtil.SIZE).subList(0, 2);
+            List<ApplyPageBean> applyPageBeanList = util.toJavaObjectList(applyPageScene, ApplyPageBean.class, SceneUtil.SIZE).subList(0, 2);
             List<Long> applyIdList = applyPageBeanList.stream().map(ApplyPageBean::getId).collect(Collectors.toList());
             List<Long> voucherIdList = applyPageBeanList.stream().map(ApplyPageBean::getVoucherId).collect(Collectors.toList());
             //批量审批不通过

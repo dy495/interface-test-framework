@@ -24,8 +24,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.customermana
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpload;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.ChangeProvideStatusScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.InvalidVoucherScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -45,13 +44,12 @@ import java.util.List;
 
 public class ActivityManage extends TestCaseCommon implements TestCaseStd {
     ScenarioUtil jc = new ScenarioUtil();
-    private static final EnumTestProduct product = EnumTestProduct.JC_DAILY;
+    private static final EnumTestProduct product = EnumTestProduct.JC_DAILY_JD;
     //    private static final EnumAppletToken APPLET_USER = EnumAppletToken.JC_GLY_DAILY;
     public VisitorProxy visitor = new VisitorProxy(product);
     BusinessUtil businessUtil = new BusinessUtil(visitor);
-    SupporterUtil supporterUtil = new SupporterUtil(visitor);
+    SceneUtil supporterUtil = new SceneUtil(visitor);
     PublicParameter pp = new PublicParameter();
-    UserUtil user = new UserUtil(visitor);
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
@@ -134,7 +132,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             String title = businessUtil.getRecruitActivityDetailDate1(activityId2).getString("title");
             System.err.println("----------title:" + title);
             //登录小程序
-            user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+            supporterUtil.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             //获取小程序推荐列表  判断裂变活动是否创建成功
             do {
                 IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
@@ -185,7 +183,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             String title = businessUtil.getRecruitActivityDetailDate1(activityId).getString("title");
             System.err.println("----------title:" + title);
             //登录小程序
-            user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+            supporterUtil.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             //小程序报名此活动
             businessUtil.activityRegisterApplet(activityId, "13436941018", "雪晴", 2, "1513814362@qq.com", "22", "女", "其他", title);
             //登录PC
@@ -198,7 +196,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             String voucherCode = voucherSendRecord.getVoucherCode();
             System.err.println("-----获取卡券码-----" + voucherCode);
             //登录小程序
-            user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+            supporterUtil.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             System.err.println("AD:" + activityId + "      title:" + title);
             //获取【我的卡券】列表条数
 //            int numBefore=jc.appletVoucherList(null,"GENERAL",100).getJSONArray("list").size();
@@ -253,7 +251,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                 //审批通过
                 businessUtil.getApprovalPassed(activityId);
                 //登陆小程序
-                user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+                supporterUtil.loginApplet(EnumAppletToken.JC_GLY_DAILY);
                 businessUtil.activityRegisterApplet(activityId, "13373166806", "郭丽雅", 2, "1513814362@qq.com", "22", "女", "其他");
             }
         } catch (AssertionError | Exception e) {
@@ -605,7 +603,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             //审批通过招募活动
             businessUtil.getApprovalPassed(activityId);
             //登录小程序
-            user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+            supporterUtil.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             //小程序报名此活动
             businessUtil.activityRegisterApplet(activityId);
             //登录PC
@@ -1098,7 +1096,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             //获取一个卡券
             Long voucherId = businessUtil.getVoucherId();
             List<String> picList = new ArrayList<>();
-            SupporterUtil supporterUtil = new SupporterUtil(visitor);
+            SceneUtil supporterUtil = new SceneUtil(visitor);
             PublicParameter pp = new PublicParameter();
             picList.add(businessUtil.getPicPath());
             //填写报名所需要信息
@@ -1268,7 +1266,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             //获取一个卡券
             Long voucherId = businessUtil.getVoucherId();
             List<String> picList = new ArrayList<>();
-            SupporterUtil supporterUtil = new SupporterUtil(visitor);
+            SceneUtil supporterUtil = new SceneUtil(visitor);
             PublicParameter pp = new PublicParameter();
             picList.add(businessUtil.getPicPath());
             //填写报名所需要信息
@@ -1423,7 +1421,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             String message = visitor.invokeApi(scene, false).getString("message");
             System.out.println(title + "-------" + message);
             //小程序中第一个为此活动
-            user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+            supporterUtil.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             JSONObject response = businessUtil.appointmentActivityTitleNew();
             String title1 = response.getJSONArray("list").getJSONObject(0).getString("title");
             Preconditions.checkArgument(title1.equals(title), "PC进行中活动的标题为：" + title + "小程序中的更多中的活动标题为：" + title1);
@@ -1545,7 +1543,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             String message = visitor.invokeApi(scene, false).getString("message");
             System.out.println(title + "-------" + message);
             //小程序中第一个为此活动
-            user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+            supporterUtil.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             JSONObject response = businessUtil.appointmentActivityTitleNew();
             String title1 = response.getJSONArray("list").getJSONObject(0).getString("title");
             Preconditions.checkArgument(title1.equals(title), "PC未开始活动的ID为：" + title + "小程序中的更多中的活动ID为：" + title);
@@ -1813,7 +1811,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             List<Long> ids = businessUtil.getFissionActivityRevoke();
             System.err.println("----ids:" + ids.get(0));
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-            SupporterUtil supporterUtil = new SupporterUtil(visitor);
+            SceneUtil supporterUtil = new SceneUtil(visitor);
             PublicParameter pp = new PublicParameter();
             List<String> picList = new ArrayList<>();
             picList.add(businessUtil.getPicPath());
@@ -1933,7 +1931,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             List<Long> ids = businessUtil.getFissionActivityReject();
             System.err.println("----ids:" + ids.get(0));
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-            SupporterUtil supporterUtil = new SupporterUtil(visitor);
+            SceneUtil supporterUtil = new SceneUtil(visitor);
             PublicParameter pp = new PublicParameter();
             List<String> picList = new ArrayList<>();
             picList.add(businessUtil.getPicPath());
@@ -2064,7 +2062,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             String message = visitor.invokeApi(scene, false).getString("message");
             System.out.println(title + "-------" + message);
             //小程序中第一个为此活动
-            user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+            supporterUtil.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             JSONObject response = businessUtil.appointmentActivityTitleNew();
             String title1 = response.getJSONArray("list").getJSONObject(0).getString("title");
             Preconditions.checkArgument(title1.equals(title), "PC进行中活动的名称为：" + title + "小程序中的更多中的活动名称为：" + title1);
@@ -2190,7 +2188,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                 IScene scene = ActivityManageTopScene.builder().id(id).build();
                 String message = visitor.invokeApi(scene, false).getString("message");
                 //小程序中第一个为此活动
-                user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+                supporterUtil.loginApplet(EnumAppletToken.JC_GLY_DAILY);
                 JSONObject response = businessUtil.appointmentActivityTitleNew();
                 System.err.println(response);
                 String title1 = response.getJSONArray("list").getJSONObject(0).getString("title");
@@ -2729,7 +2727,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             labels.add(2000);
             labels.add(3000);
             List<String> picList = new ArrayList<>();
-            SupporterUtil supporterUtil = new SupporterUtil(visitor);
+            SceneUtil supporterUtil = new SceneUtil(visitor);
             PublicParameter pp = new PublicParameter();
             picList.add(0, supporterUtil.getPicPath());
             //填写报名所需要信息
@@ -2807,7 +2805,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             labels.add(2000);
             labels.add(3000);
             List<String> picList = new ArrayList<>();
-            SupporterUtil supporterUtil = new SupporterUtil(visitor);
+            SceneUtil supporterUtil = new SceneUtil(visitor);
             PublicParameter pp = new PublicParameter();
             picList.add(0, supporterUtil.getPicPath());
             //填写报名所需要信息
@@ -2885,7 +2883,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             labels.add(2000);
             labels.add(3000);
             List<String> picList = new ArrayList<>();
-            SupporterUtil supporterUtil = new SupporterUtil(visitor);
+            SceneUtil supporterUtil = new SceneUtil(visitor);
             PublicParameter pp = new PublicParameter();
             picList.add(0, supporterUtil.getPicPath());
             //填写报名所需要信息
@@ -2960,7 +2958,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             labels.add(2000);
             labels.add(3000);
             List<String> picList = new ArrayList<>();
-            SupporterUtil supporterUtil = new SupporterUtil(visitor);
+            SceneUtil supporterUtil = new SceneUtil(visitor);
             PublicParameter pp = new PublicParameter();
             picList.add(0, supporterUtil.getPicPath());
             //填写报名所需要信息
@@ -3038,7 +3036,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             labels.add(2000);
             labels.add(3000);
             List<String> picList = new ArrayList<>();
-            SupporterUtil supporterUtil = new SupporterUtil(visitor);
+            SceneUtil supporterUtil = new SceneUtil(visitor);
             PublicParameter pp = new PublicParameter();
             picList.add(0, supporterUtil.getPicPath());
             //填写报名所需要信息
@@ -3118,7 +3116,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             labels.add(2000);
             labels.add(3000);
             List<String> picList = new ArrayList<>();
-            SupporterUtil supporterUtil = new SupporterUtil(visitor);
+            SceneUtil supporterUtil = new SceneUtil(visitor);
             PublicParameter pp = new PublicParameter();
             picList.add(0, supporterUtil.getPicPath());
             //填写报名所需要信息
@@ -3191,7 +3189,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                     .status(VoucherStatusEnum.INVALIDED).buildVoucher().getVoucherId();
             //创建招募活动
             List<String> picList = new ArrayList<>();
-            SupporterUtil supporterUtil = new SupporterUtil(visitor);
+            SceneUtil supporterUtil = new SceneUtil(visitor);
             PublicParameter pp = new PublicParameter();
             picList.add(0, supporterUtil.getPicPath());
             //填写报名所需要信息
@@ -3262,7 +3260,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                     .status(VoucherStatusEnum.SELL_OUT).buildVoucher().getVoucherId();
             //创建招募活动
             List<String> picList = new ArrayList<>();
-            SupporterUtil supporterUtil = new SupporterUtil(visitor);
+            SceneUtil supporterUtil = new SceneUtil(visitor);
             PublicParameter pp = new PublicParameter();
             picList.add(0, supporterUtil.getPicPath());
             //填写报名所需要信息
@@ -3333,7 +3331,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                     .status(VoucherStatusEnum.STOP).buildVoucher().getVoucherId();
             //创建招募活动
             List<String> picList = new ArrayList<>();
-            SupporterUtil supporterUtil = new SupporterUtil(visitor);
+            SceneUtil supporterUtil = new SceneUtil(visitor);
             PublicParameter pp = new PublicParameter();
             picList.add(0, supporterUtil.getPicPath());
             //填写报名所需要信息
@@ -3411,7 +3409,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             labels.add(100);
             labels.add(2000);
             labels.add(3000);
-            SupporterUtil supporterUtil = new SupporterUtil(visitor);
+            SceneUtil supporterUtil = new SceneUtil(visitor);
             PublicParameter pp = new PublicParameter();
             List<String> picList = new ArrayList<>();
             picList.add(supporterUtil.getPicPath());
@@ -3461,7 +3459,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             labels.add(2000);
             labels.add(3000);
             List<String> picList = new ArrayList<>();
-            SupporterUtil supporterUtil = new SupporterUtil(visitor);
+            SceneUtil supporterUtil = new SceneUtil(visitor);
             PublicParameter pp = new PublicParameter();
             picList.add(0, supporterUtil.getPicPath());
             //填写报名所需要信息
@@ -3538,7 +3536,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             String[][] label = {{"CAR_WELFARE", "车福利"}, {"CAR_INFORMATION", "车资讯"}, {"CAR_LIFE", "车生活"}, {"CAR_ACVITITY", "车活动"}, {"CAR_KNOWLEDGE", "车知识"}};
             for (int i = 0; i < label.length; i++) {
                 System.err.println(label.length + "-------" + 1);
-                SupporterUtil supporterUtil = new SupporterUtil(visitor);
+                SceneUtil supporterUtil = new SceneUtil(visitor);
                 PublicParameter pp = new PublicParameter();
                 List<String> picList = new ArrayList<>();
                 picList.add(supporterUtil.getPicPath());
@@ -3589,7 +3587,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             labels.add(2000);
             labels.add(3000);
             List<String> picList = new ArrayList<>();
-            SupporterUtil supporterUtil = new SupporterUtil(visitor);
+            SceneUtil supporterUtil = new SceneUtil(visitor);
             PublicParameter pp = new PublicParameter();
             picList.add(0, supporterUtil.getPicPath());
             //填写报名所需要信息
@@ -3809,7 +3807,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             VoucherSendRecord voucherSendRecord = supporterUtil.getVoucherSendRecord(voucherId);
             String voucherCode = voucherSendRecord.getVoucherCode();
             //登录小程序
-            user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+            supporterUtil.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             //查看小程序中此活动对应的小喇叭中的卡券的状态
             String isReceived = businessUtil.articleVoucher(activityId);
             //查询是否获得此卡券(通过卡券码查询，看看能否有此卡券的返回值)
@@ -3905,7 +3903,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             //转化PC中的活动我ID为小策划共内需中的活动ID
             Long transId = businessUtil.appointmentActivityId(activityId);
             //登录小程序
-            user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+            supporterUtil.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             //查看小程序中此活动对应的小喇叭中的卡券的状态
             String isReceivedBefore = businessUtil.articleVoucher(activityId);
             //小程序中手动领取优惠券
@@ -3922,7 +3920,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             String voucherCode = voucherSendRecord.getVoucherCode();
             System.err.println("-----获取卡券码-----" + voucherCode);
             //登录小程序
-            user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+            supporterUtil.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             //查询是否获得此卡券(通过卡券码查询，看看能否有此卡券的返回值)
             AppletVoucherInfo voucher = supporterUtil.getAppletVoucherInfo(voucherCode);
             String code = voucher.getVoucherCode();
@@ -4013,7 +4011,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             //作废卡券
             visitor.invokeApi(InvalidVoucherScene.builder().id(voucherId).build());
             //登录小程序
-            user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+            supporterUtil.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             //查看小程序中此活动对应的小喇叭中的卡券的状态
             String isReceivedBefore = businessUtil.articleVoucher(activityId);
             //小程序中手动领取优惠券
@@ -4111,7 +4109,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             IScene changeProvideStatusScene = ChangeProvideStatusScene.builder().id(voucherId).isStart(false).build();
             visitor.invokeApi(changeProvideStatusScene);
             //登录小程序
-            user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+            supporterUtil.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             //查看小程序中此活动对应的小喇叭中的卡券的状态
             String isReceivedBefore = businessUtil.articleVoucher(activityId);
             //小程序中手动领取优惠券
@@ -4143,7 +4141,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
     public void ContentMarketingAdd() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            SupporterUtil supporterUtil = new SupporterUtil(visitor);
+            SceneUtil supporterUtil = new SceneUtil(visitor);
             List<String> picList = new ArrayList<>();
             picList.add(0, businessUtil.getPicPath());
             String[][] label = {{"CAR_WELFARE", "车福利"}, {"CAR_INFORMATION", "车资讯"}, {"CAR_LIFE", "车生活"}, {"CAR_ACVITITY", "车活动"}, {"CAR_KNOWLEDGE", "车知识"}};
@@ -4597,7 +4595,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             String message = visitor.invokeApi(scene, false).getString("message");
             System.out.println(title + "-------" + message);
             //小程序中第一个为此活动
-            user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+            supporterUtil.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             JSONObject response = businessUtil.appointmentActivityTitleNew();
             String title1 = response.getJSONArray("list").getJSONObject(0).getString("title");
             Preconditions.checkArgument(title1.equals(title), "PC进行中活动的名称为：" + title + "小程序中的更多中的活动名称为：" + title1);
@@ -4699,7 +4697,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             //获取活动的状态
             int statusOffLine = businessUtil.getActivityStatus(id);
             //登录小程序
-            user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+            supporterUtil.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             //获取小程序推荐列表
             do {
                 IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
@@ -4727,7 +4725,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             IScene scene = ActivityManageTopScene.builder().id(id).build();
             visitor.invokeApi(scene, false).getString("message");
             //小程序中第一个为此活动
-            user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+            supporterUtil.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             JSONObject response = businessUtil.appointmentActivityTitleNew();
             String title2 = response.getJSONArray("list").getJSONObject(0).getString("title");
             Preconditions.checkArgument(statusOnLine == ActivityStatusEnum.PASSED.getId() && message1.equals("success"), "上架以后活动的状态为：" + statusOnLine);
@@ -4780,7 +4778,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             String message = visitor.invokeApi(scene, false).getString("message");
             System.out.println(title + "-------" + message);
             //小程序中第一个为此活动
-            user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+            supporterUtil.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             JSONObject response = businessUtil.appointmentActivityTitleNew();
             String title1 = response.getJSONArray("list").getJSONObject(0).getString("title");
             Preconditions.checkArgument(title1.equals(title), "PC未开始活动的ID为：" + title + "小程序中的更多中的活动ID为：" + title);
@@ -4884,7 +4882,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             //获取活动的状态
             int statusOffLine = businessUtil.getActivityStatus(id);
             //登录小程序
-            user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+            supporterUtil.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             //获取小程序推荐列表
             do {
                 IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
@@ -4909,7 +4907,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             IScene scene = ActivityManageTopScene.builder().id(id).build();
             visitor.invokeApi(scene, false).getString("message");
             //小程序中第一个为此活动
-            user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+            supporterUtil.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             JSONObject response = businessUtil.appointmentActivityTitleNew();
             String title2 = response.getJSONArray("list").getJSONObject(0).getString("title");
             Preconditions.checkArgument(statusOnLine == ActivityStatusEnum.WAITING_START.getId() && message1.equals("success"), "上架以后活动的状态为：" + statusOnLine);
@@ -4970,7 +4968,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                 //获取活动的状态
                 int statusOffLine = businessUtil.getActivityStatus(ids.get(0));
                 //登录小程序
-                user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+                supporterUtil.loginApplet(EnumAppletToken.JC_GLY_DAILY);
                 //获取小程序推荐列表
                 do {
                     IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
@@ -4995,7 +4993,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                 IScene scene = ActivityManageTopScene.builder().id(ids.get(0)).build();
                 visitor.invokeApi(scene, false).getString("message");
                 //小程序中第一个为此活动
-                user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+                supporterUtil.loginApplet(EnumAppletToken.JC_GLY_DAILY);
                 JSONObject response = businessUtil.appointmentActivityTitleNew();
                 String title2 = response.getJSONArray("list").getJSONObject(0).getString("title");
                 Preconditions.checkArgument(statusOnLine == ActivityStatusEnum.WAITING_START.getId() && message1.equals("success"), "上架以后活动的状态为：" + statusOnLine);
@@ -5074,7 +5072,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             //获取活动的状态
             int statusOffLine = businessUtil.getActivityStatus(ids.get(0));
             //登录小程序
-            user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+            supporterUtil.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             //获取小程序推荐列表
             do {
                 IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
@@ -5102,7 +5100,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             IScene scene = ActivityManageTopScene.builder().id(ids.get(0)).build();
             visitor.invokeApi(scene, false).getString("message");
             //小程序中第一个为此活动
-            user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+            supporterUtil.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             JSONObject response = businessUtil.appointmentActivityTitleNew();
             String title2 = response.getJSONArray("list").getJSONObject(0).getString("title");
             Preconditions.checkArgument(statusOnLine == ActivityStatusEnum.PASSED.getId() && message1.equals("success"), "上架以后活动的状态为：" + statusOnLine);
@@ -5136,7 +5134,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                 //获取活动的状态
                 int statusOffLine = businessUtil.getActivityStatus(ids.get(0));
                 //登录小程序
-                user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+                supporterUtil.loginApplet(EnumAppletToken.JC_GLY_DAILY);
                 //获取小程序推荐列表
                 do {
                     IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
@@ -5161,7 +5159,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                 IScene scene = ActivityManageTopScene.builder().id(ids.get(0)).build();
                 visitor.invokeApi(scene, false).getString("message");
                 //小程序中第一个为此活动
-                user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+                supporterUtil.loginApplet(EnumAppletToken.JC_GLY_DAILY);
                 JSONObject response = businessUtil.appointmentActivityTitleNew();
                 String title2 = response.getJSONArray("list").getJSONObject(0).getString("title");
                 Preconditions.checkArgument(statusOnLine == ActivityStatusEnum.WAITING_START.getId() && message1.equals("success"), "上架以后活动的状态为：" + statusOnLine);
@@ -5264,7 +5262,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             //获取活动的状态
             int statusOffLine = businessUtil.getActivityStatus(ids.get(0));
             //登录小程序
-            user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+            supporterUtil.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             //获取小程序推荐列表
             do {
                 IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
@@ -5292,7 +5290,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             IScene scene = ActivityManageTopScene.builder().id(ids.get(0)).build();
             visitor.invokeApi(scene, false).getString("message");
             //小程序中第一个为此活动
-            user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+            supporterUtil.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             JSONObject response = businessUtil.appointmentActivityTitleNew();
             String title2 = response.getJSONArray("list").getJSONObject(0).getString("title");
             Preconditions.checkArgument(statusOnLine == ActivityStatusEnum.PASSED.getId() && message1.equals("success"), "上架以后活动的状态为：" + statusOnLine);
@@ -5370,7 +5368,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                 //获取活动的状态
                 int statusOffLine = businessUtil.getActivityStatus(ids.get(0));
                 //登录小程序
-                user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+                supporterUtil.loginApplet(EnumAppletToken.JC_GLY_DAILY);
                 //获取小程序推荐列表
                 do {
                     IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
@@ -5395,7 +5393,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
                 IScene scene = ActivityManageTopScene.builder().id(ids.get(0)).build();
                 visitor.invokeApi(scene, false).getString("message");
                 //小程序中第一个为此活动
-                user.loginApplet(EnumAppletToken.JC_GLY_DAILY);
+                supporterUtil.loginApplet(EnumAppletToken.JC_GLY_DAILY);
                 JSONObject response = businessUtil.appointmentActivityTitleNew();
                 String title2 = response.getJSONArray("list").getJSONObject(0).getString("title");
                 Preconditions.checkArgument(statusOnLine == ActivityStatusEnum.WAITING_START.getId() && message1.equals("success"), "上架以后活动的状态为：" + statusOnLine);

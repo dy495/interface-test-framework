@@ -46,7 +46,7 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
         commonConfig.product = EnumTestProduct.JC_ONLINE.getAbbreviation();
-        jc.changeIpPort(EnumTestProduct.JC_ONLINE.getPort());
+        jc.changeIpPort(EnumTestProduct.JC_ONLINE.getIp());
 
 
         //replace backend gateway url
@@ -417,7 +417,7 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
         try {
             System.out.println(commonConfig.referer);
             jc.appletLoginToken(pp.appletTocken);
-            System.out.println(EnumTestProduct.JC_DAILY.getPort());
+            System.out.println(EnumTestProduct.JC_DAILY_ZH.getIp());
             System.out.println("卡券数量" + pf.getVoucherTotal());
 //            System.out.println("套餐数量"+pf.getpackgeTotal());
 

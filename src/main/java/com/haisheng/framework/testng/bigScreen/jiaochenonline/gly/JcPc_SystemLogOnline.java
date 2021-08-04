@@ -9,7 +9,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.util.PublicParameter;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -32,7 +32,7 @@ public class JcPc_SystemLogOnline extends TestCaseCommon implements TestCaseStd 
     private static final EnumTestProduct product = EnumTestProduct.JC_ONLINE;
     PublicParameter pp = new PublicParameter();
     public VisitorProxy visitor = new VisitorProxy(product);
-    SupporterUtil su = new SupporterUtil(visitor);
+    SceneUtil su = new SceneUtil(visitor);
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
@@ -41,12 +41,12 @@ public class JcPc_SystemLogOnline extends TestCaseCommon implements TestCaseStd 
     @Override
     public void initial() {
         logger.debug("before class initial");
-        jc.changeIpPort(EnumTestProduct.JC_ONLINE.getPort());
+        jc.changeIpPort(EnumTestProduct.JC_ONLINE.getIp());
         //替换checklist的相关信息
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
         commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
         commonConfig.checklistQaOwner = "郭丽雅";
-        commonConfig.product = EnumTestProduct.JC_DAILY.getAbbreviation();
+        commonConfig.product = EnumTestProduct.JC_DAILY_ZH.getAbbreviation();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "jc-onLine-test");
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.JC_ONLINE.getDesc() + commonConfig.checklistQaOwner);

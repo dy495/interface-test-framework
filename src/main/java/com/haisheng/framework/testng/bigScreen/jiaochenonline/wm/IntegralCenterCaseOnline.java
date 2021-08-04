@@ -22,7 +22,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.integralcente
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.integralcenter.ExchangeStockPageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.integralmall.GoodsManagePageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherFormVoucherPageBean;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.ChangeStockTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.CommodityTypeEnum;
@@ -38,8 +38,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vipmarketing
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vipmarketing.ShareManagerPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vipmarketing.SignInConfigPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.AddVoucherScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -69,8 +68,7 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.JC_ALL_AUTHORITY_ONLINE;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
-    public UserUtil user = new UserUtil(visitor);
-    public SupporterUtil util = new SupporterUtil(visitor);
+    public SceneUtil util = new SceneUtil(visitor);
 
     @BeforeClass
     @Override
@@ -103,7 +101,7 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-        user.loginPc(ALL_AUTHORITY);
+        util.loginPc(ALL_AUTHORITY);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
@@ -154,9 +152,9 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
     public void integralCustomerPage_system_3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.loginApplet(APPLET_USER_ONE);
+            util.loginApplet(APPLET_USER_ONE);
             Integer score = AppletUserInfoDetailScene.builder().build().invoke(visitor).getInteger("score");
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
             //变更记录
             IScene scene = CustomerIntegralChangeRecordPageScene.builder().build();
             List<CustomerIntegralChangeRecordPageBean> changeRecordList = util.toJavaObjectList(scene, CustomerIntegralChangeRecordPageBean.class);
@@ -177,7 +175,7 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
             CommonUtil.checkResult("pc积分明细变更内容", 1, exchangeDetailed.getStockDetail());
             CommonUtil.checkResult("pc积分明细兑换类型", ChangeStockTypeEnum.ADD.getDescription(), exchangeDetailed.getExchangeTypeName());
             CommonUtil.checkResult("pc积分明细变更类型", ChangeStockTypeEnum.ADD.name(), exchangeDetailed.getExchangeType());
-            user.loginApplet(APPLET_USER_ONE);
+            util.loginApplet(APPLET_USER_ONE);
             Integer newScore = AppletUserInfoDetailScene.builder().build().invoke(visitor).getInteger("score");
             CommonUtil.checkResult("变更积分后" + APPLET_USER_ONE.getPhone() + "的积分为", score + 1, newScore);
             AppletIntegralRecord appletIntegralRecord = util.getAppletIntegralRecordList().get(0);
@@ -196,9 +194,9 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
     public void integralCustomerPage_system_4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            user.loginApplet(APPLET_USER_ONE);
+            util.loginApplet(APPLET_USER_ONE);
             Integer score = AppletUserInfoDetailScene.builder().build().invoke(visitor).getInteger("score");
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
             //变更记录
             IScene scene = CustomerIntegralChangeRecordPageScene.builder().build();
             List<CustomerIntegralChangeRecordPageBean> changeRecordList = util.toJavaObjectList(scene, CustomerIntegralChangeRecordPageBean.class);
@@ -219,7 +217,7 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
             CommonUtil.checkResult("pc积分明细变更内容", 1, exchangeDetailed.getStockDetail());
             CommonUtil.checkResult("pc积分明细兑换类型", ChangeStockTypeEnum.MINUS.getDescription(), exchangeDetailed.getExchangeTypeName());
             CommonUtil.checkResult("pc积分明细变更类型", ChangeStockTypeEnum.MINUS.name(), exchangeDetailed.getExchangeType());
-            user.loginApplet(APPLET_USER_ONE);
+            util.loginApplet(APPLET_USER_ONE);
             Integer newScore = AppletUserInfoDetailScene.builder().build().invoke(visitor).getInteger("score");
             CommonUtil.checkResult("变更积分后" + APPLET_USER_ONE.getPhone() + "的积分为", score - 1, newScore);
             AppletIntegralRecord appletIntegralRecord = util.getAppletIntegralRecordList().get(0);
@@ -671,7 +669,7 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
             //不限兑换次数
             util.modifyExchangeGoodsLimit(exchangePage.getId(), exchangePage.getExchangeType(), false);
             List<Integer> exchangedAndSurplusList = Arrays.stream(exchangePage.getExchangedAndSurplus().split("/")).map(Integer::valueOf).collect(Collectors.toList());
-            user.loginApplet(APPLET_USER_ONE);
+            util.loginApplet(APPLET_USER_ONE);
             int score = AppletDetailScene.builder().build().invoke(visitor).getInteger("score");
             int integralRecordNum = util.getAppletIntegralRecordNum();
             int exchangeRecordNum = util.getAppletExchangeRecordNum();
@@ -680,13 +678,13 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
             AppletShippingAddress appletShippingAddress = AppletShippingAddressListScene.builder().build().invoke(visitor).getJSONArray("list").stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppletShippingAddress.class)).collect(Collectors.toList()).get(0);
             //兑换积分
             AppletSubmitOrderScene.builder().commodityId(exchangePage.getId()).specificationId(specificationId).smsNotify(false).commodityNum("1").districtCode(appletShippingAddress.getDistrictCode()).address(appletShippingAddress.getAddress()).receiver(appletShippingAddress.getName()).receivePhone(appletShippingAddress.getPhone()).build().invoke(visitor);
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
             ExchangePage newExchangePage = util.getExchangePage(exchangePage.getId());
             List<Integer> newExchangedAndSurplusList = Arrays.stream(newExchangePage.getExchangedAndSurplus().split("/")).map(Integer::valueOf).collect(Collectors.toList());
             CommonUtil.checkResult(newExchangePage.getGoodsName() + "已兑换数量", exchangedAndSurplusList.get(0) + 1, newExchangedAndSurplusList.get(0));
             CommonUtil.checkResult(newExchangePage.getGoodsName() + "剩余数量", exchangedAndSurplusList.get(1) - 1, newExchangedAndSurplusList.get(1));
             //小程序积分明细列表数量
-            user.loginApplet(APPLET_USER_ONE);
+            util.loginApplet(APPLET_USER_ONE);
             int newIntegralRecordNum = util.getAppletIntegralRecordNum();
             int newExchangeRecordNum = util.getAppletExchangeRecordNum();
             CommonUtil.checkResult("小程序积分明细页数量", integralRecordNum + 1, newIntegralRecordNum);
@@ -707,7 +705,7 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
             int scoreTwo = AppletDetailScene.builder().build().invoke(visitor).getInteger("score");
             CommonUtil.checkResult("小程序积分总数", score - appletExchangeRecord.getIntegral(), scoreTwo);
             //积分订单页
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
             IScene exchangeOrderScene = ExchangeOrderScene.builder().build();
             ExchangeOrderBean exchangeOrder = util.toJavaObjectList(exchangeOrderScene, ExchangeOrderBean.class).get(0);
             CommonUtil.checkResult("pc积分订单页订单号", appletExchangeRecord.getOrderId(), exchangeOrder.getOrderId());
@@ -722,7 +720,7 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
             CommonUtil.checkResult("pc积分订单页订单状态", OrderStatusEnum.SEND.name(), exchangeOrderTwo.getOrderStatus());
             CommonUtil.checkResult("pc积分订单页订单状态", OrderStatusEnum.SEND.getName(), exchangeOrderTwo.getOrderStatusName());
             //小程序状态2
-            user.loginApplet(APPLET_USER_ONE);
+            util.loginApplet(APPLET_USER_ONE);
             AppletExchangeRecord appletExchangeRecordTwo = util.getAppletExchangeRecordList().get(0);
             CommonUtil.checkResult("小程序订单状态", OrderStatusEnum.SEND.name(), appletExchangeRecordTwo.getExchangeStatus());
             CommonUtil.checkResult("小程序订单状态", OrderStatusEnum.SEND.getName(), appletExchangeRecordTwo.getExchangeStatusName());
@@ -736,7 +734,7 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
             CommonUtil.checkResult("小程序订单详情快递单号", "1122", response.getString("odd_numbers"));
             CommonUtil.checkResult("小程序订单详情订单状态", OrderStatusEnum.FINISHED.getName(), response.getString("exchange_status_name"));
             //pc状态3
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
             ExchangeOrderBean exchangeOrderThree = util.toJavaObjectList(exchangeOrderScene, ExchangeOrderBean.class).get(0);
             CommonUtil.checkResult("pc积分订单页订单状态", OrderStatusEnum.FINISHED.name(), exchangeOrderThree.getOrderStatus());
             CommonUtil.checkResult("pc积分订单页订单状态", OrderStatusEnum.FINISHED.getName(), exchangeOrderThree.getOrderStatusName());
@@ -765,7 +763,7 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
             CommonUtil.checkResult("pc积分明细页明细", ChangeStockTypeEnum.ADD.name(), exchangeDetailedTwo.getExchangeType());
             CommonUtil.checkResult("pc积分明细页兑换类型", ChangeStockTypeEnum.ADD.getDescription(), exchangeDetailedTwo.getExchangeTypeName());
             //小程序状态4
-            user.loginApplet(APPLET_USER_ONE);
+            util.loginApplet(APPLET_USER_ONE);
             AppletExchangeRecord appletExchangeRecordFour = util.getAppletExchangeRecordList().get(0);
             CommonUtil.checkResult("小程序订单状态", OrderStatusEnum.CANCELED.name(), appletExchangeRecordFour.getExchangeStatus());
             CommonUtil.checkResult("小程序订单状态", OrderStatusEnum.CANCELED.getName(), appletExchangeRecordFour.getExchangeStatusName());
@@ -796,19 +794,19 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
             //不限兑换次数
             util.modifyExchangeGoodsLimit(exchangeGoodsId, exchangePage.getExchangeType(), false);
             List<Integer> exchangedAndSurplusList = Arrays.stream(exchangePage.getExchangedAndSurplus().split("/")).map(Integer::valueOf).collect(Collectors.toList());
-            visitor.login(APPLET_USER_ONE.getToken());
+            visitor.setToken(APPLET_USER_ONE.getToken());
             int score = AppletDetailScene.builder().build().invoke(visitor).getInteger("score");
             int integralRecordNum = util.getAppletIntegralRecordNum();
             int exchangeRecordNum = util.getAppletExchangeRecordNum();
             //兑换积分
             AppletIntegralExchangeScene.builder().id(exchangeGoodsId).build().invoke(visitor);
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
             ExchangePage newExchangePage = util.getExchangePage(exchangeGoodsId);
             List<Integer> newExchangedAndSurplusList = Arrays.stream(newExchangePage.getExchangedAndSurplus().split("/")).map(Integer::valueOf).collect(Collectors.toList());
             CommonUtil.checkResult(newExchangePage.getGoodsName() + "已兑换数量", exchangedAndSurplusList.get(0) + 1, newExchangedAndSurplusList.get(0));
             CommonUtil.checkResult(newExchangePage.getGoodsName() + "剩余数量", exchangedAndSurplusList.get(1) - 1, newExchangedAndSurplusList.get(1));
             //小程序积分明细列表数量
-            visitor.login(APPLET_USER_ONE.getToken());
+            visitor.setToken(APPLET_USER_ONE.getToken());
             int newIntegralRecordNum = util.getAppletIntegralRecordNum();
             int newExchangeRecordNum = util.getAppletExchangeRecordNum();
             CommonUtil.checkResult("小程序积分明细页数量", integralRecordNum + 1, newIntegralRecordNum);
@@ -829,7 +827,7 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
             int scoreTwo = AppletDetailScene.builder().build().invoke(visitor).getInteger("score");
             CommonUtil.checkResult("小程序积分总数", score - appletExchangeRecord.getIntegral(), scoreTwo);
             //积分订单页
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
             IScene exchangeOrderScene = ExchangeOrderScene.builder().build();
             ExchangeOrderBean exchangeOrder = util.toJavaObjectList(exchangeOrderScene, ExchangeOrderBean.class).get(0);
             CommonUtil.checkResult("pc积分订单页订单号", appletExchangeRecord.getOrderId(), exchangeOrder.getOrderId());
@@ -857,18 +855,18 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
             //置顶
             MakeTopScene.builder().id(id).build().invoke(visitor);
             //小程序人气推荐
-            user.loginApplet(APPLET_USER_ONE);
+            util.loginApplet(APPLET_USER_ONE);
             JSONArray list = AppletHomePageScene.builder().build().invoke(visitor).getJSONArray("recommend_list");
             Long appletId = list.getJSONObject(0).getLong("id");
             CommonUtil.checkResult("人气推荐第一项", id, appletId);
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
             //再置顶第二个积分兑换
             JSONObject response1 = ExchangePageScene.builder().status(IntegralExchangeStatusEnum.WORKING.name()).build().invoke(visitor);
             Long id1 = response1.getJSONArray("list").getJSONObject(1).getLong("id");
             Preconditions.checkArgument(id1 != null, "不存在积分兑换商品");
             //置顶
             MakeTopScene.builder().id(id1).build().invoke(visitor);
-            user.loginApplet(APPLET_USER_ONE);
+            util.loginApplet(APPLET_USER_ONE);
             JSONArray list1 = AppletHomePageScene.builder().build().invoke(visitor).getJSONArray("recommend_list");
             Long appletId1 = list1.getJSONObject(0).getLong("id");
             Long appletId2 = list1.getJSONObject(1).getLong("id");
@@ -914,7 +912,7 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
             ExchangePage exchangePage = util.createExchangeFictitiousGoods(voucherId);
             id = exchangePage.getId();
             //开启
-            String message = util.getResponse(ChangeSwitchStatusScene.builder().id(exchangePage.getId()).status(true).build()).getMessage();
+            String message = ChangeSwitchStatusScene.builder().id(exchangePage.getId()).status(true).build().getResponse(visitor).getMessage();
             String err = "积分兑换商品已开启，请勿重复操作";
             CommonUtil.checkResult("再次开启已开启的积分兑换商品", err, message);
             VoucherFormVoucherPageBean secondVoucherPage = util.getVoucherPage(voucherId);
@@ -928,7 +926,7 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            String message = util.getResponse(ChangeSwitchStatusScene.builder().id(id).status(false).build()).getMessage();
+            String message = ChangeSwitchStatusScene.builder().id(id).status(false).build().getResponse(visitor).getMessage();
             String err = "积分兑换商品已关闭，请勿重复操作";
             CommonUtil.checkResult("再次关闭已关闭的积分兑换商品", err, message);
             DeleteExchangeGoodsScene.builder().id(id).build().invoke(visitor);
@@ -1051,10 +1049,10 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
             exchangeGoodsId = exchangePage.getId();
             //不限兑换次数
             util.modifyExchangeGoodsLimit(exchangeGoodsId, exchangePage.getExchangeType(), false);
-            visitor.login(APPLET_USER_ONE.getToken());
+            visitor.setToken(APPLET_USER_ONE.getToken());
             //兑换积分
             AppletIntegralExchangeScene.builder().id(exchangeGoodsId).build().invoke(visitor);
-            user.loginPc(ALL_AUTHORITY);
+            util.loginPc(ALL_AUTHORITY);
             VoucherFormVoucherPageBean secondExchangePage = util.getVoucherPage(voucherId);
             CommonUtil.checkResult("兑换一张卡券后 " + voucherPage.getVoucherName() + " 的可用库存", voucherPage.getAllowUseInventory() - 2, secondExchangePage.getAllowUseInventory());
             CommonUtil.checkResult("兑换一张卡券后 " + voucherPage.getVoucherName() + " 的剩余库存", voucherPage.getSurplusInventory() - 1, secondExchangePage.getSurplusInventory());
@@ -1087,7 +1085,7 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
             IScene scene = CreateExchangeGoodsScene.builder().exchangeGoodsType(CommodityTypeEnum.REAL.name()).goodsId(goodsId)
                     .exchangePrice("1").isLimit(true).exchangePeopleNum("10").specificationList(specificationList).expireType(2).useDays("10")
                     .exchangeStartTime(exchangeStartTime).exchangeEndTime(exchangeEndTime).build();
-            String message = util.getResponse(scene).getMessage();
+            String message = scene.getResponse(visitor).getMessage();
             String err = "商品已下架";
             CommonUtil.checkResult("下架的商品创建积分兑换", err, message);
         } catch (Exception | AssertionError e) {
@@ -1122,7 +1120,7 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
                 IScene scene = CreateExchangeGoodsScene.builder().exchangeGoodsType(CommodityTypeEnum.REAL.name()).goodsId(goodsId)
                         .exchangePrice(exchangePrice).isLimit(true).exchangePeopleNum("10").specificationList(specificationList).expireType(2).useDays("10")
                         .exchangeStartTime(exchangeStartTime).exchangeEndTime(exchangeEndTime).build();
-                String message = util.getResponse(scene).getMessage();
+                String message = scene.getResponse(visitor).getMessage();
                 String err = StringUtils.isEmpty(exchangePrice) ? "兑换价格不能为空" : exchangePrice.compareTo("0") < 0 ? "兑换价格必须大于等于0" : "请求入参类型不正确";
                 CommonUtil.checkResult("兑换价格为：" + exchangePrice, err, message);
             });
@@ -1147,7 +1145,7 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
             IScene scene = CreateExchangeGoodsScene.builder().exchangeGoodsType(CommodityTypeEnum.REAL.name()).goodsId(goodsId)
                     .exchangePrice("1").isLimit(true).exchangePeopleNum("10").specificationList(specificationList).expireType(2).useDays("10")
                     .exchangeStartTime(exchangeStartTime).exchangeEndTime(exchangeEndTime).build();
-            String message = util.getResponse(scene).getMessage();
+            String message = scene.getResponse(visitor).getMessage();
             String err = "";
             ExchangePage exchangePage = util.toJavaObjectList(ExchangePageScene.builder().build(), ExchangePage.class).get(0);
             exchangeId = exchangePage.getId();
@@ -1177,7 +1175,7 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
                         .exchangePrice("1").isLimit(true).exchangePeopleNum("10").exchangeStartTime(exchangeStartTime).expireType(2)
                         .exchangeEndTime(exchangeEndTime).useDays(useDays).exchangeNum(String.valueOf(voucherPage.getAllowUseInventory()))
                         .build();
-                String message = util.getResponse(scene).getMessage();
+                String message = scene.getResponse(visitor).getMessage();
                 String err = StringUtils.isEmpty(useDays) ? "" : useDays.compareTo("3650") > 0 ? "使用时间不能超过3650天" : "请求入参类型不正确";
                 CommonUtil.checkResult("优惠券有效期为：" + useDays, err, message);
             });
@@ -1194,7 +1192,7 @@ public class IntegralCenterCaseOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene exchangeOrderScene = ExchangeOrderScene.builder().build();
-            List<JSONObject> jsonObjectList = util.toJavaObjectList(exchangeOrderScene, JSONObject.class, SupporterUtil.SIZE);
+            List<JSONObject> jsonObjectList = util.toJavaObjectList(exchangeOrderScene, JSONObject.class, SceneUtil.SIZE);
             jsonObjectList.forEach(e -> {
                 int id = e.getInteger("id");
                 IScene orderDetailScene = OrderDetailScene.builder().id(id).build();

@@ -18,7 +18,7 @@ import com.haisheng.framework.testng.bigScreen.itemCms.common.enumerator.EnumReg
 import com.haisheng.framework.testng.bigScreen.itemCms.common.scene.*;
 import com.haisheng.framework.testng.bigScreen.itemCms.common.util.CmsConstants;
 import com.haisheng.framework.testng.bigScreen.itemCms.common.util.ScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;

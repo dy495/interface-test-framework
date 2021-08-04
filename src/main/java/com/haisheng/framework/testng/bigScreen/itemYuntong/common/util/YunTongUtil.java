@@ -33,7 +33,7 @@ public class YunTongUtil extends TestCaseCommon {
 //    }
      public  YunTongUtil(EnumTestProduct product) {
         this.product = product;
-        this.IpPort = product.getPort();
+        this.IpPort = product.getIp();
         this.visitor = new VisitorProxy(product);
     }
 

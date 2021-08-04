@@ -1340,7 +1340,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
     public void nearshop() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
+            visitor.setToken(EnumAppletToken.INS_ZT_DAILY.getToken());
             JSONArray list = wx.nearshop(null, "赢识", 116.29845, 39.95933).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 String shop_name = list.getJSONObject(i).getString("shop_name");
@@ -1358,7 +1358,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
     public void userfeedback() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
+            visitor.setToken(EnumAppletToken.INS_ZT_DAILY.getToken());
             JSONArray querylist = wx.queryAll().getJSONArray("list");
             int feedback_type_id = querylist.getJSONObject(0).getInteger("feedback_type_id");
             int code = wx.submitFeedback(feedback_type_id, 5, "自动化提交用户反馈").getInteger("code");
@@ -1371,7 +1371,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             String name = md.feedbackList(null, null, 1, 100).getJSONArray("list").getJSONObject(a).getString("user_name");
             String feedback_gift = md.feedbackList(null, null, 1, 100).getJSONArray("list").getJSONObject(a).getString("feedback_gift");
 
-            visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
+            visitor.setToken(EnumAppletToken.INS_ZT_DAILY.getToken());
             JSONArray feedlist = wx.awardFeedback(null).getJSONArray("list");
             String appletname = feedlist.getJSONObject(0).getString("user_name");
             String appletgift = feedlist.getJSONObject(0).getString("feedback_gift");
@@ -1391,7 +1391,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
     public void userfeedbackerror() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            visitor.login(EnumAppletToken.INS_ZT_DAILY.getToken());
+            visitor.setToken(EnumAppletToken.INS_ZT_DAILY.getToken());
             JSONArray querylist = wx.queryAll().getJSONArray("list");
             int feedback_type_id = querylist.getJSONObject(0).getInteger("feedback_type_id");
             //不添加反馈类型

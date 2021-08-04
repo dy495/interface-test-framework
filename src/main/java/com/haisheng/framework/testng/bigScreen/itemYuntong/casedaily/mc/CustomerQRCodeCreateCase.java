@@ -5,7 +5,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProd
 import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherScene.H5.GetQRCode;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.loginuser.LoginPc;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.YunTongInfo;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -15,7 +15,7 @@ import java.lang.reflect.Method;
 
 
 public class CustomerQRCodeCreateCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_DAILY_SSO; // 管理页—-首页
+    private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_DAILY_ZH; // 管理页—-首页
     private static final EnumAccount YT_RECEPTION_DAILY = EnumAccount.YT_RECEPTION_DAILY; // 全部权限账号 【运通】
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);   // 产品类放到代理类中（通过代理类发请求）
     // public SceneUtil util = new SceneUtil(visitor);
@@ -45,7 +45,7 @@ public class CustomerQRCodeCreateCase extends TestCaseCommon implements TestCase
         beforeClassInit(commonConfig);  // 配置请求头
         //util.loginPc(YT_RECEPTION_DAILY);   //登录
         LoginPc loginScene = LoginPc.builder().phone("13402050043").verificationCode("000000").build();
-        httpPost(loginScene.getPath(),loginScene.getBody(),PRODUCE.getPort());
+        httpPost(PRODUCE.getIp(), loginScene.getPath(), loginScene.getBody());
     }
 
     @AfterClass
@@ -61,6 +61,7 @@ public class CustomerQRCodeCreateCase extends TestCaseCommon implements TestCase
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
     }
+
     @Test
     public void customerInfo() {
         visitor.setProduct(EnumTestProduct.YT_DAILY_CAR);

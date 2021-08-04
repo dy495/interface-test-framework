@@ -9,7 +9,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklis
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.dataprovider.DataClass;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.pc.manage.VoiceEvaluationPageBean;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.pc.sensitivewords.LabelListBean;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.bean.pc.specialaudio.SpecialAudioPageBean;

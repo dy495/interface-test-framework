@@ -21,7 +21,6 @@ import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.rule.Add
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.rule.DeleteScene;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.rule.SwitchScene;
 import com.haisheng.framework.testng.bigScreen.fengkongdaily.util.PublicParam;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
 import com.haisheng.framework.util.CommonUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import org.apache.http.Header;
@@ -37,12 +36,10 @@ public class CommonUsedUtilOnline {
     PublicParam pp=new PublicParam();
     DateTimeUtil dt =new DateTimeUtil();
     private VisitorProxy visitor;
-    private UserUtil user;
     private final routerEnum router;
 
     public CommonUsedUtilOnline(VisitorProxy visitor, routerEnum router) {
         this.visitor = visitor;
-        this.user=new UserUtil(visitor);
         this.router = router;
     }
 
@@ -952,7 +949,7 @@ public class CommonUsedUtilOnline {
      */
     public void pcLogin(String username, String password) {
         IScene scene= LoginPcScene.builder().type(0).username(username).password(password).build();
-        visitor.login(scene);
+        visitor.setToken(scene);
     }
 
 

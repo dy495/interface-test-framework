@@ -42,7 +42,7 @@ public class RiskControlCaseDataOnline extends TestCaseCommon implements TestCas
     @Override
     public void initial() {
         logger.debug("before class initial");
-        ru.changeIpPort(EnumTestProduct.FK_ONLINE.getPort(), EnumTestProduct.FK_ONLINE);
+        ru.changeIpPort(EnumTestProduct.FK_ONLINE.getIp(), EnumTestProduct.FK_ONLINE);
         CommonConfig commonConfig = new CommonConfig();
         //替换checklist的相关信息
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;

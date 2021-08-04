@@ -62,7 +62,7 @@ public class CrmScenarioUtilOnlineX extends TestCaseCommon {
     /***
      * 方法区，不同产品的测试场景各不相同，自行更改
      */
-    public String IpPort = EnumTestProduct.PORSCHE_ONLINE.getPort();
+    public String IpPort = EnumTestProduct.PORSCHE_ONLINE.getIp();
 
     //----------------------登陆--------------------
     public void login(String userName, String password) {

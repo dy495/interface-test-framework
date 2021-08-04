@@ -39,7 +39,7 @@ public class JcPcReceptionRelateOnline extends TestCaseCommon implements TestCas
     public void initial1() {
         logger.debug("before classs initial");
         CommonConfig commonConfig = new CommonConfig();
-        jc.changeIpPort(EnumTestProduct.JC_ONLINE.getPort());
+        jc.changeIpPort(EnumTestProduct.JC_ONLINE.getIp());
 
 
         //replace checklist app id and conf id

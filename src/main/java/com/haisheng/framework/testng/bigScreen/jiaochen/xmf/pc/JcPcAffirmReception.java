@@ -28,7 +28,7 @@ import java.lang.reflect.Method;
  **/
 
 public class JcPcAffirmReception extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduct product = EnumTestProduct.JC_DAILY;
+    private static final EnumTestProduct product = EnumTestProduct.JC_DAILY_ZH;
     private VisitorProxy visitor = new VisitorProxy(product);
     ScenarioUtil jc = new ScenarioUtil();
     private QADbProxy qaDbProxy = QADbProxy.getInstance();
@@ -48,8 +48,8 @@ public class JcPcAffirmReception extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.referer = EnumTestProduct.JC_DAILY.getReferer();
-        commonConfig.product = EnumTestProduct.JC_DAILY.getAbbreviation();
+        commonConfig.referer = EnumTestProduct.JC_DAILY_ZH.getReferer();
+        commonConfig.product = EnumTestProduct.JC_DAILY_ZH.getAbbreviation();
 
         //replace backend gateway url
         //commonConfig.gateway = "";
@@ -58,7 +58,7 @@ public class JcPcAffirmReception extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.JC_DAILY.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.JC_DAILY_ZH.getDesc() + commonConfig.checklistQaOwner);
 
         //replace ding f
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;

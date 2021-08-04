@@ -15,8 +15,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.Vouc
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.FissionVoucherAddScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.ManageContentMarketingAddScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.ManageRecruitAddScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.UserUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -32,13 +31,11 @@ public class JustForTest extends TestCaseCommon implements TestCaseStd {
 
     //--------日常开始---------
     ScenarioUtil jc = new ScenarioUtil();
-    private static final EnumTestProduct product = EnumTestProduct.JC_DAILY;
+    private static final EnumTestProduct product = EnumTestProduct.JC_DAILY_ZH;
     //private static final EnumAppletToken APPLET_USER = EnumAppletToken.JC_GLY_DAILY;
     public VisitorProxy visitor = new VisitorProxy(product);
     BusinessUtil businessUtil = new BusinessUtil(visitor);
-    SupporterUtil supporterUtil = new SupporterUtil(visitor);
     PublicParameter pp = new PublicParameter();
-    UserUtil user = new UserUtil(visitor);
     JiaoChenInfo info = new JiaoChenInfo();
 
 
@@ -159,7 +156,7 @@ public class JustForTest extends TestCaseCommon implements TestCaseStd {
             String[][] label = {{"CAR_WELFARE", "车福利"}, {"CAR_INFORMATION", "车资讯"}, {"CAR_LIFE", "车生活"}, {"CAR_ACVITITY", "车活动"}, {"CAR_KNOWLEDGE", "车知识"}};
             for (int i = 0; i < label.length; i++) {
                 System.err.println(label.length + "-------" + 1);
-                SupporterUtil supporterUtil = new SupporterUtil(visitor);
+                SceneUtil supporterUtil = new SceneUtil(visitor);
                 PublicParameter pp = new PublicParameter();
                 List<String> picList = new ArrayList<>();
                 picList.add(supporterUtil.getPicPath());
@@ -206,7 +203,7 @@ public class JustForTest extends TestCaseCommon implements TestCaseStd {
             List<Integer> labels = new ArrayList<>();
             String[][] label = {{"1", "普通会员"}};
             List<String> picList = new ArrayList<>();
-            SupporterUtil supporterUtil = new SupporterUtil(visitor);
+            SceneUtil supporterUtil = new SceneUtil(visitor);
             PublicParameter pp = new PublicParameter();
             picList.add(0, supporterUtil.getPicPath());
             //填写报名所需要信息
@@ -291,7 +288,7 @@ public class JustForTest extends TestCaseCommon implements TestCaseStd {
     public void activityType2(String lable, String mess) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            SupporterUtil supporterUtil = new SupporterUtil(visitor);
+            SceneUtil supporterUtil = new SceneUtil(visitor);
             List<String> picList = new ArrayList<>();
             picList.add(0, businessUtil.getPicPath());
 

@@ -60,7 +60,7 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
     public void initial() {
         logger.debug("before class initial");
         CommonConfig commonConfig = new CommonConfig();
-        md.changeIpPort(EnumTestProduct.FK_ONLINE.getPort(), EnumTestProduct.FK_ONLINE);
+        md.changeIpPort(EnumTestProduct.FK_ONLINE.getIp(), EnumTestProduct.FK_ONLINE);
         //替换checklist的相关信息
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;

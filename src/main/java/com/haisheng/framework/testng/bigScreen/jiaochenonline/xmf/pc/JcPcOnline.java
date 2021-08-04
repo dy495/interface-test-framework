@@ -58,7 +58,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
     @Override
     public void initial() {
         logger.debug("before classs initial");
-        jc.changeIpPort(EnumTestProduct.JC_ONLINE.getPort());
+        jc.changeIpPort(EnumTestProduct.JC_ONLINE.getIp());
 
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
@@ -100,7 +100,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
         object.put("phone", username);
         object.put("verification_code", password);
         commonConfig.roleId = roleId;
-        httpPost(path, object, EnumTestProduct.JC_ONLINE.getPort());
+        httpPost(EnumTestProduct.JC_ONLINE.getIp(), path, object);
     }
 
     //pc登录
@@ -110,7 +110,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
         object.put("phone", phone);
         object.put("verification_code", verificationCode);
         commonConfig.roleId = roleId;
-        httpPost(path, object, EnumTestProduct.JC_ONLINE.getPort());
+        httpPost(EnumTestProduct.JC_ONLINE.getIp(), path, object);
     }
 
 

@@ -5,7 +5,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.util.BasicUtil;
 import com.haisheng.framework.testng.bigScreen.itemCms.common.enumerator.EnumCloudSceneType;
 import com.haisheng.framework.testng.bigScreen.itemCms.common.scene.LoginScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 
 public class ScenarioUtil extends BasicUtil {
     private final VisitorProxy visitor;
@@ -18,7 +18,7 @@ public class ScenarioUtil extends BasicUtil {
     public void login(EnumAccount account) {
         String email = "28e3e02ba627a44c949d3ef94b217388";
         IScene scene = LoginScene.builder().email(account.getPhone()).password(email).build();
-        visitor.login(scene);
+        visitor.setToken(scene);
     }
 
 

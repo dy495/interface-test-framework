@@ -57,8 +57,8 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistQaOwner = "吕雪晴";
 
 
-        commonConfig.referer = EnumTestProduct.JC_DAILY.getReferer();
-        commonConfig.product = EnumTestProduct.JC_DAILY.getAbbreviation();
+        commonConfig.referer = EnumTestProduct.JC_DAILY_ZH.getReferer();
+        commonConfig.product = EnumTestProduct.JC_DAILY_ZH.getAbbreviation();
 
         //replace backend gateway url
         //commonConfig.gateway = "";
@@ -67,7 +67,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.JC_DAILY.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.JC_DAILY_ZH.getDesc() + commonConfig.checklistQaOwner);
 
         //replace ding push conf
         //commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
@@ -2801,7 +2801,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     public void show() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            VisitorProxy visitor = new VisitorProxy(EnumTestProduct.JC_DAILY);
+            VisitorProxy visitor = new VisitorProxy(EnumTestProduct.JC_DAILY_ZH);
 
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.INVALIDED).buildVoucher().getVoucherId();
 

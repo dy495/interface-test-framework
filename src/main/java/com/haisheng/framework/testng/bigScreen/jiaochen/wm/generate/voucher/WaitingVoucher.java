@@ -3,7 +3,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherTypeEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -24,7 +24,7 @@ public class WaitingVoucher extends AbstractVoucher {
         logger("CREATE WAITING START");
         super.visitor = visitor;
         if (scene == null) {
-            new SupporterUtil(visitor).createVoucher(10, VoucherTypeEnum.CUSTOM);
+            new SceneUtil(visitor).createVoucher(10, VoucherTypeEnum.CUSTOM);
         } else {
             visitor.invokeApi(scene);
         }

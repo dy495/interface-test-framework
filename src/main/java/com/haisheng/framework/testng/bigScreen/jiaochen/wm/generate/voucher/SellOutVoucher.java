@@ -16,7 +16,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanag
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.packagemanage.PurchaseTemporaryPackageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyApprovalScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SupporterUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
 
 /**
  * 无库存状态
@@ -33,7 +33,7 @@ public class SellOutVoucher extends AbstractVoucher {
     public void execute(VisitorProxy visitor, IScene scene) {
         logger("CREATE SELL OUT START");
         super.visitor = visitor;
-        String voucherName = new SupporterUtil(visitor).createVoucher(1, VoucherTypeEnum.CUSTOM);
+        String voucherName = new SceneUtil(visitor).createVoucher(1, VoucherTypeEnum.CUSTOM);
         applyVoucher(voucherName);
         buyTemporaryPackage(voucherName);
         makeSureBuyPackage();

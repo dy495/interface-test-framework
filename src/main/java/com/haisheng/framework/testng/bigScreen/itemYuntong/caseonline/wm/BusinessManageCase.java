@@ -12,7 +12,7 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.custo
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanage.PreSaleCustomerCreatePotentialCustomerScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.customermanage.PreSaleCustomerPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -127,7 +127,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
             IScene scene = PreSaleCustomerCreatePotentialCustomerScene.builder().customerType("PERSON").customerName("燕小六")
                     .customerPhone(util.getNotExistPhone()).sex("0").salesId(util.getSaleId()).shopId(Long.parseLong(util.getReceptionShopId()))
                     .carStyleId(Long.parseLong(util.getCarStyleId())).carModelId(Long.parseLong(util.getCarModelId())).build().modify(field, value);
-            String message = util.getResponse(scene).getMessage();
+            String message = scene.getResponse(visitor).getMessage();
             CommonUtil.checkResult("创建潜客：" + field, value, err, message);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -145,7 +145,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
                     .sex("1").customerType("PERSON").shopId(Long.parseLong(util.getReceptionShopId()))
                     .carStyleId(Long.parseLong(util.getCarStyleId())).carModelId(Long.parseLong(util.getCarModelId())).salesId(util.getSaleId())
                     .purchaseCarDate(DateTimeUtil.addDayFormat(new Date(), -10)).vehicleChassisCode(vin).build().modify(field, value);
-            String message = util.getResponse(scene).getMessage();
+            String message = scene.getResponse(visitor).getMessage();
             CommonUtil.checkResult("创建成交记录：" + field, value, err, message);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
