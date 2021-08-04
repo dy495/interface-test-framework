@@ -12,7 +12,7 @@ import lombok.Builder;
  * @date 2021-07-28 16:58:57
  */
 @Builder
-public class CustomersPortraitScene extends BaseScene {
+public class CustomersPortraitRealTimeScene extends BaseScene {
     /**
      * 描述 No comments found.
      * 是否必填 false
@@ -20,11 +20,14 @@ public class CustomersPortraitScene extends BaseScene {
      */
     private final String referer;
 
+    private final String mallId;
+
 
     @Override
     protected JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("referer", referer);
+        object.put("mall_id", mallId);
         return object;
     }
 

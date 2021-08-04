@@ -32,7 +32,7 @@ public class OverviewFloorOverviewScene extends BaseScene {
      * 是否必填 false
      * 版本 -
      */
-    private final String time;
+    private final String date;
 
     /**
      * 描述 楼层id
@@ -47,7 +47,7 @@ public class OverviewFloorOverviewScene extends BaseScene {
         JSONObject object = new JSONObject();
         object.put("referer", referer);
         object.put("time_type", timeType);
-        object.put("time", time);
+        object.put("date", date);
         object.put("floor_id", floorId);
         return object;
     }

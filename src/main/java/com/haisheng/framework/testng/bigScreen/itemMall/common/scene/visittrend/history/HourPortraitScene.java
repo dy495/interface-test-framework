@@ -32,7 +32,9 @@ public class HourPortraitScene extends BaseScene {
      * 是否必填 false
      * 版本 -
      */
-    private final String region;
+    private final String scene;
+
+    private final Long floorId;
 
 
     @Override
@@ -40,7 +42,8 @@ public class HourPortraitScene extends BaseScene {
         JSONObject object = new JSONObject();
         object.put("referer", referer);
         object.put("date", date);
-        object.put("region", region);
+        object.put("scene", scene);
+        object.put("floor_id", floorId);
         return object;
     }
 
