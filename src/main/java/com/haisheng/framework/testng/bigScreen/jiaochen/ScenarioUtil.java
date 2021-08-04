@@ -55,7 +55,7 @@ public class ScenarioUtil extends TestCaseCommon {
 
     //app登录
     public void appLogin(String username, String password) {
-        String path = "/jiaochen/login-m-app";
+        String path = "/account-platform/login-m-app";
         JSONObject object = new JSONObject();
         object.put("phone", username);
         object.put("verification_code", password);
@@ -64,7 +64,7 @@ public class ScenarioUtil extends TestCaseCommon {
 
     //app登录
     public JSONObject appLogin2(String username, String password, Boolean checkCode) {
-        String path = "/jiaochen/login-m-app";
+        String path = "/account-platform/login-m-app";
         JSONObject object = new JSONObject();
         object.put("phone", username);
         object.put("verification_code", password);
@@ -75,10 +75,11 @@ public class ScenarioUtil extends TestCaseCommon {
 
     //pc登录
     public JSONObject pcTryLogin(String phone, String verificationCode, Boolean checkCode) {
-        String path = "/jiaochen/login-pc";
+        String path = "/account-platform/login-pc";
         JSONObject object = new JSONObject();
         object.put("phone", phone);
         object.put("verification_code", verificationCode);
+        object.put("type", 1);
         String rs = JSONObject.toJSONString(object);
         String response = httpPost(EnumTestProduct.JC_DAILY_ZH.getIp(), path, rs, checkCode, false);
         return JSONObject.parseObject(response);
@@ -86,7 +87,7 @@ public class ScenarioUtil extends TestCaseCommon {
 
     //app登录
     public void appLoginout() {
-        String path = "/jiaochen/m-app/login-user/logout";
+        String path = "/account-platform/m-app/login-user/logout";
         JSONObject object = new JSONObject();
         httpPost(EnumTestProduct.JC_DAILY_ZH.getIp(), path, object);
     }
@@ -112,7 +113,7 @@ public class ScenarioUtil extends TestCaseCommon {
 
     //pc修改密码
     public JSONObject pcModifyPassword(String oldPassword, String newPassword) {
-        String path = "/jiaochen/pc/modifyPassword";
+        String path = "/account-platform/pc/modifyPassword";
         JSONObject object = new JSONObject();
         object.put("old_password", oldPassword);
         object.put("new_password", newPassword);
@@ -121,14 +122,14 @@ public class ScenarioUtil extends TestCaseCommon {
 
     //pc通过token获取用户信息
     public JSONObject pcAuthLoginUserDetail() {
-        String path = "/jiaochen/pc/auth/login-user/detail";
+        String path = "/account-platform/pc/auth/login-user/detail";
         JSONObject object = new JSONObject();
         return invokeApi(path, object, false);
     }
 
     //pc登出
     public JSONObject pcLogout() {
-        String path = "/jiaochen/pc/logout";
+        String path = "/account-platform/pc/logout";
         JSONObject object = new JSONObject();
         String response = httpPost(EnumTestProduct.JC_DAILY_ZH.getIp(), path, JSONObject.toJSONString(object), false, false);
         return JSONObject.parseObject(response);
@@ -3624,11 +3625,12 @@ public class ScenarioUtil extends TestCaseCommon {
      */
 
     public JSONObject loginPC(String phone, String code) {
-        String url = "/jiaochen/login-pc";
+        String url = "/account-platform/login-pc";
         JSONObject json = new JSONObject();
         json.put("phone", phone);
         json.put("verification_code", code);
-        String result = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        json.put("type", 1);
+        String result = httpPostWithCheckCode(url, json.toJSONString(), EnumTestProduct.JC_DAILY_ZH.getIp());
         return JSON.parseObject(result).getJSONObject("data");
     }
 
@@ -6964,7 +6966,7 @@ public class ScenarioUtil extends TestCaseCommon {
      */
 
     public JSONObject AppletAppletLoginScene(String code) {
-        String url = "/jiaochen/applet-login";
+        String url = "/account-platform/applet-login";
         JSONObject json = new JSONObject();
         json.put("code", code);
 

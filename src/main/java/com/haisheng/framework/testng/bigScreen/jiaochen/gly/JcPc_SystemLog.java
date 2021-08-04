@@ -29,7 +29,7 @@ import static com.aliyun.openservices.shade.com.alibaba.rocketmq.common.UtilAll.
 
 public class JcPc_SystemLog extends TestCaseCommon implements TestCaseStd {
     CommonConfig commonConfig = new CommonConfig();
-    private static final EnumTestProduct product = EnumTestProduct.JC_DAILY_ZH;
+    private static final EnumTestProduct product = EnumTestProduct.JC_DAILY_JD;
     ScenarioUtil jc = new ScenarioUtil();
     PublicParm pp = new PublicParm();
     public String shopId = "-1";

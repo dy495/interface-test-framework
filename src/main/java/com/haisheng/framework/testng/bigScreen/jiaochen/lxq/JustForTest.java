@@ -31,7 +31,7 @@ public class JustForTest extends TestCaseCommon implements TestCaseStd {
 
     //--------日常开始---------
     ScenarioUtil jc = new ScenarioUtil();
-    private static final EnumTestProduct product = EnumTestProduct.JC_DAILY_ZH;
+    private static final EnumTestProduct product = EnumTestProduct.JC_DAILY_JD;
     //private static final EnumAppletToken APPLET_USER = EnumAppletToken.JC_GLY_DAILY;
     public VisitorProxy visitor = new VisitorProxy(product);
     BusinessUtil businessUtil = new BusinessUtil(visitor);

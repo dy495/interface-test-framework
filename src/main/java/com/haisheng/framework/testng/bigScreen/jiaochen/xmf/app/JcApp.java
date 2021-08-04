@@ -85,7 +85,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
 
     //app登录
     public void appLogin(String username, String password, String roleId) {
-        String path = "/jiaochen/login-m-app";
+        String path = "/account-platform/login-m-app";
         JSONObject object = new JSONObject();
         object.put("phone", username);
         object.put("verification_code", password);
@@ -95,10 +95,11 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
 
     //pc登录
     public void pcLogin(String phone, String verificationCode, String roleId) {
-        String path = "/jiaochen/login-pc";
+        String path = "/account-platform/login-pc";
         JSONObject object = new JSONObject();
         object.put("phone", phone);
         object.put("verification_code", verificationCode);
+        object.put("type", 1);
         commonConfig.roleId = roleId;
         httpPost(EnumTestProduct.JC_DAILY_ZH.getIp(), path, object);
     }

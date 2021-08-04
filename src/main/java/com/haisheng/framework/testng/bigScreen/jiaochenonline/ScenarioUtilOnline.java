@@ -43,11 +43,12 @@ public class ScenarioUtilOnline extends TestCaseCommon {
 
     //pc登录
     public void pcLogin(String phone, String verificationCode) {
-        String path = "/jiaochen/login-pc";
+        String path = "/account-platform/login-pc";
         JSONObject object = new JSONObject();
         object.put("phone", phone);
         object.put("verification_code", verificationCode);
-        httpPost(IpPort, path, object);
+        object.put("type", 1);
+        httpPost(EnumTestProduct.JC_ONLINE_ZH.getIp(), path, object);
     }
 
     /**
@@ -62,30 +63,35 @@ public class ScenarioUtilOnline extends TestCaseCommon {
     }
 
     //pc登录
-    public JSONObject pcTryLogin(String phone, String verificationCode, Boolean checkcode) {
-        String path = "/jiaochen/login-pc";
+    public JSONObject pcTryLogin(String phone, String verificationCode, Boolean checkCode) {
+        String path = "/account-platform/login-pc";
         JSONObject object = new JSONObject();
         object.put("phone", phone);
         object.put("verification_code", verificationCode);
-        return invokeApi(path, object, checkcode);
+        object.put("type", 1);
+        String rs = JSONObject.toJSONString(object);
+        String response = httpPost(EnumTestProduct.JC_ONLINE_ZH.getIp(), path, rs, checkCode, false);
+        return JSONObject.parseObject(response);
     }
 
     //app登录
     public JSONObject appLogin2(String username, String password, Boolean checkCode) {
-        String path = "/jiaochen/login-m-app";
+        String path = "/account-platform/login-m-app";
         JSONObject object = new JSONObject();
         object.put("phone", username);
         object.put("verification_code", password);
-        return invokeApi(path, object, checkCode);
+        String rs = JSONObject.toJSONString(object);
+        String response = httpPost(EnumTestProduct.JC_ONLINE_ZH.getIp(), path, rs, checkCode, false);
+        return JSONObject.parseObject(response);
     }
 
     //app登录
     public void appLogin(String username, String password) {
-        String path = "/jiaochen/login-m-app";
+        String path = "/account-platform/login-m-app";
         JSONObject object = new JSONObject();
         object.put("phone", username);
         object.put("verification_code", password);
-        httpPost(IpPort, path, object);
+        httpPost(EnumTestProduct.JC_ONLINE_ZH.getIp(), path, object);
     }
 
     public void appletLoginToken(String token) {
@@ -109,7 +115,7 @@ public class ScenarioUtilOnline extends TestCaseCommon {
 
     //pc修改密码
     public JSONObject pcModifyPassword(String oldPassword, String newPassword) {
-        String path = "/jiaochen/pc/modifyPassword";
+        String path = "/account-platform/pc/modifyPassword";
         JSONObject object = new JSONObject();
         object.put("old_password", oldPassword);
         object.put("new_password", newPassword);
@@ -118,14 +124,14 @@ public class ScenarioUtilOnline extends TestCaseCommon {
 
     //pc通过token获取用户信息
     public JSONObject pcAuthLoginUserDetail() {
-        String path = "/jiaochen/pc/auth/login-user/detail";
+        String path = "/account-platform/pc/auth/login-user/detail";
         JSONObject object = new JSONObject();
         return invokeApi(path, object, false);
     }
 
     //pc登出
     public JSONObject pcLogout() {
-        String path = "/jiaochen/pc/logout";
+        String path = "/account-platform/pc/logout";
         JSONObject object = new JSONObject();
         return invokeApi(path, object, false);
     }

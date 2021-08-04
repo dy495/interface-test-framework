@@ -23,7 +23,7 @@ public class Jc_Pc_CustomerManageOnline extends TestCaseCommon implements TestCa
     ScenarioUtil jc = new ScenarioUtil();
     public String shopId = "-1";
     CommonPram cp = new CommonPram();
-    private static final EnumTestProduct product = EnumTestProduct.JC_ONLINE;
+    private static final EnumTestProduct product = EnumTestProduct.JC_ONLINE_JD;
     CommonConfig commonConfig = new CommonConfig();
 
     /**
@@ -33,7 +33,7 @@ public class Jc_Pc_CustomerManageOnline extends TestCaseCommon implements TestCa
     @Override
     public void initial() {
         logger.debug("before class initial");
-        jc.changeIpPort(EnumTestProduct.JC_ONLINE.getIp());
+        jc.changeIpPort(EnumTestProduct.JC_ONLINE_JD.getIp());
         //替换checklist的相关信息
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
         commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
@@ -41,11 +41,11 @@ public class Jc_Pc_CustomerManageOnline extends TestCaseCommon implements TestCa
         commonConfig.product = EnumTestProduct.JC_DAILY_ZH.getAbbreviation();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "jc-onLine-test");
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.JC_ONLINE.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.JC_ONLINE_JD.getDesc() + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = EnumDingTalkWebHook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
-        commonConfig.shopId = EnumTestProduct.JC_ONLINE.getShopId();
+        commonConfig.shopId = EnumTestProduct.JC_ONLINE_JD.getShopId();
         commonConfig.referer = product.getReferer();
         commonConfig.roleId = "395";
         beforeClassInit(commonConfig);
