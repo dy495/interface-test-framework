@@ -46,6 +46,6 @@ public class AddScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/car-platform/pc/role/add";
+        return "/account-platform/pc/role/add";
     }
 }

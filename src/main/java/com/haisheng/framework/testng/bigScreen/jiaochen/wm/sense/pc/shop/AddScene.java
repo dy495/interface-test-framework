@@ -118,6 +118,6 @@ public class AddScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/car-platform/pc/shop/add";
+        return "/account-platform/pc/shop/add";
     }
 }

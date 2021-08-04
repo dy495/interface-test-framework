@@ -86,6 +86,6 @@ public class ExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/car-platform/pc/staff/export";
+        return "/account-platform/pc/staff/export";
     }
 }

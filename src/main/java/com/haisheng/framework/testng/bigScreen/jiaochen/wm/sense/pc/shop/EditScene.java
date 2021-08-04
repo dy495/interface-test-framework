@@ -126,6 +126,6 @@ public class EditScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/car-platform/pc/shop/edit";
+        return "/account-platform/pc/shop/edit";
     }
 }
