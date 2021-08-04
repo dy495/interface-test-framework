@@ -13,6 +13,9 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherSce
 import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherScene.AppFlowUp.AppFlowUpRemarkScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.AppFinishReceptionScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.AppPreSalesReceptionCreateScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.loginuser.LoginPc;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.EvaluateDetailV4Scene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.EvaluatePageV4Scene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.PreSalesReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.PreSalesRecpEvaluateOpt;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.PreSalesRecpEvaluateSubmit;
@@ -53,7 +56,7 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.YUNTONG_ONLINE_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
         //替换钉钉推送
-        commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
+        commonConfig.dingHook = DingWebhook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         commonConfig.product = PRODUCE.getAbbreviation(); // 产品代号 -- YT
         commonConfig.referer = PRODUCE.getReferer();
         commonConfig.shopId = YT_RECEPTION_ACCOUNT.getReceptionShopId();  //请求头放入shopId YT_RECEPTION_ACCOUNT.getReceptionShopId();
@@ -185,11 +188,17 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
             String message = PreSalesRecpEvaluateSubmit.builder().evaluate_info_list(evaluateInfoList).reception_id(Long.parseLong(customer.get("id"))).build().invoke(visitor, false).getString("message");
             commonConfig.shopId = YT_RECEPTION_ACCOUNT.getReceptionShopId();
             commonConfig.roleId = YT_RECEPTION_ACCOUNT.getRoleId();
-            if (Objects.equals(message,"success")){
-                Integer flowUpId = AppFlowUpPageScene.builder().size(10).build().invoke(visitor, true).getJSONArray("list").getJSONObject(0).getInteger("id");
-                String code = AppFlowUpRemarkScene.builder().followId(flowUpId).remark(remark).build().invoke(visitor, false).getString("code");
-                Preconditions.checkArgument(Objects.equals(expect,code),description+",预期结果code="+expect+",实际结果code="+code);
+            JSONObject firstFlow = AppFlowUpPageScene.builder().size(10).build().invoke(visitor, true).getJSONArray("list").getJSONObject(0);
+            Integer flowUpId = firstFlow.getInteger("id");
+            String phone = firstFlow.getJSONObject("pre_reception_offline_evaluate").getString("customer_phone");
+            String code = AppFlowUpRemarkScene.builder().followId(flowUpId).remark(remark).build().invoke(visitor, false).getString("code");
+            Integer id = EvaluatePageV4Scene.builder().page(1).size(10).evaluateType(4).customerPhone(phone).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getInteger("id");
+            String remarkContent = EvaluateDetailV4Scene.builder().id(id).build().invoke(visitor, true).getString("remark_content");
+            Preconditions.checkArgument(Objects.equals(expect,code),description+",预期结果code="+expect+",实际结果code="+code);
+            if(Objects.equals(expect,"1000")) {
+                Preconditions.checkArgument(Objects.equals(remark,remarkContent),"跟进内容不一致。APP填写跟进内容:"+remark+";PC跟进内容:"+remarkContent);
             }
+
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {

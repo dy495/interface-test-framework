@@ -39,7 +39,7 @@ public class CustomersPortraitScene extends BaseScene {
      * 是否必填 false
      * 版本 -
      */
-    private final String floorId;
+    private final Long floorId;
 
 
     @Override

@@ -17,7 +17,7 @@ public class EvaluateDetailV4Scene extends BaseScene {
      * 是否必填 false
      * 版本 v4.0
      */
-    private final Long id;
+    private final int id;
 
 
     @Override
@@ -29,6 +29,6 @@ public class EvaluateDetailV4Scene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/account-platform/auth/manage/evaluate/detail-v4";
+        return "/car-platform/pc/manage/evaluate/v4/detail";
     }
 }

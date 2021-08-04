@@ -21,6 +21,11 @@
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.wm.SeverManageCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.wm.AppReceptionCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.wm.SystemRecordCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.AppTaskReceiveDataCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.EvaluateConfigCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.ReceivingLineSystemCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.ReceivingSystemCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.RecordCase"/>
         </classes>
     </test>
 </suite>
