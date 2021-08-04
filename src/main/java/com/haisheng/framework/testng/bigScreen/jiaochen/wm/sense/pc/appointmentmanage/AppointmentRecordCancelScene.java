@@ -45,6 +45,6 @@ public class AppointmentRecordCancelScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/appointment-manage/appointment-record/cancel";
+        return "/car-platform/pc/appointment-manage/appointment-record/cancel";
     }
 }

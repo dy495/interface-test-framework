@@ -53,6 +53,6 @@ public class LossCustomerRepairPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/customer-manage/loss-customer/repair-page";
+        return "/car-platform/pc/customer-manage/loss-customer/repair-page";
     }
 }

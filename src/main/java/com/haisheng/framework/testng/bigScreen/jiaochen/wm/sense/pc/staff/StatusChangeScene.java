@@ -37,6 +37,6 @@ public class StatusChangeScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/staff/status/change";
+        return "/car-platform/pc/staff/status/change";
     }
 }

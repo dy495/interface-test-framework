@@ -29,6 +29,6 @@ public class AdmitScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/pre-sales-reception/admit";
+        return "/car-platform/pc/pre-sales-reception/admit";
     }
 }

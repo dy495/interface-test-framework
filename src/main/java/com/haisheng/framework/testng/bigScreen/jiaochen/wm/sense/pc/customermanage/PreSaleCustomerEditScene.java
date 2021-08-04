@@ -85,6 +85,6 @@ public class PreSaleCustomerEditScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/customer-manage/pre-sale-customer/edit";
+        return "/car-platform/pc/customer-manage/pre-sale-customer/edit";
     }
 }

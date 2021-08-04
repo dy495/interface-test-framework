@@ -45,6 +45,6 @@ public class SignInConfigEditScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/vip-marketing/sign_in_config/edit";
+        return "/car-platform/pc/vip-marketing/sign_in_config/edit";
     }
 }

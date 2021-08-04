@@ -45,6 +45,6 @@ public class CarInsuranceRecordScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/insurance-management/car-insurance-record";
+        return "/car-platform/pc/insurance-management/car-insurance-record";
     }
 }

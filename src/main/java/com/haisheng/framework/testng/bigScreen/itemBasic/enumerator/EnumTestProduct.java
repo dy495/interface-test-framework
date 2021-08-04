@@ -16,8 +16,6 @@ public enum EnumTestProduct {
 
     PORSCHE_ONLINE_CLIENT("汽车-保时捷 保时捷线上 ", "", "http://porsche.dealer-ydauto.winsenseos.com", "12732", "BSJ", "", false),
 
-    JC_ONLINE("汽车-轿辰 赢识线上 ", "https://servicewechat.com/wxbd41de85739a00c7/0/page-frame.html", "http://www.4001000574.com", "-1", "JC", "395", false),
-
     XD_DAILY("门店 日常 ", "https://servicewechat.com/wx937d85ff683db555/0/page-frame.html", "http://dev.inspect.store.winsenseos.cn", "43072", "MD", "", true),
 
     XD_ONLINE("门店 线上 ", "http://inspect.store.winsenseos.com/authpage/login", "http://inspect.store.winsenseos.com", "14630", "MD", "", false),
@@ -43,13 +41,13 @@ public enum EnumTestProduct {
     JC_ONLINE_ZH("汽车-轿辰 线上 ", "http://zhanghao.auto.winsenseos.com", "http://zhanghao.auto.winsenseos.com", "-1", "JC", "395", false),
 
 
-    YT_DAILY_CAR("汽车-运通 日常 ", "http://dev.car.yuntong.winsenseos.cn/", "http://dev.car.yuntong.winsenseos.cn", "-1", "YT", null, true),
-    YT_DAILY_CONTROL("汽车-运通 日常 ", "http://dev.control.yuntong.winsenseos.cn/", "http://dev.control.yuntong.winsenseos.cn", "-1", "YT", null, true),
-    YT_DAILY_ZH("汽车-运通 日常 ", "http://123.57.59.38", "http://123.57.59.38", "-1", "YT", null, true),
+    YT_DAILY_JD("汽车-运通 日常 ", "http://jiedai.auto.winsenseos.com", "http://jiedai.auto.winsenseos.com", "-1", "YT", null, true),
+    YT_DAILY_GK("汽车-运通 日常 ", "http://huiting.auto.winsenseos.com", "http://huiting.auto.winsenseos.com", "-1", "YT", null, true),
+    YT_DAILY_ZH("汽车-运通 日常 ", "http://zhanghao.auto.winsenseos.com", "http://zhanghao.auto.winsenseos.com", "-1", "YT", null, true),
 
-    YT_ONLINE_CAR("汽车-运通 线上 ", "http://jiedai.auto.winsenseos.com", "http://jiedai.auto.winsenseos.com", "-1", "YT", null, false),
-    YT_ONLINE_CONTROL("汽车-运通 线上 ", "http://huiting.auto.winsenseos.com", "http://huiting.auto.winsenseos.com", "-1", "YT", null, false),
-    YT_ONLINE_SSO("汽车-运通 线上 ", "http://zhanghao.auto.winsenseos.com", "http://zhanghao.auto.winsenseos.com", "-1", "YT", null, false),
+    YT_ONLINE_JD("汽车-运通 线上 ", "http://jiedai.auto.winsenseos.com", "http://jiedai.auto.winsenseos.com", "-1", "YT", null, false),
+    YT_ONLINE_GK("汽车-运通 线上 ", "http://huiting.auto.winsenseos.com", "http://huiting.auto.winsenseos.com", "-1", "YT", null, false),
+    YT_ONLINE_ZH("汽车-运通 线上 ", "http://zhanghao.auto.winsenseos.com", "http://zhanghao.auto.winsenseos.com", "-1", "YT", null, false),
 
 
     MALL_DAILY("购物中心-日常", "", "http://dev.mall.store.winsenseos.cn", "", "MALL", null, true),

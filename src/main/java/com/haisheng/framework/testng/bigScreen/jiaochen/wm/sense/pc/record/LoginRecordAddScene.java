@@ -37,6 +37,6 @@ public class LoginRecordAddScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/record/login-record/add";
+        return "/car-platform/pc/record/login-record/add";
     }
 }

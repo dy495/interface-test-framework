@@ -26,9 +26,9 @@ import java.lang.reflect.Method;
  **/
 
 public class JcAppointmentRelateOnLine extends TestCaseCommon implements TestCaseStd {
-
+    EnumTestProduct product = EnumTestProduct.JC_ONLINE_JD;
     ScenarioUtil jc = new ScenarioUtil();
-    private QADbProxy qaDbProxy = QADbProxy.getInstance();
+    private final QADbProxy qaDbProxy = QADbProxy.getInstance();
     public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
     String dataName = "pc_appointmentPageOnLine";
 
@@ -40,15 +40,15 @@ public class JcAppointmentRelateOnLine extends TestCaseCommon implements TestCas
     public void initial1() {
         logger.debug("before classs initial");
         CommonConfig commonConfig = new CommonConfig();
-        jc.changeIpPort(EnumTestProduct.JC_ONLINE.getIp());
+        jc.changeIpPort(product.getIp());
 
 
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.referer = EnumTestProduct.JC_ONLINE.getReferer();
-        commonConfig.product = EnumTestProduct.JC_ONLINE.getAbbreviation();
+        commonConfig.referer = product.getReferer();
+        commonConfig.product = product.getAbbreviation();
 
         //replace backend gateway url
         //commonConfig.gateway = "";
@@ -57,7 +57,7 @@ public class JcAppointmentRelateOnLine extends TestCaseCommon implements TestCas
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_ONLINE_TEST.getJobName());
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.JC_ONLINE.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
 
 
         //replace ding push conf
@@ -68,7 +68,7 @@ public class JcAppointmentRelateOnLine extends TestCaseCommon implements TestCas
 //        commonConfig.referer="http://dev.dealer-jc.winsenseos.cn/authpage/login";
         //set shop id
         commonConfig.shopId = pp.shopIdZ;
-        commonConfig.roleId=pp.roleidJdgw;
+        commonConfig.roleId = pp.roleidJdgw;
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);
@@ -249,8 +249,6 @@ public class JcAppointmentRelateOnLine extends TestCaseCommon implements TestCas
             saveData("预约后pc预约记录页信息校验");
         }
     }
-
-
 
 
     //    @Test()  //测试函数

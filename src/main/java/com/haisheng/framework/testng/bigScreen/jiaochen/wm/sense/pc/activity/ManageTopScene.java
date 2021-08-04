@@ -29,6 +29,6 @@ public class ManageTopScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/activity/manage/top";
+        return "/car-platform/pc/activity/manage/top";
     }
 }

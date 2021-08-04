@@ -53,6 +53,6 @@ public class IntegralRuleSetScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/integral-center/integral-rule-set";
+        return "/car-platform/pc/integral-center/integral-rule-set";
     }
 }

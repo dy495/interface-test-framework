@@ -78,6 +78,6 @@ public class IntelligentRemindEditScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/manage/intelligent-remind/edit";
+        return "/car-platform/pc/manage/intelligent-remind/edit";
     }
 }

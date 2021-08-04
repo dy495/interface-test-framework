@@ -26,6 +26,6 @@ public class CreateVerificationPeopleScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/voucher-manage/create-verification-people";
+        return "/car-platform/pc/voucher-manage/create-verification-people";
     }
 }

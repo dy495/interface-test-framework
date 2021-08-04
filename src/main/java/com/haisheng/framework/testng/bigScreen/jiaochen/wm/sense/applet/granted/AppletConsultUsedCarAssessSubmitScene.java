@@ -69,6 +69,6 @@ public class AppletConsultUsedCarAssessSubmitScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/granted/consult/used-car-assess-submit";
+        return "/car-platform/applet/granted/consult/used-car-assess-submit";
     }
 }

@@ -30,7 +30,8 @@ import java.text.SimpleDateFormat;
 import static com.google.common.base.Preconditions.checkArgument;
 
 public class JcApplet extends TestCaseCommon implements TestCaseStd {
-    VisitorProxy visitor = new VisitorProxy(EnumTestProduct.JC_DAILY_ZH);
+    EnumTestProduct product = EnumTestProduct.JC_DAILY_JD;
+    VisitorProxy visitor = new VisitorProxy(product);
     private static final EnumAccount administrator = EnumAccount.JC_ALL_AUTHORITY_DAILY;
     ScenarioUtil jc = new ScenarioUtil();
     SceneUtil util = new SceneUtil(visitor);
@@ -52,7 +53,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.product = EnumTestProduct.JC_DAILY_ZH.getAbbreviation();
+        commonConfig.product = product.getAbbreviation();
 
         //replace backend gateway url
         //commonConfig.gateway = "";
@@ -61,12 +62,12 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.JC_DAILY_ZH.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
 
         //replace ding push conf
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.referer = EnumTestProduct.JC_DAILY_ZH.getReferer();
+        commonConfig.referer = product.getReferer();
 
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};

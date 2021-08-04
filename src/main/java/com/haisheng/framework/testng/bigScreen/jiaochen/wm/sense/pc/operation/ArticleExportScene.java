@@ -94,6 +94,6 @@ public class ArticleExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/operation/article/export";
+        return "/car-platform/pc/operation/article/export";
     }
 }

@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class YunTongInfo {
-    EnumTestProduct PRODUCE = EnumTestProduct.YT_DAILY_CAR;
+    EnumTestProduct PRODUCE = EnumTestProduct.YT_DAILY_JD;
     EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_DAILY;
     VisitorProxy visitor = new VisitorProxy(PRODUCE);
     DateTimeUtil dt = new DateTimeUtil();

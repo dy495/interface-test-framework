@@ -38,6 +38,6 @@ public class AppletRescueShopListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/granted/rescue/shop/list";
+        return "/car-platform/applet/granted/rescue/shop/list";
     }
 }

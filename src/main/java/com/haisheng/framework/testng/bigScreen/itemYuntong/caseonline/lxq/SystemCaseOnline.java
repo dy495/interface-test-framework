@@ -27,7 +27,7 @@ import java.lang.reflect.Method;
  */
 public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
 
-    EnumTestProduct PRODUCE = EnumTestProduct.YT_DAILY_CAR;
+    EnumTestProduct PRODUCE = EnumTestProduct.YT_DAILY_JD;
     EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_ONLINE;
     VisitorProxy visitor = new VisitorProxy(PRODUCE);
     SceneUtil businessUtil = new SceneUtil(visitor);

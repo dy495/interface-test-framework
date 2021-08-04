@@ -20,6 +20,6 @@ public class AppletHomePageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/granted/integral-mall/home-page";
+        return "/car-platform/applet/granted/integral-mall/home-page";
     }
 }

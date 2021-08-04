@@ -37,6 +37,6 @@ public class AppletConsultSalesPosterScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/granted/consult/sales-poster";
+        return "/car-platform/applet/granted/consult/sales-poster";
     }
 }

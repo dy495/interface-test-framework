@@ -53,6 +53,6 @@ public class PushMessageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/message-manage/push-message";
+        return "/car-platform/pc/message-manage/push-message";
     }
 }

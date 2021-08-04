@@ -46,6 +46,6 @@ public class TypeListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/banner/type-list";
+        return "/car-platform/pc/banner/type-list";
     }
 }

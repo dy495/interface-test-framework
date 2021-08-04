@@ -53,6 +53,6 @@ public class UploadScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/file/upload";
+        return "/car-platform/pc/file/upload";
     }
 }

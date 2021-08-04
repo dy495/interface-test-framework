@@ -20,7 +20,7 @@ public class DeleteExchangeGoodsScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/integral-center/delete-exchange-goods";
+        return "/car-platform/pc/integral-center/delete-exchange-goods";
     }
 
 }

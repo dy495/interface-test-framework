@@ -37,6 +37,6 @@ public class AuthListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/staff/auth-list";
+        return "/car-platform/pc/staff/auth-list";
     }
 }

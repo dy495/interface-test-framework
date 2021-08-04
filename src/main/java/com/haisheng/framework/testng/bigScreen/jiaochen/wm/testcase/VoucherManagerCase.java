@@ -49,7 +49,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduct PRODUCE = EnumTestProduct.JC_DAILY_ZH;
+    private static final EnumTestProduct PRODUCE = EnumTestProduct.JC_DAILY_JD;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.JC_ALL_AUTHORITY_DAILY;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_DAILY;
     private static final EnumAppletToken APPLET_USER_TWO = EnumAppletToken.JC_LXQ_DAILY;

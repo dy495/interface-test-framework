@@ -29,6 +29,6 @@ public class AppointmentMaintainConfigDetailScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/manage/appointment/maintain-config/detail";
+        return "/car-platform/pc/manage/appointment/maintain-config/detail";
     }
 }

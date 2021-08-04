@@ -18,6 +18,6 @@ public class ManageDeleteScene extends BaseScene {
     }
     @Override
     public String getPath() {
-        return "/jiaochen/pc/activity/manage/delete";
+        return "/car-platform/pc/activity/manage/delete";
     }
 }

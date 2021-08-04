@@ -29,6 +29,6 @@ public class CancelPackageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/package-manage/cancel-package";
+        return "/car-platform/pc/package-manage/cancel-package";
     }
 }

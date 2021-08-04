@@ -34,7 +34,7 @@ public class BuyPackageRecordScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/package-manage/buy-package-record";
+        return "/car-platform/pc/package-manage/buy-package-record";
     }
 
     @Override

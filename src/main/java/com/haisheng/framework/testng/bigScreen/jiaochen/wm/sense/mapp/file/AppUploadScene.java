@@ -53,6 +53,6 @@ public class AppUploadScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/m-app/file/upload";
+        return "/car-platform/m-app/file/upload";
     }
 }

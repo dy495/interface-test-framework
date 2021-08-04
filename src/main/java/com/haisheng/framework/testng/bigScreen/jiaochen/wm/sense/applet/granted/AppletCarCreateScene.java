@@ -37,6 +37,6 @@ public class AppletCarCreateScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/granted/car/create";
+        return "/car-platform/applet/granted/car/create";
     }
 }

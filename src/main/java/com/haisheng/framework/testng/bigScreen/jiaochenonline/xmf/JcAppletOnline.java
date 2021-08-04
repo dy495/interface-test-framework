@@ -24,7 +24,7 @@ import java.text.SimpleDateFormat;
 import static com.google.common.base.Preconditions.checkArgument;
 
 public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
-
+    EnumTestProduct product = EnumTestProduct.JC_ONLINE_JD;
     ScenarioUtil jc = new ScenarioUtil();
 
     PublicParmOnline pp = new PublicParmOnline();
@@ -45,8 +45,8 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.product = EnumTestProduct.JC_ONLINE.getAbbreviation();
-        jc.changeIpPort(EnumTestProduct.JC_ONLINE.getIp());
+        commonConfig.product = product.getAbbreviation();
+        jc.changeIpPort(product.getIp());
 
 
         //replace backend gateway url
@@ -56,13 +56,13 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "Jjiaochen-online-test");
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.JC_ONLINE.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
 
         //replace ding push conf
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
         commonConfig.dingHook = DingWebhook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
 
-        commonConfig.referer = EnumTestProduct.JC_ONLINE.getReferer();
+        commonConfig.referer = product.getReferer();
 
 //        commonConfig.referer=getJcReferOnline();
 
@@ -417,7 +417,7 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
         try {
             System.out.println(commonConfig.referer);
             jc.appletLoginToken(pp.appletTocken);
-            System.out.println(EnumTestProduct.JC_DAILY_ZH.getIp());
+            System.out.println(product.getIp());
             System.out.println("卡券数量" + pf.getVoucherTotal());
 //            System.out.println("套餐数量"+pf.getpackgeTotal());
 

@@ -78,6 +78,6 @@ public class AllScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/brand/all";
+        return "/car-platform/pc/brand/all";
     }
 }

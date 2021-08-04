@@ -37,6 +37,6 @@ public class AppointmentTimeRangeDetailScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/manage/appointment/time-range/detail";
+        return "/car-platform/pc/manage/appointment/time-range/detail";
     }
 }

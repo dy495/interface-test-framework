@@ -5,7 +5,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/applet/granted/consult/online-experts-submit的接口
+ * /car-platform/applet/granted/consult/online-experts-submit的接口
  *
  * @author wangmin
  * @date 2021-03-12 17:53:03
@@ -69,6 +69,6 @@ public class AppletConsultOnlineExpertsSubmitScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/granted/consult/online-experts-submit";
+        return "/car-platform/applet/granted/consult/online-experts-submit";
     }
 }

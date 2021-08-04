@@ -5,7 +5,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/integral-center/change-switch-status的接口
+ * /car-platform/pc/integral-center/change-switch-status的接口
  *
  * @author wangmin
  * @date 2021-03-12 17:23:18
@@ -37,6 +37,6 @@ public class ChangeSwitchStatusScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/integral-center/change-switch-status";
+        return "/car-platform/pc/integral-center/change-switch-status";
     }
 }

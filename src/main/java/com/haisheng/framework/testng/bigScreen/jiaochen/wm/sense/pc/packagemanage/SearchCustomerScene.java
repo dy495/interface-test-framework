@@ -23,6 +23,6 @@ public class SearchCustomerScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/package-manage/search-customer";
+        return "/car-platform/pc/package-manage/search-customer";
     }
 }

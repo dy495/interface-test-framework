@@ -6,7 +6,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * /jiaochen/pc/vip-marketing/wash-car-manager/export的接口
+ * /car-platform/pc/vip-marketing/wash-car-manager/export的接口
  *
  * @author wangmin
  * @date 2021-03-12 17:23:17
@@ -102,6 +102,6 @@ public class WashCarManagerExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/vip-marketing/wash-car-manager/export";
+        return "/car-platform/pc/vip-marketing/wash-car-manager/export";
     }
 }

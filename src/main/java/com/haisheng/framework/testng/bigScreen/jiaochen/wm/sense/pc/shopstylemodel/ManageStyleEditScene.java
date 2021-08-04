@@ -37,6 +37,6 @@ public class ManageStyleEditScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/shop-style-model/manage/style/edit";
+        return "/car-platform/pc/shop-style-model/manage/style/edit";
     }
 }

@@ -94,6 +94,6 @@ public class WechatCustomerPageExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/customer-manage/wechat-customer/page/export";
+        return "/car-platform/pc/customer-manage/wechat-customer/page/export";
     }
 }

@@ -15,6 +15,6 @@ public class DetailScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/use-range/detail";
+        return "/car-platform/pc/use-range/detail";
     }
 }

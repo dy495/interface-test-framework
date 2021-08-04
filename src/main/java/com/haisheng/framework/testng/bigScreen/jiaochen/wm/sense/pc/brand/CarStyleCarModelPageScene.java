@@ -69,6 +69,6 @@ public class CarStyleCarModelPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/brand/car-style/car-model/page";
+        return "/car-platform/pc/brand/car-style/car-model/page";
     }
 }

@@ -150,6 +150,6 @@ public class CustomerPageListExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/insurance-management/customer-page-list/export";
+        return "/car-platform/pc/insurance-management/customer-page-list/export";
     }
 }

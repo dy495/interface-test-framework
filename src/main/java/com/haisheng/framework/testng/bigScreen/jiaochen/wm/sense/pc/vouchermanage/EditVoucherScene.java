@@ -190,6 +190,6 @@ public class EditVoucherScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/voucher-manage/edit-voucher";
+        return "/car-platform/pc/voucher-manage/edit-voucher";
     }
 }

@@ -49,6 +49,6 @@ public class PurchaseTemporaryPackageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/package-manage/purchase-temporary-package";
+        return "/car-platform/pc/package-manage/purchase-temporary-package";
     }
 }

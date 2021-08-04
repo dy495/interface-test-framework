@@ -143,6 +143,6 @@ public class ManageContentMarketingAddScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/activity/manage/content-marketing/add";
+        return "/car-platform/pc/activity/manage/content-marketing/add";
     }
 }

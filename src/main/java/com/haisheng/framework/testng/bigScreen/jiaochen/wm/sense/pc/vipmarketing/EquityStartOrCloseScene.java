@@ -25,6 +25,6 @@ public class EquityStartOrCloseScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/vip-marketing/equity/start-or-close";
+        return "/car-platform/pc/vip-marketing/equity/start-or-close";
     }
 }

@@ -38,6 +38,6 @@ public class AppletArticleActivityRegisterScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/granted/article/activity/register";
+        return "/car-platform/applet/granted/article/activity/register";
     }
 }

@@ -29,6 +29,6 @@ public class DeleteSpecificationsScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/integral-mall/delete-specifications";
+        return "/car-platform/pc/integral-mall/delete-specifications";
     }
 }

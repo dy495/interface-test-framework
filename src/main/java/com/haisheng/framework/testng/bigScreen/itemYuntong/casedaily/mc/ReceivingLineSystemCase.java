@@ -86,7 +86,7 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
 
     @Test
     public void test01CustomerConfig() {
-        visitor.setProduct(EnumTestProduct.YT_DAILY_CAR);
+        visitor.setProduct(EnumTestProduct.YT_DAILY_JD);
         try {
             String phone = "15" + numRandom(9);
             AppPreSalesReceptionCreateScene.builder().customerName("mc自动化创建使用").customerPhone(phone).sexId("1").intentionCarModelId(util.mcCarId()).estimateBuyCarTime("2035-07-12").build().invoke(visitor);//创建销售接待

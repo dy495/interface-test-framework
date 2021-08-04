@@ -117,6 +117,6 @@ public class PreSaleCustomerBuyCarPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/customer-manage/pre-sale-customer/buy-car/page";
+        return "/car-platform/pc/customer-manage/pre-sale-customer/buy-car/page";
     }
 }

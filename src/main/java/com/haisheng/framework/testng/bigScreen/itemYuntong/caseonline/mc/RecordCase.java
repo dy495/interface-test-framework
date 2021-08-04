@@ -28,7 +28,7 @@ import java.util.Objects;
  * @description :系统记录
  **/
 public class RecordCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_SSO; // 管理页—-首页
+    private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_ZH; // 管理页—-首页
     private static final EnumAccount AUTHORITY = EnumAccount.YT_RECEPTION_ONLINE_5; // 全部权限账号 【运通】
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);   // 产品类放到代理类中（通过代理类发请求）
     public SceneUtil util = new SceneUtil(visitor);    //场景工具类中放入代理类，类中封装接口方法直接调用
@@ -75,17 +75,17 @@ public class RecordCase extends TestCaseCommon implements TestCaseStd {
     @Test(dataProvider = "CarExportPages")
     public void testExportPage(String product, String path, String type) {
         try {
-            visitor.setProduct(EnumTestProduct.YT_ONLINE_CAR);
+            visitor.setProduct(EnumTestProduct.YT_ONLINE_JD);
             JSONObject res1 = util.checkExport(); //查询接口
             Integer total1 = res1.getInteger("total");//检查导出操作前的总记录
             if (Objects.equals(product,"control")) {
-                visitor.setProduct(EnumTestProduct.YT_ONLINE_CONTROL);
+                visitor.setProduct(EnumTestProduct.YT_ONLINE_GK);
             }
             if (Objects.equals(product,"car")) {
-                visitor.setProduct(EnumTestProduct.YT_ONLINE_CAR);
+                visitor.setProduct(EnumTestProduct.YT_ONLINE_JD);
             }
             util.carPageExport(path); //在对应页面中导出
-            visitor.setProduct(EnumTestProduct.YT_ONLINE_CAR);
+            visitor.setProduct(EnumTestProduct.YT_ONLINE_JD);
             JSONObject res2 = util.checkExport();//查询接口
             Integer total2 = res2.getInteger("total"); // 检查导出操作后的总记录
             String typeName = res2.getJSONArray("list").getJSONObject(0).getString("type_name"); //获取导出的页面字段
@@ -128,7 +128,7 @@ public class RecordCase extends TestCaseCommon implements TestCaseStd {
 
     @Test
     public void deleteRecord() {
-        visitor.setProduct(EnumTestProduct.YT_ONLINE_CAR);
+        visitor.setProduct(EnumTestProduct.YT_ONLINE_JD);
         try {
             JSONObject res1 = util.checkDelete(); //删除之前校验
             Integer total1 = res1.getInteger("total");  //之前总删除条数

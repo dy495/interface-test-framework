@@ -29,6 +29,6 @@ public class AppReceptorListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/m-app/pre-sales-reception/receptor/list";
+        return "/car-platform/m-app/pre-sales-reception/receptor/list";
     }
 }

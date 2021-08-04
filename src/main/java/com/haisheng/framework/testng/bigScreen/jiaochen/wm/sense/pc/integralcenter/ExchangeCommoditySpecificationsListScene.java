@@ -20,7 +20,7 @@ public class ExchangeCommoditySpecificationsListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/integral-center/exchange-commodity-specifications-list";
+        return "/car-platform/pc/integral-center/exchange-commodity-specifications-list";
     }
 
 }

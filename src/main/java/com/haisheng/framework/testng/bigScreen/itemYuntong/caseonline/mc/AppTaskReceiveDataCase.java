@@ -33,7 +33,7 @@ import java.util.Objects;
 
 
 public class AppTaskReceiveDataCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_SSO; // 管理页—-首页
+    private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_ZH; // 管理页—-首页
     private static final EnumAccount YT_RECEPTION = EnumAccount.YT_RECEPTION_ONLINE_5; // 全部权限账号 【运通】
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);   // 产品类放到代理类中（通过代理类发请求）
     public SceneUtil util = new SceneUtil(visitor);
@@ -59,7 +59,7 @@ public class AppTaskReceiveDataCase extends TestCaseCommon implements TestCaseSt
         commonConfig.roleId = YT_RECEPTION.getRoleId(); //请求头放入roleId
         beforeClassInit(commonConfig);  // 配置请求头
         util.loginPc(YT_RECEPTION);   //登录
-        visitor.setProduct(EnumTestProduct.YT_ONLINE_CAR);
+        visitor.setProduct(EnumTestProduct.YT_ONLINE_JD);
     }
 
 

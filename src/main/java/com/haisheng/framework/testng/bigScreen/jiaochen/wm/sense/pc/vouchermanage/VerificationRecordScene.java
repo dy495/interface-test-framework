@@ -34,7 +34,7 @@ public class VerificationRecordScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/voucher-manage/verification-record";
+        return "/car-platform/pc/voucher-manage/verification-record";
     }
 
     @Override

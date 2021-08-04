@@ -45,6 +45,6 @@ public class AfterSaleCustomerInfoScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/customer-manage/after-sale-customer/info";
+        return "/car-platform/pc/customer-manage/after-sale-customer/info";
     }
 }

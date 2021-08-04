@@ -61,6 +61,6 @@ public class OperateLogRecordPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/manage/operate-log/record-page";
+        return "/car-platform/pc/manage/operate-log/record-page";
     }
 }

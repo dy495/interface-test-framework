@@ -45,6 +45,6 @@ public class AppTodayDataScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/m-app/home-page/today-data";
+        return "/car-platform/m-app/home-page/today-data";
     }
 }

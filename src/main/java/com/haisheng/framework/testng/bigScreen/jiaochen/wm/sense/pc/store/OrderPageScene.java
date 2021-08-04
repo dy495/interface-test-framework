@@ -77,6 +77,6 @@ public class OrderPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/store/order/page";
+        return "/car-platform/pc/store/order/page";
     }
 }

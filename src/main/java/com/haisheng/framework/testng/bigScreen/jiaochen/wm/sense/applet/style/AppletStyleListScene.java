@@ -29,6 +29,6 @@ public class AppletStyleListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/style/list";
+        return "/car-platform/applet/style/list";
     }
 }

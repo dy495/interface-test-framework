@@ -29,6 +29,6 @@ public class ShowShopExtensionScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/shop/show-shop-extension";
+        return "/car-platform/pc/shop/show-shop-extension";
     }
 }

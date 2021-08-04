@@ -27,6 +27,6 @@ public class AppFollowUpCompleteScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/m-app/follow-up/complete";
+        return "/car-platform/m-app/follow-up/complete";
     }
 }

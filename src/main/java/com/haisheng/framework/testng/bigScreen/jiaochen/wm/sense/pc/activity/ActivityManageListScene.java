@@ -38,7 +38,7 @@ public class ActivityManageListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/activity/manage/page";
+        return "/car-platform/pc/activity/manage/page";
     }
 
     @Override

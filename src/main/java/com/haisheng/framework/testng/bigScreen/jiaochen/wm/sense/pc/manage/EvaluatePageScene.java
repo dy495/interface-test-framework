@@ -26,7 +26,7 @@ public class EvaluatePageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/manage/evaluate/page";
+        return "/car-platform/pc/manage/evaluate/page";
     }
 
     @Override

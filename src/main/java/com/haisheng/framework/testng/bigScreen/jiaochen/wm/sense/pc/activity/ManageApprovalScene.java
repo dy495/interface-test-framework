@@ -24,6 +24,6 @@ public class ManageApprovalScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/activity/manage/approval";
+        return "/car-platform/pc/activity/manage/approval";
     }
 }

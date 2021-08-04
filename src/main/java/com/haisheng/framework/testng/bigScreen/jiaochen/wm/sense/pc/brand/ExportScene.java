@@ -70,6 +70,6 @@ public class ExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/brand/export";
+        return "/car-platform/pc/brand/export";
     }
 }

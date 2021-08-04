@@ -37,6 +37,6 @@ public class ReplyScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/consult-management/reply";
+        return "/car-platform/pc/consult-management/reply";
     }
 }

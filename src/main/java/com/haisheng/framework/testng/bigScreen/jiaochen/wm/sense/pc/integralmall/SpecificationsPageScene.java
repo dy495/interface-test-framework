@@ -61,6 +61,6 @@ public class SpecificationsPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/integral-mall/specifications-page";
+        return "/car-platform/pc/integral-mall/specifications-page";
     }
 }

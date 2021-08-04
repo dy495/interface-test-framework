@@ -102,6 +102,6 @@ public class WashCarManagerAdjustNumberExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/vip-marketing/wash-car-manager/adjust-number/export";
+        return "/car-platform/pc/vip-marketing/wash-car-manager/adjust-number/export";
     }
 }

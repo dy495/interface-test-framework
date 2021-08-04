@@ -74,7 +74,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
-        visitor.setProduct(EnumTestProduct.YT_DAILY_CAR);
+        visitor.setProduct(EnumTestProduct.YT_DAILY_JD);
     }
 
     @Test(description = "创建一个潜客，销售客户列表中手机号不存在，销售客户列表+1&客户类型为【潜客】")

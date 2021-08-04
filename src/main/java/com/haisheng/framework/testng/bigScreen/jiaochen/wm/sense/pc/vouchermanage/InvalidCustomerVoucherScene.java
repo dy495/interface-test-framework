@@ -22,6 +22,6 @@ public class InvalidCustomerVoucherScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/voucher-manage/invalid-customer-voucher";
+        return "/car-platform/pc/voucher-manage/invalid-customer-voucher";
     }
 }

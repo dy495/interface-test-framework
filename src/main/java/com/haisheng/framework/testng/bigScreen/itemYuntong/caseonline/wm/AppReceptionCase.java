@@ -43,7 +43,7 @@ import java.util.Date;
  * @date 2021/1/29 11:17
  */
 public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_CAR;
+    private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_JD;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_ONLINE;
     private static AppPreSalesReceptionPageBean preSalesReceptionPage;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);

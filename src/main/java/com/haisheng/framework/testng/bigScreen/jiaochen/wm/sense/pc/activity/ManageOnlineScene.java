@@ -29,6 +29,6 @@ public class ManageOnlineScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/activity/manage/online";
+        return "/car-platform/pc/activity/manage/online";
     }
 }

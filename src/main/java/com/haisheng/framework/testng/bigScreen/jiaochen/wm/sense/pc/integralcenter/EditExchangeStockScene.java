@@ -28,6 +28,6 @@ public class EditExchangeStockScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/integral-center/edit-exchange-stock";
+        return "/car-platform/pc/integral-center/edit-exchange-stock";
     }
 }

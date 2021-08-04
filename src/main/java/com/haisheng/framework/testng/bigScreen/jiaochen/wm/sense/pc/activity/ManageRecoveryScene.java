@@ -29,6 +29,6 @@ public class ManageRecoveryScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/activity/manage/recovery";
+        return "/car-platform/pc/activity/manage/recovery";
     }
 }

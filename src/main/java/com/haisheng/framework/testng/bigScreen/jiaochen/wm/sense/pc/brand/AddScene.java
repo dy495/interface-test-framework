@@ -37,6 +37,6 @@ public class AddScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/brand/add";
+        return "/car-platform/pc/brand/add";
     }
 }

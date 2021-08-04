@@ -155,6 +155,6 @@ public class EvaluateConfigSubmitScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/manage/evaluate/config/submit";
+        return "/car-platform/pc/manage/evaluate/config/submit";
     }
 }

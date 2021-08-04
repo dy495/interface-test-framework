@@ -28,6 +28,6 @@ public class ShareManagerPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/vip-marketing/share-manager/page";
+        return "/car-platform/pc/vip-marketing/share-manager/page";
     }
 }

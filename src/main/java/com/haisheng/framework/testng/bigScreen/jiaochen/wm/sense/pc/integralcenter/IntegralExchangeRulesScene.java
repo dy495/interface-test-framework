@@ -24,7 +24,7 @@ public class IntegralExchangeRulesScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/integral-center/integral-exchange-rules";
+        return "/car-platform/pc/integral-center/integral-exchange-rules";
     }
 
     @Override

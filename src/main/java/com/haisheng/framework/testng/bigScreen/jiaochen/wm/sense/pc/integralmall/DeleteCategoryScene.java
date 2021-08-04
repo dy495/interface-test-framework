@@ -29,6 +29,6 @@ public class DeleteCategoryScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/integral-mall/delete-category";
+        return "/car-platform/pc/integral-mall/delete-category";
     }
 }

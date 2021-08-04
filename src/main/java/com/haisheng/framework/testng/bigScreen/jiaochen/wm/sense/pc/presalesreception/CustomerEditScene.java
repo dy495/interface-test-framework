@@ -77,6 +77,6 @@ public class CustomerEditScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/pre-sales-reception/customer/edit";
+        return "/car-platform/pc/pre-sales-reception/customer/edit";
     }
 }

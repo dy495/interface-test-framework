@@ -29,6 +29,6 @@ public class CategoryDetailScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/integral-mall/category-detail";
+        return "/car-platform/pc/integral-mall/category-detail";
     }
 }

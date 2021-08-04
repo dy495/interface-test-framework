@@ -20,7 +20,7 @@ public class DeleteVoucherScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/voucher-manage/delete-voucher";
+        return "/car-platform/pc/voucher-manage/delete-voucher";
     }
 
 }

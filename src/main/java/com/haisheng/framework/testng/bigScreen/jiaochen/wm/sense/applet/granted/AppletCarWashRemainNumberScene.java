@@ -14,6 +14,6 @@ public class AppletCarWashRemainNumberScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/granted/member-center/car-wash/remain-number";
+        return "/car-platform/applet/granted/member-center/car-wash/remain-number";
     }
 }

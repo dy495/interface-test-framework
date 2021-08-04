@@ -62,6 +62,6 @@ public class AddScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/staff/add";
+        return "/car-platform/pc/staff/add";
     }
 }

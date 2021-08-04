@@ -37,6 +37,6 @@ public class AppWaitingTaskNumv3Scene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/m-app/home-page/waiting-task/numV3";
+        return "/car-platform/m-app/home-page/waiting-task/numV3";
     }
 }

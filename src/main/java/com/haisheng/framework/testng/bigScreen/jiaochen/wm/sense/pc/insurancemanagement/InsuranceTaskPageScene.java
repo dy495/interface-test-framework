@@ -109,6 +109,6 @@ public class InsuranceTaskPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/insurance-management/insurance-task-page";
+        return "/car-platform/pc/insurance-management/insurance-task-page";
     }
 }

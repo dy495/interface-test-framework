@@ -20,6 +20,6 @@ public class NoticeMessagePullScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/notice-message/pull";
+        return "/car-platform/pc/notice-message/pull";
     }
 }

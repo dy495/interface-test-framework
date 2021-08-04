@@ -53,6 +53,6 @@ public class MaintainCarModelEditScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/manage/maintain/car-model/edit";
+        return "/car-platform/pc/manage/maintain/car-model/edit";
     }
 }

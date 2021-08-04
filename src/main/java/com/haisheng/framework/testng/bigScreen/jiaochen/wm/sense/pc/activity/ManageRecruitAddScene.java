@@ -67,7 +67,7 @@ public class ManageRecruitAddScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/activity/manage/recruit/add";
+        return "/car-platform/pc/activity/manage/recruit/add";
     }
 
 }

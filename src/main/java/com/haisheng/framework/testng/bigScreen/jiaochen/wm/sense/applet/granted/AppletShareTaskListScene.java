@@ -20,6 +20,6 @@ public class AppletShareTaskListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/granted/member-center/share-task/list";
+        return "/car-platform/applet/granted/member-center/share-task/list";
     }
 }

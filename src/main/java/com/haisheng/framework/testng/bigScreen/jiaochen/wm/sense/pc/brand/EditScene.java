@@ -45,6 +45,6 @@ public class EditScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/brand/edit";
+        return "/car-platform/pc/brand/edit";
     }
 }

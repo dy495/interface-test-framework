@@ -27,7 +27,7 @@ import java.lang.reflect.Method;
  **/
 
 public class JcPcAffirmReceptionOnLine extends TestCaseCommon implements TestCaseStd {
-
+    EnumTestProduct product = EnumTestProduct.JC_ONLINE_JD;
     ScenarioUtil jc = new ScenarioUtil();
     private QADbProxy qaDbProxy = QADbProxy.getInstance();
     public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
@@ -35,19 +35,20 @@ public class JcPcAffirmReceptionOnLine extends TestCaseCommon implements TestCas
 
     JcFunctionOnline pf = new JcFunctionOnline();
     PublicParmOnline pp = new PublicParmOnline();
+
     public void initial1() {
         logger.debug("before classs initial");
         CommonConfig commonConfig = new CommonConfig();
 
-        jc.changeIpPort(EnumTestProduct.JC_ONLINE.getIp());
+        jc.changeIpPort(product.getIp());
 
 
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.referer = EnumTestProduct.JC_ONLINE.getReferer();
-        commonConfig.product = EnumTestProduct.JC_ONLINE.getAbbreviation();
+        commonConfig.referer = product.getReferer();
+        commonConfig.product = product.getAbbreviation();
 
 
         //replace backend gateway url
@@ -57,7 +58,7 @@ public class JcPcAffirmReceptionOnLine extends TestCaseCommon implements TestCas
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_ONLINE_TEST.getJobName());
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.JC_ONLINE.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
 
 
         //replace ding push conf
@@ -68,7 +69,7 @@ public class JcPcAffirmReceptionOnLine extends TestCaseCommon implements TestCas
 //        commonConfig.referer="http://dev.dealer-jc.winsenseos.cn/authpage/login";
         //set shop id
         commonConfig.shopId = pp.shopIdZ;
-        commonConfig.roleId=pp.roleidJdgw;
+        commonConfig.roleId = pp.roleidJdgw;
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);
@@ -120,9 +121,9 @@ public class JcPcAffirmReceptionOnLine extends TestCaseCommon implements TestCas
             dataTemp.setApp_surplus_reception(appTodayTask[2]);
             dataTemp.setApp_all_reception(appTodayTask[3]);
             //pc 完成接待
-            Integer receptionId=qaDbUtil.selsetDataTempOne("appointmentId",dataName);
-            jc.pcFinishReception((long)receptionId,pp.shopIdZ);
-            dataTemp.setAppointmentId((long)receptionId);
+            Integer receptionId = qaDbUtil.selsetDataTempOne("appointmentId", dataName);
+            jc.pcFinishReception((long) receptionId, pp.shopIdZ);
+            dataTemp.setAppointmentId((long) receptionId);
             qaDbUtil.updateDataAll(dataTemp);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());

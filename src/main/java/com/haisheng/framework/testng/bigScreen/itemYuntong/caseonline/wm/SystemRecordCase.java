@@ -30,7 +30,7 @@ import java.util.List;
  * @date 2021/1/29 11:17
  */
 public class SystemRecordCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_CAR;
+    private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_JD;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public SceneUtil util = new SceneUtil(visitor);

@@ -25,6 +25,6 @@ public class AddVoucherScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/voucher-manage/add-voucher";
+        return "/car-platform/pc/voucher-manage/add-voucher";
     }
 }

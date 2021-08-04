@@ -142,6 +142,6 @@ public class LossCustomerPageExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/customer-manage/loss-customer/page/export";
+        return "/car-platform/pc/customer-manage/loss-customer/page/export";
     }
 }

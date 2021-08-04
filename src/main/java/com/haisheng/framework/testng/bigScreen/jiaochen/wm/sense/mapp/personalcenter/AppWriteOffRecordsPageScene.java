@@ -37,6 +37,6 @@ public class AppWriteOffRecordsPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/m-app/personal-center/write-off-records/page";
+        return "/car-platform/m-app/personal-center/write-off-records/page";
     }
 }

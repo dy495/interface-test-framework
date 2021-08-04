@@ -29,7 +29,7 @@ public class ChangeRecordScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/voucher-manage/change-record";
+        return "/car-platform/pc/voucher-manage/change-record";
     }
 
     @Override

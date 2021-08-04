@@ -43,7 +43,7 @@ import java.util.stream.Collectors;
  * @date 2021/1/29 11:17
  */
 public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_CONTROL;
+    private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_GK;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public SceneUtil util = new SceneUtil(visitor);
@@ -117,7 +117,7 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
         try {
             IScene voiceEvaluationPageScene = VoiceEvaluationPageScene.builder().build();
             long evaluationTotal = voiceEvaluationPageScene.invoke(visitor).getLong("total");
-            visitor.setProduct(EnumTestProduct.YT_ONLINE_CAR);
+            visitor.setProduct(EnumTestProduct.YT_ONLINE_JD);
             IScene preSalesReceptionPageScene = PreSalesReceptionPageScene.builder().build();
             long receptionTotal = preSalesReceptionPageScene.invoke(visitor).getLong("total");
             CommonUtil.valueView(evaluationTotal, receptionTotal);
@@ -125,7 +125,7 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            visitor.setProduct(EnumTestProduct.YT_ONLINE_CONTROL);
+            visitor.setProduct(EnumTestProduct.YT_ONLINE_GK);
             saveData("语音评鉴列表数<=销售接待页列表数");
         }
     }

@@ -93,6 +93,6 @@ public class AppletIntegralMallSubmitOrderScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/granted/integral-mall/submit-order";
+        return "/car-platform/applet/granted/integral-mall/submit-order";
     }
 }

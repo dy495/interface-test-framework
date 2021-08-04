@@ -66,7 +66,7 @@ public class EvaluateConfigCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(dataProvider = "contentCheck")
     public void addATopic1(String description, String expect, String title, String... answer) {
-        visitor.setProduct(EnumTestProduct.YT_DAILY_CAR);
+        visitor.setProduct(EnumTestProduct.YT_DAILY_JD);
         try {
             if (util instanceof TopicUtil) {
                 TopicUtil topicUtil = (TopicUtil) util;
@@ -100,7 +100,7 @@ public class EvaluateConfigCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(dataProvider = "topicNum")
     public void addATopic2(String description, List<Integer> topicList, String expectCode, String... answer) {
-        visitor.setProduct(EnumTestProduct.YT_DAILY_CAR);
+        visitor.setProduct(EnumTestProduct.YT_DAILY_JD);
         try {
             if (util instanceof TopicUtil) {
                 TopicUtil topicUtil = (TopicUtil) util;

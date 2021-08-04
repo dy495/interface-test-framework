@@ -85,6 +85,6 @@ public class RescuePageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/manage/rescue/page";
+        return "/car-platform/pc/manage/rescue/page";
     }
 }

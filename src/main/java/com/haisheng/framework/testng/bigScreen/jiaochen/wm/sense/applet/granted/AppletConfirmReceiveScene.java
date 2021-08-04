@@ -20,7 +20,7 @@ public class AppletConfirmReceiveScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/granted/integral-mall/confirm-receive";
+        return "/car-platform/applet/granted/integral-mall/confirm-receive";
     }
 
 }

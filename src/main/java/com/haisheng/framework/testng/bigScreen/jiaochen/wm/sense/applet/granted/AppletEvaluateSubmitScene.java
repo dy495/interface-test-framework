@@ -39,6 +39,6 @@ public class AppletEvaluateSubmitScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/granted/evaluate/submit";
+        return "/car-platform/applet/granted/evaluate/submit";
     }
 }

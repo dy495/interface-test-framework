@@ -37,6 +37,6 @@ public class AppletAppointmentCancelScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/granted/appointment/cancel";
+        return "/car-platform/applet/granted/appointment/cancel";
     }
 }

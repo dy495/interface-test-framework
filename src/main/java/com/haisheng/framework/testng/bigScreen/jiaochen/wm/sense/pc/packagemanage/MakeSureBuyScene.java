@@ -19,6 +19,6 @@ public class MakeSureBuyScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/package-manage/make-sure-buy";
+        return "/car-platform/pc/package-manage/make-sure-buy";
     }
 }

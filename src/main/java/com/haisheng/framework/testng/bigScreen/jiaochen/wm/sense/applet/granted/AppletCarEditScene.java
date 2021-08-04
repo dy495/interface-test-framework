@@ -45,6 +45,6 @@ public class AppletCarEditScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/granted/car/edit";
+        return "/car-platform/applet/granted/car/edit";
     }
 }

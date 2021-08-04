@@ -86,6 +86,6 @@ public class ImportRecordExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/record/import-record/export";
+        return "/car-platform/pc/record/import-record/export";
     }
 }

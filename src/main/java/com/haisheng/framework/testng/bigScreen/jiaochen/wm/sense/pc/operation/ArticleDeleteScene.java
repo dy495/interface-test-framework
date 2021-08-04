@@ -29,6 +29,6 @@ public class ArticleDeleteScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/operation/article/delete";
+        return "/car-platform/pc/operation/article/delete";
     }
 }

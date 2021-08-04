@@ -37,6 +37,6 @@ public class AppAppointmentMaintainTimeListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/m-app/task/appointment/maintain/time/list";
+        return "/car-platform/m-app/task/appointment/maintain/time/list";
     }
 }

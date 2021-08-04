@@ -23,6 +23,6 @@ public class AppAppointmentReceptionScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/m-app/task/appointment/reception";
+        return "/car-platform/m-app/task/appointment/reception";
     }
 }

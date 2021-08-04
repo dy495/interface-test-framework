@@ -25,6 +25,6 @@ public class AppReceptionFinishReceptionScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/m-app/task/reception/finish-reception";
+        return "/car-platform/m-app/task/reception/finish-reception";
     }
 }

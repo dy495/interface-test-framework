@@ -17,7 +17,7 @@ public class AppletShippingAddressListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/granted/integral-mall/shipping-address-list";
+        return "/car-platform/applet/granted/integral-mall/shipping-address-list";
     }
 
 }

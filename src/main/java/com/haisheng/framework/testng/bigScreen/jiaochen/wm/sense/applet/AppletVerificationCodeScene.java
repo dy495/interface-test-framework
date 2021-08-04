@@ -37,6 +37,6 @@ public class AppletVerificationCodeScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/verification-code";
+        return "/car-platform/applet/verification-code";
     }
 }

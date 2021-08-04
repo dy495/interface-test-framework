@@ -48,7 +48,7 @@ public class PurchaseFixedPackageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/package-manage/purchase-fixed-package";
+        return "/car-platform/pc/package-manage/purchase-fixed-package";
     }
 
 

@@ -21,7 +21,7 @@ public class ManageDataScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/activity/manage/data";
+        return "/car-platform/pc/activity/manage/data";
     }
 
 }

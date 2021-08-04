@@ -133,6 +133,6 @@ public class RenewInsurancePageListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/consult-management/renew-insurance-page-list";
+        return "/car-platform/pc/consult-management/renew-insurance-page-list";
     }
 }

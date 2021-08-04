@@ -37,6 +37,6 @@ public class AppPreSalesReceptionPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/m-app/pre-sales-reception/page";
+        return "/car-platform/m-app/pre-sales-reception/page";
     }
 }

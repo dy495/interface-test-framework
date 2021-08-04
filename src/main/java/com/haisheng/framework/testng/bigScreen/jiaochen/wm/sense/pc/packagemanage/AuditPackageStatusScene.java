@@ -30,6 +30,6 @@ public class AuditPackageStatusScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/package-manage/audit-package-status";
+        return "/car-platform/pc/package-manage/audit-package-status";
     }
 }

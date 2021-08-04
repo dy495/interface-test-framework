@@ -45,6 +45,6 @@ public class AppVehicleEditScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/m-app/pre-sales-reception/vehicle/edit";
+        return "/car-platform/m-app/pre-sales-reception/vehicle/edit";
     }
 }

@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class EvaluateConfigCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_SSO; // 管理页—-首页
+    private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_ZH; // 管理页—-首页
     private static final EnumAccount AUTHORITY = EnumAccount.YT_RECEPTION_ONLINE_5; // 全部权限账号 【运通】
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);   // 产品类放到代理类中（通过代理类发请求）
     public SceneUtil util = new TopicUtil(visitor);    //场景工具类中放入代理类，类中封装接口方法直接调用
@@ -66,7 +66,7 @@ public class EvaluateConfigCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(dataProvider = "contentCheck")
     public void addATopic1(String description, String expect, String title, String... answer) {
-        visitor.setProduct(EnumTestProduct.YT_ONLINE_CAR);
+        visitor.setProduct(EnumTestProduct.YT_ONLINE_JD);
         try {
             if (util instanceof TopicUtil) {
                 TopicUtil topicUtil = (TopicUtil) util;
@@ -100,7 +100,7 @@ public class EvaluateConfigCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(dataProvider = "topicNum")
     public void addATopic2(String description, List<Integer> topicList, String expectCode, String... answer) {
-        visitor.setProduct(EnumTestProduct.YT_ONLINE_CAR);
+        visitor.setProduct(EnumTestProduct.YT_ONLINE_JD);
         try {
             if (util instanceof TopicUtil) {
                 TopicUtil topicUtil = (TopicUtil) util;

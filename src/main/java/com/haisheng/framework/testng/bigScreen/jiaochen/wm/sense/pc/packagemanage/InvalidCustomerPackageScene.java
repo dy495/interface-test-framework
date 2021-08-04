@@ -37,6 +37,6 @@ public class InvalidCustomerPackageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/package-manage/invalid-customer-package";
+        return "/car-platform/pc/package-manage/invalid-customer-package";
     }
 }

@@ -30,6 +30,6 @@ public class PackageFormSwitchPackageStatusScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/package-manage/package-form/switch-package-status";
+        return "/car-platform/pc/package-manage/package-form/switch-package-status";
     }
 }

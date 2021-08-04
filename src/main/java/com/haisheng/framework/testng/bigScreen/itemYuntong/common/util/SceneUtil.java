@@ -86,7 +86,7 @@ public class SceneUtil extends BasicUtil {
      */
     public void login(IScene scene) {
         EnumTestProduct oldProduce = visitor.getProduct();
-        EnumTestProduct newProduce = visitor.isDaily() ? EnumTestProduct.YT_DAILY_ZH : EnumTestProduct.YT_ONLINE_SSO;
+        EnumTestProduct newProduce = visitor.isDaily() ? EnumTestProduct.YT_DAILY_ZH : EnumTestProduct.YT_ONLINE_ZH;
         visitor.setProduct(newProduce);
         visitor.setToken(scene);
         visitor.setProduct(oldProduce);

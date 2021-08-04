@@ -29,6 +29,6 @@ public class DedicatedServiceExplainEditScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/consult-management/dedicated-service/explain-edit";
+        return "/car-platform/pc/consult-management/dedicated-service/explain-edit";
     }
 }

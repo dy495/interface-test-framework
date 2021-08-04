@@ -37,6 +37,6 @@ public class AppletAppointmentActivityListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/granted/appointment/activity/list";
+        return "/car-platform/applet/granted/appointment/activity/list";
     }
 }

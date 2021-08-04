@@ -29,6 +29,6 @@ public class ManageOfflineScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/activity/manage/offline";
+        return "/car-platform/pc/activity/manage/offline";
     }
 }

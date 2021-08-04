@@ -29,6 +29,6 @@ public class OnlineExpertsExplainEditScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/consult-management/online-experts/explain-edit";
+        return "/car-platform/pc/consult-management/online-experts/explain-edit";
     }
 }

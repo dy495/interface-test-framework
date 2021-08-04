@@ -29,6 +29,6 @@ public class EvaluateConfigDetailScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/manage/evaluate/config/detail";
+        return "/car-platform/pc/manage/evaluate/config/detail";
     }
 }

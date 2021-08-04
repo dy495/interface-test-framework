@@ -19,6 +19,6 @@ public class AppletConsultDedicatedServiceSalesListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/granted/consult/dedicated-service-sales-list";
+        return "/car-platform/applet/granted/consult/dedicated-service-sales-list";
     }
 }

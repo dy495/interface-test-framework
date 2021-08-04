@@ -133,6 +133,6 @@ public class PageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/reception-manage/page";
+        return "/car-platform/pc/reception-manage/page";
     }
 }

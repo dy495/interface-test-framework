@@ -13,6 +13,6 @@ public class SubjectListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/use-range/subject-list";
+        return "/car-platform/pc/use-range/subject-list";
     }
 }

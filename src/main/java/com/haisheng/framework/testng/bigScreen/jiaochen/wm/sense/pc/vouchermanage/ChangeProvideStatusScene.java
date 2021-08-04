@@ -26,6 +26,6 @@ public class ChangeProvideStatusScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/voucher-manage/change-provide-status";
+        return "/car-platform/pc/voucher-manage/change-provide-status";
     }
 }

@@ -61,6 +61,6 @@ public class CreateCategoryScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/integral-mall/create-category";
+        return "/car-platform/pc/integral-mall/create-category";
     }
 }

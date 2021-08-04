@@ -29,7 +29,7 @@ import java.util.*;
 
 public class ActivityType extends TestCaseCommon implements TestCaseStd {
     ScenarioUtil jc = new ScenarioUtil();
-    private static final EnumTestProduct product = EnumTestProduct.JC_DAILY_ZH;
+    private static final EnumTestProduct product = EnumTestProduct.JC_DAILY_JD;
     //private static final EnumAppletToken APPLET_USER = EnumAppletToken.JC_GLY_DAILY;
     public VisitorProxy visitor = new VisitorProxy(product);
     BusinessUtil businessUtil = new BusinessUtil(visitor);

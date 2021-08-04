@@ -69,6 +69,6 @@ public class AppletConsultRenewInsuranceSubmitScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/granted/consult/renew-insurance-submit";
+        return "/car-platform/applet/granted/consult/renew-insurance-submit";
     }
 }

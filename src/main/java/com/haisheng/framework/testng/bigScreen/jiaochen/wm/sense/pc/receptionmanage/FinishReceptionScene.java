@@ -37,6 +37,6 @@ public class FinishReceptionScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/reception-manage/finish-reception";
+        return "/car-platform/pc/reception-manage/finish-reception";
     }
 }

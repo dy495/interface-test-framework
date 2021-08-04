@@ -53,6 +53,6 @@ public class AfterSaleCustomerChangeBelongSaleScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/customer-manage/after-sale-customer/change-belong-sale";
+        return "/car-platform/pc/customer-manage/after-sale-customer/change-belong-sale";
     }
 }

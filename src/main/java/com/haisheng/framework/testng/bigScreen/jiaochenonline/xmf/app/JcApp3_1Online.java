@@ -3,7 +3,6 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.app;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.commonDs.JsonPathUtil;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
@@ -28,15 +27,14 @@ import org.testng.annotations.*;
 import java.lang.reflect.Method;
 
 public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
-
+    EnumTestProduct product = EnumTestProduct.JC_ONLINE_JD;
     ScenarioUtil jc = new ScenarioUtil();
 
     PublicParmOnline pp = new PublicParmOnline();
     JcFunctionOnline pf = new JcFunctionOnline();
-    JsonPathUtil jp = new JsonPathUtil();
     CommonConfig commonConfig = new CommonConfig();
 
-    private QADbProxy qaDbProxy = QADbProxy.getInstance();
+    private final QADbProxy qaDbProxy = QADbProxy.getInstance();
     public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
 
     public String dataName = "app_sale_receptionIdOnline";
@@ -55,9 +53,9 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.referer = EnumTestProduct.JC_ONLINE.getReferer();
-        commonConfig.product = EnumTestProduct.JC_ONLINE.getAbbreviation();
-        jc.changeIpPort(EnumTestProduct.JC_ONLINE.getIp());
+        commonConfig.referer = product.getReferer();
+        commonConfig.product = product.getAbbreviation();
+        jc.changeIpPort(product.getIp());
 
         //replace backend gateway url
         //commonConfig.gateway = "";
@@ -66,7 +64,7 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_ONLINE_TEST.getJobName());
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.JC_ONLINE.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
 
         //replace ding f
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
@@ -102,7 +100,7 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
         object.put("verification_code", verificationCode);
         object.put("type", 1);
         commonConfig.roleId = roleId;
-        httpPost( EnumTestProduct.JC_ONLINE_ZH.getIp(),path, object);
+        httpPost(EnumTestProduct.JC_ONLINE_ZH.getIp(), path, object);
     }
 
     public void startReception() {
@@ -118,7 +116,7 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
                 .customerName("夏明凤")
                 .estimatedBuyTime(dt.getHistoryDate(0))
                 .build();
-        JSONObject data1 = jc.invokeApi(appcustomerEdit, true);
+        jc.invokeApi(appcustomerEdit, true);
 
 
         IScene appfinishReception = AppFinishReceptionScene.builder()
@@ -205,12 +203,12 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
             int id = qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum", dataName);
             String[] reception = {String.valueOf(id), null};
             String[] errphone = {"1590293829", "178273766554", "新人%￥#"};
-            for (int i = 0; i < errphone.length; i++) {
+            for (String s : errphone) {
                 IScene appcustomerEdit2 = AppCustomerEditScene.builder()
                         .id(reception[0])
                         .shopId(pp.shopIdZ)
                         .customerName("一个字")
-                        .customerPhone(errphone[i])
+                        .customerPhone(s)
                         .estimatedBuyTime(dt.getHistoryDate(0))
                         .build();
                 JSONObject data1 = jc.invokeApi(appcustomerEdit2, false);
@@ -242,7 +240,7 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
                     .estimatedBuyTime(dt.getHistoryDate(0))
                     .carModel(Long.valueOf(pp.carModelId))
                     .build();
-            JSONObject data1 = jc.invokeApi(appcustomerEdit2);
+            jc.invokeApi(appcustomerEdit2);
 
             //购车记录数
             IScene customerDetail = AppCustomerDetailScene.builder().id(reception[0]).shopId(pp.shopIdZ).build();
@@ -326,14 +324,14 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
 
             IScene customerDetail = AppCustomerDetailScene.builder().id(reception[0]).shopId(pp.shopIdZ).build();
             JSONObject orderList = jc.invokeApi(customerDetail);
-            JSONArray list = orderList.getJSONArray("remarks");
+            orderList.getJSONArray("remarks");
 
             String remark = pp.String_50;
             jc.AppCustomerRemarkScene(Long.valueOf(reception[0]), Long.valueOf(pp.shopIdZ), remark);
 
             IScene customerDetail2 = AppCustomerDetailScene.builder().id(reception[0]).shopId(pp.shopIdZ).build();
             JSONObject orderList2 = jc.invokeApi(customerDetail2);
-            JSONArray list2 = orderList2.getJSONArray("remarks");
+            orderList2.getJSONArray("remarks");
 
 //            Preconditions.checkArgument(list2.size()-list.size()==1,"备注失败");
 
@@ -359,7 +357,7 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
                     .modelId(Long.valueOf(pp.carModelId))
                     .brandId(pp.brandId)
                     .build();
-            JSONObject data = jc.invokeApi(onlineExpert);
+            jc.invokeApi(onlineExpert);
 
             //跟进列表 获取id
             JSONObject followList = jc.AppPageV3Scene(10, null, FollowType.ONLINE_EXPERTS.getName());
@@ -415,7 +413,7 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
                     .modelId(Long.valueOf(pp.carModelId))
                     .salesId(pp.userid)
                     .build();
-            JSONObject data = jc.invokeApi(onlineExpert);
+            jc.invokeApi(onlineExpert);
 
             //跟进列表 获取id
             JSONObject followList = jc.AppPageV3Scene(10, null, FollowType.ONLINE_EXPERTS.getName());

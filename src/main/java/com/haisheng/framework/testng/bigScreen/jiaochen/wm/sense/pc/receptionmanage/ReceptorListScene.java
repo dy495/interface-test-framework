@@ -29,6 +29,6 @@ public class ReceptorListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/reception-manage/receptor/list";
+        return "/car-platform/pc/reception-manage/receptor/list";
     }
 }

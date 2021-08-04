@@ -110,6 +110,6 @@ public class ExchangeDetailExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/integral-center/exchange-detail/export";
+        return "/car-platform/pc/integral-center/exchange-detail/export";
     }
 }

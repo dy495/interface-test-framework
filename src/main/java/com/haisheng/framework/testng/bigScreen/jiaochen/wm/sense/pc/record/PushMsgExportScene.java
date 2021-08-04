@@ -94,6 +94,6 @@ public class PushMsgExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/record/push-msg/export";
+        return "/car-platform/pc/record/push-msg/export";
     }
 }

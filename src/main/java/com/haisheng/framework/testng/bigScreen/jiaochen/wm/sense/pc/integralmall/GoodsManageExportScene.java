@@ -102,6 +102,6 @@ public class GoodsManageExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/integral-mall/goods-manage/export";
+        return "/car-platform/pc/integral-mall/goods-manage/export";
     }
 }

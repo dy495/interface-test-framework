@@ -29,6 +29,6 @@ public class ArticleTopScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/operation/article/top";
+        return "/car-platform/pc/operation/article/top";
     }
 }

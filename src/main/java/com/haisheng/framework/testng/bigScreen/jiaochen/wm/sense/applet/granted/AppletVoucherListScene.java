@@ -28,6 +28,6 @@ public class AppletVoucherListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/granted/voucher/list";
+        return "/car-platform/applet/granted/voucher/list";
     }
 }

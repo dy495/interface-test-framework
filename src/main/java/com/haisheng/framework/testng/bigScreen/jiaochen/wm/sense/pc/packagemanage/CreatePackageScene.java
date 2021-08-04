@@ -44,7 +44,7 @@ public class CreatePackageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/package-manage/create-package";
+        return "/car-platform/pc/package-manage/create-package";
     }
 
 }

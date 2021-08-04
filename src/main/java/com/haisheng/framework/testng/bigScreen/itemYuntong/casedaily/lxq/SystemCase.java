@@ -56,7 +56,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         beforeClassInit(commonConfig);
         businessUtil.loginPc(ALL_AUTHORITY);
 
-        visitor.setProduct(EnumTestProduct.YT_DAILY_CAR);  //展厅接待模块
+        visitor.setProduct(EnumTestProduct.YT_DAILY_JD);  //展厅接待模块
     }
 
     @AfterClass
@@ -435,7 +435,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            visitor.setProduct(EnumTestProduct.YT_DAILY_CAR);
+            visitor.setProduct(EnumTestProduct.YT_DAILY_JD);
             Long shop_id = info.oneshopid;
             Long car_style_id = PreSaleCustomerStyleListScene.builder().shopId(shop_id).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("style_id");
             Long car_model_id = PreSaleCustomerModelListScene.builder().styleId(car_style_id).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("model_id");
@@ -494,7 +494,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            visitor.setProduct(EnumTestProduct.YT_DAILY_CAR);
+            visitor.setProduct(EnumTestProduct.YT_DAILY_JD);
             Long shop_id = info.oneshopid;
             Long car_style_id = PreSaleCustomerStyleListScene.builder().shopId(shop_id).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("style_id");
             Long car_model_id = PreSaleCustomerModelListScene.builder().styleId(car_style_id).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("model_id");
@@ -764,7 +764,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            visitor.setProduct(EnumTestProduct.YT_DAILY_CAR);
+            visitor.setProduct(EnumTestProduct.YT_DAILY_JD);
 
             //创建一个品牌
             String name1 = info.stringsix;

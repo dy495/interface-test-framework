@@ -36,7 +36,7 @@ public class PackageFormPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/package-manage/package-form/page";
+        return "/car-platform/pc/package-manage/package-form/page";
     }
 
     @Override

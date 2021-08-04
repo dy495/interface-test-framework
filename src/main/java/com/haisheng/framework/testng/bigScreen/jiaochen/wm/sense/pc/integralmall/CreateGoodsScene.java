@@ -118,6 +118,6 @@ public class CreateGoodsScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/integral-mall/create-goods";
+        return "/car-platform/pc/integral-mall/create-goods";
     }
 }

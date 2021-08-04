@@ -22,7 +22,7 @@ public class TimeTableListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/appointment-manage/time-table/list";
+        return "/car-platform/pc/appointment-manage/time-table/list";
     }
 
 }

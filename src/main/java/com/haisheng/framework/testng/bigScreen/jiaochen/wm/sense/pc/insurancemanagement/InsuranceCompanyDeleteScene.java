@@ -29,6 +29,6 @@ public class InsuranceCompanyDeleteScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/insurance-management/insurance-company-delete";
+        return "/car-platform/pc/insurance-management/insurance-company-delete";
     }
 }

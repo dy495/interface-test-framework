@@ -24,6 +24,6 @@ public class ManageChangeRecordScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/activity/manage/change/record/page";
+        return "/car-platform/pc/activity/manage/change/record/page";
     }
 }

@@ -25,6 +25,6 @@ public class RepairPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/customer-manage/after-sale-customer/repair-page";
+        return "/car-platform/pc/customer-manage/after-sale-customer/repair-page";
     }
 }

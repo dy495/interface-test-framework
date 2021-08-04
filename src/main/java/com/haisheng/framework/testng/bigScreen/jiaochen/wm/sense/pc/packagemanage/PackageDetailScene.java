@@ -21,6 +21,6 @@ public class PackageDetailScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/package-manage/package-detail";
+        return "/car-platform/pc/package-manage/package-detail";
     }
 }

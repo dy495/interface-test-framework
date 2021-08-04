@@ -41,6 +41,6 @@ public class CreateExchangeGoodsScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/integral-center/create-exchange-goods";
+        return "/car-platform/pc/integral-center/create-exchange-goods";
     }
 }

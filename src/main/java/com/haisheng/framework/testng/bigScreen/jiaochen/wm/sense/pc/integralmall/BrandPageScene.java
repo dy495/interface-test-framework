@@ -53,6 +53,6 @@ public class BrandPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/integral-mall/brand-page";
+        return "/car-platform/pc/integral-mall/brand-page";
     }
 }

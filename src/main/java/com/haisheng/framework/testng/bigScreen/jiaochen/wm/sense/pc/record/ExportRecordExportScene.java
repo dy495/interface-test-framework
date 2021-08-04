@@ -94,6 +94,6 @@ public class ExportRecordExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/record/export-record/export";
+        return "/car-platform/pc/record/export-record/export";
     }
 }

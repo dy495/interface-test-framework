@@ -37,6 +37,6 @@ public class ChangeSpecificationsStatusScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/integral-mall/change-specifications-status";
+        return "/car-platform/pc/integral-mall/change-specifications-status";
     }
 }

@@ -35,7 +35,7 @@ import java.util.Date;
  * @date 2021/1/29 11:17
  */
 public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_SSO;
+    private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_ZH;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public SceneUtil util = new SceneUtil(visitor);
@@ -74,7 +74,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
-        visitor.setProduct(EnumTestProduct.YT_ONLINE_CAR);
+        visitor.setProduct(EnumTestProduct.YT_ONLINE_JD);
     }
 
     @Test(description = "创建一个潜客，销售客户列表中手机号不存在，销售客户列表+1&客户类型为【潜客】")

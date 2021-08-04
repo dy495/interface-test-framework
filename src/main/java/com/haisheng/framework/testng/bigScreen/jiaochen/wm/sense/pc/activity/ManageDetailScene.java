@@ -17,6 +17,6 @@ public class ManageDetailScene extends BaseScene {
     }
     @Override
     public String getPath() {
-        return "/jiaochen/pc/activity/manage/detail";
+        return "/car-platform/pc/activity/manage/detail";
     }
 }

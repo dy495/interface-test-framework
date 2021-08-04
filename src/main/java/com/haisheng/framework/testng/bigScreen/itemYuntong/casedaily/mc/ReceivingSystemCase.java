@@ -14,7 +14,6 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.mc.otherSce
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.*;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.EvaluateDetailV4Scene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.EvaluatePageV4Scene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.PreSalesReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.PreSalesRecpEvaluateOpt;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presalesreception.PreSalesRecpEvaluateSubmit;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
@@ -59,7 +58,7 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
         util.loginPc(YT_RECEPTION_DAILY);   //登录
 //        LoginPc loginScene = LoginPc.builder().phone("13402050043").verificationCode("000000").build();
 //        httpPost(loginScene.getPath(),loginScene.getBody(),PRODUCE.getPort());
-        visitor.setProduct(EnumTestProduct.YT_DAILY_CAR);
+        visitor.setProduct(EnumTestProduct.YT_DAILY_JD);
     }
 
     @AfterClass
@@ -88,7 +87,7 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(dataProvider = "errorInfo")
     public void test01createCustomer_system_err(String description,String point,String content,String expect) {
-        visitor.setProduct(EnumTestProduct.YT_DAILY_CAR);
+        visitor.setProduct(EnumTestProduct.YT_DAILY_JD);
         try {
             IScene scene = AppPreSalesReceptionCreateScene.builder().customerName("正常名字").customerPhone("18" + numRandom(9)).sexId("1").intentionCarModelId(util.mcCarId()).estimateBuyCarTime("2035-12-20").build().modify(point, content);
             String code = scene.invoke(visitor,false).getString("code");

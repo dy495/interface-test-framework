@@ -53,6 +53,6 @@ public class AppletWechatPhoneScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/grant/wechat-phone";
+        return "/car-platform/applet/grant/wechat-phone";
     }
 }

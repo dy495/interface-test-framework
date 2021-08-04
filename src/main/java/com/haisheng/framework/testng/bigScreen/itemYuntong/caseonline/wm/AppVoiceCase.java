@@ -52,7 +52,7 @@ import java.util.stream.Collectors;
  * @date 2021/1/29 11:17
  */
 public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_CONTROL;
+    private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_GK;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public SceneUtil util = new SceneUtil(visitor);

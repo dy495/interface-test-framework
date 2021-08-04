@@ -191,7 +191,7 @@ public class AppointmentRecordAppointmentPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/appointment-manage/appointment-record/appointment-page";
+        return "/car-platform/pc/appointment-manage/appointment-record/appointment-page";
     }
 
 

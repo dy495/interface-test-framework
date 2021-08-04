@@ -22,6 +22,6 @@ public class ConfirmShipmentScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/integral-center/confirm_shipment";
+        return "/car-platform/pc/integral-center/confirm_shipment";
     }
 }

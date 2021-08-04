@@ -29,6 +29,6 @@ public class AppDetailScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/m-app/message/detail";
+        return "/car-platform/m-app/message/detail";
     }
 }

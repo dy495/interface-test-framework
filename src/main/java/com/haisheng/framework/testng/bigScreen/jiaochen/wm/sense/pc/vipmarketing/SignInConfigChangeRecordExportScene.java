@@ -62,6 +62,6 @@ public class SignInConfigChangeRecordExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/vip-marketing/sign_in_config/change-record/export";
+        return "/car-platform/pc/vip-marketing/sign_in_config/change-record/export";
     }
 }

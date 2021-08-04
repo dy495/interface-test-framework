@@ -85,6 +85,6 @@ public class PreSaleCustomerCreatePotentialCustomerScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/customer-manage/pre-sale-customer/create-potential-customer";
+        return "/car-platform/pc/customer-manage/pre-sale-customer/create-potential-customer";
     }
 }

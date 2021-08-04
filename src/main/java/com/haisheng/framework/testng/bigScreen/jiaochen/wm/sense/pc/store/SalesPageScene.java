@@ -53,6 +53,6 @@ public class SalesPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/store/sales/page";
+        return "/car-platform/pc/store/sales/page";
     }
 }

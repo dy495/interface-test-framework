@@ -29,6 +29,6 @@ public class DeleteBrandScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/integral-mall/delete-brand";
+        return "/car-platform/pc/integral-mall/delete-brand";
     }
 }

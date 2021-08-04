@@ -54,6 +54,6 @@ public class FissionVoucherAddScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/activity/manage/fission-voucher/add";
+        return "/car-platform/pc/activity/manage/fission-voucher/add";
     }
 }

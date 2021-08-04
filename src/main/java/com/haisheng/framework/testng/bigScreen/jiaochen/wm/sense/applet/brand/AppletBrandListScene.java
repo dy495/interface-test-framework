@@ -29,6 +29,6 @@ public class AppletBrandListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/brand/list";
+        return "/car-platform/applet/brand/list";
     }
 }

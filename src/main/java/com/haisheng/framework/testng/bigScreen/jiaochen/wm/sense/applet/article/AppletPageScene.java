@@ -37,6 +37,6 @@ public class AppletPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/article/page";
+        return "/car-platform/applet/article/page";
     }
 }

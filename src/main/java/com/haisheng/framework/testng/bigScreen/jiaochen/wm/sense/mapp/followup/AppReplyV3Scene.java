@@ -37,6 +37,6 @@ public class AppReplyV3Scene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/m-app/follow-up/reply-v3";
+        return "/car-platform/m-app/follow-up/reply-v3";
     }
 }

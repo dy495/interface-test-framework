@@ -61,6 +61,6 @@ public class AppletIntegralMallCreateAddressScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/granted/integral-mall/create-address";
+        return "/car-platform/applet/granted/integral-mall/create-address";
     }
 }

@@ -63,7 +63,7 @@ public class CustomerIntegralChangeRecordPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/integral-center/customer-integral/change-record/page";
+        return "/car-platform/pc/integral-center/customer-integral/change-record/page";
     }
 
     @Override

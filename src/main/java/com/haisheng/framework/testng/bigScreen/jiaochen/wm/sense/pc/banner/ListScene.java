@@ -46,6 +46,6 @@ public class ListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/banner/list";
+        return "/car-platform/pc/banner/list";
     }
 }

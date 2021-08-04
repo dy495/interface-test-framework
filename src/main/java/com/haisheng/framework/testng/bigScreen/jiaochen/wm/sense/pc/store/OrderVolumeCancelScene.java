@@ -29,6 +29,6 @@ public class OrderVolumeCancelScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/store/order/volume-cancel";
+        return "/car-platform/pc/store/order/volume-cancel";
     }
 }

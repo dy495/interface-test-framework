@@ -37,6 +37,6 @@ public class AppWaitingTaskReadScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/m-app/home-page/waiting-task/read";
+        return "/car-platform/m-app/home-page/waiting-task/read";
     }
 }

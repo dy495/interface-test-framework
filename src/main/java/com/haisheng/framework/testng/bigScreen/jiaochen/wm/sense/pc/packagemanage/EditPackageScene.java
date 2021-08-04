@@ -48,6 +48,6 @@ public class EditPackageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/package-manage/edit-package";
+        return "/car-platform/pc/package-manage/edit-package";
     }
 }

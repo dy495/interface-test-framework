@@ -102,6 +102,6 @@ public class RescueExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/manage/rescue/export";
+        return "/car-platform/pc/manage/rescue/export";
     }
 }

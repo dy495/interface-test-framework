@@ -78,6 +78,6 @@ public class CommodityPageExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/store/commodity/page/export";
+        return "/car-platform/pc/store/commodity/page/export";
     }
 }

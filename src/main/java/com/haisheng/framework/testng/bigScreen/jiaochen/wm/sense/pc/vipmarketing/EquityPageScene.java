@@ -27,6 +27,6 @@ public class EquityPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/vip-marketing/equity/page";
+        return "/car-platform/pc/vip-marketing/equity/page";
     }
 }

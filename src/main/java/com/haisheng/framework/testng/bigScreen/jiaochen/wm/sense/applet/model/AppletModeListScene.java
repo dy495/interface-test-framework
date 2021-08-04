@@ -37,6 +37,6 @@ public class AppletModeListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/model/list";
+        return "/car-platform/applet/model/list";
     }
 }

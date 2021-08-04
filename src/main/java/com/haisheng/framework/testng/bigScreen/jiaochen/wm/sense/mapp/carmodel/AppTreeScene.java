@@ -29,6 +29,6 @@ public class AppTreeScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/m-app/car-model/tree";
+        return "/car-platform/m-app/car-model/tree";
     }
 }

@@ -17,6 +17,6 @@ public class ReceptionManagerVoucherListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/reception-manage/voucher-list";
+        return "/car-platform/pc/reception-manage/voucher-list";
     }
 }

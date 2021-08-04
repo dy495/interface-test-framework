@@ -29,6 +29,6 @@ public class OrderVolumeSendScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/store/order/volume-send";
+        return "/car-platform/pc/store/order/volume-send";
     }
 }

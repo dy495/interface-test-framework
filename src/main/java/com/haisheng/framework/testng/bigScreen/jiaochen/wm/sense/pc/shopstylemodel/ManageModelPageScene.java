@@ -87,7 +87,7 @@ public class ManageModelPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/shop-style-model/manage/model/page";
+        return "/car-platform/pc/shop-style-model/manage/model/page";
     }
 
     @Override

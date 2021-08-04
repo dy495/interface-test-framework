@@ -14,6 +14,6 @@ public class AppletUserInfoDetailScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/granted/user-info/detail";
+        return "/car-platform/applet/granted/user-info/detail";
     }
 }

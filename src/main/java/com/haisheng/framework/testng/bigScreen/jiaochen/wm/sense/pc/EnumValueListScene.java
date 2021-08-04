@@ -29,6 +29,6 @@ public class EnumValueListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/enum-value-list";
+        return "/car-platform/pc/enum-value-list";
     }
 }

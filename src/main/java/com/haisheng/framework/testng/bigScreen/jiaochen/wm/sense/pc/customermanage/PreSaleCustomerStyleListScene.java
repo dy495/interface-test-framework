@@ -29,6 +29,6 @@ public class PreSaleCustomerStyleListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/customer-manage/pre-sale-customer/style-list";
+        return "/car-platform/pc/customer-manage/pre-sale-customer/style-list";
     }
 }

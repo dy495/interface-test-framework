@@ -158,6 +158,6 @@ public class EvaluateExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/manage/evaluate/export";
+        return "/car-platform/pc/manage/evaluate/export";
     }
 }

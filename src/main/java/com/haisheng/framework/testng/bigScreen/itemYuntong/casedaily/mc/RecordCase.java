@@ -74,17 +74,17 @@ public class RecordCase extends TestCaseCommon implements TestCaseStd {
     @Test(dataProvider = "CarExportPages")
     public void testExportPage(String product, String path, String type) {
         try {
-            visitor.setProduct(EnumTestProduct.YT_DAILY_CAR);
+            visitor.setProduct(EnumTestProduct.YT_DAILY_JD);
             JSONObject res1 = util.checkExport(); //查询接口
             Integer total1 = res1.getInteger("total");//检查导出操作前的总记录
             if (Objects.equals(product,"control")) {
-                visitor.setProduct(EnumTestProduct.YT_DAILY_CONTROL);
+                visitor.setProduct(EnumTestProduct.YT_DAILY_GK);
             }
             if (Objects.equals(product,"car")) {
-                visitor.setProduct(EnumTestProduct.YT_DAILY_CAR);
+                visitor.setProduct(EnumTestProduct.YT_DAILY_JD);
             }
             util.carPageExport(path); //在对应页面中导出
-            visitor.setProduct(EnumTestProduct.YT_DAILY_CAR);
+            visitor.setProduct(EnumTestProduct.YT_DAILY_JD);
             JSONObject res2 = util.checkExport();//查询接口
             Integer total2 = res2.getInteger("total"); // 检查导出操作后的总记录
             String typeName = res2.getJSONArray("list").getJSONObject(0).getString("type_name"); //获取导出的页面字段
@@ -127,7 +127,7 @@ public class RecordCase extends TestCaseCommon implements TestCaseStd {
 
     @Test
     public void deleteRecord() {
-        visitor.setProduct(EnumTestProduct.YT_DAILY_CAR);
+        visitor.setProduct(EnumTestProduct.YT_DAILY_JD);
         try {
             JSONObject res1 = util.checkDelete(); //删除之前校验
             Integer total1 = res1.getInteger("total");  //之前总删除条数

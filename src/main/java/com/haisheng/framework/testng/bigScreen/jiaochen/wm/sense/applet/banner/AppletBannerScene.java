@@ -13,6 +13,6 @@ public class AppletBannerScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/banner";
+        return "/car-platform/applet/banner";
     }
 }

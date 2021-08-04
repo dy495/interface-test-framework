@@ -26,7 +26,7 @@ public class ExchangeStockPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/integral-center/exchange-stock-page";
+        return "/car-platform/pc/integral-center/exchange-stock-page";
     }
 
     @Override

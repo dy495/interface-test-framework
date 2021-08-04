@@ -26,6 +26,6 @@ public class GroupTotalScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/message-manage/group-total";
+        return "/car-platform/pc/message-manage/group-total";
     }
 }

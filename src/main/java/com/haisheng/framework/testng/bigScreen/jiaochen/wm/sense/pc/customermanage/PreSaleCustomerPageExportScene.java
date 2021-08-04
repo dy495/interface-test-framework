@@ -110,6 +110,6 @@ public class PreSaleCustomerPageExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/customer-manage/pre-sale-customer/page/export";
+        return "/car-platform/pc/customer-manage/pre-sale-customer/page/export";
     }
 }

@@ -30,6 +30,6 @@ public class AppletMemberCenterCarWashShopListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/granted/member-center/car-wash/shop-list";
+        return "/car-platform/applet/granted/member-center/car-wash/shop-list";
     }
 }

@@ -29,6 +29,6 @@ public class InsuranceCompanyAddScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/insurance-management/insurance-company-add";
+        return "/car-platform/pc/insurance-management/insurance-company-add";
     }
 }

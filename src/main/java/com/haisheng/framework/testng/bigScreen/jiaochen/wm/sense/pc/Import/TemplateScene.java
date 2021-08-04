@@ -29,6 +29,6 @@ public class TemplateScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/import/template";
+        return "/car-platform/pc/import/template";
     }
 }

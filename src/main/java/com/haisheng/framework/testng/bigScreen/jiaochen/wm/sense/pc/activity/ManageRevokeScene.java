@@ -20,7 +20,7 @@ public class ManageRevokeScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/activity/manage/revoke";
+        return "/car-platform/pc/activity/manage/revoke";
     }
 
 

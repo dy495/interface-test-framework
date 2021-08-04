@@ -28,7 +28,7 @@ import java.util.List;
 
 
 public class EnumListCheckNotNull extends TestCaseCommon implements TestCaseStd {
-
+    EnumTestProduct product = EnumTestProduct.JC_DAILY_JD;
     ScenarioUtil jc = new ScenarioUtil();
     JsonPathUtil jpu = new JsonPathUtil();
     DateTimeUtil dt = new DateTimeUtil();
@@ -49,7 +49,7 @@ public class EnumListCheckNotNull extends TestCaseCommon implements TestCaseStd 
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.product = EnumTestProduct.JC_DAILY_ZH.getAbbreviation();
+        commonConfig.product = product.getAbbreviation();
 
 
         //replace backend gaturl
@@ -59,7 +59,7 @@ public class EnumListCheckNotNull extends TestCaseCommon implements TestCaseStd 
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.JC_DAILY_ZH.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
 
         //replace ding push conf
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
@@ -70,7 +70,7 @@ public class EnumListCheckNotNull extends TestCaseCommon implements TestCaseStd 
         //set shop id
         commonConfig.shopId = pp.shopIdZ;
         commonConfig.roleId = pp.roleidJdgw;
-        commonConfig.referer = EnumTestProduct.JC_DAILY_ZH.getReferer();
+        commonConfig.referer = product.getReferer();
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);

@@ -18,6 +18,6 @@ public class ManagePromotionScene extends BaseScene {
     }
     @Override
     public String getPath() {
-        return "/jiaochen/pc/activity/manage/promotion";
+        return "/car-platform/pc/activity/manage/promotion";
     }
 }

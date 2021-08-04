@@ -29,6 +29,6 @@ public class AppVerificationScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/m-app/voucher/verification";
+        return "/car-platform/m-app/voucher/verification";
     }
 }

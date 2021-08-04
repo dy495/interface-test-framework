@@ -53,6 +53,6 @@ public class ListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/used-car/list";
+        return "/car-platform/used-car/list";
     }
 }

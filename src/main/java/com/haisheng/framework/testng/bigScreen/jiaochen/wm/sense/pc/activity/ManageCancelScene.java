@@ -18,6 +18,6 @@ public class ManageCancelScene extends BaseScene {
     }
     @Override
     public String getPath() {
-        return "/jiaochen/pc/activity/manage/cancel";
+        return "/car-platform/pc/activity/manage/cancel";
     }
 }

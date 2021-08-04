@@ -214,6 +214,6 @@ public class SendRecordExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/voucher-manage/send-record/export";
+        return "/car-platform/pc/voucher-manage/send-record/export";
     }
 }

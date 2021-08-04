@@ -37,7 +37,7 @@ import java.util.*;
  * 系统配置case
  */
 public class SystemConfigCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_SSO;
+    private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_ZH;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public SceneUtil util = new SceneUtil(visitor);

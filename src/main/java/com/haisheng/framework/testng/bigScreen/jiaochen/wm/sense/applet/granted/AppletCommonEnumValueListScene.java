@@ -29,6 +29,6 @@ public class AppletCommonEnumValueListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/granted/common/enum-value-list";
+        return "/car-platform/applet/granted/common/enum-value-list";
     }
 }

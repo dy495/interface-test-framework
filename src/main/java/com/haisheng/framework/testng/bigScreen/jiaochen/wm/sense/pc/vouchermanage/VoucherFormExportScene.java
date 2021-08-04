@@ -102,6 +102,6 @@ public class VoucherFormExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/voucher-manage/voucher-form/export";
+        return "/car-platform/pc/voucher-manage/voucher-form/export";
     }
 }

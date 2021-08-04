@@ -77,6 +77,6 @@ public class AppletConsultPreServiceSubmitScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/granted/consult/pre-service-submit";
+        return "/car-platform/applet/granted/consult/pre-service-submit";
     }
 }

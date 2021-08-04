@@ -53,6 +53,6 @@ public class CreateBrandScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/integral-mall/create-brand";
+        return "/car-platform/pc/integral-mall/create-brand";
     }
 }

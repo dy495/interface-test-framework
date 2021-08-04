@@ -45,6 +45,6 @@ public class AppReceptionStartReceptionV3Scene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/m-app/task/reception/start-reception/v3";
+        return "/car-platform/m-app/task/reception/start-reception/v3";
     }
 }

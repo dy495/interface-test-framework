@@ -88,6 +88,6 @@ public class SearchCustomerPhoneScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/message-manage/search-customer-phone";
+        return "/car-platform/pc/message-manage/search-customer-phone";
     }
 }

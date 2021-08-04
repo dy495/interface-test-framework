@@ -118,6 +118,6 @@ public class EditGoodsScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/integral-mall/edit-goods";
+        return "/car-platform/pc/integral-mall/edit-goods";
     }
 }

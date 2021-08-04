@@ -78,6 +78,6 @@ public class ManageStyleExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/shop-style-model/manage/style/export";
+        return "/car-platform/pc/shop-style-model/manage/style/export";
     }
 }

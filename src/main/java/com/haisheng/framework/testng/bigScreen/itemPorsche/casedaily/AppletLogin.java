@@ -124,7 +124,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
     public void JC_applet_online(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            EnumTestProduct produce = EnumTestProduct.JC_ONLINE;
+            EnumTestProduct produce = EnumTestProduct.JC_ONLINE_JD;
             commonConfig.shopId = produce.getShopId();
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, produce.getDesc());
             commonConfig.referer = produce.getReferer();

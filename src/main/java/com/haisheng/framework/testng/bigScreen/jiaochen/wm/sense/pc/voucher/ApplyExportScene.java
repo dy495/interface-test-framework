@@ -94,6 +94,6 @@ public class ApplyExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/voucher/apply/export";
+        return "/car-platform/pc/voucher/apply/export";
     }
 }

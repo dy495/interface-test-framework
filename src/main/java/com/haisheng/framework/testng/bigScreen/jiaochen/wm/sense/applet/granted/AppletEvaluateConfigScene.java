@@ -37,6 +37,6 @@ public class AppletEvaluateConfigScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/granted/evaluate/config";
+        return "/car-platform/applet/granted/evaluate/config";
     }
 }

@@ -31,6 +31,6 @@ public class AppletCommonShopListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/granted/common/shop-list";
+        return "/car-platform/applet/granted/common/shop-list";
     }
 }

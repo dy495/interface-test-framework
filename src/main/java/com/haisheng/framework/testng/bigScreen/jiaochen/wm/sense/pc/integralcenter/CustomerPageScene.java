@@ -47,7 +47,7 @@ public class CustomerPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/integral-center/customer/page";
+        return "/car-platform/pc/integral-center/customer/page";
     }
 
     @Override

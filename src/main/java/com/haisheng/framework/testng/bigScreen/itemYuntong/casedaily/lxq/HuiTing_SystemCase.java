@@ -68,7 +68,7 @@ public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
         beforeClassInit(commonConfig);
         businessUtil.loginPc(ALL_AUTHORITY);
 
-        visitor.setProduct(EnumTestProduct.YT_DAILY_CONTROL);  //会听模块
+        visitor.setProduct(EnumTestProduct.YT_DAILY_GK);  //会听模块
     }
 
     @AfterClass

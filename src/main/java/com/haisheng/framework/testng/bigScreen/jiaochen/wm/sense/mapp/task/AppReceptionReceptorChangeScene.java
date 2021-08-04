@@ -44,6 +44,6 @@ public class AppReceptionReceptorChangeScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/m-app/task/reception/receptor/change";
+        return "/car-platform/m-app/task/reception/receptor/change";
     }
 }

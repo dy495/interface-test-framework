@@ -29,6 +29,6 @@ public class AppletIntegralRecordScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/granted/integral-mall/integral-record";
+        return "/car-platform/applet/granted/integral-mall/integral-record";
     }
 }

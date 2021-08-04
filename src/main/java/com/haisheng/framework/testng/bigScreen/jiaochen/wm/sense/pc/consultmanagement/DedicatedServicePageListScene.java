@@ -133,6 +133,6 @@ public class DedicatedServicePageListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/consult-management/dedicated-service-page-list";
+        return "/car-platform/pc/consult-management/dedicated-service-page-list";
     }
 }

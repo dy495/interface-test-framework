@@ -36,7 +36,7 @@ public class MessageFormPageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/message-manage/message-form/page";
+        return "/car-platform/pc/message-manage/message-form/page";
     }
 
     @Override

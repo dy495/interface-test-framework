@@ -61,6 +61,6 @@ public class EditCategoryScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/integral-mall/edit-category";
+        return "/car-platform/pc/integral-mall/edit-category";
     }
 }

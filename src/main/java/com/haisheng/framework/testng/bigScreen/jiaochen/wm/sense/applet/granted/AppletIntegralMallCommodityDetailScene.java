@@ -29,6 +29,6 @@ public class AppletIntegralMallCommodityDetailScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/applet/granted/integral-mall/commodity-detail";
+        return "/car-platform/applet/granted/integral-mall/commodity-detail";
     }
 }

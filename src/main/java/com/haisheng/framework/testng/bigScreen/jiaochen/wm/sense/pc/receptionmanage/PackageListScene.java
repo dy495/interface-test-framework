@@ -17,6 +17,6 @@ public class PackageListScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/reception-manage/package-list";
+        return "/car-platform/pc/reception-manage/package-list";
     }
 }

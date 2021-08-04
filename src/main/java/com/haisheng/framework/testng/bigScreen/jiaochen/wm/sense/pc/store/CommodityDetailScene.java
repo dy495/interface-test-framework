@@ -29,6 +29,6 @@ public class CommodityDetailScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/store/commodity/detail";
+        return "/car-platform/pc/store/commodity/detail";
     }
 }

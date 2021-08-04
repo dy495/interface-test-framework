@@ -53,6 +53,6 @@ public class BuyCarScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/pre-sales-reception/buy-car";
+        return "/car-platform/pc/pre-sales-reception/buy-car";
     }
 }

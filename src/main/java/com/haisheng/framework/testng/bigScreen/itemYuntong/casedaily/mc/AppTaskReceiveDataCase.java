@@ -59,7 +59,7 @@ public class AppTaskReceiveDataCase extends TestCaseCommon implements TestCaseSt
         commonConfig.roleId = YT_RECEPTION_DAILY.getRoleId(); //请求头放入roleId
         beforeClassInit(commonConfig);  // 配置请求头
         util.loginPc(YT_RECEPTION_DAILY);   //登录
-        visitor.setProduct(EnumTestProduct.YT_DAILY_CAR);
+        visitor.setProduct(EnumTestProduct.YT_DAILY_JD);
     }
 
 

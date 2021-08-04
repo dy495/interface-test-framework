@@ -45,6 +45,6 @@ public class PageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/role/page";
+        return "/car-platform/pc/role/page";
     }
 }

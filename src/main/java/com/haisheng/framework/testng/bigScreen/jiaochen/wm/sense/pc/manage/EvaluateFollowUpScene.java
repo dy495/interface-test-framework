@@ -45,6 +45,6 @@ public class EvaluateFollowUpScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/manage/evaluate/follow-up";
+        return "/car-platform/pc/manage/evaluate/follow-up";
     }
 }

@@ -38,7 +38,7 @@ import java.lang.reflect.Method;
 public class SystemCaseRecpOnline extends TestCaseCommon implements TestCaseStd {
 
 
-    EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_CAR;
+    EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_JD;
     EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_ONLINE_LXQ;
     VisitorProxy visitor = new VisitorProxy(PRODUCE);
     SceneUtil businessUtil = new SceneUtil(visitor);
@@ -103,7 +103,7 @@ public class SystemCaseRecpOnline extends TestCaseCommon implements TestCaseStd 
             Long recId = info.startrecption(true);
 
             //获取评价选项
-            visitor.setProduct(EnumTestProduct.YT_ONLINE_CAR);
+            visitor.setProduct(EnumTestProduct.YT_ONLINE_JD);
             commonConfig.shopId = null;
             commonConfig.roleId = null;
             JSONArray evaluate_info_list = info.evaluateInfo(recId, type);
@@ -178,13 +178,13 @@ public class SystemCaseRecpOnline extends TestCaseCommon implements TestCaseStd 
 
             Thread.sleep(301000);
             Long endtime = System.currentTimeMillis();
-            visitor.setProduct(EnumTestProduct.YT_DAILY_CONTROL);
+            visitor.setProduct(EnumTestProduct.YT_DAILY_GK);
             AppVoiceRecordSubmitScene.builder().base64(base1).recordName(record_name).startTime(starttime).endTime(endtime).receptionId(recId1).receptionNodes(reception_nodes).build().invoke(visitor);
             AppVoiceRecordSubmitScene.builder().base64(base2).recordName(record_name).startTime(starttime).endTime(endtime).receptionId(recId2).receptionNodes(reception_nodes).build().invoke(visitor);
             AppVoiceRecordSubmitScene.builder().base64(base3).recordName(record_name).startTime(starttime).endTime(endtime).receptionId(recId3).receptionNodes(reception_nodes).build().invoke(visitor);
 
 
-            visitor.setProduct(EnumTestProduct.YT_ONLINE_CAR);
+            visitor.setProduct(EnumTestProduct.YT_ONLINE_JD);
             //完成接待
             FinishReceptionScene.builder().id(recId1).shopId(info.oneshopid).build().invoke(visitor);
             FinishReceptionScene.builder().id(recId2).shopId(info.oneshopid).build().invoke(visitor);

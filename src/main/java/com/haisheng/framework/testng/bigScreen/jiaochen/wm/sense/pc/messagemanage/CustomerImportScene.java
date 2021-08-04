@@ -20,6 +20,6 @@ public class CustomerImportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/message-manage/customers/import";
+        return "/car-platform/pc/message-manage/customers/import";
     }
 }

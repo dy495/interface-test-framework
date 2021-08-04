@@ -54,6 +54,6 @@ public class EditSpecificationsScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/integral-mall/edit-specifications";
+        return "/car-platform/pc/integral-mall/edit-specifications";
     }
 }

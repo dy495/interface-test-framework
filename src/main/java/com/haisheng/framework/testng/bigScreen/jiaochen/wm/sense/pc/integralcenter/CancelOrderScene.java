@@ -20,6 +20,6 @@ public class CancelOrderScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/integral-center/cancel-order";
+        return "/car-platform/pc/integral-center/cancel-order";
     }
 }

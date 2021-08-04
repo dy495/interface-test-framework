@@ -134,6 +134,6 @@ public class VoucherInvalidPageExportScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/voucher-manage/voucher-invalid-page/export";
+        return "/car-platform/pc/voucher-manage/voucher-invalid-page/export";
     }
 }

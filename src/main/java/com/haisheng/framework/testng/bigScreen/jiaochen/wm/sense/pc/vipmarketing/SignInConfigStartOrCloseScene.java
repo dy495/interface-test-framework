@@ -37,6 +37,6 @@ public class SignInConfigStartOrCloseScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/jiaochen/pc/vip-marketing/sign_in_config/start-or-close";
+        return "/car-platform/pc/vip-marketing/sign_in_config/start-or-close";
     }
 }
