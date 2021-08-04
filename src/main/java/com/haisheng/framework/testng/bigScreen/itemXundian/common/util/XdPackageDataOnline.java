@@ -96,7 +96,7 @@ public class XdPackageDataOnline extends TestCaseCommon {
     @DataProvider(name = "DEVICE_ID")
     public static Object[] device_id() {
         return new String[][]{
-                {"8681109537195008","ai-151"},
+                {"8720871407682560","大门152"},
 //                {"8134193718100992","云台全功能"},
                 {"8446461860381696","巡店1（ 不支持云台操作）"},
                 {"8446463209866240","巡店2（ 不支持云台操作）"},

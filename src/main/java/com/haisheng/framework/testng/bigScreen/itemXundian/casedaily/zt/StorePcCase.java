@@ -1464,7 +1464,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd {
         saveData("签到-打卡-异常情况-纪念日-积分优惠券都为空");
     }
 
-    @Test(dataProvider = "updatetype" , dataProviderClass = DataProviderMethod.class,description = "签到-打卡-异常情况-纪念日设置-天数重复")//ok
+//    @Test(dataProvider = "updatetype" , dataProviderClass = DataProviderMethod.class,description = "签到-打卡-异常情况-纪念日设置-天数重复")//ok
     public void  punchsinginSystemError15(String date,String punch){
         logger.logCaseStart(caseResult.getCaseName());
         try{

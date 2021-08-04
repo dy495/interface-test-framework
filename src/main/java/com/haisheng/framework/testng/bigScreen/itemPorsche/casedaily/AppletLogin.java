@@ -140,7 +140,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(dataProvider = "INS_APPLET_TOKENS_DAILY", enabled = false)
+    @Test(dataProvider = "INS_APPLET_TOKENS_DAILY")
     public void INS_applet_daily(String token) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
