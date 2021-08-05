@@ -66,7 +66,7 @@ public interface IScene {
      * @return 接口返回值
      */
     default JSONObject invoke(VisitorProxy visitor) {
-        return invoke(visitor, true);
+        return invoke(visitor, true).getJSONObject("data");
     }
 
     /**
