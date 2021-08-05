@@ -44,7 +44,7 @@ public class VisitorProxy extends TestCaseCommon {
      * @return 返回值
      */
     public JSONObject invokeApi(IScene scene) {
-        return invokeApi(scene, true).getJSONObject("data");
+        return invokeApi(scene, true);
     }
 
     /**
@@ -54,7 +54,8 @@ public class VisitorProxy extends TestCaseCommon {
      * @return 返回值
      */
     public JSONObject invokeApi(@NotNull IScene scene, boolean checkCode) {
-        return invokeApi(scene.getPath(), scene.getBody(), checkCode);
+        JSONObject response = invokeApi(scene.getPath(), scene.getBody(), checkCode);
+        return checkCode ? response.getJSONObject("data") : response;
     }
 
     /**
