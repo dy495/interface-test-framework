@@ -54,8 +54,7 @@ public class VisitorProxy extends TestCaseCommon {
      * @return 返回值
      */
     public JSONObject invokeApi(@NotNull IScene scene, boolean checkCode) {
-        JSONObject response = invokeApi(scene.getPath(), scene.getBody(), checkCode);
-        return checkCode ? response.getJSONObject("data") : response;
+        return invokeApi(scene.getPath(), scene.getBody(), checkCode);
     }
 
     /**
@@ -70,7 +69,8 @@ public class VisitorProxy extends TestCaseCommon {
         Preconditions.checkArgument(!StringUtils.isEmpty(path), "path不可为空");
         String request = JSON.toJSONString(requestBody);
         String result = httpPost(product.getIp(), path, request, checkCode, false);
-        return JSON.parseObject(result);
+        JSONObject response = JSON.parseObject(result);
+        return checkCode ? response.getJSONObject("data") : response;
     }
 
     /**
