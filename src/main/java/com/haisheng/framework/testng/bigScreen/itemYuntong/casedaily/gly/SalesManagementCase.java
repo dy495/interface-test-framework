@@ -29,10 +29,10 @@ import java.lang.reflect.Method;
 
 public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct product = EnumTestProduct.YT_DAILY;
-    YunTongUtil yt=new YunTongUtil(product);
+    YunTongUtil yt = new YunTongUtil(product);
     public VisitorProxy visitor = new VisitorProxy(product);
-    BusinessUtil businessUtil=new BusinessUtil(product);
-    SystemCase systemCase=new SystemCase();
+    BusinessUtil businessUtil = new BusinessUtil(product);
+    SystemCase systemCase = new SystemCase();
 
 
     @BeforeClass
@@ -51,9 +51,9 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
         //替换钉钉推送
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //放入shopId
-        commonConfig.referer =product.getReferer();
+        commonConfig.referer = product.getReferer();
         commonConfig.shopId = product.getShopId();
-        commonConfig.roleId =product.getRoleId();
+        commonConfig.roleId = product.getRoleId();
         beforeClassInit(commonConfig);
     }
 
@@ -76,16 +76,16 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
 
 
     /**
-     * @deprecated 展厅客户列表-筛选栏单项搜索
      * @date :2021-6-4
+     * @deprecated 展厅客户列表-筛选栏单项搜索
      */
-    @Test(dataProvider = "SELECT_preSalesReceptionPageRecordFilter", dataProviderClass = Constant.class,enabled = true,description = "展厅客户列表-筛选栏单项搜索")
-    public void preSaleCustomerPage1(String pram,String output){
+    @Test(dataProvider = "SELECT_preSalesReceptionPageRecordFilter", dataProviderClass = Constant.class, enabled = true, description = "展厅客户列表-筛选栏单项搜索")
+    public void preSaleCustomerPage1(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject response = yt.preSalesCustomerPage("1", "10", "", "");
             if (response.getJSONArray("list").size() > 0) {
-                System.out.println(pram+"   "+output);
+                System.out.println(pram + "   " + output);
                 String result = response.getJSONArray("list").getJSONObject(0).getString(output);
                 System.err.println(result);
                 JSONObject response1 = yt.preSalesCustomerPage("1", "10", pram, result);
@@ -110,7 +110,7 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
      * @date :2021-06-08
      * @deprecated 展厅客户列表-筛选栏时间搜索
      */
-    @Test(enabled = true,description = "展厅客户列表-筛选栏时间搜索")
+    @Test(enabled = true, description = "展厅客户列表-筛选栏时间搜索")
     public void preSaleCustomerPage2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -122,7 +122,7 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
                 JSONArray list = yt.preSalesCustomerPageTime(String.valueOf(page), "10", startTime, endTime).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     String createDate = list.getJSONObject(i).containsKey("create_date") ? list.getJSONObject(i).getString("create_date").substring(0, 10) : startTime;
-                    Preconditions.checkArgument(createDate.compareTo(startTime) >= 0 && createDate.compareTo(endTime) <= 0, "开始时间：" + startTime + " 结束时间：" + endTime + "列表中创建时间时间:" + createDate );
+                    Preconditions.checkArgument(createDate.compareTo(startTime) >= 0 && createDate.compareTo(endTime) <= 0, "开始时间：" + startTime + " 结束时间：" + endTime + "列表中创建时间时间:" + createDate);
                 }
             }
         } catch (AssertionError | Exception e) {
@@ -136,29 +136,29 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
      * 销售客户列表项校验
      */
     @Test(description = "销售客户列表项校验")
-    public void preSaleCustomerPage3(){
+    public void preSaleCustomerPage3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject response = yt.preSalesCustomerPage("1", "10", "", "");
-            int pages=response.getInteger("pages");
-            for(int page=1;page<=pages;page++){
-               JSONArray list= yt.preSalesCustomerPage("1", "10", "", "").getJSONArray("list");
-               for(int i=0;i<list.size();i++){
-                   String shopName=list.getJSONObject(i).getString("shop_name");
-                   String brandName=list.getJSONObject(i).getString("brand_name");
-                   String subjectType=list.getJSONObject(i).getString("subject_type");
-                   String customerTypeName=list.getJSONObject(i).getString("customer_type_name");
-                   String registrationStatus=list.getJSONObject(i).getString("registration_status");
-                   String customerName=list.getJSONObject(i).getString("customer_name");
-                   String customerPhone=list.getJSONObject(i).getString("customer_phone");
-                   String intentionCarModelName=list.getJSONObject(i).getString("intention_car_model_name");
-                   String sex=list.getJSONObject(i).getString("sex");
-                   String intentionCarStyleName=list.getJSONObject(i).getString("intention_car_style_name");
-                   String createDate=list.getJSONObject(i).getString("create_date");
-                   String saleName=list.getJSONObject(i).getString("sale_name");
-                   String salePhone=list.getJSONObject(i).getString("sale_phone");
-                   Preconditions.checkArgument(shopName!=null&&brandName!=null&&subjectType!=null&&customerTypeName!=null&&registrationStatus!=null&&customerName!=null&&customerPhone!=null&&intentionCarModelName!=null&&sex!=null&&intentionCarStyleName!=null&&createDate!=null&&saleName!=null&&salePhone!=null,"第"+pages+"页，第"+i+"行存列表项为空的数据");
-               }
+            int pages = response.getInteger("pages");
+            for (int page = 1; page <= pages; page++) {
+                JSONArray list = yt.preSalesCustomerPage("1", "10", "", "").getJSONArray("list");
+                for (int i = 0; i < list.size(); i++) {
+                    String shopName = list.getJSONObject(i).getString("shop_name");
+                    String brandName = list.getJSONObject(i).getString("brand_name");
+                    String subjectType = list.getJSONObject(i).getString("subject_type");
+                    String customerTypeName = list.getJSONObject(i).getString("customer_type_name");
+                    String registrationStatus = list.getJSONObject(i).getString("registration_status");
+                    String customerName = list.getJSONObject(i).getString("customer_name");
+                    String customerPhone = list.getJSONObject(i).getString("customer_phone");
+                    String intentionCarModelName = list.getJSONObject(i).getString("intention_car_model_name");
+                    String sex = list.getJSONObject(i).getString("sex");
+                    String intentionCarStyleName = list.getJSONObject(i).getString("intention_car_style_name");
+                    String createDate = list.getJSONObject(i).getString("create_date");
+                    String saleName = list.getJSONObject(i).getString("sale_name");
+                    String salePhone = list.getJSONObject(i).getString("sale_phone");
+                    Preconditions.checkArgument(shopName != null && brandName != null && subjectType != null && customerTypeName != null && registrationStatus != null && customerName != null && customerPhone != null && intentionCarModelName != null && sex != null && intentionCarStyleName != null && createDate != null && saleName != null && salePhone != null, "第" + pages + "页，第" + i + "行存列表项为空的数据");
+                }
             }
 
         } catch (AssertionError | Exception e) {
@@ -173,35 +173,35 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
      * 销售客户查看详情
      */
     @Test(description = "销售客户查看详情")
-    public void preSaleCustomerPage4(){
+    public void preSaleCustomerPage4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject response = yt.preSalesCustomerPage("1", "10", "", "");
-            int pages=response.getInteger("pages")>20?20:response.getInteger("pages");
-            for(int page=1;page<=pages;page++){
-                JSONArray list= yt.preSalesCustomerPage("1", "10", "", "").getJSONArray("list");
-                for(int i=0;i<list.size();i++){
-                    String sex=list.getJSONObject(i).getString("sex");
-                    String saleName=list.getJSONObject(i).getString("sale_name");
-                    String customerPhone=list.getJSONObject(i).getString("customer_phone");
-                    String intentionCarStyleName=list.getJSONObject(i).getString("intention_car_style_name");
-                    String createDate=list.getJSONObject(i).getString("create_date");
-                    Long shopId=list.getJSONObject(i).getLong("shop_id");
-                    Long customerId=list.getJSONObject(i).getLong("customer_id");
+            int pages = response.getInteger("pages") > 20 ? 20 : response.getInteger("pages");
+            for (int page = 1; page <= pages; page++) {
+                JSONArray list = yt.preSalesCustomerPage("1", "10", "", "").getJSONArray("list");
+                for (int i = 0; i < list.size(); i++) {
+                    String sex = list.getJSONObject(i).getString("sex");
+                    String saleName = list.getJSONObject(i).getString("sale_name");
+                    String customerPhone = list.getJSONObject(i).getString("customer_phone");
+                    String intentionCarStyleName = list.getJSONObject(i).getString("intention_car_style_name");
+                    String createDate = list.getJSONObject(i).getString("create_date");
+                    Long shopId = list.getJSONObject(i).getLong("shop_id");
+                    Long customerId = list.getJSONObject(i).getLong("customer_id");
                     //进入销售客户详情
-                    IScene scene= PreSaleCustomerInfoScene.builder().customerId(customerId).shopId(shopId).build();
-                    JSONObject response1=visitor.invokeApi(scene,true);
-                    String sexDetails=response1.getString("sex");
-                    String saleNameDetails=response1.getString("sale_name");
-                    String customerPhoneDetails=response1.getString("customer_phone");
-                    String intentionCarStyleNameDetails=response1.getString("intention_car_style_name");
-                    String createDateDetails=response1.getString("create_date");
+                    IScene scene = PreSaleCustomerInfoScene.builder().customerId(customerId).shopId(shopId).build();
+                    JSONObject response1 = visitor.invokeApi(scene, true);
+                    String sexDetails = response1.getString("sex");
+                    String saleNameDetails = response1.getString("sale_name");
+                    String customerPhoneDetails = response1.getString("customer_phone");
+                    String intentionCarStyleNameDetails = response1.getString("intention_car_style_name");
+                    String createDateDetails = response1.getString("create_date");
 
-                    Preconditions.checkArgument(sex.equals(sexDetails),"第"+pages+"页，第"+i+"行列表项为："+sex+"  客户详情中的内容为："+sexDetails);
-                    Preconditions.checkArgument(saleName.equals(saleNameDetails),"第"+pages+"页，第"+i+"行列表项为："+saleName+"  客户详情中的内容为："+saleNameDetails);
-                    Preconditions.checkArgument(customerPhone.equals(customerPhoneDetails),"第"+pages+"页，第"+i+"行列表项为："+customerPhone+"  客户详情中的内容为："+customerPhoneDetails);
-                    Preconditions.checkArgument(intentionCarStyleName.equals(intentionCarStyleNameDetails),"第"+pages+"页，第"+i+"行列表项为："+intentionCarStyleName+"  客户详情中的内容为："+intentionCarStyleNameDetails);
-                    Preconditions.checkArgument(createDate.equals(createDateDetails),"第"+pages+"页，第"+i+"行列表项为："+createDate+"  客户详情中的内容为："+createDateDetails);
+                    Preconditions.checkArgument(sex.equals(sexDetails), "第" + pages + "页，第" + i + "行列表项为：" + sex + "  客户详情中的内容为：" + sexDetails);
+                    Preconditions.checkArgument(saleName.equals(saleNameDetails), "第" + pages + "页，第" + i + "行列表项为：" + saleName + "  客户详情中的内容为：" + saleNameDetails);
+                    Preconditions.checkArgument(customerPhone.equals(customerPhoneDetails), "第" + pages + "页，第" + i + "行列表项为：" + customerPhone + "  客户详情中的内容为：" + customerPhoneDetails);
+                    Preconditions.checkArgument(intentionCarStyleName.equals(intentionCarStyleNameDetails), "第" + pages + "页，第" + i + "行列表项为：" + intentionCarStyleName + "  客户详情中的内容为：" + intentionCarStyleNameDetails);
+                    Preconditions.checkArgument(createDate.equals(createDateDetails), "第" + pages + "页，第" + i + "行列表项为：" + createDate + "  客户详情中的内容为：" + createDateDetails);
                 }
             }
 
@@ -216,15 +216,15 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
     /**
      * 成交客户筛选栏
      */
-    @Test(dataProvider = "SELECT_ preSaleBuyCarPageFilter", dataProviderClass = Constant.class,enabled = true,description = "成交客户筛选栏")
-    public void preSaleCustomerPage5(String pram,String output){
+    @Test(dataProvider = "SELECT_ preSaleBuyCarPageFilter", dataProviderClass = Constant.class, enabled = true, description = "成交客户筛选栏")
+    public void preSaleCustomerPage5(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject response = yt.preSalesBuyCarPage("1", "10", "", "");
             if (response.getJSONArray("list").size() > 0) {
-                if(pram.equals("shop_id")){
+                if (pram.equals("shop_id")) {
                     String result = response.getJSONArray("list").getJSONObject(0).getString(output);
-                    Long shopId=businessUtil.getStoreId(result);
+                    Long shopId = businessUtil.getStoreId(result);
                     System.err.println(result);
                     JSONObject response1 = yt.preSalesBuyCarPage("1", "10", pram, String.valueOf(shopId));
                     int pages = response1.getInteger("pages");
@@ -236,9 +236,9 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
                             Preconditions.checkArgument(Flag.contains(result), "销售客户接待列表按" + result + "查询，结果错误" + Flag);
                         }
                     }
-                }else if(pram.equals("car_style_id")){
+                } else if (pram.equals("car_style_id")) {
                     String result = response.getJSONArray("list").getJSONObject(0).getString(output);
-                    Long styleId=businessUtil.getStyleId(result);
+                    Long styleId = businessUtil.getStyleId(result);
                     System.err.println(result);
                     JSONObject response1 = yt.preSalesBuyCarPage("1", "10", pram, String.valueOf(styleId));
                     int pages = response1.getInteger("pages");
@@ -250,7 +250,7 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
                             Preconditions.checkArgument(Flag.contains(result), "销售客户接待列表按" + result + "查询，结果错误" + Flag);
                         }
                     }
-                }else{
+                } else {
                     String result = response.getJSONArray("list").getJSONObject(0).getString(output);
                     System.err.println(result);
                     JSONObject response1 = yt.preSalesBuyCarPage("1", "10", pram, result);
@@ -277,7 +277,7 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
      * @date :2021-06-08
      * @deprecated 成交记录-筛选栏时间搜索
      */
-    @Test(enabled = true,description = "成交记录-筛选栏时间搜索")
+    @Test(enabled = true, description = "成交记录-筛选栏时间搜索")
     public void preSaleCustomerPage6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -289,7 +289,7 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
                 JSONArray list = yt.preSalesBuyCarPageTime(String.valueOf(page), "10", startTime, endTime).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     String buyCarDate = list.getJSONObject(i).containsKey("buy_car_date") ? list.getJSONObject(i).getString("buy_car_date").substring(0, 10) : startTime;
-                    Preconditions.checkArgument(buyCarDate.compareTo(startTime) >= 0 && buyCarDate.compareTo(endTime) <= 0, "开始时间：" + startTime + " 结束时间：" + endTime + "列表中创建时间时间:" + buyCarDate );
+                    Preconditions.checkArgument(buyCarDate.compareTo(startTime) >= 0 && buyCarDate.compareTo(endTime) <= 0, "开始时间：" + startTime + " 结束时间：" + endTime + "列表中创建时间时间:" + buyCarDate);
                 }
             }
         } catch (AssertionError | Exception e) {
@@ -303,27 +303,27 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
      * 成交记录列表项校验
      */
     @Test(description = "成交记录列表项校验")
-    public void preSaleCustomerPage7(){
+    public void preSaleCustomerPage7() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject response = yt.preSalesBuyCarPage("1", "10", "", "");
-            int pages=response.getInteger("pages");
-            for(int page=1;page<=pages;page++){
-                JSONArray list= yt.preSalesBuyCarPage("1", "10", "", "").getJSONArray("list");
-                for(int i=0;i<list.size();i++){
-                    String shopName=list.getJSONObject(i).getString("shop_name");
-                    String brandName=list.getJSONObject(i).getString("brand_name");
-                    String ownerTypeName=list.getJSONObject(i).getString("owner_type_name");
-                    String customerName=list.getJSONObject(i).getString("customer_name");
-                    String customerPhone=list.getJSONObject(i).getString("customer_phone");
-                    String sex=list.getJSONObject(i).getString("sex");
-                    String intentionCarStyleName=list.getJSONObject(i).getString("intention_car_style_name");
-                    String intentionCarModelName=list.getJSONObject(i).getString("intention_car_model_name");
-                    String buyCarDate=list.getJSONObject(i).getString("buy_car_date");
-                    String vehicleChassisCode=list.getJSONObject(i).getString("vehicle_chassis_code");
-                    String preSaleName=list.getJSONObject(i).getString("pre_sale_name");
-                    String preSaleAccount=list.getJSONObject(i).getString("pre_sale_account");
-                    Preconditions.checkArgument(shopName!=null&&brandName!=null&&ownerTypeName!=null&&buyCarDate!=null&&vehicleChassisCode!=null&&customerName!=null&&customerPhone!=null&&intentionCarModelName!=null&&sex!=null&&intentionCarStyleName!=null&&preSaleName!=null&&preSaleAccount!=null,"第"+pages+"页，第"+i+"行存列表项为空的数据");
+            int pages = response.getInteger("pages");
+            for (int page = 1; page <= pages; page++) {
+                JSONArray list = yt.preSalesBuyCarPage("1", "10", "", "").getJSONArray("list");
+                for (int i = 0; i < list.size(); i++) {
+                    String shopName = list.getJSONObject(i).getString("shop_name");
+                    String brandName = list.getJSONObject(i).getString("brand_name");
+                    String ownerTypeName = list.getJSONObject(i).getString("owner_type_name");
+                    String customerName = list.getJSONObject(i).getString("customer_name");
+                    String customerPhone = list.getJSONObject(i).getString("customer_phone");
+                    String sex = list.getJSONObject(i).getString("sex");
+                    String intentionCarStyleName = list.getJSONObject(i).getString("intention_car_style_name");
+                    String intentionCarModelName = list.getJSONObject(i).getString("intention_car_model_name");
+                    String buyCarDate = list.getJSONObject(i).getString("buy_car_date");
+                    String vehicleChassisCode = list.getJSONObject(i).getString("vehicle_chassis_code");
+                    String preSaleName = list.getJSONObject(i).getString("pre_sale_name");
+                    String preSaleAccount = list.getJSONObject(i).getString("pre_sale_account");
+                    Preconditions.checkArgument(shopName != null && brandName != null && ownerTypeName != null && buyCarDate != null && vehicleChassisCode != null && customerName != null && customerPhone != null && intentionCarModelName != null && sex != null && intentionCarStyleName != null && preSaleName != null && preSaleAccount != null, "第" + pages + "页，第" + i + "行存列表项为空的数据");
                 }
             }
 
@@ -339,48 +339,48 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
      * 展厅客户编辑客户信息
      */
     @Test(description = "展厅客户编辑客户信息")
-    public void preSaleCustomerPage8(){
+    public void preSaleCustomerPage8() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject response = yt.preSalesCustomerPage("1", "10", "", "");
-            JSONArray list=response.getJSONArray("list");
-            int sexId=list.getJSONObject(0).getInteger("sex_id");
-            String subjectType=list.getJSONObject(0).getString("subject_type");
-            String customerName=list.getJSONObject(0).getString("customer_name");
-            String customerPhone=list.getJSONObject(0).getString("customer_phone");
-            Long intentionCarStyleId=list.getJSONObject(0).getLong("intention_car_style_id");
-            Long intentionCarModelId=list.getJSONObject(0).getLong("intention_car_model_id");
-            Long shopId=list.getJSONObject(0).getLong("shop_id");
-            Long customerId=list.getJSONObject(0).getLong("customer_id");
+            JSONArray list = response.getJSONArray("list");
+            int sexId = list.getJSONObject(0).getInteger("sex_id");
+            String subjectType = list.getJSONObject(0).getString("subject_type");
+            String customerName = list.getJSONObject(0).getString("customer_name");
+            String customerPhone = list.getJSONObject(0).getString("customer_phone");
+            Long intentionCarStyleId = list.getJSONObject(0).getLong("intention_car_style_id");
+            Long intentionCarModelId = list.getJSONObject(0).getLong("intention_car_model_id");
+            Long shopId = list.getJSONObject(0).getLong("shop_id");
+            Long customerId = list.getJSONObject(0).getLong("customer_id");
             //编辑客户信息，修改的内容为列表种内容
-            IScene scene= PreSaleCustomerEditScene.builder()
+            IScene scene = PreSaleCustomerEditScene.builder()
                     .customerId(customerId)
                     .shopId(shopId)
                     .subjectType(subjectType)
-                    .customerName(customerName+businessUtil.randomNumber())
+                    .customerName(customerName + businessUtil.randomNumber())
                     .customerPhone(customerPhone)
                     .sex(sexId)
                     .intentionCarModelId(intentionCarModelId)
                     .carStyleId(intentionCarStyleId)
                     .build();
-            String message=visitor.invokeApi(scene,false).getString("message");
-            Preconditions.checkArgument(message.equals("success"),"编辑客户失败");
+            String message = visitor.invokeApi(scene, false).getString("message");
+            Preconditions.checkArgument(message.equals("success"), "编辑客户失败");
             //编辑后的列表信息
             JSONObject response1 = yt.preSalesCustomerPage("1", "10", "", "");
-            JSONArray list1=response.getJSONArray("list");
-            int sexId1=list1.getJSONObject(0).getInteger("sex_id");
-            String subjectType1=list1.getJSONObject(0).getString("subject_type");
-            String customerName1=list1.getJSONObject(0).getString("customer_name");
-            String customerPhone1=list1.getJSONObject(0).getString("customer_phone");
-            Long intentionCarStyleId1=list1.getJSONObject(0).getLong("intention_car_style_id");
-            Long intentionCarModelId1=list1.getJSONObject(0).getLong("intention_car_model_id");
+            JSONArray list1 = response.getJSONArray("list");
+            int sexId1 = list1.getJSONObject(0).getInteger("sex_id");
+            String subjectType1 = list1.getJSONObject(0).getString("subject_type");
+            String customerName1 = list1.getJSONObject(0).getString("customer_name");
+            String customerPhone1 = list1.getJSONObject(0).getString("customer_phone");
+            Long intentionCarStyleId1 = list1.getJSONObject(0).getLong("intention_car_style_id");
+            Long intentionCarModelId1 = list1.getJSONObject(0).getLong("intention_car_model_id");
 
-            Preconditions.checkArgument(sexId1==sexId,"编辑后的性别为："+sexId1+"    编辑的性别为："+sexId);
-            Preconditions.checkArgument(subjectType1.equals(subjectType),"编辑后的车主类型为："+subjectType1+"    编辑的车主类型为："+subjectType);
-            Preconditions.checkArgument(customerName1.equals(customerName),"编辑后的姓名为："+customerName1+"    编辑的姓名为："+customerName1);
-            Preconditions.checkArgument(customerPhone1.equals(customerPhone),"编辑后的电话为："+customerPhone1+"    编辑的电话为："+customerPhone);
-            Preconditions.checkArgument(intentionCarStyleId1.equals(intentionCarStyleId),"编辑后的意向车系为："+intentionCarStyleId1+"    编辑的意向车系为："+intentionCarStyleId);
-            Preconditions.checkArgument(intentionCarModelId1.equals(intentionCarModelId),"编辑后的意向车型为："+intentionCarModelId1+"    编辑的意向车型为："+intentionCarModelId);
+            Preconditions.checkArgument(sexId1 == sexId, "编辑后的性别为：" + sexId1 + "    编辑的性别为：" + sexId);
+            Preconditions.checkArgument(subjectType1.equals(subjectType), "编辑后的车主类型为：" + subjectType1 + "    编辑的车主类型为：" + subjectType);
+            Preconditions.checkArgument(customerName1.equals(customerName), "编辑后的姓名为：" + customerName1 + "    编辑的姓名为：" + customerName1);
+            Preconditions.checkArgument(customerPhone1.equals(customerPhone), "编辑后的电话为：" + customerPhone1 + "    编辑的电话为：" + customerPhone);
+            Preconditions.checkArgument(intentionCarStyleId1.equals(intentionCarStyleId), "编辑后的意向车系为：" + intentionCarStyleId1 + "    编辑的意向车系为：" + intentionCarStyleId);
+            Preconditions.checkArgument(intentionCarModelId1.equals(intentionCarModelId), "编辑后的意向车型为：" + intentionCarModelId1 + "    编辑的意向车型为：" + intentionCarModelId);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -392,7 +392,7 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
      * @date :2021-06-08
      * @deprecated 销售客户接待列表-筛选栏单项搜索
      */
-    @Test(dataProvider = "SELECT_preSalesReceptionPageRecordFilter", dataProviderClass = Constant.class, enabled = true,description = "销售客户接待列表-筛选栏单项搜索")
+    @Test(dataProvider = "SELECT_preSalesReceptionPageRecordFilter", dataProviderClass = Constant.class, enabled = true, description = "销售客户接待列表-筛选栏单项搜索")
     public void preSaleCustomerPage9(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -423,13 +423,13 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
      * @date :2021-06-08
      * @deprecated 销售接待列表-筛选栏时间搜索
      */
-    @Test(enabled = true,description = "销售接待列表-筛选栏时间搜索")
+    @Test(enabled = true, description = "销售接待列表-筛选栏时间搜索")
     public void preSaleCustomerPage10() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String startTime = dt.getHistoryDate(-30);
             String endTime = dt.getHistoryDate(30);
-            JSONObject response =yt.salesReceptionPageTime("1", "10", startTime, endTime);
+            JSONObject response = yt.salesReceptionPageTime("1", "10", startTime, endTime);
             System.out.println("---------" + response);
             int pages = response.getInteger("pages") > 10 ? 10 : response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
@@ -457,36 +457,36 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
      * 新建成交记录,成交客户的手机号在销售客户的列表中存在，成交记录+1，销售客户+0
      */
     @Test(description = "新建成交记录,成交客户的手机号在销售客户的列表中存在，成交记录+1   ")
-    public void preSaleCustomerPageCase1(){
+    public void preSaleCustomerPageCase1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //成交记录列表
             IScene scene = PreSaleCustomerBuyCarPageScene.builder().page(1).size(10).build();
-            JSONObject response=visitor.invokeApi(scene,true);
+            JSONObject response = visitor.invokeApi(scene, true);
             //新建成交记录前的列表条数
-            int totalBefore=response.getInteger("total");
+            int totalBefore = response.getInteger("total");
             //展厅客户的列表
             IScene scene1 = PreSaleCustomerPageScene.builder().page(1).size(10).build();
-            JSONObject response2=visitor.invokeApi(scene1,true);
+            JSONObject response2 = visitor.invokeApi(scene1, true);
             //新建成交记录前的销售客户列表条数
-            int totalBefore1=response2.getInteger("total");
+            int totalBefore1 = response2.getInteger("total");
 
             //新建成交记录
-            systemCase.newCstmRecord("Max","13373166806","CORPORATION","0","","true");
+            systemCase.newCstmRecord("Max", "13373166806", "CORPORATION", "0", "", "true");
             //新建成交记录后的列表条数
-            JSONObject response1=PreSaleCustomerBuyCarPageScene.builder().page(1).size(10).build().invoke(visitor,true);
-            int totalAfter=response1.getInteger("total");
+            JSONObject response1 = PreSaleCustomerBuyCarPageScene.builder().page(1).size(10).build().invoke(visitor, true);
+            int totalAfter = response1.getInteger("total");
             //新建成交记录后的销售客户列表条数
-            int totalAfter1=PreSaleCustomerPageScene.builder().page(1).size(10).build().invoke(visitor,true).getInteger("total");
+            int totalAfter1 = PreSaleCustomerPageScene.builder().page(1).size(10).build().invoke(visitor, true).getInteger("total");
             //获取新建的成家记录的信息
-            JSONObject object=response1.getJSONArray("list").getJSONObject(0);
-            String customerName=object.getString("customer_name");
-            String customerPhone=object.getString("customer_phone");
-            String ownerTypeId=object.getString("owner_type_name").equals("公司")?"CORPORATION":"PERSON";
-            String sex=object.getString("sex").equals("女")?"0":"1";
-            Preconditions.checkArgument(totalAfter==totalBefore+1,"新建成交记录前的成交记录条数为："+totalBefore+"   新建成交记录以后的成交记录条数为："+totalAfter);
-            Preconditions.checkArgument(totalAfter1==totalBefore1+1,"新建成交记录前的销售客户条数为："+totalBefore1+"   新建成交记录以后的销售客户条数为："+totalAfter1);
-            Preconditions.checkArgument(customerName.equals("Max")&&customerPhone.equals("13373166806")&&ownerTypeId.equals("CORPORATION")&&sex.equals("0"),"新建成交记录的信息与创建时填写的不一致");
+            JSONObject object = response1.getJSONArray("list").getJSONObject(0);
+            String customerName = object.getString("customer_name");
+            String customerPhone = object.getString("customer_phone");
+            String ownerTypeId = object.getString("owner_type_name").equals("公司") ? "CORPORATION" : "PERSON";
+            String sex = object.getString("sex").equals("女") ? "0" : "1";
+            Preconditions.checkArgument(totalAfter == totalBefore + 1, "新建成交记录前的成交记录条数为：" + totalBefore + "   新建成交记录以后的成交记录条数为：" + totalAfter);
+            Preconditions.checkArgument(totalAfter1 == totalBefore1 + 1, "新建成交记录前的销售客户条数为：" + totalBefore1 + "   新建成交记录以后的销售客户条数为：" + totalAfter1);
+            Preconditions.checkArgument(customerName.equals("Max") && customerPhone.equals("13373166806") && ownerTypeId.equals("CORPORATION") && sex.equals("0"), "新建成交记录的信息与创建时填写的不一致");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -499,28 +499,28 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
      * 新建成交记录,成交客户的手机号在销售客户的列表中存在，展厅客户中的购车记录+1
      */
     @Test(description = "新建成交记录,成交客户的手机号在销售客户的列表中存在，展厅客户中的购车记录+1")
-    public void preSaleCustomerPageCase2(){
+    public void preSaleCustomerPageCase2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = PreSaleCustomerPageScene.builder().page(1).size(10).customerPhone("13373166806").build();
-            JSONObject response=visitor.invokeApi(scene,true).getJSONArray("list").getJSONObject(0);
-            Long shopId=response.getLong("shop_id");
-            Long customerId=response.getLong("customer_id");
-            JSONObject respond= PreSaleCustomerInfoBuyCarRecordScene.builder().customerId(customerId).shopId(shopId).build().invoke(visitor,true);
+            JSONObject response = visitor.invokeApi(scene, true).getJSONArray("list").getJSONObject(0);
+            Long shopId = response.getLong("shop_id");
+            Long customerId = response.getLong("customer_id");
+            JSONObject respond = PreSaleCustomerInfoBuyCarRecordScene.builder().customerId(customerId).shopId(shopId).build().invoke(visitor, true);
             //新建成交记录前客户详情中的购车记录条数
-            int totalBefore=respond.getInteger("total");
+            int totalBefore = respond.getInteger("total");
             //新建成交记录
-            systemCase.newCstmRecord("Max","13373166806","CORPORATION","0","","true");
+            systemCase.newCstmRecord("Max", "13373166806", "CORPORATION", "0", "", "true");
             //新建成交记录后的列表条数
-            JSONObject respond1= PreSaleCustomerInfoBuyCarRecordScene.builder().customerId(customerId).shopId(shopId).build().invoke(visitor,true);
-            int totalAfter=respond1.getInteger("total");
-            JSONObject object=respond1.getJSONArray("list").getJSONObject(0);
-            String customerName=object.getString("customer_name");
-            String customerPhone=object.getString("customer_phone");
-            String buyCarDate=object.getString("buy_car_date");
+            JSONObject respond1 = PreSaleCustomerInfoBuyCarRecordScene.builder().customerId(customerId).shopId(shopId).build().invoke(visitor, true);
+            int totalAfter = respond1.getInteger("total");
+            JSONObject object = respond1.getJSONArray("list").getJSONObject(0);
+            String customerName = object.getString("customer_name");
+            String customerPhone = object.getString("customer_phone");
+            String buyCarDate = object.getString("buy_car_date");
 
-            Preconditions.checkArgument(totalAfter==totalBefore+1,"新建成交记录前的购车记录条数为："+totalBefore+"   新建成交记录以后的购车记录条数为："+totalAfter);
-            Preconditions.checkArgument(customerName.equals("Max")&&customerPhone.equals("13373166806")&&buyCarDate.contains(businessUtil.getDateNow()),"购车记录信息与新建购车记录时填写的信息不一致");
+            Preconditions.checkArgument(totalAfter == totalBefore + 1, "新建成交记录前的购车记录条数为：" + totalBefore + "   新建成交记录以后的购车记录条数为：" + totalAfter);
+            Preconditions.checkArgument(customerName.equals("Max") && customerPhone.equals("13373166806") && buyCarDate.contains(businessUtil.getDateNow()), "购车记录信息与新建购车记录时填写的信息不一致");
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -532,27 +532,27 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
      * 新建潜客记录,潜客的手机号在列表中不存在，销售客户+1
      */
     @Test(description = "新建潜客记录,潜客的手机号在列表中不存在，销售客户+1")
-    public void preSaleCustomerPageCase3(){
+    public void preSaleCustomerPageCase3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //展厅客户的列表
-            IScene scene= PreSaleCustomerPageScene.builder().page(1).size(10).build();
-            JSONObject response=visitor.invokeApi(scene,true);
+            IScene scene = PreSaleCustomerPageScene.builder().page(1).size(10).build();
+            JSONObject response = visitor.invokeApi(scene, true);
             //新建潜客前的销售客户列表条数
-            int totalBefore=response.getInteger("total");
+            int totalBefore = response.getInteger("total");
             //新建潜客
-            systemCase.newPotentialCustomer("自动化潜客"+businessUtil.randomNumber(),"1337316"+businessUtil.randomNumber(),"CORPORATION","0","","true");
+            systemCase.newPotentialCustomer("自动化潜客" + businessUtil.randomNumber(), "1337316" + businessUtil.randomNumber(), "CORPORATION", "0", "", "true");
             //新建潜客后的列表条数
-            JSONObject response1=PreSaleCustomerPageScene.builder().page(1).size(10).build().invoke(visitor,true);
-            int totalAfter=response1.getInteger("total");
+            JSONObject response1 = PreSaleCustomerPageScene.builder().page(1).size(10).build().invoke(visitor, true);
+            int totalAfter = response1.getInteger("total");
             //获取新建的潜客的信息
-            JSONObject object=response1.getJSONArray("list").getJSONObject(0);
-            String customerName=object.getString("customer_name");
-            String customerPhone=object.getString("customer_phone");
-            String ownerTypeId=object.getString("owner_type_name").equals("公司")?"CORPORATION":"PERSON";
-            String sex=object.getString("sex").equals("女")?"0":"1";
-            Preconditions.checkArgument(totalAfter==totalBefore+1,"新建潜客前的条数为："+totalBefore+"   新建潜客以后的条数为："+totalAfter);
-            Preconditions.checkArgument(customerName.equals("Max")&&customerPhone.equals("13373166806")&&ownerTypeId.equals("CORPORATION")&&sex.equals("0"),"新建潜客的信息与创建时填写的不一致");
+            JSONObject object = response1.getJSONArray("list").getJSONObject(0);
+            String customerName = object.getString("customer_name");
+            String customerPhone = object.getString("customer_phone");
+            String ownerTypeId = object.getString("owner_type_name").equals("公司") ? "CORPORATION" : "PERSON";
+            String sex = object.getString("sex").equals("女") ? "0" : "1";
+            Preconditions.checkArgument(totalAfter == totalBefore + 1, "新建潜客前的条数为：" + totalBefore + "   新建潜客以后的条数为：" + totalAfter);
+            Preconditions.checkArgument(customerName.equals("Max") && customerPhone.equals("13373166806") && ownerTypeId.equals("CORPORATION") && sex.equals("0"), "新建潜客的信息与创建时填写的不一致");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -560,29 +560,6 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
             saveData("新建潜客记录,潜客的手机号在列表中不存在，销售客户+1");
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }

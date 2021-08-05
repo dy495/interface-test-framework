@@ -35,10 +35,7 @@ import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.CommonUtil;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -404,5 +401,4 @@ public class ApproveManagerCase extends TestCaseCommon implements TestCaseStd {
             saveData("优惠券审批--活动审批页全部审批=待审批+审批通过+审批未通过");
         }
     }
-
 }

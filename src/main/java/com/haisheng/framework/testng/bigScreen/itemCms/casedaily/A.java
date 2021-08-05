@@ -109,7 +109,7 @@ public class A extends TestCaseCommon implements TestCaseStd {
         String tableName = table.getKey();
         EnumDataLayout enumDataLayout = EnumDataLayout.finEnumByName(tableName);
         Long layoutId = getLayoutIdByLayoutName(subjectId, enumDataLayout);
-        Long regionId = getRegionIdByRegionId(subjectId, tableName);
+        Long regionId = getRegionIdByRegionName(subjectId, tableName);
         Arrays.stream(table.getRows()).map(row -> createDeviceAndGetDeviceMap(subjectId, row))
                 .forEach(map -> map.entrySet().stream().filter(e -> e.getValue() != null).forEach(e -> {
                     DataLayoutDeviceScene.builder().deviceId(e.getValue()).layoutId(layoutId).build().invoke(visitor);
@@ -130,7 +130,7 @@ public class A extends TestCaseCommon implements TestCaseStd {
             EnumDataLayout enumDataLayout = StringUtils.isEmpty(floorName) ? EnumDataLayout.L1 : EnumDataLayout.finEnumByName(floorName.replace("层", ""));
             Long layoutId = getLayoutIdByLayoutName(subjectId, enumDataLayout);
             DataRegionScene.builder().subjectId(subjectId).regionName(shopName).layoutId(layoutId).regionType(EnumRegionType.GENERAL.name()).build().invoke(visitor);
-            Long regionId = getRegionIdByRegionId(subjectId, shopName);
+            Long regionId = getRegionIdByRegionName(subjectId, shopName);
             createDeviceAndGetDeviceMap(subjectId, row).entrySet().stream().filter(map -> map.getValue() != null).forEach(e -> {
                 DataLayoutDeviceScene.builder().deviceId(e.getValue()).layoutId(layoutId).build().invoke(visitor);
                 DataRegionDeviceScene.builder().regionId(regionId).deviceId(e.getValue()).build().invoke(visitor);
@@ -150,7 +150,7 @@ public class A extends TestCaseCommon implements TestCaseStd {
             String floorName = row.getField(CmsConstants.TABLE_FIELD_FLOOR_NAME).getValue().replace("层", "");
             EnumDataLayout enumDataLayout = EnumDataLayout.finEnumByName(floorName);
             Long layoutId = getLayoutIdByLayoutName(subjectId, enumDataLayout);
-            Long regionId = getRegionIdByRegionId(subjectId, floorName);
+            Long regionId = getRegionIdByRegionName(subjectId, floorName);
             createDeviceAndGetDeviceMap(subjectId, row).entrySet().stream().filter(map -> map.getValue() != null).forEach(e -> {
                 DataLayoutDeviceScene.builder().deviceId(e.getValue()).layoutId(layoutId).build().invoke(visitor);
                 DataEntranceScene.builder().regionId(regionId).entranceName(e.getKey()).entranceType("REGION").build().invoke(visitor);
@@ -180,7 +180,7 @@ public class A extends TestCaseCommon implements TestCaseStd {
      * @param regionName 区域名称
      * @return 区域id
      */
-    private Long getRegionIdByRegionId(Long subjectId, String regionName) {
+    private Long getRegionIdByRegionName(Long subjectId, String regionName) {
         IScene scene = RegionListScene.builder().regionName(regionName).subjectId(subjectId).build();
         return util.toFirstJavaObject(scene, JSONObject.class).getLong("region_id");
     }

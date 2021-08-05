@@ -84,7 +84,7 @@ public class GoodsMarkingCase extends TestCaseCommon implements TestCaseStd {
     public void integralMall_system_1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String[] names = {"大", EnumDesc.DESC_10.getDesc()};
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    String[] names = {"大", EnumDesc.DESC_10.getDesc()};
             Arrays.stream(names).forEach(name -> {
                 String picPath = util.getPicPath(FILEPATH, "1:1");
                 JSONObject response = CreateBrandScene.builder().brandName(name).brandDescription("梅赛德斯奔驰").brandPic(picPath).build().invoke(visitor, false);

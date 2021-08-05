@@ -23,7 +23,7 @@ public enum EnumAppletToken {
 
     BSJ_WM_SMALL_ONLINE("29c11pEn61vmjuKxyX5WZw==", false, "15321527989"),
 
-    JC_WM_DAILY("+4QvEng6s0rnqlfzyztttg==", true, "15321527989"),
+    JC_WM_DAILY("G5155S0DLknIFoC3CcbXRQ==", true, "15321527989"),
 
     JC_WM_ONLINE("ozWh4QcCow9uvHXvVGoQAg==", false, "15321527989"),
 
