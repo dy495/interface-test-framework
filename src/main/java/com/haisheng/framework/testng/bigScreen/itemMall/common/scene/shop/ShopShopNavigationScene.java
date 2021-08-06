@@ -9,7 +9,7 @@ import lombok.Builder;
  * 3.9. 门店导航
  *
  * @author wangmin
- * @date 2021-07-28 16:58:57
+ * @date 2021-08-06 17:47:04
  */
 @Builder
 public class ShopShopNavigationScene extends BaseScene {

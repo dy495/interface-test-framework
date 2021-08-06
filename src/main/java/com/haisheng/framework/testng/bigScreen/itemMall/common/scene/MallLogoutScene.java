@@ -9,7 +9,7 @@ import lombok.Builder;
  * 10.2. 用户登出
  *
  * @author wangmin
- * @date 2021-07-28 16:58:57
+ * @date 2021-08-06 17:47:05
  */
 @Builder
 public class MallLogoutScene extends BaseScene {

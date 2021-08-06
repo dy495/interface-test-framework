@@ -9,7 +9,7 @@ import lombok.Builder;
  * 9.1. 场馆客流总览
  *
  * @author wangmin
- * @date 2021-07-28 16:58:57
+ * @date 2021-08-06 17:47:05
  */
 @Builder
 public class OverviewVenueOverviewScene extends BaseScene {
@@ -21,26 +21,42 @@ public class OverviewVenueOverviewScene extends BaseScene {
     private final String referer;
 
     /**
-     * 描述 按时间查询类型(DAY天，WEEK周，MONTH月，CYCLE自定义)
-     * 是否必填 false
+     * 描述 购物中心id
+     * 是否必填 true
      * 版本 -
      */
-    private final String timeType;
+    private final Long mallId;
 
     /**
-     * 描述 日期/周/月份/自定义周期
+     * 描述 查询开始日期
      * 是否必填 false
      * 版本 -
      */
-    private final String time;
+    private final String startTime;
+
+    /**
+     * 描述 查询结束日期
+     * 是否必填 false
+     * 版本 -
+     */
+    private final String endTime;
+
+    /**
+     * 描述 查询开始日期
+     * 是否必填 false
+     * 版本 -
+     */
+    private final String date;
 
 
     @Override
     protected JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("referer", referer);
-        object.put("time_type", timeType);
-        object.put("time", time);
+        object.put("mall_id", mallId);
+        object.put("start_time", startTime);
+        object.put("end_time", endTime);
+        object.put("date", date);
         return object;
     }
 

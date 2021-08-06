@@ -9,7 +9,7 @@ import lombok.Builder;
  * 7.1. 全场到访趋势折线图
  *
  * @author wangmin
- * @date 2021-07-28 16:58:57
+ * @date 2021-08-06 17:47:04
  */
 @Builder
 public class FullCourtTrendHistoryScene extends BaseScene {
@@ -19,6 +19,13 @@ public class FullCourtTrendHistoryScene extends BaseScene {
      * 版本 -
      */
     private final String referer;
+
+    /**
+     * 描述 购物中心id
+     * 是否必填 true
+     * 版本 -
+     */
+    private final Long mallId;
 
     /**
      * 描述 查询开始日期
@@ -46,13 +53,14 @@ public class FullCourtTrendHistoryScene extends BaseScene {
      * 是否必填 false
      * 版本 -
      */
-    private final Long floorId;
+    private final long floorId;
 
 
     @Override
     protected JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("referer", referer);
+        object.put("mall_id", mallId);
         object.put("date", date);
         object.put("type", type);
         object.put("scene", scene);

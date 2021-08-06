@@ -9,7 +9,7 @@ import lombok.Builder;
  * 4.1. 获取区划树
  *
  * @author wangmin
- * @date 2021-07-28 16:58:57
+ * @date 2021-08-06 17:47:04
  */
 @Builder
 public class MallDistrictsScene extends BaseScene {

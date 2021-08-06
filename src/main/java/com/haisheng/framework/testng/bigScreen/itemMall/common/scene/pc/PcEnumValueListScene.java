@@ -9,7 +9,7 @@ import lombok.Builder;
  * 5.2. 获取指定枚举值列表（谢）（2021-02-19）
  *
  * @author wangmin
- * @date 2021-07-28 16:58:57
+ * @date 2021-08-06 17:47:04
  */
 @Builder
 public class PcEnumValueListScene extends BaseScene {

@@ -9,7 +9,7 @@ import lombok.Builder;
  * 2.3. 竞合分析
  *
  * @author wangmin
- * @date 2021-07-28 16:58:57
+ * @date 2021-08-06 17:47:04
  */
 @Builder
 public class ShopConcurrenceScene extends BaseScene {
@@ -19,6 +19,13 @@ public class ShopConcurrenceScene extends BaseScene {
      * 版本 -
      */
     private final String referer;
+
+    /**
+     * 描述 购物中心id
+     * 是否必填 true
+     * 版本 -
+     */
+    private final Long mallId;
 
     /**
      * 描述 查询开始日期
@@ -46,6 +53,7 @@ public class ShopConcurrenceScene extends BaseScene {
     protected JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("referer", referer);
+        object.put("mall_id", mallId);
         object.put("start_time", startTime);
         object.put("end_time", endTime);
         object.put("shop_id", shopId);

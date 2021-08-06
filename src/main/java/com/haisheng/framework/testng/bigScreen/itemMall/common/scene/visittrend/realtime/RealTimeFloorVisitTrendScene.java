@@ -6,10 +6,10 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 1.7. 楼层到访趋势
+ * 1.6. 楼层到访趋势
  *
  * @author wangmin
- * @date 2021-07-28 16:58:57
+ * @date 2021-08-06 17:47:04
  */
 @Builder
 public class RealTimeFloorVisitTrendScene extends BaseScene {
@@ -19,6 +19,13 @@ public class RealTimeFloorVisitTrendScene extends BaseScene {
      * 版本 -
      */
     private final String referer;
+
+    /**
+     * 描述 购物中心id
+     * 是否必填 true
+     * 版本 -
+     */
+    private final Long mallId;
 
     /**
      * 描述 类型（VISIT到访，FLOOR_ENTER爬楼）
@@ -32,6 +39,7 @@ public class RealTimeFloorVisitTrendScene extends BaseScene {
     protected JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("referer", referer);
+        object.put("mall_id", mallId);
         object.put("type", type);
         return object;
     }
