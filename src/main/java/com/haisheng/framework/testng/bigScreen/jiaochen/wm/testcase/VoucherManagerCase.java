@@ -69,7 +69,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
         //放入shopId
         commonConfig.product = PRODUCE.getAbbreviation();
         commonConfig.referer = PRODUCE.getReferer();
-        commonConfig.shopId = PRODUCE.getShopId();
+        commonConfig.shopId = ACCOUNT.getShopId();
         commonConfig.roleId = ACCOUNT.getRoleId();
         beforeClassInit(commonConfig);
     }
@@ -77,7 +77,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
     @AfterClass
     @Override
     public void clean() {
-//        util.cleanVoucher();
+        util.cleanVoucher();
         afterClassClean();
     }
 
