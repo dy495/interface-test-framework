@@ -49,7 +49,7 @@ import java.util.stream.Collectors;
  */
 public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_DAILY_GK;
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_DAILY;
+    private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_RECEPTION_DAILY;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public SceneUtil util = new SceneUtil(visitor);
     private static final String startDate = DateTimeUtil.addDayFormat(new Date(), -1);
@@ -72,7 +72,7 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
         //放入shopId
         commonConfig.product = PRODUCE.getAbbreviation();
         commonConfig.referer = PRODUCE.getReferer();
-        commonConfig.shopId = PRODUCE.getShopId();
+        commonConfig.shopId = ALL_AUTHORITY.getShopId();
         commonConfig.roleId = ALL_AUTHORITY.getRoleId();
         beforeClassInit(commonConfig);
         util.loginApp(ALL_AUTHORITY);
@@ -90,12 +90,12 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
+        logger.logCaseStart(caseResult.getCaseName());
     }
 
     //ok
     @Test(description = "APP【部门接待评鉴】平均接待时长=APP【部门接待评鉴】总接待时长/接待次数")
     public void department_data_1() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = AppOverviewScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
             AppOverviewBean appOverviewBean = util.toJavaObject(scene, AppOverviewBean.class);
@@ -115,7 +115,6 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     //bug
     @Test(description = "APP【部门接待评鉴】总接待时长=PC【语音接待评鉴】所有接待时长之和")
     public void department_data_2() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene appOverviewScene = AppOverviewScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
             int totalDuration = util.toJavaObject(appOverviewScene, AppOverviewBean.class).getTotalDuration();
@@ -135,7 +134,6 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "APP【部门接待评鉴】总接待时长=APP【员工接待评鉴】列表中接待时长之和")
     public void department_data_3() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene appOverviewScene = AppOverviewScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
             int totalDuration = util.toJavaObject(appOverviewScene, AppOverviewBean.class).getTotalDuration();
@@ -153,7 +151,6 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     //bug
     @Test(description = "APP【部门接待评鉴】接待次数=PC【语音接待评鉴】列表数")
     public void department_data_4() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene appOverviewScene = AppOverviewScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
             int count = util.toJavaObject(appOverviewScene, AppOverviewBean.class).getCount();
@@ -170,7 +167,6 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "APP【部门接待评鉴】接待次数=APP【员工接待评鉴】列表中接待次数之和")
     public void department_data_5() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene appOverviewScene = AppOverviewScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
             int count = util.toJavaObject(appOverviewScene, AppOverviewBean.class).getCount();
@@ -187,7 +183,6 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     //bug
     @Test(description = "APP【部门接待评鉴】接待次数=APP每个员工的【接待评分详情】列表之和")
     public void department_data_6() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene appOverviewScene = AppOverviewScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
             int count = util.toJavaObject(appOverviewScene, AppOverviewBean.class).getCount();
@@ -204,7 +199,6 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "APP【部门接待评鉴】接待平均分=PC【语音接待评鉴】列表中首次进店&评分完成的得分平均数")
     public void department_data_7() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene appOverviewScene = AppOverviewScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
             int averageData = util.toJavaObject(appOverviewScene, AppOverviewBean.class).getAverageScore();
@@ -224,7 +218,6 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "APP【部门接待评鉴】接待平均分=APP【销售接待能力模型】中各话术数值之和/5")
     public void department_data_8() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene appOverviewScene = AppOverviewScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
             int averageData = util.toJavaObject(appOverviewScene, AppOverviewBean.class).getAverageScore();
@@ -243,7 +236,6 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     //数据有问题（分母刨去分数为0的人）
     @Test(description = "APP【部门接待评鉴】接待平均分=APP每个【员工接待评鉴】接待平均分之和/总人数")
     public void department_data_9() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene appOverviewScene = AppOverviewScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
             int averageData = util.toJavaObject(appOverviewScene, AppOverviewBean.class).getAverageScore();
@@ -263,7 +255,6 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "APP【部门接待评鉴】接待平均分=APP每个【员工接待详情】本次接待得分加和（首次进店&本次得分！=0）/接待次数")
     public void department_data_10() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene appOverviewScene = AppOverviewScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
             int averageData = util.toJavaObject(appOverviewScene, AppOverviewBean.class).getAverageScore();
@@ -293,7 +284,6 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "APP【部门接待评鉴】接待平均分=APP【销售接待能力模型】中各话术数值之和/5")
     public void department_data_11() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene appOverviewScene = AppOverviewScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
             int averageData = util.toJavaObject(appOverviewScene, AppOverviewBean.class).getAverageScore();
@@ -312,7 +302,6 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "APP【销售接待能力模型】各话术环节分数相加/5=APP每个【员工接待评鉴】接待平均分之和（不为0）/人数")
     public void department_data_12() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = AppCapabilityModelScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
             int scoreSum = util.toJavaObjectList(scene, AppCapabilityModelBean.class, "list").stream().mapToInt(AppCapabilityModelBean::getScore).sum();
@@ -334,7 +323,6 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "APP【销售接待能力模型】的各环节平均分=APP【环节平均分】中各环节的部门平均分", dataProvider = "receptionType", dataProviderClass = DataClass.class)
     public void department_data_13(String name, int type) {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene capabilityModelScene = AppCapabilityModelScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
             JSONArray modelList = capabilityModelScene.invoke(visitor).getJSONArray("list");
@@ -354,7 +342,6 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     //有问题
     @Test(description = "APP【销售接待能力模型】各话术环节分数相加/5=APP每个员工【接待详情】中的部门平均分")
     public void department_data_14() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = AppCapabilityModelScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
             int scoreSum = util.toJavaObjectList(scene, AppCapabilityModelBean.class, "list").stream().mapToInt(AppCapabilityModelBean::getScore).sum();
@@ -376,7 +363,6 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "APP【环节平均分】中各环节的合格线=后台配置60分", dataProvider = "receptionType", dataProviderClass = DataClass.class)
     public void department_data_15(String name, int type) {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray array = AppLinkDataCarouselScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build().invoke(visitor).getJSONArray("list");
             array.stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("type").equals(type))
@@ -391,7 +377,6 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "APP【环节平均分】中全部环节的合格率=APP【接待详情】中本次接待分数>=60分的次数/接待次数（首次接待&本次接待！=0）")
     public void department_data_16() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = AppLinkDataCarouselScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
             List<AppLinkDataCarouselBean> linkDataCarouselList = util.toJavaObjectList(scene, AppLinkDataCarouselBean.class, "list");
@@ -419,7 +404,6 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "APP【环节平均分】中各环节的接待合格率=APP【接待详情】中各环节接待分数>=60分的次数/接待次数（首次接待&本次接待！=0）", dataProvider = "receptionType", dataProviderClass = DataClass.class)
     public void department_data_17(String name, int type) {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = AppLinkDataCarouselScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
             List<AppLinkDataCarouselBean> linkDataCarouselList = util.toJavaObjectList(scene, AppLinkDataCarouselBean.class, "list");
@@ -450,7 +434,6 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     //有问题
     @Test(description = "APP【环节平均分】中各环节的得分达成率=APP【接待详情】中各环节的得分>部门平均分的次数/接待次数（首次接待&本次接待！=0）", dataProvider = "receptionType", dataProviderClass = DataClass.class)
     public void department_data_18(String name, int type) {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = AppLinkDataCarouselScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
             List<AppLinkDataCarouselBean> linkDataCarouselList = util.toJavaObjectList(scene, AppLinkDataCarouselBean.class, "list");
@@ -482,7 +465,6 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "APP【部门总平均分趋势】分数=APP【各环节得分趋势】各话术环节平均分之和/5")
     public void department_data_19() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene receptionAverageScoreTrendScene = AppReceptionAverageScoreTrendScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
             AppReceptionAverageScoreTrendBean receptionAverageScoreTrend = util.toFirstJavaObject(receptionAverageScoreTrendScene, AppReceptionAverageScoreTrendBean.class);
@@ -503,7 +485,6 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     //bug
     @Test(description = "APP【各环节得分趋势】中的各环节得分＝APP【销售接待能力模型】各环节得分", dataProvider = "receptionType", dataProviderClass = DataClass.class)
     public void department_data_20(String name, int type) {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene receptionScoreTrendScene = AppReceptionScoreTrendScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
             JSONArray array = receptionScoreTrendScene.invoke(visitor).getJSONArray("list");
@@ -523,7 +504,6 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     //bug
     @Test(description = "APP【各环节得分趋势】中的各环节得分=PC【语音接待评鉴】中的各环节的平均分", dataProvider = "receptionType", dataProviderClass = DataClass.class)
     public void department_data_21(String name, int type) {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene receptionScoreTrendScene = AppReceptionScoreTrendScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
             JSONArray array = receptionScoreTrendScene.invoke(visitor).getJSONArray("list");
@@ -547,7 +527,6 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "APP【部门总平均分趋势】平均分＝APP【销售接待能力模型】各话术环节平均分之和/5")
     public void department_data_22() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene receptionAverageScoreTrendScene = AppReceptionAverageScoreTrendScene.builder().startDate(startDate).endDate(startDate).dataCycleType(dataCycleType).build();
             AppReceptionAverageScoreTrendBean receptionAverageScoreTrend = util.toFirstJavaObject(receptionAverageScoreTrendScene, AppReceptionAverageScoreTrendBean.class);
@@ -567,7 +546,6 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "APP【部门总平均分趋势】分数=APP【部门接待评鉴】中的接待平均分")
     public void department_data_23() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene receptionAverageScoreTrendScene = AppReceptionAverageScoreTrendScene.builder().startDate(startDate).endDate(startDate).dataCycleType(dataCycleType).build();
             AppReceptionAverageScoreTrendBean receptionAverageScoreTrend = util.toFirstJavaObject(receptionAverageScoreTrendScene, AppReceptionAverageScoreTrendBean.class);
@@ -588,7 +566,6 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "APP【员工接待评鉴】中的接待平均分＝APP【个人总平均分值趋势】中的总平均分")
     public void department_data_24() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene receptionAverageScoreTrendScene = AppReceptionAverageScoreTrendScene.builder().startDate(startDate).endDate(startDate).dataCycleType(dataCycleType).build();
             AppReceptionAverageScoreTrendBean receptionAverageScoreTrend = util.toFirstJavaObject(receptionAverageScoreTrendScene, AppReceptionAverageScoreTrendBean.class);
@@ -608,7 +585,6 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "APP【员工接待评鉴】中的接待次数=APP【接待评分详情】列表条数")
     public void department_data_25() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             List<AppDepartmentPageBean> list = util.getAppDepartmentPageList(dataCycleType, startDate, endDate);
             list.forEach(e -> {
@@ -626,7 +602,6 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "APP【员工接待评鉴】中的平均接待时长＝APP【员工接待评鉴】中的接待时长/接待次数")
     public void department_data_27() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             List<AppDepartmentPageBean> departmentPageList = util.getAppDepartmentPageList(dataCycleType, startDate, endDate);
             departmentPageList.forEach(e -> {
@@ -647,7 +622,6 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "APP【员工接待评鉴】的接待平均分=APP【我的能力模型】各话术环节分数相加/5")
     public void personal_data_1() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             List<AppDepartmentPageBean> departmentPageList = util.getAppDepartmentPageList(dataCycleType, startDate, endDate);
             departmentPageList.forEach(e -> {
@@ -669,7 +643,6 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "APP【员工接待评鉴】的接待平均分=APP【我的各环节得分】个人总平均分之和/5")
     public void personal_data_2() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             List<AppDepartmentPageBean> departmentPageList = util.getAppDepartmentPageList(dataCycleType, startDate, endDate);
             departmentPageList.forEach(e -> {
@@ -692,7 +665,6 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "APP【我的能力模型】各话术环节的分值＝APP【我的各环节得分】平均分的分值", dataProvider = "receptionType", dataProviderClass = DataClass.class)
     public void personal_data_3(String name, int type) {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             List<AppDepartmentPageBean> departmentPageList = util.getAppDepartmentPageList(dataCycleType, startDate, endDate);
             departmentPageList.forEach(e -> {
@@ -715,7 +687,6 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "APP【我的能力模型】各话术环节的分值＝PC【语音接待评鉴】接待详情中的各环节的分值", dataProvider = "receptionType", dataProviderClass = DataClass.class)
     public void personal_data_5(String name, int type) {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             List<AppDepartmentPageBean> departmentPageList = util.getAppDepartmentPageList(dataCycleType, startDate, endDate);
             departmentPageList.forEach(e -> {
@@ -743,7 +714,6 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "APP【个人总平均分趋势】中分数=APP【各环节得分】各环节总平均分相加/5")
     public void personal_data_6() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             List<AppDepartmentPageBean> list = util.getAppDepartmentPageList(dataCycleType, startDate, startDate);
             list.forEach(e -> {
@@ -770,7 +740,6 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "APP【接待详情】本次接待得分=APP【接待详情】各环节的接待得分之和/5")
     public void personal_data_8() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             List<AppDepartmentPageBean> departmentPageList = util.getAppDepartmentPageList(dataCycleType, startDate, endDate);
             departmentPageList.forEach(e -> {
@@ -798,7 +767,6 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "APP【接待详情】中各环节得分=PC【语音接待评鉴详情】中各环节得分", dataProvider = "receptionType", dataProviderClass = DataClass.class)
     public void personal_data_9(String name, int type) {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             List<AppDepartmentPageBean> departmentPageList = util.getAppDepartmentPageList(dataCycleType, startDate, endDate);
             departmentPageList.forEach(e -> {
@@ -844,7 +812,6 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "首次到店的客户A的【接待详情】中的接待的得分中的本次接待得分=PC中【语音接待评鉴】客户A的详情中的接待得分")
     public void personal_data_10() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             List<AppDepartmentPageBean> departmentPageList = util.getAppDepartmentPageList(dataCycleType, startDate, endDate);
             departmentPageList.forEach(e -> {
@@ -882,7 +849,6 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "APP【接待详情】中的话术提高项=PC【语音接待评鉴】中给您一些小建议")
     public void personal_data_11() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             Map<String, AppSpeechTechniqueAdviceBean> map = new HashMap<>();
             IScene scene = AppStandardListScene.builder().build();
@@ -919,7 +885,6 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "APP【接待详情】中的录音记录的时长＝PC【语音接待评鉴】中同一客户的接待详情中的录音时长")
     public void personal_data_12() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             List<AppDepartmentPageBean> departmentPageList = util.getAppDepartmentPageList(dataCycleType, startDate, endDate);
             departmentPageList.forEach(e -> {
@@ -957,7 +922,6 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "APP【接待详情】部门平均分=此部门的全部员工全流程接待分值之和/参与评分的接待次数*5")
     public void personal_data_13() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene overviewScene = AppOverviewScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
             AppOverviewBean overview = util.toJavaObject(overviewScene, AppOverviewBean.class);

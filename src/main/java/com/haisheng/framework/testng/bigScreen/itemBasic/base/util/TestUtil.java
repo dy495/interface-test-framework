@@ -8,7 +8,6 @@ import com.haisheng.framework.model.bean.AppointmentData;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.sql.SqlFactory;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.marker.attribute.SceneAttribute;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.marker.marker.SceneMarker;
-import com.haisheng.framework.testng.bigScreen.itemBasic.base.marker.parse.BeanParser;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.marker.parse.SceneParser;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.tarot.container.ExcelContainer;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.tarot.container.IContainer;
@@ -40,7 +39,7 @@ public class TestUtil {
     @Test
     public void createScene() {
         String[] htmlPaths = {
-                "http://192.168.50.3/api-doc/jiedai/pc/"
+                "http://192.168.50.3/api-doc/jiedai/app/"
         };
         Arrays.stream(htmlPaths).forEach(htmlPath -> {
             SceneAttribute[] sceneAttributeList = new SceneParser.Builder().htmlUrl(htmlPath).build().getAttributes();
@@ -51,95 +50,6 @@ public class TestUtil {
                     .sceneAttribute(sceneAttribute)
                     .buildMarker()
                     .execute());
-        });
-    }
-
-    @Test(description = "生成门店的接口")
-    public void createStoreScene() {
-        String[] htmlPaths = {
-                "http://192.168.50.3/api-doc/business-patrol/pc/index.html"
-        };
-        Arrays.stream(htmlPaths).forEach(htmlPath -> {
-            SceneAttribute[] sceneAttributeList = new SceneParser.Builder().htmlUrl(htmlPath).build().getAttributes();
-            Arrays.stream(sceneAttributeList).forEach(sceneAttribute -> new SceneMarker.Builder()
-                    .templatePath("src\\main\\resources\\template")
-                    .templateName("sceneTemplate.ftl")
-                    .parentPath("src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/common/scene")
-                    .sceneAttribute(sceneAttribute)
-                    .buildMarker()
-                    .execute());
-        });
-    }
-
-    @Test(description = "生成购物中心的接口")
-    public void createMallScene() {
-        String[] htmlPaths = {
-                "http://192.168.50.3/api-doc/business-mall/pc/index.html"
-        };
-        Arrays.stream(htmlPaths).forEach(htmlPath -> {
-            SceneAttribute[] sceneAttributeList = new SceneParser.Builder().htmlUrl(htmlPath).build().getAttributes();
-            Arrays.stream(sceneAttributeList).forEach(sceneAttribute -> new SceneMarker.Builder()
-                    .templatePath("src\\main\\resources\\template")
-                    .templateName("sceneTemplate.ftl")
-                    .parentPath("src/main/java/com/haisheng/framework/testng/bigScreen/itemMall/common/scene")
-                    .sceneAttribute(sceneAttribute)
-                    .buildMarker()
-                    .execute());
-        });
-    }
-
-    @Test
-    public void createBean() {
-        String[] htmlPaths = {
-                "http://192.168.50.3/api-doc/intelligent-control/pc/index.html",
-                "http://192.168.50.3/api-doc/intelligent-control/app/index.html"
-        };
-        Arrays.stream(htmlPaths).forEach(htmlPath -> {
-            SceneAttribute[] sceneAttributeList = new BeanParser.Builder().htmlUrl(htmlPath).build().getAttributes();
-            Arrays.stream(sceneAttributeList).forEach(sceneAttribute -> new SceneMarker.Builder()
-                    .templatePath("src\\main\\resources\\template")
-                    .templateName("beanTemplate.ftl")
-                    .parentPath("src/main/java/com/haisheng/framework/testng/bigScreen/yuntong/wm/bean")
-                    .sceneAttribute(sceneAttribute)
-                    .buildMarker()
-                    .execute());
-        });
-    }
-
-    @Test
-    public void createRisk() {
-        String[] htmlPaths = {"https://192.168.50.3/api-doc/business-risk-platform/index.html#_7_1_%E7%89%B9%E6%AE%8A%E4%BA%BA%E5%91%98%E5%88%86%E9%A1%B5"};
-        Arrays.stream(htmlPaths).forEach(htmlPath -> {
-            SceneAttribute[] sceneAttributeList = new SceneParser.Builder().htmlUrl(htmlPath).build().getAttributes();
-            Arrays.stream(sceneAttributeList).forEach(sceneAttribute -> new SceneMarker.Builder()
-                    .templatePath("src\\main\\resources\\template")
-                    .templateName("sceneTemplate.ftl")
-                    .parentPath("src/main/java/com/haisheng/framework/testng/bigScreen/fengkongdaily/scene")
-                    .sceneAttribute(sceneAttribute)
-                    .buildMarker()
-                    .execute());
-        });
-    }
-
-    @Test   //参数四个以内的接口
-    public void createScene2() {
-        String[] htmlPaths = {
-                "http://192.168.50.3/api-doc/yt/app/index.html",
-                "https://192.168.50.3/api-doc-v2.3/business-jiaochen/app/index.html",
-                "https://192.168.50.3/api-doc/business-jiaochen/applet/index.html",
-                "https://192.168.50.3/api-doc/business-jiaochen/pc/index.html",
-        };
-        Arrays.stream(htmlPaths).forEach(htmlPath -> {
-            SceneAttribute[] sceneAttributeList = new SceneParser.Builder().htmlUrl(htmlPath).build().getAttributes();
-            Arrays.stream(sceneAttributeList).forEach(sceneAttribute -> new SceneMarker.Builder()
-                    .templatePath("src\\main\\resources\\template")
-                    .templateName("sceneTemplate2.ftl")
-                    .templateFile("src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\jiaochen\\xmf\\file\\JcMethod")
-                    .ExitFile("src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\jiaochen\\ScenarioUtil.java")
-                    .parentPath("src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf")
-                    .sceneAttribute(sceneAttribute)
-                    .buildMarker()
-                    .execute2());
         });
     }
 
