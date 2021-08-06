@@ -73,6 +73,7 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
+        logger.logCaseStart(caseResult.getCaseName());
     }
     // 随机n位数字
     private String numRandom(Integer n) {

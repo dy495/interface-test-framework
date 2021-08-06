@@ -72,6 +72,7 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
+        logger.logCaseStart(caseResult.getCaseName());
     }
     // 随机n位数字
     private String numRandom(Integer n) {
