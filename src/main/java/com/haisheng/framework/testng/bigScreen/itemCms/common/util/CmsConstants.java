@@ -7,6 +7,7 @@ package com.haisheng.framework.testng.bigScreen.itemCms.common.util;
  * @data 2021-06-16
  */
 public class CmsConstants {
+    public static final String SUBJECT_TABLE_NAME = "主体";
     public static final String SHOP_TABLE_NAME = "店铺";
     public static final String ENTRANCE_TABLE_NAME = "出入口";
     public static final String TABLE_FIELD_SHOP_NAME = "店铺名";

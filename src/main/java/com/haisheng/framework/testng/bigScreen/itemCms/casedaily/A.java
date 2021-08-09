@@ -47,9 +47,9 @@ public class A extends TestCaseCommon implements TestCaseStd {
     public void initial() {
         CommonConfig commonConfig = new CommonConfig();
         logger.debug("before class initial");
-        commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_XUNDIAN_DAILY_SERVICE;
-        commonConfig.checklistQaOwner = EnumChecklistUser.GLY.getName();
+        commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_MANAGE_PORTAL_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_MANAGEMENT_PLATFORM_SERVICE;
+        commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.XUNDIAN_DAILY_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
         commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
@@ -83,15 +83,30 @@ public class A extends TestCaseCommon implements TestCaseStd {
             if (file != null) {
                 IContainer container = new ExcelContainer.Builder().path(file.getPath()).build();
                 container.init();
-                Arrays.stream(container.getTables()).forEach(e -> System.err.println(e.getKey()));
+                //输出表名，没有啥实际意义
+                Arrays.stream(container.getTables()).forEach(e -> logger.info("table_name is：{}", e.getKey()));
+                //这三行是生成设备及出入口的代码，注释掉，用的时候开启然后提交到git
+//                long subjectId = getSubjectId(container);
+//                ITable[] tables = container.getTables();
+//                Arrays.stream(tables).forEach(table -> createLayoutAndAddDevice(subjectId, table));
             }
         } catch (Exception e) {
             collectMessage(e);
         } finally {
             util.deleteFile(file);
         }
-//        ITable[] tables = container.getTables();
-//        Arrays.stream(tables).forEach(table -> createLayoutAndAddDevice(57814L, table));
+    }
+
+    /**
+     * 获取主体Id
+     *
+     * @param container 容器
+     * @return 主体id
+     */
+    public long getSubjectId(IContainer container) {
+        ITable table = container.getTable(CmsConstants.SUBJECT_TABLE_NAME);
+        String subjectId = table.getRows()[0].getField("subject_id").getValue();
+        return Long.parseLong(subjectId);
     }
 
     /**
