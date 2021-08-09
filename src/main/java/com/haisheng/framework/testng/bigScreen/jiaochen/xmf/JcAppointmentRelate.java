@@ -29,7 +29,7 @@ public class JcAppointmentRelate extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct product = EnumTestProduct.JC_DAILY_JD;
     public VisitorProxy visitor = new VisitorProxy(product);
     ScenarioUtil jc = new ScenarioUtil();
-    private QADbProxy qaDbProxy = QADbProxy.getInstance();
+    private final QADbProxy qaDbProxy = QADbProxy.getInstance();
     public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
     PublicParm pp = new PublicParm();
     JcFunction pf = new JcFunction(visitor, pp);
@@ -116,7 +116,7 @@ public class JcAppointmentRelate extends TestCaseCommon implements TestCaseStd {
             dataTemp.setPcAppointmentRecordNum(pf.pcAppointmentRecodePage());
             dataTemp.setAppReceiptage(pf.appReceiptPage());
             dataTemp.setPcAppointmentNUmber(pf.appointmentNUmber(num));
-            int appTodayTask[] = pf.appTask();
+            int[] appTodayTask = pf.appTask();
             dataTemp.setAppSurplusAppointment(appTodayTask[0]);
             dataTemp.setApp_all_appointment(appTodayTask[1]);
             dataTemp.setApp_surplus_reception(appTodayTask[2]);
@@ -204,7 +204,7 @@ public class JcAppointmentRelate extends TestCaseCommon implements TestCaseStd {
     public void AppAppointmentTodayTask() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int appTask[] = pf.appTask();  //先调取函数可先验证此接口，在验证数据
+            int[] appTask = pf.appTask();  //先调取函数可先验证此接口，在验证数据
 
             int appSurplusAppointment = qaDbUtil.selsetDataTempOne("appSurplusAppointment", "pc_appointmentPage");
             int app_all_appointment = qaDbUtil.selsetDataTempOne("app_all_appointment", "pc_appointmentPage");
@@ -239,7 +239,7 @@ public class JcAppointmentRelate extends TestCaseCommon implements TestCaseStd {
             IScene appointmentPage = AppointmentRecordAppointmentPageScene.builder().page(1).size(10).type("MAINTAIN")
                     .customerPhone(pp.customerPhone).build();
             JSONObject data = jc.invokeApi(appointmentPage).getJSONArray("list").getJSONObject(0);
-            String customer_name = data.getString("customer_name");
+//            String customer_name = data.getString("customer_name");
             String customer_phone = data.getString("customer_phone");
             String plate_number = data.getString("plate_number");
             String customer_manager = data.getString("customer_manager");
@@ -281,8 +281,6 @@ public class JcAppointmentRelate extends TestCaseCommon implements TestCaseStd {
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
-        } finally {
-//            saveData("轿辰-今日任务数=今日数据各列数据之和");
         }
     }
 

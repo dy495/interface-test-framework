@@ -90,7 +90,6 @@ public class ContentOperationCaseOnline extends TestCaseCommon implements TestCa
     //ok
     @Test(description = "内容管理--banner--上传图片不符合3:2")
     public void banner_system_1() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
             String base64 = new ImageUtil().getImageBinary(filePath);
@@ -107,7 +106,6 @@ public class ContentOperationCaseOnline extends TestCaseCommon implements TestCa
     //bug
     @Test(description = "banner--跳转活动/文章的条数=展示中的文章+进行中或者已结束活动条数之和")
     public void banner_data_1() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             int num = ArticleList.builder().build().invoke(visitor).getJSONArray("list").size();
             IScene articlePageScene = ArticlePageScene.builder().build();
@@ -125,7 +123,6 @@ public class ContentOperationCaseOnline extends TestCaseCommon implements TestCa
     //ok
     @Test(description = "banner--填写banner1-banner5的内容")
     public void banner_data_2() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             List<Long> articleIds = util.getArticleIdList();
             String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture";
@@ -138,27 +135,27 @@ public class ContentOperationCaseOnline extends TestCaseCommon implements TestCa
             JSONObject jsonObject1 = new JSONObject();
             jsonObject1.put("article_id", articleIds.get(0));
             jsonObject1.put("banner_img_url", picPaths.get(0));
-            jsonObject1.put("banner_id", 1);
+            jsonObject1.put("banner_id", 41);
             jsonObject1.put("banner_select", "banner1");
             JSONObject jsonObject2 = new JSONObject();
             jsonObject2.put("article_id", articleIds.get(1));
             jsonObject2.put("banner_img_url", picPaths.get(1));
-            jsonObject2.put("banner_id", 2);
+            jsonObject2.put("banner_id", 42);
             jsonObject2.put("banner_select", "banner2");
             JSONObject jsonObject3 = new JSONObject();
             jsonObject3.put("article_id", articleIds.get(2));
             jsonObject3.put("banner_img_url", picPaths.get(2));
-            jsonObject3.put("banner_id", 3);
+            jsonObject3.put("banner_id", 43);
             jsonObject3.put("banner_select", "banner3");
             JSONObject jsonObject4 = new JSONObject();
             jsonObject4.put("article_id", articleIds.get(3));
             jsonObject4.put("banner_img_url", picPaths.get(3));
-            jsonObject4.put("banner_id", 4);
+            jsonObject4.put("banner_id", 44);
             jsonObject4.put("banner_select", "banner4");
             JSONObject jsonObject5 = new JSONObject();
             jsonObject5.put("article_id", articleIds.get(4));
             jsonObject5.put("banner_img_url", picPaths.get(4));
-            jsonObject5.put("banner_id", 5);
+            jsonObject5.put("banner_id", 45);
             jsonObject5.put("banner_select", "banner5");
             array.add(jsonObject1);
             array.add(jsonObject2);

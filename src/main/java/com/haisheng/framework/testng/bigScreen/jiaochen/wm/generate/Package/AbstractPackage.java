@@ -26,24 +26,29 @@ public abstract class AbstractPackage extends BaseGenerator implements IPackage 
     @Override
     public Long getPackageId() {
         try {
-            PackageStatusEnum.findById(status.getId());
-            Preconditions.checkArgument(!isEmpty(), "visitor is null");
-            logger("FIND " + status.name() + " START");
-            Preconditions.checkArgument(counter(status) < 4, status.getName() + " 状态执行次数大于3次，强行停止，请检查此状态生成");
-            PackagePage packagePage = getPage();
-            if (packagePage != null) {
-                logger("FIND " + status.name() + " FINISH");
-                logger("packageId is: " + packagePage.getPackageId());
-                logger("packageName is：" + packagePage.getPackageName());
-                return packagePage.getPackageId();
-            }
-            status.getPackageBuilder().buildPackage().execute(visitor, scene);
-            return getPackageId();
+            return getPackagePage().getPackageId();
         } catch (Exception e) {
             e.printStackTrace();
             errorMsg.append(e);
         }
         return null;
+    }
+
+    @Override
+    public PackagePage getPackagePage() {
+        PackageStatusEnum.findById(status.getId());
+        Preconditions.checkArgument(!isEmpty(), "visitor is null");
+        logger("FIND " + status.name() + " START");
+        Preconditions.checkArgument(counter(status) < 4, status.getName() + " 状态执行次数大于3次，强行停止，请检查此状态生成");
+        PackagePage packagePage = getPage();
+        if (packagePage != null) {
+            logger("FIND " + status.name() + " FINISH");
+            logger("packageId is: " + packagePage.getPackageId());
+            logger("packageName is：" + packagePage.getPackageName());
+            return packagePage;
+        }
+        status.getPackageBuilder().buildPackage().execute(visitor, scene);
+        return getPackagePage();
     }
 
     public static abstract class AbstractBuilder extends BaseBuilder<AbstractBuilder, IPackage> {

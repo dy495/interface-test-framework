@@ -116,7 +116,7 @@ public class JcCancleAppointment extends TestCaseCommon implements TestCaseStd {
             dataTemp.setPcAppointmentRecordNum(pf.pcAppointmentRecodePage());
             dataTemp.setAppReceiptage(pf.appReceiptPage());
             dataTemp.setPcAppointmentNUmber(pf.appointmentNUmber(num));
-            int appTodayTask[] = pf.appTask();
+            int[] appTodayTask = pf.appTask();
             dataTemp.setAppSurplusAppointment(appTodayTask[0]);
             dataTemp.setApp_all_appointment(appTodayTask[1]);
             dataTemp.setApp_surplus_reception(appTodayTask[2]);
@@ -135,7 +135,7 @@ public class JcCancleAppointment extends TestCaseCommon implements TestCaseStd {
 
             qaDbUtil.updateDataAll(dataTemp);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             logger.info("start:");
         }
@@ -152,7 +152,7 @@ public class JcCancleAppointment extends TestCaseCommon implements TestCaseStd {
             System.out.println(result1 + ":" + result2);
             Preconditions.checkArgument(result2 - result1 == 0, "取消取消预约后预约记录数没+1,预约前：" + result1 + "取消取消预约后：" + result2);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("取消取消预约后，预约记录数+1");
         }
@@ -167,7 +167,7 @@ public class JcCancleAppointment extends TestCaseCommon implements TestCaseStd {
             System.out.println(result1 + ":" + result2);
             Preconditions.checkArgument(result2 - result1 == -1, "取消预约后预约看板数没-1,预约前：" + result1 + "取消预约后：" + result2);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("取消预约后，预约看板数-1");
         }
@@ -183,7 +183,7 @@ public class JcCancleAppointment extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(result2 - result1 == 0, "取消预约后,该小程序客户预约次数没+1，预约前：" + result1 + "取消预约后：" + result2);
             //TODO:该处产品有bug,提测后应将预期改为-1
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("取消预约后，该小程序客户预约次数");
         }
@@ -199,7 +199,7 @@ public class JcCancleAppointment extends TestCaseCommon implements TestCaseStd {
             System.out.println(result1 + ":" + result2);
             Preconditions.checkArgument(result2 - result1 == -1, "取消预约后app预约任务列数,预约前：" + result1 + "取消预约后：" + result2);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("取消预约后，app预约任务列数");
         }
@@ -216,7 +216,7 @@ public class JcCancleAppointment extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(appTask[0] - appSurplusAppointment == -1, "取消预约后app今日任务appSurplusAppointment,预约前：" + appSurplusAppointment + "取消预约后：" + appTask[0]);
             Preconditions.checkArgument(appTask[1] - app_all_appointment == -1, "取消预约后app今日任务app_all_appointment,预约前：" + app_all_appointment + "取消预约后：" + appTask[1]);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("取消预约后，app今日任务分子分母+1");
         }
@@ -231,7 +231,7 @@ public class JcCancleAppointment extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(totalA - total == 0, "预约后app今日任务app_all_appointment,预约前：" + total + "预约后：" + totalA);
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("取消预约后，小程序预约消息列表数-0");
         }

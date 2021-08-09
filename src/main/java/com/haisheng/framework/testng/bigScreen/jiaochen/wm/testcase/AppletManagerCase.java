@@ -97,6 +97,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.shopId = ACCOUNT.getShopId();
         commonConfig.roleId = ACCOUNT.getRoleId();
         beforeClassInit(commonConfig);
+        util.loginPc(ACCOUNT);
     }
 
     @AfterClass
@@ -108,7 +109,6 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-        util.loginPc(ACCOUNT);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
@@ -117,7 +117,6 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "预约保养->确认预约->点接待->变更接待->完成接待->评价->跟进")
     public void appointmentManager_maintain() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             Date appointmentBoardDate = DateTimeUtil.addDay(new Date(), 0);
             String appointmentDate = DateTimeUtil.addDayFormat(new Date(), 0);
@@ -268,7 +267,6 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "预约维修->确认预约->点接待->变更接待->完成接待->评价->跟进")
     public void appointmentManager_repair() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             String appointmentDate = DateTimeUtil.addDayFormat(new Date(), 0);
             AppointmentTypeEnum appointmentTypeEnum = AppointmentTypeEnum.REPAIR;
@@ -417,7 +415,6 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "预约试驾->确认预约->点接待->变更接待->完成接待->评价->跟进")
     public void appointmentManager_testDriver() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             String appointmentDate = DateTimeUtil.addDayFormat(new Date(), 0);
             AppointmentTypeEnum appointmentTypeEnum = AppointmentTypeEnum.TEST_DRIVE;
@@ -562,7 +559,6 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "小程序--积分总数=积分明细所有项加和")
     public void integralMall_data_1() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             util.loginApplet(APPLET_USER_ONE);
             IScene homePageScene = AppletHomePageScene.builder().build();
@@ -585,7 +581,6 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "小程序--积分商城商品数量=pc进行中的积分兑换数量")
     public void integralMall_data_2() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             util.loginApplet(APPLET_USER_ONE);
             int appletCommodityListNum = util.getAppletCommodityListNum();
@@ -602,7 +597,6 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "小程序--积分兑换--兑换库存不足的实体商品，提示：商品库存不足")
     public void integralMall_system_1() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene exchangePageScene = ExchangePageScene.builder().status(IntegralExchangeStatusEnum.WORKING.name()).exchangeType(CommodityTypeEnum.REAL.name()).build();
             ExchangePage a = util.toJavaObjectList(exchangePageScene, ExchangePage.class).stream().filter(e -> e.getExchangedAndSurplus().split("/")[1].equals("0")).findFirst().orElse(null);
@@ -626,7 +620,6 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "小程序--积分兑换--兑换无库存的虚拟商品，提示：商品库存不足")
     public void integralMall_system_3() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             //找一个库存为大于0并且包含卡券剩余库存等于0的积分商品
             IScene exchangePageScene = ExchangePageScene.builder().status(IntegralExchangeStatusEnum.WORKING.name()).exchangeType(CommodityTypeEnum.FICTITIOUS.name()).build();
@@ -655,7 +648,6 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "小程序--积分兑换--兑换无库存的虚拟商品")
     public void integralMall_system_4() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             Long voucherId;
             ExchangePage exchangePage;
@@ -707,7 +699,6 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "小程序--积分商城倒序排序，积分依次减少")
     public void integralMall_system_5() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             util.loginApplet(APPLET_USER_ONE);
             List<AppletCommodity> appletCommodityList = util.getAppletCommodityList(SortTypeEnum.DOWN.name(), false);
@@ -729,7 +720,6 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "小程序--积分商城，我可兑换的商品所需积分均小于我现有积分")
     public void integralMall_system_6() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             util.loginApplet(APPLET_USER_ONE);
             List<AppletCommodity> appletCommodityList = util.getAppletCommodityList(SortTypeEnum.DOWN.name(), true);
@@ -748,7 +738,6 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "小程序--签到--积分增加&积分明细记录增加类型")
     public void integralCenter_system_5() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene integralExchangeRulesScene = IntegralExchangeRulesScene.builder().build();
             int allSend = util.toJavaObjectList(integralExchangeRulesScene, JSONObject.class).stream().filter(e -> e.getString("rule_name").equals(AppletCodeBusinessTypeEnum.SIGN_IN.getTypeName())).map(e -> e.getInteger("all_send")).findFirst().orElse(0);

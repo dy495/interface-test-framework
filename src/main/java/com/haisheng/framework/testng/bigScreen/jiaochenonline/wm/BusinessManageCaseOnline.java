@@ -105,9 +105,9 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
     }
 
     //ok
+    //ok
     @Test(description = "售后接待管理--购买一个临时套餐，套餐内卡券剩余库存-1&套餐购买记录+1")
     public void receptionManage_data_1() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).build();
             ReceptionPage receptionPage = util.toFirstJavaObject(receptionPageScene, ReceptionPage.class);
@@ -163,7 +163,6 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
     //ok
     @Test(description = "售后接待管理--购买一个固定套餐，包含卡券剩余库存-1&套餐购买记录+1&套餐购买数量+1")
     public void receptionManage_data_2() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).build();
             ReceptionPage receptionPage = util.toFirstJavaObject(receptionPageScene, ReceptionPage.class);
@@ -227,7 +226,6 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
     //ok
     @Test(description = "售后接待管理--赠送一个临时套餐，套餐内卡券剩余库存-1&套餐购买记录+1")
     public void receptionManage_data_3() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).build();
             ReceptionPage receptionPage = util.toJavaObjectList(receptionPageScene, ReceptionPage.class).get(0);
@@ -283,7 +281,6 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
     //ok
     @Test(description = "售后接待管理--赠送一个固定套餐，包含卡券剩余库存-1&套餐购买记录+1&套餐购买数量+1")
     public void receptionManage_data_4() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene receptionPageScene = ReceptionPageScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).build();
             ReceptionPage receptionPage = util.toFirstJavaObject(receptionPageScene, ReceptionPage.class);
@@ -346,7 +343,6 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
     //ok
     @Test(description = "售后接待管理--赠送一个固定套餐，取消后卡券&套餐数量不变")
     public void receptionManage_data_5() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             VoucherFormVoucherPageBean voucherPage = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherPage();
             Long voucherId = voucherPage.getVoucherId();
@@ -392,7 +388,6 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
     //ok
     @Test(description = "售后接待管理--赠送一个临时套餐，取消后卡券&套餐数量不变")
     public void receptionManage_data_6() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             VoucherFormVoucherPageBean voucherPage = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherPage();
             Long voucherId = voucherPage.getVoucherId();
@@ -433,7 +428,6 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
     //ok
     @Test(description = "售后客户管理--相同底盘号的客户最新里程数相等")
     public void afterSaleCustomerManager_data_1() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene afterSaleCustomerPageScene = AfterSaleCustomerPageScene.builder().build();
             List<AfterSaleCustomerPageBean> afterSaleCustomerPageList = util.toJavaObjectList(afterSaleCustomerPageScene, AfterSaleCustomerPageBean.class, SceneUtil.SIZE);
@@ -459,7 +453,6 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
     //ok
     @Test(description = "售后客户管理--售后客户列表，消费频次=维修记录中产值不为0的记录之和，总消费=维修记录列表产值之和")
     public void afterSaleCustomerManager_data_2() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = AfterSaleCustomerPageScene.builder().build();
             List<AfterSaleCustomerPageBean> customerPageBeanList = util.toJavaObjectList(scene, AfterSaleCustomerPageBean.class, SceneUtil.SIZE);
@@ -481,7 +474,6 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
     //bug会造成小程序车牌号消失，暂时关闭
     @Test(description = "售后客户管理--编辑售后客户各项信息，必填项不填，全部失败", enabled = false)
     public void afterSaleCustomerManager_data_3() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene saleCustomerPageScene = AfterSaleCustomerPageScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).build();
             AfterSaleCustomerPageBean customerPage = util.toJavaObjectList(saleCustomerPageScene, AfterSaleCustomerPageBean.class).get(0);
@@ -514,7 +506,6 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
     //ok
     @Test(description = "预约管理--保养配置，修改保养价格")
     public void customerManager_data_6() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             commonConfig.shopId = ALL_AUTHORITY.getReceptionShopId();
             Double[] doubles = {1.00, 2.99, 3.66, 50.1};

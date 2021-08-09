@@ -80,16 +80,16 @@ public class ContentOperationCase extends TestCaseCommon implements TestCaseStd 
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-        util.loginPc(ALL_AUTHORITY);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
+        util.loginPc(ALL_AUTHORITY);
+        logger.logCaseStart(caseResult.getCaseName());
     }
 
     //ok
     @Test(description = "内容管理--banner--上传图片不符合3:2")
     public void banner_system_1() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
             String base64 = new ImageUtil().getImageBinary(filePath);
@@ -106,7 +106,6 @@ public class ContentOperationCase extends TestCaseCommon implements TestCaseStd 
     //bug
     @Test(description = "banner--跳转活动/文章的条数=展示中的文章+进行中或者已结束活动条数之和")
     public void banner_data_1() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             int num = ArticleList.builder().build().invoke(visitor).getJSONArray("list").size();
             IScene articlePageScene = ArticlePageScene.builder().build();
@@ -124,7 +123,6 @@ public class ContentOperationCase extends TestCaseCommon implements TestCaseStd 
     //ok
     @Test(description = "banner--填写banner1-banner5的内容")
     public void banner_data_2() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             List<Long> articleIds = util.getArticleIdList();
             String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture";
