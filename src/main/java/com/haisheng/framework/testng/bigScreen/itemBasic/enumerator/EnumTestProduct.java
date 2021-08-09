@@ -35,7 +35,6 @@ public enum EnumTestProduct {
     JC_DAILY_JD("汽车-轿辰 日常 ", "https://servicewechat.com/wxbd41de85739a00c7/0/page-frame.html", "http://dev.jiedai.auto.winsenseos.cn", "-1", "JC", "603", true),
     JC_DAILY_GK("汽车-轿辰 日常 ", "https://servicewechat.com/wxbd41de85739a00c7/0/page-frame.html", "http://dev.huiting.auto.winsenseos.cn", "-1", "JC", "603", true),
     JC_DAILY_ZH("汽车-轿辰 日常 ", "https://servicewechat.com/wxbd41de85739a00c7/0/page-frame.html", "http://dev.zhanghao.auto.winsenseos.cn", "-1", "JC", "603", true),
-    JC_DAILY_APPLET("汽车-轿辰 日常 ", "https://servicewechat.com/wxbd41de85739a00c7/0/page-frame.html", "http://dev.dealer-jc.winsenseos.cn", "-1", "JC", "603", true),
 
 
     JC_ONLINE_JD("汽车-轿辰 线上 ", "http://jiedai.auto.winsenseos.com", "http://jiedai.auto.winsenseos.com", "-1", "JC", "395", false),
