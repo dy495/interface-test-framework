@@ -6,6 +6,8 @@ import com.aliyun.oss.model.GetObjectRequest;
 import com.aliyun.oss.model.OSSObject;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.tarot.container.ExcelContainer;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.tarot.container.IContainer;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.util.BasicUtil;
 import com.haisheng.framework.testng.bigScreen.itemCms.common.enumerator.EnumCloudSceneType;
 import com.haisheng.framework.testng.bigScreen.itemCms.common.scene.LoginScene;
@@ -44,35 +46,31 @@ public class ScenarioUtil extends BasicUtil {
         return EnumCloudSceneType.AUTO_DEFAULT.name();
     }
 
-    public void main(String[] args) {
+    public File downloadFile() throws InterruptedException {
+        String tableName = System.getProperty("tableName");
         String endpoint = "http://oss-cn-beijing.aliyuncs.com";
         String accessKeyId = "LTAI5t8wVqrm9pfHZswwRok1";
         String accessKeySecret = "O1DToNZRCeRxVdVewpuJrg4sPKojHe";
         String bucketName = "retail-huabei2";
-        String objectName = "test/日常/门店出入口数据0809.xlsx";
+        String objectName = visitor.isDaily() ? "test/日常/" + tableName : "test/线上/" + tableName;
         OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
-//        OSSObject ossObject = ossClient.getObject(bucketName, objectName);
-//        System.out.println("Object content:");
-        System.err.println("开始下载");
+        logger.info("文件开始下载");
         GetObjectRequest objectRequest = new GetObjectRequest(bucketName, objectName);
         String userDir = System.getProperty("user.dir");
-        System.err.println(userDir);
-//        File file = new File("D:\\JetBrains\\IntelliJ IDEAProjects\\interface-test-framework\\src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\itemCms\\common\\multimedia\\file\\门店出入口数据0809.xlsx");
-//        ossClient.getObject(objectRequest, file);
+        File file = new File(userDir + "/src/main/java/com/haisheng/framework/testng/bigScreen/itemCms/common/multimedia/file/" + tableName);
+        if (!file.exists()) {
+            logger.info("文件生成路径：{}", file.getPath());
+            ossClient.getObject(objectRequest, file);
+            return file;
+        } else {
+            logger.info("文件不存在");
+            return null;
+        }
+    }
 
-
-//        BufferedReader reader = new BufferedReader(new InputStreamReader(ossObject.getObjectContent()));
-//        try {
-//            while (true) {
-//                String line = reader.readLine();
-//                if (line == null) break;
-//                System.out.println("\n" + line);
-//            }
-//            reader.close();
-//            ossClient.shutdown();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+    public void deleteFile(File file) {
+        String result = file == null ? "文件不存在" : file.exists() && file.isFile() ? "删除文件--" + file.delete() : "文件不存在或者不是文件";
+        logger.info(result);
     }
 
 }

@@ -30,6 +30,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -75,10 +76,21 @@ public class A extends TestCaseCommon implements TestCaseStd {
 
     @Test
     public void test() {
-        IContainer container = new ExcelContainer.Builder().path("src/main/java/com/haisheng/framework/testng/bigScreen/itemcms/common/multimedia/file/店铺.xlsx").build();
-        container.init();
-        ITable[] tables = container.getTables();
-        Arrays.stream(tables).forEach(table -> createLayoutAndAddDevice(57814L, table));
+        File file = null;
+        try {
+            file = util.downloadFile();
+            if (file != null) {
+                IContainer container = new ExcelContainer.Builder().path(file.getPath()).build();
+                container.init();
+                Arrays.stream(container.getTables()).forEach(e -> System.err.println(e.getKey()));
+            }
+        } catch (Exception e) {
+            collectMessage(e);
+        } finally {
+            util.deleteFile(file);
+        }
+//        ITable[] tables = container.getTables();
+//        Arrays.stream(tables).forEach(table -> createLayoutAndAddDevice(57814L, table));
     }
 
     /**
