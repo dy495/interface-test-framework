@@ -113,13 +113,13 @@ public class JcAppAppointment extends TestCaseCommon implements TestCaseStd {
             }
             Long id = list.getJSONObject(0).getLong("id");  //取一个预约id
             Long shop_id = list.getJSONObject(0).getLong("shop_id");  //取一个预约id
-            int tasknum[] = pf.appTask();
+            int[] tasknum = pf.appTask();
 
             //确认预约
             jc.appointmentHandle(id, type, shop_id);
 
             int totalA = jc.appointmentPage(null, 10).getInteger("total");
-            int tasknumA[] = pf.appTask();
+            int[] tasknumA = pf.appTask();
 
             Preconditions.checkArgument(total - totalA == 1, "确认预约 列表未-1,前：" + total + "，后：" + totalA);
             Preconditions.checkArgument(tasknum[0] - tasknumA[0] == 1, "确认预约后今日任务(分子)未-1,前：" + tasknum[0] + "，后：" + tasknumA[0]);
@@ -138,7 +138,7 @@ public class JcAppAppointment extends TestCaseCommon implements TestCaseStd {
         try {
             JSONObject data = jc.appointmentPage(null, 10);
             int total = data.getInteger("total");
-            int tasknum[] = pf.appTask();
+            int[] tasknum = pf.appTask();
 
             jc.appletLoginToken(pp.appletTocken);
             //小程序预约
@@ -149,11 +149,11 @@ public class JcAppAppointment extends TestCaseCommon implements TestCaseStd {
             pm.staff_id = "uid_f9342ae2";
             pm.time_id = pf.getTimeId(pm.shop_id, pm.car_id, dt.getHistoryDate(0));
 
-            Long appointmentId = jc.appletAppointment(pm).getLong("id");
+            jc.appletAppointment(pm).getLong("id");
 
             jc.appLogin(pp.gwphone, pp.gwpassword);
             int totalA = jc.appointmentPage(null, 10).getInteger("total");
-            int tasknumA[] = pf.appTask();
+            int[] tasknumA = pf.appTask();
 
             jc.appletLoginToken(pp.appletTocken);
             Preconditions.checkArgument(totalA - total == 1, "小程序预约 列表未+1,前：" + total + "，后：" + totalA);

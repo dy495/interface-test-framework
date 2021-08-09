@@ -23,15 +23,15 @@ public enum EnumAppletToken {
 
     BSJ_WM_SMALL_ONLINE("29c11pEn61vmjuKxyX5WZw==", false, "15321527989"),
 
-    JC_WM_DAILY("G5155S0DLknIFoC3CcbXRQ==", true, "15321527989"),
+    JC_WM_DAILY("Xnf/2VMTz/p2GxNQtNrSog==", true, "15321527989"),
 
     JC_WM_ONLINE("ozWh4QcCow9uvHXvVGoQAg==", false, "15321527989"),
 
-    JC_LXQ_DAILY("/EyTUCJ03NrqyYF9iYtWig==", false, "13436941018"),
+    JC_LXQ_DAILY("58DV7Wo/cfSMUFfKjM7ndA==", false, "13436941018"),
 
     JC_LXQ_ONLINE("sdPfrCq3BAurovfyqBA95g==", false, "13436941018"),
 
-    JC_GLY_DAILY("HBpN0dfUrLK/Nak8Zjmg9Q==", true, "13373166806"),
+    JC_GLY_DAILY("58DV7Wo/cfSMUFfKjM7ndA==", true, "13373166806"),
 
     JC_GLY_ONLINE("Lle2O9LilbiQEcbGAFHE2A==", false, "13373166806"),
 
