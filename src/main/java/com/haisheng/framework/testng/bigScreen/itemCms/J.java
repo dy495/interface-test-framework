@@ -6,6 +6,6 @@ public class J {
     @Test
     public void a() {
         String userDir = System.getProperty("user.dir");
-        System.err.println(userDir);
+        System.err.println("user.dir is:" + userDir);
     }
 }
