@@ -41,7 +41,7 @@ public class ScenarioUtil extends BasicUtil {
     }
 
     public File downloadFile() throws AssertionError {
-        String tableName = System.getProperty("tableName");
+        String tableName = System.getProperty("TABLE_NAME");
         Preconditions.checkArgument(tableName != null, "表名不可为空");
         String endpoint = "http://oss-cn-beijing.aliyuncs.com";
         String accessKeyId = "LTAI5t8wVqrm9pfHZswwRok1";
