@@ -72,6 +72,7 @@ public class A extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
+        logger.logCaseStart(caseResult.getCaseName());
     }
 
     @Test

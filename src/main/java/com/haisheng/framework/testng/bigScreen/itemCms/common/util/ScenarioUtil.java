@@ -3,21 +3,15 @@ package com.haisheng.framework.testng.bigScreen.itemCms.common.util;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.model.GetObjectRequest;
-import com.aliyun.oss.model.OSSObject;
+import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.itemBasic.base.tarot.container.ExcelContainer;
-import com.haisheng.framework.testng.bigScreen.itemBasic.base.tarot.container.IContainer;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.util.BasicUtil;
 import com.haisheng.framework.testng.bigScreen.itemCms.common.enumerator.EnumCloudSceneType;
 import com.haisheng.framework.testng.bigScreen.itemCms.common.scene.LoginScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
-import org.testng.annotations.Test;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
 
 public class ScenarioUtil extends BasicUtil {
     private final VisitorProxy visitor;
@@ -46,8 +40,9 @@ public class ScenarioUtil extends BasicUtil {
         return EnumCloudSceneType.AUTO_DEFAULT.name();
     }
 
-    public File downloadFile() throws InterruptedException {
+    public File downloadFile() throws AssertionError {
         String tableName = System.getProperty("tableName");
+        Preconditions.checkArgument(tableName != null, "表名不可为空");
         String endpoint = "http://oss-cn-beijing.aliyuncs.com";
         String accessKeyId = "LTAI5t8wVqrm9pfHZswwRok1";
         String accessKeySecret = "O1DToNZRCeRxVdVewpuJrg4sPKojHe";
@@ -72,5 +67,4 @@ public class ScenarioUtil extends BasicUtil {
         String result = file == null ? "文件不存在" : file.exists() && file.isFile() ? "删除文件--" + file.delete() : "文件不存在或者不是文件";
         logger.info(result);
     }
-
 }
