@@ -119,13 +119,13 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             int appletsize3 = appletsize2 - appsize;
             Preconditions.checkArgument(appletsize3 == 1, "期望数量+1实际增加了" + add);
 
-            //改变门店状态
+//            改变门店状态
             xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
             int pages = md.searchShop(null, null, null, null, 1, 10).getInteger("pages");
             int page_size = md.searchShop(null, null, null, null, pages, 10).getInteger("page_size");
 //            int t = md.searchShop(null, null, null, null, 1, 100).getInteger("total");
             int t1 = page_size - 1;
-            int id = md.searchShop(null, null, null, null, 1, 100).getJSONArray("list").getJSONObject(t1).getInteger("id");
+            int id = md.searchShop("两杆大烟枪啊", null, null, null, 1, 100).getJSONArray("list").getJSONObject(t1).getInteger("id");
             md.updateStatus(id, false);
 
             visitor.setToken(EnumAppletToken.INS_ZT_DAILY.getToken());
@@ -133,15 +133,15 @@ public class InsPcData extends TestCaseCommon implements TestCaseStd {
             int statusnum1 = appstatus.size();
             int statusnum2 = appletsize2 - statusnum1;
             Preconditions.checkArgument(statusnum2 == 1, "期望数量-1实际减少了" + statusnum2);
-
-
+//
+//
             //改变门店状态
             xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
             int pages0 = md.searchShop(null, null, null, null, 1, 10).getInteger("pages");
             int page_size0 = md.searchShop(null, null, null, null, pages0, 10).getInteger("page_size");
 //            int t2 = md.searchShop(null, null, null, null, 1, 100).getInteger("total");
             int t3 = page_size0 - 1;
-            int id0 = md.searchShop(null, null, null, null, 1, 100).getJSONArray("list").getJSONObject(t3).getInteger("id");
+            int id0 = md.searchShop("两杆大烟枪啊", null, null, null, 1, 100).getJSONArray("list").getJSONObject(t3).getInteger("id");
             md.updateStatus(id0, true);
 
             visitor.setToken(EnumAppletToken.INS_ZT_DAILY.getToken());
