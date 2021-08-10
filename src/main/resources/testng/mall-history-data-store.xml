@@ -13,7 +13,7 @@
                     <include name="historyData"/>
                 </methods>
             </class>
-            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.zt.ShopMallHistorySql"/>
+<!--            <class name="com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.zt.ShopMallHistorySql"/>-->
         </classes>
     </test>
 </suite>

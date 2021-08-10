@@ -4,10 +4,12 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.activity.ActivityAddScene;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.checkrisk.EventTotalScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.pc.operation.ArticleAddScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.riskcontrol.rule.OperatePageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
@@ -1009,27 +1011,31 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
     public void create_message() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-
             String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/common/multimedia/picture/INS.jpg";
             String base64 = MendianInfo.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
             JSONArray piclist = new JSONArray();
             piclist.add(path);
-            ArticleAddScene.builder()
+            IScene scene = ArticleAddScene.builder()
                     .title("自动化添加活动")
                     .authorAvatar(path)
                     .authorNickname("自动化发帖")
                     .content("123213212131")
-                    .label("RECOMMEND")
+                    .label("SELL_WELL")
                     .picList(piclist)
                     .picType("ONE_BIG")
-                    .build().invoke(visitor,true);
-
-//            Preconditions.checkArgument(res2.getInteger("code") == 1000, "状态码期待1000，实际" + res2.getInteger("code"));
+                    .build();
+            JSONObject response = visitor.invokeApi(scene, false);
+            Preconditions.checkArgument(response.getInteger("code") == 1000, "状态码期待1000，实际" + response.getInteger("code"));
+            Long id = response.getJSONObject("data").getLong("id");
+            JSONObject res1 = md.article_status_change(id);
+            Preconditions.checkArgument(res1.getInteger("code") == 1000, "状态码期待1000，实际" + res1.getInteger("code"));
+            JSONObject res2 = md.article_delete(id);
+            Preconditions.checkArgument(res2.getInteger("code") == 1000, "状态码期待1000，实际" + res2.getInteger("code"));
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("新建内容一张大图并删除");
+//            saveData("新建内容一张大图并删除");
         }
     }
 
@@ -1038,7 +1044,6 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
     public void create_message1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-
             String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/common/multimedia/picture/INS.jpg";
             String base64 = MendianInfo.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
@@ -1046,22 +1051,22 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
             piclist.add(path);
             piclist.add(path);
             piclist.add(path);
-            ArticleAddScene.builder()
+            IScene scene = ArticleAddScene.builder()
                     .title("自动化添加活动")
                     .authorAvatar(path)
                     .authorNickname("自动化发帖")
                     .content("123213212131")
-                    .label("RECOMMEND")
+                    .label("SELL_WELL")
                     .picList(piclist)
-                    .picType("ONE_BIG")
-                    .build().invoke(visitor,true);
-//            JSONObject res = md.article_export("活动活动", "THREE", "1", "RED_PAPER", piclist);
-//            Preconditions.checkArgument(res.getInteger("code") == 1000, "状态码期待1000，实际" + res.getInteger("code"));
-//            Long id = res.getJSONObject("data").getLong("id");
-//            JSONObject res1 = md.article_status_change(id);
-//            Preconditions.checkArgument(res1.getInteger("code") == 1000, "状态码期待1000，实际" + res1.getInteger("code"));
-//            JSONObject res2 = md.article_delete(id);
-//            Preconditions.checkArgument(res2.getInteger("code") == 1000, "状态码期待1000，实际" + res2.getInteger("code"));
+                    .picType("THREE")
+                    .build();
+            JSONObject response = visitor.invokeApi(scene, false);
+            Preconditions.checkArgument(response.getInteger("code") == 1000, "状态码期待1000，实际" + response.getInteger("code"));
+            Long id = response.getJSONObject("data").getLong("id");
+            JSONObject res1 = md.article_status_change(id);
+            Preconditions.checkArgument(res1.getInteger("code") == 1000, "状态码期待1000，实际" + res1.getInteger("code"));
+            JSONObject res2 = md.article_delete(id);
+            Preconditions.checkArgument(res2.getInteger("code") == 1000, "状态码期待1000，实际" + res2.getInteger("code"));
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -1074,15 +1079,23 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
     public void create_message2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-
             String pic = "src/main/java/com/haisheng/framework/testng/bigScreen/itemXundian/common/multimedia/picture/INS.jpg";
             String base64 = MendianInfo.getImgStr(pic);
             String path = md.pcFileUpload(base64).getString("pic_path");
             JSONArray piclist = new JSONArray();
             piclist.add(path);
-            JSONObject res = md.article_export("活动活动", "ONE_LEFT", "1", "RED_PAPER", piclist);
-            Preconditions.checkArgument(res.getInteger("code") == 1000, "状态码期待1000，实际" + res.getInteger("code"));
-            Long id = res.getJSONObject("data").getLong("id");
+            IScene scene = ArticleAddScene.builder()
+                    .title("自动化添加活动")
+                    .authorAvatar(path)
+                    .authorNickname("自动化发帖")
+                    .content("123213212131")
+                    .label("SELL_WELL")
+                    .picList(piclist)
+                    .picType("ONE_LEFT")
+                    .build();
+            JSONObject response = visitor.invokeApi(scene, false);
+            Preconditions.checkArgument(response.getInteger("code") == 1000, "状态码期待1000，实际" + response.getInteger("code"));
+            Long id = response.getJSONObject("data").getLong("id");
             JSONObject res1 = md.article_status_change(id);
             Preconditions.checkArgument(res1.getInteger("code") == 1000, "状态码期待1000，实际" + res1.getInteger("code"));
             JSONObject res2 = md.article_delete(id);
