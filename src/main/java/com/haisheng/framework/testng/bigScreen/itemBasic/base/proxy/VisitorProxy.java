@@ -85,7 +85,8 @@ public class VisitorProxy extends TestCaseCommon {
      * @return 返回值
      */
     public JSONObject upload(String path, String filePath) {
-        String response = uploadFile(product.getIp(), path, filePath);
+        InnerData innerData = transfer(path, null);
+        String response = uploadFile(product.getIp(), innerData.getPath(), filePath);
         return JSON.parseObject(response);
     }
 
