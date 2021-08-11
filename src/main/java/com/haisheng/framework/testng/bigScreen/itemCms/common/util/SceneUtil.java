@@ -4,6 +4,7 @@ import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.model.GetObjectRequest;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.datacheck.AliyunConfig;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.util.BasicUtil;
@@ -13,10 +14,10 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 
 import java.io.File;
 
-public class ScenarioUtil extends BasicUtil {
+public class SceneUtil extends BasicUtil {
     private final VisitorProxy visitor;
 
-    public ScenarioUtil(VisitorProxy visitor) {
+    public SceneUtil(VisitorProxy visitor) {
         super(visitor);
         this.visitor = visitor;
     }
@@ -53,18 +54,11 @@ public class ScenarioUtil extends BasicUtil {
         GetObjectRequest objectRequest = new GetObjectRequest(bucketName, objectName);
         String userDir = System.getProperty("user.dir");
         File file = new File(userDir + "/src/main/java/com/haisheng/framework/testng/bigScreen/itemCms/common/multimedia/file/" + tableName);
-        if (!file.exists()) {
-            logger.info("文件生成路径：{}", file.getPath());
-            ossClient.getObject(objectRequest, file);
-            return file;
-        } else {
-            logger.info("文件不存在");
-            return null;
-        }
+        logger.info(file.exists() ? "文件已存在" : "文件生成路径：{} ObjectMetadata：{}", file.getPath(), ossClient.getObject(objectRequest, file));
+        return file;
     }
 
     public void deleteFile(File file) {
-        String result = file == null ? "文件不存在" : file.exists() && file.isFile() ? "删除文件--" + file.delete() : "文件不存在或者不是文件";
-        logger.info(result);
+        logger.info(file == null ? "文件不存在" : file.exists() && file.isFile() ? "删除文件--" + file.delete() : "文件不存在或者不是文件");
     }
 }

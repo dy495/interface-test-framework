@@ -17,7 +17,7 @@ import com.haisheng.framework.testng.bigScreen.itemCms.common.enumerator.EnumMan
 import com.haisheng.framework.testng.bigScreen.itemCms.common.enumerator.EnumRegionType;
 import com.haisheng.framework.testng.bigScreen.itemCms.common.scene.*;
 import com.haisheng.framework.testng.bigScreen.itemCms.common.util.CmsConstants;
-import com.haisheng.framework.testng.bigScreen.itemCms.common.util.ScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.itemCms.common.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -40,7 +40,7 @@ public class A extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct product = EnumTestProduct.CMS_DAILY;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.CMS_DAILY;
     public VisitorProxy visitor = new VisitorProxy(product);
-    public ScenarioUtil util = new ScenarioUtil(visitor);
+    public SceneUtil util = new SceneUtil(visitor);
 
     @BeforeClass
     @Override
@@ -93,6 +93,7 @@ public class A extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             collectMessage(e);
         } finally {
+
             util.deleteFile(file);
         }
     }
