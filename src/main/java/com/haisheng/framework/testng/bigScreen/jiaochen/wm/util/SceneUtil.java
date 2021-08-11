@@ -1443,7 +1443,6 @@ public class SceneUtil extends BasicUtil {
     public Integer appointmentNumber(Date date, String type) {
         String nowDate = DateTimeUtil.getFormat(new Date(), "yyyy-MM");
         IScene scene = TimeTableListScene.builder().type(type).appointmentMonth(nowDate).build();
-        System.err.println(DateTimeUtil.getDayOnMonth(date));
         return scene.invoke(visitor).getJSONArray("list").stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("day").equals(DateTimeUtil.getDayOnMonth(date)))
                 .map(e -> e.getInteger("appointment_number") == null ? 0 : e.getInteger("appointment_number")).findFirst().orElse(0);
     }
