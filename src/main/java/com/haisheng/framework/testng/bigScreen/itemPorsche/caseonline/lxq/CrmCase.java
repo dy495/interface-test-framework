@@ -25,7 +25,7 @@ import java.util.List;
  */
 
 public class CrmCase extends TestCaseCommon implements TestCaseStd {
-
+    EnumTestProduct product = EnumTestProduct.PORSCHE_ONLINE;
     CrmScenarioUtilOnline crm = CrmScenarioUtilOnline.getInstance();
     CustomerInfoOnline cstm = new CustomerInfoOnline();
 
@@ -57,7 +57,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-online-test");
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.PORSCHE_ONLINE.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
 
         //replace ding push conf
         //commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
@@ -66,7 +66,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = EnumTestProduct.PORSCHE_ONLINE.getShopId();
+        commonConfig.setShopId(product.getShopId()).setReferer(product.getReferer()).setRoleId(product.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
 
         logger.debug("crm: " + crm);
@@ -248,7 +248,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
-//    @Ignore //4.0作废
+    //    @Ignore //4.0作废
 //    @Test
     public void addVisitRemarkNum50() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -279,7 +279,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
-//    @Ignore //4.0作废
+    //    @Ignore //4.0作废
 //    @Test
     public void addVisitRemarkNum51() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -941,7 +941,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
     @Test(dataProvider = "DCCCREAT", dataProviderClass = CrmScenarioUtilOnline.class)
     public void addDccCust(String name, String phone, String car) {
         logger.logCaseStart(caseResult.getCaseName());
-        try{
+        try {
             crm.login(cstm.dcc, cstm.pwd);
             int total1 = crm.dcclist(1, 1).getInteger("total");
             crm.dccCreate(name, phone, car);

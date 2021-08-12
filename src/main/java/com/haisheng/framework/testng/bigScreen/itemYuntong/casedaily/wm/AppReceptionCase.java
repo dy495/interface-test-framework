@@ -46,9 +46,9 @@ import java.util.*;
  * @date 2021/1/29 11:17
  */
 public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_DAILY_JD;
+    private static final EnumTestProduct product = EnumTestProduct.YT_DAILY_JD;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_RECEPTION_DAILY;
-    public VisitorProxy visitor = new VisitorProxy(PRODUCE);
+    public VisitorProxy visitor = new VisitorProxy(product);
     public SceneUtil util = new SceneUtil(visitor);
     private static AppPreSalesReceptionPageBean preSalesReceptionPage;
     CommonConfig commonConfig = new CommonConfig();
@@ -64,12 +64,9 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
         //放入shopId
-        commonConfig.product = PRODUCE.getAbbreviation();
-        commonConfig.referer = PRODUCE.getReferer();
-        commonConfig.shopId = ALL_AUTHORITY.getReceptionShopId();
-        commonConfig.roleId = ALL_AUTHORITY.getRoleId();
+        commonConfig.setShopId(ALL_AUTHORITY.getShopId()).setReferer(product.getReferer()).setRoleId(ALL_AUTHORITY.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
 
     }
@@ -86,6 +83,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
+        logger.logCaseStart(caseResult.getCaseName());
     }
 
     private void initAppPreSalesReceptionPageBean() {
@@ -101,7 +99,6 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "APP接待时产生新的节点，节点名称为销售创建")
     public void saleCustomerManager_data_1() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             initAppPreSalesReceptionPageBean();
             IScene preSalesReceptionPageScene = PreSalesReceptionPageScene.builder().customerId(String.valueOf(preSalesReceptionPage.getCustomerId())).build();
@@ -117,7 +114,6 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "APP接待时填写备注，备注记录+1")
     public void saleCustomerManager_data_2() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             initAppPreSalesReceptionPageBean();
             IScene scene = PreSaleCustomerInfoRemarkRecordScene.builder().customerId(String.valueOf(preSalesReceptionPage.getCustomerId())).build();
@@ -138,7 +134,6 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "APP接待时购买车辆，购车记录+1")
     public void saleCustomerManager_data_3() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             initAppPreSalesReceptionPageBean();
             IScene preSaleCustomerBuyCarPageScene = PreSaleCustomerBuyCarPageScene.builder().build();
@@ -164,7 +159,6 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "PC新建成交记录，购车记录+1")
     public void saleCustomerManager_data_4() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             initAppPreSalesReceptionPageBean();
             IScene scene = PreSaleCustomerInfoBuyCarRecordScene.builder().customerId(preSalesReceptionPage.getCustomerId()).build();
@@ -189,7 +183,6 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "接待客户一次，更新最近到店时间为当前接待时间")
     public void saleCustomerManager_data_5() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             initAppPreSalesReceptionPageBean();
             IScene scene = PreSaleCustomerInfoScene.builder().customerId(preSalesReceptionPage.getCustomerId()).shopId(Long.parseLong(util.getReceptionShopId())).build();
@@ -206,7 +199,6 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
     @AfterClass(description = "完成此条接待记录")
     @Test(description = "完成接待，更新接待时间")
     public void saleCustomerManager_data_6() {
-        logger.info(caseResult.getCaseName());
         try {
             initAppPreSalesReceptionPageBean();
             String date = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm");
@@ -224,8 +216,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "个人单个门店-【今日任务】销售接待数据=【今日数据】销售接待数据")
     public void taskFollowUp_data_1() {
-        logger.logCaseStart(caseResult.getCaseName());
-        commonConfig.roleId = util.getRoleId();
+        commonConfig.setRoleId(util.getRoleId());
         try {
             List<AppTodayDataBean> todayDataList = util.getAppTodayDataList();
             String prePendingReception = todayDataList.stream().map(AppTodayDataBean::getPrePendingReception).findFirst().orElse(null);
@@ -236,7 +227,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            commonConfig.roleId = ALL_AUTHORITY.getRoleId();
+            commonConfig.setRoleId(ALL_AUTHORITY.getRoleId());
             saveData("个人单个门店-【今日任务】销售接待数据=【今日数据】销售接待数据");
         }
     }
@@ -244,8 +235,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "个人单个门店-【今日任务】销售跟进数据=【今日数据】销售跟进数据")
     public void taskFollowUp_data_2() {
-        logger.logCaseStart(caseResult.getCaseName());
-        commonConfig.roleId = util.getRoleId();
+        commonConfig.setRoleId(util.getRoleId());
         try {
             List<AppTodayDataBean> todayDataList = util.getAppTodayDataList();
             String prePendingReception = todayDataList.stream().map(AppTodayDataBean::getPrePendingFollow).findFirst().orElse(null);
@@ -256,7 +246,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            commonConfig.roleId = ALL_AUTHORITY.getRoleId();
+            commonConfig.setRoleId(ALL_AUTHORITY.getRoleId());
             saveData("个人单个门店-【今日任务】销售跟进数据=【今日数据】销售跟进数据");
         }
     }
@@ -264,8 +254,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "个人单个门店-【今日任务】销售接待分子=【销售接待】列表数")
     public void taskFollowUp_data_3() {
-        logger.logCaseStart(caseResult.getCaseName());
-        commonConfig.roleId = util.getRoleId();
+        commonConfig.setRoleId(util.getRoleId());
         try {
             int receptionCount = util.getAppPreSalesReceptionPageList().size();
             String preReception = AppTodayTaskScene.builder().build().invoke(visitor).getString("pre_reception");
@@ -275,7 +264,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            commonConfig.roleId = ALL_AUTHORITY.getRoleId();
+            commonConfig.setRoleId(ALL_AUTHORITY.getRoleId());
             saveData("个人单个门店-【今日任务】销售接待分子=【销售接待】列表数");
         }
     }
@@ -283,8 +272,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "个人单个门店-【今日任务】销售接待分子=PC【销售接待记录】列表未完成接待总数")
     public void taskFollowUp_data_4() {
-        logger.logCaseStart(caseResult.getCaseName());
-        commonConfig.roleId = util.getRoleId();
+        commonConfig.setRoleId(util.getRoleId());
         try {
             String preReception = AppTodayTaskScene.builder().build().invoke(visitor).getString("pre_reception");
             int receptionCount = Integer.parseInt(preReception.split("/")[0]);
@@ -295,7 +283,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            commonConfig.roleId = ALL_AUTHORITY.getRoleId();
+            commonConfig.setRoleId(ALL_AUTHORITY.getRoleId());
             saveData("个人单个门店-【今日任务】销售接待分子=PC【销售接待记录】列表未完成接待总数");
         }
     }
@@ -303,8 +291,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "个人单个门店-【今日任务】销售接待分母=PC【接待管理】列表当天完成接待总数")
     public void taskFollowUp_data_5() {
-        logger.logCaseStart(caseResult.getCaseName());
-        commonConfig.roleId = util.getRoleId();
+        commonConfig.setRoleId(util.getRoleId());
         try {
             String date = DateTimeUtil.getFormat(new Date());
             String preReception = AppTodayTaskScene.builder().build().invoke(visitor).getString("pre_reception");
@@ -316,7 +303,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            commonConfig.roleId = ALL_AUTHORITY.getRoleId();
+            commonConfig.setRoleId(ALL_AUTHORITY.getRoleId());
             saveData("个人单个门店-【今日任务】销售接待分母=【销售接待记录】列表当天完成接待总数");
         }
     }
@@ -324,8 +311,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "个人单个门店-【今日任务】销售跟进分子=PC【销售线下接待评价】列表未跟进数量")
     public void taskFollowUp_data_6() {
-        logger.logCaseStart(caseResult.getCaseName());
-        commonConfig.roleId = util.getRoleId();
+        commonConfig.setRoleId(util.getRoleId());
         try {
             String preFollow = AppTodayTaskScene.builder().build().invoke(visitor).getString("pre_follow");
             int followCount = Integer.parseInt(preFollow.split("/")[0]);
@@ -336,7 +322,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            commonConfig.roleId = ALL_AUTHORITY.getRoleId();
+            commonConfig.setRoleId(ALL_AUTHORITY.getRoleId());
             saveData("个人单个门店-【今日任务】销售跟进分子=PC【销售线下接待评价】列表未跟进数量");
         }
     }
@@ -344,8 +330,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "个人单个门店-【今日任务】销售跟进分母=PC【销售线下接待评价】列表今天产生跟进总数")
     public void taskFollowUp_data_7() {
-        logger.logCaseStart(caseResult.getCaseName());
-        commonConfig.roleId = util.getRoleId();
+        commonConfig.setRoleId(util.getRoleId());
         try {
             String date = DateTimeUtil.getFormat(new Date());
             String preFollow = AppTodayTaskScene.builder().build().invoke(visitor).getString("pre_follow");
@@ -357,7 +342,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            commonConfig.roleId = ALL_AUTHORITY.getRoleId();
+            commonConfig.setRoleId(ALL_AUTHORITY.getRoleId());
             saveData("个人单个门店-【今日任务】销售跟进分母=PC【销售线下接待评价】列表今天产生跟进总数");
         }
     }
@@ -365,7 +350,6 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "全部多个门店-【今日任务】销售接待分子/分母=【今日数据】所有销售接待分子/分母之和")
     public void taskFollowUp_data_11() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             List<AppTodayDataBean> todayDataList = util.getAppTodayDataList();
             List<Integer> receptionList = new ArrayList<>();
@@ -392,7 +376,6 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "全部多个门店-【今日任务】销售跟进分子/分母=【今日数据】所有销售跟进分子/分母之和")
     public void taskFollowUp_data_12() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             List<AppTodayDataBean> todayDataList = util.getAppTodayDataList();
             List<Integer> receptionList = new ArrayList<>();
@@ -419,7 +402,6 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "全部多个门店-【今日任务】销售接待分子=【销售接待】列表数")
     public void taskFollowUp_data_13() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             int total = AppPreSalesReceptionPageScene.builder().build().invoke(visitor).getInteger("total");
             String preReception = AppTodayTaskScene.builder().build().invoke(visitor).getString("pre_reception");
@@ -435,8 +417,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "全部多个门店-【今日任务】销售接待分母=PC【接待管理】列表未完成接待总数")
     public void taskFollowUp_data_14() {
-        logger.logCaseStart(caseResult.getCaseName());
-        commonConfig.shopId = PRODUCE.getShopId();
+        commonConfig.setShopId(product.getShopId());
         try {
             IScene scene = PreSalesReceptionPageScene.builder().build();
             int count = (int) util.toJavaObjectList(scene, JSONObject.class).stream().filter(e -> !e.getBoolean("is_finish")).count();
@@ -448,7 +429,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            commonConfig.shopId = ALL_AUTHORITY.getReceptionShopId();
+            commonConfig.setShopId(ALL_AUTHORITY.getReceptionShopId());
             saveData("全部多个门店-【今日任务】销售接待分母=PC【接待管理】列表未完成接待总数");
         }
     }
@@ -456,8 +437,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "全部多个门店-【今日任务】销售接待分子=PC【接待管理】列表今日完成接待总数")
     public void taskFollowUp_data_15() {
-        logger.logCaseStart(caseResult.getCaseName());
-        commonConfig.shopId = PRODUCE.getShopId();
+        commonConfig.setShopId(product.getShopId());
         try {
             String date = DateTimeUtil.getFormat(new Date());
             IScene scene = PreSalesReceptionPageScene.builder().receptionStart(date).receptionEnd(date).build();
@@ -470,7 +450,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            commonConfig.shopId = ALL_AUTHORITY.getReceptionShopId();
+            commonConfig.setShopId(ALL_AUTHORITY.getReceptionShopId());
             saveData("全部多个门店-【今日任务】销售接待分子=PC【接待管理】列表今日完成接待总数");
         }
     }
@@ -478,8 +458,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "全部多个门店-【今日任务】销售跟进分母=PC【销售接待线下评价】列表今日已跟进总数")
     public void taskFollowUp_data_16() {
-        logger.logCaseStart(caseResult.getCaseName());
-        commonConfig.shopId = PRODUCE.getShopId();
+        commonConfig.setShopId(product.getShopId());
         try {
             String date = DateTimeUtil.getFormat(new Date());
             int total = EvaluateV4PageScene.builder().sourceCreateStart(date).sourceCreateEnd(date).isFollowUp(true).evaluateType(5).build().invoke(visitor).getInteger("total");
@@ -491,7 +470,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            commonConfig.shopId = ALL_AUTHORITY.getReceptionShopId();
+            commonConfig.setShopId(ALL_AUTHORITY.getReceptionShopId());
             saveData("全部多个门店-【今日任务】销售跟进分母=PC【销售接待线下评价】列表今日已跟进总数");
         }
     }
@@ -499,8 +478,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
     //no
     @Test(description = "全部多个门店-【今日任务】销售跟进分子=PC【销售接待线下评价】列表未跟进总数")
     public void taskFollowUp_data_17() {
-        logger.logCaseStart(caseResult.getCaseName());
-        commonConfig.shopId = PRODUCE.getShopId();
+        commonConfig.setShopId(product.getShopId());
         try {
             int total = EvaluateV4PageScene.builder().isFollowUp(false).evaluateType(5).build().invoke(visitor).getInteger("total");
             String preFollow = AppTodayTaskScene.builder().build().invoke(visitor).getString("pre_follow");
@@ -511,14 +489,13 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            commonConfig.shopId = ALL_AUTHORITY.getReceptionShopId();
+            commonConfig.setShopId(ALL_AUTHORITY.getReceptionShopId());
             saveData("全部多个门店-【今日任务】销售跟进分子=PC【销售接待线下评价】列表未跟进总数");
         }
     }
 
     @Test(description = "新建接待系统不存在的手机号")
     public void saleReception_data_1() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene preCustomerScene = AppPreCustomerScene.builder().build();
             IScene salesReceptionPageScene = PreSalesReceptionPageScene.builder().build();
@@ -553,7 +530,6 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "完成接待系统存在的手机号", dependsOnMethods = "saleReception_data_1")
     public void saleReception_data_2() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             int receptionPageCount = util.getAppPreSalesReceptionPageList().size();
             IScene todayTaskScene = AppTodayTaskScene.builder().build();
@@ -582,7 +558,6 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "新建接待系统存在的手机号")
     public void saleReception_data_3() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             String phone = util.getExistPhone();
             int historyReceptionRecordTotal = PreSalesReceptionPageScene.builder().phone(phone).build().invoke(visitor).getInteger("total");
@@ -620,7 +595,6 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "完成接待系统存在的手机号", dependsOnMethods = "saleReception_data_3")
     public void saleReception_data_4() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             int receptionPageCount = util.getAppPreSalesReceptionPageList().size();
             IScene todayTaskScene = AppTodayTaskScene.builder().build();

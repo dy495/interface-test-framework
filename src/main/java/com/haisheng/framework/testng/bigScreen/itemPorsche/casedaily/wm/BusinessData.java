@@ -50,7 +50,7 @@ public class BusinessData extends TestCaseCommon implements TestCaseStd {
         logger.debug("before class initial");
         CommonConfig commonConfig = new CommonConfig();
         //放入shopId
-        commonConfig.shopId = shopId;
+        commonConfig.setShopId(shopId);
         beforeClassInit(commonConfig);
         logger.debug("crm: " + crm);
     }

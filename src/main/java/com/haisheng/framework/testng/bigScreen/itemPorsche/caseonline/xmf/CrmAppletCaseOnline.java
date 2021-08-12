@@ -30,6 +30,7 @@ import static java.lang.Integer.parseInt;
 
 
 public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
+    EnumTestProduct product = EnumTestProduct.PORSCHE_ONLINE;
     CrmScenarioUtilOnlineX crm = CrmScenarioUtilOnlineX.getInstance();
     DateTimeUtil dt = new DateTimeUtil();
     PublicParmOnline pp = new PublicParmOnline();
@@ -83,10 +84,6 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.referer = ChecklistDbInfo.APPLET_ONLINE_REFER;
-        commonConfig.product= EnumTestProduct.PORSCHE_ONLINE.getAbbreviation();
-
-
         //replace backend gateway url
         //commonConfig.gateway = "";
 
@@ -94,7 +91,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-daily-test");
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.PORSCHE_ONLINE.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
 
         //replace ding push conf
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
@@ -103,7 +100,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = EnumTestProduct.PORSCHE_ONLINE.getShopId();
+        commonConfig.setShopId(product.getShopId()).setReferer("https://servicewechat.com/wx0cf070e8eed63e90/").setRoleId(product.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
 
         logger.debug("crm: " + crm);
@@ -270,7 +267,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
             checkArgument(car_type_nameapp.equals(car_type_name), "app预约试驾试驾车型显示异常");
 
             //pc & app 接待人员
-            checkArgument(reception_sale_nameapp.equals(sale_namepc),"pc接待销售与app所属销售不一致");
+            checkArgument(reception_sale_nameapp.equals(sale_namepc), "pc接待销售与app所属销售不一致");
 
             //TODO:试驾车型；今日总计，本月总计，当天去重，隔天不去重；故一天只能运行一次，且首次运行 pc
 //            Preconditions.checkArgument((Long.parseLong(today_numberA)-Long.parseLong(today_number))==1,"预约试驾成功后，pc预约试驾今日总计没+1");
@@ -332,11 +329,11 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
     public void sameCarFail() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int num=crm.myCarList().getJSONArray("list").size();
+            int num = crm.myCarList().getJSONArray("list").size();
             String plate_number = "京AWE1234";
             crm.myCarAddCode(car_type, car_model, plate_number).getLong("code");
-            int numA=crm.myCarList().getJSONArray("list").size();
-            Preconditions.checkArgument(numA-num==0,"添加重复车牌，不重复显示");
+            int numA = crm.myCarList().getJSONArray("list").size();
+            Preconditions.checkArgument(numA - num == 0, "添加重复车牌，不重复显示");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -354,10 +351,10 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String plate_number = "豫GBBA24";
-            String my_car_id=crm.myCarAdd(car_type, plate_number, car_model).getString("my_car_id");
+            String my_car_id = crm.myCarAdd(car_type, plate_number, car_model).getString("my_car_id");
             JSONObject carData = crm.myCarList();
             JSONArray list = carData.getJSONArray("list");
-            int count=list.size();
+            int count = list.size();
             crm.myCarDelete(my_car_id);
             JSONArray listB = crm.myCarList().getJSONArray("list");
             int aftercount;
@@ -396,11 +393,11 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
                 count = list.size();
             }
             int limit = 10 - count;
-            JSONArray carId=new JSONArray();
+            JSONArray carId = new JSONArray();
             for (int i = 0; i < limit; i++) {
                 String plate_number;
                 plate_number = "豫GBBA3" + i;
-                int car_id=crm.myCarAdd(car_type, plate_number, car_model).getInteger("my_car_id");
+                int car_id = crm.myCarAdd(car_type, plate_number, car_model).getInteger("my_car_id");
                 carId.add(car_id);
             }
             for (int j = 0; j < carId.size(); j++) {
@@ -432,10 +429,10 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
                 count = list.size();
             }
             int limit = 10 - count;
-            JSONArray carId=new JSONArray();
+            JSONArray carId = new JSONArray();
             for (int i = 0; i < limit; i++) {
                 String plate_number = "吉GBBA3" + i;
-                int car_id=crm.myCarAdd(car_type,  plate_number,car_model).getInteger("my_car_id");
+                int car_id = crm.myCarAdd(car_type, plate_number, car_model).getInteger("my_car_id");
                 carId.add(car_id);
             }
             String plate_number = "豫GBBA11";
@@ -1066,6 +1063,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
             saveData("车辆，车牌号异常验证");
         }
     }
+
     /**
      * @description :编辑车辆
      * @date :2020/10/10 16:00
@@ -1074,7 +1072,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
     public void editplate() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String plate="沪W336699";
+            String plate = "沪W336699";
             Long code = crm.appletEditCar(pp.mycarId2, car_type, plate, car_model).getLong("code");
             $Preconditions.checkArgument(code == 1000, "编辑车辆接口报错");
         } catch (AssertionError | Exception e) {
@@ -1102,6 +1100,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
             saveData("applet-小程序新建车辆，车牌号异常验证");
         }
     }
+
     //预约试驾/维修/保养  长度/非数字---前端校验
 //    @Test()
     public void yuyueAb() {
@@ -1115,11 +1114,12 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
             saveData("预约试驾，名称长度异常校验");
         }
     }
-//    @Test()
+
+    //    @Test()
     public void yuyueAb2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            long timelist = pf.appointmentTimeListO("MAINTAIN",dt.getHistoryDate(2)).getLong("time_id");
+            long timelist = pf.appointmentTimeListO("MAINTAIN", dt.getHistoryDate(2)).getLong("time_id");
             int code1 = crm.appointmentMaintainCode(pp.mycarId, pp.abString, customer_phone_number, timelist).getInteger("code");
             Preconditions.checkArgument(code1 == 1001, "预约试驾，名称长度51仍成功");
         } catch (AssertionError | Exception e) {
@@ -1134,7 +1134,7 @@ public class CrmAppletCaseOnline extends TestCaseCommon implements TestCaseStd {
     public void yuyuephoneAb(String phone) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Long code2= crm.appointmentTestDrivecode("MALE", pp.customer_name, phone, appointment_date, car_type, car_model).getLong("code");
+            Long code2 = crm.appointmentTestDrivecode("MALE", pp.customer_name, phone, appointment_date, car_type, car_model).getLong("code");
             sleep(5);
             Preconditions.checkArgument(code2 == 1001, "预约试驾，电话异常仍成功");
         } catch (AssertionError | Exception e) {

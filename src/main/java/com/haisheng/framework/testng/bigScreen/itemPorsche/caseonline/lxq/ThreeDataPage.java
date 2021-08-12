@@ -23,6 +23,7 @@ import java.math.BigDecimal;
  */
 
 public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
+    EnumTestProduct product = EnumTestProduct.PORSCHE_ONLINE;
     CrmScenarioUtilOnline crm = CrmScenarioUtilOnline.getInstance();
     CustomerInfoOnline cstm = new CustomerInfoOnline();
 
@@ -117,7 +118,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-online-test");
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.PORSCHE_ONLINE.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
 
         //replace ding push conf
         //commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
@@ -126,8 +127,7 @@ public class ThreeDataPage extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = EnumTestProduct.PORSCHE_ONLINE.getShopId();
-
+        commonConfig.setShopId(product.getShopId()).setReferer(product.getReferer()).setRoleId(product.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
 
         logger.debug("crm: " + crm);

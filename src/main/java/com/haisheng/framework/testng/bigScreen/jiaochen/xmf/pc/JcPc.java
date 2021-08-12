@@ -67,8 +67,6 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.referer = product.getReferer();
-        commonConfig.product = product.getAbbreviation();
         //replace backend gateway url
         //commonConfig.gateway = "";
 
@@ -84,10 +82,8 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};
-//        commonConfig.referer="http://dev.dealer-jc.winsenseos.cn/authpage/login";
         //set shop id
-        commonConfig.shopId = "49195";
-        commonConfig.roleId = "603";
+        commonConfig.setShopId("49195").setReferer(product.getReferer()).setRoleId(product.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);
@@ -101,7 +97,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         JSONObject object = new JSONObject();
         object.put("phone", username);
         object.put("verification_code", password);
-        commonConfig.roleId = roleId;
+        commonConfig.setRoleId(roleId);
         httpPost(EnumTestProduct.JC_DAILY_ZH.getIp(), path, object);
     }
 
@@ -112,7 +108,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         object.put("phone", phone);
         object.put("verification_code", verificationCode);
         object.put("type", 1);
-        commonConfig.roleId = roleId;
+        commonConfig.setRoleId(roleId);
         httpPost(EnumTestProduct.JC_DAILY_ZH.getIp(), path, object);
     }
 
@@ -723,7 +719,6 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             String type = "MAINTAIN";
             int num = 0;
             String dataType = "WEEKDAY";
-            System.out.println(commonConfig.shopId);
             pcLogin(pp.jdgw, pp.gwpassword, pp.roleidJdgw);
             //判断今天是否是周末，周末就取周末的折扣配置
             Calendar cal = Calendar.getInstance();
@@ -881,7 +876,6 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
     public void pcmaintainTableEdit(String type) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            System.out.println(commonConfig.shopId);
             Calendar calendar = Calendar.getInstance();
             int day = calendar.get(Calendar.DAY_OF_WEEK);
 

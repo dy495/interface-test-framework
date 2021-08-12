@@ -27,9 +27,9 @@ import java.lang.reflect.Method;
  */
 public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
 
-    EnumTestProduct PRODUCE = EnumTestProduct.YT_DAILY_JD;
+    EnumTestProduct product = EnumTestProduct.YT_DAILY_JD;
     EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_ONLINE;
-    VisitorProxy visitor = new VisitorProxy(PRODUCE);
+    VisitorProxy visitor = new VisitorProxy(product);
     SceneUtil businessUtil = new SceneUtil(visitor);
 
 
@@ -50,14 +50,11 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistQaOwner = "吕雪晴";
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.YUNTONG_ONLINE_TEST.getJobName());
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = DingWebhook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //放入shopId
-        commonConfig.product = PRODUCE.getAbbreviation();
-        commonConfig.referer = PRODUCE.getReferer();
-        commonConfig.shopId = PRODUCE.getShopId();
-        commonConfig.roleId = ALL_AUTHORITY.getRoleId();
+        commonConfig.setShopId(product.getShopId()).setReferer(product.getReferer()).setRoleId(ALL_AUTHORITY.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
         businessUtil.loginPc(ALL_AUTHORITY);
     }

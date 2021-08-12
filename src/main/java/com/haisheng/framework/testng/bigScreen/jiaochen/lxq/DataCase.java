@@ -33,10 +33,10 @@ import java.lang.reflect.Method;
 
 public class DataCase extends TestCaseCommon implements TestCaseStd {
 
-    private static final EnumTestProduct PRODUCE = EnumTestProduct.JC_DAILY_JD;
+    private static final EnumTestProduct product = EnumTestProduct.JC_DAILY_JD;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.JC_ALL_AUTHORITY_DAILY_LXQ;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_LXQ_DAILY;
-    public VisitorProxy visitor = new VisitorProxy(PRODUCE);
+    public VisitorProxy visitor = new VisitorProxy(product);
     public SceneUtil user = new SceneUtil(visitor);
 
     ScenarioUtil jc = ScenarioUtil.getInstance();
@@ -58,26 +58,20 @@ public class DataCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "吕雪晴";
 
-        commonConfig.product = PRODUCE.getAbbreviation();
-        //replace backend gateway url
-        //commonConfig.gateway = "";
-
         //replace jenkins job name
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
 
         //replace ding push conf
         //commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.referer = PRODUCE.getReferer();
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = "-1";
-        commonConfig.roleId = "603";
+        commonConfig.setShopId(product.getShopId()).setReferer(product.getReferer()).setRoleId(product.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
 
 

@@ -96,10 +96,7 @@ public class AppletManagerCaseOnline extends TestCaseCommon implements TestCaseS
         //替换钉钉推送
         commonConfig.dingHook = DingWebhook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //header信息
-        commonConfig.product = PRODUCE.getAbbreviation();
-        commonConfig.referer = PRODUCE.getReferer();
-        commonConfig.shopId = PRODUCE.getShopId();
-        commonConfig.roleId = ACCOUNT.getRoleId();
+        commonConfig.setShopId(PRODUCE.getShopId()).setReferer(PRODUCE.getReferer()).setRoleId(ACCOUNT.getRoleId()).setProduct(PRODUCE.getAbbreviation());
         beforeClassInit(commonConfig);
     }
 

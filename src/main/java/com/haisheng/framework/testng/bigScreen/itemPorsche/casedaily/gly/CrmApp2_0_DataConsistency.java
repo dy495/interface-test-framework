@@ -34,6 +34,7 @@ import java.util.*;
  */
 
 public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCaseStd {
+    EnumTestProduct product = EnumTestProduct.PORSCHE_DAILY;
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     EnumAccount zjl = EnumAccount.ZJL_DAILY;
     String xs_name = "0805xsgw";//销售顾问
@@ -71,7 +72,6 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         //commonConfig.gateway = "";
         //replace jenkins job name
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-daily-test");
-        commonConfig.product = EnumTestProduct.PORSCHE_DAILY.getAbbreviation();
         //replace product name for ding push
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.PORSCHE_DAILY.getDesc() + commonConfig.checklistQaOwner);
         //replace ding push conf
@@ -79,9 +79,8 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};
-
+        commonConfig.setShopId(product.getShopId()).setReferer(product.getReferer()).setProduct(product.getAbbreviation()).setRoleId(product.getRoleId());
         //set shop id
-        commonConfig.shopId = EnumTestProduct.PORSCHE_DAILY.getShopId();
         beforeClassInit(commonConfig);
 
         logger.debug("crm: " + crm);

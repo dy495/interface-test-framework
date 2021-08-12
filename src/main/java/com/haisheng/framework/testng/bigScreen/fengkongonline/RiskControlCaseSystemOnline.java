@@ -65,15 +65,12 @@ public class RiskControlCaseSystemOnline extends TestCaseCommon implements TestC
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "郭丽雅";
-        commonConfig.product = product.getAbbreviation();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "FengKong-Online-test");
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "风控-线上-郭丽雅");        //替换钉钉推送
         commonConfig.dingHook = DingWebhook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //放入shopId
-        commonConfig.referer = product.getReferer();
-        commonConfig.shopId = product.getShopId();
-        commonConfig.roleId = product.getRoleId();
+        commonConfig.setShopId(product.getShopId()).setRoleId(product.getRoleId()).setReferer(product.getReferer()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
         logger.debug("FK: " + cu);
     }

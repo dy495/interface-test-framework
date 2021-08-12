@@ -81,10 +81,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
         //放入shopId
-        commonConfig.product = PRODUCE.getAbbreviation();
-        commonConfig.referer = PRODUCE.getReferer();
-        commonConfig.shopId = PRODUCE.getShopId();
-        commonConfig.roleId = ALL_AUTHORITY.getRoleId();
+        commonConfig.setShopId(PRODUCE.getShopId()).setReferer(PRODUCE.getReferer()).setRoleId(ALL_AUTHORITY.getRoleId()).setProduct(PRODUCE.getAbbreviation());
         beforeClassInit(commonConfig);
     }
 
@@ -506,7 +503,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
     @Test(description = "预约管理--保养配置，修改保养价格")
     public void customerManager_data_6() {
         try {
-            commonConfig.shopId = ALL_AUTHORITY.getReceptionShopId();
+            commonConfig.setShopId(ALL_AUTHORITY.getReceptionShopId());
             Double[] doubles = {1.00, 2.99, 3.66, 50.1};
             JSONObject jsonObject = ManageModelPageScene.builder().type("MAINTAIN").build().invoke(visitor).getJSONArray("list").getJSONObject(0);
             Long id = jsonObject.getLong("id");
@@ -518,7 +515,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            commonConfig.shopId = PRODUCE.getShopId();
+            commonConfig.setShopId(PRODUCE.getShopId());
             saveData("预约管理--保养配置，修改保养价格");
         }
     }

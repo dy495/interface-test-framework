@@ -65,9 +65,8 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             EnumTestProduct produce = EnumTestProduct.PORSCHE_DAILY;
-            commonConfig.shopId = produce.getShopId();
+            commonConfig.setShopId(produce.getShopId()).setReferer(produce.getReferer());
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, produce.getDesc());
-            commonConfig.referer = produce.getReferer();
             commonConfig.pushQa = new String[]{EnumAppletToken.getPhoneByToken(token)};
             VisitorProxy visitor = new VisitorProxy(produce);
             visitor.setToken(token);
@@ -85,9 +84,8 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             EnumTestProduct produce = EnumTestProduct.PORSCHE_ONLINE;
-            commonConfig.shopId = produce.getShopId();
+            commonConfig.setShopId(produce.getShopId()).setReferer(produce.getReferer());
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, produce.getDesc());
-            commonConfig.referer = produce.getReferer();
             commonConfig.pushQa = new String[]{EnumAppletToken.getPhoneByToken(token)};
             VisitorProxy visitor = new VisitorProxy(produce);
             visitor.setToken(token);
@@ -105,9 +103,8 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             EnumTestProduct produce = EnumTestProduct.JC_DAILY_JD;
-            commonConfig.shopId = produce.getShopId();
+            commonConfig.setShopId(produce.getShopId()).setReferer(produce.getReferer());
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, produce.getDesc());
-            commonConfig.referer = produce.getReferer();
             commonConfig.pushQa = new String[]{EnumAppletToken.getPhoneByToken(token)};
             VisitorProxy visitor = new VisitorProxy(produce);
             visitor.setToken(token);
@@ -125,9 +122,8 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             EnumTestProduct produce = EnumTestProduct.JC_ONLINE_JD;
-            commonConfig.shopId = produce.getShopId();
+            commonConfig.setShopId(produce.getShopId()).setReferer(produce.getReferer());
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, produce.getDesc());
-            commonConfig.referer = produce.getReferer();
             commonConfig.pushQa = new String[]{EnumAppletToken.getPhoneByToken(token)};
             VisitorProxy visitor = new VisitorProxy(produce);
             visitor.setToken(token);
@@ -146,7 +142,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         try {
             EnumTestProduct produce = EnumTestProduct.INS_DAILY;
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, produce.getDesc());
-            commonConfig.referer = produce.getReferer();
+            commonConfig.setReferer(produce.getReferer());
             commonConfig.pushQa = new String[]{EnumAppletToken.getPhoneByToken(token)};
             VisitorProxy visitor = new VisitorProxy(produce);
             visitor.setToken(token);
@@ -165,7 +161,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         try {
             EnumTestProduct produce = EnumTestProduct.INS_ONLINE;
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, produce.getDesc());
-            commonConfig.referer = produce.getReferer();
+            commonConfig.setReferer(produce.getReferer());
             commonConfig.pushQa = new String[]{EnumAppletToken.getPhoneByToken(token)};
             VisitorProxy visitor = new VisitorProxy(produce);
             visitor.setToken(token);

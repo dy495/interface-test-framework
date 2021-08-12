@@ -45,16 +45,13 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "郭丽雅";
-        commonConfig.product = product.getAbbreviation();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "jc-daily-test");
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //放入shopId
-        commonConfig.referer = "https://servicewechat.com/wxbd41de85739a00c7/0/page-frame.html";
-        commonConfig.shopId = product.getShopId();
-        commonConfig.roleId = "603";
+        commonConfig.setShopId(product.getShopId()).setReferer(product.getReferer()).setRoleId(product.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
         logger.debug("jc: " + jc);
     }
@@ -1000,7 +997,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
     public void maintainOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            commonConfig.shopId = "49195";
+            commonConfig.setShopId("49195");
             JSONObject respond = jc.maintainFilterManage("49195", "1", "10", "MAINTAIN", "", "");
             if (respond.getJSONArray("list").size() > 0) {
                 String result = respond.getJSONArray("list").getJSONObject(0).getString(output);
@@ -1020,7 +1017,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
             appendFailReason(e.toString());
         } finally {
             saveData("保养配置单项查询，结果校验");
-            commonConfig.shopId = product.getShopId();
+            commonConfig.setShopId(product.getShopId());
         }
     }
 
@@ -1032,7 +1029,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
     public void maintainALLFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            commonConfig.shopId = "49195";
+            commonConfig.setShopId("49195");
             Object[][] flag = Constant.maintainFilter_pram();
             maintainVariable variable = new maintainVariable();
             JSONArray res = jc.maintainFilterManage("49195", "1", "10", "MAINTAIN", "", "").getJSONArray("list");
@@ -1060,7 +1057,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
             appendFailReason(e.toString());
         } finally {
             saveData("保养配置填写全部参数查询，结果校验");
-            commonConfig.shopId = product.getShopId();
+            commonConfig.setShopId(product.getShopId());
         }
     }
 
@@ -1072,7 +1069,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
     public void maintainSomeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            commonConfig.shopId = "49195";
+            commonConfig.setShopId("49195");
             Object[][] flag = Constant.maintainFilter_pram();
             maintainVariable variable = new maintainVariable();
             JSONArray res = jc.maintainFilterManage("49195", "1", "10", "MAINTAIN", "", "").getJSONArray("list");
@@ -1102,7 +1099,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
             appendFailReason(e.toString());
         } finally {
             saveData("保养配置填写多项参数查询，结果校验");
-            commonConfig.shopId = product.getShopId();
+            commonConfig.setShopId(product.getShopId());
         }
     }
 
@@ -1114,14 +1111,14 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
     public void maintainEmptyFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            commonConfig.shopId = "49195";
+            commonConfig.setShopId("49195");
             jc.maintainFilterManage("49195", "1", "10", "MAINTAIN", "", "").getJSONArray("list");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("保养配置列表参数不填写，结果校验");
-            commonConfig.shopId = product.getShopId();
+            commonConfig.setShopId(product.getShopId());
         }
     }
 
@@ -3145,7 +3142,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
     public void intelligentRemindList() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            commonConfig.shopId = "49195";//指定中关村门店
+            commonConfig.setShopId("49195");//指定中关村门店
             JSONObject response = jc.remindPage("1", "10", "", "", "");
             String item = response.getJSONArray("list").getJSONObject(0).getString("item");
             JSONObject response1 = jc.remindPage("1", "10", "", "item", item);
@@ -3163,7 +3160,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            commonConfig.shopId = product.getShopId();
+            commonConfig.setShopId(product.getShopId());
             saveData("V2.0-智能提醒筛选栏校验");
         }
     }
@@ -5039,7 +5036,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
                         for (int page = 1; page <= pages; page++) {
                             JSONArray list = jc.lossCustomerPage(String.valueOf(page), "10", pram, result1).getJSONArray("list");
                             for (int i = 0; i < list.size(); i++) {
-                                String Flag = list.getJSONObject(i).containsKey(output)?list.getJSONObject(i).getString(output):"否";
+                                String Flag = list.getJSONObject(i).containsKey(output) ? list.getJSONObject(i).getString(output) : "否";
                                 System.out.println("V3.1流失客户接待列表按" + result + "查询，结果错误" + Flag);
                                 Preconditions.checkArgument(Flag.contains(result), "V3.1流失客户接待列表按" + result + "查询，结果错误" + Flag);
                             }

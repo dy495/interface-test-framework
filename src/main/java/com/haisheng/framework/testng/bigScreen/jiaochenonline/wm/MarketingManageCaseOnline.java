@@ -77,10 +77,10 @@ import java.util.stream.Collectors;
  * @date 2021/1/29 11:17
  */
 public class MarketingManageCaseOnline extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduct PRODUCE = EnumTestProduct.JC_ONLINE_JD;
+    private static final EnumTestProduct product = EnumTestProduct.JC_ONLINE_JD;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.JC_ALL_AUTHORITY_ONLINE;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_ONLINE;
-    public VisitorProxy visitor = new VisitorProxy(PRODUCE);
+    public VisitorProxy visitor = new VisitorProxy(product);
     public SceneUtil util = new SceneUtil(visitor);
     CommonConfig commonConfig = new CommonConfig();
 
@@ -94,14 +94,11 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_ONLINE_TEST.getJobName());
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = DingWebhook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //放入shopId
-        commonConfig.product = PRODUCE.getAbbreviation();
-        commonConfig.referer = PRODUCE.getReferer();
-        commonConfig.shopId = PRODUCE.getShopId();
-        commonConfig.roleId = ALL_AUTHORITY.getRoleId();
+        commonConfig.setShopId(product.getShopId()).setReferer(product.getReferer()).setRoleId(ALL_AUTHORITY.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
     }
 
@@ -2020,7 +2017,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     //ok
     @Test(description = "消息管理--推送消息销售成交客户数量=销售客户列表门店&品牌不为空的成交客户数量", dataProvider = "shopIds")
     public void messageManagerPeople_data_2(String shopIds) {
-        commonConfig.shopId = shopIds;
+        commonConfig.setShopId(shopIds);
         try {
             JSONArray shopList = ShopListScene.builder().build().invoke(visitor).getJSONArray("list");
             shopList.stream().map(e -> (JSONObject) e).forEach(shop -> {
@@ -2054,7 +2051,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            commonConfig.shopId = PRODUCE.getShopId();
+            commonConfig.setShopId(product.getShopId());
             saveData("消息管理--推送消息销售成交客客数量=销售客户列表门店&品牌不为空的成交客户数量");
         }
     }
@@ -2062,7 +2059,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     //ok
     @Test(description = "消息管理--推送消息销售潜在客户数量=销售客户列表门店&品牌不为空的潜在客户数量", dataProvider = "shopIds")
     public void messageManagerPeople_data_3(String shopIds) {
-        commonConfig.shopId = shopIds;
+        commonConfig.setShopId(shopIds);
         try {
             JSONArray shopList = ShopListScene.builder().build().invoke(visitor).getJSONArray("list");
             shopList.stream().map(e -> (JSONObject) e).forEach(shop -> {
@@ -2095,7 +2092,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            commonConfig.shopId = PRODUCE.getShopId();
+            commonConfig.setShopId(product.getShopId());
             saveData("消息管理--推送消息销售成交客户数量=销售客户列表门店&品牌不为空的潜在客户数量");
         }
     }

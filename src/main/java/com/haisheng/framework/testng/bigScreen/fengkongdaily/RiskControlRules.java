@@ -68,15 +68,12 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "郭丽雅";
-        commonConfig.product = product.getAbbreviation();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "FengKong-daily-test");
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "风控 日常");        //替换钉钉推送
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //放入shopId
-        commonConfig.referer = product.getReferer();
-        commonConfig.shopId = product.getShopId();
-        commonConfig.roleId = product.getRoleId();
+        commonConfig.setShopId(product.getShopId()).setReferer(product.getReferer()).setRoleId(product.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
         logger.debug("FK: " + cu);
 //        qaDbUtil.openConnectionRdDailyEnvironment();
@@ -94,7 +91,7 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
     public void recode(String tranid, String casename) throws IOException {
         Writer out = null;
         try {
-            String path="src/main/java/com/haisheng/framework/testng/bigScreen/fengkongdaily/things.txt".replace("/", File.separator);
+            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/fengkongdaily/things.txt".replace("/", File.separator);
 //            path.replace("/", File.separator);
             out = new BufferedWriter(new FileWriter(path, true));
             out.write("测试规则：" + casename + "\n");
@@ -549,8 +546,8 @@ public class RiskControlRules extends TestCaseCommon implements TestCaseStd {
             String post2 = cu.getCreateOrder(shopId, transId2, userId1, openId2, carVehicleNumber);
 //            String post3=cu.getCreateOrder(shopId,transId3,userId3,openId,carVehicleNumber);
 //            System.out.println("-----------"+post1);
-            recode(transId,"一车多人失败");
-            recode(transId2,"一车多人失败");
+            recode(transId, "一车多人失败");
+            recode(transId2, "一车多人失败");
             System.out.println("-----------" + post2);
 //            System.out.println("-----------"+post3);
 

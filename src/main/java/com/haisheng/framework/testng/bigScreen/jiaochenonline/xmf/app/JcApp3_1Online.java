@@ -53,8 +53,6 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.referer = product.getReferer();
-        commonConfig.product = product.getAbbreviation();
         jc.changeIpPort(product.getIp());
 
         //replace backend gateway url
@@ -71,10 +69,7 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};
-
-        //set shop id
-        commonConfig.shopId = pp.shopIdZ;
-        commonConfig.roleId = pp.roleidJdgw;
+        commonConfig.setShopId(pp.shopIdZ).setReferer(product.getReferer()).setRoleId(pp.roleidJdgw).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);
@@ -88,7 +83,7 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
         JSONObject object = new JSONObject();
         object.put("phone", username);
         object.put("verification_code", password);
-        commonConfig.roleId = roleId;
+        commonConfig.setRoleId(roleId);
         httpPost(EnumTestProduct.JC_ONLINE_ZH.getIp(), path, object);
     }
 
@@ -99,7 +94,7 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
         object.put("phone", phone);
         object.put("verification_code", verificationCode);
         object.put("type", 1);
-        commonConfig.roleId = roleId;
+        commonConfig.setRoleId(roleId);
         httpPost(EnumTestProduct.JC_ONLINE_ZH.getIp(), path, object);
     }
 
@@ -508,7 +503,6 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
             String type = "ONLINE_EXPERTS";
             Integer remind = 1;
             pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
-            System.out.println(commonConfig.shopId);
             String workday = "{\n" +
                     "            \"afternoon_date_start\":\"13:00\",\n" +
                     "            \"forenoon_date_end\":\"12:00\",\n" +

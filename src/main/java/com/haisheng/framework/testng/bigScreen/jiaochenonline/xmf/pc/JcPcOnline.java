@@ -65,12 +65,6 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.referer = product.getReferer();
-        commonConfig.product = product.getAbbreviation();
-
-        //replace backend gateway url
-        //commonConfig.gateway = "";
-
         //replace jenkins job name
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_ONLINE_TEST.getJobName());
 
@@ -85,8 +79,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 //        commonConfig.referer="http://dev.dealer-jc.winsenseos.cn/authpage/login";
         //set shop id
-        commonConfig.shopId = pp.shopIdZ;
-        commonConfig.roleId = pp.roleId;
+        commonConfig.setShopId(pp.shopIdZ).setReferer(product.getReferer()).setRoleId(pp.roleId).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);
@@ -100,7 +93,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
         JSONObject object = new JSONObject();
         object.put("phone", username);
         object.put("verification_code", password);
-        commonConfig.roleId = roleId;
+        commonConfig.setRoleId(roleId);
         httpPost(EnumTestProduct.JC_ONLINE_ZH.getIp(), path, object);
     }
 
@@ -111,7 +104,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
         object.put("phone", phone);
         object.put("verification_code", verificationCode);
         object.put("type", 1);
-        commonConfig.roleId = roleId;
+        commonConfig.setRoleId(roleId);
         httpPost(EnumTestProduct.JC_ONLINE_ZH.getIp(), path, object);
     }
 
@@ -556,7 +549,6 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
 
             //禁用开启按钮
             jc.organizationAccountButtom(id, "DISABLE");
-            System.out.println("shopid:" + commonConfig.shopId);
             int codeApp = jc.appLogin2(pp.jdgw2, pp.jdgwpassword, false).getInteger("code");
             int codePc = jc.pcTryLogin(pp.jdgw2, pp.jdgwpassword, false).getInteger("code");
 
@@ -729,7 +721,6 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             String type = "MAINTAIN";
             int num = 0;
             String dataType = "WEEKDAY";
-            System.out.println(commonConfig.shopId);
             pcLogin(pp.jdgw, pp.gwpassword, pp.roleidJdgw);
             //判断今天是否是周末，周末就取周末的折扣配置
             Calendar cal = Calendar.getInstance();
@@ -887,7 +878,6 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
     public void pcmaintainTableEdit(String type) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            System.out.println(commonConfig.shopId);
             Calendar calendar = Calendar.getInstance();
             int day = calendar.get(Calendar.DAY_OF_WEEK);
 

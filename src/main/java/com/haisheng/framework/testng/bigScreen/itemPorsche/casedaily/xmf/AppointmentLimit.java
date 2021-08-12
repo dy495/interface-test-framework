@@ -24,6 +24,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static java.lang.Integer.parseInt;
 
 public class AppointmentLimit extends TestCaseCommon implements TestCaseStd {
+    EnumTestProduct product = EnumTestProduct.PORSCHE_DAILY;
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     DateTimeUtil dt = new DateTimeUtil();
     PublicParm pp = new PublicParm();
@@ -57,7 +58,6 @@ public class AppointmentLimit extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.referer= commonConfig.referer = EnumTestProduct.PORSCHE_DAILY.getReferer();
 
 
         //replace backend gateway url
@@ -76,7 +76,7 @@ public class AppointmentLimit extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = EnumTestProduct.PORSCHE_DAILY.getShopId();
+        commonConfig.setShopId(product.getShopId()).setReferer(product.getReferer());
         beforeClassInit(commonConfig);
 
         logger.debug("crm: " + crm);
@@ -144,7 +144,7 @@ public class AppointmentLimit extends TestCaseCommon implements TestCaseStd {
 
     }
 
-//    @Test()
+    //    @Test()
     public void AmainTain() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -527,7 +527,7 @@ public class AppointmentLimit extends TestCaseCommon implements TestCaseStd {
             Integer leftNum = list.getJSONObject(i).getInteger("left_num");
             //预约
             long timelist = pf.appointmentTimeList(type, i, appointment_date);
-            JSONObject data = crm.appointmentMaintain(pp.mycarId, customer_name, customer_phone_number,  timelist);
+            JSONObject data = crm.appointmentMaintain(pp.mycarId, customer_name, customer_phone_number, timelist);
             Long appoint_id = data.getLong("appointment_id");
             JSONArray list2 = crm.timeList(type, appointment_date).getJSONArray("list");
             Integer leftNum2 = list2.getJSONObject(i).getInteger("left_num");
@@ -559,7 +559,7 @@ public class AppointmentLimit extends TestCaseCommon implements TestCaseStd {
 //            Integer leftNum = list.getJSONObject(i).getInteger("left_num");
 
             long timelist2 = pf.appointmentTimeListO(type, appointment_date).getLong("time_id");
-            JSONObject res = crm.appointmentMaintainCode((pp.mycarId), customer_name, customer_phone_number,  timelist2,null);
+            JSONObject res = crm.appointmentMaintainCode((pp.mycarId), customer_name, customer_phone_number, timelist2, null);
             Long code = res.getLong("code");
             checkArgument(code == 1001, "预约同一天其他时段应该失败");
 

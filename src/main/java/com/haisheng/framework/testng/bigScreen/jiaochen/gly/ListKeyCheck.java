@@ -23,9 +23,7 @@ public class ListKeyCheck extends TestCaseCommon implements TestCaseStd {
     EnumTestProduct product = EnumTestProduct.JC_DAILY_JD;
     ScenarioUtil jc = new ScenarioUtil();
     PublicParm pp = new PublicParm();
-    public String shopId = "-1";
-    public String appletTocken = EnumAppletToken.JC_GLY_DAILY.getToken();
-    ListConstant lc = new ListConstant();
+    public String appletToken = EnumAppletToken.JC_GLY_DAILY.getToken();
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
@@ -39,17 +37,15 @@ public class ListKeyCheck extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "郭丽雅";
-        commonConfig.product = product.getAbbreviation();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "jc-daily-test");
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //放入shopId
-        commonConfig.shopId = product.getShopId();
+        commonConfig.setShopId(product.getShopId()).setReferer(product.getReferer()).setRoleId(product.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
         logger.debug("jc: " + jc);
-        commonConfig.referer = product.getReferer();
     }
 
     @AfterClass

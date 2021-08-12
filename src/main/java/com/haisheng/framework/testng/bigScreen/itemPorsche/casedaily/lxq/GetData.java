@@ -25,6 +25,7 @@ import java.lang.reflect.Method;
  */
 
 public class GetData extends TestCaseCommon implements TestCaseStd {
+    EnumTestProduct product = EnumTestProduct.PORSCHE_DAILY;
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     CustomerInfo cstm = new CustomerInfo();
     FileUtil fileUtil = new FileUtil();
@@ -53,7 +54,6 @@ public class GetData extends TestCaseCommon implements TestCaseStd {
 
         //replace jenkins job name
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-daily-test");
-        commonConfig.product = EnumTestProduct.PORSCHE_DAILY.getAbbreviation();
         //replace product name for ding push
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.PORSCHE_DAILY.getDesc() + commonConfig.checklistQaOwner);
 
@@ -64,7 +64,7 @@ public class GetData extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = EnumTestProduct.PORSCHE_DAILY.getShopId();
+        commonConfig.setShopId(product.getShopId()).setReferer(product.getReferer()).setRoleId(product.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
 
         logger.debug("crm: " + crm);

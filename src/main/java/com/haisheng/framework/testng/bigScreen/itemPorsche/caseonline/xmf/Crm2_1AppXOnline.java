@@ -32,6 +32,7 @@ import java.util.*;
 
 
 public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
+    EnumTestProduct product = EnumTestProduct.PORSCHE_ONLINE;
     CrmScenarioUtilOnlineX crm = CrmScenarioUtilOnlineX.getInstance();
     DateTimeUtil dt = new DateTimeUtil();
     PublicParmOnline pp = new PublicParmOnline();
@@ -53,11 +54,6 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.referer = ChecklistDbInfo.APPLET_ONLINE_REFER;
-        commonConfig.product= EnumTestProduct.PORSCHE_ONLINE.getAbbreviation();
-
-
-
         //replace backend gateway url
         //commonConfig.gateway = "";
 
@@ -65,7 +61,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-online-test");
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.PORSCHE_ONLINE.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product + commonConfig.checklistQaOwner);
 
         //replace ding push conf
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
@@ -74,7 +70,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = EnumTestProduct.PORSCHE_ONLINE.getShopId();
+        commonConfig.setShopId(product.getShopId()).setReferer(product.getReferer()).setRoleId(product.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
 
         logger.debug("crm: " + crm);
@@ -1695,18 +1691,17 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
             String channelNnameAfterDeliver = dataAfterDeliver.getString("channel_name");
 
             crm.finishReception3(fr);
-            Preconditions.checkArgument(channel_name.equals("自然到访"),"首次到访渠道异常"+channel_name);
-            Preconditions.checkArgument(channelNnameAfterDeliver.equals("老客户重购"),"首次到访渠道异常"+channelNnameAfterDeliver);
+            Preconditions.checkArgument(channel_name.equals("自然到访"), "首次到访渠道异常" + channel_name);
+            Preconditions.checkArgument(channelNnameAfterDeliver.equals("老客户重购"), "首次到访渠道异常" + channelNnameAfterDeliver);
 
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            crm.login(pp.xiaoshouGuwen,pp.xsgwPassword);
+            crm.login(pp.xiaoshouGuwen, pp.xsgwPassword);
             saveData("创建顾客接待，填写全部信息，与客户管理信息校验");
         }
     }
-
 
 
     @Test(description = "Dcc创建线索，接待线索客户的渠道为线上垂媒")
@@ -1721,7 +1716,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
             JSONObject object = pf.creatCustOld(phone);
 
             FinishReceptionOnline fr = new FinishReceptionOnline();
-            fr.name=name;
+            fr.name = name;
             fr.customer_id = object.getString("customerId");
             fr.reception_id = object.getString("reception_id");
             fr.phoneList = object.getJSONArray("phoneList");
@@ -1736,13 +1731,13 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
             String channel_name = data.getString("channel_name");
 
             crm.finishReception3(fr);
-            Preconditions.checkArgument(channel_name.equals("线上垂媒"),"首次到访渠道异常"+channel_name);
+            Preconditions.checkArgument(channel_name.equals("线上垂媒"), "首次到访渠道异常" + channel_name);
 
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            crm.login(pp.xiaoshouGuwen,pp.xsgwPassword);
+            crm.login(pp.xiaoshouGuwen, pp.xsgwPassword);
             saveData("Dcc创建线索，接待线索客户的渠道为线上垂媒");
         }
     }
@@ -1758,26 +1753,26 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
             fr.phoneList = object.getJSONArray("phoneList");
             fr.belongs_sale_id = object.getString("sale_id");
             fr.reception_type = "FU";
-            fr.pay_type="0";
+            fr.pay_type = "0";
             String userLoginName = object.getString("userLoginName");
             crm.login(userLoginName, pp.adminpassword);
             fr.name = object.getString("name");
             crm.editCustomer(fr);
-            String [][]faceLableList={{"GET_CLUES","首次到店"},{"BUY_CAR_ASPIRATION","一般"},{"ADVANCED_CAR","高配车"}};
-            JSONArray faceLable=crm.faceLable(fr.customer_id).getJSONArray("labels");
-            for(int j=0;j<faceLableList.length;j++){
-                int flag=0;
-                for(int i=0;i<faceLable.size();i++){
+            String[][] faceLableList = {{"GET_CLUES", "首次到店"}, {"BUY_CAR_ASPIRATION", "一般"}, {"ADVANCED_CAR", "高配车"}};
+            JSONArray faceLable = crm.faceLable(fr.customer_id).getJSONArray("labels");
+            for (int j = 0; j < faceLableList.length; j++) {
+                int flag = 0;
+                for (int i = 0; i < faceLable.size(); i++) {
                     flag++;
-                    JSONObject dd=faceLable.getJSONObject(i);
-                    String lableType=dd.getString("label_type");
-                    String label_value=dd.getString("label_value");
-                    if(lableType.equals(faceLableList[j][0])){
+                    JSONObject dd = faceLable.getJSONObject(i);
+                    String lableType = dd.getString("label_type");
+                    String label_value = dd.getString("label_value");
+                    if (lableType.equals(faceLableList[j][0])) {
                         Preconditions.checkArgument(label_value.equals(faceLableList[j][1]));
                         break;
-                    }else if(flag== faceLable.size()){
-                        throw new Exception("缺少客户标签"+faceLableList[j][0]);
-                    }else{
+                    } else if (flag == faceLable.size()) {
+                        throw new Exception("缺少客户标签" + faceLableList[j][0]);
+                    } else {
                         continue;
                     }
                 }
@@ -1787,7 +1782,7 @@ public class Crm2_1AppXOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            crm.login(pp.xiaoshouGuwen,pp.xsgwPassword);
+            crm.login(pp.xiaoshouGuwen, pp.xsgwPassword);
             saveData("编辑新客户付款方式全款，再次查看客户标签出现高配车");
         }
     }

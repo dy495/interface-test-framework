@@ -28,9 +28,9 @@ import java.util.Objects;
  * @description :系统记录
  **/
 public class RecordCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_ZH; // 管理页—-首页
+    private static final EnumTestProduct product = EnumTestProduct.YT_ONLINE_ZH; // 管理页—-首页
     private static final EnumAccount AUTHORITY = EnumAccount.YT_RECEPTION_ONLINE_5; // 全部权限账号 【运通】
-    public VisitorProxy visitor = new VisitorProxy(PRODUCE);   // 产品类放到代理类中（通过代理类发请求）
+    public VisitorProxy visitor = new VisitorProxy(product);   // 产品类放到代理类中（通过代理类发请求）
     public SceneUtil util = new SceneUtil(visitor);    //场景工具类中放入代理类，类中封装接口方法直接调用
     CommonConfig commonConfig = new CommonConfig();    // 配置类初始化
 
@@ -44,12 +44,10 @@ public class RecordCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistQaOwner = "孟辰";
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.YUNTONG_ONLINE_TEST.getJobName());
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = DingWebhook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.product = PRODUCE.getAbbreviation(); // 产品代号 -- YT
-        commonConfig.shopId = PRODUCE.getShopId();  //请求头放入shopId
-        commonConfig.roleId = AUTHORITY.getRoleId(); //请求头放入roleId
+        commonConfig.setShopId(product.getShopId()).setReferer(product.getReferer()).setRoleId(AUTHORITY.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);  // 配置请求头
         util.loginPc(AUTHORITY);   //登录
     }
@@ -78,10 +76,10 @@ public class RecordCase extends TestCaseCommon implements TestCaseStd {
             visitor.setProduct(EnumTestProduct.YT_ONLINE_JD);
             JSONObject res1 = util.checkExport(); //查询接口
             Integer total1 = res1.getInteger("total");//检查导出操作前的总记录
-            if (Objects.equals(product,"control")) {
+            if (Objects.equals(product, "control")) {
                 visitor.setProduct(EnumTestProduct.YT_ONLINE_GK);
             }
-            if (Objects.equals(product,"car")) {
+            if (Objects.equals(product, "car")) {
                 visitor.setProduct(EnumTestProduct.YT_ONLINE_JD);
             }
             util.carPageExport(path); //在对应页面中导出
@@ -91,7 +89,7 @@ public class RecordCase extends TestCaseCommon implements TestCaseStd {
             String typeName = res2.getJSONArray("list").getJSONObject(0).getString("type_name"); //获取导出的页面字段
             Preconditions.checkArgument(total2 == total1 + 1, type + "页面导出结果导出记录中没有+1");  //判断记录是否+1
             if (total2 == total1 + 1) {
-                Preconditions.checkArgument(Objects.equals(typeName,type), "导出记录中的第一条不是" + type); // 如果结果+1 ，判断第一条是不是相应的位置
+                Preconditions.checkArgument(Objects.equals(typeName, type), "导出记录中的第一条不是" + type); // 如果结果+1 ，判断第一条是不是相应的位置
             }
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -144,7 +142,7 @@ public class RecordCase extends TestCaseCommon implements TestCaseStd {
             String type = res2.getJSONArray("list").getJSONObject(0).getString("operation_content");  //删除的品牌名
             Preconditions.checkArgument(total2 == total1 + 1, "删除记录没有增加1");
             if (total2 == total1 + 1) {
-                Preconditions.checkArgument(Objects.equals(type,name), "删除的不是新创建的:" + type + "!=" + name);
+                Preconditions.checkArgument(Objects.equals(type, name), "删除的不是新创建的:" + type + "!=" + name);
             }
 
         } catch (AssertionError | Exception e) {

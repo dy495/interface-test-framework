@@ -34,6 +34,7 @@ import java.util.*;
 
 
 public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
+    EnumTestProduct product = EnumTestProduct.PORSCHE_DAILY;
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     CustomerInfo cstm = new CustomerInfo();
     DateTimeUtil dt = new DateTimeUtil();
@@ -82,10 +83,6 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.product = EnumTestProduct.PORSCHE_DAILY.getAbbreviation();
-        commonConfig.referer = EnumTestProduct.PORSCHE_DAILY.getReferer();
-
-
         //replace backend gateway url
         //commonConfig.gateway = "";
 
@@ -102,9 +99,8 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = EnumTestProduct.PORSCHE_DAILY.getShopId();
+        commonConfig.setShopId(product.getShopId()).setReferer(product.getReferer()).setRoleId(product.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
-
         logger.debug("crm: " + crm);
         crm.login(adminname, adminpassword);
 
@@ -1452,7 +1448,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             int total = data.getInteger("total");
             Preconditions.checkArgument(today_number <= month_number, "今日试驾总数>本月共计");
             Preconditions.checkArgument(month_number <= total_number, "本月共计>累计");
-            Preconditions.checkArgument(total_number <= total, "今日累计:"+total+">列表总数"+total_number);
+            Preconditions.checkArgument(total_number <= total, "今日累计:" + total + ">列表总数" + total_number);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -2243,7 +2239,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-//             @Test(description = "删除用户管理中多余用户数据")
+    //             @Test(description = "删除用户管理中多余用户数据")
     public void deleteuser() {
         try {
             crm.login(baoshijie, adminpassword);

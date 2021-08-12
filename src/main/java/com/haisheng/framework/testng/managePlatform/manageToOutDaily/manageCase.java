@@ -38,7 +38,7 @@ public class manageCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "管理后台对外接口 日常");
         commonConfig.pushRd = new String[]{"15084928847"};
-        commonConfig.referer = "http://39.106.253.190/cms/login";
+        commonConfig.setReferer("http://39.106.253.190/cms/login");
         beforeClassInit(commonConfig);
 
     }
@@ -58,31 +58,31 @@ public class manageCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //获取摄像头状态枚举
-    public String getDevice_status() throws Exception{
+    public String getDevice_status() throws Exception {
         JSONArray list = dw.device_status().getJSONArray("list");
-        String type ="";
-        for(int i=0;i<list.size();i++){
-            type =list.getJSONObject(i).getString("type");
+        String type = "";
+        for (int i = 0; i < list.size(); i++) {
+            type = list.getJSONObject(i).getString("type");
         }
         return type;
     }
 
     //获取服务器状态枚举
-    public String getCluster_status() throws Exception{
+    public String getCluster_status() throws Exception {
         JSONArray list = dw.cluster_status().getJSONArray("list");
-        String type ="";
-        for(int i=0;i<list.size();i++){
-            type =list.getJSONObject(i).getString("type");
+        String type = "";
+        for (int i = 0; i < list.size(); i++) {
+            type = list.getJSONObject(i).getString("type");
         }
         return type;
     }
 
     //获取服务器型号枚举
-    public String getCluster_model() throws Exception{
+    public String getCluster_model() throws Exception {
         JSONArray list = dw.cluster_model().getJSONArray("list");
-        String model ="";
-        for(int i=0;i<list.size();i++){
-            model =list.getJSONObject(i).getString("model");
+        String model = "";
+        for (int i = 0; i < list.size(); i++) {
+            model = list.getJSONObject(i).getString("model");
         }
         return model;
     }
@@ -106,6 +106,7 @@ public class manageCase extends TestCaseCommon implements TestCaseStd {
             saveData("管理后台对外接口]查询摄像头设备列表,根据门店43072单个条件调取设备列表");
         }
     }
+
     @Test(description = "[管理后台对外接口]查询摄像头设备列表,根据门店43072和150的设备ID调取设备列表")
     public void device_list1() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -125,6 +126,7 @@ public class manageCase extends TestCaseCommon implements TestCaseStd {
             saveData("[管理后台对外接口]查询摄像头设备列表,根据门店43072和150的设备ID调取设备列表");
         }
     }
+
     @Test(description = "[管理后台对外接口]查询摄像头设备列表,根据门店43072和摄像头状态-调取设备列表")
     public void device_list2() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -132,12 +134,12 @@ public class manageCase extends TestCaseCommon implements TestCaseStd {
             List<Long> shop_ids = new ArrayList();
             shop_ids.add(43072L);
             String device_status = this.getDevice_status();
-            JSONObject data = dw.device_seach(page, size, shop_ids, "",null, device_status);
+            JSONObject data = dw.device_seach(page, size, shop_ids, "", null, device_status);
             JSONArray list = data.getJSONArray("list");
             Integer total = data.getInteger("total");
             Preconditions.checkArgument(
                     total != null,
-                    "根据门店43072的摄像头状态"+device_status+"调取设备列表,列表数量返回为"+total
+                    "根据门店43072的摄像头状态" + device_status + "调取设备列表,列表数量返回为" + total
             );
         } catch (AssertionError | Exception e) {
             collectMessage(e);
@@ -145,17 +147,18 @@ public class manageCase extends TestCaseCommon implements TestCaseStd {
             saveData("[管理后台对外接口]查询摄像头设备列表,根据门店43072和设备类型-调取设备列表");
         }
     }
+
     @Test(description = "[管理后台对外接口]查询摄像头设备列表,根据门店43072、和设备类型调取设备列表")
     public void device_list3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             List<Long> shop_ids = new ArrayList();
             shop_ids.add(43072L);
-            JSONObject data = dw.device_seach(page, size, shop_ids, "AI_CAMERA",null, null);
+            JSONObject data = dw.device_seach(page, size, shop_ids, "AI_CAMERA", null, null);
             JSONArray list = data.getJSONArray("list");
             int total = data.getInteger("total");
             Preconditions.checkArgument(
-                    total != 0 ,
+                    total != 0,
                     "根据门店43072和设备类型为AI摄像头取设备列表,列表数据返回为空"
             );
         } catch (AssertionError | Exception e) {
@@ -171,11 +174,11 @@ public class manageCase extends TestCaseCommon implements TestCaseStd {
         try {
             List<Long> shop_ids = new ArrayList();
             shop_ids.add(43072L);
-            JSONObject data = dw.cluster_seach(page, size, shop_ids,"",null,"", "","");
+            JSONObject data = dw.cluster_seach(page, size, shop_ids, "", null, "", "", "");
             JSONArray list = data.getJSONArray("list");
             Integer total = data.getInteger("total");
             Preconditions.checkArgument(
-                    total != null ,
+                    total != null,
                     "根据门店43072单个条件调取服务器列表,列表返回为空"
             );
         } catch (AssertionError | Exception e) {
@@ -192,11 +195,11 @@ public class manageCase extends TestCaseCommon implements TestCaseStd {
             List<Long> shop_ids = new ArrayList();
             shop_ids.add(43072L);
             String device_status = this.getCluster_status();
-            JSONObject data = dw.cluster_seach(page, size, shop_ids,"",null,device_status, "","");
+            JSONObject data = dw.cluster_seach(page, size, shop_ids, "", null, device_status, "", "");
             JSONArray list = data.getJSONArray("list");
             Integer total = data.getInteger("total");
             Preconditions.checkArgument(
-                    total != null ,
+                    total != null,
                     "根据【门店43072】【设备状态】调取服务器列表,列表返回为空"
             );
         } catch (AssertionError | Exception e) {
@@ -213,7 +216,7 @@ public class manageCase extends TestCaseCommon implements TestCaseStd {
             List<Long> shop_ids = new ArrayList();
             shop_ids.add(43072L);
             String device_model = this.getCluster_model();
-            JSONObject data = dw.cluster_seach(page, size, shop_ids,"",null,"", "",device_model);
+            JSONObject data = dw.cluster_seach(page, size, shop_ids, "", null, "", "", device_model);
             JSONArray list = data.getJSONArray("list");
             Integer total = data.getInteger("total");
             Preconditions.checkArgument(
@@ -231,11 +234,11 @@ public class manageCase extends TestCaseCommon implements TestCaseStd {
     public void subjec_list1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject data = dw.storeInfo_seach(page, size,"");
+            JSONObject data = dw.storeInfo_seach(page, size, "");
             JSONArray list = data.getJSONArray("list");
             Integer total = data.getInteger("total");
             Preconditions.checkArgument(
-                    total != 0 || !data.isEmpty() || list.size() !=0,
+                    total != 0 || !data.isEmpty() || list.size() != 0,
                     "[管理后台对外接口]查询所有门店信息列表,列表返回为空"
             );
         } catch (AssertionError | Exception e) {
@@ -244,15 +247,16 @@ public class manageCase extends TestCaseCommon implements TestCaseStd {
             saveData("[管理后台对外接口]查询门店信息列表,根据[应用ID]调取门店信息列表");
         }
     }
+
     @Test(description = "[管理后台对外接口]查询门店信息列表,根据[应用ID]调取门店信息列表")
     public void subjec_list2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject data = dw.storeInfo_seach(page, size,"88590052b177");
+            JSONObject data = dw.storeInfo_seach(page, size, "88590052b177");
             JSONArray list = data.getJSONArray("list");
             Integer total = data.getInteger("total");
             Preconditions.checkArgument(
-                    total != 0 || !data.isEmpty() || list.size() !=0,
+                    total != 0 || !data.isEmpty() || list.size() != 0,
                     "[管理后台对外接口]查询门店信息列表,根据[保时捷门店应用ID]调取门店信息列表,列表返回为空"
             );
         } catch (AssertionError | Exception e) {
@@ -261,15 +265,16 @@ public class manageCase extends TestCaseCommon implements TestCaseStd {
             saveData("[管理后台对外接口]查询门店信息列表,根据[应用ID]调取门店信息列表");
         }
     }
+
     @Test(description = "[管理后台对外接口]查询门店信息列表,根据[应用ID]调取门店信息列表")
     public void subjec_list3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject data = dw.storeInfo_seach(page, size,"49998b971ea0");
+            JSONObject data = dw.storeInfo_seach(page, size, "49998b971ea0");
             JSONArray list = data.getJSONArray("list");
             Integer total = data.getInteger("total");
             Preconditions.checkArgument(
-                    total != 0 || !data.isEmpty() || list.size() !=0,
+                    total != 0 || !data.isEmpty() || list.size() != 0,
                     "[管理后台对外接口]查询门店信息列表,根据[门店应用ID]调取门店信息列表,列表返回为空"
             );
         } catch (AssertionError | Exception e) {
@@ -278,15 +283,16 @@ public class manageCase extends TestCaseCommon implements TestCaseStd {
             saveData("[管理后台对外接口]查询门店信息列表,根据[应用ID]调取门店信息列表");
         }
     }
+
     @Test(description = "[管理后台对外接口]查询门店信息列表,根据[应用ID]调取门店信息列表")
     public void subjec_list4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject data = dw.storeInfo_seach(page, size,"913076db53d7");
+            JSONObject data = dw.storeInfo_seach(page, size, "913076db53d7");
             JSONArray list = data.getJSONArray("list");
             Integer total = data.getInteger("total");
             Preconditions.checkArgument(
-                    total != 0 || !data.isEmpty() || list.size() !=0,
+                    total != 0 || !data.isEmpty() || list.size() != 0,
                     "[管理后台对外接口]查询门店信息列表,根据[轿辰应用ID]调取门店信息列表,列表返回为空"
             );
         } catch (AssertionError | Exception e) {
@@ -299,7 +305,7 @@ public class manageCase extends TestCaseCommon implements TestCaseStd {
     /**
      * *description = "[管理后台对外接口]摄像头云台控制,上、下、左、右、缩、放"
      */
-    @Test(dataProvider = "COMMAND",dataProviderClass = ToOutUtil.class)
+    @Test(dataProvider = "COMMAND", dataProviderClass = ToOutUtil.class)
     public void device_control(Integer command) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -307,8 +313,8 @@ public class manageCase extends TestCaseCommon implements TestCaseStd {
             JSONObject res = dw.device_control(terminal_device_id, command, null);
             Integer code = res.getInteger("code");
             Preconditions.checkArgument(
-                    code ==1000 ,
-                    "[管理后台对外接口]摄像头云台控制uniview-云台全功能,上、下、左、右、缩、放中的【"+command+"】出错了。0-上，1-下，2-左，3-右，8-放大，9-缩小"
+                    code == 1000,
+                    "[管理后台对外接口]摄像头云台控制uniview-云台全功能,上、下、左、右、缩、放中的【" + command + "】出错了。0-上，1-下，2-左，3-右，8-放大，9-缩小"
             );
         } catch (AssertionError | Exception e) {
             collectMessage(e);

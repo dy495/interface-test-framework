@@ -82,10 +82,7 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
         //替换钉钉推送
         commonConfig.dingHook = DingWebhook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //放入shopId
-        commonConfig.product = PRODUCE.getAbbreviation();
-        commonConfig.referer = PRODUCE.getReferer();
-        commonConfig.shopId = PRODUCE.getShopId();
-        commonConfig.roleId = ALL_AUTHORITY.getRoleId();
+        commonConfig.setShopId(ALL_AUTHORITY.getShopId()).setRoleId(ALL_AUTHORITY.getRoleId()).setReferer(PRODUCE.getReferer());
         beforeClassInit(commonConfig);
     }
 
@@ -102,9 +99,9 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
+        logger.logCaseStart(caseResult.getCaseName());
     }
 
-    //ok
     //ok
     @Test(description = "售后接待管理--购买一个临时套餐，套餐内卡券剩余库存-1&套餐购买记录+1")
     public void receptionManage_data_1() {
@@ -507,7 +504,7 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
     @Test(description = "预约管理--保养配置，修改保养价格")
     public void customerManager_data_6() {
         try {
-            commonConfig.shopId = ALL_AUTHORITY.getReceptionShopId();
+            commonConfig.setShopId(ALL_AUTHORITY.getReceptionShopId());
             Double[] doubles = {1.00, 2.99, 3.66, 50.1};
             JSONObject jsonObject = ManageModelPageScene.builder().type("MAINTAIN").build().invoke(visitor).getJSONArray("list").getJSONObject(0);
             Long id = jsonObject.getLong("id");
@@ -519,7 +516,8 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            commonConfig.shopId = PRODUCE.getShopId();
+            commonConfig.setShopId(PRODUCE.getShopId());
+            logger.info(commonConfig.getHeaders().toString());
             saveData("预约管理--保养配置，修改保养价格");
         }
     }

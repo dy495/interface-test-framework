@@ -53,10 +53,7 @@ public class AppTaskReceiveDataCase extends TestCaseCommon implements TestCaseSt
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = DingWebhook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.product = PRODUCE.getAbbreviation(); // 产品代号 -- YT
-        commonConfig.referer = PRODUCE.getReferer();
-        commonConfig.shopId = YT_RECEPTION.getReceptionShopId();  //请求头放入shopId
-        commonConfig.roleId = YT_RECEPTION.getRoleId(); //请求头放入roleId
+        commonConfig.setShopId(YT_RECEPTION.getShopId()).setReferer(PRODUCE.getReferer()).setRoleId(YT_RECEPTION.getRoleId()).setProduct(PRODUCE.getAbbreviation());
         beforeClassInit(commonConfig);  // 配置请求头
         util.loginPc(YT_RECEPTION);   //登录
         visitor.setProduct(EnumTestProduct.YT_ONLINE_JD);
@@ -76,22 +73,23 @@ public class AppTaskReceiveDataCase extends TestCaseCommon implements TestCaseSt
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
     }
+
     @Test
     public void flowUp1() {
-        try{
+        try {
             Integer total1 = AppFlowUpPageScene.builder().size(10).build().invoke(visitor, true).getInteger("total");
             Map<String, String> customer = util.createCustomerCommon("自动差评者", "1", "150" + CommonUtil.getRandom(8), util.mcCarId(), "2033-12-20");
             AppFinishReceptionScene.builder().id(customer.get("id")).shopId(customer.get("shopId")).build().invoke(visitor);
-            commonConfig.shopId = null;
-            commonConfig.roleId = null;
+            commonConfig.setShopId(null);
+            commonConfig.setRoleId(null);
             JSONArray evaluateInfoList = new JSONArray();
-            PreSalesRecpEvaluateOpt.builder().reception_id(Long.parseLong(customer.get("id"))).build().invoke(visitor, true).getJSONArray("list").stream().map(j -> (JSONObject) j).map(json -> json.getInteger("id")).forEach(e-> evaluateInfoList.add(lowEvaluate(e)));
+            PreSalesRecpEvaluateOpt.builder().reception_id(Long.parseLong(customer.get("id"))).build().invoke(visitor, true).getJSONArray("list").stream().map(j -> (JSONObject) j).map(json -> json.getInteger("id")).forEach(e -> evaluateInfoList.add(lowEvaluate(e)));
             String message = PreSalesRecpEvaluateSubmit.builder().evaluate_info_list(evaluateInfoList).reception_id(Long.parseLong(customer.get("id"))).build().invoke(visitor, false).getString("message");
-            if (Objects.equals(message,"success")){
-                commonConfig.shopId = YT_RECEPTION.getReceptionShopId();
-                commonConfig.roleId = YT_RECEPTION.getRoleId();
+            if (Objects.equals(message, "success")) {
+                commonConfig.setShopId(YT_RECEPTION.getReceptionShopId());
+                commonConfig.setRoleId(YT_RECEPTION.getRoleId());
                 Integer total2 = AppFlowUpPageScene.builder().size(10).build().invoke(visitor, true).getInteger("total");
-                Preconditions.checkArgument(total2 == total1 + 1,"app跟进列表总数："+total1+"销售接待差评，app跟进列表总数："+total2);
+                Preconditions.checkArgument(total2 == total1 + 1, "app跟进列表总数：" + total1 + "销售接待差评，app跟进列表总数：" + total2);
             }
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -102,16 +100,17 @@ public class AppTaskReceiveDataCase extends TestCaseCommon implements TestCaseSt
         }
 
     }
-    private JSONObject lowEvaluate(int id){
+
+    private JSONObject lowEvaluate(int id) {
         JSONObject o = new JSONObject();
-        o.put("id",id);
-        o.put("score",1);
+        o.put("id", id);
+        o.put("score", 1);
         return o;
     }
 
     @Test
-    public void flowUp2(){
-        try{
+    public void flowUp2() {
+        try {
             String[] follows1 = AppTodayTaskScene.builder().build().invoke(visitor, true).getString("pre_follow").split("/");
             Integer flowUpId = AppFlowUpPageScene.builder().size(10).build().invoke(visitor, true).getJSONArray("list").getJSONObject(0).getInteger("id");
             AppFlowUpRemarkScene.builder().followId(flowUpId).remark("自动完成跟进备注。。。1azCVB").build().invoke(visitor);
@@ -120,14 +119,14 @@ public class AppTaskReceiveDataCase extends TestCaseCommon implements TestCaseSt
             int followZi2 = Integer.parseInt(follows2[0]);
             int followMu1 = Integer.parseInt(follows1[1]);
             int followMu2 = Integer.parseInt(follows2[1]);
-            Preconditions.checkArgument(followZi2 == followZi1 - 1 && followMu1 == followMu2,"跟进前："+followZi1+"/"+followMu1+",跟进后："+followZi2+"/"+followMu2);
+            Preconditions.checkArgument(followZi2 == followZi1 - 1 && followMu1 == followMu2, "跟进前：" + followZi1 + "/" + followMu1 + ",跟进后：" + followZi2 + "/" + followMu2);
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("销售接待差评跟进,【首页-今日任务】分子-1,分母-0");
-    }
+        }
 
     }
 

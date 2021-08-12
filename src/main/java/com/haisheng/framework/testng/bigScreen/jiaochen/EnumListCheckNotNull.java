@@ -49,7 +49,6 @@ public class EnumListCheckNotNull extends TestCaseCommon implements TestCaseStd 
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.product = product.getAbbreviation();
 
 
         //replace backend gaturl
@@ -68,9 +67,7 @@ public class EnumListCheckNotNull extends TestCaseCommon implements TestCaseStd 
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = pp.shopIdZ;
-        commonConfig.roleId = pp.roleidJdgw;
-        commonConfig.referer = product.getReferer();
+        commonConfig.setShopId(pp.shopIdZ).setReferer(product.getReferer()).setRoleId(pp.roleidJdgw).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);

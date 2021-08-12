@@ -40,12 +40,6 @@ public class JcAppAppointment extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.referer = product.getReferer();
-//        commonConfig.referer=getJcReferdaily();
-
-        commonConfig.product = product.getAbbreviation();
-
-
         //replace backend gateway url
         //commonConfig.gateway = "";
 
@@ -60,9 +54,8 @@ public class JcAppAppointment extends TestCaseCommon implements TestCaseStd {
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};
-
+        commonConfig.setShopId(product.getShopId()).setReferer(product.getReferer()).setRoleId(product.getRoleId()).setProduct(product.getAbbreviation());
         //set shop id
-        commonConfig.shopId = "-1";
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);

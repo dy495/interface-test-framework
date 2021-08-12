@@ -46,9 +46,9 @@ import java.util.stream.Collectors;
  * 审批管理
  */
 public class ApproveManagerCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduct PRODUCE = EnumTestProduct.JC_DAILY_JD;
+    private static final EnumTestProduct product = EnumTestProduct.JC_DAILY_JD;
     private static final EnumAccount ACCOUNT = EnumAccount.JC_ALL_AUTHORITY_DAILY;
-    public VisitorProxy visitor = new VisitorProxy(PRODUCE);
+    public VisitorProxy visitor = new VisitorProxy(product);
     public SceneUtil util = new SceneUtil(visitor);
 
     @BeforeClass
@@ -63,12 +63,9 @@ public class ApproveManagerCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
         //放入shopId
-        commonConfig.product = PRODUCE.getAbbreviation();
-        commonConfig.referer = PRODUCE.getReferer();
-        commonConfig.shopId = ACCOUNT.getShopId();
-        commonConfig.roleId = ACCOUNT.getRoleId();
+        commonConfig.setShopId(ACCOUNT.getShopId()).setReferer(product.getReferer()).setRoleId(ACCOUNT.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
         util.loginPc(ACCOUNT);
     }

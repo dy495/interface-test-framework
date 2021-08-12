@@ -1,5 +1,10 @@
 package com.haisheng.framework.testng.commonDataStructure;
 
+import lombok.Getter;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class CommonConfig {
     //宏变量，用于被替换真实参数
     public final String JOB_NAME = "JOB-NAME";
@@ -37,11 +42,35 @@ public class CommonConfig {
             "case：" + CASE_NAME + "\n\n" +
             "验证：" + CASE_DESC +
             " \n\n" + CASE_FAIL;
-    //配置信息
-    public String shopId;
     public String caseName = "login";
-    public String referer;
-    public String product;
-    public String roleId;
-    public String mallId;
+
+    //配置信息
+    @Getter
+    private final Map<String, String> headers = new HashMap<>();
+
+    public CommonConfig setShopId(String shopId) {
+        headers.put("shop_id", shopId);
+        return this;
+    }
+
+    public CommonConfig setReferer(String referer) {
+        headers.put("referer", referer);
+        return this;
+    }
+
+    public CommonConfig setRoleId(String roleId) {
+        headers.put("role_id", roleId);
+        return this;
+    }
+
+    public CommonConfig setMallId(String mallId) {
+        headers.put("mall_id", mallId);
+        return this;
+    }
+
+    public CommonConfig setProduct(String product) {
+        headers.put("product", product);
+        return this;
+    }
+
 }

@@ -43,8 +43,6 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.referer = product.getReferer();
-        commonConfig.product = product.getAbbreviation();
 
 //        commonConfig.referer=getJcReferOnline();
 
@@ -63,10 +61,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};
-
-        //set shop id
-        commonConfig.shopId = pp.shopIdZ;
-        commonConfig.roleId = pp.roleidJdgw;
+        commonConfig.setShopId(pp.shopIdZ).setReferer(product.getReferer()).setRoleId(pp.roleidJdgw).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);
@@ -79,7 +74,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
         JSONObject object = new JSONObject();
         object.put("phone", username);
         object.put("verification_code", password);
-        commonConfig.roleId = roleId;
+        commonConfig.setRoleId(roleId);
         httpPost(EnumTestProduct.JC_ONLINE_ZH.getIp(), path, object);
     }
 
@@ -90,7 +85,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
         object.put("phone", phone);
         object.put("verification_code", verificationCode);
         object.put("type", 1);
-        commonConfig.roleId = roleId;
+        commonConfig.setRoleId(roleId);
         httpPost(EnumTestProduct.JC_ONLINE_ZH.getIp(), path, object);
     }
 
@@ -446,8 +441,6 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
         try {
             String voucher_code[] = pf.voucherName();
             //pc
-            System.out.println(commonConfig.shopId);
-            System.out.println(commonConfig.roleId);
             pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
             int messagePctotal = jc.pushMsgListFilterManage("-1", "1", "10", null, null).getInteger("total");
             int verificationReordPctotal = jc.verificationReordFilterManage("-1", "", "1", "10", null, null).getInteger("total");
