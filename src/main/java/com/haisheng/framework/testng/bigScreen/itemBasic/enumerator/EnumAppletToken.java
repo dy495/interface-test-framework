@@ -35,6 +35,10 @@ public enum EnumAppletToken {
 
     JC_GLY_ONLINE("Lle2O9LilbiQEcbGAFHE2A==", false, "13373166806"),
 
+    JC_MC_DAILY("58DV7Wo/cfSMUFfKjM7ndA==", true, "15022399925"),
+
+    JC_MC_ONLINE("Lle2O9LilbiQEcbGAFHE2A==", false, "15022399925"),
+
     INS_WM_DAILY("mdBX0R2xzhXwswuUFUDwAw==", true, "13373166806"),
 
     INS_WM_ONLINE("TnJd0oOQ8wznvndM+0hV6A==", false, "15321527989"),
@@ -58,7 +62,7 @@ public enum EnumAppletToken {
     private final String phone;
 
     public static String getPhoneByToken(String token) {
-        return Arrays.stream(EnumAppletToken.values()).filter(e -> e.getToken().equals(token)).findFirst().map(EnumAppletToken::getPhone).orElse(JC_GLY_ONLINE.getPhone());
+        return Arrays.stream(EnumAppletToken.values()).filter(e -> e.getToken().equals(token)).findFirst().map(EnumAppletToken::getPhone).orElse(JC_MC_ONLINE.getPhone());
     }
 
     public static EnumAppletToken getEnumByToken(String token) {
