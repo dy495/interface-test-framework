@@ -25,7 +25,7 @@ public enum EnumAppletToken {
 
     JC_WM_DAILY("Xnf/2VMTz/p2GxNQtNrSog==", true, "15321527989"),
 
-    JC_WM_ONLINE("ozWh4QcCow9uvHXvVGoQAg==", false, "15321527989"),
+    JC_WM_ONLINE("KX8IutVx4M1URn2+Fb0Mqg==", false, "15321527989"),
 
     JC_LXQ_DAILY("58DV7Wo/cfSMUFfKjM7ndA==", false, "13436941018"),
 
