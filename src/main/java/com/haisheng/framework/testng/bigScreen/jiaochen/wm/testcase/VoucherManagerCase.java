@@ -75,7 +75,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
     @AfterClass
     @Override
     public void clean() {
-//        util.cleanVoucher();
+        util.cleanVoucher();
         afterClassClean();
     }
 
