@@ -46,9 +46,9 @@ import java.util.stream.Collectors;
  * 审批管理
  */
 public class ApproveManagerCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduct PRODUCE = EnumTestProduct.JC_DAILY_JD;
+    private static final EnumTestProduct product = EnumTestProduct.JC_DAILY_JD;
     private static final EnumAccount ACCOUNT = EnumAccount.JC_ALL_AUTHORITY_DAILY;
-    public VisitorProxy visitor = new VisitorProxy(PRODUCE);
+    public VisitorProxy visitor = new VisitorProxy(product);
     public SceneUtil util = new SceneUtil(visitor);
 
     @BeforeClass
@@ -63,13 +63,11 @@ public class ApproveManagerCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
         //放入shopId
-        commonConfig.product = PRODUCE.getAbbreviation();
-        commonConfig.referer = PRODUCE.getReferer();
-        commonConfig.shopId = ACCOUNT.getShopId();
-        commonConfig.roleId = ACCOUNT.getRoleId();
+        commonConfig.setShopId(ACCOUNT.getShopId()).setReferer(product.getReferer()).setRoleId(ACCOUNT.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
+        util.loginPc(ACCOUNT);
     }
 
     @AfterClass
@@ -82,16 +80,15 @@ public class ApproveManagerCase extends TestCaseCommon implements TestCaseStd {
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-        util.loginPc(ACCOUNT);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
+        logger.logCaseStart(caseResult.getCaseName());
     }
 
     //ok
     @Test(description = "优惠券审批--成本累计=发出数量*成本单价")
     public void voucherApply_data_1() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene applyPageScene = ApplyPageScene.builder().build();
             List<ApplyPageBean> applyPageList = util.toJavaObjectList(applyPageScene, ApplyPageBean.class, SceneUtil.SIZE);
@@ -114,11 +111,10 @@ public class ApproveManagerCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "优惠券审批--发出数量（首发）=【优惠券管理】发行库存数量")
     public void voucherApply_data_2() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             //卡券列表
             IScene voucherPageScene = VoucherFormVoucherPageScene.builder().build();
-            List<com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherFormVoucherPageBean> voucherPageList = util.toJavaObjectList(voucherPageScene, com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherFormVoucherPageBean.class, SceneUtil.SIZE);
+            List<VoucherFormVoucherPageBean> voucherPageList = util.toJavaObjectList(voucherPageScene, VoucherFormVoucherPageBean.class, SceneUtil.SIZE);
             voucherPageList.forEach(voucherPage -> {
                 VoucherDetailBean voucherDetail = util.getVoucherDetail(voucherPage.getVoucherId());
                 String voucherName = voucherPage.getVoucherName();
@@ -138,7 +134,6 @@ public class ApproveManagerCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "优惠券审批--审批列表成本单价=【优惠券管理】成本")
     public void voucherApply_data_3() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             //卡券列表
             IScene voucherPageScene = VoucherFormVoucherPageScene.builder().build();
@@ -163,7 +158,6 @@ public class ApproveManagerCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "优惠券审批--优惠券审批页各状态数量=审批数据统计中各状态数量")
     public void voucherApply_data_4() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             List<Long> totalLost = Arrays.stream(VoucherApprovalStatusEnum.values()).map(e -> ApplyPageScene.builder().status(e.getId()).build().invoke(visitor).getLong("total")).collect(Collectors.toList());
             IScene scene = ApplyApprovalInfoScene.builder().build();
@@ -181,7 +175,6 @@ public class ApproveManagerCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "优惠券审批--优惠券审批页全部审批=待审批+审批通过+审批未通过+已撤销")
     public void voucherApply_data_5() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject data = ApplyApprovalInfoScene.builder().build().invoke(visitor);
             Long total = data.getLong("total_approval");
@@ -208,7 +201,6 @@ public class ApproveManagerCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "优惠券审批--待审批的卡券数量=全局提醒卡券审批的数量")
     public void voucherApply_data_6() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             Integer total = ApplyPageScene.builder().status(ApplyStatusEnum.AUDITING.getId()).build().invoke(visitor).getInteger("total");
             JSONArray list = NoticeMessagePullScene.builder().build().invoke(visitor).getJSONArray("list");
@@ -226,7 +218,6 @@ public class ApproveManagerCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "优惠券审批--待审批的活动数量=全局提醒活动审批的数量")
     public void voucherApply_data_7() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             int total = ManagePageScene.builder().approvalStatus(ActivityStatusEnum.PENDING.getId()).build().invoke(visitor).getInteger("total");
             JSONArray list = NoticeMessagePullScene.builder().build().invoke(visitor).getJSONArray("list");
@@ -245,9 +236,10 @@ public class ApproveManagerCase extends TestCaseCommon implements TestCaseStd {
     @Test(description = "优惠券审批--拒绝卡券的增发")
     public void voucherApply_system_1() {
         try {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-            String voucherName = util.getVoucherName(voucherId);
-            VoucherFormVoucherPageBean voucherPage = util.getVoucherPage(voucherId);
+            VoucherFormVoucherPageBean voucherPage = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherPage();
+            Long voucherId = voucherPage.getVoucherId();
+            String voucherName = voucherPage.getVoucherName();
+            voucherPage = util.getVoucherPage(voucherId);
             IScene additionalRecordScene = AdditionalRecordScene.builder().voucherId(voucherId).build();
             int addTotal = additionalRecordScene.invoke(visitor).getInteger("total");
             //增发卡券
@@ -257,7 +249,7 @@ public class ApproveManagerCase extends TestCaseCommon implements TestCaseStd {
             CommonUtil.checkResult(voucherName + " 审批申请类型", ApplyTypeEnum.ADDITIONAL.getName(), applyPage.getApplyTypeName());
             CommonUtil.checkResult(voucherName + " 审批列表状态", ApplyStatusEnum.AUDITING.getName(), applyPage.getStatusName());
             //增发记录数量+1
-            JSONObject response = visitor.invokeApi(additionalRecordScene);
+            JSONObject response = additionalRecordScene.invoke(visitor);
             int newAddTotal = response.getInteger("total");
             CommonUtil.checkResult(voucherName + " 增发记录列表数", addTotal + 1, newAddTotal);
             //增发记录状态
@@ -282,7 +274,6 @@ public class ApproveManagerCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "优惠券审批--卡券批量审批通过")
     public void voucherApply_system_2() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene applyApprovalInfoScene = ApplyApprovalInfoScene.builder().build();
             ApplyApprovalInfoBean applyApprovalInfoBean = util.toJavaObject(applyApprovalInfoScene, ApplyApprovalInfoBean.class);
@@ -321,7 +312,6 @@ public class ApproveManagerCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "优惠券审批--卡券批量审批不通过")
     public void voucherApply_system_3() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene applyApprovalInfoScene = ApplyApprovalInfoScene.builder().build();
             ApplyApprovalInfoBean applyApprovalInfoBean = util.toJavaObject(applyApprovalInfoScene, ApplyApprovalInfoBean.class);
@@ -361,12 +351,11 @@ public class ApproveManagerCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "优惠券审批--卡券审批已通过的卡券")
     public void voucherApply_system_5() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray list = ApplyPageScene.builder().status(ApplyStatusEnum.AGREE.getId()).build().invoke(visitor).getJSONArray("list");
             Long applyId = list.getJSONObject(0).getLong("id");
             //批量审批通过
-            String message = ApplyApprovalScene.builder().id(applyId).status(String.valueOf(VoucherApprovalStatusEnum.AGREE.getId())).build().invoke(visitor, false).getString("message");
+            String message = ApplyApprovalScene.builder().id(applyId).status(String.valueOf(VoucherApprovalStatusEnum.AGREE.getId())).build().getResponse(visitor).getMessage();
             String err = "success";
             CommonUtil.checkResult("批量审批已通过的卡券", err, message);
         } catch (Exception | AssertionError e) {
@@ -379,7 +368,6 @@ public class ApproveManagerCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "活动审批--活动审批页全部审批=待审批+审批通过+审批未通过")
     public void activityApply_data_1() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject data = ManageDataScene.builder().build().invoke(visitor);
             Long total = data.getLong("total");

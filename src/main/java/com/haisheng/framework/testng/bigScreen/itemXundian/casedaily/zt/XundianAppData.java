@@ -25,6 +25,7 @@ import java.lang.reflect.Method;
 import static com.google.common.base.Preconditions.checkArgument;
 
 public class XundianAppData extends TestCaseCommon implements TestCaseStd {
+    EnumTestProduct product = EnumTestProduct.XD_DAILY;
     public static final Logger log = LoggerFactory.getLogger(StorePcAndAppData.class);
     public static final int size = 100;
     XundianScenarioUtil xd = XundianScenarioUtil.getInstance();
@@ -44,10 +45,10 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistQaOwner = "周涛";
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.XUNDIAN_DAILY_TEST.getJobName());
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.XD_DAILY.getDesc());
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc());
         commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.pushRd = new String[]{"15898182672", "18513118484", "18810332354", "15084928847"};
-        commonConfig.shopId = EnumTestProduct.XD_DAILY.getShopId();
+        commonConfig.setShopId(product.getShopId()).setReferer(product.getReferer()).setRoleId(product.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
         logger.debug("xundian " + xd);
         xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
@@ -69,7 +70,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
     // 巡店记录列表报告数量 == 待处理+已处理+无需处理的数量
     @Test
-    public void getShopHandleStatusList(){
+    public void getShopHandleStatusList() {
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -100,7 +101,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
     //不合格报告+合格报告 == 列表下全部报告
     @Test
-    public void getResultTypeList(){
+    public void getResultTypeList() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             // 获取门店巡店记录列表total总数
@@ -123,7 +124,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
     //巡店记录详情内容==PC【巡店报告详情】中的巡店记录详情内容
     @Test
-    public void getShopChecksDetail(){
+    public void getShopChecksDetail() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray bgList = xd.shopChecksPage(1, 10, info.shop_id_01).getJSONArray("list");
@@ -161,11 +162,11 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             saveData("巡店记录详情内容==PC【巡店报告详情】中的巡店记录详情内容");
         }
     }
- 
+
 
     //[未完成]列表的数量==未完成的待办事项的的展示项
     @Test
-    public void wwcSum(){
+    public void wwcSum() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Long lastValue = null;
@@ -178,8 +179,8 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
                 count += jsonArray.size();
             } while (jsonArray.size() == 10);
             //获取待办列表事项总数totalnum
-            int totalnum = xd.task_list(1,10,0,null).getInteger("total");
-            CommonUtil.valueView(count,totalnum);
+            int totalnum = xd.task_list(1, 10, 0, null).getInteger("total");
+            CommonUtil.valueView(count, totalnum);
             checkArgument(totalnum == count, "未完成列表数量" + totalnum + "!=未完成的待办事项的展示项" + count);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -192,7 +193,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 //    app账号下当前门店数量==pc该账号下巡店中心列表的数量
 
     @Test
-    public void mdNum(){
+    public void mdNum() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Integer appMdNum = md.app_shopNum().getInteger("shop_count");
@@ -209,7 +210,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
     // app账号下当前门店数量==pc该账号下客流分析列表的数量
     @Test
-    public void mdNum1(){
+    public void mdNum1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Integer appMdNum = md.app_shopNum().getInteger("shop_count");
@@ -226,7 +227,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
     //app[首页实时客流分析] 今日到访人数<= [趋势图]今天各时段人数之和
     @Test
-    public void todayNumUv(){
+    public void todayNumUv() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray homeList = md.cardList("HOME_BELOW", null, 10).getJSONArray("list");
@@ -255,7 +256,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
     //app[首页实时客流分析] 今日到访人次== [趋势图]今天各时段人次之和
     @Test
-    public void todayNumPv(){
+    public void todayNumPv() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray homeList = md.cardList("HOME_BELOW", null, 10).getJSONArray("list");
@@ -284,22 +285,22 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
 
     //APP巡店记录详情，打开展示报告信息
-    @Test(dataProvider = "is_read",dataProviderClass = DataProviderMethod.class)
-    public void ReportList(Boolean is_read){
+    @Test(dataProvider = "is_read", dataProviderClass = DataProviderMethod.class)
+    public void ReportList(Boolean is_read) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 //            获取消息列表
-            JSONArray message_center = xd.user_message_center(is_read,null,10).getJSONArray("list");
+            JSONArray message_center = xd.user_message_center(is_read, null, 10).getJSONArray("list");
 //          获取第一份报告的id
-            for(int i=0;i<message_center.size();i++){
+            for (int i = 0; i < message_center.size(); i++) {
                 int reportId = message_center.getJSONObject(i).getInteger("id");
 //            获取recordID
                 Long record_id = xd.user_message_center_detail(reportId).getLong("record_id");
                 Long shopID = xd.user_message_center_detail(reportId).getLong("shop_id");
-                JSONArray items_list = xd.patrol_detail(shopID,record_id).getJSONArray("list");
-                for(int j=0;j<items_list.size();j++){
+                JSONArray items_list = xd.patrol_detail(shopID, record_id).getJSONArray("list");
+                for (int j = 0; j < items_list.size(); j++) {
                     Long items_id = items_list.getJSONObject(j).getLong("id");
-                    JSONObject check = xd.getShopChecksDetail(record_id,shopID,items_id,null).getJSONObject("check");
+                    JSONObject check = xd.getShopChecksDetail(record_id, shopID, items_id, null).getJSONObject("check");
                     JSONArray check_items = check.getJSONArray("check_items");
                     checkArgument(check_items != null, "app巡店记录详情");
                 }
@@ -315,11 +316,11 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
     // 今日进店客流==今日进店客流详情中今日进店客流
     @Test
-    public void customerFlow(){
+    public void customerFlow() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取卡片list
-            JSONArray list = md.cardList("HOME_TOP",null,10).getJSONArray("list");
+            JSONArray list = md.cardList("HOME_TOP", null, 10).getJSONArray("list");
             //获取result
             JSONObject result = list.getJSONObject(0).getJSONObject("result");
             //获取累计进店客流
@@ -328,7 +329,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             JSONArray items = md.cardDetail("TOTAL_ENTER_CUSTOMER_FLOW").getJSONArray("items");
             int items_value = items.getJSONObject(0).getInteger("item_value");
             CommonUtil.valueView(items_value, total_enter_customer_uv);
-            checkArgument(total_enter_customer_uv==items_value, "今日进店客流总数!=今日进店客流详情中今日进店客流总数");
+            checkArgument(total_enter_customer_uv == items_value, "今日进店客流总数!=今日进店客流详情中今日进店客流总数");
 
             //获取今日进店客流列表
             JSONObject today_enter_customer_flow = result.getJSONObject("today_enter_customer_flow");
@@ -345,21 +346,21 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             //获取详情中的环比和同比
             int before_day = items.getJSONObject(2).getInteger("before_day");
             int before_week = items.getJSONObject(2).getInteger("before_week");
-            checkArgument(yesterday_enter_customer_qoq==before_day, "今日进店客流同比！=今日进店客流详情中今日进店客流同比");
-            checkArgument(last_week_enter_customer_qoq==before_week, "今日进店客流环比比！=今日进店客流详情中今日进店客流环比");
+            checkArgument(yesterday_enter_customer_qoq == before_day, "今日进店客流同比！=今日进店客流详情中今日进店客流同比");
+            checkArgument(last_week_enter_customer_qoq == before_week, "今日进店客流环比比！=今日进店客流详情中今日进店客流环比");
 //
 //            获取今日进店新客
             JSONObject today_new_customer_flow = result.getJSONObject("today_new_customer_flow");
             int today_new_customer_uv = today_new_customer_flow.getInteger("today_new_customer_uv");
             int items_value2 = items.getJSONObject(1).getInteger("item_value");
-            checkArgument(today_new_customer_uv==items_value2, "今日进店新客！=今日进店客流详情中今日进店新客");
+            checkArgument(today_new_customer_uv == items_value2, "今日进店新客！=今日进店客流详情中今日进店新客");
             //获取今日进店新客的同比
             int last_week_new_customer_qoq = today_new_customer_flow.getInteger("last_week_new_customer_qoq");
             int yesterday_new_customer_qoq = today_new_customer_flow.getInteger("yesterday_new_customer_qoq");
             int before_day1 = items.getJSONObject(1).getInteger("before_day");
             int before_week1 = items.getJSONObject(1).getInteger("before_week");
-            checkArgument(last_week_new_customer_qoq==before_week1, "今日进店新客同比！=今日进店新客中今日新客同比");
-            checkArgument(yesterday_new_customer_qoq==before_day1, "今日进店新客环比比==今日进店新客中今日新客环比");
+            checkArgument(last_week_new_customer_qoq == before_week1, "今日进店新客同比！=今日进店新客中今日新客同比");
+            checkArgument(yesterday_new_customer_qoq == before_day1, "今日进店新客环比比==今日进店新客中今日新客环比");
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -370,11 +371,11 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
     //交易数据方面
     @Test
-    public void  tradeCustomer(){
+    public void tradeCustomer() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取卡片list
-            JSONArray list = md.cardList("HOME_TOP",null,10).getJSONArray("list");
+            JSONArray list = md.cardList("HOME_TOP", null, 10).getJSONArray("list");
             //获取result
             JSONObject result = list.getJSONObject(1).getJSONObject("result");
             //获取累计交易客流
@@ -383,7 +384,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             JSONArray items = md.cardDetail("TOTAL_TRANS_CUSTOMER_FLOW").getJSONArray("items");
             int items_value = items.getJSONObject(0).getInteger("item_value");
             CommonUtil.valueView(total_enter_customer_uv, items_value);
-            checkArgument(total_enter_customer_uv==items_value, "累计交易客流==累计交易客流详情中今日进店客流总数");
+            checkArgument(total_enter_customer_uv == items_value, "累计交易客流==累计交易客流详情中今日进店客流总数");
 
             //获取今日交易客流
             JSONObject today_enter_customer_flow = result.getJSONObject("today_trans_customer_flow");
@@ -391,7 +392,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             int today_enter_customer_uv = today_enter_customer_flow.getInteger("today_trans_customer_uv");
 //            Integer items_value1 = items.getInteger(1);
             int items_value1 = items.getJSONObject(1).getInteger("item_value");
-            checkArgument(today_enter_customer_uv==items_value1, "今日进店客流==今日进店客流详情中今日进店客流");
+            checkArgument(today_enter_customer_uv == items_value1, "今日进店客流==今日进店客流详情中今日进店客流");
 
             //获取今日交易客流得同比
             int yesterday_enter_customer_qoq = today_enter_customer_flow.getInteger("last_week_trans_customer_qoq");
@@ -400,22 +401,22 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             //获取详情中的环比和同比
             int before_day = items.getJSONObject(1).getInteger("before_day");
             int before_week = items.getJSONObject(1).getInteger("before_week");
-            checkArgument(yesterday_enter_customer_qoq==before_day, "今日交易客流同比==今日交易客流详情中今日进店客流同比");
-            checkArgument(last_week_enter_customer_qoq==before_week, "今日交易客流环比==今日交易客流详情中今日进店客流环比");
+            checkArgument(yesterday_enter_customer_qoq == before_day, "今日交易客流同比==今日交易客流详情中今日进店客流同比");
+            checkArgument(last_week_enter_customer_qoq == before_week, "今日交易客流环比==今日交易客流详情中今日进店客流环比");
 //
             //获取今日进店新客
             JSONObject today_new_customer_flow = result.getJSONObject("today_first_trans_customer");
             int today_new_customer_uv = today_new_customer_flow.getInteger("today_first_trans_customer_uv");
 //            int items_value2 = items.getInteger(1);
             int items_value2 = items.getJSONObject(1).getInteger("item_value");
-            checkArgument(today_new_customer_uv==items_value2, "首次交易客流==交易客流详情中首次交易客流");
+            checkArgument(today_new_customer_uv == items_value2, "首次交易客流==交易客流详情中首次交易客流");
             //获取今日进店新客的同比
             int last_week_new_customer_qoq = today_new_customer_flow.getInteger("last_week_first_trans_customer_qoq");
             int yesterday_new_customer_qoq = today_new_customer_flow.getInteger("yesterday_first_trans_customer_qoq");
             int before_day1 = items.getJSONObject(2).getInteger("before_day");
             int before_week1 = items.getJSONObject(2).getInteger("before_week");
-            checkArgument(last_week_new_customer_qoq==before_day1, "今日进店客流同比==今日进店客流详情中今日新客同比");
-            checkArgument(yesterday_new_customer_qoq==before_week1, "今日进店客流环比比==今日进店客流详情中今日新客环比");
+            checkArgument(last_week_new_customer_qoq == before_day1, "今日进店客流同比==今日进店客流详情中今日新客同比");
+            checkArgument(yesterday_new_customer_qoq == before_week1, "今日进店客流环比比==今日进店客流详情中今日新客环比");
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -423,13 +424,14 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
         }
 
     }
+
     // 今日进店客流==今日进店客流详情中今日进店客流
     @Test
-    public void  orderForm(){
+    public void orderForm() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取卡片list
-            JSONArray list = md.cardList("HOME_TOP",null,10).getJSONArray("list");
+            JSONArray list = md.cardList("HOME_TOP", null, 10).getJSONArray("list");
             //获取result
             JSONObject result = list.getJSONObject(2).getJSONObject("result");
             //获取累计订单
@@ -437,21 +439,21 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             //获取订单详情中的累计订单数
             JSONArray items = md.cardDetail("TOTAL_ORDER").getJSONArray("items");
             int items_value = items.getJSONObject(0).getInteger("item_value");
-            checkArgument(total_order_number==items_value, "累计订单数==累计订单详情中的累计订单数");
+            checkArgument(total_order_number == items_value, "累计订单数==累计订单详情中的累计订单数");
 
             //获取今日订单数
             JSONObject today_order = result.getJSONObject("today_order");
             int today_order_number = today_order.getInteger("today_order_number");
             int items_value1 = items.getJSONObject(1).getInteger("item_value");
-            checkArgument(today_order_number==items_value1, "今日订单数==订单详情中的今日订单数");
+            checkArgument(today_order_number == items_value1, "今日订单数==订单详情中的今日订单数");
 
             //今日订单的环比和同比
             int last_week_order_qoq = today_order.getInteger("last_week_order_qoq");
             int yesterday_order_qoq = today_order.getInteger("yesterday_order_qoq");
-            int before_day =  items.getJSONObject(1).getInteger("before_day");
-            int before_week =  items.getJSONObject(1).getInteger("before_day");
-            checkArgument(last_week_order_qoq==before_week, "今日订单的环比==订单详情中的今日订单数环比");
-            checkArgument(yesterday_order_qoq==before_day, "今日订单数的同比==订单详情中的今日订单数同比");
+            int before_day = items.getJSONObject(1).getInteger("before_day");
+            int before_week = items.getJSONObject(1).getInteger("before_day");
+            checkArgument(last_week_order_qoq == before_week, "今日订单的环比==订单详情中的今日订单数环比");
+            checkArgument(yesterday_order_qoq == before_day, "今日订单数的同比==订单详情中的今日订单数同比");
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -460,11 +462,11 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test
-    public void  OrderTurnover(){
+    public void OrderTurnover() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取卡片list
-            JSONArray list = md.cardList("HOME_TOP",null,10).getJSONArray("list");
+            JSONArray list = md.cardList("HOME_TOP", null, 10).getJSONArray("list");
 //            //获取result
             JSONObject result = list.getJSONObject(3).getJSONObject("result");
 //            //获取累计营业额
@@ -473,37 +475,37 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             JSONArray items = md.cardDetail("TOTAL_TURNOVER").getJSONArray("items");
             int items_value = items.getJSONObject(0).getInteger("item_value");
 //
-            checkArgument(total_turnover==items_value, "累计营业额==营业额详情中的累计营业额");
+            checkArgument(total_turnover == items_value, "累计营业额==营业额详情中的累计营业额");
 
 //            //获取今日营业额
             JSONObject today_customer_univalence = result.getJSONObject("today_turnover");
             int today_customer_univalence1 = today_customer_univalence.getInteger("today_turnover");
             int items_value1 = items.getJSONObject(1).getInteger("item_value");
 //            CommonUtil.valueView(today_customer_univalence1, items_value1);
-            checkArgument(today_customer_univalence1==items_value1, "今日营业额==订单详情中的今日营业额");
+            checkArgument(today_customer_univalence1 == items_value1, "今日营业额==订单详情中的今日营业额");
 
             //今日营业额的环比和同比
             int last_week_customer_univalence_qoq = today_customer_univalence.getInteger("last_week_turnover_qoq");
             int yesterday_customer_univalence_qoq = today_customer_univalence.getInteger("yesterday_turnover_qoq");
             int before_day = items.getJSONObject(1).getInteger("before_day");
             int before_week = items.getJSONObject(1).getInteger("before_week");
-            checkArgument(last_week_customer_univalence_qoq==before_week, "今日营业额的环比==订单详情中的今日营业额环比");
-            checkArgument(yesterday_customer_univalence_qoq==before_day, "今日营业额的同比==订单详情中的今日订单数同比");
+            checkArgument(last_week_customer_univalence_qoq == before_week, "今日营业额的环比==订单详情中的今日营业额环比");
+            checkArgument(yesterday_customer_univalence_qoq == before_day, "今日营业额的同比==订单详情中的今日订单数同比");
 //
 //
 //            //获取今日客单价
             JSONObject today_turnover = result.getJSONObject("today_customer_univalence");
             int today_turnover1 = today_turnover.getInteger("today_customer_univalence");
             int items_value2 = items.getJSONObject(2).getInteger("item_value");
-            checkArgument(today_turnover1==items_value2, "今日客单价==订单详情中的今日客单价");
+            checkArgument(today_turnover1 == items_value2, "今日客单价==订单详情中的今日客单价");
 
 //            //今日客单价的环比和同比
             int last_week_turnover_qoq = today_turnover.getInteger("last_week_customer_univalence_qoq");
             int yesterday_turnover_qoq = today_turnover.getInteger("yesterday_customer_univalence_qoq");
             int before_day1 = items.getJSONObject(1).getInteger("before_day");
             int before_week1 = items.getJSONObject(1).getInteger("before_week");
-            checkArgument(last_week_turnover_qoq==before_week1, "今日客单价的环比==订单详情中的今日客单价环比");
-            checkArgument(yesterday_turnover_qoq==before_day1, "今日客单价的同比==订单详情中的今日客单价同比");
+            checkArgument(last_week_turnover_qoq == before_week1, "今日客单价的环比==订单详情中的今日客单价环比");
+            checkArgument(yesterday_turnover_qoq == before_day1, "今日客单价的同比==订单详情中的今日客单价同比");
 
 
         } catch (AssertionError | Exception e) {
@@ -516,7 +518,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
     //app实时客流趋势图中的uv==客流概览趋势图中的uv
     @Test
-    public void allShoptodayNum(){
+    public void allShoptodayNum() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //app趋势图中uv
@@ -533,15 +535,15 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             //pc趋势图中的uv
             int pcTodayUvCount = 0;
             JSONArray list = md.real_shop_PUv().getJSONArray("list");
-            for (int j=0;j<list.size();j++){
+            for (int j = 0; j < list.size(); j++) {
                 Integer uv = list.getJSONObject(j).getInteger("today_uv");
                 if (uv == null) {
                     uv = 0;
                 }
                 pcTodayUvCount += uv;
             }
-            CommonUtil.valueView( pcTodayUvCount,appTodayUvCount);
-            checkArgument(appTodayUvCount==pcTodayUvCount, "app实时客流趋势图uv" + appTodayUvCount + "pc实时趋势图中uv" + pcTodayUvCount);
+            CommonUtil.valueView(pcTodayUvCount, appTodayUvCount);
+            checkArgument(appTodayUvCount == pcTodayUvCount, "app实时客流趋势图uv" + appTodayUvCount + "pc实时趋势图中uv" + pcTodayUvCount);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -553,7 +555,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
     //app实时客流趋势图中的pv==客流概览趋势图中的pv
     @Test
-    public void allShoptodayNum1(){
+    public void allShoptodayNum1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //app趋势图中Pv
@@ -570,15 +572,15 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             //pc趋势图中的Pv
             int pcTodayPvCount = 0;
             JSONArray list = md.real_shop_PUv().getJSONArray("list");
-            for (int j=0;j<list.size();j++){
+            for (int j = 0; j < list.size(); j++) {
                 Integer pv = list.getJSONObject(j).getInteger("today_pv");
                 if (pv == null) {
                     pv = 0;
                 }
                 pcTodayPvCount += pv;
             }
-            CommonUtil.valueView( pcTodayPvCount,appTodayPvCount);
-            checkArgument(appTodayPvCount==pcTodayPvCount, "app实时客流趋势图Pv" + appTodayPvCount + "pc实时趋势图中Pv" + pcTodayPvCount);
+            CommonUtil.valueView(pcTodayPvCount, appTodayPvCount);
+            checkArgument(appTodayPvCount == pcTodayPvCount, "app实时客流趋势图Pv" + appTodayPvCount + "pc实时趋势图中Pv" + pcTodayPvCount);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -590,7 +592,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
     //app实时客流趋势图中的yesterdayuv==客流概览趋势图中的yesterdayuv
     @Test
-    public void allShoptodayNum2(){
+    public void allShoptodayNum2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //app趋势图中uv
@@ -607,15 +609,15 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             //pc趋势图中的uv
             int pcYesterdayUvCount = 0;
             JSONArray list = md.real_shop_PUv().getJSONArray("list");
-            for (int j=0;j<list.size();j++){
+            for (int j = 0; j < list.size(); j++) {
                 Integer uv = list.getJSONObject(j).getInteger("yesterday_uv");
                 if (uv == null) {
                     uv = 0;
                 }
                 pcYesterdayUvCount += uv;
             }
-            CommonUtil.valueView( pcYesterdayUvCount,appYesterdayUvCount);
-            checkArgument(appYesterdayUvCount==pcYesterdayUvCount, "app实时客流趋势图昨日uv" + appYesterdayUvCount + "pc实时趋势图中昨日uv" + pcYesterdayUvCount);
+            CommonUtil.valueView(pcYesterdayUvCount, appYesterdayUvCount);
+            checkArgument(appYesterdayUvCount == pcYesterdayUvCount, "app实时客流趋势图昨日uv" + appYesterdayUvCount + "pc实时趋势图中昨日uv" + pcYesterdayUvCount);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -627,7 +629,7 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
 
     //app实时客流趋势图中昨日pv==客流概览趋势图中昨日的pv
     @Test
-    public void allShoptodayNum3(){
+    public void allShoptodayNum3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //app趋势图中Pv
@@ -644,15 +646,15 @@ public class XundianAppData extends TestCaseCommon implements TestCaseStd {
             //pc趋势图中的Pv
             int pcYesterdayPvCount = 0;
             JSONArray list = md.real_shop_PUv().getJSONArray("list");
-            for (int j=0;j<list.size();j++){
+            for (int j = 0; j < list.size(); j++) {
                 Integer pv = list.getJSONObject(j).getInteger("yesterday_pv");
                 if (pv == null) {
                     pv = 0;
                 }
                 pcYesterdayPvCount += pv;
             }
-            CommonUtil.valueView( pcYesterdayPvCount,appYesterdayPvCount);
-            checkArgument(appYesterdayPvCount==pcYesterdayPvCount, "app实时客流趋势图昨日Pv" + appYesterdayPvCount + "pc实时趋势图中昨日Pv" + pcYesterdayPvCount);
+            CommonUtil.valueView(pcYesterdayPvCount, appYesterdayPvCount);
+            checkArgument(appYesterdayPvCount == pcYesterdayPvCount, "app实时客流趋势图昨日Pv" + appYesterdayPvCount + "pc实时趋势图中昨日Pv" + pcYesterdayPvCount);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {

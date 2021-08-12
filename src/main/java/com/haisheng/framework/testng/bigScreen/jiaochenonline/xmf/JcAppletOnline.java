@@ -45,7 +45,6 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.product = product.getAbbreviation();
         jc.changeIpPort(product.getIp());
 
 
@@ -61,17 +60,13 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
         //replace ding push conf
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
         commonConfig.dingHook = DingWebhook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
-
-        commonConfig.referer = product.getReferer();
-
 //        commonConfig.referer=getJcReferOnline();
 
 
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};
-
+        commonConfig.setShopId("45973").setReferer(product.getReferer()).setRoleId(product.getRoleId()).setProduct(product.getAbbreviation());
         //set shop id
-        commonConfig.shopId = "45973";
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);
@@ -415,7 +410,6 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
     public void number() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            System.out.println(commonConfig.referer);
             jc.appletLoginToken(pp.appletTocken);
             System.out.println(product.getIp());
             System.out.println("卡券数量" + pf.getVoucherTotal());

@@ -310,9 +310,8 @@ public class TestCaseCommon {
         String url = ipPort + path;
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(url);
+        commonConfig.getHeaders().entrySet().stream().filter(e -> !StringUtils.isEmpty(e.getValue())).forEach(e -> httpPost.addHeader(e.getKey(), e.getValue()));
         httpPost.addHeader("authorization", authorization);
-        httpPost.addHeader("shop_id", commonConfig.shopId);
-        httpPost.addHeader("role_id", commonConfig.roleId);
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
         File file = new File(filePath);
         String res = "";
@@ -357,7 +356,7 @@ public class TestCaseCommon {
      *
      * @param path   路径
      * @param object 请求体
-     * @param IpPort 域名
+     * @param port   域名
      */
     public void httpPost(String port, String path, JSONObject object) {
         httpPost(port, path, JSONObject.toJSONString(object), true, true);
@@ -402,6 +401,8 @@ public class TestCaseCommon {
             config.url(api.getUrl());
             response = HttpClientUtil.get(config);
         } else {
+            config.url("").json("");
+            response = HttpClientUtil.upload(config);
             throw new RuntimeException("未指定请求方式");
         }
         logger.info("response：{}", response);
@@ -423,16 +424,11 @@ public class TestCaseCommon {
         HttpHeader httpHeader = HttpHeader.custom()
                 .contentType("application/json; charset=utf-8")
                 .userAgent(userAgent)
-                .referer(commonConfig.referer)
                 .authorization(authorization);
-        //有的业务线不存在shopId和roleId时传入空会失败，在此加个判断
-
-        httpHeader = commonConfig.shopId != null ? httpHeader.other("shop_id", commonConfig.shopId) : httpHeader;
-        httpHeader = commonConfig.roleId != null ? httpHeader.other("role_id", commonConfig.roleId) : httpHeader;
+        commonConfig.getHeaders().entrySet().stream().filter(e -> !StringUtils.isEmpty(e.getValue())).forEach(e -> httpHeader.other(e.getKey(), e.getValue()));
         headers = httpHeader.build();
-        config = HttpConfig.custom()
-                .headers(headers)
-                .client(client);
+        logger.info("headers:{}", Arrays.toString(headers));
+        config = HttpConfig.custom().headers(headers).client(client);
     }
 
     private void dingPushFinal(boolean isFAIL) {
@@ -483,7 +479,7 @@ public class TestCaseCommon {
     }
 
     public void setBasicParaToDB(String caseDesc) {
-        String desc = StringUtils.isEmpty(commonConfig.product) ? caseDesc : commonConfig.product + "_" + caseDesc;
+        String desc = StringUtils.isEmpty(commonConfig.getHeaders().get("product")) ? caseDesc : commonConfig.getHeaders().get("product") + "_" + caseDesc;
         caseResult.setCaseDescription(desc);
         caseResult.setExpect("见描述");
 

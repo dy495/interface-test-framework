@@ -16,9 +16,9 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 
 public class CrmQtOnlineWarm extends TestCaseCommon implements TestCaseStd {
+    EnumTestProduct product = EnumTestProduct.PORSCHE_ONLINE;
     CrmScenarioUtilOnlineX crm = CrmScenarioUtilOnlineX.getInstance();
     DateTimeUtil dt = new DateTimeUtil();
-
 
 
     /**
@@ -35,8 +35,6 @@ public class CrmQtOnlineWarm extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.product= EnumTestProduct.PORSCHE_ONLINE.getAbbreviation();
-
 
 
         //replace backend gateway url
@@ -46,7 +44,7 @@ public class CrmQtOnlineWarm extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-online-test");
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.PORSCHE_ONLINE.getDesc()+"门店：12732" + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + "门店：12732" + commonConfig.checklistQaOwner);
 
         //replace ding push conf
 //        commonConfig.dingHook = DingWebhook.QA_GRP;
@@ -55,11 +53,11 @@ public class CrmQtOnlineWarm extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = "12732";
+        commonConfig.setShopId("12732").setReferer(product.getReferer()).setRoleId(product.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
 
         logger.debug("crm: " + crm);
-        crm.login("hellenan","e10adc3949ba59abbe56e057f20f883e");
+        crm.login("hellenan", "e10adc3949ba59abbe56e057f20f883e");
 
 
     }
@@ -85,11 +83,11 @@ public class CrmQtOnlineWarm extends TestCaseCommon implements TestCaseStd {
     public void qtztSelect() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String data=dt.getHistoryDate(0);
+            String data = dt.getHistoryDate(0);
             JSONArray data2 = crm.qtreceptionPage("", data, data, "1", "10").getJSONArray("list");
-           if(data2.size()==0){
-               throw new Exception("warm:接待管理今日接待数据为空");
-           }
+            if (data2.size() == 0) {
+                throw new Exception("warm:接待管理今日接待数据为空");
+            }
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -99,7 +97,7 @@ public class CrmQtOnlineWarm extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-        /**
+    /**
      * @description :到访记录按时间查询 ok
      * @date :2020/8/3 12:48
      **/
@@ -107,9 +105,9 @@ public class CrmQtOnlineWarm extends TestCaseCommon implements TestCaseStd {
     public void visitRecodeSelectTime() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String select_date=dt.getHistoryDate(0);
+            String select_date = dt.getHistoryDate(0);
             JSONArray list = crm.visitList(select_date, select_date, "1", "10").getJSONArray("list");
-            if(select_date.equals("")&&list.size()==0){
+            if (select_date.equals("") && list.size() == 0) {
                 throw new Exception("到访记录为空");
             }
         } catch (AssertionError e) {
@@ -126,7 +124,7 @@ public class CrmQtOnlineWarm extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray list = crm.markcustomerList().getJSONArray("list");
-            if(list.size()==0){
+            if (list.size() == 0) {
                 throw new Exception("警告：线上人脸列表为空");
             }
         } catch (AssertionError e) {
@@ -137,7 +135,6 @@ public class CrmQtOnlineWarm extends TestCaseCommon implements TestCaseStd {
             saveData("检查前台人脸列表是否为空");
         }
     }
-
 
 
 }

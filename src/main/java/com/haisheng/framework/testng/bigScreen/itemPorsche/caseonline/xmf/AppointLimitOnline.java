@@ -21,6 +21,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static java.lang.Integer.parseInt;
 
 public class AppointLimitOnline extends TestCaseCommon implements TestCaseStd {
+    EnumTestProduct product = EnumTestProduct.PORSCHE_ONLINE;
     CrmScenarioUtilOnlineX crm = CrmScenarioUtilOnlineX.getInstance();
     DateTimeUtil dt = new DateTimeUtil();
     PublicParmOnline pp = new PublicParmOnline();
@@ -54,9 +55,6 @@ public class AppointLimitOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.referer= EnumTestProduct.PORSCHE_ONLINE.getReferer();
-
-
         //replace backend gateway url
         //commonConfig.gateway = "";
 
@@ -64,7 +62,7 @@ public class AppointLimitOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-daily-test");
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.PORSCHE_DAILY.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
 
         //replace ding push conf
         commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
@@ -73,7 +71,7 @@ public class AppointLimitOnline extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = EnumTestProduct.PORSCHE_ONLINE.getShopId();
+        commonConfig.setShopId(product.getShopId()).setReferer(product.getReferer()).setRoleId(product.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
 
         logger.debug("crm: " + crm);
@@ -97,6 +95,7 @@ public class AppointLimitOnline extends TestCaseCommon implements TestCaseStd {
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
     }
+
     /**
      * @description :预约保养成功，页面一致性验证；applet & pc & app
      * @date :2020/7/10 14:29
@@ -310,6 +309,7 @@ public class AppointLimitOnline extends TestCaseCommon implements TestCaseStd {
             saveData("预约维修成功后，pc和app预约试驾信息校验");
         }
     }
+
     /**
      * @description :预约同一天其他时段失败
      * @date :2020/8/12 12:57
@@ -321,7 +321,7 @@ public class AppointLimitOnline extends TestCaseCommon implements TestCaseStd {
             crm.appletLoginToken(EnumAppletToken.BSJ_XMF_ONLINE.getToken());
             String type = "MAINTAIN";
             long timelist2 = pf.appointmentTimeListO(type, appointment_date).getLong("time_id");
-            JSONObject res = crm.appointmentMaintainCode((pp.mycarId), customer_name, customer_phone_number,  timelist2);
+            JSONObject res = crm.appointmentMaintainCode((pp.mycarId), customer_name, customer_phone_number, timelist2);
             Long code = res.getLong("code");
             checkArgument(code == 1001, "预约同一天其他时段应该失败");
 

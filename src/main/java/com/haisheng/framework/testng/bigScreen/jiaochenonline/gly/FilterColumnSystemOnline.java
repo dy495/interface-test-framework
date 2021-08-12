@@ -51,16 +51,13 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
         commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
         commonConfig.checklistQaOwner = "郭丽雅";
-        commonConfig.product = product.getAbbreviation();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "jc-onLine-test");
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = EnumDingTalkWebHook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
-        commonConfig.shopId = product.getShopId();
-        commonConfig.referer = product.getReferer();
-        commonConfig.roleId = "395";
+        commonConfig.setShopId(product.getShopId()).setReferer(product.getReferer()).setRoleId("395").setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
         logger.debug("jc: " + jc);
 
@@ -960,7 +957,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void maintainOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            commonConfig.shopId = "20032";
+            commonConfig.setShopId("20032");
             JSONObject respond = jc.maintainFilterManage("20032", "1", "10", "MAINTAIN", "", "");
             if (respond.getJSONArray("list").size() > 0) {
                 String result = respond.getJSONArray("list").getJSONObject(0).getString(output);
@@ -980,7 +977,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
             appendFailReason(e.toString());
         } finally {
             saveData("保养配置单项查询，结果校验");
-            commonConfig.shopId = product.getShopId();
+            commonConfig.setShopId(product.getShopId());
         }
     }
 
@@ -992,7 +989,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void maintainALLFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            commonConfig.shopId = "20032";
+            commonConfig.setShopId("20032");
             Object[][] flag = Constant.maintainFilter_pram();
             maintainVariable variable = new maintainVariable();
             JSONArray res = jc.maintainFilterManage("20032", "1", "10", "MAINTAIN", "", "").getJSONArray("list");
@@ -1020,7 +1017,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
             appendFailReason(e.toString());
         } finally {
             saveData("保养配置填写全部参数查询，结果校验");
-            commonConfig.shopId = product.getShopId();
+            commonConfig.setShopId(product.getShopId());
         }
     }
 
@@ -1032,7 +1029,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void maintainSomeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            commonConfig.shopId = "20032";
+            commonConfig.setShopId("20032");
             Object[][] flag = Constant.maintainFilter_pram();
             maintainVariable variable = new maintainVariable();
             JSONArray res = jc.maintainFilterManage("20032", "1", "10", "MAINTAIN", "", "").getJSONArray("list");
@@ -1062,7 +1059,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
             appendFailReason(e.toString());
         } finally {
             saveData("保养配置填写多项参数查询，结果校验");
-            commonConfig.shopId = product.getShopId();
+            commonConfig.setShopId(product.getShopId());
         }
     }
 
@@ -1074,14 +1071,14 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void maintainEmptyFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            commonConfig.shopId = "20032";
+            commonConfig.setShopId("20032");
             jc.maintainFilterManage("20032", "1", "10", "MAINTAIN", "", "").getJSONArray("list");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("保养配置列表参数不填写，结果校验");
-            commonConfig.shopId = product.getShopId();
+            commonConfig.setShopId(product.getShopId());
         }
     }
 
@@ -2646,7 +2643,6 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         logger.logCaseStart(caseResult.getCaseName());
         JSONObject respond = jc.staffListFilterManage("1", "10", "", "");
         try {
-            System.out.println(commonConfig.shopId);
             if (respond.getJSONArray("list").size() > 0) {
                 if (pram.equals("shop_id")) {
                     String result = respond.getJSONArray("list").getJSONObject(0).getJSONArray("shop_list").getJSONObject(0).getString(output);
@@ -3097,7 +3093,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
     public void intelligentRemindList() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            commonConfig.shopId = "20032";//指定中关村门店
+            commonConfig.setShopId("20032");//指定中关村门店
             JSONObject response = jc.remindPage("1", "10", "", "", "");
             String item = response.getJSONArray("list").getJSONObject(0).getString("item");
             JSONObject response1 = jc.remindPage("1", "10", "", "item", item);
@@ -3115,7 +3111,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            commonConfig.shopId = product.getShopId();
+            commonConfig.setShopId(product.getShopId());
             saveData("V2.0-智能提醒筛选栏校验");
         }
     }

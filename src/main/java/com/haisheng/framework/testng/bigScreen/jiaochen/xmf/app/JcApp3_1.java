@@ -60,8 +60,6 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.referer = product.getReferer();
-        commonConfig.product = product.getAbbreviation();
 
         //replace backend gateway url
         //commonConfig.gateway = "";
@@ -79,8 +77,7 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = "49195";
-        commonConfig.roleId = "2945";
+        commonConfig.setShopId("49195").setReferer(product.getReferer()).setRoleId("2945").setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);
@@ -94,7 +91,7 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
         JSONObject object = new JSONObject();
         object.put("phone", username);
         object.put("verification_code", password);
-        commonConfig.roleId = roleId;
+        commonConfig.setRoleId(roleId);
         httpPost(EnumTestProduct.JC_DAILY_ZH.getIp(), path, object);
     }
 
@@ -105,7 +102,7 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
         object.put("phone", phone);
         object.put("verification_code", verificationCode);
         object.put("type", 1);
-        commonConfig.roleId = roleId;
+        commonConfig.setRoleId(roleId);
         httpPost(EnumTestProduct.JC_DAILY_ZH.getIp(), path, object);
     }
 

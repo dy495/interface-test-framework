@@ -38,9 +38,9 @@ import java.lang.reflect.Method;
 public class SystemCaseRecpOnline extends TestCaseCommon implements TestCaseStd {
 
 
-    EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_JD;
+    EnumTestProduct product = EnumTestProduct.YT_ONLINE_JD;
     EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_ONLINE_LXQ;
-    VisitorProxy visitor = new VisitorProxy(PRODUCE);
+    VisitorProxy visitor = new VisitorProxy(product);
     SceneUtil businessUtil = new SceneUtil(visitor);
 
 
@@ -59,14 +59,11 @@ public class SystemCaseRecpOnline extends TestCaseCommon implements TestCaseStd 
         commonConfig.checklistQaOwner = "吕雪晴";
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.YUNTONG_ONLINE_TEST.getJobName());
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = DingWebhook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //放入shopId
-        commonConfig.product = PRODUCE.getAbbreviation();
-        commonConfig.referer = PRODUCE.getReferer();
-        commonConfig.shopId = PRODUCE.getShopId();
-        commonConfig.roleId = ALL_AUTHORITY.getRoleId();
+        commonConfig.setShopId(product.getShopId()).setReferer(product.getReferer()).setRoleId(ALL_AUTHORITY.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
         businessUtil.loginPc(ALL_AUTHORITY);
     }
@@ -104,8 +101,8 @@ public class SystemCaseRecpOnline extends TestCaseCommon implements TestCaseStd 
 
             //获取评价选项
             visitor.setProduct(EnumTestProduct.YT_ONLINE_JD);
-            commonConfig.shopId = null;
-            commonConfig.roleId = null;
+            commonConfig.setShopId(null);
+            commonConfig.setRoleId(null);
             JSONArray evaluate_info_list = info.evaluateInfo(recId, type);
 
             //提交评价
@@ -113,8 +110,8 @@ public class SystemCaseRecpOnline extends TestCaseCommon implements TestCaseStd 
 
             //PC跟进
             if (type.equals("mid")) {
-                commonConfig.shopId = PRODUCE.getShopId();
-                commonConfig.roleId = ALL_AUTHORITY.getRoleId();
+                commonConfig.setShopId(product.getShopId());
+                commonConfig.setRoleId(ALL_AUTHORITY.getRoleId());
                 Long id = EvaluatePageV4Scene.builder().page(1).size(1).evaluateType(5).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
                 EvaluateFollowUpScene.builder().id(id).evaluate_type(5).shopId(info.oneshopid).remark("祝他发财吧！！！祝他发财吧！！！祝他发财吧！！！").build().invoke(visitor);
 
@@ -127,8 +124,8 @@ public class SystemCaseRecpOnline extends TestCaseCommon implements TestCaseStd 
             appendFailReason(e.toString());
         } finally {
             saveData("接待后评价");
-            commonConfig.shopId = PRODUCE.getShopId();
-            commonConfig.roleId = ALL_AUTHORITY.getRoleId();
+            commonConfig.setShopId(product.getShopId());
+            commonConfig.setRoleId(ALL_AUTHORITY.getRoleId());
         }
     }
 

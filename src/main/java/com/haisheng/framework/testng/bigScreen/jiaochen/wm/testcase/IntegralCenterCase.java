@@ -84,10 +84,7 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
         //放入shopId
-        commonConfig.product = PRODUCE.getAbbreviation();
-        commonConfig.referer = PRODUCE.getReferer();
-        commonConfig.shopId = PRODUCE.getShopId();
-        commonConfig.roleId = ALL_AUTHORITY.getRoleId();
+        commonConfig.setShopId(PRODUCE.getShopId()).setReferer(PRODUCE.getReferer()).setRoleId(ALL_AUTHORITY.getRoleId()).setProduct(PRODUCE.getAbbreviation());
         beforeClassInit(commonConfig);
     }
 
@@ -104,13 +101,12 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
-    }
 
+    }
 
     //ok
     @Test(description = "积分客户管理--增加某人积分异常")
     public void integralCustomerPage_system_1() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject data = CustomerPageScene.builder().customerPhone(APPLET_USER_ONE.getPhone()).build().invoke(visitor);
             Long id = data.getJSONArray("list").getJSONObject(0).getLong("id");
@@ -130,7 +126,6 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "积分客户管理--扣减某人减积分大于剩余积分")
     public void integralCustomerPage_system_2() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray list = CustomerPageScene.builder().build().invoke(visitor).getJSONArray("list");
             JSONObject data = list.stream().map(e -> (JSONObject) e).filter(e -> Long.parseLong(e.getString("integral")) < 100000L).findFirst().orElse(null);
@@ -150,7 +145,6 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "积分客户管理--增加某人积分")
     public void integralCustomerPage_system_3() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             util.loginApplet(APPLET_USER_ONE);
             Integer score = AppletUserInfoDetailScene.builder().build().invoke(visitor).getInteger("score");
@@ -192,7 +186,6 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "积分客户管理--减少某人积分")
     public void integralCustomerPage_system_4() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             util.loginApplet(APPLET_USER_ONE);
             Integer score = AppletUserInfoDetailScene.builder().build().invoke(visitor).getInteger("score");
@@ -234,7 +227,6 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "积分兑换--库存详情--当前库存=兑换品库存明细加和")
     public void integralExchange_data_1() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             //上线日期，之前得数据不做校验
             long time = Long.parseLong(DateTimeUtil.dateToStamp("2021-02-25", "yyyy-MM-dd"));
@@ -267,7 +259,6 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "积分兑换--创建实物积分兑换，积分兑换列表+1")
     public void integralExchange_data_2() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             int total = ExchangePageScene.builder().build().invoke(visitor).getInteger("total");
             //创建实物兑换
@@ -289,7 +280,6 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "积分兑换--创建虚拟积分兑换，积分兑换列表+1")
     public void integralExchange_data_3() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             int total = ExchangePageScene.builder().build().invoke(visitor).getInteger("total");
             Long voucherId = new VoucherGenerator.Builder().status(VoucherStatusEnum.WORKING).visitor(visitor).buildVoucher().getVoucherId();
@@ -312,7 +302,6 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "积分兑换--创建虚拟积分兑换，编辑库存-1，卡券可用库存+1")
     public void integralExchange_data_4() {
-        logger.logCaseStart(caseResult.getCaseName());
         Long id = null;
         try {
             Long voucherId = new VoucherGenerator.Builder().status(VoucherStatusEnum.WORKING).visitor(visitor).buildVoucher().getVoucherId();
@@ -339,7 +328,6 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "积分兑换--创建虚拟积分兑换，编辑库存+1，卡券可用库存-1")
     public void integralExchange_data_5() {
-        logger.logCaseStart(caseResult.getCaseName());
         Long id = null;
         try {
             Long voucherId = new VoucherGenerator.Builder().status(VoucherStatusEnum.WORKING).visitor(visitor).buildVoucher().getVoucherId();
@@ -366,7 +354,6 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "积分兑换--创建实体积分兑换")
     public void integralExchange_system_1() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             String exchangeStartTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
             String exchangeEndTime = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 30), "yyyy-MM-dd HH:mm:ss");
@@ -411,7 +398,6 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "积分兑换--创建虚拟积分兑换")
     public void integralExchange_system_2() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             VoucherFormVoucherPageBean voucherPage = util.getVoucherPage(voucherId);
@@ -447,7 +433,6 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "积分兑换--创建虚拟积分兑换，可兑换数量大于卡券库存")
     public void integralExchange_system_3() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             VoucherFormVoucherPageBean voucherPage = util.getVoucherPage(voucherId);
@@ -470,7 +455,6 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "积分兑换--创建虚拟积分兑换，兑换价异常")
     public void integralExchange_system_4() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             VoucherFormVoucherPageBean voucherPage = util.getVoucherPage(voucherId);
@@ -496,7 +480,6 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "积分兑换--创建虚拟积分兑换，包含无库存的卡券")
     public void integralExchange_system_5() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             String exchangeStartTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
             String exchangeEndTime = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 30), "yyyy-MM-dd HH:mm:ss");
@@ -517,7 +500,6 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "积分兑换--修改实体积分兑换库存")
     public void integralExchange_system_9() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene exchangePageScene = ExchangePageScene.builder().exchangeType(CommodityTypeEnum.REAL.name()).build();
             List<ExchangePage> exchangePageList = util.toJavaObjectList(exchangePageScene, ExchangePage.class);
@@ -563,7 +545,6 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "积分兑换--修改实体积分兑换库存，异常情况")
     public void integralExchange_system_10() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene exchangePageScene = ExchangePageScene.builder().exchangeType(CommodityTypeEnum.REAL.name()).build();
             List<ExchangePage> exchangePageList = util.toJavaObjectList(exchangePageScene, ExchangePage.class);
@@ -593,7 +574,6 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "积分兑换--修改实体积分兑换库存，减少大于当前库存的数")
     public void integralExchange_system_11() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene exchangePageScene = ExchangePageScene.builder().exchangeType(CommodityTypeEnum.REAL.name()).build();
             List<ExchangePage> exchangePageList = util.toJavaObjectList(exchangePageScene, ExchangePage.class);
@@ -613,7 +593,6 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "积分兑换--修改虚拟积分兑换库存，增加大于卡券库存的数")
     public void integralExchange_system_12() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene exchangePageScene = ExchangePageScene.builder().exchangeType(CommodityTypeEnum.FICTITIOUS.name()).build();
             List<ExchangePage> exchangePageList = util.toJavaObjectList(exchangePageScene, ExchangePage.class);
@@ -638,7 +617,6 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "积分兑换--修改虚拟积分兑换库存，减少大于当前库存的数")
     public void integralExchange_system_13() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene exchangePageScene = ExchangePageScene.builder().exchangeType(CommodityTypeEnum.FICTITIOUS.name()).build();
             List<ExchangePage> exchangePageList = util.toJavaObjectList(exchangePageScene, ExchangePage.class);
@@ -661,7 +639,6 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "积分兑换--创建实体积分兑换->小程序兑换实体商品->发货->确认收货->取消")
     public void integralExchange_system_14() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene exchangePageScene = ExchangePageScene.builder().status(IntegralExchangeStatusEnum.WORKING.name()).exchangeType(CommodityTypeEnum.REAL.name()).build();
             ExchangePage a = util.toJavaObjectList(exchangePageScene, ExchangePage.class).stream().filter(e -> !e.getExchangedAndSurplus().split("/")[1].equals("0") && e.getExchangePrice() == 1).findFirst().orElse(null);
@@ -785,7 +762,6 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "积分兑换--创建虚拟积分兑换->小程序兑换虚拟商品")
     public void integralExchange_system_15() {
-        logger.logCaseStart(caseResult.getCaseName());
         Long exchangeGoodsId = null;
         try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
@@ -847,7 +823,6 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "积分兑换--置顶某一积分兑换，小程序人气推荐置顶该兑换，再置顶一个积分兑换，人气推荐刷新第一位，原第一位降到第二位")
     public void integralExchange_system_16() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject response = ExchangePageScene.builder().status(IntegralExchangeStatusEnum.WORKING.name()).build().invoke(visitor);
             Long id = response.getJSONArray("list").getJSONObject(0).getLong("id");
@@ -882,7 +857,6 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "积分兑换--删除未关闭的积分兑换，失败")
     public void integralExchange_system_17() {
-        logger.logCaseStart(caseResult.getCaseName());
         Long id = null;
         try {
             //创建积分兑换
@@ -903,7 +877,6 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "积分兑换--关闭积分兑换，优惠券可用库存释放")
     public void integralExchange_system_18() {
-        logger.logCaseStart(caseResult.getCaseName());
         Long id = null;
         try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
@@ -937,7 +910,6 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "积分兑换--兑换商品过期，不释放可用库存")
     public void integralExchange_system_19() {
-        logger.logCaseStart(caseResult.getCaseName());
         Long id = null;
         try {
             String exchangeStartTime = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), -2), "yyyy-MM-dd HH:mm:ss");
@@ -970,7 +942,6 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "积分兑换--创建虚拟兑换商品时，可兑换库存大于卡券可用库存，创建失败")
     public void integralExchange_system_20() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             VoucherFormVoucherPageBean voucherPage = util.getOccupyVoucherId();
             //创建积分兑换
@@ -992,7 +963,6 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "积分兑换--先关闭虚拟兑换商品，商品内卡券库存不足再开启兑换商品，失败")
     public void integralExchange_system_21() {
-        logger.logCaseStart(caseResult.getCaseName());
         ExchangePage exchangePage = null;
         try {
             VoucherFormVoucherPageBean voucherPage = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherPage();
@@ -1037,7 +1007,6 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "积分兑换--创建积分兑换，兑换一个，再关闭积分兑换")
     public void integralExchange_system_22() {
-        logger.logCaseStart(caseResult.getCaseName());
         Long exchangeGoodsId = null;
         try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
@@ -1074,7 +1043,6 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "积分兑换--创建实体积分兑换时将商品下架")
     public void integralExchange_system_23() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             String exchangeStartTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
             String exchangeEndTime = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 30), "yyyy-MM-dd HH:mm:ss");
@@ -1106,7 +1074,6 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "积分兑换--创建实体积分兑换-兑换价格异常")
     public void integralExchange_system_24() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             String exchangeStartTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
             String exchangeEndTime = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 30), "yyyy-MM-dd HH:mm:ss");
@@ -1134,7 +1101,6 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     //bug能创建成功
     @Test(description = "积分兑换--创建实体积分兑换-结束时间大于开始时间")
     public void integralExchange_system_25() {
-        logger.logCaseStart(caseResult.getCaseName());
         Long exchangeId = null;
         try {
             String exchangeStartTime = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 30), "yyyy-MM-dd HH:mm:ss");
@@ -1162,7 +1128,6 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     //bug有效天数为空没校验
     @Test(description = "积分兑换--创建虚拟兑换商品时，优惠券有效期异常")
     public void integralExchange_system_26() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             Long voucherId = new VoucherGenerator.Builder().status(VoucherStatusEnum.WORKING).visitor(visitor).buildVoucher().getVoucherId();
             VoucherFormVoucherPageBean voucherPage = util.getVoucherPage(voucherId);
@@ -1189,7 +1154,6 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "积分订单--订单明细--实付总积分=商品积分*兑换数量")
     public void integralOrder_data_1() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene exchangeOrderScene = ExchangeOrderScene.builder().build();
             List<JSONObject> jsonObjectList = util.toJavaObjectList(exchangeOrderScene, JSONObject.class, SceneUtil.SIZE);
@@ -1214,7 +1178,6 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     //bug 积分数对不上
     @Test(description = "积分明细--各个积分规则所得积分相加=此规则的已发放积分")
     public void integralRule_data_1() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene exchangeDetailedScene = ExchangeDetailedScene.builder().build();
             List<ExchangeDetailed> exchangeDetailedList = util.toJavaObjectList(exchangeDetailedScene, ExchangeDetailed.class);
@@ -1232,7 +1195,6 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "积分明细--各个积分规则的奖励积分=该规则的单笔发放积分")
     public void integralRule_data_2() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene shareManagerPageScene = ShareManagerPageScene.builder().build();
             String[] strings = (String[]) ruleName()[0];
@@ -1251,7 +1213,6 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "积分明细--各个积分规则的奖励积分=该规则的单笔发放积分")
     public void integralRule_data_3() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene shareManagerPageScene = ShareManagerPageScene.builder().build();
             String[] strings = (String[]) ruleName()[0];
@@ -1270,7 +1231,6 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "积分明细--各个积分规则的奖励积分=该规则的单笔发放积分")
     public void integralRule_data_4() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene equityPageScene = EquityPageScene.builder().build();
             String[] strings = (String[]) ruleName()[1];
@@ -1289,7 +1249,6 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "积分明细--各个积分规则的奖励积分=该规则的单笔发放积分")
     public void integralRule_data_5() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene equityPageScene = EquityPageScene.builder().build();
             String[] strings = (String[]) ruleName()[1];
@@ -1308,7 +1267,6 @@ public class IntegralCenterCase extends TestCaseCommon implements TestCaseStd {
     //ok
     @Test(description = "积分明细--各个积分规则的奖励积分=该规则的单笔发放积分")
     public void integralRule_data_6() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene signInConfigPageScene = SignInConfigPageScene.builder().build();
             String[] strings = (String[]) ruleName()[2];

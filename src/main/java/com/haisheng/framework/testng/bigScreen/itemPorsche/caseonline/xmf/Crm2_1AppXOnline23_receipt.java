@@ -24,6 +24,7 @@ import java.lang.reflect.Method;
 
 
 public class Crm2_1AppXOnline23_receipt extends TestCaseCommon implements TestCaseStd {
+    EnumTestProduct product = EnumTestProduct.PORSCHE_ONLINE;
     CrmScenarioUtilOnlineX crm = CrmScenarioUtilOnlineX.getInstance();
     DateTimeUtil dt = new DateTimeUtil();
     PublicParmOnline pp = new PublicParmOnline();
@@ -44,8 +45,6 @@ public class Crm2_1AppXOnline23_receipt extends TestCaseCommon implements TestCa
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.product= EnumTestProduct.PORSCHE_ONLINE.getAbbreviation();
-
 
         //replace backend gateway url
         //commonConfig.gateway = "";
@@ -54,7 +53,7 @@ public class Crm2_1AppXOnline23_receipt extends TestCaseCommon implements TestCa
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-online-test");
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.PORSCHE_ONLINE.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
 
         //replace ding push conf
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
@@ -63,7 +62,7 @@ public class Crm2_1AppXOnline23_receipt extends TestCaseCommon implements TestCa
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = EnumTestProduct.PORSCHE_ONLINE.getShopId();
+        commonConfig.setShopId(product.getShopId()).setReferer(product.getReferer()).setRoleId(product.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
 
         logger.debug("crm: " + crm);
@@ -88,6 +87,7 @@ public class Crm2_1AppXOnline23_receipt extends TestCaseCommon implements TestCa
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
     }
+
     @Test(description = "23点接待客户，购车交车，有手机号完成接待")
     public void testdeliver() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -111,6 +111,7 @@ public class Crm2_1AppXOnline23_receipt extends TestCaseCommon implements TestCa
             saveData("创建新客完成接待");
         }
     }
+
     @Test(description = "23点接待客户无手机号")
     public void testdeliverNophone() {
         logger.logCaseStart(caseResult.getCaseName());

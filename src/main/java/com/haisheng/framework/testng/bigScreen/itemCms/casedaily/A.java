@@ -17,7 +17,7 @@ import com.haisheng.framework.testng.bigScreen.itemCms.common.enumerator.EnumMan
 import com.haisheng.framework.testng.bigScreen.itemCms.common.enumerator.EnumRegionType;
 import com.haisheng.framework.testng.bigScreen.itemCms.common.scene.*;
 import com.haisheng.framework.testng.bigScreen.itemCms.common.util.CmsConstants;
-import com.haisheng.framework.testng.bigScreen.itemCms.common.util.ScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.itemCms.common.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -30,6 +30,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -39,22 +40,20 @@ public class A extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct product = EnumTestProduct.CMS_DAILY;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.CMS_DAILY;
     public VisitorProxy visitor = new VisitorProxy(product);
-    public ScenarioUtil util = new ScenarioUtil(visitor);
+    public SceneUtil util = new SceneUtil(visitor);
 
     @BeforeClass
     @Override
     public void initial() {
         CommonConfig commonConfig = new CommonConfig();
         logger.debug("before class initial");
-        commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_XUNDIAN_DAILY_SERVICE;
-        commonConfig.checklistQaOwner = EnumChecklistUser.GLY.getName();
+        commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_MANAGE_PORTAL_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_MANAGEMENT_PLATFORM_SERVICE;
+        commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.XUNDIAN_DAILY_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
         commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.product = product.getAbbreviation();
-        commonConfig.shopId = product.getShopId();
-        commonConfig.referer = product.getReferer();
+        commonConfig.setShopId(product.getShopId()).setReferer(product.getReferer()).setRoleId(product.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
         util.login(ALL_AUTHORITY);
     }
@@ -71,14 +70,42 @@ public class A extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
+        logger.logCaseStart(caseResult.getCaseName());
     }
 
     @Test
     public void test() {
-        IContainer container = new ExcelContainer.Builder().path("src/main/java/com/haisheng/framework/testng/bigScreen/itemcms/common/multimedia/file/店铺.xlsx").build();
-        container.init();
-        ITable[] tables = container.getTables();
-        Arrays.stream(tables).forEach(table -> createLayoutAndAddDevice(57814L, table));
+        File file = null;
+        try {
+            file = util.downloadFile();
+            if (file != null) {
+                IContainer container = new ExcelContainer.Builder().path(file.getPath()).build();
+                container.init();
+                //输出表名，没有啥实际意义
+                Arrays.stream(container.getTables()).forEach(e -> logger.info("table_name is：{}", e.getKey()));
+                //这三行是生成设备及出入口的代码，注释掉，用的时候开启然后提交到git
+//                long subjectId = getSubjectId(container);
+//                ITable[] tables = container.getTables();
+//                Arrays.stream(tables).forEach(table -> createLayoutAndAddDevice(subjectId, table));
+            }
+        } catch (Exception e) {
+            collectMessage(e);
+        } finally {
+
+            util.deleteFile(file);
+        }
+    }
+
+    /**
+     * 获取主体Id
+     *
+     * @param container 容器
+     * @return 主体id
+     */
+    public long getSubjectId(IContainer container) {
+        ITable table = container.getTable(CmsConstants.SUBJECT_TABLE_NAME);
+        String subjectId = table.getRows()[0].getField("subject_id").getValue();
+        return Long.parseLong(subjectId);
     }
 
     /**

@@ -40,6 +40,7 @@ import java.util.stream.Collectors;
  * 有问题处请@wangmin
  */
 public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
+    EnumTestProduct product = EnumTestProduct.XD_DAILY;
     public static final Logger log = LoggerFactory.getLogger(StorePcAndAppData.class);
     public static final int size = 100;
     StoreScenarioUtil md = StoreScenarioUtil.getInstance();
@@ -55,10 +56,10 @@ public class StorePcAndAppData extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistQaOwner = EnumChecklistUser.QQ.getName();
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.XUNDIAN_DAILY_TEST.getJobName());
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.XD_DAILY.getDesc());
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT,product.getDesc());
         commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.pushRd = new String[]{"15898182672", "18513118484", "18810332354", "13604609869", "13373166806"};
-        commonConfig.shopId = EnumTestProduct.XD_DAILY.getShopId();
+        commonConfig.setShopId(product.getShopId()).setReferer(product.getReferer()).setRoleId(product.getRoleId()).setProduct(product.getAbbreviation());
         commonConfig.checklistQaOwner = "青青";
         beforeClassInit(commonConfig);
         logger.debug("store " + md);

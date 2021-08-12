@@ -45,8 +45,6 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "吕雪晴";
-
-        commonConfig.product = product.getAbbreviation();
         //replace backend gateway url
         //commonConfig.gateway = "";
 
@@ -64,7 +62,7 @@ public class IgnoreCase extends TestCaseCommon implements TestCaseStd {
 
         //set shop id
         //commonConfig.shopId = "-1";
-        commonConfig.shopId = "45973";
+        commonConfig.setShopId("45973").setReferer(product.getReferer()).setRoleId(product.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
 
     }

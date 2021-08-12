@@ -51,8 +51,6 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.referer = product.getReferer();
-        commonConfig.product = product.getAbbreviation();
 //        commonConfig.referer=getJcReferdaily();
 
 
@@ -72,8 +70,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = "49195";
-        commonConfig.roleId = "2945";
+        commonConfig.setShopId("49195").setRoleId("2945").setReferer(product.getReferer()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
         jc.changeIpPort(product.getIp());
 
@@ -89,7 +86,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         JSONObject object = new JSONObject();
         object.put("phone", username);
         object.put("verification_code", password);
-        commonConfig.roleId = roleId;
+        commonConfig.setRoleId(roleId);
         httpPost(EnumTestProduct.JC_DAILY_ZH.getIp(), path, object);
     }
 
@@ -100,7 +97,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         object.put("phone", phone);
         object.put("verification_code", verificationCode);
         object.put("type", 1);
-        commonConfig.roleId = roleId;
+        commonConfig.setRoleId(roleId);
         httpPost(EnumTestProduct.JC_DAILY_ZH.getIp(), path, object);
     }
 
@@ -325,7 +322,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
     public void receptionPageAndpctodaydate3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            commonConfig.shopId = "-1";
+            commonConfig.setShopId("-1");
             appLogin(pp.gwphone, pp.gwpassword, pp.roleId);
             //app今日任务数
             int[] tasknum = pf.appTask();
@@ -365,7 +362,7 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             appLogin(pp.gwphone, pp.gwpassword, pp.roleId);
-            commonConfig.shopId = pp.shopIdZ;
+            commonConfig.setShopId(pp.shopIdZ);
             saveData("今日任务接待（预约）总数（分母）==pc【】列表条数");
         }
     }
@@ -469,8 +466,6 @@ public class JcApp extends TestCaseCommon implements TestCaseStd {
         try {
             String[] voucher_code = pf.voucherName();
             //pc
-            System.out.println(commonConfig.shopId);
-            System.out.println(commonConfig.roleId);
             pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
             int messagePctotal = jc.pushMsgListFilterManage("-1", "1", "10", null, null).getInteger("total");
             int verificationReordPctotal = jc.verificationReordFilterManage("-1", voucher_code[2], "1", "10", null, null).getInteger("total");

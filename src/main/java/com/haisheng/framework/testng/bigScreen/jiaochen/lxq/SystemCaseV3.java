@@ -67,10 +67,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         //替换钉钉推送
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //放入shopId
-        commonConfig.product = PRODUCE.getAbbreviation();
-        commonConfig.referer = PRODUCE.getReferer();
-        commonConfig.shopId = PRODUCE.getShopId();
-        commonConfig.roleId = ALL_AUTHORITY.getRoleId();
+        commonConfig.setShopId(PRODUCE.getShopId()).setReferer(PRODUCE.getReferer()).setRoleId(ALL_AUTHORITY.getRoleId()).setProduct(PRODUCE.getAbbreviation());
         beforeClassInit(commonConfig);
     }
 
@@ -1620,9 +1617,9 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             //小程序删除无牌爱车
             util.loginApplet(APPLET_USER_ONE);
             JSONArray arr = AppletCarListScene.builder().build().invoke(visitor).getJSONArray("list");
-            for (int i = 0 ; i < arr.size();i++){
+            for (int i = 0; i < arr.size(); i++) {
                 JSONObject obj = arr.getJSONObject(i);
-                if (!obj.containsKey("plate_number")){
+                if (!obj.containsKey("plate_number")) {
                     AppletCarDeleteScene.builder().id(obj.getLong("id")).build().invoke(visitor);
 
                 }

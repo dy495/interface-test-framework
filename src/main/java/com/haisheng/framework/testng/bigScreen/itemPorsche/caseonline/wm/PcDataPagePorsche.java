@@ -25,10 +25,9 @@ import java.util.List;
 import java.util.Map;
 
 public class PcDataPagePorsche extends TestCaseCommon implements TestCaseStd {
-
+    EnumTestProduct product = EnumTestProduct.PORSCHE_ONLINE_CLIENT;
     CrmScenarioUtilOnline crm = CrmScenarioUtilOnline.getInstance();
     private static final EnumAccount zj = EnumAccount.ZJ_ONLINE_PORSCHE;
-    private static final String shopId = EnumTestProduct.PORSCHE_ONLINE_CLIENT.getShopId();
 
     @BeforeClass
     @Override
@@ -41,11 +40,11 @@ public class PcDataPagePorsche extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.CRM_ONLINE_TEST.getJobName());
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.PORSCHE_ONLINE_CLIENT.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = EnumDingTalkWebHook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
-        commonConfig.shopId = shopId;
+        commonConfig.setShopId(product.getShopId()).setReferer(product.getReferer()).setRoleId(product.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
         logger.debug("crm: " + crm);
         UserUtil.login(zj);

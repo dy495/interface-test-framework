@@ -42,15 +42,14 @@ import java.util.Random;
 public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
 
     private static final EnumTestProduct product = EnumTestProduct.JC_DAILY_JD;
-    private VisitorProxy visitor = new VisitorProxy(product);
+    private final VisitorProxy visitor = new VisitorProxy(product);
 
     ScenarioUtil jc = ScenarioUtil.getInstance();
     DateTimeUtil dt = new DateTimeUtil();
     PublicParm pp = new PublicParm();
     JcFunction pf = new JcFunction(visitor, pp);
-    FileUtil file = new FileUtil();
     Random random = new Random();
-    private QADbProxy qaDbProxy = QADbProxy.getInstance();
+    private final QADbProxy qaDbProxy = QADbProxy.getInstance();
     public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
     CommonConfig commonConfig = new CommonConfig();
     public String IpPort = product.getIp();
@@ -69,8 +68,6 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.referer = product.getReferer();
-        commonConfig.product = product.getAbbreviation();
 
         //replace backend gateway url
         //commonConfig.gateway = "";
@@ -89,8 +86,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 //        commonConfig.referer="http://dev.dealer-jc.winsenseos.cn/authpage/login";
         //set shop id
-        commonConfig.shopId = pp.shopIdZ;
-        commonConfig.roleId = "603";
+        commonConfig.setShopId(pp.shopIdZ).setReferer(product.getReferer()).setRoleId(product.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);
@@ -105,7 +101,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         JSONObject object = new JSONObject();
         object.put("phone", username);
         object.put("verification_code", password);
-        commonConfig.roleId = roleId;
+        commonConfig.setRoleId(roleId);
         httpPost(EnumTestProduct.JC_DAILY_ZH.getIp(), path, object);
     }
 
@@ -116,7 +112,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         object.put("phone", phone);
         object.put("verification_code", verificationCode);
         object.put("type", 1);
-        commonConfig.roleId = roleId;
+        commonConfig.setRoleId(roleId);
         httpPost(EnumTestProduct.JC_DAILY_ZH.getIp(), path, object);
     }
 
@@ -377,9 +373,8 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
 //            er.days="1";            //提醒天数
             er.mileage = "90000";        //提醒公里数
             jc.createRemindMethod(er);
-            String RemindId = jc.remindPage("1", "10", "", "", "").getJSONArray("list").getJSONObject(0).getString("id");
             //编辑
-            er.id = RemindId;
+            er.id = jc.remindPage("1", "10", "", "", "").getJSONArray("list").getJSONObject(0).getString("id");
             er.content = "修改提醒内容";
             jc.editRemindMethod(er);
 
@@ -392,7 +387,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test(description = "", enabled = false)  //新建智能提醒（公里数）,由于智能提醒隔天生效，故此case一天运行一次  明天调试
+    @Test(description = "pc-新建智能提醒（公里）结果验证", enabled = false)  //新建智能提醒（公里数）,由于智能提醒隔天生效，故此case一天运行一次  明天调试
     public void CreateRemindCheck() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -455,7 +450,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             Calendar calendar = Calendar.getInstance();
 
             int day = calendar.get(Calendar.DAY_OF_WEEK);
-            if (day % 2 == 0 && day != Calendar.SUNDAY) {  //如果是星期数数是基数且不是周日
+            if (day % 2 == 0) {  //如果是星期数数是基数且不是周日
                 //查询小程序卡券数量
                 jc.appletLoginToken(EnumAppletToken.JC_WM_DAILY.getToken());
                 int totalAfter = pf.getVoucherTotal();
@@ -481,9 +476,8 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
     public void accountInfoData_2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            commonConfig.shopId = "-1";
+            commonConfig.setShopId("-1");
             pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
-            System.out.println(commonConfig.shopId);
             JSONArray list = jc.staffListFilterManage("", "1", "10", "", "").getJSONArray("list");
             for (int i = 1; i < list.size(); i++) {
                 String role_name = list.getJSONObject(i).getJSONArray("role_list").getJSONObject(0).getString("role_name");
@@ -496,7 +490,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            commonConfig.shopId = pp.shopIdZ;
+            commonConfig.setShopId(pp.shopIdZ);
             pcLogin(pp.gwname, pp.gwpassword, pp.roleidJdgw);
             saveData("角色的使用账号数量==账号列表中该角色的数量");
         }
@@ -601,7 +595,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
 
             System.out.println(dt.getHHmm(0, "HH:mm:ss"));
             dt.getHHmm(0);
-            String maile = "2001";
+//            String maile = "2001";
             String vin = "ASDAAAAAAA12" + CommonUtil.getRandom(5);
             String plate = "京AS" + CommonUtil.getRandom(4);
 //            String phone="177"+CommonUtil.getRandom(8);
@@ -625,7 +619,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test(enabled = true, description = "导入流失客户")
+    @Test(description = "导入流失客户")
     public void maintainRemind() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -660,7 +654,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test(enabled = true, description = "流失客户数量")
+    @Test(description = "流失客户数量")
     public void customer1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -715,7 +709,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test(enabled = true, description = "导入潜客，车系填，车型不填，成功")
+    @Test(description = "导入潜客，车系填，车型不填，成功")
     public void importPotentialCustomer2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -748,7 +742,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test(enabled = true, description = "导入潜客，车系不填，车型不填，失败")
+    @Test(description = "导入潜客，车系不填，车型不填，失败")
     public void importPotentialCustomer3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {

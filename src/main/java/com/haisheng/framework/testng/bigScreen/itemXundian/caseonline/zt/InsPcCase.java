@@ -56,7 +56,7 @@ public class InsPcCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.dingHook = DingWebhook.ONLINE_STORE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.pushRd = new String[]{"13604609869", "15084928847"};
 //        commonConfig.shopId = EnumTestProduce. INS_DAILY.getShopId();
-        commonConfig.referer = PRODUCE.getReferer();
+        commonConfig.setReferer(PRODUCE.getReferer()).setRoleId(PRODUCE.getRoleId()).setProduct(PRODUCE.getAbbreviation());
         beforeClassInit(commonConfig);
         logger.debug("xundian " + xd);
 

@@ -40,11 +40,10 @@ import static com.google.common.base.Preconditions.checkArgument;
 public class JcPc extends TestCaseCommon implements TestCaseStd {
 
     private static final EnumTestProduct product = EnumTestProduct.JC_DAILY_JD;
-    private VisitorProxy visitor = new VisitorProxy(product);
+    private final VisitorProxy visitor = new VisitorProxy(product);
     CommonConfig commonConfig = new CommonConfig();
     ScenarioUtil jc = ScenarioUtil.getInstance();
     DateTimeUtil dt = new DateTimeUtil();
-    JsonPathUtil jpu = new JsonPathUtil();
     PublicParm pp = new PublicParm();
     JcFunction pf = new JcFunction(visitor, pp);
 
@@ -68,8 +67,6 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.referer = product.getReferer();
-        commonConfig.product = product.getAbbreviation();
         //replace backend gateway url
         //commonConfig.gateway = "";
 
@@ -85,10 +82,8 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};
-//        commonConfig.referer="http://dev.dealer-jc.winsenseos.cn/authpage/login";
         //set shop id
-        commonConfig.shopId = "49195";
-        commonConfig.roleId = "603";
+        commonConfig.setShopId("49195").setReferer(product.getReferer()).setRoleId(product.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);
@@ -102,7 +97,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         JSONObject object = new JSONObject();
         object.put("phone", username);
         object.put("verification_code", password);
-        commonConfig.roleId = roleId;
+        commonConfig.setRoleId(roleId);
         httpPost(EnumTestProduct.JC_DAILY_ZH.getIp(), path, object);
     }
 
@@ -113,7 +108,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         object.put("phone", phone);
         object.put("verification_code", verificationCode);
         object.put("type", 1);
-        commonConfig.roleId = roleId;
+        commonConfig.setRoleId(roleId);
         httpPost(EnumTestProduct.JC_DAILY_ZH.getIp(), path, object);
     }
 
@@ -154,13 +149,13 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             if (size < 100) {
                 JSONArray list = jc.organizationRolePage(name, 1, 100).getJSONArray("list");
                 Long role_id = list.getJSONObject(list.size() - 1).getLong("id");
-//                jc.organizationRoleDelete(role_id, true);
+                jc.organizationRoleDelete(role_id, true);
             } else {
                 logger.warn("警告：角色数量超过100个，不在删除新增角色，将造成数据冗余");
             }
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("轿辰-新增角色");
         }
@@ -180,7 +175,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             String description = "自动化测试给店长用的角色";
             JSONArray moduleId = pp.roleList;
             //新增一个角色organizationRoleAdd
-            JSONObject res = jc.organizationRoleAdd(name, description, moduleId, true);
+            jc.organizationRoleAdd(name, description, moduleId, true);
             String id = jc.roleListFilterManage("", "1", "10", "name", name).getJSONArray("list").getJSONObject(0).getString("id");
             //编辑角色
             String name1 = "AUTOtest在编辑";
@@ -197,7 +192,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             jc.organizationidRoleDelete(id);
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
 
             saveData("轿辰-新增删改查角色");
@@ -235,7 +230,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(total - totalB == 1, "新增角色列表没+1");
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("轿辰-新增角色(名称校验)-正常");
         }
@@ -262,7 +257,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("轿辰-新增角色(名称异常校验)");
         }
@@ -282,7 +277,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             JSONArray shop_list = new JSONArray();
             String phone = pf.genPhoneNum();
             //用EMAIL新增一个账号
-            JSONObject res = jc.organizationAccountAdd(name, phone, r_dList, shop_list);
+            jc.organizationAccountAdd(name, phone, r_dList, shop_list);
 
             JSONArray accountList = jc.pcStaffPage(name, 1, 10).getJSONArray("list");
             String account = accountList.getJSONObject(0).getString("id");
@@ -308,7 +303,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(total1 - total2 == 1, "删除1个账号，账号列表的数量却减了：" + (total1 - total2));
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
 
             saveData("轿辰-新增1个账号，列表+1；删除1个账号，列表-1；修改账号信息以后与列表是否一致");
@@ -329,9 +324,9 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(code == 1001, "新增账户，名称异常");
             }
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
+            collectMessage(e);
         } finally {
-
             saveData("轿辰-新增1个账号，列表+1；删除1个账号，列表-1；修改账号信息以后与列表是否一致");
         }
     }
@@ -347,7 +342,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(code == 1001, "新增账户，电话异常");
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
 
             saveData("轿辰-新增1个账号，列表+1；删除1个账号，列表-1；修改账号信息以后与列表是否一致");
@@ -366,7 +361,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(code == 1001, "新增账户，电话异常");
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
 
             saveData("轿辰-新增1个账号，列表+1；删除1个账号，列表-1；修改账号信息以后与列表是否一致");
@@ -398,7 +393,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(code == 1001, "新增账户，角色超过5个");
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
 
             saveData("轿辰-新增1个账号电话号码重复异常验证");
@@ -432,7 +427,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             jc.organizationAccountDelete(account);
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("轿辰-新增1个账号角色5个");
         }
@@ -460,7 +455,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             }
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
 
             saveData("轿辰-创建账号必填项不填");
@@ -525,7 +520,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(total.equals(total1), "编辑一个账号，账号列表的数量由:" + total + "变成了" + total1);
             }
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
 
             saveData("轿辰-编辑账号信息以后，创建者和创建时间是否发生改变");
@@ -564,7 +559,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("轿辰-禁用账户登录失败，开启登录成功");
         }
@@ -592,7 +587,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument((Expetresult.equals(SelectResult)), "接待管理按" + parm + "查询，结果错误" + SelectResult);
             }
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("轿辰-接待管理查询，结果校验");
         }
@@ -617,7 +612,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(result.getString(ss[0][1].toString()).contains(sr.plate_number), "");
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("轿辰-接待管理列表查询全填，结果校验");
         }
@@ -638,7 +633,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
                 }
             }
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("销售客户查询单项查询，结果校验");
         }
@@ -655,7 +650,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             int code = jc.pcManageReception(plate, false).getInteger("code");
             Preconditions.checkArgument(code == 1001, "异常车牌号依然成功");
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("pc接待车牌号验证");
         }
@@ -671,7 +666,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             JsonPathUtil.spiltString(data.toJSONString(), jsonpath);
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("pc接待搜索老车牌号展示项验证");
         }
@@ -700,7 +695,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(appTask - appTaskA == 1, "pc取消接待，app接待任务没-1");
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
             saveData("pc取消接待，app任务-1");
@@ -724,7 +719,6 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             String type = "MAINTAIN";
             int num = 0;
             String dataType = "WEEKDAY";
-            System.out.println(commonConfig.shopId);
             pcLogin(pp.jdgw, pp.gwpassword, pp.roleidJdgw);
             //判断今天是否是周末，周末就取周末的折扣配置
             Calendar cal = Calendar.getInstance();
@@ -763,7 +757,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(result.equals(pa), "预约价格异常" + result + ":" + pa);
             }
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             jc.pcLogin(pp.gwphone, pp.gwpassword);
             saveData("pc修改预约配置验证");
@@ -782,7 +776,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             }
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
 
             saveData("pc修改预约配置价格格式验证");
@@ -808,7 +802,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(priceAfter.equals(price), "编辑后价格与入参不一致");
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("pc修改预约配置价格，列表验证");
         }
@@ -838,7 +832,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
 
             Preconditions.checkArgument(code != 1000, "预约配置关闭小程序预约保养页返回" + message);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             jc.pcLogin(pp.gwphone, pp.gwpassword);
             saveData("pc修改预约配置验证");
@@ -870,7 +864,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(totalAfter == totalAfter2, "开启预约配置后列表数量变化");
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             jc.pcLogin(pp.gwphone, pp.gwpassword);
             saveData("pc开关预约配置按钮，预约配置列表数量有无变化");
@@ -882,7 +876,6 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
     public void pcmaintainTableEdit(String type) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            System.out.println(commonConfig.shopId);
             Calendar calendar = Calendar.getInstance();
             int day = calendar.get(Calendar.DAY_OF_WEEK);
 
@@ -939,7 +932,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             jc.pcLogin(pp.gwphone, pp.gwpassword);
             saveData("pc修改工位，工作日和休息日不同步变更");
@@ -978,7 +971,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(as.getRemindTime() == 20, "提醒时间配置失败");
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             jc.pcLogin(pp.gwphone, pp.gwpassword);
             saveData("pc修改预约配置，正常");
@@ -1006,7 +999,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(code == 1001, "修改预约配置，卡券使用天数限制超过2000仍成功");
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             jc.pcLogin(pp.gwphone, pp.gwpassword);
             saveData("pc修改预约配置卡券限制使用时间2000天验证");
@@ -1047,7 +1040,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             int code4 = jc.pcappointmentConfig(er).getInteger("code");
             Preconditions.checkArgument(code4 == 1000, "修改预约配置异常");
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             jc.pcLogin(pp.gwphone, pp.gwpassword);
             saveData("pc修改预约配置，异常");
@@ -1093,7 +1086,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(totalAfter2 - totalAfter == 1, "开启预约配置，小程序预约门店+1");
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             jc.pcLogin(pp.gwphone, pp.gwpassword);
             saveData("pc修改预约配置验证");
@@ -1132,7 +1125,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             jc.shopStatusChange(pp.shopIdZ, "APPOINTMENT", open);
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("pc门店按钮修改关联验证");
         }
@@ -1232,7 +1225,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             }
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             pcLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
 //            saveData("");

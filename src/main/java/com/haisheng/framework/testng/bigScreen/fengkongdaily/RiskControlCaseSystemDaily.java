@@ -62,16 +62,13 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "郭丽雅";
-        commonConfig.product = product.getAbbreviation();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "FengKong-daily-test");
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "风控-日常-郭丽雅");        //替换钉钉推送
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //放入shopId
-        commonConfig.referer = product.getReferer();
+        commonConfig.setShopId(product.getShopId()).setReferer(product.getReferer()).setRoleId(product.getRoleId()).setProduct(product.getAbbreviation());
         //全部门店--需要单个门店时需要修改
-        commonConfig.shopId = product.getShopId();
-        commonConfig.roleId = product.getRoleId();
         beforeClassInit(commonConfig);
         logger.debug("FK: " + cu);
     }
@@ -598,7 +595,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     /**
      * 收银追溯-小票详情内容校验--是否为空的内容待确认
      */
-    @Test(description = "收银追溯-小票详情内容校验",enabled = false)
+    @Test(description = "收银追溯-小票详情内容校验", enabled = false)
     public void authCashierPageSystem4() {
         try {
             //收银风控列表第一条的shopId
@@ -646,7 +643,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     /**
      * 收银风控事件-小票详情内容校验--是否为空待确认
      */
-    @Test(description = "收银风控事件-小票详情内容校验",enabled = false)
+    @Test(description = "收银风控事件-小票详情内容校验", enabled = false)
     public void authCashierPageSystem() {
         try {
             //收银风控列表第一条的shopId

@@ -31,7 +31,7 @@ public class JcPcReceptionRelate extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct product = EnumTestProduct.JC_DAILY_JD;
     private final VisitorProxy visitor = new VisitorProxy(product);
     ScenarioUtil jc = new ScenarioUtil();
-    private QADbProxy qaDbProxy = QADbProxy.getInstance();
+    private final QADbProxy qaDbProxy = QADbProxy.getInstance();
     public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
     PublicParm pp = new PublicParm();
     JcFunction pf = new JcFunction(visitor, pp);
@@ -48,9 +48,6 @@ public class JcPcReceptionRelate extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.referer = product.getReferer();
-        commonConfig.product = product.getAbbreviation();
-//        commonConfig.referer=getJcReferdaily();
 
 
         //replace backend gateway url
@@ -67,10 +64,7 @@ public class JcPcReceptionRelate extends TestCaseCommon implements TestCaseStd {
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};
-
-        //set shop id
-        commonConfig.shopId = "49195";
-        commonConfig.roleId = "2945";
+        commonConfig.setShopId("49195").setReferer(product.getReferer()).setRoleId("2945").setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);
@@ -116,7 +110,7 @@ public class JcPcReceptionRelate extends TestCaseCommon implements TestCaseStd {
             dataTemp.setDataName(dataName);
             dataTemp.setPcAppointmentRecordNum(pf.pcReceptionPage());  //pc接待管理数
             dataTemp.setAppReceiptage(pf.appReceptionPage());            //app[任务-接待数]
-            int appTodayTask[] = pf.appTask();
+            int[] appTodayTask = pf.appTask();
             dataTemp.setAppSurplusAppointment(appTodayTask[0]);
             dataTemp.setApp_all_appointment(appTodayTask[1]);
             dataTemp.setApp_surplus_reception(appTodayTask[2]);
@@ -169,7 +163,7 @@ public class JcPcReceptionRelate extends TestCaseCommon implements TestCaseStd {
     public void AppAppointmentTodayTask() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int appTask[] = pf.appTask();  //先调取函数可先验证此接口，在验证数据
+            int[] appTask = pf.appTask();  //先调取函数可先验证此接口，在验证数据
 
             int app_surplus_reception = qaDbUtil.selsetDataTempOne("app_surplus_reception", dataName);
             int app_all_reception = qaDbUtil.selsetDataTempOne("app_all_reception", dataName);

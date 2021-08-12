@@ -53,6 +53,7 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public SceneUtil util = new SceneUtil(visitor);
 
+
     @BeforeClass
     @Override
     public void initial() {
@@ -67,17 +68,14 @@ public class VoucherManagerCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
         //放入shopId
-        commonConfig.product = PRODUCE.getAbbreviation();
-        commonConfig.referer = PRODUCE.getReferer();
-        commonConfig.shopId = ACCOUNT.getShopId();
-        commonConfig.roleId = ACCOUNT.getRoleId();
+        commonConfig.setShopId(ACCOUNT.getShopId()).setRoleId(ACCOUNT.getRoleId()).setReferer(PRODUCE.getReferer()).setProduct(PRODUCE.getAbbreviation());
         beforeClassInit(commonConfig);
     }
 
     @AfterClass
     @Override
     public void clean() {
-        util.cleanVoucher();
+//        util.cleanVoucher();
         afterClassClean();
     }
 

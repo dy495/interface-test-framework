@@ -23,9 +23,9 @@ import java.util.List;
 import java.util.Objects;
 
 public class EvaluateConfigCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_DAILY_ZH; // 管理页—-首页
+    private static final EnumTestProduct product = EnumTestProduct.YT_DAILY_ZH; // 管理页—-首页
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_DAILY; // 全部权限账号 【运通】
-    public VisitorProxy visitor = new VisitorProxy(PRODUCE);   // 产品类放到代理类中（通过代理类发请求）
+    public VisitorProxy visitor = new VisitorProxy(product);   // 产品类放到代理类中（通过代理类发请求）
     public SceneUtil util = new TopicUtil(visitor);    //场景工具类中放入代理类，类中封装接口方法直接调用
     CommonConfig commonConfig = new CommonConfig();    // 配置类初始化
 
@@ -39,13 +39,10 @@ public class EvaluateConfigCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistQaOwner = "孟辰";
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.YUNTONG_DAILY_TEST.getJobName());
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.product = PRODUCE.getAbbreviation(); // 产品代号 -- YT
-        commonConfig.referer = PRODUCE.getReferer();
-        commonConfig.shopId = "57279";  //请求头放入shopId
-        commonConfig.roleId = ALL_AUTHORITY.getRoleId(); //请求头放入roleId
+        commonConfig.setShopId("57279").setReferer(product.getReferer()).setRoleId(ALL_AUTHORITY.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);  // 配置请求头
         util.loginPc(ALL_AUTHORITY);   //登录
     }
@@ -73,7 +70,7 @@ public class EvaluateConfigCase extends TestCaseCommon implements TestCaseStd {
                 TopicUtil topicUtil = (TopicUtil) util;
                 JSONArray links = topicUtil.checkContents(title, answer);
                 String code = EvaluateV4ConfigSubmitScene.builder().links(links).build().invoke(visitor, false).getString("code");
-                Preconditions.checkArgument(Objects.equals(code,expect), description + ",期待:" + expect + ", 结果code=" + code);
+                Preconditions.checkArgument(Objects.equals(code, expect), description + ",期待:" + expect + ", 结果code=" + code);
             }
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -107,7 +104,7 @@ public class EvaluateConfigCase extends TestCaseCommon implements TestCaseStd {
                 TopicUtil topicUtil = (TopicUtil) util;
                 JSONArray links = topicUtil.checkTopicNum(topicList, answer);
                 String code = EvaluateV4ConfigSubmitScene.builder().links(links).build().invoke(visitor, false).getString("code");
-                Preconditions.checkArgument(Objects.equals(code,expectCode), description + ",期待:" + expectCode + ", 结果code=" + code);
+                Preconditions.checkArgument(Objects.equals(code, expectCode), description + ",期待:" + expectCode + ", 结果code=" + code);
             }
         } catch (AssertionError e) {
             appendFailReason(e.toString());

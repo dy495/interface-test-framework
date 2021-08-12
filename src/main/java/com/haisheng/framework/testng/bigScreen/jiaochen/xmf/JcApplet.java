@@ -53,8 +53,6 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.product = product.getAbbreviation();
-
         //replace backend gateway url
         //commonConfig.gateway = "";
 
@@ -67,14 +65,12 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         //replace ding push conf
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.referer = product.getReferer();
 
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = pp.shopIdZ;
-        commonConfig.roleId = pp.roleId;
+        commonConfig.setShopId(pp.shopIdZ).setReferer(product.getReferer()).setRoleId(product.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
         jc.appletLoginToken(pp.appletTocken);
         logger.debug("jc: " + jc);
@@ -87,7 +83,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         object.put("phone", phone);
         object.put("verification_code", verificationCode);
         object.put("type", 1);
-        commonConfig.roleId = roleId;
+        commonConfig.setRoleId(roleId);
         httpPost(EnumTestProduct.JC_DAILY_ZH.getIp(), path, object);
     }
 
@@ -524,7 +520,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
 //           Long total=jc.appletVoucherList(null,"GENERAL",20).getLong("total");
             jc.pcLogin(pp.gwphone, pp.jdgwpassword);
             //登录门店查询数据
-            commonConfig.shopId = "-1";
+            commonConfig.setShopId("-1");
             String voucherName = util.getVoucherName(pp.voucherId);
             VoucherFormVoucherPageBean voucher = util.getVoucherPage(voucherName);
             //累计发出数
@@ -532,7 +528,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
             //发卡记录数
             int sendRecordTotal = jc.invokeApi(SendRecordScene.builder().build()).getInteger("total");
             //登回
-            commonConfig.shopId = "45973";
+            commonConfig.setShopId("45973");
             JSONArray voucherList = new JSONArray();
 //            Long voucherId=jc.pcVoucherList().getJSONArray("list").getJSONObject(0).getLong("id");
             voucherList.add(pp.voucherId);   //
@@ -543,7 +539,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(voucherTotalB - voucherTotal == 1, "活动领取卡券后，卡券数量未加1");
             util.loginPc(administrator);
             //查询新数据
-            commonConfig.shopId = "-1";
+            commonConfig.setShopId("-1");
             //累计发出数
             VoucherFormVoucherPageBean newVoucher = util.getVoucherPage(voucherName);
             int newCumulativeDelivery = newVoucher.getCumulativeDelivery();
@@ -556,7 +552,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
             collectMessage(e);
         } finally {
             //还原
-            commonConfig.shopId = pp.shopIdZ;
+            commonConfig.setShopId(pp.shopIdZ);
             jc.appletLoginToken(pp.appletTocken);
             saveData("创建活动，领卡券");
         }
@@ -740,7 +736,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
-            commonConfig.shopId = pp.shopId;
+            commonConfig.setShopId(pp.shopId);
             int openShoptotal = getshopNumber("status");
             jc.appletLoginToken(pp.appletTocken);
             int total = jc.rescueShopList(pp.coordinate, "null").getJSONArray("list").size();  //TODO：接口没有返回门店列表总数，暂取list的size
@@ -748,7 +744,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
-            commonConfig.shopId = pp.shopIdZ;
+            commonConfig.setShopId(pp.shopIdZ);
             saveData("道路救援");
         }
     }
@@ -759,7 +755,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
-            commonConfig.shopId = pp.shopId;
+            commonConfig.setShopId(pp.shopId);
             int openShoptotal = getshopNumber("washing_status");
             jc.appletLoginToken(pp.appletTocken);
             int total = jc.carWashShopList(pp.coordinate).getJSONArray("list").size();    //TODO：接口没有返回门店列表总数，暂取list的size
@@ -767,7 +763,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
-            commonConfig.shopId = pp.shopIdZ;
+            commonConfig.setShopId(pp.shopIdZ);
             saveData("免费洗车门店数=门店管理开启的门店");
         }
     }

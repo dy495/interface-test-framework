@@ -22,6 +22,7 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 
 public class CrmQt extends TestCaseCommon implements TestCaseStd {
+    EnumTestProduct product = EnumTestProduct.PORSCHE_DAILY;
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     DateTimeUtil dt = new DateTimeUtil();
     PublicParm pp = new PublicParm();
@@ -42,7 +43,6 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.product = EnumTestProduct.PORSCHE_DAILY.getAbbreviation();
         //replace backend gateway url
         //commonConfig.gateway = "";
 
@@ -59,7 +59,7 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = EnumTestProduct.PORSCHE_DAILY.getShopId();
+        commonConfig.setShopId(product.getShopId()).setReferer(product.getReferer()).setRoleId(product.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
 
         logger.debug("crm: " + crm);
@@ -804,14 +804,14 @@ public class CrmQt extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(description = "前台老客解绑",enabled = false)
+    @Test(description = "前台老客解绑", enabled = false)
     public void jiebang() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray list = crm.markcustomerList().getJSONArray("list");
 
             JSONObject dd = pf.customermess(list, "老客");
-            if(dd.size()==0){
+            if (dd.size() == 0) {
                 throw new Exception("暂无老客到访，无法解绑");
             }
             String analysis_customer_id = dd.getString("analysis_customer_id");

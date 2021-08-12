@@ -38,35 +38,30 @@ import java.lang.reflect.Method;
  */
 public class SystemCaseRecp extends TestCaseCommon implements TestCaseStd {
 
-    EnumTestProduct PRODUCE = EnumTestProduct.YT_DAILY_ZH;
+    EnumTestProduct product = EnumTestProduct.YT_DAILY_JD;
     EnumAccount ALL_AUTHORITY = EnumAccount.YT_RECEPTION_DAILY_LXQ;
-    VisitorProxy visitor = new VisitorProxy(PRODUCE);
+    VisitorProxy visitor = new VisitorProxy(product);
     SceneUtil businessUtil = new SceneUtil(visitor);
     YunTongInfo info = new YunTongInfo();
     CommonConfig commonConfig = new CommonConfig();
+
     @BeforeClass
     @Override
     public void initial() {
         logger.debug("before class initial");
-
         //替换checklist的相关信息
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
         commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_DAILY_SERVICE.getId();
         commonConfig.checklistQaOwner = "吕雪晴";
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.YUNTONG_DAILY_TEST.getJobName());
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //放入shopId
-        commonConfig.product = PRODUCE.getAbbreviation();
-        commonConfig.referer = PRODUCE.getReferer();
-        commonConfig.shopId = PRODUCE.getShopId();
-        commonConfig.roleId = ALL_AUTHORITY.getRoleId();
+        commonConfig.setShopId(product.getShopId()).setReferer(product.getReferer()).setRoleId(ALL_AUTHORITY.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
         businessUtil.loginPc(ALL_AUTHORITY);
-
-        visitor.setProduct(EnumTestProduct.YT_DAILY_JD);  //展厅接待模块
 
     }
 
@@ -91,7 +86,7 @@ public class SystemCaseRecp extends TestCaseCommon implements TestCaseStd {
      */
 
     /**
-     *     手机评价后跟进
+     * 手机评价后跟进
      */
     @Test
     public void doEvaluate() {
@@ -102,17 +97,17 @@ public class SystemCaseRecp extends TestCaseCommon implements TestCaseStd {
             Long recId = info.startrecption(true);
 
             //获取评价选项
-             visitor.setProduct(EnumTestProduct.YT_DAILY_JD);
-             commonConfig.shopId = null;
-             commonConfig.roleId = null;
-            JSONArray evaluate_info_list = info.evaluateInfo(recId,"mid");
+            visitor.setProduct(EnumTestProduct.YT_DAILY_JD);
+            commonConfig.setShopId(null);
+            commonConfig.setRoleId(null);
+            JSONArray evaluate_info_list = info.evaluateInfo(recId, "mid");
 
             //提交评价
             PreSalesRecpEvaluateSubmit.builder().reception_id(recId).evaluate_info_list(evaluate_info_list).build().invoke(visitor);
 
             //PC跟进
-            commonConfig.shopId = PRODUCE.getShopId();
-            commonConfig.roleId = ALL_AUTHORITY.getRoleId();
+            commonConfig.setShopId(product.getShopId());
+            commonConfig.setRoleId(ALL_AUTHORITY.getRoleId());
             Long id = EvaluatePageV4Scene.builder().page(1).size(1).evaluateType(5).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
             EvaluateFollowUpScene.builder().id(id).evaluate_type(5).shopId(info.oneshopid).remark("祝他发财吧！！！祝他发财吧！！！祝他发财吧！！！").build().invoke(visitor);
 
@@ -148,9 +143,9 @@ public class SystemCaseRecp extends TestCaseCommon implements TestCaseStd {
             String phone2 = "1380220" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000));//手机号
             String phone3 = "1380330" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000));//手机号
 
-            String name1 = "自自"+dt.getHistoryDate(0);
-            String name2 = "动动"+dt.getHistoryDate(0);
-            String name3 = "化化"+dt.getHistoryDate(0);
+            String name1 = "自自" + dt.getHistoryDate(0);
+            String name2 = "动动" + dt.getHistoryDate(0);
+            String name3 = "化化" + dt.getHistoryDate(0);
             Long car_style_id = PreSaleCustomerStyleListScene.builder().shopId(info.oneshopid).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("style_id");
             Long car_model_id = PreSaleCustomerModelListScene.builder().styleId(car_style_id).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("model_id");
 
@@ -190,19 +185,19 @@ public class SystemCaseRecp extends TestCaseCommon implements TestCaseStd {
             //评价
 
             //获取评价选项
-            commonConfig.shopId = null;
-            commonConfig.roleId = null;
+            commonConfig.setShopId(null);
+            commonConfig.setRoleId(null);
 
             visitor.setProduct(EnumTestProduct.YT_DAILY_JD);
             //满分
-            JSONArray evaluate_info_list1 = info.evaluateInfo(recId1,"high");
+            JSONArray evaluate_info_list1 = info.evaluateInfo(recId1, "high");
             //提交评价
             PreSalesRecpEvaluateSubmit.builder().reception_id(recId1).evaluate_info_list(evaluate_info_list1).build().invoke(visitor);
 
-            JSONArray evaluate_info_list2 = info.evaluateInfo(recId2,"low");
+            JSONArray evaluate_info_list2 = info.evaluateInfo(recId2, "low");
             PreSalesRecpEvaluateSubmit.builder().reception_id(recId2).evaluate_info_list(evaluate_info_list2).build().invoke(visitor);
 
-            JSONArray evaluate_info_list3 = info.evaluateInfo(recId3,"mid");
+            JSONArray evaluate_info_list3 = info.evaluateInfo(recId3, "mid");
             PreSalesRecpEvaluateSubmit.builder().reception_id(recId3).evaluate_info_list(evaluate_info_list3).build().invoke(visitor);
 
 

@@ -49,7 +49,6 @@ public class EnumListCheckNotNull extends TestCaseCommon implements TestCaseStd 
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.product = product.getAbbreviation();
 
 
         //replace backend gaturl
@@ -68,9 +67,7 @@ public class EnumListCheckNotNull extends TestCaseCommon implements TestCaseStd 
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = pp.shopIdZ;
-        commonConfig.roleId = pp.roleidJdgw;
-        commonConfig.referer = product.getReferer();
+        commonConfig.setShopId(pp.shopIdZ).setReferer(product.getReferer()).setRoleId(pp.roleidJdgw).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);
@@ -254,7 +251,7 @@ public class EnumListCheckNotNull extends TestCaseCommon implements TestCaseStd 
             JSONArray list = data.getJSONArray("list");
             if (list.size() != 0) {
                 String jsonpath = "$.list[*].id&&$.list[*].shop_id&&$.list[*].plate_number&&$.list[*].car_style&&$.list[*].customer_name&&$.list[*].customer_phone&&$.list[*].evaluate_time&&$.list[*].score&&$.list[*].suggestion&&$.list[*].labels";
-                jpu.spiltString(data.toJSONString(), jsonpath);
+                JsonPathUtil.spiltString(data.toJSONString(), jsonpath);
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -273,7 +270,7 @@ public class EnumListCheckNotNull extends TestCaseCommon implements TestCaseStd 
             JSONArray list = data.getJSONArray("list");
             if (list.size() != 0) {
                 String jsonpath = "$.list[*].id&&$.list[*].title&&$.list[*].time&&$.list[*].is_read&&$.list[*].type";
-                jpu.spiltString(data.toJSONString(), jsonpath);
+                JsonPathUtil.spiltString(data.toJSONString(), jsonpath);
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -296,7 +293,7 @@ public class EnumListCheckNotNull extends TestCaseCommon implements TestCaseStd 
             String id = list.getJSONObject(0).getString("id");
             JSONObject data2 = jc.appmessagedetail(id);
             String jsonpath = "$.list[*].id&&$.list[*].title&&$.list[*].time&&$.list[*].is_read&&$.list[*].type&&$.list[*].shop_id&&$.list[*].brand_name&&$.list[*].plate_number&&$.list[*].car_style_name&&$.list[*].customer_name&&$.list[*].customer_phone&&$.list[*].is_overtime&&$.list[*].car_logo_url&&$.list[*].appointment_arrival_time&&$.list[*].type_name&&$.list[*].fault_description&&$.list[*].service_sale_name";
-            jpu.spiltString(data2.toJSONString(), jsonpath);
+            JsonPathUtil.spiltString(data2.toJSONString(), jsonpath);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {

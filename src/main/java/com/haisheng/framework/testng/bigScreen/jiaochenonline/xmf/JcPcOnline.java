@@ -48,10 +48,6 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "夏明凤";
-        commonConfig.referer = product.getReferer();
-        commonConfig.product = product.getAbbreviation();
-
-
         //replace backend gateway url
         //commonConfig.gateway = "";
 
@@ -69,7 +65,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 //        commonConfig.referer="http://dev.dealer-jc.winsenseos.cn/authpage/login";
         //set shop id
-        commonConfig.shopId = "-1";
+        commonConfig.setShopId(product.getShopId()).setReferer(product.getReferer()).setRoleId(product.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);
@@ -457,8 +453,8 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
     public void pcmaintainPriceEdit() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            commonConfig.shopId = "20032";
-            commonConfig.roleId = "424";
+            commonConfig.setShopId("20032");
+            commonConfig.setRoleId("424");
             int num = 0;
             String dataType = "WEEKDAY";
             jc.pcLogin(pp.jdgw, pp.gwpassword);
@@ -500,7 +496,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            commonConfig.shopId = "-1";
+            commonConfig.setShopId("-1");
             saveData("pc修改预约配置验证");
         }
     }

@@ -20,7 +20,8 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 
 public class XundianPcCase extends TestCaseCommon implements TestCaseStd {
-//    public static final Logger log = LoggerFactory.getLogger(StorePcAndAppData.class);
+    EnumTestProduct product = EnumTestProduct.XD_DAILY;
+    //    public static final Logger log = LoggerFactory.getLogger(StorePcAndAppData.class);
     public static final int size = 100;
     XundianScenarioUtil xd = XundianScenarioUtil.getInstance();
     StoreScenarioUtil md = StoreScenarioUtil.getInstance();
@@ -37,10 +38,11 @@ public class XundianPcCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistQaOwner = "周涛";
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.XUNDIAN_DAILY_TEST.getJobName());
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, EnumTestProduct.XD_DAILY.getDesc());
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc());
         commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.pushRd = new String[]{"15898182672", "18513118484", "18810332354", "15084928847"};
-        commonConfig.shopId = EnumTestProduct.XD_DAILY.getShopId();
+        commonConfig.setShopId(product.getShopId()).setReferer(product.getReferer()).setRoleId(product.getRoleId()).setProduct(product.getAbbreviation());
+
         beforeClassInit(commonConfig);
         logger.debug("xundian " + xd);
         xd.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
@@ -63,7 +65,7 @@ public class XundianPcCase extends TestCaseCommon implements TestCaseStd {
 
     //pc特殊截屏（四张图片截取成功）+事件时间
     @Test
-    public void problemMark(){
+    public void problemMark() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //JSONObject list = xd.checkStart("\"REMOTE\"", 1); //进入远程巡店
@@ -79,7 +81,7 @@ public class XundianPcCase extends TestCaseCommon implements TestCaseStd {
             String responsorId = xd.problemesponsors().getJSONArray("list").getJSONObject(0).getString("id");
             String audit_comment = "pc 截屏留痕推送给门店负责人";
 //            xd.problemMarkTime("uid_91df0ddd", listId, itemId, pic_list,43072, audit_comment,20);
-            xd.problemMarkTime(responsorId, listId, itemId, pic_list,43072, audit_comment,20);
+            xd.problemMarkTime(responsorId, listId, itemId, pic_list, 43072, audit_comment, 20);
 //            checkArgument(res.getInteger("code") == 1000, "截图四张失败message+"+res.getString("message"));
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());

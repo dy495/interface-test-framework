@@ -42,10 +42,7 @@ public class EvaluateConfigCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = DingWebhook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.product = PRODUCE.getAbbreviation(); // 产品代号 -- YT
-        commonConfig.referer = PRODUCE.getReferer();
-        commonConfig.shopId = "35827";  //请求头放入shopId
-        commonConfig.roleId = AUTHORITY.getRoleId(); //请求头放入roleId
+        commonConfig.setShopId("35827").setReferer(PRODUCE.getReferer()).setRoleId(AUTHORITY.getRoleId()).setProduct(PRODUCE.getAbbreviation());
         beforeClassInit(commonConfig);  // 配置请求头
         util.loginPc(AUTHORITY);   //登录
     }
@@ -73,7 +70,7 @@ public class EvaluateConfigCase extends TestCaseCommon implements TestCaseStd {
                 TopicUtil topicUtil = (TopicUtil) util;
                 JSONArray links = topicUtil.checkContents(title, answer);
                 String code = EvaluateV4ConfigSubmitScene.builder().links(links).build().invoke(visitor, false).getString("code");
-                Preconditions.checkArgument(Objects.equals(code,expect), description + ",期待:" + expect + ", 结果code=" + code);
+                Preconditions.checkArgument(Objects.equals(code, expect), description + ",期待:" + expect + ", 结果code=" + code);
             }
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -107,7 +104,7 @@ public class EvaluateConfigCase extends TestCaseCommon implements TestCaseStd {
                 TopicUtil topicUtil = (TopicUtil) util;
                 JSONArray links = topicUtil.checkTopicNum(topicList, answer);
                 String code = EvaluateV4ConfigSubmitScene.builder().links(links).build().invoke(visitor, false).getString("code");
-                Preconditions.checkArgument(Objects.equals(code,expectCode), description + ",期待:" + expectCode + ", 结果code=" + code);
+                Preconditions.checkArgument(Objects.equals(code, expectCode), description + ",期待:" + expectCode + ", 结果code=" + code);
             }
         } catch (AssertionError e) {
             appendFailReason(e.toString());

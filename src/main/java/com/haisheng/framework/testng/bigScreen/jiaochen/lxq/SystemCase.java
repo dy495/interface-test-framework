@@ -35,7 +35,7 @@ import java.util.List;
 
 public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
-
+    EnumTestProduct product = EnumTestProduct.JC_DAILY_JD;
     ScenarioUtil jc = ScenarioUtil.getInstance();
     JiaoChenInfo info = new JiaoChenInfo();
     PublicParm pp = new PublicParm();
@@ -55,11 +55,6 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "吕雪晴";
-
-
-        commonConfig.referer = EnumTestProduct.JC_DAILY_ZH.getReferer();
-        commonConfig.product = EnumTestProduct.JC_DAILY_ZH.getAbbreviation();
-
         //replace backend gateway url
         //commonConfig.gateway = "";
 
@@ -76,9 +71,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = "-1";
-        commonConfig.roleId = "603";
-//        commonConfig.shopId = "46439";
+        commonConfig.setShopId(product.getShopId()).setReferer(product.getReferer()).setRoleId(product.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
 
     }
@@ -746,7 +739,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             jc.topArticle(id);
             //登陆小程序查看
             jc.appletLoginToken(EnumAppletToken.JC_LXQ_DAILY.getToken());
-            Long search_list = jc.appletArticleList(null, null,"CAR_WELFARE").getJSONArray("list").getJSONObject(0).getLong("list");
+            Long search_list = jc.appletArticleList(null, null, "CAR_WELFARE").getJSONArray("list").getJSONObject(0).getLong("list");
 
             Preconditions.checkArgument(id == search_list, "置顶后不在小程序首位");
         } catch (AssertionError e) {
@@ -2603,7 +2596,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            commonConfig.shopId = "46439";
+            commonConfig.setShopId("46439");
             //导出
             int code = jc.recExport(url).getInteger("code");
             Preconditions.checkArgument(code == 1000, mess + "导出状态码为" + code);
@@ -2616,7 +2609,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailReason(e.toString());
         } finally {
-            commonConfig.shopId = "-1";
+            commonConfig.setShopId("-1");
             saveData("导出");
         }
     }

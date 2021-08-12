@@ -6,9 +6,12 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
+import lombok.Data;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.util.StringUtils;
+
+import java.io.Serializable;
 
 /**
  * 调用http请求的代理
@@ -67,8 +70,9 @@ public class VisitorProxy extends TestCaseCommon {
      */
     public JSONObject invokeApi(String path, JSONObject requestBody, boolean checkCode) {
         Preconditions.checkArgument(!StringUtils.isEmpty(path), "path不可为空");
-        String request = JSON.toJSONString(requestBody);
-        String result = httpPost(product.getIp(), path, request, checkCode, false);
+        InnerData innerData = transfer(path, requestBody);
+        String request = JSON.toJSONString(innerData.requestBody);
+        String result = httpPost(product.getIp(), innerData.getPath(), request, checkCode, false);
         JSONObject response = JSON.parseObject(result);
         return checkCode ? response.getJSONObject("data") : response;
     }
@@ -81,7 +85,8 @@ public class VisitorProxy extends TestCaseCommon {
      * @return 返回值
      */
     public JSONObject upload(String path, String filePath) {
-        String response = uploadFile(product.getIp(), path, filePath);
+        InnerData innerData = transfer(path, null);
+        String response = uploadFile(product.getIp(), innerData.getPath(), filePath);
         return JSON.parseObject(response);
     }
 
@@ -91,7 +96,8 @@ public class VisitorProxy extends TestCaseCommon {
      * @param scene 场景
      */
     public void setToken(@NotNull IScene scene) {
-        httpPost(product.getIp(), scene.getPath(), scene.getBody());
+        InnerData innerData = transfer(scene.getPath(), scene.getBody());
+        httpPost(product.getIp(), innerData.getPath(), innerData.getRequestBody());
     }
 
     /**
@@ -130,5 +136,34 @@ public class VisitorProxy extends TestCaseCommon {
      */
     public void setProduct(EnumTestProduct product) {
         this.product = product;
+    }
+
+    /**
+     * 新增处理插件
+     * 由于线上线下域名与路径不同，增加处理
+     *
+     * @param oldPath     旧的路径
+     * @param requestBody 旧的请求体
+     * @return 内部类数据
+     */
+    private InnerData transfer(String oldPath, JSONObject requestBody) {
+        InnerData innerData = new InnerData();
+        if (product.getIp().contains(EnumTestProduct.JC_ONLINE_ZH.getIp())) {
+            if (oldPath.contains("/account-platform/")) {
+                oldPath = oldPath.replace("/account-platform/", "/jiaochen/");
+                requestBody.remove("type");
+            } else {
+                oldPath = oldPath.contains("/car-platform/") ? oldPath.replace("/car-platform/", "/jiaochen/") : oldPath;
+            }
+        }
+        innerData.setPath(oldPath);
+        innerData.setRequestBody(requestBody);
+        return innerData;
+    }
+
+    @Data
+    static class InnerData implements Serializable {
+        private JSONObject requestBody;
+        private String path;
     }
 }

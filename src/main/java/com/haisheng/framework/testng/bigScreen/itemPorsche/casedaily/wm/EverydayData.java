@@ -37,7 +37,7 @@ public class EverydayData extends TestCaseCommon implements TestCaseStd {
     public void initial() {
         logger.debug("before class initial");
         CommonConfig commonConfig = new CommonConfig();
-        commonConfig.shopId = shopId;
+        commonConfig.setShopId(shopId);
         beforeClassInit(commonConfig);
         logger.debug("crm: " + crm);
     }

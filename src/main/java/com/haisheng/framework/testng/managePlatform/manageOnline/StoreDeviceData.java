@@ -45,7 +45,7 @@ public class StoreDeviceData extends TestCaseCommon implements TestCaseStd {
         commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "管理后台-统计线上店铺和设备掉线监控");
         commonConfig.pushRd = new String[]{"15084928847"};
-        commonConfig.referer = "http://39.106.253.190/cms/login";
+        commonConfig.setReferer("http://39.106.253.190/cms/login");
         beforeClassInit(commonConfig);
     }
 
@@ -69,19 +69,19 @@ public class StoreDeviceData extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         List<OnlineScopeDevice> onlineScopeDeviceList = new LinkedList<>();
         try {
-            int total = store.store_manage(page,size,null,null,null,null,null).getInteger("total");
+            int total = store.store_manage(page, size, null, null, null, null, null).getInteger("total");
             int t = CommonUtil.getTurningPage(total, 50);
             for (int l = 1; l < t; l++) {
-                JSONObject res = store.store_manage(l,size,null,null,null,null,null);
+                JSONObject res = store.store_manage(l, size, null, null, null, null, null);
                 JSONArray list = res.getJSONArray("list");
-                for(int i=0;i<list.size();i++){
+                for (int i = 0; i < list.size(); i++) {
                     Long subject_id = list.getJSONObject(i).getLong("subject_id");
                     OnlineScopeDevice onlineScopeDevice = new OnlineScopeDevice();
                     onlineScopeDeviceList.add(onlineScopeDevice);
                     onlineScopeDevice.setScopeId(subject_id);
 //                    List<OnlineScopeDevice> deviceMonitorUnitList = new ArrayList<OnlineScopeDevice>();
 //                    List<OnlineScopeDevice> deviceMonitorUnitErrorList = new ArrayList<OnlineScopeDevice>();
-                    if(subject_id !=null){
+                    if (subject_id != null) {
                         JSONObject response = store.decice_manage(subject_id);
                         JSONArray device_list = response.getJSONArray("list");
                         String deviceId;
@@ -90,8 +90,8 @@ public class StoreDeviceData extends TestCaseCommon implements TestCaseStd {
                         String deviceName;
                         String deviceType;
                         Timestamp deviceCreateTime;
-                        if(device_list.size() > 0){
-                            for(int j=0;j<device_list.size();j++) {
+                        if (device_list.size() > 0) {
+                            for (int j = 0; j < device_list.size(); j++) {
                                 deviceId = device_list.getJSONObject(j).getString("device_id");
                                 deviceStatus = device_list.getJSONObject(j).getString("status_name");
                                 scopeName = device_list.getJSONObject(j).getString("subject_name");
