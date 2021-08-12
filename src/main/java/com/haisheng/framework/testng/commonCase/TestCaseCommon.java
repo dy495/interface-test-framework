@@ -357,7 +357,7 @@ public class TestCaseCommon {
      *
      * @param path   路径
      * @param object 请求体
-     * @param IpPort 域名
+     * @param port   域名
      */
     public void httpPost(String port, String path, JSONObject object) {
         httpPost(port, path, JSONObject.toJSONString(object), true, true);
@@ -402,6 +402,8 @@ public class TestCaseCommon {
             config.url(api.getUrl());
             response = HttpClientUtil.get(config);
         } else {
+            config.url("").json("");
+            response = HttpClientUtil.upload(config);
             throw new RuntimeException("未指定请求方式");
         }
         logger.info("response：{}", response);
@@ -426,13 +428,11 @@ public class TestCaseCommon {
                 .referer(commonConfig.referer)
                 .authorization(authorization);
         //有的业务线不存在shopId和roleId时传入空会失败，在此加个判断
-
         httpHeader = commonConfig.shopId != null ? httpHeader.other("shop_id", commonConfig.shopId) : httpHeader;
         httpHeader = commonConfig.roleId != null ? httpHeader.other("role_id", commonConfig.roleId) : httpHeader;
         headers = httpHeader.build();
-        config = HttpConfig.custom()
-                .headers(headers)
-                .client(client);
+        logger.info("headers:{}", Arrays.toString(headers));
+        config = HttpConfig.custom().headers(headers).client(client);
     }
 
     private void dingPushFinal(boolean isFAIL) {
