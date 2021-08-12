@@ -196,7 +196,6 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
     @AfterClass(description = "完成此条接待记录")
     @Test(description = "完成接待，更新接待时间")
     public void saleCustomerManager_data_6() {
-        logger.info(caseResult.getCaseName());
         try {
             initAppPreSalesReceptionPageBean();
             String date = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm");
