@@ -73,11 +73,11 @@ public class SystemConfigCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
+        logger.logCaseStart(caseResult.getCaseName());
     }
 
     @Test(description = "新增一个角色，角色列表+1，【账户管理】页角色下拉框+1")
     public void roleManage_data_1() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene roleListScene = RoleListScene.builder().build();
             int a = roleListScene.invoke(visitor).getJSONArray("list").size();
@@ -99,7 +99,6 @@ public class SystemConfigCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "删除一个角色，角色列表-1，【账户管理】页角色下拉框-1", dependsOnMethods = "roleManage_data_1")
     public void roleManage_data_2() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene roleListScene = RoleListScene.builder().build();
             int a = roleListScene.invoke(visitor).getJSONArray("list").size();
@@ -120,7 +119,6 @@ public class SystemConfigCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "使用账号数量==账号列表中的数量")
     public void roleManage_data_3() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             Map<Integer, Integer> map = new HashMap<>();
             IScene scene = RolePageScene.builder().build();
@@ -139,7 +137,6 @@ public class SystemConfigCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "新增一个账户，账号管理列表+1，新增账号的信息与列表该账号的信息一致")
     public void staffManage_data_1() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             String phone = "15555555555";
             int total = StaffPageScene.builder().build().invoke(visitor).getInteger("total");
@@ -175,7 +172,6 @@ public class SystemConfigCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "删除一个账户，账号管理列表-1", dependsOnMethods = "staffManage_data_1")
     public void staffManage_data_2() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             int total = StaffPageScene.builder().build().invoke(visitor).getInteger("total");
             util.deleteStaff("15555555555");
@@ -190,7 +186,6 @@ public class SystemConfigCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "编辑一个账号提交以后，列表数量不变")
     public void staffManage_data_3() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene staffPageScene = StaffPageScene.builder().build();
             int total = staffPageScene.invoke(visitor).getInteger("total");
@@ -207,7 +202,6 @@ public class SystemConfigCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "禁用一个账号，列表数量不变")
     public void staffManage_data_4() {
-        logger.logCaseStart(caseResult.getCaseName());
         String id = null;
         try {
             IScene staffPageScene = StaffPageScene.builder().build();

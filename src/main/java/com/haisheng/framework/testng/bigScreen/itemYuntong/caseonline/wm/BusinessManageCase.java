@@ -35,7 +35,7 @@ import java.util.Date;
  * @date 2021/1/29 11:17
  */
 public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_ZH;
+    private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_JD;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public SceneUtil util = new SceneUtil(visitor);
@@ -71,12 +71,11 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
-        visitor.setProduct(EnumTestProduct.YT_ONLINE_JD);
+        logger.logCaseStart(caseResult.getCaseName());
     }
 
     @Test(description = "创建一个潜客，销售客户列表中手机号不存在，销售客户列表+1&客户类型为【潜客】")
     public void saleCustomerManager_data_1() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = PreSaleCustomerPageScene.builder().build();
             int total = scene.invoke(visitor).getInteger("total");
@@ -98,7 +97,6 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "创建一个潜客，销售客户列表中手机号存在，销售客户列表+0")
     public void saleCustomerManager_data_2() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = PreSaleCustomerPageScene.builder().build();
             JSONObject response = scene.invoke(visitor);
@@ -119,7 +117,6 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(dataProvider = "createCustomerAbnormalParam", dataProviderClass = DataClass.class, description = "创建潜客异常情况")
     public void saleCustomerManager_system_1(String field, Object value, String err) {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = PreSaleCustomerCreatePotentialCustomerScene.builder().customerType("PERSON").customerName("燕小六")
                     .customerPhone(util.getNotExistPhone()).sex("0").salesId(util.getSaleId()).shopId(Long.parseLong(util.getReceptionShopId()))
@@ -135,7 +132,6 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(dataProvider = "createCustomerOrderAbnormalParam", dataProviderClass = DataClass.class, description = "创建成交记录异常情况")
     public void saleCustomerManager_system_2(String field, Object value, String err) {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             String vin = util.getExistVin();
             IScene scene = PreSaleCustomerCreateCustomerScene.builder().customerPhone(util.getNotExistPhone()).customerName("燕小六")

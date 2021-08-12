@@ -66,11 +66,11 @@ public class SystemRecordCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
+        logger.logCaseStart(caseResult.getCaseName());
     }
 
     @Test(description = "导入成功条数=导入条数-失败条数")
     public void importRecord_data_1() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = ImportPageScene.builder().build();
             List<JSONObject> list = util.toJavaObjectList(scene, JSONObject.class);
@@ -84,7 +84,6 @@ public class SystemRecordCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "导入成功条数<=导入条数")
     public void importRecord_data_2() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = ImportPageScene.builder().build();
             List<JSONObject> list = util.toJavaObjectList(scene, JSONObject.class);
@@ -98,7 +97,6 @@ public class SystemRecordCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "导入失败条数<=导入条数")
     public void importRecord_data_3() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = ImportPageScene.builder().build();
             List<JSONObject> list = util.toJavaObjectList(scene, JSONObject.class);

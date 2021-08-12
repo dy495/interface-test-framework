@@ -44,7 +44,7 @@ import java.util.Date;
  */
 public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_JD;
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_ONLINE;
+    private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_RECEPTION_ONLINE_5;
     private static AppPreSalesReceptionPageBean preSalesReceptionPage;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public SceneUtil util = new SceneUtil(visitor);
@@ -79,6 +79,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
+        logger.logCaseStart(caseResult.getCaseName());
     }
 
     private void initAppPreSalesReceptionPageBean() {
@@ -94,7 +95,6 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "APP接待时产生新的节点，节点名称为销售创建")
     public void saleCustomerManager_data_1() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             initAppPreSalesReceptionPageBean();
             IScene preSalesReceptionPageScene = PreSalesReceptionPageScene.builder().customerId(String.valueOf(preSalesReceptionPage.getCustomerId())).build();
@@ -110,7 +110,6 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "APP接待时填写备注，备注记录+1")
     public void saleCustomerManager_data_2() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             initAppPreSalesReceptionPageBean();
             IScene scene = PreSaleCustomerInfoRemarkRecordScene.builder().customerId(String.valueOf(preSalesReceptionPage.getCustomerId())).build();
@@ -132,7 +131,6 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "APP接待时购买车辆，购车记录+1")
     public void saleCustomerManager_data_3() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             initAppPreSalesReceptionPageBean();
             IScene preSaleCustomerBuyCarPageScene = PreSaleCustomerBuyCarPageScene.builder().build();
@@ -158,7 +156,6 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "PC新建成交记录，购车记录+1")
     public void saleCustomerManager_data_4() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             initAppPreSalesReceptionPageBean();
             IScene scene = PreSaleCustomerInfoBuyCarRecordScene.builder().customerId(preSalesReceptionPage.getCustomerId()).build();
@@ -183,7 +180,6 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "接待客户一次，更新最近到店时间为当前接待时间")
     public void saleCustomerManager_data_5() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             initAppPreSalesReceptionPageBean();
             IScene scene = PreSaleCustomerInfoScene.builder().customerId(preSalesReceptionPage.getCustomerId()).shopId(Long.parseLong(util.getReceptionShopId())).build();
