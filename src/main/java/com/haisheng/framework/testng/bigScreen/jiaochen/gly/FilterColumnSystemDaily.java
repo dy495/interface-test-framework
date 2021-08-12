@@ -4685,7 +4685,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      * @description :V3.1维修预约记录-筛选栏单项查询
      * @date :2021/3/26
      **/
-    @Test(dataProvider = "SELECT_appointmentRecordFilter", dataProviderClass = Constant.class, enabled = true)
+    @Test(dataProvider = "SELECT_appointmentRecordFilter", dataProviderClass = Constant.class)
     public void maintainAppointmentRecordOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -4879,7 +4879,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      * @description :V3.1预约试驾记录-筛选栏单项查询
      * @date :2021/3/26
      **/
-    @Test(dataProvider = "SELECT_appointmentDriverRecordFilter", dataProviderClass = Constant.class, enabled = true)
+    @Test(dataProvider = "SELECT_appointmentDriverRecordFilter", dataProviderClass = Constant.class)
     public void driveAppointmentRecordOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -4963,7 +4963,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      * @date :2021-3-16
      * @deprecated V3.1销售客户接待列表-筛选栏单项搜索
      */
-    @Test(dataProvider = "SELECT_preSalesReceptionPageRecordFilter", dataProviderClass = Constant.class, enabled = true)
+    @Test(dataProvider = "SELECT_preSalesReceptionPageRecordFilter", dataProviderClass = Constant.class)
     public void preSaleCustomerPageRecordOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -5024,7 +5024,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      * @date :2021-3-26
      * @deprecated V3.1流失客户接待列表-筛选栏单项搜索
      */
-    @Test(dataProvider = "SELECT_AfterSleCustomerManageFilter", dataProviderClass = Constant.class, enabled = true)
+    @Test(dataProvider = "SELECT_AfterSleCustomerManageFilter", dataProviderClass = Constant.class)
     public void lossCustomerPageRecordOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -5168,7 +5168,7 @@ public class FilterColumnSystemDaily extends TestCaseCommon implements TestCaseS
      * @date :2021-3-26
      * @deprecated V3.1登录日志列表-筛选栏单项搜索
      */
-    @Test(dataProvider = "SELECT_loginLogStaffRecordFilter", dataProviderClass = Constant.class, enabled = true)
+    @Test(dataProvider = "SELECT_loginLogStaffRecordFilter", dataProviderClass = Constant.class)
     public void loginLogStaffRecordOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
