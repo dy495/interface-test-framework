@@ -427,9 +427,10 @@ public class TestCaseCommon {
                 .userAgent(userAgent)
                 .referer(commonConfig.referer)
                 .authorization(authorization);
-        //有的业务线不存在shopId和roleId时传入空会失败，在此加个判断
+        //有的业务线不存在shopId、mall_id和roleId时传入空会失败，在此加个判断
         httpHeader = commonConfig.shopId != null ? httpHeader.other("shop_id", commonConfig.shopId) : httpHeader;
         httpHeader = commonConfig.roleId != null ? httpHeader.other("role_id", commonConfig.roleId) : httpHeader;
+        httpHeader = commonConfig.mallId != null ? httpHeader.other("mall_id", commonConfig.mallId) : httpHeader;
         headers = httpHeader.build();
         logger.info("headers:{}", Arrays.toString(headers));
         config = HttpConfig.custom().headers(headers).client(client);

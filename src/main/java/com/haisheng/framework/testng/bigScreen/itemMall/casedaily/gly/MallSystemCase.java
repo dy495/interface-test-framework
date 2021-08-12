@@ -32,7 +32,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-
 public class MallSystemCase extends TestCaseCommon implements TestCaseStd {
 
     private final EnumTestProduct product = EnumTestProduct.MALL_DAILY;
@@ -41,8 +40,6 @@ public class MallSystemCase extends TestCaseCommon implements TestCaseStd {
     public SupporterUtil util = new SupporterUtil(visitor);
     MallBusinessUtil businessUtil=new MallBusinessUtil();
     StoreScenarioUtil su = StoreScenarioUtil.getInstance();
-    public Long shopId = 28758L;
-    public String shopName = "巡店测试门店1";
     CommonConfig commonConfig = new CommonConfig();
 
     @BeforeClass
@@ -58,6 +55,8 @@ public class MallSystemCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.product = product.getAbbreviation();
         commonConfig.shopId = product.getShopId();
         commonConfig.referer = product.getReferer();
+        commonConfig.mallId="55456";
+        commonConfig.roleId=product.getRoleId();
         beforeClassInit(commonConfig);
     }
 
@@ -73,27 +72,32 @@ public class MallSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
-        su.login("yuexiu@test.com", "f5b3e737510f31b88eb2d4b5d0cd2fb4");
+        //登录的日常的账号
+        su.loginInMall("yuexiu@test.com","f5b3e737510f31b88eb2d4b5d0cd2fb4");
+        //切换角色
+
     }
+
 
 
      //--------------------------------------------------场馆客流分时数据---------------------------------------------------------
 
 
     /**
-     * 场馆客流总览中的到访人数<=到访人次(按天查询)
+     * 场馆客流总览中的到访人数<=到访人次(按天查询)---ok
      */
     @Test(description = "场馆客流总览中的到访人数<=到访人次(按天查询)")
     public void mallCenterDataCase4(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             //获取历史客流数据
-            IScene scene= OverviewVenueOverviewScene.builder().startTime(businessUtil.getDateTime(-1)).endTime(businessUtil.getDateTime(-1)).build();
+            IScene scene= OverviewVenueOverviewScene.builder().date(businessUtil.getDate(-1)).build();
             JSONObject response=visitor.invokeApi(scene,true);
             //当前人次
             int numberPv=response.getJSONObject("pv_overview").getInteger("number");
             //当前人数
             int numberUv=response.getJSONObject("uv_overview").getInteger("number");
+
             Preconditions.checkArgument(numberPv>=numberUv,"当前的人数的UV："+numberUv+"  当前人次的PV："+numberPv);
 
         }catch (AssertionError | Exception e) {
@@ -996,7 +1000,6 @@ public class MallSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try{
             String[] sortTypeArray={SortTypeEnum.ENTRY.getSortType(),SortTypeEnum.ENTRY_PERCENTAGE.getSortType(),SortTypeEnum.PASS.getSortType(),SortTypeEnum.VISIT_PERCENTAGE.getSortType()};
-            String[] sortArray={"TOP_FIVE","LAST_FIVE"};
             Arrays.stream(sortTypeArray).forEach(type->{
                 //获取柱状图的数据
                 IScene scene=RealTimeColumnarRankingScene.builder().type(type).build();
@@ -1373,7 +1376,7 @@ public class MallSystemCase extends TestCaseCommon implements TestCaseStd {
             int number=response.getJSONObject("pv_overview").getInteger("number");
 
             //获取历史的全场到访趋势图种的前一天当前小时的的PV数据
-            IScene scene1= FullCourtTrendHistoryScene.builder().type("PV").scene(FloorTypeEnum.FLOOR_ENTER.getFloorType()).floorId(1l).build();
+            IScene scene1= FullCourtTrendHistoryScene.builder().type("PV").scene(FloorTypeEnum.FLOOR_ENTER.getFloorType()).floorId(1L).build();
             JSONObject response1=visitor.invokeApi(scene1,true);
             JSONArray list=response1.getJSONArray("list");
             for(int i=0;i<list.size();i++){
@@ -1403,37 +1406,22 @@ public class MallSystemCase extends TestCaseCommon implements TestCaseStd {
             int pages=response.getInteger("pages");
             for (int page=1;page<=pages;page++){
                 JSONArray list=ShopPageScene.builder().page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
+                //获取门店上一个七天的数据
+                JSONArray list1=ShopPageScene.builder().page(1).size(10).startTime(businessUtil.getDateTime(-9)).endTime(businessUtil.getDateTime(-16)).build().invoke(visitor,true).getJSONArray("list");
                 for(int i=0;i<list.size();i++){
                     //过店人数
                     int passNumber=list.getJSONObject(i).getInteger("pass_number");
-                    //进店人数
-                    int enterNumber=list.getJSONObject(i).getInteger("enter_number");
-                    //人均停留时长
-                    String stayTimeAvg=list.getJSONObject(i).getString("stay_time_avg");
                     //过店人数环比
                     String passNumberQoq=list.getJSONObject(i).getString("pass_number_qoq");
-                    //进店人数环比
-                    String enterNumberQoq=list.getJSONObject(i).getString("enter_number_qoq");
-                    //进店率
-                    String enterPercentage=list.getJSONObject(i).getString("enter_percentage");
-                    //进店率环比
-                    String enterPercentageQoq=list.getJSONObject(i).getString("enter_percentage_qoq");
-                    //人均停留时长环比
-                    String stayTimeAvgQoq=list.getJSONObject(i).getString("stay_time_avg_qoq");
 
-
-
-
-
+                    //上一个七天的过店人数
+                    int passNumberLast=list1.getJSONObject(i).getInteger("pass_number");
+                    //计算过店人数环比
+                    double value=passNumber-passNumberLast;
+                    double qoq=value/passNumberLast;
+                    Preconditions.checkArgument(passNumberQoq.equals(String.valueOf(qoq)));
                 }
-
             }
-
-
-
-
-
-
         }catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -1444,60 +1432,145 @@ public class MallSystemCase extends TestCaseCommon implements TestCaseStd {
     /**
      *进店人数环比=前7天进店人数之和-上上个7天过进店人数之和/上上个7天进店人数之和
      */
-    @Test(description = "")
+    @Test(description = "进店人数环比=前7天进店人数之和-上上个7天过进店人数之和/上上个7天进店人数之和")
     public void mallCenterDataCase43(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
+            //获取门店数据分析列表  默认七天的数据
+            IScene scene= ShopPageScene.builder().page(1).size(10).build();
+            JSONObject response=visitor.invokeApi(scene,true);
+            int pages=response.getInteger("pages");
+            for (int page=1;page<=pages;page++){
+                JSONArray list=ShopPageScene.builder().page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
+                //获取门店上一个七天的数据
+                JSONArray list1=ShopPageScene.builder().page(1).size(10).startTime(businessUtil.getDateTime(-9)).endTime(businessUtil.getDateTime(-16)).build().invoke(visitor,true).getJSONArray("list");
+                for(int i=0;i<list.size();i++){
+                    //进店人数
+                    int enterNumber=list.getJSONObject(i).getInteger("enter_number");
+                    //进店人数环比
+                    String enterNumberQoq=list.getJSONObject(i).getString("enter_number_qoq");
+
+                    //上一个七天的进店人数
+                    int enterNumberLast=list1.getJSONObject(i).getInteger("enter_number");
+                    //计算进店人数环比
+                    double value=enterNumber-enterNumberLast;
+                    double qoq=value/enterNumberLast;
+                    Preconditions.checkArgument(enterNumberQoq.equals(String.valueOf(qoq)));
+                }
+            }
 
         }catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("");
+            saveData("进店人数环比=前7天进店人数之和-上上个7天过进店人数之和/上上个7天进店人数之和");
         }
     }
 
     /**
      *进店率环比=前7天进店率-上上个7天进店率/上上个7天进店率
      */
-    @Test(description = "")
+    @Test(description = "进店率环比=前7天进店率-上上个7天进店率/上上个7天进店率")
     public void mallCenterDataCase44(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
+            //获取门店数据分析列表  默认七天的数据
+            IScene scene= ShopPageScene.builder().page(1).size(10).build();
+            JSONObject response=visitor.invokeApi(scene,true);
+            int pages=response.getInteger("pages");
+            for (int page=1;page<=pages;page++){
+                JSONArray list=ShopPageScene.builder().page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
+                //获取门店上一个七天的数据
+                JSONArray list1=ShopPageScene.builder().page(1).size(10).startTime(businessUtil.getDateTime(-9)).endTime(businessUtil.getDateTime(-16)).build().invoke(visitor,true).getJSONArray("list");
+                for(int i=0;i<list.size();i++){
+                    //进店率
+                    double enterPercentage=list.getJSONObject(i).getDouble("enter_percentage");
+                    //进店率环比
+                    String enterPercentageQoq=list.getJSONObject(i).getString("enter_percentage_qoq");
 
+                    //上一个七天的进店率人数
+                    double enterPercentageLast=list1.getJSONObject(i).getDouble("enter_percentage");
+                    //计算进店率的环比
+                    double value=enterPercentage-enterPercentageLast;
+                    double qoq=value/enterPercentageLast;
+                    Preconditions.checkArgument(enterPercentageQoq.equals(String.valueOf(qoq)));
+                }
+            }
         }catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("");
+            saveData("进店率环比=前7天进店率-上上个7天进店率/上上个7天进店率");
         }
     }
 
     /**
      *人均停留时长环比=前7天人均停留时长-上上个7天人均停留时长/上上个7天人均停留时长
      */
-    @Test(description = "")
+    @Test(description = "人均停留时长环比=前7天人均停留时长-上上个7天人均停留时长/上上个7天人均停留时长")
     public void mallCenterDataCase45(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
+            //获取门店数据分析列表  默认七天的数据
+            IScene scene= ShopPageScene.builder().page(1).size(10).build();
+            JSONObject response=visitor.invokeApi(scene,true);
+            int pages=response.getInteger("pages");
+            for (int page=1;page<=pages;page++){
+                JSONArray list=ShopPageScene.builder().page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
+                //获取门店上一个七天的数据
+                JSONArray list1=ShopPageScene.builder().page(1).size(10).startTime(businessUtil.getDateTime(-9)).endTime(businessUtil.getDateTime(-16)).build().invoke(visitor,true).getJSONArray("list");
+                for(int i=0;i<list.size();i++){
+                    //人均停留时长
+                    double stayTimeAvg=list.getJSONObject(i).getDouble("stay_time_avg");
+                    //人均停留时长环比
+                    String stayTimeAvgQoq=list.getJSONObject(i).getString("stay_time_avg_qoq");
+
+                    //上一个七天的人均停留时长人数
+                    double stayTimeAvgLast=list.getJSONObject(i).getDouble("stay_time_avg");
+                    //计算人均停留时长的环比
+                    double value=stayTimeAvg-stayTimeAvgLast;
+                    double qoq=value/stayTimeAvgLast;
+                    Preconditions.checkArgument(stayTimeAvgQoq.equals(String.valueOf(qoq)));
+                }
+            }
 
         }catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("");
+            saveData("人均停留时长环比=前7天人均停留时长-上上个7天人均停留时长/上上个7天人均停留时长");
         }
     }
 
     /**
      *进店率=前7天进店人数/前7天过店总人数（含进店）
      */
-    @Test(description = "")
+    @Test(description = "进店率=前7天进店人数/前7天过店总人数（含进店）")
     public void mallCenterDataCase46(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
+            //获取门店数据分析列表  默认七天的数据
+            IScene scene= ShopPageScene.builder().page(1).size(10).build();
+            JSONObject response=visitor.invokeApi(scene,true);
+            int pages=response.getInteger("pages");
+            for (int page=1;page<=pages;page++){
+                JSONArray list=ShopPageScene.builder().page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
+                //获取门店上一个七天的数据
+                JSONArray list1=ShopPageScene.builder().page(1).size(10).startTime(businessUtil.getDateTime(-9)).endTime(businessUtil.getDateTime(-16)).build().invoke(visitor,true).getJSONArray("list");
+                for(int i=0;i<list.size();i++){
+                    //进店人数
+                    int enterNumber=list.getJSONObject(i).getInteger("enter_number");
+                    //进店率
+                    String enterPercentage=list.getJSONObject(i).getString("enter_percentage");
 
+                    //上一个七天的过店人数
+                    int enterNumberLast=list1.getJSONObject(i).getInteger("enter_number");
+                    //计算过店人数环比
+                    double qoq=enterNumber/enterNumberLast;
+                    Preconditions.checkArgument(enterPercentage.equals(String.valueOf(qoq)));
+                }
+            }
         }catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("");
+            saveData("进店率=前7天进店人数/前7天过店总人数（含进店）");
         }
     }
 
@@ -1505,15 +1578,36 @@ public class MallSystemCase extends TestCaseCommon implements TestCaseStd {
     /**
      *光顾率环比=前7天光顾率之和-上上个7天光顾率之和/上上个7天光顾率之和
      */
-    @Test(description = "")
+    @Test(description = "光顾率环比=前7天光顾率之和-上上个7天光顾率之和/上上个7天光顾率之和")
     public void mallCenterDataCase47(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
+            //获取门店数据分析列表  默认七天的数据
+            IScene scene= ShopPageScene.builder().page(1).size(10).build();
+            JSONObject response=visitor.invokeApi(scene,true);
+            int pages=response.getInteger("pages");
+            for (int page=1;page<=pages;page++){
+                JSONArray list=ShopPageScene.builder().page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
+                //获取门店上一个七天的数据
+                JSONArray list1=ShopPageScene.builder().page(1).size(10).startTime(businessUtil.getDateTime(-9)).endTime(businessUtil.getDateTime(-16)).build().invoke(visitor,true).getJSONArray("list");
+                for(int i=0;i<list.size();i++){
+                    //光顾率
+                    double visitPercentage=list.getJSONObject(i).getDouble("visit_percentage");
+                    //光顾率环比
+                    String visitPercentageQoq=list.getJSONObject(i).getString("visit_percentage_qoq");
 
+                    //上一个七天的光顾率
+                    double visitPercentageLast=list1.getJSONObject(i).getDouble("visit_percentage");
+                    //计算过店人数环比
+                    double value=visitPercentage-visitPercentageLast;
+                    double qoq=value/visitPercentageLast;
+                    Preconditions.checkArgument(visitPercentageQoq.equals(String.valueOf(qoq)));
+                }
+            }
         }catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
-            saveData("");
+            saveData("光顾率环比=前7天光顾率之和-上上个7天光顾率之和/上上个7天光顾率之和");
         }
     }
 

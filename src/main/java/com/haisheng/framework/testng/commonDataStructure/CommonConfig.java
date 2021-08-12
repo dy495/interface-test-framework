@@ -43,4 +43,5 @@ public class CommonConfig {
     public String referer;
     public String product;
     public String roleId;
+    public String mallId;
 }
