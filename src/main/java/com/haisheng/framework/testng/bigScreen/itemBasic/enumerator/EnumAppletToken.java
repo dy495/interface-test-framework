@@ -29,7 +29,7 @@ public enum EnumAppletToken {
 
     JC_LXQ_DAILY("58DV7Wo/cfSMUFfKjM7ndA==", false, "13436941018"),
 
-    JC_LXQ_ONLINE("sdPfrCq3BAurovfyqBA95g==", false, "13436941018"),
+    JC_LXQ_ONLINE("IpL0YOvMvVFCcO8vvI9fvA==", false, "13436941018"),
 
     JC_GLY_DAILY("58DV7Wo/cfSMUFfKjM7ndA==", true, "13373166806"),
 
