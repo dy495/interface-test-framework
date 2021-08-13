@@ -33,12 +33,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduct product = EnumTestProduct.YT_ONLINE_ZH; // 管理页—-首页
-    private static final EnumAccount YT_RECEPTION_ACCOUNT = EnumAccount.YT_RECEPTION_ONLINE_5; // 全部权限账号 【运通】
+    private static final EnumTestProduct product = EnumTestProduct.YT_ONLINE_JD; // 管理页—-首页
+    private static final EnumAccount YT_RECEPTION_ACCOUNT = EnumAccount.YT_RECEPTION_ONLINE_MC; // 全部权限账号 【运通】
     public VisitorProxy visitor = new VisitorProxy(product);   // 产品类放到代理类中（通过代理类发请求）
     public SceneUtil util = new SceneUtil(visitor);
-    public YunTongInfo info = new YunTongInfo();
     CommonConfig commonConfig = new CommonConfig();    // 配置类初始化
+    public YunTongInfo info = new YunTongInfo();
     public Long newId; // 本次创建的接待id
     public Long newShopId; // 本次接待门店的shopId
     public Long newCustomerId;
@@ -56,11 +56,9 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = DingWebhook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.setShopId(YT_RECEPTION_ACCOUNT.getShopId()).setReferer(product.getReferer()).setRoleId(YT_RECEPTION_ACCOUNT.getRoleId()).setProduct(product.getAbbreviation());
+        commonConfig.setShopId(YT_RECEPTION_ACCOUNT.getReceptionShopId()).setRoleId(YT_RECEPTION_ACCOUNT.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);  // 配置请求头
         util.loginPc(YT_RECEPTION_ACCOUNT);   //登录
-        //LoginPc loginScene = LoginPc.builder().phone("13402050043").verificationCode("000000").build();
-        //httpPost(loginScene.getPath(),loginScene.getBody(),PRODUCE.getPort());
     }
 
 
@@ -81,18 +79,17 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
     // 随机n位数字
     private String numRandom(Integer n) {
         Random ran = new Random();
-        String numStr = "";
+        StringBuilder numStr = new StringBuilder();
         for (int i = 0; i < n; i++) {
             String num = ran.nextInt(9) + "";
-            numStr += num;
+            numStr.append(num);
         }
-        return numStr;
+        return numStr.toString();
     }
 
     // 创建一个接待，
     //return：接待id 和 shop_id
     private Map<String, String> createCustomerCommon(String name, String sex, String phone, String carId, String buyTime) {
-        visitor.setProduct(EnumTestProduct.YT_ONLINE_JD);
         Map<String, String> customer = new HashMap<>();
         AppPreSalesReceptionCreateScene.builder().customerName(name).customerPhone(phone).sexId(sex).intentionCarModelId(carId).estimateBuyCarTime(buyTime).build().invoke(visitor);//创建销售接待
         JSONObject pageInfo = PreSalesReceptionPageScene.builder().build().invoke(visitor, true);
@@ -108,14 +105,11 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(dataProvider = "errorInfo")
     public void test01createCustomer_system_err(String description, String point, String content, String expect) {
-        visitor.setProduct(EnumTestProduct.YT_ONLINE_JD);
         try {
             IScene scene = AppPreSalesReceptionCreateScene.builder().customerName("正常名字").customerPhone("18" + numRandom(9)).sexId("1").intentionCarModelId("20895").estimateBuyCarTime("2035-12-20").build().modify(point, content);
             String code = scene.invoke(visitor, false).getString("code");
             Preconditions.checkArgument(Objects.equals(expect, code), description + ",预期结果code=" + expect + "，实际结果code=" + code);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("手动创建接待,所有异常情况");
@@ -165,9 +159,7 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
             //Boolean isFinish = PreSalesReceptionPageScene.builder().build().invoke(visitor, true).getJSONArray("list").getJSONObject(0).getBoolean("is_finish");
             Preconditions.checkArgument(!Objects.equals(code, "1000") || Objects.equals("该客户当天已接待2次！不能再进行接待！", message), "同一个手机号当天接待三次message=" + message);
 
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("手机号接待次数：同一个手机号当天接待最多两次");
@@ -176,7 +168,6 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(dataProvider = "remarkContent")
     public void flowUpContent(String description, String expect, String remark) {
-        visitor.setProduct(EnumTestProduct.YT_ONLINE_JD);
         try {
             Map<String, String> customer = util.createCustomerCommon("自动创建差评跟进", "1", "150" + CommonUtil.getRandom(8), util.mcCarId(), "2033-12-20");
             AppFinishReceptionScene.builder().id(customer.get("id")).shopId(customer.get("shopId")).build().invoke(visitor);
@@ -186,7 +177,7 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
             PreSalesRecpEvaluateOpt.builder().reception_id(Long.parseLong(customer.get("id"))).build().invoke(visitor, true).getJSONArray("list").stream().map(j -> (JSONObject) j).map(json -> json.getInteger("id")).forEach(e -> evaluateInfoList.add(lowEvaluate(e)));
             String message = PreSalesRecpEvaluateSubmit.builder().evaluate_info_list(evaluateInfoList).reception_id(Long.parseLong(customer.get("id"))).build().invoke(visitor, false).getString("message");
             commonConfig.setShopId(YT_RECEPTION_ACCOUNT.getReceptionShopId());
-            commonConfig.setShopId(YT_RECEPTION_ACCOUNT.getReceptionShopId());
+            commonConfig.setRoleId(YT_RECEPTION_ACCOUNT.getRoleId());
             JSONObject firstFlow = AppFlowUpPageScene.builder().size(10).build().invoke(visitor, true).getJSONArray("list").getJSONObject(0);
             Integer flowUpId = firstFlow.getInteger("id");
             String phone = firstFlow.getJSONObject("pre_reception_offline_evaluate").getString("customer_phone");
@@ -198,9 +189,7 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(Objects.equals(remark, remarkContent), "跟进内容不一致。APP填写跟进内容:" + remark + ";PC跟进内容:" + remarkContent);
             }
 
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("销售接待差评,跟进内容校验");

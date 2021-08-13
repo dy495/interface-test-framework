@@ -52,7 +52,7 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.YUNTONG_DAILY_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
         //放入shopId
-        commonConfig.setShopId(product.getShopId()).setReferer(product.getReferer()).setRoleId(ALL_AUTHORITY.getRoleId()).setProduct(product.getAbbreviation());
+        commonConfig.setShopId(product.getShopId()).setRoleId(ALL_AUTHORITY.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
         util.loginApp(ALL_AUTHORITY);
     }

@@ -28,17 +28,17 @@ import java.util.Objects;
  * @description :系统记录
  **/
 public class RecordCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduct product = EnumTestProduct.YT_ONLINE_ZH; // 管理页—-首页
-    private static final EnumAccount AUTHORITY = EnumAccount.YT_RECEPTION_ONLINE_5; // 全部权限账号 【运通】
+    private static final EnumTestProduct product = EnumTestProduct.YT_ONLINE_JD; // 管理页—-首页
+    private static final EnumAccount AUTHORITY = EnumAccount.YT_RECEPTION_ONLINE_MC; // 全部权限账号 【运通】
     public VisitorProxy visitor = new VisitorProxy(product);   // 产品类放到代理类中（通过代理类发请求）
     public SceneUtil util = new SceneUtil(visitor);    //场景工具类中放入代理类，类中封装接口方法直接调用
-    CommonConfig commonConfig = new CommonConfig();    // 配置类初始化
 
     @BeforeClass
     @Override
     public void initial() {
         logger.debug("before class initial");
         //替换checklist的相关信息
+        CommonConfig commonConfig = new CommonConfig();    // 配置类初始化
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
         commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
         commonConfig.checklistQaOwner = "孟辰";
@@ -47,7 +47,7 @@ public class RecordCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = DingWebhook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.setShopId(product.getShopId()).setReferer(product.getReferer()).setRoleId(AUTHORITY.getRoleId()).setProduct(product.getAbbreviation());
+        commonConfig.setShopId(product.getShopId()).setRoleId(AUTHORITY.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);  // 配置请求头
         util.loginPc(AUTHORITY);   //登录
     }
@@ -64,6 +64,7 @@ public class RecordCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
+        logger.logCaseStart(caseResult.getCaseName());
     }
 
 
@@ -91,9 +92,7 @@ public class RecordCase extends TestCaseCommon implements TestCaseStd {
             if (total2 == total1 + 1) {
                 Preconditions.checkArgument(Objects.equals(typeName, type), "导出记录中的第一条不是" + type); // 如果结果+1 ，判断第一条是不是相应的位置
             }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("导出记录");
@@ -144,7 +143,6 @@ public class RecordCase extends TestCaseCommon implements TestCaseStd {
             if (total2 == total1 + 1) {
                 Preconditions.checkArgument(Objects.equals(type, name), "删除的不是新创建的:" + type + "!=" + name);
             }
-
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {

@@ -34,7 +34,7 @@ import java.util.Objects;
 
 public class AppTaskReceiveDataCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_JD; // 管理页—-首页
-    private static final EnumAccount YT_RECEPTION = EnumAccount.YT_RECEPTION_ONLINE_5; // 全部权限账号 【运通】
+    private static final EnumAccount YT_RECEPTION = EnumAccount.YT_RECEPTION_ONLINE_MC; // 全部权限账号 【运通】
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);   // 产品类放到代理类中（通过代理类发请求）
     public SceneUtil util = new SceneUtil(visitor);
     public YunTongInfo info = new YunTongInfo();
@@ -53,7 +53,7 @@ public class AppTaskReceiveDataCase extends TestCaseCommon implements TestCaseSt
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = DingWebhook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.setShopId(YT_RECEPTION.getReceptionShopId()).setReferer(PRODUCE.getReferer()).setRoleId(YT_RECEPTION.getRoleId()).setProduct(PRODUCE.getAbbreviation());
+        commonConfig.setShopId(YT_RECEPTION.getReceptionShopId()).setRoleId(YT_RECEPTION.getRoleId()).setProduct(PRODUCE.getAbbreviation());
         beforeClassInit(commonConfig);  // 配置请求头
         util.loginPc(YT_RECEPTION);   //登录
     }

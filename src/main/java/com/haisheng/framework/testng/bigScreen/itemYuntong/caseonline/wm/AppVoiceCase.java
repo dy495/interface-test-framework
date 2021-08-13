@@ -74,7 +74,7 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.YUNTONG_ONLINE_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
         //放入shopId
-        commonConfig.setShopId(ACCOUNT.getShopId()).setRoleId(ACCOUNT.getRoleId()).setProduct(PRODUCE.getAbbreviation()).setReferer(PRODUCE.getReferer()).setProduct(PRODUCE.getAbbreviation());
+        commonConfig.setShopId(ACCOUNT.getShopId()).setRoleId(ACCOUNT.getRoleId()).setProduct(PRODUCE.getAbbreviation()).setProduct(PRODUCE.getAbbreviation());
         beforeClassInit(commonConfig);
         util.loginApp(ACCOUNT);
     }

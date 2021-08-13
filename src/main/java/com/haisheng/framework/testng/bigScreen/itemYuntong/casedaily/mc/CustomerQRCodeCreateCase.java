@@ -39,7 +39,7 @@ public class CustomerQRCodeCreateCase extends TestCaseCommon implements TestCase
 //        //替换钉钉推送
 //        commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
 //        commonConfig.product = PRODUCE.getAbbreviation(); // 产品代号 -- YT
-        commonConfig.setShopId("57279").setReferer(product.getReferer()).setRoleId("10322").setProduct(product.getAbbreviation());
+        commonConfig.setShopId("57279").setRoleId("10322").setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);  // 配置请求头
         //util.loginPc(YT_RECEPTION_DAILY);   //登录
         LoginPc loginScene = LoginPc.builder().phone("13402050043").verificationCode("000000").build();
