@@ -7,11 +7,11 @@ import lombok.Getter;
  */
 public enum EnumAccount {
 
-    JC_ALL_AUTHORITY_DAILY("13402050025", "000000", "全部角色", true, "预约应答13402050025", "2942", "-1", "46522"),
+    JC_ALL_DAILY("13402050025", "000000", "全部角色", true, "预约应答13402050025", "2942", "-1", "46522"),
 
-    JC_ALL_AUTHORITY_DAILY_LXQ("13114785236", "000000", "系统管理员", true, "轿辰（赢识测试）", "603", "-1", "46522"),
+    JC_ALL_DAILY_LXQ("13114785236", "000000", "系统管理员", true, "轿辰（赢识测试）", "603", "-1", "46522"),
 
-    JC_ALL_AUTHORITY_ONLINE("15037286012", "000000", "所有权限", false, "石矶娘娘", "2227", "-1", "20034"),
+    JC_ALL_ONLINE_LXQ("15037286012", "000000", "所有权限", false, "石矶娘娘", "2227", "-1", "20034"),
 
     JC_ALL_ONLINE("15711200001", "000000", "所有权限", false, "轿辰线上", "395", "-1", "-1"),
 
@@ -29,13 +29,13 @@ public enum EnumAccount {
 
     YT_RECEPTION_ONLINE_WM("13406250004", "000000", "全部权限", false, "四号演员", "5511", "-1", "34691"),
 
-    YT_RECEPTION_ONLINE_MC("13406250005","000000","全部权限",false,"五号","5511","-1","35827"),
+    YT_RECEPTION_ONLINE_MC("13406250005", "000000", "全部权限", false, "五号", "5511", "-1", "35827"),
 
-    CMS_DAILY("wangmin@winsense.ai","wangmin","",true,"wangmin","","",""),
+    CMS_DAILY("wangmin@winsense.ai", "wangmin", "", true, "wangmin", "", "", ""),
 
-    CMS_ONLINE("wangmin@winsense.ai","wangmin","",false,"wangmin","","",""),
+    CMS_ONLINE("wangmin@winsense.ai", "wangmin", "", false, "wangmin", "", "", ""),
 
-            ;
+    ;
 
     EnumAccount(String phone, String password, String role, boolean isDaily, String name, String roleId, String shopId, String receptionShopId) {
         this.role = role;
