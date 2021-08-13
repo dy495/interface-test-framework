@@ -15,25 +15,27 @@ public enum EnumAccount {
 
     JC_ALL_ONLINE("15711200001", "000000", "所有权限", false, "轿辰线上", "395", "-1", "-1"),
 
-    YT_ALL_DAILY("13700000002", "000000", "超级管理员", true, "运通（赢识测试）", "5505", "-1", "-1"),
-
-    YT_RECEPTION_DAILY("18989494435", "000000", "全部角色", true, "江远", "7881", "-1", "56666"),
+    YT_RECEPTION_DAILY_WM("18989494435", "000000", "全部角色", true, "江远", "7881", "-1", "56666"),
 
     YT_RECEPTION_DAILY_LXQ("13406250003", "000000", "全部角色", true, "自动化13406250003", "7881", "-1", "56721"),
 
-    YT_RECEPTION_DAILY_M("13402050043", "000000", "接待个人", true, "自动化使用账户", "10322", "-1", "57279"),
+    YT_RECEPTION_DAILY_MC("13402050043", "000000", "接待个人", true, "自动化使用账户", "10322", "-1", "57279"),
 
-    YT_ALL_ONLINE("13700000002", "000000", "超级管理员", true, "运通（赢识测试）", "5505", "-1", "-1"),
+    YT_ALL_DAILY("13700000002", "000000", "超级管理员", true, "运通（赢识测试）", "5505", "-1", "-1"),
 
-    YT_ALL_ONLINE_LXQ("13406250004", "000000", "全部权限", true, "四号演员", "5511", "-1", "-1"),
+    YT_ALL_ONLINE("13700000002", "000000", "超级管理员", false, "运通（赢识测试）", "5505", "-1", "-1"),
 
-    YT_RECEPTION_ONLINE_5("13406250005", "000000", "全部权限", false, "五号", "5511", "-1", "35827"),
+    YT_ALL_ONLINE_LXQ("13406250004", "000000", "全部权限", false, "四号演员", "5511", "-1", "-1"),
 
-    CMS_DAILY("wangmin@winsense.ai", "wangmin", "", true, "wangmin", "", "", ""),
+    YT_RECEPTION_ONLINE_WM("13406250004", "000000", "全部权限", false, "四号演员", "5511", "-1", "34691"),
 
-    CMS_ONLINE("wangmin@winsense.ai", "wangmin", "", true, "wangmin", "", "", ""),
+    YT_RECEPTION_ONLINE_5("13406250005","000000","全部权限",false,"五号","5511","-1","35827"),
 
-    ;
+    CMS_DAILY("wangmin@winsense.ai","wangmin","",true,"wangmin","","",""),
+
+    CMS_ONLINE("wangmin@winsense.ai","wangmin","",false,"wangmin","","",""),
+
+            ;
 
     EnumAccount(String phone, String password, String role, boolean isDaily, String name, String roleId, String shopId, String receptionShopId) {
         this.role = role;

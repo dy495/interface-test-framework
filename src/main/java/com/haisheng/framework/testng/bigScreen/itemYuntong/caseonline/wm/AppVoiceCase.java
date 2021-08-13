@@ -53,7 +53,7 @@ import java.util.stream.Collectors;
  */
 public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_GK;
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_ONLINE;
+    private static final EnumAccount ACCOUNT = EnumAccount.YT_ALL_ONLINE_LXQ;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public SceneUtil util = new SceneUtil(visitor);
     private static final String startDate = DateTimeUtil.addDayFormat(new Date(), -1);
@@ -74,9 +74,9 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.YUNTONG_ONLINE_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
         //放入shopId
-        commonConfig.setShopId(ALL_AUTHORITY.getShopId()).setRoleId(ALL_AUTHORITY.getRoleId()).setProduct(PRODUCE.getAbbreviation()).setReferer(PRODUCE.getReferer()).setProduct(PRODUCE.getAbbreviation());
+        commonConfig.setShopId(ACCOUNT.getShopId()).setRoleId(ACCOUNT.getRoleId()).setProduct(PRODUCE.getAbbreviation()).setReferer(PRODUCE.getReferer()).setProduct(PRODUCE.getAbbreviation());
         beforeClassInit(commonConfig);
-        util.loginApp(ALL_AUTHORITY);
+        util.loginApp(ACCOUNT);
     }
 
     @AfterClass
@@ -729,7 +729,7 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
                 int f = object.getInteger("500");
                 int mathResult = CommonUtil.getRoundIntRatio(a + b + c + d + f, 5);
                 CommonUtil.valueView(totalAverageScore, mathResult);
-                Preconditions.checkArgument(totalAverageScore == mathResult, e.getName() + "APP【个人总平均分趋势】中分数：" + totalAverageScore + " APP【各环节得分】各环节总平均分相加/5：" + mathResult);
+                Preconditions.checkArgument(totalAverageScore <= mathResult + 1 && totalAverageScore >= mathResult - 1, e.getName() + "APP【个人总平均分趋势】中分数：" + totalAverageScore + " APP【各环节得分】各环节总平均分相加/5：" + mathResult);
             });
         } catch (Exception | AssertionError e) {
             collectMessage(e);
