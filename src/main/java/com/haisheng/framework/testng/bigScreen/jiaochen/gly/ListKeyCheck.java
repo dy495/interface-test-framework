@@ -23,7 +23,7 @@ public class ListKeyCheck extends TestCaseCommon implements TestCaseStd {
     EnumTestProduct product = EnumTestProduct.JC_DAILY_JD;
     ScenarioUtil jc = new ScenarioUtil();
     PublicParm pp = new PublicParm();
-    public String appletToken = EnumAppletToken.JC_MC_DAILY.getToken();
+    public String appletToken = EnumAppletToken.JC_GLY_DAILY.getToken();
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name

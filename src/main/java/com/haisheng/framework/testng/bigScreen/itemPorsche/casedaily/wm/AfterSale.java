@@ -662,7 +662,7 @@ public class AfterSale extends TestCaseCommon implements TestCaseStd {
             }
             CommonUtil.valueView(total, todayReturnVisitNumber, listSize);
             //取消试驾
-            UserUtil.loginApplet(EnumAppletToken.JC_MC_DAILY);
+            UserUtil.loginApplet(EnumAppletToken.JC_GLY_DAILY);
             int id = crm.appointmentList(0L, EnumAppointmentType.MAINTAIN.getType(), 20).getJSONArray("list").getJSONObject(0).getInteger("id");
             crm.appointmentCancel(id);
             UserUtil.login(zjl);

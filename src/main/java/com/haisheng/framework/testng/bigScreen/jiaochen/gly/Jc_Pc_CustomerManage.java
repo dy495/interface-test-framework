@@ -25,7 +25,7 @@ public class Jc_Pc_CustomerManage extends TestCaseCommon implements TestCaseStd 
     //    JsonPathUtil jpu = new JsonPathUtil();
     public String shopId = "-1";
     CommonPram cp = new CommonPram();
-    public String appletTocken = EnumAppletToken.JC_MC_DAILY.getToken();
+    public String appletTocken = EnumAppletToken.JC_GLY_DAILY.getToken();
     CommonConfig commonConfig = new CommonConfig();
     private static final EnumTestProduct product = EnumTestProduct.JC_DAILY_JD;
     /**

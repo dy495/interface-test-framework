@@ -1018,7 +1018,7 @@ public class BusinessUtilOnline {
             getApprovalPassed(id1);
             ids.add(id1);
             //小程序报名
-            user.loginApplet(EnumAppletToken.JC_MC_ONLINE);
+            user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
             activityRegisterApplet(id1, "13373166806", "郭丽雅", 2, "1513814362@qq.com", "22", "女", "其他");
             jc.pcLogin(pp.phone, pp.password);
         }
@@ -1732,7 +1732,7 @@ public class BusinessUtilOnline {
         //获取此活动的名称
         jc.pcLogin(pp.phone, pp.password);
         String title = getRecruitActivityDetailDate1(activityId).getString("title");
-        user.loginApplet(EnumAppletToken.JC_MC_ONLINE);
+        user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
         do {
             IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
             JSONObject response = visitor.invokeApi(scene);
@@ -1973,7 +1973,7 @@ public class BusinessUtilOnline {
         }
         //获取此活动的名称
         String title = getRecruitActivityDetailDate1(id).getString("title");
-        user.loginApplet(EnumAppletToken.JC_MC_ONLINE);
+        user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
         //获取小程序推荐列表
         JSONObject lastValue = null;
         JSONArray list = null;
@@ -2077,7 +2077,7 @@ public class BusinessUtilOnline {
         //获取此活动的名称
         jc.pcLogin(pp.phone, pp.password);
         String title = getRecruitActivityDetailDate1(id).getString("title");
-        user.loginApplet(EnumAppletToken.JC_MC_ONLINE);
+        user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
         //获取小程序推荐列表
         do {
             IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
@@ -2134,7 +2134,7 @@ public class BusinessUtilOnline {
      */
     public List<Long> voucherNotUseId() {
         //登录小程序
-        user.loginApplet(EnumAppletToken.JC_MC_ONLINE);
+        user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
         JSONArray list = jc.appletVoucherList(null, "USED", 100).getJSONArray("list");
         List<Long> voucherCodes = new ArrayList<>();
         List<Long> ids = new ArrayList<>();

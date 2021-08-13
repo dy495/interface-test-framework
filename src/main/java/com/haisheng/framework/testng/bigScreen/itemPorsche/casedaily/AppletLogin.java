@@ -210,9 +210,9 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
     public static Object[] jc_appletTokens_daily() {
         return new String[]{
                 EnumAppletToken.JC_WM_DAILY.getToken(),
-                EnumAppletToken.JC_MC_DAILY.getToken(),
+                EnumAppletToken.JC_GLY_DAILY.getToken(),
                 EnumAppletToken.JC_LXQ_DAILY.getToken(),
-                EnumAppletToken.JC_MC_DAILY.getToken(),
+                EnumAppletToken.JC_GLY_DAILY.getToken(),
         };
     }
 
@@ -221,8 +221,8 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         return new String[]{
                 EnumAppletToken.JC_WM_ONLINE.getToken(),
                 EnumAppletToken.JC_LXQ_ONLINE.getToken(),
-                EnumAppletToken.JC_MC_ONLINE.getToken(),
-                EnumAppletToken.JC_MC_ONLINE.getToken(),
+                EnumAppletToken.JC_GLY_ONLINE.getToken(),
+                EnumAppletToken.JC_GLY_ONLINE.getToken(),
         };
     }
 

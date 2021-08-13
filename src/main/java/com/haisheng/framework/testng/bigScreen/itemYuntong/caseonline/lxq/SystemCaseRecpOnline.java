@@ -36,17 +36,11 @@ import java.lang.reflect.Method;
  * @date 2021/1/29 11:17
  */
 public class SystemCaseRecpOnline extends TestCaseCommon implements TestCaseStd {
-
-
     EnumTestProduct product = EnumTestProduct.YT_ONLINE_JD;
     EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_ONLINE_LXQ;
     VisitorProxy visitor = new VisitorProxy(product);
     SceneUtil businessUtil = new SceneUtil(visitor);
-
-
     YunTongInfoOnline info = new YunTongInfoOnline();
-
-
     CommonConfig commonConfig = new CommonConfig();
 
     @BeforeClass
@@ -77,7 +71,6 @@ public class SystemCaseRecpOnline extends TestCaseCommon implements TestCaseStd 
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
@@ -94,11 +87,9 @@ public class SystemCaseRecpOnline extends TestCaseCommon implements TestCaseStd 
     @Test(dataProvider = "TYPE", dataProviderClass = YunTongInfoOnline.class)
     public void doEvaluate(String type) {
         logger.logCaseStart(caseResult.getCaseName());
-
         try {
             //创建一个接待并完成接待
             Long recId = info.startrecption(true);
-
             //获取评价选项
             visitor.setProduct(EnumTestProduct.YT_ONLINE_JD);
             commonConfig.setShopId(null);
