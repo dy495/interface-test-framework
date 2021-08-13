@@ -7,6 +7,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.*;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shop.EditScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.PublicParmOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -30,6 +31,7 @@ public class DataCaseOnline extends TestCaseCommon implements TestCaseStd {
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.JC_ALL_ONLINE;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_LXQ_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
+    SceneUtil util = new SceneUtil(visitor);
 
     ScenarioUtilOnline jc = ScenarioUtilOnline.getInstance();
     jiaoChenInfoOnline info = new jiaoChenInfoOnline();
@@ -74,8 +76,7 @@ public class DataCaseOnline extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
-
-        jc.pcLogin("15711200001", "000000");
+        util.loginPc(ALL_AUTHORITY);
     }
 
 
@@ -272,22 +273,20 @@ public class DataCaseOnline extends TestCaseCommon implements TestCaseStd {
 
             jc.appletLoginToken(pp.appletTocken);
             int bef = jc.appletBrandList().getJSONArray("list").size();
-
-            jc.pcLogin("15711200001", "000000");
+            util.loginPc(ALL_AUTHORITY);
             jc.addBrand(info.stringone, info.getLogo());
             Long id = jc.brandPage(1, 10, "", "").getJSONArray("list").getJSONObject(0).getLong("id");
 
             jc.appletLoginToken(pp.appletTocken);
             int afteradd = jc.appletBrandList().getJSONArray("list").size();
             //删除品牌
-            jc.pcLogin("15711200001", "000000");
+            util.loginPc(ALL_AUTHORITY);
             jc.delBrand(id);
 
             jc.appletLoginToken(pp.appletTocken);
             int afterdel = jc.appletBrandList().getJSONArray("list").size();
 
-
-            jc.pcLogin("15711200001", "000000");
+            util.loginPc(ALL_AUTHORITY);
             int add = afteradd - bef;//1
             int del = afteradd - afterdel;//1
             Preconditions.checkArgument(add == 1, "创建后列表增加" + add);
@@ -309,8 +308,7 @@ public class DataCaseOnline extends TestCaseCommon implements TestCaseStd {
         try {
             jc.appletLoginToken(pp.appletTocken);
             int bef = jc.appletCarStyleList(info.BrandIDOnline).getJSONArray("list").size();
-
-            jc.pcLogin("15711200001", "000000");
+            util.loginPc(ALL_AUTHORITY);
             //创建车系
             String manufacturer = "旧生产商";
             String name = "旧车系";
@@ -322,7 +320,7 @@ public class DataCaseOnline extends TestCaseCommon implements TestCaseStd {
             jc.appletLoginToken(pp.appletTocken);
             int afteradd = jc.appletCarStyleList(info.BrandIDOnline).getJSONArray("list").size();
 
-            jc.pcLogin("15711200001", "000000");
+            util.loginPc(ALL_AUTHORITY);
             //删除品牌车系
             jc.delCarStyle(id);
 
@@ -330,7 +328,7 @@ public class DataCaseOnline extends TestCaseCommon implements TestCaseStd {
             int afterdel = jc.appletCarStyleList(info.BrandIDOnline).getJSONArray("list").size();
 
 
-            jc.pcLogin("15711200001", "000000");
+            util.loginPc(ALL_AUTHORITY);
             int add = afteradd - bef; //1
             int del = afteradd - afterdel; //1
             Preconditions.checkArgument(add == 1, "新建后，列表增加" + add);
@@ -353,7 +351,7 @@ public class DataCaseOnline extends TestCaseCommon implements TestCaseStd {
             jc.appletLoginToken(pp.appletTocken);
             int bef = jc.appletCarModelList(Long.toString(info.BrandIDOnline), Long.toString(info.CarStyleIDOnline)).getJSONArray("list").size();
 
-            jc.pcLogin("15711200001", "000000");
+            util.loginPc(ALL_AUTHORITY);
             //创建车型
             String name1 = "旧车型名称" + System.currentTimeMillis();
             String year1 = "2000年";
@@ -366,14 +364,14 @@ public class DataCaseOnline extends TestCaseCommon implements TestCaseStd {
             jc.appletLoginToken(pp.appletTocken);
             int afteradd = jc.appletCarModelList(Long.toString(info.BrandIDOnline), Long.toString(info.CarStyleIDOnline)).getJSONArray("list").size();
 
-            jc.pcLogin("15711200001", "000000");
+            util.loginPc(ALL_AUTHORITY);
             //删除品牌车系车型
             jc.delCarModel(id);
 
             jc.appletLoginToken(pp.appletTocken);
             int afterdel = jc.appletCarModelList(Long.toString(info.BrandIDOnline), Long.toString(info.CarStyleIDOnline)).getJSONArray("list").size();
 
-            jc.pcLogin("15711200001", "000000");
+            util.loginPc(ALL_AUTHORITY);
             int add = afteradd - bef; //1
             int del = afteradd - afterdel; //1
             Preconditions.checkArgument(add == 1, "新建后，列表增加" + add);

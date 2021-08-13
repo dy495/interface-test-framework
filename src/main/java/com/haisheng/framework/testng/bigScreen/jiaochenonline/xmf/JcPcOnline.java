@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.commonDs.JsonPathUtil;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
@@ -25,6 +26,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
     EnumTestProduct product = EnumTestProduct.JC_ONLINE_JD;
+    VisitorProxy visitor = new VisitorProxy(product);
     ScenarioUtilOnline jc = ScenarioUtilOnline.getInstance();
     DateTimeUtil dt = new DateTimeUtil();
     PublicParmOnline pp = new PublicParmOnline();

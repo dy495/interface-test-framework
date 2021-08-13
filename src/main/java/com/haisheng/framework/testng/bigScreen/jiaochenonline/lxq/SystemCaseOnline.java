@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterators;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.PcCreateGoods;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -26,10 +28,13 @@ import java.util.List;
 
 public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
     EnumTestProduct product = EnumTestProduct.JC_ONLINE_JD;
+    EnumAccount account = EnumAccount.JC_ALL_ONLINE;
+    VisitorProxy visitor = new VisitorProxy(product);
     CommonConfig commonConfig = new CommonConfig();
     ScenarioUtilOnline jc = ScenarioUtilOnline.getInstance();
     jiaoChenInfoOnline info = new jiaoChenInfoOnline();
-    String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
+    String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/car-platform/wm/multimedia/picture/奔驰.jpg";
+    SceneUtil util = new SceneUtil(visitor);
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
@@ -70,8 +75,7 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
-
-        jc.pcLogin("15711200001", "000000");
+        util.loginPc(account);
     }
 
 
@@ -2360,40 +2364,40 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
     @DataProvider(name = "export")
     public Object[] export() {
         return new String[][]{
-                {"/jiaochen/pc/customer-manage/pre-sale-customer/page/export", "销售客户"},
-                {"/jiaochen/pc/customer-manage/after-sale-customer/page/export", "售后客户"},
-                {"/jiaochen/pc/customer-manage/wechat-customer/page/export", "小程序客户"},
-                {"/jiaochen/pc/voucher-manage/voucher-form/export", "优惠券管理"},
-                {"/jiaochen/pc/voucher-manage/verification-people/export", "核销人员"},
-                {"/jiaochen/pc/package-manage/buy-package-record/export", "套餐购买记录"},
-                {"/jiaochen/pc/operation/article/export", "文章列表"},
-                {"/jiaochen/pc/activity/manage/export", "活动列表"},
-                {"/jiaochen/pc/voucher/apply/export", "优惠券申请"},
-                {"/jiaochen/pc/shop/export", "门店管理"},
-                {"/jiaochen/pc/brand/export", "品牌管理"},
-                {"/jiaochen/pc/role/export", "角色管理"},
-                {"/jiaochen/pc/staff/export", "员工管理"},
-                {"/jiaochen/pc/record/import-record/export", "导入记录"},
-                {"/jiaochen/pc/record/export-record/export", "导出记录"},
-                {"/jiaochen/pc/record/push-msg/export", "消息记录"},
-                {"/jiaochen/pc/record/login-record/export", "登陆记录"},
-                {"/jiaochen/pc/manage/rescue/export", "道路救援"},
-                {"/jiaochen/pc/vip-marketing/wash-car-manager/export", "洗车管理"},
-                {"/jiaochen/pc/vip-marketing/wash-car-manager/adjust-number/export", "调整次数"},
-                {"/jiaochen/pc/vip-marketing/sign_in_config/change-record/export", "签到积分变更记录"},
-                {"/jiaochen/pc/integral-center/exchange/export", "积分兑换"},
-                {"/jiaochen/pc/integral-center/exchange-detail/export", "积分明细"},
-                {"/jiaochen/pc/integral-center/exchange-order/export", "积分订单"},
-                {"/jiaochen/pc/integral-mall/goods-manage/export", "商品管理"},
-                {"/jiaochen/pc/manage/maintain/car-model/export", "保养配置"},
-                {"/jiaochen/pc/customer-manage/pre-sale-customer/buy-car/page/export", "成交记录"},
-                {"/jiaochen/pc/pre-sales-reception/export", "销售接待记录"},
-                {"/jiaochen/pc/reception-manage/record/export", "售后接待管理"},
-                {"/jiaochen/pc/customer-manage/loss-customer/page/export", "流失客户管理"},
-                {"/jiaochen/pc/voucher/apply/export", "优惠券审批"},
+                {"/car-platform/pc/customer-manage/pre-sale-customer/page/export", "销售客户"},
+                {"/car-platform/pc/customer-manage/after-sale-customer/page/export", "售后客户"},
+                {"/car-platform/pc/customer-manage/wechat-customer/page/export", "小程序客户"},
+                {"/car-platform/pc/voucher-manage/voucher-form/export", "优惠券管理"},
+                {"/car-platform/pc/voucher-manage/verification-people/export", "核销人员"},
+                {"/car-platform/pc/package-manage/buy-package-record/export", "套餐购买记录"},
+                {"/car-platform/pc/operation/article/export", "文章列表"},
+                {"/car-platform/pc/activity/manage/export", "活动列表"},
+                {"/car-platform/pc/voucher/apply/export", "优惠券申请"},
+                {"/car-platform/pc/shop/export", "门店管理"},
+                {"/car-platform/pc/brand/export", "品牌管理"},
+                {"/car-platform/pc/role/export", "角色管理"},
+                {"/car-platform/pc/staff/export", "员工管理"},
+                {"/car-platform/pc/record/import-record/export", "导入记录"},
+                {"/car-platform/pc/record/export-record/export", "导出记录"},
+                {"/car-platform/pc/record/push-msg/export", "消息记录"},
+                {"/car-platform/pc/record/login-record/export", "登陆记录"},
+                {"/car-platform/pc/manage/rescue/export", "道路救援"},
+                {"/car-platform/pc/vip-marketing/wash-car-manager/export", "洗车管理"},
+                {"/car-platform/pc/vip-marketing/wash-car-manager/adjust-number/export", "调整次数"},
+                {"/car-platform/pc/vip-marketing/sign_in_config/change-record/export", "签到积分变更记录"},
+                {"/car-platform/pc/integral-center/exchange/export", "积分兑换"},
+                {"/car-platform/pc/integral-center/exchange-detail/export", "积分明细"},
+                {"/car-platform/pc/integral-center/exchange-order/export", "积分订单"},
+                {"/car-platform/pc/integral-mall/goods-manage/export", "商品管理"},
+                {"/car-platform/pc/manage/maintain/car-model/export", "保养配置"},
+                {"/car-platform/pc/customer-manage/pre-sale-customer/buy-car/page/export", "成交记录"},
+                {"/car-platform/pc/pre-sales-reception/export", "销售接待记录"},
+                {"/car-platform/pc/reception-manage/record/export", "售后接待管理"},
+                {"/car-platform/pc/customer-manage/loss-customer/page/export", "流失客户管理"},
+                {"/car-platform/pc/voucher/apply/export", "优惠券审批"},
                 {"XXXXXXXX", "保养车系配置"},
-                {"/jiaochen/pc/consult-management/online-experts-page-list-export", "在线专家列表"},
-                {"/jiaochen/pc/consult-management/dedicated-service-page-list-export", "专属服务列表"},
+                {"/car-platform/pc/consult-management/online-experts-page-list-export", "在线专家列表"},
+                {"/car-platform/pc/consult-management/dedicated-service-page-list-export", "专属服务列表"},
 
 
         };
@@ -2450,11 +2454,11 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
     public Object[] exportVourcher() {
         return new String[][]{ // 单弄 活动报名记录、车系列表、车型列表
 
-                {"/jiaochen/pc/voucher-manage/change-record/export", "优惠券变更记录"},
-                {"/jiaochen/pc/voucher-manage/voucher-invalid-page/export", "作废记录"},
-                {"/jiaochen/pc/voucher-manage/additional-record/export", "增发记录"},
-                {"/jiaochen/pc/voucher-manage/send-record/export", "领取记录"},
-                {"/jiaochen/pc/voucher-manage/verification-record/export", "核销记录"},
+                {"/car-platform/pc/voucher-manage/change-record/export", "优惠券变更记录"},
+                {"/car-platform/pc/voucher-manage/voucher-invalid-page/export", "作废记录"},
+                {"/car-platform/pc/voucher-manage/additional-record/export", "增发记录"},
+                {"/car-platform/pc/voucher-manage/send-record/export", "领取记录"},
+                {"/car-platform/pc/voucher-manage/verification-record/export", "核销记录"},
 
         };
     }
