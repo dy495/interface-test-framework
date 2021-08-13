@@ -18,7 +18,7 @@
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.caseonline.wm.VoiceDataManagerCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.caseonline.wm.BusinessManageCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.caseonline.wm.SeverManageCase"/>
-<!--            <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.caseonline.wm.AppReceptionCase"/>-->
+            <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.caseonline.wm.AppReceptionCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.caseonline.wm.SystemRecordCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.caseonline.mc.RecordCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.caseonline.mc.AppTaskReceiveDataCase"/>
