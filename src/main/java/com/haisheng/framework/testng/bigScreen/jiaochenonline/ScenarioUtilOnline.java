@@ -41,6 +41,12 @@ public class ScenarioUtilOnline extends TestCaseCommon {
         return instance;
     }
 
+    public JSONObject roleTree() {
+        String url = "/car-platform/pc/auth/tree";
+        JSONObject json = new JSONObject();
+        return invokeApi(url, json);
+    }
+
     //pc登录
     public void pcLogin(String phone, String verificationCode) {
         String path = "/account-platform/login-pc";
@@ -465,16 +471,6 @@ public class ScenarioUtilOnline extends TestCaseCommon {
         JSONObject object = new JSONObject();
         object.put("id", id);
         object.put("status", status);
-        return invokeApi(url, object);
-    }
-
-    //小程序我的卡券
-    public JSONObject appletVoucherList(Long lastValue, String type, Integer size) {
-        String url = "/car-platform/applet/granted/voucher/list";
-        JSONObject object = new JSONObject();
-        object.put("last_value", lastValue);
-        object.put("type", type);
-        object.put("size", size);
         return invokeApi(url, object);
     }
 
@@ -5152,6 +5148,111 @@ public class ScenarioUtilOnline extends TestCaseCommon {
         JSONObject json = new JSONObject();
         String url = "/car-platform/pc/customer-manage/pre-sale-customer/model-list";
         json.put("style_id", style_id);
+        return invokeApi(url, json);
+    }
+
+    //预约管理 -> 预约看板
+    public JSONObject pcTimeTableList(String appointmentMonth, String type) {
+        String url = "/car-platform/pc/appointment-manage/time-table/list";
+        JSONObject object = new JSONObject();
+        object.put("appointment_month", appointmentMonth);
+        object.put("type", type);
+        return invokeApi(url, object);
+    }
+
+    /**
+     * 1.3. app跟进列表（池）V3（2020-03-09）的接口
+     *
+     * @date 2021-04-07 17:50:29
+     * Integer size : 页大小 范围为[1,100]  是否必填 true  版本 v1.0
+     * JSONObject lastValue : 上次请求最后值  是否必填 false  版本 v1.0
+     * String type : 跟进类型  是否必填 false  版本 v3.0
+     */
+
+    public JSONObject AppPageV3Scene(Integer size, JSONObject lastValue, String type) {
+        String url = "/car-platform/m-app/follow-up/page-v3";
+        JSONObject json = new JSONObject();
+        json.put("size", size);
+        json.put("last_value", lastValue);
+        json.put("type", type);
+
+        return invokeApi(url, json);
+    }
+
+    /**
+     * @description :创建活动
+     * @date :2020/12/16 16:10
+     **/
+
+    public JSONObject pccreateActile(PcCreateActile er) {
+        String url = "/car-platform/pc/operation/article/add";
+        JSONObject json1 = new JSONObject();
+        json1.put("title", er.title);
+        json1.put("pic_type", er.pic_type);
+        json1.put("pic_list", er.pic_list);
+        json1.put("content", er.content);
+        json1.put("label", er.label);
+        json1.put("content_type", er.content_type);
+        json1.put("total_quota", er.total_quota);
+        json1.put("register_start_date", er.register_start_date);
+        json1.put("register_end_date", er.register_end_date);
+        json1.put("start_date", er.start_date);
+        json1.put("end_date", er.end_date);
+        json1.put("address", er.address);
+        json1.put("is_can_maintain", er.is_can_maintain);
+        json1.put("is_voucher", er.is_voucher);
+        json1.put("voucher_list", er.voucher_list);
+        json1.put("voucher_receive_type", er.voucher_receive_type);
+        json1.put("voucher_get_use_days", er.voucher_get_use_days);
+        return invokeApi(url, json1, er.checkcode);
+    }
+
+    //小程序我的套餐
+    public JSONObject appletpackageList(String lastValue, String type, Integer size) {
+        String url = "/car-platform/applet/granted/package/list";
+        JSONObject object = new JSONObject();
+        object.put("last_value", lastValue);
+        object.put("type", type);
+        object.put("size", size);
+        return invokeApi(url, object);
+    }
+
+    //pc接待管理 -> 开始接待
+    public JSONObject pcStartReception(AppStartReception ar) {
+        String path = "/car-platform/pc/reception-manage/start-reception";
+        JSONObject object = new JSONObject();
+        object.put("customer_id", ar.id);
+        object.put("plate_number", ar.plate_number);
+        object.put("customer_name", ar.customer_name);
+        object.put("customer_phone", ar.customer_phone);
+        object.put("after_sales_type", ar.after_sales_type);
+        return invokeApi(path, object);
+    }
+
+    //小程序我的卡券
+    public JSONObject appletVoucherList(JSONObject lastValue, String type, Integer size) {
+        String url = "/car-platform/applet/granted/voucher/list";
+        JSONObject object = new JSONObject();
+        object.put("last_value", lastValue);
+        object.put("type", type);
+        object.put("size", size);
+        return invokeApi(url, object);
+    }
+
+    /**
+     * 5.5. app接待分页（谢）v3.0 （2021-03-16）的接口
+     *
+     * @date 2021-04-07 17:50:30
+     * Integer size : 页大小 范围为[1,100]  是否必填 true  版本 v1.0
+     * JSONObject lastValue : 上次请求最后值  是否必填 false  版本 v1.0
+     */
+
+    public JSONObject AppPageScene(Integer size, JSONObject lastValue) {
+        String url = "/car-platform/m-app/pre-sales-reception/page";
+        JSONObject json = new JSONObject();
+        json.put("size", size);
+        json.put("last_value", lastValue);
+
         return invokeApi(url, json);
     }
 

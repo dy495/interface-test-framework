@@ -26,7 +26,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
     EnumTestProduct product = EnumTestProduct.JC_ONLINE_JD;
-    VisitorProxy visitor = new VisitorProxy(product);
     ScenarioUtilOnline jc = ScenarioUtilOnline.getInstance();
     DateTimeUtil dt = new DateTimeUtil();
     PublicParmOnline pp = new PublicParmOnline();

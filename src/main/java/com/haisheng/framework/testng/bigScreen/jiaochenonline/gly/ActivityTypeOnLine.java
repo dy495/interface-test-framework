@@ -28,24 +28,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
-    ScenarioUtil jc = new ScenarioUtil();
     private static final EnumTestProduct product = EnumTestProduct.JC_ONLINE_JD;
     private static final EnumAccount ADMINISTRATOR = EnumAccount.JC_ALL_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(product);
-    //    BusinessUtil businessUtil = new BusinessUtil(visitor);
     BusinessUtilOnline businessUtil = new BusinessUtilOnline(visitor);
     SceneUtil supporterUtil = new SceneUtil(visitor);
     PublicParameter pp = new PublicParameter();
-    CommonConfig commonConfig = new CommonConfig();
+    ScenarioUtil jc = new ScenarioUtil();
 
-    /**
-     * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
-     */
     @BeforeClass
     @Override
     public void initial() {
         logger.debug("before class initial");
         jc.changeIpPort(EnumTestProduct.JC_ONLINE_JD.getIp());
+        CommonConfig commonConfig = new CommonConfig();
         //替换checklist的相关信息
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
         commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();

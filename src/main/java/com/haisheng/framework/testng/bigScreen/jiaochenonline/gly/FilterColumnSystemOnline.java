@@ -4,15 +4,13 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistAppId;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistConfId;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumDingTalkWebHook;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Constant;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.applyListVariable;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.util.BusinessUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.SelectReception;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -30,14 +28,13 @@ import java.util.*;
 
 public class FilterColumnSystemOnline extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct product = EnumTestProduct.JC_ONLINE_JD;
+    private static final EnumAccount account = EnumAccount.JC_ALL_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(product);
+    SceneUtil util = new SceneUtil(visitor);
     BusinessUtil businessUtil = new BusinessUtil(visitor);
     CommonConfig commonConfig = new CommonConfig();
-    PublicParm pp = new PublicParm();
     ScenarioUtil jc = new ScenarioUtil();
-    //    JsonPathUtil jpu = new JsonPathUtil();
-    public String shopId = "-1";
-    public String shopOne = "20032";//中关村门店
+    public String shopId = product.getShopId();
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
@@ -57,7 +54,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         //替换钉钉推送
         commonConfig.dingHook = EnumDingTalkWebHook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP.getWebHook();
         //放入shopId
-        commonConfig.setShopId(product.getShopId()).setReferer(product.getReferer()).setRoleId("395").setProduct(product.getAbbreviation());
+        commonConfig.setShopId(shopId).setReferer(product.getReferer()).setRoleId("395").setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
         logger.debug("jc: " + jc);
 
@@ -78,7 +75,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
-        jc.pcLogin("15711200001", "000000");
+        util.loginPc(account);
     }
 
 
