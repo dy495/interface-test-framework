@@ -270,7 +270,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //创建活动之前的列表数量
-            IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
+            IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
             int totalBefore = visitor.invokeApi(scene).getInteger("total");
             //获取一个卡券
             Long voucherId = businessUtil.getVoucherId();
@@ -723,7 +723,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             //未通过活动
             int failed = response.getInteger("failed");
             //获取【全部tab】的列表数
-            IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
+            IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
             JSONObject response1 = visitor.invokeApi(scene);
             int totalNum = response1.getInteger("total");
             //获取【待审核tab】的列表数
@@ -760,7 +760,7 @@ public class ActivityManage extends TestCaseCommon implements TestCaseStd {
             int failed = response.getInteger("failed");
 
             //获取【全部tab】的列表数
-            IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
+            IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
             JSONObject response1 = visitor.invokeApi(scene);
             int totalNum = response1.getInteger("total");
             //获取【待审核tab】的列表数
