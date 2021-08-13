@@ -33,7 +33,7 @@ public enum EnumAppletToken {
 
     JC_GLY_DAILY("58DV7Wo/cfSMUFfKjM7ndA==", true, "13373166806"),
 
-    JC_GLY_ONLINE("Lle2O9LilbiQEcbGAFHE2A==", false, "13373166806"),
+    JC_GLY_ONLINE("ycXvLgMpXD/hxkkOci8ceQ==", false, "13373166806"),
 
     JC_MC_DAILY("58DV7Wo/cfSMUFfKjM7ndA==", true, "15022399925"),
 

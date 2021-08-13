@@ -27,12 +27,14 @@ public class RealTimeOverviewScene extends BaseScene {
      */
     private final Long mallId;
 
+    private final String type;
 
     @Override
     protected JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("referer", referer);
         object.put("mall_id", mallId);
+        object.put("type", type);
         return object;
     }
 
