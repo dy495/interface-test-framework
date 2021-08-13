@@ -112,7 +112,7 @@ public class MallSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try{
             //获取历史客流人数UV数据
-            IScene scene= OverviewVenueOverviewScene.builder().startTime(businessUtil.getDateTime(-1)).endTime(businessUtil.getDateTime(-1)).build();
+            IScene scene= OverviewVenueOverviewScene.builder().date(businessUtil.getDate(-1)).build();
             JSONObject response=visitor.invokeApi(scene,true);
             //当前人数的日环比
             int dayQoqUv=response.getJSONObject("uv_overview").getInteger("day_qoq");
@@ -121,7 +121,7 @@ public class MallSystemCase extends TestCaseCommon implements TestCaseStd {
             System.out.println("-------dayQoqUv:"+dayQoqUv+"----numberUv:"+numberUv);
 
             //获取历史的全场到访趋势图种的前一天当前小时的的UV数据
-            IScene scene1= FullCourtTrendHistoryScene.builder().type("UV").date(businessUtil.getDateTime(-1)).build();
+            IScene scene1= OverviewVenueOverviewScene.builder().date(businessUtil.getDateTime(-2)).build();
             JSONObject response1=visitor.invokeApi(scene1,true);
             int preUv=response1.getJSONObject("uv_overview").getInteger("number");
             System.out.println("-----preUv:"+preUv);
