@@ -70,9 +70,8 @@ public class VisitorProxy extends TestCaseCommon {
      */
     public JSONObject invokeApi(String path, JSONObject requestBody, boolean checkCode) {
         Preconditions.checkArgument(!StringUtils.isEmpty(path), "path不可为空");
-        InnerData innerData = transfer(path, requestBody);
-        String request = JSON.toJSONString(innerData.requestBody);
-        String result = httpPost(product.getIp(), innerData.getPath(), request, checkCode, false);
+        String request = JSON.toJSONString(requestBody);
+        String result = httpPost(product.getIp(), path, request, checkCode, false);
         JSONObject response = JSON.parseObject(result);
         return checkCode ? response.getJSONObject("data") : response;
     }
@@ -85,8 +84,7 @@ public class VisitorProxy extends TestCaseCommon {
      * @return 返回值
      */
     public JSONObject upload(String path, String filePath) {
-        InnerData innerData = transfer(path, null);
-        String response = uploadFile(product.getIp(), innerData.getPath(), filePath);
+        String response = uploadFile(product.getIp(), path, filePath);
         return JSON.parseObject(response);
     }
 
@@ -96,8 +94,7 @@ public class VisitorProxy extends TestCaseCommon {
      * @param scene 场景
      */
     public void setToken(@NotNull IScene scene) {
-        InnerData innerData = transfer(scene.getPath(), scene.getBody());
-        httpPost(product.getIp(), innerData.getPath(), innerData.getRequestBody());
+        httpPost(product.getIp(), scene.getPath(), scene.getBody());
     }
 
     /**
@@ -107,7 +104,6 @@ public class VisitorProxy extends TestCaseCommon {
      */
     public void setToken(String token) {
         authorization = token;
-        logger.info("applet authorization is:{}", authorization);
     }
 
     /**

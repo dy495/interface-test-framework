@@ -53,11 +53,6 @@ public class CommonConfig {
         return this;
     }
 
-    public CommonConfig setReferer(String referer) {
-        headers.put("referer", referer);
-        return this;
-    }
-
     public CommonConfig setRoleId(String roleId) {
         headers.put("role_id", roleId);
         return this;
@@ -65,6 +60,11 @@ public class CommonConfig {
 
     public CommonConfig setMallId(String mallId) {
         headers.put("mall_id", mallId);
+        return this;
+    }
+
+    public CommonConfig setReferer(String referer) {
+        headers.put("referer", referer);
         return this;
     }
 
