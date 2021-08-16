@@ -2320,6 +2320,29 @@ public class BusinessUtilOnline extends BasicUtil {
     }
 
     /**
+     * 内容营销-查询列表中的状态为【未开始的ID】
+     * 2021-3-17
+     */
+    public ManagePageBean getContentMarketingWaitingStar() {
+        //活动列表
+        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
+        int pages = visitor.invokeApi(scene).getInteger("pages");
+        for (int page = 1; page <= pages; page++) {
+            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
+            JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
+            JSONObject obj = list.stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("status").equals(ActivityStatusEnum.WAITING_START.getId()))
+                    .filter(e -> e.getInteger("activity_type") == 3).findFirst().orElse(null);
+            if (obj != null) {
+                return JSONObject.toJavaObject(obj, ManagePageBean.class);
+            }
+        }
+        Long id1 = getContentMarketingNotStar();
+        //审批活动
+        getApprovalPassed(id1);
+        return getContentMarketingWaitingStar();
+    }
+
+    /**
      * 编辑招募活动，返回活动ID
      */
     public String getContentMarketingEdit(Long id, String title, String rule) {
@@ -2359,45 +2382,11 @@ public class BusinessUtilOnline extends BasicUtil {
         return visitor.invokeApi(scene, false).getString("message");
     }
 
-
-    /**
-     * 内容营销-查询列表中的状态为【未开始的ID】
-     * 2021-3-17
-     */
-    public List<Long> getContentMarketingWaitingStar() {
-        List<Long> ids = new ArrayList<>();
-        //活动列表
-        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = visitor.invokeApi(scene).getInteger("pages") > 10 ? 10 : visitor.invokeApi(scene).getInteger("pages");
-        for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                int status = list.getJSONObject(i).getInteger("status");
-                int activityType = list.getJSONObject(i).getInteger("activity_type");
-                if (status == ActivityStatusEnum.WAITING_START.getId() && activityType == 3) {
-                    Long id = list.getJSONObject(i).getLong("id");
-                    ids.add(id);
-                }
-            }
-        }
-        //创建活动并审批
-        if (ids.size() == 0) {
-            //创建活动
-            Long id1 = getContentMarketingNotStar();
-            //审批活动
-            getApprovalPassed(id1);
-            ids.add(id1);
-
-        }
-        return ids;
-    }
-
     /**
      * 招募活动-查询列表中的状态为【已过期的ID】---招募活动
      * 2021-3-17
      */
-    public List<Long> geContentMarketingFinish() {
+    public ManagePageBean geContentMarketingFinish() {
         List<Long> ids = new ArrayList<>();
         //活动列表
         IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
@@ -2405,16 +2394,13 @@ public class BusinessUtilOnline extends BasicUtil {
         for (int page = 1; page <= pages; page++) {
             IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                int status = list.getJSONObject(i).getInteger("status");
-                int activityType = list.getJSONObject(i).getInteger("activity_type");
-                if (status == ActivityStatusEnum.FINISH.getId() && activityType == 3) {
-                    Long id = list.getJSONObject(i).getLong("id");
-                    ids.add(id);
-                }
+            JSONObject obj = list.stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("status").equals(ActivityStatusEnum.FINISH.getId()))
+                    .filter(e -> e.getInteger("activity_type").equals(3)).findFirst().orElse(null);
+            if (obj != null) {
+                return JSONObject.toJavaObject(obj, ManagePageBean.class);
             }
         }
-        return ids;
+        return null;
     }
 
     /**

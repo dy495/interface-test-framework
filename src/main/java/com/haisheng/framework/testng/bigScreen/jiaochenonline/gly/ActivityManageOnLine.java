@@ -146,7 +146,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(statusPassed == ActivityStatusEnum.PASSED.getId(), "审批通过的活动状态为：" + statusPassed);
             Preconditions.checkArgument(flag.equals(true), "小程序中不展示此审批通过的活动");
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("创建裂变活动-撤回裂变活动-再次创建裂变活动-审批通过裂变活动-小程序查看裂变活动");
         }
@@ -227,7 +227,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         try {
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("测试呀呀呀呀");
         }
@@ -275,7 +275,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(totalAfter == (totalBefore + 1) && status == ActivityStatusEnum.PENDING.getId(), "创建活动之前的列表数为：" + totalBefore + "创建活动之后的列表数为：" + totalAfter + "活动的状态为：" + status);
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("创建招募活动-数据一致性校验{列表+1&状态=待审核,【活动审批】列表+1&状态=待审核}");
         }
@@ -311,7 +311,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(num.equals(number) && leftNum.equals(number), "活动详情中的数值与创建时的数字不一致");
 //            Preconditions.checkArgument(price.equals(parValue),"优惠券的面值和活动中优惠券的面值不一致");
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("创建招募活动-【活动详情】发放数量=创建时的填写数量,【活动详情】面值=创建时填写的数量,【活动详情】剩余库存=创建时填写数量");
         }
@@ -336,7 +336,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(content.equals("创建活动") && list.size() == 1, "调整记录中新增的记录的状态为：" + content);
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("创建招募活动-数据一致性校验{【调整记录】+1&调整类型=新建活动}");
         }
@@ -398,7 +398,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(status == ActivityStatusEnum.CANCELED.getId(), "取消【进行中】的活动,现活动的状态为" + ActivityStatusEnum.CANCELED.getStatusName());
             Preconditions.checkArgument(numAfter == numBefore + 1 && content.equals("取消活动"), "取消前变更记录的条数为：" + numBefore + "取消后的变更记录的条数为：" + numAfter + "  取消后变更记录新增的内容为：" + content);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("活动管理-取消【进行中】的活动，①【调整记录】+1&调整类型=取消  ②活动状态=已取消");
         }
@@ -430,7 +430,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(Double.parseDouble(totalCost) == Double.parseDouble(cost) * num && num == leftNum + sendNum && num >= leftNum, "总成本为：" + totalCost + "  应等于面值*数量为" + Double.parseDouble(cost) * num + "  奖励项总数为：" + num + "  发放数量为：" + sendNum + "  剩余数量为：" + leftNum);
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("活动管理-招募活动详情-①成本合计=发放数量*成本   ②总数量=剩余库存+发放数量&总数量>=剩余库存");
         }
@@ -482,7 +482,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
 
             }
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("活动报名列---①活动名额>=报名成功人数和 ②报名成功数=【全部列表】状态为审核通过人数和  ③已报名数>=报名成功数");
         }
@@ -530,7 +530,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
 
             }
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("报名列表-已报名数=【全部】报名人数和=【待审核】【报名列表】【报名失败】人数和");
         }
@@ -574,7 +574,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(passedAfter > 0 && passedAfter == (passedBefore + registerNum), "审批的通过的人数为:" + registerNum);
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("报名列表-审批通过1条，报名成功&报名成功列表");
         }
@@ -625,7 +625,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(passedAfter > 0 && passedAfter == (passedBefore + 1), "审批的通过的人数为:" + registerNum);
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("报名列表-审批通过1条，报名成功&报名成功列表");
         }
@@ -696,7 +696,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
 
             }
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("报名列表-审批不通过1条，报名失败");
         }
@@ -724,7 +724,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                 Preconditions.checkArgument(quota >= num, "活动名额为：" + quota + "  创建活动时填写数量：" + num);
             }
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("活动报名列---【活动名额】=创建活动时填写数量");
         }
@@ -760,7 +760,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(total <= totalNum, "活动审批数据-全部活动为：" + total + "审批列表中全部活动的列表数为：" + totalNum);
             Preconditions.checkArgument(total == (waitNum + passedNum + failedNum), "活动审批数据-全部活动为：" + total + "【待审核】【审核通过】【审核未通过】列表数加和为：" + (waitNum + passedNum + failedNum));
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("活动审批--①全部审批=【全部】列表数  ②全部审批=【待审核】【审核通过】【审核未通过】列表数加和");
         }
@@ -798,7 +798,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(passed == passedNum, "审批通过的数量为：" + passed + "活动审核列表中审批通过的数量为：" + passedNum);
             Preconditions.checkArgument(failed == failedNum, "审批未通过的数量为：" + failed + "活动审核列表中审批未通过的数量为：" + failedNum);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("活动审批--①待审批=活动状态为待审批的列表数  ②审批通过=活动状态为审批通过的列表数 ③审批未通过=活动状态为审批未通过的列表数");
         }
@@ -837,7 +837,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                 Preconditions.checkArgument(status == ActivityStatusEnum.WAITING_START.getId() || status == ActivityStatusEnum.PASSED.getId(), "活动审批数后活动的状态应为【进行中】或者【未开始】，此时为为：" + status);
             }
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("活动审批--审批通过，待审批-1&审批通过+1");
         }
@@ -933,7 +933,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             String title1 = visitor.invokeApi(scene).getString("title");
             Preconditions.checkArgument(title.equals(title1), "现在活动的名称为：" + title);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("招募活动-【待审核】的活动-查看");
         }
@@ -955,7 +955,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(status == ActivityStatusEnum.REVOKE.getId(), "撤回的待审批的活动,现活动的状态为：" + ActivityStatusEnum.REVOKE.getStatusName());
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("招募活动-活动审批未通过");
         }
@@ -979,7 +979,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             System.out.println(title + "-------" + message);
             Preconditions.checkArgument(message.equals("活动未审核通过！暂不能置顶"), "现在活动的名称为：" + message);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("招募活动-【待审核】的活动-置顶");
         }
@@ -1003,7 +1003,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             System.out.println(title + "-------" + title1);
             Preconditions.checkArgument(title.equals(title1), "现在活动的名称为：" + title);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("招募活动-【已撤销】的活动-查看");
         }
@@ -1027,7 +1027,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             System.out.println(title + "-------" + message);
             Preconditions.checkArgument(message.equals("活动未审核通过！暂不能置顶"), "置顶已撤销的活动的相关提示:" + message);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("招募活动-【已撤销】的活动-置顶");
         }
@@ -1047,7 +1047,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             String message = businessUtil.getDelActivity(ids.get(0));
             Preconditions.checkArgument(message.equals("success"), "已撤销的活动删除失败");
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("招募活动-【已撤销】的活动-删除");
         }
@@ -1152,7 +1152,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
 
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("招募活动-【已撤销】的活动-编辑");
         }
@@ -1176,7 +1176,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             System.out.println(title + "-------" + title1);
             Preconditions.checkArgument(title.equals(title1), "现在活动的名称为：" + title);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("招募活动-【审核未通过】的活动-查看");
         }
@@ -1200,7 +1200,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             System.out.println(title + "-------" + message);
             Preconditions.checkArgument(message.equals("活动未审核通过！暂不能置顶"), "置顶审核不通过的活动的相关提示:" + message);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("招募活动-【审核未通过】的活动-置顶");
         }
@@ -1219,7 +1219,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             String message = businessUtil.getDelActivity(ids.get(0));
             Preconditions.checkArgument(message.equals("success"), "删除【审核未通过】的活动的message为：" + message);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("招募活动-删除【审核未通过】的活动");
         }
@@ -1323,7 +1323,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(address.equals("呀呀呀呀呀呀呀呀呀呀地址") && id.equals(voucherId) && approval.equals("true"), "审核未通过的活动编辑失败6");
             Preconditions.checkArgument(content.equals("编辑活动"), "变更记录中的变更事项没有更新");
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("招募活动-【审核未通过】的活动-编辑");
         }
@@ -1347,7 +1347,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             System.out.println(title + "-------" + title1);
             Preconditions.checkArgument(title.equals(title1), "现在活动的名称为：" + title);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("招募活动-【已取消】的活动-查看");
         }
@@ -1371,7 +1371,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             System.out.println(title + "-------" + message);
             Preconditions.checkArgument(message.equals("当前状态【 已取消】！不能置顶"), "置顶已取消的活动的相关提示:" + message);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("招募活动-【已取消】的活动-置顶");
         }
@@ -1395,7 +1395,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             System.out.println(title + "-------" + title1);
             Preconditions.checkArgument(title.equals(title1), "现在活动的名称为：" + title);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("招募活动-【进行中】的活动-查看");
         }
@@ -1424,7 +1424,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(title1.equals(title), "PC进行中活动的标题为：" + title + "小程序中的更多中的活动标题为：" + title1);
             Preconditions.checkArgument(message.equals("success"), "置顶进行中的活动的相关提示:" + message);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("招募活动-【进行中】的活动-置顶");
         }
@@ -1443,7 +1443,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             String appletCodeUrl = businessUtil.getPromotionActivity(ids.get(0));
             Preconditions.checkArgument(!appletCodeUrl.equals(""), "推广【进行中】的活动的小程序二维码的返回值为空");
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("招募活动-推广【进行中】的活动");
         }
@@ -1464,7 +1464,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             int status = businessUtil.getActivityStatus(ids.get(0));
             Preconditions.checkArgument(status == ActivityStatusEnum.CANCELED.getId(), "现在活动的状态为：" + status);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("招募活动-取消【进行中】的活动");
         }
@@ -1493,7 +1493,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             System.out.println(title + "--------" + rule);
             Preconditions.checkArgument(message.equals("success") && title.contains("编辑过后的招募活动") && rule.equals(pp.EditRule) && content.equals("编辑活动"), "进行中的活动编辑失败");
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("招募活动-【进行中】的活动-编辑");
         }
@@ -1517,7 +1517,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             System.out.println(title + "-------" + title1);
             Preconditions.checkArgument(title.equals(title1), "现在活动的名称为：" + title);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("招募活动-【未开始】的活动-查看");
         }
@@ -1548,7 +1548,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(title1.equals(title), "PC未开始活动的ID为：" + title + "小程序中的更多中的活动ID为：" + title);
             Preconditions.checkArgument(message.equals("success"), "置顶未开始的活动的相关提示:" + message);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("招募活动-【未开始】的活动-置顶");
         }
@@ -1570,7 +1570,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             System.err.println("------" + status);
             Preconditions.checkArgument(status == ActivityStatusEnum.CANCELED.getId(), "现在活动的状态为：" + status);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("招募活动-取消【未开始】的活动");
         }
@@ -1590,7 +1590,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             System.err.println(appletCodeUrl + "--------" + ids);
             Preconditions.checkArgument(!appletCodeUrl.equals(""), "推广【未开始】的活动的小程序二维码的返回值为空");
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("招募活动-推广【未开始】的活动");
         }
@@ -1620,7 +1620,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             System.out.println(title + "--------" + rule);
             Preconditions.checkArgument(message.equals("success") && title.contains("编辑过后的招募活动") && rule.equals(pp.EditRule) && content.equals("编辑活动"), "进行中的活动编辑失败");
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("招募活动-【未开始】的活动-编辑");
         }
@@ -1647,7 +1647,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                 Preconditions.checkArgument(title.equals(title1), "现在活动的名称为：" + title);
             }
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("招募活动-【已过期】的活动-查看");
         }
@@ -1670,7 +1670,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                 Preconditions.checkArgument(message.equals("当前状态【 已结束】！不能置顶"), "置顶已过期的活动的相关提示:" + message);
             }
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("招募活动-【已过期】的活动-置顶");
         }
@@ -1699,7 +1699,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             String title1 = visitor.invokeApi(scene).getString("title");
             Preconditions.checkArgument(title.equals(title1), "现在活动的名称为：" + title);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("裂变活动-【待审核】的活动-查看");
         }
@@ -1720,7 +1720,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             int status = businessUtil.getActivityStatus(ids.get(0));
             Preconditions.checkArgument(status == ActivityStatusEnum.REVOKE.getId(), "撤回的待审批的活动,现活动的状态为：" + ActivityStatusEnum.REVOKE.getStatusName());
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("裂变活动-活动审批未通过");
         }
@@ -1744,7 +1744,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             System.out.println(title + "-------" + message);
             Preconditions.checkArgument(message.equals("活动未审核通过！暂不能置顶"), "现在活动的名称为：" + message);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("裂变活动-【待审核】的活动-置顶");
         }
@@ -1768,7 +1768,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             System.out.println(title + "-------" + title1);
             Preconditions.checkArgument(title.equals(title1), "现在活动的名称为：" + title);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("裂变活动-【已撤销】的活动-查看");
         }
@@ -1792,7 +1792,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             System.out.println(title + "-------" + message);
             Preconditions.checkArgument(message.equals("活动未审核通过！暂不能置顶"), "置顶已撤销的活动的相关提示:" + message);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("裂变活动-【已撤销】的活动-置顶");
         }
@@ -1812,7 +1812,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             String message = businessUtil.getDelActivity(ids.get(0));
             Preconditions.checkArgument(message.equals("success"), "已撤销的活动删除失败");
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("裂变活动-【已撤销】的活动-删除");
         }
@@ -1822,7 +1822,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
      * 裂变活动-【已撤销】的活动-编辑：名称，活动规则----裂变活动
      * 2021-3-17
      */
-    @Test(enabled = true, description = "裂变活动-【已撤销】的活动-编辑")
+    @Test(description = "裂变活动-【已撤销】的活动-编辑")
     public void revokeFissionActivityEdit() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1913,7 +1913,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             System.out.println(title + "-------" + title1);
             Preconditions.checkArgument(title.equals(title1), "现在活动的名称为：" + title);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("裂变活动-【审核未通过】的活动-查看");
         }
@@ -1937,7 +1937,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             System.out.println(title + "-------" + message);
             Preconditions.checkArgument(message.equals("活动未审核通过！暂不能置顶"), "置顶审核不通过的活动的相关提示:" + message);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("裂变活动-【审核未通过】的活动-置顶");
         }
@@ -1956,7 +1956,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             String message = businessUtil.getDelActivity(ids.get(0));
             Preconditions.checkArgument(message.equals("success"), "删除【审核未通过】的活动的message为：" + message);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("裂变活动-删除【审核未通过】的活动");
         }
@@ -1966,7 +1966,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
      * 裂变活动-【审核未通过】的活动-编辑：名称，活动规则----裂变活动
      * 2021-3-17
      */
-    @Test(enabled = true, description = "裂变活动-【审核未通过】的活动-编辑")
+    @Test(description = "裂变活动-【审核未通过】的活动-编辑")
     public void rejectFissionActivityEdit() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2034,7 +2034,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(content.equals("编辑活动"), "变更记录中的变更事项没有更新");
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("裂变活动-【审核未通过】的活动-编辑");
         }
@@ -2058,7 +2058,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             System.out.println(title + "-------" + title1);
             Preconditions.checkArgument(title.equals(title1), "现在活动的名称为：" + title);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("裂变活动-【已取消】的活动-查看");
         }
@@ -2082,7 +2082,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             System.out.println(title + "-------" + message);
             Preconditions.checkArgument(message.equals("当前状态【 已取消】！不能置顶"), "置顶已取消的活动的相关提示:" + message);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("活动管理-【已取消】的活动-置顶");
         }
@@ -2106,7 +2106,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             System.out.println(title + "-------" + title1);
             Preconditions.checkArgument(title.equals(title1), "现在活动的名称为：" + title);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("裂变活动-【进行中】的活动-查看");
         }
@@ -2135,7 +2135,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(title1.equals(title), "PC进行中活动的名称为：" + title + "小程序中的更多中的活动名称为：" + title1);
             Preconditions.checkArgument(message.equals("success"), "置顶进行中的活动的相关提示:" + message);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("裂变活动-【进行中】的活动-置顶");
         }
@@ -2154,7 +2154,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             String appletCodeUrl = businessUtil.getPromotionActivity(ids.get(0));
             Preconditions.checkArgument(!appletCodeUrl.equals(""), "推广【进行中】的活动的小程序二维码的返回值为空");
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("裂变活动-推广【进行中】的活动");
         }
@@ -2175,7 +2175,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             int status = businessUtil.getActivityStatus(ids.get(0));
             Preconditions.checkArgument(status == ActivityStatusEnum.CANCELED.getId(), "现在活动的状态为：" + status);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("裂变活动-取消【进行中】的活动");
         }
@@ -2185,7 +2185,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
      * 裂变活动-【进行中】的活动-编辑：名称，活动规则----裂变活动
      * 2021-3-17
      */
-    @Test(enabled = true, description = "裂变活动-【进行中】的活动-编辑")
+    @Test(description = "裂变活动-【进行中】的活动-编辑")
     public void workingFissionActivityEdit() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2204,7 +2204,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
 //            String content = businessUtil.changeRecordPage(ids.get(0)).getJSONArray("list").getJSONObject(0).getString("content");   &&content.equals("编辑活动")
             Preconditions.checkArgument(message.equals("success") && title.contains("编辑过的裂变活动") && rule.equals(pp.EditFissionRule), "进行中的活动编辑失败");
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("裂变活动-【进行中】的活动-编辑");
         }
@@ -2228,7 +2228,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             System.out.println(title + "-------" + title1);
             Preconditions.checkArgument(title.equals(title1), "现在活动的名称为：" + title);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("裂变活动-【未开始】的活动-查看");
         }
@@ -2257,7 +2257,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(title1.equals(title), "PC未开始活动的ID为：" + title + "小程序中的更多中的活动标题为：" + title1);
             Preconditions.checkArgument(message.equals("success"), "置顶未开始的活动的相关提示:" + message);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("裂变活动-【未开始】的活动-置顶");
         }
@@ -2282,7 +2282,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             System.err.println("------" + status);
             Preconditions.checkArgument(status == ActivityStatusEnum.CANCELED.getId(), "现在活动的状态为：" + status);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("裂变活动-取消【未开始】的活动");
         }
@@ -2302,7 +2302,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             System.err.println(appletCodeUrl + "--------" + ids);
             Preconditions.checkArgument(!appletCodeUrl.equals(""), "推广【未开始】的活动的小程序二维码的返回值为空");
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("裂变活动-推广【未开始】的活动");
         }
@@ -2312,7 +2312,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
      * 裂变活动-【未开始】的活动-编辑：名称，活动规则----裂变活动
      * 2021-3-17
      */
-    @Test(enabled = true, description = "裂变活动-【进行中】的活动-编辑")
+    @Test(description = "裂变活动-【进行中】的活动-编辑")
     public void promotionFissionActivityEdit() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2331,7 +2331,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
 //            String content = businessUtil.changeRecordPage(ids.get(0)).getJSONArray("list").getJSONObject(0).getString("content");     &&content.equals("编辑活动")
             Preconditions.checkArgument(message.equals("success") && title.contains("编辑过的裂变活动") && rule.equals(pp.EditFissionRule), "未开始的活动编辑失败");
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("裂变活动-【未开始】的活动-编辑");
         }
@@ -2357,7 +2357,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                 Preconditions.checkArgument(title.equals(title1), "现在活动的名称为：" + title);
             }
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("裂变活动-【已过期】的活动-查看");
         }
@@ -2380,7 +2380,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                 Preconditions.checkArgument(message.equals("当前状态【 已结束】！不能置顶"), "置顶已过期的活动的相关提示:" + message);
             }
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("裂变活动-【已过期】的活动-置顶");
         }
@@ -2432,7 +2432,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                 }
             }
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("创建活动-领取次数的异常情况{长度101}");
         }
@@ -2476,7 +2476,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
 
             }
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("创建活动-标题异常情况");
         }
@@ -2520,7 +2520,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
 
             }
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("创建活动-分享人数的异常情况{不填写、10000、中文、英文、标点符号}");
         }
@@ -2564,7 +2564,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
 
             }
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("创建活动-活动规则异常{2001位}");
         }
@@ -2603,7 +2603,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             String message = visitor.invokeApi(scene, false).getString("message");
             Preconditions.checkArgument(message.equals("图片不能为空"), "创建活动图片为空");
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("创建活动-活动图片异常{不填写}");
         }
@@ -2625,7 +2625,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                 Preconditions.checkArgument(message.equals("success") || message.equals("图片宽高比不符合null的要求"), "活动图片的异常情况为：" + path);
             });
         } catch (Exception | AssertionError e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("创建活动-活动图片异常{>500K,.gif}");
         }
@@ -2671,7 +2671,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                 Preconditions.checkArgument(message.equals("卡券数量不能为空") || message.equals("奖励数量不能为空") || message.contains("可用库存不足") || message.equals("奖励数量至少一张"), "分享者优惠券配置异常情况为：" + s);
             }
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("创建裂变活动-分享者优惠券配置{0，不填写，>库存}");
         }
@@ -2717,7 +2717,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                 Preconditions.checkArgument(message.equals("卡券数量不能为空") || message.equals("奖励数量不能为空") || message.contains("可用库存不足") || message.equals("奖励数量至少一张"), "被邀请者优惠券配置异常情况为：" + s);
             }
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("创建裂变活动-被邀请者优惠券配置{0，不填写，>库存}");
         }
@@ -2788,7 +2788,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             System.out.println(message);
             Preconditions.checkArgument(message.contains("可用库存不足") || message.contains("已作废"), "作废优惠券的校验，message返回结果为：" + message);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("创建招募活动-校验已作废的优惠券");
         }
@@ -2831,7 +2831,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(message.equals("卡券有效天数范围为[1,3650]"), "优惠券领取后使用天数为3651，创建成功");
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("创建裂变活动-优惠券领取后使用天数为3651");
         }
@@ -2914,7 +2914,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                 Preconditions.checkArgument(message.equals("活动名称长度为[1,20]") || message.equals("活动名称不能为空"), "创建招募活动--标题的异常情况{不填写、21位},标题异常情况创建成功");
             }
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("创建招募活动--标题的异常情况{不填写、21位}");
         }
@@ -2992,7 +2992,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
 
             }
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("创建招募活动--活动时间的异常情况{今天之前，一年以后}");
         }
@@ -3067,7 +3067,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(message.equals("限制名额数取值范围为[1,9999]"), "创建招募活动--活动名额的异常情况{空,51},招募人数异常情况创建成功");
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("创建招募活动--活动名额的异常情况{空,51}");
         }
@@ -3143,7 +3143,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             }
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("创建招募活动--活动规则的异常情况{空,2001} ");
         }
@@ -3223,7 +3223,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             }
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("创建招募活动--优惠券发行张数的异常情况{null,大于库存，0} ");
         }
@@ -3299,7 +3299,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(message.equals("卡券有效天数范围为[1,3650]"), "优惠券有效期为3651天，创建成功");
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("创建招募活动--优惠券有效期为3651天");
         }
@@ -3371,7 +3371,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             System.out.println(message);
             Preconditions.checkArgument(message.contains("可用库存不足") || message.contains("已售罄"), "作废优惠券的校验，message返回结果为：" + message);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("创建招募活动-校验已售罄的优惠券");
         }
@@ -3442,7 +3442,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             System.out.println(message);
             Preconditions.checkArgument(message.contains("可用库存不足") || message.contains("暂停发放"), "作废优惠券的校验，message返回结果为：" + message);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("创建招募活动-校验暂停发放的优惠券");
         }
@@ -3492,7 +3492,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             businessUtil.getApprovalPassed(activityId);
             Preconditions.checkArgument(activityId > 0, "创建裂变活动-参与客户限制为【部分】，部分中的标签选择全部的活动ID为：" + activityId);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("创建裂变活动-参与客户限制为【部分】，部分中的标签选择全部的");
         }
@@ -3567,7 +3567,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             businessUtil.getApprovalPassed(activityId);
             Preconditions.checkArgument(activityId > 0, "创建招募活动，报名信息全为非必填项活动-参与客户限制为【部分】，部分中的标签选择全部的活动ID为：" + activityId);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("创建招募活动，报名信息全为非必填项活动-参与客户限制为【部分】，部分中的标签选择全部的");
         }
@@ -3620,7 +3620,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             }
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("创建裂变活动-参与客户限制为【部分】，部分中的标签选择全部的");
         }
@@ -3698,7 +3698,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
 
             Preconditions.checkArgument(activityId > 0, "招募活动，报名信息全为非必填项");
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("招募活动，报名信息全为非必填项");
         }
@@ -3773,7 +3773,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
 
             Preconditions.checkArgument(activityId > 0, "招募活动，报名信息为空");
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("招募活动，报名信息为空");
         }
@@ -4207,7 +4207,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             String title1 = scene.invoke(visitor).getString("title");
             Preconditions.checkArgument(title.equals(title1), "现在活动的名称为：" + title);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("活动管理-内容营销-【待审核】的活动-查看");
         }
@@ -4229,7 +4229,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             int status = businessUtil.getActivityStatus(id);
             Preconditions.checkArgument(status == ActivityStatusEnum.REVOKE.getId() && message.equals("success"), "撤回的待审批的活动,现活动的状态为：" + status);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("活动管理-内容营销-【待审批】的活动撤回");
         }
@@ -4253,7 +4253,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             String message = scene.invoke(visitor, false).getString("message");
             Preconditions.checkArgument(message.equals("活动未审核通过！暂不能置顶"), "现在活动的名称为：" + title);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("活动管理-内容营销-【待审核】的活动-置顶");
         }
@@ -4278,7 +4278,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             System.out.println(title + "-------" + title1);
             Preconditions.checkArgument(title.equals(title1), "现在活动的名称为：" + title);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("活动管理-内容营销-内容营销-【已撤销】的活动-查看");
         }
@@ -4303,7 +4303,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             System.out.println(title + "-------" + message);
             Preconditions.checkArgument(message.equals("活动未审核通过！暂不能置顶"), "置顶已撤销的活动的相关提示:" + message);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("活动管理-内容营销-【已撤销】的活动-置顶");
         }
@@ -4324,7 +4324,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             String message = businessUtil.getDelActivity(id);
             Preconditions.checkArgument(message.equals("success"), "已撤销的活动删除失败");
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("活动管理-内容营销-【已撤销】的活动-删除");
         }
@@ -4382,7 +4382,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(actionPoint.equals("2"), "活动详情中的客户行动点为：" + actionPoint);
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("活动管理-内容营销-【已撤销】的活动-编辑");
         }
@@ -4407,7 +4407,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             System.out.println(title + "-------" + title1);
             Preconditions.checkArgument(title.equals(title1), "现在活动的名称为：" + title);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("活动管理-内容营销-【审核未通过】的活动-查看");
         }
@@ -4432,7 +4432,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             System.out.println(title + "-------" + message);
             Preconditions.checkArgument(message.equals("活动未审核通过！暂不能置顶"), "置顶审核不通过的活动的相关提示:" + message);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("内容营销【审核未通过】的活动-置顶");
         }
@@ -4451,7 +4451,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             String message = businessUtil.getDelActivity(managePageBean.getId());
             Preconditions.checkArgument(message.equals("success"), "删除【审核未通过】的活动的message为：" + message);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("活动管理-删除【审核未通过】的活动");
         }
@@ -4508,7 +4508,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(label1.equals(label[1][0]), "活动详情中的活动标签为：" + label1);
             Preconditions.checkArgument(actionPoint.equals("2"), "活动详情中的客户行动点为：" + actionPoint);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("内容营销-【审核未通过】的活动-编辑");
         }
@@ -4532,7 +4532,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             System.out.println(title + "-------" + title1);
             Preconditions.checkArgument(title.equals(title1), "现在活动的名称为：" + title);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("内容营销-【已取消】的活动-查看");
         }
@@ -4557,7 +4557,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(message.equals("success"), "活动恢复失败");
             Preconditions.checkArgument(statusCancel == ActivityStatusEnum.CANCELED.getId() && statusRecover == ActivityStatusEnum.PENDING.getId(), "恢复以后的状态为：：" + statusRecover);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("内容营销-【已取消】的活动-恢复");
         }
@@ -4581,7 +4581,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             System.out.println(title + "-------" + title1);
             Preconditions.checkArgument(title.equals(title1), "现在活动的名称为：" + title);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("内容营销-【进行中】的活动-查看");
         }
@@ -4610,7 +4610,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(title1.equals(title), "PC进行中活动的名称为：" + title + "小程序中的更多中的活动名称为：" + title1);
             Preconditions.checkArgument(message.equals("success"), "置顶进行中的活动的相关提示:" + message);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("内容营销-【进行中】的活动-置顶");
         }
@@ -4630,7 +4630,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             String appletCodeUrl = businessUtil.getPromotionActivity(id);
             Preconditions.checkArgument(!appletCodeUrl.equals(""), "推广【进行中】的活动的小程序二维码的返回值为空");
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("内容营销-推广【进行中】的活动");
         }
@@ -4652,7 +4652,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             int status = businessUtil.getActivityStatus(id);
             Preconditions.checkArgument(status == ActivityStatusEnum.CANCELED.getId(), "现在活动的状态为：" + status);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("内容营销-取消【进行中】的活动");
         }
@@ -4662,7 +4662,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
      * 内容营销-【进行中】的活动-编辑：名称，活动规则----内容营销
      * 2021-3-17
      */
-    @Test(enabled = true, description = "内容营销-【进行中】的活动-编辑")
+    @Test(description = "内容营销-【进行中】的活动-编辑")
     public void workingContentMarketingEdit() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -4681,7 +4681,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             //变更记录
             Preconditions.checkArgument(message.equals("success") && title.equals(pp.contentMarketingNameEdit) && rule.equals(pp.EditRule), "进行中的活动编辑失败");
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("内容营销-【进行中】的活动-编辑");
         }
@@ -4691,7 +4691,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
      * 内容营销-【进行中】的活动-下架,再上架
      * 2021-3-17
      */
-    @Test(enabled = true, description = "内容营销-【进行中】的活动-下架")
+    @Test(description = "内容营销-【进行中】的活动-下架")
     public void workingContentMarketingOffLine() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -4743,7 +4743,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(statusOnLine == ActivityStatusEnum.PASSED.getId() && message1.equals("success"), "上架以后活动的状态为：" + statusOnLine);
             Preconditions.checkArgument(title2.equals(title), "PC进行中活动的名称为：" + title + "小程序中的更多中的活动名称为：" + title2);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("内容营销-【进行中】的活动-下架");
         }
@@ -4758,16 +4758,17 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取未开始活动的ID
-            List<Long> ids = businessUtil.getContentMarketingWaitingStar();
+            ManagePageBean managePageBean = businessUtil.getContentMarketingWaitingStar();
             //获取未开始的活动名称
-            String title = businessUtil.getActivityTitle(ids.get(0));
+            Long id = managePageBean.getId();
+            String title = managePageBean.getTitle();
             //获取活动详情中的此活动的名称
-            IScene scene = ManageDetailScene.builder().id(ids.get(0)).build();
+            IScene scene = ManageDetailScene.builder().id(id).build();
             String title1 = visitor.invokeApi(scene).getString("title");
             System.out.println(title + "-------" + title1);
             Preconditions.checkArgument(title.equals(title1), "现在活动的名称为：" + title);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("内容营销-【未开始】的活动-查看");
         }
@@ -4782,11 +4783,12 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取未开始活动的ID
-            List<Long> ids = businessUtil.getContentMarketingWaitingStar();
+            ManagePageBean managePageBean = businessUtil.getContentMarketingWaitingStar();
             //获取未开始的活动名称
-            String title = businessUtil.getActivityTitle(ids.get(0));
+            Long id = managePageBean.getId();
+            String title = managePageBean.getTitle();
             //置顶【未开始的活动】
-            IScene scene = ActivityManageTopScene.builder().id(ids.get(0)).build();
+            IScene scene = ActivityManageTopScene.builder().id(id).build();
             String message = visitor.invokeApi(scene, false).getString("message");
             System.out.println(title + "-------" + message);
             //小程序中第一个为此活动
@@ -4796,7 +4798,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(title1.equals(title), "PC未开始活动的ID为：" + title + "小程序中的更多中的活动ID为：" + title);
             Preconditions.checkArgument(message.equals("success"), "置顶未开始的活动的相关提示:" + message);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("内容营销-【未开始】的活动-置顶");
         }
@@ -4810,15 +4812,16 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取未开始活动的ID
-            List<Long> ids = businessUtil.getContentMarketingWaitingStar();
+            ManagePageBean managePageBean = businessUtil.getContentMarketingWaitingStar();
             //取消未开始的活动
-            businessUtil.getCancelActivity(ids.get(0));
+            Long id = managePageBean.getId();
+            businessUtil.getCancelActivity(id);
             //获取活动的状态
-            int status = businessUtil.getActivityStatus(ids.get(0));
+            int status = businessUtil.getActivityStatus(id);
             System.err.println("------" + status);
             Preconditions.checkArgument(status == ActivityStatusEnum.CANCELED.getId(), "现在活动的状态为：" + status);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("内容营销-取消【未开始】的活动");
         }
@@ -4832,13 +4835,14 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取未开始活动的ID
-            List<Long> ids = businessUtil.getContentMarketingWaitingStar();
+            ManagePageBean managePageBean = businessUtil.getContentMarketingWaitingStar();
+            Long id = managePageBean.getId();
             //推广未开始的活动
-            String appletCodeUrl = businessUtil.getPromotionActivity(ids.get(0));
-            System.err.println(appletCodeUrl + "--------" + ids);
+            String appletCodeUrl = businessUtil.getPromotionActivity(id);
+            logger.info("appletCodeUrl:-------{]", id);
             Preconditions.checkArgument(!appletCodeUrl.equals(""), "推广【未开始】的活动的小程序二维码的返回值为空");
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("活动管理-推广【未开始】的活动");
         }
@@ -4848,25 +4852,26 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
      * 内容营销-【未开始】的活动-编辑：名称，活动规则----内容营销
      * 2021-3-17
      */
-    @Test(enabled = true, description = "内容营销-【未开始】的活动-编辑")
+    @Test(description = "内容营销-【未开始】的活动-编辑")
     public void waitingStarContentMarketingEdit() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取未开始活动的ID
-            List<Long> ids = businessUtil.getContentMarketingWaitingStar();
-            System.err.println("----ids:" + ids.get(0));
+            ManagePageBean managePageBean = businessUtil.getContentMarketingWaitingStar();
+            Long id = managePageBean.getId();
+            System.err.println("----ids:" + id);
             //编辑未开始中的活动
-            String message = businessUtil.getContentMarketingEdit(ids.get(0), pp.contentMarketingNameEdit, pp.EditRule);
+            String message = businessUtil.getContentMarketingEdit(id, pp.contentMarketingNameEdit, pp.EditRule);
             System.out.println("---------" + message);
             //获取活动详情中编辑后的标题和活动规则
-            String title = businessUtil.getFissionActivityDetailDate1(ids.get(0)).getString("title");
-            String rule = businessUtil.getFissionActivityDetailDate1(ids.get(0)).getString("rule");
+            String title = businessUtil.getFissionActivityDetailDate1(id).getString("title");
+            String rule = businessUtil.getFissionActivityDetailDate1(id).getString("rule");
             System.out.println(title + "----------" + rule);
             System.out.println(rule);
             //变更记录
             Preconditions.checkArgument(message.equals("success") && title.equals(pp.contentMarketingNameEdit) && rule.equals(pp.EditRule), "进行中的活动编辑失败");
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("内容营销-【未开始】的活动-编辑");
         }
@@ -4876,11 +4881,11 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
      * 内容营销-【未开始中】的活动-上架下架
      * 2021-3-17
      */
-    @Test(enabled = true, description = "内容营销-【未开始中】的活动-下架")
+    @Test(description = "内容营销-【未开始中】的活动-下架")
     public void waitingContentMarketingOffLine() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Boolean flag = false;
+            boolean flag = false;
             JSONObject lastValue = null;
             JSONArray list = null;
             //创建活动
@@ -4927,7 +4932,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(statusOnLine == ActivityStatusEnum.WAITING_START.getId() && message1.equals("success"), "上架以后活动的状态为：" + statusOnLine);
             Preconditions.checkArgument(title2.equals(title), "PC进行中活动的名称为：" + title + "小程序中的更多中的活动名称为：" + title2);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("内容营销-【未开始中】的活动-下架");
         }
@@ -4942,19 +4947,17 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取已过期活动的ID
-            List<Long> ids = businessUtil.geContentMarketingFinish();
-            if (ids.size() > 0) {
-                //获取已过期的活动名称
-                String title = businessUtil.getActivityTitle(ids.get(0));
-                //获取活动详情中的此活动的名称
-                IScene scene = ManageDetailScene.builder().id(ids.get(0)).build();
+            ManagePageBean managePageBean = businessUtil.geContentMarketingFinish();
+            if (managePageBean != null) {
+                Long id = managePageBean.getId();
+                String title = managePageBean.getTitle();
+                IScene scene = ManageDetailScene.builder().id(id).build();
                 String title1 = visitor.invokeApi(scene).getString("title");
                 System.out.println(title + "-------" + title1);
                 Preconditions.checkArgument(title.equals(title1), "现在活动的名称为：" + title);
             }
-
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("内容营销-【已过期】的活动-查看");
         }
@@ -4964,23 +4967,22 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
      * 内容营销-【未开始】的活动-下架和上架
      * 2021-3-17
      */
-    @Test(enabled = true, description = "内容营销-【未开始中】的活动-下架")
+    @Test(description = "内容营销-【未开始中】的活动-下架")
     public void finishContentMarketingOffLine() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Boolean flag = false;
+            boolean flag = false;
             JSONObject lastValue = null;
             JSONArray list = null;
             //获取未开始活动的ID
-            List<Long> ids = businessUtil.geContentMarketingFinish();
-            if (ids.size() > 0) {
-                System.err.println("----ids:" + ids.get(0));
-                //获取进行中的活动名称
-                String title = businessUtil.getActivityTitle(ids.get(0));
+            ManagePageBean managePageBean = businessUtil.geContentMarketingFinish();
+            if (managePageBean != null) {
+                String title = managePageBean.getTitle();
+                Long id = managePageBean.getId();
                 //进行中的活动下架
-                String message = businessUtil.getContentMarketingOffLine(ids.get(0));
+                String message = businessUtil.getContentMarketingOffLine(id);
                 //获取活动的状态
-                int statusOffLine = businessUtil.getActivityStatus(ids.get(0));
+                int statusOffLine = businessUtil.getActivityStatus(id);
                 //登录小程序
                 util.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
                 //获取小程序推荐列表
@@ -5000,11 +5002,11 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                 Preconditions.checkArgument(!flag, "小程序中还是能够查看到此活动");
                 jc.pcLogin(pp.phone, pp.password);
                 //活动上架
-                String message1 = businessUtil.getContentMarketingOnline(ids.get(0));
+                String message1 = businessUtil.getContentMarketingOnline(id);
                 //获取活动的状态
-                int statusOnLine = businessUtil.getActivityStatus(ids.get(0));
+                int statusOnLine = businessUtil.getActivityStatus(id);
                 //置顶此活动
-                IScene scene = ActivityManageTopScene.builder().id(ids.get(0)).build();
+                IScene scene = ActivityManageTopScene.builder().id(id).build();
                 visitor.invokeApi(scene, false).getString("message");
                 //小程序中第一个为此活动
                 util.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
@@ -5015,7 +5017,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
 
             }
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("内容营销-【未开始中】的活动-下架");
         }
@@ -5039,7 +5041,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             System.out.println(title + "-------" + title1);
             Preconditions.checkArgument(title.equals(title1), "现在活动的名称为：" + title);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("内容营销-【已下架】的活动-查看");
         }
@@ -5059,7 +5061,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             String message = businessUtil.getDelActivity(ids.get(0));
             Preconditions.checkArgument(message.equals("success"), "已下架的活动删除失败");
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("内容营销-【已下架】的活动-删除");
         }
@@ -5069,7 +5071,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
      * 裂变活动-【进行中】的活动-下架,再上架
      * 2021-3-17
      */
-    @Test(enabled = true, description = "裂变活动-【进行中】的活动-下架上架")
+    @Test(description = "裂变活动-【进行中】的活动-下架上架")
     public void workingFissionActivityOffLine() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -5120,7 +5122,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(statusOnLine == ActivityStatusEnum.PASSED.getId() && message1.equals("success"), "上架以后活动的状态为：" + statusOnLine);
             Preconditions.checkArgument(title2.equals(title), "PC进行中活动的名称为：" + title + "小程序中的更多中的活动名称为：" + title2);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("裂变活动-【进行中】的活动-下架上架");
         }
@@ -5130,7 +5132,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
      * 裂变活动-【未开始中】的活动-下架和上架
      * 2021-3-17
      */
-    @Test(enabled = true, description = "裂变活动-【未开始中】的活动-下架")
+    @Test(description = "裂变活动-【未开始中】的活动-下架")
     public void finishFissionActivityOffLine() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -5184,7 +5186,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
 
             }
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("裂变活动-【未开始】的活动-下架");
         }
@@ -5208,7 +5210,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             System.out.println(title + "-------" + title1);
             Preconditions.checkArgument(title.equals(title1), "现在活动的名称为：" + title);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("裂变活动-【已下架】的活动-查看");
         }
@@ -5228,7 +5230,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             String message = businessUtil.getDelActivity(ids.get(0));
             Preconditions.checkArgument(message.equals("success"), "已下架的活动删除失败");
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("裂变活动-【已下架】的活动-删除");
         }
@@ -5252,7 +5254,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(message.equals("success"), "活动恢复失败");
             Preconditions.checkArgument(statusCancel == ActivityStatusEnum.CANCELED.getId() && statusRecover == ActivityStatusEnum.PENDING.getId(), "恢复以后的状态为：：" + statusRecover);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("裂变活动-【已取消】的活动-恢复");
         }
@@ -5262,7 +5264,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
      * 招募活动-【进行中】的活动-下架,再上架
      * 2021-3-17
      */
-    @Test(enabled = true, description = "招募活动-【进行中】的活动-下架,再上架")
+    @Test(description = "招募活动-【进行中】的活动-下架,再上架")
     public void workingRecruitActivityOffLine() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -5315,7 +5317,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(statusOnLine == ActivityStatusEnum.PASSED.getId() && message1.equals("success"), "上架以后活动的状态为：" + statusOnLine);
             Preconditions.checkArgument(title2.equals(title), "PC进行中活动的名称为：" + title + "小程序中的更多中的活动名称为：" + title2);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("招募活动-【进行中】的活动-下架,再上架");
         }
@@ -5339,7 +5341,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             System.out.println(title + "-------" + title1);
             Preconditions.checkArgument(title.equals(title1), "现在活动的名称为：" + title);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("招募活动-【已下架】的活动-查看");
         }
@@ -5359,7 +5361,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             String message = businessUtil.getDelActivity(ids.get(0));
             Preconditions.checkArgument(message.equals("success"), "已下架的活动删除失败");
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("招募活动-【已下架】的活动-删除");
         }
@@ -5369,58 +5371,58 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
      * 招募活动-【未开始】的活动-下架和上架
      * 2021-3-17
      */
-    @Test(enabled = true, description = "招募活动-【未开始中】的活动-下架")
+    @Test(description = "招募活动-【未开始中】的活动-下架")
     public void finishRecruitActivityOffLine() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Boolean flag = false;
-            JSONObject lastValue = null;
-            JSONArray list = null;
-            //获取未开始活动的ID
-            List<Long> ids = businessUtil.geContentMarketingFinish();
-            if (ids.size() > 0) {
-                System.err.println("----ids:" + ids.get(0));
-                //获取进行中的活动名称
-                String title = businessUtil.getActivityTitle(ids.get(0));
-                //进行中的活动下架
-                String message = businessUtil.getContentMarketingOffLine(ids.get(0));
-                //获取活动的状态
-                int statusOffLine = businessUtil.getActivityStatus(ids.get(0));
-                //登录小程序
-                util.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
-                //获取小程序推荐列表
-                do {
-                    IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
-                    JSONObject response = visitor.invokeApi(scene);
-                    lastValue = response.getJSONObject("last_value");
-                    list = response.getJSONArray("list");
-                    for (int i = 0; i < list.size(); i++) {
-                        String title1 = list.getJSONObject(i).getString("title");
-                        if (title.equals(title1)) {
-                            flag = true;
-                        }
-                    }
-                } while (list.size() == 10);
-                Preconditions.checkArgument(message.equals("success") && statusOffLine == ActivityStatusEnum.OFFLINE.getId(), "下架失败");
-                Preconditions.checkArgument(!flag, "小程序中还是能够查看到此活动");
-                jc.pcLogin(pp.phone, pp.password);
-                //活动上架
-                String message1 = businessUtil.getContentMarketingOnline(ids.get(0));
-                //获取活动的状态
-                int statusOnLine = businessUtil.getActivityStatus(ids.get(0));
-                //置顶此活动
-                IScene scene = ActivityManageTopScene.builder().id(ids.get(0)).build();
-                visitor.invokeApi(scene, false).getString("message");
-                //小程序中第一个为此活动
-                util.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
-                JSONObject response = businessUtil.appointmentActivityTitleNew();
-                String title2 = response.getJSONArray("list").getJSONObject(0).getString("title");
-                Preconditions.checkArgument(statusOnLine == ActivityStatusEnum.WAITING_START.getId() && message1.equals("success"), "上架以后活动的状态为：" + statusOnLine);
-                Preconditions.checkArgument(title2.equals(title), "PC进行中活动的名称为：" + title + "小程序中的更多中的活动名称为：" + title2);
-
-            }
+//            Boolean flag = false;
+//            JSONObject lastValue = null;
+//            JSONArray list = null;
+//            //获取未开始活动的ID
+//            List<Long> ids = businessUtil.geContentMarketingFinish();
+//            if (ids.size() > 0) {
+//                System.err.println("----ids:" + ids.get(0));
+//                //获取进行中的活动名称
+//                String title = businessUtil.getActivityTitle(ids.get(0));
+//                //进行中的活动下架
+//                String message = businessUtil.getContentMarketingOffLine(ids.get(0));
+//                //获取活动的状态
+//                int statusOffLine = businessUtil.getActivityStatus(ids.get(0));
+//                //登录小程序
+//                util.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
+//                //获取小程序推荐列表
+//                do {
+//                    IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
+//                    JSONObject response = visitor.invokeApi(scene);
+//                    lastValue = response.getJSONObject("last_value");
+//                    list = response.getJSONArray("list");
+//                    for (int i = 0; i < list.size(); i++) {
+//                        String title1 = list.getJSONObject(i).getString("title");
+//                        if (title.equals(title1)) {
+//                            flag = true;
+//                        }
+//                    }
+//                } while (list.size() == 10);
+//                Preconditions.checkArgument(message.equals("success") && statusOffLine == ActivityStatusEnum.OFFLINE.getId(), "下架失败");
+//                Preconditions.checkArgument(!flag, "小程序中还是能够查看到此活动");
+//                jc.pcLogin(pp.phone, pp.password);
+//                //活动上架
+//                String message1 = businessUtil.getContentMarketingOnline(ids.get(0));
+//                //获取活动的状态
+//                int statusOnLine = businessUtil.getActivityStatus(ids.get(0));
+//                //置顶此活动
+//                IScene scene = ActivityManageTopScene.builder().id(ids.get(0)).build();
+//                visitor.invokeApi(scene, false).getString("message");
+//                //小程序中第一个为此活动
+//                util.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
+//                JSONObject response = businessUtil.appointmentActivityTitleNew();
+//                String title2 = response.getJSONArray("list").getJSONObject(0).getString("title");
+//                Preconditions.checkArgument(statusOnLine == ActivityStatusEnum.WAITING_START.getId() && message1.equals("success"), "上架以后活动的状态为：" + statusOnLine);
+//                Preconditions.checkArgument(title2.equals(title), "PC进行中活动的名称为：" + title + "小程序中的更多中的活动名称为：" + title2);
+//
+//            }
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("招募活动-【未开始中】的活动-下架");
         }
@@ -5443,7 +5445,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(message.equals("success"), "活动恢复失败");
             Preconditions.checkArgument(statusCancel == ActivityStatusEnum.CANCELED.getId() && statusRecover == ActivityStatusEnum.PENDING.getId(), "恢复以后的状态为：：" + statusRecover);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("招募活动-【已取消】的活动-恢复");
         }
@@ -5476,7 +5478,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             System.out.println("可用库存的数量不为:" + AllowUseInventory + "+++++++++" + AllowUseInventoryAfter + "    " + activityId);
             Preconditions.checkArgument(AllowUseInventoryBefore == 1000 && AllowUseInventoryAfter == 970L, "可用库存的数量不为0");
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData(" 创建招募活动-优惠券的可用库存校验-创建卡券,创建活动,优惠券数量不变,审批通过,可用库存数量减少");
         }
