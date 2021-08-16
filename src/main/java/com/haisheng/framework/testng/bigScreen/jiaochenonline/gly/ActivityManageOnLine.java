@@ -361,17 +361,18 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取进行中活动的ID
-            List<Long> ids = businessUtil.getActivityWorking();
+            ManagePageBean managePageBean = businessUtil.getActivityWorking();
+            Long id = managePageBean.getId();
             //编辑前-变更记录条数
-            JSONArray list = businessUtil.changeRecordPage(ids.get(0)).getJSONArray("list");
+            JSONArray list = businessUtil.changeRecordPage(id).getJSONArray("list");
             int numBefore = list.size();
             //取消进行中的活动
-            businessUtil.getCancelActivity(ids.get(0));
+            businessUtil.getCancelActivity(id);
             //获取此活动的状态
-            int status = businessUtil.getActivityStatus(ids.get(0));
+            int status = businessUtil.getActivityStatus(id);
             logger.info("---------" + status);
             //编辑后 变更记录+1&调整类型=取消活动
-            JSONArray list1 = businessUtil.changeRecordPage(ids.get(0)).getJSONArray("list");
+            JSONArray list1 = businessUtil.changeRecordPage(id).getJSONArray("list");
             int numAfter = list1.size();
             String content = list1.getJSONObject(0).getString("content");
             Preconditions.checkArgument(status == ActivityStatusEnum.CANCELED.getId(), "取消【进行中】的活动,现活动的状态为" + ActivityStatusEnum.CANCELED.getStatusName());
@@ -1611,12 +1612,12 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取已过期活动的ID
-            List<Long> ids = businessUtil.getRecruitActivityFinish();
-            if (ids.size() > 0) {
-                //获取已过期的活动名称
-                String title = businessUtil.getActivityTitle(ids.get(0));
+            ManagePageBean managePageBean = businessUtil.getRecruitActivityFinish();
+            if (managePageBean != null) {
+                Long id = managePageBean.getId();
+                String title = businessUtil.getActivityTitle(id);
                 //获取活动详情中的此活动的名称
-                IScene scene = ManageDetailScene.builder().id(ids.get(0)).build();
+                IScene scene = ManageDetailScene.builder().id(id).build();
                 String title1 = visitor.invokeApi(scene).getString("title");
                 logger.info(title + "-------" + title1);
                 Preconditions.checkArgument(title.equals(title1), "现在活动的名称为：" + title);
@@ -1637,10 +1638,10 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取已过期活动的ID
-            List<Long> ids = businessUtil.getRecruitActivityFinish();
-            if (ids.size() > 0) {
-                //置顶【已过期的活动】
-                IScene scene = ActivityManageTopScene.builder().id(ids.get(0)).build();
+            ManagePageBean managePageBean = businessUtil.getRecruitActivityFinish();
+            if (managePageBean != null) {
+                Long id = managePageBean.getId();
+                IScene scene = ActivityManageTopScene.builder().id(id).build();
                 String message = visitor.invokeApi(scene, false).getString("message");
                 Preconditions.checkArgument(message.equals("当前状态【 已结束】！不能置顶"), "置顶已过期的活动的相关提示:" + message);
             }
@@ -1732,11 +1733,12 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取已撤销活动的ID
-            List<Long> ids = businessUtil.getFissionActivityRevoke();
+            ManagePageBean managePageBean = businessUtil.getFissionActivityRevoke();
+            Long id = managePageBean.getId();
             //获取已撤销的活动名称
-            String title = businessUtil.getActivityTitle(ids.get(0));
+            String title = managePageBean.getTitle();
             //获取活动详情中的此活动的名称
-            IScene scene = ManageDetailScene.builder().id(ids.get(0)).build();
+            IScene scene = ManageDetailScene.builder().id(id).build();
             String title1 = visitor.invokeApi(scene).getString("title");
             logger.info(title + "-------" + title1);
             Preconditions.checkArgument(title.equals(title1), "现在活动的名称为：" + title);
@@ -1756,11 +1758,12 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取已撤销活动的ID
-            List<Long> ids = businessUtil.getFissionActivityRevoke();
+            ManagePageBean managePageBean = businessUtil.getFissionActivityRevoke();
+            Long id = managePageBean.getId();
             //获取已撤销的活动名称
-            String title = businessUtil.getActivityTitle(ids.get(0));
+            String title = managePageBean.getTitle();
             //置顶【已撤销的活动】
-            IScene scene = ActivityManageTopScene.builder().id(ids.get(0)).build();
+            IScene scene = ActivityManageTopScene.builder().id(id).build();
             String message = visitor.invokeApi(scene, false).getString("message");
             logger.info(title + "-------" + message);
             Preconditions.checkArgument(message.equals("活动未审核通过！暂不能置顶"), "置顶已撤销的活动的相关提示:" + message);
@@ -1780,9 +1783,10 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取已撤销活动的ID
-            List<Long> ids = businessUtil.getFissionActivityRevoke();
+            ManagePageBean managePageBean = businessUtil.getFissionActivityRevoke();
+            Long id = managePageBean.getId();
             //删除已撤销的活动
-            String message = businessUtil.getDelActivity(ids.get(0));
+            String message = businessUtil.getDelActivity(id);
             Preconditions.checkArgument(message.equals("success"), "已撤销的活动删除失败");
         } catch (AssertionError | Exception e) {
             collectMessage(e);
@@ -1800,8 +1804,8 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //获取已撤销活动的ID
-            List<Long> ids = businessUtil.getFissionActivityRevoke();
-            logger.info("----ids:" + ids.get(0));
+            ManagePageBean managePageBean = businessUtil.getFissionActivityRevoke();
+            Long id = managePageBean.getId();
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             SceneUtil supporterUtil = new SceneUtil(visitor);
             PublicParameter pp = new PublicParameter();
@@ -1817,7 +1821,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             String endTime = businessUtil.getEndDate();
             //编辑裂变活动
             IScene scene = FissionVoucherEditScene.builder()
-                    .id(ids.get(0))
+                    .id(id)
                     .type(1)
                     .participationLimitType(0)
                     .receiveLimitType(0)
@@ -1838,8 +1842,8 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             String message = visitor.invokeApi(scene, false).getString("message");
             logger.info("---------" + message);
             //获取活动详情中编辑后的标题和活动规则
-            JSONObject response = businessUtil.getFissionActivityDetailDate1(ids.get(0));
-            JSONObject response1 = businessUtil.getFissionActivityDetailData(ids.get(0));
+            JSONObject response = businessUtil.getFissionActivityDetailDate1(id);
+            JSONObject response1 = businessUtil.getFissionActivityDetailData(id);
             String title = response.getString("title");
             String rule = response1.getString("rule");
             String participationLimitType = response.getString("participation_limit_type");
@@ -1852,7 +1856,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             String picName = response.getJSONArray("pic_list").getJSONObject(0).getString("pic_path");
             Long invitedVoucherId = response1.getJSONObject("invited_voucher").getLong("id");
             Long shareVoucherId = response1.getJSONObject("share_voucher").getLong("id");
-            String content = businessUtil.changeRecordPage(ids.get(0)).getJSONArray("list").getJSONObject(0).getString("content");
+            String content = businessUtil.changeRecordPage(id).getJSONArray("list").getJSONObject(0).getString("content");
             logger.info(invitedVoucherId + "----------" + voucherId + "----------" + title + "----------" + rule + "--------" + participationLimitType + "----------" + receiveLimitType + "--------" + startTime + "----------" + endTime + "--------" + shareNum + "----------" + subjectType + "--------" + label + "----------" + picName + "--------" + startDate + "----------" + endDate);
             Preconditions.checkArgument(message.equals("success") && title.contains("编辑过的裂变活动") && rule.equals(pp.EditFissionRule), "已撤销的活动编辑失败1");
             Preconditions.checkArgument(participationLimitType.equals("0") && receiveLimitType.equals("0"), "已撤销的活动编辑失败2");
@@ -2424,12 +2428,12 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             JSONObject invitedVoucher = businessUtil.getInvitedVoucher(voucherId, 1, "1", 2, "", "", 3);
             JSONObject shareVoucher = businessUtil.getShareVoucher(pp.packageId, 2, "1", 2, "", "", 3);
             String[] title = pp.titleException;
-            for (int i = 0; i < title.length; i++) {
+            for (String s : title) {
                 IScene scene = FissionVoucherAddScene.builder()
                         .type(1)
                         .participationLimitType(0)
                         .receiveLimitType(0)
-                        .title(title[i])
+                        .title(s)
                         .rule(pp.rule)
                         .startDate(businessUtil.getStartDate())
                         .endDate(businessUtil.getEndDate())
@@ -2442,7 +2446,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                         .invitedVoucher(invitedVoucher)
                         .build();
                 String message = visitor.invokeApi(scene, false).getString("message");
-                Preconditions.checkArgument(message.equals("活动名称长度为[1,20]") || message.equals("活动名称不能为空"), "创建活动填写的名字为：" + title[i]);
+                Preconditions.checkArgument(message.equals("活动名称长度为[1,20]") || message.equals("活动名称不能为空"), "创建活动填写的名字为：" + s);
 
             }
         } catch (AssertionError | Exception e) {
@@ -2468,7 +2472,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             JSONObject invitedVoucher = businessUtil.getInvitedVoucher(voucherId, 1, "1", 2, "", "", 3);
             JSONObject shareVoucher = businessUtil.getShareVoucher(pp.packageId, 2, "1", 2, "", "", 3);
             String[] shareNum = pp.shareNumException;
-            for (int i = 0; i < shareNum.length; i++) {
+            for (String s : shareNum) {
                 IScene scene = FissionVoucherAddScene.builder()
                         .type(1)
                         .participationLimitType(0)
@@ -2481,12 +2485,12 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                         .subjectId(util.getSubjectDesc(util.getSubjectType()))
                         .label("CAR_WELFARE")
                         .picList(picList)
-                        .shareNum(shareNum[i])
+                        .shareNum(s)
                         .shareVoucher(shareVoucher)
                         .invitedVoucher(invitedVoucher)
                         .build();
                 String message = visitor.invokeApi(scene, false).getString("message");
-                Preconditions.checkArgument(message.equals("分享人数不能为空") || message.equals("分享人数范围为[1,50]"), "创建活动分享人数为：" + shareNum[i]);
+                Preconditions.checkArgument(message.equals("分享人数不能为空") || message.equals("分享人数范围为[1,50]"), "创建活动分享人数为：" + s);
 
             }
         } catch (AssertionError | Exception e) {
@@ -2512,13 +2516,13 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             JSONObject invitedVoucher = businessUtil.getInvitedVoucher(voucherId, 1, "1", 2, "", "", 3);
             JSONObject shareVoucher = businessUtil.getShareVoucher(pp.packageId, 2, "1", 2, "", "", 3);
             String[] rule = pp.ruleException;
-            for (int i = 0; i < rule.length; i++) {
+            for (String s : rule) {
                 IScene scene = FissionVoucherAddScene.builder()
                         .type(1)
                         .participationLimitType(0)
                         .receiveLimitType(0)
                         .title(pp.fissionVoucherName)
-                        .rule(rule[i])
+                        .rule(s)
                         .startDate(businessUtil.getStartDate())
                         .endDate(businessUtil.getEndDate())
                         .subjectType(util.getSubjectType())
@@ -2530,7 +2534,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                         .invitedVoucher(invitedVoucher)
                         .build();
                 String message = visitor.invokeApi(scene, false).getString("message");
-                Preconditions.checkArgument(message.equals("活动规则字数为[1,2000]"), "创建活动规则为：" + rule[i]);
+                Preconditions.checkArgument(message.equals("活动规则字数为[1,2000]"), "创建活动规则为：" + s);
 
             }
         } catch (AssertionError | Exception e) {

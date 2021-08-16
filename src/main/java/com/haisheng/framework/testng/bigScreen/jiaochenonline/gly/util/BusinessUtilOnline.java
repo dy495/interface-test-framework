@@ -2,6 +2,7 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.util;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.util.BasicUtil;
@@ -30,9 +31,9 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Stream;
 
 public class BusinessUtilOnline extends BasicUtil {
-
     private final VisitorProxy visitor;
     private final SceneUtil user;
 
@@ -244,7 +245,6 @@ public class BusinessUtilOnline extends BasicUtil {
      * 获取待审批的优惠券合集
      */
     public List<Long> getVoucherIds() {
-        SceneUtil su = new SceneUtil(visitor);
         List<Long> voucherIds = new ArrayList<>();
         IScene scene = VoucherFormVoucherPageScene.builder().page(1).size(10).build();
         JSONObject response = visitor.invokeApi(scene);
@@ -826,41 +826,14 @@ public class BusinessUtilOnline extends BasicUtil {
     /**
      * 查询活动列表中的状态为【进行中的ID】
      */
-    public List<Long> getActivityWorking() {
-        List<Long> ids = new ArrayList<>();
-
-        //活动列表
-        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = visitor.invokeApi(scene).getInteger("pages");
-        for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                //是否取消
-                Boolean isCanCancel = list.getJSONObject(i).getBoolean("is_can_cancel");
-                //是否删除
-                Boolean isCanDelete = list.getJSONObject(i).getBoolean("is_can_delete");
-                //是否编辑
-                Boolean isCanEdit = list.getJSONObject(i).getBoolean("is_can_edit");
-                //是否推广
-                Boolean isCanPromotion = list.getJSONObject(i).getBoolean("is_can_promotion");
-                //是否撤回
-                Boolean isCanRevoke = list.getJSONObject(i).getBoolean("is_can_revoke");
-                int status = list.getJSONObject(i).getInteger("status");
-                if (status == ActivityStatusEnum.PASSED.getId()) {
-                    Long id = list.getJSONObject(i).getLong("id");
-                    ids.add(id);
-                }
-            }
+    public ManagePageBean getActivityWorking() {
+        ManagePageBean managePageBean = getActivity(ActivityStatusEnum.PASSED, null);
+        if (managePageBean != null) {
+            return managePageBean;
         }
-        //创建活动并审批
-        if (ids.size() == 0) {
-            Long id1 = createRecruitActivityApproval();
-            getApprovalPassed(id1);
-            ids.add(id1);
-
-        }
-        return ids;
+        Long id = createRecruitActivityApproval();
+        getApprovalPassed(id);
+        return getActivityWorking();
     }
 
     /**
@@ -885,14 +858,15 @@ public class BusinessUtilOnline extends BasicUtil {
         return getFissionActivityWorking();
     }
 
-    public ManagePageBean getActivity(ActivityStatusEnum status, int activityType) {
+    public ManagePageBean getActivity(ActivityStatusEnum status, Integer activityType) {
         IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(scene).getInteger("pages");
         for (int page = 1; page <= pages; page++) {
             IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
-            JSONObject obj = list.stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("status").equals(status.getId()))
-                    .filter(e -> e.getInteger("activity_type").equals(activityType)).findFirst().orElse(null);
+            Stream<JSONObject> stream = list.stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("status").equals(status.getId()));
+            stream = activityType != null ? stream.filter(e -> e.getInteger("activity_type").equals(activityType)) : stream;
+            JSONObject obj = stream.findFirst().orElse(null);
             if (obj != null) {
                 return JSONObject.toJavaObject(obj, ManagePageBean.class);
             }
@@ -904,7 +878,6 @@ public class BusinessUtilOnline extends BasicUtil {
      * 招募活动-查询列表中的状态为【进行中的ID】
      */
     public ManagePageBean getRecruitActivityWorking() {
-        List<Long> ids = new ArrayList<>();
         //活动列表
         IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(scene).getInteger("pages");
@@ -1275,31 +1248,15 @@ public class BusinessUtilOnline extends BasicUtil {
      * 查询列表中的状态为【已撤销的ID】----裂变活动
      * 2021-3-17
      */
-    public List<Long> getFissionActivityRevoke() {
-        List<Long> ids = new ArrayList<>();
-        //活动列表
-        IScene activityManageListScene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = visitor.invokeApi(activityManageListScene).getInteger("pages");
-        for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                int status = list.getJSONObject(i).getInteger("status");
-                int activityType = list.getJSONObject(i).getInteger("activity_type");
-                if (status == ActivityStatusEnum.REVOKE.getId() && activityType == 1) {
-                    Long id = list.getJSONObject(i).getLong("id");
-                    System.err.println(status + "-------" + id);
-                    ids.add(id);
-                }
-            }
+    public ManagePageBean getFissionActivityRevoke() {
+        ManagePageBean managePageBean = getActivity(ActivityStatusEnum.REVOKE, 1);
+        if (managePageBean != null) {
+            return managePageBean;
         }
-        if (ids.size() == 0) {
-            Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-            Long id1 = createFissionActivity(voucherId);
-            getRevokeActivity(id1);
-            ids.add(id1);
-        }
-        return ids;
+        Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
+        Long id = createFissionActivity(voucherId);
+        getRevokeActivity(id);
+        return getFissionActivityRevoke();
     }
 
     /**
@@ -1407,24 +1364,13 @@ public class BusinessUtilOnline extends BasicUtil {
      * 招募活动-查询列表中的状态为【已过期的ID】---招募活动
      * 2021-3-17
      */
-    public List<Long> getRecruitActivityFinish() {
+    public ManagePageBean getRecruitActivityFinish() {
         List<Long> ids = new ArrayList<>();
-        //活动列表
-        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = visitor.invokeApi(scene).getInteger("pages");
-        for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                int status = list.getJSONObject(i).getInteger("status");
-                int activityType = list.getJSONObject(i).getInteger("activity_type");
-                if (status == ActivityStatusEnum.FINISH.getId() && activityType == 2) {
-                    Long id = list.getJSONObject(i).getLong("id");
-                    ids.add(id);
-                }
-            }
+        ManagePageBean managePageBean = getActivity(ActivityStatusEnum.FINISH, 2);
+        if (managePageBean != null) {
+            return managePageBean;
         }
-        return ids;
+        return null;
     }
 
     /**
