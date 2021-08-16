@@ -6,7 +6,6 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.util.BasicUtil;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAppletToken;
-import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.util.PublicParameter;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.activity.ManagePageBean;
@@ -453,7 +452,7 @@ public class BusinessUtilOnline extends BasicUtil {
         JSONArray registerInformationList = this.getRegisterInformationList(isShow, isRequired);
         //判断可用库存
         int AllowUseInventory = getVoucherAllowUseInventory(voucherId);
-        ManageRecruitAddScene.ManageRecruitAddSceneBuilder builder = null;
+        ManageRecruitAddScene.ManageRecruitAddSceneBuilder builder;
         if (AllowUseInventory > 0) {
             //报名成功奖励
             JSONArray registerObject = getRewardVouchers(voucherId, 1, Math.toIntExact(AllowUseInventory));
@@ -482,7 +481,6 @@ public class BusinessUtilOnline extends BasicUtil {
             if (successReward) {
                 builder.rewardVouchers(registerObject)
                         .voucherValid(voucherValid);
-
             }
         } else {
             //创建卡券
@@ -745,13 +743,6 @@ public class BusinessUtilOnline extends BasicUtil {
     }
 
     /**
-     * 获取图片地址
-     *
-     * @return 图片地址
-     */
-
-
-    /**
      * 获取优惠券的库存
      */
     public String getSurplusInventory(Long id) {
@@ -789,35 +780,7 @@ public class BusinessUtilOnline extends BasicUtil {
         return visitor.invokeApi(scene).getString("cost");
     }
 
-
-/**
- * --------------------------------活动列表中活动状态--------------------------------------------
- */
-    /**
-     * 查询列表中的状态为【待审核的ID】
-     */
-    public List<Long> getActivityWaitingApproval() {
-        List<Long> ids = new ArrayList<>();
-        //活动列表
-        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = visitor.invokeApi(scene).getInteger("pages");
-        for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
-            JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                int status = list.getJSONObject(i).getInteger("status");
-                if (status == ActivityStatusEnum.PENDING.getId()) {
-                    Long id = list.getJSONObject(i).getLong("id");
-                    ids.add(id);
-                }
-            }
-        }
-        if (ids.size() == 0) {
-            Long id1 = createRecruitActivityApproval();
-            ids.add(id1);
-        }
-        return ids;
-    }
+    //--------------------------------活动列表中活动状态--------------------------------------------
 
     /**
      * 查询列表中的状态为【待审核的ID】---招募活动
@@ -920,6 +883,21 @@ public class BusinessUtilOnline extends BasicUtil {
         Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
         createFissionActivity(voucherId);
         return getFissionActivityWorking();
+    }
+
+    public ManagePageBean getActivity(ActivityStatusEnum status, int activityType) {
+        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
+        int pages = visitor.invokeApi(scene).getInteger("pages");
+        for (int page = 1; page <= pages; page++) {
+            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
+            JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
+            JSONObject obj = list.stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("status").equals(status.getId()))
+                    .filter(e -> e.getInteger("activity_type").equals(activityType)).findFirst().orElse(null);
+            if (obj != null) {
+                return JSONObject.toJavaObject(obj, ManagePageBean.class);
+            }
+        }
+        return null;
     }
 
     /**
@@ -1603,7 +1581,7 @@ public class BusinessUtilOnline extends BasicUtil {
      */
     public String appointmentActivityStatus(Long activityId) {
         Integer lastValue = null;
-        JSONArray list = null;
+        JSONArray list;
         String status = "";
         do {
             IScene scene = AppointmentActivityListScene.builder().lastValue(lastValue).size(10).build();
@@ -1657,9 +1635,7 @@ public class BusinessUtilOnline extends BasicUtil {
         return id;
     }
 
-/**
- * ---------------------------------------------获取页面返回值---------------------------------------------
- */
+    //---------------------------------------------获取页面返回值---------------------------------------------
 
 
     /**
@@ -1735,8 +1711,7 @@ public class BusinessUtilOnline extends BasicUtil {
      */
     public JSONObject getActivityApprovalDate() {
         IScene scene = ActivityManageDateScene.builder().build();
-        JSONObject response = visitor.invokeApi(scene);
-        return response;
+        return visitor.invokeApi(scene);
     }
 
     /**
@@ -1744,8 +1719,7 @@ public class BusinessUtilOnline extends BasicUtil {
      */
     public JSONObject getActivityManagePage(int status) {
         IScene scene = ActivityManagePageScene.builder().page(1).size(10).approvalStatus(status).build();
-        JSONObject response = visitor.invokeApi(scene);
-        return response;
+        return visitor.invokeApi(scene);
     }
 
 
@@ -1775,8 +1749,7 @@ public class BusinessUtilOnline extends BasicUtil {
     public int getAppletArticleList() {
         //获取小程序推荐列表
         JSONObject lastValue = null;
-        JSONArray list = null;
-        JSONObject object = null;
+        JSONArray list;
         int num = 0;
         do {
             IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
@@ -1794,7 +1767,7 @@ public class BusinessUtilOnline extends BasicUtil {
      * 判断客户报名是否重复，获取重复的手机号
      */
     public List<String> phoneSameArrayCheck(Long activityId) {
-        List<String> phoneSameArray = null;
+        List<String> phoneSameArray = new ArrayList<>();
         //报名列表的返回值
         JSONObject pageRes = getRegisterPage(activityId);
         int pages = pageRes.getInteger("pages");
@@ -1871,7 +1844,7 @@ public class BusinessUtilOnline extends BasicUtil {
         user.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
         //获取小程序推荐列表
         JSONObject lastValue = null;
-        JSONArray list = null;
+        JSONArray list;
         do {
             IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
             JSONObject response1 = visitor.invokeApi(scene);
@@ -1943,7 +1916,7 @@ public class BusinessUtilOnline extends BasicUtil {
         user.loginApplet(EnumAppletToken.JC_LXQ_ONLINE);
         //获取小程序推荐列表
         JSONObject lastValue = null;
-        JSONArray list = null;
+        JSONArray list;
         do {
             IScene scene = AppletArticleListScene.builder().lastValue(lastValue).size(10).build();
             JSONObject response1 = visitor.invokeApi(scene);
@@ -1966,7 +1939,7 @@ public class BusinessUtilOnline extends BasicUtil {
      */
     public void activityRegisterApplet(Long id) {
         JSONObject lastValue = null;
-        JSONArray list = null;
+        JSONArray list;
         JSONArray registerItems = new JSONArray();
         Long activityId = 0L;
         //获取此活动的名称
@@ -2014,9 +1987,7 @@ public class BusinessUtilOnline extends BasicUtil {
      **/
     public void dataCompare() throws ParseException {
         String flag = "2020-12-13 12:33";
-        String aaa = flag.substring(0, 9);
         //获取当前时间---df.format(date)
-        Date date = new Date();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         //当前时间+-3天
         Calendar rightNow = Calendar.getInstance();

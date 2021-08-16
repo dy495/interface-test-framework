@@ -1463,7 +1463,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             String title = businessUtil.getRecruitActivityDetailDate1(id).getString("title");
             String rule = businessUtil.getRecruitActivityDetailDate(id).getString("rule");
             //获取活动状态
-            int status = businessUtil.getActivityStatus(id);
+            businessUtil.getActivityStatus(id);
             String content = businessUtil.changeRecordPage(id).getJSONArray("list").getJSONObject(0).getString("content");
             logger.info(title + "--------" + rule);
             Preconditions.checkArgument(message.equals("success") && title.contains("编辑过后的招募活动") && rule.equals(pp.EditRule) && content.equals("编辑活动"), "进行中的活动编辑失败");
@@ -2378,12 +2378,12 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             JSONObject shareVoucher = businessUtil.getShareVoucher(pp.packageId, 2, "1", 2, "", "", 3);
             String[] receiveLimit = pp.receiveLimitException;
             for (int num = 1; num <= 2; num++) {
-                for (int i = 0; i < receiveLimit.length; i++) {
+                for (String s : receiveLimit) {
                     IScene scene = FissionVoucherAddScene.builder()
                             .type(1)
                             .participationLimitType(0)
                             .receiveLimitType(num)
-                            .receiveLimitTimes(receiveLimit[i])
+                            .receiveLimitTimes(s)
                             .title(pp.fissionVoucherName)
                             .rule(pp.rule)
                             .startDate(businessUtil.getStartDate())
@@ -2397,7 +2397,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                             .invitedVoucher(invitedVoucher)
                             .build();
                     String message = visitor.invokeApi(scene, false).getString("message");
-                    Preconditions.checkArgument(message.equals("活动期间总次数范围为[1,100]") || message.equals("活动期间每日次数不能为空") || message.equals("活动期间总次数不能为空") || message.equals("活动期间每日次数范围为[1,100]"), "获取期间总次数(1)/每天领取总次数(2)错误的类型为：" + num + "错误的结果为: " + receiveLimit[i]);
+                    Preconditions.checkArgument(message.equals("活动期间总次数范围为[1,100]") || message.equals("活动期间每日次数不能为空") || message.equals("活动期间总次数不能为空") || message.equals("活动期间每日次数范围为[1,100]"), "获取期间总次数(1)/每天领取总次数(2)错误的类型为：" + num + "错误的结果为: " + s);
 
                 }
             }
@@ -2813,12 +2813,6 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-            List<Integer> labels = new ArrayList<>();
-            labels.add(1000);
-            labels.add(1);
-            labels.add(100);
-            labels.add(2000);
-            labels.add(3000);
             List<String> picList = new ArrayList<>();
             SceneUtil supporterUtil = new SceneUtil(visitor);
             PublicParameter pp = new PublicParameter();
@@ -3189,12 +3183,6 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-            List<Integer> labels = new ArrayList<>();
-            labels.add(1000);
-            labels.add(1);
-            labels.add(100);
-            labels.add(2000);
-            labels.add(3000);
             List<String> picList = new ArrayList<>();
             SceneUtil supporterUtil = new SceneUtil(visitor);
             PublicParameter pp = new PublicParameter();
@@ -4024,12 +4012,6 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
     public void activityVoucherStatus4() {
         try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
-            List<Integer> labels = new ArrayList<>();
-            labels.add(1000);
-            labels.add(1);
-            labels.add(100);
-            labels.add(2000);
-            labels.add(3000);
             List<String> picList = new ArrayList<>();
             SceneUtil supporterUtil = new SceneUtil(visitor);
             PublicParameter pp = new PublicParameter();
