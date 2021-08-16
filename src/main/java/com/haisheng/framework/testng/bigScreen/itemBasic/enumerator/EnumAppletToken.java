@@ -39,11 +39,11 @@ public enum EnumAppletToken {
 
     JC_GLY_ONLINE("ycXvLgMpXD/hxkkOci8ceQ==", false, "13373166806"),
 
-    INS_WM_DAILY("mdBX0R2xzhXwswuUFUDwAw==", true, "13373166806"),
+    INS_WM_DAILY("1ROzxOSf9xI5JjasqHTIfA==", true, "13373166806"),
 
     INS_WM_ONLINE("TnJd0oOQ8wznvndM+0hV6A==", false, "15321527989"),
 
-    INS_ZT_DAILY("oivuHuPuOxBVkx1QiOXq/A==", true, "13604609869"),
+    INS_ZT_DAILY("cnfzuWUpdlKQkVv1X4bfsw==", true, "13604609869"),
 
     INS_ZT_ONLINE("Com3dkGhBuuZgzAir8SRDw==", false, "13604609869"),
     ;
