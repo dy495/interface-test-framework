@@ -105,6 +105,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     @AfterClass
     @Override
     public void clean() {
+        util.loginPc(ALL_AUTHORITY);
         util.cleanVoucher();
         afterClassClean();
     }
