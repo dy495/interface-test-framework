@@ -62,7 +62,7 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.YUNTONG_ONLINE_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
         //放入shopId
-        commonConfig.setShopId(ALL_AUTHORITY.getShopId()).setReferer(PRODUCE.getReferer()).setRoleId(ALL_AUTHORITY.getRoleId()).setProduct(PRODUCE.getAbbreviation());
+        commonConfig.setShopId(ALL_AUTHORITY.getShopId()).setRoleId(ALL_AUTHORITY.getRoleId()).setProduct(PRODUCE.getAbbreviation());
         beforeClassInit(commonConfig);
         util.loginApp(ALL_AUTHORITY);
     }
@@ -79,11 +79,11 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
+        logger.logCaseStart(caseResult.getCaseName());
     }
 
     @Test(description = "进店情况=再次进店， 接待评分=空， 评分状态=无需评分")
     public void voiceEvaluation_data_1() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene voiceEvaluationPageScene = VoiceEvaluationPageScene.builder().enterStatus(2).build();
             List<VoiceEvaluationPageBean> list = util.toJavaObjectList(voiceEvaluationPageScene, VoiceEvaluationPageBean.class);
@@ -110,7 +110,6 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
 
     @Test(description = "语音评鉴列表信息与客户详情页信息一致")
     public void voiceEvaluation_data_2() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene voiceEvaluationPageScene = VoiceEvaluationPageScene.builder().build();
             long evaluationTotal = voiceEvaluationPageScene.invoke(visitor).getLong("total");
@@ -129,7 +128,6 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
 
     @Test(description = "语音评鉴列表详情接待得分 = 5个环节分数之和 / 5， 四舍五入取整")
     public void voiceEvaluation_data_3() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene voiceEvaluationPageScene = VoiceEvaluationPageScene.builder().enterStatus(1).build();
             List<VoiceEvaluationPageBean> voiceEvaluationPageList = util.toJavaObjectList(voiceEvaluationPageScene, VoiceEvaluationPageBean.class);
@@ -150,7 +148,6 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
 
     @Test(description = "建议中的环节内容 是 各环节得分标签中置灰 的子集")
     public void voiceEvaluation_data_4() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene voiceEvaluationPageScene = VoiceEvaluationPageScene.builder().enterStatus(1).build();
             List<VoiceEvaluationPageBean> voiceEvaluationPageList = util.toJavaObjectList(voiceEvaluationPageScene, VoiceEvaluationPageBean.class);
@@ -172,7 +169,6 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
 
     @Test(description = "各环节得分 约等于 该环节的 高亮标签数/总标签数 * 100", dataProvider = "receptionType", dataProviderClass = DataClass.class, enabled = false)
     public void voiceEvaluation_data_5(String typeName, int type) {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene voiceEvaluationPageScene = VoiceEvaluationPageScene.builder().enterStatus(1).build();
             List<VoiceEvaluationPageBean> voiceEvaluationPageList = util.toJavaObjectList(voiceEvaluationPageScene, VoiceEvaluationPageBean.class);
@@ -197,7 +193,6 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
 
     @Test(description = "柱状图总 各标签数量 = 列表中该标签数量之和", dataProvider = "receptionWord", dataProviderClass = DataClass.class)
     public void voiceEvaluation_data_6(String word) {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene labelListScene = SensitiveWordsLabelListScene.builder().build();
             List<LabelListBean> labelList = util.toJavaObjectList(labelListScene, LabelListBean.class, "list");
@@ -216,7 +211,6 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
 
     @Test(description = "柱状图数量之和 = 行为记录列表数")
     public void voiceEvaluation_data_7() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene labelListScene = SensitiveWordsLabelListScene.builder().build();
             List<LabelListBean> labelList = util.toJavaObjectList(labelListScene, LabelListBean.class, "list");
@@ -233,7 +227,6 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
 
     @Test(description = "行为记录列表中的 敏感词 和敏感词风控 均为 【敏感词设置】中的子集")
     public void voiceEvaluation_data_8() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene sensitiveWordsPageScene = SensitiveWordsPageScene.builder().build();
             List<JSONObject> sensitiveWordsPageList = util.toJavaObjectList(sensitiveWordsPageScene, JSONObject.class);
@@ -250,7 +243,6 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
 
     @Test(description = "特殊音频审核列表数量<=语音评鉴列表数")
     public void voiceEvaluation_data_9() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             int voiceEvaluationPageTotal = VoiceEvaluationPageScene.builder().build().invoke(visitor).getInteger("total");
             int specialAudioPageSceneTotal = SpecialAudioPageScene.builder().build().invoke(visitor).getInteger("total");
@@ -264,7 +256,6 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
 
     @Test(description = "话术考核设置--筛选全部列表条数=筛选各话术环节的列表条数之和")
     public void voiceEvaluation_data_10() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             int total = SpeechTechniquePageScene.builder().build().invoke(visitor).getInteger("total");
             int[] ints = {100, 200, 300, 400, 500};
@@ -280,7 +271,6 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
 
     @Test(description = "话术考核设置--筛选全部列表条数=筛选各话术环节的列表条数之和")
     public void voiceEvaluation_data_11() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene specialAudioPageScene = SpecialAudioPageScene.builder().build();
             List<SpecialAudioPageBean> list = util.toJavaObjectList(specialAudioPageScene, SpecialAudioPageBean.class);

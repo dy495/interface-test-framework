@@ -50,7 +50,7 @@ public class SeverManageCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.YUNTONG_ONLINE_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
         //放入shopId
-        commonConfig.setShopId(util.getReceptionShopId()).setReferer(PRODUCE.getReferer()).setRoleId(ALL_AUTHORITY.getRoleId()).setProduct(PRODUCE.getAbbreviation());
+        commonConfig.setShopId(util.getReceptionShopId()).setRoleId(ALL_AUTHORITY.getRoleId()).setProduct(PRODUCE.getAbbreviation());
         beforeClassInit(commonConfig);
         util.loginPc(ALL_AUTHORITY);
     }
@@ -67,11 +67,11 @@ public class SeverManageCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
+        logger.logCaseStart(caseResult.getCaseName());
     }
 
     @Test(description = "创建一个题目，大类下题目+1")
     public void evaluateManager_data_1() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray linksA = util.getSubmitLink(false);
             EvaluateV4ConfigSubmitScene.builder().links(linksA).build().invoke(visitor);
@@ -92,7 +92,6 @@ public class SeverManageCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "删除一个题目，大类下题目-1", dependsOnMethods = "evaluateManager_data_1")
     public void evaluateManager_data_2() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = EvaluateV4ConfigDetailScene.builder().build();
             int itemCount = scene.invoke(visitor).getJSONArray("list").stream().map(e -> (JSONObject) e)

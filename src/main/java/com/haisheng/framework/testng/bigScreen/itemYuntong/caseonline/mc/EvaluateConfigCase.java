@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class EvaluateConfigCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_ZH; // 管理页—-首页
-    private static final EnumAccount AUTHORITY = EnumAccount.YT_RECEPTION_ONLINE_5; // 全部权限账号 【运通】
+    private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_JD; // 管理页—-首页
+    private static final EnumAccount AUTHORITY = EnumAccount.YT_RECEPTION_ONLINE_MC; // 全部权限账号 【运通】
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);   // 产品类放到代理类中（通过代理类发请求）
     public SceneUtil util = new TopicUtil(visitor);    //场景工具类中放入代理类，类中封装接口方法直接调用
     CommonConfig commonConfig = new CommonConfig();    // 配置类初始化
@@ -42,7 +42,7 @@ public class EvaluateConfigCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = DingWebhook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.setShopId("35827").setReferer(PRODUCE.getReferer()).setRoleId(AUTHORITY.getRoleId()).setProduct(PRODUCE.getAbbreviation());
+        commonConfig.setShopId(AUTHORITY.getReceptionShopId()).setRoleId(AUTHORITY.getRoleId()).setProduct(PRODUCE.getAbbreviation());
         beforeClassInit(commonConfig);  // 配置请求头
         util.loginPc(AUTHORITY);   //登录
     }
@@ -64,7 +64,6 @@ public class EvaluateConfigCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(dataProvider = "contentCheck")
     public void addATopic1(String description, String expect, String title, String... answer) {
-        visitor.setProduct(EnumTestProduct.YT_ONLINE_JD);
         try {
             if (util instanceof TopicUtil) {
                 TopicUtil topicUtil = (TopicUtil) util;
@@ -72,9 +71,7 @@ public class EvaluateConfigCase extends TestCaseCommon implements TestCaseStd {
                 String code = EvaluateV4ConfigSubmitScene.builder().links(links).build().invoke(visitor, false).getString("code");
                 Preconditions.checkArgument(Objects.equals(code, expect), description + ",期待:" + expect + ", 结果code=" + code);
             }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("评价配置：内容校验");
@@ -98,7 +95,6 @@ public class EvaluateConfigCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(dataProvider = "topicNum")
     public void addATopic2(String description, List<Integer> topicList, String expectCode, String... answer) {
-        visitor.setProduct(EnumTestProduct.YT_ONLINE_JD);
         try {
             if (util instanceof TopicUtil) {
                 TopicUtil topicUtil = (TopicUtil) util;
@@ -106,15 +102,11 @@ public class EvaluateConfigCase extends TestCaseCommon implements TestCaseStd {
                 String code = EvaluateV4ConfigSubmitScene.builder().links(links).build().invoke(visitor, false).getString("code");
                 Preconditions.checkArgument(Objects.equals(code, expectCode), description + ",期待:" + expectCode + ", 结果code=" + code);
             }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("评价配置：题目数量");
         }
-
-
     }
 
     @DataProvider(name = "topicNum")
@@ -124,9 +116,6 @@ public class EvaluateConfigCase extends TestCaseCommon implements TestCaseStd {
                 {"10道题,5个答案", Arrays.asList(10, 10, 10, 10, 10), "1000", "选项1", "选项2", "选项3", "选项4", "选项5"},
                 {"11道题,5个答案", Arrays.asList(11, 10, 10, 10, 10), "1001", "选项1", "选项2", "选项3", "选项4", "选项5"},
                 {"有0道题,5个答案", Arrays.asList(10, 10, 10, 10, 0), "1001", "选项1", "选项2", "选项3", "选项4", "选项5"},
-
         };
     }
-
-
 }

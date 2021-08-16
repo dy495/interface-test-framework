@@ -58,7 +58,7 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.YUNTONG_ONLINE_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
         //放入shopId
-        commonConfig.setShopId(PRODUCE.getShopId()).setReferer(PRODUCE.getReferer()).setRoleId(ALL_AUTHORITY.getRoleId()).setProduct(PRODUCE.getAbbreviation());
+        commonConfig.setShopId(PRODUCE.getShopId()).setRoleId(ALL_AUTHORITY.getRoleId()).setProduct(PRODUCE.getAbbreviation());
         beforeClassInit(commonConfig);
         util.loginApp(ALL_AUTHORITY);
     }
@@ -75,11 +75,11 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
+        logger.logCaseStart(caseResult.getCaseName());
     }
 
     @Test(description = "【星级评分趋势】中的星级=【星级评分详情】中各话术环节各星级相加/（列表条数＊５）")
     public void evaluate_data_1() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene evaluateV4ScoreTrendScene = EvaluateV4ScoreTrendScene.builder().receptionStart(startDate).receptionEnd(endDate).evaluateType(5).build();
             JSONObject obj = evaluateV4ScoreTrendScene.invoke(visitor).getJSONArray("list").getJSONObject(0);
@@ -107,7 +107,6 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "【星级比例】全部环节中的x星级比例=【星级评分详情】总分中x星级条数/列表条数", dataProvider = "starType", dataProviderClass = DataClass.class)
     public void evaluate_data_2(String type, Integer scoreValue, String name) {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene evaluateV4ScoreTrendScene = EvaluateV4ScoreRateScene.builder().receptionStart(startDate).receptionEnd(endDate).evaluateType(5).build();
             List<JSONObject> evaluateV4ScoreRateList = util.toJavaObjectList(evaluateV4ScoreTrendScene, JSONObject.class, "list");
@@ -127,7 +126,6 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "【星级比例】欢迎接待中的x星级比例=【星级评分详情】欢迎接待中x星级条数/列表条数", dataProvider = "starType", dataProviderClass = DataClass.class)
     public void evaluate_data_3(String type, Integer scoreValue, String name) {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene evaluateV4ScoreTrendScene = EvaluateV4ScoreRateScene.builder().receptionStart(startDate).receptionEnd(endDate).evaluateType(5).build();
             List<JSONObject> evaluateV4ScoreRateList = util.toJavaObjectList(evaluateV4ScoreTrendScene, JSONObject.class, "list");
@@ -147,7 +145,6 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "【星级比例】欢迎接待中的x星级比例=【星级评分详情】欢迎接待中x星级条数/列表条数", dataProvider = "starType", dataProviderClass = DataClass.class)
     public void evaluate_data_4(String type, Integer scoreValue, String name) {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             String[][] strings = {{"欢迎接待", "link1"}, {"新车推荐", "link2"}, {"试乘试驾", "link3"}, {"车辆提案", "link4"}, {"个性需求", "link5"}};
             Arrays.stream(strings).forEach(string -> {
@@ -170,7 +167,6 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "【星级评分详情】总分=各环节星级相加/5")
     public void evaluate_data_5() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene evaluateV4PageScene = EvaluateV4PageScene.builder().evaluateType(5).build();
             List<JSONObject> list = util.toJavaObjectList(evaluateV4PageScene, JSONObject.class);
@@ -194,7 +190,6 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "【星级评分趋势】星级=【星级评分详情】总分的星级=【星级比例】全部环节中为100%的星级")
     public void evaluate_data_6() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene evaluateV4ScoreTrendScene = EvaluateV4ScoreTrendScene.builder().receptionStart(startDate).receptionEnd(endDate).evaluateType(5).build();
             List<JSONObject> trendList = util.toJavaObjectList(evaluateV4ScoreTrendScene, JSONObject.class, "list");
@@ -214,7 +209,6 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "各个环节中各星级比例相加为100％或者0%")
     public void evaluate_data_7() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             String[] strings = {"全部环节", "欢迎接待", "新车推荐", "试乘试驾", "车辆提案", "个性需求"};
             Arrays.stream(strings).forEach(string -> {
@@ -246,7 +240,6 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "各个环节中各星级比例相加为100％")
     public void evaluate_data_8() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene evaluateV4PageScene = EvaluateV4PageScene.builder().receptionStart(startDate).evaluateEnd(endDate).evaluateType(5).build();
             List<JSONObject> evaluateV4PageList = util.toJavaObjectList(evaluateV4PageScene, JSONObject.class);

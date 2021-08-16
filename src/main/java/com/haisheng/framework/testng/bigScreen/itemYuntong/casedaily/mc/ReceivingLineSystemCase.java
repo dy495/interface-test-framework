@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct product = EnumTestProduct.YT_DAILY_ZH; // 管理页—-首页
-    private static final EnumAccount YT_RECEPTION_DAILY = EnumAccount.YT_RECEPTION_DAILY_M; // 全部权限账号 【运通】
+    private static final EnumAccount YT_RECEPTION_DAILY = EnumAccount.YT_RECEPTION_DAILY_MC; // 全部权限账号 【运通】
     public VisitorProxy visitor = new VisitorProxy(product);   // 产品类放到代理类中（通过代理类发请求）
     public SceneUtil util = new SceneUtil(visitor);
     public YunTongInfo info = new YunTongInfo();
@@ -50,7 +50,7 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.setShopId(YT_RECEPTION_DAILY.getShopId()).setReferer(product.getReferer()).setRoleId(YT_RECEPTION_DAILY.getRoleId()).setProduct(product.getAbbreviation());
+        commonConfig.setShopId(YT_RECEPTION_DAILY.getShopId()).setRoleId(YT_RECEPTION_DAILY.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);  // 配置请求头
         util.loginPc(YT_RECEPTION_DAILY);   //登录
 //        LoginPc loginScene = LoginPc.builder().phone("13402050043").verificationCode("000000").build();

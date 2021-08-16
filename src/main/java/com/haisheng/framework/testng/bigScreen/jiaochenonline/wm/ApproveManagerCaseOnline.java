@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
@@ -12,7 +13,6 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.voucher.Apply
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.voucher.ApplyPageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherDetailBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherFormVoucherPageBean;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityApprovalStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.activity.ActivityStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.financial.ApplyTypeEnum;
@@ -50,7 +50,7 @@ import java.util.stream.Collectors;
  */
 public class ApproveManagerCaseOnline extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct PRODUCE = EnumTestProduct.JC_ONLINE_JD;
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.JC_ALL_AUTHORITY_ONLINE;
+    private static final EnumAccount ALL_AUTHORITY = EnumAccount.JC_ALL_ONLINE_LXQ;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public SceneUtil util = new SceneUtil(visitor);
 
@@ -297,7 +297,7 @@ public class ApproveManagerCaseOnline extends TestCaseCommon implements TestCase
             //卡券状态
             IScene scene = VoucherFormVoucherPageScene.builder().build();
             voucherIdList.forEach(voucherId -> {
-                com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherFormVoucherPageBean voucherFormVoucherPageBean = util.toJavaObject(scene, com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherFormVoucherPageBean.class, "voucher_id", voucherId);
+                VoucherFormVoucherPageBean voucherFormVoucherPageBean = util.toJavaObject(scene, VoucherFormVoucherPageBean.class, "voucher_id", voucherId);
                 CommonUtil.checkResult("卡券" + voucherFormVoucherPageBean.getVoucherName() + "的状态", VoucherStatusEnum.WORKING.getName(), voucherFormVoucherPageBean.getVoucherStatusName());
                 CommonUtil.checkResult("卡券" + voucherFormVoucherPageBean.getVoucherName() + "的状态", VoucherStatusEnum.WORKING.name(), voucherFormVoucherPageBean.getVoucherStatus());
             });
@@ -336,7 +336,7 @@ public class ApproveManagerCaseOnline extends TestCaseCommon implements TestCase
             //卡券状态
             IScene scene = VoucherFormVoucherPageScene.builder().build();
             voucherIdList.forEach(voucherId -> {
-                com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherFormVoucherPageBean voucherFormVoucherPageBean = util.toJavaObject(scene, com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherFormVoucherPageBean.class, "voucher_id", voucherId);
+                VoucherFormVoucherPageBean voucherFormVoucherPageBean = util.toJavaObject(scene, VoucherFormVoucherPageBean.class, "voucher_id", voucherId);
                 CommonUtil.checkResult("卡券" + voucherFormVoucherPageBean.getVoucherName() + "的状态", VoucherStatusEnum.REJECT.getName(), voucherFormVoucherPageBean.getVoucherStatusName());
                 CommonUtil.checkResult("卡券" + voucherFormVoucherPageBean.getVoucherName() + "的状态", VoucherStatusEnum.REJECT.name(), voucherFormVoucherPageBean.getVoucherStatus());
             });

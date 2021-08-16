@@ -49,7 +49,7 @@ public class SystemRecordCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.YUNTONG_ONLINE_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
         //放入shopId
-        commonConfig.setShopId(PRODUCE.getShopId()).setReferer(PRODUCE.getReferer()).setRoleId(ALL_AUTHORITY.getRoleId()).setProduct(PRODUCE.getAbbreviation());
+        commonConfig.setShopId(PRODUCE.getShopId()).setRoleId(ALL_AUTHORITY.getRoleId()).setProduct(PRODUCE.getAbbreviation());
         beforeClassInit(commonConfig);
         util.loginPc(ALL_AUTHORITY);
     }
@@ -66,11 +66,11 @@ public class SystemRecordCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
+        logger.logCaseStart(caseResult.getCaseName());
     }
 
     @Test(description = "导入成功条数=导入条数-失败条数")
     public void importRecord_data_1() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = ImportPageScene.builder().build();
             List<JSONObject> list = util.toJavaObjectList(scene, JSONObject.class);
@@ -84,7 +84,6 @@ public class SystemRecordCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "导入成功条数<=导入条数")
     public void importRecord_data_2() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = ImportPageScene.builder().build();
             List<JSONObject> list = util.toJavaObjectList(scene, JSONObject.class);
@@ -98,7 +97,6 @@ public class SystemRecordCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "导入失败条数<=导入条数")
     public void importRecord_data_3() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = ImportPageScene.builder().build();
             List<JSONObject> list = util.toJavaObjectList(scene, JSONObject.class);

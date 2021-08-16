@@ -2,26 +2,32 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.mc;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.core.JsonGenerationException;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.*;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.AppPreSalesReceptionPageScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.reid.AppReidReidDistributeScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.reid.AppReidReidListScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.reid.AppReidReidMarkScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.retention.AppRetentionQueryQrCodeScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.saleschedule.AppSaleScheduleDayListScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.riskcontrol.NonCustomerSignScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.appointment.AppointmentTypeEnum;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletAppointmentSubmitScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
+import com.haisheng.framework.util.DateTimeUtil;
 import org.apache.commons.collections.ArrayStack;
 import org.jooq.False;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -30,12 +36,12 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumAccount ACCOUNT = EnumAccount.JC_ALL_AUTHORITY_DAILY_NEW;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public SceneUtil util = new SceneUtil(visitor);
-
+    CommonConfig commonConfig = new CommonConfig();
     @BeforeClass
     @Override
     public void initial() {
         logger.debug("before class initial");
-        CommonConfig commonConfig = new CommonConfig();
+
         //替换checklist的相关信息
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
@@ -45,10 +51,10 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
         //放入shopId
-        commonConfig.product = PRODUCE.getAbbreviation();
-        commonConfig.referer = PRODUCE.getReferer();
-        commonConfig.shopId = "46522";
-        commonConfig.roleId = ACCOUNT.getRoleId();
+        commonConfig.setProduct(PRODUCE.getAbbreviation()).setReferer(PRODUCE.getReferer()).setShopId("-1").setRoleId(ACCOUNT.getRoleId());
+//        commonConfig.referer = PRODUCE.getReferer();
+//        commonConfig.shopId = "-1";
+//        commonConfig.roleId = ACCOUNT.getRoleId();
         beforeClassInit(commonConfig);
         util.loginPc(ACCOUNT);
     }
@@ -137,6 +143,33 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         return new Object[][]{
                 {},
         };
+    }
+
+    @Test
+    public void test02Confirm(){
+        JSONArray customers = new JSONArray();
+        List<JSONObject> faceIdList = getFaceIdList(false);
+        customers.addAll(faceIdList.stream().map(e->e.getString("reid")).collect(Collectors.toList()));
+        AppRetentionQueryQrCodeScene.builder().analysisCustomerIds(customers).build().invoke(visitor);
+
+        //AppReidReidDistributeScene.builder().enterType("PRE_SALE").
+    }
+
+
+    @Test
+    public void test(){
+        commonConfig.setShopId("-1");
+        List<String> list1 = AppPreSalesReceptionPageScene.builder().size(40).build().invoke(visitor, true).getJSONArray("list").stream().map(e -> (JSONObject) e).map(e -> e.getString("reception_sale_name")).distinct().collect(Collectors.toList());
+        Collections.sort(list1);
+
+        commonConfig.setShopId("49153");
+        List<String> list2 = AppSaleScheduleDayListScene.builder().type("PRE").build().invoke(visitor, true).getJSONArray("sales_info_list").stream().map(e -> (JSONObject) e).filter(e -> Objects.equals(e.getString("sale_status"), "接待中")).map(e -> e.getString("sale_name")).collect(Collectors.toList());
+        Collections.sort(list2);
+        System.err.println("一有接待卡片的销售："+list1);
+        System.err.println("================================");
+        System.err.println("状态为接待中的销售："+list2);
+
+
     }
 
 

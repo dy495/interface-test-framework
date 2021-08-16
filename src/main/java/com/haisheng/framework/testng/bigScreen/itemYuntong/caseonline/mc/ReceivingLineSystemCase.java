@@ -27,12 +27,11 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_ZH; // 管理页—-首页
-    private static final EnumAccount YT_RECEPTION_ACCOUNT = EnumAccount.YT_RECEPTION_ONLINE_5; // 全部权限账号 【运通】
+    private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_JD; // 管理页—-首页
+    private static final EnumAccount YT_RECEPTION_ACCOUNT = EnumAccount.YT_RECEPTION_ONLINE_MC; // 全部权限账号 【运通】
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);   // 产品类放到代理类中（通过代理类发请求）
     public SceneUtil util = new SceneUtil(visitor);
     public YunTongInfo info = new YunTongInfo();
-    CommonConfig commonConfig = new CommonConfig();    // 配置类初始化
     public Long newId; // 本次创建的接待id
     public Long newShopId; // 本次接待门店的shopId
     public Long newCustomerId;
@@ -41,6 +40,7 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
     @Override
     public void initial() {
         logger.debug("before class initial");
+        CommonConfig commonConfig = new CommonConfig();    // 配置类初始化
         //替换checklist的相关信息
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
         commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
@@ -50,11 +50,9 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = DingWebhook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.setShopId("35827").setReferer(PRODUCE.getReferer()).setRoleId(YT_RECEPTION_ACCOUNT.getRoleId()).setProduct(PRODUCE.getAbbreviation());
+        commonConfig.setShopId(YT_RECEPTION_ACCOUNT.getReceptionShopId()).setRoleId(YT_RECEPTION_ACCOUNT.getRoleId()).setProduct(PRODUCE.getAbbreviation());
         beforeClassInit(commonConfig);  // 配置请求头
         util.loginPc(YT_RECEPTION_ACCOUNT);   //登录
-        //LoginPc loginScene = LoginPc.builder().phone("13402050043").verificationCode("000000").build();
-        //httpPost(loginScene.getPath(),loginScene.getBody(),PRODUCE.getPort());
     }
 
     @AfterClass
@@ -72,20 +70,20 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
         logger.logCaseStart(caseResult.getCaseName());
     }
 
-    // 随机n位数字
+    //随机n位数字
     private String numRandom(Integer n) {
         Random ran = new Random();
-        String numStr = "";
+        StringBuilder numStr = new StringBuilder();
         for (int i = 0; i < n; i++) {
             String num = ran.nextInt(9) + "";
-            numStr += num;
+            numStr.append(num);
         }
-        return numStr;
+        return numStr.toString();
     }
 
-    @Test
+
+    @Test()
     public void test01CustomerConfig() {
-        visitor.setProduct(EnumTestProduct.YT_ONLINE_JD);
         try {
             String phone = "15" + numRandom(9);
             AppPreSalesReceptionCreateScene.builder().customerName("mc自动化创建使用").customerPhone(phone).sexId("1").intentionCarModelId(util.mcCarId()).estimateBuyCarTime("2035-07-12").build().invoke(visitor);//创建销售接待
@@ -97,10 +95,7 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
             this.newId = id;
             this.newShopId = shopId;
             this.newCustomerId = customerId;
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("手动创建接待");
@@ -123,9 +118,7 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
                     Preconditions.checkArgument(Objects.equals(addedRemark, remark), "备注内容不一致，pc输入的备注内容" + remark + ",app接待详情中备注记录:" + addedRemark);
                 }
             }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("接待中，PC备注");
@@ -153,9 +146,7 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
                     Preconditions.checkArgument(Objects.equals(chassisCode, vin.toUpperCase()), "详情中底盘号不一致,输入:" + vin + "实际:" + chassisCode);
                 }
             }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("接待中，PC确认购车");
@@ -184,9 +175,7 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
                     Preconditions.checkArgument(Objects.equals(addedRemark, remark), "备注内容不一致，app输入的备注内容" + remark + ",app接待详情中备注记录:" + addedRemark);
                 }
             }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("app接待中备注");
@@ -229,9 +218,7 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
                 Preconditions.checkArgument(Objects.equals(code, expect), description + "，期待结果code=" + expect + "实际结果code=" + code);
                 sleep(3);
             }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("app接待中编辑资料,只填写必填项");
@@ -285,9 +272,7 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
                 Boolean isFinish = PreSalesReceptionPageScene.builder().build().invoke(visitor, true).getJSONArray("list").getJSONObject(0).getBoolean("is_finish");
                 Preconditions.checkArgument(isFinish, "完成接待操作失败，接待id=" + newId);
             }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("Pc完成接待");

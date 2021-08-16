@@ -402,7 +402,10 @@ public class SceneUtil extends BasicUtil {
      */
     public String getExistVin() {
         IScene scene = PreSaleCustomerBuyCarPageScene.builder().build();
-        return toFirstJavaObject(scene, JSONObject.class).getString("vehicle_chassis_code");
+        JSONArray list = scene.invoke(visitor).getJSONArray("list");
+        JSONObject jsonObject = list.stream().map(e -> (JSONObject) e).filter(e -> e.getString("vehicle_chassis_code") != null).findFirst().orElse(null);
+        Preconditions.checkNotNull(jsonObject, "未找到底盘号");
+        return jsonObject.getString("vehicle_chassis_code");
     }
 
     /**
@@ -421,7 +424,7 @@ public class SceneUtil extends BasicUtil {
     }
 
     public String getReceptionShopId() {
-        return visitor.isDaily() ? "56666" : "34691";
+        return visitor.isDaily() ? EnumAccount.YT_RECEPTION_DAILY_WM.getReceptionShopId() : EnumAccount.YT_RECEPTION_ONLINE_WM.getReceptionShopId();
     }
 
     public String getSaleId() {

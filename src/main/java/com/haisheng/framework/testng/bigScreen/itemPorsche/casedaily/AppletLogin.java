@@ -48,6 +48,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
+        logger.logCaseStart(caseResult.getCaseName());
     }
 
     @AfterMethod
@@ -62,7 +63,6 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
 
     @Test(dataProvider = "BSJ_APPLET_TOKENS_DAILY", enabled = false)
     public void BSJ_applet_daily(String token) {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             EnumTestProduct produce = EnumTestProduct.PORSCHE_DAILY;
             commonConfig.setShopId(produce.getShopId()).setReferer(produce.getReferer());
@@ -81,7 +81,6 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
 
     @Test(dataProvider = "BSJ_APPLET_TOKENS_ONLINE", enabled = false)
     public void BSJ_applet_online(String token) {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             EnumTestProduct produce = EnumTestProduct.PORSCHE_ONLINE;
             commonConfig.setShopId(produce.getShopId()).setReferer(produce.getReferer());
@@ -100,7 +99,6 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
 
     @Test(dataProvider = "JC_APPLET_TOKENS_DAILY")
     public void JC_applet_daily(String token) {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             EnumTestProduct produce = EnumTestProduct.JC_DAILY_JD;
             commonConfig.setShopId(produce.getShopId()).setReferer(produce.getReferer());
@@ -119,7 +117,6 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
 
     @Test(dataProvider = "JC_APPLET_TOKENS_ONLINE")
     public void JC_applet_online(String token) {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             EnumTestProduct produce = EnumTestProduct.JC_ONLINE_JD;
             commonConfig.setShopId(produce.getShopId()).setReferer(produce.getReferer());
@@ -138,7 +135,6 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
 
     @Test(dataProvider = "INS_APPLET_TOKENS_DAILY")
     public void INS_applet_daily(String token) {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             EnumTestProduct produce = EnumTestProduct.INS_DAILY;
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, produce.getDesc());
@@ -157,7 +153,6 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
 
     @Test(dataProvider = "INS_APPLET_TOKENS_ONLINE", enabled = false)
     public void INS_applet_online(String token) {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             EnumTestProduct produce = EnumTestProduct.INS_ONLINE;
             commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, produce.getDesc());
@@ -217,6 +212,7 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
                 EnumAppletToken.JC_WM_DAILY.getToken(),
                 EnumAppletToken.JC_GLY_DAILY.getToken(),
                 EnumAppletToken.JC_LXQ_DAILY.getToken(),
+                EnumAppletToken.JC_MC_DAILY.getToken(),
         };
     }
 
@@ -225,7 +221,8 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
         return new String[]{
                 EnumAppletToken.JC_WM_ONLINE.getToken(),
                 EnumAppletToken.JC_LXQ_ONLINE.getToken(),
-                EnumAppletToken.JC_GLY_ONLINE.getToken()
+                EnumAppletToken.JC_GLY_ONLINE.getToken(),
+                EnumAppletToken.JC_MC_ONLINE.getToken(),
         };
     }
 

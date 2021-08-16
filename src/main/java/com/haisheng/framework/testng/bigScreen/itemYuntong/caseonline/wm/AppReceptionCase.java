@@ -44,7 +44,7 @@ import java.util.Date;
  */
 public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_JD;
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_ONLINE;
+    private static final EnumAccount ACCOUNT = EnumAccount.YT_RECEPTION_ONLINE_WM;
     private static AppPreSalesReceptionPageBean preSalesReceptionPage;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public SceneUtil util = new SceneUtil(visitor);
@@ -63,7 +63,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.YUNTONG_ONLINE_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
         //放入shopId
-        commonConfig.setShopId(ALL_AUTHORITY.getShopId()).setReferer(PRODUCE.getReferer()).setRoleId(ALL_AUTHORITY.getRoleId()).setProduct(PRODUCE.getAbbreviation());
+        commonConfig.setShopId(ACCOUNT.getReceptionShopId()).setRoleId(ACCOUNT.getRoleId()).setProduct(PRODUCE.getAbbreviation());
         beforeClassInit(commonConfig);
     }
 
@@ -79,22 +79,22 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
+        logger.logCaseStart(caseResult.getCaseName());
     }
 
     private void initAppPreSalesReceptionPageBean() {
-        util.loginApp(ALL_AUTHORITY);
+        util.loginApp(ACCOUNT);
         preSalesReceptionPage = util.getAppPreSalesReceptionPageList().stream().filter(e -> e.getCustomerName().equals("自动化创建的接待人")).findFirst().orElse(null);
         if (preSalesReceptionPage == null) {
             logger.info("不存在接待人，需要创建");
             AppPreSalesReceptionCreateScene.builder().customerName("自动化创建的接待人").customerPhone(EnumAppletToken.JC_GLY_ONLINE.getPhone()).sexId("1").intentionCarModelId(util.getCarModelId()).estimateBuyCarTime("2100-07-12").build().invoke(visitor);
             preSalesReceptionPage = util.getAppPreSalesReceptionPageList().stream().filter(e -> e.getCustomerName().equals("自动化创建的接待人")).findFirst().orElse(null);
         }
-        util.loginPc(ALL_AUTHORITY);
+        util.loginPc(ACCOUNT);
     }
 
     @Test(description = "APP接待时产生新的节点，节点名称为销售创建")
     public void saleCustomerManager_data_1() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             initAppPreSalesReceptionPageBean();
             IScene preSalesReceptionPageScene = PreSalesReceptionPageScene.builder().customerId(String.valueOf(preSalesReceptionPage.getCustomerId())).build();
@@ -110,15 +110,15 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "APP接待时填写备注，备注记录+1")
     public void saleCustomerManager_data_2() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             initAppPreSalesReceptionPageBean();
-            IScene scene = PreSaleCustomerInfoRemarkRecordScene.builder().customerId(String.valueOf(preSalesReceptionPage.getCustomerId())).build();
+            String customerId = String.valueOf(preSalesReceptionPage.getCustomerId());
+            String id = String.valueOf(preSalesReceptionPage.getId());
+            IScene scene = PreSaleCustomerInfoRemarkRecordScene.builder().customerId(customerId).build();
             int total = scene.invoke(visitor).getInteger("total");
-            util.loginApp(ALL_AUTHORITY);
-            AppCustomerRemarkV4Scene.builder().id(String.valueOf(preSalesReceptionPage.getId())).customerId(String.valueOf(preSalesReceptionPage.getCustomerId())).remark(EnumDesc.DESC_BETWEEN_200_300.getDesc())
-                    .shopId(util.getReceptionShopId()).build().invoke(visitor);
-            util.loginPc(ALL_AUTHORITY);
+            util.loginApp(ACCOUNT);
+            AppCustomerRemarkV4Scene.builder().id(id).customerId(customerId).remark(EnumDesc.DESC_BETWEEN_200_300.getDesc()).shopId(util.getReceptionShopId()).build().invoke(visitor);
+            util.loginPc(ACCOUNT);
             int newTotal = scene.invoke(visitor).getInteger("total");
             String remarkContent = util.toFirstJavaObject(scene, JSONObject.class).getString("remark_content");
             Preconditions.checkArgument(newTotal == total + 1, "APP接待时填写备注前pc备注条数：" + total + " 填写备注后pc备注条数：" + newTotal);
@@ -132,7 +132,6 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "APP接待时购买车辆，购车记录+1")
     public void saleCustomerManager_data_3() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             initAppPreSalesReceptionPageBean();
             IScene preSaleCustomerBuyCarPageScene = PreSaleCustomerBuyCarPageScene.builder().build();
@@ -158,7 +157,6 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "PC新建成交记录，购车记录+1")
     public void saleCustomerManager_data_4() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             initAppPreSalesReceptionPageBean();
             IScene scene = PreSaleCustomerInfoBuyCarRecordScene.builder().customerId(preSalesReceptionPage.getCustomerId()).build();
@@ -183,7 +181,6 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "接待客户一次，更新最近到店时间为当前接待时间")
     public void saleCustomerManager_data_5() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             initAppPreSalesReceptionPageBean();
             IScene scene = PreSaleCustomerInfoScene.builder().customerId(preSalesReceptionPage.getCustomerId()).shopId(Long.parseLong(util.getReceptionShopId())).build();
@@ -200,7 +197,6 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
     @AfterClass(description = "完成此条接待记录")
     @Test(description = "完成接待，更新接待时间")
     public void saleCustomerManager_data_6() {
-        logger.info(caseResult.getCaseName());
         try {
             initAppPreSalesReceptionPageBean();
             String date = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm");

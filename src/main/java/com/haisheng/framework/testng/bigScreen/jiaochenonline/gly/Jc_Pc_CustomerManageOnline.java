@@ -3,12 +3,11 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline.gly;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistAppId;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistConfId;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumDingTalkWebHook;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.CommonPram;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -20,19 +19,17 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 
 public class Jc_Pc_CustomerManageOnline extends TestCaseCommon implements TestCaseStd {
-    ScenarioUtil jc = new ScenarioUtil();
-    public String shopId = "-1";
-    CommonPram cp = new CommonPram();
     private static final EnumTestProduct product = EnumTestProduct.JC_ONLINE_JD;
-    CommonConfig commonConfig = new CommonConfig();
+    private static final EnumAccount account = EnumAccount.JC_ALL_ONLINE;
+    public VisitorProxy visitor = new VisitorProxy(product);
+    SceneUtil util = new SceneUtil(visitor);
+    ScenarioUtil jc = new ScenarioUtil();
 
-    /**
-     * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
-     */
     @BeforeClass
     @Override
     public void initial() {
         logger.debug("before class initial");
+        CommonConfig commonConfig = new CommonConfig();
         jc.changeIpPort(product.getIp());
         //替换checklist的相关信息
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
@@ -56,7 +53,7 @@ public class Jc_Pc_CustomerManageOnline extends TestCaseCommon implements TestCa
     }
 
     /**
-     * @description: get a fresh case ds to save case result, such as result/response
+     * @description: get a fresh case ds to save case result, such as result/responsese
      */
     @BeforeMethod
     @Override
@@ -64,7 +61,7 @@ public class Jc_Pc_CustomerManageOnline extends TestCaseCommon implements TestCa
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
-        jc.pcLogin("15711200001", "000000");
+        util.loginPc(account);
     }
 
     /**
@@ -75,17 +72,17 @@ public class Jc_Pc_CustomerManageOnline extends TestCaseCommon implements TestCa
     public void customerManage_System1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] phone = cp.phoneNumberFormat();
-            Object[][] sex = cp.sex();
-            Object[][] name = cp.name();
-            Object[][] customerType = cp.customerType();
+            Object[][] phone = CommonPram.phoneNumberFormat();
+            Object[][] sex = CommonPram.sex();
+            Object[][] name = CommonPram.name();
+            Object[][] customerType = CommonPram.customerType();
             //姓名为空
-            JSONObject respon = jc.createCustomer("", name[0][1].toString(), cp.phoneNumber, sex[1][1].toString(), customerType[1][1].toString());
-            String message = respon.getString("message");
+            JSONObject response = jc.createCustomer("", name[0][1].toString(), CommonPram.phoneNumber, sex[1][1].toString(), customerType[1][1].toString());
+            String message = response.getString("message");
             Preconditions.checkArgument(message.equals("客户名称不允许为空"), "姓名入参为空，返回的的message为：" + message);
             //客户姓名51个字
-            JSONObject respon1 = jc.createCustomer("", name[0][1].toString(), "13373166806", sex[1][1].toString(), customerType[1][1].toString());
-            String message1 = respon1.getString("message");
+            JSONObject response1 = jc.createCustomer("", name[0][1].toString(), "13373166806", sex[1][1].toString(), customerType[1][1].toString());
+            String message1 = response1.getString("message");
             Preconditions.checkArgument(message1.equals(" "), "姓名入参51个字，返回的的message为：" + message1);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -102,13 +99,13 @@ public class Jc_Pc_CustomerManageOnline extends TestCaseCommon implements TestCa
     public void customerManage_System2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] phone = cp.phoneNumberFormat();
-            Object[][] sex = cp.sex();
-            Object[][] name = cp.name();
-            Object[][] customerType = cp.customerType();
+            Object[][] phone = CommonPram.phoneNumberFormat();
+            Object[][] sex = CommonPram.sex();
+            Object[][] name = CommonPram.name();
+            Object[][] customerType = CommonPram.customerType();
             for (int i = 0; i < 7; i++) {
-                JSONObject respon = jc.createCustomer("", cp.name, phone[i][1].toString(), sex[1][1].toString(), customerType[1][1].toString());
-                String message = respon.getString("message");
+                JSONObject response = jc.createCustomer("", CommonPram.name, phone[i][1].toString(), sex[1][1].toString(), customerType[1][1].toString());
+                String message = response.getString("message");
                 Preconditions.checkArgument(message.equals("手机号格式不正确") || message.equals("手机号已存在") || message.equals("手机号不能为空"), phone[i][0].toString() + " : " + phone[i][1].toString());
             }
         } catch (AssertionError | Exception e) {
@@ -126,13 +123,13 @@ public class Jc_Pc_CustomerManageOnline extends TestCaseCommon implements TestCa
     public void customerManage_System3() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] phone = cp.phoneNumberFormat();
-            Object[][] sex = cp.sex();
-            Object[][] name = cp.name();
-            Object[][] customerType = cp.customerType();
+            Object[][] phone = CommonPram.phoneNumberFormat();
+            Object[][] sex = CommonPram.sex();
+            Object[][] name = CommonPram.name();
+            Object[][] customerType = CommonPram.customerType();
             for (int i = 2; i <= 3; i++) {
-                JSONObject respon = jc.createCustomer("", cp.name, cp.phoneNumber, sex[i][1].toString(), customerType[1][1].toString());
-                String message = respon.getString("message");
+                JSONObject response = jc.createCustomer("", CommonPram.name, CommonPram.phoneNumber, sex[i][1].toString(), customerType[1][1].toString());
+                String message = response.getString("message");
                 Preconditions.checkArgument(message.equals(""), sex[i][0].toString() + " : " + sex[i][1].toString());
             }
         } catch (AssertionError | Exception e) {
@@ -150,13 +147,13 @@ public class Jc_Pc_CustomerManageOnline extends TestCaseCommon implements TestCa
     public void customerManage_System4() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            Object[][] phone = cp.phoneNumberFormat();
-            Object[][] sex = cp.sex();
-            Object[][] name = cp.name();
-            Object[][] customerType = cp.customerType();
+            Object[][] phone = CommonPram.phoneNumberFormat();
+            Object[][] sex = CommonPram.sex();
+            Object[][] name = CommonPram.name();
+            Object[][] customerType = CommonPram.customerType();
             for (int i = 2; i <= 3; i++) {
-                JSONObject respon = jc.createCustomer("", cp.name, cp.phoneNumber, sex[1][1].toString(), customerType[i][1].toString());
-                String message = respon.getString("message");
+                JSONObject response = jc.createCustomer("", CommonPram.name, CommonPram.phoneNumber, sex[1][1].toString(), customerType[i][1].toString());
+                String message = response.getString("message");
                 Preconditions.checkArgument(message.equals(""), customerType[i][0].toString() + " : " + customerType[i][1].toString());
             }
         } catch (AssertionError | Exception e) {
@@ -174,8 +171,8 @@ public class Jc_Pc_CustomerManageOnline extends TestCaseCommon implements TestCa
     public void customerManage_System5() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject respon = jc.preSleCustomerManage("", "1", "10", "", "");
-            int pages = respon.getInteger("pages");
+            JSONObject response = jc.preSleCustomerManage("", "1", "10", "", "");
+            int pages = response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
                 JSONArray list = jc.preSleCustomerManage("", String.valueOf(page), "10", "", "").getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
@@ -194,7 +191,7 @@ public class Jc_Pc_CustomerManageOnline extends TestCaseCommon implements TestCa
                     System.out.println("customerName" + customerName);
                     System.out.println("customerPhone" + customerPhone);
                     System.out.println("createDate" + createDate);
-                    Preconditions.checkArgument(shopName != null && customerName != null && customerPhone != null && registrationStatusName != null && customerPhone != null && customerName != null && sex != null && createDate != null, "销售客户列表中第 " + (i + 1) + "行，列表项为空");
+                    Preconditions.checkArgument(shopName != null && registrationStatusName != null && customerPhone != null && customerName != null && sex != null && createDate != null, "销售客户列表中第 " + (i + 1) + "行，列表项为空");
                 }
             }
         } catch (AssertionError | Exception e) {
@@ -212,8 +209,8 @@ public class Jc_Pc_CustomerManageOnline extends TestCaseCommon implements TestCa
     public void customerManage_System6() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject respon = jc.preSleCustomerManage("", "1", "10", "", "");
-            int pages = respon.getInteger("pages");
+            JSONObject response = jc.preSleCustomerManage("", "1", "10", "", "");
+            int pages = response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
                 JSONArray list = jc.preSleCustomerManage("", String.valueOf(page), "10", "", "").getJSONArray("list");
                 for (int i = 0; i < list.size() - 1; i++) {
@@ -238,8 +235,8 @@ public class Jc_Pc_CustomerManageOnline extends TestCaseCommon implements TestCa
     public void customerManage_System7() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject respon = jc.afterSleCustomerManage("", "1", "10", "", "");
-            int pages = respon.getInteger("pages");
+            JSONObject response = jc.afterSleCustomerManage("", "1", "10", "", "");
+            int pages = response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
                 JSONArray list = jc.afterSleCustomerManage("", String.valueOf(page), "10", "", "").getJSONArray("list");
                 for (int i = 0; i < list.size() - 1; i++) {
@@ -264,8 +261,8 @@ public class Jc_Pc_CustomerManageOnline extends TestCaseCommon implements TestCa
     public void customerManage_System8() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject respond = jc.afterSleCustomerManage("", "1", "10", "", "");
-            int pages = respond.getInteger("pages");
+            JSONObject response = jc.afterSleCustomerManage("", "1", "10", "", "");
+            int pages = response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
                 JSONArray list = jc.afterSleCustomerManage("", String.valueOf(page), "10", "", "").getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
@@ -295,8 +292,8 @@ public class Jc_Pc_CustomerManageOnline extends TestCaseCommon implements TestCa
     public void customerManage_System9() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject respon = jc.weChatSleCustomerManage("", "1", "10", "", "");
-            int pages = respon.getInteger("pages");
+            JSONObject response = jc.weChatSleCustomerManage("", "1", "10", "", "");
+            int pages = response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
                 JSONArray list = jc.weChatSleCustomerManage("", String.valueOf(page), "10", "", "").getJSONArray("list");
                 for (int i = 0; i < list.size() - 1; i++) {
@@ -321,8 +318,8 @@ public class Jc_Pc_CustomerManageOnline extends TestCaseCommon implements TestCa
     public void customerManage_System10() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject respon = jc.weChatSleCustomerManage("", "1", "10", "", "");
-            int pages = respon.getInteger("pages");
+            JSONObject response = jc.weChatSleCustomerManage("", "1", "10", "", "");
+            int pages = response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
                 JSONArray list = jc.weChatSleCustomerManage("", String.valueOf(page), "10", "", "").getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {

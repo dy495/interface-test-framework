@@ -16,7 +16,7 @@ import java.lang.reflect.Method;
 
 public class CustomerQRCodeCreateCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct product = EnumTestProduct.YT_DAILY_ZH; // 管理页—-首页
-    private static final EnumAccount YT_RECEPTION_DAILY = EnumAccount.YT_RECEPTION_DAILY; // 全部权限账号 【运通】
+    private static final EnumAccount YT_RECEPTION_DAILY = EnumAccount.YT_RECEPTION_DAILY_WM; // 全部权限账号 【运通】
     public VisitorProxy visitor = new VisitorProxy(product);   // 产品类放到代理类中（通过代理类发请求）
     // public SceneUtil util = new SceneUtil(visitor);
     public YunTongInfo info = new YunTongInfo();
@@ -39,7 +39,7 @@ public class CustomerQRCodeCreateCase extends TestCaseCommon implements TestCase
 //        //替换钉钉推送
 //        commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
 //        commonConfig.product = PRODUCE.getAbbreviation(); // 产品代号 -- YT
-        commonConfig.setShopId("57279").setReferer(product.getReferer()).setRoleId("10322").setProduct(product.getAbbreviation());
+        commonConfig.setShopId("57279").setRoleId("10322").setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);  // 配置请求头
         //util.loginPc(YT_RECEPTION_DAILY);   //登录
         LoginPc loginScene = LoginPc.builder().phone("13402050043").verificationCode("000000").build();

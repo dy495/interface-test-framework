@@ -92,6 +92,12 @@ public class SceneUtil extends BasicUtil {
         this.visitor = visitor;
     }
 
+    public void loginPc(String account, String password) {
+        IScene scene = LoginPc.builder().phone(account).verificationCode(password).type(1).build();
+        login(scene);
+    }
+
+
     public void loginApp(EnumAccount enumAccount) {
         IScene scene = LoginApp.builder().phone(enumAccount.getPhone()).verificationCode(enumAccount.getPassword()).build();
         login(scene);

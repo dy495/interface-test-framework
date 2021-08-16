@@ -6,14 +6,12 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.gly.util.PublicParameter;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -25,14 +23,13 @@ import java.lang.reflect.Method;
 import static com.aliyun.openservices.shade.com.alibaba.rocketmq.common.UtilAll.deleteFile;
 
 public class JcPc_SystemLogOnline extends TestCaseCommon implements TestCaseStd {
-    ScenarioUtil jc = new ScenarioUtil();
-    public String shopId = "-1";
-    public String appletToken = EnumAppletToken.JC_GLY_ONLINE.getToken();
-    CommonConfig commonConfig = new CommonConfig();
     private static final EnumTestProduct product = EnumTestProduct.JC_ONLINE_JD;
-    PublicParameter pp = new PublicParameter();
+    private static final EnumAccount account = EnumAccount.JC_ALL_ONLINE;
+    public static final EnumAppletToken appletToken = EnumAppletToken.JC_GLY_ONLINE;
+    public static final String shopId = product.getShopId();
     public VisitorProxy visitor = new VisitorProxy(product);
-    SceneUtil su = new SceneUtil(visitor);
+    ScenarioUtil jc = new ScenarioUtil();
+    SceneUtil util = new SceneUtil(visitor);
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
@@ -42,6 +39,7 @@ public class JcPc_SystemLogOnline extends TestCaseCommon implements TestCaseStd 
     public void initial() {
         logger.debug("before class initial");
         jc.changeIpPort(product.getIp());
+        CommonConfig commonConfig = new CommonConfig();
         //替换checklist的相关信息
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
         commonConfig.checklistConfId = EnumChecklistConfId.DB_SERVICE_ID_CRM_ONLINE_SERVICE.getId();
@@ -55,6 +53,7 @@ public class JcPc_SystemLogOnline extends TestCaseCommon implements TestCaseStd 
         commonConfig.setShopId(product.getShopId()).setReferer(product.getReferer()).setRoleId("395").setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
         logger.debug("jc: " + jc);
+        util.loginPc(account);
 
     }
 
@@ -73,7 +72,6 @@ public class JcPc_SystemLogOnline extends TestCaseCommon implements TestCaseStd 
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
-        jc.pcLogin(pp.phone, pp.password);
     }
 
     /**
@@ -197,7 +195,6 @@ public class JcPc_SystemLogOnline extends TestCaseCommon implements TestCaseStd 
     @Test(enabled = false)
     public void SystemLog_Date5() {
         logger.logCaseStart(caseResult.getCaseName());
-        Workbook wb = null;
         String path = "C:\\work\\downloadFile";
         File fileDir = new File(path);
         try {
@@ -272,18 +269,18 @@ public class JcPc_SystemLogOnline extends TestCaseCommon implements TestCaseStd 
             //获取卡券
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             //推送推送消息SystemLog_Date6
-            su.pushCustomMessage(0, true, voucherId);
+            util.pushCustomMessage(0, true, voucherId);
             //查看消息记录中的第一条消息
             JSONObject respond = jc.pushMsgListFilterManage("", "1", "10", "", "");
             String isReadBefore = respond.getJSONArray("list").getJSONObject(0).getString("is_read");
             //登录小程序
-            jc.appletLoginToken(appletToken);
+            util.loginApplet(appletToken);
             //查看消息
             JSONArray list = jc.appletmessageList("", "10").getJSONArray("list");
             String id = list.getJSONObject(0).getString("id");
             jc.messageDetail(id);
             //查看现在的-客户查看
-            jc.pcLogin("15711200001", "000000");
+            util.loginPc(account);
             JSONArray list1 = jc.pushMsgListFilterManage("", "1", "10", "", "").getJSONArray("list");
             String isReadAfter = list1.getJSONObject(0).getString("phone").equals("13373166806") ? list1.getJSONObject(0).getString("is_read") : list1.getJSONObject(1).getString("is_read");
             System.out.println("客户查看之前的状态为:" + isReadBefore + "现在客户查看的状态为:" + isReadAfter);
@@ -310,7 +307,7 @@ public class JcPc_SystemLogOnline extends TestCaseCommon implements TestCaseStd 
             JSONObject respond = jc.pushMsgListFilterManage("", "1", "10", "", "");
             int total = respond.getInteger("total");
             //推送推送消息
-            su.pushCustomMessage(0, true, voucherId);
+            util.pushCustomMessage(0, true, voucherId);
             sleep(3);
             //推送消息以后再次查看消息记录的总条数
             JSONObject respond1 = jc.pushMsgListFilterManage("", "1", "10", "", "");
@@ -337,7 +334,7 @@ public class JcPc_SystemLogOnline extends TestCaseCommon implements TestCaseStd 
             JSONObject respond = jc.pushMsgListFilterManage("", "1", "10", "", "");
             int total = respond.getInteger("total");
             //推送推送消息
-            su.pushCustomMessage(0, true, voucherId);
+            util.pushCustomMessage(0, true, voucherId);
             int sendCount = jc.messageFormFilterManage("", "1", "10", "", "").getJSONArray("list").getJSONObject(0).getInteger("send_count");
             //推送消息以后再次查看消息记录的总条数
             JSONObject respond1 = jc.pushMsgListFilterManage("", "1", "10", "", "");
@@ -368,7 +365,7 @@ public class JcPc_SystemLogOnline extends TestCaseCommon implements TestCaseStd 
             JSONObject respond = jc.pushMsgListFilterManage("", "1", "10", "", "");
             int total = respond.getInteger("total");
             //推送推送消息
-            su.pushCustomMessage(0, true, voucherId);
+            util.pushCustomMessage(0, true, voucherId);
             int sendCount = jc.messageFormFilterManage("", "1", "10", "", "").getJSONArray("list").getJSONObject(0).getInteger("send_count");
             //推送消息以后再次查看消息记录的总条数
             JSONObject respond1 = jc.pushMsgListFilterManage("", "1", "100", "", "");

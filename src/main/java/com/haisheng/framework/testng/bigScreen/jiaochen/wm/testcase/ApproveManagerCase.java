@@ -47,7 +47,7 @@ import java.util.stream.Collectors;
  */
 public class ApproveManagerCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct product = EnumTestProduct.JC_DAILY_JD;
-    private static final EnumAccount ACCOUNT = EnumAccount.JC_ALL_AUTHORITY_DAILY;
+    private static final EnumAccount ACCOUNT = EnumAccount.JC_ALL_DAILY;
     public VisitorProxy visitor = new VisitorProxy(product);
     public SceneUtil util = new SceneUtil(visitor);
 

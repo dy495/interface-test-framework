@@ -61,7 +61,7 @@ public class JiaoChenInfo {
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public SceneUtil util = new SceneUtil(visitor);
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_LXQ_DAILY;
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.JC_ALL_AUTHORITY_DAILY_LXQ;
+    private static final EnumAccount ALL_AUTHORITY = EnumAccount.JC_ALL_DAILY_LXQ;
     //日常
     public final long BrandID = 61L;//自动化用的品牌id
     public final long CarStyleID = 48L;//自动化用的品牌车系id
