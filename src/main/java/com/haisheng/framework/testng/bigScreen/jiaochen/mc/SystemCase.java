@@ -7,11 +7,15 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.*;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.AppPreSalesReceptionPageScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.presalesreception.AppReceptorChangeScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.presalesreception.AppReceptorListScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.reid.AppReidReidDistributeScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.reid.AppReidReidListScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.reid.AppReidReidMarkScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.retention.AppRetentionQueryQrCodeScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.saleschedule.AppSaleScheduleDayListScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.saleschedule.AppSaleScheduleFreeSaleScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.saleschedule.AppSaleScheduleUpdateSaleStatusScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.riskcontrol.NonCustomerSignScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.appointment.AppointmentTypeEnum;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletAppointmentSubmitScene;
@@ -51,10 +55,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
         //放入shopId
-        commonConfig.setProduct(PRODUCE.getAbbreviation()).setReferer(PRODUCE.getReferer()).setShopId("-1").setRoleId(ACCOUNT.getRoleId());
-//        commonConfig.referer = PRODUCE.getReferer();
-//        commonConfig.shopId = "-1";
-//        commonConfig.roleId = ACCOUNT.getRoleId();
+        commonConfig.setProduct(PRODUCE.getAbbreviation()).setReferer(PRODUCE.getReferer()).setShopId(ACCOUNT.getReceptionShopId()).setRoleId(ACCOUNT.getRoleId());
         beforeClassInit(commonConfig);
         util.loginPc(ACCOUNT);
     }
@@ -155,22 +156,42 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         //AppReidReidDistributeScene.builder().enterType("PRE_SALE").
     }
 
+    /**
+     * @description : 门店中状态为接待中的销售，判断状态是否正确
+     * @return  : list, 状态为接待中但没有接待卡片的销售
+     **/
+    public List<String> checkSalesStatus(String shopId){
+        commonConfig.setShopId("-1");
+        List<String> list1 = AppPreSalesReceptionPageScene.builder().size(40).build().invoke(visitor, true).getJSONArray("list").stream().map(e -> (JSONObject) e).map(e -> e.getString("reception_sale_name")).distinct().collect(Collectors.toList());
+        commonConfig.setShopId(shopId);
+        List<String> list2 = AppSaleScheduleDayListScene.builder().type("PRE").build().invoke(visitor, true).getJSONArray("sales_info_list").stream().map(e -> (JSONObject) e).filter(e -> Objects.equals(e.getString("sale_status"), "接待中")).map(e -> e.getString("sale_name")).collect(Collectors.toList());
+        List<String> list = new ArrayList<>();
+        for (String s : list2) {
+            if (!list1.contains(s)){ list.add(s); }
+        }
+        return list;
+//        Preconditions.checkArgument(list.size()==0,list+"：这些销售状态为接待中，在所有门店都没有接待中的卡片");
+    }
+
+
+    @Test
+    public void test03CheckStatus(){
+        AppReceptorListScene.builder().shopId(Long.parseLong(ACCOUNT.getReceptionShopId())).build().invoke(visitor);
+    }
+
 
     @Test
     public void test(){
-        commonConfig.setShopId("-1");
-        List<String> list1 = AppPreSalesReceptionPageScene.builder().size(40).build().invoke(visitor, true).getJSONArray("list").stream().map(e -> (JSONObject) e).map(e -> e.getString("reception_sale_name")).distinct().collect(Collectors.toList());
-        Collections.sort(list1);
-
-        commonConfig.setShopId("49153");
-        List<String> list2 = AppSaleScheduleDayListScene.builder().type("PRE").build().invoke(visitor, true).getJSONArray("sales_info_list").stream().map(e -> (JSONObject) e).filter(e -> Objects.equals(e.getString("sale_status"), "接待中")).map(e -> e.getString("sale_name")).collect(Collectors.toList());
-        Collections.sort(list2);
-        System.err.println("一有接待卡片的销售："+list1);
-        System.err.println("================================");
-        System.err.println("状态为接待中的销售："+list2);
-
+//        Date date = new Date();
+//        long time = date.getTime();
+//        dt.dateToTimestamp1()
+        //AppSaleScheduleUpdateSaleStatusScene.builder().saleId(util.getSaleId()).sourceSaleStatus(0).targetSaleStatus(3).vacationStartTime("2021-08-10").vacationEndTime("2021-08-20").build().invoke(visitor);
+        AppSaleScheduleUpdateSaleStatusScene.builder().saleId(util.getSaleId()).sourceSaleStatus(0).targetSaleStatus(2).build().invoke(visitor);
 
     }
+
+
+
 
 
 }

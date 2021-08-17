@@ -1697,4 +1697,6 @@ public class SceneUtil extends BasicUtil {
         return list.stream().map(e -> JSONObject.toJavaObject(scene.remove(e).invoke(visitor, false), Response.class))
                 .map(Response::getMessage).collect(Collectors.toList()).toArray(new String[list.size()]);
     }
+
+    public String getSaleId(){return visitor.isDaily() ? "uid_f1a745c7":"";}
 }

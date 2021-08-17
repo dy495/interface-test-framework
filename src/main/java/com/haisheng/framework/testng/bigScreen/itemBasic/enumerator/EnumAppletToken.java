@@ -31,9 +31,9 @@ public enum EnumAppletToken {
 
     JC_LXQ_ONLINE("h2kYseiQaoRRbP2kQARUTA==", false, "13436941018"),
 
-    JC_MC_DAILY("WED4t1GqqZ/QS6IX5OX3aw==", true, "15022399925"),
+    JC_MC_DAILY("stHnP90Xdj+Qq/vkvmkv7Q==", true, "15022399925"),
 
-    JC_MC_ONLINE("+OaWLdQkHg/GOm2lrsb0Sg==", false, "15022399925"),
+    JC_MC_ONLINE("xeFdesH4NkU3v3oz0eGEjA==", false, "15022399925"),
 
     JC_GLY_DAILY("HnAZm5VmguIB90xcDvpAEw==", true, "13373166806"),
 
