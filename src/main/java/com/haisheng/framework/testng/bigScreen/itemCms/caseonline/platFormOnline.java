@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen.itemCms.casedaily;
+package com.haisheng.framework.testng.bigScreen.itemCms.caseonline;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
@@ -9,6 +9,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.tarot.container.IC
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.tarot.field.IField;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.tarot.row.IRow;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.tarot.table.ITable;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
@@ -19,7 +20,6 @@ import com.haisheng.framework.testng.bigScreen.itemCms.common.enumerator.EnumReg
 import com.haisheng.framework.testng.bigScreen.itemCms.common.scene.*;
 import com.haisheng.framework.testng.bigScreen.itemCms.common.util.CmsConstants;
 import com.haisheng.framework.testng.bigScreen.itemCms.common.util.SceneUtil;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -37,9 +37,9 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class A extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduct product = EnumTestProduct.CMS_DAILY;
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.CMS_DAILY;
+public class platFormOnline extends TestCaseCommon implements TestCaseStd {
+    private static final EnumTestProduct product = EnumTestProduct.CMS_ONLINE;
+    private static final EnumAccount ALL_AUTHORITY = EnumAccount.CMS_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(product);
     public SceneUtil util = new SceneUtil(visitor);
 
@@ -85,9 +85,9 @@ public class A extends TestCaseCommon implements TestCaseStd {
                 //输出表名，没有啥实际意义
                 Arrays.stream(container.getTables()).forEach(e -> logger.info("table_name is：{}", e.getKey()));
                 //这三行是生成设备及出入口的代码，注释掉，用的时候开启然后提交到git
-//                long subjectId = getSubjectId(container);
-//                ITable[] tables = container.getTables();
-//                Arrays.stream(tables).forEach(table -> createLayoutAndAddDevice(subjectId, table));
+                long subjectId = getSubjectId(container);
+                ITable[] tables = container.getTables();
+                Arrays.stream(tables).forEach(table -> createLayoutAndAddDevice(subjectId, table));
             }
         } catch (Exception e) {
             collectMessage(e);
