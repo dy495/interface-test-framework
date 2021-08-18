@@ -1710,7 +1710,7 @@ public class SceneUtil extends BasicUtil {
         "order":当前状态的排序,
         "status":状态值 }
      **/
-    public JSONObject checkLastSale(){
+    public JSONObject getLastSale(){
         //long count = AppSaleScheduleDayListScene.builder().type("PRE").build().invoke(visitor, true).getJSONArray("sales_info_list").stream().map(e -> (JSONObject) e).filter(e -> Objects.equals(e.getString("sale_status"), "空闲中")).count();
         return AppSaleScheduleDayListScene.builder().type("PRE").build().invoke(visitor, true).getJSONArray("sales_info_list").stream().map(e -> (JSONObject) e).
                 filter(e -> Objects.equals(e.getString("sale_status"), "空闲中")).sorted((x, y) -> y.getInteger("order") - x.getInteger("order")).findFirst().get();
@@ -1721,7 +1721,7 @@ public class SceneUtil extends BasicUtil {
      * @parameter : 状态值：   {0:"空闲中",1:"接待中",2:"忙碌中",3:"休假中"}
      * @return  : 指定状态的销售 JSONObject，没有则返回 null
      **/
-    public JSONObject getSale(Integer statusId){
+    public JSONObject getNeededSale(Integer statusId){
         return AppSaleScheduleDayListScene.builder().type("PRE").build().invoke(visitor, true).getJSONArray("sales_info_list").stream().map(e -> (JSONObject) e).
                 filter(e -> e.getInteger("status") == statusId).findAny().orElse(null);
     }

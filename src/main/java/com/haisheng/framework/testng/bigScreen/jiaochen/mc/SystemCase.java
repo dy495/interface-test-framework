@@ -2,24 +2,16 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.mc;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.core.JsonGenerationException;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.*;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.AppPreSalesReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.presalesreception.AppReceptorChangeScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.presalesreception.AppReceptorListScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.reid.AppReidReidDistributeScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.reid.AppReidReidListScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.reid.AppReidReidMarkScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.retention.AppRetentionQueryQrCodeScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.retention.AppRetentionReidCustomerAddScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.saleschedule.AppSaleScheduleDayListScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.saleschedule.AppSaleScheduleFreeSaleScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.saleschedule.AppSaleScheduleUpdateSaleStatusScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.riskcontrol.NonCustomerSignScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.appointment.AppointmentTypeEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletAppointmentSubmitScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -27,9 +19,6 @@ import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.CommonUtil;
-import com.haisheng.framework.util.DateTimeUtil;
-import org.apache.commons.collections.ArrayStack;
-import org.jooq.False;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
@@ -189,12 +178,12 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         AppSaleScheduleUpdateSaleStatusScene.builder().saleId("uid_caf1b799").sourceSaleStatus(0).targetSaleStatus(2).build().invoke(visitor);
     }
     @Test
-    public void changeSale(){
+    public void changeSale1(){
         try {
             Object reception = AppPreSalesReceptionPageScene.builder().build().invoke(visitor, true).getJSONArray("list").stream().findAny().orElse(null);
             if (reception == null){ preCreate(); }
             Long id = AppPreSalesReceptionPageScene.builder().build().invoke(visitor, true).getJSONArray("list").getJSONObject(0).getLong("id");
-            String saleId = util.getSale(2).getString("sale_id");
+            String saleId = util.getNeededSale(2).getString("sale_id");
             String message = AppReceptorChangeScene.builder().id(id).shopId(Long.parseLong(ACCOUNT.getReceptionShopId())).receptorId(saleId).build().invoke(visitor,false).getString("message");
             Preconditions.checkArgument(Objects.equals("当前顾问非空闲,请选择其他顾问!",message));
         } catch (AssertionError | Exception e) {
@@ -211,8 +200,23 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 //        };
 //    }
 
-
-
-
+    @Test(description = "变更接待")
+    public void changeSale2(){
+        try {
+            String saleId = util.getNeededSale(0).getString("sale_id");
+            Object reception = AppPreSalesReceptionPageScene.builder().build().invoke(visitor, true).getJSONArray("list").stream().findAny().orElse(null);
+            if (reception == null){ preCreate(); }
+            JSONObject getReception = AppPreSalesReceptionPageScene.builder().build().invoke(visitor, true).getJSONArray("list").getJSONObject(0);
+            Long id = getReception.getLong("id");
+            String receptorId = getReception.getString("receptor_id");
+            AppReceptorChangeScene.builder().id(id).shopId(Long.parseLong(ACCOUNT.getReceptionShopId())).receptorId(saleId).build().invoke(visitor,false);
+            String lastId = util.getLastSale().getString("sale_id");
+            Preconditions.checkArgument(Objects.equals(receptorId,lastId),"变更销售后，被替换的销售未在空闲中最后一位");
+        }catch (AssertionError | Exception e) {
+            collectMessage(e);
+        } finally {
+            saveData("变更成非空闲的销售");
+        }
+    }
 
 }
