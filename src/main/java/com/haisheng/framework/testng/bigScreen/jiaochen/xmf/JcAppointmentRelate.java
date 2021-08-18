@@ -137,7 +137,7 @@ public class JcAppointmentRelate extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int result2 = pf.pcAppointmentRecodePage();  //先调取函数可先验证此接口，在验证数据
-            int result1 = qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum", "pc_appointmentPage");
+            int result1 = qaDbUtil.selectDataTempOne("pcAppointmentRecordNum", "pc_appointmentPage");
             System.out.println(result1 + ":" + result2);
             Preconditions.checkArgument(result2 - result1 == 1, "预约后预约记录数没+1,预约前：" + result1 + "预约后：" + result2);
         } catch (AssertionError | Exception e) {
@@ -152,7 +152,7 @@ public class JcAppointmentRelate extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int result2 = pf.appointmentNUmber(num);  //先调取函数可先验证此接口，在验证数据
-            int result1 = qaDbUtil.selsetDataTempOne("pcAppointmentNUmber", "pc_appointmentPage");
+            int result1 = qaDbUtil.selectDataTempOne("pcAppointmentNUmber", "pc_appointmentPage");
             System.out.println(result1 + ":" + result2);
             Preconditions.checkArgument(result2 - result1 == 1, "预约后预约看板数没+1,预约前：" + result1 + "预约后：" + result2);
         } catch (AssertionError | Exception e) {
@@ -167,7 +167,7 @@ public class JcAppointmentRelate extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int result2 = pf.pcAppointmentTimes();
-            int result1 = qaDbUtil.selsetDataTempOne("pc_appointment_times", "pc_appointmentPage");
+            int result1 = qaDbUtil.selectDataTempOne("pc_appointment_times", "pc_appointmentPage");
             System.out.println(result1 + ":" + result2);
             Preconditions.checkArgument(result2 - result1 == 1, "预约后,该小程序客户预约次数没+1，预约前：" + result1 + "预约后：" + result2);
         } catch (AssertionError | Exception e) {
@@ -183,7 +183,7 @@ public class JcAppointmentRelate extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int result2 = pf.appReceiptPage();  //先调取函数可先验证此接口，在验证数据
-            int result1 = qaDbUtil.selsetDataTempOne("appReceiptage", "pc_appointmentPage");
+            int result1 = qaDbUtil.selectDataTempOne("appReceiptage", "pc_appointmentPage");
             System.out.println(result1 + ":" + result2);
             Preconditions.checkArgument(result2 - result1 == 1, "预约后app预约任务列数,预约前：" + result1 + "预约后：" + result2);
         } catch (AssertionError | Exception e) {
@@ -199,8 +199,8 @@ public class JcAppointmentRelate extends TestCaseCommon implements TestCaseStd {
         try {
             int[] appTask = pf.appTask();  //先调取函数可先验证此接口，在验证数据
 
-            int appSurplusAppointment = qaDbUtil.selsetDataTempOne("appSurplusAppointment", "pc_appointmentPage");
-            int app_all_appointment = qaDbUtil.selsetDataTempOne("app_all_appointment", "pc_appointmentPage");
+            int appSurplusAppointment = qaDbUtil.selectDataTempOne("appSurplusAppointment", "pc_appointmentPage");
+            int app_all_appointment = qaDbUtil.selectDataTempOne("app_all_appointment", "pc_appointmentPage");
             Preconditions.checkArgument(appTask[0] - appSurplusAppointment == 1, "预约后app今日任务appSurplusAppointment,预约前：" + appSurplusAppointment + "预约后：" + appTask[0]);
             Preconditions.checkArgument(appTask[1] - app_all_appointment == 1, "预约后app今日任务app_all_appointment,预约前：" + app_all_appointment + "预约后：" + appTask[1]);
         } catch (AssertionError | Exception e) {
@@ -215,7 +215,7 @@ public class JcAppointmentRelate extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int totalA = pf.appletmyAppointment();
-            int total = qaDbUtil.selsetDataTempOne("applet_myappointment", "pc_appointmentPage");
+            int total = qaDbUtil.selectDataTempOne("applet_myappointment", "pc_appointmentPage");
             Preconditions.checkArgument(totalA - total == 1, "预约后app今日任务app_all_appointment,预约前：" + total + "预约后：" + totalA);
 
         } catch (AssertionError | Exception e) {

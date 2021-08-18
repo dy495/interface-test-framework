@@ -8,7 +8,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProd
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.DataAbnormal;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.JcFunctionOnline;
-import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.PublicParmOnline;
+import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.PublicParamOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -24,7 +24,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
     ScenarioUtil jc = new ScenarioUtil();
 
     DateTimeUtil dt = new DateTimeUtil();
-    PublicParmOnline pp = new PublicParmOnline();
+    PublicParamOnline pp = new PublicParamOnline();
     JcFunctionOnline pf = new JcFunctionOnline();
     CommonConfig commonConfig = new CommonConfig();
 
@@ -451,7 +451,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
             jc.verification(voucher_code[0], true);
             int totalA = jc.appWriteOffRecordsPage("ALL", "10", null).getInteger("total");
             //小程序消息最新一条信息校验
-            jc.appletLoginToken(pp.appletTocken);
+            jc.appletLoginToken(pp.appletToken);
             JSONObject message = jc.appletMessageList(null, 20).getJSONArray("list").getJSONObject(0);
             String messageName = message.getString("content");
 //            String messageTime=message.getString("content");
@@ -482,7 +482,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
         try {
             appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
             //开始接待
-            Long[] id = pf.startReception(pp.carplate);
+            Long[] id = pf.startReception(pp.carPlate);
             //变更接待前
             int total = jc.appreceptionPage(null, 10).getInteger("total");
             int[] tasknum = pf.appTask();

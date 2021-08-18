@@ -23,7 +23,7 @@ import java.util.Random;
 
 public class JcFunctionOnline {
     ScenarioUtilOnline jc = new ScenarioUtilOnline();
-    PublicParmOnline pp = new PublicParmOnline();
+    PublicParamOnline pp = new PublicParamOnline();
     DateTimeUtil dt = new DateTimeUtil();
     FileUtil file = new FileUtil();
     Random random = new Random();
@@ -165,7 +165,7 @@ public class JcFunctionOnline {
     }
 
     public Long getAppointmentId() {
-        jc.appletLoginToken(pp.appletTocken);
+        jc.appletLoginToken(pp.appletToken);
         Long id = jc.appletAppointmentList("", "10", null).getJSONArray("list").getJSONObject(0).getLong("id");
         return id;
     }
@@ -196,7 +196,7 @@ public class JcFunctionOnline {
 
     //小程序预约消息数
     public Integer appletmyAppointment() {
-        jc.appletLoginToken(pp.appletTocken);
+        jc.appletLoginToken(pp.appletToken);
         return jc.appletAppointmentList("MAINTAIN", "20", null).getInteger("total");
     }
 
@@ -325,16 +325,16 @@ public class JcFunctionOnline {
     //增加车辆，返回车辆id
     public String appletAddCar(String plateNumber) {
         jc.appletAddCar(plateNumber, pp.carModelId);
-        String car_id = "";
+        String carId = "";
         JSONArray carData = jc.appletMyCar(pp.carStyleId).getJSONArray("list");
         for (int i = 0; i < carData.size(); i++) {
             String plate_numberAfter = carData.getJSONObject(i).getString("plate_number");
             if (plate_numberAfter.equals(plateNumber)) {
-                car_id = carData.getJSONObject(i).getString("id");
+                carId = carData.getJSONObject(i).getString("id");
                 break;
             }
         }
-        return car_id;
+        return carId;
     }
 
     public int carListNumber(String carStyleId) {
@@ -417,7 +417,7 @@ public class JcFunctionOnline {
     //小程序预约，返回预约id
     public Long appletAppointment(int num) {
         //小程序预约
-        jc.appletLoginToken(pp.appletTocken);
+        jc.appletLoginToken(pp.appletToken);
         AppletAppointment pm = new AppletAppointment();
         pm.car_id = pp.car_idA;
         pm.appointment_name = "自动夏";
@@ -534,7 +534,7 @@ public class JcFunctionOnline {
 
     //获取小程序可用核销码
     public String[] voucherName() throws Exception {
-        jc.appletLoginToken(pp.appletTocken);
+        jc.appletLoginToken(pp.appletToken);
         JSONArray list = jc.appletVoucherList(null, "GENERAL", 20).getJSONArray("list");
         String voucher_code[] = {"123", "123", ""};
         for (int i = 0; i < list.size(); i++) {

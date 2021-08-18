@@ -78,10 +78,6 @@ public class SystemCaseRecpOnline extends TestCaseCommon implements TestCaseStd 
     }
 
     /**
-     * -------------------------------服务管理 - 评价管理 -----------------------------------------
-     */
-
-    /**
      * 手机评价， 在下面的case包含了， 注释掉了
      */
     @Test(dataProvider = "TYPE", dataProviderClass = YunTongInfoOnline.class)
@@ -109,9 +105,7 @@ public class SystemCaseRecpOnline extends TestCaseCommon implements TestCaseStd 
             }
 
 
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("接待后评价");

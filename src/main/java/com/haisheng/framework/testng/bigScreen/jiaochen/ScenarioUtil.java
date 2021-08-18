@@ -1351,12 +1351,11 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :新增车辆xmf
      * @date :2020/11/28 12:29
      **/
-    public JSONObject appletAddCarcode(String plate_number, String model_id) {
+    public JSONObject appletCarCreate(String plate_number, String model_id) {
         String url = "/car-platform/applet/granted/car/create";
         JSONObject json1 = new JSONObject();
         json1.put("plate_number", plate_number);
         json1.put("model_id", model_id);
-
         return invokeApi(url, json1, false);
     }
 
@@ -1568,11 +1567,10 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :车型列表 xmf
      * @date :2020/11/28 12:58
      **/
-    public JSONObject appletplateNumberProvinceList() {
+    public JSONObject appletPlateNumberProvinceList() {
         String url = "/car-platform/applet/plate-number-province-list";
-        JSONObject json1 = new JSONObject();
-
-        return invokeApi(url, json1);
+        JSONObject obj = new JSONObject();
+        return invokeApi(url, obj);
     }
 
     /**

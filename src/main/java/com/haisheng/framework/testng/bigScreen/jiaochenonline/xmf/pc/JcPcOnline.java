@@ -12,14 +12,14 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Constant;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.manage.AppointmentMaintainConfigDetailBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletEvaluateSubmitScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.manage.EvaluateConfigSubmitScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.role.PageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.role.RolePageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shopstylemodel.ManageModelEditScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shopstylemodel.ManageModelPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.DataAbnormal;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.SelectReception;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.PcAppointmentConfig;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.JcFunctionOnline;
-import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.PublicParmOnline;
+import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.PublicParamOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -42,7 +42,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
     ScenarioUtil jc = ScenarioUtil.getInstance();
     DateTimeUtil dt = new DateTimeUtil();
     JsonPathUtil jpu = new JsonPathUtil();
-    PublicParmOnline pp = new PublicParmOnline();
+    PublicParamOnline pp = new PublicParamOnline();
     JcFunctionOnline pf = new JcFunctionOnline();
 
     public int page = 1;
@@ -407,7 +407,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
 
             String roleId[][] = new String[5][2];
             JSONArray r_dList = new JSONArray();
-            IScene rolepage = PageScene.builder().page(1).size(10).build();
+            IScene rolepage = RolePageScene.builder().page(1).size(10).build();
             JSONArray list = jc.invokeApi(rolepage).getJSONArray("list");
             for (int i = 0; i < 5; i++) {
                 String id = list.getJSONObject(i).getString("id");
@@ -663,7 +663,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
-            JSONObject data = jc.pcManageReception(pp.carplate, true);
+            JSONObject data = jc.pcManageReception(pp.carPlate, true);
             String jsonpath = "$.arrive_times&&$.customers[*].voucher_list[*]&&$.er_code_url&&$.last_reception_sale_name&&$.last_arrive_time&&$.plate_number";
             jpu.spiltString(data.toJSONString(), jsonpath);
 
@@ -748,7 +748,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             }
 
             //小程序这个车预约的价格
-            jc.appletLoginToken(pp.appletTocken);
+            jc.appletLoginToken(pp.appletToken);
             JSONArray appletTime = jc.appletmaintainTimeList(Long.parseLong(pp.shopIdZ), pp.car_idA, dt.getHistoryDate(num), type).getJSONArray("list");
             Preconditions.checkArgument(discount.length == appletTime.size(), "pc配置的预约时间段与小程序展示不一致");
             for (int z = 0; z < appletTime.size(); z++) {
@@ -823,7 +823,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             //  public JSONObject pcCarModelPriceEdit(String id, String price, String status, Boolean checkcode,String  type) {
             jc.pcCarModelPriceEdit(pp.modelIdAppointment, null, "DISABLE", true, type);
 
-            jc.appletLoginToken(pp.appletTocken);
+            jc.appletLoginToken(pp.appletToken);
             JSONObject isAble = jc.appletmaintainTimeList(Long.parseLong(pp.shopIdZ), pp.car_idA, dt.getHistoryDate(1), type, false);
             int code = isAble.getInteger("code");
             String message = isAble.getString("message");
@@ -1068,20 +1068,20 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
                 throw new Exception("中关村店,预约开关被关闭了");
             }
             //配置前预约门店配置列表
-            jc.appletLoginToken(pp.appletTocken);
+            jc.appletLoginToken(pp.appletToken);
             JSONArray isAble = jc.appletmaintainShopList(pp.car_idA.toString(), pp.coordinate, type).getJSONArray("list");
             int total = isAble.size();
             //关闭门店预约配置
             pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
             jc.shopStatusChange(pp.shopIdZ, "APPOINTMENT", "DISABLE");
             //小程序预约门店列表
-            jc.appletLoginToken(pp.appletTocken);
+            jc.appletLoginToken(pp.appletToken);
             JSONArray isAbleAfter = jc.appletmaintainShopList(pp.car_idA.toString(), pp.coordinate, type).getJSONArray("list");
             int totalAfter = isAbleAfter.size();
 
             pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
             jc.shopStatusChange(pp.shopIdZ, "APPOINTMENT", "ENABLE");
-            jc.appletLoginToken(pp.appletTocken);
+            jc.appletLoginToken(pp.appletToken);
 
             int totalAfter2 = jc.appletmaintainShopList(pp.car_idA.toString(), pp.coordinate, "MAINTAIN").getJSONArray("list").size();
             Preconditions.checkArgument(total - totalAfter == 1, "关闭预约配置，小程序预约门店-1");
@@ -1164,7 +1164,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
                     .type(type).vouchersId(pp.voucherIdevluate).build();
             jc.invokeApi(evaluateConfig);
 
-            jc.appletLoginToken(pp.appletTocken);
+            jc.appletLoginToken(pp.appletToken);
             String id[] = pf.getMessageId(messageName);
             if (StringUtils.isEmpty(id[0])) {
                 throw new Exception("没有待评价的消息，检查接待case 是否失败");

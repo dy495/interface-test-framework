@@ -613,7 +613,7 @@ public class ScenarioUtilOnline extends TestCaseCommon {
                         "\"id\" :\"" + account + "\",\n" +
                         "\"name\" :\"" + name + "\",\n";
 
-        if (phone != "") {
+        if (!phone.equals("")) {
             json = json + "\"phone\" :\"" + phone + "\",\n";
         }
         ;
@@ -1545,32 +1545,14 @@ public class ScenarioUtilOnline extends TestCaseCommon {
         }
     }
 
-    //角色权限列表 xmf
-    @DataProvider(name = "LIMITID")
-    public static Object[][] limitid() {
-        return new Integer[][]{
-                {118, 119, 120},
-                {136, 118},
-        };
-    }
-
-    @DataProvider(name = "SELECT_PARM")  //xmf
-    public static Object[] select_parm() {
-        return new String[][]{
-                {"vehicle_chassis_code", "vehicle_chassis_code"},
-
-        };
-    }
-
-    @DataProvider(name = "PLATE")  //xmf
+    @DataProvider(name = "PLATE")
     public static Object[] plate() {   //异常车牌号集合
         return new String[]{
                 "苏BJ123",   //6位
-                "BJ12345",    //不含汉字
                 "京1234567",  //不含英文
-                "京bj12345", //含小写
                 "京B@12345", //含字母
                 "苏BJ123456",//9位
+                "阿里巴巴呀",
         };
     }
 

@@ -454,7 +454,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
                 //查询小程序卡券数量
                 jc.appletLoginToken(EnumAppletToken.JC_WM_DAILY.getToken());
                 int totalAfter = pf.getVoucherTotal();
-                int historyData = qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum", "Applet");  //取数据库存好的数
+                int historyData = qaDbUtil.selectDataTempOne("pcAppointmentRecordNum", "Applet");  //取数据库存好的数
                 //接待该客户
                 pf.pcstartReception(pp.CarplateOther);      //虚拟小程序客户，车牌号和手机号只有我知道
                 Preconditions.checkArgument(totalAfter - historyData == 1, "触发智能提醒，小程序收到卡券");

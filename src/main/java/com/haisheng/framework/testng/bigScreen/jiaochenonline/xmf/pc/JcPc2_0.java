@@ -16,7 +16,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.PcCreateStor
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.PcCreateRemind;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.PcCreateStoreSales;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.JcFunctionOnline;
-import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.PublicParmOnline;
+import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.PublicParamOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -38,7 +38,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
     ScenarioUtil jc = ScenarioUtil.getInstance();
     DateTimeUtil dt = new DateTimeUtil();
     JsonPathUtil jpu = new JsonPathUtil();
-    PublicParmOnline pp = new PublicParmOnline();
+    PublicParamOnline pp = new PublicParamOnline();
     JcFunctionOnline pf = new JcFunctionOnline();
     Random random = new Random();
     private QADbProxy qaDbProxy = QADbProxy.getInstance();
@@ -374,14 +374,14 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             //提前创建好订单，写入订单号
             int totalBefore = pf.getVoucherTotal();  //小程序 卡券个数
             //发放，套餐个数+1
-            jc.volumeSend(pp.ordeId);
+            jc.volumeSend(pp.orderId);
 
             int total = pf.getVoucherTotal();
 //            JSONArray list=jc.appletpackageList(null,"GENERAL",20).getJSONArray("list");
 //            Integer id=list.getJSONObject(0).getInteger("id");
 
             //作废，套餐状态变更 失效
-            jc.volumeCancel(pp.ordeId);
+            jc.volumeCancel(pp.orderId);
             int totalAfter = pf.getVoucherTotal();
 
 //            JSONArray packageList=jc.appletpackageDeatil(id.toString()).getJSONArray("list");
@@ -462,7 +462,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             String maile = "2001";
             //前提新建好一个任务
             //查询小程序卡券数量
-            jc.appletLoginToken(pp.appletTocken);
+            jc.appletLoginToken(pp.appletToken);
             int total = pf.getVoucherTotal();
             //新建一个excel,里程数=智能提醒公里数
             PoiUtils.importCustomer(maile);
@@ -471,13 +471,13 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             jc.pcWorkOrder(pp.importFilepath);      //导入工单文件的路径=新建excel 路径
             sleep(20);
             //查询小程序卡券数量
-            jc.appletLoginToken(pp.appletTocken);
+            jc.appletLoginToken(pp.appletToken);
             int totalAfter = pf.getVoucherTotal();
             PoiUtils.importCustomer(maile);
             pcLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
             jc.pcWorkOrder(pp.importFilepath);      //导入工单文件的路径=新建excel 路径
             sleep(30);
-            jc.appletLoginToken(pp.appletTocken);
+            jc.appletLoginToken(pp.appletToken);
             int totalAfter2 = pf.getVoucherTotal();
             //新建下一个智能提醒
             pcLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
@@ -517,11 +517,11 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             int day = calendar.get(Calendar.DAY_OF_WEEK);
             if (day % 2 == 0 && day != Calendar.SUNDAY) {  //如果是星期数数是基数且不是周日
                 //查询小程序卡券数量
-                jc.appletLoginToken(pp.getAppletTockenOther);
+                jc.appletLoginToken(pp.getAppletTokenOther);
                 int totalAfter = pf.getVoucherTotal();
-                int historyData = qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum", "Applet");  //取数据库存好的数
+                int historyData = qaDbUtil.selectDataTempOne("pcAppointmentRecordNum", "Applet");  //取数据库存好的数
                 //接待该客户
-                pf.pcstartReception(pp.CarplateOther);      //虚拟小程序客户，车牌号和手机号只有我知道
+                pf.pcstartReception(pp.carPlateOther);      //虚拟小程序客户，车牌号和手机号只有我知道
                 Preconditions.checkArgument(totalAfter - historyData == 1, "触发智能提醒，小程序收到卡券");
                 qaDbUtil.updateDataNum("Applet", totalAfter);  //把新的卡券数存到数据库
             }
