@@ -105,6 +105,7 @@ public class platFormOnline extends TestCaseCommon implements TestCaseStd {
     public long getSubjectId(IContainer container) {
         ITable table = container.getTable(CmsConstants.SUBJECT_TABLE_NAME);
         Preconditions.checkNotNull(table, "没有主体表");
+        table.load();
         IRow[] rows = table.getRows();
         Preconditions.checkArgument(rows.length != 0, "主体为空");
         String subjectId = table.getRows()[0].getField("subject_id").getValue();
