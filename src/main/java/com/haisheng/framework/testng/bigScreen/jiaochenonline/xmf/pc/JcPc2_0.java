@@ -662,7 +662,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String[] parm = {
-                    pp.shopname,
+                    pp.shopName,
                     "个人",
                     "潜客" + CommonUtil.getRandom(2),
                     "157" + CommonUtil.getRandom(8),
@@ -695,7 +695,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String[] parm = {
-                    pp.shopname,
+                    pp.shopName,
                     "个人",
                     "潜客" + CommonUtil.getRandom(2),
                     "157" + CommonUtil.getRandom(8),
@@ -728,7 +728,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             String[] parm = {
-                    pp.shopname,
+                    pp.shopName,
                     "个人",
                     "潜客" + CommonUtil.getRandom(2),
                     "157" + CommonUtil.getRandom(8),
@@ -762,7 +762,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
 
             System.out.println(IpPort);
             String[] parm = {
-                    pp.shopname,
+                    pp.shopName,
                     "个人",
                     "潜客" + CommonUtil.getRandom(2),
                     "157" + CommonUtil.getRandom(8),

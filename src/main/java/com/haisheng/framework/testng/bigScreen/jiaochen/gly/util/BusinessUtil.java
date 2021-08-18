@@ -802,10 +802,10 @@ public class BusinessUtil {
     public List<Long> getActivityWaitingApproval() {
         List<Long> ids = new ArrayList<>();
         //活动列表
-        IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
+        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(scene).getInteger("pages");
         for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManageListScene.builder().page(page).size(10).build();
+            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
@@ -829,10 +829,10 @@ public class BusinessUtil {
     public List<Long> getRecruitActivityWaitingApproval() {
         List<Long> ids = new ArrayList<>();
         //活动列表
-        IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
+        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(scene).getInteger("pages");
         for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManageListScene.builder().page(page).size(10).build();
+            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
@@ -856,10 +856,10 @@ public class BusinessUtil {
     public List<Long> getFissionActivityWaitingApproval() {
         List<Long> ids = new ArrayList<>();
         //活动列表
-        IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
+        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(scene).getInteger("pages");
         for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManageListScene.builder().page(page).size(10).build();
+            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
@@ -885,10 +885,10 @@ public class BusinessUtil {
         List<Long> ids = new ArrayList<>();
 
         //活动列表
-        IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
+        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(scene).getInteger("pages");
         for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManageListScene.builder().page(page).size(10).build();
+            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
@@ -914,10 +914,10 @@ public class BusinessUtil {
     public List<Long> getFissionActivityWorking() {
         List<Long> ids = new ArrayList<>();
         //活动列表
-        IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
+        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(scene).getInteger("pages");
         for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManageListScene.builder().page(page).size(10).build();
+            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
@@ -946,12 +946,12 @@ public class BusinessUtil {
     public List<Long> getRecruitActivityWorking() {
         List<Long> ids = new ArrayList<>();
         //活动列表
-        IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
+        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(scene).getInteger("pages") > 10 ? 10 : visitor.invokeApi(scene).getInteger("pages");
         System.err.println("pages:" + pages);
         for (int page = 1; page <= pages; page++) {
             System.err.println("------------" + page);
-            IScene scene1 = ActivityManageListScene.builder().page(page).size(10).build();
+            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
@@ -980,10 +980,10 @@ public class BusinessUtil {
     public List<Long> getRecruitActivityWorkingApproval() {
         List<Long> ids = new ArrayList<>();
         //活动列表
-        IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
+        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(scene).getInteger("pages");
         for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManageListScene.builder().page(page).size(10).build();
+            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 String statusName = list.getJSONObject(i).getString("status_name");
@@ -1021,10 +1021,10 @@ public class BusinessUtil {
     public List<Long> getActivityReject() {
         List<Long> ids = new ArrayList<>();
         //活动列表
-        IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
+        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(scene).getInteger("pages");
         for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManageListScene.builder().page(page).size(10).build();
+            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
@@ -1050,10 +1050,10 @@ public class BusinessUtil {
     public List<Long> getRecruitActivityReject() {
         List<Long> ids = new ArrayList<>();
         //活动列表
-        IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
+        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(scene).getInteger("pages");
         for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManageListScene.builder().page(page).size(10).build();
+            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
@@ -1080,10 +1080,10 @@ public class BusinessUtil {
     public List<Long> getFissionActivityReject() {
         List<Long> ids = new ArrayList<>();
         //活动列表
-        IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
+        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(scene).getInteger("pages");
         for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManageListScene.builder().page(page).size(10).build();
+            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
@@ -1112,10 +1112,10 @@ public class BusinessUtil {
     public List<Long> getFissionActivityWait() {
         List<Long> ids = new ArrayList<>();
         //活动列表
-        IScene activityManageListScene = ActivityManageListScene.builder().page(1).size(10).build();
+        IScene activityManageListScene = ActivityManagePageScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(activityManageListScene).getInteger("pages");
         for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManageListScene.builder().page(page).size(10).build();
+            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
@@ -1141,10 +1141,10 @@ public class BusinessUtil {
     public List<Long> getActivityWait() {
         List<Long> ids = new ArrayList<>();
         //活动列表
-        IScene activityManageListScene = ActivityManageListScene.builder().page(1).size(10).build();
+        IScene activityManageListScene = ActivityManagePageScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(activityManageListScene).getInteger("pages");
         for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManageListScene.builder().page(page).size(10).build();
+            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
@@ -1169,10 +1169,10 @@ public class BusinessUtil {
     public List<Long> getActivityCancel() {
         List<Long> ids = new ArrayList<>();
         //活动列表
-        IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
+        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(scene).getInteger("pages");
         for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManageListScene.builder().page(page).size(10).build();
+            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
@@ -1201,10 +1201,10 @@ public class BusinessUtil {
     public List<Long> getRecruitActivityCancel() {
         List<Long> ids = new ArrayList<>();
         //活动列表
-        IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
+        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(scene).getInteger("pages");
         for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManageListScene.builder().page(page).size(10).build();
+            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
@@ -1234,10 +1234,10 @@ public class BusinessUtil {
     public List<Long> getFissionActivityCancel() {
         List<Long> ids = new ArrayList<>();
         //活动列表
-        IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
+        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(scene).getInteger("pages");
         for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManageListScene.builder().page(page).size(10).build();
+            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
@@ -1269,10 +1269,10 @@ public class BusinessUtil {
     public List<Long> getActivityRevoke() {
         List<Long> ids = new ArrayList<>();
         //活动列表
-        IScene activityManageListScene = ActivityManageListScene.builder().page(1).size(10).build();
+        IScene activityManageListScene = ActivityManagePageScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(activityManageListScene).getInteger("pages");
         for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManageListScene.builder().page(page).size(10).build();
+            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
@@ -1298,10 +1298,10 @@ public class BusinessUtil {
     public List<Long> getRecruitActivityRevoke() {
         List<Long> ids = new ArrayList<>();
         //活动列表
-        IScene activityManageListScene = ActivityManageListScene.builder().page(1).size(10).build();
+        IScene activityManageListScene = ActivityManagePageScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(activityManageListScene).getInteger("pages");
         for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManageListScene.builder().page(page).size(10).build();
+            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
@@ -1328,10 +1328,10 @@ public class BusinessUtil {
     public List<Long> getFissionActivityRevoke() {
         List<Long> ids = new ArrayList<>();
         //活动列表
-        IScene activityManageListScene = ActivityManageListScene.builder().page(1).size(10).build();
+        IScene activityManageListScene = ActivityManagePageScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(activityManageListScene).getInteger("pages");
         for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManageListScene.builder().page(page).size(10).build();
+            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
@@ -1359,10 +1359,10 @@ public class BusinessUtil {
     public List<Long> getActivityWaitingStar() {
         List<Long> ids = new ArrayList<>();
         //活动列表
-        IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
+        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(scene).getInteger("pages");
         for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManageListScene.builder().page(page).size(10).build();
+            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
@@ -1392,10 +1392,10 @@ public class BusinessUtil {
     public List<Long> getRecruitActivityWaitingStar() {
         List<Long> ids = new ArrayList<>();
         //活动列表
-        IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
+        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(scene).getInteger("pages") > 10 ? 10 : visitor.invokeApi(scene).getInteger("pages");
         for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManageListScene.builder().page(page).size(10).build();
+            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
@@ -1425,10 +1425,10 @@ public class BusinessUtil {
     public List<Long> getFissionActivityWaitingStar() {
         List<Long> ids = new ArrayList<>();
         //活动列表
-        IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
+        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(scene).getInteger("pages");
         for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManageListScene.builder().page(page).size(10).build();
+            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
@@ -1459,10 +1459,10 @@ public class BusinessUtil {
     public List<Long> getRecruitActivityFinish() {
         List<Long> ids = new ArrayList<>();
         //活动列表
-        IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
+        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(scene).getInteger("pages");
         for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManageListScene.builder().page(page).size(10).build();
+            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
@@ -1483,10 +1483,10 @@ public class BusinessUtil {
     public List<Long> getFissionActivityFinish() {
         List<Long> ids = new ArrayList<>();
         //活动列表
-        IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
+        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(scene).getInteger("pages");
         for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManageListScene.builder().page(page).size(10).build();
+            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
@@ -1505,11 +1505,11 @@ public class BusinessUtil {
      * 获取活动的的状态
      */
     public int getActivityStatus(Long id) {
-        IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
+        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(scene).getInteger("pages");
         int status = 0;
         for (int page = 1; page <= pages; page++) {
-            IScene scene2 = ActivityManageListScene.builder().page(page).size(10).build();
+            IScene scene2 = ActivityManagePageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene2).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 Long activityId = list.getJSONObject(i).getLong("id");
@@ -1525,11 +1525,11 @@ public class BusinessUtil {
      * 获取活动审批的的状态
      */
     public int getActivityApprovalStatus(Long id) {
-        IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
+        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(scene).getInteger("pages");
         int status = 0;
         for (int page = 1; page <= pages; page++) {
-            IScene scene2 = ActivityManageListScene.builder().page(page).size(10).build();
+            IScene scene2 = ActivityManagePageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene2).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 Long activityId = list.getJSONObject(i).getLong("id");
@@ -1861,7 +1861,7 @@ public class BusinessUtil {
      * 活动审批列表返回值--data
      */
     public JSONObject getActivityManagePage(int status) {
-        IScene scene = ActivityManageListScene.builder().page(1).size(10).approvalStatus(status).build();
+        IScene scene = ActivityManagePageScene.builder().page(1).size(10).approvalStatus(status).build();
         JSONObject response = visitor.invokeApi(scene);
         return response;
     }
@@ -1871,11 +1871,11 @@ public class BusinessUtil {
      * 获取招募活动的返回值
      */
     public JSONObject getActivityRespond(Long id) {
-        IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
+        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(scene).getInteger("pages");
         JSONObject respondOne = null;
         for (int page = 1; page <= pages; page++) {
-            IScene scene2 = ActivityManageListScene.builder().page(page).size(10).build();
+            IScene scene2 = ActivityManagePageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene2).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 Long activityId = list.getJSONObject(i).getLong("id");
@@ -2385,11 +2385,11 @@ public class BusinessUtil {
      * 2021-3-17
      */
     public String getActivityTitle(Long id) {
-        IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
+        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(scene).getInteger("pages");
         String title = "";
         for (int page = 1; page <= pages; page++) {
-            IScene scene2 = ActivityManageListScene.builder().page(page).size(10).build();
+            IScene scene2 = ActivityManagePageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene2).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 Long activityId = list.getJSONObject(i).getLong("id");
@@ -2563,10 +2563,10 @@ public class BusinessUtil {
     public List<Long> getContentMarketingWaitingApproval() {
         List<Long> ids = new ArrayList<>();
         //活动列表
-        IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
+        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(scene).getInteger("pages");
         for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManageListScene.builder().page(page).size(10).build();
+            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
@@ -2591,10 +2591,10 @@ public class BusinessUtil {
     public List<Long> getContentMarketingRevoke() {
         List<Long> ids = new ArrayList<>();
         //活动列表
-        IScene activityManageListScene = ActivityManageListScene.builder().page(1).size(10).build();
+        IScene activityManageListScene = ActivityManagePageScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(activityManageListScene).getInteger("pages");
         for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManageListScene.builder().page(page).size(10).build();
+            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
@@ -2620,10 +2620,10 @@ public class BusinessUtil {
     public List<Long> getContentMarketingReject() {
         List<Long> ids = new ArrayList<>();
         //活动列表
-        IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
+        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(scene).getInteger("pages");
         for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManageListScene.builder().page(page).size(10).build();
+            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
@@ -2650,10 +2650,10 @@ public class BusinessUtil {
     public List<Long> getContentMarketingCancel() {
         List<Long> ids = new ArrayList<>();
         //活动列表
-        IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
+        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(scene).getInteger("pages");
         for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManageListScene.builder().page(page).size(10).build();
+            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
@@ -2693,10 +2693,10 @@ public class BusinessUtil {
     public List<Long> getContentMarketingWorking() {
         List<Long> ids = new ArrayList<>();
         //活动列表
-        IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
+        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(scene).getInteger("pages");
         for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManageListScene.builder().page(page).size(10).build();
+            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
@@ -2769,10 +2769,10 @@ public class BusinessUtil {
     public List<Long> getContentMarketingWaitingStar() {
         List<Long> ids = new ArrayList<>();
         //活动列表
-        IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
+        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(scene).getInteger("pages") > 10 ? 10 : visitor.invokeApi(scene).getInteger("pages");
         for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManageListScene.builder().page(page).size(10).build();
+            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
@@ -2802,10 +2802,10 @@ public class BusinessUtil {
     public List<Long> geContentMarketingFinish() {
         List<Long> ids = new ArrayList<>();
         //活动列表
-        IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
+        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(scene).getInteger("pages");
         for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManageListScene.builder().page(page).size(10).build();
+            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
@@ -2826,10 +2826,10 @@ public class BusinessUtil {
     public List<Long> getContentMarketingOffLine() {
         List<Long> ids = new ArrayList<>();
         //活动列表
-        IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
+        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(scene).getInteger("pages") > 10 ? 10 : visitor.invokeApi(scene).getInteger("pages");
         for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManageListScene.builder().page(page).size(10).build();
+            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
@@ -2861,10 +2861,10 @@ public class BusinessUtil {
     public List<Long> getFissionActivityOffLine() {
         List<Long> ids = new ArrayList<>();
         //活动列表
-        IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
+        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(scene).getInteger("pages") > 10 ? 10 : visitor.invokeApi(scene).getInteger("pages");
         for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManageListScene.builder().page(page).size(10).build();
+            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");
@@ -2897,10 +2897,10 @@ public class BusinessUtil {
     public List<Long> getRecruitActivityOffLine() {
         List<Long> ids = new ArrayList<>();
         //活动列表
-        IScene scene = ActivityManageListScene.builder().page(1).size(10).build();
+        IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
         int pages = visitor.invokeApi(scene).getInteger("pages") > 10 ? 10 : visitor.invokeApi(scene).getInteger("pages");
         for (int page = 1; page <= pages; page++) {
-            IScene scene1 = ActivityManageListScene.builder().page(page).size(10).build();
+            IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int status = list.getJSONObject(i).getInteger("status");

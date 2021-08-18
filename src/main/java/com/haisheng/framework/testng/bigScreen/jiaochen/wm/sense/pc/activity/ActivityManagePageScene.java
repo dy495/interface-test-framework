@@ -8,7 +8,7 @@ import lombok.Builder;
  * 活动管理-活动管理列表
  */
 @Builder
-public class ActivityManageListScene extends BaseScene {
+public class ActivityManagePageScene extends BaseScene {
     @Builder.Default
     private Integer page = 1;
     @Builder.Default

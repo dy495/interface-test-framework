@@ -92,6 +92,12 @@ public class SceneUtil extends BasicUtil {
         this.visitor = visitor;
     }
 
+    public void loginPc(String account, String password) {
+        IScene scene = LoginPc.builder().phone(account).verificationCode(password).type(1).build();
+        login(scene);
+    }
+
+
     public void loginApp(EnumAccount enumAccount) {
         IScene scene = LoginApp.builder().phone(enumAccount.getPhone()).verificationCode(enumAccount.getPassword()).build();
         login(scene);
@@ -1691,4 +1697,6 @@ public class SceneUtil extends BasicUtil {
         return list.stream().map(e -> JSONObject.toJavaObject(scene.remove(e).invoke(visitor, false), Response.class))
                 .map(Response::getMessage).collect(Collectors.toList()).toArray(new String[list.size()]);
     }
+
+    public String getSaleId(){return visitor.isDaily() ? "uid_f1a745c7":"";}
 }

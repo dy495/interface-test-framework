@@ -8,9 +8,11 @@ import lombok.Builder;
  * 活动管理-报名列表
  */
 @Builder
-public class ManageRegisterPageScene extends BaseScene  {
-    private final Integer page;
-    private final Integer size;
+public class ManageRegisterPageScene extends BaseScene {
+    @Builder.Default
+    private Integer page = 1;
+    @Builder.Default
+    private Integer size = 10;
     private final Long activityId;
     private final Integer status;
 
@@ -18,16 +20,25 @@ public class ManageRegisterPageScene extends BaseScene  {
     @Override
     public JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
-        object.put("page",page );
-        object.put("size",size );
-        object.put("activity_id",activityId );
-        object.put("status",status );
+        object.put("page", page);
+        object.put("size", size);
+        object.put("activity_id", activityId);
+        object.put("status", status);
         return object;
     }
+
     @Override
     public String getPath() {
         return "/car-platform/pc/activity/manage/register/page";
     }
 
+    @Override
+    public void setPage(Integer page) {
+        this.page = page;
+    }
 
+    @Override
+    public void setSize(Integer size) {
+        this.size = size;
+    }
 }

@@ -34,13 +34,11 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
     BusinessUtilOnline businessUtil = new BusinessUtilOnline(visitor);
     SceneUtil supporterUtil = new SceneUtil(visitor);
     PublicParameter pp = new PublicParameter();
-    ScenarioUtil jc = new ScenarioUtil();
 
     @BeforeClass
     @Override
     public void initial() {
         logger.debug("before class initial");
-        jc.changeIpPort(EnumTestProduct.JC_ONLINE_JD.getIp());
         CommonConfig commonConfig = new CommonConfig();
         //替换checklist的相关信息
         commonConfig.checklistAppId = EnumChecklistAppId.DB_APP_ID_SCREEN_SERVICE.getId();
@@ -54,7 +52,6 @@ public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
         //放入shopId
         commonConfig.setShopId(product.getShopId()).setReferer(product.getReferer()).setRoleId(ADMINISTRATOR.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
-        logger.debug("jc: " + jc);
     }
 
     @AfterClass

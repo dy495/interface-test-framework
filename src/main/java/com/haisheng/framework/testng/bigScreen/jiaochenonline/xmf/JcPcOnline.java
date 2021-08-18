@@ -3,7 +3,6 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.commonDs.JsonPathUtil;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
@@ -467,7 +466,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             }
             Double price = 300.00;
             //修改预约价格
-            jc.pcCarModelPriceEdit(pp.modolIdAppointment, price, "ENABLE", "MAINTAIN");
+            jc.pcCarModelPriceEdit(pp.modelIdAppointment, price, "ENABLE", "MAINTAIN");
 
             //工位配置里的折扣
             JSONObject timeRangeDetail = jc.timeRangeDetail("MAINTAIN", dataType);
@@ -567,14 +566,14 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             if (!status.equals("ENABLE")) {
                 throw new Exception(pp.carModel + "车型,预约配置被关闭");
             }
-            jc.pcCarModelPriceEdit(pp.modolIdAppointment, null, "DISABLE", "MAINTAIN");
+            jc.pcCarModelPriceEdit(pp.modelIdAppointment, null, "DISABLE", "MAINTAIN");
             jc.appletLoginToken(pp.appletTocken);
             JSONObject isAble = jc.appletmaintainTimeList(Long.parseLong(pp.shopIdZ), pp.car_idA, dt.getHistoryDate(1), AppointmentTypeEnum.MAINTAIN.name(), false);
             int code = isAble.getInteger("code");
             String message = isAble.getString("message");
 
             jc.pcLogin(pp.gwphone, pp.gwpassword);
-            jc.pcCarModelPriceEdit(pp.modolIdAppointment, null, "ENABLE", "MAINTAIN");
+            jc.pcCarModelPriceEdit(pp.modelIdAppointment, null, "ENABLE", "MAINTAIN");
 
 
             Preconditions.checkArgument(code == 1001, "预约配置关闭小程序预约保养页返回" + message);
@@ -590,10 +589,10 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
     public void pcShopAppointmentButton() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject data = jc.shopListFilterManage("", "1", "10", "name", pp.shopname).getJSONArray("list").getJSONObject(0);
+            JSONObject data = jc.shopListFilterManage("", "1", "10", "name", pp.shopName).getJSONArray("list").getJSONObject(0);
             String status = data.getString("appointment_status");
             if (!status.equals("ENABLE")) {
-                throw new Exception(pp.shopname + "门店,预约开关被关闭了");
+                throw new Exception(pp.shopName + "门店,预约开关被关闭了");
             }
             //配置前预约门店配置列表
             jc.appletLoginToken(pp.appletTocken);
@@ -625,7 +624,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
         try {
             String statusAll = "DISABLE";
             String open = "ENABLE";
-            JSONObject data = jc.shopListFilterManage("", "1", "10", "name", pp.shopname).getJSONArray("list").getJSONObject(0);
+            JSONObject data = jc.shopListFilterManage("", "1", "10", "name", pp.shopName).getJSONArray("list").getJSONObject(0);
             String status1 = data.getString("status");
             if (!status1.equals("ENABLE")) {
                 statusAll = "ENABLE";
@@ -634,14 +633,14 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             //关闭门店预约配置
             jc.pcLogin(pp.gwphone, pp.gwpassword);
             jc.shopStatusChange(pp.shopIdZ, "SHOP", statusAll);
-            JSONObject dataAfter = jc.shopListFilterManage("", "1", "10", "name", pp.shopname).getJSONArray("list").getJSONObject(0);
+            JSONObject dataAfter = jc.shopListFilterManage("", "1", "10", "name", pp.shopName).getJSONArray("list").getJSONObject(0);
             String status = dataAfter.getString("status");
             String appointment_status = dataAfter.getString("appointment_status");
             String washing_status = dataAfter.getString("washing_status");
             Preconditions.checkArgument(appointment_status.equals(statusAll) && washing_status.equals(statusAll) && status.equals(statusAll), "门店开关未同步");
 
             jc.shopStatusChange(pp.shopIdZ, "SHOP", open);
-            JSONObject dataAfter2 = jc.shopListFilterManage("", "1", "10", "name", pp.shopname).getJSONArray("list").getJSONObject(0);
+            JSONObject dataAfter2 = jc.shopListFilterManage("", "1", "10", "name", pp.shopName).getJSONArray("list").getJSONObject(0);
             String status2 = dataAfter2.getString("status");
             String appointment_status2 = dataAfter2.getString("appointment_status");
             String washing_status2 = dataAfter2.getString("washing_status");

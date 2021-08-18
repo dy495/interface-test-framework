@@ -26,7 +26,6 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
     DateTimeUtil dt = new DateTimeUtil();
     PublicParmOnline pp = new PublicParmOnline();
     JcFunctionOnline pf = new JcFunctionOnline();
-    JsonPathUtil jp = new JsonPathUtil();
     CommonConfig commonConfig = new CommonConfig();
 
 
@@ -124,7 +123,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
             appLogin(name, code, roleId);
             String type = "all";   //home \all
             //获取今日任务数
-            int tasknum[] = pf.appTask();
+            int[] tasknum = pf.appTask();
 
             Integer appointmentcountZ = 0;  //预约
             Integer appointmentcountM = 0;
@@ -439,7 +438,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
     public void write() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String voucher_code[] = pf.voucherName();
+            String[] voucher_code = pf.voucherName();
             //pc
             pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
             int messagePctotal = jc.pushMsgListFilterManage("-1", "1", "10", null, null).getInteger("total");
@@ -483,16 +482,16 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
         try {
             appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
             //开始接待
-            Long id[] = pf.startReception(pp.carplate);
+            Long[] id = pf.startReception(pp.carplate);
             //变更接待前
             int total = jc.appreceptionPage(null, 10).getInteger("total");
-            int tasknum[] = pf.appTask();
+            int[] tasknum = pf.appTask();
 
             jc.receptorChange(id[0], id[1], pp.userid2);    //变更接待
 
             //变更接待后
             int total2 = jc.appreceptionPage(null, 10).getInteger("total");
-            int tasknumA[] = pf.appTask();
+            int[] tasknumA = pf.appTask();
             appLogin(pp.dzphone, pp.dzcode, pp.dzroleId);
             jc.receptorChange(id[0], id[1], pp.userid);    //变更接待，变回来
             appLogin(pp.jdgw, pp.gwpassword, pp.roleidJdgw);
@@ -520,19 +519,19 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
         try {
             appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
             //开始接待
-            Long id[] = new Long[2];
+            Long[] id = new Long[2];
             JSONObject dd = jc.appreceptionPage(null, 10).getJSONArray("list").getJSONObject(0);
 
             id[0] = dd.getLong("id");
             id[1] = dd.getLong("shop_id");
 
             int total = jc.appreceptionPage(null, 10).getInteger("total");
-            int tasknum[] = pf.appTask();
+            int[] tasknum = pf.appTask();
 
             //取消接待
             jc.cancleReception(id[0], id[1]);
             int totalA = jc.appreceptionPage(null, 10).getInteger("total");
-            int tasknumA[] = pf.appTask();
+            int[] tasknumA = pf.appTask();
 
             Preconditions.checkArgument(total - totalA == 1, "取消接待后接待列表未-1,接待前：" + total + "，接待后：" + totalA);
             Preconditions.checkArgument(tasknum[2] - tasknumA[2] == 1, "取消接待后今日任务-1,接待前：" + tasknum[2] + "，接待后：" + tasknumA[2]);
@@ -552,7 +551,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject data = jc.receptorList(Long.parseLong(pp.shopIdZ));
-            jp.spiltString(data.toJSONString(), "$.list[*].uid&&$.list[*].name&&$.list[*].phone");
+            JsonPathUtil.spiltString(data.toJSONString(), "$.list[*].uid&&$.list[*].name&&$.list[*].phone");
 
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -577,7 +576,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
             //shopList
             JSONObject shopdate = new JSONObject();
             shopdate.put("shop_id", pp.shopIdZ);
-            shopdate.put("shop_name", pp.shopname);
+            shopdate.put("shop_name", pp.shopName);
             JSONArray shop_list = new JSONArray();
             shop_list.add(shopdate);
             //shopList

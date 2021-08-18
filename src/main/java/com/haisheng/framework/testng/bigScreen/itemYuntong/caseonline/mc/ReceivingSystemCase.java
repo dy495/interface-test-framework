@@ -38,10 +38,14 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
     public VisitorProxy visitor = new VisitorProxy(product);   // 产品类放到代理类中（通过代理类发请求）
     public SceneUtil util = new SceneUtil(visitor);
     CommonConfig commonConfig = new CommonConfig();    // 配置类初始化
+//    public Long newId; // 本次创建的接待id
+//    public Long newShopId; // 本次接待门店的shopId
+//    public Long newCustomerId;
     public YunTongInfo info = new YunTongInfo();
     public Long newId; // 本次创建的接待id
     public Long newShopId; // 本次接待门店的shopId
     public Long newCustomerId;
+
 
     @BeforeClass
     @Override
@@ -74,6 +78,7 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
+        logger.logCaseStart(caseResult.getCaseName());
     }
 
     // 随机n位数字

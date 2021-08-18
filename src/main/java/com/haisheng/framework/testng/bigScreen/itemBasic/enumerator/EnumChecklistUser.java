@@ -13,8 +13,9 @@ public enum EnumChecklistUser {
 
     QQ("青青"),
 
-    GLY("郭丽雅");
-    ;
+    XMF("夏明凤"),
+
+    GLY("郭丽雅");;
 
     EnumChecklistUser(String name) {
         this.name = name;

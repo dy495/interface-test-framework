@@ -729,7 +729,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
                 dataType = "WEEKEND";
             }
             Double price = 300.0;
-            IScene manageModelEdit = ManageModelEditScene.builder().price(price).id(Long.parseLong(pp.modolIdAppointment)).type(type).status("ENABLE").build();
+            IScene manageModelEdit = ManageModelEditScene.builder().price(price).id(Long.parseLong(pp.modelIdAppointment)).type(type).status("ENABLE").build();
             //修改预约价格
             jc.invokeApi(manageModelEdit);
 
@@ -773,7 +773,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             String price[] = {"", "qwe", "我", "!@#", "100000000.011"};   //保养价格为空，保养价格异常格式
             //修改预约价格
             for (int i = 0; i < price.length; i++) {
-                int code = jc.pcCarModelPriceEdit(pp.modolIdAppointment, price[i], null, false, type).getInteger("code");
+                int code = jc.pcCarModelPriceEdit(pp.modelIdAppointment, price[i], null, false, type).getInteger("code");
                 System.out.println("code:" + code);
             }
 
@@ -797,7 +797,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
                 price = "200.0";
             }
-            jc.pcCarModelPriceEdit(pp.modolIdAppointment, price, null, true, type);
+            jc.pcCarModelPriceEdit(pp.modelIdAppointment, price, null, true, type);
             IScene modelpage = ManageModelPageScene.builder().page(1).type(type).size(10).carModel(pp.carModel).build();
 
             String priceAfter = jc.invokeApi(modelpage).getJSONArray("list").getJSONObject(0).getString("price");
@@ -821,7 +821,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
                 throw new Exception("车型,预约配置被关闭");
             }
             //  public JSONObject pcCarModelPriceEdit(String id, String price, String status, Boolean checkcode,String  type) {
-            jc.pcCarModelPriceEdit(pp.modolIdAppointment, null, "DISABLE", true, type);
+            jc.pcCarModelPriceEdit(pp.modelIdAppointment, null, "DISABLE", true, type);
 
             jc.appletLoginToken(pp.appletTocken);
             JSONObject isAble = jc.appletmaintainTimeList(Long.parseLong(pp.shopIdZ), pp.car_idA, dt.getHistoryDate(1), type, false);
@@ -829,7 +829,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             String message = isAble.getString("message");
 
             jc.pcLogin(pp.gwphone, pp.gwpassword);
-            jc.pcCarModelPriceEdit(pp.modolIdAppointment, null, "ENABLE", true, type);
+            jc.pcCarModelPriceEdit(pp.modelIdAppointment, null, "ENABLE", true, type);
 
 
             Preconditions.checkArgument(code != 1000, "预约配置关闭小程序预约保养页返回" + message);
@@ -854,11 +854,11 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             IScene modelPage2 = ManageModelPageScene.builder().page(1).size(10).type(type).build();
             int total = jc.invokeApi(modelPage2).getInteger("total");
 
-            jc.pcCarModelPriceEdit(pp.modolIdAppointment, null, "DISABLE", true, type);
+            jc.pcCarModelPriceEdit(pp.modelIdAppointment, null, "DISABLE", true, type);
             IScene modelPage3 = ManageModelPageScene.builder().page(1).size(10).type(type).build();
             int totalAfter = jc.invokeApi(modelPage3).getInteger("total");
 
-            jc.pcCarModelPriceEdit(pp.modolIdAppointment, null, "ENABLE", true, type);
+            jc.pcCarModelPriceEdit(pp.modelIdAppointment, null, "ENABLE", true, type);
             IScene modelPage4 = ManageModelPageScene.builder().page(1).size(10).type(type).build();
             int totalAfter2 = jc.invokeApi(modelPage4).getInteger("total");
 
@@ -1062,7 +1062,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
     public void pcShopAppointmentButton(String type) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject data = jc.shopListFilterManage("", "1", "10", "name", pp.shopname).getJSONArray("list").getJSONObject(0);
+            JSONObject data = jc.shopListFilterManage("", "1", "10", "name", pp.shopName).getJSONArray("list").getJSONObject(0);
             String status = data.getString("appointment_status");
             if (!status.equals("ENABLE")) {
                 throw new Exception("中关村店,预约开关被关闭了");
@@ -1102,7 +1102,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
 //            System.out.println("ip=="+IpPort);
             String statusAll = "DISABLE";
             String open = "ENABLE";
-            JSONObject data = jc.shopListFilterManage("", "1", "10", "name", pp.shopname).getJSONArray("list").getJSONObject(0);
+            JSONObject data = jc.shopListFilterManage("", "1", "10", "name", pp.shopName).getJSONArray("list").getJSONObject(0);
             String status1 = data.getString("status");
             if (!status1.equals("ENABLE")) {
                 statusAll = "ENABLE";

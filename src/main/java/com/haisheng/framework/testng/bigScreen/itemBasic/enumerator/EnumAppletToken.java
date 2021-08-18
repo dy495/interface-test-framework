@@ -23,27 +23,27 @@ public enum EnumAppletToken {
 
     BSJ_WM_SMALL_ONLINE("29c11pEn61vmjuKxyX5WZw==", false, "15321527989"),
 
-    JC_WM_DAILY("Xnf/2VMTz/p2GxNQtNrSog==", true, "15321527989"),
+    JC_WM_DAILY("NQCwHOIDej7k1xfyBgBniw==", true, "15321527989"),
 
-    JC_WM_ONLINE("KX8IutVx4M1URn2+Fb0Mqg==", false, "15321527989"),
+    JC_WM_ONLINE("GXR/H6LR7XZbjABBbfm2qg==", false, "15321527989"),
 
-    JC_LXQ_DAILY("58DV7Wo/cfSMUFfKjM7ndA==", false, "13436941018"),
+    JC_LXQ_DAILY("i14SLR9N9SFmuiU7aGmRPA==", false, "13436941018"),
 
-    JC_LXQ_ONLINE("IpL0YOvMvVFCcO8vvI9fvA==", false, "13436941018"),
+    JC_LXQ_ONLINE("h2kYseiQaoRRbP2kQARUTA==", false, "13436941018"),
 
-    JC_MC_DAILY("58DV7Wo/cfSMUFfKjM7ndA==", true, "15022399925"),
+    JC_MC_DAILY("stHnP90Xdj+Qq/vkvmkv7Q==", true, "15022399925"),
 
-    JC_MC_ONLINE("ycXvLgMpXD/hxkkOci8ceQ==", false, "15022399925"),
+    JC_MC_ONLINE("xeFdesH4NkU3v3oz0eGEjA==", false, "15022399925"),
 
-    JC_GLY_DAILY("58DV7Wo/cfSMUFfKjM7ndA==", true, "13373166806"),
+    JC_GLY_DAILY("HnAZm5VmguIB90xcDvpAEw==", true, "13373166806"),
 
-    JC_GLY_ONLINE("ycXvLgMpXD/hxkkOci8ceQ==", false, "13373166806"),
+    JC_GLY_ONLINE("gDSGIYKXFy9kweptrW5MnA==", false, "13373166806"),
 
-    INS_WM_DAILY("mdBX0R2xzhXwswuUFUDwAw==", true, "13373166806"),
+    INS_WM_DAILY("1ROzxOSf9xI5JjasqHTIfA==", true, "13373166806"),
 
     INS_WM_ONLINE("TnJd0oOQ8wznvndM+0hV6A==", false, "15321527989"),
 
-    INS_ZT_DAILY("oivuHuPuOxBVkx1QiOXq/A==", true, "13604609869"),
+    INS_ZT_DAILY("cnfzuWUpdlKQkVv1X4bfsw==", true, "13604609869"),
 
     INS_ZT_ONLINE("Com3dkGhBuuZgzAir8SRDw==", false, "13604609869"),
     ;

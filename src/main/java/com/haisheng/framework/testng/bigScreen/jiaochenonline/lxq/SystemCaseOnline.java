@@ -33,7 +33,7 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
     CommonConfig commonConfig = new CommonConfig();
     ScenarioUtilOnline jc = ScenarioUtilOnline.getInstance();
     jiaoChenInfoOnline info = new jiaoChenInfoOnline();
-    String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/car-platform/wm/multimedia/picture/奔驰.jpg";
+    String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
     SceneUtil util = new SceneUtil(visitor);
 
     /**
@@ -922,30 +922,22 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
     public void categoryAddFirst(String name) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-
             JSONObject obj = info.newFirstCategory(name);
             int code = obj.getInteger("code");
             Long id = obj.getLong("id");
             Preconditions.checkArgument(code == 1000, "新建状态码期待1000，实际" + code);
-
             //禁用品类
             jc.categoryChgStatus(id, false);
-
             //编辑品类-更换图片
             String logo2 = jc.pcFileUploadNew(new ImageUtil().getImageBinary(filePath)).getString("pic_path");
             int code2 = jc.categoryEdit(false, id, name, "FIRST_CATEGORY", "", logo2).getInteger("code");
             Preconditions.checkArgument(code2 == 1000, "编辑重新上传图片状态码期待1000，实际" + code2);
-
             //编辑品类-不更换图片
-
             int code3 = jc.categoryEdit(false, id, name, "FIRST_CATEGORY", "", null).getInteger("code");
             Preconditions.checkArgument(code3 == 1000, "编辑不传图片状态码期待1000，实际" + code3);
-
             //删除启用品类
             jc.categoryDel(id, true);
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("PC【商品品类】新建/编辑一级品类,品类名称1/5/10个字");
@@ -982,7 +974,6 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
     public void categoryAddSecond(String name) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-
             //存在的一级品类
             Long idone = info.newFirstCategory(name).getLong("id");
             //新建二级品类
@@ -991,11 +982,7 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
             Long id = jc.categoryPage(1, 10, null, null, null, null).getJSONArray("list").getJSONObject(0).getLong("id");
             jc.categoryDel(id, false);
             jc.categoryDel(idone, true);
-
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("PC【商品品类】新建二级品类,所属一级品类存在");
@@ -1006,15 +993,10 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
     public void categoryAddSecondErr() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-
             String logo = jc.pcFileUploadNew(new ImageUtil().getImageBinary(filePath)).getString("pic_path");
             int code = jc.categoryCreate(false, "name", "SECOND_CATEGORY", "99999", logo, null).getInteger("code");
             Preconditions.checkArgument(code == 1001, "状态码期待1001，实际" + code);
-
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("PC【商品品类】新建二级品类,所属一级品类不存在");
@@ -1059,7 +1041,7 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //存在的一级品类
-            String nameone = "1-" + Integer.toString((int) ((Math.random() * 9 + 1) * 100));
+            String nameone = "1-" + (int) ((Math.random() * 9 + 1) * 100);
             Long idone = info.newFirstCategory(nameone).getLong("id");
             //新建二级品类
             int code = jc.categoryCreate(false, nameone, "SECOND_CATEGORY", Long.toString(idone), jc.pcFileUploadNew(new ImageUtil().getImageBinary(filePath)).getString("pic_path"), null).getInteger("code");
@@ -1067,10 +1049,7 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
             Long id = jc.categoryPage(1, 10, null, null, null, null).getJSONArray("list").getJSONObject(0).getLong("id");
             jc.categoryDel(id, false);
             jc.categoryDel(idone, true);
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("PC【商品品类】新建二级品类,品类名称与已存在的一级品类重复");
@@ -1082,25 +1061,17 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
     public void categoryAddErr() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-
             String logo = jc.pcFileUploadNew(new ImageUtil().getImageBinary(filePath)).getString("pic_path");
             //不填写品类名称
             int code = jc.categoryCreate(false, null, "FIRST_CATEGORY", "", logo, null).getInteger("code");
             Preconditions.checkArgument(code == 1001, "不填写品类名称,状态码期待1001，实际" + code);
-
-
             //不填写所属分类
-
             int code2 = jc.categoryCreate(false, "不填写所属品类", "SECOND_CATEGORY", "", logo, null).getInteger("code");
             Preconditions.checkArgument(code2 == 1001, "不填写所属品类,状态码期待1001，实际" + code);
-
             //不选择logo
             int code3 = jc.categoryCreate(false, "不选择logo", "FIRST_CATEGORY", "", null, null).getInteger("code");
             Preconditions.checkArgument(code3 == 1001, "不选择logo,状态码期待1001，实际" + code);
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("PC【商品品类】新建品类,不填写必填项");
