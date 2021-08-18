@@ -81,42 +81,35 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
         return numStr.toString();
     }
 
-
-    @Test()
-    public void test01CustomerConfig() {
-        try {
-            String phone = "15" + numRandom(9);
-            AppPreSalesReceptionCreateScene.builder().customerName("mc自动化创建使用").customerPhone(phone).sexId("1").intentionCarModelId(util.mcCarId()).estimateBuyCarTime("2035-07-12").build().invoke(visitor);//创建销售接待
-            JSONObject pageInfo = AppPreSalesReceptionPageScene.builder().build().invoke(visitor, true);
-            List<JSONObject> newCustomer = pageInfo.getJSONArray("list").stream().map(ele -> (JSONObject) ele).filter(obj -> phone.equals(obj.getString("customer_phone"))).collect(Collectors.toList());
-            Long id = newCustomer.get(0).getLong("id");
-            Long shopId = newCustomer.get(0).getLong("shop_id");
-            Long customerId = newCustomer.get(0).getLong("customer_id");
-            this.newId = id;
-            this.newShopId = shopId;
-            this.newCustomerId = customerId;
-        } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("手动创建接待");
-        }
+    public void customerConfig() {
+        String phone = "15" + numRandom(9);
+        AppPreSalesReceptionCreateScene.builder().customerName("mc自动化创建使用").customerPhone(phone).sexId("1").intentionCarModelId(util.mcCarId()).estimateBuyCarTime("2035-07-12").build().invoke(visitor);//创建销售接待
+        JSONObject pageInfo = AppPreSalesReceptionPageScene.builder().build().invoke(visitor, true);
+        List<JSONObject> newCustomer = pageInfo.getJSONArray("list").stream().map(ele -> (JSONObject) ele).filter(obj -> phone.equals(obj.getString("customer_phone"))).collect(Collectors.toList());
+        Long id = newCustomer.get(0).getLong("id");
+        Long shopId = newCustomer.get(0).getLong("shop_id");
+        Long customerId = newCustomer.get(0).getLong("customer_id");
+        this.newId = id;
+        this.newShopId = shopId;
+        this.newCustomerId = customerId;
 
     }
 
     @Test(dataProvider = "remarkContent")
     public void test02PcRemark(String description, String expect, String remark) {
         try {
-            if (newId != null && newCustomerId != null) {
-                AppCustomerDetailV4Scene detail = AppCustomerDetailV4Scene.builder().shopId(newShopId.toString()).customerId(newCustomerId.toString()).id(newId.toString()).build();
-                //            int beforeSum = detail.invoke(visitor, true).getJSONArray("remarks").size();
-                String code = CustomerRemarkScene.builder().id(newId).shopId(newShopId).remark(remark).build().invoke(visitor, false).getString("code");
-                JSONArray remarks = detail.invoke(visitor, true).getJSONArray("remarks");
-                //            int afterSum = remarks.size();
-                String addedRemark = remarks.getJSONObject(0).getString("remark");
-                Preconditions.checkArgument(Objects.equals(code, expect), description + ",预期:" + expect + ",实际结果:" + code);
-                if (Objects.equals("1000", code)) {
-                    Preconditions.checkArgument(Objects.equals(addedRemark, remark), "备注内容不一致，pc输入的备注内容" + remark + ",app接待详情中备注记录:" + addedRemark);
-                }
+            if (newId == null || newCustomerId == null) {
+                customerConfig();
+            }
+            AppCustomerDetailV4Scene detail = AppCustomerDetailV4Scene.builder().shopId(newShopId.toString()).customerId(newCustomerId.toString()).id(newId.toString()).build();
+            //            int beforeSum = detail.invoke(visitor, true).getJSONArray("remarks").size();
+            String code = CustomerRemarkScene.builder().id(newId).shopId(newShopId).remark(remark).build().invoke(visitor, false).getString("code");
+            JSONArray remarks = detail.invoke(visitor, true).getJSONArray("remarks");
+            //            int afterSum = remarks.size();
+            String addedRemark = remarks.getJSONObject(0).getString("remark");
+            Preconditions.checkArgument(Objects.equals(code, expect), description + ",预期:" + expect + ",实际结果:" + code);
+            if (Objects.equals("1000", code)) {
+                Preconditions.checkArgument(Objects.equals(addedRemark, remark), "备注内容不一致，pc输入的备注内容" + remark + ",app接待详情中备注记录:" + addedRemark);
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -167,13 +160,14 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
     @Test(dataProvider = "remarkContent")
     public void test04AppRemark(String description, String expect, String remark) {
         try {
-            if (newId != null && newCustomerId != null) {
-                String code = AppCustomerRemarkV4Scene.builder().id(newId.toString()).shopId(newShopId.toString()).customerId(newCustomerId.toString()).remark(remark).build().invoke(visitor, false).getString("code");
-                String addedRemark = AppCustomerDetailV4Scene.builder().shopId(newShopId.toString()).customerId(newCustomerId.toString()).id(newId.toString()).build().invoke(visitor, true).getJSONArray("remarks").getJSONObject(0).getString("remark");
-                Preconditions.checkArgument(Objects.equals(code, expect), description + ",预期:" + expect + ",实际结果:" + code);
-                if (Objects.equals("1000", code)) {
-                    Preconditions.checkArgument(Objects.equals(addedRemark, remark), "备注内容不一致，app输入的备注内容" + remark + ",app接待详情中备注记录:" + addedRemark);
-                }
+            if (newId == null || newCustomerId == null) {
+                customerConfig();
+            }
+            String code = AppCustomerRemarkV4Scene.builder().id(newId.toString()).shopId(newShopId.toString()).customerId(newCustomerId.toString()).remark(remark).build().invoke(visitor, false).getString("code");
+            String addedRemark = AppCustomerDetailV4Scene.builder().shopId(newShopId.toString()).customerId(newCustomerId.toString()).id(newId.toString()).build().invoke(visitor, true).getJSONArray("remarks").getJSONObject(0).getString("remark");
+            Preconditions.checkArgument(Objects.equals(code, expect), description + ",预期:" + expect + ",实际结果:" + code);
+            if (Objects.equals("1000", code)) {
+                Preconditions.checkArgument(Objects.equals(addedRemark, remark), "备注内容不一致，app输入的备注内容" + remark + ",app接待详情中备注记录:" + addedRemark);
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -213,11 +207,12 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
     @Test(dataProvider = "userInfo")
     public void test07ChangeUserInfo(String description, String expect, String name, String phone, Integer sex) {
         try {
-            if (newId != null && newCustomerId != null) {
-                String code = AppCustomerEditV4Scene.builder().id(newId.toString()).customerId(newCustomerId.toString()).shopId(newShopId.toString()).customerName(name).customerPhone(phone).sexId(sex).intentionCarModelId("20895").estimateBuyCarDate("2035-12-20").build().invoke(visitor, false).getString("code");
-                Preconditions.checkArgument(Objects.equals(code, expect), description + "，期待结果code=" + expect + "实际结果code=" + code);
-                sleep(3);
+            if (newId == null || newCustomerId == null) {
+                customerConfig();
             }
+            String code = AppCustomerEditV4Scene.builder().id(newId.toString()).customerId(newCustomerId.toString()).shopId(newShopId.toString()).customerName(name).customerPhone(phone).sexId(sex).intentionCarModelId("20895").estimateBuyCarDate("2035-12-20").build().invoke(visitor, false).getString("code");
+            Preconditions.checkArgument(Objects.equals(code, expect), description + "，期待结果code=" + expect + "实际结果code=" + code);
+            sleep(3);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -263,8 +258,7 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
 //        };
 //    }
 
-
-    @Test
+    @AfterClass
     public void test09PcComplete() {
         try {
             if (newId != null && newCustomerId != null) {
