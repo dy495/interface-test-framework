@@ -4,8 +4,10 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.google.inject.internal.util.$Preconditions;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletCarListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.AppletActivityRegister;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -20,11 +22,15 @@ import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
 public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
-    EnumTestProduct product = EnumTestProduct.JC_ONLINE_JD;
+    private static final EnumTestProduct product = EnumTestProduct.JC_ONLINE_JD;
+    private static final EnumAccount account = EnumAccount.JC_ALL_ONLINE_LXQ;
+    private static final EnumAppletToken APPLET_USER = EnumAppletToken.JC_LXQ_ONLINE;
+    private VisitorProxy visitor = new VisitorProxy(product);
     ScenarioUtil jc = new ScenarioUtil();
 
     PublicParmOnline pp = new PublicParmOnline();
@@ -38,41 +44,18 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
     @BeforeClass
     @Override
     public void initial() {
-        logger.debug("before classs initial");
-
-
-        //replace checklist app id and conf id
+        jc.changeIpPort(product.getIp());
+        logger.debug("before class initial");
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
-        commonConfig.checklistQaOwner = "夏明凤";
-        jc.changeIpPort(product.getIp());
-
-
-        //replace backend gateway url
-        //commonConfig.gateway = "";
-
-        //replace jenkins job name
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "Jjiaochen-online-test");
-
-        //replace product name for ding push
+        commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_ONLINE_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
-
-        //replace ding push conf
-//        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
         commonConfig.dingHook = DingWebhook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
-//        commonConfig.referer=getJcReferOnline();
-
-
-        //if need reset push rd, default are huachengyu,xiezhidong,yanghang
-        //commonConfig.pushRd = {"1", "2"};
         commonConfig.setShopId("45973").setReferer(product.getReferer()).setRoleId(product.getRoleId()).setProduct(product.getAbbreviation());
-        //set shop id
         beforeClassInit(commonConfig);
-
         logger.debug("jc: " + jc);
-        jc.appletLoginToken(pp.appletTocken);
-
-
+        jc.appletLoginToken(APPLET_USER.getToken());
     }
 
     @AfterClass
@@ -81,15 +64,13 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
         afterClassClean();
     }
 
-    /**
-     * @description: get a fresh case ds to save case result, such as result/response
-     */
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
+        logger.logCaseStart(caseResult.getCaseName());
     }
 
     /**
@@ -97,28 +78,22 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
      * @date :2020/7/10 18:03
      **/
     @Test()
-    public void mycarConsistency() {
-        logger.logCaseStart(caseResult.getCaseName());
+    public void myCarConsistency() {
         try {
-            jc.appletLoginToken(pp.appletTocken);
+            jc.appletLoginToken(APPLET_USER.getToken());
             int count = pf.carListNumber(pp.carStyleId);
             String plate_number = "蒙JKIO123";
             String car_idBefore = pf.appletAddCar(plate_number);
-
             JSONArray listB = jc.appletMyCar(pp.carStyleId).getJSONArray("list");
-            int aftercount = listB.size();
-
-            jc.appletCarDelst(car_idBefore);
+            int afterCount = listB.size();
+            jc.appletCarDelete(car_idBefore);
             int countA = pf.carListNumber(pp.carStyleId);
-
-            checkArgument((aftercount - count) == 1, "增加车辆，我的车辆列表没加1");
-            checkArgument((aftercount - countA) == 1, "删除车辆，我的车辆列表没-1");
-
-
+            checkArgument((afterCount - count) == 1, "增加车辆，我的车辆列表没加1");
+            checkArgument((afterCount - countA) == 1, "删除车辆，我的车辆列表没-1");
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
-//            saveData("添加车辆，applet我的车辆列表加1");
+            saveData("添加车辆，applet我的车辆列表加1");
         }
     }
 
@@ -127,26 +102,19 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
      * @date :2020/7/10 18:03
      **/
     @Test()
-    public void mycarConsistencySeven() {
-        logger.logCaseStart(caseResult.getCaseName());
+    public void myCarConsistencySeven() {
         try {
             String plate_number = "蒙JKIO12";
-
             int count = pf.carListNumber(pp.carStyleId);
             String car_idBefore = pf.appletAddCar(plate_number);
-
-            JSONArray listB = jc.appletMyCar(pp.carStyleId).getJSONArray("list");
-            int aftercount = listB.size();
-
-            jc.appletCarDelst(car_idBefore);
+            JSONArray list = jc.appletMyCar(pp.carStyleId).getJSONArray("list");
+            int afterCount = list.size();
+            jc.appletCarDelete(car_idBefore);
             int countA = pf.carListNumber(pp.carStyleId);
-
-            checkArgument((aftercount - count) == 1, "增加车辆，我的车辆列表没加1");
-            checkArgument((aftercount - countA) == 1, "删除车辆，我的车辆列表没-1");
-
-
+            checkArgument((afterCount - count) == 1, "增加车辆，我的车辆列表没加1");
+            checkArgument((afterCount - countA) == 1, "删除车辆，我的车辆列表没-1");
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("添加车辆7位车牌，applet我的车辆列表加1");
         }
@@ -158,7 +126,6 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
      **/
     @Test()
     public void sameCarFail() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             jc.appletLoginToken(pp.appletTocken);
 //            int num=jc.appletMyCar(pp.carStyleId).getJSONArray("list").size();
@@ -169,7 +136,7 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
 //            Preconditions.checkArgument(numA-num==0,"添加重复车牌，不重复显示");
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("添加重复车牌验证");
         }
@@ -182,7 +149,6 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
      **/
     @Test()
     public void myCarTen() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             jc.appletLoginToken(pp.appletTocken);
             int count = pf.carListNumber(pp.carStyleId);
@@ -200,10 +166,10 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
 
             for (int j = 0; j < carId.size(); j++) {
                 String car_id = carId.getString(j);
-                jc.appletCarDelst(car_id);
+                jc.appletCarDelete(car_id);
             }
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("小程序我的车辆，增加6辆");
         }
@@ -215,7 +181,6 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
      **/
     @Test
     public void provinceList() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject data = jc.appletplateNumberProvinceList();
             JSONArray list = data.getJSONArray("list");
@@ -224,7 +189,7 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
 //            Preconditions.checkArgument(Util.equals("苏"),"省份默认不是苏");
         } catch (AssertionError | Exception e) {
 
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("车牌号验证");
         }
@@ -236,12 +201,11 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
      **/
     @Test(dataProvider = "PLATE", dataProviderClass = ScenarioUtilOnline.class)
     public void editplateab(String plate) {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             Long code = jc.appletCarEdit(pp.car_id, plate, pp.carModelId).getLong("code");
             $Preconditions.checkArgument(code == 1001, "编辑输入错误车牌，仍成功");
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
 //            saveData("车辆，车牌号异常验证");
         }
@@ -253,12 +217,11 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
      **/
     @Test()
     public void editplate() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             Long code = jc.appletCarEdit(pp.car_id, pp.carplate, pp.carModelId).getLong("code");
             Preconditions.checkArgument(code == 1000, "编辑车辆接口报错");
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("编辑车辆");
         }
@@ -271,13 +234,12 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
      **/
     @Test(dataProvider = "PLATE", dataProviderClass = ScenarioUtilOnline.class)
     public void plateabnormal(String plate) {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONObject data = jc.appletAddCarcode(plate, pp.carModelId);
             Long code = data.getLong("code");
             $Preconditions.checkArgument(code == 1001, "编辑输入错误车牌，仍成功");
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("新建车辆，车牌号异常验证");
         }
@@ -293,7 +255,6 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
      **/
 //    @Test()
     public void activityConsistency() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             //活动报名前
             Long[] aid = {};
@@ -319,7 +280,7 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             jc.appletLoginToken(pp.appletTocken);
             saveData("applet活动报名,pc报名客户+1");
@@ -333,7 +294,6 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
      **/
 //    @Test()
     public void pcappointmentSum() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             //活动报名前
             Long[] aid = {};
@@ -353,7 +313,7 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
             checkArgument(numA[2] - num[2] == 1, "小程序活动报名，小程序文章报名名单未+1");
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             jc.appletLoginToken(pp.appletTocken);
             saveData("活动报名，applet已报名人数++，剩余人数--，pc 总数--，已报名人数++");
@@ -367,7 +327,6 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
 
 //    @Test()
     public void pcappointmentSumPass() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
 //            String date=dt.getHistoryDate(0);
             String date = "2020-12-04";
@@ -399,7 +358,7 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
             checkArgument(numA[0] - num[0] == 1, "小程序活动报名，pc报名客户未+1");
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             jc.appletLoginToken(pp.appletTocken);
             saveData("活动报名，applet已报名人数++，剩余人数--，pc 总数--，已报名人数++");
@@ -408,7 +367,6 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "卡券 套餐数量")
     public void number() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             jc.appletLoginToken(pp.appletTocken);
             System.out.println(product.getIp());
@@ -417,7 +375,7 @@ public class JcAppletOnline extends TestCaseCommon implements TestCaseStd {
 
 
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
 //            saveData("number");
         }

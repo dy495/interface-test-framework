@@ -7,6 +7,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.util.BasicUtil;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAppletToken;
+import com.haisheng.framework.testng.bigScreen.jiaochen.gly.ActivityManage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.util.PublicParameter;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.activity.ManagePageBean;
@@ -1397,6 +1398,10 @@ public class BusinessUtilOnline extends BasicUtil {
         return ids;
     }
 
+    public ManagePageBean getActivityManagerPage(Long id) {
+        IScene scene = ActivityManagePageScene.builder().build();
+        return toJavaObject(scene, ManagePageBean.class, "id", id);
+    }
 
     /**
      * 获取活动的的状态
@@ -1431,7 +1436,7 @@ public class BusinessUtilOnline extends BasicUtil {
     /**
      * 报名审批列表【待审批】ids的合集
      */
-    public List<Long> RegisterAppletIds(Long activityId) {
+    public List<Long> registerAppletIds(Long activityId) {
         List<Long> ids = new ArrayList<>();
         IScene scene = ManageRegisterPageScene.builder().page(1).size(100).status(1).activityId(activityId).build();
         JSONObject response = visitor.invokeApi(scene);

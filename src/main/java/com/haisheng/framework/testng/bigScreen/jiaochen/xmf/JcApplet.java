@@ -135,7 +135,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
             JSONArray listB = jc.appletMyCar(pp.carStyleId).getJSONArray("list");
             int aftercount = listB.size();
 
-            jc.appletCarDelst(car_idBefore);
+            jc.appletCarDelete(car_idBefore);
             int countA = pf.carListNumber(pp.carStyleId);
 
             checkArgument((aftercount - count) == 1, "增加车辆，我的车辆列表没加1");
@@ -165,7 +165,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
             JSONArray listB = jc.appletMyCar(pp.carStyleId).getJSONArray("list");
             int aftercount = listB.size();
 
-            jc.appletCarDelst(car_idBefore);
+            jc.appletCarDelete(car_idBefore);
             int countA = pf.carListNumber(pp.carStyleId);
 
             checkArgument((aftercount - count) == 1, "增加车辆，我的车辆列表没加1");
@@ -226,7 +226,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
 
             for (int j = 0; j < carId.size(); j++) {
                 String car_id = carId.getString(j);
-                jc.appletCarDelst(car_id);
+                jc.appletCarDelete(car_id);
             }
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());

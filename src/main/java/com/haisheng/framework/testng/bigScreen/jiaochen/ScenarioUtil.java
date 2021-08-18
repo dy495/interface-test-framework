@@ -1511,11 +1511,10 @@ public class ScenarioUtil extends TestCaseCommon {
      * @description :删除车辆xmf
      * @date :2020/11/28 12:58
      **/
-    public JSONObject appletCarDelst(String id) {
+    public JSONObject appletCarDelete(String id) {
         String url = "/car-platform/applet/granted/car/delete";
         JSONObject json1 = new JSONObject();
         json1.put("id", id);
-
         return invokeApi(url, json1);
     }
 

@@ -3,7 +3,6 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.registerListVariable;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.AppAdmitScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.AppStartReceptionScene;
@@ -30,9 +29,7 @@ public class JcFunctionOnline {
     Random random = new Random();
 
     public String genPhoneNum() {
-        String num = "177" + (random.nextInt(89999999) + 10000000);
-
-        return num;
+        return "177" + (random.nextInt(89999999) + 10000000);
     }
 
     public String[] salereception(String phone) {
@@ -41,12 +38,12 @@ public class JcFunctionOnline {
         JSONObject data = jc.invokeApi(appAdmitScene);
         Long customerId = data.getLong("customer_id");
         //开始接待
-        IScene appstartReception = AppStartReceptionScene.builder()
+        IScene appStartReception = AppStartReceptionScene.builder()
                 .customerId(customerId)
                 .customerPhone(phone)
                 .build();
         String[] receptionId = new String[2];
-        receptionId[0] = jc.invokeApi(appstartReception).getString("id");  //接待ID
+        receptionId[0] = jc.invokeApi(appStartReception).getString("id");  //接待ID
         return receptionId;
     }
 
@@ -127,7 +124,7 @@ public class JcFunctionOnline {
         //shopList
         JSONObject shopdate = new JSONObject();
         shopdate.put("shop_id", pp.shopIdZ);
-        shopdate.put("shop_name", pp.shopname);
+        shopdate.put("shop_name", pp.shopName);
         JSONArray shop_list = new JSONArray();
         shop_list.add(shopdate);
         //shopList
@@ -146,7 +143,7 @@ public class JcFunctionOnline {
         //shopList
         JSONObject shopdate = new JSONObject();
         shopdate.put("shop_id", pp.shopIdZ);
-        shopdate.put("shop_name", pp.shopname);
+        shopdate.put("shop_name", pp.shopName);
         JSONArray shop_list = new JSONArray();
         shop_list.add(shopdate);
         //shopList
@@ -301,13 +298,12 @@ public class JcFunctionOnline {
     }
 
     //根据门店名称或接待顾问名称，获取今日数据中待处理数据
-    public int[] apptodayDate(String type, String name) {
+    public int[] appTodayDate(String type, String name) {
         //今日数据
-        JSONArray todaydate = jc.apptodayDate(type, null, 10).getJSONArray("list");
+        JSONArray todayDate = jc.apptodayDate(type, null, 10).getJSONArray("list");
         String[] both = new String[4];
-
-        for (int i = 0; i < todaydate.size(); i++) {
-            JSONObject list_data = todaydate.getJSONObject(i);
+        for (int i = 0; i < todayDate.size(); i++) {
+            JSONObject list_data = todayDate.getJSONObject(i);
             //待处理预约数和
             String name1 = list_data.getString("name");
             if (name1.equals(name)) {
@@ -319,9 +315,9 @@ public class JcFunctionOnline {
                 both = (String[]) ArrayUtils.addAll(appointment, reception);
             }
         }
-        int result[] = new int[both.length];
+        int[] result = new int[both.length];
         for (int j = 0; j < both.length; j++) {
-            result[j] = Integer.valueOf(both[j]);
+            result[j] = Integer.parseInt(both[j]);
         }
         return result;
     }

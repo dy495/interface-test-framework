@@ -18,9 +18,9 @@ public class PublicParmOnline {
     public String shopId = "-1";   //门店Id
     public String shopIdZ = "20032";   //门店Id 中关村店
 
-    public String reception_sale_id = "接待顾问x";
+    public String reception_sale_id = "石矶娘娘";
     public String name = "";
-    public String customerPhone = "15037286013";
+    public String customerPhone = "15037286012";
     public String filepath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/jcBase64.txt";
 
     public String shichang = "";
@@ -33,8 +33,8 @@ public class PublicParmOnline {
     public String carplate7 = "浙ASD124";      //编辑小程序车牌号
     //预约使用车辆
     public Long car_idA = 206834L;
-    public String shopname = "中关村店简";
-    public String modolIdAppointment = "19655";
+    public String shopName = "中关村店简";
+    public String modelIdAppointment = "19655";
     public String carStyleId = "78";
     public String carStyleName = "";
 
