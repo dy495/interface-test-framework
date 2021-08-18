@@ -1089,12 +1089,45 @@ public class SceneUtil extends BasicUtil {
 
     /**
      * 获取小程序carId
+     *
+     * @return 我的爱车id
      */
     public Long getCarId() {
         IScene appletCarListScene = AppletCarListScene.builder().build();
         JSONObject jsonObject = appletCarListScene.invoke(visitor).getJSONArray("list").getJSONObject(0);
         Preconditions.checkArgument(jsonObject != null, "小程序我的爱车为空");
         return jsonObject.getLong("id");
+    }
+
+    /**
+     * 获取小程序我的爱车列表
+     *
+     * @return 我的爱车列表
+     */
+    public List<AppletCarInfo> getAppletCarList() {
+        return AppletCarListScene.builder().build().invoke(visitor).getJSONArray("list").stream().map(e -> (JSONObject) e)
+                .map(e -> JSONObject.toJavaObject(e, AppletCarInfo.class)).collect(Collectors.toList());
+
+    }
+
+    /**
+     * 创建我的爱车并返回爱车信息
+     *
+     * @param plateNumber 车牌号
+     * @param carModelId  车型id
+     * @return 爱车信息
+     */
+    public AppletCarInfo createCar(String plateNumber, Long carModelId) {
+        AppletCarCreateScene.builder().modelId(carModelId).plateNumber(plateNumber).build().invoke(visitor);
+        IScene scene = AppletCarListScene.builder().build();
+        JSONObject obj = scene.invoke(visitor).getJSONArray("list").stream().map(e -> (JSONObject) e)
+                .filter(e -> e.getString("plate_number") != null)
+                .filter(e -> e.getString("plate_number").equals(plateNumber))
+                .findFirst().orElse(null);
+        if (obj != null) {
+            return JSONObject.toJavaObject(obj, AppletCarInfo.class);
+        }
+        return null;
     }
 
     /**
@@ -1768,7 +1801,7 @@ public class SceneUtil extends BasicUtil {
      * "status":状态值 }
      * @description : 用于检查空闲中最后一位销售
      **/
-    public JSONObject getLastSale(){
+    public JSONObject getLastSale() {
         //long count = AppSaleScheduleDayListScene.builder().type("PRE").build().invoke(visitor, true).getJSONArray("sales_info_list").stream().map(e -> (JSONObject) e).filter(e -> Objects.equals(e.getString("sale_status"), "空闲中")).count();
         return AppSaleScheduleDayListScene.builder().type("PRE").build().invoke(visitor, true).getJSONArray("sales_info_list").stream().map(e -> (JSONObject) e).
                 filter(e -> Objects.equals(e.getString("sale_status"), "空闲中")).min((x, y) -> y.getInteger("order") - x.getInteger("order")).get();
@@ -1779,7 +1812,7 @@ public class SceneUtil extends BasicUtil {
      * @description : 用于获取当日排班中指定状态的一位销售，
      * @parameter : 状态值：   {0:"空闲中",1:"接待中",2:"忙碌中",3:"休假中"}
      **/
-    public JSONObject getNeededSale(Integer statusId){
+    public JSONObject getNeededSale(Integer statusId) {
         return AppSaleScheduleDayListScene.builder().type("PRE").build().invoke(visitor, true).getJSONArray("sales_info_list").stream().map(e -> (JSONObject) e).
                 filter(e -> e.getInteger("status").equals(statusId)).findAny().orElse(null);
     }
