@@ -57,7 +57,7 @@ public interface IScene {
      * @param checkCode 是否校验返回值code
      * @return 接口返回值
      */
-    JSONObject invoke(VisitorProxy visitor, boolean checkCode);
+    JSONObject execute(VisitorProxy visitor, boolean checkCode);
 
     /**
      * 访问接口
@@ -65,9 +65,16 @@ public interface IScene {
      * @param visitor 产品
      * @return 接口返回值
      */
-    default JSONObject invoke(VisitorProxy visitor) {
-        return invoke(visitor, true);
+    default JSONObject execute(VisitorProxy visitor) {
+        return execute(visitor, true);
     }
+
+    /**
+     * 访问接口
+     *
+     * @return 返回值
+     */
+    JSONObject execute();
 
     /**
      * 上传文件
@@ -92,7 +99,8 @@ public interface IScene {
      */
     List<String> getKeyList();
 
+    Response getResponse();
 
-    Response getResponse(VisitorProxy visitor);
+    IScene visitor(VisitorProxy visitor);
 
 }

@@ -69,9 +69,25 @@ public class VisitorProxy extends TestCaseCommon {
      * @return JSONObject response.data
      */
     public JSONObject invokeApi(String path, JSONObject requestBody, boolean checkCode) {
+        return invokeApi(product.getIp(), path, requestBody, checkCode);
+    }
+
+    /**
+     * http请求方法调用
+     *
+     * @param host        域名
+     * @param path        路径
+     * @param requestBody 请求体
+     * @param checkCode   是否校验code
+     * @return JSONObject
+     */
+    public JSONObject invokeApi(String host, String path, JSONObject requestBody, boolean checkCode) {
         Preconditions.checkArgument(!StringUtils.isEmpty(path), "path不可为空");
+        //判断接口域名是不是空，如果不是使用提供的域名，如果是使用product的域名
+        host = StringUtils.isEmpty(host) ? product.getIp() : host;
+        Preconditions.checkArgument(!StringUtils.isEmpty(host), "host不可为空");
         String request = JSON.toJSONString(requestBody);
-        String result = httpPost(product.getIp(), path, request, checkCode, false);
+        String result = httpPost(host, path, request, checkCode, false);
         JSONObject response = JSON.parseObject(result);
         return checkCode ? response.getJSONObject("data") : response;
     }
@@ -123,7 +139,6 @@ public class VisitorProxy extends TestCaseCommon {
     public boolean isDaily() {
         return product.getIsDaily();
     }
-
 
     /**
      * 更换域名

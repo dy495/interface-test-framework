@@ -113,10 +113,10 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
         logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene voiceEvaluationPageScene = VoiceEvaluationPageScene.builder().build();
-            long evaluationTotal = voiceEvaluationPageScene.invoke(visitor).getLong("total");
+            long evaluationTotal = voiceEvaluationPageScene.execute(visitor).getLong("total");
             visitor.setProduct(EnumTestProduct.YT_DAILY_JD);
             IScene preSalesReceptionPageScene = PreSalesReceptionPageScene.builder().build();
-            long receptionTotal = preSalesReceptionPageScene.invoke(visitor).getLong("total");
+            long receptionTotal = preSalesReceptionPageScene.execute(visitor).getLong("total");
             CommonUtil.valueView(evaluationTotal, receptionTotal);
             Preconditions.checkArgument(evaluationTotal <= receptionTotal, "语音评鉴列表数：" + evaluationTotal + " 销售接待页列表数：" + receptionTotal);
         } catch (Exception | AssertionError e) {
@@ -134,7 +134,7 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
             IScene voiceEvaluationPageScene = VoiceEvaluationPageScene.builder().enterStatus(1).build();
             List<VoiceEvaluationPageBean> voiceEvaluationPageList = util.toJavaObjectList(voiceEvaluationPageScene, VoiceEvaluationPageBean.class);
             voiceEvaluationPageList.stream().filter(e -> e.getEvaluateScore() != null).filter(e -> e.getEvaluateScore() != 0)
-                    .map(e -> VoiceDetailScene.builder().id(e.getId()).build().invoke(visitor)).forEach(object -> {
+                    .map(e -> VoiceDetailScene.builder().id(e.getId()).build().execute(visitor)).forEach(object -> {
                 int averageScore = object.getInteger("average_score");
                 int scoreSum = object.getJSONArray("scores").stream().map(e -> (JSONObject) e).mapToInt(e -> e.getInteger("score")).sum();
                 int mathResult = CommonUtil.getRoundIntRatio(scoreSum, 5);
@@ -155,7 +155,7 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
             IScene voiceEvaluationPageScene = VoiceEvaluationPageScene.builder().enterStatus(1).build();
             List<VoiceEvaluationPageBean> voiceEvaluationPageList = util.toJavaObjectList(voiceEvaluationPageScene, VoiceEvaluationPageBean.class);
             voiceEvaluationPageList.stream().filter(e -> e.getEvaluateScore() != null).filter(e -> e.getEvaluateScore() != 0)
-                    .map(e -> VoiceDetailScene.builder().id(e.getId()).build().invoke(visitor)).forEach(object -> {
+                    .map(e -> VoiceDetailScene.builder().id(e.getId()).build().execute(visitor)).forEach(object -> {
                 int adviceListSize = object.getJSONArray("advice_list").size();
                 int count = (int) object.getJSONArray("link_label_list").stream().map(link -> (JSONObject) link)
                         .mapToLong(link -> link.getJSONArray("labels").stream().map(label -> (JSONObject) label)
@@ -177,7 +177,7 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
             IScene voiceEvaluationPageScene = VoiceEvaluationPageScene.builder().enterStatus(1).build();
             List<VoiceEvaluationPageBean> voiceEvaluationPageList = util.toJavaObjectList(voiceEvaluationPageScene, VoiceEvaluationPageBean.class);
             voiceEvaluationPageList.stream().filter(e -> e.getEvaluateScore() != null).filter(e -> e.getEvaluateScore() != 0)
-                    .map(e -> VoiceDetailScene.builder().id(e.getId()).build().invoke(visitor)).forEach(object -> {
+                    .map(e -> VoiceDetailScene.builder().id(e.getId()).build().execute(visitor)).forEach(object -> {
                 JSONArray linkLabelList = object.getJSONArray("link_label_list");
                 JSONArray labels = linkLabelList.stream().map(e -> (JSONObject) e).filter(e -> e.getString("type_name").equals(typeName)).map(e -> e.getJSONArray("labels")).findFirst().orElse(null);
                 Preconditions.checkNotNull(labels, object.getString("name") + " " + typeName + "标签为空");
@@ -221,7 +221,7 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
             IScene labelListScene = SensitiveWordsLabelListScene.builder().build();
             List<LabelListBean> labelList = util.toJavaObjectList(labelListScene, LabelListBean.class, "list");
             int countSum = labelList.stream().mapToInt(LabelListBean::getCount).sum();
-            int total = SensitiveBehaviorPageScene.builder().build().invoke(visitor).getInteger("total");
+            int total = SensitiveBehaviorPageScene.builder().build().execute(visitor).getInteger("total");
             CommonUtil.valueView(countSum, total);
             Preconditions.checkArgument(countSum == total, "柱状图数量之和" + countSum + " 行为记录列表数：" + total);
         } catch (Exception | AssertionError e) {
@@ -252,8 +252,8 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
     public void voiceEvaluation_data_9() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int voiceEvaluationPageTotal = VoiceEvaluationPageScene.builder().build().invoke(visitor).getInteger("total");
-            int specialAudioPageSceneTotal = SpecialAudioPageScene.builder().build().invoke(visitor).getInteger("total");
+            int voiceEvaluationPageTotal = VoiceEvaluationPageScene.builder().build().execute(visitor).getInteger("total");
+            int specialAudioPageSceneTotal = SpecialAudioPageScene.builder().build().execute(visitor).getInteger("total");
             Preconditions.checkArgument(voiceEvaluationPageTotal >= specialAudioPageSceneTotal, "特殊音频审核列表数量：" + specialAudioPageSceneTotal + " 语音评鉴列表数：" + voiceEvaluationPageTotal);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -266,7 +266,7 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
     public void voiceEvaluation_data_10() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int total = SpeechTechniquePageScene.builder().build().invoke(visitor).getInteger("total");
+            int total = SpeechTechniquePageScene.builder().build().execute(visitor).getInteger("total");
             int[] ints = {100, 200, 300, 400, 500};
             int sum = Arrays.stream(ints).mapToObj(type -> SpeechTechniquePageScene.builder().type(type).build()).map(speechTechniquePageScene -> util.toJavaObjectList(speechTechniquePageScene, JSONObject.class)).mapToInt(List::size).sum();
             CommonUtil.valueView(total, sum);

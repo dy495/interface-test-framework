@@ -331,7 +331,7 @@ public class CommonUsedUtil {
         acceptRoleIdList.add(4945L);
         acceptRoleIdList.add(5030L);
         //新建风控告警规则
-        String alarmId=getAlarmRuleAdd( realTime, silentTime,type,ruleIdList,acceptRoleIdList,name).invoke(visitor,false).getString("message");
+        String alarmId=getAlarmRuleAdd( realTime, silentTime,type,ruleIdList,acceptRoleIdList,name).execute(visitor,false).getString("message");
         return alarmId;
     }
 
@@ -906,7 +906,7 @@ public class CommonUsedUtil {
         JSONObject response=visitor.invokeApi(scene);
         int pages=response.getInteger("pages");
         for(int page=1;page<=pages;page++){
-            JSONArray list=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.PageScene.builder().page(page).size(10).build().invoke(visitor,true).getJSONArray("list");
+            JSONArray list=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.PageScene.builder().page(page).size(10).build().execute(visitor,true).getJSONArray("list");
             for(int i=0;i<list.size();i++){
                 String name1=list.getJSONObject(i).getString("name");
                 if(name1.equals(name)){
@@ -927,7 +927,7 @@ public class CommonUsedUtil {
         JSONObject response=visitor.invokeApi(scene);
         int pages=response.getInteger("pages")>10?10:response.getInteger("pages");
         for(int page=1;page<=pages;page++){
-            JSONArray list=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().page(page).size(10).build().invoke(visitor,true).getJSONArray("list");
+            JSONArray list=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().page(page).size(10).build().execute(visitor,true).getJSONArray("list");
             if(list.size()>0){
                 for(int i=0;i<list.size();i++){
                     String phone1=list.getJSONObject(i).getString("phone");
@@ -946,11 +946,11 @@ public class CommonUsedUtil {
      */
     public JSONObject staffIdTransResponse(String id){
         JSONObject res=null;
-        JSONObject response=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().page(1).size(10).build().invoke(visitor,true);
+        JSONObject response=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().page(1).size(10).build().execute(visitor,true);
         int numBefore=response.getInteger("total");
         int pages=response.getInteger("pages");
         for(int page=1;page<=pages;page++){
-            JSONArray list=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().page(page).size(10).build().invoke(visitor,true).getJSONArray("list");
+            JSONArray list=com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().page(page).size(10).build().execute(visitor,true).getJSONArray("list");
             for(int i=0;i<list.size();i++){
                 String id1=list.getJSONObject(i).getString("id");
                 if(id1.equals(id)){

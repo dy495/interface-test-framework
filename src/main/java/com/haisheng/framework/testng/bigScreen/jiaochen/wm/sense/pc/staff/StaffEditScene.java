@@ -12,7 +12,7 @@ import lombok.Builder;
  * @date 2021-03-31 12:47:27
  */
 @Builder
-public class EditScene extends BaseScene {
+public class StaffEditScene extends BaseScene {
     /**
      * 描述 姓名
      * 是否必填 true
@@ -55,6 +55,7 @@ public class EditScene extends BaseScene {
      */
     private final String id;
 
+    private final JSONArray shopList;
 
     @Override
     public JSONObject getRequestBody() {
@@ -65,11 +66,12 @@ public class EditScene extends BaseScene {
         object.put("role_list", roleList);
         object.put("picture_path", picturePath);
         object.put("id", id);
+        object.put("shop_list", shopList);
         return object;
     }
 
     @Override
     public String getPath() {
-        return "/account-platform/pc/staff/edit";
+        return "/account-platform/auth/staff/edit";
     }
 }

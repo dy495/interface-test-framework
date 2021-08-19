@@ -33,9 +33,10 @@ public class CommonConfig {
     //钉钉推送信息
     public String dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
     public String[] pushRd = {
-            "18513118484", //杨航
-            "15011479599", //谢志东
-            "15898182672"}; //华成裕
+//            "18513118484", //杨航
+//            "15011479599", //谢志东
+//            "15898182672" //华成裕
+    };
 
     public String[] pushQa = null;
     public String message = TEST_PRODUCT + " \n" +

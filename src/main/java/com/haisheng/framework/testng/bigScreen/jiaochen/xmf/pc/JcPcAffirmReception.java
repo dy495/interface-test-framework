@@ -114,7 +114,7 @@ public class JcPcAffirmReception extends TestCaseCommon implements TestCaseStd {
             dataTemp.setApp_surplus_reception(appTodayTask[2]);
             dataTemp.setApp_all_reception(appTodayTask[3]);
             //pc 完成接待
-            Integer receptionId = qaDbUtil.selsetDataTempOne("appointmentId", dataName);
+            Integer receptionId = qaDbUtil.selectDataTempOne("appointmentId", dataName);
             jc.pcFinishReception((long) receptionId, pp.shopIdZ);
             dataTemp.setAppointmentId((long) receptionId);
             qaDbUtil.updateDataAll(dataTemp);
@@ -131,7 +131,7 @@ public class JcPcAffirmReception extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int result2 = pf.pcReceptionPage();  //先调取函数可先验证此接口，在验证数据
-            int result1 = qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum", dataName);
+            int result1 = qaDbUtil.selectDataTempOne("pcAppointmentRecordNum", dataName);
             System.out.println(result1 + ":" + result2);
             Preconditions.checkArgument(result2 - result1 == 0, "接待后pc接待列表+1,接待前：" + result1 + "接待后：" + result2);
         } catch (AssertionError | Exception e) {
@@ -146,7 +146,7 @@ public class JcPcAffirmReception extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int result2 = pf.appReceptionPage();  //先调取函数可先验证此接口，在验证数据
-            int result1 = qaDbUtil.selsetDataTempOne("appReceiptage", dataName);
+            int result1 = qaDbUtil.selectDataTempOne("appReceiptage", dataName);
             System.out.println(result1 + ":" + result2);
             Preconditions.checkArgument(result2 - result1 == -1, "接待后app接待任务列数,接待前：" + result1 + "接待后：" + result2);
         } catch (AssertionError | Exception e) {
@@ -162,8 +162,8 @@ public class JcPcAffirmReception extends TestCaseCommon implements TestCaseStd {
         try {
             int appTask[] = pf.appTask();  //先调取函数可先验证此接口，在验证数据
 
-            int app_surplus_reception = qaDbUtil.selsetDataTempOne("app_surplus_reception", dataName);
-            int app_all_reception = qaDbUtil.selsetDataTempOne("app_all_reception", dataName);
+            int app_surplus_reception = qaDbUtil.selectDataTempOne("app_surplus_reception", dataName);
+            int app_all_reception = qaDbUtil.selectDataTempOne("app_all_reception", dataName);
             Preconditions.checkArgument(appTask[2] - app_surplus_reception == -1, "接待后app今日任务appSurplusAppointment,接待前：" + app_surplus_reception + "接待后：" + appTask[2]);
             Preconditions.checkArgument(appTask[3] - app_all_reception == 0, "接待后app今日任务app_all_appointment,接待前：" + app_all_reception + "接待后：" + appTask[3]);
         } catch (AssertionError | Exception e) {

@@ -112,7 +112,7 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
     }
 
     public void finishReception() {
-        Integer receptionId = qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum", "app_sale_receptionId");
+        Integer receptionId = qaDbUtil.selectDataTempOne("pcAppointmentRecordNum", "app_sale_receptionId");
         IScene appcustomerEdit = AppCustomerEditScene.builder()
                 .id(String.valueOf(receptionId))
                 .shopId(pp.shopIdZ)
@@ -177,7 +177,7 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
     public void editCustomer1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int id = qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum", "app_sale_receptionId");
+            int id = qaDbUtil.selectDataTempOne("pcAppointmentRecordNum", "app_sale_receptionId");
             String[] reception = {String.valueOf(id), null};
             //编辑客户--名称超过50字
             IScene appcustomerEdit = AppCustomerEditScene.builder()
@@ -203,7 +203,7 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
     public void editCustomer2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int id = qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum", "app_sale_receptionId");
+            int id = qaDbUtil.selectDataTempOne("pcAppointmentRecordNum", "app_sale_receptionId");
             String[] reception = {String.valueOf(id), null};
             String[] errphone = {"1590293829", "178273766554", "新人%￥#"};
             for (int i = 0; i < errphone.length; i++) {
@@ -235,7 +235,7 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
     public void buyCar() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int id = qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum", "app_sale_receptionId");
+            int id = qaDbUtil.selectDataTempOne("pcAppointmentRecordNum", "app_sale_receptionId");
             String[] reception = {String.valueOf(id), null};
             //编辑客户信息
             IScene appcustomerEdit2 = AppCustomerEditScene.builder()
@@ -279,7 +279,7 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
     public void changeReception() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int id = qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum", "app_sale_receptionId");
+            int id = qaDbUtil.selectDataTempOne("pcAppointmentRecordNum", "app_sale_receptionId");
             String[] reception = {String.valueOf(id), null};
             String uid = "";
 
@@ -324,7 +324,7 @@ public class JcApp3_1 extends TestCaseCommon implements TestCaseStd {
     public void remark() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int id = qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum", "app_sale_receptionId");
+            int id = qaDbUtil.selectDataTempOne("pcAppointmentRecordNum", "app_sale_receptionId");
             String[] reception = {String.valueOf(id), null};
 
             IScene customerDetail = AppCustomerDetailScene.builder().id(reception[0]).shopId(pp.shopIdZ).build();

@@ -170,17 +170,17 @@ public class AppletLogin extends TestCaseCommon implements TestCaseStd {
     }
 
     private Response invokePorsche(VisitorProxy visitor) {
-        JSONObject response = AppletPorscheAMessageListScene.builder().lastValue(null).size(20).build().invoke(visitor, false);
+        JSONObject response = AppletPorscheAMessageListScene.builder().lastValue(null).size(20).build().execute(visitor, false);
         return getResponseInfo(response);
     }
 
     private Response invokeJC(VisitorProxy visitor) {
-        JSONObject response = AppletVoucherListScene.builder().type("GENERAL").size(20).build().invoke(visitor, false);
+        JSONObject response = AppletVoucherListScene.builder().type("GENERAL").size(20).build().execute(visitor, false);
         return getResponseInfo(response);
     }
 
     private Response invokeIns(VisitorProxy visitor) {
-        JSONObject response = AppletIntegralRecordScene.builder().lastValue(null).size(20).build().invoke(visitor, false);
+        JSONObject response = AppletIntegralRecordScene.builder().lastValue(null).size(20).build().execute(visitor, false);
         return getResponseInfo(response);
     }
 

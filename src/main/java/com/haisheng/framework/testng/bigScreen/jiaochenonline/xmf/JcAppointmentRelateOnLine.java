@@ -29,8 +29,8 @@ import java.lang.reflect.Method;
  **/
 
 public class JcAppointmentRelateOnLine extends TestCaseCommon implements TestCaseStd {
-    EnumTestProduct product = EnumTestProduct.JC_ONLINE_JD;
-    EnumAccount account = EnumAccount.JC_ALL_ONLINE_LXQ;
+    private static final EnumTestProduct product = EnumTestProduct.JC_ONLINE_JD;
+    private static final EnumAccount account = EnumAccount.JC_ALL_ONLINE_LXQ;
     VisitorProxy visitor = new VisitorProxy(product);
     SceneUtil util = new SceneUtil(visitor);
     ScenarioUtilOnline jc = new ScenarioUtilOnline();
@@ -38,7 +38,7 @@ public class JcAppointmentRelateOnLine extends TestCaseCommon implements TestCas
     public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
     String dataName = "pc_appointmentPageOnLine";
     JcFunctionOnline pf = new JcFunctionOnline();
-    PublicParmOnline pp = new PublicParmOnline();
+    PublicParamOnline pp = new PublicParamOnline();
     int num = pp.num;   //预约天数控制
 
     public void initial1() {
@@ -112,7 +112,7 @@ public class JcAppointmentRelateOnLine extends TestCaseCommon implements TestCas
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int result2 = pf.pcAppointmentRecodePage();  //先调取函数可先验证此接口，在验证数据
-            int result1 = qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum", "pc_appointmentPage");
+            int result1 = qaDbUtil.selectDataTempOne("pcAppointmentRecordNum", "pc_appointmentPage");
             System.out.println(result1 + ":" + result2);
             Preconditions.checkArgument(result2 - result1 == 1, "预约后预约记录数没+1,预约前：" + result1 + "预约后：" + result2);
         } catch (AssertionError | Exception e) {
@@ -127,7 +127,7 @@ public class JcAppointmentRelateOnLine extends TestCaseCommon implements TestCas
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int result2 = pf.appointmentNUmber(num);  //先调取函数可先验证此接口，在验证数据
-            int result1 = qaDbUtil.selsetDataTempOne("pcAppointmentNUmber", "pc_appointmentPage");
+            int result1 = qaDbUtil.selectDataTempOne("pcAppointmentNUmber", "pc_appointmentPage");
             System.out.println(result1 + ":" + result2);
             Preconditions.checkArgument(result2 - result1 == 1, "预约后预约看板数没+1,预约前：" + result1 + "预约后：" + result2);
         } catch (AssertionError | Exception e) {
@@ -142,7 +142,7 @@ public class JcAppointmentRelateOnLine extends TestCaseCommon implements TestCas
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int result2 = pf.pcAppointmentTimes();
-            int result1 = qaDbUtil.selsetDataTempOne("pc_appointment_times", "pc_appointmentPage");
+            int result1 = qaDbUtil.selectDataTempOne("pc_appointment_times", "pc_appointmentPage");
             System.out.println(result1 + ":" + result2);
             Preconditions.checkArgument(result2 - result1 == 1, "预约后,该小程序客户预约次数没+1，预约前：" + result1 + "预约后：" + result2);
         } catch (AssertionError | Exception e) {
@@ -158,7 +158,7 @@ public class JcAppointmentRelateOnLine extends TestCaseCommon implements TestCas
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int result2 = pf.appReceiptPage();  //先调取函数可先验证此接口，在验证数据
-            int result1 = qaDbUtil.selsetDataTempOne("appReceiptage", "pc_appointmentPage");
+            int result1 = qaDbUtil.selectDataTempOne("appReceiptage", "pc_appointmentPage");
             System.out.println(result1 + ":" + result2);
             Preconditions.checkArgument(result2 - result1 == 1, "预约后app预约任务列数,预约前：" + result1 + "预约后：" + result2);
         } catch (AssertionError | Exception e) {
@@ -173,8 +173,8 @@ public class JcAppointmentRelateOnLine extends TestCaseCommon implements TestCas
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int[] appTask = pf.appTask();  //先调取函数可先验证此接口，在验证数据
-            int appSurplusAppointment = qaDbUtil.selsetDataTempOne("appSurplusAppointment", "pc_appointmentPage");
-            int app_all_appointment = qaDbUtil.selsetDataTempOne("app_all_appointment", "pc_appointmentPage");
+            int appSurplusAppointment = qaDbUtil.selectDataTempOne("appSurplusAppointment", "pc_appointmentPage");
+            int app_all_appointment = qaDbUtil.selectDataTempOne("app_all_appointment", "pc_appointmentPage");
             Preconditions.checkArgument(appTask[0] - appSurplusAppointment == 1, "预约后app今日任务appSurplusAppointment,预约前：" + appSurplusAppointment + "预约后：" + appTask[0]);
             Preconditions.checkArgument(appTask[1] - app_all_appointment == 1, "预约后app今日任务app_all_appointment,预约前：" + app_all_appointment + "预约后：" + appTask[1]);
         } catch (AssertionError | Exception e) {
@@ -189,7 +189,7 @@ public class JcAppointmentRelateOnLine extends TestCaseCommon implements TestCas
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int totalA = pf.appletmyAppointment();
-            int total = qaDbUtil.selsetDataTempOne("applet_myappointment", "pc_appointmentPage");
+            int total = qaDbUtil.selectDataTempOne("applet_myappointment", "pc_appointmentPage");
             Preconditions.checkArgument(totalA - total == 1, "预约后app今日任务app_all_appointment,预约前：" + total + "预约后：" + totalA);
         } catch (AssertionError | Exception e) {
             collectMessage(e);
@@ -217,37 +217,4 @@ public class JcAppointmentRelateOnLine extends TestCaseCommon implements TestCas
             saveData("预约后pc预约记录页信息校验");
         }
     }
-
-
-    //    @Test()  //测试函数
-    public void test1() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-
-//            Integer re=qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum","pc_appointmentPage");
-//            System.out.println("re:"+re);
-
-//            qaDbUtil.updateDataNum("pc_appointmentPage",66);
-//            System.out.println("test");
-
-//            DataTemp dt1=new DataTemp();
-//            dt1.setPcAppointmentRecordNum(83);
-//            System.out.println(dt1.getPcAppointmentRecordNum());
-//            qaDbUtil.updateDataAll(dt1);
-//
-            DataTemp result1 = qaDbUtil.selsetDataTemp("pc_appointmentPage");
-            System.out.println(result1.getPcAppointmentRecordNum());
-//
-//            int num=qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum","pc_appointmentPage");
-//            System.out.println(num);
-
-
-        } catch (AssertionError | Exception e) {
-            collectMessage(e);
-        } finally {
-//            saveData("今日任务数=今日数据各列数据之和");
-        }
-    }
-
-
 }

@@ -189,7 +189,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
         try {
 //            int num=jc.appletMyCar(pp.carStyleId).getJSONArray("list").size();
             String plate_number = pp.carplate;
-            Long code = jc.appletAddCarcode(plate_number, pp.carModelId).getLong("code");
+            Long code = jc.appletCarCreate(plate_number, pp.carModelId).getLong("code");
             Preconditions.checkArgument(code == 1001, "重复车牌仍成功");
 //            int numA=jc.appletMyCar(pp.carStyleId).getJSONArray("list").size();
 //            Preconditions.checkArgument(numA-num==0,"添加重复车牌，不重复显示");
@@ -221,7 +221,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
                 carId.add(car_id);
             }
             String plate_number = "吉GBBA10";
-            Long code = jc.appletAddCarcode(plate_number, pp.carModelId).getLong("code");
+            Long code = jc.appletCarCreate(plate_number, pp.carModelId).getLong("code");
             checkArgument(code == 1001, "我的车辆上限5辆车");
 
             for (int j = 0; j < carId.size(); j++) {
@@ -243,7 +243,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
     public void provinceList() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject data = jc.appletplateNumberProvinceList();
+            JSONObject data = jc.appletPlateNumberProvinceList();
             JSONArray list = data.getJSONArray("list");
 //            String p=list.getJSONObject(0).getString("province_name");
             checkArgument(list.size() == 31, "车牌号省份不是31");
@@ -300,7 +300,7 @@ public class JcApplet extends TestCaseCommon implements TestCaseStd {
     public void plateabnormal(String plate) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject data = jc.appletAddCarcode(plate, pp.carModelId);
+            JSONObject data = jc.appletCarCreate(plate, pp.carModelId);
             Long code = data.getLong("code");
             $Preconditions.checkArgument(code == 1001, "编辑输入错误车牌，仍成功");
         } catch (AssertionError | Exception e) {

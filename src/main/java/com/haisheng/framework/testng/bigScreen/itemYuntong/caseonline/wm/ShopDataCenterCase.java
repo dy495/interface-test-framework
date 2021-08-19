@@ -82,7 +82,7 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
     public void evaluate_data_1() {
         try {
             IScene evaluateV4ScoreTrendScene = EvaluateV4ScoreTrendScene.builder().receptionStart(startDate).receptionEnd(endDate).evaluateType(5).build();
-            JSONObject obj = evaluateV4ScoreTrendScene.invoke(visitor).getJSONArray("list").getJSONObject(0);
+            JSONObject obj = evaluateV4ScoreTrendScene.execute(visitor).getJSONArray("list").getJSONObject(0);
             int score = obj.getInteger("score") == null ? 0 : obj.getInteger("score");
             IScene evaluateV4PageScene = EvaluateV4PageScene.builder().receptionStart(startDate).receptionEnd(endDate).evaluateType(5).build();
             List<JSONObject> list = util.toJavaObjectList(evaluateV4PageScene, JSONObject.class);

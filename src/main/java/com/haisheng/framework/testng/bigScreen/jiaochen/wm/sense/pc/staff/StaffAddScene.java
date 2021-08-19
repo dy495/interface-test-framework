@@ -6,13 +6,13 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 34.3. 新建员工 （杨）（2021-03-23） v3.0
+ * 25.3. 新建员工 （杨）（2021-03-23） v3.0
  *
  * @author wangmin
- * @date 2021-03-31 12:47:27
+ * @date 2021-05-18 17:04:35
  */
 @Builder
-public class AddScene extends BaseScene {
+public class StaffAddScene extends BaseScene {
     /**
      * 描述 姓名
      * 是否必填 true
@@ -39,7 +39,9 @@ public class AddScene extends BaseScene {
      * 是否必填 true
      * 版本 v2.0
      */
-    private final JSONArray roleList;
+    private final int roleId;
+
+    private final String roleName;
 
     /**
      * 描述 员工图片oss路径
@@ -49,19 +51,28 @@ public class AddScene extends BaseScene {
     private final String picturePath;
 
 
+    private final JSONArray shopList;
+
+
     @Override
-    public JSONObject getRequestBody() {
+    protected JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("name", name);
         object.put("phone", phone);
         object.put("gender", gender);
-        object.put("role_list", roleList);
         object.put("picture_path", picturePath);
+        JSONArray roleList = new JSONArray();
+        JSONObject a = new JSONObject();
+        a.put("role_id", roleId);
+        a.put("role_name", roleName);
+        a.put("shop_list", shopList);
+        roleList.add(a);
+        object.put("role_list", roleList);
         return object;
     }
 
     @Override
     public String getPath() {
-        return "/account-platform/pc/staff/add";
+        return "/account-platform/auth/staff/add";
     }
 }

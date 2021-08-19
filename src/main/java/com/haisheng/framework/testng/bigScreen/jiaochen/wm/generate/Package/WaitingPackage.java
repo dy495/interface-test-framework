@@ -33,7 +33,7 @@ public class WaitingPackage extends AbstractPackage {
             JSONArray voucherArray = util.getVoucherArray(voucherPage, 1);
             util.createPackage(voucherArray, UseRangeEnum.CURRENT);
         } else {
-            scene.invoke(visitor);
+            scene.execute(visitor);
         }
         logger("CREATE WAITING FINISH");
     }

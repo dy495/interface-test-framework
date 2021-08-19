@@ -9,7 +9,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shop.EditScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
-import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.PublicParmOnline;
+import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.PublicParamOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -35,7 +35,7 @@ public class DataCaseOnline extends TestCaseCommon implements TestCaseStd {
 
     ScenarioUtilOnline jc = ScenarioUtilOnline.getInstance();
     jiaoChenInfoOnline info = new jiaoChenInfoOnline();
-    PublicParmOnline pp = new PublicParmOnline();
+    PublicParamOnline pp = new PublicParamOnline();
     CommonConfig commonConfig = new CommonConfig();
 
     /**
@@ -105,7 +105,7 @@ public class DataCaseOnline extends TestCaseCommon implements TestCaseStd {
             //每次修改固定shop
             int code = EditScene.builder().id(20709L).name(name).simpleName(simple_name).districtCode(district_code).address(address).brandList(arr)
                     .saleTel(sale_tel).serviceTel(service_tel).longitude(Double.valueOf(longitude)).latitude(Double.valueOf(latitude)).avatarPath(info.getLogo()).customerServiceTel(sale_tel).rescueTel(sale_tel)
-                    .build().invoke(visitor, false).getInteger("code");
+                    .build().execute(visitor, false).getInteger("code");
             Preconditions.checkArgument(code == 1000, "修改门店，状态码" + code);
 
             int after = jc.shopPage(1, 1, "").getInteger("total");
@@ -271,19 +271,19 @@ public class DataCaseOnline extends TestCaseCommon implements TestCaseStd {
         try {
 
 
-            jc.appletLoginToken(pp.appletTocken);
+            jc.appletLoginToken(pp.appletToken);
             int bef = jc.appletBrandList().getJSONArray("list").size();
             util.loginPc(ALL_AUTHORITY);
             jc.addBrand(info.stringone, info.getLogo());
             Long id = jc.brandPage(1, 10, "", "").getJSONArray("list").getJSONObject(0).getLong("id");
 
-            jc.appletLoginToken(pp.appletTocken);
+            jc.appletLoginToken(pp.appletToken);
             int afteradd = jc.appletBrandList().getJSONArray("list").size();
             //删除品牌
             util.loginPc(ALL_AUTHORITY);
             jc.delBrand(id);
 
-            jc.appletLoginToken(pp.appletTocken);
+            jc.appletLoginToken(pp.appletToken);
             int afterdel = jc.appletBrandList().getJSONArray("list").size();
 
             util.loginPc(ALL_AUTHORITY);
@@ -306,7 +306,7 @@ public class DataCaseOnline extends TestCaseCommon implements TestCaseStd {
     public void addDelCarStyleChkApplet() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            jc.appletLoginToken(pp.appletTocken);
+            jc.appletLoginToken(pp.appletToken);
             int bef = jc.appletCarStyleList(info.BrandIDOnline).getJSONArray("list").size();
             util.loginPc(ALL_AUTHORITY);
             //创建车系
@@ -317,14 +317,14 @@ public class DataCaseOnline extends TestCaseCommon implements TestCaseStd {
             //获取车系id
             Long id = jc.carStylePage(1, 1, info.BrandIDOnline, name).getJSONArray("list").getJSONObject(0).getLong("id");
 
-            jc.appletLoginToken(pp.appletTocken);
+            jc.appletLoginToken(pp.appletToken);
             int afteradd = jc.appletCarStyleList(info.BrandIDOnline).getJSONArray("list").size();
 
             util.loginPc(ALL_AUTHORITY);
             //删除品牌车系
             jc.delCarStyle(id);
 
-            jc.appletLoginToken(pp.appletTocken);
+            jc.appletLoginToken(pp.appletToken);
             int afterdel = jc.appletCarStyleList(info.BrandIDOnline).getJSONArray("list").size();
 
 
@@ -348,7 +348,7 @@ public class DataCaseOnline extends TestCaseCommon implements TestCaseStd {
     public void addDelCarModelChkApplet() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            jc.appletLoginToken(pp.appletTocken);
+            jc.appletLoginToken(pp.appletToken);
             int bef = jc.appletCarModelList(Long.toString(info.BrandIDOnline), Long.toString(info.CarStyleIDOnline)).getJSONArray("list").size();
 
             util.loginPc(ALL_AUTHORITY);
@@ -361,14 +361,14 @@ public class DataCaseOnline extends TestCaseCommon implements TestCaseStd {
             int size = jc.carModelPage(1, 1, info.BrandIDOnline, info.CarStyleIDOnline, name1, "", "").getInteger("total");
             Long id = jc.carModelPage(1, size, info.BrandIDOnline, info.CarStyleIDOnline, name1, "", "").getJSONArray("list").getJSONObject(size - 1).getLong("id");
 
-            jc.appletLoginToken(pp.appletTocken);
+            jc.appletLoginToken(pp.appletToken);
             int afteradd = jc.appletCarModelList(Long.toString(info.BrandIDOnline), Long.toString(info.CarStyleIDOnline)).getJSONArray("list").size();
 
             util.loginPc(ALL_AUTHORITY);
             //删除品牌车系车型
             jc.delCarModel(id);
 
-            jc.appletLoginToken(pp.appletTocken);
+            jc.appletLoginToken(pp.appletToken);
             int afterdel = jc.appletCarModelList(Long.toString(info.BrandIDOnline), Long.toString(info.CarStyleIDOnline)).getJSONArray("list").size();
 
             util.loginPc(ALL_AUTHORITY);

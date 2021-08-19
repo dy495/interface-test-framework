@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.bigScreen.itemBasic.base.scene;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
+import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -28,6 +29,8 @@ public abstract class BaseScene implements IScene {
     @Setter
     protected Integer page;
     private JSONObject body;
+    @Getter
+    private VisitorProxy visitor;
 
     /**
      * 处理后的请求体
@@ -65,19 +68,40 @@ public abstract class BaseScene implements IScene {
     }
 
     /**
-     * 提供访问接口的能力
+     * 执行
      *
      * @param visitor   要执行的产品
      * @param checkCode 是否校验code
      * @return 接口返回值
      */
     @Override
-    public JSONObject invoke(@NotNull VisitorProxy visitor, boolean checkCode) {
+    public JSONObject execute(@NotNull VisitorProxy visitor, boolean checkCode) {
         return visitor.invokeApi(getPath(), getBody(), checkCode);
     }
 
     /**
-     * 提供上传文件的能力
+     * 执行
+     *
+     * @return 接口返回值
+     */
+    @Override
+    public JSONObject execute() {
+        return execute(true);
+    }
+
+    /**
+     * 执行
+     *
+     * @param checkCode 是否校验code
+     * @return 返回值
+     */
+    private JSONObject execute(boolean checkCode) {
+        Preconditions.checkNotNull(this.visitor, "visitor 未传入");
+        return this.visitor.invokeApi(getIpPort(), getPath(), getBody(), checkCode);
+    }
+
+    /**
+     * 上传
      *
      * @param visitor 要执行的产品
      * @return 接口返回值
@@ -89,6 +113,11 @@ public abstract class BaseScene implements IScene {
         return visitor.upload(getPath(), filePath);
     }
 
+    /**
+     * 下载
+     *
+     * @return 接口返回值
+     */
     public JSONObject download() {
         //todo 未开发
         return null;
@@ -106,6 +135,7 @@ public abstract class BaseScene implements IScene {
 
     /**
      * 去掉某些参数
+     * 对构建的请求体操作
      *
      * @param keys 键的集合
      * @return IScene
@@ -119,6 +149,7 @@ public abstract class BaseScene implements IScene {
 
     /**
      * 修改某个key的值
+     * 对构建的请求体操作
      *
      * @param key   key
      * @param value value
@@ -131,9 +162,19 @@ public abstract class BaseScene implements IScene {
         return this;
     }
 
+    /**
+     * 获取接口返回值
+     *
+     * @return 响应数据
+     */
     @Override
-    public Response getResponse(VisitorProxy visitor) {
-        JSONObject object = visitor.invokeApi(getPath(), getBody(), false);
-        return JSONObject.toJavaObject(object, Response.class);
+    public Response getResponse() {
+        return JSONObject.toJavaObject(execute(false), Response.class);
+    }
+
+    @Override
+    public IScene visitor(VisitorProxy visitor) {
+        this.visitor = visitor;
+        return this;
     }
 }

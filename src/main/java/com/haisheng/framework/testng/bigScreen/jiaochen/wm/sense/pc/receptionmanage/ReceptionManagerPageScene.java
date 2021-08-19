@@ -11,20 +11,22 @@ import lombok.Builder;
  * @date 2021-03-31 12:47:27
  */
 @Builder
-public class PageScene extends BaseScene {
+public class ReceptionManagerPageScene extends BaseScene {
     /**
      * 描述 页码 大于0
      * 是否必填 true
      * 版本 v1.0
      */
-    private final Integer page;
+    @Builder.Default
+    private Integer page = 1;
 
     /**
      * 描述 页大小 范围为[1,100]
      * 是否必填 true
      * 版本 v1.0
      */
-    private final Integer size;
+    @Builder.Default
+    private Integer size = 10;
 
     /**
      * 描述 车牌号
@@ -134,5 +136,15 @@ public class PageScene extends BaseScene {
     @Override
     public String getPath() {
         return "/car-platform/pc/reception-manage/page";
+    }
+
+    @Override
+    public void setPage(Integer page) {
+        this.page = page;
+    }
+
+    @Override
+    public void setSize(Integer size) {
+        this.size = size;
     }
 }

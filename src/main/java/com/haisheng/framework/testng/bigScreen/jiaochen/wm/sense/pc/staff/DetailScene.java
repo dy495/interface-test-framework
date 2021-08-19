@@ -29,6 +29,6 @@ public class DetailScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/account-platform/pc/staff/detail";
+        return "/account-platform/auth/staff/detail";
     }
 }

@@ -348,14 +348,14 @@ public class QADbUtil {
     }
 
 
-    public DataTemp selsetDataTemp(String dataName) {
+    public DataTemp selectDataTemp(String dataName) {
         getNewSqlSession();
         IDataTempDao dao = sqlSession.getMapper(IDataTempDao.class);
 
         return dao.queryDataByName(dataName);
     }
 
-    public Integer selsetDataTempOne(String column_name, String dataName) {
+    public Integer selectDataTempOne(String column_name, String dataName) {
         getNewSqlSession();
         IDataTempDao dao = sqlSession.getMapper(IDataTempDao.class);
 

@@ -11,7 +11,7 @@ import lombok.Builder;
  * @date 2021-03-31 12:47:27
  */
 @Builder
-public class DeleteScene extends BaseScene {
+public class StaffDeleteScene extends BaseScene {
     /**
      * 描述 账号id
      * 是否必填 true
@@ -29,6 +29,6 @@ public class DeleteScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/account-platform/pc/staff/delete";
+        return "/account-platform/auth/staff/delete";
     }
 }
