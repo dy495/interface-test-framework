@@ -19,7 +19,7 @@ public class PublicParamOnline {
     public String shopIdZ = "20032";   //门店Id 中关村店
 
     public String reception_sale_id = "石矶娘娘";
-    public String name = "";
+    public String name = "创建角色xia";
     public String customerPhone = "15037286012";
     public String filepath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/jcBase64.txt";
 
@@ -80,7 +80,8 @@ public class PublicParamOnline {
     public JSONArray coordinate = getCoordinate();
     public Long voucherId = 81L;  //经纬度
 
-    public JSONArray roleList = getRoleList();
+    public Long parentRoleId = 395L;
+    public JSONArray authList = getAuthList();
     public JSONArray vouchers = getvouchersList();
     public JSONArray vouchers2 = voucherSingle();
 
@@ -101,7 +102,7 @@ public class PublicParamOnline {
         return moduleId2;
     }
 
-    public JSONArray getRoleList() {
+    public JSONArray getAuthList() {
         JSONArray moduleId2 = new JSONArray();
         moduleId2.add(136);
         moduleId2.add(138);

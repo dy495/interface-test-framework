@@ -50,7 +50,8 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.task.AppRe
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.AuthTreeScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.appointmentmanage.AppointmentPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.appointmentmanage.TimeTableListScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpload;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUploadScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.UploadScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralcenter.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralmall.GoodsManagePageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.loginuser.LoginApp;
@@ -65,6 +66,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionman
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.ReceptionPurchaseFixedPackageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.ReceptionPurchaseTemporaryPackageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.role.RoleListScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.staff.StaffAddScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.staff.StaffDeleteScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.staff.StaffPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.userange.DetailScene;
@@ -123,6 +125,11 @@ public class SceneUtil extends BasicUtil {
         visitor.setProduct(newProduce);
         visitor.setToken(scene);
         visitor.setProduct(oldProduce);
+    }
+
+    public String uploadFile() {
+        String pic = new ImageUtil().getImageBinary("src/main/java/com/haisheng/framework/testng/bigScreen/itemYuntong/common/resources/picture/touxiang.jpg");
+        return UploadScene.builder().pic("data:image/jpeg;base64," + pic).permanentPicType(0).ratio(1.0).ratioStr("1:1").build().execute(visitor).getString("pic_path");
     }
 
     /**
@@ -295,7 +302,7 @@ public class SceneUtil extends BasicUtil {
         String[] strings = ratioStr.split(":");
         double ratio = BigDecimal.valueOf(Double.parseDouble(strings[0]) / Double.parseDouble(strings[1]))
                 .divide(new BigDecimal(1), 4, BigDecimal.ROUND_HALF_UP).doubleValue();
-        return FileUpload.builder().isPermanent(false).permanentPicType(0).pic(picture).ratioStr(ratioStr)
+        return FileUploadScene.builder().isPermanent(false).permanentPicType(0).pic(picture).ratioStr(ratioStr)
                 .ratio(ratio).build().execute(visitor).getString("pic_path");
     }
 

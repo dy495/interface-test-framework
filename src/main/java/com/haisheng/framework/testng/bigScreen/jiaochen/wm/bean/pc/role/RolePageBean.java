@@ -13,7 +13,7 @@ import java.io.Serializable;
  * @date 2021-04-02 14:47:46
  */
 @Data
-public class PageBean implements Serializable {
+public class RolePageBean implements Serializable {
     /**
      * 描述 当前页
      * 版本 v1.0

@@ -53,6 +53,7 @@ public class StaffAddScene extends BaseScene {
 
     private final JSONArray shopList;
 
+    private final JSONArray roleList;
 
     @Override
     protected JSONObject getRequestBody() {
@@ -61,13 +62,17 @@ public class StaffAddScene extends BaseScene {
         object.put("phone", phone);
         object.put("gender", gender);
         object.put("picture_path", picturePath);
-        JSONArray roleList = new JSONArray();
-        JSONObject a = new JSONObject();
-        a.put("role_id", roleId);
-        a.put("role_name", roleName);
-        a.put("shop_list", shopList);
-        roleList.add(a);
-        object.put("role_list", roleList);
+        if (!roleList.isEmpty()) {
+            object.put("role_list", roleList);
+        } else {
+            JSONArray roleList = new JSONArray();
+            JSONObject a = new JSONObject();
+            a.put("role_id", roleId);
+            a.put("role_name", roleName);
+            a.put("shop_list", shopList);
+            roleList.add(a);
+            object.put("role_list", roleList);
+        }
         return object;
     }
 

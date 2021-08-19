@@ -29,6 +29,6 @@ public class RoleDeleteScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/car-platform/pc/role/delete";
+        return "/account-platform/auth/role/delete";
     }
 }

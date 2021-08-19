@@ -11,7 +11,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.om.Article
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.banner.AppletBannerScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.ActivityManagePageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.banner.EditScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpload;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUploadScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.operation.ArticleList;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.operation.ArticlePageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
@@ -86,7 +86,7 @@ public class ContentOperationCaseOnline extends TestCaseCommon implements TestCa
         try {
             String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
             String base64 = new ImageUtil().getImageBinary(filePath);
-            String message = FileUpload.builder().pic(base64).permanentPicType(0).isPermanent(false).ratio(1.5).ratioStr("3：2").build().execute(visitor, false).getString("message");
+            String message = FileUploadScene.builder().pic(base64).permanentPicType(0).isPermanent(false).ratio(1.5).ratioStr("3：2").build().execute(visitor, false).getString("message");
             String err = "图片宽高比不符合3：2的要求";
             CommonUtil.checkResult("图片比", "非3：2", err, message);
         } catch (Exception | AssertionError e) {
@@ -123,7 +123,7 @@ public class ContentOperationCaseOnline extends TestCaseCommon implements TestCa
             File[] files = file.listFiles();
             assert files != null;
             List<String> base64s = Arrays.stream(files).filter(e -> e.toString().contains("banner")).map(e -> new ImageUtil().getImageBinary(e.getPath())).collect(Collectors.toList());
-            List<String> picPaths = base64s.stream().map(e -> visitor.invokeApi(FileUpload.builder().pic(e).permanentPicType(0).isPermanent(false).ratio(1.5).ratioStr("3：2").build()).getString("pic_path")).collect(Collectors.toList());
+            List<String> picPaths = base64s.stream().map(e -> visitor.invokeApi(FileUploadScene.builder().pic(e).permanentPicType(0).isPermanent(false).ratio(1.5).ratioStr("3：2").build()).getString("pic_path")).collect(Collectors.toList());
             JSONArray array = new JSONArray();
             JSONObject jsonObject1 = new JSONObject();
             jsonObject1.put("article_id", articleIds.get(0));

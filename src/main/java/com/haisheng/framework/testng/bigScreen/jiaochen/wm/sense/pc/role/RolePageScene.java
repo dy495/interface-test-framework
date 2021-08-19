@@ -47,7 +47,7 @@ public class RolePageScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/car-platform/pc/role/page";
+        return "/account-platform/auth/role/page";
     }
 
 

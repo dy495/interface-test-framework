@@ -34,6 +34,8 @@ public class RoleAddScene extends BaseScene {
      */
     private final String description;
 
+    private final Long parentRoleId;
+
 
     @Override
     public JSONObject getRequestBody() {
@@ -41,11 +43,12 @@ public class RoleAddScene extends BaseScene {
         object.put("name", name);
         object.put("authList", authList);
         object.put("description", description);
+        object.put("parent_role_id", parentRoleId);
         return object;
     }
 
     @Override
     public String getPath() {
-        return "/car-platform/pc/role/add";
+        return "/account-platform/auth/role/add";
     }
 }

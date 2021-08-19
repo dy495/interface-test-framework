@@ -111,7 +111,7 @@ public class JcCancleAppointmentOnLine extends TestCaseCommon implements TestCas
             dataTemp.setPcAppointmentRecordNum(pf.pcAppointmentRecodePage());
             dataTemp.setAppReceiptage(pf.appReceiptPage());
             dataTemp.setPcAppointmentNUmber(pf.appointmentNUmber(num));
-            int appTodayTask[] = pf.appTask();
+            int[] appTodayTask = pf.appTask();
             dataTemp.setAppSurplusAppointment(appTodayTask[0]);
             dataTemp.setApp_all_appointment(appTodayTask[1]);
             dataTemp.setApp_surplus_reception(appTodayTask[2]);

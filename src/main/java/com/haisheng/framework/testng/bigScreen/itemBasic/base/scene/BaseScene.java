@@ -96,8 +96,8 @@ public abstract class BaseScene implements IScene {
      * @return 返回值
      */
     private JSONObject execute(boolean checkCode) {
-        Preconditions.checkNotNull(this.visitor, "visitor 未传入");
-        return this.visitor.invokeApi(getIpPort(), getPath(), getBody(), checkCode);
+        Preconditions.checkNotNull(visitor, "visitor is null");
+        return visitor.invokeApi(getIpPort(), getPath(), getBody(), checkCode);
     }
 
     /**

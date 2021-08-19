@@ -14,7 +14,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.VoucherGenerator;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpload;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUploadScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherDetailScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherFormVoucherPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
@@ -735,7 +735,7 @@ public class BusinessUtil {
         String picture = new ImageUtil().getImageBinary(picPath);
         String[] strings = ratioStr.split(":");
         double ratio = BigDecimal.valueOf(Double.parseDouble(strings[0]) / Double.parseDouble(strings[1])).divide(new BigDecimal(1), 4, BigDecimal.ROUND_HALF_UP).doubleValue();
-        IScene scene = FileUpload.builder().isPermanent(false).permanentPicType(0).pic(picture).ratioStr(ratioStr).ratio(ratio).build();
+        IScene scene = FileUploadScene.builder().isPermanent(false).permanentPicType(0).pic(picture).ratioStr(ratioStr).ratio(ratio).build();
         return visitor.invokeApi(scene).getString("pic_path");
     }
 
@@ -748,7 +748,7 @@ public class BusinessUtil {
     public String getPicPath() {
         String path = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/banner-1.jpg";
         String picture = new ImageUtil().getImageBinary(path);
-        IScene scene = FileUpload.builder().isPermanent(false).permanentPicType(0).pic(picture).ratio(1.5).build();
+        IScene scene = FileUploadScene.builder().isPermanent(false).permanentPicType(0).pic(picture).ratio(1.5).build();
         return visitor.invokeApi(scene).getString("pic_path");
     }
 

@@ -141,17 +141,16 @@ public class JcFunctionOnline {
 
     public JSONObject getRoleList1(String roleId, String roleName) {
         //shopList
-        JSONObject shopdate = new JSONObject();
-        shopdate.put("shop_id", pp.shopIdZ);
-        shopdate.put("shop_name", pp.shopName);
+        JSONObject shopDate = new JSONObject();
+        shopDate.put("shop_id", pp.shopIdZ);
+        shopDate.put("shop_name", pp.shopName);
         JSONArray shop_list = new JSONArray();
-        shop_list.add(shopdate);
+        shop_list.add(shopDate);
         //shopList
         JSONObject roleList = new JSONObject();
         roleList.put("role_id", roleId);
         roleList.put("role_name", roleName);
         roleList.put("shop_list", shop_list);
-
         return roleList;
     }
 

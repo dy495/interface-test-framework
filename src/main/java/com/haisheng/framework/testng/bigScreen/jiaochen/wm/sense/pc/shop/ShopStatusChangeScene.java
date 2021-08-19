@@ -11,7 +11,7 @@ import lombok.Builder;
  * @date 2021-03-31 12:47:27
  */
 @Builder
-public class StatusChangeScene extends BaseScene {
+public class ShopStatusChangeScene extends BaseScene {
     /**
      * 描述 门店id
      * 是否必填 true

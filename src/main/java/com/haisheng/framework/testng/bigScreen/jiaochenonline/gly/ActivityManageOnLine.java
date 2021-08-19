@@ -21,7 +21,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.Vouc
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.AppletArticleListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.ArticleVoucherReceiveScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpload;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUploadScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.ChangeProvideStatusScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.InvalidVoucherScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
@@ -2594,7 +2594,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                     "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/动图.gif"};
             Arrays.stream(paths).forEach(path -> {
                 String picture = new ImageUtil().getImageBinary(path);
-                IScene scene = FileUpload.builder().isPermanent(false).permanentPicType(0).pic(picture).ratio(1.5).build();
+                IScene scene = FileUploadScene.builder().isPermanent(false).permanentPicType(0).pic(picture).ratio(1.5).build();
                 String message = visitor.invokeApi(scene, false).getString("message");
                 Preconditions.checkArgument(message.equals("success") || message.equals("图片宽高比不符合null的要求"), "活动图片的异常情况为：" + path);
             });

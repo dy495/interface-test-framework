@@ -13,7 +13,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesre
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.AppStartReceptionScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.brand.BrandPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.manage.EvaluateConfigSubmitScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shop.PageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shop.ShopPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyBatchApprovalScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.AddVoucherScene;
@@ -307,7 +307,7 @@ public class jiaoChenInfoOnline {
     //门店id对应的门店名字
     public String shopIdForName(Long id) {
         user.loginPc(ALL_AUTHORITY);
-        JSONArray array = PageScene.builder().page(1).size(100).build().execute(visitor).getJSONArray("list");
+        JSONArray array = ShopPageScene.builder().page(1).size(100).build().execute(visitor).getJSONArray("list");
         String name = "";
         for (int i = 0; i < array.size(); i++) {
             JSONObject obj = array.getJSONObject(i);

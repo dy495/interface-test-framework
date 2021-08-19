@@ -662,7 +662,7 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     public JSONObject organizationAccountAdd(String name, String phone, List role_list, List shop_list, Boolean checkcode) {
-        String url = "/car-platform/pc/staff/add";
+        String url = "/account-platform/auth/staff/add";
         JSONObject json = new JSONObject();
         json.put("name", name);
         json.put("phone", phone);

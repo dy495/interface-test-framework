@@ -5,7 +5,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.BaseScene;
 import lombok.Builder;
 
 @Builder
-public class FileUpload extends BaseScene {
+public class FileUploadScene extends BaseScene {
     private final String pic;
     private final Boolean isPermanent;
     private final Double ratio;
