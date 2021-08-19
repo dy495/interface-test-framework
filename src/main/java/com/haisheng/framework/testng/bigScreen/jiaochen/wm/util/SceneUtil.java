@@ -1699,7 +1699,9 @@ public class SceneUtil extends BasicUtil {
                 .map(Response::getMessage).collect(Collectors.toList()).toArray(new String[list.size()]);
     }
 
-    public String getSaleId(){return visitor.isDaily() ? "uid_f1a745c7":"";}
+    public String getVacationSaleId(){return visitor.isDaily() ? "uid_f1a745c7":"";}
+    public String getBusySaleId(){return visitor.isDaily() ? "uid_caf1b799":"";}
+    public Long getBuyCarId(){return visitor.isDaily() ? 335L:0;}
 
     /**
      * @description : 用于检查空闲中最后一位销售
