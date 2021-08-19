@@ -89,7 +89,7 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
 
 
     //品牌--正常
-    @Test //ok
+    @Test(enabled = false) //ok
     public void addBrand_name1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -111,7 +111,7 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test //ok
+    @Test(enabled = false) //ok
     public void addBrand_name10() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -188,7 +188,7 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
 
     //品牌车系--正常
 
-    @Test(dataProvider = "CAR_STYLE")
+    @Test(dataProvider = "CAR_STYLE",enabled = false)
     public void addCarStyle(String manufacturer, String name, String online_time) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -249,7 +249,7 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test  //ok
+    @Test(enabled = false)  //ok
     public void addOneCarStyleinTwoModel() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -385,7 +385,7 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
 
 
     //品牌车系车型 --正常
-    @Test(dataProvider = "CAR_MODEL") //ok
+    @Test(dataProvider = "CAR_MODEL",enabled = false) //ok
     public void addCarModel(String name, String year, String status) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
