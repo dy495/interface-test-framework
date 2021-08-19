@@ -82,7 +82,7 @@ public class FaceCase extends TestCaseCommon implements TestCaseStd {
 
 
     public List<JSONObject> getFaceIdList(String customerType, boolean isApprove){
-        Stream<JSONObject> jsonObjectStream = AppReidReidListScene.builder().isFaceOpen(true).enterType("PRE_SALE").size(100).build().invoke(visitor, true)
+        Stream<JSONObject> jsonObjectStream = AppReidReidListScene.builder().isFaceOpen(true).enterType("PRE_SALE").size(100).build().execute(visitor, true)
                 .getJSONArray("list").stream().map(ele -> (JSONObject) ele)
                 .filter(e -> Objects.equals(customerType, e.getString("reid_type_name")));
         if(isApprove){
@@ -93,16 +93,16 @@ public class FaceCase extends TestCaseCommon implements TestCaseStd {
         return null;
     }
     public List<JSONObject> getFaceIdList(String customerType){
-        return AppReidReidListScene.builder().isFaceOpen(true).enterType("PRE_SALE").size(100).build().invoke(visitor, true)
+        return AppReidReidListScene.builder().isFaceOpen(true).enterType("PRE_SALE").size(100).build().execute(visitor, true)
                 .getJSONArray("list").stream().map(ele -> (JSONObject) ele)
                 .filter(e -> Objects.equals(customerType, e.getString("reid_type_name"))).collect(Collectors.toList());
     }
     public List<JSONObject> getFaceIdList(boolean isApprove){
         if(isApprove){
-            return AppReidReidListScene.builder().isFaceOpen(true).enterType("PRE_SALE").size(100).build().invoke(visitor, true)
+            return AppReidReidListScene.builder().isFaceOpen(true).enterType("PRE_SALE").size(100).build().execute(visitor, true)
                     .getJSONArray("list").stream().map(ele -> (JSONObject) ele).filter(e -> e.getBoolean("is_agreement")).collect(Collectors.toList());
         } else if(!isApprove){
-            return AppReidReidListScene.builder().isFaceOpen(true).enterType("PRE_SALE").size(100).build().invoke(visitor, true)
+            return AppReidReidListScene.builder().isFaceOpen(true).enterType("PRE_SALE").size(100).build().execute(visitor, true)
                     .getJSONArray("list").stream().map(ele -> (JSONObject) ele).filter(e -> !e.getBoolean("is_agreement")).collect(Collectors.toList());
         }
         return null;

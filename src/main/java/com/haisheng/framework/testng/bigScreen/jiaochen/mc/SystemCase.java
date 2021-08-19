@@ -10,6 +10,7 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.pres
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.presalesreception.AppCustomerEditV4Scene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.presalesreception.AppReceptorChangeScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.reid.AppReidReidDistributeScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.reid.AppReidReidListScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.retention.AppRetentionReidCustomerAddScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.saleschedule.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.AppFinishReceptionScene;
@@ -24,6 +25,7 @@ import org.testng.annotations.*;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SystemCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct PRODUCE = EnumTestProduct.JC_DAILY_JD;
@@ -66,8 +68,6 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-<<<<<<< HEAD
-=======
      * @description :
      * prams:     customerType:"新客"
      *
@@ -147,7 +147,6 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 //    }
 
     /**
->>>>>>> 72491ef61438fbc6b66374c3411b7c403b21f0b3
      * @description : 门店中状态为接待中的销售，判断状态是否正确
      * @return  : list, 状态为接待中但没有接待卡片的销售
      **/
@@ -171,29 +170,22 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         customer.put("customer_id",customerId);
         customer.put("is_decision",true);
         customerList.add(customer);
-<<<<<<< HEAD
-        AppReidReidDistributeScene.builder().reidInfoList(customerList).enterType("PRE_SALE").build().invoke(visitor);
-=======
         AppReidReidDistributeScene.builder().reidInfoList(customerList).enterType("PRE_SALE").build().execute(visitor);
-
->>>>>>> 72491ef61438fbc6b66374c3411b7c403b21f0b3
     }
     /**
      * @description : 自动完成一个接待，自动编辑信息然后完成
      **/
     public String finishReception(JSONObject reception){
-        AppCustomerEditV4Scene.builder().id(reception.getLong("id")).customerId(reception.getLong("customer_id")).customerName("自动完成接待").sexId(1).customerPhone("156" + CommonUtil.getRandom(9)).intentionCarModelId(util.getBuyCarId()).estimateBuyCarDate("2030-08-08").build().invoke(visitor,false);
-        return AppFinishReceptionScene.builder().id(reception.getLong("id")).shopId(Long.parseLong(ACCOUNT.getReceptionShopId())).build().invoke(visitor, false).getString("message");
+        AppCustomerEditV4Scene.builder().id(reception.getLong("id")).customerId(reception.getLong("customer_id")).customerName("自动完成接待").sexId(1).customerPhone("156" + CommonUtil.getRandom(9)).intentionCarModelId(util.getBuyCarId()).estimateBuyCarDate("2030-08-08").build().execute(visitor,false);
+        return AppFinishReceptionScene.builder().id(reception.getLong("id")).shopId(Long.parseLong(ACCOUNT.getReceptionShopId())).build().execute(visitor, false).getString("message");
     }
 
     @Test
     public void a1ChangeStatus(){
         //AppSaleScheduleUpdateSaleStatusScene.builder().saleId("uid_38b574df").sourceSaleStatus(0).targetSaleStatus(3).vacationStartTime("2021-08-18").vacationEndTime("2035-08-18").build().invoke(visitor);
-<<<<<<< HEAD
-        AppSaleScheduleUpdateSaleStatusScene.builder().saleId(util.getBusySaleId()).sourceSaleStatus(0).targetSaleStatus(2).build().invoke(visitor);
-=======
+        AppSaleScheduleUpdateSaleStatusScene.builder().saleId(util.getBusySaleId()).sourceSaleStatus(0).targetSaleStatus(2).build().execute(visitor);
         AppSaleScheduleUpdateSaleStatusScene.builder().saleId("uid_caf1b799").sourceSaleStatus(0).targetSaleStatus(2).build().execute(visitor);
->>>>>>> 72491ef61438fbc6b66374c3411b7c403b21f0b3
+
     }
     @Test
     public void changeSale1(){
@@ -243,34 +235,34 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     @Test(description = "分组设置")
     public void groupConfig(){
         try {
-            JSONArray groups = AppSaleScheduleGroupListScene.builder().type("PRE").build().invoke(visitor, true).getJSONArray("group_infos");
+            JSONArray groups = AppSaleScheduleGroupListScene.builder().type("PRE").build().execute(visitor, true).getJSONArray("group_infos");
             //拿到2组
             JSONObject second = groups.stream().map(e -> (JSONObject) e).filter(e -> Objects.equals("2组", e.getString("group_name"))).findFirst().orElse(null);
             // 操作前的总组数
             int size1 = groups.size();
             if (second != null) {
                 // 删除2组
-                String delMessage = AppSaleScheduleDelGroupScene.builder().groupId(second.getLong("group_id")).type("PRE").build().invoke(visitor, false).getString("message");
+                String delMessage = AppSaleScheduleDelGroupScene.builder().groupId(second.getLong("group_id")).type("PRE").build().execute(visitor, false).getString("message");
                 //删除2组后的组数
-                int size2 = AppSaleScheduleGroupListScene.builder().type("PRE").build().invoke(visitor, true).getJSONArray("group_infos").size();
+                int size2 = AppSaleScheduleGroupListScene.builder().type("PRE").build().execute(visitor, true).getJSONArray("group_infos").size();
                 Preconditions.checkArgument(size2 == size1-1,"删除组失败:"+delMessage);
                 //新建一个分组3组
-                String addMessage = AppSaleScheduleAddGroupScene.builder().type("PRE").build().invoke(visitor, false).getString("message");
+                String addMessage = AppSaleScheduleAddGroupScene.builder().type("PRE").build().execute(visitor, false).getString("message");
                 //新建3组后的组数
-                JSONArray groups2 = AppSaleScheduleGroupListScene.builder().type("PRE").build().invoke(visitor, true).getJSONArray("group_infos");
+                JSONArray groups2 = AppSaleScheduleGroupListScene.builder().type("PRE").build().execute(visitor, true).getJSONArray("group_infos");
                 int size3 = groups2.size();
                 // 获取3组
                 JSONObject three = groups2.stream().map(e -> (JSONObject) e).filter(e -> Objects.equals("3组", e.getString("group_name"))).findFirst().orElse(null);
                 Preconditions.checkArgument(size3 == size2 + 1, "创建组失败:" + addMessage);
                 //获取前6个销售id列表
-                List<String> list = AppSaleScheduleFreeSaleScene.builder().type("PRE").build().invoke(visitor, true).
+                List<String> list = AppSaleScheduleFreeSaleScene.builder().type("PRE").build().execute(visitor, true).
                         getJSONArray("list").stream().map(e -> (JSONObject) e).map(e -> e.getString("sale_id")).limit(6).collect(Collectors.toList());
                 JSONArray saleList = new JSONArray();
                 saleList.addAll(list);
                 if (three != null) {
                     // 新增的3组里添加6个销售
-                    String addSaleMessage = AppSaleScheduleJoinGroupScene.builder().groupId(three.getLong("group_id")).type("PRE").salesInfoList(saleList).build().invoke(visitor, false).getString("message");
-                    int groupSize = AppSaleScheduleGroupListScene.builder().type("PRE").build().invoke(visitor, true).getJSONArray("group_infos").
+                    String addSaleMessage = AppSaleScheduleJoinGroupScene.builder().groupId(three.getLong("group_id")).type("PRE").salesInfoList(saleList).build().execute(visitor, false).getString("message");
+                    int groupSize = AppSaleScheduleGroupListScene.builder().type("PRE").build().execute(visitor, true).getJSONArray("group_infos").
                             stream().map(e -> (JSONObject) e).filter(e -> Objects.equals("3组", e.getString("group_name"))).findFirst().orElse(null).
                             getJSONArray("sales_info_list").size();
                     Preconditions.checkArgument(groupSize==6,"3组添加销售失败:"+addSaleMessage);
@@ -283,9 +275,9 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test
+    //@Test
     public void checkSales(){
-        Object recept = AppPreSalesReceptionPageScene.builder().build().invoke(visitor).getJSONArray("list").get(0);
+        Object recept = AppPreSalesReceptionPageScene.builder().build().execute(visitor).getJSONArray("list").get(0);
         finishReception((JSONObject) recept);
     }
 

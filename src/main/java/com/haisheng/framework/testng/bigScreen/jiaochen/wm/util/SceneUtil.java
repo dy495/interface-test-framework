@@ -1736,11 +1736,10 @@ public class SceneUtil extends BasicUtil {
                 .map(Response::getMessage).collect(Collectors.toList()).toArray(new String[list.size()]);
     }
 
-<<<<<<< HEAD
     public String getVacationSaleId(){return visitor.isDaily() ? "uid_f1a745c7":"";}
     public String getBusySaleId(){return visitor.isDaily() ? "uid_caf1b799":"";}
     public Long getBuyCarId(){return visitor.isDaily() ? 335L:0;}
-=======
+
     public String getSaleId() {
         return visitor.isDaily() ? "uid_f1a745c7" : "";
     }
@@ -1796,7 +1795,6 @@ public class SceneUtil extends BasicUtil {
         String id = response.getString("id");
         StaffDeleteScene.builder().id(id).build().execute(visitor);
     }
->>>>>>> 72491ef61438fbc6b66374c3411b7c403b21f0b3
 
     /**
      * @return : 空闲中最后一位销售的JSONObject
