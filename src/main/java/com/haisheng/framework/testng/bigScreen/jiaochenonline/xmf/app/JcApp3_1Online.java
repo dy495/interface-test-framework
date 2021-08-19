@@ -14,7 +14,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesre
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.consultmanagement.ResponseRuleEditScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.FollowType;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.JcFunctionOnline;
-import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.PublicParmOnline;
+import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.PublicParamOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -30,7 +30,7 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
     EnumTestProduct product = EnumTestProduct.JC_ONLINE_JD;
     ScenarioUtil jc = new ScenarioUtil();
 
-    PublicParmOnline pp = new PublicParmOnline();
+    PublicParamOnline pp = new PublicParamOnline();
     JcFunctionOnline pf = new JcFunctionOnline();
     CommonConfig commonConfig = new CommonConfig();
 
@@ -104,7 +104,7 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
     }
 
     public void finishReception() {
-        Integer receptionId = qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum", dataName);
+        Integer receptionId = qaDbUtil.selectDataTempOne("pcAppointmentRecordNum", dataName);
         IScene appcustomerEdit = AppCustomerEditScene.builder()
                 .id(String.valueOf(receptionId))
                 .shopId(pp.shopIdZ)
@@ -169,7 +169,7 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
     public void editCustomer1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int id = qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum", dataName);
+            int id = qaDbUtil.selectDataTempOne("pcAppointmentRecordNum", dataName);
             String[] reception = {String.valueOf(id), null};
             //编辑客户--名称超过50字
             IScene appcustomerEdit = AppCustomerEditScene.builder()
@@ -195,7 +195,7 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
     public void editCustomer2() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int id = qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum", dataName);
+            int id = qaDbUtil.selectDataTempOne("pcAppointmentRecordNum", dataName);
             String[] reception = {String.valueOf(id), null};
             String[] errphone = {"1590293829", "178273766554", "新人%￥#"};
             for (String s : errphone) {
@@ -224,7 +224,7 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
     public void buyCar() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int id = qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum", dataName);
+            int id = qaDbUtil.selectDataTempOne("pcAppointmentRecordNum", dataName);
             String[] reception = {String.valueOf(id), null};
             //编辑客户信息
             IScene appcustomerEdit2 = AppCustomerEditScene.builder()
@@ -268,7 +268,7 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
     public void changeReception() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int id = qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum", dataName);
+            int id = qaDbUtil.selectDataTempOne("pcAppointmentRecordNum", dataName);
             String[] reception = {String.valueOf(id), null};
             String uid = "";
 
@@ -314,7 +314,7 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
-            int id = qaDbUtil.selsetDataTempOne("pcAppointmentRecordNum", dataName);
+            int id = qaDbUtil.selectDataTempOne("pcAppointmentRecordNum", dataName);
             String[] reception = {String.valueOf(id), null};
 
             IScene customerDetail = AppCustomerDetailScene.builder().id(reception[0]).shopId(pp.shopIdZ).build();
@@ -343,7 +343,7 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int totalBefore = pf.followPageNumber();
-            jc.appletLoginToken(pp.appletTocken);
+            jc.appletLoginToken(pp.appletToken);
             IScene onlineExpert = AppletConsultOnlineExpertsSubmitScene.builder()
                     .shopId(Long.valueOf(pp.shopIdZ))
                     .content("咨询轮胎保养")
@@ -466,7 +466,7 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
             roleList1.add(pf.getAccessId2("门店"));
             //预约保养分配
             jc.organizationRoleEdit(Long.parseLong(pp.userroleId), "权限", "随时修改用户权限", roleList1);
-            jc.appletLoginToken(pp.appletTocken);
+            jc.appletLoginToken(pp.appletToken);
             int staffTotalBefore = jc.AppletAppointmentStaffListScene("MAINTAIN", Long.valueOf(pp.shopIdZ)).getJSONArray("list").size();
 
             //            appLogin(pp.user,pp.userpassword,pp.userroleId);
@@ -476,14 +476,14 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
             jc.organizationRoleEdit(Long.parseLong(pp.userroleId), "权限", "随时修改用户权限", roleList1);
 
             //小程序 门店下接待人员总数
-            jc.appletLoginToken(pp.appletTocken);
+            jc.appletLoginToken(pp.appletToken);
             int staffTotal = jc.AppletAppointmentStaffListScene("MAINTAIN", Long.valueOf(pp.shopIdZ)).getJSONArray("list").size();
 
             roleList1.remove(2);
             pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
             jc.organizationRoleEdit(Long.parseLong(pp.userroleId), "权限", "随时修改用户权限", roleList1);
 
-            jc.appletLoginToken(pp.appletTocken);
+            jc.appletLoginToken(pp.appletToken);
             int staffTotalAfter = jc.AppletAppointmentStaffListScene("MAINTAIN", Long.valueOf(pp.shopIdZ)).getJSONArray("list").size();
             Preconditions.checkArgument(staffTotalAfter - staffTotal == -1, "去掉权限后：" + staffTotalAfter + "去掉权限前:" + staffTotal);
             Preconditions.checkArgument(staffTotalBefore - staffTotal == -1, "增加权限前：" + staffTotalBefore + "增加之后:" + staffTotal);
@@ -522,7 +522,7 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
             jc.invokeApi(responseRuleEditScene);
 
 
-            jc.appletLoginToken(pp.appletTocken);
+            jc.appletLoginToken(pp.appletToken);
             //发起专属服务
             IScene appletCustomer = AppletConsultOnlineExpertsSubmitScene.builder().customerName("夏明凤").customerPhone(pp.customerPhone)
                     .content("自动询问有权限者收1234567890")
@@ -578,7 +578,7 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
             jc.invokeApi(responseRuleEditScene);
 
 
-            jc.appletLoginToken(pp.appletTocken);
+            jc.appletLoginToken(pp.appletToken);
             //发起专属服务
             IScene appletCustomer = AppletConsultPreServiceSubmitScene.builder().customerName("夏明凤").customerPhone(pp.customerPhone)
                     .content("自动发起专属服务，有提醒权限者收1111111")

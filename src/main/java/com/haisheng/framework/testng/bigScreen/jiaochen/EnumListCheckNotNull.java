@@ -167,7 +167,7 @@ public class EnumListCheckNotNull extends TestCaseCommon implements TestCaseStd 
     public void AJc_appletProvinceList() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject data = jc.appletplateNumberProvinceList();
+            JSONObject data = jc.appletPlateNumberProvinceList();
             String jsonpath = "$.list[*].province&&$.list[*].province_name";
             JsonPathUtil.spiltString(data.toJSONString(), jsonpath);
         } catch (AssertionError | Exception e) {

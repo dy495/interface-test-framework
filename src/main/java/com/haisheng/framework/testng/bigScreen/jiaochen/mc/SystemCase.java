@@ -2,32 +2,23 @@ package com.haisheng.framework.testng.bigScreen.jiaochen.mc;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.core.JsonGenerationException;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.*;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.AppPreSalesReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.presalesreception.AppReceptorChangeScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.presalesreception.AppReceptorListScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.reid.AppReidReidDistributeScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.reid.AppReidReidListScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.reid.AppReidReidMarkScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.retention.AppRetentionQueryQrCodeScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.retention.AppRetentionReidCustomerAddScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.saleschedule.AppSaleScheduleDayListScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.saleschedule.AppSaleScheduleFreeSaleScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.saleschedule.AppSaleScheduleUpdateSaleStatusScene;
-import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.riskcontrol.NonCustomerSignScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.appointment.AppointmentTypeEnum;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletAppointmentSubmitScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import com.haisheng.framework.util.DateTimeUtil;
-import org.apache.commons.collections.ArrayStack;
-import org.jooq.False;
+import com.haisheng.framework.util.CommonUtil;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
@@ -69,7 +60,6 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-        util.loginPc(ACCOUNT);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
@@ -114,47 +104,46 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
 
 
+//
+//    @Test(dataProvider = "ReidType")
+//    public void test01Mark(String typeName,String reidType){
+//        try {
+////            List<JSONObject> customerList = getFaceIdList(type, isApprove);
+////            if(customerList != null && customerList.size()>0){
+////                JSONObject customer = customerList.get(0);
+////                Integer reid = customer.getInteger("reid");
+////                new JSONArray(reid);
+////            }
+//            JSONObject res1 = AppReidReidListScene.builder().isFaceOpen(true).enterType("PRE_SALE").size(100).build().invoke(visitor, true);
+//            Integer total1 = res1.getInteger("total");
+//            String reid = res1.getJSONArray("list").getJSONObject(0).getString("reid");
+//            JSONArray reidList = new JSONArray();
+//            reidList.add(reid);
+//            AppReidReidMarkScene.builder().enterType("PRE_SALE").reidType(reidType).reidList(reidList).build().invoke(visitor);
+//            JSONObject res2 = AppReidReidListScene.builder().isFaceOpen(true).enterType("PRE_SALE").size(100).build().invoke(visitor, true);
+//            Integer total2 = res2.getInteger("total");
+//            Preconditions.checkArgument(total1==total2+1,"前台标记为"+typeName+"客流列表之前:"+total1+",之后:"+total2);
+//        } catch (AssertionError | Exception e) {
+//            collectMessage(e);
+//        } finally {
+//            saveData("前台标记客流列表-1");
+//        }
+//    }
+//    @DataProvider(name = "ReidType")
+//    public Object[] reidType(){
+//        return new Object[][]{
+//                {},
+//        };
+//    }
 
-    @Test(dataProvider = "ReidType")
-    public void test01Mark(String typeName,String reidType){
-        try {
-//            List<JSONObject> customerList = getFaceIdList(type, isApprove);
-//            if(customerList != null && customerList.size()>0){
-//                JSONObject customer = customerList.get(0);
-//                Integer reid = customer.getInteger("reid");
-//                new JSONArray(reid);
-//            }
-            JSONObject res1 = AppReidReidListScene.builder().isFaceOpen(true).enterType("PRE_SALE").size(100).build().invoke(visitor, true);
-            Integer total1 = res1.getInteger("total");
-            String reid = res1.getJSONArray("list").getJSONObject(0).getString("reid");
-            JSONArray reidList = new JSONArray();
-            reidList.add(reid);
-            AppReidReidMarkScene.builder().enterType("PRE_SALE").reidType(reidType).reidList(reidList).build().invoke(visitor);
-            JSONObject res2 = AppReidReidListScene.builder().isFaceOpen(true).enterType("PRE_SALE").size(100).build().invoke(visitor, true);
-            Integer total2 = res2.getInteger("total");
-            Preconditions.checkArgument(total1==total2+1,"前台标记为"+typeName+"客流列表之前:"+total1+",之后:"+total2);
-        } catch (AssertionError | Exception e) {
-            collectMessage(e);
-        } finally {
-            saveData("前台标记客流列表-1");
-        }
-    }
-    @DataProvider(name = "ReidType")
-    public Object[] reidType(){
-        return new Object[][]{
-                {},
-        };
-    }
-
-    @Test
-    public void test02Confirm(){
-        JSONArray customers = new JSONArray();
-        List<JSONObject> faceIdList = getFaceIdList(false);
-        customers.addAll(faceIdList.stream().map(e->e.getString("reid")).collect(Collectors.toList()));
-        AppRetentionQueryQrCodeScene.builder().analysisCustomerIds(customers).build().invoke(visitor);
-
-        //AppReidReidDistributeScene.builder().enterType("PRE_SALE").
-    }
+//    @Test(description = "选人脸确认分配")
+//    public void test02Confirm(){
+//        JSONArray customers = new JSONArray();
+//        List<JSONObject> faceIdList = getFaceIdList(false);
+//        customers.addAll(faceIdList.stream().map(e->e.getString("reid")).collect(Collectors.toList()));
+//        AppRetentionQueryQrCodeScene.builder().analysisCustomerIds(customers).build().invoke(visitor);
+//        //AppReidReidDistributeScene.builder().enterType("PRE_SALE").
+//    }
 
     /**
      * @description : 门店中状态为接待中的销售，判断状态是否正确
@@ -173,25 +162,61 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 //        Preconditions.checkArgument(list.size()==0,list+"：这些销售状态为接待中，在所有门店都没有接待中的卡片");
     }
 
-
-    @Test
-    public void test03CheckStatus(){
-        AppReceptorListScene.builder().shopId(Long.parseLong(ACCOUNT.getReceptionShopId())).build().invoke(visitor);
-    }
-
-
-    @Test
-    public void test(){
-//        Date date = new Date();
-//        long time = date.getTime();
-//        dt.dateToTimestamp1()
-        //AppSaleScheduleUpdateSaleStatusScene.builder().saleId(util.getSaleId()).sourceSaleStatus(0).targetSaleStatus(3).vacationStartTime("2021-08-10").vacationEndTime("2021-08-20").build().invoke(visitor);
-        AppSaleScheduleUpdateSaleStatusScene.builder().saleId(util.getSaleId()).sourceSaleStatus(0).targetSaleStatus(2).build().invoke(visitor);
+    public void preCreate(){
+        JSONArray customerList = new JSONArray();
+        JSONObject customer = new JSONObject();
+        Integer customerId = AppRetentionReidCustomerAddScene.builder().name(dt.getHistoryDate(0) + "自动2").phone("155" + CommonUtil.getRandom(9)).build().invoke(visitor, true).getInteger("customer_id");
+        customer.put("customer_id",customerId);
+        customer.put("is_decision",true);
+        customerList.add(customer);
+        AppReidReidDistributeScene.builder().reidInfoList(customerList).enterType("PRE_SALE").build().invoke(visitor);
 
     }
+    @Test
+    public void a1ChangeStatus(){
+        //AppSaleScheduleUpdateSaleStatusScene.builder().saleId("uid_38b574df").sourceSaleStatus(0).targetSaleStatus(3).vacationStartTime("2021-08-18").vacationEndTime("2035-08-18").build().invoke(visitor);
+        AppSaleScheduleUpdateSaleStatusScene.builder().saleId("uid_caf1b799").sourceSaleStatus(0).targetSaleStatus(2).build().invoke(visitor);
+    }
+    @Test
+    public void changeSale1(){
+        try {
+            Object reception = AppPreSalesReceptionPageScene.builder().build().invoke(visitor, true).getJSONArray("list").stream().findAny().orElse(null);
+            if (reception == null){ preCreate(); }
+            Long id = AppPreSalesReceptionPageScene.builder().build().invoke(visitor, true).getJSONArray("list").getJSONObject(0).getLong("id");
+            String saleId = util.getNeededSale(2).getString("sale_id");
+            String message = AppReceptorChangeScene.builder().id(id).shopId(Long.parseLong(ACCOUNT.getReceptionShopId())).receptorId(saleId).build().invoke(visitor,false).getString("message");
+            Preconditions.checkArgument(Objects.equals("当前顾问非空闲,请选择其他顾问!",message));
+        } catch (AssertionError | Exception e) {
+            collectMessage(e);
+        } finally {
+            saveData("变更成非空闲的销售");
+        }
+    }
 
+//    @DataProvider(name = "notFreeSale")
+//    public Object[] getNotFree(){
+//        return new Object[][]{
+//                {"状态为接待中"},
+//        };
+//    }
 
-
-
+    @Test(description = "变更接待")
+    public void changeSale2(){
+        try {
+            String saleId = util.getNeededSale(0).getString("sale_id");
+            Object reception = AppPreSalesReceptionPageScene.builder().build().invoke(visitor, true).getJSONArray("list").stream().findAny().orElse(null);
+            if (reception == null){ preCreate(); }
+            JSONObject getReception = AppPreSalesReceptionPageScene.builder().build().invoke(visitor, true).getJSONArray("list").getJSONObject(0);
+            Long id = getReception.getLong("id");
+            String receptorId = getReception.getString("receptor_id");
+            AppReceptorChangeScene.builder().id(id).shopId(Long.parseLong(ACCOUNT.getReceptionShopId())).receptorId(saleId).build().invoke(visitor,false);
+            String lastId = util.getLastSale().getString("sale_id");
+            Preconditions.checkArgument(Objects.equals(receptorId,lastId),"变更销售后，被替换的销售未在空闲中最后一位");
+        }catch (AssertionError | Exception e) {
+            collectMessage(e);
+        } finally {
+            saveData("变更成非空闲的销售");
+        }
+    }
 
 }

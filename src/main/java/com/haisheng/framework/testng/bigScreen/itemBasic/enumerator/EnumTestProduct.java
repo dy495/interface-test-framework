@@ -54,7 +54,7 @@ public enum EnumTestProduct {
 
 
     CMS_DAILY("管理后台 日常 ", "", "http://39.106.253.190", "", "CMS", "", true),
-    CMS_ONLINE("管理后台 线上 ", "", "", "", "CMS", "", false),
+    CMS_ONLINE("管理后台 线上 ", "", "http://39.106.253.135", "", "CMS", "", false),
 
     ;
 

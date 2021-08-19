@@ -37,7 +37,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class A extends TestCaseCommon implements TestCaseStd {
+public class platFormDaily extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct product = EnumTestProduct.CMS_DAILY;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.CMS_DAILY;
     public VisitorProxy visitor = new VisitorProxy(product);
@@ -85,9 +85,9 @@ public class A extends TestCaseCommon implements TestCaseStd {
                 //输出表名，没有啥实际意义
                 Arrays.stream(container.getTables()).forEach(e -> logger.info("table_name is：{}", e.getKey()));
                 //这三行是生成设备及出入口的代码，注释掉，用的时候开启然后提交到git
-//                long subjectId = getSubjectId(container);
-//                ITable[] tables = container.getTables();
-//                Arrays.stream(tables).forEach(table -> createLayoutAndAddDevice(subjectId, table));
+                long subjectId = getSubjectId(container);
+                ITable[] tables = container.getTables();
+                Arrays.stream(tables).forEach(table -> createLayoutAndAddDevice(subjectId, table));
             }
         } catch (Exception e) {
             collectMessage(e);
@@ -105,6 +105,7 @@ public class A extends TestCaseCommon implements TestCaseStd {
     public long getSubjectId(IContainer container) {
         ITable table = container.getTable(CmsConstants.SUBJECT_TABLE_NAME);
         Preconditions.checkNotNull(table, "没有主体表");
+        table.load();
         IRow[] rows = table.getRows();
         Preconditions.checkArgument(rows.length != 0, "主体为空");
         String subjectId = table.getRows()[0].getField("subject_id").getValue();

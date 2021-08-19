@@ -12,6 +12,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.tarot.entity.IEnti
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.tarot.row.IRow;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.tarot.enumerator.EnumContainer;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.util.BasicUtil;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAppletToken;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.common.enumerator.customer.EnumAppointmentType;
@@ -26,7 +27,6 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.voucher.Apply
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherDetailBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherFormVoucherPageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherInvalidPageBean;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumVP;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.Integral.CommodityTypeEnum;
@@ -43,9 +43,11 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesre
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.AppCustomerEditScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.AppPreSalesReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.AppReceptorListScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.saleschedule.AppSaleScheduleDayListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.task.AppAppointmentPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.task.AppReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.task.AppReceptionReceptorListScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.AuthTreeScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.appointmentmanage.AppointmentPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.appointmentmanage.TimeTableListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpload;
@@ -62,6 +64,9 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.presalesrece
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.ReceptionPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.ReceptionPurchaseFixedPackageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.ReceptionPurchaseTemporaryPackageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.role.RoleListScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.staff.StaffDeleteScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.staff.StaffPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.userange.DetailScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.userange.SubjectListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyApprovalScene;
@@ -1084,12 +1089,45 @@ public class SceneUtil extends BasicUtil {
 
     /**
      * 获取小程序carId
+     *
+     * @return 我的爱车id
      */
     public Long getCarId() {
         IScene appletCarListScene = AppletCarListScene.builder().build();
         JSONObject jsonObject = appletCarListScene.invoke(visitor).getJSONArray("list").getJSONObject(0);
         Preconditions.checkArgument(jsonObject != null, "小程序我的爱车为空");
         return jsonObject.getLong("id");
+    }
+
+    /**
+     * 获取小程序我的爱车列表
+     *
+     * @return 我的爱车列表
+     */
+    public List<AppletCarInfo> getAppletCarList() {
+        return AppletCarListScene.builder().build().invoke(visitor).getJSONArray("list").stream().map(e -> (JSONObject) e)
+                .map(e -> JSONObject.toJavaObject(e, AppletCarInfo.class)).collect(Collectors.toList());
+
+    }
+
+    /**
+     * 创建我的爱车并返回爱车信息
+     *
+     * @param plateNumber 车牌号
+     * @param carModelId  车型id
+     * @return 爱车信息
+     */
+    public AppletCarInfo createCar(String plateNumber, Long carModelId) {
+        AppletCarCreateScene.builder().modelId(carModelId).plateNumber(plateNumber).build().invoke(visitor);
+        IScene scene = AppletCarListScene.builder().build();
+        JSONObject obj = scene.invoke(visitor).getJSONArray("list").stream().map(e -> (JSONObject) e)
+                .filter(e -> e.getString("plate_number") != null)
+                .filter(e -> e.getString("plate_number").equals(plateNumber))
+                .findFirst().orElse(null);
+        if (obj != null) {
+            return JSONObject.toJavaObject(obj, AppletCarInfo.class);
+        }
+        return null;
     }
 
     /**
@@ -1698,5 +1736,85 @@ public class SceneUtil extends BasicUtil {
                 .map(Response::getMessage).collect(Collectors.toList()).toArray(new String[list.size()]);
     }
 
-    public String getSaleId(){return visitor.isDaily() ? "uid_f1a745c7":"";}
+    public String getSaleId() {
+        return visitor.isDaily() ? "uid_f1a745c7" : "";
+    }
+
+
+    /**
+     * 获取指定父权限可选择的权限
+     *
+     * @param parentRole 父权限
+     * @return 权限map
+     */
+    public Map<Integer, String> getAuthRoleMap(int parentRole) {
+        Map<Integer, String> map = new HashMap<>();
+        IScene scene = AuthTreeScene.builder().parentRole(parentRole).build();
+        scene.invoke(visitor).getJSONArray("children").stream().map(e -> (JSONObject) e)
+                .forEach(e -> e.getJSONArray("children").stream().map(a -> (JSONObject) a)
+                        .forEach(a -> map.put(a.getInteger("value"), a.getString("label"))));
+        return map;
+    }
+
+    /**
+     * 获取任意一个权限map
+     *
+     * @return map
+     */
+    public Map<Integer, String> getRandomRoleMap() {
+        Map<Integer, String> map = new HashMap<>();
+        IScene scene = RoleListScene.builder().build();
+        List<JSONObject> list = toJavaObjectList(scene, JSONObject.class, "list");
+        JSONObject response = list.stream().filter(e -> !e.getString("name").equals("超级管理员")).findFirst().orElse(null);
+        Preconditions.checkArgument(response != null, "角色为空");
+        map.put(response.getInteger("id"), response.getString("name"));
+        return map;
+    }
+
+    /**
+     * 获取门店列表map
+     *
+     * @return map
+     */
+    public JSONArray getShopIdArray() {
+        return ShopListScene.builder().build().invoke(visitor).getJSONArray("list");
+    }
+
+    /**
+     * 删除工作人员
+     *
+     * @param phone 电话号
+     */
+    public void deleteStaff(String phone) {
+        IScene scene = StaffPageScene.builder().phone(phone).build();
+        JSONObject response = toFirstJavaObject(scene, JSONObject.class);
+        String id = response.getString("id");
+        StaffDeleteScene.builder().id(id).build().invoke(visitor);
+    }
+
+    /**
+     * @return : 空闲中最后一位销售的JSONObject
+     * {"sale_id":"销售id",
+     * "sale_status":"销售状态",
+     * "sale_name":"销售姓名",
+     * "order":当前状态的排序,
+     * "status":状态值 }
+     * @description : 用于检查空闲中最后一位销售
+     **/
+    public JSONObject getLastSale() {
+        //long count = AppSaleScheduleDayListScene.builder().type("PRE").build().invoke(visitor, true).getJSONArray("sales_info_list").stream().map(e -> (JSONObject) e).filter(e -> Objects.equals(e.getString("sale_status"), "空闲中")).count();
+        return AppSaleScheduleDayListScene.builder().type("PRE").build().invoke(visitor, true).getJSONArray("sales_info_list").stream().map(e -> (JSONObject) e).
+                filter(e -> Objects.equals(e.getString("sale_status"), "空闲中")).min((x, y) -> y.getInteger("order") - x.getInteger("order")).get();
+    }
+
+    /**
+     * @return : 指定状态的销售 JSONObject，没有则返回 null
+     * @description : 用于获取当日排班中指定状态的一位销售，
+     * @parameter : 状态值：   {0:"空闲中",1:"接待中",2:"忙碌中",3:"休假中"}
+     **/
+    public JSONObject getNeededSale(Integer statusId) {
+        return AppSaleScheduleDayListScene.builder().type("PRE").build().invoke(visitor, true).getJSONArray("sales_info_list").stream().map(e -> (JSONObject) e).
+                filter(e -> e.getInteger("status").equals(statusId)).findAny().orElse(null);
+    }
+
 }

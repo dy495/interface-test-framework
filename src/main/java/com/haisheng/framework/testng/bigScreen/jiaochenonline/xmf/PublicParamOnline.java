@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAppletToken;
 
-public class PublicParmOnline {
+public class PublicParamOnline {
 
     //3.0
     public Long brandId = 1L;  //TODO:
@@ -26,10 +26,11 @@ public class PublicParmOnline {
     public String shichang = "";
     public String shichangPassword = "";
 
+    public String roleName = "创建角色xia";
     public String carModelId = "19655";
     public String carModel = "AB";
     public String car_id = "78";             //小程序车id
-    public String carplate = "浙MNB789";      //编辑小程序车牌号
+    public String carPlate = "浙MNB789";      //编辑小程序车牌号
     public String carplate7 = "浙ASD124";      //编辑小程序车牌号
     //预约使用车辆
     public Long car_idA = 206834L;
@@ -63,18 +64,19 @@ public class PublicParmOnline {
     public String importFilepath2 = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/importfile2.xlsx";   //导入工单文件路径
     public String importFilepath3 = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/importPotentialCustomerfile.xlsx";   //导入工单文件路径
     //其他小程序用户tocken和车牌号信息
-    public String getAppletTockenOther = "R4M7UpQ2+Q3L0QbxGA32iA==";
-    public String CarplateOther = "浙ZXCV123";
+    public String getAppletTokenOther = "R4M7UpQ2+Q3L0QbxGA32iA==";
+    public String carPlateOther = "浙ZXCV123";
     public String userid = "uid_2960c1cf"; //接待顾问x 15037286011 的userId;
     public String userid2 = "uid_bf9d24ef"; //接待顾问2 6013的userId;
 
     //3.0
     public String useridxs = "uid_2960c1cf"; //销售的userId;
 
-    public int ordeId = 10; // 订单Id
+    public int orderId = 10; // 订单Id
     public String filepath11 = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/1_1.jpg";
+
     //---------2.0---------
-    public String appletTocken = EnumAppletToken.JC_LXQ_ONLINE.getToken();
+    public String appletToken = EnumAppletToken.JC_LXQ_ONLINE.getToken();
     public JSONArray coordinate = getCoordinate();
     public Long voucherId = 81L;  //经纬度
 
@@ -114,6 +116,4 @@ public class PublicParmOnline {
         dd.add(116.29845);
         return dd;
     }
-
-
 }
