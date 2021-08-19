@@ -584,132 +584,7 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
      *    PC 门店管理-系统测试
      */
 
-//
-//    //门店管理--正常
-//    @Test(dataProvider = "SHOP")
-//    public void addshop(String simple_name, String name, String district_code, String adddress, String sale_tel, String service_tel,
-//                        String longitude, String latitude, String appointment_status,String washing_status) {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            JSONArray arr = new JSONArray();
-//            arr.add(info.BrandIDOnline);
-//            int code = jc.addShopNotChk(info.getLogo(),simple_name,name,arr,district_code,adddress,sale_tel,service_tel,Double.valueOf(longitude),
-//                    Double.valueOf(latitude),appointment_status,washing_status).getInteger("code");
-//            Preconditions.checkArgument(code==1000,"期待状态码1000，实际"+ code);
-//
-//        } catch (AssertionError e) {
-//            appendFailReason(e.toString());
-//        } catch (Exception e) {
-//            appendFailReason(e.toString());
-//        } finally {
-//            saveData("PC【门店管理】，新建门店");
-//        }
-//    }
-//    @DataProvider(name = "SHOP")
-//    public  Object[] shop() {
-//
-//        return new String[][]{
-////                {info.stringone, info.stringone,info.district_code,info.stringone, info.phone,info.phone,"129.8439","42.96805","ENABLE","ENABLE"}, //一个字符太少了 注视掉 每次需要更改
-////                {info.stringone, info.stringten,info.district_code,info.stringfifty, info.phone,info.phone,"129.8439","42.96805","ENABLE","DISABLE"},
-////                {info.stringten, info.stringone,info.district_code,info.stringten, info.phone,info.phone,"129.8439","42.96805","DISABLE","ENABLE"},
-//                {info.stringten, info.stringfifty,info.district_code,info.stringone, info.phone,info.phone,"129.8439","42.96805","DISABLE","DISABLE"},
-////                {info.stringone, info.stringfifty,info.district_code,info.stringten, info.phone,info.phone,"129.8439","42.96805","DISABLE","DISABLE"},
-//
-//        };
-//    }
-//
-//
-//    @Test //ok
-//    public void addshop_rephone() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//
-//            String sale_tel = info.phone;
-//            String service_tel = info.phone;
-//
-//            JSONArray arr = new JSONArray();
-//            arr.add(info.BrandIDOnline);
-//
-//            jc.addShop(info.getLogo(),info.stringsix,info.stringsix,arr,info.district_code,info.stringsix,sale_tel,service_tel,
-//                    129.8439,42.96805, "DISABLE","DISABLE");
-//            int code = jc.addShopNotChk(info.getLogo(),info.stringsix+"1",info.stringsix+"1",arr,info.district_code,info.stringsix,sale_tel,service_tel,
-//                    129.8439,42.96805, "DISABLE","DISABLE").getInteger("code");
-//            Preconditions.checkArgument(code==1000,"期待状态码1000，实际"+ code);
-//
-//        } catch (AssertionError e) {
-//            appendFailReason(e.toString());
-//        } catch (Exception e) {
-//            appendFailReason(e.toString());
-//        } finally {
-//            saveData("PC【门店管理】，新建门店销售电话/售后电话与其他门店重复");
-//        }
-//    }
-//
-//    //门店管理--异常
-//    @Test(dataProvider = "SHOPERR")
-//    public void addshopErr(String simple_name, String name, String district_code, String adddress, String sale_tel, String service_tel,
-//                        String longitude, String latitude, String appointment_status,String washing_status,String a) {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//            JSONArray arr = new JSONArray();
-//            arr.add(info.BrandIDOnline);
-//            int code = jc.addShopNotChk(info.getLogo(),simple_name,name,arr,district_code,adddress,sale_tel,service_tel,Double.valueOf(longitude),
-//                    Double.valueOf(latitude),appointment_status,washing_status).getInteger("code");
-//            Preconditions.checkArgument(code==1001,a+"期待状态码1001，实际"+ code);
-//
-//        } catch (AssertionError e) {
-//            appendFailReason(e.toString());
-//        } catch (Exception e) {
-//            appendFailReason(e.toString());
-//        } finally {
-//            saveData("PC【门店管理】，新建门店，参数不规范");
-//        }
-//    }
-//
-//    @DataProvider(name = "SHOPERR")
-//    public  Object[] shop_err() {
-//
-//        return new String[][]{
-//                {info.stringten+"1", info.stringone,info.district_code,info.stringone, info.phone,info.phone,"129.8439","42.96805","ENABLE","ENABLE","门店简称11字"},
-//                {info.stringone, info.stringfifty1,info.district_code,info.stringfifty, info.phone,info.phone,"129.8439","42.96805","ENABLE","DISABLE","门店全称1字"},
-//                {info.stringten, info.stringfifty,info.district_code,info.stringfifty1, info.phone,info.phone,"129.8439","42.96805","DISABLE","DISABLE","详细地址51字"},
-////                {info.stringten, info.stringone,info.district_code,info.stringten, "11111111111",info.phone,"129.8439","42.96805","DISABLE","ENABLE","销售手机号11111111111"},
-////                {info.stringone, info.stringfifty,info.district_code,info.stringten, "111111111111",info.phone,"129.8439","42.96805","DISABLE","DISABLE","销售手机号12位"},
-////                {info.stringone, info.stringfifty,info.district_code,info.stringten, "1111111111",info.phone,"129.8439","42.96805","DISABLE","DISABLE","销售手机号10位"},
-////                {info.stringten, info.stringone,info.district_code,info.stringten, info.phone,"11111111111","129.8439","42.96805","DISABLE","ENABLE","售后手机号11111111111"},
-////                {info.stringone, info.stringfifty,info.district_code,info.stringten, info.phone,"111111111111","129.8439","42.96805","DISABLE","DISABLE","售后手机号12位"},
-////                {info.stringone, info.stringfifty,info.district_code,info.stringten, info.phone,"1111111111","129.8439","42.96805","DISABLE","DISABLE","售后手机号10位"},
-//                {info.stringone, info.stringfifty,info.district_code,info.stringten, info.phone,info.phone,"1298439","42.96805","DISABLE","DISABLE","经度1298439"},
-//                {info.stringone, info.stringfifty,info.district_code,info.stringten, info.phone,info.phone,"129.8439","4296805","DISABLE","DISABLE","纬度4296805"},
-//
-//
-//        };
-//    }
-//
-//    @Test //ok
-//    public void addshoperr1() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        try {
-//
-//            String sale_tel = info.phone;
-//            String service_tel = info.phone;
-//
-//            JSONArray arr = new JSONArray();
-//            arr.add(System.currentTimeMillis());
-//
-//            int code = jc.addShopNotChk(info.getLogo(),info.stringsix,info.stringsix,arr,info.district_code,info.stringsix,sale_tel,service_tel,
-//                    129.8439,42.96805, "DISABLE","DISABLE").getInteger("code");
-//            Preconditions.checkArgument(code==1001,"期待状态码1001，实际"+ code);
-//
-//        } catch (AssertionError e) {
-//            appendFailReason(e.toString());
-//        } catch (Exception e) {
-//            appendFailReason(e.toString());
-//        } finally {
-//            saveData("PC【门店管理】，新建门店时品牌不存在");
-//        }
-//    }
-//
+
 
 
     /**
@@ -756,10 +631,10 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
     @DataProvider(name = "ARTICLE") //要补充
     public Object[] article() {
         return new String[][]{
-                {"1234", "ONE_BIG", info.stringone, "CAR_WELFARE"},
-                {info.stringten, "ONE_BIG", info.stringfifty, "CAR_INFORMATION"},
-                {info.string20, "ONE_LEFT", info.stringten, "CAR_LIFE"},
-                {info.stringten, "ONE_LEFT", info.stringlong, "CAR_ACVITITY"},
+//                {"1234", "ONE_BIG", info.stringone, "CAR_WELFARE"},
+//                {info.stringten, "ONE_BIG", info.stringfifty, "CAR_INFORMATION"},
+//                {info.string20, "ONE_LEFT", info.stringten, "CAR_LIFE"},
+//                {info.stringten, "ONE_LEFT", info.stringlong, "CAR_ACVITITY"},
                 {info.stringsix, "ONE_LEFT", info.stringlong, "CAR_KNOWLEDGE"},
 
         };
@@ -947,9 +822,9 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
     @DataProvider(name = "NAME")
     public Object[] name() {
         return new String[]{
-                "啊啊啊2",
-                "12345",
-                "1Aa啊！@#，嗷嗷",
+//                "啊啊啊2",
+                "自动化名字",
+//                "1Aa啊！@#，嗷嗷",
 
         };
     }
@@ -1423,9 +1298,9 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
     @DataProvider(name = "BRANDADD")
     public Object[] brandAdd1() {
         return new String[][]{
-                {"1", "1", "品牌名称1个字简介1个字"},
+//                {"1", "1", "品牌名称1个字简介1个字"},
                 {info.stringsix, info.stringsix, "品牌名称6个字简介6个字"},
-                {"zh这是20位！@#的说的是发发简称11", info.stringfifty, "品牌名称20个字简介50个字"},
+//                {"zh这是20位！@#的说的是发发简称11", info.stringfifty, "品牌名称20个字简介50个字"},
         };
     }
 
@@ -1573,6 +1448,7 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
                 {"false", "停用"},
         };
     }
+
 
     //商品规格
     @Test
@@ -1822,8 +1698,8 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
     @DataProvider(name = "GOOD")
     public Object[] good() { //商品名称 商品描述  商品详情 市场价 规格名称 描述
         return new String[][]{
-                {"a", "a", "123456789sdxfcghvjbknlm,@#$%^&*JHGFDs事事顺遂", "0.00", "a", "商品名称1个字 商品描述1个字 市场价0.00 规格名称1个字"},
-                {"12345Q~!a啊不嘈杂啊67890", "12345Q~!a啊不嘈杂啊6789012345Q~!a啊不嘈杂啊67890", "123456789sdxf123456789sdxfcghvjbknlm,@#$%^&*JHGFDs事事顺遂123456789sdxfcghvjbknlm,@#$%^&*JHGFDs事事顺遂123456789sdxfcghvjbknlm,@#$%^&*JHGFDs事事顺遂123456789sdxfcghvjbknlm,@#$%^&*JHGFDs事事顺遂123456789sdxfcghvjbknlm,@#$%^&*JHGFDs事事顺遂123456789sdxfcghvjbknlm,@#$%^&*JHGFDs事事顺遂cghvjbknlm,@#$%^&*JHGFDs事事顺遂", "100000000.00", "a啊123～！@90", "商品名称20个字 商品描述40个字 市场价100000000.00 规格名称10个字"},
+//                {"a", "a", "123456789sdxfcghvjbknlm,@#$%^&*JHGFDs事事顺遂", "0.00", "a", "商品名称1个字 商品描述1个字 市场价0.00 规格名称1个字"},
+//                {"12345Q~!a啊不嘈杂啊67890", "12345Q~!a啊不嘈杂啊6789012345Q~!a啊不嘈杂啊67890", "123456789sdxf123456789sdxfcghvjbknlm,@#$%^&*JHGFDs事事顺遂123456789sdxfcghvjbknlm,@#$%^&*JHGFDs事事顺遂123456789sdxfcghvjbknlm,@#$%^&*JHGFDs事事顺遂123456789sdxfcghvjbknlm,@#$%^&*JHGFDs事事顺遂123456789sdxfcghvjbknlm,@#$%^&*JHGFDs事事顺遂123456789sdxfcghvjbknlm,@#$%^&*JHGFDs事事顺遂cghvjbknlm,@#$%^&*JHGFDs事事顺遂", "100000000.00", "a啊123～！@90", "商品名称20个字 商品描述40个字 市场价100000000.00 规格名称10个字"},
                 {"12Q~!a啊不嘈", "12Q~!a啊不嘈", "1", "99.99", "a啊23～", "商品名称10个字 商品描述10个字 市场价99.99 规格名称5个字"},
 
         };
@@ -2652,15 +2528,15 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @DataProvider(name = "CSTMINFO")
+    @DataProvider(name = "CSTMINFO") //线上不弄太多数据，先注释掉，理论上都可以成功的
     public Object[] customerInfo() {
         return new String[][]{ // 姓名 手机号 类型 性别  提示语 正常/异常
 
-                {"我", "1382172" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000)), "PERSON", "0", "姓名一个字", "true"},
-                {info.stringfifty, "1381172" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000)), "CORPORATION", "1", "姓名50个字", "true"},
+//                {"我", "1382172" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000)), "PERSON", "0", "姓名一个字", "true"},
+//                {info.stringfifty, "1381172" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000)), "CORPORATION", "1", "姓名50个字", "true"},
                 {info.stringsix, "1381172" + Integer.toString((int) ((Math.random() * 9 + 1) * 100)), "CORPORATION", "1", "手机号10位", "false"},
-                {info.stringsix, "1381172" + Integer.toString((int) ((Math.random() * 9 + 1) * 10000)), "CORPORATION", "1", "手机号12位", "false"},
-                {info.stringfifty + "1", "1381172" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000)), "CORPORATION", "1", "姓名51位", "false"},
+//                {info.stringsix, "1381172" + Integer.toString((int) ((Math.random() * 9 + 1) * 10000)), "CORPORATION", "1", "手机号12位", "false"},
+//                {info.stringfifty + "1", "1381172" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000)), "CORPORATION", "1", "姓名51位", "false"},
 
         };
     }

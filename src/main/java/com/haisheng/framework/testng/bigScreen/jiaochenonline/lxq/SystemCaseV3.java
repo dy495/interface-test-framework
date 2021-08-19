@@ -1648,10 +1648,10 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
     public Object[] onlineExpertrReply() {
         return new String[][]{
 
-                {"1啊A！5", "正常回复5个字"},
-                {info.getString(1000), "正常回复1000个字"},
-                {info.string200, "正常回复200个字"},
-                {"1234", "异常回复4个字"},
+//                {"1啊A！5", "正常回复5个字"},
+//                {info.getString(1000), "正常回复1000个字"},
+//                {info.string200, "正常回复200个字"},
+                {"自动备注", "异常回复4个字"},
                 {info.getString(1001), "异常回复1001个字"},
 
         };
@@ -1661,10 +1661,10 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
     public Object[] onlineExpertrRemark() {
         return new String[][]{
 
-                {"啊1234", "正常备注5个字"},
-                {info.string20, "正常备注20个字"},
-                {info.string200, "正常备注200个字"},
-                {info.getString(1000), "正常备注1000个字"},
+                {"自动备注呦", "正常备注5个字"},
+//                {info.string20, "正常备注20个字"},
+//                {info.string200, "正常备注200个字"},
+//                {info.getString(1000), "正常备注1000个字"},
                 {info.getString(1001), "异常备注1001个字"},
                 {info.getString(4), "异常备注4个字"},
 
