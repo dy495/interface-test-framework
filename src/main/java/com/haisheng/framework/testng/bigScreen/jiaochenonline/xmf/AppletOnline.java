@@ -77,7 +77,7 @@ public class AppletOnline extends TestCaseCommon implements TestCaseStd {
             int count = util.getAppletCarList().size();
             Long carId = util.createCar(plateNumber, Long.parseLong(pp.carModelId)).getId();
             int addCount = util.getAppletCarList().size();
-            AppletCarDeleteScene.builder().id(carId).build().invoke(visitor);
+            AppletCarDeleteScene.builder().id(carId).build().execute(visitor);
             int deleteCount = util.getAppletCarList().size();
             checkArgument((addCount - count) == 1, "增加车辆，我的车辆列表没加1");
             checkArgument((addCount - deleteCount) == 1, "删除车辆，我的车辆列表没-1");
@@ -99,7 +99,7 @@ public class AppletOnline extends TestCaseCommon implements TestCaseStd {
             int count = util.getAppletCarList().size();
             Long carId = util.createCar(plateNumber, Long.parseLong(pp.carModelId)).getId();
             int addCount = util.getAppletCarList().size();
-            AppletCarDeleteScene.builder().id(carId).build().invoke(visitor);
+            AppletCarDeleteScene.builder().id(carId).build().execute(visitor);
             int deleteCount = util.getAppletCarList().size();
             checkArgument((addCount - count) == 1, "增加车辆，我的车辆列表没加1");
             checkArgument((addCount - deleteCount) == 1, "删除车辆，我的车辆列表没-1");
@@ -122,7 +122,7 @@ public class AppletOnline extends TestCaseCommon implements TestCaseStd {
             AppletCarInfo appletCarInfo = carInfoList.stream().filter(e -> e.getModelId() != null).filter(e -> e.getPlateNumber() != null).findFirst().orElse(null);
             Long modelId = appletCarInfo == null ? Long.parseLong(pp.carModelId) : appletCarInfo.getModelId();
             String plateNumber = appletCarInfo == null ? pp.carPlate : appletCarInfo.getPlateNumber();
-            Response response = AppletCarCreateScene.builder().modelId(modelId).plateNumber(plateNumber).build().getResponse(visitor);
+            Response response = AppletCarCreateScene.builder().modelId(modelId).plateNumber(plateNumber).build().visitor(visitor).getResponse();
             int code = response.getCode();
             String message = response.getMessage();
             String err = "请勿重复新增爱车";
@@ -152,7 +152,7 @@ public class AppletOnline extends TestCaseCommon implements TestCaseStd {
                 ids.add(id);
             }
             String plateNumber = "豫GBBA11";
-            Response response = AppletCarCreateScene.builder().plateNumber(plateNumber).modelId(Long.parseLong(pp.carModelId)).build().getResponse(visitor);
+            Response response = AppletCarCreateScene.builder().plateNumber(plateNumber).modelId(Long.parseLong(pp.carModelId)).build().visitor(visitor).getResponse();
             int code = response.getCode();
             String message = response.getMessage();
             checkArgument(code == 1001, "我的车辆上限5辆车");
@@ -160,7 +160,7 @@ public class AppletOnline extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
-            ids.forEach(id -> AppletCarDeleteScene.builder().id(id).build().invoke(visitor));
+            ids.forEach(id -> AppletCarDeleteScene.builder().id(id).build().execute(visitor));
             saveData("小程序我的车辆，增加6辆");
         }
     }
@@ -172,7 +172,7 @@ public class AppletOnline extends TestCaseCommon implements TestCaseStd {
     @Test
     public void myCar_system_5() {
         try {
-            JSONArray list = AppletPlateNumberProvinceListScene.builder().build().invoke(visitor).getJSONArray("list");
+            JSONArray list = AppletPlateNumberProvinceListScene.builder().build().execute(visitor).getJSONArray("list");
             checkArgument(list.size() == 31, "车牌号省份不是31");
         } catch (AssertionError | Exception e) {
             collectMessage(e);
@@ -190,7 +190,7 @@ public class AppletOnline extends TestCaseCommon implements TestCaseStd {
         try {
             AppletCarInfo appletCarInfo = util.getAppletCarList().get(0);
             Long carId = appletCarInfo.getId();
-            int code = AppletCarEditScene.builder().id(carId).plateNumber(plate).modelId(Long.parseLong(pp.carModelId)).build().getResponse(visitor).getCode();
+            int code = AppletCarEditScene.builder().id(carId).plateNumber(plate).modelId(Long.parseLong(pp.carModelId)).build().visitor(visitor).getResponse().getCode();
             Preconditions.checkArgument(code == 1001, "修改车牌号为：" + plate + " 预期code值：1001" + " 实际code值：" + code);
         } catch (AssertionError | Exception e) {
             collectMessage(e);
@@ -210,12 +210,12 @@ public class AppletOnline extends TestCaseCommon implements TestCaseStd {
         try {
             String platNumber = "新A12345";
             id = util.getAppletCarList().get(0).getId();
-            int code = AppletCarEditScene.builder().id(id).plateNumber(platNumber).modelId(Long.parseLong(pp.carModelId)).build().getResponse(visitor).getCode();
+            int code = AppletCarEditScene.builder().id(id).plateNumber(platNumber).modelId(Long.parseLong(pp.carModelId)).build().visitor(visitor).getResponse().getCode();
             Preconditions.checkArgument(code == 1000, "编辑我的爱车预期code：1000" + " 实际code：" + 1001);
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
-            AppletCarEditScene.builder().id(id).plateNumber(finalPlatNumber).modelId(Long.parseLong(pp.carModelId)).build().invoke(visitor);
+            AppletCarEditScene.builder().id(id).plateNumber(finalPlatNumber).modelId(Long.parseLong(pp.carModelId)).build().execute(visitor);
             saveData("编辑车辆");
         }
     }
@@ -227,7 +227,7 @@ public class AppletOnline extends TestCaseCommon implements TestCaseStd {
     @Test(dataProvider = "PLATE", dataProviderClass = ScenarioUtilOnline.class)
     public void myCar_system_8(String plate) {
         try {
-            int code = AppletCarCreateScene.builder().plateNumber(plate).modelId(Long.valueOf(pp.carModelId)).build().getResponse(visitor).getCode();
+            int code = AppletCarCreateScene.builder().plateNumber(plate).modelId(Long.valueOf(pp.carModelId)).build().visitor(visitor).getResponse().getCode();
             Preconditions.checkArgument(code == 1001, "新增车牌号为：" + plate + " 预期code值：1001" + " 实际code值：" + code);
         } catch (AssertionError | Exception e) {
             collectMessage(e);

@@ -471,10 +471,10 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
             //新建成交记录
             systemCase.newCstmRecord("Max", "13373166806", "CORPORATION", "0", "", "true");
             //新建成交记录后的列表条数
-            JSONObject response1 = PreSaleCustomerBuyCarPageScene.builder().page(1).size(10).build().invoke(visitor, true);
+            JSONObject response1 = PreSaleCustomerBuyCarPageScene.builder().page(1).size(10).build().execute(visitor, true);
             int totalAfter = response1.getInteger("total");
             //新建成交记录后的销售客户列表条数
-            int totalAfter1 = PreSaleCustomerPageScene.builder().page(1).size(10).build().invoke(visitor, true).getInteger("total");
+            int totalAfter1 = PreSaleCustomerPageScene.builder().page(1).size(10).build().execute(visitor, true).getInteger("total");
             //获取新建的成家记录的信息
             JSONObject object = response1.getJSONArray("list").getJSONObject(0);
             String customerName = object.getString("customer_name");
@@ -503,13 +503,13 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
             JSONObject response = visitor.invokeApi(scene, true).getJSONArray("list").getJSONObject(0);
             Long shopId = response.getLong("shop_id");
             Long customerId = response.getLong("customer_id");
-            JSONObject respond = PreSaleCustomerInfoBuyCarRecordScene.builder().customerId(customerId).shopId(shopId).build().invoke(visitor, true);
+            JSONObject respond = PreSaleCustomerInfoBuyCarRecordScene.builder().customerId(customerId).shopId(shopId).build().execute(visitor, true);
             //新建成交记录前客户详情中的购车记录条数
             int totalBefore = respond.getInteger("total");
             //新建成交记录
             systemCase.newCstmRecord("Max", "13373166806", "CORPORATION", "0", "", "true");
             //新建成交记录后的列表条数
-            JSONObject respond1 = PreSaleCustomerInfoBuyCarRecordScene.builder().customerId(customerId).shopId(shopId).build().invoke(visitor, true);
+            JSONObject respond1 = PreSaleCustomerInfoBuyCarRecordScene.builder().customerId(customerId).shopId(shopId).build().execute(visitor, true);
             int totalAfter = respond1.getInteger("total");
             JSONObject object = respond1.getJSONArray("list").getJSONObject(0);
             String customerName = object.getString("customer_name");
@@ -540,7 +540,7 @@ public class SalesManagementCase extends TestCaseCommon implements TestCaseStd {
             //新建潜客
             systemCase.newPotentialCustomer("自动化潜客" + businessUtil.randomNumber(), "1337316" + businessUtil.randomNumber(), "CORPORATION", "0", "", "true");
             //新建潜客后的列表条数
-            JSONObject response1 = PreSaleCustomerPageScene.builder().page(1).size(10).build().invoke(visitor, true);
+            JSONObject response1 = PreSaleCustomerPageScene.builder().page(1).size(10).build().execute(visitor, true);
             int totalAfter = response1.getInteger("total");
             //获取新建的潜客的信息
             JSONObject object = response1.getJSONArray("list").getJSONObject(0);

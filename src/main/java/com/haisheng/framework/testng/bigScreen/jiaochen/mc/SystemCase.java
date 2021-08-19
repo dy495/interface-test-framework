@@ -75,7 +75,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
 
     public List<JSONObject> getFaceIdList(String customerType, boolean isApprove){
-        Stream<JSONObject> jsonObjectStream = AppReidReidListScene.builder().isFaceOpen(true).enterType("PRE_SALE").size(100).build().invoke(visitor, true)
+        Stream<JSONObject> jsonObjectStream = AppReidReidListScene.builder().isFaceOpen(true).enterType("PRE_SALE").size(100).build().execute(visitor, true)
                 .getJSONArray("list").stream().map(ele -> (JSONObject) ele)
                 .filter(e -> Objects.equals(customerType, e.getString("reid_type_name")));
         if(isApprove){
@@ -86,16 +86,16 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         return null;
     }
     public List<JSONObject> getFaceIdList(String customerType){
-        return AppReidReidListScene.builder().isFaceOpen(true).enterType("PRE_SALE").size(100).build().invoke(visitor, true)
+        return AppReidReidListScene.builder().isFaceOpen(true).enterType("PRE_SALE").size(100).build().execute(visitor, true)
                 .getJSONArray("list").stream().map(ele -> (JSONObject) ele)
                 .filter(e -> Objects.equals(customerType, e.getString("reid_type_name"))).collect(Collectors.toList());
     }
     public List<JSONObject> getFaceIdList(boolean isApprove){
         if(isApprove){
-            return AppReidReidListScene.builder().isFaceOpen(true).enterType("PRE_SALE").size(100).build().invoke(visitor, true)
+            return AppReidReidListScene.builder().isFaceOpen(true).enterType("PRE_SALE").size(100).build().execute(visitor, true)
                     .getJSONArray("list").stream().map(ele -> (JSONObject) ele).filter(e -> e.getBoolean("is_agreement")).collect(Collectors.toList());
         } else if(!isApprove){
-            return AppReidReidListScene.builder().isFaceOpen(true).enterType("PRE_SALE").size(100).build().invoke(visitor, true)
+            return AppReidReidListScene.builder().isFaceOpen(true).enterType("PRE_SALE").size(100).build().execute(visitor, true)
                     .getJSONArray("list").stream().map(ele -> (JSONObject) ele).filter(e -> !e.getBoolean("is_agreement")).collect(Collectors.toList());
         }
         return null;
@@ -151,9 +151,9 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
      **/
     public List<String> checkSalesStatus(String shopId){
         commonConfig.setShopId("-1");
-        List<String> list1 = AppPreSalesReceptionPageScene.builder().size(40).build().invoke(visitor, true).getJSONArray("list").stream().map(e -> (JSONObject) e).map(e -> e.getString("reception_sale_name")).distinct().collect(Collectors.toList());
+        List<String> list1 = AppPreSalesReceptionPageScene.builder().size(40).build().execute(visitor, true).getJSONArray("list").stream().map(e -> (JSONObject) e).map(e -> e.getString("reception_sale_name")).distinct().collect(Collectors.toList());
         commonConfig.setShopId(shopId);
-        List<String> list2 = AppSaleScheduleDayListScene.builder().type("PRE").build().invoke(visitor, true).getJSONArray("sales_info_list").stream().map(e -> (JSONObject) e).filter(e -> Objects.equals(e.getString("sale_status"), "接待中")).map(e -> e.getString("sale_name")).collect(Collectors.toList());
+        List<String> list2 = AppSaleScheduleDayListScene.builder().type("PRE").build().execute(visitor, true).getJSONArray("sales_info_list").stream().map(e -> (JSONObject) e).filter(e -> Objects.equals(e.getString("sale_status"), "接待中")).map(e -> e.getString("sale_name")).collect(Collectors.toList());
         List<String> list = new ArrayList<>();
         for (String s : list2) {
             if (!list1.contains(s)){ list.add(s); }
@@ -165,26 +165,26 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     public void preCreate(){
         JSONArray customerList = new JSONArray();
         JSONObject customer = new JSONObject();
-        Integer customerId = AppRetentionReidCustomerAddScene.builder().name(dt.getHistoryDate(0) + "自动2").phone("155" + CommonUtil.getRandom(9)).build().invoke(visitor, true).getInteger("customer_id");
+        Integer customerId = AppRetentionReidCustomerAddScene.builder().name(dt.getHistoryDate(0) + "自动2").phone("155" + CommonUtil.getRandom(9)).build().execute(visitor, true).getInteger("customer_id");
         customer.put("customer_id",customerId);
         customer.put("is_decision",true);
         customerList.add(customer);
-        AppReidReidDistributeScene.builder().reidInfoList(customerList).enterType("PRE_SALE").build().invoke(visitor);
+        AppReidReidDistributeScene.builder().reidInfoList(customerList).enterType("PRE_SALE").build().execute(visitor);
 
     }
     @Test
     public void a1ChangeStatus(){
         //AppSaleScheduleUpdateSaleStatusScene.builder().saleId("uid_38b574df").sourceSaleStatus(0).targetSaleStatus(3).vacationStartTime("2021-08-18").vacationEndTime("2035-08-18").build().invoke(visitor);
-        AppSaleScheduleUpdateSaleStatusScene.builder().saleId("uid_caf1b799").sourceSaleStatus(0).targetSaleStatus(2).build().invoke(visitor);
+        AppSaleScheduleUpdateSaleStatusScene.builder().saleId("uid_caf1b799").sourceSaleStatus(0).targetSaleStatus(2).build().execute(visitor);
     }
     @Test
     public void changeSale1(){
         try {
-            Object reception = AppPreSalesReceptionPageScene.builder().build().invoke(visitor, true).getJSONArray("list").stream().findAny().orElse(null);
+            Object reception = AppPreSalesReceptionPageScene.builder().build().execute(visitor, true).getJSONArray("list").stream().findAny().orElse(null);
             if (reception == null){ preCreate(); }
-            Long id = AppPreSalesReceptionPageScene.builder().build().invoke(visitor, true).getJSONArray("list").getJSONObject(0).getLong("id");
+            Long id = AppPreSalesReceptionPageScene.builder().build().execute(visitor, true).getJSONArray("list").getJSONObject(0).getLong("id");
             String saleId = util.getNeededSale(2).getString("sale_id");
-            String message = AppReceptorChangeScene.builder().id(id).shopId(Long.parseLong(ACCOUNT.getReceptionShopId())).receptorId(saleId).build().invoke(visitor,false).getString("message");
+            String message = AppReceptorChangeScene.builder().id(id).shopId(Long.parseLong(ACCOUNT.getReceptionShopId())).receptorId(saleId).build().execute(visitor,false).getString("message");
             Preconditions.checkArgument(Objects.equals("当前顾问非空闲,请选择其他顾问!",message));
         } catch (AssertionError | Exception e) {
             collectMessage(e);
@@ -204,12 +204,12 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     public void changeSale2(){
         try {
             String saleId = util.getNeededSale(0).getString("sale_id");
-            Object reception = AppPreSalesReceptionPageScene.builder().build().invoke(visitor, true).getJSONArray("list").stream().findAny().orElse(null);
+            Object reception = AppPreSalesReceptionPageScene.builder().build().execute(visitor, true).getJSONArray("list").stream().findAny().orElse(null);
             if (reception == null){ preCreate(); }
-            JSONObject getReception = AppPreSalesReceptionPageScene.builder().build().invoke(visitor, true).getJSONArray("list").getJSONObject(0);
+            JSONObject getReception = AppPreSalesReceptionPageScene.builder().build().execute(visitor, true).getJSONArray("list").getJSONObject(0);
             Long id = getReception.getLong("id");
             String receptorId = getReception.getString("receptor_id");
-            AppReceptorChangeScene.builder().id(id).shopId(Long.parseLong(ACCOUNT.getReceptionShopId())).receptorId(saleId).build().invoke(visitor,false);
+            AppReceptorChangeScene.builder().id(id).shopId(Long.parseLong(ACCOUNT.getReceptionShopId())).receptorId(saleId).build().execute(visitor,false);
             String lastId = util.getLastSale().getString("sale_id");
             Preconditions.checkArgument(Objects.equals(receptorId,lastId),"变更销售后，被替换的销售未在空闲中最后一位");
         }catch (AssertionError | Exception e) {

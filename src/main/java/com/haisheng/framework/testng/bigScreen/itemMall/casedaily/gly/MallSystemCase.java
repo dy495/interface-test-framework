@@ -1404,9 +1404,9 @@ public class MallSystemCase extends TestCaseCommon implements TestCaseStd {
             JSONObject response=visitor.invokeApi(scene,true);
             int pages=response.getInteger("pages");
             for (int page=1;page<=pages;page++){
-                JSONArray list=ShopPageScene.builder().page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
+                JSONArray list=ShopPageScene.builder().page(1).size(10).build().execute(visitor,true).getJSONArray("list");
                 //获取门店上一个七天的数据
-                JSONArray list1=ShopPageScene.builder().page(1).size(10).startTime(businessUtil.getDateTime(-9)).endTime(businessUtil.getDateTime(-16)).build().invoke(visitor,true).getJSONArray("list");
+                JSONArray list1=ShopPageScene.builder().page(1).size(10).startTime(businessUtil.getDateTime(-9)).endTime(businessUtil.getDateTime(-16)).build().execute(visitor,true).getJSONArray("list");
                 for(int i=0;i<list.size();i++){
                     //过店人数
                     int passNumber=list.getJSONObject(i).getInteger("pass_number");
@@ -1440,9 +1440,9 @@ public class MallSystemCase extends TestCaseCommon implements TestCaseStd {
             JSONObject response=visitor.invokeApi(scene,true);
             int pages=response.getInteger("pages");
             for (int page=1;page<=pages;page++){
-                JSONArray list=ShopPageScene.builder().page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
+                JSONArray list=ShopPageScene.builder().page(1).size(10).build().execute(visitor,true).getJSONArray("list");
                 //获取门店上一个七天的数据
-                JSONArray list1=ShopPageScene.builder().page(1).size(10).startTime(businessUtil.getDateTime(-9)).endTime(businessUtil.getDateTime(-16)).build().invoke(visitor,true).getJSONArray("list");
+                JSONArray list1=ShopPageScene.builder().page(1).size(10).startTime(businessUtil.getDateTime(-9)).endTime(businessUtil.getDateTime(-16)).build().execute(visitor,true).getJSONArray("list");
                 for(int i=0;i<list.size();i++){
                     //进店人数
                     int enterNumber=list.getJSONObject(i).getInteger("enter_number");
@@ -1477,9 +1477,9 @@ public class MallSystemCase extends TestCaseCommon implements TestCaseStd {
             JSONObject response=visitor.invokeApi(scene,true);
             int pages=response.getInteger("pages");
             for (int page=1;page<=pages;page++){
-                JSONArray list=ShopPageScene.builder().page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
+                JSONArray list=ShopPageScene.builder().page(1).size(10).build().execute(visitor,true).getJSONArray("list");
                 //获取门店上一个七天的数据
-                JSONArray list1=ShopPageScene.builder().page(1).size(10).startTime(businessUtil.getDateTime(-9)).endTime(businessUtil.getDateTime(-16)).build().invoke(visitor,true).getJSONArray("list");
+                JSONArray list1=ShopPageScene.builder().page(1).size(10).startTime(businessUtil.getDateTime(-9)).endTime(businessUtil.getDateTime(-16)).build().execute(visitor,true).getJSONArray("list");
                 for(int i=0;i<list.size();i++){
                     //进店率
                     double enterPercentage=list.getJSONObject(i).getDouble("enter_percentage");
@@ -1513,9 +1513,9 @@ public class MallSystemCase extends TestCaseCommon implements TestCaseStd {
             JSONObject response=visitor.invokeApi(scene,true);
             int pages=response.getInteger("pages");
             for (int page=1;page<=pages;page++){
-                JSONArray list=ShopPageScene.builder().page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
+                JSONArray list=ShopPageScene.builder().page(1).size(10).build().execute(visitor,true).getJSONArray("list");
                 //获取门店上一个七天的数据
-                JSONArray list1=ShopPageScene.builder().page(1).size(10).startTime(businessUtil.getDateTime(-9)).endTime(businessUtil.getDateTime(-16)).build().invoke(visitor,true).getJSONArray("list");
+                JSONArray list1=ShopPageScene.builder().page(1).size(10).startTime(businessUtil.getDateTime(-9)).endTime(businessUtil.getDateTime(-16)).build().execute(visitor,true).getJSONArray("list");
                 for(int i=0;i<list.size();i++){
                     //人均停留时长
                     double stayTimeAvg=list.getJSONObject(i).getDouble("stay_time_avg");
@@ -1550,9 +1550,9 @@ public class MallSystemCase extends TestCaseCommon implements TestCaseStd {
             JSONObject response=visitor.invokeApi(scene,true);
             int pages=response.getInteger("pages");
             for (int page=1;page<=pages;page++){
-                JSONArray list=ShopPageScene.builder().page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
+                JSONArray list=ShopPageScene.builder().page(1).size(10).build().execute(visitor,true).getJSONArray("list");
                 //获取门店上一个七天的数据
-                JSONArray list1=ShopPageScene.builder().page(1).size(10).startTime(businessUtil.getDateTime(-9)).endTime(businessUtil.getDateTime(-16)).build().invoke(visitor,true).getJSONArray("list");
+                JSONArray list1=ShopPageScene.builder().page(1).size(10).startTime(businessUtil.getDateTime(-9)).endTime(businessUtil.getDateTime(-16)).build().execute(visitor,true).getJSONArray("list");
                 for(int i=0;i<list.size();i++){
                     //进店人数
                     int enterNumber=list.getJSONObject(i).getInteger("enter_number");
@@ -1586,9 +1586,9 @@ public class MallSystemCase extends TestCaseCommon implements TestCaseStd {
             JSONObject response=visitor.invokeApi(scene,true);
             int pages=response.getInteger("pages");
             for (int page=1;page<=pages;page++){
-                JSONArray list=ShopPageScene.builder().page(1).size(10).build().invoke(visitor,true).getJSONArray("list");
+                JSONArray list=ShopPageScene.builder().page(1).size(10).build().execute(visitor,true).getJSONArray("list");
                 //获取门店上一个七天的数据
-                JSONArray list1=ShopPageScene.builder().page(1).size(10).startTime(businessUtil.getDateTime(-9)).endTime(businessUtil.getDateTime(-16)).build().invoke(visitor,true).getJSONArray("list");
+                JSONArray list1=ShopPageScene.builder().page(1).size(10).startTime(businessUtil.getDateTime(-9)).endTime(businessUtil.getDateTime(-16)).build().execute(visitor,true).getJSONArray("list");
                 for(int i=0;i<list.size();i++){
                     //光顾率
                     double visitPercentage=list.getJSONObject(i).getDouble("visit_percentage");

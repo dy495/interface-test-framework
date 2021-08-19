@@ -703,7 +703,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd{
     public void videoAvailable1(){
         try{
             //获取视频监控中进行中设备列表
-            JSONArray list = AllDeviceListScene.builder().available(1).build().invoke(visitor,true).getJSONArray("list");
+            JSONArray list = AllDeviceListScene.builder().available(1).build().execute(visitor,true).getJSONArray("list");
             for(int i = 0; i<list.size() ; i++){
                 JSONArray device_list = list.getJSONObject(i).getJSONArray("device_list");
                 if(device_list.size()>0){
@@ -725,7 +725,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd{
     public void videoAvailable0(){
         try{
             //获取视频监控中进行中设备列表
-            JSONArray list = AllDeviceListScene.builder().available(0).build().invoke(visitor,true).getJSONArray("list");
+            JSONArray list = AllDeviceListScene.builder().available(0).build().execute(visitor,true).getJSONArray("list");
             for(int i = 0; i<list.size() ; i++){
                 JSONArray device_list = list.getJSONObject(i).getJSONArray("device_list");
                 if(device_list.size()>0){
@@ -746,7 +746,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd{
     @Test(description = "[视频监控]收藏栏下的门店全部都是以收藏的")
     public void collectionShop(){
         try{
-            JSONArray list = ShopDeviceListScene.builder().build().invoke(visitor,true).getJSONArray("list");
+            JSONArray list = ShopDeviceListScene.builder().build().execute(visitor,true).getJSONArray("list");
             for (int i = 0; i<list.size(); i++){
                 boolean collected = list.getJSONObject(i).getBoolean("collected");
                 String subject_name = list.getJSONObject(i).getString("subject_name");
@@ -761,13 +761,13 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd{
     @Test(description = "[视频监控]收藏门店")
     public void addCollectedShop(){
         try{
-            JSONArray list = AllDeviceListScene.builder().build().invoke(visitor,true).getJSONArray("list");
+            JSONArray list = AllDeviceListScene.builder().build().execute(visitor,true).getJSONArray("list");
             for(int i = 0; i<list.size(); i++){
                 boolean collected = list.getJSONObject(i).getBoolean("collected");
                 if(!collected){
                     Long subject_id = list.getJSONObject(i).getLong("subject_id");
                     String subject_name = list.getJSONObject(i).getString("subject_name");
-                    String message = AddScene.builder().id(subject_id).build().invoke(visitor,false).getString("message");
+                    String message = AddScene.builder().id(subject_id).build().execute(visitor,false).getString("message");
                     Preconditions.checkArgument(message.equals("success"),"收藏门店失败,门店名称"+subject_name);
                 }
             }
@@ -781,11 +781,11 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd{
     @Test(description = "[视频监控]取消收藏门店")
     public void cancelCollectionShop(){
         try{
-            JSONArray list = ShopDeviceListScene.builder().build().invoke(visitor,true).getJSONArray("list");
+            JSONArray list = ShopDeviceListScene.builder().build().execute(visitor,true).getJSONArray("list");
             for(int i = 0; i<list.size(); i++){
                 Long subject_id = list.getJSONObject(i).getLong("subject_id");
                 String subject_name = list.getJSONObject(i).getString("subject_name");
-                String message = CancelScene.builder().id(subject_id).build().invoke(visitor,false).getString("message");
+                String message = CancelScene.builder().id(subject_id).build().execute(visitor,false).getString("message");
                 Preconditions.checkArgument(message.equals("success"),"取消收藏门店失败，门店名称"+subject_name);
             }
         }catch (AssertionError|Exception e){
@@ -797,10 +797,10 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd{
     @Test(description = "[视频监控]门店名称筛选框")
     public void authAllDeviceList(){
         try{
-            JSONArray list = AllDeviceListScene.builder().build().invoke(visitor,true).getJSONArray("list");
+            JSONArray list = AllDeviceListScene.builder().build().execute(visitor,true).getJSONArray("list");
             for (int i=0; i<list.size() ; i++){
                 String subject_name = list.getJSONObject(i).getString("subject_name");
-                JSONArray shop_list = AllDeviceListScene.builder().shopName(subject_name).build().invoke(visitor,true).getJSONArray("list");
+                JSONArray shop_list = AllDeviceListScene.builder().shopName(subject_name).build().execute(visitor,true).getJSONArray("list");
                 for (int j=0; j<shop_list.size() ; j++){
                     String shop_name = shop_list.getJSONObject(j).getString("subject_name");
                     Preconditions.checkArgument(shop_name.equals(subject_name),"筛选框输入门店名称"+subject_name+"列表展示出的门店名称"+shop_name);
@@ -815,7 +815,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd{
     @Test(description = "[视频监控]播放视频")
     public void deviceLive(){
         try {
-            JSONArray list = AllDeviceListScene.builder().build().invoke(visitor,true).getJSONArray("list");
+            JSONArray list = AllDeviceListScene.builder().build().execute(visitor,true).getJSONArray("list");
             for (int i = 0; i<list.size() ; i++){
                 JSONArray device_list = list.getJSONObject(i).getJSONArray("device_list");
                 Long shopId = list.getJSONObject(i).getLong("subject_id");
@@ -824,7 +824,7 @@ public class StorePcCase extends TestCaseCommon implements TestCaseStd{
                     int available = device_list.getJSONObject(j).getInteger("available");
                     String device_id = device_list.getJSONObject(j).getString("device_id");
                     if(available==1){
-                        String message = LiveScene.builder().deviceId(device_id).shopId(shopId).build().invoke(visitor,false).getString("message");
+                        String message = LiveScene.builder().deviceId(device_id).shopId(shopId).build().execute(visitor,false).getString("message");
                         Preconditions.checkArgument(message.equals("success"),"播放视频失败，设备id"+device_id+"门店名称"+shopName);
                     }
                 }

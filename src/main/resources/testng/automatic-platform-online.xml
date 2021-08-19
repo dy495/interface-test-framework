@@ -9,7 +9,7 @@
 
     <test name="ad-touch" preserve-order="true">
         <classes>
-            <class name="com.haisheng.framework.testng.bigScreen.itemCms.caseonline.platFormOnline"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemCms.caseonline.PlatFormOnline"/>
         </classes>
     </test>
 

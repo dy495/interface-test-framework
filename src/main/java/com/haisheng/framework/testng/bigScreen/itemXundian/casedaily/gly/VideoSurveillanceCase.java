@@ -8,7 +8,6 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
-import com.haisheng.framework.testng.bigScreen.itemXundian.casedaily.gly.util.BusinessUtil;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.enumerator.CameraStatusEnum;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.equipmentmanagement.auth.AllDeviceListScene;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.equipmentmanagement.device.DevicePageScene;
@@ -90,7 +89,7 @@ public class VideoSurveillanceCase extends TestCaseCommon implements TestCaseStd
             //计算type为【WEB_CAMERA】的条数
             int pages = response1.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = DevicePageScene.builder().page(page).size(10).type("CAMERA").build().invoke(visitor, true).getJSONArray("list");
+                JSONArray list = DevicePageScene.builder().page(page).size(10).type("CAMERA").build().execute(visitor, true).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     String type = list.getJSONObject(i).getString("type");
                     if (type.equals("WEB_CAMERA") || type.equals("UNIVIEW_PLATFORM") || type.equals("AI_CAMERA")) {
@@ -180,13 +179,13 @@ public class VideoSurveillanceCase extends TestCaseCommon implements TestCaseStd
             int notRunNum = deviceSum - deviceIng;
 
             //【设备管理中】视频流错误的设备数量
-            int streamErrorNum = DevicePageScene.builder().page(1).size(10).type("CAMERA").deviceStatus(CameraStatusEnum.STREAM_ERROR.getDeviceStatus()).build().invoke(visitor, true).getInteger("total");
+            int streamErrorNum = DevicePageScene.builder().page(1).size(10).type("CAMERA").deviceStatus(CameraStatusEnum.STREAM_ERROR.getDeviceStatus()).build().execute(visitor, true).getInteger("total");
             //【设备管理中】掉线的设备数量
-            int offLineNum = DevicePageScene.builder().page(1).size(10).type("CAMERA").deviceStatus(CameraStatusEnum.OFFLINE.getDeviceStatus()).build().invoke(visitor, true).getInteger("total");
+            int offLineNum = DevicePageScene.builder().page(1).size(10).type("CAMERA").deviceStatus(CameraStatusEnum.OFFLINE.getDeviceStatus()).build().execute(visitor, true).getInteger("total");
             //【设备管理中】已停止的设备数量
-            int stoppedNum = DevicePageScene.builder().page(1).size(10).type("CAMERA").deviceStatus(CameraStatusEnum.STOPPED.getDeviceStatus()).build().invoke(visitor, true).getInteger("total");
+            int stoppedNum = DevicePageScene.builder().page(1).size(10).type("CAMERA").deviceStatus(CameraStatusEnum.STOPPED.getDeviceStatus()).build().execute(visitor, true).getInteger("total");
             //【设备管理中】部署中的设备数量
-            int deploymentNum = DevicePageScene.builder().page(1).size(10).type("CAMERA").deviceStatus(CameraStatusEnum.DEPLOYMENT_ING.getDeviceStatus()).build().invoke(visitor, true).getInteger("total");
+            int deploymentNum = DevicePageScene.builder().page(1).size(10).type("CAMERA").deviceStatus(CameraStatusEnum.DEPLOYMENT_ING.getDeviceStatus()).build().execute(visitor, true).getInteger("total");
             //【设备管理中】未部署的设备数量
             int unDeploymentNum = 0;
             //设备管理中的筛选符合条件的未部署的设备数量
@@ -194,7 +193,7 @@ public class VideoSurveillanceCase extends TestCaseCommon implements TestCaseStd
             JSONObject response1 = visitor.invokeApi(scene1, true);
             int pages = response1.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = DevicePageScene.builder().page(page).size(10).type("CAMERA").deviceStatus(CameraStatusEnum.UN_DEPLOYMENT.getDeviceStatus()).build().invoke(visitor, true).getJSONArray("list");
+                JSONArray list = DevicePageScene.builder().page(page).size(10).type("CAMERA").deviceStatus(CameraStatusEnum.UN_DEPLOYMENT.getDeviceStatus()).build().execute(visitor, true).getJSONArray("list");
                 for (int i = 0; i < list.size(); i++) {
                     String type = list.getJSONObject(i).getString("type");
                     if (type.equals("WEB_CAMERA") || type.equals("UNIVIEW_PLATFORM") || type.equals("AI_CAMERA")) {

@@ -3,7 +3,9 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.app;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
@@ -12,6 +14,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletConsultPreServiceSubmitScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.consultmanagement.ResponseRuleEditScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.FollowType;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.JcFunctionOnline;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.PublicParamOnline;
@@ -27,7 +30,10 @@ import org.testng.annotations.*;
 import java.lang.reflect.Method;
 
 public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
-    EnumTestProduct product = EnumTestProduct.JC_ONLINE_JD;
+    private static final EnumTestProduct product = EnumTestProduct.JC_ONLINE_JD;
+    private static final EnumAccount account = EnumAccount.JC_ALL_ONLINE_LXQ;
+    private final VisitorProxy visitor = new VisitorProxy(product);
+    private final SceneUtil util = new SceneUtil(visitor);
     ScenarioUtil jc = new ScenarioUtil();
 
     PublicParamOnline pp = new PublicParamOnline();
@@ -73,7 +79,7 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);
-        appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
+        util.loginApp(account);
 
     }
 
@@ -143,7 +149,6 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             startReception();
-
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {

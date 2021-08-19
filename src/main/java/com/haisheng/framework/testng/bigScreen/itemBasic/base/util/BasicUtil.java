@@ -2,17 +2,14 @@ package com.haisheng.framework.testng.bigScreen.itemBasic.base.util;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.bigScreen.itemBasic.base.mapper.IEnum;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
-import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.Response;
 import com.haisheng.framework.util.CommonUtil;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -34,23 +31,23 @@ public class BasicUtil {
     }
 
     public <T> List<T> toJavaObjectList(@NotNull IScene scene, Class<T> tClass, String JSONArrayName) {
-        JSONArray list = scene.invoke(visitor).getJSONArray(JSONArrayName);
+        JSONArray list = scene.execute(visitor).getJSONArray(JSONArrayName);
         return list.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, tClass)).collect(Collectors.toList());
     }
 
     public <T> List<T> toJavaObjectList(@NotNull IScene scene, Class<T> tClass) {
-        int total = scene.invoke(visitor).getInteger("total");
+        int total = scene.execute(visitor).getInteger("total");
         return toJavaObjectList(scene, tClass, total);
     }
 
     public <T> List<T> toJavaObjectList(@NotNull IScene scene, Integer size, Class<T> tClass) {
         List<T> list = new ArrayList<>();
-        int total = scene.invoke(visitor).getInteger("total");
+        int total = scene.execute(visitor).getInteger("total");
         int s = CommonUtil.getTurningPage(total, size);
         for (int i = 1; i < s; i++) {
             scene.setPage(i);
             scene.setSize(size);
-            JSONArray array = scene.invoke(visitor).getJSONArray("list");
+            JSONArray array = scene.execute(visitor).getJSONArray("list");
             list.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, tClass)).collect(Collectors.toList()));
         }
         return list;
@@ -62,7 +59,7 @@ public class BasicUtil {
         for (int i = 1; i < s; i++) {
             scene.setPage(i);
             scene.setSize(SIZE);
-            JSONArray array = scene.invoke(visitor).getJSONArray("list");
+            JSONArray array = scene.execute(visitor).getJSONArray("list");
             list.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, tClass)).collect(Collectors.toList()));
         }
         return list;
@@ -70,12 +67,12 @@ public class BasicUtil {
 
     public <T> List<T> toJavaObjectList(@NotNull IScene scene, Class<T> bean, String key, Object value) {
         List<T> list = new ArrayList<>();
-        int total = scene.invoke(visitor).getInteger("total");
+        int total = scene.execute(visitor).getInteger("total");
         int s = CommonUtil.getTurningPage(total, SIZE);
         for (int i = 1; i < s; i++) {
             scene.setPage(i);
             scene.setSize(SIZE);
-            JSONArray array = scene.invoke(visitor).getJSONArray("list");
+            JSONArray array = scene.execute(visitor).getJSONArray("list");
             array.stream().map(e -> (JSONObject) e).filter(e -> e.getObject(key, value.getClass()).equals(value))
                     .map(e -> JSONObject.toJavaObject(e, bean)).forEach(list::add);
         }
@@ -83,7 +80,7 @@ public class BasicUtil {
     }
 
     public <T> T toJavaObject(@NotNull IScene scene, Class<T> tClass) {
-        return toJavaObject(scene.invoke(visitor), tClass);
+        return toJavaObject(scene.execute(visitor), tClass);
     }
 
     public <T> T toJavaObject(JSONObject object, Class<T> tClass) {
@@ -91,12 +88,12 @@ public class BasicUtil {
     }
 
     public <T> T toJavaObject(@NotNull IScene scene, Class<T> tClass, String key, Object value) {
-        int total = scene.invoke(visitor).getInteger("total");
+        int total = scene.execute(visitor).getInteger("total");
         int s = CommonUtil.getTurningPage(total, SIZE);
         for (int i = 1; i < s; i++) {
             scene.setPage(i);
             scene.setSize(SIZE);
-            JSONArray array = scene.invoke(visitor).getJSONArray("list");
+            JSONArray array = scene.execute(visitor).getJSONArray("list");
             T clazz = array.stream().map(e -> (JSONObject) e).filter(e -> e.getObject(key, value.getClass())
                     .equals(value)).findFirst().map(e -> JSONObject.toJavaObject(e, tClass)).orElse(null);
             if (clazz != null) {
@@ -107,12 +104,12 @@ public class BasicUtil {
     }
 
     public <T> T toJavaObject(@NotNull IScene scene, Integer size, Class<T> tClass, String key, Object value) {
-        int total = scene.invoke(visitor).getInteger("total");
+        int total = scene.execute(visitor).getInteger("total");
         int s = CommonUtil.getTurningPage(total, size);
         for (int i = 1; i < s; i++) {
             scene.setPage(i);
             scene.setSize(size);
-            JSONArray array = scene.invoke(visitor).getJSONArray("list");
+            JSONArray array = scene.execute(visitor).getJSONArray("list");
             T clazz = array.stream().map(e -> (JSONObject) e).filter(e -> e.getObject(key, value.getClass())
                     .equals(value)).findFirst().map(e -> JSONObject.toJavaObject(e, tClass)).orElse(null);
             if (clazz != null) {
@@ -123,8 +120,8 @@ public class BasicUtil {
     }
 
     public <T> T toFirstJavaObject(@NotNull IScene scene, Class<T> tClass) {
-        JSONArray array = scene.invoke(visitor).getJSONArray("list");
-        return array.size() == 0 ? null : toJavaObject(scene.invoke(visitor).getJSONArray("list").getJSONObject(0), tClass);
+        JSONArray array = scene.execute(visitor).getJSONArray("list");
+        return array.size() == 0 ? null : toJavaObject(scene.execute(visitor).getJSONArray("list").getJSONObject(0), tClass);
     }
 
     public <K, V, T> V getValueByKey(@NotNull Map<K, V> map, T key) {

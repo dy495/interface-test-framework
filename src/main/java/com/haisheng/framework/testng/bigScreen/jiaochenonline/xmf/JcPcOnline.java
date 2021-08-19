@@ -176,17 +176,17 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             JSONArray moduleId = pp.roleList;
             String description = "自动化测试给店长自动化用的角色";
             IScene scene = RolePageScene.builder().build();
-            Long total = scene.invoke(visitor).getLong("total");
-            int code = RoleAddScene.builder().name(name).description(description).authList(moduleId).build().getResponse(visitor).getCode();
+            Long total = scene.execute(visitor).getLong("total");
+            int code = RoleAddScene.builder().name(name).description(description).authList(moduleId).build().visitor(visitor).getResponse().getCode();
             checkArgument(code == 1000, mess);
-            Long newTotal = scene.invoke(visitor).getLong("total");
+            Long newTotal = scene.execute(visitor).getLong("total");
             IScene rolePageScene = RolePageScene.builder().name(name).build();
             id = util.toJavaObject(rolePageScene, JSONObject.class, "name", name).getInteger("id");
             Preconditions.checkArgument(newTotal - total == 1, "新增角色前列表数：" + total + " 新增角色后列表数：" + newTotal);
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
-            RoleDeleteScene.builder().id(id).build().invoke(visitor);
+            RoleDeleteScene.builder().id(id).build().execute(visitor);
             saveData("新增角色(名称校验)-正常");
         }
     }
@@ -206,7 +206,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             visitor.setProduct(EnumTestProduct.JC_ONLINE_JD);
             JSONArray moduleId = pp.roleList;
             String description = "自动化测试给店长自动化用的角色";
-            String message = RoleAddScene.builder().authList(moduleId).description(description).name(name).build().getResponse(visitor).getMessage();
+            String message = RoleAddScene.builder().authList(moduleId).description(description).name(name).build().visitor(visitor).getResponse().getMessage();
             checkArgument(message.equals(res), mess);
         } catch (AssertionError | Exception e) {
             collectMessage(e);
@@ -223,13 +223,13 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
     public void accountInfoData() {
         try {
             String phone = "15555555555";
-            int total = StaffPageScene.builder().build().invoke(visitor).getInteger("total");
+            int total = StaffPageScene.builder().build().execute(visitor).getInteger("total");
             util.getRandomRoleMap().forEach((roleId, roleName) -> {
                 JSONArray shopList = util.getShopIdArray();
                 String pic = new ImageUtil().getImageBinary("src/main/java/com/haisheng/framework/testng/bigScreen/itemYuntong/common/resources/picture/touxiang.jpg");
-                String picPath = FileUploadScene.builder().pic("data:image/jpeg;base64," + pic).permanentPicType(0).ratio(1.0).ratioStr("1:1").build().invoke(visitor).getString("pic_path");
-                StaffAddScene.builder().phone(phone).name("克拉拉").shopList(shopList).roleId(roleId).roleName(roleName).picturePath(picPath).build().invoke(visitor);
-                int newTotal = StaffPageScene.builder().build().invoke(visitor).getInteger("total");
+                String picPath = FileUploadScene.builder().pic("data:image/jpeg;base64," + pic).permanentPicType(0).ratio(1.0).ratioStr("1:1").build().execute(visitor).getString("pic_path");
+                StaffAddScene.builder().phone(phone).name("克拉拉").shopList(shopList).roleId(roleId).roleName(roleName).picturePath(picPath).build().execute(visitor);
+                int newTotal = StaffPageScene.builder().build().execute(visitor).getInteger("total");
                 Preconditions.checkArgument(newTotal == total + 1, "新增一个账号前列表数：" + total + " 新增一个账号后列表数：" + newTotal);
                 IScene scene = StaffPageScene.builder().phone(phone).build();
                 JSONObject object = util.toFirstJavaObject(scene, JSONObject.class);
@@ -246,9 +246,9 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(name.equals("克拉拉"));
                 Preconditions.checkArgument(staffPhone.equals(phone));
                 Preconditions.checkArgument(shop_list.equals(shopList));
-                int deleteTotal = StaffPageScene.builder().build().invoke(visitor).getInteger("total");
+                int deleteTotal = StaffPageScene.builder().build().execute(visitor).getInteger("total");
                 util.deleteStaff("15555555555");
-                int newDeleteTotal = com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.staff.StaffPageScene.builder().build().invoke(visitor).getInteger("total");
+                int newDeleteTotal = com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.staff.StaffPageScene.builder().build().execute(visitor).getInteger("total");
                 Preconditions.checkArgument(newDeleteTotal == deleteTotal - 1, "删除一个账号前列表数：" + deleteTotal + " 删除一个账号后列表数：" + newDeleteTotal);
             });
         } catch (AssertionError | Exception e) {
@@ -267,7 +267,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
         try {
             visitor.setProduct(EnumTestProduct.JC_ONLINE_ZH);
             IScene staffPageScene = StaffPageScene.builder().phone(ACCOUNT.getPhone()).build();
-            JSONObject response = staffPageScene.invoke(visitor);
+            JSONObject response = staffPageScene.execute(visitor);
             int total = response.getInteger("total");
             JSONObject obj = response.getJSONArray("list").getJSONObject(0);
             JSONArray roleList = obj.getJSONArray("role_list");
@@ -275,14 +275,14 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
             String phone = obj.getString("phone");
             String createTime = obj.getString("create_time");
             String name = obj.getString("name");
-            StaffEditScene.builder().roleList(roleList).id(id).phone(phone).name(name + "-改").build().invoke(visitor);
-            JSONObject newResponse = staffPageScene.invoke(visitor);
+            StaffEditScene.builder().roleList(roleList).id(id).phone(phone).name(name + "-改").build().execute(visitor);
+            JSONObject newResponse = staffPageScene.execute(visitor);
             int newTotal = newResponse.getInteger("total");
             JSONObject newObj = newResponse.getJSONArray("list").getJSONObject(0);
             String newCreateTime = newObj.getString("create_time");
             Preconditions.checkArgument(createTime.equals(newCreateTime), "编辑前创建时间：" + createTime + " 编辑后创建时间：" + newCreateTime);
             Preconditions.checkArgument(total == newTotal, "编辑一个账号，账号列表的数量由:" + total + "变成了" + newTotal);
-            StaffEditScene.builder().roleList(roleList).id(id).phone(phone).name(name).build().invoke(visitor);
+            StaffEditScene.builder().roleList(roleList).id(id).phone(phone).name(name).build().execute(visitor);
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
@@ -295,23 +295,23 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
     public void accountStart() {
         String id = null;
         try {
-            JSONObject response = StaffPageScene.builder().phone(account.getPhone()).build().invoke(visitor);
+            JSONObject response = StaffPageScene.builder().phone(account.getPhone()).build().execute(visitor);
             id = response.getJSONArray("list").getJSONObject(0).getString("id");
             //关闭账号
-            StatusChangeScene.builder().id(id).status("DISABLE").build().invoke(visitor);
-            int pcCode = LoginPc.builder().type(1).phone(account.getPhone()).verificationCode(account.getPassword()).build().getResponse(visitor).getCode();
-            int appCode = LoginApp.builder().phone(account.getPhone()).verificationCode(account.getPassword()).build().getResponse(visitor).getCode();
+            StatusChangeScene.builder().id(id).status("DISABLE").build().execute(visitor);
+            int pcCode = LoginPc.builder().type(1).phone(account.getPhone()).verificationCode(account.getPassword()).build().visitor(visitor).getResponse().getCode();
+            int appCode = LoginApp.builder().phone(account.getPhone()).verificationCode(account.getPassword()).build().visitor(visitor).getResponse().getCode();
             Preconditions.checkArgument(appCode == 1001, "账户禁用，app登陆预期为：1001" + "实际为：" + appCode);
             Preconditions.checkArgument(pcCode == 1001, "账户禁用，pc登陆预期为：1001" + "实际为：" + pcCode);
             //开启账号
-            StatusChangeScene.builder().id(id).status("ENABLE").build().invoke(visitor);
-            int enablePcCode = LoginPc.builder().type(1).phone(account.getPhone()).verificationCode(account.getPassword()).build().getResponse(visitor).getCode();
+            StatusChangeScene.builder().id(id).status("ENABLE").build().execute(visitor);
+            int enablePcCode = LoginPc.builder().type(1).phone(account.getPhone()).verificationCode(account.getPassword()).build().visitor(visitor).getResponse().getCode();
             Preconditions.checkArgument(enablePcCode == 1000, "账户启用，pc登陆预期为：1000" + "实际为：" + enablePcCode);
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
             //开启账号
-            StatusChangeScene.builder().id(id).status("ENABLE").build().invoke(visitor);
+            StatusChangeScene.builder().id(id).status("ENABLE").build().execute(visitor);
             saveData("禁用账户登录失败，开启登录成功");
         }
     }
@@ -324,7 +324,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
     public void pcReceiptAb(String plate) {
         try {
             visitor.setProduct(EnumTestProduct.JC_ONLINE_JD);
-            int code = ReceptionScene.builder().plateNumber(plate).build().getResponse(visitor).getCode();
+            int code = ReceptionScene.builder().plateNumber(plate).build().visitor(visitor).getResponse().getCode();
             Preconditions.checkArgument(code == 1001, "接待车牌为：" + code + "时，预期code为1001 实际code为：" + code);
         } catch (AssertionError | Exception e) {
             collectMessage(e);
@@ -338,7 +338,7 @@ public class JcPcOnline extends TestCaseCommon implements TestCaseStd {
         try {
             visitor.setProduct(EnumTestProduct.JC_ONLINE_JD);
             util.loginPc(account);
-            JSONObject response = ReceptionScene.builder().plateNumber(util.getPlatNumber(EnumAppletToken.JC_WM_DAILY.getPhone())).build().invoke(visitor);
+            JSONObject response = ReceptionScene.builder().plateNumber(util.getPlatNumber(EnumAppletToken.JC_WM_DAILY.getPhone())).build().execute(visitor);
             String jsonpath = "$.arrive_times&&$.customers[*].voucher_list[*]&&$.er_code_url&&$.last_reception_sale_name&&$.last_arrive_time&&$.plate_number";
             JsonPathUtil.spiltString(response.toJSONString(), jsonpath);
         } catch (AssertionError | Exception e) {

@@ -135,13 +135,13 @@ public class JcFunction extends BasicUtil {
     }
 
     public int getVoucherTotal(String phone) {
-        int total = VoucherListScene.builder().transferPhone(phone).build().invoke(visitor).getJSONArray("list").size();
+        int total = VoucherListScene.builder().transferPhone(phone).build().execute(visitor).getJSONArray("list").size();
         return total;
     }
 
     public Long getMessDetailId() {
-        Long listid = AppletMessageListScene.builder().build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
-        Long detailid = AppletMessageDetailScene.builder().id(listid).build().invoke(visitor).getJSONObject("evaluate_info").getLong("id");
+        Long listid = AppletMessageListScene.builder().build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+        Long detailid = AppletMessageDetailScene.builder().id(listid).build().execute(visitor).getJSONObject("evaluate_info").getLong("id");
         return detailid;
     }
 

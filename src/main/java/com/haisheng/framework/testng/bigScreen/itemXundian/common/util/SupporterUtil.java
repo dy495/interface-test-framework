@@ -77,7 +77,7 @@ public class SupporterUtil extends BasicUtil {
         String picture = new ImageUtil().getImageBinary(picPath);
         String[] strings = ratioStr.split(":");
         double ratio = BigDecimal.valueOf(Double.parseDouble(strings[0]) / Double.parseDouble(strings[1])).divide(new BigDecimal(1), 4, BigDecimal.ROUND_HALF_UP).doubleValue();
-        return FileUpload.builder().isPermanent(false).permanentPicType(0).pic(picture).ratioStr(ratioStr).ratio(ratio).build().invoke(visitor).getString("pic_path");
+        return FileUpload.builder().isPermanent(false).permanentPicType(0).pic(picture).ratioStr(ratioStr).ratio(ratio).build().execute(visitor).getString("pic_path");
     }
 
     /**
@@ -89,7 +89,7 @@ public class SupporterUtil extends BasicUtil {
      */
     public String createVoucher(Integer stock, VoucherTypeEnum type) {
         String voucherName = createVoucherName(type);
-        createVoucherBuilder(stock, type).voucherName(voucherName).build().invoke(visitor);
+        createVoucherBuilder(stock, type).voucherName(voucherName).build().execute(visitor);
         return voucherName;
     }
 
@@ -169,7 +169,7 @@ public class SupporterUtil extends BasicUtil {
      * @return 门店id
      */
     public List<Long> getShopIdList() {
-        JSONArray array = ShopListScene.builder().build().invoke(visitor).getJSONArray("list");
+        JSONArray array = ShopListScene.builder().build().execute(visitor).getJSONArray("list");
         return array.stream().map(e -> (JSONObject) e).map(e -> e.getLong("shop_id")).collect(Collectors.toList());
     }
 
@@ -250,7 +250,7 @@ public class SupporterUtil extends BasicUtil {
      * @return 电话号
      */
     public String getRepetitionVerificationPhone() {
-        JSONArray array = VerificationPeopleScene.builder().build().invoke(visitor).getJSONArray("list");
+        JSONArray array = VerificationPeopleScene.builder().build().execute(visitor).getJSONArray("list");
         return array.stream().map(e -> (JSONObject) e).map(e -> e.getString("verification_phone")).findFirst().orElse(null);
     }
 
@@ -359,7 +359,7 @@ public class SupporterUtil extends BasicUtil {
     public void applyVoucher(String voucherName, String status) {
         IScene scene = ApplyPageScene.builder().name(voucherName).status(ApplyStatusEnum.AUDITING.getId()).build();
         ApplyPageBean applyPage = toJavaObject(scene, ApplyPageBean.class, "name", voucherName);
-        ApplyApprovalScene.builder().id(applyPage.getId()).status(status).build().invoke(visitor);
+        ApplyApprovalScene.builder().id(applyPage.getId()).status(status).build().execute(visitor);
     }
 
     //----------------------------------------------------核销人员-------------------------------------------------------
@@ -443,7 +443,7 @@ public class SupporterUtil extends BasicUtil {
     public void switchVerificationStatus(String code, boolean status) {
         IScene verificationPeopleScene = VerificationPeopleScene.builder().verificationCode(code).build();
         long id = visitor.invokeApi(verificationPeopleScene).getJSONArray("list").getJSONObject(0).getLong("id");
-        SwitchVerificationStatusScene.builder().id(id).status(status).build().invoke(visitor);
+        SwitchVerificationStatusScene.builder().id(id).status(status).build().execute(visitor);
     }
 
     /**
@@ -603,7 +603,7 @@ public class SupporterUtil extends BasicUtil {
         Integer lastValue = null;
         JSONArray array;
         do {
-            JSONObject response = AppletExchangeRecordScene.builder().lastValue(lastValue).size(20).status(null).build().invoke(visitor);
+            JSONObject response = AppletExchangeRecordScene.builder().lastValue(lastValue).size(20).status(null).build().execute(visitor);
             lastValue = response.getInteger("last_value");
             array = response.getJSONArray("list");
             listSize += array.size();
@@ -621,7 +621,7 @@ public class SupporterUtil extends BasicUtil {
         Integer lastValue = null;
         JSONArray array;
         do {
-            JSONObject response = AppletExchangeRecordScene.builder().lastValue(lastValue).size(20).status(null).build().invoke(visitor);
+            JSONObject response = AppletExchangeRecordScene.builder().lastValue(lastValue).size(20).status(null).build().execute(visitor);
             lastValue = response.getInteger("last_value");
             array = response.getJSONArray("list");
             appletExchangeRecordList.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppletExchangeRecord.class)).collect(Collectors.toList()));
@@ -641,7 +641,7 @@ public class SupporterUtil extends BasicUtil {
         JSONObject lastValue = null;
         JSONArray array;
         do {
-            JSONObject data = AppletCommodityListScene.builder().lastValue(lastValue).size(10).integralSort(integralSort).status(status).build().invoke(visitor);
+            JSONObject data = AppletCommodityListScene.builder().lastValue(lastValue).size(10).integralSort(integralSort).status(status).build().execute(visitor);
             lastValue = data.getJSONObject("last_value");
             array = data.getJSONArray("list");
             appletCommodityListList.addAll(array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppletCommodity.class)).collect(Collectors.toList()));
@@ -660,7 +660,7 @@ public class SupporterUtil extends BasicUtil {
         JSONObject lastValue = null;
         JSONArray array;
         do {
-            JSONObject data = AppletCommodityListScene.builder().lastValue(lastValue).size(10).integralSort(SortTypeEnum.DOWN.name()).status(false).build().invoke(visitor);
+            JSONObject data = AppletCommodityListScene.builder().lastValue(lastValue).size(10).integralSort(SortTypeEnum.DOWN.name()).status(false).build().execute(visitor);
             lastValue = data.getJSONObject("last_value");
             array = data.getJSONArray("list");
             listSie += array.size();
@@ -694,9 +694,9 @@ public class SupporterUtil extends BasicUtil {
         String exchangeStartTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
         String exchangeEndTime = DateTimeUtil.getFormat(DateTimeUtil.addDay(new Date(), 30), "yyyy-MM-dd HH:mm:ss");
         JSONArray specificationList = new JSONArray();
-        JSONObject response = GoodsManagePageScene.builder().goodsStatus(CommodityStatusEnum.UP.name()).build().invoke(visitor).getJSONArray("list").getJSONObject(0);
+        JSONObject response = GoodsManagePageScene.builder().goodsStatus(CommodityStatusEnum.UP.name()).build().execute(visitor).getJSONArray("list").getJSONObject(0);
         Long goodsId = response.getLong("id");
-        JSONArray specificationDetailList = CommoditySpecificationsListScene.builder().id(goodsId).build().invoke(visitor).getJSONArray("specification_detail_list");
+        JSONArray specificationDetailList = CommoditySpecificationsListScene.builder().id(goodsId).build().execute(visitor).getJSONArray("specification_detail_list");
         specificationDetailList.forEach(e -> {
             JSONObject specificationDetail = (JSONObject) e;
             JSONObject jsonObject = new JSONObject();
@@ -710,7 +710,7 @@ public class SupporterUtil extends BasicUtil {
                 .specificationList(specificationList).expireType(2).useDays(10)
                 .exchangeStartTime(exchangeStartTime)
                 .exchangeEndTime(exchangeEndTime)
-                .build().invoke(visitor);
+                .build().execute(visitor);
         return toJavaObjectList(ExchangePageScene.builder().build(), ExchangePage.class).get(0);
     }
 
@@ -726,7 +726,7 @@ public class SupporterUtil extends BasicUtil {
         //创建积分兑换
         CreateExchangeGoodsScene.builder().exchangeGoodsType(CommodityTypeEnum.FICTITIOUS.name()).goodsId(voucherId)
                 .exchangePrice(1L).isLimit(true).exchangePeopleNum(10).exchangeStartTime(exchangeStartTime)
-                .exchangeEndTime(exchangeEndTime).expireType(2).useDays(10).exchangeNum(1L).build().invoke(visitor);
+                .exchangeEndTime(exchangeEndTime).expireType(2).useDays(10).exchangeNum(1L).build().execute(visitor);
         return toJavaObjectList(ExchangePageScene.builder().build(), ExchangePage.class).get(0);
     }
 
@@ -737,13 +737,13 @@ public class SupporterUtil extends BasicUtil {
      * @return 卡券信息
      */
     public VoucherFormVoucherPageBean getExchangeGoodsContainVoucher(Long id) {
-        String voucherName = ExchangeGoodsStockScene.builder().id(id).build().invoke(visitor).getString("goods_name");
+        String voucherName = ExchangeGoodsStockScene.builder().id(id).build().execute(visitor).getString("goods_name");
         return getVoucherPage(voucherName);
     }
 
     public void modifyExchangeGoodsLimit(Long exchangeGoodsId, String exchangeGoodsType, Boolean isLimit) {
         IScene scene = ExchangeGoodsDetailScene.builder().id(exchangeGoodsId).build();
-        ExchangeGoodsDetailBean exchangeGoodsDetail = JSONObject.toJavaObject(scene.invoke(visitor), ExchangeGoodsDetailBean.class);
+        ExchangeGoodsDetailBean exchangeGoodsDetail = JSONObject.toJavaObject(scene.execute(visitor), ExchangeGoodsDetailBean.class);
         EditExchangeGoodsScene.EditExchangeGoodsSceneBuilder builder = EditExchangeGoodsScene.builder()
                 .exchangeGoodsType(exchangeGoodsDetail.getExchangeGoodsType()).goodsId(exchangeGoodsDetail.getGoodsId())
                 .exchangePrice(exchangeGoodsDetail.getExchangePrice()).exchangeNum(exchangeGoodsDetail.getExchangeNum())
@@ -751,7 +751,7 @@ public class SupporterUtil extends BasicUtil {
                 .isLimit(isLimit).id(exchangeGoodsDetail.getId());
         builder = isLimit ? builder.exchangePeopleNum(1) : builder;
         builder = exchangeGoodsType.equals(CommodityTypeEnum.REAL.name()) ? builder : builder.expireType(2).useDays(10);
-        builder.build().invoke(visitor);
+        builder.build().execute(visitor);
     }
 
     //-------------------------------------------------------商品管理---------------------------------------------------
@@ -766,7 +766,7 @@ public class SupporterUtil extends BasicUtil {
      */
     public Long createCategory(String categoryName, String picPath, String categoryLevel, Long belongCategory) {
         CreateCategoryScene.builder().categoryName(categoryName).belongPic(picPath).categoryLevel(categoryLevel)
-                .belongCategory(belongCategory).build().invoke(visitor);
+                .belongCategory(belongCategory).build().execute(visitor);
         return getCategoryId(categoryName);
     }
 
@@ -779,13 +779,13 @@ public class SupporterUtil extends BasicUtil {
         if (categoryLevel.equals(IntegralCategoryTypeEnum.SECOND_CATEGORY)) {
             Long id = getCategoryId(IntegralCategoryTypeEnum.FIRST_CATEGORY);
             id = id == null ? createFirstCategory(getCategoryPicPath()) : id;
-            CreateCategoryScene.builder().categoryName(IntegralCategoryTypeEnum.SECOND_CATEGORY.getDesc()).belongPic(getCategoryPicPath()).categoryLevel(categoryLevel.name()).belongCategory(id).build().invoke(visitor);
+            CreateCategoryScene.builder().categoryName(IntegralCategoryTypeEnum.SECOND_CATEGORY.getDesc()).belongPic(getCategoryPicPath()).categoryLevel(categoryLevel.name()).belongCategory(id).build().execute(visitor);
             return getCategoryId(IntegralCategoryTypeEnum.SECOND_CATEGORY.getDesc());
         }
         if (categoryLevel.equals(IntegralCategoryTypeEnum.THIRD_CATEGORY)) {
             Long id = getCategoryId(IntegralCategoryTypeEnum.SECOND_CATEGORY);
             id = id == null ? createSecondCategory() : id;
-            CreateCategoryScene.builder().categoryName(IntegralCategoryTypeEnum.THIRD_CATEGORY.getDesc()).belongPic(getCategoryPicPath()).categoryLevel(categoryLevel.name()).belongCategory(id).build().invoke(visitor);
+            CreateCategoryScene.builder().categoryName(IntegralCategoryTypeEnum.THIRD_CATEGORY.getDesc()).belongPic(getCategoryPicPath()).categoryLevel(categoryLevel.name()).belongCategory(id).build().execute(visitor);
             return getCategoryId(IntegralCategoryTypeEnum.THIRD_CATEGORY.getDesc());
         } else {
             Long id = getCategoryId(categoryLevel);
@@ -811,7 +811,7 @@ public class SupporterUtil extends BasicUtil {
      */
     private Long createFirstCategory(String picPath) {
         String name = IntegralCategoryTypeEnum.FIRST_CATEGORY.getDesc();
-        CreateCategoryScene.builder().categoryName(name).belongPic(picPath).categoryLevel(IntegralCategoryTypeEnum.FIRST_CATEGORY.name()).build().invoke(visitor);
+        CreateCategoryScene.builder().categoryName(name).belongPic(picPath).categoryLevel(IntegralCategoryTypeEnum.FIRST_CATEGORY.name()).build().execute(visitor);
         return getCategoryId(name);
     }
 
@@ -890,7 +890,7 @@ public class SupporterUtil extends BasicUtil {
                 .firstCategory(goodsParamBean.getFirstCategory())
                 .secondCategory(goodsParamBean.getSecondCategory())
                 .thirdCategory(goodsParamBean.getThirdCategory())
-                .build().invoke(visitor).getLong("id");
+                .build().execute(visitor).getLong("id");
         GoodsBean goodsBean = new GoodsBean();
         goodsBean.setGoodsId(goodsId);
         goodsBean.setGoodsParamBean(goodsParamBean);
@@ -898,7 +898,7 @@ public class SupporterUtil extends BasicUtil {
     }
 
     public JSONArray getSelectSpecifications(GoodsParamBean goodsParamBean) {
-        JSONObject data = SpecificationsDetailScene.builder().id(goodsParamBean.getSpecificationsId()).build().invoke(visitor);
+        JSONObject data = SpecificationsDetailScene.builder().id(goodsParamBean.getSpecificationsId()).build().execute(visitor);
         String specificationsName = data.getString("specifications_name");
         JSONObject specificationsDetail = data.getJSONArray("specifications_list").getJSONObject(0);
         JSONArray selectSpecifications = new JSONArray();
@@ -916,7 +916,7 @@ public class SupporterUtil extends BasicUtil {
     }
 
     public JSONArray getGoodsSpecificationsList(GoodsParamBean goodsParamBean) {
-        JSONObject data = SpecificationsDetailScene.builder().id(goodsParamBean.getSpecificationsId()).build().invoke(visitor);
+        JSONObject data = SpecificationsDetailScene.builder().id(goodsParamBean.getSpecificationsId()).build().execute(visitor);
         JSONObject specificationsDetail = data.getJSONArray("specifications_list").getJSONObject(0);
         JSONArray goodsSpecificationsList = new JSONArray();
         JSONObject object = new JSONObject();
@@ -937,10 +937,10 @@ public class SupporterUtil extends BasicUtil {
         //创建三级品类
         Long thirdId = createCategory("特斯拉ModelS", getCategoryPicPath(), IntegralCategoryTypeEnum.THIRD_CATEGORY.name(), secondId);
         //创建品牌
-        Long brandId = CreateBrandScene.builder().brandPic(getCategoryPicPath()).brandName("特斯拉").brandDescription("商品使用，用完销毁").build().invoke(visitor).getLong("id");
+        Long brandId = CreateBrandScene.builder().brandPic(getCategoryPicPath()).brandName("特斯拉").brandDescription("商品使用，用完销毁").build().execute(visitor).getLong("id");
         //给一级品类创建规格
-        Long specificationsId = CreateSpecificationsScene.builder().belongsCategory(id).specificationsName("颜色").build().invoke(visitor).getLong("id");
-        EditSpecificationsScene.builder().belongsCategory(id).id(specificationsId).specificationsList(getSpecificationsList()).specificationsName("颜色").build().invoke(visitor);
+        Long specificationsId = CreateSpecificationsScene.builder().belongsCategory(id).specificationsName("颜色").build().execute(visitor).getLong("id");
+        EditSpecificationsScene.builder().belongsCategory(id).id(specificationsId).specificationsList(getSpecificationsList()).specificationsName("颜色").build().execute(visitor);
         //给规格创建规格参数
         goodsParamBean.setFirstCategory(id);
         goodsParamBean.setSecondCategory(secondId);
@@ -961,7 +961,7 @@ public class SupporterUtil extends BasicUtil {
 
     public JSONArray getRuledays() {
         JSONArray voucher_list = VoucherFormVoucherPageScene.builder()
-                .voucherStatus("WORKING").build().invoke(visitor, true).getJSONArray("list");
+                .voucherStatus("WORKING").build().execute(visitor, true).getJSONArray("list");
         long voucher_id = voucher_list.getJSONObject(0).getLong("id");
         JSONArray RuleDaysList = new JSONArray();
         JSONObject Rule1= new JSONObject();
@@ -988,7 +988,7 @@ public class SupporterUtil extends BasicUtil {
     }
     public JSONArray fixed() {
         JSONArray voucher_list = VoucherFormVoucherPageScene.builder()
-                .voucherStatus("WORKING").build().invoke(visitor, true).getJSONArray("list");
+                .voucherStatus("WORKING").build().execute(visitor, true).getJSONArray("list");
         long voucher_id = voucher_list.getJSONObject(0).getLong("id");
         JSONArray RuleDaysList = new JSONArray();
         JSONObject Rule = new JSONObject();
@@ -1003,7 +1003,7 @@ public class SupporterUtil extends BasicUtil {
 
     public JSONArray dynamic() {
         JSONArray voucher_list = VoucherFormVoucherPageScene.builder()
-                .voucherStatus("WORKING").build().invoke(visitor, true).getJSONArray("list");
+                .voucherStatus("WORKING").build().execute(visitor, true).getJSONArray("list");
         long voucher_id = voucher_list.getJSONObject(0).getLong("id");
         JSONArray RuleDaysList = new JSONArray();
         JSONObject Rule = new JSONObject();
@@ -1017,7 +1017,7 @@ public class SupporterUtil extends BasicUtil {
     }
     public JSONArray cyclemonth() {
         JSONArray voucher_list = VoucherFormVoucherPageScene.builder()
-                .voucherStatus("WORKING").build().invoke(visitor, true).getJSONArray("list");
+                .voucherStatus("WORKING").build().execute(visitor, true).getJSONArray("list");
         long voucher_id = voucher_list.getJSONObject(0).getLong("id");
         JSONArray RuleDaysList = new JSONArray();
         JSONObject Rule = new JSONObject();
@@ -1033,7 +1033,7 @@ public class SupporterUtil extends BasicUtil {
 
     public JSONArray cycleweek() {
         JSONArray voucher_list = VoucherFormVoucherPageScene.builder()
-                .voucherStatus("WORKING").build().invoke(visitor, true).getJSONArray("list");
+                .voucherStatus("WORKING").build().execute(visitor, true).getJSONArray("list");
         long voucher_id = voucher_list.getJSONObject(0).getLong("id");
         JSONArray RuleDaysList = new JSONArray();
         JSONObject Rule = new JSONObject();

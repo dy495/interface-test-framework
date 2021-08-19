@@ -85,23 +85,23 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         try {
 
 
-            int bef = PreSaleCustomerPageScene.builder().page(1).size(1).build().invoke(visitor).getInteger("total");
+            int bef = PreSaleCustomerPageScene.builder().page(1).size(1).build().execute(visitor).getInteger("total");
 
             Long shop_id = info.oneshopid;
 
-            Long car_style_id = PreSaleCustomerStyleListScene.builder().shopId(shop_id).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("style_id");
-            Long car_model_id = PreSaleCustomerModelListScene.builder().styleId(car_style_id).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("model_id");
-            String salesId = PreSaleCustomerSalesListScene.builder().shopId(shop_id).type("PRE").build().invoke(visitor).getJSONArray("list").getJSONObject(0).getString("sales_id");
+            Long car_style_id = PreSaleCustomerStyleListScene.builder().shopId(shop_id).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("style_id");
+            Long car_model_id = PreSaleCustomerModelListScene.builder().styleId(car_style_id).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("model_id");
+            String salesId = PreSaleCustomerSalesListScene.builder().shopId(shop_id).type("PRE").build().execute(visitor).getJSONArray("list").getJSONObject(0).getString("sales_id");
 
-            int code = PreSaleCustomerCreatePotentialCustomerScene.builder().customerName(name).customerPhone(phone).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).shopId(shop_id).salesId(salesId).build().invoke(visitor, false).getInteger("code");
-            int after = PreSaleCustomerPageScene.builder().page(1).size(1).build().invoke(visitor).getInteger("total");
+            int code = PreSaleCustomerCreatePotentialCustomerScene.builder().customerName(name).customerPhone(phone).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).shopId(shop_id).salesId(salesId).build().execute(visitor, false).getInteger("code");
+            int after = PreSaleCustomerPageScene.builder().page(1).size(1).build().execute(visitor).getInteger("total");
             if (chk.equals("false")) {
                 Preconditions.checkArgument(code == 1001, mess + "期待失败，实际" + code);
             } else {
                 int sum = after - bef;
                 Preconditions.checkArgument(code == 1000, mess + "期待创建成功，实际" + code);
                 Preconditions.checkArgument(sum == 1, mess + "期待创建成功列表+1，实际增加" + sum);
-                int code2 = PreSaleCustomerCreatePotentialCustomerScene.builder().customerName(name).customerPhone(phone).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).shopId(shop_id).salesId(salesId).build().invoke(visitor, false).getInteger("code");
+                int code2 = PreSaleCustomerCreatePotentialCustomerScene.builder().customerName(name).customerPhone(phone).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).shopId(shop_id).salesId(salesId).build().execute(visitor, false).getInteger("code");
                 Preconditions.checkArgument(code2 == 1001, "使用列表中存在的手机号期待创建失败，实际" + code);
             }
         } catch (AssertionError e) {
@@ -136,46 +136,46 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         try {
 
             Long shop_id = info.oneshopid;
-            Long car_style_id = PreSaleCustomerStyleListScene.builder().shopId(shop_id).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("style_id");
-            Long car_model_id = PreSaleCustomerModelListScene.builder().styleId(car_style_id).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("model_id");
-            String salesId = PreSaleCustomerSalesListScene.builder().shopId(shop_id).type("PRE").build().invoke(visitor).getJSONArray("list").getJSONObject(0).getString("sales_id");
+            Long car_style_id = PreSaleCustomerStyleListScene.builder().shopId(shop_id).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("style_id");
+            Long car_model_id = PreSaleCustomerModelListScene.builder().styleId(car_style_id).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("model_id");
+            String salesId = PreSaleCustomerSalesListScene.builder().shopId(shop_id).type("PRE").build().execute(visitor).getJSONArray("list").getJSONObject(0).getString("sales_id");
 
             String name = "name" + System.currentTimeMillis();
             String phone = "1391172" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000));
             String type = "PERSON";
             String sex = "0";
             //不填写姓名
-            int code = PreSaleCustomerCreatePotentialCustomerScene.builder().customerPhone(phone).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).shopId(shop_id).salesId(salesId).build().invoke(visitor, false).getInteger("code");
+            int code = PreSaleCustomerCreatePotentialCustomerScene.builder().customerPhone(phone).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).shopId(shop_id).salesId(salesId).build().execute(visitor, false).getInteger("code");
 
             Preconditions.checkArgument(code == 1001, "不填写姓名期待失败，实际" + code);
 
             //不填写手机号
-            int code1 = PreSaleCustomerCreatePotentialCustomerScene.builder().customerName(name).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).shopId(shop_id).salesId(salesId).build().invoke(visitor, false).getInteger("code");
+            int code1 = PreSaleCustomerCreatePotentialCustomerScene.builder().customerName(name).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).shopId(shop_id).salesId(salesId).build().execute(visitor, false).getInteger("code");
 
             Preconditions.checkArgument(code1 == 1001, "不填写手机号期待失败，实际" + code);
 
             //不填写类型
-            int code2 = PreSaleCustomerCreatePotentialCustomerScene.builder().customerName(name).customerPhone(phone).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).shopId(shop_id).salesId(salesId).build().invoke(visitor, false).getInteger("code");
+            int code2 = PreSaleCustomerCreatePotentialCustomerScene.builder().customerName(name).customerPhone(phone).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).shopId(shop_id).salesId(salesId).build().execute(visitor, false).getInteger("code");
 
             Preconditions.checkArgument(code2 == 1001, "不填写车主类型期待失败，实际" + code);
 
             //不填写性别
-            int code3 = PreSaleCustomerCreatePotentialCustomerScene.builder().customerName(name).customerPhone(phone).customerType(type).carStyleId(car_style_id).carModelId(car_model_id).shopId(shop_id).salesId(salesId).build().invoke(visitor, false).getInteger("code");
+            int code3 = PreSaleCustomerCreatePotentialCustomerScene.builder().customerName(name).customerPhone(phone).customerType(type).carStyleId(car_style_id).carModelId(car_model_id).shopId(shop_id).salesId(salesId).build().execute(visitor, false).getInteger("code");
 
             Preconditions.checkArgument(code3 == 1001, "不填写性别期待失败，实际" + code);
 
             //不填写意向车型
-            int code4 = PreSaleCustomerCreatePotentialCustomerScene.builder().customerName(name).customerPhone(phone).customerType(type).sex(sex).carStyleId(car_style_id).shopId(shop_id).salesId(salesId).build().invoke(visitor, false).getInteger("code");
+            int code4 = PreSaleCustomerCreatePotentialCustomerScene.builder().customerName(name).customerPhone(phone).customerType(type).sex(sex).carStyleId(car_style_id).shopId(shop_id).salesId(salesId).build().execute(visitor, false).getInteger("code");
 
             Preconditions.checkArgument(code4 == 1001, "不填写意向车型期待失败，实际" + code);
 
             //不填写所属门店
-            int code5 = PreSaleCustomerCreatePotentialCustomerScene.builder().customerName(name).customerPhone(phone).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).salesId(salesId).build().invoke(visitor, false).getInteger("code");
+            int code5 = PreSaleCustomerCreatePotentialCustomerScene.builder().customerName(name).customerPhone(phone).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).salesId(salesId).build().execute(visitor, false).getInteger("code");
 
             Preconditions.checkArgument(code5 == 1001, "不填写所属门店期待失败，实际" + code);
 
             //不填写所属销售 bug 9609
-            int code6 = PreSaleCustomerCreatePotentialCustomerScene.builder().customerName(name).customerPhone(phone).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).shopId(shop_id).build().invoke(visitor, false).getInteger("code");
+            int code6 = PreSaleCustomerCreatePotentialCustomerScene.builder().customerName(name).customerPhone(phone).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).shopId(shop_id).build().execute(visitor, false).getInteger("code");
 
             Preconditions.checkArgument(code6 == 1001, "不填写所属销售期待失败，实际" + code6);
 
@@ -198,7 +198,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            JSONObject obj = PreSaleCustomerPageScene.builder().page(1).size(1).build().invoke(visitor).getJSONArray("list").getJSONObject(0);
+            JSONObject obj = PreSaleCustomerPageScene.builder().page(1).size(1).build().execute(visitor).getJSONArray("list").getJSONObject(0);
             String customer_name = obj.getString("customer_name"); //客户姓名
             String customer_phone = obj.getString("customer_phone"); //客户手机号
             String date = obj.getString("create_date").substring(0, 10); // 创建日期
@@ -206,7 +206,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             String subject_type = obj.getString("subject_type"); //客户类型
 
             //已有姓名
-            JSONArray namelist = PreSaleCustomerPageScene.builder().page(1).size(30).customerName(customer_name).build().invoke(visitor).getJSONArray("list");
+            JSONArray namelist = PreSaleCustomerPageScene.builder().page(1).size(30).customerName(customer_name).build().execute(visitor).getJSONArray("list");
             int nametotal = namelist.size();
             Preconditions.checkArgument(nametotal > 0, "搜索列表中存在的姓名" + customer_name + ",结果无数据");
             for (int i = 0; i < nametotal; i++) {
@@ -215,7 +215,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             }
 
             //已有手机号
-            JSONArray phonelist = PreSaleCustomerPageScene.builder().page(1).size(30).customerPhone(customer_phone).build().invoke(visitor).getJSONArray("list");
+            JSONArray phonelist = PreSaleCustomerPageScene.builder().page(1).size(30).customerPhone(customer_phone).build().execute(visitor).getJSONArray("list");
             int phonetotal = phonelist.size();
             Preconditions.checkArgument(phonetotal > 0, "搜索列表中存在的手机号" + customer_phone + ",结果无数据");
             for (int i = 0; i < phonetotal; i++) {
@@ -224,7 +224,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             }
 
             //已有日期
-            JSONArray datelist = PreSaleCustomerPageScene.builder().page(1).size(30).startTime(date).endTime(date).build().invoke(visitor).getJSONArray("list");
+            JSONArray datelist = PreSaleCustomerPageScene.builder().page(1).size(30).startTime(date).endTime(date).build().execute(visitor).getJSONArray("list");
             int datetotal = datelist.size();
             Preconditions.checkArgument(datetotal > 0, "搜索列表中存在的时间" + date + ",结果无数据");
             for (int i = 0; i < datetotal; i++) {
@@ -233,7 +233,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             }
 
             //已有销售顾问
-            JSONArray salelist = PreSaleCustomerPageScene.builder().page(1).size(30).saleName(sale_name).build().invoke(visitor).getJSONArray("list");
+            JSONArray salelist = PreSaleCustomerPageScene.builder().page(1).size(30).saleName(sale_name).build().execute(visitor).getJSONArray("list");
             int saletotal = salelist.size();
             Preconditions.checkArgument(saletotal > 0, "搜索列表中存在的销售顾问" + sale_name + ",结果无数据");
             for (int i = 0; i < saletotal; i++) {
@@ -242,7 +242,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             }
 
             //已有客户类型
-            JSONArray subjectlist = PreSaleCustomerPageScene.builder().page(1).size(30).customerType(subject_type).build().invoke(visitor).getJSONArray("list");
+            JSONArray subjectlist = PreSaleCustomerPageScene.builder().page(1).size(30).customerType(subject_type).build().execute(visitor).getJSONArray("list");
             int subjecttotal = subjectlist.size();
             Preconditions.checkArgument(subjecttotal > 0, "搜索列表中存在的客户类型" + subject_type + ",结果无数据");
             for (int i = 0; i < subjecttotal; i++) {
@@ -266,7 +266,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //姓名
-            JSONArray namelist = PreSaleCustomerPageScene.builder().page(1).size(30).customerName(search).build().invoke(visitor).getJSONArray("list");
+            JSONArray namelist = PreSaleCustomerPageScene.builder().page(1).size(30).customerName(search).build().execute(visitor).getJSONArray("list");
             if (namelist.size() > 0) {
                 for (int i = 0; i < namelist.size(); i++) {
                     JSONObject obj1 = namelist.getJSONObject(i);
@@ -275,7 +275,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             }
 
             //手机号
-            JSONArray phonelist = PreSaleCustomerPageScene.builder().page(1).size(30).customerPhone(search).build().invoke(visitor).getJSONArray("list");
+            JSONArray phonelist = PreSaleCustomerPageScene.builder().page(1).size(30).customerPhone(search).build().execute(visitor).getJSONArray("list");
             if (phonelist.size() > 0) {
                 for (int i = 0; i < phonelist.size(); i++) {
                     JSONObject obj1 = phonelist.getJSONObject(i);
@@ -285,7 +285,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
 
             //销售顾问
-            JSONArray salelist = PreSaleCustomerPageScene.builder().page(1).size(30).saleName(search).build().invoke(visitor).getJSONArray("list");
+            JSONArray salelist = PreSaleCustomerPageScene.builder().page(1).size(30).saleName(search).build().execute(visitor).getJSONArray("list");
             if (salelist.size() > 0) {
                 for (int i = 0; i < salelist.size(); i++) {
                     JSONObject obj1 = salelist.getJSONObject(i);
@@ -319,9 +319,9 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             String phone = "138" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000)) + "7788";
             String type = "PERSON";
             int sex = 1;
-            Long car_style_id = PreSaleCustomerStyleListScene.builder().shopId(info.oneshopid).build().invoke(visitor).getJSONArray("list").getJSONObject(1).getLong("style_id");
-            Long car_model_id = PreSaleCustomerModelListScene.builder().styleId(car_style_id).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("model_id");
-            JSONObject obj = PreSaleCustomerEditScene.builder().customerId(custID).customerName(name).customerPhone(phone).subjectType(type).sex(sex).carStyleId(car_style_id).intentionCarModelId(car_model_id).shopId(info.oneshopid).build().invoke(visitor, false);
+            Long car_style_id = PreSaleCustomerStyleListScene.builder().shopId(info.oneshopid).build().execute(visitor).getJSONArray("list").getJSONObject(1).getLong("style_id");
+            Long car_model_id = PreSaleCustomerModelListScene.builder().styleId(car_style_id).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("model_id");
+            JSONObject obj = PreSaleCustomerEditScene.builder().customerId(custID).customerName(name).customerPhone(phone).subjectType(type).sex(sex).carStyleId(car_style_id).intentionCarModelId(car_model_id).shopId(info.oneshopid).build().execute(visitor, false);
             int code = obj.getInteger("code");
             if (code != 1000) {
                 String message = obj.getString("message");
@@ -351,8 +351,8 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             String phone = "138" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000)) + "7788";
             String type = "PERSON";
             int sex = 1;
-            Long car_style_id = PreSaleCustomerStyleListScene.builder().shopId(info.oneshopid).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("style_id");
-            Long car_model_id = PreSaleCustomerModelListScene.builder().styleId(car_style_id).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("model_id");
+            Long car_style_id = PreSaleCustomerStyleListScene.builder().shopId(info.oneshopid).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("style_id");
+            Long car_model_id = PreSaleCustomerModelListScene.builder().styleId(car_style_id).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("model_id");
 
 
 //            //姓名51字
@@ -371,22 +371,22 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 //            Preconditions.checkArgument(code3==1001,"编辑客户手机号10位，期待失败，实际"+code3);
 
             //不填写必填项
-            int code4 = PreSaleCustomerEditScene.builder().customerId(custID).customerPhone(phone).subjectType(type).sex(sex).carStyleId(car_style_id).intentionCarModelId(car_model_id).shopId(info.oneshopid).build().invoke(visitor, false).getInteger("code");
+            int code4 = PreSaleCustomerEditScene.builder().customerId(custID).customerPhone(phone).subjectType(type).sex(sex).carStyleId(car_style_id).intentionCarModelId(car_model_id).shopId(info.oneshopid).build().execute(visitor, false).getInteger("code");
             Preconditions.checkArgument(code4 == 1001, "编辑客户不填写 姓名，期待失败，实际" + code4);
 
-            int code5 = PreSaleCustomerEditScene.builder().customerId(custID).customerName(name).subjectType(type).sex(sex).carStyleId(car_style_id).intentionCarModelId(car_model_id).shopId(info.oneshopid).build().invoke(visitor, false).getInteger("code");
+            int code5 = PreSaleCustomerEditScene.builder().customerId(custID).customerName(name).subjectType(type).sex(sex).carStyleId(car_style_id).intentionCarModelId(car_model_id).shopId(info.oneshopid).build().execute(visitor, false).getInteger("code");
             Preconditions.checkArgument(code5 == 1001, "编辑客户不填写 手机号，期待失败，实际" + code5);
 
-            int code6 = PreSaleCustomerEditScene.builder().customerId(custID).customerName(name).customerPhone(phone).subjectType(type).carStyleId(car_style_id).intentionCarModelId(car_model_id).shopId(info.oneshopid).build().invoke(visitor, false).getInteger("code");
+            int code6 = PreSaleCustomerEditScene.builder().customerId(custID).customerName(name).customerPhone(phone).subjectType(type).carStyleId(car_style_id).intentionCarModelId(car_model_id).shopId(info.oneshopid).build().execute(visitor, false).getInteger("code");
             Preconditions.checkArgument(code6 == 1001, "编辑客户不填写 性别，期待失败，实际" + code6);
 
-            int code7 = PreSaleCustomerEditScene.builder().customerId(custID).customerName(name).customerPhone(phone).sex(sex).carStyleId(car_style_id).intentionCarModelId(car_model_id).shopId(info.oneshopid).build().invoke(visitor, false).getInteger("code");
+            int code7 = PreSaleCustomerEditScene.builder().customerId(custID).customerName(name).customerPhone(phone).sex(sex).carStyleId(car_style_id).intentionCarModelId(car_model_id).shopId(info.oneshopid).build().execute(visitor, false).getInteger("code");
             Preconditions.checkArgument(code7 == 1001, "编辑客户不填写车主类型 ，期待失败，实际" + code7);
 
-            int code8 = PreSaleCustomerEditScene.builder().customerId(custID).customerName(name).customerPhone(phone).subjectType(type).sex(sex).intentionCarModelId(car_model_id).shopId(info.oneshopid).build().invoke(visitor, false).getInteger("code");
+            int code8 = PreSaleCustomerEditScene.builder().customerId(custID).customerName(name).customerPhone(phone).subjectType(type).sex(sex).intentionCarModelId(car_model_id).shopId(info.oneshopid).build().execute(visitor, false).getInteger("code");
             Preconditions.checkArgument(code8 == 1001, "编辑客户不填写 意向车系，期待失败，实际" + code8);
 
-            int code9 = PreSaleCustomerEditScene.builder().customerId(custID).customerName(name).customerPhone(phone).subjectType(type).sex(sex).carStyleId(car_style_id).shopId(info.oneshopid).build().invoke(visitor, false).getInteger("code");
+            int code9 = PreSaleCustomerEditScene.builder().customerId(custID).customerName(name).customerPhone(phone).subjectType(type).sex(sex).carStyleId(car_style_id).shopId(info.oneshopid).build().execute(visitor, false).getInteger("code");
             Preconditions.checkArgument(code9 == 1001, "编辑客户不填写 意向车型，期待失败，实际" + code9);
 
 
@@ -431,20 +431,20 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         try {
             visitor.setProduct(EnumTestProduct.YT_DAILY_JD);
             Long shop_id = info.oneshopid;
-            Long car_style_id = PreSaleCustomerStyleListScene.builder().shopId(shop_id).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("style_id");
-            Long car_model_id = PreSaleCustomerModelListScene.builder().styleId(car_style_id).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("model_id");
-            String salesId = PreSaleCustomerSalesListScene.builder().shopId(shop_id).type("PRE").build().invoke(visitor).getJSONArray("list").getJSONObject(0).getString("sales_id");
+            Long car_style_id = PreSaleCustomerStyleListScene.builder().shopId(shop_id).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("style_id");
+            Long car_model_id = PreSaleCustomerModelListScene.builder().styleId(car_style_id).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("model_id");
+            String salesId = PreSaleCustomerSalesListScene.builder().shopId(shop_id).type("PRE").build().execute(visitor).getJSONArray("list").getJSONObject(0).getString("sales_id");
             if (chk.equals("false")) {
-                int code = PreSaleCustomerCreateCustomerScene.builder().customerName(name).customerPhone(phone).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).salesId(salesId).shopId(shop_id).vehicleChassisCode("ASDFUGGDSF12" + (int) ((Math.random() * 9 + 1) * 10000)).purchaseCarDate(dt.getHistoryDate(-1)).build().invoke(visitor, false).getInteger("code");
+                int code = PreSaleCustomerCreateCustomerScene.builder().customerName(name).customerPhone(phone).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).salesId(salesId).shopId(shop_id).vehicleChassisCode("ASDFUGGDSF12" + (int) ((Math.random() * 9 + 1) * 10000)).purchaseCarDate(dt.getHistoryDate(-1)).build().execute(visitor, false).getInteger("code");
                 Preconditions.checkArgument(code == 1001, mess + "期待失败，实际" + code);
             } else {
                 IScene preSaleCustomerPageScene = PreSaleCustomerPageScene.builder().build();
-                int total = preSaleCustomerPageScene.invoke(visitor).getInteger("total");
+                int total = preSaleCustomerPageScene.execute(visitor).getInteger("total");
 
-                JSONObject response = PreSaleCustomerCreateCustomerScene.builder().customerName(name).customerPhone(phone).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).salesId(salesId).shopId(shop_id).vehicleChassisCode("ASDFUGGDSF02" + (int) ((Math.random() * 9 + 1) * 10000)).purchaseCarDate(dt.getHistoryDate(-1)).build().invoke(visitor, false);
+                JSONObject response = PreSaleCustomerCreateCustomerScene.builder().customerName(name).customerPhone(phone).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).salesId(salesId).shopId(shop_id).vehicleChassisCode("ASDFUGGDSF02" + (int) ((Math.random() * 9 + 1) * 10000)).purchaseCarDate(dt.getHistoryDate(-1)).build().execute(visitor, false);
                 Preconditions.checkArgument(response.getInteger("code") == 1000, mess + "期待创建成功，实际" + response.getInteger("code"));
 
-                int oneTotal = preSaleCustomerPageScene.invoke(visitor).getInteger("total");
+                int oneTotal = preSaleCustomerPageScene.execute(visitor).getInteger("total");
                 Preconditions.checkArgument(oneTotal == total + 1, "创建成交记录之前客户列表总数：" + total + " 创建成交记录之后客户列表总数：" + oneTotal);
 
                 JSONObject object = businessUtil.toJavaObject(preSaleCustomerPageScene, JSONObject.class, "customer_phone", phone);
@@ -452,18 +452,18 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
                 //找一个潜客创建成交记录
                 JSONObject object1 = businessUtil.toJavaObject(preSaleCustomerPageScene, JSONObject.class, "customer_type_name", "潜在客户");
-                PreSaleCustomerCreateCustomerScene.builder().customerName(name).customerPhone(object1.getString("customer_phone")).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).salesId(salesId).shopId(Long.parseLong(object1.getString("shop_id"))).vehicleChassisCode("ASDFUGGDSF02" + (int) ((Math.random() * 9 + 1) * 10000)).purchaseCarDate(dt.getHistoryDate(-1)).build().invoke(visitor);
+                PreSaleCustomerCreateCustomerScene.builder().customerName(name).customerPhone(object1.getString("customer_phone")).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).salesId(salesId).shopId(Long.parseLong(object1.getString("shop_id"))).vehicleChassisCode("ASDFUGGDSF02" + (int) ((Math.random() * 9 + 1) * 10000)).purchaseCarDate(dt.getHistoryDate(-1)).build().execute(visitor);
                 JSONObject object2 = businessUtil.toJavaObject(preSaleCustomerPageScene, JSONObject.class, "id", object1.getString("id"));
                 Preconditions.checkArgument(object2.getString("customer_type_name").equals("成交客户"), "创建潜客户的成交记录，客户类型变为：" + object2.getString("customer_type_name"));
                 Preconditions.checkArgument(object2.getString("subject_type").equals(type), "创建潜客户的成交记录，车主类型变为：" + object2.getString("subject_type"));
                 Preconditions.checkArgument(object2.getString("customer_name").equals(name), "创建潜客户的成交记录，客户姓名变为：" + object2.getString("customer_name"));
 //                Preconditions.checkArgument(object2.getString("customer_phone").equals(phone), "创建潜客户的成交记录，客户联系方式变为：" + object2.getString("customer_phone"));
                 Preconditions.checkArgument(object2.getString("sex_id").equals(sex), "创建潜客户的成交记录，客户性别id变为：" + object2.getString("sex_id"));
-                int secondTotal = preSaleCustomerPageScene.invoke(visitor).getInteger("total");
+                int secondTotal = preSaleCustomerPageScene.execute(visitor).getInteger("total");
                 Preconditions.checkArgument(secondTotal == oneTotal, "创建潜客户的成交记前客户列表总数：" + oneTotal + " 创建潜客户的成交记后客户列表总数：" + secondTotal);
                 //找一个成交客户创建成交记录
                 JSONObject object3 = businessUtil.toJavaObject(preSaleCustomerPageScene, JSONObject.class, "customer_type_name", "成交客户");
-                PreSaleCustomerCreateCustomerScene.builder().customerName(name).customerPhone(object3.getString("customer_phone")).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).salesId(salesId).shopId(Long.parseLong(object3.getString("shop_id"))).vehicleChassisCode("ASDFUGGDSF02" + (int) ((Math.random() * 9 + 1) * 10000)).purchaseCarDate(dt.getHistoryDate(-1)).build().invoke(visitor);
+                PreSaleCustomerCreateCustomerScene.builder().customerName(name).customerPhone(object3.getString("customer_phone")).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).salesId(salesId).shopId(Long.parseLong(object3.getString("shop_id"))).vehicleChassisCode("ASDFUGGDSF02" + (int) ((Math.random() * 9 + 1) * 10000)).purchaseCarDate(dt.getHistoryDate(-1)).build().execute(visitor);
                 JSONObject object4 = businessUtil.toJavaObject(preSaleCustomerPageScene, JSONObject.class, "id", object3.getString("id"));
                 Preconditions.checkArgument(object4.getString("customer_type_name").equals("成交客户"), "创建成交客户的成交记录，客户类型变为：" + object4.getString("customer_type_name"));
                 Preconditions.checkArgument(object4.getString("customer_type_name").equals("成交客户"), "创建成交客户的成交记录，客户类型变为：" + object2.getString("customer_type_name"));
@@ -471,7 +471,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
                 Preconditions.checkArgument(object4.getString("customer_name").equals(name), "创建成交客户的成交记录，客户姓名变为：" + object2.getString("customer_name"));
 //                Preconditions.checkArgument(object4.getString("customer_phone").equals(phone), "创建成交客户的成交记录，客户联系方式变为：" + object2.getString("customer_phone"));
                 Preconditions.checkArgument(object4.getString("sex_id").equals(sex), "创建成交客户的成交记录，客户性别id变为：" + object2.getString("sex_id"));
-                int thirdTotal = preSaleCustomerPageScene.invoke(visitor).getInteger("total");
+                int thirdTotal = preSaleCustomerPageScene.execute(visitor).getInteger("total");
                 Preconditions.checkArgument(thirdTotal == secondTotal, "创建成交客户的成交记前客户列表总数：" + secondTotal + " 创建成交客户的成交记后客户列表总数：" + thirdTotal);
             }
 
@@ -490,9 +490,9 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
             visitor.setProduct(EnumTestProduct.YT_DAILY_JD);
             Long shop_id = info.oneshopid;
-            Long car_style_id = PreSaleCustomerStyleListScene.builder().shopId(shop_id).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("style_id");
-            Long car_model_id = PreSaleCustomerModelListScene.builder().styleId(car_style_id).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("model_id");
-            String salesId = PreSaleCustomerSalesListScene.builder().shopId(shop_id).type("PRE").build().invoke(visitor).getJSONArray("list").getJSONObject(0).getString("sales_id");
+            Long car_style_id = PreSaleCustomerStyleListScene.builder().shopId(shop_id).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("style_id");
+            Long car_model_id = PreSaleCustomerModelListScene.builder().styleId(car_style_id).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("model_id");
+            String salesId = PreSaleCustomerSalesListScene.builder().shopId(shop_id).type("PRE").build().execute(visitor).getJSONArray("list").getJSONObject(0).getString("sales_id");
 
             String name = "name" + System.currentTimeMillis();
             String phone = info.phone;
@@ -500,15 +500,15 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             String sex = "0";
 
 
-            int code = PreSaleCustomerCreateCustomerScene.builder().customerName(name).customerPhone(phone).customerType(type).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).salesId(salesId).shopId(shop_id).vehicleChassisCode("ASDFUGGDSF12" + Integer.toString((int) ((Math.random() * 9 + 1) * 10000))).purchaseCarDate(dt.getHistoryDate(+1)).build().invoke(visitor, false).getInteger("code");
+            int code = PreSaleCustomerCreateCustomerScene.builder().customerName(name).customerPhone(phone).customerType(type).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).salesId(salesId).shopId(shop_id).vehicleChassisCode("ASDFUGGDSF12" + Integer.toString((int) ((Math.random() * 9 + 1) * 10000))).purchaseCarDate(dt.getHistoryDate(+1)).build().execute(visitor, false).getInteger("code");
 
             Preconditions.checkArgument(code == 1001, "购车日期大于当前时间期待失败，实际" + code);
 
-            int code1 = PreSaleCustomerCreateCustomerScene.builder().customerName(name).customerPhone(phone).customerType(type).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).salesId(salesId).shopId(shop_id).vehicleChassisCode("ASDFUGGDSF1" + Integer.toString((int) ((Math.random() * 9 + 1) * 10000))).purchaseCarDate(dt.getHistoryDate(-1)).build().invoke(visitor, false).getInteger("code");
+            int code1 = PreSaleCustomerCreateCustomerScene.builder().customerName(name).customerPhone(phone).customerType(type).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).salesId(salesId).shopId(shop_id).vehicleChassisCode("ASDFUGGDSF1" + Integer.toString((int) ((Math.random() * 9 + 1) * 10000))).purchaseCarDate(dt.getHistoryDate(-1)).build().execute(visitor, false).getInteger("code");
 
             Preconditions.checkArgument(code1 == 1001, "底盘号16位期待失败，实际" + code1);
 
-            int code2 = PreSaleCustomerCreateCustomerScene.builder().customerName(name).customerPhone(phone).customerType(type).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).salesId(salesId).shopId(shop_id).vehicleChassisCode("ASDFUGGDSF111" + Integer.toString((int) ((Math.random() * 9 + 1) * 10000))).purchaseCarDate(dt.getHistoryDate(-1)).build().invoke(visitor, false).getInteger("code");
+            int code2 = PreSaleCustomerCreateCustomerScene.builder().customerName(name).customerPhone(phone).customerType(type).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).salesId(salesId).shopId(shop_id).vehicleChassisCode("ASDFUGGDSF111" + Integer.toString((int) ((Math.random() * 9 + 1) * 10000))).purchaseCarDate(dt.getHistoryDate(-1)).build().execute(visitor, false).getInteger("code");
 
             Preconditions.checkArgument(code2 == 1001, "底盘号18位期待失败，实际" + code2);
 
@@ -534,7 +534,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     public void buyCarPage_Filter1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONArray pagelist = PreSaleCustomerBuyCarPageScene.builder().build().invoke(visitor).getJSONArray("list");
+            JSONArray pagelist = PreSaleCustomerBuyCarPageScene.builder().build().execute(visitor).getJSONArray("list");
             if (pagelist.size() > 0) {
                 JSONObject one = pagelist.getJSONObject(0);
                 String customer_name = one.getString("customer_name").toUpperCase();
@@ -545,7 +545,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
                 String buy_car_date = one.getString("buy_car_date").toUpperCase();
 
                 //姓名
-                JSONArray searchlist = PreSaleCustomerBuyCarPageScene.builder().page(1).size(20).customerName(customer_name).build().invoke(visitor).getJSONArray("list");
+                JSONArray searchlist = PreSaleCustomerBuyCarPageScene.builder().page(1).size(20).customerName(customer_name).build().execute(visitor).getJSONArray("list");
                 Preconditions.checkArgument(searchlist.size() > 0, "搜索无结果");
                 for (int i = 0; i < searchlist.size(); i++) {
                     String searchname = searchlist.getJSONObject(i).getString("customer_name").toUpperCase();
@@ -553,14 +553,14 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
                 }
 
                 //手机号
-                JSONArray searchlist1 = PreSaleCustomerBuyCarPageScene.builder().page(1).size(20).phone(customer_phone).build().invoke(visitor).getJSONArray("list");
+                JSONArray searchlist1 = PreSaleCustomerBuyCarPageScene.builder().page(1).size(20).phone(customer_phone).build().execute(visitor).getJSONArray("list");
                 Preconditions.checkArgument(searchlist1.size() > 0, "搜索无结果");
                 for (int i = 0; i < searchlist1.size(); i++) {
                     String searchphone = searchlist1.getJSONObject(i).getString("customer_phone").toUpperCase();
                     Preconditions.checkArgument(searchphone.contains(customer_phone), "搜索" + customer_phone + " ，结果包含" + searchphone);
                 }
                 //销售顾问
-                JSONArray searchlist2 = PreSaleCustomerBuyCarPageScene.builder().page(1).size(20).preSaleName(pre_sale_name).build().invoke(visitor).getJSONArray("list");
+                JSONArray searchlist2 = PreSaleCustomerBuyCarPageScene.builder().page(1).size(20).preSaleName(pre_sale_name).build().execute(visitor).getJSONArray("list");
                 Preconditions.checkArgument(searchlist2.size() > 0, "搜索无结果");
                 for (int i = 0; i < searchlist2.size(); i++) {
                     String searchpre_sale_name = searchlist2.getJSONObject(i).getString("pre_sale_name").toUpperCase();
@@ -568,7 +568,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
                 }
 
                 //销售账号
-                JSONArray searchlist3 = PreSaleCustomerBuyCarPageScene.builder().page(1).size(20).preSaleAccount(pre_sale_account).build().invoke(visitor).getJSONArray("list");
+                JSONArray searchlist3 = PreSaleCustomerBuyCarPageScene.builder().page(1).size(20).preSaleAccount(pre_sale_account).build().execute(visitor).getJSONArray("list");
                 Preconditions.checkArgument(searchlist3.size() > 0, "搜索无结果");
                 for (int i = 0; i < searchlist3.size(); i++) {
                     String searchpre_sale_account = searchlist3.getJSONObject(i).getString("pre_sale_account").toUpperCase();
@@ -576,7 +576,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
                 }
 
                 //购车日期
-                JSONArray searchlist4 = PreSaleCustomerBuyCarPageScene.builder().page(1).size(20).buyCarTimeStart(buy_car_date).buyCarTimeEnd(buy_car_date).build().invoke(visitor).getJSONArray("list");
+                JSONArray searchlist4 = PreSaleCustomerBuyCarPageScene.builder().page(1).size(20).buyCarTimeStart(buy_car_date).buyCarTimeEnd(buy_car_date).build().execute(visitor).getJSONArray("list");
                 Preconditions.checkArgument(searchlist4.size() > 0, "搜索无结果");
                 for (int i = 0; i < searchlist4.size(); i++) {
                     String searchdate = searchlist4.getJSONObject(i).getString("buy_car_date").toUpperCase();
@@ -602,7 +602,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
             //所属门店
             String shopname = "自动化门店简称";
-            JSONArray searchlist = PreSaleCustomerBuyCarPageScene.builder().page(1).size(20).shopId(info.oneshopid).build().invoke(visitor).getJSONArray("list");
+            JSONArray searchlist = PreSaleCustomerBuyCarPageScene.builder().page(1).size(20).shopId(info.oneshopid).build().execute(visitor).getJSONArray("list");
             Preconditions.checkArgument(searchlist.size() > 0, "搜索无结果");
             for (int i = 0; i < searchlist.size(); i++) {
                 String search = searchlist.getJSONObject(i).getString("shop_name");
@@ -612,7 +612,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             //购买车系
             Long car_style_id = 1470L;
             String intention_car_style_name = "Model";
-            JSONArray searchlist1 = PreSaleCustomerBuyCarPageScene.builder().page(1).size(20).carStyleId(car_style_id).build().invoke(visitor).getJSONArray("list");
+            JSONArray searchlist1 = PreSaleCustomerBuyCarPageScene.builder().page(1).size(20).carStyleId(car_style_id).build().execute(visitor).getJSONArray("list");
             Preconditions.checkArgument(searchlist1.size() > 0, "搜索无结果");
             for (int i = 0; i < searchlist1.size(); i++) {
                 String search = searchlist1.getJSONObject(i).getString("intention_car_style_name");
@@ -642,27 +642,27 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
 
             //姓名
-            JSONArray searchlist = PreSaleCustomerBuyCarPageScene.builder().page(1).size(20).customerName(customer_name).build().invoke(visitor).getJSONArray("list");
+            JSONArray searchlist = PreSaleCustomerBuyCarPageScene.builder().page(1).size(20).customerName(customer_name).build().execute(visitor).getJSONArray("list");
             for (int i = 0; i < searchlist.size(); i++) {
                 String searchname = searchlist.getJSONObject(i).getString("customer_name").toUpperCase();
                 Preconditions.checkArgument(searchname.contains(customer_name), "搜索姓名=" + customer_name + " ，结果包含" + searchname);
             }
 
             //手机号
-            JSONArray searchlist1 = PreSaleCustomerBuyCarPageScene.builder().page(1).size(20).phone(customer_phone).build().invoke(visitor).getJSONArray("list");
+            JSONArray searchlist1 = PreSaleCustomerBuyCarPageScene.builder().page(1).size(20).phone(customer_phone).build().execute(visitor).getJSONArray("list");
             for (int i = 0; i < searchlist1.size(); i++) {
                 String searchphone = searchlist1.getJSONObject(i).getString("customer_phone").toUpperCase();
                 Preconditions.checkArgument(searchphone.contains(customer_phone), "搜索手机号=" + customer_phone + " ，结果包含" + searchphone);
             }
             //销售顾问
-            JSONArray searchlist2 = PreSaleCustomerBuyCarPageScene.builder().page(1).size(20).preSaleName(pre_sale_name).build().invoke(visitor).getJSONArray("list");
+            JSONArray searchlist2 = PreSaleCustomerBuyCarPageScene.builder().page(1).size(20).preSaleName(pre_sale_name).build().execute(visitor).getJSONArray("list");
             for (int i = 0; i < searchlist2.size(); i++) {
                 String searchpre_sale_name = searchlist2.getJSONObject(i).getString("pre_sale_name").toUpperCase();
                 Preconditions.checkArgument(searchpre_sale_name.contains(pre_sale_name), "搜索销售顾问=" + customer_phone + " ，结果包含" + searchpre_sale_name);
             }
 
             //销售账号
-            JSONArray searchlist3 = PreSaleCustomerBuyCarPageScene.builder().page(1).size(20).preSaleAccount(pre_sale_account).build().invoke(visitor).getJSONArray("list");
+            JSONArray searchlist3 = PreSaleCustomerBuyCarPageScene.builder().page(1).size(20).preSaleAccount(pre_sale_account).build().execute(visitor).getJSONArray("list");
             for (int i = 0; i < searchlist3.size(); i++) {
                 String searchpre_sale_account = searchlist3.getJSONObject(i).getString("pre_sale_account").toUpperCase();
                 Preconditions.checkArgument(searchpre_sale_account.contains(pre_sale_account), "搜索销售账号=" + customer_phone + " ，结果包含" + searchpre_sale_account);
@@ -708,14 +708,14 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         try {
 
 
-            int code = BrandAddScene.builder().name(info.stringone).logoPath(info.getLogo()).build().invoke(visitor, false).getInteger("code");
+            int code = BrandAddScene.builder().name(info.stringone).logoPath(info.getLogo()).build().execute(visitor, false).getInteger("code");
 
             Preconditions.checkArgument(code == 1000, "状态码期待1000，实际" + code);
 
             //删除品牌
-            Long id = BrandPageScene.builder().page(1).size(10).name(info.stringone).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            Long id = BrandPageScene.builder().page(1).size(10).name(info.stringone).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
 
-            BrandDeleteScene.builder().id(id).build().invoke(visitor);
+            BrandDeleteScene.builder().id(id).build().execute(visitor);
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -733,14 +733,14 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         try {
 
 
-            int code = BrandAddScene.builder().name(info.stringten).logoPath(info.getLogo()).build().invoke(visitor, false).getInteger("code");
+            int code = BrandAddScene.builder().name(info.stringten).logoPath(info.getLogo()).build().execute(visitor, false).getInteger("code");
 
             Preconditions.checkArgument(code == 1000, "状态码期待1000，实际" + code);
 
             //删除品牌
-            Long id = BrandPageScene.builder().page(1).size(10).name(info.stringten).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            Long id = BrandPageScene.builder().page(1).size(10).name(info.stringten).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
 
-            BrandDeleteScene.builder().id(id).build().invoke(visitor);
+            BrandDeleteScene.builder().id(id).build().execute(visitor);
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -762,14 +762,14 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             //创建一个品牌
             String name1 = info.stringsix;
             String name2 = info.stringsix + "aaa";
-            BrandAddScene.builder().name(name1).logoPath(info.getLogo()).build().invoke(visitor);
+            BrandAddScene.builder().name(name1).logoPath(info.getLogo()).build().execute(visitor);
             //获取创建的品牌id
-            Long id = BrandPageScene.builder().page(1).size(10).name(name1).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            Long id = BrandPageScene.builder().page(1).size(10).name(name1).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
 
             //修改这个品牌的名字
-            BrandEditScene.builder().id(id).name(name2).logoPath(info.getLogo()).build().invoke(visitor);
+            BrandEditScene.builder().id(id).name(name2).logoPath(info.getLogo()).build().execute(visitor);
             //根据id查询，名字为name2
-            JSONArray arr = BrandPageScene.builder().page(1).size(10).build().invoke(visitor).getJSONArray("list");
+            JSONArray arr = BrandPageScene.builder().page(1).size(10).build().execute(visitor).getJSONArray("list");
 
             for (int i = 0; i < arr.size(); i++) {
                 JSONObject obj = arr.getJSONObject(i);
@@ -779,7 +779,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             }
 
             //删除品牌
-            BrandDeleteScene.builder().id(id).build().invoke(visitor);
+            BrandDeleteScene.builder().id(id).build().execute(visitor);
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -799,7 +799,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
 
             String name = "12345aA啊！@1";
-            int code = BrandAddScene.builder().name(name).logoPath(info.getLogo()).build().invoke(visitor, false).getInteger("code");
+            int code = BrandAddScene.builder().name(name).logoPath(info.getLogo()).build().execute(visitor, false).getInteger("code");
 
             Preconditions.checkArgument(code == 1001, "状态码期待1001，实际" + code);
 
@@ -820,12 +820,12 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            int code = CarStyleAddScene.builder().brandId(info.BrandID).manufacturer(manufacturer).name(name).onlineTime(online_time).build().invoke(visitor, false).getInteger("code");
+            int code = CarStyleAddScene.builder().brandId(info.BrandID).manufacturer(manufacturer).name(name).onlineTime(online_time).build().execute(visitor, false).getInteger("code");
             Preconditions.checkArgument(code == 1000, "创建车系：生产商 " + manufacturer + ", 车系 " + name + ", 上线日期" + online_time + "状态码" + code);
 
             //删除品牌车系
-            Long id = CarStylePageScene.builder().brandId(info.BrandID).page(1).size(1).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
-            CarStyleDeleteScene.builder().id(id).build().invoke(visitor);
+            Long id = CarStylePageScene.builder().brandId(info.BrandID).page(1).size(1).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            CarStyleDeleteScene.builder().id(id).build().execute(visitor);
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -855,10 +855,10 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             String name = "旧车系" + Integer.toString((int) ((Math.random() * 9 + 1) * 100));
             ;
             String online_time = dt.getHistoryDate(0);
-            CarStyleAddScene.builder().brandId(info.BrandID).manufacturer(manufacturer).name(name).onlineTime(online_time).build().invoke(visitor);
+            CarStyleAddScene.builder().brandId(info.BrandID).manufacturer(manufacturer).name(name).onlineTime(online_time).build().execute(visitor);
 
             //获取车系id
-            Long id = CarStylePageScene.builder().brandId(info.BrandID).page(1).size(1).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            Long id = CarStylePageScene.builder().brandId(info.BrandID).page(1).size(1).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
             //修改车系
             String manufacturer1 = "新生产商" + Integer.toString((int) ((Math.random() * 9 + 1) * 100));
             ;
@@ -866,10 +866,10 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             ;
             String online_time1 = dt.getHistoryDate(-2);
 
-            CarStyleEditScene.builder().brandId(info.BrandID).id(id).manufacturer(manufacturer1).name(name1).onlineTime(online_time1).build().invoke(visitor);
+            CarStyleEditScene.builder().brandId(info.BrandID).id(id).manufacturer(manufacturer1).name(name1).onlineTime(online_time1).build().execute(visitor);
 
             //查看修改结果
-            JSONArray arr = CarStylePageScene.builder().brandId(info.BrandID).page(1).size(30).build().invoke(visitor).getJSONArray("list");
+            JSONArray arr = CarStylePageScene.builder().brandId(info.BrandID).page(1).size(30).build().execute(visitor).getJSONArray("list");
             for (int i = 0; i < arr.size(); i++) {
                 JSONObject obj = arr.getJSONObject(i);
                 if (obj.getLong("id").longValue() == id) {
@@ -886,7 +886,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
 
             //删除品牌车系
-            CarStyleDeleteScene.builder().id(id).build().invoke(visitor);
+            CarStyleDeleteScene.builder().id(id).build().execute(visitor);
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -912,15 +912,15 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             String name = "车系重复";
             String online_time = dt.getHistoryDate(0);
 
-            CarStyleAddScene.builder().brandId(brandid1).manufacturer(manufacturer).name(name).onlineTime(online_time).build().invoke(visitor);
+            CarStyleAddScene.builder().brandId(brandid1).manufacturer(manufacturer).name(name).onlineTime(online_time).build().execute(visitor);
 
-            int code = CarStyleAddScene.builder().brandId(brandid2).manufacturer(manufacturer).name(name).onlineTime(online_time).build().invoke(visitor, false).getInteger("code");
+            int code = CarStyleAddScene.builder().brandId(brandid2).manufacturer(manufacturer).name(name).onlineTime(online_time).build().execute(visitor, false).getInteger("code");
 
             Preconditions.checkArgument(code == 1000, "期待状态码1000，实际" + code);
 
             //删除品牌
-            BrandDeleteScene.builder().id(brandid1).build().invoke(visitor);
-            BrandDeleteScene.builder().id(brandid2).build().invoke(visitor);
+            BrandDeleteScene.builder().id(brandid1).build().execute(visitor);
+            BrandDeleteScene.builder().id(brandid2).build().execute(visitor);
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -937,7 +937,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     public void addCarStyleErr(String manufacturer, String name, String online_time, String yz) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject obj = CarStyleAddScene.builder().brandId(info.BrandID).manufacturer(manufacturer).name(name).onlineTime(online_time).build().invoke(visitor, false);
+            JSONObject obj = CarStyleAddScene.builder().brandId(info.BrandID).manufacturer(manufacturer).name(name).onlineTime(online_time).build().execute(visitor, false);
 
             int code = obj.getInteger("code");
             String message = obj.getString("message");
@@ -974,9 +974,9 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             String name = "车系重复" + Integer.toString((int) ((Math.random() * 9 + 1) * 100));
             String online_time = dt.getHistoryDate(0);
 
-            CarStyleAddScene.builder().brandId(brandid1).manufacturer(manufacturer).name(name).onlineTime(online_time).build().invoke(visitor);
+            CarStyleAddScene.builder().brandId(brandid1).manufacturer(manufacturer).name(name).onlineTime(online_time).build().execute(visitor);
 
-            JSONObject obj = CarStyleAddScene.builder().brandId(brandid1).manufacturer(manufacturer).name(name).onlineTime(online_time).build().invoke(visitor, false);
+            JSONObject obj = CarStyleAddScene.builder().brandId(brandid1).manufacturer(manufacturer).name(name).onlineTime(online_time).build().execute(visitor, false);
 
             int code = obj.getInteger("code");
             String message = obj.getString("message");
@@ -984,7 +984,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
 
             //删除品牌
-            BrandDeleteScene.builder().id(brandid1).build().invoke(visitor);
+            BrandDeleteScene.builder().id(brandid1).build().execute(visitor);
 
 
         } catch (AssertionError e) {
@@ -1005,13 +1005,13 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             Long brandid1 = info.getBrandID(5);
 
             //删除品牌
-            BrandDeleteScene.builder().id(brandid1).build().invoke(visitor);
+            BrandDeleteScene.builder().id(brandid1).build().execute(visitor);
 
             //添加车系
             String manufacturer = "自动化" + System.currentTimeMillis();
             String name = "自动化" + System.currentTimeMillis();
             String online_time = dt.getHistoryDate(0);
-            JSONObject obj = CarStyleAddScene.builder().brandId(brandid1).manufacturer(manufacturer).name(name).onlineTime(online_time).build().invoke(visitor, false);
+            JSONObject obj = CarStyleAddScene.builder().brandId(brandid1).manufacturer(manufacturer).name(name).onlineTime(online_time).build().execute(visitor, false);
 
             int code = obj.getInteger("code");
             String message = obj.getString("message");
@@ -1034,13 +1034,13 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            int code = CarStyleCarModelAddScene.builder().brandId(info.BrandID).styleId(info.CarStyleID).name(name).year(year).status(status).build().invoke(visitor, false).getInteger("code");
+            int code = CarStyleCarModelAddScene.builder().brandId(info.BrandID).styleId(info.CarStyleID).name(name).year(year).status(status).build().execute(visitor, false).getInteger("code");
             Preconditions.checkArgument(code == 1000, "创建车系：车型名称 " + name + ", 年款 " + year + ", 预约状态" + status + "状态码" + code);
 
             //删除品牌车系
-            Long id = CarStyleCarModelPageScene.builder().brandId(info.BrandID).styleId(info.CarStyleID).name(name).page(1).size(1).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            Long id = CarStyleCarModelPageScene.builder().brandId(info.BrandID).styleId(info.CarStyleID).name(name).page(1).size(1).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
 
-            CarStyleCarModelDeleteScene.builder().id(id).build().invoke(visitor);
+            CarStyleCarModelDeleteScene.builder().id(id).build().execute(visitor);
 
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -1069,25 +1069,25 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             String name1 = "旧车型名称" + System.currentTimeMillis();
             String year1 = "2000年";
             String status1 = "ENABLE";
-            CarStyleCarModelAddScene.builder().brandId(info.BrandID).styleId(info.CarStyleID).name(name1).year(year1).status(status1).build().invoke(visitor);
+            CarStyleCarModelAddScene.builder().brandId(info.BrandID).styleId(info.CarStyleID).name(name1).year(year1).status(status1).build().execute(visitor);
 
             //获取车系id
-            int size = CarStyleCarModelPageScene.builder().brandId(info.BrandID).styleId(info.CarStyleID).name(name1).page(1).size(1).build().invoke(visitor).getInteger("total");
+            int size = CarStyleCarModelPageScene.builder().brandId(info.BrandID).styleId(info.CarStyleID).name(name1).page(1).size(1).build().execute(visitor).getInteger("total");
 
-            Long id = CarStyleCarModelPageScene.builder().brandId(info.BrandID).styleId(info.CarStyleID).name(name1).page(1).size(size).build().invoke(visitor).getJSONArray("list").getJSONObject(size - 1).getLong("id");
+            Long id = CarStyleCarModelPageScene.builder().brandId(info.BrandID).styleId(info.CarStyleID).name(name1).page(1).size(size).build().execute(visitor).getJSONArray("list").getJSONObject(size - 1).getLong("id");
 
             //修改车型
             String name2 = "新车型名称" + System.currentTimeMillis();
             String year2 = "2020年";
             String status2 = "DISABLE";
-            CarStyleCarModelEditScene.builder().brandId(info.BrandID).styleId(info.CarStyleID).id(id).name(name2).year(year2).status(status2).build().invoke(visitor);
+            CarStyleCarModelEditScene.builder().brandId(info.BrandID).styleId(info.CarStyleID).id(id).name(name2).year(year2).status(status2).build().execute(visitor);
 
             //查看修改结果
             String search_name2 = "";
             String search_year2 = "";
             String search_status2 = "";
-            int size1 = CarStyleCarModelPageScene.builder().brandId(info.BrandID).styleId(info.CarStyleID).page(1).size(1).build().invoke(visitor).getInteger("total");
-            JSONArray arr = CarStyleCarModelPageScene.builder().brandId(info.BrandID).styleId(info.CarStyleID).page(1).size(size1).build().invoke(visitor).getJSONArray("list");
+            int size1 = CarStyleCarModelPageScene.builder().brandId(info.BrandID).styleId(info.CarStyleID).page(1).size(1).build().execute(visitor).getInteger("total");
+            JSONArray arr = CarStyleCarModelPageScene.builder().brandId(info.BrandID).styleId(info.CarStyleID).page(1).size(size1).build().execute(visitor).getJSONArray("list");
 
             for (int i = size1 - 1; i > 0; i--) {
                 JSONObject obj = arr.getJSONObject(i);
@@ -1106,7 +1106,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(search_status2.equals(status2), "修改前状态=" + status1 + "，期望修改为" + status2 + "，实际修改后为" + search_status2);
 
             //删除品牌车系车型
-            CarStyleCarModelDeleteScene.builder().id(id).build().invoke(visitor);
+            CarStyleCarModelDeleteScene.builder().id(id).build().execute(visitor);
 
 
         } catch (AssertionError e) {
@@ -1126,7 +1126,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
             String year = "1998年";
             String status = "ENABLE";
-            JSONObject obj = CarStyleCarModelAddScene.builder().brandId(info.BrandID).styleId(info.CarStyleID).name(info.stringfifty1).year(year).status(status).build().invoke(visitor, false);
+            JSONObject obj = CarStyleCarModelAddScene.builder().brandId(info.BrandID).styleId(info.CarStyleID).name(info.stringfifty1).year(year).status(status).build().execute(visitor, false);
             int code = obj.getInteger("code");
             String message = obj.getString("message");
             Preconditions.checkArgument(code == 1001, "期待状态码1001，实际" + code + "， 提示语：" + message);
@@ -1148,7 +1148,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
             String year = "12345啊啊啊啊啊！@#qweQWERQ";
             String status = "ENABLE";
-            JSONObject obj = CarStyleCarModelAddScene.builder().brandId(info.BrandID).styleId(info.CarStyleID).name(info.stringsix).year(year).status(status).build().invoke(visitor, false);
+            JSONObject obj = CarStyleCarModelAddScene.builder().brandId(info.BrandID).styleId(info.CarStyleID).name(info.stringsix).year(year).status(status).build().execute(visitor, false);
             int code = obj.getInteger("code");
             String message = obj.getString("message");
             Preconditions.checkArgument(code == 1001, "期待状态码1001，实际" + code + "， 提示语：" + message);
@@ -1173,17 +1173,17 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             Long carStyleId = info.getCarStyleID(brandid, 5);
 
             //删除车系
-            CarStyleDeleteScene.builder().id(carStyleId).build().invoke(visitor);
+            CarStyleDeleteScene.builder().id(carStyleId).build().execute(visitor);
 
             //新建车型
             String name1 = "自动化" + System.currentTimeMillis();
             String year1 = "2019年";
             String status1 = "ENABLE";
-            JSONObject obj = CarStyleCarModelAddScene.builder().brandId(brandid).styleId(carStyleId).name(name1).year(year1).status(status1).build().invoke(visitor, false);
+            JSONObject obj = CarStyleCarModelAddScene.builder().brandId(brandid).styleId(carStyleId).name(name1).year(year1).status(status1).build().execute(visitor, false);
 
 
             //删除品牌
-            BrandDeleteScene.builder().id(brandid).build().invoke(visitor);
+            BrandDeleteScene.builder().id(brandid).build().execute(visitor);
 
             int code = obj.getInteger("code");
             String message = obj.getString("message");
@@ -1209,12 +1209,12 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             Long carStyleId = info.getCarStyleID(brandid, 5);
 
             //删除品牌
-            BrandDeleteScene.builder().id(brandid).build().invoke(visitor);
+            BrandDeleteScene.builder().id(brandid).build().execute(visitor);
             //新建车型
             String name1 = "自动化" + System.currentTimeMillis();
             String year1 = "1009年";
             String status1 = "ENABLE";
-            JSONObject obj = CarStyleCarModelAddScene.builder().brandId(brandid).styleId(carStyleId).name(name1).year(year1).status(status1).build().invoke(visitor, false);
+            JSONObject obj = CarStyleCarModelAddScene.builder().brandId(brandid).styleId(carStyleId).name(name1).year(year1).status(status1).build().execute(visitor, false);
 
 
             int code = obj.getInteger("code");

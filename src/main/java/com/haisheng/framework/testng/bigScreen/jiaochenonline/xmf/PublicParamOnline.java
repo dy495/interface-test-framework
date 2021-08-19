@@ -45,7 +45,7 @@ public class PublicParamOnline {
     public String gwpassword = "000000"; //单个店的客户的数据  登录密码
 
     public String jdgw = "15037286012";  //xx ,属于中关村店
-    public String roleidJdgw = "424";
+    public String roleidJdgw = "2227";
     public String nameJdgw = "";
     public String jdgw2 = "15037286011";  //xx ,属于中关村店
     public String jdgwpassword = "000000"; //单个店的客户的数据  登录密码
