@@ -99,8 +99,19 @@ public interface IScene {
      */
     List<String> getKeyList();
 
+    /**
+     * 获取返回值
+     *
+     * @return 返回值 推荐使用
+     */
     Response getResponse();
 
+    /**
+     * 放入相关产品代理
+     *
+     * @param visitor 代理
+     * @return IScene
+     */
     IScene visitor(VisitorProxy visitor);
 
 }
