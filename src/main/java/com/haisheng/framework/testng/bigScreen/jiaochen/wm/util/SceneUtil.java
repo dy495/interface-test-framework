@@ -1745,11 +1745,8 @@ public class SceneUtil extends BasicUtil {
 
     public String getVacationSaleId(){return visitor.isDaily() ? "uid_f1a745c7":"";}
     public String getBusySaleId(){return visitor.isDaily() ? "uid_caf1b799":"";}
-    public Long getBuyCarId(){return visitor.isDaily() ? 335L:0;}
+    public Long getBuyCarId(){return visitor.isDaily() ? 335L:21540L;}
 
-    public String getSaleId() {
-        return visitor.isDaily() ? "uid_f1a745c7" : "";
-    }
 
 
     /**
@@ -1804,7 +1801,8 @@ public class SceneUtil extends BasicUtil {
     }
 
     /**
-     * @return : 空闲中最后一位销售的JSONObject
+     * @parameter :
+     * @return : 空闲中 最后一位/第一位 销售的JSONObject
      * {"sale_id":"销售id",
      * "sale_status":"销售状态",
      * "sale_name":"销售姓名",
@@ -1813,7 +1811,6 @@ public class SceneUtil extends BasicUtil {
      * @description : 用于检查空闲中最后一位销售
      **/
     public JSONObject getLastSale() {
-        //long count = AppSaleScheduleDayListScene.builder().type("PRE").build().invoke(visitor, true).getJSONArray("sales_info_list").stream().map(e -> (JSONObject) e).filter(e -> Objects.equals(e.getString("sale_status"), "空闲中")).count();
         return AppSaleScheduleDayListScene.builder().type("PRE").build().execute(visitor, true).getJSONArray("sales_info_list").stream().map(e -> (JSONObject) e).
                 filter(e -> Objects.equals(e.getString("sale_status"), "空闲中")).min((x, y) -> y.getInteger("order") - x.getInteger("order")).get();
     }
