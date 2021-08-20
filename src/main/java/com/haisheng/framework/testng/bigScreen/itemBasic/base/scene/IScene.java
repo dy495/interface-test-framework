@@ -51,6 +51,13 @@ public interface IScene {
     void setSize(Integer size);
 
     /**
+     * 放入请求体
+     *
+     * @param requestBodyBody 请求体
+     */
+    IScene setRequestBodyBody(JSONObject requestBodyBody);
+
+    /**
      * 访问接口
      *
      * @param visitor   产品

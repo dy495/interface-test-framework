@@ -641,7 +641,7 @@ public class JcPc2_0 extends TestCaseCommon implements TestCaseStd {
             System.out.println("phone" + phone);
 
             //新建一个excel,里程数=智能提醒公里数
-            PoiUtils.importlossCustomer(maile, vin, -366, plate, phone, pp.jdgwName);
+            PoiUtils.importLossCustomer(maile, vin, -366, plate, phone, pp.jdgwName);
             //导入工单
             jc.pcWorkOrder(pp.importFilepath2);      //导入工单文件的路径=新建excel 路径
 

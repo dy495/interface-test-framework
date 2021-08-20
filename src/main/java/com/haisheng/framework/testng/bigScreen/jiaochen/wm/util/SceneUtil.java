@@ -66,7 +66,6 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionman
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.ReceptionPurchaseFixedPackageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.ReceptionPurchaseTemporaryPackageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.role.RoleListScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.staff.StaffAddScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.staff.StaffDeleteScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.staff.StaffPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.userange.DetailScene;
@@ -125,6 +124,17 @@ public class SceneUtil extends BasicUtil {
         visitor.setProduct(newProduce);
         visitor.setToken(scene);
         visitor.setProduct(oldProduce);
+    }
+
+    public JSONArray getCoordinate() {
+        JSONArray dd = new JSONArray();
+        dd.add(39.95933);
+        dd.add(116.29845);
+        return dd;
+    }
+
+    public String getRandomPhone() {
+        return "177" + (new Random().nextInt(89999999) + 10000000);
     }
 
     public String uploadFile() {
@@ -1283,6 +1293,24 @@ public class SceneUtil extends BasicUtil {
         return appletVoucherInfoList;
     }
 
+    public AppletMessageList getAppletMessageList(String messageTypeName) {
+        Long lastValue = null;
+        JSONArray array;
+        do {
+            IScene scene = AppletMessageListScene.builder().lastValue(lastValue).size(20).build();
+            JSONObject response = scene.visitor(visitor).execute();
+            lastValue = response.getLong("last_value");
+            array = response.getJSONArray("list");
+            AppletMessageList appletMessageList = array.stream().map(e -> JSONObject.toJavaObject((JSONObject) e, AppletMessageList.class))
+                    .filter(e -> e.getMessageTypeName().equals(messageTypeName))
+                    .filter(AppletMessageList::getIsCanEvaluate).findFirst().orElse(null);
+            if (appletMessageList != null) {
+                return appletMessageList;
+            }
+        } while (array.size() == 20);
+        return null;
+    }
+
     /**
      * 获取小程序我的消息列表数
      *
@@ -1743,10 +1771,17 @@ public class SceneUtil extends BasicUtil {
                 .map(Response::getMessage).collect(Collectors.toList()).toArray(new String[list.size()]);
     }
 
-    public String getVacationSaleId(){return visitor.isDaily() ? "uid_f1a745c7":"";}
-    public String getBusySaleId(){return visitor.isDaily() ? "uid_caf1b799":"";}
-    public Long getBuyCarId(){return visitor.isDaily() ? 335L:21540L;}
+    public String getVacationSaleId() {
+        return visitor.isDaily() ? "uid_f1a745c7" : "";
+    }
 
+    public String getBusySaleId() {
+        return visitor.isDaily() ? "uid_caf1b799" : "";
+    }
+
+    public Long getBuyCarId() {
+        return visitor.isDaily() ? 335L : 21540L;
+    }
 
 
     /**
@@ -1801,13 +1836,13 @@ public class SceneUtil extends BasicUtil {
     }
 
     /**
-     * @parameter :
      * @return : 空闲中 最后一位/第一位 销售的JSONObject
      * {"sale_id":"销售id",
      * "sale_status":"销售状态",
      * "sale_name":"销售姓名",
      * "order":当前状态的排序,
      * "status":状态值 }
+     * @parameter :
      * @description : 用于检查空闲中最后一位销售
      **/
     public JSONObject getLastSale() {

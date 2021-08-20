@@ -176,7 +176,7 @@ public class ApproveManagerCase extends TestCaseCommon implements TestCaseStd {
     @Test(description = "优惠券审批--优惠券审批页全部审批=待审批+审批通过+审批未通过+已撤销")
     public void voucherApply_data_5() {
         try {
-            JSONObject data = ApplyApprovalInfoScene.builder().build().execute(visitor);
+            JSONObject data = ApplyApprovalInfoScene.builder().build().visitor(visitor).execute();
             Long total = data.getLong("total_approval");
             Long wait = data.getLong("wait_approval");
             Long failed = data.getLong("fail_approval");
@@ -294,7 +294,7 @@ public class ApproveManagerCase extends TestCaseCommon implements TestCaseStd {
             //卡券状态
             IScene scene = VoucherFormVoucherPageScene.builder().build();
             voucherIdList.forEach(voucherId -> {
-                com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherFormVoucherPageBean voucherFormVoucherPageBean = util.toJavaObject(scene, com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherFormVoucherPageBean.class, "voucher_id", voucherId);
+                VoucherFormVoucherPageBean voucherFormVoucherPageBean = util.toJavaObject(scene, VoucherFormVoucherPageBean.class, "voucher_id", voucherId);
                 CommonUtil.checkResult("卡券" + voucherFormVoucherPageBean.getVoucherName() + "的状态", VoucherStatusEnum.WORKING.getName(), voucherFormVoucherPageBean.getVoucherStatusName());
                 CommonUtil.checkResult("卡券" + voucherFormVoucherPageBean.getVoucherName() + "的状态", VoucherStatusEnum.WORKING.name(), voucherFormVoucherPageBean.getVoucherStatus());
             });
@@ -333,7 +333,7 @@ public class ApproveManagerCase extends TestCaseCommon implements TestCaseStd {
             //卡券状态
             IScene scene = VoucherFormVoucherPageScene.builder().build();
             voucherIdList.forEach(voucherId -> {
-                com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherFormVoucherPageBean voucherFormVoucherPageBean = util.toJavaObject(scene, com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherFormVoucherPageBean.class, "voucher_id", voucherId);
+                VoucherFormVoucherPageBean voucherFormVoucherPageBean = util.toJavaObject(scene, VoucherFormVoucherPageBean.class, "voucher_id", voucherId);
                 CommonUtil.checkResult("卡券" + voucherFormVoucherPageBean.getVoucherName() + "的状态", VoucherStatusEnum.REJECT.getName(), voucherFormVoucherPageBean.getVoucherStatusName());
                 CommonUtil.checkResult("卡券" + voucherFormVoucherPageBean.getVoucherName() + "的状态", VoucherStatusEnum.REJECT.name(), voucherFormVoucherPageBean.getVoucherStatus());
             });

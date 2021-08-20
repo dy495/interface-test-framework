@@ -45,14 +45,14 @@ public class EvaluateConfigSubmitScene extends BaseScene {
      * 是否必填 false
      * 版本 v2.0
      */
-    private final String  vouchersId;
+    private final String vouchersId;
 
     /**
      * 描述 卡券有效期配置 发送卡券时必填
      * 是否必填 false
      * 版本 v2.0
      */
-//    private final JSONObject voucherValid;
+    private final JSONObject voucherValid;
 
     /**
      * 描述 是否奖励积分
@@ -68,36 +68,23 @@ public class EvaluateConfigSubmitScene extends BaseScene {
      */
     private final Integer points;
 
-
-    /**
-     * 描述 评价分数列表
-     * 是否必填 true
-     * 版本 v2.0
-     */
-
-
-
+    //?????? 怎么能这么写 其他调用的不就定死了
     @Override
     public JSONObject getRequestBody() {
-              String request="{\n" +
-                "    \"type\":"+type+",\n" +
-                "    \"default_favourable_cycle\":"+defaultFavourableCycle+",\n" +
-                "    \"evaluate_reward\":"+evaluateReward+",\n" +
-                "    \"is_send_points\":"+isSendPoints+",\n" +
-                "    \"is_send_voucher\":"+isSendVoucher+",\n" +
-                "    \"evaluate_reward\":"+evaluateReward+",\n" +
-                "    \"points\":"+points+",\n" +
-
-
-
-                "    \"vouchers\":[\n" +
-                        vouchersId+"\n" +
+        String request = "{\n" +
+                "    \"type\":" + type + ",\n" +
+                "    \"default_favourable_cycle\":" + defaultFavourableCycle + ",\n" +
+                "    \"evaluate_reward\":" + evaluateReward + ",\n" +
+                "    \"is_send_points\":" + isSendPoints + ",\n" +
+                "    \"is_send_voucher\":" + isSendVoucher + ",\n" +
+                "    \"evaluate_reward\":" + evaluateReward + ",\n" +
+                "    \"points\":" + points + ",\n" +
+                "    \"vouchers\":[\n" + vouchersId + "\n" +
                 "    ],\n" +
                 "    \"voucher_valid\":{\n" +
                 "        \"expire_type\":2,\n" +
                 "        \"voucher_effective_days\":1\n" +
                 "    },\n" +
-
                 "    \"scores\":[\n" +
                 "        {\n" +
                 "            \"score\":1,\n" +
@@ -148,9 +135,7 @@ public class EvaluateConfigSubmitScene extends BaseScene {
                 "        }\n" +
                 "    ]\n" +
                 "}";
-
-
-        return  JSONObject.parseObject(request);
+        return JSONObject.parseObject(request);
     }
 
     @Override

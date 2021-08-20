@@ -1659,8 +1659,8 @@ public class ScenarioUtil extends TestCaseCommon {
         };
     }
 
-    @DataProvider(name = "SELECT_PARM")  //xmf
-    public static Object[] select_parm() {
+    @DataProvider(name = "SELECT_PARAM")  //xmf
+    public static Object[] select_param() {
         return new String[][]{
                 {"vehicle_chassis_code", "vehicle_chassis_code"},
 

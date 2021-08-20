@@ -166,13 +166,12 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             CommonUtil.checkResult("是否可接待", true, newAppointmentPage.getIsCanReception());
             CommonUtil.checkResult("是否可取消", true, newAppointmentPage.getIsCanCancel());
             CommonUtil.checkResult("是否可调整时间", true, newAppointmentPage.getIsCanAdjust());
-            util.loginPc(ACCOUNT);
-            IScene receptionPageScene = ReceptionPageScene.builder().build();
-            int pcReceptionPageNum = receptionPageScene.execute(visitor).getInteger("total");
-
             //点接待
             util.loginApp(ACCOUNT);
             int appReceptionPageNum = util.getReceptionPageNum();
+            util.loginPc(ACCOUNT);
+            IScene receptionPageScene = ReceptionPageScene.builder().build();
+            int pcReceptionPageNum = receptionPageScene.execute(visitor).getInteger("total");
             AppAppointmentReceptionScene.builder().id(appointmentId).build().execute(visitor);
             int newAppReceptionPageNum = util.getReceptionPageNum();
             CommonUtil.checkResult("app接待页列表数", appReceptionPageNum + 1, newAppReceptionPageNum);
@@ -316,6 +315,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             CommonUtil.checkResult("是否可取消", true, newAppointmentPage.getIsCanCancel());
             CommonUtil.checkResult("是否可调整时间", true, newAppointmentPage.getIsCanAdjust());
             //点接待
+            util.loginApp(ACCOUNT);
             int appReceptionPageNum = util.getReceptionPageNum();
             util.loginPc(ACCOUNT);
             IScene receptionPageScene = ReceptionPageScene.builder().build();
@@ -462,10 +462,11 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             CommonUtil.checkResult("是否可取消", true, newAppointmentPage.getIsCanCancel());
             CommonUtil.checkResult("是否可调整时间", true, newAppointmentPage.getIsCanAdjust());
             //点接待
-            IScene receptionPageScene = PreSalesReceptionPageScene.builder().build();
-            int pcReceptionPageNum = receptionPageScene.execute(visitor).getInteger("total");
             util.loginApp(ACCOUNT);
             int appReceptionPageNum = util.getPreSalesReceptionPageNum();
+            util.loginPc(ACCOUNT);
+            IScene receptionPageScene = PreSalesReceptionPageScene.builder().build();
+            int pcReceptionPageNum = receptionPageScene.execute(visitor).getInteger("total");
             AppAppointmentReceptionScene.builder().id(appointmentId).build().execute(visitor);
             int newAppReceptionPageNum = util.getPreSalesReceptionPageNum();
             CommonUtil.checkResult("app接待页列表数", appReceptionPageNum + 1, newAppReceptionPageNum);

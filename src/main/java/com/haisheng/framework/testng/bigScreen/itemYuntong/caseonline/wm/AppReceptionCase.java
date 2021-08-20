@@ -44,7 +44,7 @@ import java.util.Date;
  */
 public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_JD;
-    private static final EnumAccount ACCOUNT = EnumAccount.YT_RECEPTION_ONLINE_WM;
+    private static final EnumAccount ACCOUNT = EnumAccount.YT_ALL_ONLINE_LXQ;
     private static AppPreSalesReceptionPageBean preSalesReceptionPage;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public SceneUtil util = new SceneUtil(visitor);
