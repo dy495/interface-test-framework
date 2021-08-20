@@ -57,7 +57,7 @@ public class SystemCaseRecpOnline extends TestCaseCommon implements TestCaseStd 
         //替换钉钉推送
         commonConfig.dingHook = DingWebhook.ONLINE_CAR_CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //放入shopId
-        commonConfig.setShopId(product.getShopId()).setRoleId(ALL_AUTHORITY.getRoleId()).setProduct(product.getAbbreviation());
+        commonConfig.setShopId(ALL_AUTHORITY.getReceptionShopId()).setRoleId(ALL_AUTHORITY.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
         businessUtil.loginPc(ALL_AUTHORITY);
     }
@@ -109,8 +109,9 @@ public class SystemCaseRecpOnline extends TestCaseCommon implements TestCaseStd 
             appendFailReason(e.toString());
         } finally {
             saveData("接待后评价");
-            commonConfig.setShopId(product.getShopId());
+            commonConfig.setShopId(ALL_AUTHORITY.getReceptionShopId());
             commonConfig.setRoleId(ALL_AUTHORITY.getRoleId());
+            businessUtil.loginPc(ALL_AUTHORITY);
         }
     }
 
@@ -160,7 +161,7 @@ public class SystemCaseRecpOnline extends TestCaseCommon implements TestCaseStd 
 
             Thread.sleep(301000);
             Long endtime = System.currentTimeMillis();
-            visitor.setProduct(EnumTestProduct.YT_DAILY_GK);
+            visitor.setProduct(EnumTestProduct.YT_ONLINE_GK);
             AppVoiceRecordSubmitScene.builder().base64(base1).recordName(record_name).startTime(starttime).endTime(endtime).receptionId(recId1).receptionNodes(reception_nodes).build().execute(visitor);
             AppVoiceRecordSubmitScene.builder().base64(base2).recordName(record_name).startTime(starttime).endTime(endtime).receptionId(recId2).receptionNodes(reception_nodes).build().execute(visitor);
             AppVoiceRecordSubmitScene.builder().base64(base3).recordName(record_name).startTime(starttime).endTime(endtime).receptionId(recId3).receptionNodes(reception_nodes).build().execute(visitor);
