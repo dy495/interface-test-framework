@@ -29,7 +29,7 @@ import java.lang.reflect.Method;
 public class JcPcAffirmReceptionOnLine extends TestCaseCommon implements TestCaseStd {
     EnumTestProduct product = EnumTestProduct.JC_ONLINE_JD;
     ScenarioUtil jc = new ScenarioUtil();
-    private QADbProxy qaDbProxy = QADbProxy.getInstance();
+    private final QADbProxy qaDbProxy = QADbProxy.getInstance();
     public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
     String dataName = "pc_receptionOnLine";
 

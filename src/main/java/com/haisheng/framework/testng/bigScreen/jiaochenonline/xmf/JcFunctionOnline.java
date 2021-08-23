@@ -50,8 +50,7 @@ public class JcFunctionOnline {
     public Integer importCheck(String name) {
         IScene importPageScene = ImportPageScene.builder().page(1).size(10).user(name).build();
         JSONObject importReault = jc.invokeApi(importPageScene).getJSONArray("list").getJSONObject(0);
-        int sueecssNum = importReault.getInteger("success_num");
-        return sueecssNum;
+        return importReault.getInteger("success_num");
     }
 
     //通过权限描述，返回权限id
@@ -88,8 +87,7 @@ public class JcFunctionOnline {
             access.put(String.valueOf(label.get(i)), String.valueOf(value.get(i)));
         }
 //        access.forEach((k,v)-> System.err.println(k+"-"+v));
-        Long id = Long.valueOf(access.get(labelParm));
-        return id;
+        return Long.valueOf(access.get(labelParm));
     }
 
     //new 获取小程序待评价的消息id
@@ -117,7 +115,6 @@ public class JcFunctionOnline {
             }
         }
         return messageId;
-
     }
 
     public JSONArray getroleLlist() {
@@ -165,15 +162,13 @@ public class JcFunctionOnline {
 
     public Long getAppointmentId() {
         jc.appletLoginToken(pp.appletToken);
-        Long id = jc.appletAppointmentList("", "10", null).getJSONArray("list").getJSONObject(0).getLong("id");
-        return id;
+        return jc.appletAppointmentList("", "10", null).getJSONArray("list").getJSONObject(0).getLong("id");
     }
 
     //小程序客户预约保养次数
     public int pcAppointmentTimes() {
         jc.pcLogin(pp.jdgw, pp.jdgwpassword);
-        int num = jc.weChatSleCustomerManage("", "1", "10", "customer_phone", "15037286013").getJSONArray("list").getJSONObject(0).getInteger("appointment_maintain");
-        return num;
+        return jc.weChatSleCustomerManage("", "1", "10", "customer_phone", "15037286013").getJSONArray("list").getJSONObject(0).getInteger("appointment_maintain");
     }
 
     //预约看板的预约数
@@ -202,31 +197,27 @@ public class JcFunctionOnline {
     //pc接待管理总数
     public int pcReceptionPage() {
         jc.appLogin(pp.jdgw, pp.jdgwpassword);
-        int num = jc.receptionManage("", "1", "10", null, null).getInteger("total");
-        return num;
+        return jc.receptionManage("", "1", "10", null, null).getInteger("total");
     }
 
     //app[任务-预约数]
     public int appReceiptPage() {
         jc.appLogin(pp.jdgw, pp.jdgwpassword);
         JSONObject data = jc.appointmentPage(null, 10);
-        int total = data.getInteger("total");
-        return total;
+        return data.getInteger("total");
     }
 
     //app[任务-接待数]
     public int appReceptionPage() {
         jc.appLogin(pp.jdgw, pp.jdgwpassword);
         JSONObject data = jc.appreceptionPage(null, 10);
-        int total = data.getInteger("total");
-        return total;
+        return data.getInteger("total");
     }
 
     //app[任务-接待数]  3.0
     public int appSaleReceptionPage() {
         JSONObject data = jc.AppPageScene(10, null);
-        int total = data.getInteger("total");
-        return total;
+        return data.getInteger("total");
     }
 
 
@@ -235,7 +226,7 @@ public class JcFunctionOnline {
 
         AppStartReception sr = new AppStartReception();
         JSONObject data = jc.appReceptionAdmit(carPlate).getJSONArray("customers").getJSONObject(0);
-        Long result[] = new Long[2];
+        Long[] result = new Long[2];
         sr.id = data.getString("customer_id");
         sr.plate_number = carPlate;
         sr.customer_name = data.getString("customer_name");
@@ -255,7 +246,7 @@ public class JcFunctionOnline {
     }
 
     //pc开始接待，并返回接待id
-    public Long pcstartReception(String carPlate) throws Exception {
+    public Long pcStartReception(String carPlate) throws Exception {
         jc.pcLogin(pp.jdgw, pp.jdgwpassword);
         AppStartReception sr = new AppStartReception();
         JSONObject data = jc.pcManageReception(carPlate, true).getJSONArray("customers").getJSONObject(0);
@@ -283,7 +274,7 @@ public class JcFunctionOnline {
     //app今日任务数据
     public int[] appTask() {
         JSONObject data = jc.appTask();
-        int sum[] = new int[6];
+        int[] sum = new int[6];
         //预约
         sum[0] = data.getInteger("surplus_appointment");   //分子
         sum[1] = data.getInteger("all_appointment");     //分母
@@ -351,7 +342,7 @@ public class JcFunctionOnline {
     //获取pc活动报名人数
     public int[] jsonActivityNUm(String id) {   //活动id
         registerListVariable sv = new registerListVariable();
-        int num[] = new int[4];
+        int[] num = new int[4];
 
         JSONObject ll = jc.registerListFilterManage(sv);
         num[0] = ll.getInteger("total");
@@ -373,7 +364,7 @@ public class JcFunctionOnline {
     //applet文章详情
     public int[] appletActivityDetail(String id) {   //活动id
 
-        int num[] = new int[3];   //0
+        int[] num = new int[3];   //0
 
         JSONObject ll = jc.appletArticleDetail(id);
         num[0] = ll.getInteger("total_quota");    //全部名额
@@ -384,10 +375,9 @@ public class JcFunctionOnline {
     }
 
     public int[] getPage(int total) {
-        int page[] = new int[2];
+        int[] page = new int[2];
         if (total == 0) {
             page[0] = 1;
-            page[1] = 0;
         } else if (total % 10 == 0) {
             page[0] = total / 10;
             page[1] = 10;
@@ -425,9 +415,7 @@ public class JcFunctionOnline {
         pm.staff_id = pp.userid;
         pm.time_id = getTimeId(pm.shop_id, pm.car_id, dt.getHistoryDate(num));
         pm.type = "MAINTAIN";
-
-        Long appointmentId = jc.appletAppointment(pm).getLong("id");
-        return appointmentId;
+        return jc.appletAppointment(pm).getLong("id");
     }
 
     //创建活动
@@ -456,8 +444,7 @@ public class JcFunctionOnline {
         er.voucher_receive_type = voucher_receive_type;  //"ARTICLE_BUTTON"  页面领取  //SIGN_UP   报名成功后领取
         er.voucher_get_use_days = "365";
         er.pic_list = picList;
-        Long id = jc.pccreateActile(er).getLong("id");
-        return id;
+        return jc.pccreateActile(er).getLong("id");
     }
 
     /**
@@ -492,13 +479,12 @@ public class JcFunctionOnline {
      * @description :获取卡券列表中总数
      * @date :2020/12/16 17:18
      **/
-
     public Integer getVoucherTotal() {
         JSONObject data = jc.appletVoucherList(null, "GENERAL", 20);
         JSONObject lastValue = data.getJSONObject("last_value");
         JSONArray list = data.getJSONArray("list");
         int size = list.size();
-        Integer count = size;   //计数器
+        int count = size;   //计数器
         int i = 0;
         while (size != 0) {
             JSONObject temp = jc.appletVoucherList(lastValue, "GENERAL", 20);
@@ -507,7 +493,6 @@ public class JcFunctionOnline {
             size = list.size();
             count = count + size;
             i = i + 1;
-//            String status_name=
         }
         return count;
     }
@@ -518,7 +503,7 @@ public class JcFunctionOnline {
         String lastValue = data.getString("last_value");
         JSONArray list = data.getJSONArray("list");
         int size = list.size();
-        Integer count = size;   //计数器
+        int count = size;   //计数器
         int i = 0;
         while (size != 0) {
             JSONObject temp = jc.appletpackageList(lastValue, "GENERAL", 20);
@@ -535,7 +520,7 @@ public class JcFunctionOnline {
     public String[] voucherName() throws Exception {
         jc.appletLoginToken(pp.appletToken);
         JSONArray list = jc.appletVoucherList(null, "GENERAL", 20).getJSONArray("list");
-        String voucher_code[] = {"123", "123", ""};
+        String[] voucher_code = {"123", "123", ""};
         for (int i = 0; i < list.size(); i++) {
             JSONObject data = list.getJSONObject(i);
             String isLimitCar = data.getString("is_limit_car");
@@ -546,9 +531,6 @@ public class JcFunctionOnline {
                 voucher_code[2] = data.getString("id");
                 break;
             }
-        }
-        if (voucher_code.equals("123")) {
-            throw new Exception("小程序卡券不足，需领取卡券");
         }
         return voucher_code;
     }

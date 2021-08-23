@@ -118,7 +118,7 @@ public class JcAppReceptionRelateOnline extends TestCaseCommon implements TestCa
             dataTemp.setApp_surplus_reception(appTodayTask[2]);
             dataTemp.setApp_all_reception(appTodayTask[3]);
             //接待
-            dataTemp.setAppointmentId(pf.startReception(pp.carplate7)[0]);
+            dataTemp.setAppointmentId(pf.startReception(pp.carPlate7)[0]);
 
             qaDbUtil.updateDataAll(dataTemp);
         } catch (AssertionError | Exception e) {

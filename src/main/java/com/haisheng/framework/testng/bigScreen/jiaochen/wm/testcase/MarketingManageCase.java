@@ -2015,7 +2015,9 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
     public void messageManagerPeople_data_2(String shopIds) {
         commonConfig.setShopId(shopIds);
         try {
+            visitor.setProduct(EnumTestProduct.JC_ONLINE_ZH);
             JSONArray shopList = ShopListScene.builder().build().execute(visitor).getJSONArray("list");
+            visitor.setProduct(EnumTestProduct.JC_ONLINE_JD);
             shopList.stream().map(e -> (JSONObject) e).forEach(shop -> {
                 Long shopId = shop.getLong("shop_id");
                 String shopName = shop.getString("shop_name");
@@ -2057,13 +2059,13 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
     public void messageManagerPeople_data_3(String shopIds) {
         commonConfig.setShopId(shopIds);
         try {
-            JSONArray shopList = ShopListScene.builder().build().execute(visitor).getJSONArray("list");
+            JSONArray shopList = ShopListScene.builder().build().visitor(visitor).execute().getJSONArray("list");
             shopList.stream().map(e -> (JSONObject) e).forEach(shop -> {
                 Long shopId = shop.getLong("shop_id");
                 String shopName = shop.getString("shop_name");
                 List<Long> shopIdList = new ArrayList<>();
                 shopIdList.add(shopId);
-                JSONArray brandList = AllScene.builder().build().execute(visitor).getJSONArray("list");
+                JSONArray brandList = AllScene.builder().build().visitor(visitor).execute().getJSONArray("list");
                 brandList.stream().map(e -> (JSONObject) e).forEach(brand -> {
                     Long brandId = brand.getLong("id");
                     String brandName = brand.getString("name");

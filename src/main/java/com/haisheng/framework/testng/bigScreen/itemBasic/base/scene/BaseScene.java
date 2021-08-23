@@ -49,6 +49,13 @@ public abstract class BaseScene implements IScene {
      */
     protected abstract JSONObject getRequestBody();
 
+
+    @Override
+    public IScene setRequestBodyBody(JSONObject requestBodyBody) {
+        this.body = requestBodyBody;
+        return this;
+    }
+
     /**
      * 获取接口路径
      *

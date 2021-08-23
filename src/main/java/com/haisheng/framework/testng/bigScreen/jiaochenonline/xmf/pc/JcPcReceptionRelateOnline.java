@@ -1,7 +1,10 @@
 package com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.pc;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.bean.DataTemp;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
@@ -12,8 +15,6 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import com.haisheng.framework.util.QADbProxy;
-import com.haisheng.framework.util.QADbUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -27,61 +28,36 @@ import java.lang.reflect.Method;
  **/
 
 public class JcPcReceptionRelateOnline extends TestCaseCommon implements TestCaseStd {
-    EnumTestProduct product = EnumTestProduct.JC_ONLINE_JD;
+    private static final EnumTestProduct product = EnumTestProduct.JC_ONLINE_JD;
+    private static final EnumAccount account = EnumAccount.JC_ALL_ONLINE_LXQ;
     ScenarioUtil jc = new ScenarioUtil();
-    private QADbProxy qaDbProxy = QADbProxy.getInstance();
-    public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
     JcFunctionOnline pf = new JcFunctionOnline();
     PublicParamOnline pp = new PublicParamOnline();
     String dataName = "pc_receptionOnLine";
 
-
     public void initial1() {
-        logger.debug("before classs initial");
+        logger.debug("before class initial");
         CommonConfig commonConfig = new CommonConfig();
         jc.changeIpPort(product.getIp());
-
-
-        //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
-        commonConfig.checklistQaOwner = "夏明凤";
-
-        //replace backend gateway url
-        //commonConfig.gateway = "";
-
-        //replace jenkins job name
+        commonConfig.checklistQaOwner = EnumChecklistUser.XMF.getName();
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_ONLINE_TEST.getJobName());
-
-        //replace product name for ding push
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
-
-
-        //replace ding push conf
-//        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
-        //if need reset push rd, default are huachengyu,xiezhidong,yanghang
-        //commonConfig.pushRd = {"1", "2"};
-//        commonConfig.referer="http://dev.dealer-jc.winsenseos.cn/authpage/login";
-        //set shop id
-        commonConfig.setShopId(pp.shopIdZ).setReferer(product.getReferer()).setRoleId(pp.roleidJdgw).setProduct(product.getAbbreviation());
+        commonConfig.setShopId(account.getReceptionShopId()).setRoleId(account.getRole()).setReferer(product.getReferer()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
-
         logger.debug("jc: " + jc);
-        jc.pcLogin(pp.jdgw, pp.jdgwpassword);
-
-
+        pcLogin(pp.jdgw, pp.jdgwpassword);
     }
 
-    /**
-     * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
-     */
     @BeforeClass
     @Override
     public void initial() {
         initial1();
         qaDbUtil.openConnection();
-        BeforeStart();               //调试单个case时注释此行
+        //调试单个case时注释此行
+//        BeforeStart();
     }
 
     @AfterClass
@@ -102,6 +78,16 @@ public class JcPcReceptionRelateOnline extends TestCaseCommon implements TestCas
         logger.debug("case: " + caseResult);
     }
 
+    //pc登录
+    public void pcLogin(String phone, String verificationCode) {
+        String path = "/account-platform/login-pc";
+        JSONObject object = new JSONObject();
+        object.put("phone", phone);
+        object.put("verification_code", verificationCode);
+        object.put("type", 1);
+        httpPost(EnumTestProduct.JC_ONLINE_ZH.getIp(), path, object);
+    }
+
     //操作
     public void BeforeStart() {
         try {
@@ -110,21 +96,19 @@ public class JcPcReceptionRelateOnline extends TestCaseCommon implements TestCas
             dataTemp.setDataName(dataName);
             dataTemp.setPcAppointmentRecordNum(pf.pcReceptionPage());  //pc接待管理数
             dataTemp.setAppReceiptage(pf.appReceptionPage());            //app[任务-接待数]
-            int appTodayTask[] = pf.appTask();
+            int[] appTodayTask = pf.appTask();
             dataTemp.setAppSurplusAppointment(appTodayTask[0]);
             dataTemp.setApp_all_appointment(appTodayTask[1]);
             dataTemp.setApp_surplus_reception(appTodayTask[2]);
             dataTemp.setApp_all_reception(appTodayTask[3]);
             //pc 接待
-            dataTemp.setAppointmentId(pf.pcstartReception(pp.carPlate));
-
+            dataTemp.setAppointmentId(pf.pcStartReception(pp.carPlate));
             qaDbUtil.updateDataAll(dataTemp);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             logger.info("start:");
         }
-
     }
 
     @Test()  //接待后pc接待列表+1
@@ -136,7 +120,7 @@ public class JcPcReceptionRelateOnline extends TestCaseCommon implements TestCas
             System.out.println(result1 + ":" + result2);
             Preconditions.checkArgument(result2 - result1 == 1, "接待后pc接待列表+1,接待前：" + result1 + "接待后：" + result2);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("接待后pc接待列表+1");
         }
@@ -151,7 +135,7 @@ public class JcPcReceptionRelateOnline extends TestCaseCommon implements TestCas
             System.out.println(result1 + ":" + result2);
             Preconditions.checkArgument(result2 - result1 == 1, "接待后app接待任务列数,接待前：" + result1 + "接待后：" + result2);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("接待后，app接待任务列数+1");
         }
@@ -161,18 +145,15 @@ public class JcPcReceptionRelateOnline extends TestCaseCommon implements TestCas
     public void AppAppointmentTodayTask() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int appTask[] = pf.appTask();  //先调取函数可先验证此接口，在验证数据
-
+            int[] appTask = pf.appTask();  //先调取函数可先验证此接口，在验证数据
             int app_surplus_reception = qaDbUtil.selectDataTempOne("app_surplus_reception", dataName);
             int app_all_reception = qaDbUtil.selectDataTempOne("app_all_reception", dataName);
             Preconditions.checkArgument(appTask[2] - app_surplus_reception == 1, "接待后app今日任务appSurplusAppointment,接待前：" + app_surplus_reception + "接待后：" + appTask[2]);
             Preconditions.checkArgument(appTask[3] - app_all_reception == 1, "接待后app今日任务app_all_appointment,接待前：" + app_all_reception + "接待后：" + appTask[3]);
         } catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
+            collectMessage(e);
         } finally {
             saveData("接待后，app今日任务分子分母+1");
         }
     }
-
-
 }

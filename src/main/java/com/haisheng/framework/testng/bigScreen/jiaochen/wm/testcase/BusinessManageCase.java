@@ -62,7 +62,7 @@ import java.util.stream.Collectors;
  */
 public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct PRODUCE = EnumTestProduct.JC_DAILY_JD;
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.JC_ALL_DAILY;
+    private static final EnumAccount ACCOUNT = EnumAccount.JC_ALL_DAILY;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_DAILY;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public SceneUtil util = new SceneUtil(visitor);
@@ -81,7 +81,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
         //放入shopId
-        commonConfig.setShopId(PRODUCE.getShopId()).setReferer(PRODUCE.getReferer()).setRoleId(ALL_AUTHORITY.getRoleId()).setProduct(PRODUCE.getAbbreviation());
+        commonConfig.setShopId(PRODUCE.getShopId()).setReferer(PRODUCE.getReferer()).setRoleId(ACCOUNT.getRoleId()).setProduct(PRODUCE.getAbbreviation());
         beforeClassInit(commonConfig);
     }
 
@@ -96,7 +96,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
     public void createFreshCase(Method method) {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
-        util.loginPc(ALL_AUTHORITY);
+        util.loginPc(ACCOUNT);
         logger.debug("case: " + caseResult);
 
     }
@@ -120,7 +120,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
             int appletVoucherNum = util.getAppletVoucherNum();
             int appletPackageNum = util.getAppletPackageNum();
             //购买临时套餐
-            util.loginPc(ALL_AUTHORITY);
+            util.loginPc(ACCOUNT);
             JSONArray voucherList = util.getVoucherArray(voucherPage, 1);
             util.receptionBuyTemporaryPackage(voucherList, 1);
             VoucherFormVoucherPageBean secondVoucherPage = util.flushVoucherPage(voucherPage);
@@ -181,7 +181,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
             int appletMessageMessageNum = util.getAppletMessageNum();
             int appletVoucherNum = util.getAppletVoucherNum();
             int appletPackageNum = util.getAppletPackageNum();
-            util.loginPc(ALL_AUTHORITY);
+            util.loginPc(ACCOUNT);
             //购买固定套餐
             util.receptionBuyFixedPackage(packageId, 1);
             VoucherFormVoucherPageBean secondVoucherPage = util.flushVoucherPage(voucherPage);
@@ -238,7 +238,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
             int appletVoucherNum = util.getAppletVoucherNum();
             int appletPackageNum = util.getAppletPackageNum();
             //赠送临时套餐
-            util.loginPc(ALL_AUTHORITY);
+            util.loginPc(ACCOUNT);
             JSONArray voucherList = util.getVoucherArray(voucherPage, 1);
             util.receptionBuyTemporaryPackage(voucherList, 0);
             VoucherFormVoucherPageBean secondVoucherPage = util.flushVoucherPage(voucherPage);
@@ -298,7 +298,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
             int appletMessageMessageNum = util.getAppletMessageNum();
             int appletVoucherNum = util.getAppletVoucherNum();
             int appletPackageNum = util.getAppletPackageNum();
-            util.loginPc(ALL_AUTHORITY);
+            util.loginPc(ACCOUNT);
             //赠送固定套餐
             util.receptionBuyFixedPackage(packageId, 0);
             VoucherFormVoucherPageBean secondVoucherPage = util.flushVoucherPage(voucherPage);
@@ -355,7 +355,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
             util.loginApplet(APPLET_USER_ONE);
             int appletVoucherNum = util.getAppletVoucherNum();
             int appletPackageNum = util.getAppletPackageNum();
-            util.loginPc(ALL_AUTHORITY);
+            util.loginPc(ACCOUNT);
             //赠送固定套餐
             util.receptionBuyFixedPackage(packageId, 0);
             VoucherFormVoucherPageBean secondVoucherPage = util.flushVoucherPage(voucherPage);
@@ -397,7 +397,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
             int appletVoucherNum = util.getAppletVoucherNum();
             int appletPackageNum = util.getAppletPackageNum();
             //赠送临时套餐
-            util.loginPc(ALL_AUTHORITY);
+            util.loginPc(ACCOUNT);
             JSONArray voucherList = util.getVoucherArray(voucherPage, 1);
             util.receptionBuyTemporaryPackage(voucherList, 0);
             VoucherFormVoucherPageBean secondVoucherPage = util.flushVoucherPage(voucherPage);
@@ -503,7 +503,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
     @Test(description = "预约管理--保养配置，修改保养价格")
     public void customerManager_data_6() {
         try {
-            commonConfig.setShopId(ALL_AUTHORITY.getReceptionShopId());
+            commonConfig.setShopId(ACCOUNT.getReceptionShopId());
             Double[] doubles = {1.00, 2.99, 3.66, 50.1};
             JSONObject jsonObject = ManageModelPageScene.builder().type("MAINTAIN").build().execute(visitor).getJSONArray("list").getJSONObject(0);
             Long id = jsonObject.getLong("id");
@@ -516,6 +516,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
             collectMessage(e);
         } finally {
             commonConfig.setShopId(PRODUCE.getShopId());
+            logger.info(commonConfig.getHeaders().toString());
             saveData("预约管理--保养配置，修改保养价格");
         }
     }

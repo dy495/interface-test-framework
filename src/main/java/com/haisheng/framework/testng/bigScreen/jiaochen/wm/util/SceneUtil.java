@@ -66,7 +66,6 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionman
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.ReceptionPurchaseFixedPackageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.receptionmanage.ReceptionPurchaseTemporaryPackageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.role.RoleListScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.staff.StaffAddScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.staff.StaffDeleteScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.staff.StaffPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.userange.DetailScene;
@@ -125,6 +124,17 @@ public class SceneUtil extends BasicUtil {
         visitor.setProduct(newProduce);
         visitor.setToken(scene);
         visitor.setProduct(oldProduce);
+    }
+
+    public JSONArray getCoordinate() {
+        JSONArray dd = new JSONArray();
+        dd.add(39.95933);
+        dd.add(116.29845);
+        return dd;
+    }
+
+    public String getRandomPhone() {
+        return "177" + (new Random().nextInt(89999999) + 10000000);
     }
 
     public String uploadFile() {
@@ -1283,6 +1293,24 @@ public class SceneUtil extends BasicUtil {
         return appletVoucherInfoList;
     }
 
+    public AppletMessageList getAppletMessageList(String messageTypeName) {
+        Long lastValue = null;
+        JSONArray array;
+        do {
+            IScene scene = AppletMessageListScene.builder().lastValue(lastValue).size(20).build();
+            JSONObject response = scene.visitor(visitor).execute();
+            lastValue = response.getLong("last_value");
+            array = response.getJSONArray("list");
+            AppletMessageList appletMessageList = array.stream().map(e -> JSONObject.toJavaObject((JSONObject) e, AppletMessageList.class))
+                    .filter(e -> e.getMessageTypeName().equals(messageTypeName))
+                    .filter(AppletMessageList::getIsCanEvaluate).findFirst().orElse(null);
+            if (appletMessageList != null) {
+                return appletMessageList;
+            }
+        } while (array.size() == 20);
+        return null;
+    }
+
     /**
      * 获取小程序我的消息列表数
      *
@@ -1743,15 +1771,29 @@ public class SceneUtil extends BasicUtil {
                 .map(Response::getMessage).collect(Collectors.toList()).toArray(new String[list.size()]);
     }
 
-    public String getVacationSaleId(){return visitor.isDaily() ? "uid_f1a745c7":"uid_250e621b";}
-    public String getBusySaleId(){return visitor.isDaily() ? "uid_caf1b799":"uid_a27173d3";}
-    public Long getBuyCarId(){return visitor.isDaily() ? 335L:21540L;}
+    /**
+     * @description :获取指定休假的销售
+     **/
+    public String getVacationSaleId(){
+        return visitor.isDaily() ? "uid_f1a745c7":"uid_250e621b";
+    }
+    /**
+     * @description :获取指定忙碌的销售，用于每日初始化设置忙碌，快速获取忙碌的销售
+     **/
+    public String getBusySaleId(){
+        return visitor.isDaily() ? "uid_caf1b799":"uid_a27173d3";
+    }
+    /**
+     * @description :获取车型id
+     **/
+    public Long getBuyCarId(){
+        return visitor.isDaily() ? 335L:21540L;
+    }
 
 
 
     /**
      * 获取指定父权限可选择的权限
-     *
      * @param parentRole 父权限
      * @return 权限map
      */
@@ -1801,13 +1843,13 @@ public class SceneUtil extends BasicUtil {
     }
 
     /**
-     * @params :
      * @return : 空闲中 最后一位/第一位 销售的JSONObject
      * {"sale_id":"销售id",
      * "sale_status":"销售状态",
      * "sale_name":"销售姓名",
      * "order":当前状态的排序,
      * "status":状态值 }
+     * @params : -
      * @description : 用于检查空闲中最后一位销售
      **/
     public JSONObject getLastSale() {
@@ -1817,8 +1859,8 @@ public class SceneUtil extends BasicUtil {
 
     /**
      * @description : 用于获取当日排班中指定状态的一位销售，
-     * @param statusId: 状态值：   {0:"空闲中",1:"接待中",2:"忙碌中",3:"休假中"}
      * @return : 指定状态的销售 JSONObject，没有则返回 null
+     * @param statusId: 状态值：   {0:"空闲中",1:"接待中",2:"忙碌中",3:"休假中"}
      **/
     public JSONObject getNeededSale(Integer statusId) {
         return AppSaleScheduleDayListScene.builder().type("PRE").build().execute(visitor, true).getJSONArray("sales_info_list").stream().map(e -> (JSONObject) e).

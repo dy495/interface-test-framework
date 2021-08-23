@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
  */
 public class ContentOperationCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct PRODUCE = EnumTestProduct.JC_DAILY_JD;
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.JC_ALL_DAILY;
+    private static final EnumAccount ACCOUNT = EnumAccount.JC_ALL_DAILY;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_DAILY;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public SceneUtil util = new SceneUtil(visitor);
@@ -64,7 +64,7 @@ public class ContentOperationCase extends TestCaseCommon implements TestCaseStd 
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
         //放入shopId
-        commonConfig.setShopId(PRODUCE.getShopId()).setReferer(PRODUCE.getReferer()).setRoleId(ALL_AUTHORITY.getRoleId()).setProduct(PRODUCE.getAbbreviation());
+        commonConfig.setShopId(PRODUCE.getShopId()).setReferer(PRODUCE.getReferer()).setRoleId(ACCOUNT.getRoleId()).setProduct(PRODUCE.getAbbreviation());
         beforeClassInit(commonConfig);
     }
 
@@ -80,7 +80,7 @@ public class ContentOperationCase extends TestCaseCommon implements TestCaseStd 
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
-        util.loginPc(ALL_AUTHORITY);
+        util.loginPc(ACCOUNT);
         logger.logCaseStart(caseResult.getCaseName());
     }
 

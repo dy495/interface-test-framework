@@ -57,8 +57,6 @@ public class TestCaseCommon {
     private boolean FAIL = false;
     private final String DEBUG = System.getProperty("DEBUG", "true");
     private final QADbProxy qaDbProxy = QADbProxy.getInstance();
-
-
     public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
 
 

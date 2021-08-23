@@ -75,7 +75,7 @@ public class PoiUtils {
      * @date :2021/6/10 15:31
      **/
 
-    public static void importlossCustomer(String mile,String vin,int dataNum,String plate,String phone,String staff ) throws IOException {
+    public static void importLossCustomer(String mile, String vin, int dataNum, String plate, String phone, String staff ) throws IOException {
         Random random = new Random();
         String serverNumber = "A" + random.nextInt(100000);
         DateTimeUtil dt = new DateTimeUtil();
@@ -96,7 +96,7 @@ public class PoiUtils {
                 "*里程数/km",
                 "*费用/rmb",
                 "*交车时间"};
-        String[] parm = {serverNumber,
+        String[] param = {serverNumber,
                 begin,
                 "2",
                 "保养",
@@ -109,12 +109,10 @@ public class PoiUtils {
                 mile,
                 "2000",
                 end};
-
-        XSSFWorkbook workbook = export2(roeName, parm);
+        XSSFWorkbook workbook = export2(roeName, param);
         FileOutputStream output = new FileOutputStream(importFilepath);
         workbook.write(output);
         output.flush();
-
     }
 
     /**
