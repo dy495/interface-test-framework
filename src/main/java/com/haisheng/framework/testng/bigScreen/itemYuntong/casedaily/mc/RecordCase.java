@@ -28,7 +28,7 @@ import java.util.Objects;
  * @description :系统记录
  **/
 public class RecordCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduct product = EnumTestProduct.YT_DAILY_ZH; // 管理页—-首页
+    private static final EnumTestProduct product = EnumTestProduct.YT_DAILY_JD; // 管理页—-首页
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_DAILY_YS; // 全部权限账号 【运通】
     public VisitorProxy visitor = new VisitorProxy(product);   // 产品类放到代理类中（通过代理类发请求）
     public SceneUtil util = new SceneUtil(visitor);    //场景工具类中放入代理类，类中封装接口方法直接调用
@@ -74,7 +74,6 @@ public class RecordCase extends TestCaseCommon implements TestCaseStd {
     @Test(dataProvider = "CarExportPages")
     public void testExportPage(String product, String path, String type) {
         try {
-            visitor.setProduct(EnumTestProduct.YT_DAILY_JD);
             JSONObject res1 = util.checkExport(); //查询接口
             Integer total1 = res1.getInteger("total");//检查导出操作前的总记录
             if (Objects.equals(product, "control")) {
@@ -92,9 +91,7 @@ public class RecordCase extends TestCaseCommon implements TestCaseStd {
             if (total2 == total1 + 1) {
                 Preconditions.checkArgument(Objects.equals(typeName, type), "导出记录中的第一条不是" + type); // 如果结果+1 ，判断第一条是不是相应的位置
             }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("导出记录");
@@ -127,7 +124,6 @@ public class RecordCase extends TestCaseCommon implements TestCaseStd {
 
     @Test
     public void deleteRecord() {
-        visitor.setProduct(EnumTestProduct.YT_DAILY_JD);
         try {
             JSONObject res1 = util.checkDelete(); //删除之前校验
             Integer total1 = res1.getInteger("total");  //之前总删除条数
@@ -145,7 +141,6 @@ public class RecordCase extends TestCaseCommon implements TestCaseStd {
             if (total2 == total1 + 1) {
                 Preconditions.checkArgument(Objects.equals(type, name), "删除的不是新创建的:" + type + "!=" + name);
             }
-
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
