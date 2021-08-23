@@ -97,11 +97,11 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         try {
             util.loginApplet(APPLET_USER_ONE);
             Long brandId = info.BrandID;
-            Long modelId = AppletModeListScene.builder().brandId(brandId).styleId(info.CarStyleID).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
-            Long shopId = AppletCommonShopListScene.builder().carModelId(modelId).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
+            Long modelId = AppletModeListScene.builder().brandId(brandId).styleId(info.CarStyleID).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            Long shopId = AppletCommonShopListScene.builder().carModelId(modelId).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
 
             JSONObject obj = AppletConsultOnlineExpertsSubmitScene.builder().customerName(customerName).customerPhone(customerPhone).content(content)
-                    .brandId(brandId).modelId(modelId).shopId(shopId).build().invoke(visitor, false);
+                    .brandId(brandId).modelId(modelId).shopId(shopId).build().execute(visitor, false);
             int code = obj.getInteger("code");
             if (status.equals("false")) {
                 String message = obj.getString("message");
@@ -125,27 +125,27 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         try {
             util.loginApplet(APPLET_USER_ONE);
             Long brandId = info.BrandID;
-            Long modelId = AppletModeListScene.builder().brandId(brandId).styleId(info.CarStyleID).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
-            Long shopId = AppletCommonShopListScene.builder().carModelId(modelId).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
+            Long modelId = AppletModeListScene.builder().brandId(brandId).styleId(info.CarStyleID).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            Long shopId = AppletCommonShopListScene.builder().carModelId(modelId).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
 
             String customerName = "奶糖";
             String customerPhone = "13811110000";
             String content = "12345678901234567890";
 
             JSONObject obj1 = AppletConsultOnlineExpertsSubmitScene.builder().customerPhone(customerPhone).content(content)
-                    .brandId(brandId).modelId(modelId).shopId(shopId).build().invoke(visitor, false);
+                    .brandId(brandId).modelId(modelId).shopId(shopId).build().execute(visitor, false);
             int code1 = obj1.getInteger("code");
             String message = obj1.getString("message");
             Preconditions.checkArgument(code1 == 1001, "不填写姓名，状态码为:" + code1 + ", 提示语为:" + message);
 
             JSONObject obj2 = AppletConsultOnlineExpertsSubmitScene.builder().customerName(customerName).content(content)
-                    .brandId(brandId).modelId(modelId).shopId(shopId).build().invoke(visitor, false);
+                    .brandId(brandId).modelId(modelId).shopId(shopId).build().execute(visitor, false);
             int code2 = obj2.getInteger("code");
             String message2 = obj2.getString("message");
             Preconditions.checkArgument(code2 == 1001, "不填写手机号，状态码为:" + code2 + ", 提示语为:" + message2);
 
             JSONObject obj3 = AppletConsultOnlineExpertsSubmitScene.builder().customerName(customerName).customerPhone(customerPhone)
-                    .brandId(brandId).modelId(modelId).shopId(shopId).build().invoke(visitor, false);
+                    .brandId(brandId).modelId(modelId).shopId(shopId).build().execute(visitor, false);
             int code3 = obj3.getInteger("code");
             String message3 = obj3.getString("message");
             Preconditions.checkArgument(code3 == 1001, "不填写咨询内容，状态码为:" + code3 + ", 提示语为:" + message3);
@@ -157,13 +157,13 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
 //            Preconditions.checkArgument(code4==1001,"不填写品牌，状态码为:"+code4+", 提示语为:"+message4);
 
             JSONObject obj5 = AppletConsultOnlineExpertsSubmitScene.builder().customerName(customerName).customerPhone(customerPhone).content(content)
-                    .brandId(brandId).shopId(shopId).build().invoke(visitor, false);
+                    .brandId(brandId).shopId(shopId).build().execute(visitor, false);
             int code5 = obj5.getInteger("code");
             String message5 = obj5.getString("message");
             Preconditions.checkArgument(code5 == 1001, "不填写车型，状态码为:" + code5 + ", 提示语为:" + message5);
 
             JSONObject obj6 = AppletConsultOnlineExpertsSubmitScene.builder().customerName(customerName).customerPhone(customerPhone).content(content)
-                    .brandId(brandId).modelId(modelId).build().invoke(visitor, false);
+                    .brandId(brandId).modelId(modelId).build().execute(visitor, false);
             int code6 = obj6.getInteger("code");
             String message6 = obj6.getString("message");
             Preconditions.checkArgument(code6 == 1001, "不填写咨询门店，状态码为:" + code6 + ", 提示语为:" + message6);
@@ -185,10 +185,10 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             int befApplet = info.getAppletmessNum();
             //获取app跟进列表数量
             util.loginApp(ALL_AUTHORITY);
-            int befApp = AppPageV3Scene.builder().size(10).build().invoke(visitor).getInteger("total");
+            int befApp = AppPageV3Scene.builder().size(10).build().execute(visitor).getInteger("total");
             //PC【在线专家列表】
             util.loginPc(ALL_AUTHORITY);
-            int befPC = OnlineExpertsPageListScene.builder().page(1).size(10).build().invoke(visitor).getInteger("total");
+            int befPC = OnlineExpertsPageListScene.builder().page(1).size(10).build().execute(visitor).getInteger("total");
 
             //小程序提交在线专家
             JSONObject submitobj = info.submitonlineExpert();
@@ -202,11 +202,11 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             int afterApplet = info.getAppletmessNum();
             //获取app跟进列表数量
             util.loginApp(ALL_AUTHORITY);
-            int afterApp = AppPageV3Scene.builder().size(10).build().invoke(visitor).getInteger("total");
+            int afterApp = AppPageV3Scene.builder().size(10).build().execute(visitor).getInteger("total");
             //PC【在线专家列表】
             util.loginPc(ALL_AUTHORITY);
-            JSONObject obj = OnlineExpertsPageListScene.builder().page(1).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0);
-            int afterPC = OnlineExpertsPageListScene.builder().page(1).size(10).build().invoke(visitor).getInteger("total");
+            JSONObject obj = OnlineExpertsPageListScene.builder().page(1).size(10).build().execute(visitor).getJSONArray("list").getJSONObject(0);
+            int afterPC = OnlineExpertsPageListScene.builder().page(1).size(10).build().execute(visitor).getInteger("total");
 
 
             int applet = afterApplet - befApplet;
@@ -243,7 +243,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             util.loginPc(ALL_AUTHORITY);
-            JSONArray alllist = OnlineExpertsPageListScene.builder().page(1).size(50).build().invoke(visitor).getJSONArray("list");
+            JSONArray alllist = OnlineExpertsPageListScene.builder().page(1).size(50).build().execute(visitor).getJSONArray("list");
             if (alllist.size() > 0) {
                 for (int i = 0; i < alllist.size(); i++) {
                     JSONObject obj = alllist.getJSONObject(i);
@@ -259,7 +259,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
                 }
             }
 
-            JSONArray followLIst = OnlineExpertsPageListScene.builder().page(1).size(50).followDateStart("2021-04-14").followDateEnd("2021-06-01").build().invoke(visitor).getJSONArray("list");
+            JSONArray followLIst = OnlineExpertsPageListScene.builder().page(1).size(50).followDateStart("2021-04-14").followDateEnd("2021-06-01").build().execute(visitor).getJSONArray("list");
             if (followLIst.size() > 0) {
                 for (int j = 0; j < followLIst.size(); j++) {
                     JSONObject obj = followLIst.getJSONObject(j);
@@ -302,10 +302,10 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         try {
             util.loginPc(ALL_AUTHORITY);
             //根据归属门店搜索
-            JSONObject shopobj = ShopListScene.builder().build().invoke(visitor).getJSONArray("list").getJSONObject(0);
+            JSONObject shopobj = ShopListScene.builder().build().execute(visitor).getJSONArray("list").getJSONObject(0);
             Long shopId = shopobj.getLong("shop_id");
             String shopName = shopobj.getString("shop_name");
-            JSONArray alllist = OnlineExpertsPageListScene.builder().page(1).size(20).shopId(shopId).build().invoke(visitor).getJSONArray("list");
+            JSONArray alllist = OnlineExpertsPageListScene.builder().page(1).size(20).shopId(shopId).build().execute(visitor).getJSONArray("list");
             if (alllist.size() > 0) {
                 for (int i = 0; i < alllist.size(); i++) {
                     JSONObject obj = alllist.getJSONObject(i);
@@ -314,7 +314,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             }
 
             //根据是否超时=是搜索
-            JSONArray alllist2 = OnlineExpertsPageListScene.builder().page(1).size(20).isOverTime(true).build().invoke(visitor).getJSONArray("list");
+            JSONArray alllist2 = OnlineExpertsPageListScene.builder().page(1).size(20).isOverTime(true).build().execute(visitor).getJSONArray("list");
             if (alllist2.size() > 0) {
                 for (int i = 0; i < alllist2.size(); i++) {
                     JSONObject obj = alllist2.getJSONObject(i);
@@ -323,7 +323,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             }
 
             //根据是否超时=否搜索
-            JSONArray alllist3 = OnlineExpertsPageListScene.builder().page(1).size(20).isOverTime(false).build().invoke(visitor).getJSONArray("list");
+            JSONArray alllist3 = OnlineExpertsPageListScene.builder().page(1).size(20).isOverTime(false).build().execute(visitor).getJSONArray("list");
             if (alllist3.size() > 0) {
                 for (int i = 0; i < alllist3.size(); i++) {
                     JSONObject obj = alllist3.getJSONObject(i);
@@ -347,7 +347,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             util.loginPc(ALL_AUTHORITY);
 
             //根据跟进账号搜索
-            JSONArray alllist = OnlineExpertsPageListScene.builder().page(1).size(20).followLoginName(conditions).build().invoke(visitor).getJSONArray("list");
+            JSONArray alllist = OnlineExpertsPageListScene.builder().page(1).size(20).followLoginName(conditions).build().execute(visitor).getJSONArray("list");
             if (alllist.size() > 0) {
                 for (int i = 0; i < alllist.size(); i++) {
                     JSONObject obj = alllist.getJSONObject(i);
@@ -356,7 +356,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             }
 
             //根据跟进人员搜索
-            JSONArray alllist2 = OnlineExpertsPageListScene.builder().page(1).size(20).followSalesName(conditions).build().invoke(visitor).getJSONArray("list");
+            JSONArray alllist2 = OnlineExpertsPageListScene.builder().page(1).size(20).followSalesName(conditions).build().execute(visitor).getJSONArray("list");
             if (alllist2.size() > 0) {
                 for (int i = 0; i < alllist2.size(); i++) {
                     JSONObject obj = alllist2.getJSONObject(i);
@@ -365,7 +365,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             }
 
             //根据联系人搜索
-            JSONArray alllist3 = OnlineExpertsPageListScene.builder().page(1).size(20).customerName(conditions).build().invoke(visitor).getJSONArray("list");
+            JSONArray alllist3 = OnlineExpertsPageListScene.builder().page(1).size(20).customerName(conditions).build().execute(visitor).getJSONArray("list");
             if (alllist3.size() > 0) {
                 for (int i = 0; i < alllist3.size(); i++) {
                     JSONObject obj = alllist3.getJSONObject(i);
@@ -374,7 +374,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             }
 
             //根据联系电话搜索
-            JSONArray alllist4 = OnlineExpertsPageListScene.builder().page(1).size(20).customerPhone(conditions).build().invoke(visitor).getJSONArray("list");
+            JSONArray alllist4 = OnlineExpertsPageListScene.builder().page(1).size(20).customerPhone(conditions).build().execute(visitor).getJSONArray("list");
             if (alllist4.size() > 0) {
                 for (int i = 0; i < alllist4.size(); i++) {
                     JSONObject obj = alllist4.getJSONObject(i);
@@ -399,7 +399,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             util.loginPc(ALL_AUTHORITY);
             // 根据跟进时间搜索
             String followdate = "";
-            JSONArray alllist = OnlineExpertsPageListScene.builder().page(1).size(50).build().invoke(visitor).getJSONArray("list");
+            JSONArray alllist = OnlineExpertsPageListScene.builder().page(1).size(50).build().execute(visitor).getJSONArray("list");
             if (alllist.size() > 0) {
                 for (int i = 0; i < alllist.size(); i++) {
                     JSONObject obj = alllist.getJSONObject(i);
@@ -408,7 +408,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
                         break;
                     }
                 }
-                JSONArray searchlist1 = OnlineExpertsPageListScene.builder().page(1).size(50).followDateStart(followdate).followDateEnd(followdate).build().invoke(visitor).getJSONArray("list");
+                JSONArray searchlist1 = OnlineExpertsPageListScene.builder().page(1).size(50).followDateStart(followdate).followDateEnd(followdate).build().execute(visitor).getJSONArray("list");
                 Preconditions.checkArgument(searchlist1.size() >= 1, "搜索跟进时间为" + followdate + ", 结果不正确");
                 for (int j = 0; j < searchlist1.size(); j++) {
                     JSONObject obj1 = searchlist1.getJSONObject(j);
@@ -432,7 +432,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             util.loginPc(ALL_AUTHORITY);
             // 根据咨询时间搜索
             String consult_date = "";
-            JSONArray alllist = OnlineExpertsPageListScene.builder().page(1).size(50).build().invoke(visitor).getJSONArray("list");
+            JSONArray alllist = OnlineExpertsPageListScene.builder().page(1).size(50).build().execute(visitor).getJSONArray("list");
 
             if (alllist.size() > 0) {
                 for (int i = 0; i < alllist.size(); i++) {
@@ -442,7 +442,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
                         break;
                     }
                 }
-                JSONArray searchlist1 = OnlineExpertsPageListScene.builder().page(1).size(50).consultDateStart(consult_date).consultDateEnd(consult_date).build().invoke(visitor).getJSONArray("list");
+                JSONArray searchlist1 = OnlineExpertsPageListScene.builder().page(1).size(50).consultDateStart(consult_date).consultDateEnd(consult_date).build().execute(visitor).getJSONArray("list");
                 Preconditions.checkArgument(searchlist1.size() >= 1, "搜索咨询时间为" + consult_date + ", 结果不正确");
                 for (int j = 0; j < searchlist1.size(); j++) {
                     JSONObject obj1 = searchlist1.getJSONObject(j);
@@ -467,7 +467,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         try {
             util.loginPc(ALL_AUTHORITY);
 
-            JSONObject obj = OnlineExpertsExplainEditScene.builder().content(content).build().invoke(visitor, false);
+            JSONObject obj = OnlineExpertsExplainEditScene.builder().content(content).build().execute(visitor, false);
             int code = obj.getInteger("code");
             if (!mess.contains("20001")) {
                 Preconditions.checkArgument(code == 1000, mess + "提示" + obj.getString("message"));
@@ -496,7 +496,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
                     "ze:12px\">缩小</span></p><p><strong>加粗</strong></p><p><em>斜体</em></p><p><u>下划线</u></p><p><span style=\"color:#f3" +
                     "2784\">颜色</span></p><p></p><p></p><div class=\"media-wrap image-wrap\"><img src=\"" + info.getLogoUrl() + "\"/></div><p></p><p></p>";
 
-            JSONObject obj = OnlineExpertsExplainEditScene.builder().content(content1).build().invoke(visitor, false);
+            JSONObject obj = OnlineExpertsExplainEditScene.builder().content(content1).build().execute(visitor, false);
             int code = obj.getInteger("code");
 
             Preconditions.checkArgument(code == 1000, "提示" + obj.getString("message"));
@@ -531,7 +531,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             JSONObject work_day = JSONObject.parseObject(workStr);
             JSONObject week_day = JSONObject.parseObject(weekStr);
             JSONObject obj = ResponseRuleEditScene.builder().businessType(type).remindTime(Integer.parseInt(remind)).overTime(Integer.parseInt(over))
-                    .workDay(work_day).weekDay(week_day).build().invoke(visitor, false);
+                    .workDay(work_day).weekDay(week_day).build().execute(visitor, false);
             int code = obj.getInteger("code");
             if (mess.contains("正常")) {
                 Preconditions.checkArgument(code == 1000, mess + "提示语" + obj.getString("message"));
@@ -575,24 +575,24 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             info.submitonlineExpert();
             //PC在线专家回复
             util.loginPc(ALL_AUTHORITY);
-            Long id1 = OnlineExpertsPageListScene.builder().page(1).size(5).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
-            JSONObject obj1 = ReplyScene.builder().id(id1).content(content).build().invoke(visitor, false);
+            Long id1 = OnlineExpertsPageListScene.builder().page(1).size(5).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            JSONObject obj1 = ReplyScene.builder().id(id1).content(content).build().execute(visitor, false);
             int code1 = obj1.getInteger("code");
 
             //小程序专属销售服务咨询
             info.submitPreService();
             //PC回复
             util.loginPc(ALL_AUTHORITY);
-            Long id2 = DedicatedServicePageListScene.builder().page(1).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
-            JSONObject obj2 = ReplyScene.builder().id(id2).content(content).build().invoke(visitor, false);
+            Long id2 = DedicatedServicePageListScene.builder().page(1).size(10).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            JSONObject obj2 = ReplyScene.builder().id(id2).content(content).build().execute(visitor, false);
             int code2 = obj2.getInteger("code");
 
             //小程序专属售后服务咨询
             info.submitAfterService();
             //PC回复
             util.loginPc(ALL_AUTHORITY);
-            Long id3 = DedicatedServicePageListScene.builder().page(1).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
-            JSONObject obj3 = ReplyScene.builder().id(id3).content(content).build().invoke(visitor, false);
+            Long id3 = DedicatedServicePageListScene.builder().page(1).size(10).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            JSONObject obj3 = ReplyScene.builder().id(id3).content(content).build().execute(visitor, false);
             int code3 = obj3.getInteger("code");
 
             //小程序消息列表数量
@@ -633,24 +633,24 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             info.submitonlineExpert();
             //PC在线专家备注
             util.loginPc(ALL_AUTHORITY);
-            Long id1 = OnlineExpertsPageListScene.builder().page(1).size(5).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
-            JSONObject obj1 = RemarkScene.builder().id(id1).remarkContent(content).build().invoke(visitor, false);
+            Long id1 = OnlineExpertsPageListScene.builder().page(1).size(5).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            JSONObject obj1 = RemarkScene.builder().id(id1).remarkContent(content).build().execute(visitor, false);
             int code1 = obj1.getInteger("code");
 
             //小程序专属销售服务咨询
             info.submitPreService();
             //PC备注
             util.loginPc(ALL_AUTHORITY);
-            Long id2 = DedicatedServicePageListScene.builder().page(1).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
-            JSONObject obj2 = RemarkScene.builder().id(id2).remarkContent(content).build().invoke(visitor, false);
+            Long id2 = DedicatedServicePageListScene.builder().page(1).size(10).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            JSONObject obj2 = RemarkScene.builder().id(id2).remarkContent(content).build().execute(visitor, false);
             int code2 = obj2.getInteger("code");
 
             //小程序专属售后服务咨询
             info.submitAfterService();
             //PC备注
             util.loginPc(ALL_AUTHORITY);
-            Long id3 = DedicatedServicePageListScene.builder().page(1).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
-            JSONObject obj3 = RemarkScene.builder().id(id3).remarkContent(content).build().invoke(visitor, false);
+            Long id3 = DedicatedServicePageListScene.builder().page(1).size(10).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            JSONObject obj3 = RemarkScene.builder().id(id3).remarkContent(content).build().execute(visitor, false);
             int code3 = obj3.getInteger("code");
 
             //小程序消息列表数量
@@ -691,24 +691,24 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             info.submitonlineExpert();
             //PC在线专家回复
             util.loginApp(ALL_AUTHORITY);
-            Long id1 = AppPageV3Scene.builder().type(info.ONLINE_EXPERTS).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
-            JSONObject obj1 = AppReplyV3Scene.builder().followId(id1).content(content).build().invoke(visitor, false);
+            Long id1 = AppPageV3Scene.builder().type(info.ONLINE_EXPERTS).size(10).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            JSONObject obj1 = AppReplyV3Scene.builder().followId(id1).content(content).build().execute(visitor, false);
             int code1 = obj1.getInteger("code");
 
             //小程序专属销售服务咨询
             info.submitPreService();
             //PC回复
             util.loginApp(ALL_AUTHORITY);
-            Long id2 = AppPageV3Scene.builder().type(info.SALES).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
-            JSONObject obj2 = AppReplyV3Scene.builder().followId(id2).content(content).build().invoke(visitor, false);
+            Long id2 = AppPageV3Scene.builder().type(info.SALES).size(10).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            JSONObject obj2 = AppReplyV3Scene.builder().followId(id2).content(content).build().execute(visitor, false);
             int code2 = obj2.getInteger("code");
 
             //小程序专属售后服务咨询
             info.submitAfterService();
             //PC回复
             util.loginApp(ALL_AUTHORITY);
-            Long id3 = AppPageV3Scene.builder().type(info.AFTER_SALES).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
-            JSONObject obj3 = AppReplyV3Scene.builder().followId(id3).content(content).build().invoke(visitor, false);
+            Long id3 = AppPageV3Scene.builder().type(info.AFTER_SALES).size(10).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            JSONObject obj3 = AppReplyV3Scene.builder().followId(id3).content(content).build().execute(visitor, false);
             int code3 = obj3.getInteger("code");
 
             //小程序消息列表数量
@@ -749,24 +749,24 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             info.submitonlineExpert();
             //PC在线专家备注
             util.loginApp(ALL_AUTHORITY);
-            Long id1 = AppPageV3Scene.builder().type(info.ONLINE_EXPERTS).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
-            JSONObject obj1 = AppRemarkV3Scene.builder().followId(id1).remark(content).build().invoke(visitor, false);
+            Long id1 = AppPageV3Scene.builder().type(info.ONLINE_EXPERTS).size(10).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            JSONObject obj1 = AppRemarkV3Scene.builder().followId(id1).remark(content).build().execute(visitor, false);
             int code1 = obj1.getInteger("code");
 
             //小程序专属销售服务咨询
             info.submitPreService();
             //PC备注
             util.loginApp(ALL_AUTHORITY);
-            Long id2 = AppPageV3Scene.builder().type(info.SALES).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
-            JSONObject obj2 = AppRemarkV3Scene.builder().followId(id2).remark(content).build().invoke(visitor, false);
+            Long id2 = AppPageV3Scene.builder().type(info.SALES).size(10).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            JSONObject obj2 = AppRemarkV3Scene.builder().followId(id2).remark(content).build().execute(visitor, false);
             int code2 = obj2.getInteger("code");
 
             //小程序专属售后服务咨询
             info.submitAfterService();
             //PC备注
             util.loginApp(ALL_AUTHORITY);
-            Long id3 = AppPageV3Scene.builder().type(info.AFTER_SALES).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
-            JSONObject obj3 = AppRemarkV3Scene.builder().followId(id3).remark(content).build().invoke(visitor, false);
+            Long id3 = AppPageV3Scene.builder().type(info.AFTER_SALES).size(10).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            JSONObject obj3 = AppRemarkV3Scene.builder().followId(id3).remark(content).build().execute(visitor, false);
             int code3 = obj3.getInteger("code");
 
             //小程序消息列表数量
@@ -807,13 +807,13 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         try {
 
             Long brandId = info.BrandID;
-            Long modelId = AppletModeListScene.builder().brandId(brandId).styleId(info.CarStyleID).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
-            Long shopId = AppletCommonShopListScene.builder().carModelId(modelId).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
-            String salesId = AppletConsultDedicatedServiceSalesListScene.builder().build().invoke(visitor).getJSONArray("sales_list").getJSONObject(0).getString("sales_id");//销售
-            String aftersalesId = AppletConsultDedicatedServiceSalesListScene.builder().build().invoke(visitor).getJSONArray("after_sales_list").getJSONObject(0).getString("sales_id");//售后
+            Long modelId = AppletModeListScene.builder().brandId(brandId).styleId(info.CarStyleID).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            Long shopId = AppletCommonShopListScene.builder().carModelId(modelId).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
+            String salesId = AppletConsultDedicatedServiceSalesListScene.builder().build().execute(visitor).getJSONArray("sales_list").getJSONObject(0).getString("sales_id");//销售
+            String aftersalesId = AppletConsultDedicatedServiceSalesListScene.builder().build().execute(visitor).getJSONArray("after_sales_list").getJSONObject(0).getString("sales_id");//售后
 
             JSONObject obj = AppletConsultPreServiceSubmitScene.builder().customerName(customerName).customerPhone(customerPhone).content(content)
-                    .salesId(salesId).modelId(modelId).shopId(shopId).build().invoke(visitor, false);
+                    .salesId(salesId).modelId(modelId).shopId(shopId).build().execute(visitor, false);
             int code = obj.getInteger("code");
             if (status.equals("false")) {
                 String message = obj.getString("message");
@@ -837,12 +837,12 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         try {
 
             Long brandId = info.BrandID;
-            Long modelId = AppletModeListScene.builder().brandId(brandId).styleId(info.CarStyleID).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
-            Long shopId = AppletCommonShopListScene.builder().carModelId(modelId).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
-            String aftersalesId = AppletConsultDedicatedServiceSalesListScene.builder().build().invoke(visitor).getJSONArray("after_sales_list").getJSONObject(0).getString("sales_id");//售后
+            Long modelId = AppletModeListScene.builder().brandId(brandId).styleId(info.CarStyleID).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            Long shopId = AppletCommonShopListScene.builder().carModelId(modelId).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
+            String aftersalesId = AppletConsultDedicatedServiceSalesListScene.builder().build().execute(visitor).getJSONArray("after_sales_list").getJSONObject(0).getString("sales_id");//售后
 
             JSONObject obj = AppletConsultPreServiceSubmitScene.builder().customerName(customerName).customerPhone(customerPhone).content(content)
-                    .salesId(aftersalesId).modelId(modelId).shopId(shopId).build().invoke(visitor, false);
+                    .salesId(aftersalesId).modelId(modelId).shopId(shopId).build().execute(visitor, false);
             int code = obj.getInteger("code");
             if (status.equals("false")) {
                 String message = obj.getString("message");
@@ -865,46 +865,46 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Long brandId = info.BrandID;
-            Long modelId = AppletModeListScene.builder().brandId(brandId).styleId(info.CarStyleID).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
-            Long shopId = AppletCommonShopListScene.builder().carModelId(modelId).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
-            String salesId = AppletConsultDedicatedServiceSalesListScene.builder().build().invoke(visitor).getJSONArray("after_sales_list").getJSONObject(0).getString("sales_id");//售后
+            Long modelId = AppletModeListScene.builder().brandId(brandId).styleId(info.CarStyleID).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            Long shopId = AppletCommonShopListScene.builder().carModelId(modelId).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
+            String salesId = AppletConsultDedicatedServiceSalesListScene.builder().build().execute(visitor).getJSONArray("after_sales_list").getJSONObject(0).getString("sales_id");//售后
 
             String customerName = "奶糖";
             String customerPhone = "13811110000";
             String content = "12345678901234567890";
 
             JSONObject obj1 = AppletConsultPreServiceSubmitScene.builder().customerPhone(customerPhone).content(content)
-                    .salesId(salesId).modelId(modelId).shopId(shopId).build().invoke(visitor, false);
+                    .salesId(salesId).modelId(modelId).shopId(shopId).build().execute(visitor, false);
             int code1 = obj1.getInteger("code");
             String message = obj1.getString("message");
             Preconditions.checkArgument(code1 == 1001, "不填写姓名，状态码为:" + code1 + ", 提示语为:" + message);
 
             JSONObject obj2 = AppletConsultPreServiceSubmitScene.builder().customerName(customerName).content(content)
-                    .salesId(salesId).modelId(modelId).shopId(shopId).build().invoke(visitor, false);
+                    .salesId(salesId).modelId(modelId).shopId(shopId).build().execute(visitor, false);
             int code2 = obj2.getInteger("code");
             String message2 = obj2.getString("message");
             Preconditions.checkArgument(code2 == 1001, "不填写手机号，状态码为:" + code2 + ", 提示语为:" + message2);
 
             JSONObject obj3 = AppletConsultPreServiceSubmitScene.builder().customerName(customerName).customerPhone(customerPhone)
-                    .salesId(salesId).modelId(modelId).shopId(shopId).build().invoke(visitor, false);
+                    .salesId(salesId).modelId(modelId).shopId(shopId).build().execute(visitor, false);
             int code3 = obj3.getInteger("code");
             String message3 = obj3.getString("message");
             Preconditions.checkArgument(code3 == 1001, "不填写留言，状态码为:" + code3 + ", 提示语为:" + message3);
 
             JSONObject obj4 = AppletConsultPreServiceSubmitScene.builder().customerName(customerName).customerPhone(customerPhone).content(content)
-                    .modelId(modelId).shopId(shopId).build().invoke(visitor, false);
+                    .modelId(modelId).shopId(shopId).build().execute(visitor, false);
             int code4 = obj4.getInteger("code");
             String message4 = obj4.getString("message");
             Preconditions.checkArgument(code4 == 1001, "不选择销售，状态码为:" + code4 + ", 提示语为:" + message4);
 
             JSONObject obj5 = AppletConsultPreServiceSubmitScene.builder().customerName(customerName).customerPhone(customerPhone).content(content)
-                    .salesId(salesId).shopId(shopId).build().invoke(visitor, false);
+                    .salesId(salesId).shopId(shopId).build().execute(visitor, false);
             int code5 = obj5.getInteger("code");
             String message5 = obj5.getString("message");
             Preconditions.checkArgument(code5 == 1001, "不填写车型，状态码为:" + code5 + ", 提示语为:" + message5);
 
             JSONObject obj6 = AppletConsultPreServiceSubmitScene.builder().customerName(customerName).customerPhone(customerPhone).content(content)
-                    .salesId(salesId).modelId(modelId).build().invoke(visitor, false);
+                    .salesId(salesId).modelId(modelId).build().execute(visitor, false);
             int code6 = obj6.getInteger("code");
             String message6 = obj6.getString("message");
             Preconditions.checkArgument(code6 == 1001, "不填写咨询门店，状态码为:" + code6 + ", 提示语为:" + message6);
@@ -926,10 +926,10 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             int befApplet = info.getAppletmessNum();
             //获取app跟进列表数量
             util.loginApp(ALL_AUTHORITY);
-            int befApp = AppPageV3Scene.builder().size(10).build().invoke(visitor).getInteger("total");
+            int befApp = AppPageV3Scene.builder().size(10).build().execute(visitor).getInteger("total");
             //PC【专属服务列表】
             util.loginPc(ALL_AUTHORITY);
-            int befPC = DedicatedServicePageListScene.builder().page(1).size(10).build().invoke(visitor).getInteger("total");
+            int befPC = DedicatedServicePageListScene.builder().page(1).size(10).build().execute(visitor).getInteger("total");
 
             //小程序提交销售咨询
             JSONObject submitobj = info.submitPreService();
@@ -943,11 +943,11 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             int afterApplet = info.getAppletmessNum();
             //获取app跟进列表数量
             util.loginApp(ALL_AUTHORITY);
-            int afterApp = AppPageV3Scene.builder().size(10).build().invoke(visitor).getInteger("total");
+            int afterApp = AppPageV3Scene.builder().size(10).build().execute(visitor).getInteger("total");
             //PC【专属服务列表】
             util.loginPc(ALL_AUTHORITY);
-            JSONObject obj = DedicatedServicePageListScene.builder().page(1).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0);
-            int afterPC = DedicatedServicePageListScene.builder().page(1).size(10).build().invoke(visitor).getInteger("total");
+            JSONObject obj = DedicatedServicePageListScene.builder().page(1).size(10).build().execute(visitor).getJSONArray("list").getJSONObject(0);
+            int afterPC = DedicatedServicePageListScene.builder().page(1).size(10).build().execute(visitor).getInteger("total");
 
 
             int applet = afterApplet - befApplet;
@@ -987,13 +987,13 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         try {
 
             Long brandId = info.BrandID;
-            Long modelId = AppletModeListScene.builder().brandId(brandId).styleId(info.CarStyleID).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
-            Long shopId = AppletCommonShopListScene.builder().carModelId(modelId).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
+            Long modelId = AppletModeListScene.builder().brandId(brandId).styleId(info.CarStyleID).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            Long shopId = AppletCommonShopListScene.builder().carModelId(modelId).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
 
-            String salesId = AppletConsultDedicatedServiceSalesListScene.builder().build().invoke(visitor).getJSONArray("after_sales_list").getJSONObject(0).getString("sales_id");
+            String salesId = AppletConsultDedicatedServiceSalesListScene.builder().build().execute(visitor).getJSONArray("after_sales_list").getJSONObject(0).getString("sales_id");
 
             JSONObject obj = AppletConsultAfterServiceSubmitScene.builder().customerName(customerName).customerPhone(customerPhone).content(content)
-                    .salesId(salesId).modelId(modelId).shopId(shopId).build().invoke(visitor, false);
+                    .salesId(salesId).modelId(modelId).shopId(shopId).build().execute(visitor, false);
             int code = obj.getInteger("code");
             if (status.equals("false")) {
                 String message = obj.getString("message");
@@ -1016,47 +1016,47 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             Long brandId = info.BrandID;
-            Long modelId = AppletModeListScene.builder().brandId(brandId).styleId(info.CarStyleID).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
-            Long shopId = AppletCommonShopListScene.builder().carModelId(modelId).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
+            Long modelId = AppletModeListScene.builder().brandId(brandId).styleId(info.CarStyleID).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            Long shopId = AppletCommonShopListScene.builder().carModelId(modelId).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
 
-            String salesId = AppletConsultDedicatedServiceSalesListScene.builder().build().invoke(visitor).getJSONArray("after_sales_list").getJSONObject(0).getString("sales_id");
+            String salesId = AppletConsultDedicatedServiceSalesListScene.builder().build().execute(visitor).getJSONArray("after_sales_list").getJSONObject(0).getString("sales_id");
 
             String customerName = "奶糖";
             String customerPhone = "13811110000";
             String content = "12345678901234567890";
 
             JSONObject obj1 = AppletConsultAfterServiceSubmitScene.builder().customerPhone(customerPhone).content(content)
-                    .salesId(salesId).modelId(modelId).shopId(shopId).build().invoke(visitor, false);
+                    .salesId(salesId).modelId(modelId).shopId(shopId).build().execute(visitor, false);
             int code1 = obj1.getInteger("code");
             String message = obj1.getString("message");
             Preconditions.checkArgument(code1 == 1001, "不填写姓名，状态码为:" + code1 + ", 提示语为:" + message);
 
             JSONObject obj2 = AppletConsultAfterServiceSubmitScene.builder().customerName(customerName).content(content)
-                    .salesId(salesId).modelId(modelId).shopId(shopId).build().invoke(visitor, false);
+                    .salesId(salesId).modelId(modelId).shopId(shopId).build().execute(visitor, false);
             int code2 = obj2.getInteger("code");
             String message2 = obj2.getString("message");
             Preconditions.checkArgument(code2 == 1001, "不填写手机号，状态码为:" + code2 + ", 提示语为:" + message2);
 
             JSONObject obj3 = AppletConsultAfterServiceSubmitScene.builder().customerName(customerName).customerPhone(customerPhone)
-                    .salesId(salesId).modelId(modelId).shopId(shopId).build().invoke(visitor, false);
+                    .salesId(salesId).modelId(modelId).shopId(shopId).build().execute(visitor, false);
             int code3 = obj3.getInteger("code");
             String message3 = obj3.getString("message");
             Preconditions.checkArgument(code3 == 1001, "不填写留言，状态码为:" + code3 + ", 提示语为:" + message3);
 
             JSONObject obj4 = AppletConsultAfterServiceSubmitScene.builder().customerName(customerName).customerPhone(customerPhone).content(content)
-                    .modelId(modelId).shopId(shopId).build().invoke(visitor, false);
+                    .modelId(modelId).shopId(shopId).build().execute(visitor, false);
             int code4 = obj4.getInteger("code");
             String message4 = obj4.getString("message");
             Preconditions.checkArgument(code4 == 1001, "不选择顾问，状态码为:" + code4 + ", 提示语为:" + message4);
 
             JSONObject obj5 = AppletConsultAfterServiceSubmitScene.builder().customerName(customerName).customerPhone(customerPhone).content(content)
-                    .salesId(salesId).shopId(shopId).build().invoke(visitor, false);
+                    .salesId(salesId).shopId(shopId).build().execute(visitor, false);
             int code5 = obj5.getInteger("code");
             String message5 = obj5.getString("message");
             Preconditions.checkArgument(code5 == 1001, "不填写车型，状态码为:" + code5 + ", 提示语为:" + message5);
 
             JSONObject obj6 = AppletConsultAfterServiceSubmitScene.builder().customerName(customerName).customerPhone(customerPhone).content(content)
-                    .salesId(salesId).modelId(modelId).build().invoke(visitor, false);
+                    .salesId(salesId).modelId(modelId).build().execute(visitor, false);
             int code6 = obj6.getInteger("code");
             String message6 = obj6.getString("message");
             Preconditions.checkArgument(code6 == 1001, "不填写咨询门店，状态码为:" + code6 + ", 提示语为:" + message6);
@@ -1078,10 +1078,10 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             int befApplet = info.getAppletmessNum();
             //获取app跟进列表数量
             util.loginApp(ALL_AUTHORITY);
-            int befApp = AppPageV3Scene.builder().size(10).build().invoke(visitor).getInteger("total");
+            int befApp = AppPageV3Scene.builder().size(10).build().execute(visitor).getInteger("total");
             //PC【专属服务列表】
             util.loginPc(ALL_AUTHORITY);
-            int befPC = DedicatedServicePageListScene.builder().page(1).size(10).build().invoke(visitor).getInteger("total");
+            int befPC = DedicatedServicePageListScene.builder().page(1).size(10).build().execute(visitor).getInteger("total");
 
             //小程序提交售后咨询
             JSONObject submitobj = info.submitAfterService();
@@ -1095,14 +1095,14 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             Thread.sleep(1000);
             //获取app跟进列表数量
             util.loginApp(ALL_AUTHORITY);
-            int afterApp = AppPageV3Scene.builder().size(10).build().invoke(visitor).getInteger("total");
+            int afterApp = AppPageV3Scene.builder().size(10).build().execute(visitor).getInteger("total");
             //获取小程序消息列表数量
             int afterApplet = info.getAppletmessNum();
             //PC【专属服务列表】
             util.loginPc(ALL_AUTHORITY);
 
-            JSONObject obj = DedicatedServicePageListScene.builder().page(1).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0);
-            int afterPC = DedicatedServicePageListScene.builder().page(1).size(10).build().invoke(visitor).getInteger("total");
+            JSONObject obj = DedicatedServicePageListScene.builder().page(1).size(10).build().execute(visitor).getJSONArray("list").getJSONObject(0);
+            int afterPC = DedicatedServicePageListScene.builder().page(1).size(10).build().execute(visitor).getInteger("total");
 
             int applet = afterApplet - befApplet;
             int app = afterApp - befApp;
@@ -1140,7 +1140,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         try {
             util.loginPc(ALL_AUTHORITY);
 
-            JSONObject obj2 = DedicatedServiceExplainEditScene.builder().content(content).build().invoke(visitor, false);
+            JSONObject obj2 = DedicatedServiceExplainEditScene.builder().content(content).build().execute(visitor, false);
             int code2 = obj2.getInteger("code");
             if (!mess.contains("20001")) {
                 Preconditions.checkArgument(code2 == 1000, mess + "提示" + obj2.getString("message"));
@@ -1169,7 +1169,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
                     "ze:12px\">缩小</span></p><p><strong>专属服务加粗</strong></p><p><em>专属服务斜体</em></p><p><u>专属服务下划线</u></p><p><span style=\"color:#f3" +
                     "2784\">专属服务颜色</span></p><p></p><p></p><div class=\"media-wrap image-wrap\"><img src=\"" + info.getLogoUrl() + "\"/></div><p></p><p></p>";
 
-            JSONObject obj = DedicatedServiceExplainEditScene.builder().content(content1).build().invoke(visitor, false);
+            JSONObject obj = DedicatedServiceExplainEditScene.builder().content(content1).build().execute(visitor, false);
             int code = obj.getInteger("code");
 
             Preconditions.checkArgument(code == 1000, "提示" + obj.getString("message"));
@@ -1191,10 +1191,10 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         try {
             util.loginPc(ALL_AUTHORITY);
             //根据归属门店搜索
-            JSONObject shopobj = ShopListScene.builder().build().invoke(visitor).getJSONArray("list").getJSONObject(0);
+            JSONObject shopobj = ShopListScene.builder().build().execute(visitor).getJSONArray("list").getJSONObject(0);
             Long shopId = shopobj.getLong("shop_id");
             String shopName = shopobj.getString("shop_name");
-            JSONArray alllist = DedicatedServicePageListScene.builder().page(1).size(20).shopId(shopId).build().invoke(visitor).getJSONArray("list");
+            JSONArray alllist = DedicatedServicePageListScene.builder().page(1).size(20).shopId(shopId).build().execute(visitor).getJSONArray("list");
             if (alllist.size() > 0) {
                 for (int i = 0; i < alllist.size(); i++) {
                     JSONObject obj = alllist.getJSONObject(i);
@@ -1203,10 +1203,10 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             }
 
             //根据车系搜索
-            JSONObject styleobj = PreSaleCustomerStyleListScene.builder().shopId(-1L).build().invoke(visitor).getJSONArray("list").getJSONObject(0);
+            JSONObject styleobj = PreSaleCustomerStyleListScene.builder().shopId(-1L).build().execute(visitor).getJSONArray("list").getJSONObject(0);
             Long styleId = styleobj.getLong("style_id");
             String styleName = styleobj.getString("style_name");
-            JSONArray alllist3 = DedicatedServicePageListScene.builder().page(1).size(20).carStyleId(styleId).build().invoke(visitor).getJSONArray("list");
+            JSONArray alllist3 = DedicatedServicePageListScene.builder().page(1).size(20).carStyleId(styleId).build().execute(visitor).getJSONArray("list");
             if (alllist3.size() > 0) {
                 for (int i = 0; i < alllist3.size(); i++) {
                     JSONObject obj = alllist3.getJSONObject(i);
@@ -1215,7 +1215,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             }
 
             //根据是否超时=是搜索
-            JSONArray alllist2 = DedicatedServicePageListScene.builder().page(1).size(20).isOverTime(true).build().invoke(visitor).getJSONArray("list");
+            JSONArray alllist2 = DedicatedServicePageListScene.builder().page(1).size(20).isOverTime(true).build().execute(visitor).getJSONArray("list");
             if (alllist2.size() > 0) {
                 for (int i = 0; i < alllist2.size(); i++) {
                     JSONObject obj = alllist2.getJSONObject(i);
@@ -1224,7 +1224,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             }
 
             //根据是否超时=否搜索
-            JSONArray alllist4 = DedicatedServicePageListScene.builder().page(1).size(20).isOverTime(false).build().invoke(visitor).getJSONArray("list");
+            JSONArray alllist4 = DedicatedServicePageListScene.builder().page(1).size(20).isOverTime(false).build().execute(visitor).getJSONArray("list");
             if (alllist4.size() > 0) {
                 for (int i = 0; i < alllist4.size(); i++) {
                     JSONObject obj = alllist4.getJSONObject(i);
@@ -1248,7 +1248,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             util.loginPc(ALL_AUTHORITY);
 
             //根据跟进账号搜索
-            JSONArray alllist = DedicatedServicePageListScene.builder().page(1).size(20).followLoginName(conditions).build().invoke(visitor).getJSONArray("list");
+            JSONArray alllist = DedicatedServicePageListScene.builder().page(1).size(20).followLoginName(conditions).build().execute(visitor).getJSONArray("list");
             if (alllist.size() > 0) {
                 for (int i = 0; i < alllist.size(); i++) {
                     JSONObject obj = alllist.getJSONObject(i);
@@ -1257,7 +1257,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             }
 
             //根据跟进人员搜索
-            JSONArray alllist2 = DedicatedServicePageListScene.builder().page(1).size(20).followSalesName(conditions).build().invoke(visitor).getJSONArray("list");
+            JSONArray alllist2 = DedicatedServicePageListScene.builder().page(1).size(20).followSalesName(conditions).build().execute(visitor).getJSONArray("list");
             if (alllist2.size() > 0) {
                 for (int i = 0; i < alllist2.size(); i++) {
                     JSONObject obj = alllist2.getJSONObject(i);
@@ -1266,7 +1266,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             }
 
             //根据联系人搜索
-            JSONArray alllist3 = DedicatedServicePageListScene.builder().page(1).size(20).customerName(conditions).build().invoke(visitor).getJSONArray("list");
+            JSONArray alllist3 = DedicatedServicePageListScene.builder().page(1).size(20).customerName(conditions).build().execute(visitor).getJSONArray("list");
             if (alllist3.size() > 0) {
                 for (int i = 0; i < alllist3.size(); i++) {
                     JSONObject obj = alllist3.getJSONObject(i);
@@ -1275,7 +1275,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             }
 
             //根据联系电话搜索
-            JSONArray alllist4 = DedicatedServicePageListScene.builder().page(1).size(20).customerPhone(conditions).build().invoke(visitor).getJSONArray("list");
+            JSONArray alllist4 = DedicatedServicePageListScene.builder().page(1).size(20).customerPhone(conditions).build().execute(visitor).getJSONArray("list");
             if (alllist4.size() > 0) {
                 for (int i = 0; i < alllist4.size(); i++) {
                     JSONObject obj = alllist4.getJSONObject(i);
@@ -1300,7 +1300,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             util.loginPc(ALL_AUTHORITY);
             // 根据跟进时间搜索
             String followdate = "";
-            JSONArray alllist = DedicatedServicePageListScene.builder().page(1).size(50).build().invoke(visitor).getJSONArray("list");
+            JSONArray alllist = DedicatedServicePageListScene.builder().page(1).size(50).build().execute(visitor).getJSONArray("list");
             if (alllist.size() > 0) {
                 for (int i = 0; i < alllist.size(); i++) {
                     JSONObject obj = alllist.getJSONObject(i);
@@ -1309,7 +1309,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
                         break;
                     }
                 }
-                JSONArray searchlist1 = DedicatedServicePageListScene.builder().page(1).size(50).followDateStart(followdate).followDateEnd(followdate).build().invoke(visitor).getJSONArray("list");
+                JSONArray searchlist1 = DedicatedServicePageListScene.builder().page(1).size(50).followDateStart(followdate).followDateEnd(followdate).build().execute(visitor).getJSONArray("list");
                 Preconditions.checkArgument(searchlist1.size() >= 1, "搜索跟进时间为" + followdate + ", 结果不正确");
                 for (int j = 0; j < searchlist1.size(); j++) {
                     JSONObject obj1 = searchlist1.getJSONObject(j);
@@ -1333,7 +1333,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             util.loginPc(ALL_AUTHORITY);
             // 根据咨询时间搜索
             String consult_date = "";
-            JSONArray alllist = DedicatedServicePageListScene.builder().page(1).size(50).build().invoke(visitor).getJSONArray("list");
+            JSONArray alllist = DedicatedServicePageListScene.builder().page(1).size(50).build().execute(visitor).getJSONArray("list");
 
             if (alllist.size() > 0) {
                 for (int i = 0; i < alllist.size(); i++) {
@@ -1343,7 +1343,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
                         break;
                     }
                 }
-                JSONArray searchlist1 = DedicatedServicePageListScene.builder().page(1).size(50).consultDateStart(consult_date).consultDateEnd(consult_date).build().invoke(visitor).getJSONArray("list");
+                JSONArray searchlist1 = DedicatedServicePageListScene.builder().page(1).size(50).consultDateStart(consult_date).consultDateEnd(consult_date).build().execute(visitor).getJSONArray("list");
                 Preconditions.checkArgument(searchlist1.size() >= 1, "搜索咨询时间为" + consult_date + ", 结果不正确");
                 for (int j = 0; j < searchlist1.size(); j++) {
                     JSONObject obj1 = searchlist1.getJSONObject(j);
@@ -1370,10 +1370,10 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             util.loginPc(ALL_AUTHORITY);
-            int code = RecordExportScene.builder().type(type).page(1).size(10).exportType("CURRENT_PAGE").build().invoke(visitor, false).getInteger("code");
+            int code = RecordExportScene.builder().type(type).page(1).size(10).exportType("CURRENT_PAGE").build().execute(visitor, false).getInteger("code");
             Preconditions.checkArgument(code == 1000, mess + "导出状态码为" + code);
             Thread.sleep(800);
-            String status = ExportPageScene.builder().page(1).size(1).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getString("status_name");
+            String status = ExportPageScene.builder().page(1).size(1).build().execute(visitor).getJSONArray("list").getJSONObject(0).getString("status_name");
             Preconditions.checkArgument(status.equals("导出完成"), mess + " " + status);
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -1390,10 +1390,10 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             util.loginPc(ALL_AUTHORITY);
-            int code = EvaluateExportScene.builder().evaluateType(Integer.parseInt(type)).page(1).size(10).exportType("CURRENT_PAGE").build().invoke(visitor, false).getInteger("code");
+            int code = EvaluateExportScene.builder().evaluateType(Integer.parseInt(type)).page(1).size(10).exportType("CURRENT_PAGE").build().execute(visitor, false).getInteger("code");
             Preconditions.checkArgument(code == 1000, mess + "导出状态码为" + code);
             Thread.sleep(800);
-            String status = ExportPageScene.builder().page(1).size(1).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getString("status_name");
+            String status = ExportPageScene.builder().page(1).size(1).build().execute(visitor).getJSONArray("list").getJSONObject(0).getString("status_name");
             Preconditions.checkArgument(status.equals("导出完成"), mess + " " + status);
         } catch (AssertionError e) {
             appendFailReason(e.toString());
@@ -1446,7 +1446,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
 
             int code = AddScene.builder().name(info.stringsix).simpleName(info.stringsix).districtCode(info.district_code).address(info.stringsix).brandList(arr)
                     .saleTel(sale_tel).serviceTel(service_tel).longitude(129.8439).latitude(42.96805).avatarPath(info.getLogo()).customerServiceTel(sale_tel).rescueTel(sale_tel)
-                    .build().invoke(visitor, false).getInteger("code");
+                    .build().execute(visitor, false).getInteger("code");
             Preconditions.checkArgument(code == 1001, "期待状态码1001，实际" + code);
 
         } catch (AssertionError e) {
@@ -1589,7 +1589,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            AppletConsultOnlineExpertsSubmitScene.builder().brandId(12L).build().invoke(visitor, false).getString("message");
+            AppletConsultOnlineExpertsSubmitScene.builder().brandId(12L).build().execute(visitor, false).getString("message");
         } catch (AssertionError e) {
             appendFailReason(e.toString());
         } catch (Exception e) {
@@ -1615,11 +1615,11 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
 
             //小程序删除无牌爱车
             util.loginApplet(APPLET_USER_ONE);
-            JSONArray arr = AppletCarListScene.builder().build().invoke(visitor).getJSONArray("list");
+            JSONArray arr = AppletCarListScene.builder().build().execute(visitor).getJSONArray("list");
             for (int i = 0; i < arr.size(); i++) {
                 JSONObject obj = arr.getJSONObject(i);
                 if (!obj.containsKey("plate_number")) {
-                    AppletCarDeleteScene.builder().id(obj.getLong("id")).build().invoke(visitor);
+                    AppletCarDeleteScene.builder().id(obj.getLong("id")).build().execute(visitor);
 
                 }
             }

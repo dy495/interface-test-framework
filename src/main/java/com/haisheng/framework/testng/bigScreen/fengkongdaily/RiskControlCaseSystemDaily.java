@@ -1156,7 +1156,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             JSONObject response = visitor.invokeApi(scene);
             int pages = response.getInteger("pages") > 10 ? 10 : response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(page).size(10).type(RiskPersonnelTypeEnum.BLACK.getType()).build().invoke(visitor, true).getJSONArray("list");
+                JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(page).size(10).type(RiskPersonnelTypeEnum.BLACK.getType()).build().execute(visitor, true).getJSONArray("list");
                 if (list.size() > 0) {
                     for (int i = 0; i < list.size(); i++) {
                         String name = list.getJSONObject(i).getString("name");
@@ -1187,7 +1187,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             JSONObject response = visitor.invokeApi(scene);
             int pages = response.getInteger("pages") > 10 ? 10 : response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(page).size(10).type(RiskPersonnelTypeEnum.WHITE.getType()).build().invoke(visitor, true).getJSONArray("list");
+                JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(page).size(10).type(RiskPersonnelTypeEnum.WHITE.getType()).build().execute(visitor, true).getJSONArray("list");
                 if (list.size() > 0) {
                     for (int i = 0; i < list.size(); i++) {
                         String name = list.getJSONObject(i).getString("name");
@@ -1218,7 +1218,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             JSONObject response = visitor.invokeApi(scene);
             int pages = response.getInteger("pages") > 10 ? 10 : response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(page).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build().invoke(visitor, true).getJSONArray("list");
+                JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(page).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build().execute(visitor, true).getJSONArray("list");
                 if (list.size() > 0) {
                     for (int i = 0; i < list.size(); i++) {
                         String name = list.getJSONObject(i).getString("name");
@@ -1246,13 +1246,13 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     public void authCashierPageSystem25() {
         try {
             //获取第一行的会员姓名
-            String name = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build().invoke(visitor, true).getJSONArray("list").getJSONObject(0).getString("name");
+            String name = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build().execute(visitor, true).getJSONArray("list").getJSONObject(0).getString("name");
             //会员姓名查询
             IScene scene = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().name(name).page(1).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build();
             JSONObject response = visitor.invokeApi(scene);
             int pages = response.getInteger("pages") > 10 ? 10 : response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().name(name).page(page).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build().invoke(visitor, true).getJSONArray("list");
+                JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().name(name).page(page).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build().execute(visitor, true).getJSONArray("list");
                 if (list.size() > 0) {
                     for (int i = 0; i < list.size(); i++) {
                         String name1 = list.getJSONObject(i).getString("name");
@@ -1262,13 +1262,13 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             }
 
             //获取第一行的会员ID
-            String memberId = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build().invoke(visitor, true).getJSONArray("list").getJSONObject(0).getString("member_id");
+            String memberId = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build().execute(visitor, true).getJSONArray("list").getJSONObject(0).getString("member_id");
             //会员姓名查询
             IScene scene1 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().memberId(memberId).page(1).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build();
             JSONObject response1 = visitor.invokeApi(scene1);
             int pages1 = response1.getInteger("pages") > 10 ? 10 : response.getInteger("pages");
             for (int page = 1; page <= pages1; page++) {
-                JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().memberId(memberId).page(page).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build().invoke(visitor, true).getJSONArray("list");
+                JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().memberId(memberId).page(page).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build().execute(visitor, true).getJSONArray("list");
                 if (list.size() > 0) {
                     for (int i = 0; i < list.size(); i++) {
                         String memberId1 = list.getJSONObject(i).getString("member_id");
@@ -1278,13 +1278,13 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             }
 
             //获取第一行的人员ID
-            String customerId = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build().invoke(visitor, true).getJSONArray("list").getJSONObject(0).getString("customer_id");
+            String customerId = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build().execute(visitor, true).getJSONArray("list").getJSONObject(0).getString("customer_id");
             //会员姓名查询
             IScene scene2 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().customerId(customerId).page(1).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build();
             JSONObject response2 = visitor.invokeApi(scene2);
             int pages2 = response2.getInteger("pages") > 3 ? 3 : response.getInteger("pages");
             for (int page = 1; page <= pages2; page++) {
-                JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().customerId(customerId).page(page).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build().invoke(visitor, true).getJSONArray("list");
+                JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().customerId(customerId).page(page).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build().execute(visitor, true).getJSONArray("list");
                 if (list.size() > 0) {
                     for (int i = 0; i < list.size(); i++) {
                         String customerId1 = list.getJSONObject(i).getString("customer_id");
@@ -1308,7 +1308,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     public void authCashierPageSystem26() {
         try {
             //获取特殊人员列表第一行的人员ID
-            JSONArray list1 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build().invoke(visitor, true).getJSONArray("list");
+            JSONArray list1 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build().execute(visitor, true).getJSONArray("list");
             if (list1.size() > 0) {
                 String customerId = list1.getJSONObject(0).getString("customer_id");
                 //操作日志的页面
@@ -1316,7 +1316,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
                 JSONObject response = visitor.invokeApi(scene);
                 int pages = response.getInteger("pages") > 10 ? 10 : response.getInteger("pages");
                 for (int page = 1; page <= pages; page++) {
-                    JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.BlackWhiteListOperatePageScene.builder().page(page).size(10).customerId(customerId).build().invoke(visitor, true).getJSONArray("list");
+                    JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.BlackWhiteListOperatePageScene.builder().page(page).size(10).customerId(customerId).build().execute(visitor, true).getJSONArray("list");
                     if (list.size() > 0) {
                         for (int i = 0; i < list.size(); i++) {
                             String operateName = list.getJSONObject(i).getString("operate_name");
@@ -1343,7 +1343,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     public void authCashierPageSystem27() {
         try {
             //获取特殊人员列表第一行的人员ID
-            JSONArray list1 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build().invoke(visitor, true).getJSONArray("list");
+            JSONArray list1 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.PageScene.builder().page(1).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).build().execute(visitor, true).getJSONArray("list");
             if (list1.size() > 0) {
                 String customerId = list1.getJSONObject(0).getString("customer_id");
                 //操作日志的页面
@@ -1351,7 +1351,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
                 JSONObject response = visitor.invokeApi(scene);
                 int pages = response.getInteger("pages") > 10 ? 10 : response.getInteger("pages");
                 for (int page = 1; page <= pages; page++) {
-                    JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.BlackListEventPageScene.builder().page(page).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).customerId(customerId).build().invoke(visitor, true).getJSONArray("list");
+                    JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.riskpersonnel.BlackListEventPageScene.builder().page(page).size(10).type(RiskPersonnelTypeEnum.FOCUS.getType()).customerId(customerId).build().execute(visitor, true).getJSONArray("list");
                     if (list.size() > 0) {
                         for (int i = 0; i < list.size(); i++) {
                             String riskRule = list.getJSONObject(i).getString("risk_rule");
@@ -1383,7 +1383,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             JSONObject response = visitor.invokeApi(scene);
             int pages = response.getInteger("pages") > 10 ? 10 : response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = DownloadPageScene.builder().page(page).size(10).build().invoke(visitor, true).getJSONArray("list");
+                JSONArray list = DownloadPageScene.builder().page(page).size(10).build().execute(visitor, true).getJSONArray("list");
                 if (list.size() > 0) {
                     for (int i = 0; i < list.size(); i++) {
                         String taskName = list.getJSONObject(i).getString("task_name");
@@ -1410,13 +1410,13 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
     public void authCashierPageSystem29() {
         try {
             //下载列表第一行的任务名称
-            String taskName1 = DownloadPageScene.builder().page(1).size(10).build().invoke(visitor, true).getJSONArray("list").getJSONObject(0).getString("task_name");
+            String taskName1 = DownloadPageScene.builder().page(1).size(10).build().execute(visitor, true).getJSONArray("list").getJSONObject(0).getString("task_name");
             //任务名称筛选
             IScene scene = DownloadPageScene.builder().page(1).taskName(taskName1).size(10).build();
             JSONObject response = visitor.invokeApi(scene);
             int pages = response.getInteger("pages") > 10 ? 10 : response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = DownloadPageScene.builder().taskName(taskName1).page(page).size(10).build().invoke(visitor, true).getJSONArray("list");
+                JSONArray list = DownloadPageScene.builder().taskName(taskName1).page(page).size(10).build().execute(visitor, true).getJSONArray("list");
                 if (list.size() > 0) {
                     for (int i = 0; i < list.size(); i++) {
                         String taskName = list.getJSONObject(i).getString("task_name");
@@ -1425,13 +1425,13 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
                 }
             }
             //下载列表第一行的任务类型
-            String taskType1 = DownloadPageScene.builder().page(1).size(10).build().invoke(visitor, true).getJSONArray("list").getJSONObject(0).getString("task_type");
+            String taskType1 = DownloadPageScene.builder().page(1).size(10).build().execute(visitor, true).getJSONArray("list").getJSONObject(0).getString("task_type");
             //任务类型筛选
             IScene scene1 = DownloadPageScene.builder().page(1).taskType(taskType1).size(10).build();
             JSONObject response1 = visitor.invokeApi(scene1);
             int pages1 = response1.getInteger("pages") > 10 ? 10 : response.getInteger("pages");
             for (int page = 1; page <= pages1; page++) {
-                JSONArray list = DownloadPageScene.builder().taskType(taskType1).page(page).size(10).build().invoke(visitor, true).getJSONArray("list");
+                JSONArray list = DownloadPageScene.builder().taskType(taskType1).page(page).size(10).build().execute(visitor, true).getJSONArray("list");
                 if (list.size() > 0) {
                     for (int i = 0; i < list.size(); i++) {
                         String taskType = list.getJSONObject(i).getString("task_type");
@@ -1446,7 +1446,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             JSONObject response2 = visitor.invokeApi(scene2);
             int pages2 = response2.getInteger("pages") > 10 ? 10 : response.getInteger("pages");
             for (int page = 1; page <= pages2; page++) {
-                JSONArray list = DownloadPageScene.builder().shopName(shopName1).page(page).size(10).build().invoke(visitor, true).getJSONArray("list");
+                JSONArray list = DownloadPageScene.builder().shopName(shopName1).page(page).size(10).build().execute(visitor, true).getJSONArray("list");
                 if (list.size() > 0) {
                     for (int i = 0; i < list.size(); i++) {
                         String shopName = list.getJSONObject(i).getString("shop_name");
@@ -1456,13 +1456,13 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             }
 
             //下载列表第一行的申请人
-            String applicant1 = DownloadPageScene.builder().page(1).size(10).build().invoke(visitor, true).getJSONArray("list").getJSONObject(0).getString("applicant");
+            String applicant1 = DownloadPageScene.builder().page(1).size(10).build().execute(visitor, true).getJSONArray("list").getJSONObject(0).getString("applicant");
             //申请人筛选
             IScene scene3 = DownloadPageScene.builder().page(1).applicant(applicant1).size(10).build();
             JSONObject response3 = visitor.invokeApi(scene3);
             int pages3 = response3.getInteger("pages") > 10 ? 10 : response.getInteger("pages");
             for (int page = 1; page <= pages3; page++) {
-                JSONArray list = DownloadPageScene.builder().applicant(applicant1).size(10).page(page).build().invoke(visitor, true).getJSONArray("list");
+                JSONArray list = DownloadPageScene.builder().applicant(applicant1).size(10).page(page).build().execute(visitor, true).getJSONArray("list");
                 if (list.size() > 0) {
                     for (int i = 0; i < list.size(); i++) {
                         String applicant = list.getJSONObject(i).getString("applicant");
@@ -1513,7 +1513,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             JSONObject response = visitor.invokeApi(scene);
             int pages = response.getInteger("pages") > 10 ? 10 : response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.outstaff.PageScene.builder().page(page).size(10).build().invoke(visitor, true).getJSONArray("list");
+                JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.outstaff.PageScene.builder().page(page).size(10).build().execute(visitor, true).getJSONArray("list");
                 if (list.size() > 0) {
                     for (int i = 0; i < list.size(); i++) {
                         String customerId = list.getJSONObject(i).getString("customer_id");
@@ -1549,7 +1549,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             JSONObject response1 = visitor.invokeApi(scene1);
             int pages = response1.getInteger("pages") > 10 ? 10 : response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.outstaff.PageScene.builder().page(page).size(10).outStaffName(name).build().invoke(visitor, true).getJSONArray("list");
+                JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.outstaff.PageScene.builder().page(page).size(10).outStaffName(name).build().execute(visitor, true).getJSONArray("list");
                 if (list.size() > 0) {
                     for (int i = 0; i < list.size(); i++) {
                         String outStaffName = list.getJSONObject(i).getString("out_staff_name");
@@ -1563,7 +1563,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             JSONObject response2 = visitor.invokeApi(scene2);
             int pages2 = response2.getInteger("pages") > 10 ? 10 : response.getInteger("pages");
             for (int page = 1; page <= pages2; page++) {
-                JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.outstaff.PageScene.builder().page(page).size(10).outStaffId(id).build().invoke(visitor, true).getJSONArray("list");
+                JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.outstaff.PageScene.builder().page(page).size(10).outStaffId(id).build().execute(visitor, true).getJSONArray("list");
                 if (list.size() > 0) {
                     for (int i = 0; i < list.size(); i++) {
                         String outStaffId = list.getJSONObject(i).getString("out_staff_id");
@@ -2202,7 +2202,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             JSONObject response = visitor.invokeApi(scene);
             int pages = response.getInteger("pages") > 10 ? 10 : response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.PageScene.builder().page(page).size(10).build().invoke(visitor, true).getJSONArray("list");
+                JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.PageScene.builder().page(page).size(10).build().execute(visitor, true).getJSONArray("list");
                 if (list.size() > 0) {
                     for (int i = 0; i < list.size(); i++) {
                         String name = list.getJSONObject(i).getString("name");
@@ -2242,7 +2242,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             IScene scene2 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.PageScene.builder().page(1).size(10).build();
             JSONObject response2 = visitor.invokeApi(scene2);
             int pages = response2.getInteger("pages");
-            JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.PageScene.builder().page(pages).size(10).build().invoke(visitor, true).getJSONArray("list");
+            JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.role.PageScene.builder().page(pages).size(10).build().execute(visitor, true).getJSONArray("list");
             String name = list.getJSONObject(list.size() - 1).getString("name");
             System.out.println(name + "---------" + list);
             checkArgument(name.equals(pp.roleEditName), "编辑过的角色没有更新在列表");
@@ -2343,7 +2343,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             JSONObject response = visitor.invokeApi(scene);
             int pages = response.getInteger("pages") > 10 ? 10 : response.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().page(page).size(10).build().invoke(visitor, true).getJSONArray("list");
+                JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().page(page).size(10).build().execute(visitor, true).getJSONArray("list");
                 if (list.size() > 0) {
                     for (int i = 0; i < list.size(); i++) {
                         String createTime = list.getJSONObject(i).getString("create_time");
@@ -2381,7 +2381,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             Long roleId = cu.getEditAccountNumberReturn(staffId, pp.staffEditName, pp.ownerPhone);
             System.out.println("--------roleId-" + roleId);
             //获取账号管理页面的第一条的名字
-            String name = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().page(1).size(10).build().invoke(visitor, true).getJSONArray("list").getJSONObject(0).getString("name");
+            String name = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().page(1).size(10).build().execute(visitor, true).getJSONArray("list").getJSONObject(0).getString("name");
             System.out.println("---name-----" + name);
             Preconditions.checkArgument(name.equals(pp.staffEditName), "编辑账号失败");
 
@@ -2550,7 +2550,7 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
         try {
             String shopId2 = "";
             String roleId2 = "";
-            JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().page(1).size(10).build().invoke(visitor, true).getJSONArray("list");
+            JSONArray list = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().page(1).size(10).build().execute(visitor, true).getJSONArray("list");
             String name = list.getJSONObject(0).getString("name");
             Long shopId = list.getJSONObject(0).getJSONArray("shop_list").getJSONObject(0).getLong("shop_id");
             String roleId = list.getJSONObject(0).getJSONArray("role_list").getJSONObject(0).getString("role_id");
@@ -2558,29 +2558,29 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             System.out.println("------shopId-----" + shopId);
 
             //根据账号名称筛选
-            JSONObject response1 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().name(name).page(1).size(10).build().invoke(visitor, true);
+            JSONObject response1 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().name(name).page(1).size(10).build().execute(visitor, true);
             int pages = response1.getInteger("pages") > 3 ? 3 : response1.getInteger("pages");
             for (int page = 1; page <= pages; page++) {
-                JSONArray list1 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().name(name).page(page).size(10).build().invoke(visitor, true).getJSONArray("list");
+                JSONArray list1 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().name(name).page(page).size(10).build().execute(visitor, true).getJSONArray("list");
                 for (int i = 0; i < list1.size(); i++) {
                     Preconditions.checkArgument(name.equals(list1.getJSONObject(i).getString("name")), "根据列表第一个账号名称" + name + "进行筛选的结果和筛选条件不一致");
                 }
             }
             //根据phone筛选
-            JSONObject response2 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().phone(phone).page(1).size(10).build().invoke(visitor, true);
+            JSONObject response2 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().phone(phone).page(1).size(10).build().execute(visitor, true);
             int pages2 = response2.getInteger("pages") > 3 ? 3 : response2.getInteger("pages");
             for (int page = 1; page <= pages2; page++) {
-                JSONArray list2 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().phone(phone).page(1).size(10).build().invoke(visitor, true).getJSONArray("list");
+                JSONArray list2 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().phone(phone).page(1).size(10).build().execute(visitor, true).getJSONArray("list");
                 for (int i = 0; i < list2.size(); i++) {
                     Preconditions.checkArgument(phone.equals(list2.getJSONObject(0).getString("phone")), "根据phone" + phone + "进行筛选的结果和筛选条件不一致");
                 }
             }
 
             //根据门店筛选
-            JSONObject response3 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().shopId(shopId).page(1).size(10).build().invoke(visitor, true);
+            JSONObject response3 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().shopId(shopId).page(1).size(10).build().execute(visitor, true);
             int pages3 = response3.getInteger("pages") > 5 ? 5 : response3.getInteger("pages");
             for (int page = 1; page <= pages3; page++) {
-                JSONArray list3 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().shopId(shopId).page(1).size(10).build().invoke(visitor, true).getJSONArray("list");
+                JSONArray list3 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().shopId(shopId).page(1).size(10).build().execute(visitor, true).getJSONArray("list");
                 for (int i = 0; i < list3.size(); i++) {
                     int num = list3.getJSONObject(i).getJSONArray("shop_list").size();
                     System.out.println("--------===" + num + "-----" + list3.getJSONObject(i).getJSONArray("shop_list"));
@@ -2596,10 +2596,10 @@ public class RiskControlCaseSystemDaily extends TestCaseCommon implements TestCa
             }
 
             //根据角色筛选
-            JSONObject response4 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().roleId(Long.valueOf(String.valueOf(roleId))).page(1).size(10).build().invoke(visitor, true);
+            JSONObject response4 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().roleId(Long.valueOf(String.valueOf(roleId))).page(1).size(10).build().execute(visitor, true);
             int pages4 = response4.getInteger("pages") > 5 ? 5 : response4.getInteger("pages");
             for (int page = 1; page <= pages4; page++) {
-                JSONArray list4 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().roleId(Long.valueOf(roleId)).page(1).size(10).build().invoke(visitor, true).getJSONArray("list");
+                JSONArray list4 = com.haisheng.framework.testng.bigScreen.fengkongdaily.scene.auth.staff.PageScene.builder().roleId(Long.valueOf(roleId)).page(1).size(10).build().execute(visitor, true).getJSONArray("list");
                 for (int i = 0; i < list4.size(); i++) {
                     roleId2 = "";
                     int num = list4.getJSONObject(i).getJSONArray("role_list").size();

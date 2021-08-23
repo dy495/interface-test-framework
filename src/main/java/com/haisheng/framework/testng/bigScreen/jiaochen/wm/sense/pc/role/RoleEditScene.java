@@ -12,7 +12,7 @@ import lombok.Builder;
  * @date 2021-03-31 12:47:27
  */
 @Builder
-public class EditScene extends BaseScene {
+public class RoleEditScene extends BaseScene {
     /**
      * 描述 角色名称
      * 是否必填 true
@@ -41,6 +41,8 @@ public class EditScene extends BaseScene {
      */
     private final Integer id;
 
+    private final Long parentRoleId;
+
 
     @Override
     public JSONObject getRequestBody() {
@@ -49,11 +51,12 @@ public class EditScene extends BaseScene {
         object.put("authList", authList);
         object.put("description", description);
         object.put("id", id);
+        object.put("parent_role_id", parentRoleId);
         return object;
     }
 
     @Override
     public String getPath() {
-        return "/account-platform/pc/role/edit";
+        return "/account-platform/auth/role/edit";
     }
 }

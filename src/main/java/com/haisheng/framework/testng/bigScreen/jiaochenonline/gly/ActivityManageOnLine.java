@@ -21,7 +21,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.Vouc
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.AppletArticleListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.ArticleVoucherReceiveScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpload;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUploadScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.ChangeProvideStatusScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.InvalidVoucherScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
@@ -2594,7 +2594,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
                     "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/动图.gif"};
             Arrays.stream(paths).forEach(path -> {
                 String picture = new ImageUtil().getImageBinary(path);
-                IScene scene = FileUpload.builder().isPermanent(false).permanentPicType(0).pic(picture).ratio(1.5).build();
+                IScene scene = FileUploadScene.builder().isPermanent(false).permanentPicType(0).pic(picture).ratio(1.5).build();
                 String message = visitor.invokeApi(scene, false).getString("message");
                 Preconditions.checkArgument(message.equals("success") || message.equals("图片宽高比不符合null的要求"), "活动图片的异常情况为：" + path);
             });
@@ -4115,7 +4115,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             String title = managePage.getTitle();
             //获取活动详情中的此活动的名称
             IScene scene = ManageDetailScene.builder().id(id).build();
-            String title1 = scene.invoke(visitor).getString("title");
+            String title1 = scene.execute(visitor).getString("title");
             Preconditions.checkArgument(title.equals(title1), "现在活动的名称为：" + title);
         } catch (AssertionError | Exception e) {
             collectMessage(e);
@@ -4161,7 +4161,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             String title = managePageBean.getTitle();
             //置顶【待审批的活动】
             IScene scene = ActivityManageTopScene.builder().id(id).build();
-            String message = scene.invoke(visitor, false).getString("message");
+            String message = scene.execute(visitor, false).getString("message");
             Preconditions.checkArgument(message.equals("活动未审核通过！暂不能置顶"), "现在活动的名称为：" + title);
         } catch (AssertionError | Exception e) {
             collectMessage(e);
@@ -4185,7 +4185,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             String title = managePageBean.getTitle();
             //获取活动详情中的此活动的名称
             IScene scene = ManageDetailScene.builder().id(id).build();
-            String title1 = scene.invoke(visitor).getString("title");
+            String title1 = scene.execute(visitor).getString("title");
             logger.info(title + "-------" + title1);
             Preconditions.checkArgument(title.equals(title1), "现在活动的名称为：" + title);
         } catch (AssertionError | Exception e) {
@@ -4210,7 +4210,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             String title = managePageBean.getTitle();
             //置顶【已撤销的活动】
             IScene scene = ActivityManageTopScene.builder().id(id).build();
-            String message = scene.invoke(visitor, false).getString("message");
+            String message = scene.execute(visitor, false).getString("message");
             logger.info(title + "-------" + message);
             Preconditions.checkArgument(message.equals("活动未审核通过！暂不能置顶"), "置顶已撤销的活动的相关提示:" + message);
         } catch (AssertionError | Exception e) {
@@ -4997,7 +4997,7 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             String title = obj.getString("title");
             logger.info("----ids:" + id);
             //进行中的活动下架
-            String message = ManageOfflineScene.builder().id(id).build().getResponse(visitor).getMessage();
+            String message = ManageOfflineScene.builder().id(id).build().visitor(visitor).getResponse().getMessage();
             //获取活动的状态
             int statusOffLine = businessUtil.getActivityManagerPage(id).getStatus();
             //登录小程序
@@ -5022,11 +5022,11 @@ public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd 
             Preconditions.checkArgument(!flag, "小程序中还是能够查看到此活动");
             util.loginPc(ADMINISTRATOR);
             //活动上架
-            String message1 = ManageOnlineScene.builder().id(id).build().getResponse(visitor).getMessage();
+            String message1 = ManageOnlineScene.builder().id(id).build().visitor(visitor).getResponse().getMessage();
             //获取活动的状态
             int statusOnLine = businessUtil.getActivityStatus(id);
             //置顶此活动
-            ActivityManageTopScene.builder().id(id).build().getResponse(visitor);
+            ActivityManageTopScene.builder().id(id).build().visitor(visitor).getResponse();
             //小程序中第一个为此活动
             util.loginApplet(EnumAppletToken.JC_GLY_ONLINE);
             JSONObject response = businessUtil.appointmentActivityTitleNew();

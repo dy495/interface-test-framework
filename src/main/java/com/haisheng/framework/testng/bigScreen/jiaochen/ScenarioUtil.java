@@ -662,7 +662,7 @@ public class ScenarioUtil extends TestCaseCommon {
     }
 
     public JSONObject organizationAccountAdd(String name, String phone, List role_list, List shop_list, Boolean checkcode) {
-        String url = "/car-platform/pc/staff/add";
+        String url = "/account-platform/auth/staff/add";
         JSONObject json = new JSONObject();
         json.put("name", name);
         json.put("phone", phone);
@@ -1659,8 +1659,8 @@ public class ScenarioUtil extends TestCaseCommon {
         };
     }
 
-    @DataProvider(name = "SELECT_PARM")  //xmf
-    public static Object[] select_parm() {
+    @DataProvider(name = "SELECT_PARAM")  //xmf
+    public static Object[] select_param() {
         return new String[][]{
                 {"vehicle_chassis_code", "vehicle_chassis_code"},
 

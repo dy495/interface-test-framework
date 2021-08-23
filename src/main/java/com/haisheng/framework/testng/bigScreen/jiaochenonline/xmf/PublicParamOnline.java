@@ -9,8 +9,8 @@ public class PublicParamOnline {
     //3.0
     public Long brandId = 1L;  //TODO:
     public String user;
-    public String userpassword;
-    public String userroleId = "4580";
+    public String userPassword;
+    public String userRoleId = "4580";
     public String voucherIdevluate = "7110";  //评价配置使用的卡券id
 
     public int num = 5;
@@ -19,7 +19,7 @@ public class PublicParamOnline {
     public String shopIdZ = "20032";   //门店Id 中关村店
 
     public String reception_sale_id = "石矶娘娘";
-    public String name = "";
+    public String name = "创建角色xia";
     public String customerPhone = "15037286012";
     public String filepath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/jcBase64.txt";
 
@@ -31,7 +31,7 @@ public class PublicParamOnline {
     public String carModel = "AB";
     public String car_id = "78";             //小程序车id
     public String carPlate = "浙MNB789";      //编辑小程序车牌号
-    public String carplate7 = "浙ASD124";      //编辑小程序车牌号
+    public String carPlate7 = "浙ASD124";      //编辑小程序车牌号
     //预约使用车辆
     public Long car_idA = 206834L;
     public String shopName = "中关村店简";
@@ -45,7 +45,7 @@ public class PublicParamOnline {
     public String gwpassword = "000000"; //单个店的客户的数据  登录密码
 
     public String jdgw = "15037286012";  //xx ,属于中关村店
-    public String roleidJdgw = "424";
+    public String roleidJdgw = "2227";
     public String nameJdgw = "";
     public String jdgw2 = "15037286011";  //xx ,属于中关村店
     public String jdgwpassword = "000000"; //单个店的客户的数据  登录密码
@@ -63,7 +63,7 @@ public class PublicParamOnline {
     public String importFilepath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/测试.xlsx";   //导入工单文件路径
     public String importFilepath2 = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/importfile2.xlsx";   //导入工单文件路径
     public String importFilepath3 = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/xmf/file/importPotentialCustomerfile.xlsx";   //导入工单文件路径
-    //其他小程序用户tocken和车牌号信息
+    //其他小程序用户token和车牌号信息
     public String getAppletTokenOther = "R4M7UpQ2+Q3L0QbxGA32iA==";
     public String carPlateOther = "浙ZXCV123";
     public String userid = "uid_2960c1cf"; //接待顾问x 15037286011 的userId;
@@ -80,7 +80,8 @@ public class PublicParamOnline {
     public JSONArray coordinate = getCoordinate();
     public Long voucherId = 81L;  //经纬度
 
-    public JSONArray roleList = getRoleList();
+    public Long parentRoleId = 395L;
+    public JSONArray authList = getAuthList();
     public JSONArray vouchers = getvouchersList();
     public JSONArray vouchers2 = voucherSingle();
 
@@ -101,7 +102,7 @@ public class PublicParamOnline {
         return moduleId2;
     }
 
-    public JSONArray getRoleList() {
+    public JSONArray getAuthList() {
         JSONArray moduleId2 = new JSONArray();
         moduleId2.add(136);
         moduleId2.add(138);

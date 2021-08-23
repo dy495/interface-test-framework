@@ -37,7 +37,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class platFormDaily extends TestCaseCommon implements TestCaseStd {
+public class PlatFormDaily extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct product = EnumTestProduct.CMS_DAILY;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.CMS_DAILY;
     public VisitorProxy visitor = new VisitorProxy(product);
@@ -143,8 +143,8 @@ public class platFormDaily extends TestCaseCommon implements TestCaseStd {
         Long regionId = getRegionIdByRegionName(subjectId, tableName);
         Arrays.stream(table.getRows()).map(row -> createDeviceAndGetDeviceMap(subjectId, row))
                 .forEach(map -> map.entrySet().stream().filter(e -> e.getValue() != null).forEach(e -> {
-                    DataLayoutDeviceScene.builder().deviceId(e.getValue()).layoutId(layoutId).build().invoke(visitor);
-                    DataEntranceScene.builder().regionId(regionId).entranceName(e.getKey()).entranceType("REGION").build().invoke(visitor);
+                    DataLayoutDeviceScene.builder().deviceId(e.getValue()).layoutId(layoutId).build().execute(visitor);
+                    DataEntranceScene.builder().regionId(regionId).entranceName(e.getKey()).entranceType("REGION").build().execute(visitor);
                 }));
     }
 
@@ -160,12 +160,12 @@ public class platFormDaily extends TestCaseCommon implements TestCaseStd {
             String floorName = row.getField(CmsConstants.TABLE_FIELD_FLOOR_NAME).getValue();
             EnumDataLayout enumDataLayout = StringUtils.isEmpty(floorName) ? EnumDataLayout.L1 : EnumDataLayout.finEnumByName(floorName.replace("层", ""));
             Long layoutId = getLayoutIdByLayoutName(subjectId, enumDataLayout);
-            DataRegionScene.builder().subjectId(subjectId).regionName(shopName).layoutId(layoutId).regionType(EnumRegionType.GENERAL.name()).build().invoke(visitor);
+            DataRegionScene.builder().subjectId(subjectId).regionName(shopName).layoutId(layoutId).regionType(EnumRegionType.GENERAL.name()).build().execute(visitor);
             Long regionId = getRegionIdByRegionName(subjectId, shopName);
             createDeviceAndGetDeviceMap(subjectId, row).entrySet().stream().filter(map -> map.getValue() != null).forEach(e -> {
-                DataLayoutDeviceScene.builder().deviceId(e.getValue()).layoutId(layoutId).build().invoke(visitor);
-                DataRegionDeviceScene.builder().regionId(regionId).deviceId(e.getValue()).build().invoke(visitor);
-                DataEntranceScene.builder().regionId(regionId).entranceName(e.getKey()).entranceType("REGION").isWhole(false).build().invoke(visitor);
+                DataLayoutDeviceScene.builder().deviceId(e.getValue()).layoutId(layoutId).build().execute(visitor);
+                DataRegionDeviceScene.builder().regionId(regionId).deviceId(e.getValue()).build().execute(visitor);
+                DataEntranceScene.builder().regionId(regionId).entranceName(e.getKey()).entranceType("REGION").isWhole(false).build().execute(visitor);
             });
         });
     }
@@ -183,8 +183,8 @@ public class platFormDaily extends TestCaseCommon implements TestCaseStd {
             Long layoutId = getLayoutIdByLayoutName(subjectId, enumDataLayout);
             Long regionId = getRegionIdByRegionName(subjectId, floorName);
             createDeviceAndGetDeviceMap(subjectId, row).entrySet().stream().filter(map -> map.getValue() != null).forEach(e -> {
-                DataLayoutDeviceScene.builder().deviceId(e.getValue()).layoutId(layoutId).build().invoke(visitor);
-                DataEntranceScene.builder().regionId(regionId).entranceName(e.getKey()).entranceType("REGION").build().invoke(visitor);
+                DataLayoutDeviceScene.builder().deviceId(e.getValue()).layoutId(layoutId).build().execute(visitor);
+                DataEntranceScene.builder().regionId(regionId).entranceName(e.getKey()).entranceType("REGION").build().execute(visitor);
             });
         });
     }
@@ -224,7 +224,7 @@ public class platFormDaily extends TestCaseCommon implements TestCaseStd {
      */
     public Long createLayoutAndGetLayoutId(long subjectId, String layoutName) {
         int floorId = EnumDataLayout.finEnumByName(layoutName).getFloorId();
-        DataLayoutScene.builder().name(layoutName).description(layoutName).subjectId(subjectId).floorId(floorId).build().invoke(visitor);
+        DataLayoutScene.builder().name(layoutName).description(layoutName).subjectId(subjectId).floorId(floorId).build().execute(visitor);
         IScene scene = LayoutListScene.builder().subjectId(subjectId).build();
         return util.toJavaObject(scene, JSONObject.class, "floor_id", floorId).getLong("layout_id");
     }
@@ -279,7 +279,7 @@ public class platFormDaily extends TestCaseCommon implements TestCaseStd {
         DataDeviceScene.builder().name(name).deviceType(EnumDeviceType.WEB_CAMERA.name()).url(url)
                 .subjectId(String.valueOf(subjectId)).manufacturer(EnumManufacturer.HIKVISION.getName())
                 .deploymentGroupId(util.getDeploymentGroupId()).deploymentId(util.getDeploymentId())
-                .cloudSceneType(util.getCloudSceneType()).build().invoke(visitor);
+                .cloudSceneType(util.getCloudSceneType()).build().execute(visitor);
         return getDeviceIdByDeviceName(name);
     }
 

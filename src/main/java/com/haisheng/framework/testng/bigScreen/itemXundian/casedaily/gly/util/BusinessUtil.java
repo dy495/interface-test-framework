@@ -33,7 +33,7 @@ public class BusinessUtil extends TestCaseCommon {
         JSONObject response = visitor.invokeApi(scene, true);
         int pages = response.getInteger("pages");
         for (int page = 1; page <= pages; page++) {
-            JSONArray list = ListScene.builder().page(page).size(10).shopId(shopId).build().invoke(visitor, true).getJSONArray("list");
+            JSONArray list = ListScene.builder().page(page).size(10).shopId(shopId).build().execute(visitor, true).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 int id = list.getJSONObject(i).getInteger("id");
                 if (eventId == id) {

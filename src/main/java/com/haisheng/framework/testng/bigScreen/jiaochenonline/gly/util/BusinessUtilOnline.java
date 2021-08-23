@@ -2,12 +2,10 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline.gly.util;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.util.BasicUtil;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAppletToken;
-import com.haisheng.framework.testng.bigScreen.jiaochen.gly.ActivityManage;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.util.PublicParameter;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.activity.ManagePageBean;
@@ -20,7 +18,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.generate.voucher.Vouc
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.activity.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.activity.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.brand.BrandPageScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUpload;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.file.FileUploadScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.userange.SubjectListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherDetailScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherFormVoucherPageScene;
@@ -717,7 +715,7 @@ public class BusinessUtilOnline extends BasicUtil {
     public String getPicPath() {
         String path = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/卡券图.jpg";
         String picture = new ImageUtil().getImageBinary(path);
-        IScene scene = FileUpload.builder().isPermanent(false).permanentPicType(0).pic(picture).ratio(1.5).build();
+        IScene scene = FileUploadScene.builder().isPermanent(false).permanentPicType(0).pic(picture).ratio(1.5).build();
         return visitor.invokeApi(scene).getString("pic_path");
     }
 
@@ -739,7 +737,7 @@ public class BusinessUtilOnline extends BasicUtil {
         String picture = new ImageUtil().getImageBinary(picPath);
         String[] strings = ratioStr.split(":");
         double ratio = BigDecimal.valueOf(Double.parseDouble(strings[0]) / Double.parseDouble(strings[1])).divide(new BigDecimal(1), 4, BigDecimal.ROUND_HALF_UP).doubleValue();
-        IScene scene = FileUpload.builder().isPermanent(false).permanentPicType(0).pic(picture).ratioStr(ratioStr).ratio(ratio).build();
+        IScene scene = FileUploadScene.builder().isPermanent(false).permanentPicType(0).pic(picture).ratioStr(ratioStr).ratio(ratio).build();
         return visitor.invokeApi(scene).getString("pic_path");
     }
 
@@ -906,7 +904,7 @@ public class BusinessUtilOnline extends BasicUtil {
         List<Long> ids = new ArrayList<>();
         //活动列表
         IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = scene.invoke(visitor).getInteger("pages");
+        int pages = scene.execute(visitor).getInteger("pages");
         for (int page = 1; page <= pages; page++) {
             IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");
@@ -1524,7 +1522,7 @@ public class BusinessUtilOnline extends BasicUtil {
      * 小程序-活动报名-取消报名
      */
     public void activityCancelScene(Long id) {
-        AppointmentActivityCancelScene.builder().id(id).build().invoke(visitor);
+        AppointmentActivityCancelScene.builder().id(id).build().execute(visitor);
     }
 
     /**
@@ -1556,7 +1554,7 @@ public class BusinessUtilOnline extends BasicUtil {
      * 2021-3-17
      */
     public JSONObject appointmentActivityTitleNew() {
-        return AppletArticleListScene.builder().lastValue(null).size(10).build().invoke(visitor);
+        return AppletArticleListScene.builder().lastValue(null).size(10).build().execute(visitor);
     }
 
     /**
@@ -1593,7 +1591,7 @@ public class BusinessUtilOnline extends BasicUtil {
      * 调整记录列表
      */
     public JSONObject changeRecordPage(Long activityId) {
-        return ManageChangeRecordScene.builder().page(1).size(10).id(activityId).build().invoke(visitor);
+        return ManageChangeRecordScene.builder().page(1).size(10).id(activityId).build().execute(visitor);
     }
 
     /**
@@ -1632,7 +1630,7 @@ public class BusinessUtilOnline extends BasicUtil {
      * 招募活动裂变详情页返回值
      */
     public JSONObject getFissionActivityDetailDate1(Long activityId) {
-        return ManageDetailScene.builder().id(activityId).build().invoke(visitor);
+        return ManageDetailScene.builder().id(activityId).build().execute(visitor);
     }
 
     /**
@@ -1647,14 +1645,14 @@ public class BusinessUtilOnline extends BasicUtil {
      * 报名数据-返回值（data）
      */
     public JSONObject getRegisterData(Long activityId) {
-        return ManageRegisterDataScene.builder().activityId(activityId).build().invoke(visitor);
+        return ManageRegisterDataScene.builder().activityId(activityId).build().execute(visitor);
     }
 
     /**
      * 报名列表-返回值（data）
      */
     public JSONObject getRegisterPage(Long activityId) {
-        return ManageRegisterPageScene.builder().page(1).size(10).activityId(activityId).build().invoke(visitor);
+        return ManageRegisterPageScene.builder().page(1).size(10).activityId(activityId).build().execute(visitor);
     }
 
     /**
@@ -2017,7 +2015,7 @@ public class BusinessUtilOnline extends BasicUtil {
         //定义主体的字段
         String subjectKey = "";
         //获取主题状态的列表
-        JSONArray list = SubjectListScene.builder().build().invoke(visitor).getJSONArray("list");
+        JSONArray list = SubjectListScene.builder().build().execute(visitor).getJSONArray("list");
         for (int i = 0; i < list.size(); i++) {
             String subjectValue = list.getJSONObject(i).getString("subject_value");
             if (subjectValue.equals(subjectName)) {
@@ -2108,11 +2106,11 @@ public class BusinessUtilOnline extends BasicUtil {
      */
     public ManagePageBean getContentMarketingWaitingApproval() {
         IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = scene.invoke(visitor).getInteger("pages");
+        int pages = scene.execute(visitor).getInteger("pages");
         for (int page = 1; page <= pages; page++) {
             scene.setPage(page);
             scene.setSize(10);
-            JSONArray list = scene.invoke(visitor).getJSONArray("list");
+            JSONArray list = scene.execute(visitor).getJSONArray("list");
             JSONObject obj = list.stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("status").equals(ActivityStatusEnum.PENDING.getId()))
                     .filter(e -> e.getInteger("activity_type").equals(3)).findFirst().orElse(null);
             if (obj != null) {
@@ -2147,7 +2145,7 @@ public class BusinessUtilOnline extends BasicUtil {
     public ManagePageBean getContentMarketingReject() {
         //活动列表
         IScene scene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = scene.invoke(visitor).getInteger("pages");
+        int pages = scene.execute(visitor).getInteger("pages");
         for (int page = 1; page <= pages; page++) {
             IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");

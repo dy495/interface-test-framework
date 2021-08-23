@@ -51,13 +51,20 @@ public interface IScene {
     void setSize(Integer size);
 
     /**
+     * 放入请求体
+     *
+     * @param requestBodyBody 请求体
+     */
+    IScene setRequestBodyBody(JSONObject requestBodyBody);
+
+    /**
      * 访问接口
      *
      * @param visitor   产品
      * @param checkCode 是否校验返回值code
      * @return 接口返回值
      */
-    JSONObject invoke(VisitorProxy visitor, boolean checkCode);
+    JSONObject execute(VisitorProxy visitor, boolean checkCode);
 
     /**
      * 访问接口
@@ -65,9 +72,16 @@ public interface IScene {
      * @param visitor 产品
      * @return 接口返回值
      */
-    default JSONObject invoke(VisitorProxy visitor) {
-        return invoke(visitor, true);
+    default JSONObject execute(VisitorProxy visitor) {
+        return execute(visitor, true);
     }
+
+    /**
+     * 访问接口
+     *
+     * @return 返回值
+     */
+    JSONObject execute();
 
     /**
      * 上传文件
@@ -92,7 +106,19 @@ public interface IScene {
      */
     List<String> getKeyList();
 
+    /**
+     * 获取返回值
+     *
+     * @return 返回值 推荐使用
+     */
+    Response getResponse();
 
-    Response getResponse(VisitorProxy visitor);
+    /**
+     * 放入相关产品代理
+     *
+     * @param visitor 代理
+     * @return IScene
+     */
+    IScene visitor(VisitorProxy visitor);
 
 }

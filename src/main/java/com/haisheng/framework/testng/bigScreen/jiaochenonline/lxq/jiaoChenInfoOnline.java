@@ -13,7 +13,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesre
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.AppStartReceptionScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.brand.BrandPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.manage.EvaluateConfigSubmitScene;
-import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shop.PageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shop.ShopPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyBatchApprovalScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.voucher.ApplyPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.AddVoucherScene;
@@ -215,14 +215,14 @@ public class jiaoChenInfoOnline {
     public JSONObject submitPreService() throws Exception {
         user.loginApplet(APPLET_USER_ONE);
         Long brandId = BrandIDOnline;
-        Long modelId = AppletModeListScene.builder().brandId(brandId).styleId(CarStyleIDOnline).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
-        Long shopId = AppletCommonShopListScene.builder().carModelId(modelId).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
-        String salesId = AppletConsultDedicatedServiceSalesListScene.builder().build().invoke(visitor).getJSONArray("sales_list").getJSONObject(0).getString("sales_id");
+        Long modelId = AppletModeListScene.builder().brandId(brandId).styleId(CarStyleIDOnline).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+        Long shopId = AppletCommonShopListScene.builder().carModelId(modelId).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
+        String salesId = AppletConsultDedicatedServiceSalesListScene.builder().build().execute(visitor).getJSONArray("sales_list").getJSONObject(0).getString("sales_id");
         String customerName = "奶糖";
         String customerPhone = "13811110000";
         String content = "12345678901234567890";
         AppletConsultPreServiceSubmitScene.builder().customerName(customerName).customerPhone(customerPhone).content(content)
-                .salesId(salesId).modelId(modelId).shopId(shopId).build().invoke(visitor);
+                .salesId(salesId).modelId(modelId).shopId(shopId).build().execute(visitor);
         JSONObject obj1 = new JSONObject();
         obj1.put("customerName", customerName);
         obj1.put("customerPhone", customerPhone);
@@ -237,16 +237,16 @@ public class jiaoChenInfoOnline {
     public JSONObject submitAfterService() throws Exception {
         user.loginApplet(APPLET_USER_ONE);
         Long brandId = BrandIDOnline;
-        Long modelId = AppletModeListScene.builder().brandId(brandId).styleId(CarStyleIDOnline).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
-        Long shopId = AppletCommonShopListScene.builder().carModelId(modelId).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
+        Long modelId = AppletModeListScene.builder().brandId(brandId).styleId(CarStyleIDOnline).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+        Long shopId = AppletCommonShopListScene.builder().carModelId(modelId).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
 
-        String salesId = AppletConsultDedicatedServiceSalesListScene.builder().build().invoke(visitor).getJSONArray("after_sales_list").getJSONObject(0).getString("sales_id");
+        String salesId = AppletConsultDedicatedServiceSalesListScene.builder().build().execute(visitor).getJSONArray("after_sales_list").getJSONObject(0).getString("sales_id");
 
         String customerName = "奶糖";
         String customerPhone = "13811110000";
         String content = "12345678901234567890";
         AppletConsultAfterServiceSubmitScene.builder().customerName(customerName).customerPhone(customerPhone).content(content)
-                .salesId(salesId).modelId(modelId).shopId(shopId).build().invoke(visitor);
+                .salesId(salesId).modelId(modelId).shopId(shopId).build().execute(visitor);
         JSONObject obj1 = new JSONObject();
         obj1.put("customerName", customerName);
         obj1.put("customerPhone", customerPhone);
@@ -261,17 +261,17 @@ public class jiaoChenInfoOnline {
     public JSONObject submitonlineExpert() throws Exception {
         user.loginApplet(APPLET_USER_ONE);
         Long brandId = BrandIDOnline;
-        Long modelId = AppletModeListScene.builder().brandId(brandId).styleId(CarStyleIDOnline).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+        Long modelId = AppletModeListScene.builder().brandId(brandId).styleId(CarStyleIDOnline).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
 //        String str = "[39.981536865234375,116.30351257324219]";
 //        Long shopId  = AppletCommonShopListScene.builder().carModelId(modelId).coordinate(JSONArray.parseArray(str)).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
 
-        Long shopId = AppletCommonShopListScene.builder().carModelId(modelId).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
+        Long shopId = AppletCommonShopListScene.builder().carModelId(modelId).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("shop_id");
 
         String customerName = "奶糖";
         String customerPhone = "13811110000";
         String content = "12345678901234567890";
         AppletConsultOnlineExpertsSubmitScene.builder().customerName(customerName).customerPhone(customerPhone).content(content)
-                .brandId(brandId).modelId(modelId).shopId(shopId).build().invoke(visitor);
+                .brandId(brandId).modelId(modelId).shopId(shopId).build().execute(visitor);
         JSONObject obj1 = new JSONObject();
         obj1.put("customerName", customerName);
         obj1.put("customerPhone", customerPhone);
@@ -293,7 +293,7 @@ public class jiaoChenInfoOnline {
     //获取小程序消息列表数量
     public int getAppletmessNum() {
         user.loginApplet(APPLET_USER_ONE);
-        int num = AppletMessageListScene.builder().size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getInteger("id");
+        int num = AppletMessageListScene.builder().size(10).build().execute(visitor).getJSONArray("list").getJSONObject(0).getInteger("id");
         return num;
     }
 
@@ -307,7 +307,7 @@ public class jiaoChenInfoOnline {
     //门店id对应的门店名字
     public String shopIdForName(Long id) {
         user.loginPc(ALL_AUTHORITY);
-        JSONArray array = PageScene.builder().page(1).size(100).build().invoke(visitor).getJSONArray("list");
+        JSONArray array = ShopPageScene.builder().page(1).size(100).build().execute(visitor).getJSONArray("list");
         String name = "";
         for (int i = 0; i < array.size(); i++) {
             JSONObject obj = array.getJSONObject(i);
@@ -322,7 +322,7 @@ public class jiaoChenInfoOnline {
     //品牌id对应的品牌名字
     public String brandIdForName(Long id) {
         user.loginPc(ALL_AUTHORITY);
-        JSONArray array = BrandPageScene.builder().page(1).size(100).build().invoke(visitor).getJSONArray("list");
+        JSONArray array = BrandPageScene.builder().page(1).size(100).build().execute(visitor).getJSONArray("list");
         String name = "";
         for (int i = 0; i < array.size(); i++) {
             JSONObject obj = array.getJSONObject(i);
@@ -350,19 +350,19 @@ public class jiaoChenInfoOnline {
     }
 
     public String getVoucherId() {
-        JSONObject obj = VoucherFormVoucherPageScene.builder().voucherStatus("WORKING").page(1).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0);
+        JSONObject obj = VoucherFormVoucherPageScene.builder().voucherStatus("WORKING").page(1).size(10).build().execute(visitor).getJSONArray("list").getJSONObject(0);
         String id = obj.getString("id");
         int allow = obj.getInteger("allow_use_inventory");
         if (allow > 1) {
             return id;
         } else {
             //增发
-            AddVoucherScene.builder().addNumber(100).id(Long.parseLong(id)).build().invoke(visitor);
+            AddVoucherScene.builder().addNumber(100).id(Long.parseLong(id)).build().execute(visitor);
             //审核通过
-            Long applyid = ApplyPageScene.builder().page(1).size(10).build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+            Long applyid = ApplyPageScene.builder().page(1).size(10).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
             ArrayList list = new ArrayList();
             list.add(applyid);
-            ApplyBatchApprovalScene.builder().ids(list).status(1).build().invoke(visitor);
+            ApplyBatchApprovalScene.builder().ids(list).status(1).build().execute(visitor);
             return id;
 
         }
@@ -393,13 +393,13 @@ public class jiaoChenInfoOnline {
     }
 
     public int getVoucherTotal(String phone) {
-        int total = VoucherListScene.builder().transferPhone(phone).build().invoke(visitor).getJSONArray("list").size();
+        int total = VoucherListScene.builder().transferPhone(phone).build().execute(visitor).getJSONArray("list").size();
         return total;
     }
 
     public Long getMessDetailId() {
-        Long listid = AppletMessageListScene.builder().build().invoke(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
-        Long detailid = AppletMessageDetailScene.builder().id(listid).build().invoke(visitor).getJSONObject("evaluate_info").getLong("id");
+        Long listid = AppletMessageListScene.builder().build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("id");
+        Long detailid = AppletMessageDetailScene.builder().id(listid).build().execute(visitor).getJSONObject("evaluate_info").getLong("id");
         return detailid;
     }
 

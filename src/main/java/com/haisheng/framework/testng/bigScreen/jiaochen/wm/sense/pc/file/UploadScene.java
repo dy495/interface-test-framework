@@ -5,10 +5,10 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.BaseScene;
 import lombok.Builder;
 
 /**
- * 27.5. 通用文件上传接口
+ * 35.5. 通用文件上传接口
  *
  * @author wangmin
- * @date 2021-03-31 12:32:56
+ * @date 2021-05-18 17:04:36
  */
 @Builder
 public class UploadScene extends BaseScene {
@@ -42,7 +42,7 @@ public class UploadScene extends BaseScene {
 
 
     @Override
-    public JSONObject getRequestBody() {
+    protected JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("pic", pic);
         object.put("permanent_pic_type", permanentPicType);
@@ -53,6 +53,6 @@ public class UploadScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/car-platform/pc/file/upload";
+        return "/account-platform/auth/file/upload";
     }
 }

@@ -9,9 +9,13 @@
 
     <test name="daily-rgn" preserve-order="true">
         <classes>
-
+            <!--运通语音日常            -->
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.lxq.SystemCaseRecp"/>
+            <!--运通语音线上            -->
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.caseonline.lxq.SystemCaseRecpOnline"/>
+
+            <!--轿辰线上导出            -->
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.lxq.NightOnline"/>
 
         </classes>
     </test>

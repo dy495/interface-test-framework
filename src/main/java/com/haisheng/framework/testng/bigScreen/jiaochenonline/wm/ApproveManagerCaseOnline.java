@@ -162,7 +162,7 @@ public class ApproveManagerCaseOnline extends TestCaseCommon implements TestCase
     @Test(description = "优惠券审批--优惠券审批页各状态数量=审批数据统计中各状态数量")
     public void voucherApply_data_4() {
         try {
-            List<Long> totalLost = Arrays.stream(VoucherApprovalStatusEnum.values()).map(e -> ApplyPageScene.builder().status(e.getId()).build().invoke(visitor).getLong("total")).collect(Collectors.toList());
+            List<Long> totalLost = Arrays.stream(VoucherApprovalStatusEnum.values()).map(e -> ApplyPageScene.builder().status(e.getId()).build().execute(visitor).getLong("total")).collect(Collectors.toList());
             IScene scene = ApplyApprovalInfoScene.builder().build();
             ApplyApprovalInfoBean applyApprovalInfoBean = util.toJavaObject(scene, ApplyApprovalInfoBean.class);
             CommonUtil.checkResultPlus(VoucherApprovalStatusEnum.AUDITING.getName() + " 在优惠券审批页数量", totalLost.get(VoucherApprovalStatusEnum.AUDITING.getId()), "在审批数据统数量", applyApprovalInfoBean.getWaitApproval());
@@ -179,15 +179,15 @@ public class ApproveManagerCaseOnline extends TestCaseCommon implements TestCase
     @Test(description = "优惠券审批--优惠券审批页全部审批=待审批+审批通过+审批未通过+已撤销")
     public void voucherApply_data_5() {
         try {
-            JSONObject data = ApplyApprovalInfoScene.builder().build().invoke(visitor);
+            JSONObject data = ApplyApprovalInfoScene.builder().build().visitor(visitor).execute();
             Long total = data.getLong("total_approval");
             Long wait = data.getLong("wait_approval");
             Long failed = data.getLong("fail_approval");
             Long passed = data.getLong("pass_approval");
-            Long auditingTotal = ApplyPageScene.builder().status(VoucherApprovalStatusEnum.AUDITING.getId()).build().invoke(visitor).getLong("total");
-            Long agreeTotal = ApplyPageScene.builder().status(VoucherApprovalStatusEnum.AGREE.getId()).build().invoke(visitor).getLong("total");
-            Long refusalTotal = ApplyPageScene.builder().status(VoucherApprovalStatusEnum.REFUSAL.getId()).build().invoke(visitor).getLong("total");
-            Long recallTotal = ApplyPageScene.builder().status(VoucherApprovalStatusEnum.RECALL.getId()).build().invoke(visitor).getLong("total");
+            Long auditingTotal = ApplyPageScene.builder().status(VoucherApprovalStatusEnum.AUDITING.getId()).build().execute(visitor).getLong("total");
+            Long agreeTotal = ApplyPageScene.builder().status(VoucherApprovalStatusEnum.AGREE.getId()).build().execute(visitor).getLong("total");
+            Long refusalTotal = ApplyPageScene.builder().status(VoucherApprovalStatusEnum.REFUSAL.getId()).build().execute(visitor).getLong("total");
+            Long recallTotal = ApplyPageScene.builder().status(VoucherApprovalStatusEnum.RECALL.getId()).build().execute(visitor).getLong("total");
             Preconditions.checkArgument(wait.equals(auditingTotal), "审核数据接口待审核卡券数：" + wait + " 按照待审核搜索列表数：" + auditingTotal);
             Preconditions.checkArgument(passed.equals(agreeTotal), "审核数据接口审核通过卡券数：" + passed + " 按照审核通过搜索列表数：" + agreeTotal);
             Preconditions.checkArgument(failed.equals(refusalTotal), "审核数据接口审核未通过卡券数：" + failed + " 按照审核未通过搜索列表数：" + refusalTotal);
@@ -205,8 +205,8 @@ public class ApproveManagerCaseOnline extends TestCaseCommon implements TestCase
     @Test(description = "优惠券审批--待审批的卡券数量=全局提醒卡券审批的数量")
     public void voucherApply_data_6() {
         try {
-            Integer total = ApplyPageScene.builder().status(ApplyStatusEnum.AUDITING.getId()).build().invoke(visitor).getInteger("total");
-            JSONArray list = NoticeMessagePullScene.builder().build().invoke(visitor).getJSONArray("list");
+            Integer total = ApplyPageScene.builder().status(ApplyStatusEnum.AUDITING.getId()).build().execute(visitor).getInteger("total");
+            JSONArray list = NoticeMessagePullScene.builder().build().execute(visitor).getJSONArray("list");
             String messageContent = list.stream().map(e -> (JSONObject) e).filter(e -> e.getString("message_content").contains("卡券审批"))
                     .map(e -> e.getString("message_content")).findFirst().orElse(null);
             Preconditions.checkArgument(messageContent != null, "全局提醒关于卡券审批的提示内容为空");
@@ -222,8 +222,8 @@ public class ApproveManagerCaseOnline extends TestCaseCommon implements TestCase
     @Test(description = "优惠券审批--待审批的活动数量=全局提醒活动审批的数量")
     public void voucherApply_data_7() {
         try {
-            int total = ManagePageScene.builder().approvalStatus(ActivityStatusEnum.PENDING.getId()).build().invoke(visitor).getInteger("total");
-            JSONArray list = NoticeMessagePullScene.builder().build().invoke(visitor).getJSONArray("list");
+            int total = ManagePageScene.builder().approvalStatus(ActivityStatusEnum.PENDING.getId()).build().execute(visitor).getInteger("total");
+            JSONArray list = NoticeMessagePullScene.builder().build().execute(visitor).getJSONArray("list");
             String messageContent = list.stream().map(e -> (JSONObject) e).filter(e -> e.getString("message_content").contains("活动审批"))
                     .map(e -> e.getString("message_content")).findFirst().orElse(null);
             Preconditions.checkArgument(messageContent != null, "全局提醒关于活动审批的提示内容为空");
@@ -244,15 +244,15 @@ public class ApproveManagerCaseOnline extends TestCaseCommon implements TestCase
             String voucherName = voucherPage.getVoucherName();
             voucherPage = util.getVoucherPage(voucherId);
             IScene additionalRecordScene = AdditionalRecordScene.builder().voucherId(voucherId).build();
-            int addTotal = additionalRecordScene.invoke(visitor).getInteger("total");
+            int addTotal = additionalRecordScene.execute(visitor).getInteger("total");
             //增发卡券
-            AddVoucherScene.builder().id(voucherId).addNumber(10).build().invoke(visitor);
+            AddVoucherScene.builder().id(voucherId).addNumber(10).build().execute(visitor);
             //卡券审批列表卡券状态=增发
             ApplyPageBean applyPage = util.getAuditingApplyPage(voucherName);
             CommonUtil.checkResult(voucherName + " 审批申请类型", ApplyTypeEnum.ADDITIONAL.getName(), applyPage.getApplyTypeName());
             CommonUtil.checkResult(voucherName + " 审批列表状态", ApplyStatusEnum.AUDITING.getName(), applyPage.getStatusName());
             //增发记录数量+1
-            JSONObject response = additionalRecordScene.invoke(visitor);
+            JSONObject response = additionalRecordScene.execute(visitor);
             int newAddTotal = response.getInteger("total");
             CommonUtil.checkResult(voucherName + " 增发记录列表数", addTotal + 1, newAddTotal);
             //增发记录状态
@@ -264,7 +264,7 @@ public class ApproveManagerCaseOnline extends TestCaseCommon implements TestCase
             CommonUtil.checkResult(voucherName + " 剩余库存", voucherPage.getSurplusInventory(), newVoucherPage.getSurplusInventory());
             CommonUtil.checkResult(voucherName + " 可用库存", voucherPage.getAllowUseInventory(), newVoucherPage.getAllowUseInventory());
             //增发记录状态=已拒绝
-            JSONObject newResponse = additionalRecordScene.invoke(visitor).getJSONArray("list").getJSONObject(0);
+            JSONObject newResponse = additionalRecordScene.execute(visitor).getJSONArray("list").getJSONObject(0);
             CommonUtil.checkResult(voucherName + " 增发记录状态", "审核未通过", newResponse.getString("status_name"));
             CommonUtil.checkResult(voucherName + " 增发记录申请增发数量", 10, newResponse.getInteger("additional_num"));
         } catch (Exception | AssertionError e) {
@@ -287,7 +287,7 @@ public class ApproveManagerCaseOnline extends TestCaseCommon implements TestCase
             List<Long> applyIdList = applyPageBeanList.stream().map(ApplyPageBean::getId).collect(Collectors.toList());
             List<Long> voucherIdList = applyPageBeanList.stream().map(ApplyPageBean::getVoucherId).collect(Collectors.toList());
             //批量审批通过
-            ApplyBatchApprovalScene.builder().ids(applyIdList).status(ApplyStatusEnum.AGREE.getId()).build().invoke(visitor);
+            ApplyBatchApprovalScene.builder().ids(applyIdList).status(ApplyStatusEnum.AGREE.getId()).build().execute(visitor);
             //审批通过后状态
             applyIdList.forEach(applyId -> {
                 ApplyPageBean applyPageBean = util.toJavaObject(ApplyPageScene.builder().build(), ApplyPageBean.class, "id", applyId);
@@ -325,7 +325,7 @@ public class ApproveManagerCaseOnline extends TestCaseCommon implements TestCase
             List<Long> applyIdList = applyPageBeanList.stream().map(ApplyPageBean::getId).collect(Collectors.toList());
             List<Long> voucherIdList = applyPageBeanList.stream().map(ApplyPageBean::getVoucherId).collect(Collectors.toList());
             //批量审批不通过
-            ApplyBatchApprovalScene.builder().ids(applyIdList).status(ApplyStatusEnum.REFUSAL.getId()).build().invoke(visitor);
+            ApplyBatchApprovalScene.builder().ids(applyIdList).status(ApplyStatusEnum.REFUSAL.getId()).build().execute(visitor);
             //审批不通过后状态
             applyIdList.forEach(applyId -> {
                 IScene scene = ApplyPageScene.builder().status(ApplyStatusEnum.REFUSAL.getId()).build();
@@ -355,10 +355,10 @@ public class ApproveManagerCaseOnline extends TestCaseCommon implements TestCase
     @Test(description = "优惠券审批--卡券审批已通过的卡券")
     public void voucherApply_system_5() {
         try {
-            JSONArray list = ApplyPageScene.builder().status(ApplyStatusEnum.AGREE.getId()).build().invoke(visitor).getJSONArray("list");
+            JSONArray list = ApplyPageScene.builder().status(ApplyStatusEnum.AGREE.getId()).build().execute(visitor).getJSONArray("list");
             Long applyId = list.getJSONObject(0).getLong("id");
             //批量审批通过
-            String message = ApplyApprovalScene.builder().id(applyId).status(String.valueOf(VoucherApprovalStatusEnum.AGREE.getId())).build().getResponse(visitor).getMessage();
+            String message = ApplyApprovalScene.builder().id(applyId).status(String.valueOf(VoucherApprovalStatusEnum.AGREE.getId())).build().visitor(visitor).getResponse().getMessage();
             String err = "success";
             CommonUtil.checkResult("批量审批已通过的卡券", err, message);
         } catch (Exception | AssertionError e) {
@@ -372,14 +372,14 @@ public class ApproveManagerCaseOnline extends TestCaseCommon implements TestCase
     @Test(description = "活动审批--活动审批页全部审批=待审批+审批通过+审批未通过")
     public void activityApply_data_1() {
         try {
-            JSONObject data = ManageDataScene.builder().build().invoke(visitor);
+            JSONObject data = ManageDataScene.builder().build().execute(visitor);
             Long total = data.getLong("total");
             Long wait = data.getLong("wait");
             Long failed = data.getLong("failed");
             Long passed = data.getLong("passed");
-            Long pendingTotal = ManagePageScene.builder().approvalStatus(ActivityApprovalStatusEnum.PENDING.getId()).build().invoke(visitor).getLong("total");
-            Long passedTotal = ManagePageScene.builder().approvalStatus(ActivityApprovalStatusEnum.PASSED.getId()).build().invoke(visitor).getLong("total");
-            Long rejectTotal = ManagePageScene.builder().approvalStatus(ActivityApprovalStatusEnum.REJECT.getId()).build().invoke(visitor).getLong("total");
+            Long pendingTotal = ManagePageScene.builder().approvalStatus(ActivityApprovalStatusEnum.PENDING.getId()).build().execute(visitor).getLong("total");
+            Long passedTotal = ManagePageScene.builder().approvalStatus(ActivityApprovalStatusEnum.PASSED.getId()).build().execute(visitor).getLong("total");
+            Long rejectTotal = ManagePageScene.builder().approvalStatus(ActivityApprovalStatusEnum.REJECT.getId()).build().execute(visitor).getLong("total");
             Preconditions.checkArgument(wait.equals(pendingTotal), "审核数据接口待审核活动数：" + wait + " 按照待审核搜索列表数：" + pendingTotal);
             Preconditions.checkArgument(passed.equals(passedTotal), "审核数据接口审核通过活动数：" + wait + " 按照审核通过搜索列表数：" + passedTotal);
             Preconditions.checkArgument(failed.equals(rejectTotal), "审核数据接口审核未通过活动数：" + wait + " 按照审核未通过搜索列表数：" + rejectTotal);

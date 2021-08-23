@@ -120,7 +120,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             AppointmentTypeEnum appointmentTypeEnum = AppointmentTypeEnum.MAINTAIN;
             Long shopId = util.getShopId();
             IScene appointmentPageScene = AppointmentPageScene.builder().type(appointmentTypeEnum.name()).build();
-            int appointmentPageTotal = appointmentPageScene.invoke(visitor).getInteger("total");
+            int appointmentPageTotal = appointmentPageScene.execute(visitor).getInteger("total");
             int appointmentNumber = util.appointmentNumber(appointmentBoardDate, appointmentTypeEnum.name());
             util.loginApp(ACCOUNT);
             int appAppointmentNum = util.getAppointmentPageNum();
@@ -144,7 +144,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             util.loginPc(ACCOUNT);
             int newAppointmentNumber = util.appointmentNumber(appointmentBoardDate, appointmentTypeEnum.name());
             CommonUtil.checkResult("pc预约看板分子数", appointmentNumber + 1, newAppointmentNumber);
-            int newAppointmentPageTotal = appointmentPageScene.invoke(visitor).getInteger("total");
+            int newAppointmentPageTotal = appointmentPageScene.execute(visitor).getInteger("total");
             CommonUtil.checkResult("pc预约记录列表数", appointmentPageTotal + 1, newAppointmentPageTotal);
             AppointmentRecordAppointmentPageBean appointmentPage = util.getAppointmentPageById(appointmentId, appointmentTypeEnum.name());
             CommonUtil.checkResult("预约类型", appointmentTypeEnum.getValue(), appointmentPage.getTypeName());
@@ -156,7 +156,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             //确认预约
             util.loginApp(ACCOUNT);
             int makeSureAppointmentNum = util.getAppointmentPageNum();
-            AppAppointmentHandleScene.builder().id(appointmentId).shopId(shopId).type(10).build().invoke(visitor);
+            AppAppointmentHandleScene.builder().id(appointmentId).shopId(shopId).type(10).build().execute(visitor);
             Integer newMakeSureAppAppointmentNum = util.getAppointmentPageNum();
             CommonUtil.checkResult("app预约记录数", makeSureAppointmentNum, newMakeSureAppAppointmentNum);
             util.loginPc(ACCOUNT);
@@ -166,18 +166,17 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             CommonUtil.checkResult("是否可接待", true, newAppointmentPage.getIsCanReception());
             CommonUtil.checkResult("是否可取消", true, newAppointmentPage.getIsCanCancel());
             CommonUtil.checkResult("是否可调整时间", true, newAppointmentPage.getIsCanAdjust());
-            util.loginPc(ACCOUNT);
-            IScene receptionPageScene = ReceptionPageScene.builder().build();
-            int pcReceptionPageNum = receptionPageScene.invoke(visitor).getInteger("total");
-
             //点接待
             util.loginApp(ACCOUNT);
             int appReceptionPageNum = util.getReceptionPageNum();
-            AppAppointmentReceptionScene.builder().id(appointmentId).build().invoke(visitor);
+            util.loginPc(ACCOUNT);
+            IScene receptionPageScene = ReceptionPageScene.builder().build();
+            int pcReceptionPageNum = receptionPageScene.execute(visitor).getInteger("total");
+            AppAppointmentReceptionScene.builder().id(appointmentId).build().execute(visitor);
             int newAppReceptionPageNum = util.getReceptionPageNum();
             CommonUtil.checkResult("app接待页列表数", appReceptionPageNum + 1, newAppReceptionPageNum);
             util.loginPc(ACCOUNT);
-            int newPcReceptionPageNum = receptionPageScene.invoke(visitor).getInteger("total");
+            int newPcReceptionPageNum = receptionPageScene.execute(visitor).getInteger("total");
             CommonUtil.checkResult("pc接待列表数", pcReceptionPageNum + 1, newPcReceptionPageNum);
             ReceptionPage receptionPage = util.getFirstReceptionPage();
             CommonUtil.checkResult("接待状态", ReceptionStatusEnum.IN_RECEPTION.getStatusName(), receptionPage.getReceptionStatusName());
@@ -189,16 +188,16 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             util.loginApp(ACCOUNT);
             AppReceptionReceptorList receptorList = util.getReceptorList();
             String uid = receptorList.getUid();
-            AppReceptionReceptorChangeScene.builder().id(receptionId).receptorId(uid).shopId(shopId).build().invoke(visitor);
+            AppReceptionReceptorChangeScene.builder().id(receptionId).receptorId(uid).shopId(shopId).build().execute(visitor);
             util.loginPc(ACCOUNT);
             ReceptionPage newReceptionPage = util.getReceptionPageById(receptionId);
             CommonUtil.checkResult("变更接待后接待人员", receptorList.getName(), newReceptionPage.getReceptionSaleName());
             util.loginPc(ACCOUNT);
-            ReceptorChangeScene.builder().id(receptionId).receptorId(util.getReceptorList(ACCOUNT).getUid()).shopId(shopId).build().invoke(visitor);
+            ReceptorChangeScene.builder().id(receptionId).receptorId(util.getReceptorList(ACCOUNT).getUid()).shopId(shopId).build().execute(visitor);
             //登录此人app完成接待
             util.loginApp(ACCOUNT);
             int finishReceptionNum = util.getReceptionPageNum();
-            AppReceptionFinishReceptionScene.builder().id(receptionId).shopId(shopId).build().invoke(visitor);
+            AppReceptionFinishReceptionScene.builder().id(receptionId).shopId(shopId).build().execute(visitor);
             int newFinishReceptionNum = util.getReceptionPageNum();
             CommonUtil.checkResult("完成接待后，app接待列表数", finishReceptionNum - 1, newFinishReceptionNum);
             util.loginPc(ACCOUNT);
@@ -207,12 +206,12 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             //小程序评价状态
             util.loginApplet(APPLET_USER_ONE);
             IScene appletAppointmentListScene = AppletAppointmentListScene.builder().build();
-            JSONObject object = appletAppointmentListScene.invoke(visitor).getJSONArray("list").getJSONObject(0);
+            JSONObject object = appletAppointmentListScene.execute(visitor).getJSONArray("list").getJSONObject(0);
             String statusName = object.getString("status_name");
             CommonUtil.checkResult("完成接待后applet预约状态", MaintainStatusEnum.TO_BE_EVALUATED.getStatusName(), statusName);
             //消息状态
             IScene appletMessageListScene = AppletMessageListScene.builder().build();
-            JSONObject messageObject = appletMessageListScene.invoke(visitor).getJSONArray("list").getJSONObject(0);
+            JSONObject messageObject = appletMessageListScene.execute(visitor).getJSONArray("list").getJSONObject(0);
             String messageTypeName = messageObject.getString("message_type_name");
             Integer messageType = messageObject.getInteger("message_type");
             Boolean isRead = messageObject.getBoolean("is_read");
@@ -223,7 +222,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             CommonUtil.checkResult("完成接待后applet消息是否已读", false, isRead);
             CommonUtil.checkResult("完成接待后applet消息标题", AppletMessageTypeEnum.MAINTAIN_EVALUATE_TIP.getServiceType().getMsgTitle(), title);
             IScene appletMessageDetailScene = AppletMessageDetailScene.builder().id(messageId).build();
-            JSONObject messageDetailObject = appletMessageDetailScene.invoke(visitor);
+            JSONObject messageDetailObject = appletMessageDetailScene.execute(visitor);
             Boolean isCanEvaluate = messageDetailObject.getBoolean("is_can_evaluate");
             String content = messageDetailObject.getString("content");
             CommonUtil.checkResult("完成接待后applet消息中可评价状态", true, isCanEvaluate);
@@ -231,17 +230,17 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             //评价
             util.loginPc(ACCOUNT);
             IScene evaluatePageScene = EvaluatePageScene.builder().evaluateType(EvaluateTypeEnum.MAINTAIN.getId()).build();
-            Long total = evaluatePageScene.invoke(visitor).getLong("total");
+            Long total = evaluatePageScene.execute(visitor).getLong("total");
             util.loginApplet(APPLET_USER_ONE);
-            AppletEvaluateSubmitScene.builder().id(receptionId).shopId(shopId).type(1).score(4).isAnonymous(true).describe(EnumDesc.DESC_BETWEEN_40_50.getDesc()).suggestion(EnumDesc.DESC_BETWEEN_40_50.getDesc()).build().invoke(visitor);
+            AppletEvaluateSubmitScene.builder().id(receptionId).shopId(shopId).type(1).score(4).isAnonymous(true).describe(EnumDesc.DESC_BETWEEN_40_50.getDesc()).suggestion(EnumDesc.DESC_BETWEEN_40_50.getDesc()).build().execute(visitor);
             //评价完成后
-            JSONObject newMessageDetailObject = appletMessageDetailScene.invoke(visitor);
+            JSONObject newMessageDetailObject = appletMessageDetailScene.execute(visitor);
             Boolean newIsCanEvaluate = newMessageDetailObject.getBoolean("is_can_evaluate");
             CommonUtil.checkResult("完成评价后applet消息中可评价状态", false, newIsCanEvaluate);
-            String newStatusName = appletAppointmentListScene.invoke(visitor).getJSONArray("list").getJSONObject(0).getString("status_name");
+            String newStatusName = appletAppointmentListScene.execute(visitor).getJSONArray("list").getJSONObject(0).getString("status_name");
             CommonUtil.checkResult("完成评价后applet预约状态", MaintainStatusEnum.EVALUATED.getStatusName(), newStatusName);
             util.loginPc(ACCOUNT);
-            JSONObject evaluatePageObject = evaluatePageScene.invoke(visitor);
+            JSONObject evaluatePageObject = evaluatePageScene.execute(visitor);
             Long newTotal = evaluatePageObject.getLong("total");
             EvaluatePageBean evaluatePageBean = util.toFirstJavaObject(evaluatePageScene, EvaluatePageBean.class);
             CommonUtil.checkResult("评价列表数", total + 1, newTotal);
@@ -251,7 +250,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             //跟进
             util.loginApp(ACCOUNT);
             Integer followId = util.getFollowUpPageList().get(0).getId();
-            AppFollowUpCompleteScene.builder().id(followId).shopId(shopId).remark(EnumDesc.DESC_BETWEEN_40_50.getDesc()).build().invoke(visitor);
+            AppFollowUpCompleteScene.builder().id(followId).shopId(shopId).remark(EnumDesc.DESC_BETWEEN_40_50.getDesc()).build().execute(visitor);
             util.loginPc(ACCOUNT);
             EvaluatePageBean followEvaluatePage = util.toFirstJavaObject(evaluatePageScene, EvaluatePageBean.class);
             CommonUtil.checkResult("跟进后跟进备注", EnumDesc.DESC_BETWEEN_40_50.getDesc(), followEvaluatePage.getFollowUpRemark());
@@ -271,7 +270,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             AppletMessageTypeEnum appletMessageTypeEnum = AppletMessageTypeEnum.REPAIR_EVALUATE_TIP;
             Long shopId = util.getShopId();
             IScene appointmentPageScene = AppointmentPageScene.builder().type(appointmentTypeEnum.name()).build();
-            int appointmentPageTotal = appointmentPageScene.invoke(visitor).getInteger("total");
+            int appointmentPageTotal = appointmentPageScene.execute(visitor).getInteger("total");
             util.loginApp(ACCOUNT);
             int appAppointmentNum = util.getAppointmentPageNum();
             //预约维修
@@ -292,7 +291,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             CommonUtil.checkResult("app是否可取消", true, appAppointmentPage.getIsCanCancel());
             CommonUtil.checkResult("app是否可调整时间", true, appAppointmentPage.getIsCanAdjust());
             util.loginPc(ACCOUNT);
-            int newAppointmentPageTotal = appointmentPageScene.invoke(visitor).getInteger("total");
+            int newAppointmentPageTotal = appointmentPageScene.execute(visitor).getInteger("total");
             CommonUtil.checkResult("pc预约记录列表数", appointmentPageTotal + 1, newAppointmentPageTotal);
             AppointmentRecordAppointmentPageBean appointmentPage = util.getAppointmentPageById(appointmentId, appointmentTypeEnum.name());
             CommonUtil.checkResult("预约类型", appointmentTypeEnum.getValue(), appointmentPage.getTypeName());
@@ -305,7 +304,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             //确认预约
             util.loginApp(ACCOUNT);
             int makeSureAppointmentNum = util.getAppointmentPageNum();
-            AppAppointmentHandleScene.builder().id(appointmentId).shopId(shopId).type(10).build().invoke(visitor);
+            AppAppointmentHandleScene.builder().id(appointmentId).shopId(shopId).type(10).build().execute(visitor);
             Integer newMakeSureAppAppointmentNum = util.getAppointmentPageNum();
             CommonUtil.checkResult("app预约记录数", makeSureAppointmentNum, newMakeSureAppAppointmentNum);
             util.loginPc(ACCOUNT);
@@ -316,15 +315,16 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             CommonUtil.checkResult("是否可取消", true, newAppointmentPage.getIsCanCancel());
             CommonUtil.checkResult("是否可调整时间", true, newAppointmentPage.getIsCanAdjust());
             //点接待
+            util.loginApp(ACCOUNT);
             int appReceptionPageNum = util.getReceptionPageNum();
             util.loginPc(ACCOUNT);
             IScene receptionPageScene = ReceptionPageScene.builder().build();
-            int pcReceptionPageNum = receptionPageScene.invoke(visitor).getInteger("total");
-            AppAppointmentReceptionScene.builder().id(appointmentId).build().invoke(visitor);
+            int pcReceptionPageNum = receptionPageScene.execute(visitor).getInteger("total");
+            AppAppointmentReceptionScene.builder().id(appointmentId).build().execute(visitor);
             int newAppReceptionPageNum = util.getReceptionPageNum();
             CommonUtil.checkResult("app接待页列表数", appReceptionPageNum + 1, newAppReceptionPageNum);
             util.loginPc(ACCOUNT);
-            int newPcReceptionPageNum = receptionPageScene.invoke(visitor).getInteger("total");
+            int newPcReceptionPageNum = receptionPageScene.execute(visitor).getInteger("total");
             CommonUtil.checkResult("pc接待列表数", pcReceptionPageNum + 1, newPcReceptionPageNum);
             ReceptionPage receptionPage = util.getFirstReceptionPage();
             CommonUtil.checkResult("接待状态", ReceptionStatusEnum.IN_RECEPTION.getStatusName(), receptionPage.getReceptionStatusName());
@@ -336,16 +336,16 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             util.loginApp(ACCOUNT);
             AppReceptionReceptorList receptorList = util.getReceptorList();
             String uid = receptorList.getUid();
-            AppReceptionReceptorChangeScene.builder().id(receptionId).receptorId(uid).shopId(shopId).build().invoke(visitor);
+            AppReceptionReceptorChangeScene.builder().id(receptionId).receptorId(uid).shopId(shopId).build().execute(visitor);
             util.loginPc(ACCOUNT);
             ReceptionPage newReceptionPage = util.getReceptionPageById(receptionId);
             CommonUtil.checkResult("变更接待后接待人员", receptorList.getName(), newReceptionPage.getReceptionSaleName());
             util.loginPc(ACCOUNT);
-            ReceptorChangeScene.builder().id(receptionId).receptorId(util.getReceptorList(ACCOUNT).getUid()).shopId(shopId).build().invoke(visitor);
+            ReceptorChangeScene.builder().id(receptionId).receptorId(util.getReceptorList(ACCOUNT).getUid()).shopId(shopId).build().execute(visitor);
             //登录此人app完成接待
             util.loginApp(ACCOUNT);
             int finishReceptionNum = util.getReceptionPageNum();
-            AppReceptionFinishReceptionScene.builder().id(receptionId).shopId(shopId).build().invoke(visitor);
+            AppReceptionFinishReceptionScene.builder().id(receptionId).shopId(shopId).build().execute(visitor);
             int newFinishReceptionNum = util.getReceptionPageNum();
             CommonUtil.checkResult("完成接待后，app接待列表数", finishReceptionNum - 1, newFinishReceptionNum);
             util.loginPc(ACCOUNT);
@@ -354,12 +354,12 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             //小程序评价状态
             util.loginApplet(APPLET_USER_ONE);
             IScene appletAppointmentListScene = AppletAppointmentListScene.builder().build();
-            JSONObject object = appletAppointmentListScene.invoke(visitor).getJSONArray("list").getJSONObject(0);
+            JSONObject object = appletAppointmentListScene.execute(visitor).getJSONArray("list").getJSONObject(0);
             String statusName = object.getString("status_name");
             CommonUtil.checkResult("完成接待后applet预约状态", RepairStatusEnum.TO_BE_EVALUATED.getStatusName(), statusName);
             //消息状态
             IScene appletMessageListScene = AppletMessageListScene.builder().build();
-            JSONObject messageObject = appletMessageListScene.invoke(visitor).getJSONArray("list").getJSONObject(0);
+            JSONObject messageObject = appletMessageListScene.execute(visitor).getJSONArray("list").getJSONObject(0);
             String messageTypeName = messageObject.getString("message_type_name");
             Integer messageType = messageObject.getInteger("message_type");
             Boolean isRead = messageObject.getBoolean("is_read");
@@ -370,7 +370,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             CommonUtil.checkResult("完成接待后applet消息是否已读", false, isRead);
             CommonUtil.checkResult("完成接待后applet消息标题", appletMessageTypeEnum.getServiceType().getMsgTitle(), title);
             IScene appletMessageDetailScene = AppletMessageDetailScene.builder().id(messageId).build();
-            JSONObject messageDetailObject = appletMessageDetailScene.invoke(visitor);
+            JSONObject messageDetailObject = appletMessageDetailScene.execute(visitor);
             Boolean isCanEvaluate = messageDetailObject.getBoolean("is_can_evaluate");
             String content = messageDetailObject.getString("content");
             CommonUtil.checkResult("完成接待后applet消息中可评价状态", true, isCanEvaluate);
@@ -378,17 +378,17 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             //评价
             util.loginPc(ACCOUNT);
             IScene evaluatePageScene = EvaluatePageScene.builder().evaluateType(appletMessageTypeEnum.getServiceType().getId()).build();
-            Long total = evaluatePageScene.invoke(visitor).getLong("total");
+            Long total = evaluatePageScene.execute(visitor).getLong("total");
             util.loginApplet(APPLET_USER_ONE);
-            AppletEvaluateSubmitScene.builder().id(receptionId).shopId(shopId).type(1).score(4).isAnonymous(true).describe(EnumDesc.DESC_BETWEEN_40_50.getDesc()).suggestion(EnumDesc.DESC_BETWEEN_40_50.getDesc()).build().invoke(visitor);
+            AppletEvaluateSubmitScene.builder().id(receptionId).shopId(shopId).type(1).score(4).isAnonymous(true).describe(EnumDesc.DESC_BETWEEN_40_50.getDesc()).suggestion(EnumDesc.DESC_BETWEEN_40_50.getDesc()).build().execute(visitor);
             //评价完成后
-            JSONObject newMessageDetailObject = appletMessageDetailScene.invoke(visitor);
+            JSONObject newMessageDetailObject = appletMessageDetailScene.execute(visitor);
             Boolean newIsCanEvaluate = newMessageDetailObject.getBoolean("is_can_evaluate");
             CommonUtil.checkResult("完成评价后applet消息中可评价状态", false, newIsCanEvaluate);
-            String newStatusName = appletAppointmentListScene.invoke(visitor).getJSONArray("list").getJSONObject(0).getString("status_name");
+            String newStatusName = appletAppointmentListScene.execute(visitor).getJSONArray("list").getJSONObject(0).getString("status_name");
             CommonUtil.checkResult("完成评价后applet预约状态", RepairStatusEnum.EVALUATED.getStatusName(), newStatusName);
             util.loginPc(ACCOUNT);
-            JSONObject evaluatePageObject = evaluatePageScene.invoke(visitor);
+            JSONObject evaluatePageObject = evaluatePageScene.execute(visitor);
             Long newTotal = evaluatePageObject.getLong("total");
             EvaluatePageBean evaluatePageBean = util.toFirstJavaObject(evaluatePageScene, EvaluatePageBean.class);
             CommonUtil.checkResult("评价列表数", total + 1, newTotal);
@@ -398,7 +398,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             //跟进
             util.loginApp(ACCOUNT);
             Integer followId = util.getFollowUpPageList().get(0).getId();
-            AppFollowUpCompleteScene.builder().id(followId).shopId(shopId).remark(EnumDesc.DESC_BETWEEN_40_50.getDesc()).build().invoke(visitor);
+            AppFollowUpCompleteScene.builder().id(followId).shopId(shopId).remark(EnumDesc.DESC_BETWEEN_40_50.getDesc()).build().execute(visitor);
             util.loginPc(ACCOUNT);
             EvaluatePageBean followEvaluatePage = util.toFirstJavaObject(evaluatePageScene, EvaluatePageBean.class);
             CommonUtil.checkResult("跟进后跟进备注", EnumDesc.DESC_BETWEEN_40_50.getDesc(), followEvaluatePage.getFollowUpRemark());
@@ -418,7 +418,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             AppletMessageTypeEnum appletMessageTypeEnum = AppletMessageTypeEnum.RECEPTION_EVALUATE_TIP;
             Long shopId = util.getShopId();
             IScene appointmentPageScene = AppointmentPageScene.builder().type(appointmentTypeEnum.name()).build();
-            int appointmentPageTotal = appointmentPageScene.invoke(visitor).getInteger("total");
+            int appointmentPageTotal = appointmentPageScene.execute(visitor).getInteger("total");
             util.loginApp(ACCOUNT);
             int appAppointmentNum = util.getAppointmentPageNum();
             //预约试驾
@@ -439,7 +439,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             CommonUtil.checkResult("app是否可取消", true, appAppointmentPage.getIsCanCancel());
             CommonUtil.checkResult("app是否可调整时间", true, appAppointmentPage.getIsCanAdjust());
             util.loginPc(ACCOUNT);
-            int newAppointmentPageTotal = appointmentPageScene.invoke(visitor).getInteger("total");
+            int newAppointmentPageTotal = appointmentPageScene.execute(visitor).getInteger("total");
             CommonUtil.checkResult("pc预约记录列表数", appointmentPageTotal + 1, newAppointmentPageTotal);
             AppointmentRecordAppointmentPageBean appointmentPage = util.getAppointmentPageById(appointmentId, appointmentTypeEnum.name());
             CommonUtil.checkResult("预约类型", appointmentTypeEnum.getValue(), appointmentPage.getTypeName());
@@ -451,7 +451,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             //确认预约
             util.loginApp(ACCOUNT);
             int makeSureAppointmentNum = util.getAppointmentPageNum();
-            AppAppointmentHandleScene.builder().id(appointmentId).shopId(shopId).type(10).build().invoke(visitor);
+            AppAppointmentHandleScene.builder().id(appointmentId).shopId(shopId).type(10).build().execute(visitor);
             Integer newMakeSureAppAppointmentNum = util.getAppointmentPageNum();
             CommonUtil.checkResult("app预约记录数", makeSureAppointmentNum, newMakeSureAppAppointmentNum);
             util.loginPc(ACCOUNT);
@@ -462,15 +462,16 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             CommonUtil.checkResult("是否可取消", true, newAppointmentPage.getIsCanCancel());
             CommonUtil.checkResult("是否可调整时间", true, newAppointmentPage.getIsCanAdjust());
             //点接待
-            IScene receptionPageScene = PreSalesReceptionPageScene.builder().build();
-            int pcReceptionPageNum = receptionPageScene.invoke(visitor).getInteger("total");
             util.loginApp(ACCOUNT);
             int appReceptionPageNum = util.getPreSalesReceptionPageNum();
-            AppAppointmentReceptionScene.builder().id(appointmentId).build().invoke(visitor);
+            util.loginPc(ACCOUNT);
+            IScene receptionPageScene = PreSalesReceptionPageScene.builder().build();
+            int pcReceptionPageNum = receptionPageScene.execute(visitor).getInteger("total");
+            AppAppointmentReceptionScene.builder().id(appointmentId).build().execute(visitor);
             int newAppReceptionPageNum = util.getPreSalesReceptionPageNum();
             CommonUtil.checkResult("app接待页列表数", appReceptionPageNum + 1, newAppReceptionPageNum);
             util.loginPc(ACCOUNT);
-            int newPcReceptionPageNum = receptionPageScene.invoke(visitor).getInteger("total");
+            int newPcReceptionPageNum = receptionPageScene.execute(visitor).getInteger("total");
             CommonUtil.checkResult("pc接待列表数", pcReceptionPageNum + 1, newPcReceptionPageNum);
             PreSalesReceptionPageBean receptionPage = util.getFirstPreSalesReceptionPage();
             CommonUtil.checkResult("接待类型", "预约", receptionPage.getReceptionTypeName());
@@ -480,29 +481,29 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             util.loginApp(ACCOUNT);
             AppReceptionReceptorList receptorList = util.getPreSalesReceptorList();
             String uid = receptorList.getUid();
-            AppReceptorChangeScene.builder().id(receptionId).receptorId(uid).shopId(shopId).build().invoke(visitor);
+            AppReceptorChangeScene.builder().id(receptionId).receptorId(uid).shopId(shopId).build().execute(visitor);
             util.loginPc(ACCOUNT);
             PreSalesReceptionPageBean newReceptionPage = util.getPreSalesReceptionPageById(receptionId);
             CommonUtil.checkResult("变更接待后接待人员", receptorList.getName(), newReceptionPage.getReceptionSaleName());
             util.loginPc(ACCOUNT);
-            AppReceptorChangeScene.builder().id(receptionId).receptorId(util.getReceptorList(ACCOUNT).getUid()).shopId(shopId).build().invoke(visitor);
+            AppReceptorChangeScene.builder().id(receptionId).receptorId(util.getReceptorList(ACCOUNT).getUid()).shopId(shopId).build().execute(visitor);
             //登录此人app完成接待
             util.loginApp(ACCOUNT);
             int finishReceptionNum = util.getPreSalesReceptionPageNum();
             util.editCustomerInfo();
-            AppFinishReceptionScene.builder().id(receptionId).shopId(shopId).build().invoke(visitor);
+            AppFinishReceptionScene.builder().id(receptionId).shopId(shopId).build().execute(visitor);
             int newFinishReceptionNum = util.getPreSalesReceptionPageNum();
             CommonUtil.checkResult("完成接待后，app接待列表数", finishReceptionNum - 1, newFinishReceptionNum);
             util.loginPc(ACCOUNT);
             //小程序评价状态
             util.loginApplet(APPLET_USER_ONE);
             IScene appletAppointmentListScene = AppletAppointmentListScene.builder().build();
-            JSONObject object = appletAppointmentListScene.invoke(visitor).getJSONArray("list").getJSONObject(0);
+            JSONObject object = appletAppointmentListScene.execute(visitor).getJSONArray("list").getJSONObject(0);
             String statusName = object.getString("status_name");
             CommonUtil.checkResult("完成接待后applet预约状态", MaintainStatusEnum.TO_BE_EVALUATED.getStatusName(), statusName);
             //消息状态
             IScene appletMessageListScene = AppletMessageListScene.builder().build();
-            JSONObject messageObject = appletMessageListScene.invoke(visitor).getJSONArray("list").getJSONObject(0);
+            JSONObject messageObject = appletMessageListScene.execute(visitor).getJSONArray("list").getJSONObject(0);
             String messageTypeName = messageObject.getString("message_type_name");
             Integer messageType = messageObject.getInteger("message_type");
             Boolean isRead = messageObject.getBoolean("is_read");
@@ -513,7 +514,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             CommonUtil.checkResult("完成接待后applet消息是否已读", false, isRead);
             CommonUtil.checkResult("完成接待后applet消息标题", appletMessageTypeEnum.getServiceType().getMsgTitle(), title);
             IScene appletMessageDetailScene = AppletMessageDetailScene.builder().id(messageId).build();
-            JSONObject messageDetailObject = appletMessageDetailScene.invoke(visitor);
+            JSONObject messageDetailObject = appletMessageDetailScene.execute(visitor);
             Boolean isCanEvaluate = messageDetailObject.getBoolean("is_can_evaluate");
             String content = messageDetailObject.getString("content");
             CommonUtil.checkResult("完成接待后applet消息中可评价状态", true, isCanEvaluate);
@@ -521,17 +522,17 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             //评价
             util.loginPc(ACCOUNT);
             IScene evaluatePageScene = EvaluatePageScene.builder().evaluateType(appletMessageTypeEnum.getServiceType().getId()).build();
-            Long total = evaluatePageScene.invoke(visitor).getLong("total");
+            Long total = evaluatePageScene.execute(visitor).getLong("total");
             util.loginApplet(APPLET_USER_ONE);
-            AppletEvaluateSubmitScene.builder().id(receptionId).shopId(shopId).type(4).score(4).isAnonymous(true).describe(EnumDesc.DESC_BETWEEN_40_50.getDesc()).suggestion(EnumDesc.DESC_BETWEEN_40_50.getDesc()).build().invoke(visitor);
+            AppletEvaluateSubmitScene.builder().id(receptionId).shopId(shopId).type(4).score(4).isAnonymous(true).describe(EnumDesc.DESC_BETWEEN_40_50.getDesc()).suggestion(EnumDesc.DESC_BETWEEN_40_50.getDesc()).build().execute(visitor);
             //评价完成后
-            JSONObject newMessageDetailObject = appletMessageDetailScene.invoke(visitor);
+            JSONObject newMessageDetailObject = appletMessageDetailScene.execute(visitor);
             Boolean newIsCanEvaluate = newMessageDetailObject.getBoolean("is_can_evaluate");
             CommonUtil.checkResult("完成评价后applet消息中可评价状态", false, newIsCanEvaluate);
-            String newStatusName = appletAppointmentListScene.invoke(visitor).getJSONArray("list").getJSONObject(0).getString("status_name");
+            String newStatusName = appletAppointmentListScene.execute(visitor).getJSONArray("list").getJSONObject(0).getString("status_name");
             CommonUtil.checkResult("完成评价后applet预约状态", MaintainStatusEnum.EVALUATED.getStatusName(), newStatusName);
             util.loginPc(ACCOUNT);
-            JSONObject evaluatePageObject = evaluatePageScene.invoke(visitor);
+            JSONObject evaluatePageObject = evaluatePageScene.execute(visitor);
             Long newTotal = evaluatePageObject.getLong("total");
             EvaluatePageBean evaluatePageBean = util.toFirstJavaObject(evaluatePageScene, EvaluatePageBean.class);
             CommonUtil.checkResult("评价列表数", total + 1, newTotal);
@@ -541,7 +542,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             //跟进
             util.loginApp(ACCOUNT);
             Integer followId = util.getFollowUpPageList().get(0).getId();
-            AppFollowUpCompleteScene.builder().id(followId).shopId(shopId).remark(EnumDesc.DESC_BETWEEN_40_50.getDesc()).build().invoke(visitor);
+            AppFollowUpCompleteScene.builder().id(followId).shopId(shopId).remark(EnumDesc.DESC_BETWEEN_40_50.getDesc()).build().execute(visitor);
             util.loginPc(ACCOUNT);
             EvaluatePageBean followEvaluatePage = util.toFirstJavaObject(evaluatePageScene, EvaluatePageBean.class);
             CommonUtil.checkResult("跟进后跟进备注", EnumDesc.DESC_BETWEEN_40_50.getDesc(), followEvaluatePage.getFollowUpRemark());
@@ -558,7 +559,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
         try {
             util.loginApplet(APPLET_USER_ONE);
             IScene homePageScene = AppletHomePageScene.builder().build();
-            Integer integral = homePageScene.invoke(visitor).getInteger("integral");
+            Integer integral = homePageScene.execute(visitor).getInteger("integral");
             AtomicInteger integralSum = new AtomicInteger();
             List<AppletIntegralRecord> appletIntegralRecordList = util.getAppletIntegralRecordList();
             appletIntegralRecordList.forEach(e -> {
@@ -581,7 +582,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             util.loginApplet(APPLET_USER_ONE);
             int appletCommodityListNum = util.getAppletCommodityListNum();
             util.loginPc(ACCOUNT);
-            int total = ExchangePageScene.builder().status(IntegralExchangeStatusEnum.WORKING.name()).build().invoke(visitor).getInteger("total");
+            int total = ExchangePageScene.builder().status(IntegralExchangeStatusEnum.WORKING.name()).build().execute(visitor).getInteger("total");
             CommonUtil.checkResultPlus("小程序积分商城商品数量", appletCommodityListNum, "pc进行中的积分兑换数量", total);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -600,10 +601,10 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             //修改为可兑换多次
             util.modifyExchangeGoodsLimit(exchangePage.getId(), exchangePage.getExchangeType(), false);
             util.loginApplet(APPLET_USER_ONE);
-            int specificationId = AppletCommodityDetailScene.builder().id(exchangePage.getId()).build().invoke(visitor).getJSONArray("specification_compose_list").getJSONObject(0).getInteger("id");
-            AppletShippingAddress appletShippingAddress = AppletShippingAddressListScene.builder().build().invoke(visitor).getJSONArray("list").stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppletShippingAddress.class)).collect(Collectors.toList()).get(0);
+            int specificationId = AppletCommodityDetailScene.builder().id(exchangePage.getId()).build().execute(visitor).getJSONArray("specification_compose_list").getJSONObject(0).getInteger("id");
+            AppletShippingAddress appletShippingAddress = AppletShippingAddressListScene.builder().build().execute(visitor).getJSONArray("list").stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppletShippingAddress.class)).collect(Collectors.toList()).get(0);
             //兑换积分
-            String message = AppletSubmitOrderScene.builder().commodityId(exchangePage.getId()).specificationId(specificationId).smsNotify(false).commodityNum("1").districtCode(appletShippingAddress.getDistrictCode()).address(appletShippingAddress.getAddress()).receiver(appletShippingAddress.getName()).receivePhone(appletShippingAddress.getPhone()).build().invoke(visitor, false).getString("message");
+            String message = AppletSubmitOrderScene.builder().commodityId(exchangePage.getId()).specificationId(specificationId).smsNotify(false).commodityNum("1").districtCode(appletShippingAddress.getDistrictCode()).address(appletShippingAddress.getAddress()).receiver(appletShippingAddress.getName()).receivePhone(appletShippingAddress.getPhone()).build().execute(visitor, false).getString("message");
             String err = "商品库存不足";
             CommonUtil.checkResult("兑换库存不足的商品", err, message);
         } catch (Exception | AssertionError e) {
@@ -624,14 +625,14 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             if (a == null) {
                 Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
                 exchangePage = util.createExchangeFictitiousGoods(voucherId);
-                EditExchangeStockScene.builder().id(exchangePage.getId()).changeStockType(ChangeStockTypeEnum.MINUS.name()).num("1").goodsName(exchangePage.getGoodsName()).type(exchangePage.getExchangeType()).build().invoke(visitor);
+                EditExchangeStockScene.builder().id(exchangePage.getId()).changeStockType(ChangeStockTypeEnum.MINUS.name()).num("1").goodsName(exchangePage.getGoodsName()).type(exchangePage.getExchangeType()).build().execute(visitor);
             } else {
                 exchangePage = a;
             }
             util.loginApplet(APPLET_USER_ONE);
-            Long specificationId = AppletCommodityDetailScene.builder().id(exchangePage.getId()).build().invoke(visitor).getLong("id");
+            Long specificationId = AppletCommodityDetailScene.builder().id(exchangePage.getId()).build().execute(visitor).getLong("id");
             //兑换积分
-            String message = AppletIntegralExchangeScene.builder().id(specificationId).build().invoke(visitor, false).getString("message");
+            String message = AppletIntegralExchangeScene.builder().id(specificationId).build().execute(visitor, false).getString("message");
             String err = "商品库存不足";
             CommonUtil.checkResult("兑换无库存的虚拟商品", err, message);
         } catch (Exception | AssertionError e) {
@@ -661,7 +662,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
                     //如果有给此积分商品增加一个库存
                     exchangePage = b;
                     voucherId = util.getExchangeGoodsContainVoucher(exchangePage.getId()).getVoucherId();
-                    EditExchangeStockScene.builder().changeStockType(ChangeStockTypeEnum.ADD.name()).num("1").id(exchangePage.getId()).goodsName(exchangePage.getGoodsName()).type(CommodityTypeEnum.FICTITIOUS.name()).build().invoke(visitor);
+                    EditExchangeStockScene.builder().changeStockType(ChangeStockTypeEnum.ADD.name()).num("1").id(exchangePage.getId()).goodsName(exchangePage.getGoodsName()).type(CommodityTypeEnum.FICTITIOUS.name()).build().execute(visitor);
                 }
             } else {
                 //如果有直接使用
@@ -674,8 +675,8 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             util.loginApplet(APPLET_USER_ONE);
             int appletVoucherNum = util.getAppletVoucherNum();
             //兑换积分
-            Long specificationId = AppletCommodityDetailScene.builder().id(exchangePage.getId()).build().invoke(visitor).getLong("id");
-            AppletIntegralExchangeScene.builder().id(specificationId).build().invoke(visitor);
+            Long specificationId = AppletCommodityDetailScene.builder().id(exchangePage.getId()).build().execute(visitor).getLong("id");
+            AppletIntegralExchangeScene.builder().id(specificationId).build().execute(visitor);
             int newAppletVoucherNum = util.getAppletVoucherNum();
             CommonUtil.checkResult(voucherPage.getVoucherName() + "兑换后我的卡券列表数量", appletVoucherNum + 1, newAppletVoucherNum);
             util.loginPc(ACCOUNT);
@@ -719,7 +720,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
         try {
             util.loginApplet(APPLET_USER_ONE);
             List<AppletCommodity> appletCommodityList = util.getAppletCommodityList(SortTypeEnum.DOWN.name(), true);
-            Integer score = AppletUserInfoDetailScene.builder().build().invoke(visitor).getInteger("score");
+            Integer score = AppletUserInfoDetailScene.builder().build().execute(visitor).getInteger("score");
             appletCommodityList.forEach(e -> {
                 CommonUtil.valueView(score, e.getPresentIntegralPrice());
                 Preconditions.checkArgument(e.getPresentIntegralPrice() <= score, "我的总积分：" + score + e.getCommodityName() + "所需积分" + e.getPresentIntegralPrice());
@@ -738,7 +739,7 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             IScene integralExchangeRulesScene = IntegralExchangeRulesScene.builder().build();
             int allSend = util.toJavaObjectList(integralExchangeRulesScene, JSONObject.class).stream().filter(e -> e.getString("rule_name").equals(AppletCodeBusinessTypeEnum.SIGN_IN.getTypeName())).map(e -> e.getInteger("all_send")).findFirst().orElse(0);
             util.loginApplet(APPLET_USER_ONE);
-            JSONObject response = AppletSignInDetailScene.builder().build().invoke(visitor);
+            JSONObject response = AppletSignInDetailScene.builder().build().execute(visitor);
             int signInScore = response.getInteger("sign_in_score");
             int signInScoreCount = response.getInteger("sign_in_score_count");
             int signInTime = response.getInteger("sign_in_time");
@@ -749,9 +750,9 @@ public class AppletManagerCase extends TestCaseCommon implements TestCaseStd {
             String gainTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm");
             String monthType = DateTimeUtil.getFormat(new Date(), "yyyy-MM");
             //签到
-            AppletSignInScene.builder().build().invoke(visitor);
+            AppletSignInScene.builder().build().execute(visitor);
             //签到完成后数据校验
-            JSONObject newResponse = AppletSignInDetailScene.builder().build().invoke(visitor);
+            JSONObject newResponse = AppletSignInDetailScene.builder().build().execute(visitor);
             CommonUtil.checkResult("小程序签到完成累计签到积分", signInScoreCount + signInScore, newResponse.getInteger("sign_in_score_count"));
             CommonUtil.checkResult("小程序签到完成累计签到次数", signInTime + 1, newResponse.getInteger("sign_in_time"));
             int newIntegralRecordNum = util.getAppletIntegralRecordNum();

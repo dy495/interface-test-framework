@@ -44,7 +44,7 @@ import java.util.Date;
  */
 public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_JD;
-    private static final EnumAccount ACCOUNT = EnumAccount.YT_RECEPTION_ONLINE_WM;
+    private static final EnumAccount ACCOUNT = EnumAccount.YT_ALL_ONLINE_LXQ;
     private static AppPreSalesReceptionPageBean preSalesReceptionPage;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public SceneUtil util = new SceneUtil(visitor);
@@ -87,7 +87,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
         preSalesReceptionPage = util.getAppPreSalesReceptionPageList().stream().filter(e -> e.getCustomerName().equals("自动化创建的接待人")).findFirst().orElse(null);
         if (preSalesReceptionPage == null) {
             logger.info("不存在接待人，需要创建");
-            AppPreSalesReceptionCreateScene.builder().customerName("自动化创建的接待人").customerPhone(EnumAppletToken.JC_GLY_ONLINE.getPhone()).sexId("1").intentionCarModelId(util.getCarModelId()).estimateBuyCarTime("2100-07-12").build().invoke(visitor);
+            AppPreSalesReceptionCreateScene.builder().customerName("自动化创建的接待人").customerPhone(EnumAppletToken.JC_GLY_ONLINE.getPhone()).sexId("1").intentionCarModelId(util.getCarModelId()).estimateBuyCarTime("2100-07-12").build().execute(visitor);
             preSalesReceptionPage = util.getAppPreSalesReceptionPageList().stream().filter(e -> e.getCustomerName().equals("自动化创建的接待人")).findFirst().orElse(null);
         }
         util.loginPc(ACCOUNT);
@@ -115,11 +115,11 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
             String customerId = String.valueOf(preSalesReceptionPage.getCustomerId());
             String id = String.valueOf(preSalesReceptionPage.getId());
             IScene scene = PreSaleCustomerInfoRemarkRecordScene.builder().customerId(customerId).build();
-            int total = scene.invoke(visitor).getInteger("total");
+            int total = scene.execute(visitor).getInteger("total");
             util.loginApp(ACCOUNT);
-            AppCustomerRemarkV4Scene.builder().id(id).customerId(customerId).remark(EnumDesc.DESC_BETWEEN_200_300.getDesc()).shopId(util.getReceptionShopId()).build().invoke(visitor);
+            AppCustomerRemarkV4Scene.builder().id(id).customerId(customerId).remark(EnumDesc.DESC_BETWEEN_200_300.getDesc()).shopId(util.getReceptionShopId()).build().execute(visitor);
             util.loginPc(ACCOUNT);
-            int newTotal = scene.invoke(visitor).getInteger("total");
+            int newTotal = scene.execute(visitor).getInteger("total");
             String remarkContent = util.toFirstJavaObject(scene, JSONObject.class).getString("remark_content");
             Preconditions.checkArgument(newTotal == total + 1, "APP接待时填写备注前pc备注条数：" + total + " 填写备注后pc备注条数：" + newTotal);
             Preconditions.checkArgument(EnumDesc.DESC_BETWEEN_200_300.getDesc().equals(remarkContent), "APP接待时填写备注后pc备注内容预期为：" + EnumDesc.DESC_BETWEEN_200_300.getDesc() + " 实际为：" + remarkContent);
@@ -135,15 +135,15 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
         try {
             initAppPreSalesReceptionPageBean();
             IScene preSaleCustomerBuyCarPageScene = PreSaleCustomerBuyCarPageScene.builder().build();
-            int buyCarTotal = preSaleCustomerBuyCarPageScene.invoke(visitor).getInteger("total");
+            int buyCarTotal = preSaleCustomerBuyCarPageScene.execute(visitor).getInteger("total");
             IScene preSaleCustomerInfoBuyCarRecordScene = PreSaleCustomerInfoBuyCarRecordScene.builder().customerId(preSalesReceptionPage.getCustomerId()).build();
-            int total = preSaleCustomerInfoBuyCarRecordScene.invoke(visitor).getInteger("total");
+            int total = preSaleCustomerInfoBuyCarRecordScene.execute(visitor).getInteger("total");
             String vin = util.getNotExistVin();
             //买车
-            BuyCarScene.builder().carModel(Long.parseLong(util.getCarModelId())).carStyle(Long.parseLong(util.getCarStyleId())).vin(vin).id(preSalesReceptionPage.getId()).shopId(Long.parseLong(util.getReceptionShopId())).build().invoke(visitor);
-            JSONObject response = preSaleCustomerInfoBuyCarRecordScene.invoke(visitor);
+            BuyCarScene.builder().carModel(Long.parseLong(util.getCarModelId())).carStyle(Long.parseLong(util.getCarStyleId())).vin(vin).id(preSalesReceptionPage.getId()).shopId(Long.parseLong(util.getReceptionShopId())).build().execute(visitor);
+            JSONObject response = preSaleCustomerInfoBuyCarRecordScene.execute(visitor);
             int newTotal = response.getInteger("total");
-            int newBuyCarTotal = preSaleCustomerBuyCarPageScene.invoke(visitor).getInteger("total");
+            int newBuyCarTotal = preSaleCustomerBuyCarPageScene.execute(visitor).getInteger("total");
             String vehicleChassisCode = response.getJSONArray("list").getJSONObject(0).getString("vehicle_chassis_code");
             Preconditions.checkArgument(newTotal == total + 1, "APP接待时购买车辆后，购车记录预期为：" + (total + 1) + " 实际为：" + newTotal);
             Preconditions.checkArgument(vehicleChassisCode.equals(vin), "APP接待时购买车辆后，底盘号预期为：" + vin + " 实际为：" + vehicleChassisCode);
@@ -160,14 +160,14 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
         try {
             initAppPreSalesReceptionPageBean();
             IScene scene = PreSaleCustomerInfoBuyCarRecordScene.builder().customerId(preSalesReceptionPage.getCustomerId()).build();
-            int total = scene.invoke(visitor).getInteger("total");
+            int total = scene.execute(visitor).getInteger("total");
             String vin = util.getNotExistVin();
             //新建成交记录
             PreSaleCustomerCreateCustomerScene.builder().customerPhone(preSalesReceptionPage.getCustomerPhone()).customerName(preSalesReceptionPage.getCustomerName())
                     .sex("1").customerType("PERSON").shopId(Long.parseLong(util.getReceptionShopId()))
                     .carStyleId(Long.parseLong(util.getCarStyleId())).carModelId(Long.parseLong(util.getCarModelId())).salesId(util.getSaleId())
-                    .purchaseCarDate(DateTimeUtil.addDayFormat(new Date(), -10)).vehicleChassisCode(vin).build().invoke(visitor);
-            JSONObject response = scene.invoke(visitor);
+                    .purchaseCarDate(DateTimeUtil.addDayFormat(new Date(), -10)).vehicleChassisCode(vin).build().execute(visitor);
+            JSONObject response = scene.execute(visitor);
             int newTotal = response.getInteger("total");
             String vehicleChassisCode = response.getJSONArray("list").getJSONObject(0).getString("vehicle_chassis_code");
             Preconditions.checkArgument(newTotal == total + 1, "新建成交记录后，购车记录预期为：" + (total + 1) + " 实际为：" + newTotal);
@@ -184,7 +184,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
         try {
             initAppPreSalesReceptionPageBean();
             IScene scene = PreSaleCustomerInfoScene.builder().customerId(preSalesReceptionPage.getCustomerId()).shopId(Long.parseLong(util.getReceptionShopId())).build();
-            String lastToShopDate = scene.invoke(visitor).getString("last_to_shop_date");
+            String lastToShopDate = scene.execute(visitor).getString("last_to_shop_date");
             String date = DateTimeUtil.getFormat(new Date());
             Preconditions.checkArgument(lastToShopDate.equals(date), "更新最近到店时间预期为：" + date + " 实际为：" + lastToShopDate);
         } catch (Exception | AssertionError e) {
@@ -200,7 +200,7 @@ public class AppReceptionCase extends TestCaseCommon implements TestCaseStd {
         try {
             initAppPreSalesReceptionPageBean();
             String date = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm");
-            FinishReceptionScene.builder().id(preSalesReceptionPage.getId()).shopId(Long.parseLong(util.getReceptionShopId())).build().invoke(visitor);
+            FinishReceptionScene.builder().id(preSalesReceptionPage.getId()).shopId(Long.parseLong(util.getReceptionShopId())).build().execute(visitor);
             IScene scene = PreSalesReceptionPageScene.builder().phone(preSalesReceptionPage.getCustomerPhone()).build();
             JSONObject response = util.toFirstJavaObject(scene, JSONObject.class);
             Preconditions.checkArgument(response.getString("reception_end_time").contains(date), "预期完成接待时间：" + date + " 实际完成接待时间：" + response.getString("reception_end_time"));

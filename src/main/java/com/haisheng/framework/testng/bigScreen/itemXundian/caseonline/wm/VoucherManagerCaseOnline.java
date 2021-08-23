@@ -100,12 +100,12 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
         try {
             Arrays.stream(VoucherTypeEnum.values()).forEach(anEnum -> {
                 if (!anEnum.equals(VoucherTypeEnum.CUSTOM)) {
-                    int voucherTotal = VoucherFormVoucherPageScene.builder().build().invoke(visitor).getInteger("total");
-                    int applyTotal = ApplyPageScene.builder().build().invoke(visitor).getInteger("total");
+                    int voucherTotal = VoucherFormVoucherPageScene.builder().build().execute(visitor).getInteger("total");
+                    int applyTotal = ApplyPageScene.builder().build().execute(visitor).getInteger("total");
                     //创建卡券
                     String voucherName = util.createVoucher(1, anEnum);
-                    VoucherFormVoucherPageScene.builder().voucherName(voucherName).build().invoke(visitor);
-                    JSONObject data = VoucherDetailScene.builder().id(util.getVoucherId(voucherName)).build().invoke(visitor);
+                    VoucherFormVoucherPageScene.builder().voucherName(voucherName).build().execute(visitor);
+                    JSONObject data = VoucherDetailScene.builder().id(util.getVoucherId(voucherName)).build().execute(visitor);
                     VoucherDetailBean voucherDetail = JSONObject.toJavaObject(data, VoucherDetailBean.class);
                     CommonUtil.checkResult(voucherName + "描述", util.getDesc(), voucherDetail.getVoucherDescription());
                     CommonUtil.checkResult(voucherName + " 类型", anEnum.name(), voucherDetail.getCardType());
@@ -124,7 +124,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
                         CommonUtil.checkResult(voucherName + " 成本价格", "49.99", voucherDetail.getCost());
                     }
                     //卡券列表+1
-                    int newVoucherTotal = VoucherFormVoucherPageScene.builder().build().invoke(visitor).getInteger("total");
+                    int newVoucherTotal = VoucherFormVoucherPageScene.builder().build().execute(visitor).getInteger("total");
                     CommonUtil.checkResult("卡券列表数", voucherTotal + 1, newVoucherTotal);
                     //卡券状态=待审批
                     VoucherFormVoucherPageBean voucherPage = util.getVoucherPage(voucherName);
@@ -132,10 +132,10 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
                     CommonUtil.checkResult(voucherName + " 状态", VoucherStatusEnum.WAITING.name(), voucherPage.getVoucherStatus());
                     //卡券变更记录不+1
                     Long voucherId = util.getVoucherId(voucherName);
-                    int newTotal = ChangeRecordScene.builder().voucherId(voucherId).build().invoke(visitor).getInteger("total");
+                    int newTotal = ChangeRecordScene.builder().voucherId(voucherId).build().execute(visitor).getInteger("total");
                     CommonUtil.checkResult(voucherName + " 变更记录数", 0, newTotal);
                     //审批列表+1
-                    int newApplyTotal = ApplyPageScene.builder().build().invoke(visitor).getInteger("total");
+                    int newApplyTotal = ApplyPageScene.builder().build().execute(visitor).getInteger("total");
                     CommonUtil.checkResult(voucherName + " 审批列表数", applyTotal + 1, newApplyTotal);
                     //审批状态=审批中
                     ApplyPageBean applyPage = util.getAuditingApplyPage(voucherName);
@@ -161,8 +161,8 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
             List<Long> voucherIdList = voucherFormVoucherPageBeanList.stream().map(com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.vouchermanage.VoucherFormVoucherPageBean::getVoucherId).collect(Collectors.toList());
             if (voucherIdList.size() != 0) {
                 voucherIdList.forEach(voucherId -> {
-                    RecallVoucherScene.builder().id(voucherId).build().invoke(visitor);
-                    DeleteVoucherScene.builder().id(voucherId).build().invoke(visitor);
+                    RecallVoucherScene.builder().id(voucherId).build().execute(visitor);
+                    DeleteVoucherScene.builder().id(voucherId).build().execute(visitor);
                 });
             }
         });
@@ -275,14 +275,14 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
         try {
             Long voucherId = new VoucherGenerator.Builder().status(VoucherStatusEnum.WORKING).visitor(visitor).buildVoucher().getVoucherId();
             //暂停发放
-            ChangeProvideStatusScene.builder().id(voucherId).isStart(false).build().invoke(visitor);
+            ChangeProvideStatusScene.builder().id(voucherId).isStart(false).build().execute(visitor);
             //校验
             String voucherName = util.getVoucherName(voucherId);
             VoucherFormVoucherPageBean voucherPage = util.getVoucherPage(voucherName);
             CommonUtil.checkResult(voucherName + " 状态", VoucherStatusEnum.STOP.getName(), voucherPage.getVoucherStatusName());
             CommonUtil.checkResult(voucherName + " 状态", VoucherStatusEnum.STOP.name(), voucherPage.getVoucherStatus());
             //打开
-            ChangeProvideStatusScene.builder().id(voucherId).isStart(true).build().invoke(visitor);
+            ChangeProvideStatusScene.builder().id(voucherId).isStart(true).build().execute(visitor);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -376,12 +376,12 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
             //停止发放
-            ChangeProvideStatusScene.builder().id(voucherId).isStart(false).build().invoke(visitor);
+            ChangeProvideStatusScene.builder().id(voucherId).isStart(false).build().execute(visitor);
             VoucherFormVoucherPageBean voucherPage = util.getVoucherPage(voucherName);
             CommonUtil.checkResult(voucherName + "状态", VoucherStatusEnum.STOP.getName(), voucherPage.getVoucherStatusName());
             CommonUtil.checkResult(voucherName + "状态", VoucherStatusEnum.STOP.name(), voucherPage.getVoucherStatus());
             //开始发放
-            ChangeProvideStatusScene.builder().id(voucherId).isStart(true).build().invoke(visitor);
+            ChangeProvideStatusScene.builder().id(voucherId).isStart(true).build().execute(visitor);
             //校验状态
             VoucherFormVoucherPageBean newVoucherPage = util.getVoucherPage(voucherName);
             CommonUtil.checkResult(voucherName + "状态", VoucherStatusEnum.WORKING.getName(), newVoucherPage.getVoucherStatusName());
@@ -436,10 +436,10 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
         try {
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.STOP).buildVoucher().getVoucherId();
             IScene changeRecordScene = ChangeRecordScene.builder().voucherId(voucherId).build();
-            int changeRecordTotal = changeRecordScene.invoke(visitor).getInteger("total");
+            int changeRecordTotal = changeRecordScene.execute(visitor).getInteger("total");
             String voucherName = util.getVoucherName(voucherId);
             //作废卡券
-            InvalidVoucherScene.builder().id(voucherId).build().invoke(visitor);
+            InvalidVoucherScene.builder().id(voucherId).build().execute(visitor);
             //校验卡券状态
             VoucherFormVoucherPageBean voucherPage = util.getVoucherPage(voucherName);
             CommonUtil.checkResult(voucherName + " 状态", VoucherStatusEnum.INVALIDED.name(), voucherPage.getVoucherStatus());
@@ -818,7 +818,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
             int receiveVoucherNum = util.getAppletVoucherNum();
             //转移
             user.loginPc(ALL_AUTHORITY);
-            TransferScene.builder().transferPhone(APPLET_USER_ONE.getPhone()).receivePhone(APPLET_USER_TWO.getPhone()).voucherIds(getList(id)).build().invoke(visitor);
+            TransferScene.builder().transferPhone(APPLET_USER_ONE.getPhone()).receivePhone(APPLET_USER_TWO.getPhone()).voucherIds(getList(id)).build().execute(visitor);
             visitor.setToken(APPLET_USER_ONE.getToken());
             int newTransferVoucherNum = util.getAppletVoucherNum();
             CommonUtil.checkResult("转移者我的卡券数", transferVoucherNum - 1, newTransferVoucherNum);
@@ -830,7 +830,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
         } finally {
             //转回去
             user.loginPc(ALL_AUTHORITY);
-            TransferScene.builder().transferPhone(APPLET_USER_TWO.getPhone()).receivePhone(APPLET_USER_ONE.getPhone()).voucherIds(getList(id)).build().invoke(visitor);
+            TransferScene.builder().transferPhone(APPLET_USER_TWO.getPhone()).receivePhone(APPLET_USER_ONE.getPhone()).voucherIds(getList(id)).build().execute(visitor);
             saveData("卡券管理--转移卡券，转移人小程序我的卡券数量-1，被转移人我的卡券数量+1");
         }
     }
@@ -842,9 +842,9 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
             Long voucherId = new VoucherGenerator.Builder().visitor(visitor).status(VoucherStatusEnum.WORKING).buildVoucher().getVoucherId();
             String voucherName = util.getVoucherName(voucherId);
             IScene additionalRecordScene = AdditionalRecordScene.builder().voucherId(voucherId).build();
-            int addTotal = additionalRecordScene.invoke(visitor).getInteger("total");
+            int addTotal = additionalRecordScene.execute(visitor).getInteger("total");
             //增发卡券
-            AddVoucherScene.builder().id(voucherId).addNumber(10).build().invoke(visitor);
+            AddVoucherScene.builder().id(voucherId).addNumber(10).build().execute(visitor);
             String applyTime = DateTimeUtil.getFormat(new Date(), "yyyy-MM-dd HH:mm");
             //卡券审批列表卡券状态=增发
             ApplyPageBean applyPage = util.getAuditingApplyPage(voucherName);
@@ -858,7 +858,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
             CommonUtil.checkResult(voucherName + " 增发记录状态", AdditionalRecordStatusEnum.AUDITING.getName(), statusName);
             //撤回卡券审批列表卡券状态=已取消
             long additionalId = additionalRecordList.get(0).getId();
-            RecallAdditionalScene.builder().id(additionalId).build().invoke(visitor);
+            RecallAdditionalScene.builder().id(additionalId).build().execute(visitor);
             String newStatusName = util.toJavaObjectList(additionalRecordScene, AdditionalRecord.class).get(0).getStatusName();
             CommonUtil.checkResult(voucherName + " 增发记录状态", AdditionalRecordStatusEnum.RECALL.getName(), newStatusName);
             ApplyPageBean newApplyPage = util.getApplyPageByTime(voucherName, applyTime);
@@ -1020,7 +1020,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
             //转移
             user.loginPc(ALL_AUTHORITY);
             Arrays.stream(phones).forEach(phone -> {
-                String message = TransferScene.builder().transferPhone(phone).receivePhone(APPLET_USER_ONE.getPhone()).voucherIds(getList(voucherId)).build().invoke(visitor, false).getString("message");
+                String message = TransferScene.builder().transferPhone(phone).receivePhone(APPLET_USER_ONE.getPhone()).voucherIds(getList(voucherId)).build().execute(visitor, false).getString("message");
                 String err = "推送用户id不能为空";
                 CommonUtil.checkResult("转移卡券" + voucherName, err, message);
             });
@@ -1174,7 +1174,7 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
             voucherPageList.forEach(voucherPage -> {
                 CommonUtil.valueView(voucherPage.getVoucherName());
                 IScene voucherDetailScene = VoucherDetailScene.builder().id(voucherPage.getVoucherId()).build();
-                VoucherDetailBean voucherDetail = JSONObject.toJavaObject(voucherDetailScene.invoke(visitor), VoucherDetailBean.class);
+                VoucherDetailBean voucherDetail = JSONObject.toJavaObject(voucherDetailScene.execute(visitor), VoucherDetailBean.class);
                 String cost = voucherDetail.getCost();
                 String voucherName = voucherPage.getVoucherName();
                 IScene applyPageScene = ApplyPageScene.builder().name(voucherName).build();

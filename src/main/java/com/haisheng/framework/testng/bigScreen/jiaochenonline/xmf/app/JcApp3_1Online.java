@@ -3,7 +3,9 @@ package com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.app;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
@@ -12,6 +14,7 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletConsultPreServiceSubmitScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.consultmanagement.ResponseRuleEditScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.FollowType;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.JcFunctionOnline;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.PublicParamOnline;
@@ -27,7 +30,10 @@ import org.testng.annotations.*;
 import java.lang.reflect.Method;
 
 public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
-    EnumTestProduct product = EnumTestProduct.JC_ONLINE_JD;
+    private static final EnumTestProduct product = EnumTestProduct.JC_ONLINE_JD;
+    private static final EnumAccount account = EnumAccount.JC_ALL_ONLINE_LXQ;
+    private final VisitorProxy visitor = new VisitorProxy(product);
+    private final SceneUtil util = new SceneUtil(visitor);
     ScenarioUtil jc = new ScenarioUtil();
 
     PublicParamOnline pp = new PublicParamOnline();
@@ -73,7 +79,7 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);
-        appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
+        util.loginApp(account);
 
     }
 
@@ -143,7 +149,6 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             startReception();
-
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -465,7 +470,7 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
             roleList1.add(pf.getAccessId2("个人"));
             roleList1.add(pf.getAccessId2("门店"));
             //预约保养分配
-            jc.organizationRoleEdit(Long.parseLong(pp.userroleId), "权限", "随时修改用户权限", roleList1);
+            jc.organizationRoleEdit(Long.parseLong(pp.userRoleId), "权限", "随时修改用户权限", roleList1);
             jc.appletLoginToken(pp.appletToken);
             int staffTotalBefore = jc.AppletAppointmentStaffListScene("MAINTAIN", Long.valueOf(pp.shopIdZ)).getJSONArray("list").size();
 
@@ -473,7 +478,7 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
             pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
             roleList1.add(pf.getAccessId2("预约保养分配"));
 
-            jc.organizationRoleEdit(Long.parseLong(pp.userroleId), "权限", "随时修改用户权限", roleList1);
+            jc.organizationRoleEdit(Long.parseLong(pp.userRoleId), "权限", "随时修改用户权限", roleList1);
 
             //小程序 门店下接待人员总数
             jc.appletLoginToken(pp.appletToken);
@@ -481,7 +486,7 @@ public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
 
             roleList1.remove(2);
             pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
-            jc.organizationRoleEdit(Long.parseLong(pp.userroleId), "权限", "随时修改用户权限", roleList1);
+            jc.organizationRoleEdit(Long.parseLong(pp.userRoleId), "权限", "随时修改用户权限", roleList1);
 
             jc.appletLoginToken(pp.appletToken);
             int staffTotalAfter = jc.AppletAppointmentStaffListScene("MAINTAIN", Long.valueOf(pp.shopIdZ)).getJSONArray("list").size();

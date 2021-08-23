@@ -111,7 +111,7 @@ public class JcCancleAppointmentOnLine extends TestCaseCommon implements TestCas
             dataTemp.setPcAppointmentRecordNum(pf.pcAppointmentRecodePage());
             dataTemp.setAppReceiptage(pf.appReceiptPage());
             dataTemp.setPcAppointmentNUmber(pf.appointmentNUmber(num));
-            int appTodayTask[] = pf.appTask();
+            int[] appTodayTask = pf.appTask();
             dataTemp.setAppSurplusAppointment(appTodayTask[0]);
             dataTemp.setApp_all_appointment(appTodayTask[1]);
             dataTemp.setApp_surplus_reception(appTodayTask[2]);
@@ -204,8 +204,7 @@ public class JcCancleAppointmentOnLine extends TestCaseCommon implements TestCas
     public void AppAppointmentTodayTask() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            int appTask[] = pf.appTask();  //先调取函数可先验证此接口，在验证数据
-
+            int[] appTask = pf.appTask();  //先调取函数可先验证此接口，在验证数据
             int appSurplusAppointment = qaDbUtil.selectDataTempOne("appSurplusAppointment", "pc_appointmentPage");
             int app_all_appointment = qaDbUtil.selectDataTempOne("app_all_appointment", "pc_appointmentPage");
             Preconditions.checkArgument(appTask[0] - appSurplusAppointment == -1, "取消预约后app今日任务appSurplusAppointment,预约前：" + appSurplusAppointment + "取消预约后：" + appTask[0]);

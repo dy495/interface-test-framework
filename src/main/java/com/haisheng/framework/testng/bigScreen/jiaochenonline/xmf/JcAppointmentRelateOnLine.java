@@ -210,7 +210,7 @@ public class JcAppointmentRelateOnLine extends TestCaseCommon implements TestCas
             Preconditions.checkArgument(customer_manager.equals(pp.jdgwName), "接待人名异常");
             Preconditions.checkArgument(customer_name.equals("自动夏"), "预约用户名异常");
             Preconditions.checkArgument(customer_phone.equals(pp.customerPhone), "预约手机号异常");
-            Preconditions.checkArgument(plate_number.equals(pp.carplate7), "预约车牌号异常");
+            Preconditions.checkArgument(plate_number.equals(pp.carPlate7), "预约车牌号异常");
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
