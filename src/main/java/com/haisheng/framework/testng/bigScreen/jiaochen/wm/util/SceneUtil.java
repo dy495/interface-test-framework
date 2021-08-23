@@ -1743,8 +1743,8 @@ public class SceneUtil extends BasicUtil {
                 .map(Response::getMessage).collect(Collectors.toList()).toArray(new String[list.size()]);
     }
 
-    public String getVacationSaleId(){return visitor.isDaily() ? "uid_f1a745c7":"";}
-    public String getBusySaleId(){return visitor.isDaily() ? "uid_caf1b799":"";}
+    public String getVacationSaleId(){return visitor.isDaily() ? "uid_f1a745c7":"uid_250e621b";}
+    public String getBusySaleId(){return visitor.isDaily() ? "uid_caf1b799":"uid_a27173d3";}
     public Long getBuyCarId(){return visitor.isDaily() ? 335L:21540L;}
 
 
@@ -1801,7 +1801,7 @@ public class SceneUtil extends BasicUtil {
     }
 
     /**
-     * @parameter :
+     * @params :
      * @return : 空闲中 最后一位/第一位 销售的JSONObject
      * {"sale_id":"销售id",
      * "sale_status":"销售状态",
@@ -1816,9 +1816,9 @@ public class SceneUtil extends BasicUtil {
     }
 
     /**
-     * @return : 指定状态的销售 JSONObject，没有则返回 null
      * @description : 用于获取当日排班中指定状态的一位销售，
-     * @parameter : 状态值：   {0:"空闲中",1:"接待中",2:"忙碌中",3:"休假中"}
+     * @param statusId: 状态值：   {0:"空闲中",1:"接待中",2:"忙碌中",3:"休假中"}
+     * @return : 指定状态的销售 JSONObject，没有则返回 null
      **/
     public JSONObject getNeededSale(Integer statusId) {
         return AppSaleScheduleDayListScene.builder().type("PRE").build().execute(visitor, true).getJSONArray("sales_info_list").stream().map(e -> (JSONObject) e).
