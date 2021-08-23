@@ -67,4 +67,7 @@ public class LogMine {
     public void info(String var1, Object... var2) {
         logger.info(var1, var2);
     }
+
+    public void info(boolean b) {
+    }
 }
