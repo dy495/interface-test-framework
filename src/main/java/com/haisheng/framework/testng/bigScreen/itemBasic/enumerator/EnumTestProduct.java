@@ -40,13 +40,13 @@ public enum EnumTestProduct {
     JC_ONLINE_ZH("汽车-轿辰 线上 ", "https://servicewechat.com/wxbd41de85739a00c7/0/page-frame.html", "http://sso.nb.jiaochenclub.com", "-1", "JC", "395", false),
 
 
-    YT_DAILY_JD("汽车-运通 日常 ", "http://jiedai.auto.winsenseos.com", "http://jiedai.auto.winsenseos.com", "-1", "YT", null, true),
-    YT_DAILY_GK("汽车-运通 日常 ", "http://huiting.auto.winsenseos.com", "http://huiting.auto.winsenseos.com", "-1", "YT", null, true),
-    YT_DAILY_ZH("汽车-运通 日常 ", "http://zhanghao.auto.winsenseos.com", "http://zhanghao.auto.winsenseos.com", "-1", "YT", null, true),
+    YT_DAILY_JD("汽车-运通 日常 ", "", "http://dev.jiedai.auto.winsenseos.cn", "-1", "YT", "7529", true),
+    YT_DAILY_GK("汽车-运通 日常 ", "", "http://dev.huiting.auto.winsenseos.cn", "-1", "YT", "7529", true),
+    YT_DAILY_ZH("汽车-运通 日常 ", "", "http://dev.zhanghao.auto.winsenseos.cn", "-1", "YT", "7529", true),
 
-    YT_ONLINE_JD("汽车-运通 线上 ", "http://jiedai.auto.winsenseos.com", "http://jiedai.auto.winsenseos.com", "-1", "YT", null, false),
-    YT_ONLINE_GK("汽车-运通 线上 ", "http://huiting.auto.winsenseos.com", "http://huiting.auto.winsenseos.com", "-1", "YT", null, false),
-    YT_ONLINE_ZH("汽车-运通 线上 ", "http://zhanghao.auto.winsenseos.com", "http://zhanghao.auto.winsenseos.com", "-1", "YT", null, false),
+    YT_ONLINE_JD("汽车-运通 线上 ", "", "http://jiedai.auto.winsenseos.com", "-1", "YT", null, false),
+    YT_ONLINE_GK("汽车-运通 线上 ", "", "http://huiting.auto.winsenseos.com", "-1", "YT", null, false),
+    YT_ONLINE_ZH("汽车-运通 线上 ", "", "http://zhanghao.auto.winsenseos.com", "-1", "YT", null, false),
 
 
     MALL_DAILY("购物中心 日常 ", "", "http://dev.mall.store.winsenseos.cn", "43072", "MALL", "10107", true),

@@ -28,10 +28,10 @@ import java.lang.reflect.Method;
  */
 public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
-    EnumTestProduct product = EnumTestProduct.YT_DAILY_JD;
-    EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_DAILY;
-    VisitorProxy visitor = new VisitorProxy(product);
-    SceneUtil businessUtil = new SceneUtil(visitor);
+    private final static EnumTestProduct PRODUCT = EnumTestProduct.YT_DAILY_JD;
+    private final static EnumAccount ACCOUNT = EnumAccount.YT_ALL_DAILY;
+    VisitorProxy visitor = new VisitorProxy(PRODUCT);
+    SceneUtil util = new SceneUtil(visitor);
     YunTongInfo info = new YunTongInfo();
 
     @BeforeClass
@@ -45,13 +45,13 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistQaOwner = "吕雪晴";
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCT.getDesc() + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //放入shopId
-        commonConfig.setShopId(product.getShopId()).setRoleId(ALL_AUTHORITY.getRoleId()).setProduct(product.getAbbreviation());
+        commonConfig.setShopId(PRODUCT.getShopId()).setRoleId(PRODUCT.getRoleId()).setProduct(PRODUCT.getAbbreviation());
         beforeClassInit(commonConfig);
-        businessUtil.loginPc(ALL_AUTHORITY);
+        util.loginPc(ACCOUNT);
     }
 
     @AfterClass
@@ -126,7 +126,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
     public String getPhone() {
-        return businessUtil.getNotExistPhone();
+        return util.getNotExistPhone();
     }
 
     @Test
@@ -447,13 +447,13 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
                 int oneTotal = preSaleCustomerPageScene.execute(visitor).getInteger("total");
                 Preconditions.checkArgument(oneTotal == total + 1, "创建成交记录之前客户列表总数：" + total + " 创建成交记录之后客户列表总数：" + oneTotal);
 
-                JSONObject object = businessUtil.toJavaObject(preSaleCustomerPageScene, JSONObject.class, "customer_phone", phone);
+                JSONObject object = util.toJavaObject(preSaleCustomerPageScene, JSONObject.class, "customer_phone", phone);
                 Preconditions.checkArgument(object.getString("customer_type_name").equals("成交客户"), "创建客户列表不存在的电话号的成交记录，客户类型变为：" + object.getString("customer_type_name"));
 
                 //找一个潜客创建成交记录
-                JSONObject object1 = businessUtil.toJavaObject(preSaleCustomerPageScene, JSONObject.class, "customer_type_name", "潜在客户");
+                JSONObject object1 = util.toJavaObject(preSaleCustomerPageScene, JSONObject.class, "customer_type_name", "潜在客户");
                 PreSaleCustomerCreateCustomerScene.builder().customerName(name).customerPhone(object1.getString("customer_phone")).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).salesId(salesId).shopId(Long.parseLong(object1.getString("shop_id"))).vehicleChassisCode("ASDFUGGDSF02" + (int) ((Math.random() * 9 + 1) * 10000)).purchaseCarDate(dt.getHistoryDate(-1)).build().execute(visitor);
-                JSONObject object2 = businessUtil.toJavaObject(preSaleCustomerPageScene, JSONObject.class, "id", object1.getString("id"));
+                JSONObject object2 = util.toJavaObject(preSaleCustomerPageScene, JSONObject.class, "id", object1.getString("id"));
                 Preconditions.checkArgument(object2.getString("customer_type_name").equals("成交客户"), "创建潜客户的成交记录，客户类型变为：" + object2.getString("customer_type_name"));
                 Preconditions.checkArgument(object2.getString("subject_type").equals(type), "创建潜客户的成交记录，车主类型变为：" + object2.getString("subject_type"));
                 Preconditions.checkArgument(object2.getString("customer_name").equals(name), "创建潜客户的成交记录，客户姓名变为：" + object2.getString("customer_name"));
@@ -462,9 +462,9 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
                 int secondTotal = preSaleCustomerPageScene.execute(visitor).getInteger("total");
                 Preconditions.checkArgument(secondTotal == oneTotal, "创建潜客户的成交记前客户列表总数：" + oneTotal + " 创建潜客户的成交记后客户列表总数：" + secondTotal);
                 //找一个成交客户创建成交记录
-                JSONObject object3 = businessUtil.toJavaObject(preSaleCustomerPageScene, JSONObject.class, "customer_type_name", "成交客户");
+                JSONObject object3 = util.toJavaObject(preSaleCustomerPageScene, JSONObject.class, "customer_type_name", "成交客户");
                 PreSaleCustomerCreateCustomerScene.builder().customerName(name).customerPhone(object3.getString("customer_phone")).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).salesId(salesId).shopId(Long.parseLong(object3.getString("shop_id"))).vehicleChassisCode("ASDFUGGDSF02" + (int) ((Math.random() * 9 + 1) * 10000)).purchaseCarDate(dt.getHistoryDate(-1)).build().execute(visitor);
-                JSONObject object4 = businessUtil.toJavaObject(preSaleCustomerPageScene, JSONObject.class, "id", object3.getString("id"));
+                JSONObject object4 = util.toJavaObject(preSaleCustomerPageScene, JSONObject.class, "id", object3.getString("id"));
                 Preconditions.checkArgument(object4.getString("customer_type_name").equals("成交客户"), "创建成交客户的成交记录，客户类型变为：" + object4.getString("customer_type_name"));
                 Preconditions.checkArgument(object4.getString("customer_type_name").equals("成交客户"), "创建成交客户的成交记录，客户类型变为：" + object2.getString("customer_type_name"));
                 Preconditions.checkArgument(object4.getString("subject_type").equals(type), "创建成交客户的成交记录，车主类型变为：" + object2.getString("subject_type"));

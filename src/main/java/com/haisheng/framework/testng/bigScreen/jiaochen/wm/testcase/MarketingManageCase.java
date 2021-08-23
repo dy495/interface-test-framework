@@ -74,10 +74,10 @@ import java.util.stream.Collectors;
  * @date 2021/1/29 11:17
  */
 public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduct product = EnumTestProduct.JC_DAILY_JD;
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.JC_ALL_DAILY;
+    private static final EnumTestProduct PRODUCT = EnumTestProduct.JC_DAILY_JD;
+    private static final EnumAccount ACCOUNT = EnumAccount.JC_ALL_DAILY;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_DAILY;
-    public VisitorProxy visitor = new VisitorProxy(product);
+    public VisitorProxy visitor = new VisitorProxy(PRODUCT);
     public SceneUtil util = new SceneUtil(visitor);
     CommonConfig commonConfig = new CommonConfig();
 
@@ -92,9 +92,9 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCT.getDesc() + commonConfig.checklistQaOwner);
         //放入shopId
-        commonConfig.setShopId(product.getShopId()).setReferer(product.getReferer()).setRoleId(ALL_AUTHORITY.getRoleId()).setProduct(product.getAbbreviation());
+        commonConfig.setShopId(PRODUCT.getShopId()).setReferer(PRODUCT.getReferer()).setRoleId(ACCOUNT.getRoleId()).setProduct(PRODUCT.getAbbreviation());
         beforeClassInit(commonConfig);
     }
 
@@ -108,7 +108,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-        util.loginPc(ALL_AUTHORITY);
+        util.loginPc(ACCOUNT);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
@@ -306,7 +306,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             int appletVoucherNum = util.getAppletVoucherNum();
             int appletPackageNum = util.getAppletPackageNum();
             //购买临时套餐
-            util.loginPc(ALL_AUTHORITY);
+            util.loginPc(ACCOUNT);
             JSONArray voucherList = util.getVoucherArray(voucherPage, 1);
             util.buyTemporaryPackage(voucherList, 1);
             VoucherFormVoucherPageBean secondPackagePage = util.getVoucherPage(voucherName);
@@ -359,7 +359,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             util.loginApplet(APPLET_USER_ONE);
             int appletVoucherNum = util.getAppletVoucherNum();
             int appletPackageNum = util.getAppletPackageNum();
-            util.loginPc(ALL_AUTHORITY);
+            util.loginPc(ACCOUNT);
             //购买固定套餐
             util.buyFixedPackage(packageId, 1);
             VoucherFormVoucherPageBean secondPackagePage = util.getVoucherPage(voucherName);
@@ -408,7 +408,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             int appletVoucherNum = util.getAppletVoucherNum();
             int appletPackageNum = util.getAppletPackageNum();
             //临时套餐
-            util.loginPc(ALL_AUTHORITY);
+            util.loginPc(ACCOUNT);
             JSONArray voucherList = util.getVoucherArray(voucherPage, 1);
             util.buyTemporaryPackage(voucherList, 0);
             VoucherFormVoucherPageBean secondPackagePage = util.getVoucherPage(voucherName);
@@ -459,7 +459,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             util.loginApplet(APPLET_USER_ONE);
             int appletVoucherNum = util.getAppletVoucherNum();
             int appletPackageNum = util.getAppletPackageNum();
-            util.loginPc(ALL_AUTHORITY);
+            util.loginPc(ACCOUNT);
             //赠送固定套餐
             util.buyFixedPackage(packageId, 0);
             VoucherFormVoucherPageBean secondPackagePage = util.getVoucherPage(voucherName);
@@ -1184,7 +1184,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             util.loginApplet(APPLET_USER_ONE);
             int packageNum = util.getAppletPackageNum();
             int voucherNum = util.getAppletVoucherNum();
-            util.loginPc(ALL_AUTHORITY);
+            util.loginPc(ACCOUNT);
             PackagePage packagePage = util.getPackagePage(PackageStatusEnum.AGREE);
             packageId = packagePage.getPackageId();
             String packageName = packagePage.getPackageName();
@@ -1204,7 +1204,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            util.loginPc(ALL_AUTHORITY);
+            util.loginPc(ACCOUNT);
             PackageFormSwitchPackageStatusScene.builder().id(packageId).status(true).build().execute(visitor);
             saveData("套餐管理--购买套餐，确认购买前，套餐状态改为关闭，再确认购买小程序会收到套餐/卡券");
         }
@@ -1464,7 +1464,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             visitor.setToken(APPLET_USER_ONE.getToken());
             int appletVoucherNum = util.getAppletVoucherNum();
             int appletMessageNum = util.getAppletMessageNum();
-            util.loginApp(ALL_AUTHORITY);
+            util.loginApp(ACCOUNT);
             IScene scene = SearchCustomerPhoneScene.builder().customerType(ExportPageTypeEnum.WECHAT_CUSTOMER.name()).build();
             JSONObject data = scene.execute(visitor);
             List<Long> customerIdList = data.getJSONArray("customer_id_list").toJavaList(Long.class);
@@ -1761,7 +1761,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             IScene messageFormPageScene = AppletSignInDetailScene.builder().build();
             Integer signInScore = visitor.invokeApi(messageFormPageScene).getInteger("sign_in_score");
             CommonUtil.checkResultPlus("pc修改后签到积分为", 999, "小程序签到可得积分为", signInScore);
-            util.loginPc(ALL_AUTHORITY);
+            util.loginPc(ACCOUNT);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
@@ -1784,7 +1784,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
             CommonUtil.checkResult("签到任务变更记录总数", recordTotal + 1, newRecordTotal);
             //变更内容
             JSONObject newResponse = SignInConfigChangeRecordScene.builder().build().execute(visitor).getJSONArray("list").getJSONObject(0);
-            CommonUtil.checkResult("操作员手机号", ALL_AUTHORITY.getPhone(), newResponse.getString("operate_phone"));
+            CommonUtil.checkResult("操作员手机号", ACCOUNT.getPhone(), newResponse.getString("operate_phone"));
             CommonUtil.checkResult("变更积分", awardScore + 1, newResponse.getInteger("change_score"));
             CommonUtil.checkResult("变更备注", EnumDesc.DESC_BETWEEN_15_20.getDesc(), newResponse.getString("change_remark"));
         } catch (Exception | AssertionError e) {
@@ -2015,9 +2015,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
     public void messageManagerPeople_data_2(String shopIds) {
         commonConfig.setShopId(shopIds);
         try {
-            visitor.setProduct(EnumTestProduct.JC_ONLINE_ZH);
-            JSONArray shopList = ShopListScene.builder().build().execute(visitor).getJSONArray("list");
-            visitor.setProduct(EnumTestProduct.JC_ONLINE_JD);
+            JSONArray shopList = ShopListScene.builder().build().visitor(visitor).execute().getJSONArray("list");
             shopList.stream().map(e -> (JSONObject) e).forEach(shop -> {
                 Long shopId = shop.getLong("shop_id");
                 String shopName = shop.getString("shop_name");
@@ -2049,7 +2047,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            commonConfig.setShopId(product.getShopId());
+            commonConfig.setShopId(PRODUCT.getShopId());
             saveData("消息管理--推送消息销售成交客客数量=销售客户列表门店&品牌不为空的成交客户数量");
         }
     }
@@ -2090,7 +2088,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            commonConfig.setShopId(product.getShopId());
+            commonConfig.setShopId(PRODUCT.getShopId());
             saveData("消息管理--推送消息销售成交客户数量=销售客户列表门店&品牌不为空的潜在客户数量");
         }
     }
@@ -2099,7 +2097,7 @@ public class MarketingManageCase extends TestCaseCommon implements TestCaseStd {
     @Test(description = "消息管理--售后客户查询", enabled = false)
     public void messageManagerPeople_data_4() {
         try {
-            JSONArray shopList = ShopListScene.builder().build().execute(visitor).getJSONArray("list");
+            JSONArray shopList = ShopListScene.builder().build().visitor(visitor).execute().getJSONArray("list");
             shopList.stream().map(shop -> (JSONObject) shop).forEach(shop -> {
                 Long shopId = shop.getLong("shop_id");
                 String shopName = shop.getString("shop_name");

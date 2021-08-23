@@ -39,7 +39,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     ScenarioUtil jc = ScenarioUtil.getInstance();
     JiaoChenInfo info = new JiaoChenInfo();
     PublicParm pp = new PublicParm();
-    String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/car-platform/wm/multimedia/picture/奔驰.jpg";
+    String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
     CommonConfig commonConfig = new CommonConfig();
 
     /**

@@ -302,7 +302,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         try {
             util.loginPc(ALL_AUTHORITY);
             //根据归属门店搜索
-            JSONObject shopobj = ShopListScene.builder().build().execute(visitor).getJSONArray("list").getJSONObject(0);
+            JSONObject shopobj = ShopListScene.builder().build().visitor(visitor).execute().getJSONArray("list").getJSONObject(0);
             Long shopId = shopobj.getLong("shop_id");
             String shopName = shopobj.getString("shop_name");
             JSONArray alllist = OnlineExpertsPageListScene.builder().page(1).size(20).shopId(shopId).build().execute(visitor).getJSONArray("list");
@@ -1191,7 +1191,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         try {
             util.loginPc(ALL_AUTHORITY);
             //根据归属门店搜索
-            JSONObject shopobj = ShopListScene.builder().build().execute(visitor).getJSONArray("list").getJSONObject(0);
+            JSONObject shopobj = ShopListScene.builder().build().visitor(visitor).execute().getJSONArray("list").getJSONObject(0);
             Long shopId = shopobj.getLong("shop_id");
             String shopName = shopobj.getString("shop_name");
             JSONArray alllist = DedicatedServicePageListScene.builder().page(1).size(20).shopId(shopId).build().execute(visitor).getJSONArray("list");

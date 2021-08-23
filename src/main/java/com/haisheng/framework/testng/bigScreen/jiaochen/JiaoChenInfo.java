@@ -31,24 +31,23 @@ import java.util.List;
 
 public class JiaoChenInfo {
     DateTimeUtil dt = new DateTimeUtil();
-    PublicParm pp = new PublicParm();
     ScenarioUtil jc = ScenarioUtil.getInstance();
     public String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
     public final String logo = "general_temp/9a215339-d897-4516-a1e6-3dee1f4021f8";//120*120 品牌logo
     public final String logo2 = "general_temp/9c6fbc65-0f1f-4341-9892-1f1052b6aa04";
     public final String stringone = "a";//字符串长度1
-    public final String stringten = "a2！啊A" + Integer.toString((int) ((Math.random() * 9 + 1) * 10000));//字符串长度10
-    public final String stringsix = "A" + Integer.toString((int) ((Math.random() * 9 + 1) * 10000));//随机字符串长度6
-    public final String stringfifty = "自动化创建--ZDHZDH" + Integer.toString((int) (Math.random() * 10)) + "1234567890ABCDeFGHIJ啊啊啊～！@#¥%，：67890";//随机字符串长度50
-    public final String stringfifty1 = "ZDHZDH" + Integer.toString((int) ((Math.random() * 9 + 1) * 100000)) + "1234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：678901";//随机字符串长度51
+    public final String stringten = "a2！啊A" + (int) ((Math.random() * 9 + 1) * 10000);//字符串长度10
+    public final String stringsix = "A" + (int) ((Math.random() * 9 + 1) * 10000);//随机字符串长度6
+    public final String stringfifty = "自动化创建--ZDHZDH" + (int) (Math.random() * 10) + "1234567890ABCDeFGHIJ啊啊啊～！@#¥%，：67890";//随机字符串长度50
+    public final String stringfifty1 = "ZDHZDH" + (int) ((Math.random() * 9 + 1) * 100000) + "1234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：678901";//随机字符串长度51
     public final String string20 = "ZdH啊！_*" + System.currentTimeMillis(); //20位字符串
     public final String string200 = "自动化自动化自动化自动化自动化自动化自动化AAAAAAA12345AAAAAA次sssssss!@#$%^&*自动化自动化自动化自动化自动化自动化自动化AAAAAAA12345AAAAAA次sssssss!@#$%^&*自动化自动化自动化自动化自动化自动化自动化AAAAAAA12345AAAAAA次sssssss!@#$%^&*自动化自动化自动化自动化自动化自动化自动化AAAAAAA12345AA";
-    public final String stringlong = "自动化" + System.currentTimeMillis() + "a2～！啊A" + Integer.toString((int) (Math.random() * 1000000)) + "1234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：67891234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：67890101" + System.currentTimeMillis();
+    public final String stringlong = "自动化" + System.currentTimeMillis() + "a2～！啊A" + (int) (Math.random() * 1000000) + "1234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：67891234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：6789011234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：67890101" + System.currentTimeMillis();
     public final String district_code = "222402";
-    public final String phone = "1380110" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000));//手机号
-    public final String sitphone1 = "010-8159" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000));
+    public final String phone = "1380110" + (int) ((Math.random() * 9 + 1) * 1000);//手机号
+    public final String sitphone1 = "010-8159" + (int) ((Math.random() * 9 + 1) * 1000);
     ;//座机号
-    public final String sitphone2 = "0433-381" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000));
+    public final String sitphone2 = "0433-381" + (int) ((Math.random() * 9 + 1) * 1000);
     ;//座机号
     public final String donephone = "15843317232";//成交客户手机号
     public final Long oneshopid = 46439L;
@@ -57,7 +56,7 @@ public class JiaoChenInfo {
     public final String SALES = "SALES"; //专属销售
     public final String AFTER_SALES = "AFTER_SALES"; //专属售后
 
-    private static final EnumTestProduct PRODUCE = EnumTestProduct.JC_ONLINE_JD;
+    private static final EnumTestProduct PRODUCE = EnumTestProduct.JC_DAILY_JD;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public SceneUtil util = new SceneUtil(visitor);
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_LXQ_DAILY;
@@ -68,9 +67,8 @@ public class JiaoChenInfo {
 
     //创建品牌，返回品牌id
     public final long getBrandID(int n) {
-        String name = "" + Integer.toString((int) (Math.random() * 10000));
-        Long id = jc.addBrand(name, getLogo()).getLong("id");
-        return id;
+        String name = "" + (int) (Math.random() * 10000);
+        return jc.addBrand(name, getLogo()).getLong("id");
     }
 
 
@@ -82,8 +80,7 @@ public class JiaoChenInfo {
         String online_time = dt.getHistoryDate(0);
         jc.addCarStyle(id, manufacturer, name, online_time);
         //获取车系id
-        Long carStyleId = jc.carStylePage(1, 1, id, name).getJSONArray("list").getJSONObject(0).getLong("id");
-        return carStyleId;
+        return jc.carStylePage(1, 1, id, name).getJSONArray("list").getJSONObject(0).getLong("id");
     }
 
     //创建某品牌车系下的车型，返回车型id
@@ -94,8 +91,7 @@ public class JiaoChenInfo {
         String status1 = "ENABLE";
         jc.addCarModel(brand_id, carStyle_id, name1, year1, status1);
         //获取车系id
-        Long id = jc.carModelPage(1, 1, brand_id, carStyle_id, name1, "", "").getJSONArray("list").getJSONObject(0).getLong("id");
-        return id;
+        return jc.carModelPage(1, 1, brand_id, carStyle_id, name1, "", "").getJSONArray("list").getJSONObject(0).getLong("id");
     }
 
     public final int BUSINESS_JIAOCHEN_PC_17 = 118;
@@ -386,7 +382,7 @@ public class JiaoChenInfo {
     public JSONObject newThirdCategory(String name, String... secid) {
         JSONObject obj = new JSONObject();
         String logo = jc.pcFileUploadNew(new ImageUtil().getImageBinary(filePath)).getString("pic_path");
-        int code = 0;
+        int code;
         if (secid.length == 0) {
             code = jc.categoryCreate(false, name, "THIRD_CATEGORY", Long.toString(second_category), logo, null).getInteger("code");
         } else {
@@ -412,7 +408,7 @@ public class JiaoChenInfo {
     public JSONObject newGoodBrand(String... cs) {
         JSONObject obj = new JSONObject();
         String logo = jc.pcFileUploadNew(new ImageUtil().getImageBinary(filePath)).getString("pic_path");
-        JSONObject obj1 = new JSONObject();
+        JSONObject obj1;
         if (cs.length > 0) {
             obj1 = jc.BrandCreat(false, null, cs[0], cs[1], logo);
         } else {
@@ -546,8 +542,7 @@ public class JiaoChenInfo {
     //获取小程序消息列表数量
     public int getAppletmessNum() {
         util.loginApplet(APPLET_USER_ONE);
-        int num = AppletMessageListScene.builder().size(10).build().execute(visitor).getJSONArray("list").getJSONObject(0).getInteger("id");
-        return num;
+        return AppletMessageListScene.builder().size(10).build().execute(visitor).getJSONArray("list").getJSONObject(0).getInteger("id");
     }
 
     //门店id对应的门店名字
