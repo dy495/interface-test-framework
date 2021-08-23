@@ -44,9 +44,9 @@ import java.util.stream.Collectors;
  */
 public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_GK;
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ONLINE_YS;
-    public VisitorProxy visitor = new VisitorProxy(PRODUCE);
-    public SceneUtil util = new SceneUtil(visitor);
+    private static final EnumAccount ACCOUNT = EnumAccount.YT_ONLINE_YS;
+    private final VisitorProxy visitor = new VisitorProxy(PRODUCE);
+    private final SceneUtil util = new SceneUtil(visitor);
 
     @BeforeClass
     @Override
@@ -62,9 +62,9 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.YUNTONG_ONLINE_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
         //放入shopId
-        commonConfig.setShopId(ALL_AUTHORITY.getShopId()).setRoleId(ALL_AUTHORITY.getRoleId()).setProduct(PRODUCE.getAbbreviation());
+        commonConfig.setShopId(ACCOUNT.getShopId()).setRoleId(ACCOUNT.getRoleId()).setProduct(PRODUCE.getAbbreviation());
         beforeClassInit(commonConfig);
-        util.loginApp(ALL_AUTHORITY);
+        util.loginApp(ACCOUNT);
     }
 
     @AfterClass
@@ -112,10 +112,10 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
     public void voiceEvaluation_data_2() {
         try {
             IScene voiceEvaluationPageScene = VoiceEvaluationPageScene.builder().build();
-            long evaluationTotal = voiceEvaluationPageScene.execute(visitor).getLong("total");
+            long evaluationTotal = voiceEvaluationPageScene.visitor(visitor).execute().getLong("total");
             visitor.setProduct(EnumTestProduct.YT_ONLINE_JD);
             IScene preSalesReceptionPageScene = PreSalesReceptionPageScene.builder().build();
-            long receptionTotal = preSalesReceptionPageScene.execute(visitor).getLong("total");
+            long receptionTotal = preSalesReceptionPageScene.visitor(visitor).execute().getLong("total");
             CommonUtil.valueView(evaluationTotal, receptionTotal);
             Preconditions.checkArgument(evaluationTotal <= receptionTotal, "语音评鉴列表数：" + evaluationTotal + " 销售接待页列表数：" + receptionTotal);
         } catch (Exception | AssertionError e) {
@@ -132,7 +132,7 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
             IScene voiceEvaluationPageScene = VoiceEvaluationPageScene.builder().enterStatus(1).build();
             List<VoiceEvaluationPageBean> voiceEvaluationPageList = util.toJavaObjectList(voiceEvaluationPageScene, VoiceEvaluationPageBean.class);
             voiceEvaluationPageList.stream().filter(e -> e.getEvaluateScore() != null).filter(e -> e.getEvaluateScore() != 0)
-                    .map(e -> VoiceDetailScene.builder().id(e.getId()).build().execute(visitor)).forEach(object -> {
+                    .map(e -> VoiceDetailScene.builder().id(e.getId()).build().visitor(visitor).execute()).forEach(object -> {
                 int averageScore = object.getInteger("average_score");
                 int scoreSum = object.getJSONArray("scores").stream().map(e -> (JSONObject) e).mapToInt(e -> e.getInteger("score")).sum();
                 int mathResult = CommonUtil.getRoundIntRatio(scoreSum, 5);
@@ -152,7 +152,7 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
             IScene voiceEvaluationPageScene = VoiceEvaluationPageScene.builder().enterStatus(1).build();
             List<VoiceEvaluationPageBean> voiceEvaluationPageList = util.toJavaObjectList(voiceEvaluationPageScene, VoiceEvaluationPageBean.class);
             voiceEvaluationPageList.stream().filter(e -> e.getEvaluateScore() != null).filter(e -> e.getEvaluateScore() != 0)
-                    .map(e -> VoiceDetailScene.builder().id(e.getId()).build().execute(visitor)).forEach(object -> {
+                    .map(e -> VoiceDetailScene.builder().id(e.getId()).build().visitor(visitor).execute()).forEach(object -> {
                 int adviceListSize = object.getJSONArray("advice_list").size();
                 int count = (int) object.getJSONArray("link_label_list").stream().map(link -> (JSONObject) link)
                         .mapToLong(link -> link.getJSONArray("labels").stream().map(label -> (JSONObject) label)
@@ -173,7 +173,7 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
             IScene voiceEvaluationPageScene = VoiceEvaluationPageScene.builder().enterStatus(1).build();
             List<VoiceEvaluationPageBean> voiceEvaluationPageList = util.toJavaObjectList(voiceEvaluationPageScene, VoiceEvaluationPageBean.class);
             voiceEvaluationPageList.stream().filter(e -> e.getEvaluateScore() != null).filter(e -> e.getEvaluateScore() != 0)
-                    .map(e -> VoiceDetailScene.builder().id(e.getId()).build().execute(visitor)).forEach(object -> {
+                    .map(e -> VoiceDetailScene.builder().id(e.getId()).build().visitor(visitor).execute()).forEach(object -> {
                 JSONArray linkLabelList = object.getJSONArray("link_label_list");
                 JSONArray labels = linkLabelList.stream().map(e -> (JSONObject) e).filter(e -> e.getString("type_name").equals(typeName)).map(e -> e.getJSONArray("labels")).findFirst().orElse(null);
                 Preconditions.checkNotNull(labels, object.getString("name") + " " + typeName + "标签为空");
@@ -215,7 +215,7 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
             IScene labelListScene = SensitiveWordsLabelListScene.builder().build();
             List<LabelListBean> labelList = util.toJavaObjectList(labelListScene, LabelListBean.class, "list");
             int countSum = labelList.stream().mapToInt(LabelListBean::getCount).sum();
-            int total = SensitiveBehaviorPageScene.builder().build().execute(visitor).getInteger("total");
+            int total = SensitiveBehaviorPageScene.builder().build().visitor(visitor).execute().getInteger("total");
             CommonUtil.valueView(countSum, total);
             Preconditions.checkArgument(countSum == total, "柱状图数量之和" + countSum + " 行为记录列表数：" + total);
         } catch (Exception | AssertionError e) {
@@ -244,8 +244,8 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
     @Test(description = "特殊音频审核列表数量<=语音评鉴列表数")
     public void voiceEvaluation_data_9() {
         try {
-            int voiceEvaluationPageTotal = VoiceEvaluationPageScene.builder().build().execute(visitor).getInteger("total");
-            int specialAudioPageSceneTotal = SpecialAudioPageScene.builder().build().execute(visitor).getInteger("total");
+            int voiceEvaluationPageTotal = VoiceEvaluationPageScene.builder().build().visitor(visitor).execute().getInteger("total");
+            int specialAudioPageSceneTotal = SpecialAudioPageScene.builder().build().visitor(visitor).execute().getInteger("total");
             Preconditions.checkArgument(voiceEvaluationPageTotal >= specialAudioPageSceneTotal, "特殊音频审核列表数量：" + specialAudioPageSceneTotal + " 语音评鉴列表数：" + voiceEvaluationPageTotal);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -257,7 +257,7 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
     @Test(description = "话术考核设置--筛选全部列表条数=筛选各话术环节的列表条数之和")
     public void voiceEvaluation_data_10() {
         try {
-            int total = SpeechTechniquePageScene.builder().build().execute(visitor).getInteger("total");
+            int total = SpeechTechniquePageScene.builder().build().visitor(visitor).execute().getInteger("total");
             int[] ints = {100, 200, 300, 400, 500};
             int sum = Arrays.stream(ints).mapToObj(type -> SpeechTechniquePageScene.builder().type(type).build()).map(speechTechniquePageScene -> util.toJavaObjectList(speechTechniquePageScene, JSONObject.class)).mapToInt(List::size).sum();
             CommonUtil.valueView(total, sum);

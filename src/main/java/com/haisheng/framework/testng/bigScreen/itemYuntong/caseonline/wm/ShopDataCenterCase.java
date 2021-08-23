@@ -38,9 +38,9 @@ import java.util.List;
  */
 public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_JD;
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ONLINE_YS;
-    public VisitorProxy visitor = new VisitorProxy(PRODUCE);
-    public SceneUtil util = new SceneUtil(visitor);
+    private static final EnumAccount ACCOUNT = EnumAccount.YT_ONLINE_YS;
+    private final VisitorProxy visitor = new VisitorProxy(PRODUCE);
+    private final SceneUtil util = new SceneUtil(visitor);
     private static final String startDate = DateTimeUtil.addDayFormat(new Date(), -2);
     private static final String endDate = DateTimeUtil.addDayFormat(new Date(), -2);
 
@@ -58,9 +58,9 @@ public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.YUNTONG_ONLINE_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
         //放入shopId
-        commonConfig.setShopId(PRODUCE.getShopId()).setRoleId(ALL_AUTHORITY.getRoleId()).setProduct(PRODUCE.getAbbreviation());
+        commonConfig.setShopId(PRODUCE.getShopId()).setRoleId(ACCOUNT.getRoleId()).setProduct(PRODUCE.getAbbreviation());
         beforeClassInit(commonConfig);
-        util.loginApp(ALL_AUTHORITY);
+        util.loginApp(ACCOUNT);
     }
 
     @AfterClass

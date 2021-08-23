@@ -48,10 +48,10 @@ import java.util.stream.Collectors;
  * @date 2021/1/29 11:17
  */
 public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduct product = EnumTestProduct.YT_DAILY_GK;
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ONLINE_LXQ;
-    public VisitorProxy visitor = new VisitorProxy(product);
-    public SceneUtil util = new SceneUtil(visitor);
+    private static final EnumTestProduct PRODUCT = EnumTestProduct.YT_DAILY_GK;
+    private static final EnumAccount ACCOUNT = EnumAccount.YT_ONLINE_LXQ;
+    private final VisitorProxy visitor = new VisitorProxy(PRODUCT);
+    private final SceneUtil util = new SceneUtil(visitor);
     private static final String startDate = DateTimeUtil.addDayFormat(new Date(), -1);
     private static final String endDate = DateTimeUtil.addDayFormat(new Date(), -1);
     private static final Integer dataCycleType = EnumDataCycleType.CUSTOM.getId();
@@ -68,11 +68,11 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCT.getDesc() + commonConfig.checklistQaOwner);
         //放入shopId
-        commonConfig.setShopId(ALL_AUTHORITY.getShopId()).setRoleId(ALL_AUTHORITY.getRoleId()).setProduct(product.getAbbreviation());
+        commonConfig.setShopId(ACCOUNT.getShopId()).setRoleId(ACCOUNT.getRoleId()).setProduct(PRODUCT.getAbbreviation());
         beforeClassInit(commonConfig);
-        util.loginApp(ALL_AUTHORITY);
+        util.loginApp(ACCOUNT);
     }
 
     @AfterClass
@@ -151,7 +151,7 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
         try {
             IScene appOverviewScene = AppOverviewScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
             int count = util.toJavaObject(appOverviewScene, AppOverviewBean.class).getCount();
-            int total = VoiceEvaluationPageScene.builder().receptionStart(startDate).receptionEnd(endDate).build().execute(visitor).getInteger("total");
+            int total = VoiceEvaluationPageScene.builder().receptionStart(startDate).receptionEnd(endDate).build().visitor(visitor).execute().getInteger("total");
             CommonUtil.valueView(count, total);
             Preconditions.checkArgument(count == total, "APP【部门接待评鉴】接待次数：" + count + " PC【语音接待评鉴】列表数：" + total);
         } catch (Exception | AssertionError e) {
@@ -322,10 +322,10 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     public void department_data_13(String name, int type) {
         try {
             IScene capabilityModelScene = AppCapabilityModelScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
-            JSONArray modelList = capabilityModelScene.execute(visitor).getJSONArray("list");
+            JSONArray modelList = capabilityModelScene.visitor(visitor).execute().getJSONArray("list");
             int modelScore = modelList.stream().map(obj -> (JSONObject) obj).filter(obj -> obj.getInteger("type").equals(type)).map(e -> e.getInteger("score")).findFirst().orElse(0);
             IScene linkDataCarouselScene = AppLinkDataCarouselScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
-            JSONArray linkList = linkDataCarouselScene.execute(visitor).getJSONArray("list");
+            JSONArray linkList = linkDataCarouselScene.visitor(visitor).execute().getJSONArray("list");
             int linkScore = linkList.size() == 0 ? 0 : linkList.stream().map(obj -> (JSONObject) obj).filter(obj -> obj.getInteger("type").equals(type)).map(obj -> obj.getInteger("average_score")).findFirst().orElse(0);
             CommonUtil.valueView(modelScore, linkScore);
             Preconditions.checkArgument(modelScore == linkScore, "APP【销售接待能力模型】的" + name + "环节平均分：" + modelScore + " APP【环节平均分】中" + name + "环节的部门平均分" + linkScore);
@@ -361,7 +361,7 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     @Test(description = "APP【环节平均分】中各环节的合格线=后台配置60分", dataProvider = "receptionType", dataProviderClass = DataClass.class)
     public void department_data_15(String name, int type) {
         try {
-            JSONArray array = AppLinkDataCarouselScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build().execute(visitor).getJSONArray("list");
+            JSONArray array = AppLinkDataCarouselScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build().visitor(visitor).execute().getJSONArray("list");
             array.stream().map(e -> (JSONObject) e).filter(e -> e.getInteger("type").equals(type))
                     .forEach(e -> Preconditions.checkArgument(e.getInteger("qualified_score") == 60, "APP【环节平均分】中" + name + "环节的合格线为：" + e.getInteger("qualified_score")));
         } catch (Exception | AssertionError e) {
@@ -484,7 +484,7 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     public void department_data_20(String name, int type) {
         try {
             IScene receptionScoreTrendScene = AppReceptionScoreTrendScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
-            JSONArray array = receptionScoreTrendScene.execute(visitor).getJSONArray("list");
+            JSONArray array = receptionScoreTrendScene.visitor(visitor).execute().getJSONArray("list");
             int trendScore = array.size() == 0 ? 0 : array.getJSONObject(0).getInteger(String.valueOf(type));
             IScene capabilityModelScene = AppCapabilityModelScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
             List<AppCapabilityModelBean> capabilityModelList = util.toJavaObjectList(capabilityModelScene, AppCapabilityModelBean.class, "list");
@@ -503,12 +503,12 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     public void department_data_21(String name, int type) {
         try {
             IScene receptionScoreTrendScene = AppReceptionScoreTrendScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).build();
-            JSONArray array = receptionScoreTrendScene.execute(visitor).getJSONArray("list");
+            JSONArray array = receptionScoreTrendScene.visitor(visitor).execute().getJSONArray("list");
             int trendScore = array.size() == 0 ? 0 : array.getJSONObject(0).getInteger(String.valueOf(type));
             IScene voiceEvaluationPageScene = VoiceEvaluationPageScene.builder().enterStatus(1).evaluateStatus(500).receptionStart(startDate).receptionEnd(endDate).build();
             List<JSONObject> list = new ArrayList<>();
             util.toJavaObjectList(voiceEvaluationPageScene, VoiceEvaluationPageBean.class).stream()
-                    .map(e -> VoiceDetailScene.builder().id(e.getId()).build().execute(visitor).getJSONArray("scores"))
+                    .map(e -> VoiceDetailScene.builder().id(e.getId()).build().visitor(visitor).execute().getJSONArray("scores"))
                     .forEach(e -> e.stream().map(object -> (JSONObject) object).filter(object -> object.getInteger("type").equals(type)).filter(object -> object.getInteger("score") != 0).forEach(list::add));
             int scoreSum = list.stream().mapToInt(e -> e.getInteger("score")).sum();
             int mathResult = CommonUtil.getCeilIntRatio(scoreSum, list.size());
@@ -693,7 +693,7 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
                 IScene evaluationPageScene = VoiceEvaluationPageScene.builder().receptorName(e.getName()).evaluateStatus(500).enterStatus(1).receptionStart(startDate).receptionEnd(endDate).build();
                 List<VoiceEvaluationPageBean> voiceEvaluationPageList = util.toJavaObjectList(evaluationPageScene, VoiceEvaluationPageBean.class);
                 List<Integer> list = new ArrayList<>();
-                voiceEvaluationPageList.stream().filter(Objects::nonNull).map(voiceRecord -> VoiceDetailScene.builder().id(voiceRecord.getId()).build().execute(visitor).getJSONArray("scores"))
+                voiceEvaluationPageList.stream().filter(Objects::nonNull).map(voiceRecord -> VoiceDetailScene.builder().id(voiceRecord.getId()).build().visitor(visitor).execute().getJSONArray("scores"))
                         .forEach(scores -> scores.stream().map(object -> (JSONObject) object).filter(object -> object.getInteger("type").equals(type))
                                 .filter(object -> object.getInteger("score") != null).map(object -> object.getInteger("score")).forEach(list::add));
                 int scoreSum = list.stream().mapToInt(a -> a).sum();
@@ -714,10 +714,10 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
         try {
             List<AppDepartmentPageBean> list = util.getAppDepartmentPageList(dataCycleType, startDate, startDate);
             list.forEach(e -> {
-                JSONObject response = AppPersonDataReceptionAverageScoreTrendScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(startDate).salesId(e.getSaleId()).build().execute(visitor);
+                JSONObject response = AppPersonDataReceptionAverageScoreTrendScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(startDate).salesId(e.getSaleId()).build().visitor(visitor).execute();
                 int totalAverageScore = response.getJSONArray("list").size() == 0 ? 0 : response.getJSONArray("list").getJSONObject(0).getInteger("total_average_score");
                 IScene scene = AppPersonalReceptionScoreTrendScene.builder().dataCycleType(dataCycleType).startDate(startDate).endDate(startDate).salesId(e.getSaleId()).build();
-                JSONObject object = scene.execute(visitor).getJSONArray("list").getJSONObject(0);
+                JSONObject object = scene.visitor(visitor).execute().getJSONArray("list").getJSONObject(0);
                 int a = object.getInteger("100");
                 int b = object.getInteger("200");
                 int c = object.getInteger("300");
@@ -742,7 +742,7 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
             departmentPageList.forEach(e -> {
                 List<AppPersonalPageBean> personalPageList = util.getAppPersonalPageList(dataCycleType, e.getSaleId(), startDate, endDate);
                 personalPageList.forEach(personalPage -> {
-                    JSONObject response = VoiceDetailScene.builder().id(personalPage.getId()).build().execute(visitor);
+                    JSONObject response = VoiceDetailScene.builder().id(personalPage.getId()).build().visitor(visitor).execute();
                     if (!response.getString("enter_status_name").equals("再次进店")) {
                         int averageScore = response.getInteger("average_score");
                         int scoreSum = response.getJSONArray("scores").stream().map(object -> (JSONObject) object)
@@ -770,7 +770,7 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
                 Map<Long, Integer> appScoreMap = new HashMap<>();
                 List<AppPersonalPageBean> personalPageList = util.getAppPersonalPageList(dataCycleType, e.getSaleId(), startDate, endDate);
                 personalPageList.stream().filter(Objects::nonNull).forEach(personalPage -> {
-                    JSONObject detail = AppDetailScene.builder().id(personalPage.getId()).build().execute(visitor);
+                    JSONObject detail = AppDetailScene.builder().id(personalPage.getId()).build().visitor(visitor).execute();
                     if (!detail.getString("enter_status_name").equals("再次进店") && detail.getInteger("average_score") != 0) {
                         JSONArray array = detail.getJSONArray("scores");
                         array.stream().map(obj -> (JSONObject) obj)
@@ -782,7 +782,7 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
                 IScene evaluationPageScene = VoiceEvaluationPageScene.builder().receptorName(e.getName()).receptionStart(startDate).receptionEnd(endDate).evaluateStatus(500).enterStatus(1).build();
                 List<VoiceEvaluationPageBean> voiceEvaluationPageList = util.toJavaObjectList(evaluationPageScene, VoiceEvaluationPageBean.class);
                 voiceEvaluationPageList.stream().filter(Objects::nonNull).forEach(voiceEvaluationPage -> {
-                    JSONObject detail = VoiceDetailScene.builder().id(voiceEvaluationPage.getId()).build().execute(visitor);
+                    JSONObject detail = VoiceDetailScene.builder().id(voiceEvaluationPage.getId()).build().visitor(visitor).execute();
                     if (detail.getInteger("average_score") != null && detail.getInteger("average_score") != 0) {
                         JSONArray array = detail.getJSONArray("scores");
                         array.stream().map(obj -> (JSONObject) obj)
@@ -815,7 +815,7 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
                 Map<Long, Integer> map = new HashMap<>();
                 List<AppPersonalPageBean> personalPageList = util.getAppPersonalPageList(dataCycleType, e.getSaleId(), startDate, endDate);
                 personalPageList.stream().filter(Objects::nonNull).forEach(personalPage -> {
-                    JSONObject response = AppDetailScene.builder().id(personalPage.getId()).build().execute(visitor);
+                    JSONObject response = AppDetailScene.builder().id(personalPage.getId()).build().visitor(visitor).execute();
                     if (!response.getString("enter_status_name").equals("再次进店") && response.getInteger("average_score") != null) {
                         map.put(personalPage.getId(), response.getInteger("average_score"));
                     }
@@ -825,7 +825,7 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
                 voiceEvaluationPageList.stream().filter(Objects::nonNull).forEach(voiceRecord -> {
                     for (Map.Entry<Long, Integer> entry : map.entrySet()) {
                         if (entry.getKey().equals(voiceRecord.getId())) {
-                            JSONObject response = VoiceDetailScene.builder().id(voiceRecord.getId()).build().execute(visitor);
+                            JSONObject response = VoiceDetailScene.builder().id(voiceRecord.getId()).build().visitor(visitor).execute();
                             if (response.getInteger("average_score") != null) {
                                 int pcAverageScore = response.getInteger("average_score");
                                 int appAverageScore = entry.getValue();
@@ -849,7 +849,7 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
         try {
             Map<String, AppSpeechTechniqueAdviceBean> map = new HashMap<>();
             IScene scene = AppStandardListScene.builder().build();
-            JSONArray list = scene.execute(visitor).getJSONArray("list");
+            JSONArray list = scene.visitor(visitor).execute().getJSONArray("list");
             list.stream().map(object -> (JSONObject) object).forEach(object -> {
                 String type = object.getString("type");
                 JSONArray array = object.getJSONArray("techniques");
@@ -861,7 +861,7 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
                 });
             });
             IScene speechPageScene = SpeechTechniquePageScene.builder().build();
-            JSONArray array = speechPageScene.execute(visitor).getJSONArray("list");
+            JSONArray array = speechPageScene.visitor(visitor).execute().getJSONArray("list");
             array.stream().map(e -> (JSONObject) e).forEach(e -> {
                 for (Map.Entry<String, AppSpeechTechniqueAdviceBean> entry : map.entrySet()) {
                     if (e.getString("link_name").equals(entry.getKey()) && e.getString("label").equals(entry.getValue().getTitle())) {
@@ -888,7 +888,7 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
                 Map<Long, String> map = new HashMap<>();
                 List<AppPersonalPageBean> personalPageList = util.getAppPersonalPageList(dataCycleType, e.getSaleId(), startDate, endDate);
                 personalPageList.stream().filter(Objects::nonNull).forEach(personalPage -> {
-                    JSONObject response = AppDetailScene.builder().id(personalPage.getId()).build().execute(visitor);
+                    JSONObject response = AppDetailScene.builder().id(personalPage.getId()).build().visitor(visitor).execute();
                     if (!response.getString("enter_status_name").equals("再次进店") && response.getString("voice_record") != null) {
                         map.put(personalPage.getId(), response.getString("voice_record"));
                     }
@@ -898,7 +898,7 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
                 voiceEvaluationPageList.stream().filter(Objects::nonNull).forEach(voiceRecord -> {
                     for (Map.Entry<Long, String> entry : map.entrySet()) {
                         if (entry.getKey().equals(voiceRecord.getId())) {
-                            JSONObject response = VoiceDetailScene.builder().id(voiceRecord.getId()).build().execute(visitor);
+                            JSONObject response = VoiceDetailScene.builder().id(voiceRecord.getId()).build().visitor(visitor).execute();
                             if (response.getString("voice_record") != null) {
                                 String pcVoiceRecord = response.getString("voice_record");
                                 String appVoiceRecord = entry.getValue();
@@ -928,7 +928,7 @@ public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
             departmentPageList.forEach(e -> {
                 List<AppPersonalPageBean> personalPageList = util.getAppPersonalPageList(dataCycleType, e.getSaleId(), startDate, endDate);
                 personalPageList.stream().filter(Objects::nonNull).forEach(personalPage -> {
-                    JSONObject response = AppDetailScene.builder().id(personalPage.getId()).build().execute(visitor);
+                    JSONObject response = AppDetailScene.builder().id(personalPage.getId()).build().visitor(visitor).execute();
                     if (!response.getString("enter_status_name").equals("再次进店")
                             && response.getJSONArray("scores").size() != 0) {
                         map.put(personalPage.getId(), response.getJSONArray("scores"));

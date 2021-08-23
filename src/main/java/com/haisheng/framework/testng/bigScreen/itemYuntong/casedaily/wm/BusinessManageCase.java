@@ -35,10 +35,10 @@ import java.util.Date;
  * @date 2021/1/29 11:17
  */
 public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduct product = EnumTestProduct.YT_DAILY_ZH;
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_DAILY_YS;
-    public VisitorProxy visitor = new VisitorProxy(product);
-    public SceneUtil util = new SceneUtil(visitor);
+    private static final EnumTestProduct PRODUCT = EnumTestProduct.YT_DAILY_JD;
+    private static final EnumAccount ACCOUNT = EnumAccount.YT_DAILY_YS;
+    private final VisitorProxy visitor = new VisitorProxy(PRODUCT);
+    private final SceneUtil util = new SceneUtil(visitor);
 
     @BeforeClass
     @Override
@@ -52,9 +52,9 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCT.getDesc() + commonConfig.checklistQaOwner);
         //放入shopId
-        commonConfig.setShopId(product.getShopId()).setRoleId(ALL_AUTHORITY.getRoleId()).setProduct(product.getAbbreviation());
+        commonConfig.setShopId(PRODUCT.getShopId()).setRoleId(ACCOUNT.getRoleId()).setProduct(PRODUCT.getAbbreviation());
         beforeClassInit(commonConfig);
     }
 
@@ -67,24 +67,23 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-        util.loginPc(ALL_AUTHORITY);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
-        visitor.setProduct(EnumTestProduct.YT_DAILY_JD);
+        util.loginPc(ACCOUNT);
+        logger.logCaseStart(caseResult.getCaseName());
     }
 
     @Test(description = "创建一个潜客，销售客户列表中手机号不存在，销售客户列表+1&客户类型为【潜客】")
     public void saleCustomerManager_data_1() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = PreSaleCustomerPageScene.builder().build();
-            int total = scene.execute(visitor).getInteger("total");
+            int total = scene.visitor(visitor).execute().getInteger("total");
             String phone = util.getNotExistPhone();
             PreSaleCustomerCreatePotentialCustomerScene.builder().customerType("PERSON").customerName("燕小六")
                     .customerPhone(phone).sex("0").salesId(util.getSaleId()).shopId(Long.parseLong(util.getReceptionShopId()))
-                    .carStyleId(Long.parseLong(util.getCarStyleId())).carModelId(Long.parseLong(util.getCarModelId())).build().execute(visitor);
-            JSONObject response = scene.execute(visitor);
+                    .carStyleId(Long.parseLong(util.getCarStyleId())).carModelId(Long.parseLong(util.getCarModelId())).build().visitor(visitor).execute();
+            JSONObject response = scene.visitor(visitor).execute();
             int newTotal = response.getInteger("total");
             String customerTypeName = response.getJSONArray("list").getJSONObject(0).getString("customer_type_name");
             Preconditions.checkArgument(newTotal == total + 1, "创建潜客之前为：" + total + "创建潜客之后：" + newTotal);
@@ -98,16 +97,15 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "创建一个潜客，销售客户列表中手机号存在，销售客户列表+0")
     public void saleCustomerManager_data_2() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = PreSaleCustomerPageScene.builder().build();
-            JSONObject response = scene.execute(visitor);
+            JSONObject response = scene.visitor(visitor).execute();
             int total = response.getInteger("total");
             String phone = response.getJSONArray("list").getJSONObject(0).getString("customer_phone");
             PreSaleCustomerCreatePotentialCustomerScene.builder().customerType("PERSON").customerName("燕小六")
                     .customerPhone(phone).sex("0").salesId(util.getSaleId()).shopId(Long.parseLong(util.getReceptionShopId()))
                     .carStyleId(Long.parseLong(util.getCarStyleId())).carModelId(Long.parseLong(util.getCarModelId())).build().execute(visitor, false);
-            JSONObject response1 = scene.execute(visitor);
+            JSONObject response1 = scene.visitor(visitor).execute();
             int newTotal = response1.getInteger("total");
             Preconditions.checkArgument(newTotal == total, "创建潜客之前为：" + total + "创建潜客之后：" + newTotal);
         } catch (Exception | AssertionError e) {
@@ -119,7 +117,6 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(dataProvider = "createCustomerAbnormalParam", dataProviderClass = DataClass.class, description = "创建潜客异常情况")
     public void saleCustomerManager_system_1(String field, Object value, String err) {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = PreSaleCustomerCreatePotentialCustomerScene.builder().customerType("PERSON").customerName("燕小六")
                     .customerPhone(util.getNotExistPhone()).sex("0").salesId(util.getSaleId()).shopId(Long.parseLong(util.getReceptionShopId()))
@@ -135,7 +132,6 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(dataProvider = "createCustomerOrderAbnormalParam", dataProviderClass = DataClass.class, description = "创建成交记录异常情况")
     public void saleCustomerManager_system_2(String field, Object value, String err) {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             String vin = util.getExistVin();
             IScene scene = PreSaleCustomerCreateCustomerScene.builder().customerPhone(util.getNotExistPhone()).customerName("燕小六")

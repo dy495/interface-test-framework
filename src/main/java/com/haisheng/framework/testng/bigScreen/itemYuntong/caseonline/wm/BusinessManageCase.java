@@ -36,9 +36,9 @@ import java.util.Date;
  */
 public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_JD;
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ONLINE_YS;
-    public VisitorProxy visitor = new VisitorProxy(PRODUCE);
-    public SceneUtil util = new SceneUtil(visitor);
+    private static final EnumAccount ACCOUNT = EnumAccount.YT_ONLINE_YS;
+    private final VisitorProxy visitor = new VisitorProxy(PRODUCE);
+    private final SceneUtil util = new SceneUtil(visitor);
 
     @BeforeClass
     @Override
@@ -54,7 +54,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.YUNTONG_ONLINE_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCE.getDesc() + commonConfig.checklistQaOwner);
         //放入shopId
-        commonConfig.setShopId(PRODUCE.getShopId()).setRoleId(ALL_AUTHORITY.getRoleId()).setProduct(PRODUCE.getAbbreviation());
+        commonConfig.setShopId(PRODUCE.getShopId()).setRoleId(ACCOUNT.getRoleId()).setProduct(PRODUCE.getAbbreviation());
         beforeClassInit(commonConfig);
     }
 
@@ -67,7 +67,7 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
     @BeforeMethod
     @Override
     public void createFreshCase(Method method) {
-        util.loginPc(ALL_AUTHORITY);
+        util.loginPc(ACCOUNT);
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
@@ -78,12 +78,12 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
     public void saleCustomerManager_data_1() {
         try {
             IScene scene = PreSaleCustomerPageScene.builder().build();
-            int total = scene.execute(visitor).getInteger("total");
+            int total = scene.visitor(visitor).execute().getInteger("total");
             String phone = util.getNotExistPhone();
             PreSaleCustomerCreatePotentialCustomerScene.builder().customerType("PERSON").customerName("燕小六")
                     .customerPhone(phone).sex("0").salesId(util.getSaleId()).shopId(Long.parseLong(util.getReceptionShopId()))
-                    .carStyleId(Long.parseLong(util.getCarStyleId())).carModelId(Long.parseLong(util.getCarModelId())).build().execute(visitor);
-            JSONObject response = scene.execute(visitor);
+                    .carStyleId(Long.parseLong(util.getCarStyleId())).carModelId(Long.parseLong(util.getCarModelId())).build().visitor(visitor).execute();
+            JSONObject response = scene.visitor(visitor).execute();
             int newTotal = response.getInteger("total");
             String customerTypeName = response.getJSONArray("list").getJSONObject(0).getString("customer_type_name");
             Preconditions.checkArgument(newTotal == total + 1, "创建潜客之前为：" + total + "创建潜客之后：" + newTotal);
@@ -99,13 +99,13 @@ public class BusinessManageCase extends TestCaseCommon implements TestCaseStd {
     public void saleCustomerManager_data_2() {
         try {
             IScene scene = PreSaleCustomerPageScene.builder().build();
-            JSONObject response = scene.execute(visitor);
+            JSONObject response = scene.visitor(visitor).execute();
             int total = response.getInteger("total");
             String phone = response.getJSONArray("list").getJSONObject(0).getString("customer_phone");
             PreSaleCustomerCreatePotentialCustomerScene.builder().customerType("PERSON").customerName("燕小六")
                     .customerPhone(phone).sex("0").salesId(util.getSaleId()).shopId(Long.parseLong(util.getReceptionShopId()))
                     .carStyleId(Long.parseLong(util.getCarStyleId())).carModelId(Long.parseLong(util.getCarModelId())).build().execute(visitor, false);
-            JSONObject response1 = scene.execute(visitor);
+            JSONObject response1 = scene.visitor(visitor).execute();
             int newTotal = response1.getInteger("total");
             Preconditions.checkArgument(newTotal == total, "创建潜客之前为：" + total + "创建潜客之后：" + newTotal);
         } catch (Exception | AssertionError e) {

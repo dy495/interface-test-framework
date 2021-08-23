@@ -37,9 +37,9 @@ import java.util.*;
  * 系统配置case
  */
 public class SystemConfigCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduct product = EnumTestProduct.YT_DAILY_ZH;
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_DAILY_YS;
-    public VisitorProxy visitor = new VisitorProxy(product);
+    private static final EnumTestProduct PRODUCT = EnumTestProduct.YT_DAILY_ZH;
+    private static final EnumAccount ACCOUNT = EnumAccount.YT_DAILY_YS;
+    public VisitorProxy visitor = new VisitorProxy(PRODUCT);
     public SceneUtil util = new SceneUtil(visitor);
 
     @BeforeClass
@@ -54,11 +54,11 @@ public class SystemConfigCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.YUNTONG_DAILY_TEST.getJobName());
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCT.getDesc() + commonConfig.checklistQaOwner);
         //放入shopId
-        commonConfig.setShopId(ALL_AUTHORITY.getShopId()).setRoleId(ALL_AUTHORITY.getRoleId()).setProduct(product.getAbbreviation());
+        commonConfig.setShopId(ACCOUNT.getShopId()).setRoleId(ACCOUNT.getRoleId()).setProduct(PRODUCT.getAbbreviation());
         beforeClassInit(commonConfig);
-        util.loginApp(ALL_AUTHORITY);
+        util.loginApp(ACCOUNT);
     }
 
     @AfterClass
@@ -73,21 +73,21 @@ public class SystemConfigCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
+        logger.logCaseStart(caseResult.getCaseName());
     }
 
     @Test(description = "新增一个角色，角色列表+1，【账户管理】页角色下拉框+1")
     public void roleManage_data_1() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene roleListScene = RoleListScene.builder().build();
-            int a = roleListScene.execute(visitor).getJSONArray("list").size();
+            int a = roleListScene.visitor(visitor).execute().getJSONArray("list").size();
             IScene scene = RolePageScene.builder().build();
-            int total = scene.execute(visitor).getInteger("total");
-            int parentRoleId = Integer.parseInt(ALL_AUTHORITY.getRoleId());
+            int total = scene.visitor(visitor).execute().getInteger("total");
+            int parentRoleId = Integer.parseInt(ACCOUNT.getRoleId());
             List<Integer> authList = new ArrayList<>(util.getAuthRoleMap(parentRoleId).keySet());
-            RoleAddScene.builder().name("自动化创建全部权限").description("这是一个最大权限的角色").parentRoleId(parentRoleId).authList(authList).build().execute(visitor);
-            int newTotal = scene.execute(visitor).getInteger("total");
-            int b = roleListScene.execute(visitor).getJSONArray("list").size();
+            RoleAddScene.builder().name("自动化创建全部权限").description("这是一个最大权限的角色").parentRoleId(parentRoleId).authList(authList).build().visitor(visitor).execute();
+            int newTotal = scene.visitor(visitor).execute().getInteger("total");
+            int b = roleListScene.visitor(visitor).execute().getJSONArray("list").size();
             Preconditions.checkArgument(newTotal == total + 1, "创建权限之前权限列表总数：" + total + " 创建权限之后权限列表总数：" + newTotal);
             Preconditions.checkArgument(b == a + 1, "创建权限之前【账户管理】页角色下拉框总数：" + a + " 创建权限之后【账户管理】页角色下拉框总数：" + b);
         } catch (Exception | AssertionError e) {
@@ -99,16 +99,15 @@ public class SystemConfigCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "删除一个角色，角色列表-1，【账户管理】页角色下拉框-1", dependsOnMethods = "roleManage_data_1")
     public void roleManage_data_2() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene roleListScene = RoleListScene.builder().build();
-            int a = roleListScene.execute(visitor).getJSONArray("list").size();
+            int a = roleListScene.visitor(visitor).execute().getJSONArray("list").size();
             IScene scene = RolePageScene.builder().build();
             List<JSONObject> list = util.toJavaObjectList(scene, JSONObject.class);
             int id = list.get(list.size() - 1).getInteger("id");
-            RoleDeleteScene.builder().id(id).build().execute(visitor);
-            int total = scene.execute(visitor).getInteger("total");
-            int b = roleListScene.execute(visitor).getJSONArray("list").size();
+            RoleDeleteScene.builder().id(id).build().visitor(visitor).execute();
+            int total = scene.visitor(visitor).execute().getInteger("total");
+            int b = roleListScene.visitor(visitor).execute().getJSONArray("list").size();
             Preconditions.checkArgument(list.size() - 1 == total, "删除角色之前权限列表总数：" + list.size() + " 删除角色之后权限列表总数：" + total);
             Preconditions.checkArgument(b == a - 1, "删除角色之前【账户管理】页角色下拉框总数：" + a + " 删除角色之后【账户管理】页角色下拉框总数：" + b);
         } catch (Exception | AssertionError e) {
@@ -120,14 +119,13 @@ public class SystemConfigCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "使用账号数量==账号列表中的数量")
     public void roleManage_data_3() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             Map<Integer, Integer> map = new HashMap<>();
             IScene scene = RolePageScene.builder().build();
             List<JSONObject> list = util.toJavaObjectList(scene, JSONObject.class);
             list.forEach(e -> map.put(e.getInteger("id"), e.getInteger("num")));
             map.forEach((key, value) -> {
-                int total = StaffPageScene.builder().roleId(key).build().execute(visitor).getInteger("total");
+                int total = StaffPageScene.builder().roleId(key).build().visitor(visitor).execute().getInteger("total");
                 Preconditions.checkArgument(total == value, "权限 " + key + " 的使用账号数量：" + value + " 账号列表使用此权限的账号数量：" + total);
             });
         } catch (Exception | AssertionError e) {
@@ -139,16 +137,15 @@ public class SystemConfigCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "新增一个账户，账号管理列表+1，新增账号的信息与列表该账号的信息一致")
     public void staffManage_data_1() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             String phone = "15555555555";
-            int total = StaffPageScene.builder().build().execute(visitor).getInteger("total");
+            int total = StaffPageScene.builder().build().visitor(visitor).execute().getInteger("total");
             util.getRandomRoleMap().forEach((roleId, roleName) -> {
                 JSONArray shopList = util.getShopIdArray();
                 String pic = new ImageUtil().getImageBinary("src/main/java/com/haisheng/framework/testng/bigScreen/itemYuntong/common/resources/picture/touxiang.jpg");
-                String picPath = FileUploadScene.builder().pic("data:image/jpeg;base64," + pic).permanentPicType(0).ratio(1.0).ratioStr("1:1").build().execute(visitor).getString("pic_path");
-                StaffAddScene.builder().phone(phone).name("克拉拉").shopList(shopList).roleId(roleId).roleName(roleName).picturePath(picPath).build().execute(visitor);
-                int newTotal = StaffPageScene.builder().build().execute(visitor).getInteger("total");
+                String picPath = FileUploadScene.builder().pic("data:image/jpeg;base64," + pic).permanentPicType(0).ratio(1.0).ratioStr("1:1").build().visitor(visitor).execute().getString("pic_path");
+                StaffAddScene.builder().phone(phone).name("克拉拉").shopList(shopList).roleId(roleId).roleName(roleName).picturePath(picPath).build().visitor(visitor).execute();
+                int newTotal = StaffPageScene.builder().build().visitor(visitor).execute().getInteger("total");
                 Preconditions.checkArgument(newTotal == total + 1, "新增一个账号前列表数：" + total + " 新增一个账号后列表数：" + newTotal);
                 IScene scene = StaffPageScene.builder().phone(phone).build();
                 JSONObject object = util.toFirstJavaObject(scene, JSONObject.class);
@@ -175,11 +172,10 @@ public class SystemConfigCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "删除一个账户，账号管理列表-1", dependsOnMethods = "staffManage_data_1")
     public void staffManage_data_2() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
-            int total = StaffPageScene.builder().build().execute(visitor).getInteger("total");
+            int total = StaffPageScene.builder().build().visitor(visitor).execute().getInteger("total");
             util.deleteStaff("15555555555");
-            int newTotal = StaffPageScene.builder().build().execute(visitor).getInteger("total");
+            int newTotal = StaffPageScene.builder().build().visitor(visitor).execute().getInteger("total");
             Preconditions.checkArgument(newTotal == total - 1, "删除一个账号前列表数：" + total + " 删除一个账号后列表数：" + newTotal);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -190,13 +186,12 @@ public class SystemConfigCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "编辑一个账号提交以后，列表数量不变")
     public void staffManage_data_3() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene staffPageScene = StaffPageScene.builder().build();
-            int total = staffPageScene.execute(visitor).getInteger("total");
+            int total = staffPageScene.visitor(visitor).execute().getInteger("total");
             String id = util.toFirstJavaObject(staffPageScene, JSONObject.class).getString("id");
             util.editStaff(id);
-            int newTotal = staffPageScene.execute(visitor).getInteger("total");
+            int newTotal = staffPageScene.visitor(visitor).execute().getInteger("total");
             Preconditions.checkArgument(newTotal == total, "编辑前列表数量：" + total + " 编辑后列表数量：" + newTotal);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -207,19 +202,18 @@ public class SystemConfigCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "禁用一个账号，列表数量不变")
     public void staffManage_data_4() {
-        logger.logCaseStart(caseResult.getCaseName());
         String id = null;
         try {
             IScene staffPageScene = StaffPageScene.builder().build();
-            int total = staffPageScene.execute(visitor).getInteger("total");
+            int total = staffPageScene.visitor(visitor).execute().getInteger("total");
             id = util.toFirstJavaObject(staffPageScene, JSONObject.class).getString("id");
-            StatusChangeScene.builder().id(id).status("DISABLE").build().execute(visitor);
-            int newTotal = staffPageScene.execute(visitor).getInteger("total");
+            StatusChangeScene.builder().id(id).status("DISABLE").build().visitor(visitor).execute();
+            int newTotal = staffPageScene.visitor(visitor).execute().getInteger("total");
             Preconditions.checkArgument(newTotal == total, "禁用前列表数量：" + total + " 禁用后列表数量：" + newTotal);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
         } finally {
-            StatusChangeScene.builder().id(id).status("ENABLE").build().execute(visitor);
+            StatusChangeScene.builder().id(id).status("ENABLE").build().visitor(visitor).execute();
             saveData("禁用一个账号，列表数量不变");
         }
     }

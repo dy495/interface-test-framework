@@ -27,10 +27,10 @@ import java.util.List;
  * @date 2021/1/29 11:17
  */
 public class SystemRecordCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduct product = EnumTestProduct.YT_DAILY_JD;
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_DAILY_YS;
-    public VisitorProxy visitor = new VisitorProxy(product);
-    public SceneUtil util = new SceneUtil(visitor);
+    private static final EnumTestProduct PRODUCT = EnumTestProduct.YT_DAILY_JD;
+    private static final EnumAccount ACCOUNT = EnumAccount.YT_DAILY_YS;
+    private final VisitorProxy visitor = new VisitorProxy(PRODUCT);
+    private final SceneUtil util = new SceneUtil(visitor);
 
     @BeforeClass
     @Override
@@ -44,11 +44,11 @@ public class SystemRecordCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.YUNTONG_DAILY_TEST.getJobName());
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCT.getDesc() + commonConfig.checklistQaOwner);
         //放入shopId
-        commonConfig.setShopId(product.getShopId()).setRoleId(ALL_AUTHORITY.getRoleId()).setProduct(product.getAbbreviation());
+        commonConfig.setShopId(PRODUCT.getShopId()).setRoleId(ACCOUNT.getRoleId()).setProduct(PRODUCT.getAbbreviation());
         beforeClassInit(commonConfig);
-        util.loginPc(ALL_AUTHORITY);
+        util.loginPc(ACCOUNT);
     }
 
     @AfterClass
@@ -63,11 +63,11 @@ public class SystemRecordCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
+        logger.logCaseStart(caseResult.getCaseName());
     }
 
     @Test(description = "导入成功条数=导入条数-失败条数")
     public void importRecord_data_1() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = ImportPageScene.builder().build();
             List<JSONObject> list = util.toJavaObjectList(scene, JSONObject.class);
@@ -81,7 +81,6 @@ public class SystemRecordCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "导入成功条数<=导入条数")
     public void importRecord_data_2() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = ImportPageScene.builder().build();
             List<JSONObject> list = util.toJavaObjectList(scene, JSONObject.class);
@@ -95,7 +94,6 @@ public class SystemRecordCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "导入失败条数<=导入条数")
     public void importRecord_data_3() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = ImportPageScene.builder().build();
             List<JSONObject> list = util.toJavaObjectList(scene, JSONObject.class);

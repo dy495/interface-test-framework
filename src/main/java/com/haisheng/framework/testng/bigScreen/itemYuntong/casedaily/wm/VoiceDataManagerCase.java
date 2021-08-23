@@ -43,10 +43,10 @@ import java.util.stream.Collectors;
  * @date 2021/1/29 11:17
  */
 public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduct product = EnumTestProduct.YT_DAILY_GK;
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_DAILY_YS;
-    public VisitorProxy visitor = new VisitorProxy(product);
-    public SceneUtil util = new SceneUtil(visitor);
+    private static final EnumTestProduct PRODUCT = EnumTestProduct.YT_DAILY_GK;
+    private static final EnumAccount ACCOUNT = EnumAccount.YT_DAILY_YS;
+    private final VisitorProxy visitor = new VisitorProxy(PRODUCT);
+    private final SceneUtil util = new SceneUtil(visitor);
 
     @BeforeClass
     @Override
@@ -60,11 +60,11 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.YUNTONG_DAILY_TEST.getJobName());
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCT.getDesc() + commonConfig.checklistQaOwner);
         //放入shopId
-        commonConfig.setShopId(ALL_AUTHORITY.getShopId()).setRoleId(ALL_AUTHORITY.getRoleId()).setProduct(product.getAbbreviation());
+        commonConfig.setShopId(ACCOUNT.getShopId()).setRoleId(ACCOUNT.getRoleId()).setProduct(PRODUCT.getAbbreviation());
         beforeClassInit(commonConfig);
-        util.loginApp(ALL_AUTHORITY);
+        util.loginApp(ACCOUNT);
     }
 
     @AfterClass
@@ -79,11 +79,11 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
+        logger.logCaseStart(caseResult.getCaseName());
     }
 
     @Test(description = "进店情况=再次进店， 接待评分=空， 评分状态=无需评分")
     public void voiceEvaluation_data_1() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene voiceEvaluationPageScene = VoiceEvaluationPageScene.builder().enterStatus(2).build();
             List<VoiceEvaluationPageBean> list = util.toJavaObjectList(voiceEvaluationPageScene, VoiceEvaluationPageBean.class);
@@ -110,13 +110,12 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
 
     @Test(description = "语音评鉴列表信息与客户详情页信息一致")
     public void voiceEvaluation_data_2() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene voiceEvaluationPageScene = VoiceEvaluationPageScene.builder().build();
-            long evaluationTotal = voiceEvaluationPageScene.execute(visitor).getLong("total");
+            long evaluationTotal = voiceEvaluationPageScene.visitor(visitor).execute().getLong("total");
             visitor.setProduct(EnumTestProduct.YT_DAILY_JD);
             IScene preSalesReceptionPageScene = PreSalesReceptionPageScene.builder().build();
-            long receptionTotal = preSalesReceptionPageScene.execute(visitor).getLong("total");
+            long receptionTotal = preSalesReceptionPageScene.visitor(visitor).execute().getLong("total");
             CommonUtil.valueView(evaluationTotal, receptionTotal);
             Preconditions.checkArgument(evaluationTotal <= receptionTotal, "语音评鉴列表数：" + evaluationTotal + " 销售接待页列表数：" + receptionTotal);
         } catch (Exception | AssertionError e) {
@@ -129,12 +128,11 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
 
     @Test(description = "语音评鉴列表详情接待得分 = 5个环节分数之和 / 5， 四舍五入取整")
     public void voiceEvaluation_data_3() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene voiceEvaluationPageScene = VoiceEvaluationPageScene.builder().enterStatus(1).build();
             List<VoiceEvaluationPageBean> voiceEvaluationPageList = util.toJavaObjectList(voiceEvaluationPageScene, VoiceEvaluationPageBean.class);
             voiceEvaluationPageList.stream().filter(e -> e.getEvaluateScore() != null).filter(e -> e.getEvaluateScore() != 0)
-                    .map(e -> VoiceDetailScene.builder().id(e.getId()).build().execute(visitor)).forEach(object -> {
+                    .map(e -> VoiceDetailScene.builder().id(e.getId()).build().visitor(visitor).execute()).forEach(object -> {
                 int averageScore = object.getInteger("average_score");
                 int scoreSum = object.getJSONArray("scores").stream().map(e -> (JSONObject) e).mapToInt(e -> e.getInteger("score")).sum();
                 int mathResult = CommonUtil.getRoundIntRatio(scoreSum, 5);
@@ -150,12 +148,11 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
 
     @Test(description = "建议中的环节内容 是 各环节得分标签中置灰 的子集")
     public void voiceEvaluation_data_4() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene voiceEvaluationPageScene = VoiceEvaluationPageScene.builder().enterStatus(1).build();
             List<VoiceEvaluationPageBean> voiceEvaluationPageList = util.toJavaObjectList(voiceEvaluationPageScene, VoiceEvaluationPageBean.class);
             voiceEvaluationPageList.stream().filter(e -> e.getEvaluateScore() != null).filter(e -> e.getEvaluateScore() != 0)
-                    .map(e -> VoiceDetailScene.builder().id(e.getId()).build().execute(visitor)).forEach(object -> {
+                    .map(e -> VoiceDetailScene.builder().id(e.getId()).build().visitor(visitor).execute()).forEach(object -> {
                 int adviceListSize = object.getJSONArray("advice_list").size();
                 int count = (int) object.getJSONArray("link_label_list").stream().map(link -> (JSONObject) link)
                         .mapToLong(link -> link.getJSONArray("labels").stream().map(label -> (JSONObject) label)
@@ -172,12 +169,11 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
 
     @Test(description = "各环节得分 约等于 该环节的 高亮标签数/总标签数 * 100", dataProvider = "receptionType", dataProviderClass = DataClass.class, enabled = false)
     public void voiceEvaluation_data_5(String typeName, int type) {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene voiceEvaluationPageScene = VoiceEvaluationPageScene.builder().enterStatus(1).build();
             List<VoiceEvaluationPageBean> voiceEvaluationPageList = util.toJavaObjectList(voiceEvaluationPageScene, VoiceEvaluationPageBean.class);
             voiceEvaluationPageList.stream().filter(e -> e.getEvaluateScore() != null).filter(e -> e.getEvaluateScore() != 0)
-                    .map(e -> VoiceDetailScene.builder().id(e.getId()).build().execute(visitor)).forEach(object -> {
+                    .map(e -> VoiceDetailScene.builder().id(e.getId()).build().visitor(visitor).execute()).forEach(object -> {
                 JSONArray linkLabelList = object.getJSONArray("link_label_list");
                 JSONArray labels = linkLabelList.stream().map(e -> (JSONObject) e).filter(e -> e.getString("type_name").equals(typeName)).map(e -> e.getJSONArray("labels")).findFirst().orElse(null);
                 Preconditions.checkNotNull(labels, object.getString("name") + " " + typeName + "标签为空");
@@ -197,7 +193,6 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
 
     @Test(description = "柱状图总 各标签数量 = 列表中该标签数量之和", dataProvider = "receptionWord", dataProviderClass = DataClass.class)
     public void voiceEvaluation_data_6(String word) {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene labelListScene = SensitiveWordsLabelListScene.builder().build();
             List<LabelListBean> labelList = util.toJavaObjectList(labelListScene, LabelListBean.class, "list");
@@ -216,12 +211,11 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
 
     @Test(description = "柱状图数量之和 = 行为记录列表数")
     public void voiceEvaluation_data_7() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene labelListScene = SensitiveWordsLabelListScene.builder().build();
             List<LabelListBean> labelList = util.toJavaObjectList(labelListScene, LabelListBean.class, "list");
             int countSum = labelList.stream().mapToInt(LabelListBean::getCount).sum();
-            int total = SensitiveBehaviorPageScene.builder().build().execute(visitor).getInteger("total");
+            int total = SensitiveBehaviorPageScene.builder().build().visitor(visitor).execute().getInteger("total");
             CommonUtil.valueView(countSum, total);
             Preconditions.checkArgument(countSum == total, "柱状图数量之和" + countSum + " 行为记录列表数：" + total);
         } catch (Exception | AssertionError e) {
@@ -233,7 +227,6 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
 
     @Test(description = "行为记录列表中的 敏感词 和敏感词风控 均为 【敏感词设置】中的子集")
     public void voiceEvaluation_data_8() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene sensitiveWordsPageScene = SensitiveWordsPageScene.builder().build();
             List<JSONObject> sensitiveWordsPageList = util.toJavaObjectList(sensitiveWordsPageScene, JSONObject.class);
@@ -250,10 +243,9 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
 
     @Test(description = "特殊音频审核列表数量<=语音评鉴列表数")
     public void voiceEvaluation_data_9() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
-            int voiceEvaluationPageTotal = VoiceEvaluationPageScene.builder().build().execute(visitor).getInteger("total");
-            int specialAudioPageSceneTotal = SpecialAudioPageScene.builder().build().execute(visitor).getInteger("total");
+            int voiceEvaluationPageTotal = VoiceEvaluationPageScene.builder().build().visitor(visitor).execute().getInteger("total");
+            int specialAudioPageSceneTotal = SpecialAudioPageScene.builder().build().visitor(visitor).execute().getInteger("total");
             Preconditions.checkArgument(voiceEvaluationPageTotal >= specialAudioPageSceneTotal, "特殊音频审核列表数量：" + specialAudioPageSceneTotal + " 语音评鉴列表数：" + voiceEvaluationPageTotal);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -264,9 +256,8 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
 
     @Test(description = "话术考核设置--筛选全部列表条数=筛选各话术环节的列表条数之和")
     public void voiceEvaluation_data_10() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
-            int total = SpeechTechniquePageScene.builder().build().execute(visitor).getInteger("total");
+            int total = SpeechTechniquePageScene.builder().build().visitor(visitor).execute().getInteger("total");
             int[] ints = {100, 200, 300, 400, 500};
             int sum = Arrays.stream(ints).mapToObj(type -> SpeechTechniquePageScene.builder().type(type).build()).map(speechTechniquePageScene -> util.toJavaObjectList(speechTechniquePageScene, JSONObject.class)).mapToInt(List::size).sum();
             CommonUtil.valueView(total, sum);
@@ -280,7 +271,6 @@ public class VoiceDataManagerCase extends TestCaseCommon implements TestCaseStd 
 
     @Test(description = "话术考核设置--筛选全部列表条数=筛选各话术环节的列表条数之和")
     public void voiceEvaluation_data_11() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene specialAudioPageScene = SpecialAudioPageScene.builder().build();
             List<SpecialAudioPageBean> list = util.toJavaObjectList(specialAudioPageScene, SpecialAudioPageBean.class);

@@ -104,7 +104,7 @@ public class SceneUtil extends BasicUtil {
         JSONObject lastValue = null;
         JSONArray array;
         do {
-            JSONObject response = AppDepartmentPageScene.builder().orderColumn(0).isReverse(false).dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).lastValue(lastValue).size(10).build().execute(visitor);
+            JSONObject response = AppDepartmentPageScene.builder().orderColumn(0).isReverse(false).dataCycleType(dataCycleType).startDate(startDate).endDate(endDate).lastValue(lastValue).size(10).build().visitor(visitor).execute();
             lastValue = response.getJSONObject("last_value");
             array = response.getJSONArray("list");
             array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppDepartmentPageBean.class)).forEach(list::add);
@@ -124,7 +124,7 @@ public class SceneUtil extends BasicUtil {
         JSONObject lastValue = null;
         JSONArray array;
         do {
-            JSONObject response = AppPersonalPageScene.builder().orderColumn(100).isReverse(false).dataCycleType(dataCycleType).salesId(salesId).startDate(startDate).endDate(endDate).lastValue(lastValue).size(10).build().execute(visitor);
+            JSONObject response = AppPersonalPageScene.builder().orderColumn(100).isReverse(false).dataCycleType(dataCycleType).salesId(salesId).startDate(startDate).endDate(endDate).lastValue(lastValue).size(10).build().visitor(visitor).execute();
             lastValue = response.getJSONObject("last_value");
             array = response.getJSONArray("list");
             array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppPersonalPageBean.class)).forEach(list::add);
@@ -142,7 +142,7 @@ public class SceneUtil extends BasicUtil {
         String lastValue = null;
         JSONArray array;
         do {
-            JSONObject response = AppTodayDataScene.builder().type("all").lastValue(lastValue).size(20).build().execute(visitor);
+            JSONObject response = AppTodayDataScene.builder().type("all").lastValue(lastValue).size(20).build().visitor(visitor).execute();
             lastValue = response.getString("last_value") == null ? null : response.getString("last_value");
             array = response.getJSONArray("list");
             array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppTodayDataBean.class)).forEach(list::add);
@@ -221,7 +221,7 @@ public class SceneUtil extends BasicUtil {
      */
     public JSONObject getVoiceDetail(Long receptionId) {
         IScene scene = VoiceDetailScene.builder().id(receptionId).build();
-        return scene.execute(visitor);
+        return scene.visitor(visitor).execute();
     }
 
     /**
@@ -235,7 +235,7 @@ public class SceneUtil extends BasicUtil {
         JSONArray array;
         do {
             IScene scene = AppPreSalesReceptionPageScene.builder().size(10).lastValue(lastValue).build();
-            JSONObject response = scene.execute(visitor);
+            JSONObject response = scene.visitor(visitor).execute();
             lastValue = response.getInteger("last_value");
             array = response.getJSONArray("list");
             array.stream().map(e -> (JSONObject) e).map(e -> JSONObject.toJavaObject(e, AppPreSalesReceptionPageBean.class)).forEach(list::add);
@@ -252,14 +252,14 @@ public class SceneUtil extends BasicUtil {
     public void appCustomerEditV4(String receptionId, String customerId) {
         String shopId = getReceptionShopId();
         int carModelId = getCarModelId(shopId);
-        JSONObject response = AppCustomerDetailV4Scene.builder().id(receptionId).customerId(customerId).shopId(shopId).build().execute(visitor);
+        JSONObject response = AppCustomerDetailV4Scene.builder().id(receptionId).customerId(customerId).shopId(shopId).build().visitor(visitor).execute();
         String customerName = response.getString("customer_name");
         int gender = response.getInteger("customer_gender");
         String customerPhone = response.getString("customer_phone");
         String estimateBuyCarDate = "2100-01-01";
         AppCustomerEditV4Scene.builder().shopId(shopId).id(receptionId).customerId(customerId)
                 .customerName(customerName).customerPhone(customerPhone).intentionCarModelId(String.valueOf(carModelId))
-                .estimateBuyCarDate(estimateBuyCarDate).sexId(gender).build().execute(visitor);
+                .estimateBuyCarDate(estimateBuyCarDate).sexId(gender).build().visitor(visitor).execute();
     }
 
     /**
@@ -270,7 +270,7 @@ public class SceneUtil extends BasicUtil {
      */
     public Integer getCarModelId(String shopId) {
         IScene carModelTreeScene = AppCarModelTreeScene.builder().shopId(shopId).build();
-        return carModelTreeScene.execute(visitor).getJSONArray("children").getJSONObject(0).getJSONArray("children")
+        return carModelTreeScene.visitor(visitor).execute().getJSONArray("children").getJSONObject(0).getJSONArray("children")
                 .getJSONObject(0).getJSONArray("children").getJSONObject(0).getInteger("value");
     }
 
@@ -283,7 +283,7 @@ public class SceneUtil extends BasicUtil {
     public Map<Integer, String> getAuthRoleMap(int parentRole) {
         Map<Integer, String> map = new HashMap<>();
         IScene scene = AuthTreeScene.builder().parentRole(parentRole).build();
-        scene.execute(visitor).getJSONArray("children").stream().map(e -> (JSONObject) e)
+        scene.visitor(visitor).execute().getJSONArray("children").stream().map(e -> (JSONObject) e)
                 .forEach(e -> e.getJSONArray("children").stream().map(a -> (JSONObject) a)
                         .forEach(a -> map.put(a.getInteger("value"), a.getString("label"))));
         return map;
@@ -310,7 +310,7 @@ public class SceneUtil extends BasicUtil {
      * @return map
      */
     public JSONArray getShopIdArray() {
-        return ShopListScene.builder().build().execute(visitor).getJSONArray("list");
+        return ShopListScene.builder().build().visitor(visitor).execute().getJSONArray("list");
     }
 
     /**
@@ -322,12 +322,12 @@ public class SceneUtil extends BasicUtil {
         IScene scene = StaffPageScene.builder().phone(phone).build();
         JSONObject response = toFirstJavaObject(scene, JSONObject.class);
         String id = response.getString("id");
-        StaffDeleteScene.builder().id(id).build().execute(visitor);
+        StaffDeleteScene.builder().id(id).build().visitor(visitor).execute();
     }
 
     public void addRole(int parentRoleId) {
         List<Integer> authList = new ArrayList<>(getAuthRoleMap(parentRoleId).keySet());
-        RoleAddScene.builder().name("自动化创建全部权限").description("这是一个最大权限的角色").parentRoleId(parentRoleId).authList(authList).build().execute(visitor);
+        RoleAddScene.builder().name("自动化创建全部权限").description("这是一个最大权限的角色").parentRoleId(parentRoleId).authList(authList).build().visitor(visitor).execute();
     }
 
     /**
@@ -348,7 +348,7 @@ public class SceneUtil extends BasicUtil {
         IScene scene = RolePageScene.builder().name(roleName).build();
         JSONObject object = toJavaObject(scene, JSONObject.class, "name", roleName);
         int id = object.getInteger("id");
-        RoleDeleteScene.builder().id(id).build().execute(visitor);
+        RoleDeleteScene.builder().id(id).build().visitor(visitor).execute();
     }
 
     /**
@@ -357,11 +357,11 @@ public class SceneUtil extends BasicUtil {
      * @param id 账号id
      */
     public void editStaff(String id) {
-        JSONObject response = StaffDetailScene.builder().id(id).build().execute(visitor);
+        JSONObject response = StaffDetailScene.builder().id(id).build().visitor(visitor).execute();
         JSONArray roleList = response.getJSONArray("role_list");
         String name = response.getString("name");
         String phone = response.getString("phone");
-        StaffEditScene.builder().roleList(roleList).name(name).phone(phone).id(id).build().execute(visitor);
+        StaffEditScene.builder().roleList(roleList).name(name).phone(phone).id(id).build().visitor(visitor).execute();
     }
 
     public JSONArray getSubmitLink(boolean addItem) {
@@ -382,7 +382,7 @@ public class SceneUtil extends BasicUtil {
      */
     public String getNotExistPhone() {
         String phone = "153" + CommonUtil.getRandom(8);
-        int total = PreSaleCustomerPageScene.builder().customerPhone(phone).build().execute(visitor).getInteger("total");
+        int total = PreSaleCustomerPageScene.builder().customerPhone(phone).build().visitor(visitor).execute().getInteger("total");
         return total == 0 ? phone : getNotExistPhone();
     }
 
@@ -392,7 +392,7 @@ public class SceneUtil extends BasicUtil {
      * @return 电话号
      */
     public String getExistPhone() {
-        return PreSaleCustomerPageScene.builder().build().execute(visitor).getJSONArray("list").getJSONObject(9).getString("customer_phone");
+        return PreSaleCustomerPageScene.builder().build().visitor(visitor).execute().getJSONArray("list").getJSONObject(9).getString("customer_phone");
     }
 
     /**
@@ -402,7 +402,7 @@ public class SceneUtil extends BasicUtil {
      */
     public String getExistVin() {
         IScene scene = PreSaleCustomerBuyCarPageScene.builder().build();
-        JSONArray list = scene.execute(visitor).getJSONArray("list");
+        JSONArray list = scene.visitor(visitor).execute().getJSONArray("list");
         JSONObject jsonObject = list.stream().map(e -> (JSONObject) e).filter(e -> e.getString("vehicle_chassis_code") != null).findFirst().orElse(null);
         Preconditions.checkNotNull(jsonObject, "未找到底盘号");
         return jsonObject.getString("vehicle_chassis_code");
@@ -470,28 +470,28 @@ public class SceneUtil extends BasicUtil {
      * @description : 导出记录页面查询校验
      **/
     public JSONObject checkExport() {
-        return ExportPageScene.builder().build().execute(visitor);
+        return ExportPageScene.builder().build().visitor(visitor).execute();
     }
 
     /**
      * @description : 导入记录页面查询校验
      **/
     public JSONObject checkImport() {
-        return ImportPageScene.builder().build().execute(visitor);
+        return ImportPageScene.builder().build().visitor(visitor).execute();
     }
 
     /**
      * @description : 删除记录页面查询校验
      **/
     public JSONObject checkDelete() {
-        return DeleteRecordPageScene.builder().page(1).size(10).build().execute(visitor);
+        return DeleteRecordPageScene.builder().page(1).size(10).build().visitor(visitor).execute();
     }
 
     /**
      * @description : 登陆记录页面查询校验
      **/
     public JSONObject checkLogin() {
-        return LoginRecordPageScene.builder().build().execute(visitor);
+        return LoginRecordPageScene.builder().build().visitor(visitor).execute();
     }
 
     /**
@@ -500,7 +500,7 @@ public class SceneUtil extends BasicUtil {
      **/
     public Map<String, String> createCustomerCommon(String name, String sex, String phone, String carId, String buyTime) {
         Map<String, String> customer = new HashMap<>();
-        AppPreSalesReceptionCreateScene.builder().customerName(name).customerPhone(phone).sexId(sex).intentionCarModelId(carId).estimateBuyCarTime(buyTime).build().execute(visitor);//创建销售接待
+        AppPreSalesReceptionCreateScene.builder().customerName(name).customerPhone(phone).sexId(sex).intentionCarModelId(carId).estimateBuyCarTime(buyTime).build().visitor(visitor).execute();//创建销售接待
         JSONObject pageInfo = PreSalesReceptionPageScene.builder().build().execute(visitor, true);
         List<JSONObject> newCustomer = pageInfo.getJSONArray("list").stream().map(ele -> (JSONObject) ele).filter(obj -> Objects.equals(phone, obj.getString("customer_phone"))).collect(Collectors.toList());
         String id = newCustomer.get(0).getString("id");

@@ -31,10 +31,10 @@ import java.lang.reflect.Method;
  * @date 2021/1/29 11:17
  */
 public class SeverManageCase extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduct product = EnumTestProduct.YT_DAILY_JD;
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_DAILY_YS;
-    public VisitorProxy visitor = new VisitorProxy(product);
-    public SceneUtil util = new SceneUtil(visitor);
+    private static final EnumTestProduct PRODUCT = EnumTestProduct.YT_DAILY_JD;
+    private static final EnumAccount ACCOUNT = EnumAccount.YT_DAILY_YS;
+    private final VisitorProxy visitor = new VisitorProxy(PRODUCT);
+    private final SceneUtil util = new SceneUtil(visitor);
 
     @BeforeClass
     @Override
@@ -48,11 +48,11 @@ public class SeverManageCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistQaOwner = EnumChecklistUser.WM.getName();
         //替换jenkins-job的相关信息
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCT.getDesc() + commonConfig.checklistQaOwner);
         //放入shopId
-        commonConfig.setShopId(util.getReceptionShopId()).setRoleId(ALL_AUTHORITY.getRoleId()).setProduct(product.getAbbreviation());
+        commonConfig.setShopId(util.getReceptionShopId()).setRoleId(ACCOUNT.getRoleId()).setProduct(PRODUCT.getAbbreviation());
         beforeClassInit(commonConfig);
-        util.loginPc(ALL_AUTHORITY);
+        util.loginPc(ACCOUNT);
     }
 
     @AfterClass
@@ -67,20 +67,20 @@ public class SeverManageCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
+        logger.logCaseStart(caseResult.getCaseName());
     }
 
     @Test(description = "创建一个题目，大类下题目+1")
     public void evaluateManager_data_1() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             JSONArray linksA = util.getSubmitLink(false);
-            EvaluateV4ConfigSubmitScene.builder().links(linksA).build().execute(visitor);
+            EvaluateV4ConfigSubmitScene.builder().links(linksA).build().visitor(visitor).execute();
             IScene scene = EvaluateV4ConfigDetailScene.builder().build();
-            int itemCount = scene.execute(visitor).getJSONArray("list").stream().map(e -> (JSONObject) e)
+            int itemCount = scene.visitor(visitor).execute().getJSONArray("list").stream().map(e -> (JSONObject) e)
                     .mapToInt(e -> e.getJSONArray("items").size()).sum();
             JSONArray linksB = util.getSubmitLink(true);
-            EvaluateV4ConfigSubmitScene.builder().links(linksB).build().execute(visitor);
-            int newItemCount = scene.execute(visitor).getJSONArray("list").stream().map(e -> (JSONObject) e)
+            EvaluateV4ConfigSubmitScene.builder().links(linksB).build().visitor(visitor).execute();
+            int newItemCount = scene.visitor(visitor).execute().getJSONArray("list").stream().map(e -> (JSONObject) e)
                     .mapToInt(e -> e.getJSONArray("items").size()).sum();
             Preconditions.checkArgument(newItemCount == itemCount + 1, "增加题目之前题目数量：" + itemCount + " 增加题目之后题目数量：" + newItemCount);
         } catch (Exception | AssertionError e) {
@@ -93,14 +93,13 @@ public class SeverManageCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "删除一个题目，大类下题目-1", dependsOnMethods = "evaluateManager_data_1")
     public void evaluateManager_data_2() {
-        logger.logCaseStart(caseResult.getCaseName());
         try {
             IScene scene = EvaluateV4ConfigDetailScene.builder().build();
-            int itemCount = scene.execute(visitor).getJSONArray("list").stream().map(e -> (JSONObject) e)
+            int itemCount = scene.visitor(visitor).execute().getJSONArray("list").stream().map(e -> (JSONObject) e)
                     .mapToInt(e -> e.getJSONArray("items").size()).sum();
             JSONArray links = util.getSubmitLink(false);
-            EvaluateV4ConfigSubmitScene.builder().links(links).build().execute(visitor);
-            int newItemCount = scene.execute(visitor).getJSONArray("list").stream().map(e -> (JSONObject) e)
+            EvaluateV4ConfigSubmitScene.builder().links(links).build().visitor(visitor).execute();
+            int newItemCount = scene.visitor(visitor).execute().getJSONArray("list").stream().map(e -> (JSONObject) e)
                     .mapToInt(e -> e.getJSONArray("items").size()).sum();
             Preconditions.checkArgument(newItemCount == itemCount - 1, "删除题目之前题目数量：" + itemCount + " 删除题目之后题目数量：" + newItemCount);
         } catch (Exception | AssertionError e) {
