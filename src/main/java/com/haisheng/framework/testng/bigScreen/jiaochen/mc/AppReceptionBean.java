@@ -6,7 +6,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class AppReception implements Serializable {
+public class AppReceptionBean implements Serializable {
     @JSONField(name = "id")
     private Long id;
     @JSONField(name = "belong_sale_name")
