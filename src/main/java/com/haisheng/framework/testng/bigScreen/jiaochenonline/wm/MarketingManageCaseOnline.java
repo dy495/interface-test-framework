@@ -78,7 +78,7 @@ import java.util.stream.Collectors;
  */
 public class MarketingManageCaseOnline extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct PRODUCT = EnumTestProduct.JC_ONLINE_JD;
-    private static final EnumAccount ACCOUNT = EnumAccount.JC_ALL_ONLINE_LXQ;
+    private static final EnumAccount ACCOUNT = EnumAccount.JC_ONLINE_LXQ;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(PRODUCT);
     public SceneUtil util = new SceneUtil(visitor);

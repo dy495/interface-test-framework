@@ -32,7 +32,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 public class JcApplet extends TestCaseCommon implements TestCaseStd {
     EnumTestProduct product = EnumTestProduct.JC_DAILY_JD;
     VisitorProxy visitor = new VisitorProxy(product);
-    private static final EnumAccount administrator = EnumAccount.JC_ALL_DAILY;
+    private static final EnumAccount administrator = EnumAccount.JC_DAILY_LXQ;
     ScenarioUtil jc = new ScenarioUtil();
     SceneUtil util = new SceneUtil(visitor);
     DateTimeUtil dt = new DateTimeUtil();

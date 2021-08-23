@@ -11,7 +11,6 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Variable.applyListVariable;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.util.BusinessUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.SelectReception;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -28,7 +27,7 @@ import java.util.*;
 
 public class FilterColumnSystemOnline extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct product = EnumTestProduct.JC_ONLINE_JD;
-    private static final EnumAccount account = EnumAccount.JC_ALL_ONLINE;
+    private static final EnumAccount account = EnumAccount.JC_ONLINE_YS;
     public VisitorProxy visitor = new VisitorProxy(product);
     SceneUtil util = new SceneUtil(visitor);
     BusinessUtil businessUtil = new BusinessUtil(visitor);

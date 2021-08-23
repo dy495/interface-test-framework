@@ -37,7 +37,7 @@ import java.lang.reflect.Method;
  */
 public class SystemCaseRecpOnline extends TestCaseCommon implements TestCaseStd {
     EnumTestProduct product = EnumTestProduct.YT_ONLINE_JD;
-    EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_ONLINE_LXQ;
+    EnumAccount ALL_AUTHORITY = EnumAccount.YT_ONLINE_LXQ;
     VisitorProxy visitor = new VisitorProxy(product);
     SceneUtil businessUtil = new SceneUtil(visitor);
     YunTongInfoOnline info = new YunTongInfoOnline();

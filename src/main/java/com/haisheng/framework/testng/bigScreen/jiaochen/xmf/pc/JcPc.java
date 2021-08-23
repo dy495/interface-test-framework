@@ -5,16 +5,23 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistUser;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.commonDs.JsonPathUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.Constant;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.manage.AppointmentMaintainConfigDetailBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.role.RolePageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.applet.granted.AppletEvaluateSubmitScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.manage.EvaluateConfigSubmitScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.role.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shopstylemodel.ManageModelEditScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.shopstylemodel.ManageModelPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.staff.StaffAddScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.staff.StaffPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.DataAbnormal;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.JcFunction;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
@@ -36,11 +43,12 @@ import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-
 public class JcPc extends TestCaseCommon implements TestCaseStd {
 
-    private static final EnumTestProduct product = EnumTestProduct.JC_DAILY_JD;
-    private final VisitorProxy visitor = new VisitorProxy(product);
+    private static final EnumTestProduct PRODUCT = EnumTestProduct.JC_DAILY_ZH;
+    private static final EnumAccount ACCOUNT = EnumAccount.JC_DAILY_LXQ;
+    private final VisitorProxy visitor = new VisitorProxy(PRODUCT);
+    private final SceneUtil util = new SceneUtil(visitor);
     CommonConfig commonConfig = new CommonConfig();
     ScenarioUtil jc = ScenarioUtil.getInstance();
     DateTimeUtil dt = new DateTimeUtil();
@@ -60,34 +68,17 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
     @BeforeClass
     @Override
     public void initial() {
-        logger.debug("before classs initial");
-        jc.changeIpPort(product.getIp());
-
-        //replace checklist app id and conf id
+        logger.debug("before class initial");
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
-        commonConfig.checklistQaOwner = "夏明凤";
-        //replace backend gateway url
-        //commonConfig.gateway = "";
-
-        //replace jenkins job name
+        commonConfig.checklistQaOwner = EnumChecklistUser.XMF.getName();
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.JIAOCHEN_DAILY_TEST.getJobName());
-
-        //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
-
-
-        //replace ding push conf
-//        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCT.getDesc() + commonConfig.checklistQaOwner);
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
-        //if need reset push rd, default are huachengyu,xiezhidong,yanghang
-        //commonConfig.pushRd = {"1", "2"};
-        //set shop id
-        commonConfig.setShopId("49195").setReferer(product.getReferer()).setRoleId(product.getRoleId()).setProduct(product.getAbbreviation());
+        commonConfig.setShopId(ACCOUNT.getShopId()).setReferer(PRODUCT.getReferer()).setRoleId(ACCOUNT.getRoleId()).setProduct(PRODUCT.getAbbreviation());
         beforeClassInit(commonConfig);
-
         logger.debug("jc: " + jc);
-        pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
+        util.loginPc(ACCOUNT);
 
     }
 
@@ -130,74 +121,38 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
     }
 
-
-    //创建复合权限角色
-//    @Test(dataProvider = "LIMITID", dataProviderClass = ScenarioUtil.class)
-    public void createRole(int[] a) {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-            String name = "" + a[0];
-            JSONArray moduleId = new JSONArray();
-            for (int i = 1; i < a.length; i++) {
-                moduleId.add(a[i]);
-            }
-            String description = "自动创建" + a[0];
-            //新增一个角色
-            jc.organizationRoleAdd(name, description, moduleId, true);
-
-            int size = jc.organizationRolePage(1, 10).getInteger("total");
-            if (size < 100) {
-                JSONArray list = jc.organizationRolePage(name, 1, 100).getJSONArray("list");
-                Long role_id = list.getJSONObject(list.size() - 1).getLong("id");
-                jc.organizationRoleDelete(role_id, true);
-            } else {
-                logger.warn("警告：角色数量超过100个，不在删除新增角色，将造成数据冗余");
-            }
-
-        } catch (AssertionError | Exception e) {
-            collectMessage(e);
-        } finally {
-            saveData("轿辰-新增角色");
-        }
-
-
-    }
-
     /**
      * ====================新增角色======================
      */
     @Test(description = "角色的CURD,数据校验")
-    public void role_add() {
-        logger.logCaseStart(caseResult.getCaseName());
-
+    public void role_manager_1() {
+        Integer id = null;
         try {
-            pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
+            String name = "创建角色xia";
             String description = "自动化测试给店长用的角色";
-            JSONArray moduleId = pp.roleList;
-            //新增一个角色organizationRoleAdd
-            jc.organizationRoleAdd(name, description, moduleId, true);
-            String id = jc.roleListFilterManage("", "1", "10", "name", name).getJSONArray("list").getJSONObject(0).getString("id");
+            IScene rolePageScene = RolePageScene.builder().build();
+            Long total = rolePageScene.visitor(visitor).execute().getLong("total");
+            //新增一个角色
+            JSONObject response = RoleListScene.builder().build().visitor(visitor).execute();
+            JSONObject obj = response.getJSONArray("list").getJSONObject(0);
+            Long parentId = obj.getLong("id");
+            JSONArray authList = obj.getJSONArray("auth_list");
+            RoleAddScene.builder().name(name).description(description).authList(authList).parentRoleId(parentId).build().visitor(visitor).execute();
+            response = rolePageScene.visitor(visitor).execute();
+            Long addTotal = response.getLong("total");
+            Preconditions.checkArgument(addTotal == total + 1, "添加角色前列表数：" + total + " 添加角色后列表数：" + addTotal);
             //编辑角色
-            String name1 = "AUTOtest在编辑";
-            Integer code1 = jc.organizationRoleEdit(Long.parseLong(id), name1, description, moduleId).getInteger("code");
-
-            checkArgument(code1 == 1000, "编辑角色的信息失败了");
-
-            //列表中编辑过的角色是否已更新
-            JSONArray list1 = jc.organizationRolePage(name1, 1, 10).getJSONArray("list");
-            String role_name = list1.getJSONObject(0).getString("name");
-
-            checkArgument(name1.equals(role_name), "编辑过的角色没有更新在列表");
-
-            jc.organizationidRoleDelete(id);
-
+            id = util.toJavaObject(rolePageScene, RolePageBean.class, "name", name).getId();
+            Integer code = RoleEditScene.builder().parentRoleId(parentId).authList(authList).description(description).name(name + "-改").id(id).build().visitor(visitor).getResponse().getCode();
+            checkArgument(code == 1000, "编辑角色的信息预期code：1000 实际code：" + code);
+            String newName = util.toJavaObject(rolePageScene, RolePageBean.class, "id", id).getName();
+            checkArgument(newName.equals(name + "-改"), "编辑角色后账号名称预期为：" + name + "-改" + " 实际为：" + newName);
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
-
-            saveData("轿辰-新增删改查角色");
+            RoleDeleteScene.builder().id(id).build().visitor(visitor).execute();
+            saveData("新增删改查角色");
         }
-
     }
 
     /**
@@ -216,7 +171,6 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
     public void role_add_work2(String name, String mess) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
             JSONArray moduleId = pp.roleList;
             int totalB = jc.roleListFilterManage("", "1", "10", "", "").getInteger("total");
 
@@ -248,7 +202,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
     public void role_add_workAb(String name, String res, String mess) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
+             util.loginPc(ACCOUNT);
             JSONArray moduleId = pp.roleList;
             String description = "自动化测试给店长自动化用的角色";
 
@@ -311,41 +265,42 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test(description = "新增姓名异常")    //接口未作限制
-    public void accountAb() {
+    @Test(description = "新增姓名异常")
+    public void staff_manager_2() {
         try {
-            JSONArray r_dList = pf.getroleLlist();
-
-            JSONArray shop_list = new JSONArray();
-            String phone = pf.genPhoneNum();
-            String[] name = {"123456789012345678901咿呀咿呀"};  //长度超过20
-            for (String s : name) {
-                int code = jc.organizationAccountAdd(s, phone, r_dList, shop_list, false).getInteger("code");
-                Preconditions.checkArgument(code == 1001, "新增账户，名称异常");
-            }
+            String phone = util.getRandomPhone();
+            String name = "123456789012345678901咿呀咿呀";
+            IScene scene = StaffPageScene.builder().build();
+            int total = scene.visitor(visitor).execute().getInteger("total");
+            util.getRandomRoleMap().forEach((roleId, roleName) -> {
+                JSONArray shopList = util.getShopIdArray();
+                String picPath = util.uploadFile();
+                Integer code = StaffAddScene.builder().phone(phone).name(name).shopList(shopList).roleId(roleId).roleName(roleName).picturePath(picPath).build().visitor(visitor).getResponse().getCode();
+                Preconditions.checkArgument(code == 1001, "新增账户名称为：" + name + " 预期code为1000 实际为：" + code);
+            });
+            int newTotal = scene.visitor(visitor).execute().getInteger("total");
+            Preconditions.checkArgument(newTotal == total, "新增账户前列表数为：" + total + " 新增账户后列表数为：" + newTotal);
         } catch (AssertionError | Exception e) {
             collectMessage(e);
-            collectMessage(e);
         } finally {
-            saveData("轿辰-新增1个账号，列表+1；删除1个账号，列表-1；修改账号信息以后与列表是否一致");
+            saveData("新增姓名异常");
         }
     }
 
-    @Test(description = "新增姓名电话异常", dataProvider = "ERR_PHONE", dataProviderClass = DataAbnormal.class)    //ok
-    public void accountAb2(String phone) {
+    @Test(description = "新增姓名电话异常", dataProvider = "ERR_PHONE", dataProviderClass = DataAbnormal.class)
+    public void staff_manager_3(String phone) {
         try {
-            JSONArray r_dList = pf.getroleLlist();
-
-            JSONArray shop_list = new JSONArray();
-            //用EMAIL新增一个账号
-            int code = jc.organizationAccountAdd(name, phone, r_dList, shop_list, false).getInteger("code");
-            Preconditions.checkArgument(code == 1001, "新增账户，电话异常");
-
+            String name = "创建角色xia";
+            util.getRandomRoleMap().forEach((roleId, roleName) -> {
+                JSONArray shopList = util.getShopIdArray();
+                String picPath = util.uploadFile();
+                Integer code = StaffAddScene.builder().phone(phone).name(name).shopList(shopList).roleId(roleId).roleName(roleName).picturePath(picPath).build().visitor(visitor).getResponse().getCode();
+                Preconditions.checkArgument(code == 1001, "新增账户电话号为：" + phone + " 预期code为1000 实际为：" + code);
+            });
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
-
-            saveData("轿辰-新增1个账号，列表+1；删除1个账号，列表-1；修改账号信息以后与列表是否一致");
+            saveData("新增姓名电话异常");
         }
     }
 
@@ -697,7 +652,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
-            pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
+             util.loginPc(ACCOUNT);
             saveData("pc取消接待，app任务-1");
         }
     }
@@ -1070,14 +1025,14 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
             JSONArray isAble = jc.appletmaintainShopList(pp.car_idA.toString(), pp.coordinate, type).getJSONArray("list");
             int total = isAble.size();
             //关闭门店预约配置
-            pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
+             util.loginPc(ACCOUNT);
             jc.shopStatusChange(pp.shopIdZ, "APPOINTMENT", "DISABLE");
             //小程序预约门店列表
             jc.appletLoginToken(pp.appletTocken);
             JSONArray isAbleAfter = jc.appletmaintainShopList(pp.car_idA.toString(), pp.coordinate, type).getJSONArray("list");
             int totalAfter = isAbleAfter.size();
 
-            pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
+             util.loginPc(ACCOUNT);
             jc.shopStatusChange(pp.shopIdZ, "APPOINTMENT", "ENABLE");
             jc.appletLoginToken(pp.appletTocken);
 
@@ -1107,7 +1062,7 @@ public class JcPc extends TestCaseCommon implements TestCaseStd {
                 open = "DISABLE";
             }
             //关闭门店预约配置
-            pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
+             util.loginPc(ACCOUNT);
             jc.shopStatusChange(pp.shopIdZ, "SHOP", statusAll);
             JSONObject dataAfter = jc.shopListFilterManage("", "1", "10", "name", "中关村店").getJSONArray("list").getJSONObject(0);
             String status = dataAfter.getString("status");

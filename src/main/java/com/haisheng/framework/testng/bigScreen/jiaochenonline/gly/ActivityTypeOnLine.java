@@ -6,7 +6,6 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.*;
-import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.gly.util.PublicParameter;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.marketing.VoucherStatusEnum;
@@ -29,7 +28,7 @@ import java.util.List;
 
 public class ActivityTypeOnLine extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct product = EnumTestProduct.JC_ONLINE_JD;
-    private static final EnumAccount ADMINISTRATOR = EnumAccount.JC_ALL_ONLINE;
+    private static final EnumAccount ADMINISTRATOR = EnumAccount.JC_ONLINE_YS;
     public VisitorProxy visitor = new VisitorProxy(product);
     BusinessUtilOnline businessUtil = new BusinessUtilOnline(visitor);
     SceneUtil supporterUtil = new SceneUtil(visitor);

@@ -38,7 +38,7 @@ import java.util.List;
  */
 public class ShopDataCenterCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_JD;
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_ONLINE;
+    private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ONLINE_YS;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public SceneUtil util = new SceneUtil(visitor);
     private static final String startDate = DateTimeUtil.addDayFormat(new Date(), -2);

@@ -28,7 +28,7 @@ import java.util.List;
  */
 public class SystemRecordCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct product = EnumTestProduct.YT_DAILY_JD;
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_DAILY;
+    private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_DAILY_YS;
     public VisitorProxy visitor = new VisitorProxy(product);
     public SceneUtil util = new SceneUtil(visitor);
 

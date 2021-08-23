@@ -39,7 +39,7 @@ import java.util.List;
 
 public class ActivityManageOnLine extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct product = EnumTestProduct.JC_ONLINE_JD;
-    private static final EnumAccount ADMINISTRATOR = EnumAccount.JC_ALL_ONLINE;
+    private static final EnumAccount ADMINISTRATOR = EnumAccount.JC_ONLINE_YS;
     public VisitorProxy visitor = new VisitorProxy(product);
     BusinessUtilOnline businessUtil = new BusinessUtilOnline(visitor);
     SceneUtil util = new SceneUtil(visitor);

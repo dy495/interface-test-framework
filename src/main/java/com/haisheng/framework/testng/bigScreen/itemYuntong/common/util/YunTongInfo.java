@@ -25,7 +25,7 @@ import java.io.InputStream;
 
 public class YunTongInfo {
     EnumTestProduct PRODUCE = EnumTestProduct.YT_DAILY_JD;
-    EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_DAILY;
+    EnumAccount ALL_AUTHORITY = EnumAccount.YT_DAILY_YS;
     VisitorProxy visitor = new VisitorProxy(PRODUCE);
     DateTimeUtil dt = new DateTimeUtil();
 //    public final String donephone = "";//成交客户手机号

@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
  */
 public class ContentOperationCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct PRODUCE = EnumTestProduct.JC_DAILY_JD;
-    private static final EnumAccount ACCOUNT = EnumAccount.JC_ALL_DAILY;
+    private static final EnumAccount ACCOUNT = EnumAccount.JC_DAILY_LXQ;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_DAILY;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public SceneUtil util = new SceneUtil(visitor);

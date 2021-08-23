@@ -424,7 +424,7 @@ public class SceneUtil extends BasicUtil {
     }
 
     public String getReceptionShopId() {
-        return visitor.isDaily() ? EnumAccount.YT_RECEPTION_DAILY_WM.getReceptionShopId() : EnumAccount.YT_ALL_ONLINE_LXQ.getReceptionShopId();
+        return visitor.isDaily() ? EnumAccount.YT_DAILY_WM.getReceptionShopId() : EnumAccount.YT_ONLINE_LXQ.getReceptionShopId();
     }
 
     public String getSaleId() {

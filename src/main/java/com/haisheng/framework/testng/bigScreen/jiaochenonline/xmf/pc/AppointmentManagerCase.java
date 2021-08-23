@@ -39,7 +39,7 @@ import java.util.Date;
 
 public class AppointmentManagerCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct PRODUCT = EnumTestProduct.JC_ONLINE_JD;
-    private static final EnumAccount account = EnumAccount.JC_ALL_ONLINE_LXQ;
+    private static final EnumAccount account = EnumAccount.JC_ONLINE_LXQ;
     private static final EnumAppletToken APPLET_USER = EnumAppletToken.JC_LXQ_ONLINE;
     private final VisitorProxy visitor = new VisitorProxy(PRODUCT);
     private final SceneUtil util = new SceneUtil(visitor);

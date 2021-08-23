@@ -30,7 +30,7 @@ import java.lang.reflect.Method;
 
 public class JcAppointmentRelateOnLine extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct product = EnumTestProduct.JC_ONLINE_JD;
-    private static final EnumAccount account = EnumAccount.JC_ALL_ONLINE_LXQ;
+    private static final EnumAccount account = EnumAccount.JC_ONLINE_LXQ;
     VisitorProxy visitor = new VisitorProxy(product);
     SceneUtil util = new SceneUtil(visitor);
     ScenarioUtilOnline jc = new ScenarioUtilOnline();

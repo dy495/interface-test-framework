@@ -29,7 +29,7 @@ import java.util.Objects;
  **/
 public class RecordCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct product = EnumTestProduct.YT_ONLINE_JD; // 管理页—-首页
-    private static final EnumAccount AUTHORITY = EnumAccount.YT_RECEPTION_ONLINE_MC; // 全部权限账号 【运通】
+    private static final EnumAccount AUTHORITY = EnumAccount.YT_ONLINE_MC; // 全部权限账号 【运通】
     public VisitorProxy visitor = new VisitorProxy(product);   // 产品类放到代理类中（通过代理类发请求）
     public SceneUtil util = new SceneUtil(visitor);    //场景工具类中放入代理类，类中封装接口方法直接调用
 

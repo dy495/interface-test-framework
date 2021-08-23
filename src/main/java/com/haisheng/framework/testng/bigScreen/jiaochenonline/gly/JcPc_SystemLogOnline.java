@@ -24,7 +24,7 @@ import static com.aliyun.openservices.shade.com.alibaba.rocketmq.common.UtilAll.
 
 public class JcPc_SystemLogOnline extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct product = EnumTestProduct.JC_ONLINE_JD;
-    private static final EnumAccount account = EnumAccount.JC_ALL_ONLINE;
+    private static final EnumAccount account = EnumAccount.JC_ONLINE_YS;
     public static final EnumAppletToken appletToken = EnumAppletToken.JC_GLY_ONLINE;
     public static final String shopId = product.getShopId();
     public VisitorProxy visitor = new VisitorProxy(product);

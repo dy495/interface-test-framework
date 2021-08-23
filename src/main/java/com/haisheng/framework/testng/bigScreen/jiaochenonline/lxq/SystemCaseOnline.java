@@ -28,7 +28,7 @@ import java.util.List;
 
 public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
     EnumTestProduct product = EnumTestProduct.JC_ONLINE_JD;
-    EnumAccount account = EnumAccount.JC_ALL_ONLINE;
+    EnumAccount account = EnumAccount.JC_ONLINE_YS;
     VisitorProxy visitor = new VisitorProxy(product);
     CommonConfig commonConfig = new CommonConfig();
     ScenarioUtilOnline jc = ScenarioUtilOnline.getInstance();

@@ -20,7 +20,6 @@ import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanag
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherFormVoucherPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.vouchermanage.VoucherListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
-import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.PublicParm;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.ImageUtil;
 
@@ -60,7 +59,7 @@ public class JiaoChenInfo {
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public SceneUtil util = new SceneUtil(visitor);
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_LXQ_DAILY;
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.JC_ALL_DAILY_LXQ;
+    private static final EnumAccount ALL_AUTHORITY = EnumAccount.JC_DAILY_YS;
     //日常
     public final long BrandID = 61L;//自动化用的品牌id
     public final long CarStyleID = 48L;//自动化用的品牌车系id

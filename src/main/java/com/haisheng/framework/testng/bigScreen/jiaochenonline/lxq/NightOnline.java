@@ -22,7 +22,7 @@ import java.lang.reflect.Method;
 
 public class NightOnline extends TestCaseCommon implements TestCaseStd {
     EnumTestProduct product = EnumTestProduct.JC_ONLINE_JD;
-    EnumAccount account = EnumAccount.JC_ALL_ONLINE;
+    EnumAccount account = EnumAccount.JC_ONLINE_YS;
     VisitorProxy visitor = new VisitorProxy(product);
     CommonConfig commonConfig = new CommonConfig();
     ScenarioUtilOnline jc = ScenarioUtilOnline.getInstance();

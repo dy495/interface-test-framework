@@ -34,8 +34,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 public class AccountManagerCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct PRODUCT = EnumTestProduct.JC_ONLINE_ZH;
-    private static final EnumAccount ACCOUNT = EnumAccount.JC_ALL_ONLINE;
-    private static final EnumAccount account = EnumAccount.JC_ALL_ONLINE_LXQ;
+    private static final EnumAccount ACCOUNT = EnumAccount.JC_ONLINE_YS;
+    private static final EnumAccount account = EnumAccount.JC_ONLINE_LXQ;
     private final VisitorProxy visitor = new VisitorProxy(PRODUCT);
     private final SceneUtil util = new SceneUtil(visitor);
     private final JcFunctionOnline pf = new JcFunctionOnline();

@@ -32,7 +32,7 @@ public class jiaoChenInfoOnline {
     private static final EnumTestProduct PRODUCE = EnumTestProduct.JC_ONLINE_JD;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_LXQ_ONLINE;
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.JC_ALL_ONLINE;
+    private static final EnumAccount ALL_AUTHORITY = EnumAccount.JC_ONLINE_YS;
     public SceneUtil user = new SceneUtil(visitor);
 
     DateTimeUtil dt = new DateTimeUtil();

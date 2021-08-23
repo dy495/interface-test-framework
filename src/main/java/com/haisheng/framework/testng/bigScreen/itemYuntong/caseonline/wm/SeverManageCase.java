@@ -32,7 +32,7 @@ import java.lang.reflect.Method;
  */
 public class SeverManageCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_JD;
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_ONLINE;
+    private static final EnumAccount ALL_AUTHORITY = EnumAccount.YT_ONLINE_YS;
     public VisitorProxy visitor = new VisitorProxy(PRODUCE);
     public SceneUtil util = new SceneUtil(visitor);
 

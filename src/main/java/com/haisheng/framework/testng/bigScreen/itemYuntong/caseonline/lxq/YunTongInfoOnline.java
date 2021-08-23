@@ -28,7 +28,7 @@ public class YunTongInfoOnline {
 
 
     EnumTestProduct PRODUCE = EnumTestProduct.YT_ONLINE_ZH;
-    EnumAccount ALL_AUTHORITY = EnumAccount.YT_ALL_ONLINE;
+    EnumAccount ALL_AUTHORITY = EnumAccount.YT_ONLINE_YS;
     VisitorProxy visitor = new VisitorProxy(PRODUCE);
 
     DateTimeUtil dt = new DateTimeUtil();

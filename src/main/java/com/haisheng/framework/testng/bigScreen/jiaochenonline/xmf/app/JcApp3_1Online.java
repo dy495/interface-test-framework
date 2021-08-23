@@ -31,7 +31,7 @@ import java.lang.reflect.Method;
 
 public class JcApp3_1Online extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct product = EnumTestProduct.JC_ONLINE_JD;
-    private static final EnumAccount account = EnumAccount.JC_ALL_ONLINE_LXQ;
+    private static final EnumAccount account = EnumAccount.JC_ONLINE_LXQ;
     private final VisitorProxy visitor = new VisitorProxy(product);
     private final SceneUtil util = new SceneUtil(visitor);
     ScenarioUtil jc = new ScenarioUtil();

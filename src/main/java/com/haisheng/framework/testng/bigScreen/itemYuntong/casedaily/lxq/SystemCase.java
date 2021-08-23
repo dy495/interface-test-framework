@@ -29,7 +29,7 @@ import java.lang.reflect.Method;
 public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
     private final static EnumTestProduct PRODUCT = EnumTestProduct.YT_DAILY_JD;
-    private final static EnumAccount ACCOUNT = EnumAccount.YT_ALL_DAILY;
+    private final static EnumAccount ACCOUNT = EnumAccount.YT_DAILY_YS;
     VisitorProxy visitor = new VisitorProxy(PRODUCT);
     SceneUtil util = new SceneUtil(visitor);
     YunTongInfo info = new YunTongInfo();

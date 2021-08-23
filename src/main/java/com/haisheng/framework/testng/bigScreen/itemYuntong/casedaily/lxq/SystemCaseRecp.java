@@ -39,7 +39,7 @@ import java.lang.reflect.Method;
 public class SystemCaseRecp extends TestCaseCommon implements TestCaseStd {
 
     EnumTestProduct product = EnumTestProduct.YT_DAILY_JD;
-    EnumAccount ALL_AUTHORITY = EnumAccount.YT_RECEPTION_DAILY_LXQ;
+    EnumAccount ALL_AUTHORITY = EnumAccount.YT_DAILY_LXQ;
     VisitorProxy visitor = new VisitorProxy(product);
     SceneUtil businessUtil = new SceneUtil(visitor);
     YunTongInfo info = new YunTongInfo();

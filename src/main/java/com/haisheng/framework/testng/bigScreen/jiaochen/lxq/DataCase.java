@@ -34,7 +34,7 @@ import java.lang.reflect.Method;
 public class DataCase extends TestCaseCommon implements TestCaseStd {
 
     private static final EnumTestProduct product = EnumTestProduct.JC_DAILY_JD;
-    private static final EnumAccount ALL_AUTHORITY = EnumAccount.JC_ALL_DAILY_LXQ;
+    private static final EnumAccount ALL_AUTHORITY = EnumAccount.JC_DAILY_YS;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_LXQ_DAILY;
     public VisitorProxy visitor = new VisitorProxy(product);
     public SceneUtil user = new SceneUtil(visitor);

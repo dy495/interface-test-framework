@@ -1746,7 +1746,7 @@ public class BusinessUtilOnline extends BasicUtil {
         JSONArray registerItems = new JSONArray();
         Long activityId = 0L;
         //在活动详情中获得招募活动的报名信息
-        user.loginPc(EnumAccount.JC_ALL_ONLINE);
+        user.loginPc(EnumAccount.JC_ONLINE_YS);
         JSONObject response = getRecruitActivityDetailDate(id);
         JSONArray registerInformationList = response.getJSONArray("register_information_list");
         for (int i = 0; i < registerInformationList.size(); i++) {
@@ -1818,7 +1818,7 @@ public class BusinessUtilOnline extends BasicUtil {
         JSONArray registerItems = new JSONArray();
         Long activityId = 0L;
         //在活动详情中获得招募活动的报名信息
-        user.loginPc(EnumAccount.JC_ALL_ONLINE);
+        user.loginPc(EnumAccount.JC_ONLINE_YS);
         JSONObject response = getRecruitActivityDetailDate(id);
         JSONArray registerInformationList = response.getJSONArray("register_information_list");
         for (int i = 0; i < registerInformationList.size(); i++) {

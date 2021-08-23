@@ -20,7 +20,7 @@ import java.lang.reflect.Method;
 
 public class Jc_Pc_CustomerManageOnline extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct product = EnumTestProduct.JC_ONLINE_JD;
-    private static final EnumAccount account = EnumAccount.JC_ALL_ONLINE;
+    private static final EnumAccount account = EnumAccount.JC_ONLINE_YS;
     public VisitorProxy visitor = new VisitorProxy(product);
     SceneUtil util = new SceneUtil(visitor);
     ScenarioUtil jc = new ScenarioUtil();
