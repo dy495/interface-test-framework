@@ -47,8 +47,8 @@ public class ContentOperationCase extends TestCaseCommon implements TestCaseStd 
     private static final EnumTestProduct PRODUCE = EnumTestProduct.JC_DAILY_JD;
     private static final EnumAccount ACCOUNT = EnumAccount.JC_DAILY_LXQ;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_DAILY;
-    public VisitorProxy visitor = new VisitorProxy(PRODUCE);
-    public SceneUtil util = new SceneUtil(visitor);
+    private final VisitorProxy visitor = new VisitorProxy(PRODUCE);
+    private final SceneUtil util = new SceneUtil(visitor);
 
     @BeforeClass
     @Override
@@ -104,11 +104,11 @@ public class ContentOperationCase extends TestCaseCommon implements TestCaseStd 
     @Test(description = "banner--跳转活动/文章的条数=展示中的文章+进行中或者已结束活动条数之和")
     public void banner_data_1() {
         try {
-            int num = ArticleList.builder().build().execute(visitor).getJSONArray("list").size();
+            int num = ArticleList.builder().build().visitor(visitor).execute().getJSONArray("list").size();
             IScene articlePageScene = ArticlePageScene.builder().build();
             int articlePageListSize = (int) util.toJavaObjectList(articlePageScene, ArticlePageBean.class).stream().filter(e -> e.getStatusName().equals(ArticleStatusEnum.SHOW.getTypeName())).count();
-            int passedSTotal = ActivityManagePageScene.builder().status(ActivityStatusEnum.PASSED.getId()).build().execute(visitor).getInteger("total");
-            int finishTotal = ActivityManagePageScene.builder().status(ActivityStatusEnum.FINISH.getId()).build().execute(visitor).getInteger("total");
+            int passedSTotal = ActivityManagePageScene.builder().status(ActivityStatusEnum.PASSED.getId()).build().visitor(visitor).execute().getInteger("total");
+            int finishTotal = ActivityManagePageScene.builder().status(ActivityStatusEnum.FINISH.getId()).build().visitor(visitor).execute().getInteger("total");
             CommonUtil.checkResult("跳转活动/文章的条数", passedSTotal + finishTotal + articlePageListSize, num);
         } catch (Exception | AssertionError e) {
             collectMessage(e);
@@ -159,9 +159,9 @@ public class ContentOperationCase extends TestCaseCommon implements TestCaseStd 
             array.add(jsonObject3);
             array.add(jsonObject4);
             array.add(jsonObject5);
-            EditScene.builder().bannerType("HOME_PAGE").list(array).build().execute(visitor);
+            EditScene.builder().bannerType("HOME_PAGE").list(array).build().visitor(visitor).execute();
             util.loginApplet(APPLET_USER_ONE);
-            JSONArray list = AppletBannerScene.builder().build().execute(visitor).getJSONArray("list");
+            JSONArray list = AppletBannerScene.builder().build().visitor(visitor).execute().getJSONArray("list");
             List<Long> appletArticleIds = list.stream().map(e -> (JSONObject) e).map(e -> e.getLong("article_id")).collect(Collectors.toList());
             CommonUtil.checkResultPlus("pc端文章为：", appletArticleIds, "applet端文章为：", articleIds.subList(0, 5));
         } catch (Exception | AssertionError e) {

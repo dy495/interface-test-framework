@@ -64,9 +64,9 @@ public class BusinessManageCaseOnline extends TestCaseCommon implements TestCase
     private static final EnumTestProduct PRODUCE = EnumTestProduct.JC_ONLINE_JD;
     private static final EnumAccount ACCOUNT = EnumAccount.JC_ONLINE_LXQ;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_ONLINE;
-    public VisitorProxy visitor = new VisitorProxy(PRODUCE);
-    public SceneUtil util = new SceneUtil(visitor);
-    public CommonConfig commonConfig = new CommonConfig();
+    private final VisitorProxy visitor = new VisitorProxy(PRODUCE);
+    private final SceneUtil util = new SceneUtil(visitor);
+    private final CommonConfig commonConfig = new CommonConfig();
 
     @BeforeClass
     @Override

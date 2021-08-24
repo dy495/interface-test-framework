@@ -43,8 +43,8 @@ public class ContentOperationCaseOnline extends TestCaseCommon implements TestCa
     private static final EnumTestProduct PRODUCE = EnumTestProduct.JC_ONLINE_JD;
     private static final EnumAccount ALL_AUTHORITY = EnumAccount.JC_ONLINE_LXQ;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_ONLINE;
-    public VisitorProxy visitor = new VisitorProxy(PRODUCE);
-    public SceneUtil util = new SceneUtil(visitor);
+    private final VisitorProxy visitor = new VisitorProxy(PRODUCE);
+    private final SceneUtil util = new SceneUtil(visitor);
 
     @BeforeClass
     @Override
@@ -78,6 +78,7 @@ public class ContentOperationCaseOnline extends TestCaseCommon implements TestCa
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
+        logger.logCaseStart(caseResult.getCaseName());
     }
 
     //ok

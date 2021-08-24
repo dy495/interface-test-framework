@@ -80,9 +80,9 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
     private static final EnumTestProduct PRODUCT = EnumTestProduct.JC_ONLINE_JD;
     private static final EnumAccount ACCOUNT = EnumAccount.JC_ONLINE_LXQ;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_ONLINE;
-    public VisitorProxy visitor = new VisitorProxy(PRODUCT);
-    public SceneUtil util = new SceneUtil(visitor);
-    CommonConfig commonConfig = new CommonConfig();
+    private final VisitorProxy visitor = new VisitorProxy(PRODUCT);
+    private final SceneUtil util = new SceneUtil(visitor);
+    private final CommonConfig commonConfig = new CommonConfig();
 
     @BeforeClass
     @Override
@@ -117,6 +117,7 @@ public class MarketingManageCaseOnline extends TestCaseCommon implements TestCas
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
+        logger.logCaseStart(caseResult.getCaseName());
     }
 
     //ok

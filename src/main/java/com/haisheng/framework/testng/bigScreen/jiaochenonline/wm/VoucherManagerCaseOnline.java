@@ -49,8 +49,8 @@ public class VoucherManagerCaseOnline extends TestCaseCommon implements TestCase
     private static final EnumAccount ACCOUNT = EnumAccount.JC_ONLINE_LXQ;
     private static final EnumAppletToken APPLET_USER_ONE = EnumAppletToken.JC_WM_ONLINE;
     private static final EnumAppletToken APPLET_USER_TWO = EnumAppletToken.JC_LXQ_ONLINE;
-    public VisitorProxy visitor = new VisitorProxy(PRODUCE);
-    public SceneUtil util = new SceneUtil(visitor);
+    private final VisitorProxy visitor = new VisitorProxy(PRODUCE);
+    private final SceneUtil util = new SceneUtil(visitor);
 
     @BeforeClass
     @Override
