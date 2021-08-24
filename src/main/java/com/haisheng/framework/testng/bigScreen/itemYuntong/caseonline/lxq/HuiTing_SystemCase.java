@@ -36,10 +36,10 @@ import java.lang.reflect.Method;
  * @date 2021/1/29 11:17
  */
 public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
-    EnumTestProduct product = EnumTestProduct.YT_DAILY_GK;
+    EnumTestProduct product = EnumTestProduct.YT_ONLINE_GK;
     EnumAccount ALL_AUTHORITY = EnumAccount.YT_ONLINE_YS;
     VisitorProxy visitor = new VisitorProxy(product);
-    SceneUtil businessUtil = new SceneUtil(visitor);
+    SceneUtil util = new SceneUtil(visitor);
 
     YunTongInfoOnline info = new YunTongInfoOnline();
 
@@ -63,7 +63,7 @@ public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
         //放入shopId
         commonConfig.setShopId(product.getShopId()).setRoleId(ALL_AUTHORITY.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
-        businessUtil.loginPc(ALL_AUTHORITY);
+        util.loginPc(ALL_AUTHORITY);
     }
 
     @AfterClass

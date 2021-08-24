@@ -187,7 +187,7 @@ public class DateTimeUtil {
     }
 
     public long getTimestampDiff(long from, long to) {
-        long diff = 0;
+        long diff;
 
         if (from < to) {
             diff = to - from;
@@ -294,9 +294,8 @@ public class DateTimeUtil {
         c.set(Calendar.MINUTE, 0);
         c.set(Calendar.SECOND, 0);
         c.set(Calendar.MILLISECOND, 0);
-        Long today = c.getTimeInMillis();
 
-        return today;
+        return c.getTimeInMillis();
     }
 
     public long calTimeDiff(String left, String right) throws ParseException {
@@ -413,7 +412,7 @@ public class DateTimeUtil {
         String lastYear = format.format(y);
         String latYearTimestamp = dateTimeUtil.dateToTimestamp(lastYear);
 
-        return Long.valueOf(latYearTimestamp);
+        return Long.parseLong(latYearTimestamp);
     }
 
     public boolean isWeekend(String dateStr) throws ParseException {
@@ -421,11 +420,7 @@ public class DateTimeUtil {
         Date date = format.parse(dateStr);
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
-        if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-            return true;
-        }
-
-        return false;
+        return cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY;
     }
 
     public String getBeginDayOfWeek(Date date, String pattern) {
@@ -477,7 +472,7 @@ public class DateTimeUtil {
 
         cal.set(getNowYear(date), getNowMonth(date) - 1, 1);
 
-        int day = cal.getActualMaximum(5);
+        int day = cal.getActualMaximum(Calendar.DATE);
         cal.set(getNowYear(date), getNowMonth(date) - 1, day);
         return sdf.format(cal.getTime());
     }
@@ -487,7 +482,7 @@ public class DateTimeUtil {
         GregorianCalendar gc = (GregorianCalendar) Calendar.getInstance();
         gc.setTime(date);
 
-        return gc.get(1);
+        return gc.get(Calendar.YEAR);
     }
 
     public int getNowMonth(Date date) {
@@ -495,23 +490,21 @@ public class DateTimeUtil {
         GregorianCalendar gc = (GregorianCalendar) Calendar.getInstance();
         gc.setTime(date);
 
-        return gc.get(2) + 1;
+        return gc.get(Calendar.MONTH) + 1;
     }
 
     public String getHHmm(int n) {
         Calendar beforeTime = Calendar.getInstance();
         beforeTime.add(Calendar.MINUTE, n);// n分钟之前/之后的时间
         Date beforeD = beforeTime.getTime();
-        String before = new SimpleDateFormat("HH:mm").format(beforeD);
-        return before;
+        return new SimpleDateFormat("HH:mm").format(beforeD);
     }
 
     public String getHHmm(int n, String pattern) {
         Calendar beforeTime = Calendar.getInstance();
         beforeTime.add(Calendar.MINUTE, n);// n分钟之前/之后的时间
         Date beforeD = beforeTime.getTime();
-        String before = new SimpleDateFormat(pattern).format(beforeD);
-        return before;
+        return new SimpleDateFormat(pattern).format(beforeD);
     }
 
     public long get0OclockStamp(int n) throws ParseException { //前第n天的0点时间戳
@@ -522,8 +515,7 @@ public class DateTimeUtil {
         Date date = c.getTime();
         String day = df.format(date);
         Date date2 = df.parse(day);
-        long endtime = date2.getTime();
-        return endtime;
+        return date2.getTime();
     }
 
     /**
@@ -536,9 +528,7 @@ public class DateTimeUtil {
 
         c.set(year, month, 0);
 
-        int days = c.get(Calendar.DAY_OF_MONTH);
-
-        return days;
+        return c.get(Calendar.DAY_OF_MONTH);
     }
 
     /**
@@ -550,9 +540,7 @@ public class DateTimeUtil {
 
         Calendar c = Calendar.getInstance();
 
-        int year = c.get(Calendar.YEAR);
-
-        return year;
+        return c.get(Calendar.YEAR);
     }
 
     /**
@@ -563,9 +551,7 @@ public class DateTimeUtil {
     public int getThisMonth() {
         Calendar c = Calendar.getInstance();
 
-        int month = c.get(Calendar.MONTH) + 1;
-
-        return month;
+        return c.get(Calendar.MONTH) + 1;
     }
 
     /**
@@ -576,9 +562,7 @@ public class DateTimeUtil {
     public int getdayOfThisMonth() {
         Calendar c = Calendar.getInstance();
 
-        int day = c.get(Calendar.DATE);
-
-        return day;
+        return c.get(Calendar.DATE);
     }
 
     /**
@@ -597,12 +581,12 @@ public class DateTimeUtil {
             day = LocalDate.now().minusDays(Math.abs(n)).toString();
         }
 
-        return Integer.valueOf(day.substring(day.length() - 2));
+        return Integer.parseInt(day.substring(day.length() - 2));
     }
 
     public String getDaysMinusPlusStr(int n) {
 
-        String day = "";
+        String day;
 
         if (n > 0) {
             day = LocalDate.now().plusDays(n).toString();
@@ -784,16 +768,14 @@ public class DateTimeUtil {
     public int getDay(int num_day) {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DATE, num_day);
-        int monthDay = calendar.get(Calendar.DAY_OF_MONTH);
-        return monthDay;
+        return calendar.get(Calendar.DAY_OF_MONTH);
     }
 
     //获取日期的年月
     public String getMounth(int num_day) {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DATE, num_day);
-        String month = new SimpleDateFormat("yyyy-MM").format(calendar.getTime());
-        return month;
+        return new SimpleDateFormat("yyyy-MM").format(calendar.getTime());
     }
 
     public String getLast12Months(int i) {

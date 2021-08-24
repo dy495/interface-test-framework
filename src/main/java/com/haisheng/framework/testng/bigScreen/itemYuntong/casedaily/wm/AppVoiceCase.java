@@ -49,7 +49,7 @@ import java.util.stream.Collectors;
  */
 public class AppVoiceCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct PRODUCT = EnumTestProduct.YT_DAILY_GK;
-    private static final EnumAccount ACCOUNT = EnumAccount.YT_ONLINE_LXQ;
+    private static final EnumAccount ACCOUNT = EnumAccount.YT_DAILY_LXQ;
     private final VisitorProxy visitor = new VisitorProxy(PRODUCT);
     private final SceneUtil util = new SceneUtil(visitor);
     private static final String startDate = DateTimeUtil.addDayFormat(new Date(), -1);
