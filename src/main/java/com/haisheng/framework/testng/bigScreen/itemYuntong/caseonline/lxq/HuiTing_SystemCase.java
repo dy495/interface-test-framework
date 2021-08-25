@@ -40,8 +40,7 @@ public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
     EnumAccount ALL_AUTHORITY = EnumAccount.YT_ONLINE_YS;
     VisitorProxy visitor = new VisitorProxy(product);
     SceneUtil util = new SceneUtil(visitor);
-
-    YunTongInfoOnline info = new YunTongInfoOnline();
+    YunTongInfoOnline info = new YunTongInfoOnline(visitor);
 
     CommonConfig commonConfig = new CommonConfig();
 

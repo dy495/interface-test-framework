@@ -893,10 +893,8 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
             jc.categoryDel(id, true);
 
 
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
+        } catch (AssertionError | Exception e) {
+            collectMessage(e);
         } finally {
             saveData("PC【商品品类】新建二级/三级品类,品类名称重复");
         }

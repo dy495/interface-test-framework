@@ -101,9 +101,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             if (status.equals("true")) {
                 Preconditions.checkArgument(code == 1000, mess + ", 状态码为:" + code);
             }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("小程序提交在线专家咨询，校验必填项内容");
@@ -159,9 +157,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
             String message6 = obj6.getString("message");
             Preconditions.checkArgument(code6 == 1001, "不填写咨询门店，状态码为:" + code6 + ", 提示语为:" + message6);
 
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("小程序提交在线专家咨询，不填写必填项");
@@ -308,7 +304,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         try {
             util.loginPc(ALL_AUTHORITY);
             //根据归属门店搜索
-            JSONObject shopobj = ShopListScene.builder().build().execute(visitor).getJSONArray("list").getJSONObject(0);
+            JSONObject shopobj = ShopListScene.builder().build().visitor(visitor).execute().getJSONArray("list").getJSONObject(0);
             Long shopId = shopobj.getLong("shop_id");
             String shopName = shopobj.getString("shop_name");
             JSONArray alllist = OnlineExpertsPageListScene.builder().page(1).size(20).shopId(shopId).build().execute(visitor).getJSONArray("list");
@@ -337,9 +333,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
                 }
             }
 
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("PC在线专家咨询列表单项搜索");
@@ -1198,7 +1192,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
         try {
             util.loginPc(ALL_AUTHORITY);
             //根据归属门店搜索
-            JSONObject shopobj = ShopListScene.builder().build().execute(visitor).getJSONArray("list").getJSONObject(0);
+            JSONObject shopobj = ShopListScene.builder().build().visitor(visitor).execute().getJSONArray("list").getJSONObject(0);
             Long shopId = shopobj.getLong("shop_id");
             String shopName = shopobj.getString("shop_name");
             JSONArray alllist = DedicatedServicePageListScene.builder().page(1).size(20).shopId(shopId).build().execute(visitor).getJSONArray("list");
@@ -1239,9 +1233,7 @@ public class SystemCaseV3 extends TestCaseCommon implements TestCaseStd {
                 }
             }
 
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("PC专属服务列表单项搜索");

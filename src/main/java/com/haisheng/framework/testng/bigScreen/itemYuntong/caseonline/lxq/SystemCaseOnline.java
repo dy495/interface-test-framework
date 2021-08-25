@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.Response;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistAppId;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistConfId;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
@@ -31,9 +32,7 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
     EnumAccount ALL_AUTHORITY = EnumAccount.YT_ONLINE_YS;
     VisitorProxy visitor = new VisitorProxy(product);
     SceneUtil businessUtil = new SceneUtil(visitor);
-
-
-    YunTongInfoOnline info = new YunTongInfoOnline();
+    YunTongInfoOnline info = new YunTongInfoOnline(visitor);
 
 
     CommonConfig commonConfig = new CommonConfig();
@@ -76,10 +75,6 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * -------------------------------销售业务管理 - 销售客户管理 - 展厅客户 ------------------------------------
-     */
-
-    /**
      * 展厅客户-创建 正常&异常
      */
 
@@ -109,9 +104,7 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
                 int code2 = PreSaleCustomerCreatePotentialCustomerScene.builder().customerName(name).customerPhone(phone).customerType(type).sex(sex).carStyleId(car_style_id).carModelId(car_model_id).shopId(shop_id).salesId(salesId).build().execute(visitor, false).getInteger("code");
                 Preconditions.checkArgument(code2 == 1001, "使用列表中存在的手机号期待创建失败，实际" + code);
             }
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("创建潜客");
@@ -296,9 +289,7 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
             }
 
 
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("展厅客户根据已有信息筛选");
@@ -310,36 +301,25 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
      */
     @Test
     public void cstmEdit() {
-
         logger.logCaseStart(caseResult.getCaseName());
         try {
-
             //正常编辑
             Long custID = info.newPotentialCstm();
-
-            String name = "修改后" + dt.getHistoryDate(0) + Integer.toString((int) ((Math.random() * 9 + 1) * 100));
-            String phone = "138" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000)) + "7788";
+            String name = "修改后" + dt.getHistoryDate(0) + (int) ((Math.random() * 9 + 1) * 100);
+            String phone = "138" + (int) ((Math.random() * 9 + 1) * 1000) + "7788";
             String type = "PERSON";
             int sex = 1;
-            Long car_style_id = PreSaleCustomerStyleListScene.builder().shopId(info.oneshopid).build().execute(visitor).getJSONArray("list").getJSONObject(1).getLong("style_id");
+            Long car_style_id = PreSaleCustomerStyleListScene.builder().shopId(info.oneshopid).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("style_id");
             Long car_model_id = PreSaleCustomerModelListScene.builder().styleId(car_style_id).build().execute(visitor).getJSONArray("list").getJSONObject(0).getLong("model_id");
-            JSONObject obj = PreSaleCustomerEditScene.builder().customerId(custID).customerName(name).customerPhone(phone).subjectType(type).sex(sex).carStyleId(car_style_id).intentionCarModelId(car_model_id).shopId(info.oneshopid).build().execute(visitor, false);
-            int code = obj.getInteger("code");
-            if (code != 1000) {
-                String message = obj.getString("message");
-                Preconditions.checkArgument(code == 1000, "编辑客户信息提示" + message);
-            }
-
+            Response response = PreSaleCustomerEditScene.builder().customerId(custID).customerName(name).customerPhone(phone).subjectType(type).sex(sex).carStyleId(car_style_id).intentionCarModelId(car_model_id).shopId(info.oneshopid).build().visitor(visitor).getResponse();
+            int code = response.getCode();
+            Preconditions.checkArgument(code == 1000, "编辑客户信息提示" + response.getMessage());
             //姓名51字
             //手机号12位
             //手机号10位
             //不填写必填项
-
-
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
-            appendFailReason(e.toString());
+        } catch (AssertionError | Exception e) {
+            collectMessage(e);
         } finally {
             saveData("展厅客户编辑资料");
         }

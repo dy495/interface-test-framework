@@ -18,7 +18,6 @@
             <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.app.JcAppAffirmReceptionOnLine"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.pc.JcPcReceptionRelateOnline"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.pc.JcPcAffirmReceptionOnLine"/>
-            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.app.JcAppOnline"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.AppletOnline"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.lxq.SystemCaseOnline"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.lxq.SystemCaseV3"/>

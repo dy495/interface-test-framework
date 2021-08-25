@@ -40,7 +40,7 @@ public class SystemCaseRecpOnline extends TestCaseCommon implements TestCaseStd 
     EnumAccount ALL_AUTHORITY = EnumAccount.YT_ONLINE_LXQ;
     VisitorProxy visitor = new VisitorProxy(product);
     SceneUtil businessUtil = new SceneUtil(visitor);
-    YunTongInfoOnline info = new YunTongInfoOnline();
+    YunTongInfoOnline info = new YunTongInfoOnline(visitor);
     CommonConfig commonConfig = new CommonConfig();
 
     @BeforeClass
