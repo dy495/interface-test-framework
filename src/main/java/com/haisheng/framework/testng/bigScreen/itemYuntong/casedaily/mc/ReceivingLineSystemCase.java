@@ -50,7 +50,7 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
         //替换钉钉推送
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.setShopId(YT_RECEPTION_DAILY.getShopId()).setRoleId(YT_RECEPTION_DAILY.getRoleId()).setProduct(product.getAbbreviation());
+        commonConfig.setShopId(YT_RECEPTION_DAILY.getReceptionShopId()).setRoleId(YT_RECEPTION_DAILY.getRoleId()).setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);  // 配置请求头
         util.loginPc(YT_RECEPTION_DAILY);   //登录
 //        LoginPc loginScene = LoginPc.builder().phone("13402050043").verificationCode("000000").build();
