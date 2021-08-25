@@ -1,4 +1,5 @@
-package com.haisheng.framework.testng.bigScreen.itemMall.casedaily.gly;
+package com.haisheng.framework.testng.bigScreen.itemMall.caseonline.gly;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
@@ -15,12 +16,10 @@ import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.overview
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.overview.OverviewVenueOverviewScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.shop.ShopPageScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.shop.ShopFloorListScene;
-import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.visittrend.history.*;
-import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.visittrend.history.CustomersPortraitScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.visittrend.history.RegionTrendScene;
+import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.visittrend.history.*;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.visittrend.realtime.*;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.StoreScenarioUtil;
-import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.SupporterUtil;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.StoreScenarioUtilOnline;
 import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.UserUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -31,33 +30,32 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
 
-public class MallSystemCase extends TestCaseCommon implements TestCaseStd {
-
-    private final EnumTestProduct product = EnumTestProduct.MALL_DAILY;
+public class MallSystemOnlineCase extends TestCaseCommon implements TestCaseStd {
+    private final EnumTestProduct product = EnumTestProduct.MALL_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(product);
     public UserUtil user = new UserUtil(visitor);
-    public SupporterUtil util = new SupporterUtil(visitor);
     MallBusinessUtil businessUtil = new MallBusinessUtil(visitor);
-    StoreScenarioUtil su = StoreScenarioUtil.getInstance();
+    StoreScenarioUtilOnline su = StoreScenarioUtilOnline.getInstance();
     CommonConfig commonConfig = new CommonConfig();
-    Long floorId=7344L;//日常1楼的楼层id
-    String mallId="55456";
+    Long floorId=1256L;//日常1楼的楼层id
+    String mallId="3115";
 
     @BeforeClass
     @Override
     public void initial() {
         logger.debug("before class initial");
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_XUNDIAN_DAILY_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_MENDIAN_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = EnumChecklistUser.GLY.getName();
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.MALL_DAILY_TEST.getJobName());
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.MALL_ONLINE_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
-        commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
+        commonConfig.dingHook = DingWebhook.ONLINE_STORE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.setShopId(product.getShopId()).setReferer(product.getReferer()).setRoleId(product.getRoleId()).setProduct(product.getAbbreviation()).setMallId(mallId);
         beforeClassInit(commonConfig);
     }
@@ -75,7 +73,7 @@ public class MallSystemCase extends TestCaseCommon implements TestCaseStd {
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult);
         //登录的日常的账号
-        su.loginInMall("yuexiu@test.com","f5b3e737510f31b88eb2d4b5d0cd2fb4");
+        su.loginInMall("zhengda@zhengda.com","62971bd93867559a7a713305f6f594fc");
 
     }
 
@@ -567,7 +565,7 @@ public class MallSystemCase extends TestCaseCommon implements TestCaseStd {
 
 
 
-    // -----------------------------------------------------------实时客流数据分析---------------------------------------------------
+     // -----------------------------------------------------------实时客流数据分析---------------------------------------------------
 
 
     /**
@@ -729,19 +727,19 @@ public class MallSystemCase extends TestCaseCommon implements TestCaseStd {
             String[] sortTypeArray={SortTypeEnum.ENTRY.getSortType(),SortTypeEnum.ENTRY_PERCENTAGE.getSortType(),SortTypeEnum.PASS.getSortType(),SortTypeEnum.VISIT_PERCENTAGE.getSortType()};
             Arrays.stream(sortTypeArray).forEach(type->{
 
-                //获取柱状图的数据
-                IScene scene=RealTimeColumnarRankingScene.builder().type(type).build();
-                JSONObject response=visitor.invokeApi(scene,true);
-                //排名前五的list
-                JSONArray topList=response.getJSONArray("top_five_list");
+                   //获取柱状图的数据
+                   IScene scene=RealTimeColumnarRankingScene.builder().type(type).build();
+                   JSONObject response=visitor.invokeApi(scene,true);
+                   //排名前五的list
+                   JSONArray topList=response.getJSONArray("top_five_list");
                 if(type.equals(SortTypeEnum.ENTRY.getSortType())||type.equals(SortTypeEnum.PASS.getSortType())){
-                    for(int i=0;i<topList.size()-1;i++){
-                        int number=topList.getJSONObject(i).getInteger("number");
-                        int numberNext=topList.getJSONObject(i+1).getInteger("number");
-                        Preconditions.checkArgument(number>=numberNext,type+"按照排名前五的门店进行并排序，前一位的为："+number+"   后一位的为："+numberNext);
-                    }
+                   for(int i=0;i<topList.size()-1;i++){
+                       int number=topList.getJSONObject(i).getInteger("number");
+                       int numberNext=topList.getJSONObject(i+1).getInteger("number");
+                       Preconditions.checkArgument(number>=numberNext,type+"按照排名前五的门店进行并排序，前一位的为："+number+"   后一位的为："+numberNext);
+                   }
 
-                }else{
+               }else{
                     for(int i=0;i<topList.size()-1;i++){
                         String percent=topList.getJSONObject(i).getString("percentage");
                         double number=businessUtil.getNumHalfUp(percent.substring(0,percent.length()-1),4);
@@ -749,7 +747,7 @@ public class MallSystemCase extends TestCaseCommon implements TestCaseStd {
                         double numberNext=businessUtil.getNumHalfUp(percentNext.substring(0,percentNext.length()-1),4);
                         Preconditions.checkArgument(number>=numberNext,type+"按照排名前五的门店进行并排序，前一位的为："+number+"   后一位的为："+numberNext);
                     }
-                }
+               }
             });
         }catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -826,7 +824,7 @@ public class MallSystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    // ----------------------------------------------------------楼层客流总览-----------------------------------------------------------
+     // ----------------------------------------------------------楼层客流总览-----------------------------------------------------------
 
 
     /**
@@ -1047,7 +1045,7 @@ public class MallSystemCase extends TestCaseCommon implements TestCaseStd {
             //获取当前楼层的人数
             double number=response.getJSONObject("uv_overview").getDouble("number");
 
-            //获取场馆累计人数
+           //获取场馆累计人数
             IScene scene1= OverviewVenueOverviewScene.builder().date(businessUtil.getDate(-1)).build();
             JSONObject response1=visitor.invokeApi(scene1,true);
             //当前人数
@@ -1682,7 +1680,7 @@ public class MallSystemCase extends TestCaseCommon implements TestCaseStd {
                     String femalePercent = response.getString("female_ratio_str");
                     double female = Double.parseDouble(femalePercent.substring(0, malePercent.length() - 1));
                     double sum = male + female;
-                    logger.info(strings[2] + " "+scene + "-男性占比为："+male+"  女性占比为："+female);
+                   logger.info(strings[2] + " "+scene + "-男性占比为："+male+"  女性占比为："+female);
                     Preconditions.checkArgument(sum >= 99.98 || sum <= 100.02 || sum == 0.0, strings[2] + " " + scene + "-男性占比为："+male+"  女性占比为："+female);
                 }
             });

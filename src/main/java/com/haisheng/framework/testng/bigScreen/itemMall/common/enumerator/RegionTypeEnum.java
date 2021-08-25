@@ -3,8 +3,8 @@ package com.haisheng.framework.testng.bigScreen.itemMall.common.enumerator;
 import lombok.Getter;
 
 public enum RegionTypeEnum {
-    EXIT("EXIT","停车场"),
-    PARKING("PARKING","楼层出入口"),
+    EXIT("EXIT","楼层出入口"),
+    PARKING("PARKING","停车场"),
     FLOOR("FLOOR","楼层");
 
     @Getter

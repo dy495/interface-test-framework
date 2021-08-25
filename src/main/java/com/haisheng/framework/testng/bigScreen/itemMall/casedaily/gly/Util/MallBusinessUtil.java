@@ -38,42 +38,54 @@ public class MallBusinessUtil {
         return DateTimeUtil.getFormat(endDate, "yyyy-MM-dd");
     }
 
-
-
-    public static Date getNowWeekMonday(Date date) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        cal.add(Calendar.DAY_OF_MONTH, -1); //解决周日会出现 并到下一周的情况
-        cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-
-        return cal.getTime();
-    }
-
-
     /**
      * 获取上周的星期一的日期
      */
-    public Date getStartDate(Date date,int num){
-        Date a = DateUtils.addDays(date, -1);
+    public String getStartDate(int num){
         Calendar cal = Calendar.getInstance();
-        cal.setTime(a);
-        cal.add(Calendar.WEEK_OF_YEAR, num);// 一周
-        cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        //对星期的数据进行增减一周的操作
+        cal.add(Calendar.WEEK_OF_YEAR, num);
+        //设置时间单位
+        cal.set(Calendar.DAY_OF_WEEK,Calendar.MONDAY);
 
-        return cal.getTime();
+        return DateTimeUtil.getFormat(cal.getTime(), "yyyy-MM-dd");
     }
 
     /**
      * 获取上周周日的日期
      */
-    public static Date getEndDate(Date date,int num) {
-        Date a = DateUtils.addDays(date, -1);
+    public String getEndDate(int num) {
         Calendar cal = Calendar.getInstance();
-        cal.setTime(a);
         cal.add(Calendar.WEEK_OF_YEAR, num);// 一周
         cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
 
-        return cal.getTime();
+        return DateTimeUtil.getFormat(cal.getTime(), "yyyy-MM-dd");
+    }
+
+    /**
+     * 获取每个月1号的日期
+     */
+    public String getMonthStartDate(int num){
+        Calendar cal = Calendar.getInstance();
+        //对星期的数据进行增减一周的操作
+        cal.add(Calendar.MONTH, num);
+        //设置时间单位
+        cal.set(Calendar.DAY_OF_MONTH,1);
+
+        return DateTimeUtil.getFormat(cal.getTime(), "yyyy-MM-dd");
+    }
+
+    /**
+     * 获取每个月最后一号的日期
+     */
+    public String getMonthEndDate(int num){
+        Calendar cal = Calendar.getInstance();
+        //对星期的数据进行增减一周的操作
+        cal.add(Calendar.MONTH, num);
+        //设置时间单位
+        cal.set(Calendar.DAY_OF_MONTH,cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+
+        return DateTimeUtil.getFormat(cal.getTime(), "yyyy-MM-dd");
     }
 
     /**

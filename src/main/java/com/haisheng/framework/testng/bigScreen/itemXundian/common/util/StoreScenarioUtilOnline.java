@@ -3521,6 +3521,30 @@ public class StoreScenarioUtilOnline extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    /**
+     * 转购物中心IpPort
+     */
+    public void loginInMall(String userName,String passwd){
+        String IpPort="http://sso.mall.store.winsenseos.com";
+        initHttpConfig();
+        String path = "/account-platform/login-pc";
+        String loginUrl = IpPort + path;
+        String json = "{\"type\":0, \"username\":\"" + userName + "\",\"password\":\"" + passwd + "\"}";
+        config.url(loginUrl)
+                .json(json);
+        logger.info("{} json param: {}", path, json);
+        long start = System.currentTimeMillis();
+        try {
+            response = HttpClientUtil.post(config);
+            authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
+            logger.info("authorization:" + authorization);
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        }
+        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
+        //saveData("登陆");
+    }
+
 }
 
 
