@@ -7,7 +7,7 @@ import lombok.Builder;
 @Builder
 public class LoginPcMall extends BaseScene {
 
-    private final String type;
+    private final Integer type;
     private final String password;
     private final String username;
 

@@ -25,7 +25,7 @@ public class CustomerTrendScene extends BaseScene {
      * 是否必填 true
      * 版本 -
      */
-    private final Long mallId;
+    private final Long shopId;
 
     /**
      * 描述 开始时间
@@ -53,7 +53,7 @@ public class CustomerTrendScene extends BaseScene {
     protected JSONObject getRequestBody() {
         JSONObject object = new JSONObject();
         object.put("referer", referer);
-        object.put("mall_id", mallId);
+        object.put("shop_id", shopId);
         object.put("start_time", startTime);
         object.put("end_time", endTime);
         object.put("floor_id", floorId);
