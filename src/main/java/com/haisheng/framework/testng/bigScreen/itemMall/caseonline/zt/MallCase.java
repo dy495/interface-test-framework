@@ -1,16 +1,18 @@
-package com.haisheng.framework.testng.bigScreen.itemMall.casedaily.zt;
+package com.haisheng.framework.testng.bigScreen.itemMall.caseonline.zt;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.*;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.enumerator.AccountEnum;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.overview.OverviewShopOverviewScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.shop.CustomerTrendScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.shop.ShopDetailScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.shop.ShopPageScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.shop.ShopFloorListScene;
-import com.haisheng.framework.testng.bigScreen.itemMall.common.util.*;
+import com.haisheng.framework.testng.bigScreen.itemMall.common.util.LoginUntil;
+import com.haisheng.framework.testng.bigScreen.itemMall.common.util.MallScenarioUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -20,18 +22,13 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
 import java.lang.reflect.Method;
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 public class MallCase extends TestCaseCommon implements TestCaseStd {
-    private final EnumTestProduct product = EnumTestProduct.MALL_DAILY;
-    private final EnumTestProduct product1 = EnumTestProduct.MALL_DAILY_SSO;
-    private static final AccountEnum ACCOUNT_ENUM = AccountEnum.MALL_DAILY;
+    private final EnumTestProduct product = EnumTestProduct.MALL_ONLINE;
+    private final EnumTestProduct product1 = EnumTestProduct.MALL_ONLINE_SSO;
+    private static final AccountEnum ACCOUNT_ENUM = AccountEnum.MALL_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(product);
     public VisitorProxy visitor1 = new VisitorProxy(product1);
     public LoginUntil user = new LoginUntil(visitor1);

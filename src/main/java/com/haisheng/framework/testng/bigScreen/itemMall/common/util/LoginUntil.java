@@ -2,8 +2,10 @@ package com.haisheng.framework.testng.bigScreen.itemMall.common.util;
 
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.enumerator.AccountEnum;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.LoginPcMall;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.UserUtil;
 import com.haisheng.framework.util.MD5Util;
 
 public class LoginUntil {

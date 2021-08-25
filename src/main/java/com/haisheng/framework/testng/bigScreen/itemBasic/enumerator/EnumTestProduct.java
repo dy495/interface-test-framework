@@ -50,7 +50,9 @@ public enum EnumTestProduct {
 
 
     MALL_DAILY("购物中心 日常 ", "", "http://dev.mall.store.winsenseos.cn", "43072", "MALL", "10107", true),
-    MALL_ONLINE("购物中心 线上 ", "", "http://mall.store.winsenseos.cn", "", "MALL", null, false),
+    MALL_DAILY_SSO("购物中心 日常-登录ip ", "", "http://dev.sso.mall.store.winsenseos.cn", "43072", "MALL", "10107", true),
+    MALL_ONLINE("购物中心 线上 ", "", "http://mall.store.winsenseos.com", "", "MALL", null, false),
+    MALL_ONLINE_SSO("购物中心 线上-登录ip ", "", "http://sso.mall.store.winsenseos.com", "43072", "MALL", "10107", true),
 
 
     CMS_DAILY("管理后台 日常 ", "", "http://39.106.253.190", "", "CMS", "", true),

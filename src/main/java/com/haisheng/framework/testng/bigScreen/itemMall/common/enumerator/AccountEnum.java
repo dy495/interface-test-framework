@@ -6,7 +6,7 @@ public enum AccountEnum {
 
     MALL_DAILY("yuexiu@test.com", "yuexiu", true, "18513118484", "越秀测试账号", 2, "总管理员"),
 
-    MALL_ONLINE("storedemo@winsense.ai", "storedemo", false, "12313123132", "管理员", 2, "总管理员"),
+    MALL_ONLINE("mall@mall.com", "mall", false, "18888888488", "管理员", 2, "总管理员"),
 
    ;
 
