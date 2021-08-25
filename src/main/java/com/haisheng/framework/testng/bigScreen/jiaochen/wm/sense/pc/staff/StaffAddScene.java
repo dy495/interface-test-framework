@@ -62,7 +62,7 @@ public class StaffAddScene extends BaseScene {
         object.put("phone", phone);
         object.put("gender", gender);
         object.put("picture_path", picturePath);
-        if (!roleList.isEmpty()) {
+        if (roleList != null) {
             object.put("role_list", roleList);
         } else {
             JSONArray roleList = new JSONArray();

@@ -95,12 +95,10 @@ public class SeverManageCase extends TestCaseCommon implements TestCaseStd {
     public void evaluateManager_data_2() {
         try {
             IScene scene = EvaluateV4ConfigDetailScene.builder().build();
-            int itemCount = scene.visitor(visitor).execute().getJSONArray("list").stream().map(e -> (JSONObject) e)
-                    .mapToInt(e -> e.getJSONArray("items").size()).sum();
+            int itemCount = scene.visitor(visitor).execute().getJSONArray("list").stream().map(e -> (JSONObject) e).mapToInt(e -> e.getJSONArray("items").size()).sum();
             JSONArray links = util.getSubmitLink(false);
             EvaluateV4ConfigSubmitScene.builder().links(links).build().visitor(visitor).execute();
-            int newItemCount = scene.visitor(visitor).execute().getJSONArray("list").stream().map(e -> (JSONObject) e)
-                    .mapToInt(e -> e.getJSONArray("items").size()).sum();
+            int newItemCount = scene.visitor(visitor).execute().getJSONArray("list").stream().map(e -> (JSONObject) e).mapToInt(e -> e.getJSONArray("items").size()).sum();
             Preconditions.checkArgument(newItemCount == itemCount - 1, "删除题目之前题目数量：" + itemCount + " 删除题目之后题目数量：" + newItemCount);
         } catch (Exception | AssertionError e) {
             collectMessage(e);

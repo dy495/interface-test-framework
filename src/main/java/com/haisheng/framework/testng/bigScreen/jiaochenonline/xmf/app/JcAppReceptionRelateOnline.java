@@ -31,8 +31,6 @@ import java.lang.reflect.Method;
 public class JcAppReceptionRelateOnline extends TestCaseCommon implements TestCaseStd {
     EnumTestProduct product = EnumTestProduct.JC_ONLINE_JD;
     ScenarioUtil jc = new ScenarioUtil();
-    private QADbProxy qaDbProxy = QADbProxy.getInstance();
-    public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
     String dataName = "app_receptionOnLine";
 
     JcFunctionOnline pf = new JcFunctionOnline();

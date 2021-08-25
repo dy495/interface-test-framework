@@ -4,12 +4,20 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.itemPorsche.common.util.commonDs.JsonPathUtil;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.bean.pc.staff.StaffPageBean;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.LogoutAppScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.AppCancelReceptionScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.task.AppReceptionPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.task.AppReceptionReceptorListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.loginuser.LoginApp;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.staff.StaffAddScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.staff.StaffDeleteScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.staff.StaffPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.DataAbnormal;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.JcFunctionOnline;
@@ -24,9 +32,10 @@ import org.testng.annotations.*;
 import java.lang.reflect.Method;
 
 public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
-    private static final EnumTestProduct product = EnumTestProduct.JC_ONLINE_JD;
-    private static final EnumAccount account = EnumAccount.JC_ONLINE_LXQ;
-    private final VisitorProxy visitor = new VisitorProxy(product);
+    private static final EnumTestProduct PRODUCT = EnumTestProduct.JC_ONLINE_JD;
+    private static final EnumAccount ADMIN = EnumAccount.JC_ONLINE_YS;
+    private static final EnumAccount ACCOUNT = EnumAccount.JC_ONLINE_LXQ;
+    private final VisitorProxy visitor = new VisitorProxy(PRODUCT);
     private final SceneUtil util = new SceneUtil(visitor);
     ScenarioUtil jc = new ScenarioUtil();
     PublicParamOnline pp = new PublicParamOnline();
@@ -41,7 +50,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
     @Override
     public void initial() {
         logger.debug("before classs initial");
-        jc.changeIpPort(product.getIp());
+        jc.changeIpPort(PRODUCT.getIp());
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_ONLINE_SERVICE;
@@ -57,18 +66,18 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-daily-test");
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, PRODUCT.getDesc() + commonConfig.checklistQaOwner);
 
         //replace ding f
 //        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
         commonConfig.dingHook = DingWebhook.CAR_OPEN_MANAGEMENT_PLATFORM_GRP;
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};
-        commonConfig.setShopId(account.getReceptionShopId()).setReferer(product.getReferer()).setRoleId(account.getRoleId()).setProduct(product.getAbbreviation());
+        commonConfig.setShopId(ACCOUNT.getReceptionShopId()).setReferer(PRODUCT.getReferer()).setRoleId(ACCOUNT.getRoleId()).setProduct(PRODUCT.getAbbreviation());
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);
-        util.loginApp(account);
+        util.loginApp(ACCOUNT);
     }
 
     //app登录
@@ -480,7 +489,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
 
     //2.0 变更接待  调试时需注意账号登录登出顺序
     @Test(description = "app变更接待,接待任务变更")
-    public void AJc_recepchangetion() {
+    public void receptionChange() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
@@ -502,13 +511,10 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
 
             //完成接待
 //            jc.finishReception(id[0], id[1]);
-
             Preconditions.checkArgument(total - total2 == 1, "变更接待后接待列表未-1,接待前：" + total + "，接待后：" + total2);
             Preconditions.checkArgument(total3 - total2 == 1, "变更接待后接待列表未-1,接待前：" + total2 + "，接待后：" + total3);
-
             Preconditions.checkArgument(tasknumA[2] - tasknum[2] == -1, "变更接待后今日任务-分子+1 ");
             Preconditions.checkArgument(tasknumA[3] - tasknum[3] == -1, "变更接待后今日任务-分母+1");
-
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
@@ -517,29 +523,25 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test(description = "app取消接待,接待任务列表-1，今日任务数分子分母都-1")
-    public void BJc_canclereception() {
+    public void cancelReception() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
+            util.loginApp(ACCOUNT);
             //开始接待
             Long[] id = new Long[2];
-            JSONObject dd = jc.appreceptionPage(null, 10).getJSONArray("list").getJSONObject(0);
-
-            id[0] = dd.getLong("id");
-            id[1] = dd.getLong("shop_id");
-
-            int total = jc.appreceptionPage(null, 10).getInteger("total");
-            int[] tasknum = pf.appTask();
-
+            IScene scene = AppReceptionPageScene.builder().lastValue(null).size(10).build().visitor(visitor);
+            JSONObject rsp = scene.execute().getJSONArray("list").getJSONObject(0);
+            id[0] = rsp.getLong("id");
+            id[1] = rsp.getLong("shop_id");
+            int total = scene.execute().getInteger("total");
+            int[] taskNum = pf.appTask();
             //取消接待
-            jc.cancleReception(id[0], id[1]);
-            int totalA = jc.appreceptionPage(null, 10).getInteger("total");
-            int[] tasknumA = pf.appTask();
-
+            AppCancelReceptionScene.builder().id(id[0]).shopId(id[1]).build().visitor(visitor).execute();
+            int totalA = scene.execute().getInteger("total");
+            int[] taskNumA = pf.appTask();
             Preconditions.checkArgument(total - totalA == 1, "取消接待后接待列表未-1,接待前：" + total + "，接待后：" + totalA);
-            Preconditions.checkArgument(tasknum[2] - tasknumA[2] == 1, "取消接待后今日任务-1,接待前：" + tasknum[2] + "，接待后：" + tasknumA[2]);
-            Preconditions.checkArgument(tasknum[3] - tasknumA[3] == 1, "取消接待后今日任务未-1,接待前：" + tasknum[3] + "，接待后：" + tasknumA[3]);
-
+            Preconditions.checkArgument(taskNum[2] - taskNumA[2] == 1, "取消接待后今日任务-1,接待前：" + taskNum[2] + "，接待后：" + taskNumA[2]);
+            Preconditions.checkArgument(taskNum[3] - taskNumA[3] == 1, "取消接待后今日任务未-1,接待前：" + taskNum[3] + "，接待后：" + taskNumA[3]);
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
@@ -547,15 +549,13 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-
     //2.0 变更接待
     @Test(description = "变更接待列表")
     public void receptorOnlyList() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            JSONObject data = jc.receptorList(Long.parseLong(pp.shopIdZ));
+            JSONObject data = AppReceptionReceptorListScene.builder().shopId(Long.parseLong(ACCOUNT.getReceptionShopId())).build().visitor(visitor).execute();
             JsonPathUtil.spiltString(data.toJSONString(), "$.list[*].uid&&$.list[*].name&&$.list[*].phone");
-
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
@@ -571,52 +571,42 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
     public void receptorListAndCreateAccount() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
+            util.loginApp(ACCOUNT);
+            IScene appReceptionReceptorListScene = AppReceptionReceptorListScene.builder().shopId(Long.parseLong(ACCOUNT.getReceptionShopId())).build().visitor(visitor);
             //新建账户前，接待列表人数
-            Integer total = jc.receptorList(Long.parseLong(pp.shopIdZ)).getJSONArray("list").size();
+            int total = appReceptionReceptorListScene.execute().getJSONArray("list").size();
             //创建账户
-
             //shopList
-            JSONObject shopdate = new JSONObject();
-            shopdate.put("shop_id", pp.shopIdZ);
-            shopdate.put("shop_name", pp.shopName);
+            JSONObject shopDate = new JSONObject();
+            shopDate.put("shop_id", pp.shopIdZ);
+            shopDate.put("shop_name", pp.shopName);
             JSONArray shop_list = new JSONArray();
-            shop_list.add(shopdate);
+            shop_list.add(shopDate);
             //shopList
             JSONObject roleList = new JSONObject();
             roleList.put("role_id", pp.roleidJdgw);
             roleList.put("role_name", pp.nameJdgw);
             roleList.put("shop_list", shop_list);
-
             JSONArray r_dList = new JSONArray();
             r_dList.add(roleList);
-
             String name = "" + System.currentTimeMillis();
             String phone = pf.genPhoneNum();
-
-            pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
-            jc.organizationAccountAdd(name, phone, r_dList, shop_list, true);
-
-            JSONArray accountList = jc.pcStaffPage(name, 1, 10).getJSONArray("list");
-            String account = accountList.getJSONObject(0).getString("id");
-            appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
-            Integer totalAfterAdd = jc.receptorList(Long.parseLong(pp.shopIdZ)).getJSONArray("list").size();
-
-            pcLogin(pp.gwphone, pp.gwpassword, pp.roleId);
-            jc.organizationAccountDelete(account);
-
-            appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
-            Integer totalAfterDelate = jc.receptorList(Long.parseLong(pp.shopIdZ)).getJSONArray("list").size();
+            util.loginPc(ADMIN);
+            StaffAddScene.builder().roleList(r_dList).shopList(shop_list).name(name).phone(phone).build().visitor(visitor).execute();
+            IScene staffPageScene = StaffPageScene.builder().name(name).build();
+            String id = util.toFirstJavaObject(staffPageScene, StaffPageBean.class).getId();
+            util.loginApp(ACCOUNT);
+            int totalAfterAdd = appReceptionReceptorListScene.execute().getJSONArray("list").size();
+            util.loginPc(ACCOUNT);
+            StaffDeleteScene.builder().id(id).build().visitor(visitor).execute();
+            util.loginApp(ACCOUNT);
+            int totalAfterDelete = appReceptionReceptorListScene.execute().getJSONArray("list").size();
             Preconditions.checkArgument(totalAfterAdd - total == 1, "新增接待权限账户，接待人原列表+1");
-            Preconditions.checkArgument(totalAfterDelate - totalAfterAdd == -1, "删除接待权限账户，接待人原列表-1");
-
-
+            Preconditions.checkArgument(totalAfterDelete - totalAfterAdd == -1, "删除接待权限账户，接待人原列表-1");
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
             saveData("新增/删除接待权限账户，接待人原列表+-1");
         }
     }
-
-
 }
