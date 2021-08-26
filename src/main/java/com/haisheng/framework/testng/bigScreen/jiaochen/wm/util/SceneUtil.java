@@ -1069,7 +1069,8 @@ public class SceneUtil extends BasicUtil {
     }
 
     public String getTestDriverStaffId() {
-        return visitor.isDaily() ? "uid_df9293ba" : "uid_35a1d271";
+        //uid_df9293ba JC_DAILY_LXQ
+        return visitor.isDaily() ? EnumAccount.JC_DAILY_LXQ.getUid() : "uid_35a1d271";
     }
 
     /**
@@ -1774,26 +1775,28 @@ public class SceneUtil extends BasicUtil {
     /**
      * @description :获取指定休假的销售
      **/
-    public String getVacationSaleId(){
-        return visitor.isDaily() ? "uid_f1a745c7":"uid_250e621b";
+    public String getVacationSaleId() {
+        return visitor.isDaily() ? "uid_f1a745c7" : "uid_250e621b";
     }
+
     /**
      * @description :获取指定忙碌的销售，用于每日初始化设置忙碌，快速获取忙碌的销售
      **/
-    public String getBusySaleId(){
-        return visitor.isDaily() ? "uid_caf1b799":"uid_a27173d3";
+    public String getBusySaleId() {
+        return visitor.isDaily() ? "uid_caf1b799" : "uid_a27173d3";
     }
+
     /**
      * @description :获取车型id
      **/
-    public Long getBuyCarId(){
-        return visitor.isDaily() ? 335L:21540L;
+    public Long getBuyCarId() {
+        return visitor.isDaily() ? 335L : 21540L;
     }
-
 
 
     /**
      * 获取指定父权限可选择的权限
+     *
      * @param parentRole 父权限
      * @return 权限map
      */
@@ -1858,9 +1861,9 @@ public class SceneUtil extends BasicUtil {
     }
 
     /**
-     * @description : 用于获取当日排班中指定状态的一位销售，
-     * @return : 指定状态的销售 JSONObject，没有则返回 null
      * @param statusId: 状态值：   {0:"空闲中",1:"接待中",2:"忙碌中",3:"休假中"}
+     * @return : 指定状态的销售 JSONObject，没有则返回 null
+     * @description : 用于获取当日排班中指定状态的一位销售，
      **/
     public JSONObject getNeededSale(Integer statusId) {
         return AppSaleScheduleDayListScene.builder().type("PRE").build().execute(visitor, true).getJSONArray("sales_info_list").stream().map(e -> (JSONObject) e).
