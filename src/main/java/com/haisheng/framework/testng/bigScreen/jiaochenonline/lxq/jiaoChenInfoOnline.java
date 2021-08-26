@@ -41,7 +41,7 @@ public class jiaoChenInfoOnline {
     public String filePath = "src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/multimedia/picture/奔驰.jpg";
     public final String stringone = "a";//字符串长度1
     public final String stringten = "a2！啊A" + Integer.toString((int) (Math.random() * 100000));//字符串长度10
-    public final String stringsix = "A" + Integer.toString((int) (Math.random() * 100000));//随机字符串长度6
+    public final String stringsix = "A" + (int) (Math.random() * 100000);//随机字符串长度6
     public final String stringfifty = "自动化创建--ZDHZDH" + Integer.toString((int) (Math.random() * 10)) + "1234567890ABCDeFGHIJ啊啊啊～！@#¥%，：67890";//随机字符串长度50
     public final String stringfifty1 = "ZDHZDH" + Integer.toString((int) (Math.random() * 1000000)) + "1234567890ABCDeFGHIJ啊啊啊啊啊～！@#¥%，：678901";//随机字符串长度51
     public final String string20 = "ZdH啊！_*" + System.currentTimeMillis(); //20位字符串
@@ -70,8 +70,7 @@ public class jiaoChenInfoOnline {
         String online_time = dt.getHistoryDate(0);
         jc.addCarStyle(id, manufacturer, name, online_time);
         //获取车系id
-        Long carStyleId = jc.carStylePage(1, 1, id, name).getJSONArray("list").getJSONObject(0).getLong("id");
-        return carStyleId;
+        return jc.carStylePage(1, 1, id, name).getJSONArray("list").getJSONObject(0).getLong("id");
     }
 
     //创建某品牌车系下的车型，返回车型id
@@ -82,20 +81,19 @@ public class jiaoChenInfoOnline {
         String status1 = "ENABLE";
         jc.addCarModel(brand_id, carStyle_id, name1, year1, status1);
         //获取车系id
-        Long id = jc.carModelPage(1, 1, brand_id, carStyle_id, name1, "", "").getJSONArray("list").getJSONObject(0).getLong("id");
-        return id;
+        return jc.carModelPage(1, 1, brand_id, carStyle_id, name1, "", "").getJSONArray("list").getJSONObject(0).getLong("id");
     }
 
 
     //V 2.0
-    public final Long first_category = 14L; //一级品类id
-    public final String first_category_chin = "自动化一级品类别删"; //一级品类name
+    public final Long first_category = 6251L; //一级品类id
+    public final String first_category_chin = "0813一级品类"; //一级品类name
 
-    public final Long second_category = 15L; //二级品类id
-    public final String second_category_chin = "自动化二级品类别删"; //二级品类name
+    public final Long second_category = 6252L; //二级品类id
+    public final String second_category_chin = "0813二级品类"; //二级品类name
 
-    public final Long third_category = 16L; //三级品类id
-    public final String third_category_chin = "自动化三级品类别删"; //三级品类name
+    public final Long third_category = 6253L; //三级品类id
+    public final String third_category_chin = "0813三级品类"; //三级品类name
 
     public final Long goods_brand = 6L; //商品品牌
 
@@ -115,7 +113,7 @@ public class jiaoChenInfoOnline {
     public JSONObject newSecondCategory(String name, String... firstid) {
         JSONObject obj = new JSONObject();
         String logo = jc.pcFileUploadNew(new ImageUtil().getImageBinary(filePath)).getString("pic_path");
-        int code = 0;
+        int code;
         if (firstid.length == 0) {
             code = jc.categoryCreate(false, name, "SECOND_CATEGORY", Long.toString(first_category), logo, null).getInteger("code");
         } else {
@@ -131,7 +129,7 @@ public class jiaoChenInfoOnline {
     public JSONObject newThirdCategory(String name, String... secid) {
         JSONObject obj = new JSONObject();
         String logo = jc.pcFileUploadNew(new ImageUtil().getImageBinary(filePath)).getString("pic_path");
-        int code = 0;
+        int code;
         if (secid.length == 0) {
             code = jc.categoryCreate(false, name, "THIRD_CATEGORY", Long.toString(second_category), logo, null).getInteger("code");
         } else {
@@ -157,14 +155,12 @@ public class jiaoChenInfoOnline {
     public JSONObject newGoodBrand(String... cs) {
         JSONObject obj = new JSONObject();
         String logo = jc.pcFileUploadNew(new ImageUtil().getImageBinary(filePath)).getString("pic_path");
-        JSONObject obj1 = new JSONObject();
+        JSONObject obj1;
         if (cs.length > 0) {
             obj1 = jc.BrandCreat(false, null, cs[0], cs[1], logo);
         } else {
             obj1 = jc.BrandCreat(false, null, "name" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000)), "品牌desc", logo);
         }
-
-
         obj.put("code", obj1.getInteger("code"));
         obj.put("id", obj1.getJSONObject("data").getLong("id"));
         return obj;

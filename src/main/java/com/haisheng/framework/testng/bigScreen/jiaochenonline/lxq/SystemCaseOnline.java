@@ -6,6 +6,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterators;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.pc.integralmall.CreateCategoryScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochen.xmf.intefer.PcCreateGoods;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.ScenarioUtilOnline;
@@ -188,7 +189,7 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
 
     //品牌车系--正常
 
-    @Test(dataProvider = "CAR_STYLE",enabled = false)
+    @Test(dataProvider = "CAR_STYLE", enabled = false)
     public void addCarStyle(String manufacturer, String name, String online_time) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -385,7 +386,7 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
 
 
     //品牌车系车型 --正常
-    @Test(dataProvider = "CAR_MODEL",enabled = false) //ok
+    @Test(dataProvider = "CAR_MODEL", enabled = false) //ok
     public void addCarModel(String name, String year, String status) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -583,8 +584,6 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
     /**
      *    PC 门店管理-系统测试
      */
-
-
 
 
     /**
@@ -868,8 +867,7 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
     public void categoryAddSecondErr() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String logo = jc.pcFileUploadNew(new ImageUtil().getImageBinary(filePath)).getString("pic_path");
-            int code = jc.categoryCreate(false, "name", "SECOND_CATEGORY", "99999", logo, null).getInteger("code");
+            int code = CreateCategoryScene.builder().categoryName("name").categoryLevel("SECOND_CATEGORY").belongCategory(9999L).belongPic(info.getLogo()).build().visitor(visitor).getResponse().getCode();
             Preconditions.checkArgument(code == 1001, "状态码期待1001，实际" + code);
         } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
@@ -878,21 +876,12 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(dataProvider = "CATEGORYID")
-    public void categoryAdd2OR3Err(String level, String fatherid) {
+    @Test(dataProvider = "CATEGORY_ID")
+    public void categoryAdd2OR3Err(String name, String level, Long belongCategory) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            String name = info.stringsix + "aa";
-
-            Long id = jc.categoryCreate(false, name, level, fatherid, info.getLogo(), null).getJSONObject("data").getLong("id");
-
-            int code = jc.categoryCreate(false, name, level, fatherid, info.getLogo(), null).getInteger("code");
+            int code = CreateCategoryScene.builder().categoryName(name).categoryLevel(level).belongCategory(belongCategory).belongPic(info.getLogo()).build().visitor(visitor).getResponse().getCode();
             Preconditions.checkArgument(code == 1001, "状态码期待1001，实际" + code);
-
-            //删除品类
-            jc.categoryDel(id, true);
-
-
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
@@ -900,11 +889,11 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @DataProvider(name = "CATEGORYID")
-    public Object[] categroyid() {
-        return new String[][]{
-                {"SECOND_CATEGORY", Long.toString(info.first_category)},
-                {"THIRD_CATEGORY", Long.toString(info.second_category)},
+    @DataProvider(name = "CATEGORY_ID")
+    public Object[] categoryId() {
+        return new Object[][]{
+                {info.second_category_chin, "SECOND_CATEGORY", info.first_category},
+                {info.third_category_chin, "THIRD_CATEGORY", info.second_category},
 
         };
     }
@@ -2413,7 +2402,7 @@ public class SystemCaseOnline extends TestCaseCommon implements TestCaseStd {
             for (int j = 0; j < list3.size(); j++) {
                 JSONObject obj = list3.getJSONObject(j);
 //                if (obj.getString("category_name").length() == 7 && obj.getString("category_name").contains("品类")) {
-                if (obj.getInteger("num")==0) {
+                if (obj.getInteger("num") == 0) {
                     Long id = obj.getLong("id");
                     jc.categoryChgStatus(id, false, false);
                     jc.categoryDel(id, false);

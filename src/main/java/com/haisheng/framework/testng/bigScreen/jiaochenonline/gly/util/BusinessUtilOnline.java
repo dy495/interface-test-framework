@@ -1364,12 +1364,7 @@ public class BusinessUtilOnline extends BasicUtil {
      * 2021-3-17
      */
     public ManagePageBean getRecruitActivityFinish() {
-        List<Long> ids = new ArrayList<>();
-        ManagePageBean managePageBean = getActivity(ActivityStatusEnum.FINISH, 2);
-        if (managePageBean != null) {
-            return managePageBean;
-        }
-        return null;
+        return getActivity(ActivityStatusEnum.FINISH, 2);
     }
 
     /**
@@ -1659,16 +1654,14 @@ public class BusinessUtilOnline extends BasicUtil {
      * 活动审批数据-data
      */
     public JSONObject getActivityApprovalDate() {
-        IScene scene = ActivityManageDateScene.builder().build();
-        return visitor.invokeApi(scene);
+        return ActivityManageDateScene.builder().build().visitor(visitor).execute();
     }
 
     /**
      * 活动审批列表返回值--data
      */
     public JSONObject getActivityManagePage(int status) {
-        IScene scene = ActivityManagePageScene.builder().page(1).size(10).approvalStatus(status).build();
-        return visitor.invokeApi(scene);
+        return ActivityManagePageScene.builder().page(1).size(10).approvalStatus(status).build().visitor(visitor).execute();
     }
 
 
@@ -1918,7 +1911,7 @@ public class BusinessUtilOnline extends BasicUtil {
      */
     public int appointmentActivityList() {
         Integer lastValue = null;
-        JSONArray list = null;
+        JSONArray list;
         int num = 0;
         do {
             IScene scene = AppointmentActivityListScene.builder().lastValue(lastValue).size(10).build();
@@ -2126,7 +2119,7 @@ public class BusinessUtilOnline extends BasicUtil {
      */
     public ManagePageBean getContentMarketingRevoke() {
         IScene activityManageListScene = ActivityManagePageScene.builder().page(1).size(10).build();
-        int pages = visitor.invokeApi(activityManageListScene).getInteger("pages");
+        int pages = activityManageListScene.visitor(visitor).execute().getInteger("pages");
         for (int page = 1; page <= pages; page++) {
             IScene scene1 = ActivityManagePageScene.builder().page(page).size(10).build();
             JSONArray list = visitor.invokeApi(scene1).getJSONArray("list");

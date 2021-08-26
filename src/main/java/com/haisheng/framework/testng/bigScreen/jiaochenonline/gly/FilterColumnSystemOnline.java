@@ -82,7 +82,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :接待管理-时间的筛选
      * @date :2020/12/16
      **/
-    @Test(enabled = true)
+    @Test()
     public void selectAppointmentRecodeTimeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -114,7 +114,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :接待管理-筛选栏参数全填查询
      * @date :2020/11/28
      **/
-    @Test(enabled = true)
+    @Test()
     public void selectAppointmentRecodeAllFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -157,7 +157,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :接待管路-筛选栏参数多项查询
      * @date :2020/11/28
      **/
-    @Test(enabled = true)
+    @Test()
     public void selectAppointmentRecodeSomeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -422,7 +422,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description 售后客户查询-导入时间的筛选
      * @date :2020/12/16
      **/
-    @Test(enabled = true)
+    @Test()
     public void selectAfterSleCustomerManageTimeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -449,7 +449,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description 售后客户查询-开单时间的筛选
      * @date :2020/12/16
      **/
-    @Test(enabled = true)
+    @Test()
     public void selectAfterSleCustomerManageCreateTimeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -476,7 +476,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description 售后客户查询-购车时间的筛选
      * @date :2020/12/16
      **/
-    @Test(enabled = true)
+    @Test()
     public void selectAfterSleCustomerManageOrderTimeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -843,7 +843,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :预约记录-筛选栏填写全部参数查询
      * @date :2020/11/24
      **/
-    @Test(enabled = true)
+    @Test()
     public void appointmentRecordAllFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -892,7 +892,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :预约记录-筛选栏填写参数多项查询
      * @date :2020/11/28
      **/
-    @Test(enabled = true)
+    @Test()
     public void appointmentRecordSomeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1128,7 +1128,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :卡券管理-筛选栏填写全部参数查询
      * @date :2020/11/24
      **/
-    @Test(enabled = true)
+    @Test()
     public void voucherFormAllFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1168,7 +1168,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :卡券管理-筛选栏填写多项参数查询
      * @date :2020/11/28
      **/
-    @Test(enabled = true)
+    @Test()
     public void voucherFormSomeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1200,7 +1200,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :卡券管理查询-筛选栏参数不填写
      * @date :2020/11/27
      **/
-    @Test(enabled = true)
+    @Test()
     public void voucherFormEmptyFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1261,7 +1261,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description 核销记录查询-时间的筛选
      * @date :2020/12/16
      **/
-    @Test(enabled = true)
+    @Test()
     public void verificationRecordTimeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1292,7 +1292,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :核销记录-筛选栏填写全部参数查询
      * @date :2020/11/24
      **/
-    @Test(enabled = true)
+    @Test()
     public void verificationRecordAllFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1331,7 +1331,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :核销记录-筛选栏填写多项参数查询
      * @date :2020/11/28
      **/
-    @Test(enabled = true)
+    @Test()
     public void verificationRecordSomeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1366,7 +1366,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :核销记录查询-筛选栏参数不填写
      * @date :2020/11/27
      **/
-    @Test(enabled = true)
+    @Test()
     public void verificationRecordEmptyFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1903,7 +1903,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :消息表单-筛选栏填写全部参数查询
      * @date :2020/11/28
      **/
-    @Test(enabled = true)
+    @Test()
     public void messageFormAllFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -1935,7 +1935,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :消息表单-筛选栏填写多项参数查询--校验前五页数据
      * @date :2020/11/28
      **/
-    @Test(enabled = true)
+    @Test()
     public void messageFormSomeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2010,7 +2010,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description 内容管理-文章表单-时间的筛选
      * @date :2020/12/16
      **/
-    @Test(enabled = true)
+    @Test()
     public void articleTimeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2567,7 +2567,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :车型列表查询-筛选栏参数不填写
      * @date :2020/11/27
      **/
-    @Test(enabled = true)
+    @Test()
     public void carModelListEmptyFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2700,7 +2700,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :员工列表查询-筛选栏参数不填写
      * @date :2020/11/27
      **/
-    @Test(enabled = true)
+    @Test()
     public void staffListEmptyFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -2879,7 +2879,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :导出记录列表-筛选栏填写全部参数查询
      * @date :2020/11/27
      **/
-    @Test(enabled = true)
+    @Test()
     public void exportListAllFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -3037,7 +3037,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :消息记录列表-筛选栏填写全部参数查询
      * @date :2020/11/27
      **/
-    @Test(enabled = true)
+    @Test()
     public void pushMsgListAllFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -3175,7 +3175,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :V2.0-洗车管理列表--筛选栏全部填写查询
      * @date :2021-2-1
      **/
-    @Test(enabled = true)
+    @Test()
     public void washCarManagerPageSomeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -3208,7 +3208,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :V2.0-洗车管理列表--筛选栏多选查询
      * @date :2021-2-1
      **/
-    @Test(enabled = true)
+    @Test()
     public void washCarManagerPageAllFielter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -3343,7 +3343,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :V2.0-调整洗车次数--筛选栏全部填写查询
      * @date :2021-2-2
      **/
-    @Test(enabled = true)
+    @Test()
     public void AdjustNumberRecordAllFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -3379,7 +3379,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :V2.0-调整洗车次数--筛选栏多项填写查询
      * @date :2021-2-2
      **/
-    @Test(enabled = true)
+    @Test()
     public void AdjustNumberRecordSomeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -3471,7 +3471,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description 优惠券领取记录-时间的筛选
      * @date :2020/12/16
      **/
-    @Test(enabled = true)
+    @Test()
     public void voucherManageSendRecordTimeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -3611,7 +3611,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description 优惠券作废记录-时间的筛选
      * @date :2020/12/16
      **/
-    @Test(enabled = true)
+    @Test()
     public void voucherInvalidRecordTimeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -4596,7 +4596,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @date :2021-3-16
      * @deprecated V3.0卡券管理-增发记录-筛选栏时间搜索
      */
-    @Test(enabled = true)
+    @Test()
     public void voucherManageAdditionalRecordTimeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -4628,7 +4628,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :V3.1维修预约记录-筛选栏单项查询
      * @date :2021/3/26
      **/
-    @Test(dataProvider = "SELECT_appointmentRecordFilter", dataProviderClass = Constant.class, enabled = true)
+    @Test(dataProvider = "SELECT_appointmentRecordFilter", dataProviderClass = Constant.class)
     public void maintainAppointmentRecordOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -4687,7 +4687,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description V3.1预约维修记录查询-时间的筛选
      * @date :2021/3/26
      **/
-    @Test(enabled = true)
+    @Test()
     public void maintainAppointmentRecordTimeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -4822,7 +4822,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description :V3.1预约试驾记录-筛选栏单项查询
      * @date :2021/3/26
      **/
-    @Test(dataProvider = "SELECT_appointmentDriverRecordFilter", dataProviderClass = Constant.class, enabled = true)
+    @Test(dataProvider = "SELECT_appointmentDriverRecordFilter", dataProviderClass = Constant.class)
     public void driveAppointmentRecordOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -4869,7 +4869,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description V3.1预约试驾记录查询-时间的筛选
      * @date :2021/3/26
      **/
-    @Test(enabled = true)
+    @Test()
     public void maintainDriverAppointmentRecordTimeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -4904,7 +4904,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @date :2021-3-16
      * @deprecated V3.1销售客户接待列表-筛选栏单项搜索
      */
-    @Test(dataProvider = "SELECT_preSalesReceptionPageRecordFilter", dataProviderClass = Constant.class, enabled = true)
+    @Test(dataProvider = "SELECT_preSalesReceptionPageRecordFilter", dataProviderClass = Constant.class)
     public void preSaleCustomerPageRecordOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -4935,7 +4935,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @date :2021-3-26
      * @deprecated V3.1销售接待列表-筛选栏时间搜索
      */
-    @Test(enabled = true)
+    @Test()
     public void salesReceptionPageTimeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -4966,7 +4966,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @date :2021-3-26
      * @deprecated V3.1流失客户接待列表-筛选栏单项搜索
      */
-    @Test(dataProvider = "SELECT_AfterSleCustomerManageFilter", dataProviderClass = Constant.class, enabled = true)
+    @Test(dataProvider = "SELECT_AfterSleCustomerManageFilter", dataProviderClass = Constant.class)
     public void lossCustomerPageRecordOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -5028,7 +5028,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description 流失客户查询-导入时间的筛选
      * @date :2020/12/16
      **/
-    @Test(enabled = true)
+    @Test()
     public void selectLossCustomerManageTimeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -5055,7 +5055,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description 流失客户查询-开单时间的筛选
      * @date :2020/12/16
      **/
-    @Test(enabled = true)
+    @Test()
     public void selectLossCustomerManageCreateTimeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -5082,7 +5082,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @description 流失客户查询-购车时间的筛选
      * @date :2020/12/16
      **/
-    @Test(enabled = true)
+    @Test()
     public void selectLossCustomerManageOrderTimeFilter() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -5110,7 +5110,7 @@ public class FilterColumnSystemOnline extends TestCaseCommon implements TestCase
      * @date :2021-3-26
      * @deprecated V3.1登录日志列表-筛选栏单项搜索
      */
-    @Test(dataProvider = "SELECT_loginLogStaffRecordFilter", dataProviderClass = Constant.class, enabled = true)
+    @Test(dataProvider = "SELECT_loginLogStaffRecordFilter", dataProviderClass = Constant.class)
     public void loginLogStaffRecordOneFilter(String pram, String output) {
         logger.logCaseStart(caseResult.getCaseName());
         try {

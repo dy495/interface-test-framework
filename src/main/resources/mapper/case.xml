@@ -61,6 +61,7 @@
             response=#{response},
             expect=#{expect},
             result =#{result},
+            case_name=#{caseName},
             case_description=#{caseDescription},
             fail_reason=#{failReason},
             edit_time=#{editTime},

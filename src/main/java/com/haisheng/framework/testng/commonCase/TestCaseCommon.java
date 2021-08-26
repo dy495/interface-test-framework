@@ -239,16 +239,6 @@ public class TestCaseCommon {
         return apiResponse;
     }
 
-    public JSONObject sendRequestCode1000(String router, String[] resource, String json) throws Exception {
-
-        logger.info(router);
-
-        ApiResponse apiResponse = sendRequest(router, resource, json);
-        checkCode(apiResponse, router, StatusCode.SUCCESS);
-
-        return JSON.parseObject(JSON.toJSONString(apiResponse));
-    }
-
     public void checkCode(String gateway, ApiResponse apiResponse, String router, int expectCode) throws Exception {
         try {
             if (null == apiResponse) {
@@ -257,23 +247,6 @@ public class TestCaseCommon {
             int codeRes = apiResponse.getCode();
             if (codeRes != expectCode) {
                 String msg = "gateway: " + gateway + ", router: " + router + ". \nresponse: " + JSON.toJSONString(apiResponse) +
-                        "actual code: " + codeRes + " expect code: " + expectCode + ".";
-                throw new Exception(msg);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
-        }
-    }
-
-    public void checkCode(ApiResponse apiResponse, String router, int expectCode) throws Exception {
-        try {
-            if (null == apiResponse) {
-                throw new Exception("api");
-            }
-            int codeRes = apiResponse.getCode();
-            if (codeRes != expectCode) {
-                String msg = "gateway: " + commonConfig.gateway + ", router: " + router + ". \nresponse: " + JSON.toJSONString(apiResponse) +
                         "actual code: " + codeRes + " expect code: " + expectCode + ".";
                 throw new Exception(msg);
             }
@@ -340,17 +313,23 @@ public class TestCaseCommon {
         return httpGet(port, path);
     }
 
+    /**
+     * 被好多调用，无法删除
+     */
     public String httpGet(String ipPort, String path) throws HttpProcessException {
         Api api = new Api.Builder().method("GET").ipPort(ipPort).path(path).build();
         return execute(api, false, false);
     }
 
+    /**
+     * 被好多调用，无法删除
+     */
     public String httpPostWithCheckCode(String path, String json, String IpPort) {
         return httpPost(IpPort, path, json, true, false);
     }
 
     /**
-     * 登录使用
+     * 登录使用，被好多调用，无法删除
      *
      * @param path   路径
      * @param object 请求体
@@ -360,10 +339,16 @@ public class TestCaseCommon {
         httpPost(port, path, JSONObject.toJSONString(object), true, true);
     }
 
+    /**
+     * 被好多调用，无法删除
+     */
     public String httpPost(String path, String json, String IpPort) throws Exception {
         return httpPost(IpPort, path, json, false, false);
     }
 
+    /**
+     * 被好多调用，无法删除
+     */
     public String httpPost(String port, String path, String requestBody, boolean checkCode, boolean hasToken) {
         Api api = new Api.Builder().method("POST").ipPort(port).path(path).requestBody(requestBody).build();
         return execute(api, checkCode, hasToken);
@@ -399,8 +384,6 @@ public class TestCaseCommon {
             config.url(api.getUrl());
             response = HttpClientUtil.get(config);
         } else {
-            config.url("").json("");
-            response = HttpClientUtil.upload(config);
             throw new RuntimeException("未指定请求方式");
         }
         logger.info("response：{}", response);

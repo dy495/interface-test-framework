@@ -159,7 +159,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
     }
 
 //    @Test(description = "今日任务未完成接待（预约）数（分子）==【任务-接待（预约）】列表条数")  //ok
-//    public void Jc_appointmentPageAndtodaydate() {
+//    public void appointmentPageAndtodaydate() {
 //        logger.logCaseStart(caseResult.getCaseName());
 //        try {
 //            appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
@@ -180,7 +180,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
 //    }
 //
 //    @Test(description = "顾问：今日任务接待总数（分母）==【pc接待管理】接待时间为今天&&接待人为app登录接待顾问 数据和",enabled = false)  //数据待下期规划
-//    public void Jc_receptionPageAndpctodaydate() {
+//    public void receptionPageAndpctodaydate() {
 //        logger.logCaseStart(caseResult.getCaseName());
 //        try {
 //            appLogin(pp.jdgw, pp.gwpassword, pp.roleidJdgw);
@@ -233,7 +233,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
 //    }
 //
 //    @Test(description = "店长：今日任务接待总数（分母）==【pc接待管理】接待时间为今天数据和",enabled = false)  //数据待下期规划
-//    public void Jc_receptionPageAndpctodaydate2() {
+//    public void receptionPageAndpctodaydate2() {
 //        logger.logCaseStart(caseResult.getCaseName());
 //        try {
 //            appLogin(pp.dzphone, pp.dzcode, pp.dzroleId);
@@ -284,7 +284,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
 //    }
 //
 //    @Test(description = "集团：今日任务接待总数（分母）==【pc接待管理】接待时间为今天数据和",enabled = false)  //数据待下期规划
-//    public void Jc_receptionPageAndpctodaydate3() {
+//    public void receptionPageAndpctodaydate3() {
 //        logger.logCaseStart(caseResult.getCaseName());
 //        try {
 //            commonConfig.shopId = "-1";
@@ -351,7 +351,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
 
     //核销码异常验证  ok
     @Test(description = "app核销码异常验证", dataProvider = "HEXIAONUM")
-    public void Jc_hexiaoAB(String num) {
+    public void hexiaoAB(String num) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);
@@ -366,7 +366,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
 
     //车牌号异常验证  ok
     @Test(description = "app接待车牌号验证", dataProvider = "PLATE", dataProviderClass = ScenarioUtil.class)
-    public void Jc_ReceiptAb(String plate) {
+    public void ReceiptAb(String plate) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int code = jc.appReceptionAdmitcode(plate).getInteger("code");
@@ -380,7 +380,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
 
 
     @Test(description = "登录登出验证")
-    public void Jc_appLoginNor() {
+    public void appLogout() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             LoginApp.builder().phone(pp.jdgw).verificationCode(pp.jdgwpassword).build().visitor(visitor).execute();
@@ -397,7 +397,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
      * @date :2020/12/17 11:45
      **/
     @Test(dataProvider = "ERR_PHONE", dataProviderClass = DataAbnormal.class)
-    public void Jc_apploginAb(String phone) {
+    public void apploginAb(String phone) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             int code = jc.appLogin2(phone, "000000", false).getInteger("code");
@@ -410,7 +410,7 @@ public class JcAppOnline extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test(dataProvider = "CODE", dataProviderClass = DataAbnormal.class)
-    public void Jc_apploginAb2(String code) {
+    public void apploginAb2(String code) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             appLogin(pp.jdgw, pp.jdgwpassword, pp.roleidJdgw);

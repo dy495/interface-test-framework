@@ -81,31 +81,25 @@ public class DataCaseOnline extends TestCaseCommon implements TestCaseStd {
 
 
     @Test
-    public void editshop() {
+    public void editShop() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-
-            String simple_name = "简称" + Integer.toString((int) (Math.random() * 100000));
+            String simple_name = "简称" + (int) (Math.random() * 100000);
             String name = "QA测试门店全称";
             String district_code = "222402";
             String address = "地址" + System.currentTimeMillis();
-            String sale_tel = "1380000" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000));
-            String service_tel = "1389999" + Integer.toString((int) ((Math.random() * 9 + 1) * 1000));
-            String longitude = "129." + Integer.toString((int) (Math.random() * 1000));
-            String latitude = "42." + Integer.toString((int) (Math.random() * 10000));
-            String appointment_status = "DISABLE";
-            String washing_status = "DISABLE";
-
+            String sale_tel = "1380000" + (int) ((Math.random() * 9 + 1) * 1000);
+            String service_tel = "1389999" + (int) ((Math.random() * 9 + 1) * 1000);
+            String longitude = "129." + (int) (Math.random() * 1000);
+            String latitude = "42." + (int) (Math.random() * 10000);
             JSONArray arr = new JSONArray();
             arr.add(info.BrandIDOnline);
-
             //修改前获取门店列表数
             int bef = jc.shopPage(1, 1, "").getInteger("total");
-
             //每次修改固定shop
             int code = EditScene.builder().id(20709L).name(name).simpleName(simple_name).districtCode(district_code).address(address).brandList(arr)
                     .saleTel(sale_tel).serviceTel(service_tel).longitude(Double.valueOf(longitude)).latitude(Double.valueOf(latitude)).avatarPath(info.getLogo()).customerServiceTel(sale_tel).rescueTel(sale_tel)
-                    .build().execute(visitor, false).getInteger("code");
+                    .build().visitor(visitor).getResponse().getCode();
             Preconditions.checkArgument(code == 1000, "修改门店，状态码" + code);
 
             int after = jc.shopPage(1, 1, "").getInteger("total");
@@ -135,9 +129,7 @@ public class DataCaseOnline extends TestCaseCommon implements TestCaseStd {
 
             Preconditions.checkArgument(num == 0, "修改门店，门店列表增加了" + num);
 
-        } catch (AssertionError e) {
-            appendFailReason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
             saveData("PC【门店管理】，修改门店, 列表数量+0，与修改后信息一致");

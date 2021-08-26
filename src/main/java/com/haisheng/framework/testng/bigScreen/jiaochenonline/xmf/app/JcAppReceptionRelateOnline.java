@@ -4,9 +4,12 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.bean.DataTemp;
+import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.jiaochen.ScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.JcFunctionOnline;
 import com.haisheng.framework.testng.bigScreen.jiaochenonline.xmf.PublicParamOnline;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -14,8 +17,6 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import com.haisheng.framework.util.QADbProxy;
-import com.haisheng.framework.util.QADbUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -29,7 +30,10 @@ import java.lang.reflect.Method;
  **/
 
 public class JcAppReceptionRelateOnline extends TestCaseCommon implements TestCaseStd {
+    EnumAccount account = EnumAccount.JC_ONLINE_LXQ;
     EnumTestProduct product = EnumTestProduct.JC_ONLINE_JD;
+    VisitorProxy visitor = new VisitorProxy(product);
+    SceneUtil util = new SceneUtil(visitor);
     ScenarioUtil jc = new ScenarioUtil();
     String dataName = "app_receptionOnLine";
 
@@ -68,9 +72,7 @@ public class JcAppReceptionRelateOnline extends TestCaseCommon implements TestCa
         beforeClassInit(commonConfig);
 
         logger.debug("jc: " + jc);
-        jc.appLogin(pp.jdgw, pp.jdgwpassword);
-
-
+        util.loginApp(account);
     }
 
 
@@ -178,11 +180,11 @@ public class JcAppReceptionRelateOnline extends TestCaseCommon implements TestCa
     public void taskEquelDate() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            jc.appLogin(pp.jdgw, pp.jdgwpassword);
+            util.loginApp(account);
             String name = pp.nameJdgw;
             String type = "all";   //home \all
             //获取今日任务数
-            int tasknum[] = pf.appTask();
+            int[] tasknum = pf.appTask();
 
             Integer appointmentcountZ = 0;  //预约
             Integer appointmentcountM = 0;
@@ -201,8 +203,8 @@ public class JcAppReceptionRelateOnline extends TestCaseCommon implements TestCa
                 String pending_appointment = list_data.getString("pending_appointment");
                 if (!pending_appointment.contains("-")) {
                     String[] appointment = pending_appointment.split("/");
-                    appointmentcountZ += Integer.valueOf(appointment[0]);
-                    appointmentcountM += Integer.valueOf(appointment[1]);
+                    appointmentcountZ += Integer.parseInt(appointment[0]);
+                    appointmentcountM += Integer.parseInt(appointment[1]);
                 }
 
                 //接待
