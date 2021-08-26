@@ -6,15 +6,16 @@ import com.aliyun.openservices.shade.org.apache.commons.lang3.time.DateUtils;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.scene.IScene;
+import com.haisheng.framework.testng.bigScreen.itemMall.common.enumerator.RegionTypeEnum;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.overview.OverviewVenueOverviewScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.visittrend.history.FullCourtTrendHistoryScene;
+import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.visittrend.history.RegionTrendScene;
 import com.haisheng.framework.util.DateTimeUtil;
 import org.apache.poi.poifs.filesystem.NDocumentOutputStream;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.*;
 
 public class MallBusinessUtil {
     private final VisitorProxy visitor;
@@ -198,9 +199,6 @@ public class MallBusinessUtil {
         return number;
     }
 
-    /**
-     *
-     */
 
 
 
