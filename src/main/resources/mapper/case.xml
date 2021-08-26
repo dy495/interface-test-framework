@@ -3,20 +3,20 @@
 <mapper namespace="com.haisheng.framework.dao.ICaseDao">
     <resultMap id="CaseMap" type="com.haisheng.framework.model.bean.Case">
         <result property="id" column="id"/>
-        <result property="applicationId" column="application_id" />
-        <result property="configId" column="config_id" />
-        <result property="caseName" column="case_name" />
-        <result property="caseDescription" column="case_description" />
-        <result property="expect" column="expect" />
-        <result property="response" column="response" />
-        <result property="requestData" column="request_data" />
-        <result property="result" column="result" />
-        <result property="qaOwner" column="qa_owner" />
-        <result property="editTime" column="edit_time" />
-        <result property="failReason" column="fail_reason" />
-        <result property="canManualRun" column="can_manual_run" />
-        <result property="runByCi" column="run_by_ci" />
-        <result property="ciCmd" column="ci_cmd" />
+        <result property="applicationId" column="application_id"/>
+        <result property="configId" column="config_id"/>
+        <result property="caseName" column="case_name"/>
+        <result property="caseDescription" column="case_description"/>
+        <result property="expect" column="expect"/>
+        <result property="response" column="response"/>
+        <result property="requestData" column="request_data"/>
+        <result property="result" column="result"/>
+        <result property="qaOwner" column="qa_owner"/>
+        <result property="editTime" column="edit_time"/>
+        <result property="failReason" column="fail_reason"/>
+        <result property="canManualRun" column="can_manual_run"/>
+        <result property="runByCi" column="run_by_ci"/>
+        <result property="ciCmd" column="ci_cmd"/>
     </resultMap>
 
 
@@ -26,24 +26,22 @@
             useGeneratedKeys="true"
             keyProperty="id">
         <![CDATA[
-            insert into t_case (
-                id,
-                application_id,
-                config_id,
-                case_name,
-                case_description,
-                expect,
-                request_data,
-                response,
-                result,
-                qa_owner,
-                edit_time,
-                fail_reason,
-                can_manual_run,
-                run_by_ci,
-                ci_cmd
-            ) values (
-                #{id},
+        insert into t_case (id,
+                            application_id,
+                            config_id,
+                            case_name,
+                            case_description,
+                            expect,
+                            request_data,
+                            response,
+                            result,
+                            qa_owner,
+                            edit_time,
+                            fail_reason,
+                            can_manual_run,
+                            run_by_ci,
+                            ci_cmd)
+        values (#{id},
                 #{applicationId},
                 #{configId},
                 #{caseName},
@@ -57,12 +55,13 @@
                 #{failReason},
                 #{canManualRun},
                 #{runByCi},
-                #{ciCmd}
-            ) ON DUPLICATE KEY UPDATE
+                #{ciCmd}) ON DUPLICATE KEY
+        UPDATE
             request_data=#{requestData},
             response=#{response},
             expect=#{expect},
-            result=#{result},
+            result =#{result},
+            case_description=#{caseDescription},
             fail_reason=#{failReason},
             edit_time=#{editTime},
             can_manual_run=#{canManualRun},
