@@ -1,9 +1,14 @@
 package com.haisheng.framework.testng.bigScreen.jiaochen.mc;
 
+import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.saleschedule.AppSaleScheduleDayListScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.saleschedule.AppSaleScheduleGroupListScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.saleschedule.AppSaleScheduleMonthListScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -16,6 +21,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 public class DataCase extends TestCaseCommon implements TestCaseStd {
     private static final EnumTestProduct PRODUCE = EnumTestProduct.JC_DAILY_JD;
@@ -59,9 +65,30 @@ public class DataCase extends TestCaseCommon implements TestCaseStd {
 
     @Test(description = "按组排班，排班列表数=组别对应的人数")
     public void groupMode(){
-
+        try {
+            JSONObject pre = AppSaleScheduleDayListScene.builder().type("PRE").build().visitor(visitor).execute();
+            String groupName = pre.getString("group_name");
+            int saleNum = pre.getJSONArray("sales_info_list").size();
+            Long groupId = pre.getLong("group_id");
+            String today = dt.getHistoryDate(0);
+            String month = today.substring(0,7);
+            String setGroupName = AppSaleScheduleMonthListScene.builder().type("PRE").date(month).size(20).build().visitor(visitor).execute().getJSONArray("list")
+                    .stream().map(e -> (JSONObject) e).filter(e -> Objects.equals(today, e.getString("schedule_time"))).findFirst().get().getString("group_name");
+            Preconditions.checkArgument(Objects.equals(groupName,setGroupName),"排班与设置不一致，排班设置组："+setGroupName+"实际显示组别："+groupName);
+            int groupSaleNum = AppSaleScheduleGroupListScene.builder().type("PRE").groupId(groupId).build().visitor(visitor).execute().getJSONArray("group_infos")
+                    .stream().map(e -> (JSONObject) e).filter(e->e.getLong("group_id")==groupId).map(e->e.getJSONArray("sales_info_list")).findFirst().get().size();
+            Preconditions.checkArgument(saleNum==groupSaleNum,"排班列表数!=组内的人员数，组内人员数："+groupName+"排班列表数"+saleNum);
+        }catch (AssertionError | Exception e){
+            collectMessage(e);
+        }finally {
+            saveData("按组排班，排班列表数=组别对应的人数");
+        }
     }
 
+    @Test(description = "今日任务销售接待：分子 = 今日未完成的主客接待记录；分母 = 今日所有的接待数（主客+陪客）")
+    public void todayTaskPreReception(){
+
+    }
 
 
 
