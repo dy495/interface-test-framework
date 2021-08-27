@@ -46,4 +46,5 @@ public class WechatCustomerPageScene extends BaseScene {
     public void setPage(Integer page) {
         this.page = page;
     }
+
 }

@@ -91,6 +91,8 @@ public interface IScene {
      */
     JSONObject upload(VisitorProxy visitor);
 
+    JSONObject upload();
+
     /**
      * 移除键keys
      *

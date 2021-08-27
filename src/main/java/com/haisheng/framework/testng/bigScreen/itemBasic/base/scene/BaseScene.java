@@ -115,6 +115,14 @@ public abstract class BaseScene implements IScene {
      */
     @Override
     public JSONObject upload(@NotNull VisitorProxy visitor) {
+        this.visitor = visitor;
+        Preconditions.checkNotNull(getBody().getString("filePath"), "文件路径为空");
+        String filePath = getBody().getString("filePath");
+        return visitor.upload(getPath(), filePath);
+    }
+
+    @Override
+    public JSONObject upload() {
         Preconditions.checkNotNull(getBody().getString("filePath"), "文件路径为空");
         String filePath = getBody().getString("filePath");
         return visitor.upload(getPath(), filePath);
