@@ -49,12 +49,12 @@ public class MallSystemOnlineCase extends TestCaseCommon implements TestCaseStd 
     public void initial() {
         logger.debug("before class initial");
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_MENDIAN_ONLINE_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_SHOPMALL_Online_SERVICE;
         commonConfig.checklistQaOwner = EnumChecklistUser.GLY.getName();
         commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.MALL_ONLINE_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc() + commonConfig.checklistQaOwner);
         commonConfig.dingHook = DingWebhook.ONLINE_STORE_MANAGEMENT_PLATFORM_GRP;
-        commonConfig.setShopId(product.getShopId()).setReferer(product.getReferer()).setRoleId(roleId).setProduct(roleId).setMallId(mallId);
+        commonConfig.setShopId(product.getShopId()).setReferer(product.getReferer()).setRoleId(roleId).setProduct(product.getAbbreviation()).setMallId(mallId);
         beforeClassInit(commonConfig);
     }
 
