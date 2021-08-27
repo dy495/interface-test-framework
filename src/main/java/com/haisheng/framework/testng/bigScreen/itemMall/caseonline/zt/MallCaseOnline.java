@@ -1,20 +1,29 @@
-package com.haisheng.framework.testng.bigScreen.itemMall.casedaily.zt;
+package com.haisheng.framework.testng.bigScreen.itemMall.caseonline.zt;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
-import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.*;
+import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.enumerator.AccountEnum;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.auth.AuthTreeScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.auth.role.RoleAddScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.auth.role.RoleDeleteScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.auth.role.RoleEditScene;
+import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.auth.role.StatusChangeScene;
+import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.auth.staff.StaffAddScene;
+import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.auth.staff.StaffDeleteScene;
+import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.auth.staff.StaffEditScene;
+import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.file.FileUploadScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.overview.OverviewShopOverviewScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.shop.CustomerTrendScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.shop.ShopDetailScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.shop.ShopPageScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.shop.ShopFloorListScene;
-import com.haisheng.framework.testng.bigScreen.itemMall.common.util.*;
+import com.haisheng.framework.testng.bigScreen.itemMall.common.util.LoginUntil;
+import com.haisheng.framework.testng.bigScreen.itemMall.common.util.MallScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.scene.pc.file.FileUpload;
+import com.haisheng.framework.testng.bigScreen.itemXundian.common.util.SupporterUtil;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.role.RolePageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.staff.StaffPageScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
@@ -23,22 +32,28 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
+import com.haisheng.framework.util.CommonUtil;
+import com.haisheng.framework.util.ImageUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import java.lang.reflect.Method;
 
-public class MallCase extends TestCaseCommon implements TestCaseStd {
-    private final EnumTestProduct product = EnumTestProduct.MALL_DAILY;
-    private final EnumTestProduct product1 = EnumTestProduct.MALL_DAILY_SSO;
-    private static final AccountEnum ACCOUNT_ENUM = AccountEnum.MALL_DAILY;
+import java.lang.reflect.Method;
+import java.math.BigDecimal;
+
+public class MallCaseOnline extends TestCaseCommon implements TestCaseStd {
+    private final EnumTestProduct product = EnumTestProduct.MALL_ONLINE;
+    private final EnumTestProduct product1 = EnumTestProduct.MALL_ONLINE_SSO;
+    private static final AccountEnum ACCOUNT_ENUM = AccountEnum.MALL_ONLINE;
     public VisitorProxy visitor = new VisitorProxy(product);
     public VisitorProxy visitor1 = new VisitorProxy(product1);
     public LoginUntil user = new LoginUntil(visitor1);
+    public SupporterUtil util = new SupporterUtil(visitor);
     MallScenarioUtil mall = MallScenarioUtil.getInstance();
     public static final int page = 1;
     public static final int size = 100;
+    private final static String FILEPATH = "src/main/java/com/haisheng/framework/testng/bigScreen/itemMall/common/pic/人脸.jpg";
     public static final String starting = dt.getHistoryDate(-7);
     public static final String ending = dt.getHistoryDate(-1);
 
@@ -49,13 +64,13 @@ public class MallCase extends TestCaseCommon implements TestCaseStd {
         CommonConfig commonConfig = new CommonConfig();
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_SHOPMALL_DAILY_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_SHOPMALL_Online_SERVICE;
         commonConfig.checklistQaOwner = "周涛";
 //        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.SHOPMALL_DAILY_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc());
         commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.pushRd = new String[]{"15898182672", "18513118484", "18810332354", "15084928847"};
-        commonConfig.setShopId(product.getShopId()).setReferer(product.getReferer()).setRoleId(product.getRoleId()).setProduct(product.getAbbreviation()).setMallId("55456");
+        commonConfig.setShopId(product.getShopId()).setReferer(product.getReferer()).setRoleId(product.getRoleId()).setProduct(product.getAbbreviation()).setMallId("4283");
         commonConfig.setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
     }
@@ -124,6 +139,129 @@ public class MallCase extends TestCaseCommon implements TestCaseStd {
         }
         saveData("各楼层门店数量之和==列表门店之和");
     }
+
+    @Test(description = "角色管理-通过筛选框筛选角色")
+    public void mallShopSystemCase1(){
+        logger.logCase(caseResult.getCaseName());
+        try{
+            visitor.setProduct(EnumTestProduct.MALL_ONLINE_SSO);
+            JSONArray list = RolePageScene.builder().page(page).size(10).build().execute(visitor,true).getJSONArray("list");
+            for(int i=0;i<list.size();i++){
+                String name = list.getJSONObject(i).getString("name");
+                JSONArray list_size = RolePageScene.builder().name(name).page(page).size(10).build().execute(visitor,true).getJSONArray("list");
+                for (int j = 0;j<list_size.size();j++){
+                    String name2 = list_size.getJSONObject(j).getString("name");
+                    Preconditions.checkArgument(name2.contains(name),"输入框输入"+name+"列表展示"+name2);
+                }
+            }
+        }
+        catch (AssertionError |Exception e){
+            appendFailReason(e.toString());
+        }
+        saveData("角色管理-通过筛选框筛选角色");
+    }
+
+    @Test(description = "角色管理-添加角色--编辑角色--删除角色")//ok
+    public void mallShopSystemCase2(){
+        logger.logCase(caseResult.getCaseName());
+        try{
+            visitor.setProduct(EnumTestProduct.MALL_ONLINE_SSO);
+            String mess = RoleAddScene.builder().name("自动化添加角色").description(EnumDesc.DESC_BETWEEN_5_10.getDesc()).authList(mallMethod()).parentRoleId(Integer.parseInt(product.getRoleId())).build().execute(visitor,false).getString("message");
+            Preconditions.checkArgument(mess.equals("success"),"创建角色失败"+mess);
+            JSONArray list_size = RolePageScene.builder().name("自动化添加角色").page(page).size(10).build().execute(visitor,true).getJSONArray("list");
+            int id = list_size.getJSONObject(0).getInteger("id");
+            String message = RoleEditScene.builder().name("自动化编辑角色").description(EnumDesc.DESC_BETWEEN_20_30.getDesc()).authList(mallMethod()).id(id).parentRoleId(Integer.parseInt(product.getRoleId())).build().execute(visitor,false).getString("message");
+            Preconditions.checkArgument(message.equals("success"),"编辑角色失败"+message);
+            String mes = RoleDeleteScene.builder().id(id).build().execute(visitor,false).getString("message");
+            Preconditions.checkArgument(mes.equals("success"),"删除角色失败"+message);
+        }
+        catch (AssertionError |Exception e){
+            appendFailReason(e.toString());
+        }
+        saveData("角色管理-添加角色--编辑角色--删除角色");
+    }
+
+    @Test(description = "账号管理-筛选框")//ok
+    public void mallShopSystemCase3(){
+        logger.logCase(caseResult.getCaseName());
+        try{
+            visitor.setProduct(EnumTestProduct.MALL_ONLINE_SSO);
+            JSONArray staff_list = StaffPageScene.builder().page(page).size(size).build().execute(visitor,true).getJSONArray("list");
+            for (int i=0;i<staff_list.size();i++){
+                String name = staff_list.getJSONObject(i).getString("name");
+                String phone = staff_list.getJSONObject(i).getString("phone");
+                Integer role_id = staff_list.getJSONObject(i).getJSONArray("role_list").getJSONObject(0).getInteger("role_id");
+                String role_name = staff_list.getJSONObject(i).getJSONArray("role_list").getJSONObject(0).getString("role_name");
+                Long shop_id = staff_list.getJSONObject(i).getJSONArray("shop_list").getJSONObject(0).getLong("shop_id");
+                String shopname = staff_list.getJSONObject(i).getJSONArray("shop_list").getJSONObject(0).getString("shop_name");
+                JSONArray list = StaffPageScene.builder()
+                        .name(name)
+                        .phone(phone)
+                        .shopId(shop_id)
+                        .roleId(role_id)
+                        .page(page)
+                        .size(size)
+                        .build().execute(visitor,true).getJSONArray("list");
+                if(list.size()!=0){
+                    for (int j=0;j<list.size();j++) {
+                        String name1 = list.getJSONObject(j).getString("name");
+                        String phone1 = list.getJSONObject(j).getString("phone");
+                        Integer role_id1 = list.getJSONObject(j).getJSONArray("role_list").getJSONObject(0).getInteger("role_id");
+                        Long shop_id1 = list.getJSONObject(j).getJSONArray("shop_list").getJSONObject(0).getLong("shop_id");
+                        String role_name1 = list.getJSONObject(j).getJSONArray("role_list").getJSONObject(0).getString("role_name");
+                        String shopname1 = list.getJSONObject(j).getJSONArray("shop_list").getJSONObject(0).getString("shop_name");
+                        Preconditions.checkArgument(name.equals(name1),"筛选框输入"+name+"列表返回"+name1);
+                        Preconditions.checkArgument(phone.equals(phone1),"筛选框输入"+phone+"列表返回"+phone1);
+                        Preconditions.checkArgument(role_id.equals(role_id1),"筛选框输入"+role_name+"列表返回"+role_name1);
+                        Preconditions.checkArgument(shop_id1.equals(shop_id),"筛选框输入"+shopname+"列表返回"+shopname1);
+                    }
+                }
+            }
+        }
+        catch (AssertionError |Exception e){
+            appendFailReason(e.toString());
+        }
+        saveData("账号管理-筛选框");
+    }
+
+    @Test(description = "账号管理-新建-编辑-状态-删除")//ok
+    public void mallShopSystemCase4(){
+        logger.logCase(caseResult.getCaseName());
+        try{
+            visitor.setProduct(EnumTestProduct.MALL_ONLINE_SSO);
+            String pic_path = getPicPath(FILEPATH,"1:1");
+            String phone = "136" + CommonUtil.getRandom(8);
+            JSONArray role_list = new JSONArray();
+            JSONObject role = new JSONObject();
+            role.put("role_id",product.getRoleId());
+            role.put("role_name","购物中心管理员");
+            role_list.add(role);
+            JSONArray shop_list = new JSONArray();
+            JSONObject shop = new JSONObject();
+            shop.put("shop_id",product.getShopId());
+            shop.put("shop_name","购物中心");
+            shop_list.add(shop);
+            role.put("shop_list",shop_list);
+            String mess = StaffAddScene.builder().name("自动化创建账号").phone(phone).roleList(role_list).picturePath(pic_path).build().execute(visitor,false).getString("message");
+            Preconditions.checkArgument(mess.equals("success"),"创建账号"+mess);
+            String id = StaffPageScene.builder().name("自动化创建账号").page(page).size(size).build().execute(visitor,true).getJSONArray("list").getJSONObject(0).getString("id");
+//
+            String staMess = StatusChangeScene.builder().id(id).status("DISABLE").build().execute(visitor,false).getString("message");
+            Preconditions.checkArgument(staMess.equals("success"),"关闭账号"+staMess);
+//            String startMess = StatusChangeScene.builder().id(Integer.parseInt(id)).status("ENABLE").build().execute(visitor,false).getString("message");
+//            Preconditions.checkArgument(startMess.equals("success"),"开启账号"+staMess);
+
+            String editMess = StaffEditScene.builder().name("自动化创建角色2").phone(phone).roleList(role_list).picturePath(pic_path).id(id).build().execute(visitor,false).getString("message");
+            Preconditions.checkArgument(editMess.equals("success"),"编辑账号"+editMess);
+            String delMess = StaffDeleteScene.builder().id(id).build().execute(visitor,false).getString("message");
+            Preconditions.checkArgument(delMess.equals("success"),"删除账号"+delMess);
+        }catch (AssertionError | Exception e){
+            appendFailReason(e.toString());
+        }
+        saveData("账号管理-新建-编辑-状态-删除");
+    }
+
+
 
     @Test(description = "列表页门店数据==门店详情页门店数据")
     public void mallShopDataCase2(){
@@ -373,11 +511,10 @@ public class MallCase extends TestCaseCommon implements TestCaseStd {
         saveData("人均停留时长环比=上周期-上上周期/上上周期");
     }
 
-    //获得所有权限id
     public JSONArray mallMethod() {
-        visitor.setProduct(EnumTestProduct.MALL_DAILY_SSO);
+        visitor.setProduct(EnumTestProduct.MALL_ONLINE_SSO);
 //            获取所有权限id,因为日常购物中心特殊，所以只能固定parentRoleid
-        JSONArray childrenList = AuthTreeScene.builder().parentRole(10107).build().execute(visitor,true).getJSONArray("children");
+        JSONArray childrenList = AuthTreeScene.builder().parentRole(Integer.parseInt(product.getRoleId())).build().execute(visitor,true).getJSONArray("children");
         JSONArray authList = new JSONArray();
         for (int i=0;i<childrenList.size();i++){
             JSONArray childlist = childrenList.getJSONObject(i).getJSONArray("children");
@@ -387,6 +524,13 @@ public class MallCase extends TestCaseCommon implements TestCaseStd {
             }
         }
         return authList;
+    }
+    public String getPicPath(String picPath, String ratioStr) {
+        visitor.setProduct(EnumTestProduct.MALL_ONLINE_SSO);
+        String picture = new ImageUtil().getImageBinary(picPath);
+        String[] strings = ratioStr.split(":");
+        double ratio = BigDecimal.valueOf(Double.parseDouble(strings[0]) / Double.parseDouble(strings[1])).divide(new BigDecimal(1), 4, BigDecimal.ROUND_HALF_UP).doubleValue();
+        return FileUploadScene.builder().permanentPicType(0).pic(picture).ratioStr(ratioStr).ratio(ratio).build().execute(visitor).getString("pic_path");
     }
 }
 
