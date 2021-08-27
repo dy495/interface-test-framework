@@ -20,7 +20,9 @@ public class SceneParser extends AbstractHtmlParser {
 
     @Override
     protected List<ApiAttribute> getApiAttributeList(@NotNull Elements spreadElements) {
+        // 判断是否有body，（有body的就是2个表，没body的就是1个表）
         if (spreadElements.size() == 2) {
+            // 把body表（第一个表）中的每个元素的文本。且判断是否有下级参数（└─），没有则调用getApiAttribute方法
             return spreadElements.first().select("tbody").select("tr").stream().map(tr -> tr.select("[class='tableblock']"))
                     .filter(tableBlocks -> !tableBlocks.text().contains("└─")).map(this::getApiAttribute).collect(Collectors.toList());
         }
@@ -47,6 +49,7 @@ public class SceneParser extends AbstractHtmlParser {
      * @return ApiAttribute
      */
     private ApiAttribute getApiAttribute(@NotNull Elements elements) {
+        // 依次获取表中提取到的各个元素值，存放到表数据类 ：ApiAttribute
         return new ApiAttribute.Builder().parameter(elements.get(0).text()).type(elements.get(1).text()).description(elements.get(2).text())
                 .required(elements.get(3).text()).since(elements.get(4).text()).build();
     }
