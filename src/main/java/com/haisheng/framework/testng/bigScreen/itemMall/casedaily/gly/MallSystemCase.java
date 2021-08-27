@@ -399,42 +399,59 @@ public class MallSystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * 场馆客流-某一进出口的人次占比=某一进出口的人次/各个进出口的人次的总和--待写
+     * 场馆客流-某一进出口的人次占比=某一进出口的人次/各个进出口的人次的总和--ok
      */
-    @Test(description = "场馆客流-某一进出口的人次占比=某一进出口的人次/各个进出口的人次的总和",enabled = false)
+    @Test(description = "场馆客流-某一进出口的人次占比=某一进出口的人次/各个进出口的人次的总和")
     public void mallCenterDataCase14(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             //获取楼层出入口的各个人数
-            IScene scene= RegionTrendScene.builder().date(businessUtil.getDate(-4)).type("PV").region(RegionTypeEnum.EXIT.getRegion()).build();
+            IScene scene= RegionTrendScene.builder().date(businessUtil.getDate(-1)).type("PV").region(RegionTypeEnum.EXIT.getRegion()).build();
             JSONArray seriesList=visitor.invokeApi(scene,true).getJSONArray("series_List");
             JSONArray list=visitor.invokeApi(scene,true).getJSONArray("list");
             List<String> exitArray=new ArrayList<>();
+            //存放各个出入口的名称和对应的人次的map
             Map<String,Integer> exitPvMap=new HashMap<>();
+            //存放各个出入口的名称和id的map
             Map<String,String> exitName=new HashMap<>();
+            //获取各个出入口的id和名称
             for(int i=0;i<seriesList.size();i++){
                 String key=seriesList.getJSONObject(i).getString("key");
                 String name=seriesList.getJSONObject(i).getString("name");
                 exitName.put(key,name);
                 exitArray.add(key);
-                System.out.println();
             }
-            //获取各个出口的人次
+            //获取各个出口的人次和名称
+            int count=0;
             for(int j=0;j<list.size();j++){
-                for(int exit=0;exit<exitArray.size();exit++){
-                    Integer pv=list.getJSONObject(j).getInteger(exitArray.get(exit));
-                    if(exitPvMap.get(exitArray.get(exit))==null){
-                        exitPvMap.put(exitArray.get(exit), pv);
-                    }else{
-                        exitPvMap.put(exitArray.get(exit), pv+exitPvMap.get(exitArray.get(exit)));
-
-                    }
-                    System.err.println("---------------"+exitPvMap);
+                for (String s : exitArray) {
+                    Integer pv = list.getJSONObject(j).containsKey(s)?list.getJSONObject(j).getInteger(s):new Integer(0);
+                    exitPvMap.merge(s, pv, Integer::sum);
+                    count+=pv;
                 }
             }
-            //两个Map的根据key(进出口id)进行重新组合  todo
-            Map<String,Integer> map=new HashMap<>();
-
+            //两个Map的根据key(进出口id)进行重新组合成一个新的map
+            Map<String,Double> map=new HashMap<>();
+            Set<String> keySet=exitPvMap.keySet();
+            Set<String> key=exitName.keySet();
+            for(String s:keySet){
+                for (String k:key){
+                    if(s.equals(k)){
+                        map.put(exitName.get(k),businessUtil.getNumHalfUp((double)exitPvMap.get(s)*100/count,2));
+                    }
+                }
+            }
+            //判断饼状图中的中的百分比与计算的map中的结果是否一致
+            IScene scene1=HourPortraitScene.builder().date(businessUtil.getDate(-1)).region(RegionTypeEnum.EXIT.getRegion()).build();
+            JSONArray list1=visitor.invokeApi(scene1,true).getJSONArray("list");
+            for(int a=0;a<list1.size();a++){
+                String keyName=list1.getJSONObject(a).getString("key");
+                String percentPage=list1.getJSONObject(a).getString("percentage");
+                double percentage=Double.parseDouble(percentPage.substring(0,percentPage.length()-1));
+                double percentCount=map.getOrDefault(keyName,0.0);
+                logger.info("饼状图中"+keyName+"  展示的百分比为："+percentage+",通过计算得出的结果为："+percentCount);
+                Preconditions.checkArgument(percentage==percentCount,"饼状图中"+keyName+"  展示的百分比为："+percentage+",通过计算得出的结果为："+percentCount);
+            }
         }catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -444,16 +461,59 @@ public class MallSystemCase extends TestCaseCommon implements TestCaseStd {
 
 
     /**
-     * 场馆客流分时的停车厂到访趋势图某一进出口的人次占比=某一进出口的人次/各个进出口的人次的总和--待写
+     * 场馆客流分时的停车厂到访趋势图某一进出口的人次占比=某一进出口的人次/各个进出口的人次的总和--ok
      */
-    @Test(description = "场馆客流分时的停车厂到访趋势图某一进出口的人次占比=某一进出口的人次/各个进出口的人次的总和",enabled = false)
+    @Test(description = "场馆客流分时的停车厂到访趋势图某一进出口的人次占比=某一进出口的人次/各个进出口的人次的总和")
     public void mallCenterDataCase17(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            //获取楼层出入口的各个人数占比
+            //获取楼层出入口的各个人数
             IScene scene= RegionTrendScene.builder().date(businessUtil.getDate(-1)).type("PV").region(RegionTypeEnum.PARKING.getRegion()).build();
+            JSONArray seriesList=visitor.invokeApi(scene,true).getJSONArray("series_List");
             JSONArray list=visitor.invokeApi(scene,true).getJSONArray("list");
-
+            List<String> exitArray=new ArrayList<>();
+            //存放各个出入口的名称和对应的人次的map
+            Map<String,Integer> exitPvMap=new HashMap<>();
+            //存放各个出入口的名称和id的map
+            Map<String,String> exitName=new HashMap<>();
+            //获取各个出入口的id和名称
+            for(int i=0;i<seriesList.size();i++){
+                String key=seriesList.getJSONObject(i).getString("key");
+                String name=seriesList.getJSONObject(i).getString("name");
+                exitName.put(key,name);
+                exitArray.add(key);
+            }
+            //获取各个出口的人次和名称
+            int count=0;
+            for(int j=0;j<list.size();j++){
+                for (String s : exitArray) {
+                    Integer pv = list.getJSONObject(j).containsKey(s)?list.getJSONObject(j).getInteger(s):new Integer(0);
+                    exitPvMap.merge(s, pv, Integer::sum);
+                    count+=pv;
+                }
+            }
+            //两个Map的根据key(进出口id)进行重新组合成一个新的map
+            Map<String,Double> map=new HashMap<>();
+            Set<String> keySet=exitPvMap.keySet();
+            Set<String> key=exitName.keySet();
+            for(String s:keySet){
+                for (String k:key){
+                    if(s.equals(k)){
+                        map.put(exitName.get(k),businessUtil.getNumHalfUp((double)exitPvMap.get(s)*100/count,2));
+                    }
+                }
+            }
+            //判断饼状图中的中的百分比与计算的map中的结果是否一致
+            IScene scene1=HourPortraitScene.builder().date(businessUtil.getDate(-1)).region(RegionTypeEnum.PARKING.getRegion()).build();
+            JSONArray list1=visitor.invokeApi(scene1,true).getJSONArray("list");
+            for(int a=0;a<list1.size();a++){
+                String keyName=list1.getJSONObject(a).getString("key");
+                String percentPage=list1.getJSONObject(a).getString("percentage");
+                double percentage=Double.parseDouble(percentPage.substring(0,percentPage.length()-1));
+                double percentCount=map.getOrDefault(keyName,0.0);
+                logger.info("饼状图中"+keyName+"  展示的百分比为："+percentage+",通过计算得出的结果为："+percentCount);
+                Preconditions.checkArgument(percentage==percentCount,"饼状图中"+keyName+"  展示的百分比为："+percentage+",通过计算得出的结果为："+percentCount);
+            }
         }catch (AssertionError | Exception e) {
             appendFailReason(e.toString());
         } finally {
@@ -715,6 +775,128 @@ public class MallSystemCase extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             saveData("实时客流-楼层到访趋势图累计到访人数和>=今日到访人数");
+        }
+    }
+
+    /**
+     * 实时客流-进出口占比=进出口的人次/各个进出口的人次的总和--ok
+     */
+    @Test(description = "实时客流-进出口占比=进出口的人次/各个进出口的人次的总和")
+    public void mallCenterDataCase23(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            //获取楼层出入口的各个人数
+            IScene scene= RegionRealTimeTrendScene.builder().type("PV").region(RegionTypeEnum.EXIT.getRegion()).build();
+            JSONArray seriesList=visitor.invokeApi(scene,true).getJSONArray("series_List");
+            JSONArray list=visitor.invokeApi(scene,true).getJSONArray("list");
+            List<String> exitArray=new ArrayList<>();
+            //存放各个出入口的名称和对应的人次的map
+            Map<String,Integer> exitPvMap=new HashMap<>();
+            //存放各个出入口的名称和id的map
+            Map<String,String> exitName=new HashMap<>();
+            //获取各个出入口的id和名称
+            for(int i=0;i<seriesList.size();i++){
+                String key=seriesList.getJSONObject(i).getString("key");
+                String name=seriesList.getJSONObject(i).getString("name");
+                exitName.put(key,name);
+                exitArray.add(key);
+            }
+            //获取各个出口的人次和名称
+            int count=0;
+            for(int j=0;j<list.size();j++){
+                for (String s : exitArray) {
+                    Integer pv = list.getJSONObject(j).containsKey(s)?list.getJSONObject(j).getInteger(s):new Integer(0);
+                    exitPvMap.merge(s, pv, Integer::sum);
+                    count+=pv;
+                }
+            }
+            //两个Map的根据key(进出口id)进行重新组合成一个新的map
+            Map<String, Double> map=new HashMap<>();
+            Set<String> keySet=exitPvMap.keySet();
+            Set<String> key=exitName.keySet();
+            for(String s:keySet){
+                for (String k:key){
+                    if(s.equals(k)){
+                        map.put(exitName.get(k),businessUtil.getNumHalfUp((double)exitPvMap.get(s)*100/count,2));
+                    }
+                }
+            }
+            //判断饼状图中的中的百分比与计算的map中的结果是否一致
+            IScene scene1=RealTimePortraitScene.builder().region(RegionTypeEnum.EXIT.getRegion()).build();
+            JSONArray list1=visitor.invokeApi(scene1,true).getJSONArray("list");
+            for(int a=0;a<list1.size();a++){
+                String keyName=list1.getJSONObject(a).getString("key");
+                String percentPage=list1.getJSONObject(a).getString("percentage");
+                double percentage=Double.parseDouble(percentPage.substring(0,percentPage.length()-1));
+                double percentCount=map.getOrDefault(keyName,0.0);
+                logger.info("饼状图中"+keyName+"  展示的百分比为："+percentage+",通过计算得出的结果为："+percentCount);
+                Preconditions.checkArgument(percentage==percentCount,"饼状图中"+keyName+"  展示的百分比为："+percentage+",通过计算得出的结果为："+percentCount);
+            }
+        }catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("实时客流-进出口占比=进出口的人次/各个进出口的人次的总和");
+        }
+    }
+
+    /**
+     * 实时客流-停车场进出口占比=进出口的人次/各个进出口的人次的总和--ok
+     */
+    @Test(description = "实时客流-停车场进出口占比=进出口的人次/各个进出口的人次的总和")
+    public void mallCenterDataCase24(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            //获取楼层出入口的各个人数
+            IScene scene= RegionRealTimeTrendScene.builder().type("PV").region(RegionTypeEnum.PARKING.getRegion()).build();
+            JSONArray seriesList=visitor.invokeApi(scene,true).getJSONArray("series_List");
+            JSONArray list=visitor.invokeApi(scene,true).getJSONArray("list");
+            List<String> exitArray=new ArrayList<>();
+            //存放各个出入口的名称和对应的人次的map
+            Map<String,Integer> exitPvMap=new HashMap<>();
+            //存放各个出入口的名称和id的map
+            Map<String,String> exitName=new HashMap<>();
+            //获取各个出入口的id和名称
+            for(int i=0;i<seriesList.size();i++){
+                String key=seriesList.getJSONObject(i).getString("key");
+                String name=seriesList.getJSONObject(i).getString("name");
+                exitName.put(key,name);
+                exitArray.add(key);
+            }
+            //获取各个出口的人次和名称
+            int count=0;
+            for(int j=0;j<list.size();j++){
+                for (String s : exitArray) {
+                    Integer pv = list.getJSONObject(j).containsKey(s)?list.getJSONObject(j).getInteger(s):new Integer(0);
+                    exitPvMap.merge(s, pv, Integer::sum);
+                    count+=pv;
+                }
+            }
+            //两个Map的根据key(进出口id)进行重新组合成一个新的map
+            Map<String, Double> map=new HashMap<>();
+            Set<String> keySet=exitPvMap.keySet();
+            Set<String> key=exitName.keySet();
+            for(String s:keySet){
+                for (String k:key){
+                    if(s.equals(k)){
+                        map.put(exitName.get(k),businessUtil.getNumHalfUp((double)exitPvMap.get(s)*100/count,2));
+                    }
+                }
+            }
+            //判断饼状图中的中的百分比与计算的map中的结果是否一致
+            IScene scene1=RealTimePortraitScene.builder().region(RegionTypeEnum.PARKING.getRegion()).build();
+            JSONArray list1=visitor.invokeApi(scene1,true).getJSONArray("list");
+            for(int a=0;a<list1.size();a++){
+                String keyName=list1.getJSONObject(a).getString("key");
+                String percentPage=list1.getJSONObject(a).getString("percentage");
+                double percentage=Double.parseDouble(percentPage.substring(0,percentPage.length()-1));
+                double percentCount=map.getOrDefault(keyName,0.0);
+                logger.info("饼状图中"+keyName+"  展示的百分比为："+percentage+",通过计算得出的结果为："+percentCount);
+                Preconditions.checkArgument(percentage==percentCount,"饼状图中"+keyName+"  展示的百分比为："+percentage+",通过计算得出的结果为："+percentCount);
+            }
+        }catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("实时客流-停车场进出口占比=进出口的人次/各个进出口的人次的总和");
         }
     }
 
@@ -1667,6 +1849,141 @@ public class MallSystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
+     * 场馆月数据-进出口/停车场进出口占比=进出口的人次/各个进出口的人次的总和--ok
+     */
+    @Test(description = "场馆月数据-进出口/停车场进出口占比=进出口的人次/各个进出口的人次的总和")
+    public void mallCenterDataCase60(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            String[] arrays={RegionTypeEnum.PARKING.getRegion(),RegionTypeEnum.EXIT.getRegion()};
+            Arrays.stream(arrays).forEach(e->{
+                //获取楼层出入口的各个人数
+                IScene scene= CycleRegionTrendScene.builder().startTime(businessUtil.getMonthStartDate(-1)).endTime(businessUtil.getMonthEndDate(-1)).type("PV").region(e).build();
+                JSONArray seriesList=visitor.invokeApi(scene,true).getJSONArray("series_List");
+                JSONArray list=visitor.invokeApi(scene,true).getJSONArray("list");
+                List<String> exitArray=new ArrayList<>();
+                //存放各个出入口的名称和对应的人次的map
+                Map<String,Integer> exitPvMap=new HashMap<>();
+                //存放各个出入口的名称和id的map
+                Map<String,String> exitName=new HashMap<>();
+                //获取各个出入口的id和名称
+                for(int i=0;i<seriesList.size();i++){
+                    String key=seriesList.getJSONObject(i).getString("key");
+                    String name=seriesList.getJSONObject(i).getString("name");
+                    exitName.put(key,name);
+                    exitArray.add(key);
+                }
+                //获取各个出口的人次和名称
+                int count=0;
+                for(int j=0;j<list.size();j++){
+                    for (String s : exitArray) {
+                        Integer pv = list.getJSONObject(j).containsKey(s)?list.getJSONObject(j).getInteger(s):new Integer(0);
+                        if(pv>0){
+                            exitPvMap.merge(s, pv, Integer::sum);
+                            count+=pv;
+                        }
+                    }
+                }
+                //两个Map的根据key(进出口id)进行重新组合成一个新的map
+                Map<String, Double> map=new HashMap<>();
+                Set<String> keySet=exitPvMap.keySet();
+                Set<String> key=exitName.keySet();
+                for(String s:keySet){
+                    for (String k:key){
+                        if(s.equals(k)){
+                            map.put(exitName.get(k),businessUtil.getNumHalfUp((double)exitPvMap.get(s)*100/count,2));
+                        }
+                    }
+                }
+                System.out.println(map);
+                //判断饼状图中的中的百分比与计算的map中的结果是否一致
+                IScene scene1=CyclePortraitScene.builder().startTime(businessUtil.getMonthStartDate(-1)).endTime(businessUtil.getMonthEndDate(-1)).region(e).build();
+                JSONArray list1=visitor.invokeApi(scene1,true).getJSONArray("list");
+                for(int a=0;a<list1.size();a++){
+                    String keyName=list1.getJSONObject(a).getString("key");
+                    String percentPage=list1.getJSONObject(a).getString("percentage");
+                    double percentage=Double.parseDouble(percentPage.substring(0,percentPage.length()-1));
+                    double percentCount= map.getOrDefault(keyName, 0.0);
+                    logger.info("饼状图中"+keyName+"  展示的百分比为："+percentage+",通过计算得出的结果为："+percentCount);
+                    Preconditions.checkArgument(percentage==percentCount,"饼状图中"+keyName+"  展示的百分比为："+percentage+",通过计算得出的结果为："+percentCount);
+                }
+            });
+        }catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("场馆月数据-进出口/停车场进出口占比=进出口的人次/各个进出口的人次的总和");
+        }
+    }
+
+    /**
+     * 场馆周数据-进出口/停车场进出口占比=进出口的人次/各个进出口的人次的总和--ok
+     */
+    @Test(description = "场馆周数据-进出口/停车场进出口占比=进出口的人次/各个进出口的人次的总和")
+    public void mallCenterDataCase61(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            String[] arrays={RegionTypeEnum.PARKING.getRegion(),RegionTypeEnum.EXIT.getRegion()};
+            Arrays.stream(arrays).forEach(e->{
+                //获取楼层出入口的各个人数
+                IScene scene= CycleRegionTrendScene.builder().startTime(businessUtil.getStartDate(-1)).endTime(businessUtil.getEndDate(0)).type("PV").region(e).build();
+                JSONArray seriesList=visitor.invokeApi(scene,true).getJSONArray("series_List");
+                JSONArray list=visitor.invokeApi(scene,true).getJSONArray("list");
+                List<String> exitArray=new ArrayList<>();
+                //存放各个出入口的名称和对应的人次的map
+                Map<String,Integer> exitPvMap=new HashMap<>();
+                //存放各个出入口的名称和id的map
+                Map<String,String> exitName=new HashMap<>();
+                //获取各个出入口的id和名称
+                for(int i=0;i<seriesList.size();i++){
+                    String key=seriesList.getJSONObject(i).getString("key");
+                    String name=seriesList.getJSONObject(i).getString("name");
+                    exitName.put(key,name);
+                    exitArray.add(key);
+                }
+                System.err.println(exitName);
+                //获取各个出口的人次和名称
+                int count=0;
+                for(int j=0;j<list.size();j++){
+                    for (String s : exitArray) {
+                        Integer pv = list.getJSONObject(j).containsKey(s)?list.getJSONObject(j).getInteger(s):new Integer(0);
+                        if(pv>0){
+                            exitPvMap.merge(s, pv, Integer::sum);
+                            count+=pv;
+                        }
+                    }
+                }
+                System.err.println(exitPvMap);
+                //两个Map的根据key(进出口id)进行重新组合成一个新的map
+                Map<String, Double> map=new HashMap<>();
+                Set<String> keySet=exitPvMap.keySet();
+                Set<String> key=exitName.keySet();
+                for(String s:keySet){
+                    for (String k:key){
+                        if(s.equals(k)){
+                            map.put(exitName.get(k),businessUtil.getNumHalfUp((double)exitPvMap.get(s)*100/count,2));
+                        }
+                    }
+                }
+                //判断饼状图中的中的百分比与计算的map中的结果是否一致
+                IScene scene1=CyclePortraitScene.builder().startTime(businessUtil.getStartDate(-1)).endTime(businessUtil.getEndDate(0)).region(e).build();
+                JSONArray list1=visitor.invokeApi(scene1,true).getJSONArray("list");
+                for(int a=0;a<list1.size();a++){
+                    String keyName=list1.getJSONObject(a).getString("key");
+                    String percentPage=list1.getJSONObject(a).getString("percentage");
+                    double percentage=Double.parseDouble(percentPage.substring(0,percentPage.length()-1));
+                    double percentCount= map.getOrDefault(keyName, 0.0);
+                    logger.info("饼状图中"+keyName+"  展示的百分比为："+percentage+",通过计算得出的结果为："+percentCount);
+                    Preconditions.checkArgument(percentage==percentCount,"饼状图中"+keyName+"  展示的百分比为："+percentage+",通过计算得出的结果为："+percentCount);
+                }
+            });
+        }catch (AssertionError | Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("场馆周数据-进出口/停车场进出口占比=进出口的人次/各个进出口的人次的总和");
+        }
+    }
+
+    /**
      * 场馆周期/楼层周期 男性占比+女性占比=100%--ok
      */
     @Test(description = "场馆周期/楼层周期 男性占比+女性占比=100%")
@@ -1879,35 +2196,6 @@ public class MallSystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    /**
-     *
-     */
-    @Test(description = "",enabled = false)
-    public void mallCenterDataCase60(){
-        logger.logCaseStart(caseResult.getCaseName());
-        try{
-
-        }catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("");
-        }
-    }
-
-    /**
-     *
-     */
-    @Test(description = "",enabled = false)
-    public void mallCenterDataCase61(){
-        logger.logCaseStart(caseResult.getCaseName());
-        try{
-
-        }catch (AssertionError | Exception e) {
-            appendFailReason(e.toString());
-        } finally {
-            saveData("");
-        }
-    }
 
     /**
      *
