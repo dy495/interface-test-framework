@@ -62,6 +62,6 @@ public class FileUploadScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/shop/pc/file/upload";
+        return "/account-platform/auth/file/upload";
     }
 }
