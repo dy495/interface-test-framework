@@ -6,6 +6,10 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.enumerator.AccountEnum;
+import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.auth.AuthTreeScene;
+import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.auth.role.RoleAddScene;
+import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.auth.role.RoleDeleteScene;
+import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.auth.role.RoleEditScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.overview.OverviewShopOverviewScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.shop.CustomerTrendScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.shop.ShopDetailScene;
@@ -13,6 +17,9 @@ import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.shop.Sho
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.shop.ShopFloorListScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.util.LoginUntil;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.util.MallScenarioUtil;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.role.RolePageScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.staff.StaffPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -45,13 +52,13 @@ public class MallCase extends TestCaseCommon implements TestCaseStd {
         CommonConfig commonConfig = new CommonConfig();
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_SHOPMALL_DAILY_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_SHOPMALL_Online_SERVICE;
         commonConfig.checklistQaOwner = "周涛";
 //        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, EnumJobName.SHOPMALL_DAILY_TEST.getJobName());
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, product.getDesc());
         commonConfig.dingHook = DingWebhook.DAILY_STORE_MANAGEMENT_PLATFORM_GRP;
         commonConfig.pushRd = new String[]{"15898182672", "18513118484", "18810332354", "15084928847"};
-        commonConfig.setShopId(product.getShopId()).setReferer(product.getReferer()).setRoleId(product.getRoleId()).setProduct(product.getAbbreviation()).setMallId("55456");
+        commonConfig.setShopId(product.getShopId()).setReferer(product.getReferer()).setRoleId(product.getRoleId()).setProduct(product.getAbbreviation()).setMallId("4283");
         commonConfig.setProduct(product.getAbbreviation());
         beforeClassInit(commonConfig);
     }
@@ -119,6 +126,74 @@ public class MallCase extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         }
         saveData("各楼层门店数量之和==列表门店之和");
+    }
+
+    @Test(description = "角色管理-通过筛选框筛选角色")
+    public void mallShopSystemCase1(){
+        logger.logCase(caseResult.getCaseName());
+        try{
+            visitor.setProduct(EnumTestProduct.MALL_ONLINE_SSO);
+            JSONArray list = RolePageScene.builder().page(page).size(10).build().execute(visitor,true).getJSONArray("list");
+            for(int i=0;i<list.size();i++){
+                String name = list.getJSONObject(i).getString("name");
+                JSONArray list_size = RolePageScene.builder().name(name).page(page).size(10).build().execute(visitor,true).getJSONArray("list");
+                for (int j = 0;j<list_size.size();j++){
+                    String name2 = list_size.getJSONObject(j).getString("name");
+                    Preconditions.checkArgument(name2.contains(name),"输入框输入"+name+"列表展示"+name2);
+                }
+            }
+        }
+        catch (AssertionError |Exception e){
+            appendFailReason(e.toString());
+        }
+        saveData("角色管理-通过筛选框筛选角色");
+    }
+
+    @Test(description = "角色管理-添加角色--编辑角色--删除角色")
+    public void mallShopSystemCase2(){
+        logger.logCase(caseResult.getCaseName());
+        try{
+            visitor.setProduct(EnumTestProduct.MALL_ONLINE_SSO);
+            String mess = RoleAddScene.builder().name("自动化添加角色").description(EnumDesc.DESC_BETWEEN_5_10.getDesc()).authList(mallMethod()).parentRoleId(10107).build().execute(visitor,false).getString("message");
+            Preconditions.checkArgument(mess.equals("success"),"创建角色失败"+mess);
+            JSONArray list_size = RolePageScene.builder().name("自动化添加角色").page(page).size(10).build().execute(visitor,true).getJSONArray("list");
+            int id = list_size.getJSONObject(0).getInteger("id");
+            String message = RoleEditScene.builder().name("自动化编辑角色").description(EnumDesc.DESC_BETWEEN_20_30.getDesc()).authList(mallMethod()).id(id).parentRoleId(10107).build().execute(visitor,false).getString("message");
+            Preconditions.checkArgument(message.equals("success"),"编辑角色失败"+message);
+            String mes = RoleDeleteScene.builder().id(id).build().execute(visitor,false).getString("message");
+            Preconditions.checkArgument(mes.equals("success"),"删除角色失败"+message);
+        }
+        catch (AssertionError |Exception e){
+            appendFailReason(e.toString());
+        }
+        saveData("角色管理-添加角色--编辑角色--删除角色");
+    }
+
+    @Test(description = "账号管理-筛选框")
+    public void mallShopSystemCase3(){
+        logger.logCase(caseResult.getCaseName());
+        try{
+            visitor.setProduct(EnumTestProduct.MALL_ONLINE_SSO);
+            JSONArray list = StaffPageScene.builder().name("越秀测试账号").phone("18513118484").shopId(55456L).roleId(10107).page(page).size(size).build().execute(visitor,true).getJSONArray("list");
+            for(int i=0;i<list.size();i++){
+                String name = list.getJSONObject(i).getString("name");
+                String phone = list.getJSONObject(i).getString("phone");
+                Preconditions.checkArgument(name.equals("越秀测试账号"),"门店名称"+name);
+                Preconditions.checkArgument(phone.equals("18513118484"),"手机号"+phone);
+                JSONArray rloe_list = list.getJSONObject(i).getJSONArray("role_list");
+                for(int j=0;j<rloe_list.size();j++){
+                    int role_id = rloe_list.getJSONObject(j).getInteger("role_id");
+                    if (role_id==10107){
+                        int shop_id = rloe_list.getJSONObject(j).getJSONArray("shop_list").getJSONObject(0).getInteger("shop_id");
+                        Preconditions.checkArgument(shop_id==55456,"门店返回失败"+shop_id);
+                    }
+                }
+            }
+        }
+        catch (AssertionError |Exception e){
+            appendFailReason(e.toString());
+        }
+        saveData("账号管理-筛选框");
     }
 
     @Test(description = "列表页门店数据==门店详情页门店数据")
@@ -367,6 +442,21 @@ public class MallCase extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         }
         saveData("人均停留时长环比=上周期-上上周期/上上周期");
+    }
+
+    public JSONArray mallMethod() {
+        visitor.setProduct(EnumTestProduct.MALL_ONLINE_SSO);
+//            获取所有权限id,因为日常购物中心特殊，所以只能固定parentRoleid
+        JSONArray childrenList = AuthTreeScene.builder().parentRole(10107).build().execute(visitor,true).getJSONArray("children");
+        JSONArray authList = new JSONArray();
+        for (int i=0;i<childrenList.size();i++){
+            JSONArray childlist = childrenList.getJSONObject(i).getJSONArray("children");
+            for (int j=0;j<childlist.size();j++){
+                int value = childlist.getJSONObject(j).getInteger("value");
+                authList.add(j,value);
+            }
+        }
+        return authList;
     }
 }
 
