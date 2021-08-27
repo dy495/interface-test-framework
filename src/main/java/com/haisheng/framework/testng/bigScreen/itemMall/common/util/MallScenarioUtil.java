@@ -96,6 +96,5 @@ public class MallScenarioUtil extends TestCaseCommon {
         nf.setMinimumFractionDigits(2);// 小数点后保留几位
         return nf.format(Double.parseDouble(num1));
     }
-
 }
 

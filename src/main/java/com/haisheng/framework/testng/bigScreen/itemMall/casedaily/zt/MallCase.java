@@ -5,12 +5,19 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.itemBasic.base.proxy.VisitorProxy;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.*;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.enumerator.AccountEnum;
+import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.auth.AuthTreeScene;
+import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.auth.role.RoleAddScene;
+import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.auth.role.RoleDeleteScene;
+import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.auth.role.RoleEditScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.overview.OverviewShopOverviewScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.shop.CustomerTrendScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.shop.ShopDetailScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.pc.shop.ShopPageScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.scene.shop.ShopFloorListScene;
 import com.haisheng.framework.testng.bigScreen.itemMall.common.util.*;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.role.RolePageScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.staff.StaffPageScene;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.enumerator.EnumDesc;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -21,12 +28,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import java.lang.reflect.Method;
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 public class MallCase extends TestCaseCommon implements TestCaseStd {
     private final EnumTestProduct product = EnumTestProduct.MALL_DAILY;
@@ -370,6 +371,22 @@ public class MallCase extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         }
         saveData("人均停留时长环比=上周期-上上周期/上上周期");
+    }
+
+    //获得所有权限id
+    public JSONArray mallMethod() {
+        visitor.setProduct(EnumTestProduct.MALL_DAILY_SSO);
+//            获取所有权限id,因为日常购物中心特殊，所以只能固定parentRoleid
+        JSONArray childrenList = AuthTreeScene.builder().parentRole(10107).build().execute(visitor,true).getJSONArray("children");
+        JSONArray authList = new JSONArray();
+        for (int i=0;i<childrenList.size();i++){
+            JSONArray childlist = childrenList.getJSONObject(i).getJSONArray("children");
+            for (int j=0;j<childlist.size();j++){
+                int value = childlist.getJSONObject(j).getInteger("value");
+                authList.add(j,value);
+            }
+        }
+        return authList;
     }
 }
 
