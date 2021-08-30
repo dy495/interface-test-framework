@@ -39,7 +39,8 @@ public class TestUtil {
     @Test
     public void createScene() {
         String[] htmlPaths = {
-                "http://192.168.50.3/api-doc/jiedai-9-8/app/"
+                "http://192.168.50.3/api-doc/intelligent-control/pc/",
+                "http://192.168.50.3/api-doc/intelligent-control/app/",
         };
         Arrays.stream(htmlPaths).forEach(htmlPath -> {
             SceneAttribute[] sceneAttributeList = new SceneParser.Builder().htmlUrl(htmlPath).build().getAttributes();
