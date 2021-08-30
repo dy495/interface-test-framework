@@ -38,6 +38,6 @@ public class StatusChangeScene extends BaseScene {
 
     @Override
     public String getPath() {
-        return "/account-platform/auth/role/status/change";
+        return "/account-platform/auth/staff/status/change";
     }
 }

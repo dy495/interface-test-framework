@@ -33,17 +33,14 @@ import java.lang.reflect.Method;
 
 public class MallCaseDaily extends TestCaseCommon implements TestCaseStd {
     private final EnumTestProduct product = EnumTestProduct.MALL_DAILY;
-    private final EnumTestProduct product1 = EnumTestProduct.MALL_DAILY_SSO;
     private static final AccountEnum ACCOUNT_ENUM = AccountEnum.MALL_DAILY;
     public VisitorProxy visitor = new VisitorProxy(product);
-    public VisitorProxy visitor1 = new VisitorProxy(product1);
-    public LoginUntil user = new LoginUntil(visitor1);
+    public LoginUntil user = new LoginUntil(visitor);
     MallScenarioUtil mall = MallScenarioUtil.getInstance();
     public static final int page = 1;
     public static final int size = 100;
     public static final String starting = dt.getHistoryDate(-7);
     public static final String ending = dt.getHistoryDate(-1);
-
     @BeforeClass
     @Override
     public void initial() {
