@@ -177,6 +177,14 @@ public class YunTongInfo {
         };
     }
 
+    @DataProvider(name = "BOOLEAN")
+    public Object[] filter1(){
+        return new String[]{
+                "true",
+                "false"
+        };
+    }
+
     @DataProvider(name = "TIME")
     public Object[][] time(){
         return new String[][]{ // 开始时间 结束时间 提示语 是否正常

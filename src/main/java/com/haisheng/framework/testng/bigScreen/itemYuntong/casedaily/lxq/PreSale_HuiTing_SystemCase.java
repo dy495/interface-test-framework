@@ -8,6 +8,7 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklis
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumChecklistConfId;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.aftermanage.EvaluationPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.general.GeneralEnumValueListScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.manage.VoiceEvaluationPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.sensitivewords.SensitiveBehaviorApprovalScene;
@@ -35,7 +36,7 @@ import java.lang.reflect.Method;
  * @author lxq
  * @date 2021/1/29 11:17
  */
-public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
+public class PreSale_HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
     EnumTestProduct product = EnumTestProduct.YT_DAILY_ZH;
     EnumAccount ALL_AUTHORITY = EnumAccount.YT_DAILY_YS;
     VisitorProxy visitor = new VisitorProxy(product);
@@ -301,6 +302,28 @@ public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
             appendFailReason(e.toString());
         } finally {
             saveData("语音评鉴列表文本框组合筛选");
+        }
+    }
+
+
+    @Test(dataProvider = "BOOLEAN", dataProviderClass = YunTongInfo.class,enabled = false)
+    public void voiceEvaluationFilter7(String isfavorite) {
+
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            JSONArray arr1 = EvaluationPageScene.builder().page(1).size(30).isFavorite(Boolean.getBoolean(isfavorite)).build().execute(visitor).getJSONArray("list");
+            for (int j = 0; j < arr1.size(); j++) {
+                Boolean search = arr1.getJSONObject(j).getBoolean("is_favorite");
+                Preconditions.checkArgument(search == Boolean.getBoolean(isfavorite), "搜索收藏状态为"+Boolean.getBoolean(isfavorite)+"结果不正确");
+            }
+
+        } catch (AssertionError e) {
+            appendFailReason(e.toString());
+        } catch (Exception e) {
+            appendFailReason(e.toString());
+        } finally {
+            saveData("语音评鉴列表根据是否收藏筛选");
         }
     }
 
@@ -786,6 +809,8 @@ public class HuiTing_SystemCase extends TestCaseCommon implements TestCaseStd {
             saveData("话术考核设置根据接待环节进行筛选");
         }
     }
+
+    //todo 合格值设置
 
 
 }

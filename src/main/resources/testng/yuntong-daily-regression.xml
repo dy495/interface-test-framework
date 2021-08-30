@@ -11,7 +11,7 @@
         <classes>
             <!-- 运通-->
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.lxq.HuiTing_DataCase"/>
-            <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.lxq.HuiTing_SystemCase"/>
+            <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.lxq.PreSale_HuiTing_SystemCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.lxq.SystemCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.wm.AppVoiceCase"/>
             <class name="com.haisheng.framework.testng.bigScreen.itemYuntong.casedaily.wm.ShopDataCenterCase"/>
