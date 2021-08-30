@@ -31,6 +31,8 @@
             <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.MarketingManageCaseOnline"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.ContentOperationCaseOnline"/>
             <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.wm.ApproveManagerCaseOnline"/>
+            <!-- 5.5 -->
+            <class name="com.haisheng.framework.testng.bigScreen.jiaochenonline.mc.SystemCase"/>
             <!--                        风控代码-->
             <class name="com.haisheng.framework.testng.bigScreen.fengkongonline.RiskControlCaseDataOnline"/>
             <class name="com.haisheng.framework.testng.bigScreen.fengkongonline.RiskControlCaseSystemOnline"/>

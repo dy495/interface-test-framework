@@ -14,6 +14,7 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presa
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.YunTongInfo;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.jiaochen.mc.tool.DataCenter;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -108,8 +109,8 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
 
     }
 
-    @Test(dataProvider = "remarkContent")
-    public void test02PcRemark(String description, String expect, String remark) {
+    @Test(dataProvider = "remark", dataProviderClass = DataCenter.class)
+    public void test02PcRemark(String description, String remark, String expect) {
         try {
             if (newId != null && newCustomerId != null) {
                 AppCustomerDetailV4Scene detail = AppCustomerDetailV4Scene.builder().shopId(newShopId).customerId(newCustomerId.toString()).id(newId.toString()).build();
@@ -174,7 +175,7 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
     }
 
     @Test(dataProvider = "remarkContent")
-    public void test04AppRemark(String description, String expect, String remark) {
+    public void test04AppRemark(String description, String remark, String expect) {
         try {
             if (newId != null && newCustomerId != null) {
                 String code = AppCustomerRemarkV4Scene.builder().id(newId.toString()).shopId(newShopId.toString()).customerId(newCustomerId.toString()).remark(remark).build().execute(visitor, false).getString("code");

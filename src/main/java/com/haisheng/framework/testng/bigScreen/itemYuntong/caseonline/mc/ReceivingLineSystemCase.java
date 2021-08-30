@@ -14,10 +14,13 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presa
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.YunTongInfo;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.jiaochen.mc.tool.DataCenter;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
+import com.haisheng.framework.testng.service.ApiRequest;
+import com.haisheng.framework.util.CommonUtil;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
@@ -70,19 +73,9 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
         logger.logCaseStart(caseResult.getCaseName());
     }
 
-    //随机n位数字
-    private String numRandom(Integer n) {
-        Random ran = new Random();
-        StringBuilder numStr = new StringBuilder();
-        for (int i = 0; i < n; i++) {
-            String num = ran.nextInt(9) + "";
-            numStr.append(num);
-        }
-        return numStr.toString();
-    }
 
     public void customerConfig() {
-        String phone = "15" + numRandom(9);
+        String phone = "15" + CommonUtil.getRandom(9);
         AppPreSalesReceptionCreateScene.builder().customerName("mc自动化创建使用").customerPhone(phone).sexId("1").intentionCarModelId(util.mcCarId()).estimateBuyCarTime("2035-07-12").build().execute(visitor);//创建销售接待
         JSONObject pageInfo = AppPreSalesReceptionPageScene.builder().build().execute(visitor, true);
         List<JSONObject> newCustomer = pageInfo.getJSONArray("list").stream().map(ele -> (JSONObject) ele).filter(obj -> phone.equals(obj.getString("customer_phone"))).collect(Collectors.toList());
@@ -95,8 +88,8 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
 
     }
 
-    @Test(dataProvider = "remarkContent")
-    public void test02PcRemark(String description, String expect, String remark) {
+    @Test(dataProvider = "remark", dataProviderClass = DataCenter.class)
+    public void test02PcRemark(String description, String remark, String expect) {
         try {
             if (newId == null || newCustomerId == null) {
                 customerConfig();
@@ -116,16 +109,6 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
         } finally {
             saveData("接待中，PC备注");
         }
-    }
-
-    @DataProvider(name = "remarkContent")
-    private Object[] remark() {
-        return new Object[][]{
-                {"备注长度10个字符", "1000", "@%^#*?><jh"},
-                {"备注长度9个字符", "1001", "zsdfghyjh"},
-                {"备注长度0个字符", "1001", ""},
-                {"符合长度限制的字符组合", "1000", "!_=-][/?ASF你        我他slj,.  l;'\nffflllai"},
-        };
     }
 
     @Test(dataProvider = "chassisCode")
@@ -149,16 +132,16 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
     @DataProvider(name = "chassisCode")
     public Object[] chassisCode() {
         return new String[][]{
-                {"底盘号17位英文+数字", "1000", "aaaabbbc" + numRandom(9)},
-                {"底盘号16位英文+数字", "1001", "aaaabbbc" + numRandom(8)},
-                {"底盘号18位英文+数字", "1001", "aaaabbbc" + numRandom(10)},
+                {"底盘号17位英文+数字", "1000", "aaaabbbc" + CommonUtil.getRandom(9)},
+                {"底盘号16位英文+数字", "1001", "aaaabbbc" + CommonUtil.getRandom(8)},
+                {"底盘号18位英文+数字", "1001", "aaaabbbc" + CommonUtil.getRandom(10)},
                 {"底盘号为空", "1000", ""},
                 {"系统存在的底盘号", "1001", "ABC12345678901234"}
         };
     }
 
-    @Test(dataProvider = "remarkContent")
-    public void test04AppRemark(String description, String expect, String remark) {
+    @Test(dataProvider = "remark",dataProviderClass = DataCenter.class)
+    public void test04AppRemark(String description, String remark, String expect) {
         try {
             if (newId == null || newCustomerId == null) {
                 customerConfig();
@@ -175,7 +158,6 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
             saveData("app接待中备注");
         }
     }
-//     没有相关接口
 //    @Test
 //    public void test05AddCar(){
 //        try {
@@ -189,7 +171,7 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
 //            saveData("app接待中添加车牌号");
 //        }
 //    }
-    //     没有相关接口
+
 //    @Test
 //    public void test06ChangeChassisCode(){
 //        try {
@@ -204,13 +186,13 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
 //        }
 //    }
 
-    @Test(dataProvider = "userInfo")
-    public void test07ChangeUserInfo(String description, String expect, String name, String phone, Integer sex) {
+    @Test(dataProvider = "editErrorInfo", dataProviderClass = DataCenter.class)
+    public void test07ChangeUserInfo(String description, String point, String content, String expect) {
         try {
             if (newId == null || newCustomerId == null) {
                 customerConfig();
             }
-            String code = AppCustomerEditV4Scene.builder().id(newId.toString()).customerId(newCustomerId.toString()).shopId(newShopId.toString()).customerName(name).customerPhone(phone).sexId(sex).intentionCarModelId("20895").estimateBuyCarDate("2035-12-20").build().execute(visitor, false).getString("code");
+            String code = AppCustomerEditV4Scene.builder().id(newId.toString()).customerId(newCustomerId.toString()).shopId(newShopId.toString()).customerName("自动名字"+dt.getHistoryDate(0)).customerPhone("13"+CommonUtil.getRandom(9)).sexId(1).intentionCarModelId("20895").estimateBuyCarDate("2035-12-20").build().modify(point,content).execute(visitor, false).getString("message");
             Preconditions.checkArgument(Objects.equals(code, expect), description + "，期待结果code=" + expect + "实际结果code=" + code);
             sleep(3);
         } catch (AssertionError | Exception e) {
@@ -218,17 +200,6 @@ public class ReceivingLineSystemCase extends TestCaseCommon implements TestCaseS
         } finally {
             saveData("app接待中编辑资料,只填写必填项");
         }
-    }
-
-    @DataProvider(name = "userInfo")
-    public Object[] userInfo() {
-        return new Object[][]{
-                {"用户姓名1位，不存在的正常手机号", "1000", "1", "18" + numRandom(9), 1},
-                {"用户姓名50位，不存在的正常手机号", "1000", info.stringfifty, "18" + numRandom(9), 1},
-                //{"用户姓名51位，不存在的正常手机号","1001", info.stringfifty1,"18"+numRandom(9),1}, //系统繁忙
-                {"用户姓名正常，手机号10位", "1001", info.stringsix, "18" + numRandom(8), 1},
-                {"用户姓名正常，手机号11位含非数字", "1001", info.stringsix, "ab" + numRandom(8), 1},
-        };
     }
 
 //    @Test(dataProvider = "customerLevel")

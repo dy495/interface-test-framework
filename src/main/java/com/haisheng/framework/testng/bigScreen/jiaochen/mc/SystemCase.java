@@ -13,6 +13,7 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.pre
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.reid.AppReidReidDistributeScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.retention.AppRetentionReidCustomerAddScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.saleschedule.*;
+import com.haisheng.framework.testng.bigScreen.jiaochen.mc.tool.DataCenter;
 import com.haisheng.framework.testng.bigScreen.jiaochen.mc.tool.FastContent;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.AppBuyCarScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.AppFinishReceptionScene;
@@ -225,11 +226,21 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     @Test(description = "分组设置")
     public void groupConfig() {
         try {
+            // 操作前的总组数
+            int size1;
             JSONArray groups = AppSaleScheduleGroupListScene.builder().type("PRE").build().execute(visitor, true).getJSONArray("group_infos");
+            int s = groups.size();
+            if (s < 2){
+                for (int i = 0; i < (2-s); i++) {
+                    AppSaleScheduleAddGroupScene.builder().type("PRE").build().execute(visitor, false);
+                }
+                size1 = 2;
+                groups = AppSaleScheduleGroupListScene.builder().type("PRE").build().execute(visitor, true).getJSONArray("group_infos");
+            }else {
+                size1 = groups.size();
+            }
             //拿到2组
             JSONObject second = groups.stream().map(e -> (JSONObject) e).sorted((x, y) -> x.getInteger("group_id") - y.getInteger("group_id")).collect(Collectors.toList()).get(1);
-            // 操作前的总组数
-            int size1 = groups.size();
             if (second != null) {
                 // 删除2组
                 String delMessage = AppSaleScheduleDelGroupScene.builder().groupId(second.getLong("group_id")).type("PRE").build().execute(visitor, false).getString("message");
@@ -245,17 +256,17 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
                 //JSONObject three = groups2.stream().map(e -> (JSONObject) e).filter(e -> Objects.equals("3组", e.getString("group_name"))).findFirst().orElse(null);
                 JSONObject three = groups2.stream().map(e -> (JSONObject) e).min((x, y) -> y.getInteger("group_id") - x.getInteger("group_id")).get();
                 Preconditions.checkArgument(size3 == size2 + 1, "创建组失败:" + addMessage);
-                //获取前6个销售id列表
+                //获取前3个销售id列表
                 List<String> list = AppSaleScheduleFreeSaleScene.builder().type("PRE").build().execute(visitor, true).
-                        getJSONArray("list").stream().map(e -> (JSONObject) e).map(e -> e.getString("sale_id")).limit(6).collect(Collectors.toList());
+                        getJSONArray("list").stream().map(e -> (JSONObject) e).map(e -> e.getString("sale_id")).limit(3).collect(Collectors.toList());
                 JSONArray saleList = new JSONArray();
                 saleList.addAll(list);
-                // 新增的3组里添加6个销售
+                // 新增的3组里添加3个销售
                 String addSaleMessage = AppSaleScheduleJoinGroupScene.builder().groupId(three.getLong("group_id")).type("PRE").salesInfoList(saleList).build().execute(visitor, false).getString("message");
                 int groupSize = AppSaleScheduleGroupListScene.builder().type("PRE").build().execute(visitor, true).getJSONArray("group_infos").
                         stream().map(e -> (JSONObject) e).filter(e -> Objects.equals(three.getString("group_name"), e.getString("group_name"))).findFirst().orElse(null).
                         getJSONArray("sales_info_list").size();
-                Preconditions.checkArgument(groupSize == 6, "3组添加销售失败:" + addSaleMessage);
+                Preconditions.checkArgument(groupSize == 3, "3组添加销售失败:" + addSaleMessage);
 
             }
         } catch (AssertionError | Exception e) {
@@ -320,35 +331,28 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     @DataProvider(name = "preSuccess")
     private Object[] preSuccess(){
         return new Object[][]{
-                {"正常名字50字，手机不填", FastContent.NAME50,""},
-                {"正常名字1字，手机号11数字", ".","23456789123"}
+                {"正常名字50字", FastContent.NAME50,""},
+                {"正常名字1字", ".",""}
         };
     }
 
-    @Test(dataProvider = "preFalse")
+//    @Test(dataProvider = "preFalse", dataProviderClass = DataCenter.class)
     public void test01AssignReceptionN(String description, String name, String phone) {
         try {
             // 前台分配
             JSONObject creat = preAssign(name, phone);
             String code = creat.getString("code");
             String message = creat.getString("message");
-            Preconditions.checkArgument(Objects.equals("1001", code),description+"，期待成功，实际返回message："+message);
+            Preconditions.checkArgument(Objects.equals("1001", code),description+"，期待失败，实际返回message："+message+"成功的手机号"+phone);
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
             saveData("前台分配异常情况");
         }
     }
-    @DataProvider(name = "preFalse")
-    private Object[] preFalse(){
-        return new Object[][]{
-                {"正常名字51字，手机不填", FastContent.NAME51,""},
-                {"正常名字0字，手机号11数字", "","23456789123"},
-                {"正常名字1字，手机号12数字", "1","234567891234"}
-        };
-    }
-    @Test(description = "接待中编辑资料，异常情况",dataProvider = "errorInfo")
-    public void editUserInfo(String description, String point, String content, String expect){
+
+    @Test(description = "接待中编辑资料，异常情况",dataProvider = "editErrorInfo", dataProviderClass = DataCenter.class)
+    public void test04EditUserInfo(String description, String point, String content, String expect){
         try {
             JSONObject reception = (JSONObject) AppPreSalesReceptionPageScene.builder().build().execute(visitor, true).getJSONArray("list").stream().findAny().orElse(null);
             AppReceptionBean getReception;
@@ -370,34 +374,9 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @DataProvider(name = "errorInfo")
-    private Object[] errorInfo(){
-        return new Object[][]{
-                {"校验购车时间：必填","estimate_buy_car_date",null,"预计购车时间不能为空"},
-                {"校验姓名：必填","customer_name",null,"客户名称不能为空"},
-                {"校验联系方式：必填","customer_phone",null,"客户手机号不能为空"},
-                {"校验购车车型：必填","intention_car_model_id",null,"意向车型不能为空"},
-                {"校验性别：必填","sex_id",null,"客户性别不能为空"},
-                //{"校验姓名：长度51字","customer_name",FastContent.NAME51,"客户名称格式不正确"},//X    "message":"系统繁忙，请稍后再试！！"
-                //{"校验姓名：一个空格","customer_name"," ","客户名称不能为空"}, //X   success
-                {"校验姓名：空字符","customer_name","","客户名称不能为空"},
-                {"校验联系方式：长度10","customer_phone","15"+CommonUtil.getRandom(8),"客户手机号格式不正确"},
-                {"校验联系方式：长度12","customer_phone","15"+CommonUtil.getRandom(10),"客户手机号格式不正确"},
-                {"校验联系方式：11位非手机号","customer_phone","00"+CommonUtil.getRandom(10),"客户手机号格式不正确"},
-                {"校验联系方式：11位中文","customer_phone","阿坝县的风格解开了破了","客户手机号格式不正确"},
-                {"校验联系方式：11位英文","customer_phone","AbCdEfGhiJk","客户手机号格式不正确"},
-                {"校验联系方式：11位符号","customer_phone",")(_{[';@$% `","客户手机号格式不正确"},
-                {"校验联系方式：系统存在的手机号", "customer_phone", "15022399925", "当前手机号已被其他客户绑定"},
-                {"校验性别：格式", "sex_id", "3", "性别不正确"},
-                {"校验购车车型：系统中不存在的车型", "intention_car_model_id", "1234", "意向车型不存在"},
-                {"校验购车车型：门店中不存在的车型","intention_car_model_id","716","意向车型不存在"},
-                {"校验购车时间：早于今天", "estimate_buy_car_date", "2021-01-01", "预计购车时间不能小于今天"},
-        };
-    }
 
-
-    @Test(description = "接待中购车异常情况",dataProvider = "errorBuyCar")
-    public void receptionBuyCar(String description, String point, String content, String expect){
+    @Test(description = "接待中购车异常情况",dataProvider = "errorBuyCar", dataProviderClass = DataCenter.class)
+    public void test05receptionBuyCar(String description, String point, String content, String expect){
         try {
             JSONObject reception = (JSONObject) AppPreSalesReceptionPageScene.builder().build().execute(visitor, true).getJSONArray("list").stream().findAny().orElse(null);
             AppReceptionBean getReception;
@@ -414,21 +393,9 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             saveData("接待中编辑资料，异常情况");
         }
     }
-    @DataProvider(name = "errorBuyCar")
-    private Object[] errorBuyCar(){
-        return new Object[][]{
-                {"校验购买车型：必填","car_model",null,"购买车辆车型不能为空"},
-                {"校验购车车型：系统中不存在的车型", "car_model", "1234", "车型不存在，请重新选择"},
-                {"校验购车车型：门店中不存在的车型", "car_model","716","车型不存在，请重新选择"},
-                {"校验底盘号：底盘号16位英文+数字", "vin", "aaaabbbc" + CommonUtil.getRandom(8), "底盘号格式不正确"},
-                {"校验底盘号：非底盘号格式", "vin", "aaaa你bbc年十大十大啊；。", "底盘号格式不正确"},
-                {"校验底盘号：底盘号18位英文+数字", "vin", "aaaabbbc" + CommonUtil.getRandom(10), "底盘号格式不正确"},
-                {"校验底盘号：系统存在的底盘号", "vin", "ABC12345678901234", "数据已存在，请勿重复录入"}
-        };
-    }
 
-    @Test(description = "用户添加车牌号,异常",dataProvider = "addPlate")
-    public void AddPlateNumber(String description, String content, String expect){
+    @Test(description = "用户添加车牌号,异常",dataProvider = "addPlate", dataProviderClass = DataCenter.class)
+    public void test03AddPlateNumber(String description, String content, String expect){
         try {
             JSONObject reception = (JSONObject) AppPreSalesReceptionPageScene.builder().build().execute(visitor, true).getJSONArray("list").stream().findAny().orElse(null);
             AppReceptionBean getReception;
@@ -446,15 +413,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @DataProvider(name = "addPlate")
-    private Object[] addPlate(){
-        return new Object[][]{
-                {"车牌号格式：7位,汉字+纯数字","京"+CommonUtil.getRandom(6),"车牌号格式不正确"},
-                {"车牌号格式：9位,汉字+大写字母+纯数字","浙A"+CommonUtil.getRandom(7),"车牌号格式不正确"},
-                {"车牌号格式：6位,汉字+大写字母+纯数字","浙B"+CommonUtil.getRandom(4),"车牌号格式不正确"}
-        };
-    }
-    @Test(description = "接待中备注",dataProvider = "remark")
+    @Test(description = "接待中备注",dataProvider = "remark", dataProviderClass = DataCenter.class)
     public void receptionRemark(String description, String content, String expect){
         try {
             JSONObject reception = (JSONObject) AppPreSalesReceptionPageScene.builder().build().execute(visitor, true).getJSONArray("list").stream().findAny().orElse(null);
@@ -472,15 +431,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             saveData("接待中备注");
         }
     }
-    @DataProvider(name = "remark")
-    private Object[] remark(){
-        return new Object[][]{
-                {"内容9个字", FastContent.CONTENT9, "1001"},
-                {"内容1001个字", FastContent.CONTENT1000+"字", "1001"},
-                {"内容10个字", FastContent.CONTENT10, "1000"},
-                {"内容1000个字", FastContent.CONTENT1000, "1000"},
-        };
-    }
+
 
     //@Test
     public void finishAccompany(){
@@ -495,7 +446,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
 
     //@Test
     public void finish() {
-        // AppPreSalesReceptionPageScene.builder().build().execute(visitor).getJSONArray("list").stream().map(e->(JSONObject) e).map(e->e.toJavaObject(AppReceptionBean.class)).forEach(e->finishReception(e));
+         AppPreSalesReceptionPageScene.builder().build().execute(visitor).getJSONArray("list").stream().map(e->(JSONObject) e).map(e->e.toJavaObject(AppReceptionBean.class)).forEach(e->finishReception(e));
         //AppPreSalesReceptionPageScene.builder().size(100).build().execute(visitor);
     }
 

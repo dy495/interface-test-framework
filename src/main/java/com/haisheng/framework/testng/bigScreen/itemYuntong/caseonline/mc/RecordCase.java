@@ -13,6 +13,7 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.brand
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.brand.BrandPageScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.jiaochen.mc.tool.DataCenter;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -71,7 +72,7 @@ public class RecordCase extends TestCaseCommon implements TestCaseStd {
     /**
      * @description :导出页-->导出当前页-->导出记录增加一条“导出记录”处的信息
      **/
-    @Test(dataProvider = "CarExportPages")
+    @Test(dataProvider = "exportPages", dataProviderClass = DataCenter.class)
     public void testExportPage(String product, String path, String type) {
         try {
             visitor.setProduct(EnumTestProduct.YT_ONLINE_JD);
@@ -101,22 +102,7 @@ public class RecordCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @DataProvider(name = "CarExportPages")
-    public Object[] exportPages() {
-        return new String[][]{
-                {"car", "/car-platform/pc/customer-manage/pre-sale-customer/buy-car/page/export", "成交记录"},
-                {"car", "/car-platform/pc/pre-sales-reception/export", "销售接待记录"},
-                {"car", "/car-platform/pc/manage/evaluate/v4/export", "销售接待线下评价"},
-                {"car", "/car-platform/pc/record/import-record/export", "导入记录"},
-                {"car", "/car-platform/pc/record/export-record/export", "导出记录"},
-                {"car", "/car-platform/pc/record/login-record/export", "登录记录"},
-                {"car", "/car-platform/pc/shop/export", "门店管理"},
-                {"car", "/car-platform/pc/brand/export", "品牌管理"},
-                {"car", "/car-platform/pc/brand/car-style/export", "车系列表"},
-                {"car", "/car-platform/pc/brand/car-style/car-model/export", "车型列表"},
-                {"control", "/intelligent-control/pc/manage/voice/evaluation/export", "语音评鉴记录"}
-        };
-    }
+
 
     /**
      * @description :创建品牌-->删除品牌-->删除记录+1，名字为新创建的品牌名

@@ -8,13 +8,17 @@ import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumJobName;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumTestProduct;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.app.presalesreception.AppPreSalesReceptionPageScene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.customermanager.AppCustomerManagerPreCustomerAddPlateScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.presalesreception.AppCustomerEditV4Scene;
+import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.presalesreception.AppCustomerRemarkV4Scene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.presalesreception.AppReceptorChangeScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.reid.AppReidReidDistributeScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.retention.AppRetentionReidCustomerAddScene;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.mapp.saleschedule.*;
 import com.haisheng.framework.testng.bigScreen.jiaochen.mc.AppReceptionBean;
+import com.haisheng.framework.testng.bigScreen.jiaochen.mc.tool.DataCenter;
 import com.haisheng.framework.testng.bigScreen.jiaochen.mc.tool.FastContent;
+import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.AppBuyCarScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.sense.mapp.presalesreception.AppFinishReceptionScene;
 import com.haisheng.framework.testng.bigScreen.jiaochen.wm.util.SceneUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -91,19 +95,23 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
         return list;
 //        Preconditions.checkArgument(list.size()==0,list+"：这些销售状态为接待中，在所有门店都没有接待中的卡片");
     }
-
-    /**
-     * @param name:  姓名
-     * @param phone: 手机
-     * @description : 前台无人脸分配一个客户
-     * @return : 创建分配接口的 message
-     **/
-    public JSONObject preCreate(String name, String phone){
-        JSONArray customerList = new JSONArray();
+    public JSONObject preCreate(String name, String phone,boolean isDecision){
         JSONObject customer = new JSONObject();
         Integer customerId = AppRetentionReidCustomerAddScene.builder().name(name).phone(phone).build().execute(visitor, true).getInteger("customer_id");
         customer.put("customer_id", customerId);
-        customer.put("is_decision", true);
+        customer.put("is_decision", isDecision);
+        return customer;
+    }
+
+    /**
+     * @param name :  姓名
+     * @param phone : 手机
+     * @description : 前台无人脸分配一个客户
+     * @return : 创建分配接口的 message
+     **/
+    public JSONObject preAssign(String name, String phone){
+        JSONArray customerList = new JSONArray();
+        JSONObject customer = preCreate(name, phone, true);
         customerList.add(customer);
         return AppReidReidDistributeScene.builder().reidInfoList(customerList).enterType("PRE_SALE").build().execute(visitor, false);
     }
@@ -114,12 +122,12 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
      * @description : 前台无人脸分配一个客户
      * @return : AppReceptionBean  ,分配的接待javaBean
      **/
-    public AppReceptionBean preCreate(String name, String phone, boolean checkSale) {
+    public AppReceptionBean preAssign(String name, String phone, boolean checkSale) {
         // 获取第一个空闲的销售
         JSONObject first = AppSaleScheduleDayListScene.builder().type("PRE").build().execute(visitor, true).getJSONArray("sales_info_list").stream().map(e -> (JSONObject) e).
                 filter(e -> Objects.equals(e.getString("sale_status"), "空闲中")).min((x, y) -> x.getInteger("order") - y.getInteger("order")).get();
         // 前台分配
-        String message = preCreate(name, phone).getString("message");
+        String message = preAssign(name, phone).getString("message");
         Preconditions.checkArgument(Objects.equals("success", message), "前台分配分配失败,message:" + message);
         // 判断是否分给第一个空闲的销售
         if (checkSale) {
@@ -161,12 +169,12 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     @Test(dataProvider = "notFreeSale")
     public void test02ChangeSale1(String description, Integer statusId) {
         try {
-            Object reception = AppPreSalesReceptionPageScene.builder().build().execute(visitor, true).getJSONArray("list").stream().findAny().orElse(null);
+            JSONObject reception = (JSONObject) AppPreSalesReceptionPageScene.builder().build().execute(visitor, true).getJSONArray("list").stream().findAny().orElse(null);
             AppReceptionBean getReception;
             if (reception == null) {
-                getReception = preCreate("N2变更销售" + dt.getHistoryDate(0), null, true);
+                getReception = preAssign("N2变更销售" + dt.getHistoryDate(0), null, true);
             }else {
-                getReception = AppPreSalesReceptionPageScene.builder().build().execute(visitor, true).getJSONArray("list").getJSONObject(0).toJavaObject(AppReceptionBean.class);
+                getReception = reception.toJavaObject(AppReceptionBean.class);
             }
             long id = getReception.getId();
             JSONObject neededSale = util.getNeededSale(statusId);
@@ -196,12 +204,12 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     @Test(description = "变更接待")
     public void test02ChangeSale2() {
         try {
-            Object reception = AppPreSalesReceptionPageScene.builder().build().execute(visitor, true).getJSONArray("list").stream().findAny().orElse(null);
+            JSONObject reception = (JSONObject) AppPreSalesReceptionPageScene.builder().build().execute(visitor, true).getJSONArray("list").stream().findAny().orElse(null);
             AppReceptionBean getReception;
             if (reception == null) {
-                getReception = preCreate("Y1变更销售" + dt.getHistoryDate(0), null, true);
+                getReception = preAssign("Y1变更销售" + dt.getHistoryDate(0), null, true);
             }else {
-                getReception = AppPreSalesReceptionPageScene.builder().build().execute(visitor, true).getJSONArray("list").getJSONObject(0).toJavaObject(AppReceptionBean.class);
+                getReception = reception.toJavaObject(AppReceptionBean.class);
             }
             String saleId = util.getNeededSale(0).getString("sale_id");
             String receptorId = getReception.getReceptorId();
@@ -222,11 +230,21 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     @Test(description = "分组设置")
     public void groupConfig() {
         try {
+            // 操作前的总组数
+            int size1;
             JSONArray groups = AppSaleScheduleGroupListScene.builder().type("PRE").build().execute(visitor, true).getJSONArray("group_infos");
+            int s = groups.size();
+            if (s < 2){
+                for (int i = 0; i < (2-s); i++) {
+                    AppSaleScheduleAddGroupScene.builder().type("PRE").build().execute(visitor, false);
+                }
+                size1 = 2;
+                groups = AppSaleScheduleGroupListScene.builder().type("PRE").build().execute(visitor, true).getJSONArray("group_infos");
+            }else {
+                size1 = groups.size();
+            }
             //拿到2组
             JSONObject second = groups.stream().map(e -> (JSONObject) e).sorted((x, y) -> x.getInteger("group_id") - y.getInteger("group_id")).collect(Collectors.toList()).get(1);
-            // 操作前的总组数
-            int size1 = groups.size();
             if (second != null) {
                 // 删除2组
                 String delMessage = AppSaleScheduleDelGroupScene.builder().groupId(second.getLong("group_id")).type("PRE").build().execute(visitor, false).getString("message");
@@ -242,17 +260,17 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
                 //JSONObject three = groups2.stream().map(e -> (JSONObject) e).filter(e -> Objects.equals("3组", e.getString("group_name"))).findFirst().orElse(null);
                 JSONObject three = groups2.stream().map(e -> (JSONObject) e).min((x, y) -> y.getInteger("group_id") - x.getInteger("group_id")).get();
                 Preconditions.checkArgument(size3 == size2 + 1, "创建组失败:" + addMessage);
-                //获取前6个销售id列表
+                //获取前3个销售id列表
                 List<String> list = AppSaleScheduleFreeSaleScene.builder().type("PRE").build().execute(visitor, true).
-                        getJSONArray("list").stream().map(e -> (JSONObject) e).map(e -> e.getString("sale_id")).limit(6).collect(Collectors.toList());
+                        getJSONArray("list").stream().map(e -> (JSONObject) e).map(e -> e.getString("sale_id")).limit(3).collect(Collectors.toList());
                 JSONArray saleList = new JSONArray();
                 saleList.addAll(list);
-                // 新增的3组里添加6个销售
+                // 新增的3组里添加3个销售
                 String addSaleMessage = AppSaleScheduleJoinGroupScene.builder().groupId(three.getLong("group_id")).type("PRE").salesInfoList(saleList).build().execute(visitor, false).getString("message");
                 int groupSize = AppSaleScheduleGroupListScene.builder().type("PRE").build().execute(visitor, true).getJSONArray("group_infos").
                         stream().map(e -> (JSONObject) e).filter(e -> Objects.equals(three.getString("group_name"), e.getString("group_name"))).findFirst().orElse(null).
                         getJSONArray("sales_info_list").size();
-                Preconditions.checkArgument(groupSize == 6, "3组添加销售失败:" + addSaleMessage);
+                Preconditions.checkArgument(groupSize == 3, "3组添加销售失败:" + addSaleMessage);
 
             }
         } catch (AssertionError | Exception e) {
@@ -285,7 +303,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
             JSONObject res = AppPreSalesReceptionPageScene.builder().build().execute(visitor, true);
             Integer total = res.getInteger("total");
             if (total == 0){
-                reception = preCreate("完成接待"+dt.getHistoryDate(0), "17"+CommonUtil.getRandom(9), true);
+                reception = preAssign("完成接待"+dt.getHistoryDate(0), "17"+CommonUtil.getRandom(9), true);
             }else {
                 // 获取最后一个接待（第一个创建的）
                 reception = res.getJSONArray("list").getJSONObject(total - 1).toJavaObject(AppReceptionBean.class);
@@ -306,7 +324,7 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     public void test01AssignReceptionY(String description, String name, String phone) {
         try {
             // 前台分配
-            String message = preCreate(name, phone).getString("message");
+            String message = preAssign(name, phone).getString("message");
             Preconditions.checkArgument(Objects.equals("success", message),description+"，期待成功，实际返回message："+message);
         } catch (AssertionError | Exception e) {
             collectMessage(e);
@@ -317,41 +335,111 @@ public class SystemCase extends TestCaseCommon implements TestCaseStd {
     @DataProvider(name = "preSuccess")
     private Object[] preSuccess(){
         return new Object[][]{
-                {"正常名字50字，手机不填", FastContent.NAME50,""},
-                {"正常名字1字，手机号11数字", ".","23456789123"}
+                {"正常名字50字", FastContent.NAME50,""},
+                {"正常名字1字", ".",""}
         };
     }
 
-    @Test(dataProvider = "preFalse")
+    //@Test(dataProvider = "preFalse", dataProviderClass = DataCenter.class)
     public void test01AssignReceptionN(String description, String name, String phone) {
         try {
             // 前台分配
-            JSONObject creat = preCreate(name, phone);
+            JSONObject creat = preAssign(name, phone);
             String code = creat.getString("code");
             String message = creat.getString("message");
-            Preconditions.checkArgument(Objects.equals("1001", code),description+"，期待成功，实际返回message："+message);
+            Preconditions.checkArgument(Objects.equals("1001", code),description+"，期待失败，实际返回message："+message+"成功的手机号"+phone);
         } catch (AssertionError | Exception e) {
             collectMessage(e);
         } finally {
             saveData("前台分配异常情况");
         }
     }
-    @DataProvider(name = "preFalse")
-    private Object[] preFalse(){
-        return new Object[][]{
-                {"正常名字51字，手机不填", FastContent.NAME51,""},
-                {"正常名字0字，手机号11数字", "","23456789123"},
-                {"正常名字1字，手机号12数字", "1","234567891234"}
-        };
+
+    @Test(description = "接待中编辑资料，异常情况",dataProvider = "editErrorInfo", dataProviderClass = DataCenter.class)
+    public void test03EditUserInfo(String description, String point, String content, String expect){
+        try {
+            JSONObject reception = (JSONObject) AppPreSalesReceptionPageScene.builder().build().execute(visitor, true).getJSONArray("list").stream().findAny().orElse(null);
+            AppReceptionBean getReception;
+            if (reception == null) {
+                getReception = preAssign("创建接待for修改资料" + dt.getHistoryDate(0), null, true);
+            }else {
+                getReception = reception.toJavaObject(AppReceptionBean.class);
+            }
+            sleep(3);
+            String message = AppCustomerEditV4Scene.builder().id(getReception.getId()).customerId(getReception.getCustomerId()).shopId(getReception.getShopId()).
+                    customerName("正常normal").customerPhone("18" + CommonUtil.getRandom(9)).sexId(1).
+                    intentionCarModelId(util.getBuyCarId()).estimateBuyCarDate("2030-08-08").build()
+                    .modify(point, content).execute(visitor, false).getString("message");
+            Preconditions.checkArgument(Objects.equals(expect, message),"修改资料"+description+"，预期结果："+expect+"，实际："+message);
+        } catch (AssertionError | Exception e) {
+            collectMessage(e);
+        } finally {
+            saveData("接待中编辑资料，异常情况");
+        }
     }
 
 
+    @Test(description = "接待中购车异常情况",dataProvider = "errorBuyCar", dataProviderClass = DataCenter.class)
+    public void test04receptionBuyCar(String description, String point, String content, String expect){
+        try {
+            JSONObject reception = (JSONObject) AppPreSalesReceptionPageScene.builder().build().execute(visitor, true).getJSONArray("list").stream().findAny().orElse(null);
+            AppReceptionBean getReception;
+            if (reception == null) {
+                getReception = preAssign("创建接待for购车" + dt.getHistoryDate(0), null, true);
+            }else {
+                getReception = reception.toJavaObject(AppReceptionBean.class);
+            }
+            String message = AppBuyCarScene.builder().id(getReception.getId()).shopId(getReception.getShopId()).carModel(util.getBuyCarId()).vin(null).build().modify(point, content).execute(visitor, false).getString("message");
+            Preconditions.checkArgument(Objects.equals(expect, message),"接待中购车"+description+"，预期结果："+expect+"，实际："+message);
+        } catch (AssertionError | Exception e) {
+            collectMessage(e);
+        } finally {
+            saveData("接待中编辑资料，异常情况");
+        }
+    }
 
+    @Test(description = "用户添加车牌号,异常",dataProvider = "addPlate", dataProviderClass = DataCenter.class)
+    public void test05AddPlateNumber(String description, String content, String expect){
+        try {
+            JSONObject reception = (JSONObject) AppPreSalesReceptionPageScene.builder().build().execute(visitor, true).getJSONArray("list").stream().findAny().orElse(null);
+            AppReceptionBean getReception;
+            if (reception == null) {
+                getReception = preAssign("创建接待for加车牌" + dt.getHistoryDate(0), null, true);
+            }else {
+                getReception = reception.toJavaObject(AppReceptionBean.class);
+            }
+            String message = AppCustomerManagerPreCustomerAddPlateScene.builder().customerId(getReception.getCustomerId()).shopId(getReception.getShopId()).plateNumber(content).build().execute(visitor, false).getString("message");
+            Preconditions.checkArgument(Objects.equals(expect, message),"接待中添加车牌号"+description+"，预期结果："+expect+"，实际："+message);
+        } catch (AssertionError | Exception e) {
+            collectMessage(e);
+        } finally {
+            saveData("用户添加车牌号,异常");
+        }
+    }
 
-    // @Test
+    @Test(description = "接待中备注",dataProvider = "remark", dataProviderClass = DataCenter.class)
+    public void test06receptionRemark(String description, String content, String expect){
+        try {
+            JSONObject reception = (JSONObject) AppPreSalesReceptionPageScene.builder().build().execute(visitor, true).getJSONArray("list").stream().findAny().orElse(null);
+            AppReceptionBean getReception;
+            if (reception == null) {
+                getReception = preAssign("创建接待for加车牌" + dt.getHistoryDate(0), null, true);
+            }else {
+                getReception = reception.toJavaObject(AppReceptionBean.class);
+            }
+            String code = AppCustomerRemarkV4Scene.builder().id(getReception.getId()).shopId(getReception.getShopId()).remark(content).build().execute(visitor, false).getString("code");
+            Preconditions.checkArgument(Objects.equals(expect, code),"接待中备注"+description+"，预期结果code："+expect+"，实际code："+code);
+        } catch (AssertionError | Exception e) {
+            collectMessage(e);
+        } finally {
+            saveData("接待中备注");
+        }
+    }
+
+    //@Test(description = "自动完成接待，手动清接待")
     public void finish() {
         AppPreSalesReceptionPageScene.builder().build().execute(visitor).getJSONArray("list").stream().map(e->(JSONObject) e).map(e->e.toJavaObject(AppReceptionBean.class)).forEach(e->finishReception(e));
-
+        //AppPreSalesReceptionPageScene.builder().size(100).build().execute(visitor);
     }
 
 }

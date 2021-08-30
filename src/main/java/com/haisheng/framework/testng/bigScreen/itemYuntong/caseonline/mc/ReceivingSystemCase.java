@@ -21,6 +21,7 @@ import com.haisheng.framework.testng.bigScreen.itemYuntong.common.scene.pc.presa
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.SceneUtil;
 import com.haisheng.framework.testng.bigScreen.itemYuntong.common.util.YunTongInfo;
 import com.haisheng.framework.testng.bigScreen.itemBasic.enumerator.EnumAccount;
+import com.haisheng.framework.testng.bigScreen.jiaochen.mc.tool.DataCenter;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
@@ -38,14 +39,7 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
     public VisitorProxy visitor = new VisitorProxy(product);   // 产品类放到代理类中（通过代理类发请求）
     public SceneUtil util = new SceneUtil(visitor);
     CommonConfig commonConfig = new CommonConfig();    // 配置类初始化
-//    public Long newId; // 本次创建的接待id
-//    public Long newShopId; // 本次接待门店的shopId
-//    public Long newCustomerId;
     public YunTongInfo info = new YunTongInfo();
-    public Long newId; // 本次创建的接待id
-    public Long newShopId; // 本次接待门店的shopId
-    public Long newCustomerId;
-
 
     @BeforeClass
     @Override
@@ -81,16 +75,6 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
     }
 
-    // 随机n位数字
-    private String numRandom(Integer n) {
-        Random ran = new Random();
-        StringBuilder numStr = new StringBuilder();
-        for (int i = 0; i < n; i++) {
-            String num = ran.nextInt(9) + "";
-            numStr.append(num);
-        }
-        return numStr.toString();
-    }
 
     // 创建一个接待，
     //return：接待id 和 shop_id
@@ -108,10 +92,10 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
         return customer;
     }
 
-    @Test(dataProvider = "errorInfo")
+    @Test(dataProvider = "createErrorInfo", dataProviderClass = DataCenter.class)
     public void test01createCustomer_system_err(String description, String point, String content, String expect) {
         try {
-            IScene scene = AppPreSalesReceptionCreateScene.builder().customerName("正常名字").customerPhone("18" + numRandom(9)).sexId("1").intentionCarModelId("20895").estimateBuyCarTime("2035-12-20").build().modify(point, content);
+            IScene scene = AppPreSalesReceptionCreateScene.builder().customerName("正常名字").customerPhone("18" + CommonUtil.getRandom(9)).sexId("1").intentionCarModelId("20895").estimateBuyCarTime("2035-12-20").build().modify(point, content);
             String code = scene.execute(visitor, false).getString("code");
             Preconditions.checkArgument(Objects.equals(expect, code), description + ",预期结果code=" + expect + "，实际结果code=" + code);
         } catch (AssertionError | Exception e) {
@@ -122,38 +106,10 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @DataProvider(name = "errorInfo")
-    public Object[] info() {
-        String phone = "15" + numRandom(9);
-        return new Object[][]{
-                //{"校验姓名：必填","customer_name",null,"1001"},  //X   "message":"系统繁忙，请稍后再试！！"
-                //{"校验姓名：长度51字","customer_name",info.stringfifty1,"1001"},//X    "message":"系统繁忙，请稍后再试！！"
-                //{"校验姓名：空字符","customer_name","","1001"},  //X   success
-                //{"校验姓名：一个空格","customer_name"," ","1001"}, //X   success
-                //{"校验联系方式：必填","customer_phone",null,"1001"},  //X   success
-                // {"校验联系方式：长度10","customer_phone","15"+numRandom(8),"1001"}, //X   success
-                //{"校验联系方式：长度12","customer_phone","15"+numRandom(10),"1001"}, //X   success
-                //{"校验联系方式：11位非手机号","customer_phone","00"+numRandom(10),"1001"}, //X   success
-                //{"校验联系方式：11位中文","customer_phone","阿坝县的风格解开了破了","1001"}, //X   success
-                //{"校验联系方式：11位英文","customer_phone","AbCdEfGhiJk","1001"}, //X   success
-                //{"校验联系方式：11位符号","customer_phone",")(_{[';@$% `","1001"}, //X   success
-                {"成功创建,手机号固定,前置条件", "customer_phone", phone, "1000"},
-                {"校验联系方式：同一个手机号接待中再创建接待", "customer_phone", phone, "1001"}, //"当前客户正在接待中，请勿重复接待"
-                //{"校验性别：必填","sex_id",null,"1001"},  // "message":"系统繁忙，请稍后再试！！"
-                {"校验性别：格式", "sex_id", "3", "1001"}, //"性别不正确"
-                //{"校验购车车型：必填","intention_car_model_id",null,"1001"},  //X   success
-                {"校验购车车型：不存在的车型", "intention_car_model_id", "1234", "1001"}, // "车型不存在"
-                //{"校验购车车型：权限外","intention_car_model_id","716","1001"}, //X   success
-                //{"校验购车时间：必填","estimate_buy_car_time",null,"1001"},  //X   success
-                {"校验购车时间：早于今天", "estimate_buy_car_time", "2021-01-01", "1001"}, //"预计购车时间不能小于今天"
-        };
-    }
-
-
     @Test
     public void test02samePhone() {
         try {
-            String phone = "15" + numRandom(9);
+            String phone = "15" + CommonUtil.getRandom(9);
             Map<String, String> first = createCustomerCommon("一次接待", "1", phone, util.mcCarId(), "2066-12-21");
             AppFinishReceptionScene.builder().id(first.get("id")).shopId(first.get("shopId")).build().execute(visitor);
             Map<String, String> second = createCustomerCommon("二次接待", "1", phone, util.mcCarId(), "2066-12-21");
@@ -171,7 +127,7 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    @Test(dataProvider = "remarkContent")
+    @Test(dataProvider = "evaluateRemark", dataProviderClass = DataCenter.class)
     public void flowUpContent(String description, String expect, String remark) {
         try {
             Map<String, String> customer = util.createCustomerCommon("自动创建差评跟进", "1", "150" + CommonUtil.getRandom(8), util.mcCarId(), "2033-12-20");
@@ -207,16 +163,5 @@ public class ReceivingSystemCase extends TestCaseCommon implements TestCaseStd {
         o.put("score", 1);
         return o;
     }
-
-    @DataProvider(name = "remarkContent")
-    private Object[] remark() {
-        return new Object[][]{
-                {"备注长度10个字符", "1000", "@%^#*?><jh"},
-                //{"备注长度9个字符", "1001", "zsdfghyjh"},   //success
-                {"备注长度0个字符", "1001", ""},
-                {"符合长度限制的字符组合", "1000", "!_=-][/?ASF你        我他slj,.  l;'\nffflllai"},
-        };
-    }
-
 
 }
