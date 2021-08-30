@@ -46,7 +46,7 @@ public class TestUtil {
             Arrays.stream(sceneAttributeList).forEach(sceneAttribute -> new SceneMarker.Builder()
                     .templatePath("src\\main\\resources\\template")
                     .templateName("sceneTemplate.ftl")
-                    .parentPath("src/main/java/com/haisheng/framework/testng/bigScreen/jiaochen/wm/sense")
+                    .parentPath("src/main/java/com/haisheng/framework/testng/bigScreen/itemYuntong/common/scene")
                     .sceneAttribute(sceneAttribute)
                     .buildMarker()
                     .execute());
